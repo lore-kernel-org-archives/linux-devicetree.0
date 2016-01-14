@@ -1,13 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 05/26] clk: sunxi: Add display and TCON0
- clocks driver
-Date: Thu, 14 Jan 2016 16:24:48 +0100
-Message-ID: <1452785109-6172-6-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 03/26] clk: Add regmap support
+Date: Thu, 14 Jan 2016 16:24:46 +0100
+Message-ID: <1452785109-6172-4-git-send-email-maxime.ripard@free-electrons.com>
 References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3P3322AKGQEMWMHSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3H3322AKGQEIEGK5NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1452785109-6172-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,301 +16,676 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A10 SoCs and its relatives has a special clock controller to drive the
-display engines (both frontend and backend), that have a lot in common with
-the clock to drive the first TCON channel.
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add a driver to support both.
+Some devices like SoCs from Mediatek need to use the clock
+through a regmap interface.
+This patch adds regmap support for the simple multiplexer clock,
+the divider clock and the clock gate code.
 
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
- drivers/clk/sunxi/Makefile                        |   1 +
- drivers/clk/sunxi/clk-sun4i-display.c             | 241 ++++++++++++++++++++++
- 3 files changed, 244 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
+ drivers/clk/Makefile         |  1 +
+ drivers/clk/clk-divider.c    | 68 +++++++++++++++++++++++++-------
+ drivers/clk/clk-gate.c       | 54 +++++++++++++++++++------
+ drivers/clk/clk-io.c         | 48 ++++++++++++++++++++++
+ drivers/clk/clk-io.h         | 22 +++++++++++
+ drivers/clk/clk-mux.c        | 94 +++++++++++++++++++++++++++++++++++++-------
+ include/linux/clk-provider.h | 54 +++++++++++++++++++++++--
+ 7 files changed, 298 insertions(+), 43 deletions(-)
+ create mode 100644 drivers/clk/clk-io.c
+ create mode 100644 drivers/clk/clk-io.h
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 8a47b77abfca..5360554a7d3f 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -55,6 +55,7 @@ Required properties:
- 	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
- 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
- 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
-+	"allwinner,sun4i-a10-display-clk" - for the display clocks on the A10
- 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
- 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
- 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
-@@ -64,6 +65,7 @@ Required properties:
- 	"allwinner,sun8i-a23-mbus-clk" - for the MBUS clock on A23
- 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
- 	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
-+	"allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
- 	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
- 	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
- 	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index cb4c299214ce..a991cd8ca509 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -10,6 +10,7 @@ obj-y += clk-a10-pll2.o
- obj-y += clk-a20-gmac.o
- obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
-+obj-y += clk-sun4i-display.o
- obj-y += clk-sun8i-mbus.o
- obj-y += clk-sun9i-core.o
- obj-y += clk-sun9i-mmc.o
-diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 820714c72d36..31a888c0c182 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-fractional-divider.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-gpio.o
++obj-$(CONFIG_COMMON_CLK)	+= clk-io.o
+ ifeq ($(CONFIG_OF), y)
+ obj-$(CONFIG_COMMON_CLK)	+= clk-conf.o
+ endif
+diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+index 3ace102a2a0a..1ddb353b3fff 100644
+--- a/drivers/clk/clk-divider.c
++++ b/drivers/clk/clk-divider.c
+@@ -18,6 +18,8 @@
+ #include <linux/string.h>
+ #include <linux/log2.h>
+ 
++#include "clk-io.h"
++
+ /*
+  * DOC: basic adjustable divider clock that cannot gate
+  *
+@@ -142,7 +144,8 @@ static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
+ 	struct clk_divider *divider = to_clk_divider(hw);
+ 	unsigned int val;
+ 
+-	val = clk_readl(divider->reg) >> divider->shift;
++	val = clk_io_readl(hw, divider->reg, divider->regmap, divider->offset);
++	val >>= divider->shift;
+ 	val &= div_mask(divider->width);
+ 
+ 	return divider_recalc_rate(hw, parent_rate, val, divider->table,
+@@ -354,7 +357,10 @@ static long clk_divider_round_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	/* if read only, just return current value */
+ 	if (divider->flags & CLK_DIVIDER_READ_ONLY) {
+-		bestdiv = readl(divider->reg) >> divider->shift;
++		bestdiv = clk_io_readl(hw, divider->reg, divider->regmap,
++				       divider->offset);
++
++		bestdiv >>= divider->shift;
+ 		bestdiv &= div_mask(divider->width);
+ 		bestdiv = _get_div(divider->table, bestdiv, divider->flags,
+ 			divider->width);
+@@ -400,12 +406,16 @@ static int clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	if (divider->flags & CLK_DIVIDER_HIWORD_MASK) {
+ 		val = div_mask(divider->width) << (divider->shift + 16);
++		val |= value << divider->shift;
++		clk_io_writel(hw, divider->reg, divider->regmap,
++			      divider->offset, val);
+ 	} else {
+-		val = clk_readl(divider->reg);
+-		val &= ~(div_mask(divider->width) << divider->shift);
++		u32 mask = div_mask(divider->width) << divider->shift;
++
++		val = value << divider->shift;
++		clk_io_update_bits(hw, divider->reg, divider->regmap,
++				   divider->offset, mask, val);
+ 	}
+-	val |= value << divider->shift;
+-	clk_writel(val, divider->reg);
+ 
+ 	if (divider->lock)
+ 		spin_unlock_irqrestore(divider->lock, flags);
+@@ -424,9 +434,9 @@ EXPORT_SYMBOL_GPL(clk_divider_ops);
+ 
+ static struct clk *_register_divider(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+-		void __iomem *reg, u8 shift, u8 width,
+-		u8 clk_divider_flags, const struct clk_div_table *table,
+-		spinlock_t *lock)
++		void __iomem *reg, struct regmap *regmap, u32 offset,
++		u8 shift, u8 width, u8 clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock)
+ {
+ 	struct clk_divider *div;
+ 	struct clk *clk;
+@@ -451,7 +461,12 @@ static struct clk *_register_divider(struct device *dev, const char *name,
+ 	init.num_parents = (parent_name ? 1 : 0);
+ 
+ 	/* struct clk_divider assignments */
+-	div->reg = reg;
++	if (flags & CLK_USE_REGMAP)
++		div->regmap = regmap;
++	else
++		div->reg = reg;
++
++	div->offset = offset;
+ 	div->shift = shift;
+ 	div->width = width;
+ 	div->flags = clk_divider_flags;
+@@ -485,8 +500,8 @@ struct clk *clk_register_divider(struct device *dev, const char *name,
+ 		void __iomem *reg, u8 shift, u8 width,
+ 		u8 clk_divider_flags, spinlock_t *lock)
+ {
+-	return _register_divider(dev, name, parent_name, flags, reg, shift,
+-			width, clk_divider_flags, NULL, lock);
++	return _register_divider(dev, name, parent_name, flags, reg, NULL, 0,
++			shift, width, clk_divider_flags, NULL, lock);
+ }
+ EXPORT_SYMBOL_GPL(clk_register_divider);
+ 
+@@ -510,8 +525,8 @@ struct clk *clk_register_divider_table(struct device *dev, const char *name,
+ 		u8 clk_divider_flags, const struct clk_div_table *table,
+ 		spinlock_t *lock)
+ {
+-	return _register_divider(dev, name, parent_name, flags, reg, shift,
+-			width, clk_divider_flags, table, lock);
++	return _register_divider(dev, name, parent_name, flags, reg, NULL, 0,
++			shift, width, clk_divider_flags, table, lock);
+ }
+ EXPORT_SYMBOL_GPL(clk_register_divider_table);
+ 
+@@ -530,3 +545,28 @@ void clk_unregister_divider(struct clk *clk)
+ 	kfree(div);
+ }
+ EXPORT_SYMBOL_GPL(clk_unregister_divider);
++
++struct clk *clk_regm_register_divider(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 shift, u8 width,
++		u8 clk_divider_flags, spinlock_t *lock)
++{
++	flags |= CLK_USE_REGMAP;
++
++	return _register_divider(dev, name, parent_name, flags, NULL, regmap,
++			offset,	shift, width, clk_divider_flags, NULL, lock);
++}
++EXPORT_SYMBOL_GPL(clk_regm_register_divider);
++
++struct clk *clk_regm_register_divider_table(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 shift, u8 width,
++		u8 clk_divider_flags, const struct clk_div_table *table,
++		spinlock_t *lock)
++{
++	flags |= CLK_USE_REGMAP;
++
++	return _register_divider(dev, name, parent_name, flags, NULL, regmap,
++			offset,	shift, width, clk_divider_flags, table, lock);
++}
++EXPORT_SYMBOL_GPL(clk_regm_register_divider_table);
+diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
+index de0b322f5f58..38b558397631 100644
+--- a/drivers/clk/clk-gate.c
++++ b/drivers/clk/clk-gate.c
+@@ -16,6 +16,8 @@
+ #include <linux/err.h>
+ #include <linux/string.h>
+ 
++#include "clk-io.h"
++
+ /**
+  * DOC: basic gatable clock which can gate and ungate it's ouput
+  *
+@@ -46,7 +48,7 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+ 	struct clk_gate *gate = to_clk_gate(hw);
+ 	int set = gate->flags & CLK_GATE_SET_TO_DISABLE ? 1 : 0;
+ 	unsigned long uninitialized_var(flags);
+-	u32 reg;
++	u32 reg, mask;
+ 
+ 	set ^= enable;
+ 
+@@ -59,16 +61,20 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+ 		reg = BIT(gate->bit_idx + 16);
+ 		if (set)
+ 			reg |= BIT(gate->bit_idx);
+-	} else {
+-		reg = clk_readl(gate->reg);
+ 
++		clk_io_writel(hw, gate->reg, gate->regmap, gate->offset, reg);
++	} else {
+ 		if (set)
+-			reg |= BIT(gate->bit_idx);
++			reg = BIT(gate->bit_idx);
+ 		else
+-			reg &= ~BIT(gate->bit_idx);
++			reg = 0x0;
++
++		mask = BIT(gate->bit_idx);
++
++		clk_io_update_bits(hw, gate->reg, gate->regmap, gate->offset,
++				   mask, reg);
+ 	}
+ 
+-	clk_writel(reg, gate->reg);
+ 
+ 	if (gate->lock)
+ 		spin_unlock_irqrestore(gate->lock, flags);
+@@ -93,7 +99,7 @@ static int clk_gate_is_enabled(struct clk_hw *hw)
+ 	u32 reg;
+ 	struct clk_gate *gate = to_clk_gate(hw);
+ 
+-	reg = clk_readl(gate->reg);
++	reg = clk_io_readl(hw, gate->reg, gate->regmap, gate->offset);
+ 
+ 	/* if a set bit disables this clk, flip it before masking */
+ 	if (gate->flags & CLK_GATE_SET_TO_DISABLE)
+@@ -122,10 +128,10 @@ EXPORT_SYMBOL_GPL(clk_gate_ops);
+  * @clk_gate_flags: gate-specific flags for this clock
+  * @lock: shared register lock for this clock
+  */
+-struct clk *clk_register_gate(struct device *dev, const char *name,
++struct clk *__clk_register_gate(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+-		void __iomem *reg, u8 bit_idx,
+-		u8 clk_gate_flags, spinlock_t *lock)
++		void __iomem *reg, struct regmap *regmap, u32 offset,
++		u8 bit_idx, u8 clk_gate_flags, spinlock_t *lock)
+ {
+ 	struct clk_gate *gate;
+ 	struct clk *clk;
+@@ -150,7 +156,12 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
+ 	init.num_parents = (parent_name ? 1 : 0);
+ 
+ 	/* struct clk_gate assignments */
+-	gate->reg = reg;
++	if (flags & CLK_USE_REGMAP)
++		gate->regmap = regmap;
++	else
++		gate->reg = reg;
++
++	gate->offset = offset;
+ 	gate->bit_idx = bit_idx;
+ 	gate->flags = clk_gate_flags;
+ 	gate->lock = lock;
+@@ -163,6 +174,15 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
+ 
+ 	return clk;
+ }
++
++struct clk *clk_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock)
++{
++	return __clk_register_gate(dev, name, parent_name, flags,
++			reg, NULL, 0, bit_idx, clk_gate_flags, lock);
++}
+ EXPORT_SYMBOL_GPL(clk_register_gate);
+ 
+ void clk_unregister_gate(struct clk *clk)
+@@ -180,3 +200,15 @@ void clk_unregister_gate(struct clk *clk)
+ 	kfree(gate);
+ }
+ EXPORT_SYMBOL_GPL(clk_unregister_gate);
++
++struct clk *clk_regm_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock)
++{
++	flags |= CLK_USE_REGMAP;
++
++	return __clk_register_gate(dev, name, parent_name, flags,
++			NULL, regmap, offset, bit_idx, clk_gate_flags, lock);
++}
++EXPORT_SYMBOL_GPL(clk_regm_register_gate);
+diff --git a/drivers/clk/clk-io.c b/drivers/clk/clk-io.c
 new file mode 100644
-index 000000000000..9dc6894f0934
+index 000000000000..ceeb64e15ddb
 --- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun4i-display.c
-@@ -0,0 +1,241 @@
++++ b/drivers/clk/clk-io.c
+@@ -0,0 +1,48 @@
 +/*
-+ * Copyright 2015 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ * Copyright (C) 2015 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
 + */
 +
 +#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
 +
-+struct sun4i_a10_display_clk_data {
-+	bool	has_div;
-+	bool	has_rst;
-+	u8	parents;
-+
-+	u8	offset_en;
-+	u8	offset_div;
-+	u8	offset_mux;
-+	u8	offset_rst;
-+
-+	u8	width_div;
-+	u8	width_mux;
-+};
-+
-+struct reset_data {
-+	void __iomem			*reg;
-+	spinlock_t			*lock;
-+	struct reset_controller_dev	rcdev;
-+	u8				offset;
-+};
-+
-+static DEFINE_SPINLOCK(sun4i_a10_display_lock);
-+
-+static inline struct reset_data *rcdev_to_reset_data(struct reset_controller_dev *rcdev)
++void clk_io_writel(struct clk_hw *hw, void __iomem *reg, struct regmap *regmap,
++		   u32 offset, u32 val)
 +{
-+	return container_of(rcdev, struct reset_data, rcdev);
-+};
++	if (__clk_get_flags(hw->clk) & CLK_USE_REGMAP)
++		regmap_write(regmap, offset, val);
++	else
++		clk_writel(val, reg);
++}
 +
-+static int sun4i_a10_display_assert(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
++u32 clk_io_readl(struct clk_hw *hw, void __iomem *reg, struct regmap *regmap,
++		 u32 offset)
 +{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
-+	unsigned long flags;
-+	u32 reg;
++	u32 val;
 +
-+	spin_lock_irqsave(data->lock, flags);
++	if (__clk_get_flags(hw->clk) & CLK_USE_REGMAP)
++		regmap_read(regmap, offset, &val);
++	else
++		val = clk_readl(reg);
 +
-+	reg = readl(data->reg);
-+	writel(reg & ~BIT(data->offset), data->reg);
++	return val;
++}
 +
-+	spin_unlock_irqrestore(data->lock, flags);
++int clk_io_update_bits(struct clk_hw *hw, void __iomem *reg,
++		       struct regmap *regmap, u32 offset, u32 mask, u32 val)
++{
++	unsigned int tmp;
++
++	if (__clk_get_flags(hw->clk) & CLK_USE_REGMAP)
++		return regmap_update_bits(regmap, offset, mask, val);
++
++	tmp = clk_readl(reg);
++	tmp &= ~mask;
++	tmp |= val;
++	clk_writel(tmp, reg);
 +
 +	return 0;
 +}
+diff --git a/drivers/clk/clk-io.h b/drivers/clk/clk-io.h
+new file mode 100644
+index 000000000000..b5599ba02084
+--- /dev/null
++++ b/drivers/clk/clk-io.h
+@@ -0,0 +1,22 @@
++/*
++ * linux/drivers/clk/clk-io.h
++ *
++ * Copyright (C) 2015 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef __LINUX_CLK_IO_H
++#define __LINUX_CLK_IO_H
 +
-+static int sun4i_a10_display_deassert(struct reset_controller_dev *rcdev,
-+				      unsigned long id)
++#include <linux/clk-provider.h>
++
++void clk_io_writel(struct clk_hw *hw, void __iomem *reg, struct regmap *regmap,
++		   u32 offset, u32 val);
++u32 clk_io_readl(struct clk_hw *hw, void __iomem *reg, struct regmap *regmap,
++		 u32 offset);
++int clk_io_update_bits(struct clk_hw *hw, void __iomem *reg,
++		       struct regmap *regmap, u32 offset, u32 mask, u32 val);
++
++#endif
+diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+index 7129c86a79db..d3831eca8b56 100644
+--- a/drivers/clk/clk-mux.c
++++ b/drivers/clk/clk-mux.c
+@@ -16,6 +16,8 @@
+ #include <linux/io.h>
+ #include <linux/err.h>
+ 
++#include "clk-io.h"
++
+ /*
+  * DOC: basic adjustable multiplexer clock that cannot gate
+  *
+@@ -41,7 +43,9 @@ static u8 clk_mux_get_parent(struct clk_hw *hw)
+ 	 * OTOH, pmd_trace_clk_mux_ck uses a separate bit for each clock, so
+ 	 * val = 0x4 really means "bit 2, index starts at bit 0"
+ 	 */
+-	val = clk_readl(mux->reg) >> mux->shift;
++	val = clk_io_readl(hw, mux->reg, mux->regmap, mux->offset);
++
++	val >>= mux->shift;
+ 	val &= mux->mask;
+ 
+ 	if (mux->table) {
+@@ -70,6 +74,7 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+ 	struct clk_mux *mux = to_clk_mux(hw);
+ 	u32 val;
+ 	unsigned long flags = 0;
++	int ret = 0;
+ 
+ 	if (mux->table)
+ 		index = mux->table[index];
+@@ -89,19 +94,22 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+ 
+ 	if (mux->flags & CLK_MUX_HIWORD_MASK) {
+ 		val = mux->mask << (mux->shift + 16);
++		val |= index << mux->shift;
++		clk_io_writel(hw, mux->reg, mux->regmap, mux->offset, val);
+ 	} else {
+-		val = clk_readl(mux->reg);
+-		val &= ~(mux->mask << mux->shift);
++		u32 mask = mux->mask << mux->shift;
++
++		val = index << mux->shift;
++		ret = clk_io_update_bits(hw, mux->reg, mux->regmap,
++					 mux->offset, mask, val);
+ 	}
+-	val |= index << mux->shift;
+-	clk_writel(val, mux->reg);
+ 
+ 	if (mux->lock)
+ 		spin_unlock_irqrestore(mux->lock, flags);
+ 	else
+ 		__release(mux->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ const struct clk_ops clk_mux_ops = {
+@@ -116,10 +124,11 @@ const struct clk_ops clk_mux_ro_ops = {
+ };
+ EXPORT_SYMBOL_GPL(clk_mux_ro_ops);
+ 
+-struct clk *clk_register_mux_table(struct device *dev, const char *name,
++struct clk *__clk_register_mux_table(struct device *dev, const char *name,
+ 		const char * const *parent_names, u8 num_parents,
+ 		unsigned long flags,
+-		void __iomem *reg, u8 shift, u32 mask,
++		void __iomem *reg, struct regmap *regmap,
++		u32 offset, u8 shift, u32 mask,
+ 		u8 clk_mux_flags, u32 *table, spinlock_t *lock)
+ {
+ 	struct clk_mux *mux;
+@@ -152,7 +161,12 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
+ 	init.num_parents = num_parents;
+ 
+ 	/* struct clk_mux assignments */
+-	mux->reg = reg;
++	if (flags & CLK_USE_REGMAP)
++		mux->regmap = regmap;
++	else
++		mux->reg = reg;
++
++	mux->offset = offset;
+ 	mux->shift = shift;
+ 	mux->mask = mask;
+ 	mux->flags = clk_mux_flags;
+@@ -167,19 +181,40 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
+ 
+ 	return clk;
+ }
++
++struct clk *clk_register_mux_table(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, u32 *table, spinlock_t *lock)
 +{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg | BIT(data->offset), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
++	return __clk_register_mux_table(dev, name, parent_names, num_parents,
++						flags, reg, NULL, 0,
++						shift, mask, clk_mux_flags,
++						table, lock);
++}
+ EXPORT_SYMBOL_GPL(clk_register_mux_table);
+ 
+-struct clk *clk_register_mux(struct device *dev, const char *name,
++struct clk *__clk_register_mux(struct device *dev, const char *name,
+ 		const char * const *parent_names, u8 num_parents,
+-		unsigned long flags,
+-		void __iomem *reg, u8 shift, u8 width,
++		unsigned long flags, void __iomem *reg, struct regmap *regmap,
++		u32 offset, u8 shift, u8 width,
+ 		u8 clk_mux_flags, spinlock_t *lock)
+ {
+ 	u32 mask = BIT(width) - 1;
+ 
+-	return clk_register_mux_table(dev, name, parent_names, num_parents,
+-				      flags, reg, shift, mask, clk_mux_flags,
+-				      NULL, lock);
++	return __clk_register_mux_table(dev, name, parent_names, num_parents,
++					flags, reg, regmap, offset, shift, mask,
++					clk_mux_flags, NULL, lock);
 +}
 +
-+static int sun4i_a10_display_status(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
++struct clk *clk_register_mux(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 shift, u8 width,
++		u8 clk_mux_flags, spinlock_t *lock)
 +{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
++	return __clk_register_mux(dev, name, parent_names, num_parents, flags,
++					reg, NULL, 0, shift, width,
++					clk_mux_flags, lock);
+ }
+ EXPORT_SYMBOL_GPL(clk_register_mux);
+ 
+@@ -198,3 +233,32 @@ void clk_unregister_mux(struct clk *clk)
+ 	kfree(mux);
+ }
+ EXPORT_SYMBOL_GPL(clk_unregister_mux);
 +
-+	return !(readl(data->reg) & BIT(data->offset));
-+}
-+
-+static const struct reset_control_ops sun4i_a10_display_reset_ops = {
-+	.assert		= sun4i_a10_display_assert,
-+	.deassert	= sun4i_a10_display_deassert,
-+	.status		= sun4i_a10_display_status,
-+};
-+
-+static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
-+					 const struct of_phandle_args *spec)
++struct clk *clk_regm_register_mux(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, struct regmap *regmap,
++		u32 offset, u8 shift, u8 width,
++		u8 clk_mux_flags, spinlock_t *lock)
 +{
-+	/* We only have a single reset signal */
-+	return 0;
-+}
++	flags |= CLK_USE_REGMAP;
 +
-+static void __init sun4i_a10_display_init(struct device_node *node,
-+					  struct sun4i_a10_display_clk_data *data)
++	return __clk_register_mux(dev, name, parent_names, num_parents, flags,
++					NULL, regmap, offset, shift, width,
++					clk_mux_flags, lock);
++}
++EXPORT_SYMBOL_GPL(clk_regm_register_mux);
++
++struct clk *clk_regm_register_mux_table(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, struct regmap *regmap,
++		u32 offset, u8 shift, u32 mask,
++		u8 clk_mux_flags, u32 *table, spinlock_t *lock)
 +{
-+	const char *parents[data->parents];
-+	const char *clk_name = node->name;
-+	struct reset_data *reset_data;
-+	struct clk_divider *div = NULL;
-+	struct clk_gate *gate;
-+	struct clk_mux *mux;
-+	void __iomem *reg;
-+	struct clk *clk;
-+	int i;
++	flags |= CLK_USE_REGMAP;
 +
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg)) {
-+		pr_err("%s: Could not map the clock registers\n", clk_name);
-+		return;
-+	}
-+
-+	of_clk_parent_fill(node, parents, data->parents);
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return;
-+
-+	mux->reg = reg;
-+	mux->shift = data->offset_mux;
-+	mux->mask = (1 << data->width_mux) - 1;
-+	mux->lock = &sun4i_a10_display_lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto free_mux;
-+
-+	gate->reg = reg;
-+	gate->bit_idx = data->offset_en;
-+	gate->lock = &sun4i_a10_display_lock;
-+
-+	if (data->has_div) {
-+		div = kzalloc(sizeof(*div), GFP_KERNEL);
-+		if (!div)
-+			goto free_gate;
-+
-+		div->reg = reg;
-+		div->shift = data->offset_div;
-+		div->width = data->width_div;
-+		div->lock = &sun4i_a10_display_lock;
-+	}
-+
-+	clk = clk_register_composite(NULL, clk_name,
-+				     parents, data->parents,
-+				     &mux->hw, &clk_mux_ops,
-+				     data->has_div ? &div->hw : NULL,
-+				     data->has_div ? &clk_divider_ops : NULL,
-+				     &gate->hw, &clk_gate_ops,
-+				     0);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Couldn't register the clock\n", clk_name);
-+		goto free_div;
-+	}
-+
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+
-+	if (!data->has_rst)
-+		return;
-+
-+	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
-+	if (!reset_data)
-+		goto free_clk;
-+
-+	reset_data->reg = reg;
-+	reset_data->offset = data->offset_rst;
-+	reset_data->lock = &sun4i_a10_display_lock;
-+	reset_data->rcdev.nr_resets = 1;
-+	reset_data->rcdev.ops = &sun4i_a10_display_reset_ops;
-+	reset_data->rcdev.of_node = node;
-+	reset_data->rcdev.of_reset_n_cells = 0;
-+	reset_data->rcdev.of_xlate = &sun4i_a10_display_reset_xlate;
-+
-+	if (reset_controller_register(&reset_data->rcdev)) {
-+		pr_err("%s: Couldn't register the reset controller\n",
-+		       clk_name);
-+		goto free_reset;
-+	}
-+
-+	return;
-+
-+free_reset:
-+	kfree(reset_data);
-+free_clk:
-+	clk_unregister(clk);
-+free_div:
-+	if (data->has_div)
-+		kfree(div);
-+free_gate:
-+	kfree(gate);
-+free_mux:
-+	kfree(mux);
++	return __clk_register_mux_table(dev, name, parent_names, num_parents,
++					flags, NULL, regmap, offset,
++					shift, mask, clk_mux_flags,
++					table, lock);
 +}
++EXPORT_SYMBOL_GPL(clk_regm_register_mux_table);
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index c56988ac63f7..0c55a37cf8f7 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/io.h>
+ #include <linux/of.h>
++#include <linux/regmap.h>
+ 
+ #ifdef CONFIG_COMMON_CLK
+ 
+@@ -31,6 +32,7 @@
+ #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
+ #define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
+ #define CLK_RECALC_NEW_RATES	BIT(9) /* recalc rates after notifications */
++#define CLK_USE_REGMAP		BIT(10) /* uses regmap to access registers */
+ 
+ struct clk;
+ struct clk_hw;
+@@ -290,6 +292,8 @@ void of_fixed_clk_setup(struct device_node *np);
+  *
+  * @hw:		handle between common and hardware-specific interfaces
+  * @reg:	register controlling gate
++ * @regmap:	regmap used to control the gate
++ * @offset:	offset inside the regmap
+  * @bit_idx:	single bit controlling gate
+  * @flags:	hardware-specific flags
+  * @lock:	register lock
+@@ -307,7 +311,11 @@ void of_fixed_clk_setup(struct device_node *np);
+  */
+ struct clk_gate {
+ 	struct clk_hw hw;
+-	void __iomem	*reg;
++	union {
++		void __iomem	*reg;
++		struct regmap	*regmap;
++	};
++	u32		offset;
+ 	u8		bit_idx;
+ 	u8		flags;
+ 	spinlock_t	*lock;
+@@ -323,6 +331,11 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
+ 		u8 clk_gate_flags, spinlock_t *lock);
+ void clk_unregister_gate(struct clk *clk);
+ 
++struct clk *clk_regm_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock);
 +
-+static struct sun4i_a10_display_clk_data sun4i_a10_tcon_ch0_data = {
-+	.has_rst	= true,
-+	.parents	= 4,
-+	.offset_en	= 31,
-+	.offset_rst	= 29,
-+	.offset_mux	= 24,
-+	.width_mux	= 2,
-+};
+ struct clk_div_table {
+ 	unsigned int	val;
+ 	unsigned int	div;
+@@ -333,6 +346,8 @@ struct clk_div_table {
+  *
+  * @hw:		handle between common and hardware-specific interfaces
+  * @reg:	register containing the divider
++ * @regmap:	regmap used to access the divider
++ * @offest:	offset inside the regmap
+  * @shift:	shift to the divider bit field
+  * @width:	width of the divider bit field
+  * @table:	array of value/divider pairs, last entry should have div = 0
+@@ -367,7 +382,11 @@ struct clk_div_table {
+  */
+ struct clk_divider {
+ 	struct clk_hw	hw;
+-	void __iomem	*reg;
++	union {
++		void __iomem	*reg;
++		struct regmap	*regmap;
++	};
++	u32		offset;
+ 	u8		shift;
+ 	u8		width;
+ 	u8		flags;
+@@ -406,11 +425,24 @@ struct clk *clk_register_divider_table(struct device *dev, const char *name,
+ 		spinlock_t *lock);
+ void clk_unregister_divider(struct clk *clk);
+ 
++struct clk *clk_regm_register_divider(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 shift, u8 width,
++		u8 clk_divider_flags, spinlock_t *lock);
 +
-+static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
-+{
-+	sun4i_a10_display_init(node, &sun4i_a10_tcon_ch0_data);
-+}
-+CLK_OF_DECLARE(sun4i_a10_tcon_ch0, "allwinner,sun4i-a10-tcon-ch0-clk",
-+	       sun4i_a10_tcon_ch0_setup);
++struct clk *clk_regm_register_divider_table(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		struct regmap *regmap, u32 offset, u8 shift, u8 width,
++		u8 clk_divider_flags, const struct clk_div_table *table,
++		spinlock_t *lock);
 +
-+static struct sun4i_a10_display_clk_data sun4i_a10_display_data = {
-+	.has_div	= true,
-+	.parents	= 3,
-+	.offset_en	= 31,
-+	.offset_rst	= 30,
-+	.offset_mux	= 24,
-+	.offset_div	= 0,
-+	.width_mux	= 2,
-+	.width_div	= 4,
-+};
+ /**
+  * struct clk_mux - multiplexer clock
+  *
+  * @hw:		handle between common and hardware-specific interfaces
+  * @reg:	register controlling multiplexer
++ * @regmap:	regmap for controlling multiplexer
++ * @offset:	offset inside the regmap
+  * @shift:	shift to multiplexer bit field
+  * @width:	width of mutliplexer bit field
+  * @flags:	hardware-specific flags
+@@ -431,8 +463,12 @@ void clk_unregister_divider(struct clk *clk);
+  */
+ struct clk_mux {
+ 	struct clk_hw	hw;
+-	void __iomem	*reg;
++	union {
++		void __iomem	*reg;
++		struct regmap	*regmap;
++	};
+ 	u32		*table;
++	u32		offset;
+ 	u32		mask;
+ 	u8		shift;
+ 	u8		flags;
+@@ -462,6 +498,18 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
+ 
+ void clk_unregister_mux(struct clk *clk);
+ 
++struct clk *clk_regm_register_mux_table(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, struct regmap *regmap,
++		u32 offset, u8 shift, u32 mask,
++		u8 clk_mux_flags, u32 *table, spinlock_t *lock);
 +
-+static void __init sun4i_a10_display_setup(struct device_node *node)
-+{
-+	sun4i_a10_display_init(node, &sun4i_a10_display_data);
-+}
-+CLK_OF_DECLARE(sun4i_a10_display, "allwinner,sun4i-a10-display-clk",
-+	       sun4i_a10_display_setup);
++struct clk *clk_regm_register_mux(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, struct regmap *regmap,
++		u32 offset, u8 shift, u8 width,
++		u8 clk_mux_flags, spinlock_t *lock);
++
+ void of_fixed_factor_clk_setup(struct device_node *node);
+ 
+ /**
 -- 
 2.6.4
