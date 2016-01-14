@@ -1,135 +1,36 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Thu, 14 Jan 2016 13:04:05 +0800
-Message-ID: <1452747845-2962-3-git-send-email-wenyou.yang@atmel.com>
-References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452747845-2962-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v1 0/2] ata: Fixes related to edge trigger latch for ahci_xgene driver.
+Date: Thu, 14 Jan 2016 11:00:22 +0530
+Message-ID: <1452749424-28919-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-two subdevices:
- - Regulator
- - Charger
+This patch set implements a workaround for an errate in the APM
+X-Gene SATA host controller with edge interrupt. The HOST_IRQ_STAT
+misses the edge interrupt from the PORT_IRQ_STAT when clearing the
+HOST_IRQ_STAT and reporting the PORT_IRQ_STAT happens in same clock
+cycle. It also implements the capability to override generic interrupt
+handler.
 
-This patch adds documentation for ACT8945A DT bindings.
+v1 change:
+* Implement the capability for LDD to override interrupt handler.
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+* ahci_xgene driver implements the edge trigger interrupt handler.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
- - fix the tabbing errors in Example.
- - use "pmic@5b" label, not "act8945a@5b" in Example.
- - collect Acked-by from Rob.
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
 
-Changes in v2:
- - use more specific label in Example.
- - add pmic and charger nodes in Example.
 
- Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+Suman Tripathi (2):
+  libahci: Implement the capability to override the generic ahci
+    interrupt handler
+  ahci_xgene: Implement the workaround to fix the missing of edge
+    interrupt for HOST_IRQ_STAT
 
-diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
-new file mode 100644
-index 0000000..f645344
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-@@ -0,0 +1,82 @@
-+Device-Tree bindings for Active-semi ACT8945A MFD driver
-+
-+Required properties:
-+ - compatible: "active-semi,act8945a".
-+ - reg: the I2C slave address for the ACT8945A chip
-+
-+The chip exposes two subdevices:
-+ - a regulators: see ../regulator/act8945a-regulator.txt
-+ - a charger: see ../power/act8945a-charger.txt
-+
-+Example:
-+	pmic@5b {
-+		compatible = "active-semi,act8945a";
-+		reg = <0x5b>;
-+		status = "okay";
-+
-+		pmic {
-+			compatible = "active-semi,act8945a-regulator";
-+			active-semi,vsel-high;
-+
-+			regulators {
-+				vdd_1v35_reg: DCDC_REG1 {
-+					regulator-name = "VDD_1V35";
-+					regulator-min-microvolt = <1350000>;
-+					regulator-max-microvolt = <1350000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_1v2_reg: DCDC_REG2 {
-+					regulator-name = "VDD_1V2";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_3v3_reg: DCDC_REG3 {
-+					regulator-name = "VDD_3V3";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_fuse_reg: LDO_REG1 {
-+					regulator-name = "VDD_FUSE";
-+					regulator-min-microvolt = <2500000>;
-+					regulator-max-microvolt = <2500000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_3v3_lp_reg: LDO_REG2 {
-+					regulator-name = "VDD_3V3_LP";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_led_reg: LDO_REG3 {
-+					regulator-name = "VDD_LED";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				vdd_sdhc_1v8_reg: LDO_REG4 {
-+					regulator-name = "VDD_SDHC_1V8";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+
-+		charger {
-+			compatible = "active-semi,act8945a-charger";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_charger_chglev>;
-+			active-semi,chglev-gpio = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+			active-semi,input_voltage_threshold = <6600>;
-+			active-semi,precondition_timeout = <40>;
-+			active-semi,total_timeout = <3>;
-+		};
-+	};
--- 
-1.7.9.5
+ drivers/ata/ahci.h       |    2 +
+ drivers/ata/ahci_xgene.c |   84 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/ata/libahci.c    |   18 ++++++---
+ 3 files changed, 98 insertions(+), 6 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
