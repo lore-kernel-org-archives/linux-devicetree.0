@@ -1,156 +1,64 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v5 07/14] dt/bindings: Add bindings for PIC32 pin control and GPIO
-Date: Wed, 13 Jan 2016 18:15:40 -0700
-Message-ID: <1452734299-460-8-git-send-email-joshua.henderson@microchip.com>
-References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
+Date: Wed, 13 Jan 2016 19:12:52 -0600
+Message-ID: <20160114011252.GA29778@rob-hp-laptop>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452702857-2240-4-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for PINCTRL and GPIO found on Microchip
-PIC32 class devices.
+On Wed, Jan 13, 2016 at 05:34:15PM +0100, Romain Izard wrote:
+> Starting with the SAMA5D2, there is a new revision of the Atmel PMECC
+> controller that can correct 32 bits in each sector. This controller is
+> not 100% compatible with the previous revision that corrected a maximum
+> of 24 bits by sector, as some register addresses overlap.
+> 
+> Using information from the device tree, we can configure the driver to
+> work with both versions.
+> 
+> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/atmel-nand.txt         |  7 +++++--
+>  drivers/mtd/nand/atmel_nand.c                      | 23 +++++++++++++++++++++-
+>  drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
+>  3 files changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index 89b0db9801b0..90887b430f03 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -1,7 +1,10 @@
+>  Atmel NAND flash
+>  
+>  Required properties:
+> -- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5d4-nand".
+> +- compatible: The possible values are:
+> +	"atmel,at91rm9200-nand"
+> +	"atmel,sama5d2-nand"
+> +	"atmel,sama5d4-nand"
+>  - reg : should specify localbus address and size used for the chip,
+>  	and hardware ECC controller if available.
+>  	If the hardware ECC is PMECC, it should contain address and size for
+> @@ -22,7 +25,7 @@ Optional properties:
+>    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+>    "soft_bch".
+>  - atmel,has-pmecc : boolean to enable Programmable Multibit ECC hardware.
+> -  Only supported by at91sam9x5 or later sam9 product.
+> +  Supported by AT91SAM9x5 or later SAM9 chips, and SAMA5 chips.
 
-Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes since v4: None
-Changes since v3: None
-Changes since v2: None
-Changes since v1:
-	- Complete bindings API change to use standard bindings
----
- .../bindings/gpio/microchip,pic32-gpio.txt         |   49 ++++++++++++++++
- .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 ++++++++++++++++++++
- 2 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+What compatible string would AT91SAM9x5 be?
 
-diff --git a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-new file mode 100644
-index 0000000..ef37528
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-@@ -0,0 +1,49 @@
-+* Microchip PIC32 GPIO devices (PIO).
-+
-+Required properties:
-+ - compatible: "microchip,pic32mzda-gpio"
-+ - reg: Base address and length for the device.
-+ - interrupts: The port interrupt shared by all pins.
-+ - gpio-controller: Marks the port as GPIO controller.
-+ - #gpio-cells: Two. The first cell is the pin number and
-+   the second cell is used to specify the gpio polarity as defined in
-+   defined in <dt-bindings/gpio/gpio.h>:
-+      0 = GPIO_ACTIVE_HIGH
-+      1 = GPIO_ACTIVE_LOW
-+      2 = GPIO_OPEN_DRAIN
-+ - interrupt-controller: Marks the device node as an interrupt controller.
-+ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-+   is used to specify the trigger type as defined in
-+   <dt-bindings/interrupt-controller/irq.h>:
-+      IRQ_TYPE_EDGE_RISING
-+      IRQ_TYPE_EDGE_FALLING
-+      IRQ_TYPE_EDGE_BOTH
-+ - clocks: Clock specifier (see clock bindings for details).
-+ - microchip,gpio-bank: Specifies which bank a controller owns.
-+ - gpio-ranges: Interaction with the PINCTRL subsystem.
-+
-+Example:
-+
-+/* PORTA */
-+gpio0: gpio0@1f860000 {
-+	compatible = "microchip,pic32mzda-gpio";
-+	reg = <0x1f860000 0x100>;
-+	interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	clocks = <&PBCLK4>;
-+	microchip,gpio-bank = <0>;
-+	gpio-ranges = <&pic32_pinctrl 0 0 16>;
-+};
-+
-+keys {
-+	...
-+
-+	button@sw1 {
-+		label = "ESC";
-+		linux,code = <1>;
-+		gpios = <&gpio0 12 0>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
-new file mode 100644
-index 0000000..4b5efa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
-@@ -0,0 +1,60 @@
-+* Microchip PIC32 Pin Controller
-+
-+Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-+../interrupt-controller/interrupts.txt for generic information regarding
-+pin controller, GPIO, and interrupt bindings.
-+
-+PIC32 'pin configuration node' is a node of a group of pins which can be
-+used for a specific device or function. This node represents configuraions of
-+pins, optional function, and optional mux related configuration.
-+
-+Required properties for pin controller node:
-+ - compatible: "microchip,pic32mada-pinctrl"
-+ - reg: Address range of the pinctrl registers.
-+ - clocks: Clock specifier (see clock bindings for details)
-+
-+Required properties for pin configuration sub-nodes:
-+ - pins: List of pins to which the configuration applies.
-+
-+Optional properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - function: Mux function for the specified pins.
-+ - bias-pull-up: Enable weak pull-up.
-+ - bias-pull-down: Enable weak pull-down.
-+ - input-enable: Set the pin as an input.
-+ - output-low: Set the pin as an output level low.
-+ - output-high: Set the pin as an output level high.
-+ - microchip,digital: Enable digital I/O.
-+ - microchip,analog: Enable analog I/O.
-+
-+Example:
-+
-+pic32_pinctrl: pinctrl@1f801400{
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "microchip,pic32mzda-pinctrl";
-+	reg = <0x1f801400 0x400>;
-+	clocks = <&PBCLK1>;
-+
-+	pinctrl_uart2: pinctrl_uart2 {
-+		uart2-tx {
-+			pins = "G9";
-+			function = "U2TX";
-+			microchip,digital;
-+			output-low;
-+		};
-+		uart2-rx {
-+			pins = "B0";
-+			function = "U2RX";
-+			microchip,digital;
-+			input-enable;
-+		};
-+	};
-+};
-+
-+uart2: serial@1f822200 {
-+	compatible = "microchip,pic32mzda-uart";
-+	reg = <0x1f822200 0x50>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+};
--- 
-1.7.9.5
+>  - atmel,pmecc-cap : error correct capability for Programmable Multibit ECC
+>    Controller. Supported values are: 2, 4, 8, 12, 24.
+>  - atmel,pmecc-sector-size : sector size for ECC computation. Supported values
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
