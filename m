@@ -1,71 +1,71 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v5 11/14] dt/bindings: Add bindings for PIC32 SDHCI host controller
-Date: Wed, 13 Jan 2016 18:15:44 -0700
-Message-ID: <1452734299-460-12-git-send-email-joshua.henderson@microchip.com>
-References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
+Date: Thu, 14 Jan 2016 01:17:37 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBC55@penmbx01>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
+ <20160114011252.GA29778@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160114011252.GA29778@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrei Pistirica <andrei.pistirica@microchip.com>
-
-Document the devicetree bindings for the SDHCI peripheral found on
-Microchip PIC32 class devices.
-
-Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
-Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes since v4: None
-Changes since v3: None
-Changes since v2: None
-Changes since v1:
-	- Drop usage of piomode and no-1-8-v DT properties
----
- .../bindings/mmc/microchip,sdhci-pic32.txt         |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-new file mode 100644
-index 0000000..71ad57e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-@@ -0,0 +1,29 @@
-+* Microchip PIC32 SDHCI Controller
-+
-+This file documents differences between the core properties in mmc.txt
-+and the properties used by the sdhci-pic32 driver.
-+
-+Required properties:
-+- compatible: Should be "microchip,pic32mzda-sdhci"
-+- interrupts: Should contain interrupt
-+- clock-names: Should be "base_clk", "sys_clk".
-+               See: Documentation/devicetree/bindings/resource-names.txt
-+- clocks: Phandle to the clock.
-+          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+- pinctrl-names: A pinctrl state names "default" must be defined.
-+- pinctrl-0: Phandle referencing pin configuration of the SDHCI controller.
-+             See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+Example:
-+
-+	sdhci@1f8ec000 {
-+		compatible = "microchip,pic32mzda-sdhci";
-+		reg = <0x1f8ec000 0x100>;
-+		interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&REFCLKO4>, <&PBCLK5>;
-+		clock-names = "base_clk", "sys_clk";
-+		bus-width = <4>;
-+		cap-sd-highspeed;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_sdhc1>;
-+	};
--- 
-1.7.9.5
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
+aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IDIwMTbE6jHUwjE0yNUgOToxMw0KPiBUbzog
+Um9tYWluIEl6YXJkIDxyb21haW4uaXphcmQucHJvQGdtYWlsLmNvbT4NCj4gQ2M6IGxpbnV4LW10
+ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWWFuZywg
+V2VueW91DQo+IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+OyBKb3NoIFd1IDxyYWlueWZlZWxpbmdA
+b3V0bG9vay5jb20+OyBGZXJyZSwNCj4gTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMy81XSBtdGQ6IGF0bWVsX25hbmQ6IFN1cHBvcnQg
+UE1FQ0Mgb24gU0FNQTVEMg0KPiANCj4gT24gV2VkLCBKYW4gMTMsIDIwMTYgYXQgMDU6MzQ6MTVQ
+TSArMDEwMCwgUm9tYWluIEl6YXJkIHdyb3RlOg0KPiA+IFN0YXJ0aW5nIHdpdGggdGhlIFNBTUE1
+RDIsIHRoZXJlIGlzIGEgbmV3IHJldmlzaW9uIG9mIHRoZSBBdG1lbCBQTUVDQw0KPiA+IGNvbnRy
+b2xsZXIgdGhhdCBjYW4gY29ycmVjdCAzMiBiaXRzIGluIGVhY2ggc2VjdG9yLiBUaGlzIGNvbnRy
+b2xsZXIgaXMNCj4gPiBub3QgMTAwJSBjb21wYXRpYmxlIHdpdGggdGhlIHByZXZpb3VzIHJldmlz
+aW9uIHRoYXQgY29ycmVjdGVkIGENCj4gPiBtYXhpbXVtIG9mIDI0IGJpdHMgYnkgc2VjdG9yLCBh
+cyBzb21lIHJlZ2lzdGVyIGFkZHJlc3NlcyBvdmVybGFwLg0KPiA+DQo+ID4gVXNpbmcgaW5mb3Jt
+YXRpb24gZnJvbSB0aGUgZGV2aWNlIHRyZWUsIHdlIGNhbiBjb25maWd1cmUgdGhlIGRyaXZlciB0
+bw0KPiA+IHdvcmsgd2l0aCBib3RoIHZlcnNpb25zLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+Um9tYWluIEl6YXJkIDxyb21haW4uaXphcmQucHJvQGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0ICAgICAgICAgfCAgNyAr
+KysrKy0tDQo+ID4gIGRyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZC5jICAgICAgICAgICAgICAg
+ICAgICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICBkcml2ZXJzL210ZC9uYW5k
+L2F0bWVsX25hbmRfZWNjLmggICAgICAgICAgICAgICAgICB8ICA4ICsrKysrKy0tDQo+ID4gIDMg
+ZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVs
+LW5hbmQudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0
+bWVsLW5hbmQudHh0DQo+ID4gaW5kZXggODliMGRiOTgwMWIwLi45MDg4N2I0MzBmMDMgMTAwNjQ0
+DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1u
+YW5kLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
+YXRtZWwtbmFuZC50eHQNCj4gPiBAQCAtMSw3ICsxLDEwIEBADQo+ID4gIEF0bWVsIE5BTkQgZmxh
+c2gNCj4gPg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGlibGUgOiBz
+aG91bGQgYmUgImF0bWVsLGF0OTFybTkyMDAtbmFuZCIgb3IgImF0bWVsLHNhbWE1ZDQtbmFuZCIu
+DQo+ID4gKy0gY29tcGF0aWJsZTogVGhlIHBvc3NpYmxlIHZhbHVlcyBhcmU6DQo+ID4gKwkiYXRt
+ZWwsYXQ5MXJtOTIwMC1uYW5kIg0KPiA+ICsJImF0bWVsLHNhbWE1ZDItbmFuZCINCj4gPiArCSJh
+dG1lbCxzYW1hNWQ0LW5hbmQiDQo+ID4gIC0gcmVnIDogc2hvdWxkIHNwZWNpZnkgbG9jYWxidXMg
+YWRkcmVzcyBhbmQgc2l6ZSB1c2VkIGZvciB0aGUgY2hpcCwNCj4gPiAgCWFuZCBoYXJkd2FyZSBF
+Q0MgY29udHJvbGxlciBpZiBhdmFpbGFibGUuDQo+ID4gIAlJZiB0aGUgaGFyZHdhcmUgRUNDIGlz
+IFBNRUNDLCBpdCBzaG91bGQgY29udGFpbiBhZGRyZXNzIGFuZCBzaXplIGZvcg0KPiA+IEBAIC0y
+Miw3ICsyNSw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gICAgU3VwcG9ydGVkIHZhbHVl
+cyBhcmU6ICJub25lIiwgInNvZnQiLCAiaHciLCAiaHdfc3luZHJvbWUiLCAiaHdfb29iX2ZpcnN0
+IiwNCj4gPiAgICAic29mdF9iY2giLg0KPiA+ICAtIGF0bWVsLGhhcy1wbWVjYyA6IGJvb2xlYW4g
+dG8gZW5hYmxlIFByb2dyYW1tYWJsZSBNdWx0aWJpdCBFQ0MgaGFyZHdhcmUuDQo+ID4gLSAgT25s
+eSBzdXBwb3J0ZWQgYnkgYXQ5MXNhbTl4NSBvciBsYXRlciBzYW05IHByb2R1Y3QuDQo+ID4gKyAg
+U3VwcG9ydGVkIGJ5IEFUOTFTQU05eDUgb3IgbGF0ZXIgU0FNOSBjaGlwcywgYW5kIFNBTUE1IGNo
+aXBzLg0KPiANCj4gV2hhdCBjb21wYXRpYmxlIHN0cmluZyB3b3VsZCBBVDkxU0FNOXg1IGJlPw0K
+DQoiYXRtZWwsYXQ5MXJtOTIwMC1uYW5kIi4NCg0KPiANCj4gPiAgLSBhdG1lbCxwbWVjYy1jYXAg
+OiBlcnJvciBjb3JyZWN0IGNhcGFiaWxpdHkgZm9yIFByb2dyYW1tYWJsZSBNdWx0aWJpdCBFQ0MN
+Cj4gPiAgICBDb250cm9sbGVyLiBTdXBwb3J0ZWQgdmFsdWVzIGFyZTogMiwgNCwgOCwgMTIsIDI0
+Lg0KPiA+ICAtIGF0bWVsLHBtZWNjLXNlY3Rvci1zaXplIDogc2VjdG9yIHNpemUgZm9yIEVDQyBj
+b21wdXRhdGlvbi4NCj4gPiBTdXBwb3J0ZWQgdmFsdWVzDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2Vu
+eW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
