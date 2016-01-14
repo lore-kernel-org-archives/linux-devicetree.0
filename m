@@ -1,30 +1,186 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] of: drop symbols declared by _OF_DECLARE() from modules
-Date: Thu, 14 Jan 2016 11:14:58 +0100
-Message-ID: <34759085.vISMJm6PEF@wuerfel>
-References: <1452745987-22146-1-git-send-email-yamada.masahiro@socionext.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v3 3/5] ARM: dts: sun7i: Add Itead Ibox support
+Date: Thu, 14 Jan 2016 11:15:53 +0100
+Message-ID: <1452766555-16409-4-git-send-email-codekipper@gmail.com>
+References: <1452766555-16409-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452745987-22146-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Peter Hurley <peter@hurleysoftware.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBYXK3W2AKGQEWPG7AWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1452766555-16409-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 January 2016 13:33:06 Masahiro Yamada wrote:
-> 
-> -#ifdef CONFIG_OF
-> +#if defined(CONFIG_OF) && !defined(MODULE)
->  #define _OF_DECLARE(table, name, compat, fn, fn_type)                  \
->         static const struct of_device_id __of_table_##name              \
->                 __used __section(__##table##_of_table)                  \
-> -- 
-> 
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Doesn't this lead to "unused function" warnings? Maybe we can change the "__used"
-into "__unused" when MODULE is set, so the compiler will automatically
-drop all code that is only referenced from the entry.
+The Itead Ibox is a multi board device based on the Allwinner A20 SoC.
+It contains the A20 Itead Core module and a base board for the external
+interfaces.
 
-	Arnd
+The core module comes with 4GB NAND and 1GB DDR RAM.
+
+The base board to which the core board is connected provides 3 USB 2.0 Host
+ports, 1 USB 2.0 OTG, 1 uSD slot, 10/100 Ethernet port, HDMI, IR receiver,
+SPDIF and a 32-pin GPIO header. This header expands the features of core
+board by exposing the VGA pins, audio In/Out pins, SATA, SPI, I2C, UARTS,
+USB-OTG and power.
+
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 124 +++++++++++++++++++++++++++++
+ 2 files changed, 125 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index da910b2..5c5e8f4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -638,6 +638,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-hummingbird.dtb \
++	sun7i-a20-itead-ibox.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-icnova-swac.dtb \
+ 	sun7i-a20-m3.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+new file mode 100644
+index 0000000..66b8dec
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -0,0 +1,124 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20-itead-core.dtsi"
++
++/ {
++	model = "Itead Ibox A20";
++	compatible = "itead,itead_ibox_a20", "allwinner,sun7i-a20";
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_itead_core>;
++
++		green {
++			label = "itead_core:green:usr";
++			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		blue {
++			label = "itead_core:blue:usr";
++			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++	status = "okay";
++};
++
++&codec {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_mii_a>;
++	phy = <&phy1>;
++	phy-mode = "mii";
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&pio {
++	led_pins_itead_core: led_pins@0 {
++		allwinner,pins = "PH20","PH21";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_ahci_5v {
++	status = "okay";
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins_a>,
++		    <&spi0_cs0_pins_a>;
++	status = "okay";
++};
+-- 
+2.7.0
