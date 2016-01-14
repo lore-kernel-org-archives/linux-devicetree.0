@@ -1,56 +1,64 @@
-From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
- settings device tree options
-Date: Thu, 14 Jan 2016 12:18:59 -0800
-Message-ID: <20160114201858.GA17567@Asurada-Nvidia>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v1 1/2] libahci: Implement the capability to override the
+ generic ahci interrupt handler
+Date: Thu, 14 Jan 2016 15:31:26 -0500
+Message-ID: <20160114203126.GB3520@mtj.duckdns.org>
+References: <1452749424-28919-1-git-send-email-stripathi@apm.com>
+ <1452749424-28919-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452788982-11583-1-git-send-email-caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caleb Crome <caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>
-Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+In-Reply-To: <1452749424-28919-2-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 08:29:42AM -0800, Caleb Crome wrote:
-> Tuning the SSI fifo watermark & maxburst settings needs to be
-> optimized differently depending on the demands on the system.  The
-> current default of 2 is too low for high data-rate systems.  This
-> patch maintains exactly the same behavior by default (i.e defaults to
-> 2), but adds device tree options to set maxburst & fifo depth from the
-> device tree.  This is necessary because a setting of 2 simply doesn't
-> work at higher data rates.
+Hello, Suman.
 
-> @@ -61,6 +61,16 @@ Optional properties:
->  - fsl,mode:         The operating mode for the AC97 interface only.
->                      "ac97-slave" - AC97 mode, SSI is clock slave
->                      "ac97-master" - AC97 mode, SSI is clock master
-> +- fsl,fifo-watermark: Sets the fifo watermark.  The default is
-> +                    fifo_depth-2 words, meaning 'initiate dma transfer
-> +                    when 2 words are left in the fifo'.  At higher
-> +                    data rates (48kHz, 16-channels for example), this
-> +                    causes silent but deadly DMA xruns and channel
-> +                    slips.  For 15 word FIFOs (like on MX5, MX6) 8 is
-> +                    a good value when running at high data rates
-> +- fsl,dma-maxburst: sets the max number of words to transfer in DMA.
-> +                    This defaults to the same value as
-> +                    fsl,fifo-watermark.
+Your mails ended up in spam again and it looks to be from SPF failure.
 
-I think DT maintainers may not give a consent towards these two
-properties as they are not to describe the hardware but to hack
-software configurations. (And it seems you haven't CCed them.)
+  Received-SPF: softfail (google.com: domain of transitioning stripath@apm.com does not designate 198.145.29.136 as permitted sender) client-ip=198.145.29.136;
+  Authentication-Results: mx.google.com;
+	 spf=softfail (google.com: domain of transitioning stripath@apm.com does not designate 198.145.29.136 as permitted sender) smtp.mailfrom=stripath@apm.com;
+	 dmarc=fail (p=QUARANTINE dis=NONE) header.from=apm.com
 
-I forgot which values you've figured out for these two properties,
-but I think those two values should work for normal cases as well:
-as SSI only has limited FIFO depth, it won't hurt (increasing too
-much latency) even if using a higher watermark configuration imo.
-So it could be a good idea to use optimized settings for all use
-cases and let other users test it.
+Can you please look into it?
 
-Nicolin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Jan 14, 2016 at 11:00:23AM +0530, Suman Tripathi wrote:
+>  static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance)
+>  {
+> @@ -2517,16 +2518,21 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
+>  {
+>  	struct ahci_host_priv *hpriv = host->private_data;
+>  	int irq = hpriv->irq;
+> +	irqreturn_t (*ahci_irq_handler)(int irq, void *dev_instance);
+>  	int rc;
+> 
+>  	if (hpriv->flags & AHCI_HFLAG_MULTI_MSI)
+>  		rc = ahci_host_activate_multi_irqs(host, irq, sht);
+> -	else if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ)
+> -		rc = ata_host_activate(host, irq, ahci_single_edge_irq_intr,
+> -				       IRQF_SHARED, sht);
+> -	else
+> -		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
+> +	else {
+> +		ahci_irq_handler = hpriv->ahci_irq_intr ? hpriv->ahci_irq_intr :
+> +				   (hpriv->flags & AHCI_HFLAG_EDGE_IRQ ?
+> +				   ahci_single_edge_irq_intr :
+> +				   ahci_single_level_irq_intr);
+> +
+> +		rc = ata_host_activate(host, irq, ahci_irq_handler,
+>  				       IRQF_SHARED, sht);
+> +	}
+> +
+
+So, if we have ->ahci_irq_intr, we don't need AHCI_HFLAG_EDGE_IRQ at
+all, right?  Just initialize ->ahci_irq_intr to
+ahci_single_level_irq_intr and let specific drivers overrie it?
+
+Thanks.
+
+-- 
+tejun
