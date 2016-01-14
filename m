@@ -1,40 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: drop symbols declared by _OF_DECLARE() from modules
-Date: Thu, 14 Jan 2016 11:23:37 +0100
-Message-ID: <5051214.H38I57Nkpo@wuerfel>
-References: <1452745987-22146-1-git-send-email-yamada.masahiro@socionext.com> <34759085.vISMJm6PEF@wuerfel> <CAK7LNATQB1ZBHM26HGSb=hHYsjROppAaOfWGE+M6TvadR71JQg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] regulator: add LM363X driver
+Date: Thu, 14 Jan 2016 10:27:36 +0000
+Message-ID: <20160114102736.GP6588@sirena.org.uk>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-10-git-send-email-milo.kim@ti.com>
+ <56975493.7050900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="le3rj4S+jilWgWjH"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATQB1ZBHM26HGSb=hHYsjROppAaOfWGE+M6TvadR71JQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56975493.7050900-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 January 2016 19:21:21 Masahiro Yamada wrote:
-> Yes, this is my intention.
-> 
-> I think this patch does so,
-> unless I am missing something...
-> 
-> 
->   #if defined(CONFIG_OF) && !defined(MODULE)
->           __used
->   #else
->           __unused
->   #endif
-> 
-> 
 
-Ah, got it. You are right, I just missed that because the #else
-part was not in the context that I saw in the patch and I was too lazy
-to actually look at the file.
+--le3rj4S+jilWgWjH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+On Thu, Jan 14, 2016 at 04:56:03PM +0900, Milo Kim wrote:
 
-	Arnd
+> So, I'd like to know which is better for you.
+> a) Create a patch based on linux-next tree (the above patch)
+> Or
+> b) Re-generate a patch based on linux-mfd tree
+
+At this point the easiest thing might be to wait for v4.5-rc1 then send
+a patch for that after everything gets merged.
+
+--le3rj4S+jilWgWjH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWl3gXAAoJECTWi3JdVIfQ5FUH/0e/qYToX6HnCYLXTsdurRNn
+XMOyiRQpx1nxNQwJTc0vx9rjAUqqLBFrGkyY3ThiDH19P2PkI/rTf1xjMX+AQOPa
++Y/jbKCuofPA03W9hUVmjaS0vdHxWIF3ShniZiwyWuD1QY2e1+RKcsRMlUgMhK4P
+3XDNh7cpVkH8DeE7hJdww6HGuQmyCGA+18/1oUkx7By/7X00y1HP7qzF3lKQ4ovV
+m/hmvLBGF3h0MlLzEkZx8k+PFm6yiFRMfs1A0FvHiPhsuQVrwUe0z2yCG5FTUd7F
+I0sPVqy2VIoPtoPp8Jj4m5Dpf3/uscjCbhxctoa5LdgEmhLDYkXYz985zhphlQk=
+=YkP3
+-----END PGP SIGNATURE-----
+
+--le3rj4S+jilWgWjH--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
