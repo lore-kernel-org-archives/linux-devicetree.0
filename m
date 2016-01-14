@@ -1,38 +1,28 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
-Date: Thu, 14 Jan 2016 15:45:32 +0100
-Message-ID: <20160114154532.177ba6af@avionic-0020>
-References: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V3 4/6] clk: bcm2835: remove use of BCM2835_CLOCK_COUNT in driver
+Date: Thu, 14 Jan 2016 16:16:46 +0100
+Message-ID: <6E590181-FFFB-4396-8B8A-61F277ED27B7@martin.sperl.org>
+References: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org> <1452779142-20615-5-git-send-email-kernel@martin.sperl.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452759657-7114-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1452779142-20615-5-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Jan 2016 11:20:57 +0300
-Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> The correct name for aliases node is "aliases" not "alias".
+> On 14.01.2016, at 14:45, kernel@martin.sperl.org wrote:
 > 
-> An overview of the "aliases" node usage can be found
-> on the device tree usage page at devicetree.org [1].
-> 
-> Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
-> 
-> [1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-> [2] https://www.power.org/documentation/epapr-version-1-1/
+> -
+> -	clks[BCM2835_CLOCK_PWM] =
+> -		bcm2835_register_clock(cprman, &bcm2835_clock_pwm_data);
+> +	for (i = 0; i < asize; i++) {
+> +		desc = &clk_desc_array[i];
+> +		if (desc)
+		if (desc->data && desc->clk_register)
+> +			clks[i] = desc->clk_register(cprman, desc->data);
+> +	}
 
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-
-> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will wait for other feedback before sending V4, which would fix this...
