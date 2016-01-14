@@ -1,97 +1,77 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v1 1/2] libahci: Implement the capability to override the generic ahci interrupt handler
-Date: Thu, 14 Jan 2016 11:00:23 +0530
-Message-ID: <1452749424-28919-2-git-send-email-stripathi@apm.com>
-References: <1452749424-28919-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452749424-28919-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Thu, 14 Jan 2016 06:19:36 +0000
+Message-ID: <20160114061936.GM27358@x1>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+ <1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+ <87oacp5zl7.fsf@dell.be.48ers.dk>
+ <B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Cc: Peter Korsgaard <peter@korsgaard.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the capability to override the generic
-ahci interrupt handler so that LDD drivers can implement there
-own interrupt handler routines.
+On Thu, 14 Jan 2016, Yang, Wenyou wrote:
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/ata/ahci.h    |    2 ++
- drivers/ata/libahci.c |   18 ++++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+> > -----Original Message-----
+> > From: Peter Korsgaard [mailto:jacmet@gmail.com] On Behalf Of Peter =
+Korsgaard
+> > Sent: 2016=E5=B9=B41=E6=9C=8813=E6=97=A5 22:22
+> > To: Yang, Wenyou <Wenyou.Yang@atmel.com>
+> > Cc: Liam Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel=
+=2Eorg>;
+> > Rob Herring <robh+dt@kernel.org>; Pawel Moll <pawel.moll@arm.com>; =
+Mark
+> > Rutland <mark.rutland@arm.com>; Ian Campbell <ijc+devicetree@hellio=
+n.org.uk>;
+> > Kumar Gala <galak@codeaurora.org>; Krzysztof Kozlowski
+> > <k.kozlowski@samsung.com>; devicetree@vger.kernel.org; Ferre, Nicol=
+as
+> > <Nicolas.FERRE@atmel.com>; linux-kernel@vger.kernel.org; Javier Mar=
+tinez
+> > Canillas <javier@dowhile0.org>; Lee Jones <lee.jones@linaro.org>; l=
+inux-arm-
+> > kernel@lists.infradead.org
+> > Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driv=
+er for
+> > ACT8945A
+> >=20
+> > >>>>> "Wenyou" =3D=3D Wenyou Yang <wenyou.yang@atmel.com> writes:
+> >=20
+> >  > This patch adds new regulator driver to support ACT8945A MFD  > =
+chip's
+> > regulators.
+> >=20
+> >  > The ACT8945A has three step-down DC/DC converters and four  > lo=
+w-dropout
+> > regulators.
+> >=20
+> >  > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> >=20
+> > Isn't the regulator part of the act8945a identical to act8865? Can'=
+t we just use the
+> > existing act8865-regulator.c driver? (E.G. support 8865 variant in =
+the mfd driver,
+> > but only register the regulator sub device?)
+>=20
+> Yes, the regulator part of the act8945a is identical to act8865.
+>=20
+> But the act8865-regulator driver is a struct i2c_driver,  and the mfd=
+ sub-device driver is a platform_driver driver, it is not easy to use i=
+t.
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 45586c1..f59d517 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -352,6 +352,7 @@ struct ahci_host_priv {
- 	 * be overridden anytime before the host is activated.
- 	 */
- 	void			(*start_engine)(struct ata_port *ap);
-+	irqreturn_t 		(*ahci_irq_intr)(int irq, void *dev_instance);
- };
+Take a look at some existing files with the pattern
+drivers/mfd/*{spi,i2c,core}.c to see how this might be possible.
 
- extern int ahci_ignore_sss;
-@@ -400,6 +401,7 @@ int ahci_reset_em(struct ata_host *host);
- void ahci_print_info(struct ata_host *host, const char *scc_s);
- int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht);
- void ahci_error_handler(struct ata_port *ap);
-+u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked);
-
- static inline void __iomem *__ahci_port_base(struct ata_host *host,
- 					     unsigned int port_no)
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 096064c..cc1f774 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1832,7 +1832,7 @@ static irqreturn_t ahci_multi_irqs_intr(int irq, void *dev_instance)
- 	return IRQ_WAKE_THREAD;
- }
-
--static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
-+u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
- {
- 	unsigned int i, handled = 0;
-
-@@ -1858,6 +1858,7 @@ static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
-
- 	return handled;
- }
-+EXPORT_SYMBOL_GPL(ahci_handle_port_intr);
-
- static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance)
- {
-@@ -2517,16 +2518,21 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
- {
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	int irq = hpriv->irq;
-+	irqreturn_t (*ahci_irq_handler)(int irq, void *dev_instance);
- 	int rc;
-
- 	if (hpriv->flags & AHCI_HFLAG_MULTI_MSI)
- 		rc = ahci_host_activate_multi_irqs(host, irq, sht);
--	else if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ)
--		rc = ata_host_activate(host, irq, ahci_single_edge_irq_intr,
--				       IRQF_SHARED, sht);
--	else
--		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
-+	else {
-+		ahci_irq_handler = hpriv->ahci_irq_intr ? hpriv->ahci_irq_intr :
-+				   (hpriv->flags & AHCI_HFLAG_EDGE_IRQ ?
-+				   ahci_single_edge_irq_intr :
-+				   ahci_single_level_irq_intr);
-+
-+		rc = ata_host_activate(host, irq, ahci_irq_handler,
- 				       IRQF_SHARED, sht);
-+	}
-+
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(ahci_host_activate);
---
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
