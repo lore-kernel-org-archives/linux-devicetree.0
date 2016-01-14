@@ -1,59 +1,50 @@
-From: <shh.xie@gmail.com>
-Subject: [PATCH 2/3] [v2] powerpc: fsl: update fman dt binding for PCS PHY
-Date: Thu, 14 Jan 2016 16:27:18 +0800
-Message-ID: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Thu, 14 Jan 2016 09:54:30 +0100
+Message-ID: <CACRpkdZHnDCg1N3Fe1brqwiCKRBT1BKKa9OfSzGT-2WPXyRp_A@mail.gmail.com>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+	<20151124162624.GI807@x1>
+	<20151204120240.GW26072@sirena.org.uk>
+	<5665E4F7.1070707@ti.com>
+	<20151208191657.GA5727@sirena.org.uk>
+	<CACRpkdZU3RrXmPr1fDzCMumhQ8nWEf126iC1rDu=xiLFj7DU+A@mail.gmail.com>
+	<56703CCC.5060608@ti.com>
+	<CACRpkdYxBkuRcE6_VvChO=kKHTd0TS1kKAutL=8hFA4-15h3nA@mail.gmail.com>
+	<20160111073811.GA3331@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: netdev@vger.kernel.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160111073811.GA3331@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpQQ1MgUEhZIGNh
-biBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5kIDEwR0JBU0UtS1IpLCB0aGlzIG5l
-ZWRzCnRvIGNoYW5nZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLCBzbyBhIHJl
-ZmVyZW5jZSBpcyBuZWVkZWQKZm9yIHNlcmRlcyBsYW5lLiBUaGlzIHBhdGNoIGRlc2NyaWJlcyBw
-cm9wZXJ0aWVzIG5lZWRlZCBmb3IgUENTIFBIWSB0bwpzdXBwb3J0IGJhY2twbGFuZS4KClNpZ25l
-ZC1vZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPgotLS0KY2hh
-bmdlcyBpbiB2MjoKYWRkcmVzc2VkIFJvYidzIGNvbW1lbnRzLgpiYXNlZCBvbiBodHRwOi8vcGF0
-Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNTYwOTM2LwoKIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCB8IDE0ICsrKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAppbmRleCA1NWMyYzAzLi41
-Y2E5MDlhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
-ZXJwYy9mc2wvZm1hbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Bvd2VycGMvZnNsL2ZtYW4udHh0CkBAIC00MzIsNiArNDMyLDE2IEBAIGV4YW1wbGUgb2YgaG93
-IHRvIGRlZmluZSBhIFBIWSAoSW50ZXJuYWwgUEhZIGhhcyBubyBpbnRlcnJ1cHQgbGluZSkuCiAt
-IEZvciAiZnNsLGZtYW4tbWRpbyIgY29tcGF0aWJsZSBpbnRlcm5hbCBtZGlvIGJ1cywgdGhlIFBI
-WSBpcyBUQkkgUEhZLgogLSBGb3IgImZzbCxmbWFuLW1lbWFjLW1kaW8iIGNvbXBhdGlibGUgaW50
-ZXJuYWwgbWRpbyBidXMsIHRoZSBQSFkgaXMgUENTIFBIWSwKICAgUENTIFBIWSBhZGRyIG11c3Qg
-YmUgJzAnLgorICBQQ1MgUEhZIGNhbiBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5k
-IDEwR0JBU0UtS1IpLCB0aGlzIG5lZWRzIHRvCisgIGNoYW5nZSB0aGUgY29ycmVzcG9uZGluZyBz
-ZXJkZXMgbGFuZSBzZXR0aW5ncy4KKworICBQQ1MgUEhZIG5vZGUgcHJvcGVydGllcyByZXF1aXJl
-ZCBmb3IgYmFja3BsYW5lOgorCisgIC0gY29tcGF0aWJsZTogbXVzdCBiZSAiZXRoZXJuZXQtcGh5
-LWllZWU4MDIuMy1jNDUiLgorICAtIHBoeS1tb2RlOiBzdHJpbmcsIG9wZXJhdGlvbiBtb2RlIG9m
-IHRoZSBQSFkgaW50ZXJmYWNlOyBtdXN0IGJlICIxMDAwYmFzZS1reCIKKyAgICBmb3IgMTAwMEJB
-U0UtS1gsIG9yICIxMGdiYXNlLWtyIiBmb3IgMTBHQkFTRS1LUi4KKyAgLSBmc2wtbGFuZS1oYW5k
-bGU6IHBoYW5kbGUsIHNwZWNpZmllcyBhIHJlZmVyZW5jZSB0byBhIG5vZGUgcmVwcmVzZW50aW5n
-IGEgU2VyZGVzLgorICAtIGZzbC1sYW5lLXJlZzogb2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIHJl
-Z2lzdGVyIHNldCBmb3IgdGhlIHNlcmRlcyBsYW5lLgogCiBFWEFNUExFCiAKQEAgLTQ2NCw3ICs0
-NzQsMTEgQEAgbWRpb0BmMTAwMCB7CiAJZnNsLGZtYW4taW50ZXJuYWwtbWRpbzsKIAogCXBjc3Bo
-eTY6IGV0aGVybmV0LXBoeUAwIHsKKwkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktaWVlZTgw
-Mi4zLWM0NSI7CisJCXBoeS1tb2RlID0gIjEwZ2Jhc2Uta3IiOwogCQlyZWcgPSA8MHgwPjsKKwkJ
-ZnNsLWxhbmUtaGFuZGxlID0gPCZzZXJkZXM+OworCQlmc2wtbGFuZS1yZWcgPSA8MHgxOGMwIDB4
-NDA+OwogCX07CiB9OwogCi0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
-dGluZm8vbGludXhwcGMtZGV2
+On Mon, Jan 11, 2016 at 8:38 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 22 Dec 2015, Linus Walleij wrote:
+>
+>> On Tue, Dec 15, 2015 at 5:16 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+>>
+>> > Is there anything I can do to help this along? This series
+>> > and the tps65086 series have been blocked for months on
+>> > trivial issues. (Not sure why the tps65086 hasn't been taken,
+>> > it doesn't have this problem, I'd be OK with this getting
+>> > stalled for a bit longer if someone could look at the other
+>> > one)
+>>
+>> Lee can you merge the core driver if it's OK? Then we have
+>> includes etc in place to merge subdrivers for the next merge
+>> window.
+>
+> It's made more complex than that, due to patch 2 removing code from
+> all subsystems.  We probably need to take this in in its entirety, no?
+
+You know way better than me :) go ahead with the best solution
+from the MFD point of view I'd say.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
