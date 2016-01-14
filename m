@@ -1,51 +1,73 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V3 1/6] clk: bcm2835: the minimum clock divider is 2
-Date: Thu, 14 Jan 2016 13:45:36 +0000
-Message-ID: <1452779142-20615-2-git-send-email-kernel@martin.sperl.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V3 5/6] clk: bcm2835: enable management of PCM clock
+Date: Thu, 14 Jan 2016 13:45:40 +0000
+Message-ID: <1452779142-20615-6-git-send-email-kernel@martin.sperl.org>
 References: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452779142-20615-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Testing with different clock divider values has shown
-that (at least for the PCM clock) the clock divider
-has to be at least 2, otherwise the clock will not
-output a signal.
+Enable the PCM clock in the SOC, which is used by the
+bcm2835-i2s driver.
 
-So the clamping has changed from 1 to 2 and comments
-about the kind of clamping applied have been added.
-
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/clk/bcm/clk-bcm2835.c       |   13 +++++++++++++
+ include/dt-bindings/clock/bcm2835.h |    1 +
+ 2 files changed, 14 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 015e687..10e97b7 100644
+index 6b0ebf7..7bbe310 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1178,7 +1178,11 @@ static u32 bcm2835_clock_choose_div(struct clk_hw *hw,
- 	div &= ~unused_frac_mask;
+@@ -89,6 +89,8 @@
+ #define CM_HSMDIV		0x08c
+ #define CM_OTPCTL		0x090
+ #define CM_OTPDIV		0x094
++#define CM_PCMCTL		0x098
++#define CM_PCMDIV		0x09c
+ #define CM_PWMCTL		0x0a0
+ #define CM_PWMDIV		0x0a4
+ #define CM_SMICTL		0x0b0
+@@ -860,6 +862,16 @@ static const struct bcm2835_clock_data bcm2835_clock_pwm_data = {
+ 	.frac_bits = 12,
+ };
  
- 	/* Clamp to the limits. */
--	div = max(div, unused_frac_mask + 1);
++static const struct bcm2835_clock_data bcm2835_clock_pcm_data = {
++	.name = "pcm",
++	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
++	.parents = bcm2835_clock_per_parents,
++	.ctl_reg = CM_PCMCTL,
++	.div_reg = CM_PCMDIV,
++	.int_bits = 12,
++	.frac_bits = 12,
++};
 +
-+	/* divider must be >= 2 */
-+	div = max_t(u32, div, (2 << CM_DIV_FRAC_BITS));
-+
-+	/* clamp to max divider allowed */
- 	div = min_t(u32, div, GENMASK(data->int_bits + CM_DIV_FRAC_BITS - 1,
- 				      CM_DIV_FRAC_BITS - data->frac_bits));
- 
+ struct bcm2835_gate_data {
+ 	const char *name;
+ 	const char *parent;
+@@ -1676,6 +1688,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 	[BCM2835_CLOCK_HSM]	= REGISTER_CLK(&bcm2835_clock_hsm_data),
+ 	[BCM2835_CLOCK_EMMC]	= REGISTER_CLK(&bcm2835_clock_emmc_data),
+ 	[BCM2835_CLOCK_PWM]	= REGISTER_CLK(&bcm2835_clock_pwm_data),
++	[BCM2835_CLOCK_PCM]	= REGISTER_CLK(&bcm2835_clock_pcm_data),
+ 	/* the gates */
+ 	[BCM2835_CLOCK_PERI_IMAGE] = REGISTER_GATE(
+ 		&bcm2835_clock_peri_image_data),
+diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
+index 87235ac..9a7b4a5 100644
+--- a/include/dt-bindings/clock/bcm2835.h
++++ b/include/dt-bindings/clock/bcm2835.h
+@@ -44,3 +44,4 @@
+ #define BCM2835_CLOCK_EMMC		28
+ #define BCM2835_CLOCK_PERI_IMAGE	29
+ #define BCM2835_CLOCK_PWM		30
++#define BCM2835_CLOCK_PCM		31
 -- 
 1.7.10.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
