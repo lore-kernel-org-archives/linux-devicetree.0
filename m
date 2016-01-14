@@ -1,75 +1,99 @@
-From: Caleb Crome <caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
- settings device tree options
-Date: Thu, 14 Jan 2016 13:26:24 -0800
-Message-ID: <CAG5mAdwJ+VznMp5mUVTufa_wW-corc6qXGbqskz8LGqeG5Z1kw@mail.gmail.com>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org> <20160114201858.GA17567@Asurada-Nvidia>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
+ disable_unused_functions
+Date: Fri, 15 Jan 2016 01:13:05 +0200
+Message-ID: <2014724.QmjXVju9UW@avalon>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160114201858.GA17567@Asurada-Nvidia>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Alexander Kaplan <alex@nextthing.co>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 12:18 PM, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 14, 2016 at 08:29:42AM -0800, Caleb Crome wrote:
->> Tuning the SSI fifo watermark & maxburst settings needs to be
->> optimized differently depending on the demands on the system.  The
->> current default of 2 is too low for high data-rate systems.  This
->> patch maintains exactly the same behavior by default (i.e defaults to
->> 2), but adds device tree options to set maxburst & fifo depth from the
->> device tree.  This is necessary because a setting of 2 simply doesn't
->> work at higher data rates.
->
->> @@ -61,6 +61,16 @@ Optional properties:
->>  - fsl,mode:         The operating mode for the AC97 interface only.
->>                      "ac97-slave" - AC97 mode, SSI is clock slave
->>                      "ac97-master" - AC97 mode, SSI is clock master
->> +- fsl,fifo-watermark: Sets the fifo watermark.  The default is
->> +                    fifo_depth-2 words, meaning 'initiate dma transfer
->> +                    when 2 words are left in the fifo'.  At higher
->> +                    data rates (48kHz, 16-channels for example), this
->> +                    causes silent but deadly DMA xruns and channel
->> +                    slips.  For 15 word FIFOs (like on MX5, MX6) 8 is
->> +                    a good value when running at high data rates
->> +- fsl,dma-maxburst: sets the max number of words to transfer in DMA.
->> +                    This defaults to the same value as
->> +                    fsl,fifo-watermark.
->
-> I think DT maintainers may not give a consent towards these two
-> properties as they are not to describe the hardware but to hack
-> software configurations. (And it seems you haven't CCed them.)
->
-
-Yeah, I thought I'd just ask alsa first, rather than send to DT
-maintainers.  Is it preferable to just send to everybody that
-get_maintainers spits out even for an RFC?
-
-
-> I forgot which values you've figured out for these two properties,
-> but I think those two values should work for normal cases as well:
-> as SSI only has limited FIFO depth, it won't hurt (increasing too
-> much latency) even if using a higher watermark configuration imo.
-> So it could be a good idea to use optimized settings for all use
-> cases and let other users test it.
->
-> Nicolin
-
-
-As for optimal settings, I finally came to a setting of 4 for depth &
-maxburst, which will result in more DMA requests, but it's the only
-way that works at 48kHz for me.  The default settings is 13 (15 - 2)
-for the ones of the 15 item fifo, which is a pretty dramatic
-difference.  I just don't know if other chips will behave badly in
-that case.
-
-I'd be happy to just submit a patch that sets it to 4 if we think
-that's the right way to go.
-
--Caleb
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWF4aW1lLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSAxNCBKYW51
+YXJ5IDIwMTYgMTY6MjQ6NTYgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgZHJtX2ZiZGV2X2Nt
+YV9pbml0IGZ1bmN0aW9uIGFsd2F5cyBjYWxscyB0aGUKPiBkcm1faGVscGVyX2Rpc2FibGVfdW51
+c2VkX2Z1bmN0aW9ucy4gU2luY2UgaXQncyBwYXJ0IG9mIHRoZSB1c3VhbCBwcm9iZQo+IHByb2Nl
+c3MsIGFsbCB0aGUgZHJpdmVycyB1c2luZyB0aGF0IGhlbHBlciB3aWxsIGVuZCB1cCBoYXZpbmcg
+dGhlaXIgZW5jb2Rlcgo+IGFuZCBDUlRDIGRpc2FibGUgZnVuY3Rpb25zIGNhbGxlZCBhdCBwcm9i
+ZSBpZiB0aGVpciBkZXZpY2UgaGFzIG5vdCBiZWVuCj4gcmVwb3J0ZWQgYXMgZW5hYmxlZC4KPiAK
+PiBUaGlzIGNvdWxkIGJlIGZpeGVkIGJ5IHJlYWRpbmcgb3V0IGZyb20gdGhlIHJlZ2lzdGVycyB0
+aGUgY3VycmVudCBzdGF0ZSBvZgo+IHRoZSBkZXZpY2UgaWYgaXQgaXMgZW5hYmxlZCwgYnV0IGV2
+ZW4gdGhhdCB3aWxsIG5vdCBoYW5kbGUgdGhlIGNhc2Ugd2hlcmUKPiB0aGUgZGV2aWNlIGlzIGFj
+dHVhbGx5IGRpc2FibGVkLgo+IAo+IE1vcmVvdmVyLCB0aGUgZHJpdmVycyB1c2luZyB0aGUgYXRv
+bWljIG1vZGVzZXR0aW5nIGV4cGVjdCB0aGF0IHRoZWlyIGVuYWJsZQo+IGFuZCBkaXNhYmxlIGNh
+bGxiYWNrIHRvIGJlIGNhbGxlZCB3aGVuIHRoZSBkZXZpY2UgaXMgYWxyZWFkeSBlbmFibGVkIG9y
+Cj4gZGlzYWJsZWQgKHJlc3BlY3RpdmVseSkuCj4gCj4gV2UgY2FuIGhvd2V2ZXIgZml4IHRoaXMg
+aXNzdWUgYnkgbW92aW5nIHRoZSBjYWxsIHRvCj4gZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9m
+dW5jdGlvbnMgb3V0IG9mIGRybV9mYmRldl9jbWFfaW5pdCBhbmQgbWFrZSB0aGUKPiBkcml2ZXJz
+IG5lZWRpbmcgaXQgKGFsbCB0aGUgZHJpdmVycyBjYWxsaW5nIGRybV9mYmRldl9jbWFfaW5pdCBh
+bmQgbm90Cj4gdXNpbmcgdGhlIGF0b21pYyBtb2Rlc2V0dGluZykgZXhwbGljaXRseSBjYWxsIGl0
+LgoKSSdkIHJhdGhlciBhZGQgaXQgdG8gYWxsIGRyaXZlcnMgdGhhdCBjYWxsIGRybV9mYmRldl9j
+bWFfaW5pdCgpLiBBbGwgdGhlIAphdG9taWMgb25lcyBtdXN0IGhhdmUgc3BlY2lhbCBjb2RlIHRv
+IGNvcGUgd2l0aCBpdCB0aGF0IGNvdWxkIGJlIHJlbmRlcmVkIAp1c2VsZXNzIGJ5IHRoZSByZW1v
+dmFsIG9mIHRoZSBkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucygpIGNhbGwuIFRo
+YXQgCmNvZGUgc2hvdWxkIGJlIHJlbW92ZWQgdG9vLCBhbmQgaXQgd291bGQgYmUgZWFzaWVyIHRv
+IGNoZWNrIGRyaXZlcnMgb25lIGJ5IG9uZSAKYW5kIGZpeGluZyB0aGVtIGluZGl2aWR1YWxseSAo
+b3V0c2lkZSBvZiB0aGlzIHBhdGNoIHNlcmllcywgdW5sZXNzIHlvdSBpbnNpc3QgCjstKSkgd2hl
+biByZW1vdmluZyB0aGUgZXhwbGljaXQgZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlv
+bnMoKSBjYWxsLiAKT3RoZXIgdGhhbiB0aGF0IHRoZSBwYXRjaCBsb29rcyBmaW5lIHRvIG1lLgoK
+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
+b25zLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmMgfCAz
+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jICB8IDEgKwo+ICBkcml2
+ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYyAgICAgICB8IDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0v
+dGlsY2RjL3RpbGNkY19kcnYuYyB8IDEgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
+cygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Ry
+bV9mYl9jbWFfaGVscGVyLmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5j
+IGluZGV4IGMxOWE2MjU2MTE4My4uZGFhOThkODgxMTQyCj4gMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
+X2ZiX2NtYV9oZWxwZXIuYwo+IEBAIC0zNDgsOSArMzQ4LDYgQEAgc3RydWN0IGRybV9mYmRldl9j
+bWEgKmRybV9mYmRldl9jbWFfaW5pdChzdHJ1Y3QKPiBkcm1fZGV2aWNlICpkZXYsCj4gCj4gIAl9
+Cj4gCj4gLQkvKiBkaXNhYmxlIGFsbCB0aGUgcG9zc2libGUgb3V0cHV0cy9jcnRjcyBiZWZvcmUg
+ZW50ZXJpbmcgS01TIG1vZGUgKi8KPiAtCWRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rp
+b25zKGRldik7Cj4gLQo+ICAJcmV0ID0gZHJtX2ZiX2hlbHBlcl9pbml0aWFsX2NvbmZpZyhoZWxw
+ZXIsIHByZWZlcnJlZF9icHApOwo+ICAJaWYgKHJldCA8IDApIHsKPiAgCQlkZXZfZXJyKGRldi0+
+ZGV2LCAiRmFpbGVkIHRvIHNldCBpbml0aWFsIGh3IGNvbmZpZ3VyYXRpb24uXG4iKTsKPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYwo+IGIvZHJpdmVycy9n
+cHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYyBpbmRleCA3Yjk5MGI0ZTk2ZDIuLmUxZGI1Nzc5MWZj
+OQo+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9pbXgvaW14LWRybS1jb3JlLmMKPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jCj4gQEAgLTMxMiw2ICszMTIs
+NyBAQCBzdGF0aWMgaW50IGlteF9kcm1fZHJpdmVyX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRy
+bSwKPiB1bnNpZ25lZCBsb25nIGZsYWdzKSBkZXZfd2Fybihkcm0tPmRldiwgIkludmFsaWQgbGVn
+YWN5ZmJfZGVwdGguIAo+IERlZmF1bHRpbmcgdG8gMTZicHBcbiIpOyBsZWdhY3lmYl9kZXB0aCA9
+IDE2Owo+ICAJfQo+ICsJZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoZHJtKTsK
+PiAgCWlteGRybS0+ZmJoZWxwZXIgPSBkcm1fZmJkZXZfY21hX2luaXQoZHJtLCBsZWdhY3lmYl9k
+ZXB0aCwKPiAgCQkJCWRybS0+bW9kZV9jb25maWcubnVtX2NydGMsIE1BWF9DUlRDKTsKPiAgCWlm
+IChJU19FUlIoaW14ZHJtLT5mYmhlbHBlcikpIHsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL3N0aS9zdGlfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYwo+IGluZGV4
+IDE0Njk5ODc5NDlkOC4uNTA2YjU2MjZmM2VkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9zdGkvc3RpX2Rydi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0aS9zdGlfZHJ2LmMKPiBA
+QCAtMTYwLDYgKzE2MCw3IEBAIHN0YXRpYyBpbnQgc3RpX2xvYWQoc3RydWN0IGRybV9kZXZpY2Ug
+KmRldiwgdW5zaWduZWQKPiBsb25nIGZsYWdzKQo+IAo+ICAJZHJtX21vZGVfY29uZmlnX3Jlc2V0
+KGRldik7Cj4gCj4gKwlkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucyhkZXYpOwo+
+ICAJZHJtX2ZiZGV2X2NtYV9pbml0KGRldiwgMzIsCj4gIAkJCSAgIGRldi0+bW9kZV9jb25maWcu
+bnVtX2NydGMsCj4gIAkJCSAgIGRldi0+bW9kZV9jb25maWcubnVtX2Nvbm5lY3Rvcik7Cj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5jCj4gYi9kcml2ZXJz
+L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyBpbmRleCA4NzZjYWQ1OGIxZjkuLjI0YmUzMWQ2
+OTcwMQo+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMKPiBAQCAtMjk0LDYg
+KzI5NCw3IEBAIHN0YXRpYyBpbnQgdGlsY2RjX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwg
+dW5zaWduZWQKPiBsb25nIGZsYWdzKSBicmVhazsKPiAgCX0KPiAKPiArCWRybV9oZWxwZXJfZGlz
+YWJsZV91bnVzZWRfZnVuY3Rpb25zKGRldik7Cj4gIAlwcml2LT5mYmRldiA9IGRybV9mYmRldl9j
+bWFfaW5pdChkZXYsIGJwcCwKPiAgCQkJZGV2LT5tb2RlX2NvbmZpZy5udW1fY3J0YywKPiAgCQkJ
+ZGV2LT5tb2RlX2NvbmZpZy5udW1fY29ubmVjdG9yKTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
+aW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
