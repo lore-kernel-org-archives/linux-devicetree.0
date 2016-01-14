@@ -1,140 +1,120 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 1/5] ARM: dts: sunxi: Add sunxi-itead-core-common.dtsi
-Date: Thu, 14 Jan 2016 11:15:51 +0100
-Message-ID: <1452766555-16409-2-git-send-email-codekipper@gmail.com>
-References: <1452766555-16409-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/5] mtd: atmel_nand: Support variable RB_EDGE interrupts
+Date: Thu, 14 Jan 2016 11:16:19 +0100
+Message-ID: <CAGkQfmMQTBVzOoE3BTyvg73NKjtGD_0veV_zb_jLutk-6bcqGw@mail.gmail.com>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452702857-2240-3-git-send-email-romain.izard.pro@gmail.com> <20160113191409.5cd0dc82@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBX7K3W2AKGQEIV2QTVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1452766555-16409-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160113191409.5cd0dc82@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Boris,
 
-Itead have a core module board that can be populated with either
-an Allwinner A10 or A20 SoC. This patch creates a common dtsi
-which these boards can use.
+2016-01-13 19:14 GMT+01:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+>> index 9d71f9e6a8de..e5d7e7e63f49 100644
+>> --- a/drivers/mtd/nand/atmel_nand.c
+>> +++ b/drivers/mtd/nand/atmel_nand.c
+>> @@ -67,6 +67,10 @@ struct atmel_nand_caps {
+>>       bool pmecc_correct_erase_page;
+>>  };
+>>
+>> +struct atmel_nand_nfc_priv {
+>
+> Can you rename this struct into atmel_nfc_caps to be consistant with the
+> atmel_nand_caps?
+>
+>> +     uint32_t rb_edge;
+>
+> Actually, AFAIU, it's not encoding the type of edges, but the available
+> native R/B lines (by native I mean the R/B lines directly connected to
+> the NFC IP).
+> I suggest renaming this field avail_rb_lines, and making it a bitfield
+> (one bit per possible R/B line).
+>
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sunxi-itead-core-common.dtsi | 99 ++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+It's already a bitfield in the end: it's the mask for the interrupt status
+register. It might have been better if it were called rb_edge_mask.
 
-diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
-new file mode 100644
-index 0000000..0074f7b
---- /dev/null
-+++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
-@@ -0,0 +1,99 @@
-+/*
-+ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.7.0
+>> +};
+>> +
+>>  /* oob layout for large page size
+>>   * bad block info is on bytes 0 and 1
+>>   * the bytes have to be consecutives to avoid
+>> @@ -111,6 +115,7 @@ struct atmel_nfc {
+>>       /* Point to the sram bank which include readed data via NFC */
+>>       void                    *data_in_sram;
+>>       bool                    will_write_sram;
+>> +     uint32_t                rb_edge;
+>
+> Replace this by
+>         const struct atmel_nfc_caps *caps;
+>
+> so that next time you have a per-SoC particularity, you can just add it
+> to your struct atmel_nfc_caps without adding new fields to atmel_nfc.
+>
+
+I'm reluctant about this, but I will do it. For me, we are exchanging
+a single probe-time copy to indirections in each interrupt handler for some
+unspecified future user. Let's hope the tradeoff is worth it.
+
+>>  };
+>>  static struct atmel_nfc      nand_nfc;
+>>
+>> @@ -1675,9 +1680,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
+>>               nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
+>>               ret = IRQ_HANDLED;
+>>       }
+>> -     if (pending & NFC_SR_RB_EDGE) {
+>> +     if (pending & host->nfc->rb_edge) {
+>>               complete(&host->nfc->comp_ready);
+>> -             nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
+>> +             nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->rb_edge);
+>
+> How about creating a macro that would generate the appropriate bitmask
+> for you?
+>
+> Something like
+>
+> #define NFC_SR_RB_EDGE_MASK(x)  ((x) << 24)
+>
+
+It's already so verbose, it will make everything longer. Once the member name
+contains the 'mask' part, all the information will be there.
+
+
+>> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
+>> index 4d5d26221a7e..2cd9c57b1e53 100644
+>> --- a/drivers/mtd/nand/atmel_nand_nfc.h
+>> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
+>> @@ -42,7 +42,10 @@
+>>  #define              NFC_SR_UNDEF            (1 << 21)
+>>  #define              NFC_SR_AWB              (1 << 22)
+>>  #define              NFC_SR_ASE              (1 << 23)
+>> -#define              NFC_SR_RB_EDGE          (1 << 24)
+>> +#define              NFC_SR_RB_EDGE0         (1 << 24)
+>> +#define              NFC_SR_RB_EDGE1         (1 << 25)
+>> +#define              NFC_SR_RB_EDGE2         (1 << 26)
+>> +#define              NFC_SR_RB_EDGE3         (1 << 27)
+>
+> Please replace those 4 definitions by:
+>
+> #define                 NFC_SR_RB_EDGE(x)       BIT(x + 24)
+>
+
+The whole file could be rewritten in this form, but I see this as a
+zero-value proposition. I believe it is best to keep with local
+consistency. In fact, I will rather remove RB_EDGE1 & RB_EDGE2, as
+those are not mentioned in the datasheets.
+
+
+Best regards,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
