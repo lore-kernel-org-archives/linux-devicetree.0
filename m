@@ -1,54 +1,29 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Thu, 14 Jan 2016 17:44:18 +0100
-Message-ID: <20160114164418.GD19773@lunn.ch>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ti-st: use device handles and add device tree binding
+Date: Thu, 14 Jan 2016 09:07:46 -0800
+Message-ID: <20160114170746.GO12777@atomide.com>
+References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
+ <8665E2433BC68541A24DFFCA87B70F5B23769B75@DFRE01.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: shh.xie@gmail.com
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B23769B75-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 04:23:59PM +0800, shh.xie@gmail.com wrote:
-> From: Shaohui Xie <Shaohui.Xie@freescale.com>
-> 
-> This commit adds necessary definitions for the PHY layer to recognize
-> backplane Ethernet 1000BASE-KX and 10GBASE-KR as valid PHY interfaces,
-> "1000base-kx" for 1000BASE-KX, "10gbase-kr" for 10GBASE-KR.
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
-> ---
-> changes in v2:
-> new patch.
-> 
->  Documentation/devicetree/bindings/net/ethernet.txt | 4 ++--
->  include/linux/phy.h                                | 6 ++++++
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-> index 5d88f37..1166a5c 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -11,8 +11,8 @@ The following properties are common to the Ethernet controllers:
->    the maximum frame size (there's contradiction in ePAPR).
->  - phy-mode: string, operation mode of the PHY interface; supported values are
->    "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
-> -  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
-> -  standard property;
-> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii", "1000base-kx", "10gbase-kr";
-> +  this is now a de-facto standard property;
+* Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> [160114 06:23]:
+> Ping on this patchset
 
-I know very little about this, so i'm just asking a question. None of
-the other interface modes contain a bit rate. So is the bit rate
-needed for your two new modes?
+I think there are several comments pending from Rob as
+a reply to this thread on December 29th?
 
-With a bit of googling, K means copper backplane, X means 4B/5B and R
-means 64B/66B. Could there be a 10Gbps KX? a 1GBps KR? Do we actually
-need the speed here, or is kx and kr sufficient?
+Regards,
 
-     Thanks
-	Andrew
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
