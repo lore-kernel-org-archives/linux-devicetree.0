@@ -1,42 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [v7,49/50] drivers/of: Export OF changeset functions
-Date: Wed, 13 Jan 2016 17:53:53 -0600
-Message-ID: <CAL_JsqLaCMYMGLu_2aoXopgMHmT09xU1CSO4NZokMVUOZTPSJg@mail.gmail.com>
-References: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
- <20160113135426.GA29030@katana> <1452719886.8203.1.camel@ellerman.id.au> <20160113212008.GC3881@katana>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH V2 1/4] clk: bcm2835: avoid the use of BCM2835_CLOCK_COUNT in
+ clk-bcm2835
+Date: Wed, 13 Jan 2016 16:13:58 -0800
+Message-ID: <20160114001358.1168.5768@quark.deferred.io>
+References: <1452542157-2387-1-git-send-email-kernel@martin.sperl.org>
+ <1452542157-2387-2-git-send-email-kernel@martin.sperl.org>
+ <20160113200012.1168.74515@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160113212008.GC3881@katana>
-Sender: linux-pci-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Gavin Shan <gwshan@linux.vnet.ibm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, aik@ozlabs.ru, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160113200012.1168.74515@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 3:20 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Thu, Jan 14, 2016 at 08:18:06AM +1100, Michael Ellerman wrote:
->> On Wed, 2016-01-13 at 14:54 +0100, Wolfram Sang wrote:
->> > On Thu, Nov 05, 2015 at 12:12:49AM +1100, Gavin Shan wrote:
->> > > The PowerNV PCI hotplug driver is going to use the OF changeset
->> > > to manage the changed device sub-tree. This exports those OF
->> > > changeset functions for that.
->> > >
->> > > Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->> > > Acked-by: Rob Herring <robh@kernel.org>
->> >
->> > I needed something like this, too [1] and rebased my series on top of
->> > this patch. So:
->> >
->> > Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->>
->> OK. This series is kind of in limbo, it might hit 4.6, but it might not. So if
->> you need this patch before then you should probably pull it in to your series,
->> or ask Rob to merge it pre-emptively.
->
-> Yup, this is what I had in mind, too.
+Quoting Michael Turquette (2016-01-13 12:00:12)
+> Hi Martin,
+> 
+> Quoting kernel@martin.sperl.org (2016-01-11 11:55:53)
+> >  static int bcm2835_clk_probe(struct platform_device *pdev)
+> >  {
+> >         struct device *dev = &pdev->dev;
+> >         struct clk **clks;
+> > +       size_t clk_cnt;
+> >         struct bcm2835_cprman *cprman;
+> >         struct resource *res;
+> > +       size_t i;
+> > +
+> > +       /* find the max clock index */
+> > +       clk_cnt = BCM2835_CLOCK_PERI_IMAGE; /* see below */
+> > +       for (i = 0; i < ARRAY_SIZE(bcm2835_register_clocks); i++)
+> > +               clk_cnt = max(clk_cnt, bcm2835_register_clocks[i].index);
+> > +       clk_cnt += 1;
+> 
+> I'm not sure how this solution is better than using CLOCK_COUNT. Some
+> other bindings use a max value, NR_CLKS or other sentinel.
+> 
+> Why did you not choose to set clk_cnt equal to BCM2835_CLOCK_PWM? Why
+> not initialize it to zero?
 
-Given this has been on the list some time and still works, I've
-applied this for 4.5. That should simplify dependencies for 4.6.
+OK, I just caught up on the asoc/bcm2835 thread.
 
-Rob
+Really the best solution would be to have an array of all of the clks in
+the driver and just use ARRAY_SIZE on it.
+
+For your driver, could you make an array of clk_hw pointers and call
+devm_clk_register on all of them in a loop? This gets rid of the big
+pile of explicit calls in bcm2835_clk_probe.
+
+You can also get rid of stuff like bcm2835_plla_core_data by just
+stuffing that data into a single struct initialization. Here is a
+snippet for how the qcom clk drivers do it:
+
+static struct clk_pll gpll0 = {
+	.l_reg = 0x0004,
+	.m_reg = 0x0008,
+	.n_reg = 0x000c,
+	.config_reg = 0x0014,
+	.mode_reg = 0x0000,
+	.status_reg = 0x001c,
+	.status_bit = 17,
+	.clkr.hw.init = &(struct clk_init_data){
+		.name = "gpll0",
+		.parent_names = (const char *[]){ "xo" },
+		.num_parents = 1,
+		.ops = &clk_pll_ops,
+	},
+};
+
+Then a single array of clks per driver references this:
+
+static struct clk_regmap *gcc_apq8084_clocks[] = {
+	[GPLL0] = &gpll0.clkr,
+	...
+
+(in your case you won't reference struct clk_regmap, but struct clk_hw)
+
+The actual registration happens in your probe like so:
+
+static int bcm2835_clk_probe(struct platform_device *pdev)
+{
+	...
+	for (i = 0; i < num_clks; i++) {
+		clk = devm_clk_register(dev, array_of_clks[i].hw)
+	...
+}
+
+Regards,
+Mike
