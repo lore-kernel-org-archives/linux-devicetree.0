@@ -1,44 +1,39 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
-Date: Thu, 14 Jan 2016 09:05:48 +0200
-Message-ID: <87wprcbpyr.fsf@kamboji.qca.qualcomm.com>
-References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
-	<1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
-	<87io35lq2p.fsf@kamboji.qca.qualcomm.com>
-	<5695E802.7050909@compulab.co.il> <20160113172712.GI12777@atomide.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
+Date: Thu, 14 Jan 2016 08:27:45 +0100
+Message-ID: <87egdk39ji.fsf@dell.be.48ers.dk>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+	<87oacp5zl7.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113172712.GI12777-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> (Tony Lindgren's message of
-	"Wed, 13 Jan 2016 09:27:12 -0800")
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01> (Wenyou
+	Yang's message of "Thu, 14 Jan 2016 01:23:39 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
+>>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
 
->> >>  arch/arm/boot/dts/am335x-cm-t335.dts | 55 ++++++++++++++++++++++++++++++++++++
->> >>  1 file changed, 55 insertions(+)
->> > 
->> > To what tree should this patch go? My wireless-drivers-next tree doesn't
->> > even have this file.
->> 
->> Right. It will hit the mainline during this merge window through Tony's and
->> arm-soc trees.
->> 
->> Do you think it will be sensible if you take 1/3 and 2/3 patches and Tony
->> will take the 3/3 (there is no code dependency between first two and the last one),
->> or we can just wait till arm-soc hits the mainline, so you will have the
->> needed code?
->
-> Yeah I'll pick the dts changes separately after the merge window as
-> there is no dependency to the driver changes.
+ >> Isn't the regulator part of the act8945a identical to act8865? Can't we just use the
+ >> existing act8865-regulator.c driver? (E.G. support 8865 variant in the mfd driver,
+ >> but only register the regulator sub device?)
 
-Ok, I'll then take patches 1 and 2 once the merge window opens.
+ > Yes, the regulator part of the act8945a is identical to act8865.
+
+ > But the act8865-regulator driver is a struct i2c_driver, and the mfd
+ > sub-device driver is a platform_driver driver, it is not easy to use
+ > it.
+
+But the mfd driver could support the act8865 variant as well (by only
+registering the regulator mfd cell).
 
 -- 
-Kalle Valo
+Venlig hilsen,
+Peter Korsgaard 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
