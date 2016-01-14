@@ -1,68 +1,56 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: Re: [PATCH v2 9/9] regulator: add LM363X driver
-Date: Thu, 14 Jan 2016 16:56:03 +0900
-Message-ID: <56975493.7050900@ti.com>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-10-git-send-email-milo.kim@ti.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Thu, 14 Jan 2016 08:07:40 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+	<87oacp5zl7.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+ <87egdk39ji.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1448521025-2796-10-git-send-email-milo.kim@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org
-Cc: robh+dt@kernel.org, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87egdk39ji.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lee and Mark,
-
-On 11/26/2015 03:57 PM, Milo Kim wrote:
-> LM363X regulator driver supports LM3631 and LM3632.
-> LM3631 has 5 regulators. LM3632 provides 3 regulators.
-> One boost output and LDOs are used for the display module.
-> Boost voltage is configurable but always on.
-> Supported operations for LDOs are enabled/disabled and voltage change.
->
-> Two LDOs of LM3632 can be controlled by external pins.
-> Those are configured through the DT properties.
->
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
-
-I'm creating the 3rd patch-set but this driver is found in linux-next 
-tree. And Axel Lin has patched this driver. In my patch v3, modified 
-part is DT properties for external enable pins. (Use '-gpios' instead of 
-'-gpio')
-
-diff --git a/drivers/regulator/lm363x-regulator.c 
-b/drivers/regulator/lm363x-regulator.c
-index f53e633..4a11290 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -227,9 +227,9 @@ static int 
-lm363x_regulator_of_get_enable_gpio(struct device_node *np, int id)
-*/
-switch (id) {
-case LM3632_LDO_POS:
-- return of_get_named_gpio(np, "ti,lcm-en1-gpio", 0);
-+ return of_get_named_gpio(np, "ti,lcm-en1-gpios", 0);
-case LM3632_LDO_NEG:
-- return of_get_named_gpio(np, "ti,lcm-en2-gpio", 0);
-+ return of_get_named_gpio(np, "ti,lcm-en2-gpios", 0);
-default:
-return -EINVAL;
-}
-
-So, I'd like to know which is better for you.
-a) Create a patch based on linux-next tree (the above patch)
-Or
-b) Re-generate a patch based on linux-mfd tree
-
-Best regards,
-Milo
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIgS29yc2dhYXJk
+IFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtvcnNnYWFyZA0K
+PiBTZW50OiAyMDE2xOox1MIxNMjVIDE1OjI4DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5Z
+YW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+
+OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ow0KPiBSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyaw0KPiBS
+dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8aWpjK2RldmljZXRy
+ZWVAaGVsbGlvbi5vcmcudWs+Ow0KPiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47
+IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296bG93c2tpQHNhbXN1bmcuY29tPjsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0
+bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEphdmllciBNYXJ0aW5leg0K
+PiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9yZz47IExlZSBKb25lcyA8bGVlLmpvbmVzQGxp
+bmFyby5vcmc+OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBhZGQgcmVndWxh
+dG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+ID4+Pj4+ICJZYW5nLCIgPT0gWWFuZywg
+V2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+ICA+PiBJc24ndCB0
+aGUgcmVndWxhdG9yIHBhcnQgb2YgdGhlIGFjdDg5NDVhIGlkZW50aWNhbCB0byBhY3Q4ODY1PyBD
+YW4ndCB3ZSBqdXN0IHVzZQ0KPiB0aGUgID4+IGV4aXN0aW5nIGFjdDg4NjUtcmVndWxhdG9yLmMg
+ZHJpdmVyPyAoRS5HLiBzdXBwb3J0IDg4NjUgdmFyaWFudCBpbiB0aGUgbWZkDQo+IGRyaXZlciwg
+ID4+IGJ1dCBvbmx5IHJlZ2lzdGVyIHRoZSByZWd1bGF0b3Igc3ViIGRldmljZT8pDQo+IA0KPiAg
+PiBZZXMsIHRoZSByZWd1bGF0b3IgcGFydCBvZiB0aGUgYWN0ODk0NWEgaXMgaWRlbnRpY2FsIHRv
+IGFjdDg4NjUuDQo+IA0KPiAgPiBCdXQgdGhlIGFjdDg4NjUtcmVndWxhdG9yIGRyaXZlciBpcyBh
+IHN0cnVjdCBpMmNfZHJpdmVyLCBhbmQgdGhlIG1mZCAgPiBzdWItDQo+IGRldmljZSBkcml2ZXIg
+aXMgYSBwbGF0Zm9ybV9kcml2ZXIgZHJpdmVyLCBpdCBpcyBub3QgZWFzeSB0byB1c2UgID4gaXQu
+DQo+IA0KPiBCdXQgdGhlIG1mZCBkcml2ZXIgY291bGQgc3VwcG9ydCB0aGUgYWN0ODg2NSB2YXJp
+YW50IGFzIHdlbGwgKGJ5IG9ubHkgcmVnaXN0ZXJpbmcNCj4gdGhlIHJlZ3VsYXRvciBtZmQgY2Vs
+bCkuDQoNCkkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZC4NCg0KVGhlIE1GRCBzdWIgZGV2aWNlIGlz
+IHJlZ2lzdGVyZWQgYXMgYSBwbGF0Zm9ybSBkZXZpY2UsIHRoZSBleGlzdGluZyBhY3Q4ODY1IGRy
+aXZlciBpcyByZWdpc3RlcmVkIGFzIGFuIGkyY19kcml2ZXIuIEhvdyBkbyB0aGV5IG1hdGNoPyA6
+KQ0KDQpDb3VsZCB5b3UgcG9pbnQgb3V0IHdoaWNoIGV4aXRpbmcgZHJpdmVyIGZvciBtZSB0byBy
+ZWZlcmVuY2UuICBUaGFuayB5b3UhDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
