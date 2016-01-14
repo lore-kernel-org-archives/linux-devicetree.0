@@ -1,99 +1,32 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
- disable_unused_functions
-Date: Fri, 15 Jan 2016 01:13:05 +0200
-Message-ID: <2014724.QmjXVju9UW@avalon>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH v2 9/9] regulator: add LM363X driver
+Date: Fri, 15 Jan 2016 08:41:47 +0900
+Message-ID: <5698323B.4030401@ti.com>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-10-git-send-email-milo.kim@ti.com> <56975493.7050900@ti.com>
+ <20160114102736.GP6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Alexander Kaplan <alex@nextthing.co>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160114102736.GP6588@sirena.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF4aW1lLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSAxNCBKYW51
-YXJ5IDIwMTYgMTY6MjQ6NTYgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBUaGUgZHJtX2ZiZGV2X2Nt
-YV9pbml0IGZ1bmN0aW9uIGFsd2F5cyBjYWxscyB0aGUKPiBkcm1faGVscGVyX2Rpc2FibGVfdW51
-c2VkX2Z1bmN0aW9ucy4gU2luY2UgaXQncyBwYXJ0IG9mIHRoZSB1c3VhbCBwcm9iZQo+IHByb2Nl
-c3MsIGFsbCB0aGUgZHJpdmVycyB1c2luZyB0aGF0IGhlbHBlciB3aWxsIGVuZCB1cCBoYXZpbmcg
-dGhlaXIgZW5jb2Rlcgo+IGFuZCBDUlRDIGRpc2FibGUgZnVuY3Rpb25zIGNhbGxlZCBhdCBwcm9i
-ZSBpZiB0aGVpciBkZXZpY2UgaGFzIG5vdCBiZWVuCj4gcmVwb3J0ZWQgYXMgZW5hYmxlZC4KPiAK
-PiBUaGlzIGNvdWxkIGJlIGZpeGVkIGJ5IHJlYWRpbmcgb3V0IGZyb20gdGhlIHJlZ2lzdGVycyB0
-aGUgY3VycmVudCBzdGF0ZSBvZgo+IHRoZSBkZXZpY2UgaWYgaXQgaXMgZW5hYmxlZCwgYnV0IGV2
-ZW4gdGhhdCB3aWxsIG5vdCBoYW5kbGUgdGhlIGNhc2Ugd2hlcmUKPiB0aGUgZGV2aWNlIGlzIGFj
-dHVhbGx5IGRpc2FibGVkLgo+IAo+IE1vcmVvdmVyLCB0aGUgZHJpdmVycyB1c2luZyB0aGUgYXRv
-bWljIG1vZGVzZXR0aW5nIGV4cGVjdCB0aGF0IHRoZWlyIGVuYWJsZQo+IGFuZCBkaXNhYmxlIGNh
-bGxiYWNrIHRvIGJlIGNhbGxlZCB3aGVuIHRoZSBkZXZpY2UgaXMgYWxyZWFkeSBlbmFibGVkIG9y
-Cj4gZGlzYWJsZWQgKHJlc3BlY3RpdmVseSkuCj4gCj4gV2UgY2FuIGhvd2V2ZXIgZml4IHRoaXMg
-aXNzdWUgYnkgbW92aW5nIHRoZSBjYWxsIHRvCj4gZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9m
-dW5jdGlvbnMgb3V0IG9mIGRybV9mYmRldl9jbWFfaW5pdCBhbmQgbWFrZSB0aGUKPiBkcml2ZXJz
-IG5lZWRpbmcgaXQgKGFsbCB0aGUgZHJpdmVycyBjYWxsaW5nIGRybV9mYmRldl9jbWFfaW5pdCBh
-bmQgbm90Cj4gdXNpbmcgdGhlIGF0b21pYyBtb2Rlc2V0dGluZykgZXhwbGljaXRseSBjYWxsIGl0
-LgoKSSdkIHJhdGhlciBhZGQgaXQgdG8gYWxsIGRyaXZlcnMgdGhhdCBjYWxsIGRybV9mYmRldl9j
-bWFfaW5pdCgpLiBBbGwgdGhlIAphdG9taWMgb25lcyBtdXN0IGhhdmUgc3BlY2lhbCBjb2RlIHRv
-IGNvcGUgd2l0aCBpdCB0aGF0IGNvdWxkIGJlIHJlbmRlcmVkIAp1c2VsZXNzIGJ5IHRoZSByZW1v
-dmFsIG9mIHRoZSBkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucygpIGNhbGwuIFRo
-YXQgCmNvZGUgc2hvdWxkIGJlIHJlbW92ZWQgdG9vLCBhbmQgaXQgd291bGQgYmUgZWFzaWVyIHRv
-IGNoZWNrIGRyaXZlcnMgb25lIGJ5IG9uZSAKYW5kIGZpeGluZyB0aGVtIGluZGl2aWR1YWxseSAo
-b3V0c2lkZSBvZiB0aGlzIHBhdGNoIHNlcmllcywgdW5sZXNzIHlvdSBpbnNpc3QgCjstKSkgd2hl
-biByZW1vdmluZyB0aGUgZXhwbGljaXQgZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlv
-bnMoKSBjYWxsLiAKT3RoZXIgdGhhbiB0aGF0IHRoZSBwYXRjaCBsb29rcyBmaW5lIHRvIG1lLgoK
-PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
-b25zLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmMgfCAz
-IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jICB8IDEgKwo+ICBkcml2
-ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYyAgICAgICB8IDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0v
-dGlsY2RjL3RpbGNkY19kcnYuYyB8IDEgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
-cygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Ry
-bV9mYl9jbWFfaGVscGVyLmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5j
-IGluZGV4IGMxOWE2MjU2MTE4My4uZGFhOThkODgxMTQyCj4gMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
-X2ZiX2NtYV9oZWxwZXIuYwo+IEBAIC0zNDgsOSArMzQ4LDYgQEAgc3RydWN0IGRybV9mYmRldl9j
-bWEgKmRybV9mYmRldl9jbWFfaW5pdChzdHJ1Y3QKPiBkcm1fZGV2aWNlICpkZXYsCj4gCj4gIAl9
-Cj4gCj4gLQkvKiBkaXNhYmxlIGFsbCB0aGUgcG9zc2libGUgb3V0cHV0cy9jcnRjcyBiZWZvcmUg
-ZW50ZXJpbmcgS01TIG1vZGUgKi8KPiAtCWRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rp
-b25zKGRldik7Cj4gLQo+ICAJcmV0ID0gZHJtX2ZiX2hlbHBlcl9pbml0aWFsX2NvbmZpZyhoZWxw
-ZXIsIHByZWZlcnJlZF9icHApOwo+ICAJaWYgKHJldCA8IDApIHsKPiAgCQlkZXZfZXJyKGRldi0+
-ZGV2LCAiRmFpbGVkIHRvIHNldCBpbml0aWFsIGh3IGNvbmZpZ3VyYXRpb24uXG4iKTsKPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYwo+IGIvZHJpdmVycy9n
-cHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYyBpbmRleCA3Yjk5MGI0ZTk2ZDIuLmUxZGI1Nzc5MWZj
-OQo+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9pbXgvaW14LWRybS1jb3JlLmMKPiAr
-KysgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jCj4gQEAgLTMxMiw2ICszMTIs
-NyBAQCBzdGF0aWMgaW50IGlteF9kcm1fZHJpdmVyX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRy
-bSwKPiB1bnNpZ25lZCBsb25nIGZsYWdzKSBkZXZfd2Fybihkcm0tPmRldiwgIkludmFsaWQgbGVn
-YWN5ZmJfZGVwdGguIAo+IERlZmF1bHRpbmcgdG8gMTZicHBcbiIpOyBsZWdhY3lmYl9kZXB0aCA9
-IDE2Owo+ICAJfQo+ICsJZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoZHJtKTsK
-PiAgCWlteGRybS0+ZmJoZWxwZXIgPSBkcm1fZmJkZXZfY21hX2luaXQoZHJtLCBsZWdhY3lmYl9k
-ZXB0aCwKPiAgCQkJCWRybS0+bW9kZV9jb25maWcubnVtX2NydGMsIE1BWF9DUlRDKTsKPiAgCWlm
-IChJU19FUlIoaW14ZHJtLT5mYmhlbHBlcikpIHsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3N0aS9zdGlfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYwo+IGluZGV4
-IDE0Njk5ODc5NDlkOC4uNTA2YjU2MjZmM2VkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9zdGkvc3RpX2Rydi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0aS9zdGlfZHJ2LmMKPiBA
-QCAtMTYwLDYgKzE2MCw3IEBAIHN0YXRpYyBpbnQgc3RpX2xvYWQoc3RydWN0IGRybV9kZXZpY2Ug
-KmRldiwgdW5zaWduZWQKPiBsb25nIGZsYWdzKQo+IAo+ICAJZHJtX21vZGVfY29uZmlnX3Jlc2V0
-KGRldik7Cj4gCj4gKwlkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucyhkZXYpOwo+
-ICAJZHJtX2ZiZGV2X2NtYV9pbml0KGRldiwgMzIsCj4gIAkJCSAgIGRldi0+bW9kZV9jb25maWcu
-bnVtX2NydGMsCj4gIAkJCSAgIGRldi0+bW9kZV9jb25maWcubnVtX2Nvbm5lY3Rvcik7Cj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5jCj4gYi9kcml2ZXJz
-L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyBpbmRleCA4NzZjYWQ1OGIxZjkuLjI0YmUzMWQ2
-OTcwMQo+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5j
-Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMKPiBAQCAtMjk0LDYg
-KzI5NCw3IEBAIHN0YXRpYyBpbnQgdGlsY2RjX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwg
-dW5zaWduZWQKPiBsb25nIGZsYWdzKSBicmVhazsKPiAgCX0KPiAKPiArCWRybV9oZWxwZXJfZGlz
-YWJsZV91bnVzZWRfZnVuY3Rpb25zKGRldik7Cj4gIAlwcml2LT5mYmRldiA9IGRybV9mYmRldl9j
-bWFfaW5pdChkZXYsIGJwcCwKPiAgCQkJZGV2LT5tb2RlX2NvbmZpZy5udW1fY3J0YywKPiAgCQkJ
-ZGV2LT5tb2RlX2NvbmZpZy5udW1fY29ubmVjdG9yKTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
-aW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 1/14/2016 7:27 PM, Mark Brown wrote:
+> On Thu, Jan 14, 2016 at 04:56:03PM +0900, Milo Kim wrote:
+>
+>> So, I'd like to know which is better for you.
+>> a) Create a patch based on linux-next tree (the above patch)
+>> Or
+>> b) Re-generate a patch based on linux-mfd tree
+>
+> At this point the easiest thing might be to wait for v4.5-rc1 then send
+> a patch for that after everything gets merged.
+
+OK, thanks!
+
+Best regards,
+Milo
