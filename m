@@ -1,117 +1,113 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Thu, 14 Jan 2016 17:20:57 +0530
-Message-ID: <56978BA1.9050409@nvidia.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-6-git-send-email-ldewangan@nvidia.com> <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com> <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com> <5696665A.5030508@nvidia.com> <5696F0C4.1060904@samsung.com> <5696F7F8.108@samsung.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V2 1/4] clk: bcm2835: avoid the use of BCM2835_CLOCK_COUNT
+ in clk-bcm2835
+Date: Thu, 14 Jan 2016 13:11:02 +0100
+Message-ID: <56979056.6010407@martin.sperl.org>
+References: <1452542157-2387-1-git-send-email-kernel@martin.sperl.org>
+ <1452542157-2387-2-git-send-email-kernel@martin.sperl.org>
+ <20160113200012.1168.74515@quark.deferred.io>
+ <20160114001358.1168.5768@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5696F7F8.108@samsung.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160114001358.1168.5768@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Thursday 14 January 2016 06:50 AM, Krzysztof Kozlowski wrote:
-> On 14.01.2016 09:50, Krzysztof Kozlowski wrote:
->> On 13.01.2016 23:59, Laxman Dewangan wrote:
->>> On Wednesday 13 January 2016 09:55 AM, Laxman Dewangan wrote:
->>>> On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
->>>>> On 13.01.2016 13:07, Laxman Dewangan wrote:
->>>>>> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
->>>>>> That is also fine to me but still I am not comfortable with the config
->>>>>> name and driver file name as this does not suggest the common.
->>>>> The name does not matter. Really. We have a lot of drivers with a
->>>>> specific device-like name and supporting different devices. To point
->>>>> that your argument is invalid - your initial name of driver
->>>>> "rtc-max77620.c" supported totally different "names": the max77620 and
->>>>> max20024. It also wasn't suggesting something "common"...
->>>> In all config string, I have mentioned the MAX20024.
->>>>
->>>>
->>>>> With my approach we are not developing common think neither. We just
->>>>> want to extend/re-use existing max77686 (or max77802) driver for new
->>>>> devices. Just like everywhere else.
->>>> OK, fine to me if this is acceptable.
->>>> I will drop this rtc patch form this series and work in max77686
->>>> driver to modify first and once merged, use this config on my defconfig.
->>>>
->>> Here, MAX686 RTC driver needs two regmap handle, one for the rtc_regmap
->>> and other for STATUS2 register access.
->>>
->>>          ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
->>> &val);
->>>          if (ret < 0) {
->>>                  dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->>>                                  __func__, __LINE__, ret);
->>>                  goto out;
->>>          }
->>>
->>>
->>> We can not have two regmap handle on rtc driver as both regmap (pmic and
->>> rtc) registered with different i2c device.
->>>
->>> Also this register should not be accessed by RTC driver if we want to
->>> decouple as this is very much MAX77686 register set.
->>> Do we need this code?
->>> static int max77686_rtc_read_alarm(struct device *dev, struct rtc_wkalrm
->>> *alrm)
->>> {
->>>          struct max77686_rtc_info *info = dev_get_drvdata(dev);
->>>          u8 data[RTC_NR_TIME];
->>>          unsigned int val;
->>>          int i, ret;
->>>
->>> ::::::::
->>>         alrm->pending = 0;
->>>          ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
->>> &val);
->>>          if (ret < 0) {
->>>                  dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->>>                                  __func__, __LINE__, ret);
->>>                  goto out;
->>>          }
->>>
->>>          if (val & (1 << 4)) /* RTCA1 */
->>>                  alrm->pending = 1;
->>>
->>> }
->> Most of the drivers set the 'pending' field when reading alarm. Your
->> original driver did not.
+
+On 14.01.2016 01:13, Michael Turquette wrote:
+> Quoting Michael Turquette (2016-01-13 12:00:12)
+>> Hi Martin,
 >>
->> The max77802 does exactly the same (BTW, these should be merged as
->> well... I'll add this to the TODO list) so I think this is necessary.
-> How about merging max77802 to max77686 first? The only differences I
-> found are:
-> 1. It uses main MFD/PMIC regmap.
->     This can be solved as part of decoupling code. The driver will get
-> MFD's regmap and set up its own (only on max77686). The max77802 will
-> only use parent's regmap.
+>> Quoting kernel@martin.sperl.org (2016-01-11 11:55:53)
+>>>   static int bcm2835_clk_probe(struct platform_device *pdev)
+>>>   {
+>>>          struct device *dev = &pdev->dev;
+>>>          struct clk **clks;
+>>> +       size_t clk_cnt;
+>>>          struct bcm2835_cprman *cprman;
+>>>          struct resource *res;
+>>> +       size_t i;
+>>> +
+>>> +       /* find the max clock index */
+>>> +       clk_cnt = BCM2835_CLOCK_PERI_IMAGE; /* see below */
+>>> +       for (i = 0; i < ARRAY_SIZE(bcm2835_register_clocks); i++)
+>>> +               clk_cnt = max(clk_cnt, bcm2835_register_clocks[i].index);
+>>> +       clk_cnt += 1;
+>>
+>> I'm not sure how this solution is better than using CLOCK_COUNT. Some
+>> other bindings use a max value, NR_CLKS or other sentinel.
+>>
+>> Why did you not choose to set clk_cnt equal to BCM2835_CLOCK_PWM? Why
+>> not initialize it to zero?
 >
-> 2. It has different register address.
->     We need a register-layout/configuration structure. The logic is the
-> same except few differences (e.g. presence of MAX77802_RTC_AE1).
+> OK, I just caught up on the asoc/bcm2835 thread.
 >
-> It may be easier to merge them now, before adding support for max77620?
-> I could handle this probably next week or in the following week
-> (assuming someone would test max77802 because I don't have the hardware).
+> Really the best solution would be to have an array of all of the clks in
+> the driver and just use ARRAY_SIZE on it.
 >
-> Anyway I think we should develop these RTC patches having this in mind:
-> merge all of them.
+> For your driver, could you make an array of clk_hw pointers and call
+> devm_clk_register on all of them in a loop? This gets rid of the big
+> pile of explicit calls in bcm2835_clk_probe.
 >
+> You can also get rid of stuff like bcm2835_plla_core_data by just
+> stuffing that data into a single struct initialization. Here is a
+> snippet for how the qcom clk drivers do it:
+>
+> static struct clk_pll gpll0 = {
+> 	.l_reg = 0x0004,
+> 	.m_reg = 0x0008,
+> 	.n_reg = 0x000c,
+> 	.config_reg = 0x0014,
+> 	.mode_reg = 0x0000,
+> 	.status_reg = 0x001c,
+> 	.status_bit = 17,
+> 	.clkr.hw.init = &(struct clk_init_data){
+> 		.name = "gpll0",
+> 		.parent_names = (const char *[]){ "xo" },
+> 		.num_parents = 1,
+> 		.ops = &clk_pll_ops,
+> 	},
+> };
 
-I think we can do the merging of max77802 and max77686 at second step.
+I did not know you could do that - that could make life easier...
 
-At first, lets decouple the rtc-max77686.c with its mfd driver. This 
-will give better picture how will it be done.
-Once this is there then max77620 can use this and in parallel, can be 
-work for max77802 to use the same driver.
+But a quick look shows that this approach probably would require a
+major rewrite of all the methods.
 
+> static int bcm2835_clk_probe(struct platform_device *pdev)
+> {
+> 	...
+> 	for (i = 0; i < num_clks; i++) {
+> 		clk = devm_clk_register(dev, array_of_clks[i].hw)
+> 	...
+> }
 
-Let's first conclude and get accpepted for max77686 and max77620 as both 
-of us have related HW to verify the changes.
+I guess I can use a slightly different approach that does not
+require as many changes, that looks like this:
 
+static const struct bcm2835_clk_desc clk_desc_array[] = {
+	/* register PLL */
+	[BCM2835_PLLA]          = REGISTER_PLL(&bcm2835_plla_data),
+	...
+};
+...
+static int bcm2835_clk_probe(struct platform_device *pdev)
+{
+	const size_t asize = ARRAY_SIZE(clk_desc_array);
+	...
+	for (i = 0; i < asize; i++) {
+		desc = &clk_desc_array[i];
+		if (desc)
+			clks[i] = desc->clk_register(cprman,
+						     desc->data);
+	}
+	...
+}
 
+If we need to order the initialization then we can add some
+priority field to clk_desc_array and iterate over all the priority
+values.
