@@ -1,311 +1,388 @@
-From: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] Input: DT binding: Change touchscreen to touch for use with touchscreens and touchpads
-Date: Thu, 14 Jan 2016 15:42:45 -0800
-Message-ID: <1452814965-22731-1-git-send-email-aduggan@synaptics.com>
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: [PATCH v2 03/10] Input: synaptics-rmi4: Add device tree support for RMI4 I2C devices
+Date: Thu, 14 Jan 2016 15:44:19 -0800
+Message-ID: <1452815059-22980-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christopher Heiny <cheiny-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Stephen Chandler Paul <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vincent Huang <vincent.huang-8LB1SX4YFO85ffrT631h+Q@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrey Gusakov <andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These generic touchscreen bindings can also be used for touchpads.
-Instead of creating new generic bindings this patch just renames then to
-touch-*.
+Add devicetree binding for I2C devices and add bindings for optional
+parameters in the function drivers. Parameters for function drivers are
+defined in child nodes for each of the functions.
 
-Signed-off-by: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 ---
-It was suggested that for the synaptics-rmi4 driver I use the generic
-bindings. But, since the rmi4 driver is used for both touchpads and
-touchscreens it seemed weird to have a touchpad with a parameter
-of touchscreen-inverted-y. I changed all of the references to it in the
-source tree. But, I realize this could cause a backwards compatibilty
-issue with device trees which are not included in the kernel.
+ .../devicetree/bindings/input/rmi4/rmi_f01.txt     | 39 ++++++++++++++++
+ .../devicetree/bindings/input/rmi4/rmi_i2c.txt     | 53 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/input/rmi4/rmi_bus.c                       | 35 ++++++++++++++
+ drivers/input/rmi4/rmi_bus.h                       |  4 --
+ drivers/input/rmi4/rmi_driver.c                    | 28 ++++++++++++
+ drivers/input/rmi4/rmi_f01.c                       | 50 ++++++++++++++++++++
+ drivers/input/rmi4/rmi_i2c.c                       | 12 ++++-
+ 8 files changed, 217 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
+ create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
 
-Thanks,
-Andrew
-
- Documentation/devicetree/bindings/input/touch.txt  | 29 ++++++++++++++++++++++
- .../bindings/input/touchscreen/touchscreen.txt     | 29 ----------------------
- arch/arm/boot/dts/am437x-gp-evm.dts                |  4 +--
- arch/arm/boot/dts/am437x-sk-evm.dts                |  4 +--
- arch/arm/boot/dts/am43x-epos-evm.dts               |  4 +--
- arch/arm/boot/dts/omap3-n900.dts                   | 12 ++++-----
- arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           |  8 +++---
- drivers/input/touchscreen/bcm_iproc_tsc.c          | 12 ++++-----
- drivers/input/touchscreen/chipone_icn8318.c        | 16 ++++++------
- drivers/input/touchscreen/of_touchscreen.c         | 12 ++++-----
- 10 files changed, 65 insertions(+), 65 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touch.txt
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touch.txt b/Documentation/devicetree/bindings/input/touch.txt
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
 new file mode 100644
-index 0000000..3000b5a
+index 0000000..096855c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touch.txt
-@@ -0,0 +1,29 @@
-+General Touchscreen and Touchpad Properties:
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt
+@@ -0,0 +1,39 @@
++Synaptics RMI4 F01 Device Binding
 +
-+Optional properties for Touchscreens:
-+ - touch-size-x 		: horizontal resolution of touchscreen
-+				 (in pixels)
-+ - touch-size-y 		: vertical resolution of touchscreen
-+				  (in pixels)
-+ - touch-max-pressure		: maximum reported pressure (arbitrary range
-+				  dependent on the controller)
-+ - touch-fuzz-x 		: horizontal noise value of the absolute input
-+				  device (in pixels)
-+ - touch-fuzz-y 		: vertical noise value of the absolute input
-+				  device (in pixels)
-+ - touch-fuzz-pressure		: pressure noise value of the absolute input
-+				  device (arbitrary range dependent on the
-+				  controller)
-+ - touch-inverted-x		: X axis is inverted (boolean)
-+ - touch-inverted-y		: Y axis is inverted (boolean)
-+ - touch-swapped-x-y		: X and Y axis are swapped (boolean)
-+				  Swapping is done after inverting the axis
++The Synaptics RMI4 core is able to support RMI4 devices using different
++transports and different functions. This file describes the device tree
++bindings for devices which contain Function 1. Complete documentation
++for transports and other functions can be found in:
++Documentation/devicetree/bindings/input/rmi4.
 +
-+Deprecated properties for Touchscreens:
-+ - x-size			: deprecated name for touch-size-x
-+ - y-size			: deprecated name for touch-size-y
-+ - moving-threshold		: deprecated name for a combination of
-+				  touch-fuzz-x and touch-fuzz-y
-+ - contact-threshold		: deprecated name for touch-fuzz-pressure
-+ - x-invert			: deprecated name for touch-inverted-x
-+ - y-invert			: deprecated name for touch-inverted-y
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-deleted file mode 100644
-index ac23caf..0000000
---- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--General Touchscreen Properties:
--
--Optional properties for Touchscreens:
-- - touchscreen-size-x		: horizontal resolution of touchscreen
--				  (in pixels)
-- - touchscreen-size-y		: vertical resolution of touchscreen
--				  (in pixels)
-- - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
--				  dependent on the controller)
-- - touchscreen-fuzz-x		: horizontal noise value of the absolute input
--				  device (in pixels)
-- - touchscreen-fuzz-y		: vertical noise value of the absolute input
--				  device (in pixels)
-- - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
--				  device (arbitrary range dependent on the
--				  controller)
-- - touchscreen-inverted-x	: X axis is inverted (boolean)
-- - touchscreen-inverted-y	: Y axis is inverted (boolean)
-- - touchscreen-swapped-x-y	: X and Y axis are swapped (boolean)
--				  Swapping is done after inverting the axis
--
--Deprecated properties for Touchscreens:
-- - x-size			: deprecated name for touchscreen-size-x
-- - y-size			: deprecated name for touchscreen-size-y
-- - moving-threshold		: deprecated name for a combination of
--				  touchscreen-fuzz-x and touchscreen-fuzz-y
-- - contact-threshold		: deprecated name for touchscreen-fuzz-pressure
-- - x-invert			: deprecated name for touchscreen-inverted-x
-- - y-invert			: deprecated name for touchscreen-inverted-y
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index d2450ab..87510df 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -603,8 +603,8 @@
- 				      <&am43xx_pinmux 0x264>;
- 		interrupt-names = "tsc", "wakeup";
++Additional documentation for F01 can be found at:
++http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
++
++Optional Properties:
++- syna,nosleep-mode: If set the device will run at full power without sleeping.
++			nosleep has 3 modes, 0 will not change the default
++			setting, 1 will disable nosleep (allow sleeping),
++			and 2 will enable nosleep (disabling sleep).
++- syna,wakeup-threshold: Defines the amplitude of the disturbance to the
++				background capacitance that will cause the
++				device to wake from dozing.
++- syna,doze-holdoff-msec: The delay to wait after the last finger lift and the
++				first doze cycle.
++- syna,doze-interval-msec: The time period that the device sleeps between finger
++				activity.
++
++
++Example of a RMI4 I2C device with F01:
++	Example:
++	&i2c1 {
++		rmi4-i2c-dev@2c {
++			compatible = "syna,rmi4-i2c";
++
++			...
++
++			rmi4-f01@1 {
++				reg = <0x1>;
++				syna,nosleep-mode = <1>;
++			};
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+new file mode 100644
+index 0000000..b9e64f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+@@ -0,0 +1,53 @@
++Synaptics RMI4 I2C Device Binding
++
++The Synaptics RMI4 core is able to support RMI4 devices using different
++transports and different functions. This file describes the device tree
++bindings for devices using the I2C transport driver. Complete documentation
++for other transports and functions can be found in
++Documentation/devicetree/bindings/input/rmi4.
++
++Required Properties:
++- compatible: syna,rmi4-i2c
++- reg: I2C address
++- #address-cells: Set to 1 to indicate that the function child nodes
++		    consist of only on uint32 value.
++- #size-cells: Set to 0 to indicate that the function child nodes do not
++		have a size property.
++
++Optional Properties:
++- interrupts: interrupt which the rmi device is connected to.
++- interrupt-parent: The interrupt controller.
++See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++- syna,reset-delay-msec: The number of milliseconds to wait after resetting the
++			device.
++
++Function Parameters:
++Parameters specific to RMI functions are contained in child nodes of the rmi device
++ node. Documentation for the parameters of each function can be found in:
++Documentation/devicetree/bindings/input/rmi4/rmi_f*.txt.
++
++
++
++Example:
++	&i2c1 {
++		rmi4-i2c-dev@2c {
++			compatible = "syna,rmi4-i2c";
++			reg = <0x2c>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupt-parent = <&gpio>;
++			interrupts = <4 2>;
++
++			rmi4-f01@1 {
++				reg = <0x1>;
++				syna,nosleep-mode = <1>;
++			};
++
++			rmi4-f11@11 {
++				reg = <0x11>;
++				touch-inverted-y;
++				syna,sensor-type = <2>;
++			};
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 55df1d4..7a1bf68 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -220,6 +220,7 @@ sprd	Spreadtrum Communications Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
++syna	Synaptics Inc.
+ synology	Synology, Inc.
+ tbs	TBS Technologies
+ tcl	Toby Churchill Ltd.
+diff --git a/drivers/input/rmi4/rmi_bus.c b/drivers/input/rmi4/rmi_bus.c
+index e7dcd39..0246c2a 100644
+--- a/drivers/input/rmi4/rmi_bus.c
++++ b/drivers/input/rmi4/rmi_bus.c
+@@ -153,6 +153,21 @@ static int rmi_function_match(struct device *dev, struct device_driver *drv)
+ 	return fn->fd.function_number == handler->func;
+ }
  
--		touchscreen-size-x = <1024>;
--		touchscreen-size-y = <600>;
-+		touch-size-x = <1024>;
-+		touch-size-y = <600>;
- 		wakeup-source;
- 	};
++#ifdef CONFIG_OF
++static void rmi_function_of_probe(struct rmi_function *fn)
++{
++	char of_name[8];
++
++	snprintf(of_name, sizeof(of_name), "rmi4-f%02x",
++		fn->fd.function_number);
++	fn->dev.of_node = of_find_node_by_name(
++				fn->rmi_dev->xport->dev->of_node, of_name);
++}
++#else
++static inline void rmi_function_of_probe(struct rmi_function *fn)
++{}
++#endif
++
+ static int rmi_function_probe(struct device *dev)
+ {
+ 	struct rmi_function *fn = to_rmi_function(dev);
+@@ -160,6 +175,8 @@ static int rmi_function_probe(struct device *dev)
+ 					to_rmi_function_handler(dev->driver);
+ 	int error;
  
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 63de2a1..2f92cd6 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -506,8 +506,8 @@
++	rmi_function_of_probe(fn);
++
+ 	if (handler->probe) {
+ 		error = handler->probe(fn);
+ 		return error;
+@@ -328,6 +345,24 @@ err_unregister_function_handlers:
+ 	return ret;
+ }
  
- 		reset-gpios = <&gpio1 28 GPIO_ACTIVE_LOW>;
++int rmi_of_property_read_u32(struct device *dev, u32 *result,
++				const char *prop, bool optional)
++{
++	int retval;
++	u32 val = 0;
++
++	retval = of_property_read_u32(dev->of_node, prop, &val);
++	if (retval && (!optional && retval == -EINVAL)) {
++		dev_err(dev, "Failed to get %s value: %d\n",
++			prop, retval);
++		return retval;
++	}
++	*result = val;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(rmi_of_property_read_u32);
++
+ static int __init rmi_bus_init(void)
+ {
+ 	int error;
+diff --git a/drivers/input/rmi4/rmi_bus.h b/drivers/input/rmi4/rmi_bus.h
+index 64bb5d4..53f145e 100644
+--- a/drivers/input/rmi4/rmi_bus.h
++++ b/drivers/input/rmi4/rmi_bus.h
+@@ -175,10 +175,6 @@ extern struct bus_type rmi_bus_type;
  
--		touchscreen-size-x = <480>;
--		touchscreen-size-y = <272>;
-+		touch-size-x = <480>;
-+		touch-size-y = <272>;
- 	};
+ int rmi_of_property_read_u32(struct device *dev, u32 *result,
+ 				const char *prop, bool optional);
+-int rmi_of_property_read_u16(struct device *dev, u16 *result,
+-				const char *prop, bool optional);
+-int rmi_of_property_read_u8(struct device *dev, u8 *result,
+-				const char *prop, bool optional);
  
- 	tlv320aic3106: tlv320aic3106@1b {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 47954ed..83dc081 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -495,8 +495,8 @@
- 
- 		attb-gpio = <&gpio1 17 GPIO_ACTIVE_HIGH>;
- 
--		touchscreen-size-x = <1024>;
--		touchscreen-size-y = <600>;
-+		touch-size-x = <1024>;
-+		touch-size-y = <600>;
- 	};
- 
- 	tlv320aic3111: tlv320aic3111@18 {
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 5f5e0f3..ee66f97 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -829,12 +829,12 @@
- 		reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>; /* 104 */
- 		interrupts-extended = <&gpio4 4 IRQ_TYPE_EDGE_RISING>; /* 100 */
- 
--		touchscreen-fuzz-x = <4>;
--		touchscreen-fuzz-y = <7>;
--		touchscreen-fuzz-pressure = <2>;
--		touchscreen-size-x = <4096>;
--		touchscreen-size-y = <4096>;
--		touchscreen-max-pressure = <2048>;
-+		touch-fuzz-x = <4>;
-+		touch-fuzz-y = <7>;
-+		touch-fuzz-pressure = <2>;
-+		touch-size-x = <4096>;
-+		touch-size-y = <4096>;
-+		touch-max-pressure = <2048>;
- 
- 		ti,x-plate-ohms = <280>;
- 		ti,esd-recovery-timeout-ms = <8000>;
-diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-index eb793d5..59d1820 100644
---- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-@@ -97,10 +97,10 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ts_wake_pin_p66>;
- 		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
--		touchscreen-size-x = <800>;
--		touchscreen-size-y = <480>;
--		touchscreen-inverted-x;
--		touchscreen-swapped-x-y;
-+		touch-size-x = <800>;
-+		touch-size-y = <480>;
-+		touch-inverted-x;
-+		touch-swapped-x-y;
- 	};
- 
- 	pcf8563: rtc@51 {
-diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
-index ae460a5c..77fe4f7 100644
---- a/drivers/input/touchscreen/bcm_iproc_tsc.c
-+++ b/drivers/input/touchscreen/bcm_iproc_tsc.c
-@@ -394,18 +394,18 @@ static int iproc_get_tsc_config(struct device *dev, struct iproc_ts_priv *priv)
- 	}
- 
- 	/* Parse optional properties. */
--	of_property_read_u32(np, "touchscreen-size-x", &priv->cfg_params.max_x);
--	of_property_read_u32(np, "touchscreen-size-y", &priv->cfg_params.max_y);
-+	of_property_read_u32(np, "touch-size-x", &priv->cfg_params.max_x);
-+	of_property_read_u32(np, "touch-size-y", &priv->cfg_params.max_y);
- 
--	of_property_read_u32(np, "touchscreen-fuzz-x",
-+	of_property_read_u32(np, "touch-fuzz-x",
- 			     &priv->cfg_params.fuzz_x);
--	of_property_read_u32(np, "touchscreen-fuzz-y",
-+	of_property_read_u32(np, "touch-fuzz-y",
- 			     &priv->cfg_params.fuzz_y);
- 
- 	priv->cfg_params.invert_x =
--		of_property_read_bool(np, "touchscreen-inverted-x");
-+		of_property_read_bool(np, "touch-inverted-x");
- 	priv->cfg_params.invert_y =
--		of_property_read_bool(np, "touchscreen-inverted-y");
-+		of_property_read_bool(np, "touch-inverted-y");
- 
+ #define RMI_DEBUG_CORE			BIT(0)
+ #define RMI_DEBUG_XPORT			BIT(1)
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index f8bb7e0..cdf47ca 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -20,6 +20,7 @@
+ #include <linux/kconfig.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
+ #include <uapi/linux/input.h>
+ #include <linux/rmi.h>
+ #include "rmi_bus.h"
+@@ -818,6 +819,27 @@ static int rmi_driver_remove(struct device *dev)
  	return 0;
  }
-diff --git a/drivers/input/touchscreen/chipone_icn8318.c b/drivers/input/touchscreen/chipone_icn8318.c
-index 22a6fea..6a56a1c 100644
---- a/drivers/input/touchscreen/chipone_icn8318.c
-+++ b/drivers/input/touchscreen/chipone_icn8318.c
-@@ -223,18 +223,18 @@ static int icn8318_probe(struct i2c_client *client,
- 		return error;
- 	}
  
--	if (of_property_read_u32(np, "touchscreen-size-x", &data->max_x) ||
--	    of_property_read_u32(np, "touchscreen-size-y", &data->max_y)) {
--		dev_err(dev, "Error touchscreen-size-x and/or -y missing\n");
-+	if (of_property_read_u32(np, "touch-size-x", &data->max_x) ||
-+	    of_property_read_u32(np, "touch-size-y", &data->max_y)) {
-+		dev_err(dev, "Error touch-size-x and/or -y missing\n");
- 		return -EINVAL;
- 	}
++#ifdef CONFIG_OF
++static int rmi_driver_of_probe(struct device *dev,
++				struct rmi_device_platform_data *pdata)
++{
++	int retval;
++
++	retval = rmi_of_property_read_u32(dev, &pdata->reset_delay_ms,
++					"syna,reset-delay-msec", 1);
++	if (retval)
++		return retval;
++
++	return 0;
++}
++#else
++static inline int rmi_driver_of_probe(struct device *dev,
++					struct rmi_device_platform_data *pdata)
++{
++	return -ENODEV;
++}
++#endif
++
+ static int rmi_driver_probe(struct device *dev)
+ {
+ 	struct rmi_driver *rmi_driver;
+@@ -843,6 +865,12 @@ static int rmi_driver_probe(struct device *dev)
  
- 	/* Optional */
--	of_property_read_u32(np, "touchscreen-fuzz-x", &fuzz_x);
--	of_property_read_u32(np, "touchscreen-fuzz-y", &fuzz_y);
--	data->invert_x = of_property_read_bool(np, "touchscreen-inverted-x");
--	data->invert_y = of_property_read_bool(np, "touchscreen-inverted-y");
--	data->swap_x_y = of_property_read_bool(np, "touchscreen-swapped-x-y");
-+	of_property_read_u32(np, "touch-fuzz-x", &fuzz_x);
-+	of_property_read_u32(np, "touch-fuzz-y", &fuzz_y);
-+	data->invert_x = of_property_read_bool(np, "touch-inverted-x");
-+	data->invert_y = of_property_read_bool(np, "touch-inverted-y");
-+	data->swap_x_y = of_property_read_bool(np, "touch-swapped-x-y");
+ 	pdata = rmi_get_platform_data(rmi_dev);
  
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
-diff --git a/drivers/input/touchscreen/of_touchscreen.c b/drivers/input/touchscreen/of_touchscreen.c
-index bb6f2fe..d8c1008 100644
---- a/drivers/input/touchscreen/of_touchscreen.c
-+++ b/drivers/input/touchscreen/of_touchscreen.c
-@@ -72,22 +72,22 @@ void touchscreen_parse_properties(struct input_dev *input, bool multitouch)
- 		return;
++	if (rmi_dev->xport->dev->of_node) {
++		retval = rmi_driver_of_probe(rmi_dev->xport->dev, pdata);
++		if (retval)
++			return retval;
++	}
++
+ 	data = devm_kzalloc(dev, sizeof(struct rmi_driver_data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+diff --git a/drivers/input/rmi4/rmi_f01.c b/drivers/input/rmi4/rmi_f01.c
+index 09fb20b..1d7db41 100644
+--- a/drivers/input/rmi4/rmi_f01.c
++++ b/drivers/input/rmi4/rmi_f01.c
+@@ -247,6 +247,50 @@ char *rmi_f01_get_product_ID(struct rmi_function *fn)
+ 	return f01->properties.product_id;
+ }
  
- 	axis = multitouch ? ABS_MT_POSITION_X : ABS_X;
--	data_present = touchscreen_get_prop_u32(dev, "touchscreen-size-x",
-+	data_present = touchscreen_get_prop_u32(dev, "touch-size-x",
- 						input_abs_get_max(input,
- 								  axis) + 1,
- 						&maximum) |
--		       touchscreen_get_prop_u32(dev, "touchscreen-fuzz-x",
-+		       touchscreen_get_prop_u32(dev, "touch-fuzz-x",
- 						input_abs_get_fuzz(input, axis),
- 						&fuzz);
- 	if (data_present)
- 		touchscreen_set_params(input, axis, maximum - 1, fuzz);
++#ifdef CONFIG_OF
++static int rmi_f01_of_probe(struct device *dev,
++				struct rmi_device_platform_data *pdata)
++{
++	int retval;
++	u32 val;
++
++	retval = rmi_of_property_read_u32(dev,
++			(u32 *)&pdata->power_management.nosleep,
++			"syna,nosleep-mode", 1);
++	if (retval)
++		return retval;
++
++	retval = rmi_of_property_read_u32(dev, &val,
++			"syna,wakeup-threshold", 1);
++	if (retval)
++		return retval;
++
++	pdata->power_management.wakeup_threshold = val;
++
++	retval = rmi_of_property_read_u32(dev, &val,
++			"syna,doze-holdoff-msec", 1);
++	if (retval)
++		return retval;
++
++	pdata->power_management.doze_holdoff = val * 100;
++
++	retval = rmi_of_property_read_u32(dev, &val,
++			"syna,doze-interval-msec", 1);
++	if (retval)
++		return retval;
++
++	pdata->power_management.doze_interval = val / 10;
++
++	return 0;
++}
++#else
++static inline int rmi_f01_of_probe(struct device *dev,
++					struct rmi_device_platform_data *pdata)
++{
++	return -ENODEV;
++}
++#endif
++
+ static int rmi_f01_probe(struct rmi_function *fn)
+ {
+ 	struct rmi_device *rmi_dev = fn->rmi_dev;
+@@ -258,6 +302,12 @@ static int rmi_f01_probe(struct rmi_function *fn)
+ 	u8 device_status;
+ 	u8 temp;
  
- 	axis = multitouch ? ABS_MT_POSITION_Y : ABS_Y;
--	data_present = touchscreen_get_prop_u32(dev, "touchscreen-size-y",
-+	data_present = touchscreen_get_prop_u32(dev, "touch-size-y",
- 						input_abs_get_max(input,
- 								  axis) + 1,
- 						&maximum) |
--		       touchscreen_get_prop_u32(dev, "touchscreen-fuzz-y",
-+		       touchscreen_get_prop_u32(dev, "touch-fuzz-y",
- 						input_abs_get_fuzz(input, axis),
- 						&fuzz);
- 	if (data_present)
-@@ -95,11 +95,11 @@ void touchscreen_parse_properties(struct input_dev *input, bool multitouch)
++	if (fn->dev.of_node) {
++		error = rmi_f01_of_probe(&fn->dev, pdata);
++		if (error)
++			return error;
++	}
++
+ 	f01 = devm_kzalloc(&fn->dev, sizeof(struct f01_data), GFP_KERNEL);
+ 	if (!f01)
+ 		return -ENOMEM;
+diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+index c222552..d7cc95b 100644
+--- a/drivers/input/rmi4/rmi_i2c.c
++++ b/drivers/input/rmi4/rmi_i2c.c
+@@ -9,6 +9,7 @@
  
- 	axis = multitouch ? ABS_MT_PRESSURE : ABS_PRESSURE;
- 	data_present = touchscreen_get_prop_u32(dev,
--						"touchscreen-max-pressure",
-+						"touch-max-pressure",
- 						input_abs_get_max(input, axis),
- 						&maximum) |
- 		       touchscreen_get_prop_u32(dev,
--						"touchscreen-fuzz-pressure",
-+						"touch-fuzz-pressure",
- 						input_abs_get_fuzz(input, axis),
- 						&fuzz);
- 	if (data_present)
+ #include <linux/i2c.h>
+ #include <linux/rmi.h>
++#include <linux/of.h>
+ #include "rmi_driver.h"
+ 
+ #define BUFFER_SIZE_INCREMENT 32
+@@ -205,6 +206,14 @@ static int rmi_i2c_init_irq(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id rmi_i2c_of_match[] = {
++	{ .compatible = "syna,rmi4-i2c" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, rmi_i2c_of_match);
++#endif
++
+ static int rmi_i2c_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -221,7 +230,7 @@ static int rmi_i2c_probe(struct i2c_client *client,
+ 
+ 	pdata = &rmi_i2c->xport.pdata;
+ 
+-	if (client_pdata)
++	if (!client->dev.of_node && client_pdata)
+ 		*pdata = *client_pdata;
+ 
+ 	if (client->irq > 0)
+@@ -371,6 +380,7 @@ static struct i2c_driver rmi_i2c_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "rmi4_i2c",
+ 		.pm	= &rmi_i2c_pm,
++		.of_match_table = of_match_ptr(rmi_i2c_of_match),
+ 	},
+ 	.id_table	= rmi_id,
+ 	.probe		= rmi_i2c_probe,
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
