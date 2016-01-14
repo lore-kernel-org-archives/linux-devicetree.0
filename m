@@ -1,77 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
-Date: Thu, 14 Jan 2016 12:11:39 +0100
-Message-ID: <4244898.5om31fQ1mz@wuerfel>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com> <11122786.kKumQ3Dhls@wuerfel> <20160114102924.GA22340@ulmo>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
+Date: Thu, 14 Jan 2016 12:43:00 +0100
+Message-ID: <87a8o82xq3.fsf@dell.be.48ers.dk>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+	<87oacp5zl7.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+	<87egdk39ji.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160114102924.GA22340@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01> (Wenyou
+	Yang's message of "Thu, 14 Jan 2016 08:07:40 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 January 2016 11:29:24 Thierry Reding wrote:
-> 
-> It just occurred to me that none of these options really make much of a
-> difference. As Jon mentioned once we merge this series a lot of features
-> on Tegra will start to rely on PM_GENERIC_DOMAINS and hence PM. So if we
-> do want to build a kernel with a maximum of Tegra features enabled (and
-> I think a multi_v7_defconfig should include that) we'll end up with a PM
-> dependency anyway, whether forced via select or implied via depends on.
-> 
-> I'm beginning to wonder if PM really should be an option these days. The
-> disadvantages of making it optional do outweigh the advantages in my
-> opinion. I'm not saying that, in general, it's totally useless to build
-> a kernel that has no PM support, but for the more specific case where
-> you would want to enable multi-platform support I don't think there's
-> much practical advantage in allowing !PM. One of the most common build
-> warnings are triggered because of this option. Also multi-platform
-> kernels are really big already, so much so that I doubt it would make a
-> significant difference if we unconditionally built PM support. Also the
-> chances are that we'll be seeing more and more SoCs support PM and rely
-> on it, much like Tegra would with the addition of this series.
-> 
-> I imagine that we could save ourselves a lot of headaches by simply
-> enabling PM by default, whether that be via the PM Kconfig option or by
-> selecting it from ARCH_TEGRA and any other architectures that may come
-> to rely on it. Doing so would also reduce the amount of test coverage
-> that we need to do, both at compile- and runtime.
+>>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
 
-I think this needs some investigation. As a general policy, we should
-not grow the kernel image size when moving from a traditional ARM
-platform to an ARCH_MULTIPLATFORM one.
+Hi,
 
-This is somewhat contradicted by how we already require CONFIG_OF
-to be set for multiplatform kernels, and that adds around 80kb
-to the image size.
+>> 
+ >>> Isn't the regulator part of the act8945a identical to act8865? Can't we just use
+ >>> the existing act8865-regulator.c driver? (E.G. support 8865 variant in the mfd
+ >>> driver, but only register the regulator sub device?)
+ >> 
+ >> > Yes, the regulator part of the act8945a is identical to act8865.
+ >> 
+ >> > But the act8865-regulator driver is a struct i2c_driver, and the mfd  > sub-
+ >> device driver is a platform_driver driver, it is not easy to use  > it.
+ >> 
+ >> But the mfd driver could support the act8865 variant as well (by only registering
+ >> the regulator mfd cell).
 
-Looking at just the defconfig files, these are the ones that currently
-do not set CONFIG_PM:
+ > I still don't understand.
 
-build/acs5k_defconfig/.config:# CONFIG_PM is not set
-build/acs5k_tiny_defconfig/.config:# CONFIG_PM is not set
-build/axm55xx_defconfig/.config:# CONFIG_PM is not set
-build/bcm2835_defconfig/.config:# CONFIG_PM is not set
-build/clps711x_defconfig/.config:# CONFIG_PM is not set
-build/ebsa110_defconfig/.config:# CONFIG_PM is not set
-build/footbridge_defconfig/.config:# CONFIG_PM is not set
-build/ks8695_defconfig/.config:# CONFIG_PM is not set
-build/netwinder_defconfig/.config:# CONFIG_PM is not set
-build/rpc_defconfig/.config:# CONFIG_PM is not set
-build/u300_defconfig/.config:# CONFIG_PM is not set
-build/vf610m4_defconfig/.config:# CONFIG_PM is not set
+ > The MFD sub device is registered as a platform device, the existing
+ > act8865 driver is registered as an i2c_driver. How do they match? :)
 
-The only ones among these are are actually multiplatform are axm55xx,
-bcm2835, and u300. I see no downsides of force-enabling PM for
-any of those, so we could decide to 'select PM' from
-CONFIG_ARCH_MULTIPLATFORM.
+ > Could you point out which exiting driver for me to reference.  Thank you!
 
-The one usecase where we may want to have a modern machine without
-CONFIG_PM is a minimal MACH_VIRT kernel for running in a virtual
-machine or QEMU with minimal memory requirements, e.g. trying to
-squeeze a large number of guests on a single host system.
+What I'm saying is that it isn't nice that we end up with both
+act8865-regulator.c and act8954-regulator.c doing 95% the same. This can
+either be fixed by:
 
-	Arnd
+- Adding act8865 support to your mfd driver (but only registering the
+  regulator subdev for act8865) and changing the existing
+  act8865-regulator driver to work as a mfd subdev (platform device)
+
+- Extending the act8865-regulator driver to register as a platform
+  driver in ADDITION to a i2c driver so it can be used with mfd. The
+  driver already uses regmap so it should only be a matter of adding the
+  pdev probe/remove functions.
+
+-- 
+Venlig hilsen,
+Peter Korsgaard 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
