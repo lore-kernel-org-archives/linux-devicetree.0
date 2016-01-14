@@ -1,63 +1,68 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: increase vdd_arm voltage for rk3066a-rayeager board
-Date: Thu, 14 Jan 2016 13:45:02 +0100
-Message-ID: <1709463.R522kSjgXB@phil>
-References: <1452774780-16493-1-git-send-email-andy.yan@rock-chips.com> <1452774860-16572-1-git-send-email-andy.yan@rock-chips.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Thu, 14 Jan 2016 12:46:05 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63EC13F@penmbx01>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+	<87oacp5zl7.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+	<87egdk39ji.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
+ <87a8o82xq3.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452774860-16572-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87a8o82xq3.fsf@dell.be.48ers.dk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Korsgaard <peter@korsgaard.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Am Donnerstag, 14. Januar 2016, 20:34:20 schrieb Andy Yan:
-> The current vdd_arm voltage is too low, increase it will make
-> the system more stable.
-> 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3066a-rayeager.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts
-> b/arch/arm/boot/dts/rk3066a-rayeager.dts index 0bf6876..3d4c104 100644
-> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
-> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
-> @@ -159,6 +159,14 @@
-> 
->  &cpu0 {
->  	cpu0-supply = <&vdd_arm>;
-> +	operating-points = <
-> +		/* kHz    uV */
-> +		1008000 1125000
-> +		816000  1125000
-> +		600000  1100000
-> +		504000  1100000
-> +		312000  1075000
-> +	>;
->  };
-> 
->  &emac {
-
-Does this only apply to the rayeager-board / px2 soc or for all rk3066a/px2 
-boards? I.e. the original values come from some sdk kernel and I might've 
-transcribed that wrong at the time and I remember having problems trying to 
-reach higher frequencies as well.
-
-So could you check what the full operating points looks like for both and if 
-this can move to the rk3066a.dtsi, as both should be able to reach at least 
-1.4GHz / 1.6GHz.
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
+S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
+cnNnYWFyZA0KPiBTZW50OiAyMDE2xOox1MIxNMjVIDE5OjQzDQo+IFRvOiBZYW5nLCBXZW55b3Ug
+PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBn
+bWFpbC5jb20+OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ow0KPiBSb2IgSGVycmlu
+ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsg
+TWFyaw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8aWpj
+K2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+Ow0KPiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVy
+b3JhLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296bG93c2tpQHNhbXN1bmcuY29t
+PjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFz
+LkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEphdmllciBN
+YXJ0aW5leg0KPiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9yZz47IExlZSBKb25lcyA8bGVl
+LmpvbmVzQGxpbmFyby5vcmc+OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBh
+ZGQgcmVndWxhdG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+ID4+Pj4+ICJZYW5nLCIg
+PT0gWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+IEhp
+LA0KPiANCj4gPj4NCj4gID4+PiBJc24ndCB0aGUgcmVndWxhdG9yIHBhcnQgb2YgdGhlIGFjdDg5
+NDVhIGlkZW50aWNhbCB0byBhY3Q4ODY1PyBDYW4ndCB3ZSBqdXN0DQo+IHVzZSAgPj4+IHRoZSBl
+eGlzdGluZyBhY3Q4ODY1LXJlZ3VsYXRvci5jIGRyaXZlcj8gKEUuRy4gc3VwcG9ydCA4ODY1IHZh
+cmlhbnQgaW4gdGhlDQo+IG1mZCAgPj4+IGRyaXZlciwgYnV0IG9ubHkgcmVnaXN0ZXIgdGhlIHJl
+Z3VsYXRvciBzdWIgZGV2aWNlPykgID4+ICA+PiA+IFllcywgdGhlDQo+IHJlZ3VsYXRvciBwYXJ0
+IG9mIHRoZSBhY3Q4OTQ1YSBpcyBpZGVudGljYWwgdG8gYWN0ODg2NS4NCj4gID4+DQo+ICA+PiA+
+IEJ1dCB0aGUgYWN0ODg2NS1yZWd1bGF0b3IgZHJpdmVyIGlzIGEgc3RydWN0IGkyY19kcml2ZXIs
+IGFuZCB0aGUgbWZkICA+IHN1Yi0NCj4gICA+PiBkZXZpY2UgZHJpdmVyIGlzIGEgcGxhdGZvcm1f
+ZHJpdmVyIGRyaXZlciwgaXQgaXMgbm90IGVhc3kgdG8gdXNlICA+IGl0Lg0KPiAgPj4NCj4gID4+
+IEJ1dCB0aGUgbWZkIGRyaXZlciBjb3VsZCBzdXBwb3J0IHRoZSBhY3Q4ODY1IHZhcmlhbnQgYXMg
+d2VsbCAoYnkgb25seQ0KPiByZWdpc3RlcmluZyAgPj4gdGhlIHJlZ3VsYXRvciBtZmQgY2VsbCku
+DQo+IA0KPiAgPiBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQuDQo+IA0KPiAgPiBUaGUgTUZEIHN1
+YiBkZXZpY2UgaXMgcmVnaXN0ZXJlZCBhcyBhIHBsYXRmb3JtIGRldmljZSwgdGhlIGV4aXN0aW5n
+ICA+IGFjdDg4NjUNCj4gZHJpdmVyIGlzIHJlZ2lzdGVyZWQgYXMgYW4gaTJjX2RyaXZlci4gSG93
+IGRvIHRoZXkgbWF0Y2g/IDopDQo+IA0KPiAgPiBDb3VsZCB5b3UgcG9pbnQgb3V0IHdoaWNoIGV4
+aXRpbmcgZHJpdmVyIGZvciBtZSB0byByZWZlcmVuY2UuICBUaGFuayB5b3UhDQo+IA0KPiBXaGF0
+IEknbSBzYXlpbmcgaXMgdGhhdCBpdCBpc24ndCBuaWNlIHRoYXQgd2UgZW5kIHVwIHdpdGggYm90
+aCBhY3Q4ODY1LXJlZ3VsYXRvci5jDQo+IGFuZCBhY3Q4OTU0LXJlZ3VsYXRvci5jIGRvaW5nIDk1
+JSB0aGUgc2FtZS4gVGhpcyBjYW4gZWl0aGVyIGJlIGZpeGVkIGJ5Og0KPiANCj4gLSBBZGRpbmcg
+YWN0ODg2NSBzdXBwb3J0IHRvIHlvdXIgbWZkIGRyaXZlciAoYnV0IG9ubHkgcmVnaXN0ZXJpbmcg
+dGhlDQo+ICAgcmVndWxhdG9yIHN1YmRldiBmb3IgYWN0ODg2NSkgYW5kIGNoYW5naW5nIHRoZSBl
+eGlzdGluZw0KPiAgIGFjdDg4NjUtcmVndWxhdG9yIGRyaXZlciB0byB3b3JrIGFzIGEgbWZkIHN1
+YmRldiAocGxhdGZvcm0gZGV2aWNlKQ0KPiANCj4gLSBFeHRlbmRpbmcgdGhlIGFjdDg4NjUtcmVn
+dWxhdG9yIGRyaXZlciB0byByZWdpc3RlciBhcyBhIHBsYXRmb3JtDQo+ICAgZHJpdmVyIGluIEFE
+RElUSU9OIHRvIGEgaTJjIGRyaXZlciBzbyBpdCBjYW4gYmUgdXNlZCB3aXRoIG1mZC4gVGhlDQo+
+ICAgZHJpdmVyIGFscmVhZHkgdXNlcyByZWdtYXAgc28gaXQgc2hvdWxkIG9ubHkgYmUgYSBtYXR0
+ZXIgb2YgYWRkaW5nIHRoZQ0KPiAgIHBkZXYgcHJvYmUvcmVtb3ZlIGZ1bmN0aW9ucy4NCg0KVGhh
+bmsgeW91IGZvciBzbyBkZXRhaWwgaW5mb3JtYXRpb24sIEkgd2lsbCBkbyBhcyB5b3Ugc2FpZC4N
+Cg0KDQpUaGFua3MgJiBCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
