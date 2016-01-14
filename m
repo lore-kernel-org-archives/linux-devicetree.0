@@ -1,29 +1,53 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/6] rtc: max77620: add support for max77620/max20024 RTC driver
-Date: Thu, 14 Jan 2016 10:06:18 +0100
-Message-ID: <CACRpkdYHEk1=qMBgKPxaMN9PGj+Ttb-_U9j4cFE2cV8v7hDK8A@mail.gmail.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
-	<1452177524-23192-6-git-send-email-ldewangan@nvidia.com>
-	<568F0BD3.8080000@gmail.com>
-	<20160111054618.GA3331@x1>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
+Date: Thu, 14 Jan 2016 10:08:24 +0100
+Message-ID: <56976588.3060707@broadcom.com>
+References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>	<1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>	<87io35lq2p.fsf@kamboji.qca.qualcomm.com>	<5695E802.7050909@compulab.co.il>
+ <20160113172712.GI12777@atomide.com>
+ <87wprcbpyr.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160111054618.GA3331@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Linux Kernel <linuxkernelmails@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87wprcbpyr.fsf@kamboji.qca.qualcomm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kalle Valo <kvalo@codeaurora.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-wireless@vger.kernel.org, Uri Mashiach <uri.mashiach@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Eliad Peller <eliad@wizery.com>, Igor Grinberg <grinberg@compulab.co.il>, bcousson@baylibre.com, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 11, 2016 at 6:46 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> From: Linux Kernel <linuxkernelmails@gmail.com>
+On 01/14/2016 08:05 AM, Kalle Valo wrote:
+> Tony Lindgren <tony@atomide.com> writes:
 >
-> Really?  Why the shroud of secrecy?
+>>>>>   arch/arm/boot/dts/am335x-cm-t335.dts | 55 ++++++++++++++++++++++++++++++++++++
+>>>>>   1 file changed, 55 insertions(+)
+>>>>
+>>>> To what tree should this patch go? My wireless-drivers-next tree doesn't
+>>>> even have this file.
+>>>
+>>> Right. It will hit the mainline during this merge window through Tony's and
+>>> arm-soc trees.
+>>>
+>>> Do you think it will be sensible if you take 1/3 and 2/3 patches and Tony
+>>> will take the 3/3 (there is no code dependency between first two and the last one),
+>>> or we can just wait till arm-soc hits the mainline, so you will have the
+>>> needed code?
+>>
+>> Yeah I'll pick the dts changes separately after the merge window as
+>> there is no dependency to the driver changes.
 >
-> Any reason why you're not using your real name?
+> Ok, I'll then take patches 1 and 2 once the merge window opens.
 
-I wonder the same... You can use the mailadress linuxkernelmails@gmail.com
-if you like, but atleast put in a real name.
+I guess it is semantics, but the merge window is open right now so you 
+probably mean to say after the merge window closes, ie. when 4.5-rc1 is 
+ready.
 
-Yours,
-Linus Walleij
+Regards,
+Arend
