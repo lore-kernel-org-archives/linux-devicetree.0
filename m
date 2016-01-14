@@ -1,54 +1,64 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Thu, 14 Jan 2016 05:01:39 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBDC7@penmbx01>
-References: <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
- <201601122010.TpAuObtz%fengguang.wu@intel.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Thu, 14 Jan 2016 13:04:03 +0800
+Message-ID: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201601122010.TpAuObtz%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbToga2J1aWxkIHRlc3Qg
-cm9ib3QgW21haWx0bzpsa3BAaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE2xOox1MIxMsjVIDIwOjU1
-DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IGtidWls
-ZC1hbGxAMDEub3JnOyBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPjsgUm9iIEhlcnJp
-bmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNv
-bT47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwg
-PGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXINCj4gR2FsYSA8Z2FsYWtAY29k
-ZWF1cm9yYS5vcmc+OyBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBkb3doaWxlMC5v
-cmc+Ow0KPiBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47IEZl
-cnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBZYW5nLCBXZW55b3UNCj4gPFdlbnlvdS5ZYW5n
-QGF0bWVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzJdIG1mZDogYWRkIGRvY3Vt
-ZW50YXRpb24gZm9yIEFDVDg5NDVBIERUIGJpbmRpbmdzDQo+IA0KPiBIaSBXZW55b3UsDQo+IA0K
-PiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIGxqb25lcy1tZmQvZm9yLW1mZC1uZXh0XSBbYWxz
-byBidWlsZCB0ZXN0IEVSUk9SIG9uDQo+IHY0LjQgbmV4dC0yMDE2MDExMV0gW2lmIHlvdXIgcGF0
-Y2ggaXMgYXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzDQo+IGEg
-bm90ZSB0byBoZWxwIGltcHJvdmluZyB0aGUgc3lzdGVtXQ0KPiANCj4gdXJsOiAgICBodHRwczov
-L2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL1dlbnlvdS1ZYW5nL21mZC1hY3Q4OTQ1
-YS1hZGQtDQo+IEFjdGl2ZS1zZW1pLUFDVDg5NDVBLVBNSUMtTUZELWRyaXZlci8yMDE2MDExMi0x
-NjExNTkNCj4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
-bmVsL2dpdC9sZWUvbWZkLmdpdCBmb3ItbWZkLW5leHQNCj4gY29uZmlnOiB4ODZfNjQtYWxsbW9k
-Y29uZmlnIChhdHRhY2hlZCBhcyAuY29uZmlnKQ0KPiByZXByb2R1Y2U6DQo+ICAgICAgICAgIyBz
-YXZlIHRoZSBhdHRhY2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gICAgICAgICBt
-YWtlIEFSQ0g9eDg2XzY0DQo+IA0KPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBieSA+
-Pik6DQo+IA0KPiAgICBkcml2ZXJzL2J1aWx0LWluLm86IEluIGZ1bmN0aW9uIGBhY3Q4OTQ1YV9p
-MmNfcHJvYmUnOg0KPiA+PiBhY3Q4OTQ1YS5jOigudGV4dCsweDIyOTQ3Nik6IHVuZGVmaW5lZCBy
-ZWZlcmVuY2UgdG8gYF9fZGV2bV9yZWdtYXBfaW5pdF9pMmMnDQo+ICAgIGRyaXZlcnMvYnVpbHQt
-aW4ubzogSW4gZnVuY3Rpb24gYGFjdDg5NDVhX2kyY19pbml0JzoNCj4gPj4gYWN0ODk0NWEuYzoo
-LmluaXQudGV4dCsweDFhNTM2KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgaTJjX3JlZ2lzdGVy
-X2RyaXZlcicNCj4gICAgZHJpdmVycy9idWlsdC1pbi5vOiBJbiBmdW5jdGlvbiBgYWN0ODk0NWFf
-aTJjX2V4aXQnOg0KPiA+PiBhY3Q4OTQ1YS5jOiguZXhpdC50ZXh0KzB4NjZmKTogdW5kZWZpbmVk
-IHJlZmVyZW5jZSB0byBgaTJjX2RlbF9kcml2ZXInDQoNClRoYW5rIHlvdSBmb3IgeW91ciB0ZXN0
-LCBJIHdpbGwgZml4IGl0Lg0KDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
+
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
+
+Changes in v5:
+ - change depends on to 'I2C=y'.
+
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
+
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
+
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
+
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
+
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   82 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 ++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  109 ++++++++++++++++++++
+ include/linux/mfd/act8945a.h                       |   21 ++++
+ 5 files changed, 224 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
+ create mode 100644 include/linux/mfd/act8945a.h
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
