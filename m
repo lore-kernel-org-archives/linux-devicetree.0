@@ -1,223 +1,299 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v5 00/14] Initial Microchip PIC32MZDA Support
-Date: Wed, 13 Jan 2016 18:15:33 -0700
-Message-ID: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH v5 03/14] dt/bindings: Add PIC32 clock binding documentation
+Date: Wed, 13 Jan 2016 18:15:36 -0700
+Message-ID: <1452734299-460-4-git-send-email-joshua.henderson@microchip.com>
+References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, Andrei Pistirica <andrei.pistirica@microchip.com>, Andrew Bresticker <abrestic@chromium.org>, Andy Green <andy.green@linaro.org>, Ben Hutchings <ben@decadent.org.uk>, Chaotian Jing <chaotian.jing@mediatek.com>, Corneliu Doban <cdoban@broadcom.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Jean Delvare <jdelvare@suse.de>, Kevin Hao <haokexin@gmail.com>, linux-api@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, "ludovic.desroches@atmel.com" <ludovic.desroches@atmel.com>, Luis de Bethencourt <luisbg@osg.samsung.com>, Paul Burton <paul.burton@imgtec.com>, Purna
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Purna Chandra Mandal <purna.mandal@microchip.com>, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the Microchip PIC32MZDA MIPS platform.
-All drivers required to boot from a MMC uSD card are included. Clock,
-external interrupt controller, serial, SDHCI, and pinctrl/gpio drivers
-are included. This has been tested on a PIC32MZDA Starter Kit. A tree
-with these changes is available at [0].
+From: Purna Chandra Mandal <purna.mandal@microchip.com>
 
-[0] https://github.com/joshua-henderson/linux/tree/pic32-upstream-v5
+Document the devicetree bindings for the clock driver found on Microchip
+PIC32 class devices.
 
-Changes since v4 (https://lkml.org/lkml/2016/1/8/964
-	          https://lkml.org/lkml/2016/1/8/965):
-
-	+ Add soc node for core timer interrupt to DTS
-        + Add external IRQ property to DTS
-	+ Clean up irq alloc on failure
-        + Fix rework regression with handling failure in probe
-	+ Select config PIC32_EVIC for PIC32MZDA
-        + Implement get_c0_compare_int() in platform using DTS
-	+ Rearchitect (rewrite) to use generic chip
-        + Be consistent with naming of functions, use pic32_ prefix
-        + Move get_c0_compare_int() to platform where it belongs
-        + Drop obsolete header
-        + Add comments about the handler flow of the different interrupt types
-        + Prevent external interrupts from being requested as level flow type
-        + Simplify/optimize register access
-        + Configure external interrupts from DT
-        + Simplify plat_irq_dispatch() implementation
-        + Change irq chip names to evic-*
-        + Add EVIC_PIC32 config option and have platform select it
-        + Support to configure core timer interrupt from DT
-        + Use proper code comment formatting
-	+ Add new microchip,external-interrupts property
-        + Provide a better description of some of the features
-        + Clean up formatting
-
-Changes since v3 (https://lkml.org/lkml/2016/1/7/760):
-
-	+ Remove broken URL and use full manual name for boot protocol
-	+ Formatting and comment location
-	+ Move functions to remove need for forward declaration
-
-Changes since v2 (https://lkml.org/lkml/2015/12/14/818):
-
-	+ Prefer dt/bindings: prefix for subject
-	+ Remove redundant irq_chip functions in interrupt driver
-	+ Use 'sdhci_pltfm_*' instead of 'sdhci_*_host' and other cleanup
-	+ Use dynamic major/minor and ttyPIC* instead of ttyS*
-	+ Follow device-tree node naming convention for clocks
-	+ Remove pinctrl pins that are not port pins
-	+ Force lowercase in PIC32 clock binding documentation
-	+ Replace __clk_debug with pr_debug
-	+ Add of_clk_parent_fill usage in PIC32 clock driver
-	+ UART: Remove unused header files
-	+ UART: Refactor register read/write functions
-	+ UART: Reorder arguments to readl/writel functions
-	+ UART: Add missing initializations to termios
-	+ UART: Fix clk enable/disable mismatch
-
-Changes since v1 (https://lkml.org/lkml/2015/11/20/848):
-
-	+ Rename all DT compatible properties to be chip specific.
-	+ Remove hardware interrupt priorities from interrupt controller DT
-	  bindings.
-	+ Remove all dependencies on include headers used by PIC32 DTS
-	  files.
-	+ Remove arch/mips/include/asm/mach-pic32/gpio.h
-	+ Drop usage of the following, mostly non-standard, properties in
-	  DT bindings:
-		device_type
-		piomode
-		no-1-8-v
-		uart-has-rtscts
-		clock-frequency => assigned-clock-rate
-	+ Remove PIC32 memory PLL support from DT.
-	+ Replace empty 'ranges' with populated one for clock tree node.
-	+ Rename all instances of "USART" to "UART".
-	+ Remove 'interrupts' property from FSCM of PIC32 clock tree node.
-	+ Add default REFCLK rate initialization required for SDHCI in DTS.
-	+ Remove default frequency setup for REFOSC clocks in -clk DTS.
-	+ Address missing static on local functions and other sparse
-	  warnings in several drivers.
-	+ Update pinctrl driver to address major binding and architectural
-	  issues.
-	+ Remove redundant probing 'pb7_clk' to find CPU clock.
-	+ Remove unused PIC32 MPLL support.
-	+ Remove support for initializing default parent/rate for REFOSC
-	  clocks.
-	+ Be consistent and use only "SDHCI" when referring to SD host
-	  controller
-	+ Remove unnecessary PIC32 sdhci_ops min clock function.
-	+ Make platform PIC32[_CLR|_SET|_INV] register macros safer.
-
-
-Andrei Pistirica (4):
-  dt/bindings: Add bindings for PIC32 UART driver
-  serial: pic32_uart: Add PIC32 UART driver
-  dt/bindings: Add bindings for PIC32 SDHCI host controller
-  mmc: sdhci-pic32: Add PIC32 SDHCI host controller driver
-
-Cristian Birsan (2):
-  dt/bindings: Add bindings for PIC32 interrupt controller
-  irqchip: irq-pic32-evic: Add support for PIC32 interrupt controller
-
-Joshua Henderson (6):
-  dt/bindings: Add bindings for PIC32/MZDA platforms
-  MIPS: Add support for PIC32MZDA platform
-  dt/bindings: Add bindings for PIC32 pin control and GPIO
-  pinctrl: pinctrl-pic32: Add PIC32 pin control driver
-  MIPS: dts: Add initial DTS for the PIC32MZDA Starter Kit
-  MIPS: pic32mzda: Add initial PIC32MZDA Starter Kit defconfig
-
-Purna Chandra Mandal (2):
-  dt/bindings: Add PIC32 clock binding documentation
-  clk: clk-pic32: Add PIC32 clock driver
-
- .../devicetree/bindings/clock/microchip,pic32.txt  |  257 +++
- .../bindings/gpio/microchip,pic32-gpio.txt         |   49 +
- .../interrupt-controller/microchip,pic32-evic.txt  |   67 +
- .../bindings/mips/pic32/microchip,pic32mzda.txt    |   31 +
- .../bindings/mmc/microchip,sdhci-pic32.txt         |   29 +
- .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 +
- .../bindings/serial/microchip,pic32-uart.txt       |   29 +
- arch/mips/Kbuild.platforms                         |    1 +
- arch/mips/Kconfig                                  |    9 +
- arch/mips/boot/dts/Makefile                        |    1 +
- arch/mips/boot/dts/pic32/Makefile                  |   12 +
- arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi        |  236 ++
- arch/mips/boot/dts/pic32/pic32mzda.dtsi            |  281 +++
- arch/mips/boot/dts/pic32/pic32mzda_sk.dts          |  151 ++
- arch/mips/configs/pic32mzda_defconfig              |   89 +
- .../include/asm/mach-pic32/cpu-feature-overrides.h |   32 +
- arch/mips/include/asm/mach-pic32/irq.h             |   22 +
- arch/mips/include/asm/mach-pic32/pic32.h           |   44 +
- arch/mips/include/asm/mach-pic32/spaces.h          |   24 +
- arch/mips/pic32/Kconfig                            |   51 +
- arch/mips/pic32/Makefile                           |    6 +
- arch/mips/pic32/Platform                           |    7 +
- arch/mips/pic32/common/Makefile                    |    5 +
- arch/mips/pic32/common/irq.c                       |   21 +
- arch/mips/pic32/common/reset.c                     |   62 +
- arch/mips/pic32/pic32mzda/Makefile                 |    9 +
- arch/mips/pic32/pic32mzda/config.c                 |  126 ++
- arch/mips/pic32/pic32mzda/early_clk.c              |  106 +
- arch/mips/pic32/pic32mzda/early_console.c          |  171 ++
- arch/mips/pic32/pic32mzda/early_pin.c              |  275 +++
- arch/mips/pic32/pic32mzda/early_pin.h              |  241 ++
- arch/mips/pic32/pic32mzda/init.c                   |  156 ++
- arch/mips/pic32/pic32mzda/pic32mzda.h              |   29 +
- arch/mips/pic32/pic32mzda/time.c                   |   73 +
- drivers/clk/Kconfig                                |    3 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-pic32.c                            | 1801 +++++++++++++++
- drivers/irqchip/Kconfig                            |    5 +
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-pic32-evic.c                   |  324 +++
- drivers/mmc/host/Kconfig                           |   11 +
- drivers/mmc/host/Makefile                          |    1 +
- drivers/mmc/host/sdhci-pic32.c                     |  257 +++
- drivers/pinctrl/Kconfig                            |   17 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/pinctrl-pic32.c                    | 2339 ++++++++++++++++++++
- drivers/pinctrl/pinctrl-pic32.h                    |  141 ++
- drivers/tty/serial/Kconfig                         |   21 +
- drivers/tty/serial/Makefile                        |    1 +
- drivers/tty/serial/pic32_uart.c                    |  960 ++++++++
- drivers/tty/serial/pic32_uart.h                    |  126 ++
- include/linux/platform_data/sdhci-pic32.h          |   22 +
- include/uapi/linux/serial_core.h                   |    3 +
- 53 files changed, 8797 insertions(+)
+Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
+Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes since v4: None
+Changes since v3: None
+Changes since v2:
+	- Force lowercase in PIC32 clock binding documentation
+Changes since v1: None
+---
+ .../devicetree/bindings/clock/microchip,pic32.txt  |  257 ++++++++++++++++++++
+ 1 file changed, 257 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt
- create mode 100644 Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzda.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
- create mode 100644 arch/mips/boot/dts/pic32/Makefile
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda.dtsi
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda_sk.dts
- create mode 100644 arch/mips/configs/pic32mzda_defconfig
- create mode 100644 arch/mips/include/asm/mach-pic32/cpu-feature-overrides.h
- create mode 100644 arch/mips/include/asm/mach-pic32/irq.h
- create mode 100644 arch/mips/include/asm/mach-pic32/pic32.h
- create mode 100644 arch/mips/include/asm/mach-pic32/spaces.h
- create mode 100644 arch/mips/pic32/Kconfig
- create mode 100644 arch/mips/pic32/Makefile
- create mode 100644 arch/mips/pic32/Platform
- create mode 100644 arch/mips/pic32/common/Makefile
- create mode 100644 arch/mips/pic32/common/irq.c
- create mode 100644 arch/mips/pic32/common/reset.c
- create mode 100644 arch/mips/pic32/pic32mzda/Makefile
- create mode 100644 arch/mips/pic32/pic32mzda/config.c
- create mode 100644 arch/mips/pic32/pic32mzda/early_clk.c
- create mode 100644 arch/mips/pic32/pic32mzda/early_console.c
- create mode 100644 arch/mips/pic32/pic32mzda/early_pin.c
- create mode 100644 arch/mips/pic32/pic32mzda/early_pin.h
- create mode 100644 arch/mips/pic32/pic32mzda/init.c
- create mode 100644 arch/mips/pic32/pic32mzda/pic32mzda.h
- create mode 100644 arch/mips/pic32/pic32mzda/time.c
- create mode 100644 drivers/clk/clk-pic32.c
- create mode 100644 drivers/irqchip/irq-pic32-evic.c
- create mode 100644 drivers/mmc/host/sdhci-pic32.c
- create mode 100644 drivers/pinctrl/pinctrl-pic32.c
- create mode 100644 drivers/pinctrl/pinctrl-pic32.h
- create mode 100644 drivers/tty/serial/pic32_uart.c
- create mode 100644 drivers/tty/serial/pic32_uart.h
- create mode 100644 include/linux/platform_data/sdhci-pic32.h
 
---
+diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+new file mode 100644
+index 0000000..06540e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+@@ -0,0 +1,257 @@
++Binding for a Clock hardware block found on
++certain Microchip PIC32 MCU devices.
++
++Microchip SoC clocks-node consists of few oscillators, PLL, multiplexer
++and few divider nodes.
++
++We will find only the base address of the clock tree, this base
++address is common for some of the subnodes, not all. If no address is
++specified for any of subnode base address of the clock tree will be
++treated as its base. Each of subnodes follow the same common clock
++binding with some additional optional properties.
++
++	clocks_node {
++		reg = <>;
++
++		spll_node {
++			...
++		};
++
++		frcdiv_node {
++			...
++		};
++
++		sysclk_mux_node {
++			...
++		};
++
++		pbdiv_node {
++			...
++		};
++
++		refoclk_node {
++			...
++		};
++		...
++	};
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : should be one of "microchip,pic32mzda-clk",
++    "microchip,pic32mzda-sosc", "microchip,pic32mzda-frcdivclk",
++    "microchip,pic32mzda-syspll", "microchip,pic32mzda-sysclk-v2",
++    "microchip,pic32mzda-pbclk", "microchip,pic32mzda-refoclk".
++- reg : A Base address and length of the register set.
++- interrupts : source of interrupt.
++
++Optional properties (for subnodes):
++- #clock-cells: From common clock binding, should be 0.
++- microchip,clock-indices: in multiplexer node clock sources always aren't linear
++    and contiguous. This property helps define clock-sources with respect to
++    the mux clock node.
++- microchip,ignore-unused : ignore gate request even if the gated clock is unused.
++- microchip,status-bit-mask: bitmask for status check. This will be used to confirm
++    particular operation by clock sub-node is completed. It is dependent sub-node.
++- microchip,bit-mask: enable mask, similar to microchip,status-bit-mask.
++- microchip,slew-step: enable frequency slewing(stepping) during rate change;
++    applicable only to sys-clock subnode.
++
++Example:
++
++/* PIC32 specific clks */
++pic32_clktree {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	reg = <0x1f801200 0x200>;
++	compatible = "microchip,pic32mzda-clk";
++	ranges = <0 0x1f801200 0x200>;
++
++	/* secondary oscillator; external input on SOSCI pin */
++	SOSC:sosc_clk@0 {
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-sosc";
++		clock-frequency = <32768>;
++		reg = <0x000 0x10>, /* enable reg */
++		      <0x1d0 0x10>; /* status reg */
++		microchip,bit-mask = <0x02>; /* enable mask */
++		microchip,status-bit-mask = <0x10>; /* status-mask*/
++	};
++
++	FRCDIV:frcdiv_clk {
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-frcdivclk";
++		clocks = <&FRC>;
++		clock-output-names = "frcdiv_clk";
++	};
++
++	/* System PLL clock */
++	SYSPLL:spll_clk@20 {
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-syspll";
++		reg = <0x020 0x10>, /* SPLL register */
++		      <0x1d0 0x10>; /* CLKSTAT register */
++		clocks = <&POSC>, <&FRC>;
++		clock-output-names = "sys_pll";
++		microchip,status-bit-mask = <0x80>; /* SPLLRDY */
++	};
++
++	/* system clock; mux with postdiv & slew */
++	SYSCLK:sys_clk@1c0 {
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-sysclk-v2";
++		reg = <0x1c0 0x04>; /* SLEWCON */
++		clocks = <&FRCDIV>, <&SYSPLL>, <&POSC>, <&SOSC>,
++			 <&LPRC>, <&FRCDIV>;
++		microchip,clock-indices = <0>, <1>, <2>, <4>,
++					  <5>, <7>;
++		clock-output-names = "sys_clk";
++	};
++
++	/* UPLL is integral part of USB PHY; UTMI clk for USBCORE */
++	UPLL:usb_phy_clk {
++		#clock-cells = <0>;
++		compatible = "fixed-clocks";
++		clock-frequency = <24000000>;
++		clock-output-names = "usbphy_clk";
++	};
++
++	/* Peripheral bus1 clock */
++	PBCLK1:pb1_clk@140 {
++		reg = <0x140 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		clock-output-names = "pb1_clk";
++		/* used by system modules, not gateable */
++		microchip,ignore-unused;
++	};
++
++	/* Peripheral bus2 clock */
++	PBCLK2:pb2_clk@150 {
++		reg = <0x150 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		clock-output-names = "pb2_clk";
++		/* avoid gating even if unused */
++		microchip,ignore-unused;
++	};
++
++	/* Peripheral bus3 clock */
++	PBCLK3:pb3_clk@160 {
++		reg = <0x160 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		clock-output-names = "pb3_clk";
++	};
++
++	/* Peripheral bus4 clock(I/O ports, GPIO) */
++	PBCLK4:pb4_clk@170 {
++		reg = <0x170 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		clock-output-names = "pb4_clk";
++	};
++
++	/* Peripheral bus clock */
++	PBCLK5:pb5_clk@180 {
++		reg = <0x180 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		clock-output-names = "pb5_clk";
++	};
++
++	/* Peripheral Bus6 clock; */
++	PBCLK6:pb6_clk@190 {
++		reg = <0x190 0x10>;
++		compatible = "microchip,pic32mzda-pbclk";
++		clocks = <&SYSCLK>;
++		#clock-cells = <0>;
++	};
++
++	/* Peripheral bus7 clock */
++	PBCLK7:pb7_clk@1a0 {
++		reg = <0x1a0 0x10>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-pbclk";
++		/* CPU is driven by this clock; so named */
++		clock-output-names = "cpu_clk";
++		clocks = <&SYSCLK>;
++	};
++
++	/* Reference Oscillator clock for SPI/I2S */
++	REFCLKO1:refo1_clk@80 {
++		reg = <0x080 0x20>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-refoclk";
++		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
++			<&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
++		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
++					  <5>, <7>, <8>, <9>;
++		clock-output-names = "refo1_clk";
++	};
++
++	/* Reference Oscillator clock for SQI */
++	REFCLKO2:refo2_clk@a0 {
++		reg = <0x0a0 0x20>;
++		#clock-cells = <0>;
++		compatible = "microchip,pic32mzda-refoclk";
++		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
++			 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
++		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
++					  <5>, <7>, <8>, <9>;
++		clock-output-names = "refo2_clk";
++	};
++
++	/* Reference Oscillator clock, ADC */
++	REFCLKO3:refo3_clk@c0 {
++		reg = <0x0c0 0x20>;
++		compatible = "microchip,pic32mzda-refoclk";
++		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
++			 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
++		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
++					  <5>, <7>, <8>, <9>;
++		#clock-cells = <0>;
++		clock-output-names = "refo3_clk";
++	};
++
++	/* Reference Oscillator clock */
++	REFCLKO4:refo4_clk@e0 {
++		reg = <0x0e0 0x20>;
++		compatible = "microchip,pic32mzda-refoclk";
++		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
++			 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
++		microchip,clock-indices = <0>,<1>,<2>,<3>,<4>,
++					  <5>,<7>,<8>,<9>;
++		#clock-cells = <0>;
++		clock-output-names = "refo4_clk";
++	};
++
++	/* Reference Oscillator clock, LCD */
++	REFCLKO5:refo5_clk@100 {
++		reg = <0x100 0x20>;
++		compatible = "microchip,pic32mzda-refoclk";
++		clocks = <&SYSCLK>,<&PBCLK1>,<&POSC>,<&FRC>,<&LPRC>,
++			 <&SOSC>,<&SYSPLL>,<&REFIx>,<&BFRC>;
++		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
++					  <5>, <7>, <8>,<9>;
++		#clock-cells = <0>;
++		clock-output-names = "refo5_clk";
++	};
++};
++
++The clock consumer should specify the desired clock by having the clocks in its
++"clock" phandle cell. For example for UART:
++
++uart2: serial@<> {
++	compatible = "microchip,pic32mzda-uart";
++	reg = <>;
++	interrupts = <>;
++	clocks = <&PBCLK2>;
++}
+-- 
 1.7.9.5
-
