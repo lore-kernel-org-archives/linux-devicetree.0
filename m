@@ -1,70 +1,70 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
-Date: Thu, 14 Jan 2016 01:17:37 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBC55@penmbx01>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 2/5] mtd: atmel_nand: Support variable RB_EDGE
+ interrupts
+Date: Wed, 13 Jan 2016 19:19:24 -0600
+Message-ID: <20160114011924.GA31786@rob-hp-laptop>
 References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
- <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
- <20160114011252.GA29778@rob-hp-laptop>
+ <1452702857-2240-3-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160114011252.GA29778@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1452702857-2240-3-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IDIwMTbE6jHUwjE0yNUgOToxMw0KPiBUbzog
-Um9tYWluIEl6YXJkIDxyb21haW4uaXphcmQucHJvQGdtYWlsLmNvbT4NCj4gQ2M6IGxpbnV4LW10
-ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWWFuZywg
-V2VueW91DQo+IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+OyBKb3NoIFd1IDxyYWlueWZlZWxpbmdA
-b3V0bG9vay5jb20+OyBGZXJyZSwNCj4gTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMy81XSBtdGQ6IGF0bWVsX25hbmQ6IFN1cHBvcnQg
-UE1FQ0Mgb24gU0FNQTVEMg0KPiANCj4gT24gV2VkLCBKYW4gMTMsIDIwMTYgYXQgMDU6MzQ6MTVQ
-TSArMDEwMCwgUm9tYWluIEl6YXJkIHdyb3RlOg0KPiA+IFN0YXJ0aW5nIHdpdGggdGhlIFNBTUE1
-RDIsIHRoZXJlIGlzIGEgbmV3IHJldmlzaW9uIG9mIHRoZSBBdG1lbCBQTUVDQw0KPiA+IGNvbnRy
-b2xsZXIgdGhhdCBjYW4gY29ycmVjdCAzMiBiaXRzIGluIGVhY2ggc2VjdG9yLiBUaGlzIGNvbnRy
-b2xsZXIgaXMNCj4gPiBub3QgMTAwJSBjb21wYXRpYmxlIHdpdGggdGhlIHByZXZpb3VzIHJldmlz
-aW9uIHRoYXQgY29ycmVjdGVkIGENCj4gPiBtYXhpbXVtIG9mIDI0IGJpdHMgYnkgc2VjdG9yLCBh
-cyBzb21lIHJlZ2lzdGVyIGFkZHJlc3NlcyBvdmVybGFwLg0KPiA+DQo+ID4gVXNpbmcgaW5mb3Jt
-YXRpb24gZnJvbSB0aGUgZGV2aWNlIHRyZWUsIHdlIGNhbiBjb25maWd1cmUgdGhlIGRyaXZlciB0
-bw0KPiA+IHdvcmsgd2l0aCBib3RoIHZlcnNpb25zLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-Um9tYWluIEl6YXJkIDxyb21haW4uaXphcmQucHJvQGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0ICAgICAgICAgfCAgNyAr
-KysrKy0tDQo+ID4gIGRyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZC5jICAgICAgICAgICAgICAg
-ICAgICAgIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICBkcml2ZXJzL210ZC9uYW5k
-L2F0bWVsX25hbmRfZWNjLmggICAgICAgICAgICAgICAgICB8ICA4ICsrKysrKy0tDQo+ID4gIDMg
-ZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVs
-LW5hbmQudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2F0
-bWVsLW5hbmQudHh0DQo+ID4gaW5kZXggODliMGRiOTgwMWIwLi45MDg4N2I0MzBmMDMgMTAwNjQ0
-DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hdG1lbC1u
-YW5kLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-YXRtZWwtbmFuZC50eHQNCj4gPiBAQCAtMSw3ICsxLDEwIEBADQo+ID4gIEF0bWVsIE5BTkQgZmxh
-c2gNCj4gPg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGlibGUgOiBz
-aG91bGQgYmUgImF0bWVsLGF0OTFybTkyMDAtbmFuZCIgb3IgImF0bWVsLHNhbWE1ZDQtbmFuZCIu
-DQo+ID4gKy0gY29tcGF0aWJsZTogVGhlIHBvc3NpYmxlIHZhbHVlcyBhcmU6DQo+ID4gKwkiYXRt
-ZWwsYXQ5MXJtOTIwMC1uYW5kIg0KPiA+ICsJImF0bWVsLHNhbWE1ZDItbmFuZCINCj4gPiArCSJh
-dG1lbCxzYW1hNWQ0LW5hbmQiDQo+ID4gIC0gcmVnIDogc2hvdWxkIHNwZWNpZnkgbG9jYWxidXMg
-YWRkcmVzcyBhbmQgc2l6ZSB1c2VkIGZvciB0aGUgY2hpcCwNCj4gPiAgCWFuZCBoYXJkd2FyZSBF
-Q0MgY29udHJvbGxlciBpZiBhdmFpbGFibGUuDQo+ID4gIAlJZiB0aGUgaGFyZHdhcmUgRUNDIGlz
-IFBNRUNDLCBpdCBzaG91bGQgY29udGFpbiBhZGRyZXNzIGFuZCBzaXplIGZvcg0KPiA+IEBAIC0y
-Miw3ICsyNSw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gICAgU3VwcG9ydGVkIHZhbHVl
-cyBhcmU6ICJub25lIiwgInNvZnQiLCAiaHciLCAiaHdfc3luZHJvbWUiLCAiaHdfb29iX2ZpcnN0
-IiwNCj4gPiAgICAic29mdF9iY2giLg0KPiA+ICAtIGF0bWVsLGhhcy1wbWVjYyA6IGJvb2xlYW4g
-dG8gZW5hYmxlIFByb2dyYW1tYWJsZSBNdWx0aWJpdCBFQ0MgaGFyZHdhcmUuDQo+ID4gLSAgT25s
-eSBzdXBwb3J0ZWQgYnkgYXQ5MXNhbTl4NSBvciBsYXRlciBzYW05IHByb2R1Y3QuDQo+ID4gKyAg
-U3VwcG9ydGVkIGJ5IEFUOTFTQU05eDUgb3IgbGF0ZXIgU0FNOSBjaGlwcywgYW5kIFNBTUE1IGNo
-aXBzLg0KPiANCj4gV2hhdCBjb21wYXRpYmxlIHN0cmluZyB3b3VsZCBBVDkxU0FNOXg1IGJlPw0K
-DQoiYXRtZWwsYXQ5MXJtOTIwMC1uYW5kIi4NCg0KPiANCj4gPiAgLSBhdG1lbCxwbWVjYy1jYXAg
-OiBlcnJvciBjb3JyZWN0IGNhcGFiaWxpdHkgZm9yIFByb2dyYW1tYWJsZSBNdWx0aWJpdCBFQ0MN
-Cj4gPiAgICBDb250cm9sbGVyLiBTdXBwb3J0ZWQgdmFsdWVzIGFyZTogMiwgNCwgOCwgMTIsIDI0
-Lg0KPiA+ICAtIGF0bWVsLHBtZWNjLXNlY3Rvci1zaXplIDogc2VjdG9yIHNpemUgZm9yIEVDQyBj
-b21wdXRhdGlvbi4NCj4gPiBTdXBwb3J0ZWQgdmFsdWVzDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2Vu
-eW91IFlhbmcNCg==
+On Wed, Jan 13, 2016 at 05:34:14PM +0100, Romain Izard wrote:
+> The NFC controller used to accelerate the NAND transfers on SAMA5 chips
+> can use either RB_EDGE0 or RB_EDGE3 as its ready/busy interrupt bit.
+> 
+> Use the controller's compatible string to select the correct bit.
+> 
+> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Wenyou Yang <Wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
+>  drivers/mtd/nand/atmel_nand.c                      | 39 +++++++++++++++++-----
+>  drivers/mtd/nand/atmel_nand_nfc.h                  |  5 ++-
+>  3 files changed, 36 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index 7d4c8eb775a5..89b0db9801b0 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -34,7 +34,7 @@ Optional properties:
+>  - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+>  - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
+>    - Required properties:
+> -    - compatible : "atmel,sama5d3-nfc".
+> +    - compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
+>      - reg : should specify the address and size used for NFC command registers,
+>              NFC registers and NFC Sram. NFC Sram address and size can be absent
+>              if don't want to use it.
+
+For the binding: 
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+[...]
+
+> @@ -2352,6 +2360,12 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	priv = of_match_device(atmel_nand_nfc_match, &pdev->dev)->data;
+
+Use of_device_get_match_data
+
+> +	if (NULL == priv)
+> +		return -ENODEV;
+> +
+> +	nfc->rb_edge = priv->rb_edge;
+> +
+>  	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
+>  	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
+>  
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
