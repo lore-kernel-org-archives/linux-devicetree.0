@@ -1,13 +1,13 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 15/26] drm/modes: Support modes names on the
- command line
-Date: Thu, 14 Jan 2016 16:24:58 +0100
-Message-ID: <1452785109-6172-16-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 05/26] clk: sunxi: Add display and TCON0
+ clocks driver
+Date: Thu, 14 Jan 2016 16:24:48 +0100
+Message-ID: <1452785109-6172-6-git-send-email-maxime.ripard@free-electrons.com>
 References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAP4322AKGQEFVHFSUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3P3322AKGQEMWMHSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1452785109-6172-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,148 +20,298 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The drm subsystem also uses the video= kernel parameter, and in the
-documentation refers to the fbdev documentation for that parameter.
+The A10 SoCs and its relatives has a special clock controller to drive the
+display engines (both frontend and backend), that have a lot in common with
+the clock to drive the first TCON channel.
 
-However, that documentation also says that instead of giving the mode using
-its resolution we can also give a name. However, DRM doesn't handle that
-case at the moment. Even though in most case it shouldn't make any
-difference, it might be useful for analog modes, where different standards
-might have the same resolution, but still have a few different parameters
-that are not encoded in the modes (NTSC vs NTSC-J vs PAL-M for example).
+Add a driver to support both.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/drm_crtc.c      |  3 ++-
- drivers/gpu/drm/drm_fb_helper.c |  4 ++++
- drivers/gpu/drm/drm_modes.c     | 49 ++++++++++++++++++++++++++++-------------
- include/drm/drm_modes.h         |  1 +
- 4 files changed, 41 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
+ drivers/clk/sunxi/Makefile                        |   1 +
+ drivers/clk/sunxi/clk-sun4i-display.c             | 241 ++++++++++++++++++++++
+ 3 files changed, 244 insertions(+)
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
 
-diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-index 24c5434abd1c..c3267d695e4e 100644
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -846,8 +846,9 @@ static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
- 		connector->force = mode->force;
- 	}
- 
--	DRM_DEBUG_KMS("cmdline mode for connector %s %dx%d@%dHz%s%s%s\n",
-+	DRM_DEBUG_KMS("cmdline mode for connector %s %s %dx%d@%dHz%s%s%s\n",
- 		      connector->name,
-+		      mode->name ? mode->name : "",
- 		      mode->xres, mode->yres,
- 		      mode->refresh_specified ? mode->refresh : 60,
- 		      mode->rb ? " reduced blanking" : "",
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 69cbab5e5c81..fcb7ba796202 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1649,6 +1649,10 @@ struct drm_display_mode *drm_pick_cmdline_mode(struct drm_fb_helper_connector *f
- 	prefer_non_interlace = !cmdline_mode->interlace;
- again:
- 	list_for_each_entry(mode, &fb_helper_conn->connector->modes, head) {
-+		/* Check (optional) mode name first */
-+		if (!strcmp(mode->name, cmdline_mode->name))
-+			return mode;
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 8a47b77abfca..5360554a7d3f 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -55,6 +55,7 @@ Required properties:
+ 	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
++	"allwinner,sun4i-a10-display-clk" - for the display clocks on the A10
+ 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+ 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+ 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
+@@ -64,6 +65,7 @@ Required properties:
+ 	"allwinner,sun8i-a23-mbus-clk" - for the MBUS clock on A23
+ 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
+ 	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
++	"allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
+ 	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+ 	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+ 	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index cb4c299214ce..a991cd8ca509 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -10,6 +10,7 @@ obj-y += clk-a10-pll2.o
+ obj-y += clk-a20-gmac.o
+ obj-y += clk-mod0.o
+ obj-y += clk-simple-gates.o
++obj-y += clk-sun4i-display.o
+ obj-y += clk-sun8i-mbus.o
+ obj-y += clk-sun9i-core.o
+ obj-y += clk-sun9i-mmc.o
+diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
+new file mode 100644
+index 000000000000..9dc6894f0934
+--- /dev/null
++++ b/drivers/clk/sunxi/clk-sun4i-display.c
+@@ -0,0 +1,241 @@
++/*
++ * Copyright 2015 Maxime Ripard
++ *
++ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 		/* check width/height */
- 		if (mode->hdisplay != cmdline_mode->xres ||
- 		    mode->vdisplay != cmdline_mode->yres)
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 5b1921b22dd6..bbb23000eb5b 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -1351,7 +1351,7 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 					       struct drm_cmdline_mode *mode)
- {
- 	const char *name;
--	bool parse_extras = false;
-+	bool named_mode = false, parse_extras = false;
- 	unsigned int bpp_off = 0, refresh_off = 0;
- 	unsigned int mode_end = 0;
- 	char *bpp_ptr = NULL, *refresh_ptr = NULL, *extra_ptr = NULL;
-@@ -1370,8 +1370,14 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 
- 	name = mode_option;
- 
-+	/*
-+	 * If the first character is not a digit, then it means that
-+	 * we have a named mode.
-+	 */
- 	if (!isdigit(name[0]))
--		return false;
-+		named_mode = true;
-+	else
-+		named_mode = false;
- 
- 	/* Try to locate the bpp and refresh specifiers, if any */
- 	bpp_ptr = strchr(name, '-');
-@@ -1398,12 +1404,16 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 		parse_extras = true;
- 	}
- 
--	ret = drm_mode_parse_cmdline_res_mode(name, mode_end,
--					      parse_extras,
--					      connector,
--					      mode);
--	if (ret)
--		return false;
-+	if (named_mode) {
-+		strncpy(mode->name, name, mode_end);
-+	} else {
-+		ret = drm_mode_parse_cmdline_res_mode(name, mode_end,
-+						      parse_extras,
-+						      connector,
-+						      mode);
-+		if (ret)
-+			return false;
++#include <linux/clk-provider.h>
++#include <linux/kernel.h>
++#include <linux/of_address.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++
++struct sun4i_a10_display_clk_data {
++	bool	has_div;
++	bool	has_rst;
++	u8	parents;
++
++	u8	offset_en;
++	u8	offset_div;
++	u8	offset_mux;
++	u8	offset_rst;
++
++	u8	width_div;
++	u8	width_mux;
++};
++
++struct reset_data {
++	void __iomem			*reg;
++	spinlock_t			*lock;
++	struct reset_controller_dev	rcdev;
++	u8				offset;
++};
++
++static DEFINE_SPINLOCK(sun4i_a10_display_lock);
++
++static inline struct reset_data *rcdev_to_reset_data(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct reset_data, rcdev);
++};
++
++static int sun4i_a10_display_assert(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct reset_data *data = rcdev_to_reset_data(rcdev);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(data->lock, flags);
++
++	reg = readl(data->reg);
++	writel(reg & ~BIT(data->offset), data->reg);
++
++	spin_unlock_irqrestore(data->lock, flags);
++
++	return 0;
++}
++
++static int sun4i_a10_display_deassert(struct reset_controller_dev *rcdev,
++				      unsigned long id)
++{
++	struct reset_data *data = rcdev_to_reset_data(rcdev);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(data->lock, flags);
++
++	reg = readl(data->reg);
++	writel(reg | BIT(data->offset), data->reg);
++
++	spin_unlock_irqrestore(data->lock, flags);
++
++	return 0;
++}
++
++static int sun4i_a10_display_status(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct reset_data *data = rcdev_to_reset_data(rcdev);
++
++	return !(readl(data->reg) & BIT(data->offset));
++}
++
++static const struct reset_control_ops sun4i_a10_display_reset_ops = {
++	.assert		= sun4i_a10_display_assert,
++	.deassert	= sun4i_a10_display_deassert,
++	.status		= sun4i_a10_display_status,
++};
++
++static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
++					 const struct of_phandle_args *spec)
++{
++	/* We only have a single reset signal */
++	return 0;
++}
++
++static void __init sun4i_a10_display_init(struct device_node *node,
++					  struct sun4i_a10_display_clk_data *data)
++{
++	const char *parents[data->parents];
++	const char *clk_name = node->name;
++	struct reset_data *reset_data;
++	struct clk_divider *div = NULL;
++	struct clk_gate *gate;
++	struct clk_mux *mux;
++	void __iomem *reg;
++	struct clk *clk;
++	int i;
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg)) {
++		pr_err("%s: Could not map the clock registers\n", clk_name);
++		return;
 +	}
- 	mode->specified = true;
- 
- 	if (bpp_ptr) {
-@@ -1431,14 +1441,23 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 		extra_ptr = refresh_end_ptr;
- 
- 	if (extra_ptr) {
--		int remaining = strlen(name) - (extra_ptr - name);
-+		if (!named_mode) {
-+			int len = strlen(name) - (extra_ptr - name);
- 
--		/*
--		 * We still have characters to process, while
--		 * we shouldn't have any
--		 */
--		if (remaining > 0)
--			return false;
-+			ret = drm_mode_parse_cmdline_extra(extra_ptr, len,
-+							   connector, mode);
-+			if (ret)
-+				return false;
-+		} else {
-+			int remaining = strlen(name) - (extra_ptr - name);
 +
-+			/*
-+			 * We still have characters to process, while
-+			 * we shouldn't have any
-+			 */
-+			if (remaining > 0)
-+				return false;
-+		}
- 	}
- 
- 	return true;
-diff --git a/include/drm/drm_modes.h b/include/drm/drm_modes.h
-index 08a8cac9e555..709d43f3515e 100644
---- a/include/drm/drm_modes.h
-+++ b/include/drm/drm_modes.h
-@@ -151,6 +151,7 @@ struct drm_display_mode {
- 
- /* mode specified on the command line */
- struct drm_cmdline_mode {
-+	char name[DRM_DISPLAY_MODE_LEN];
- 	bool specified;
- 	bool refresh_specified;
- 	bool bpp_specified;
++	of_clk_parent_fill(node, parents, data->parents);
++
++	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		return;
++
++	mux->reg = reg;
++	mux->shift = data->offset_mux;
++	mux->mask = (1 << data->width_mux) - 1;
++	mux->lock = &sun4i_a10_display_lock;
++
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		goto free_mux;
++
++	gate->reg = reg;
++	gate->bit_idx = data->offset_en;
++	gate->lock = &sun4i_a10_display_lock;
++
++	if (data->has_div) {
++		div = kzalloc(sizeof(*div), GFP_KERNEL);
++		if (!div)
++			goto free_gate;
++
++		div->reg = reg;
++		div->shift = data->offset_div;
++		div->width = data->width_div;
++		div->lock = &sun4i_a10_display_lock;
++	}
++
++	clk = clk_register_composite(NULL, clk_name,
++				     parents, data->parents,
++				     &mux->hw, &clk_mux_ops,
++				     data->has_div ? &div->hw : NULL,
++				     data->has_div ? &clk_divider_ops : NULL,
++				     &gate->hw, &clk_gate_ops,
++				     0);
++	if (IS_ERR(clk)) {
++		pr_err("%s: Couldn't register the clock\n", clk_name);
++		goto free_div;
++	}
++
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++
++	if (!data->has_rst)
++		return;
++
++	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
++	if (!reset_data)
++		goto free_clk;
++
++	reset_data->reg = reg;
++	reset_data->offset = data->offset_rst;
++	reset_data->lock = &sun4i_a10_display_lock;
++	reset_data->rcdev.nr_resets = 1;
++	reset_data->rcdev.ops = &sun4i_a10_display_reset_ops;
++	reset_data->rcdev.of_node = node;
++	reset_data->rcdev.of_reset_n_cells = 0;
++	reset_data->rcdev.of_xlate = &sun4i_a10_display_reset_xlate;
++
++	if (reset_controller_register(&reset_data->rcdev)) {
++		pr_err("%s: Couldn't register the reset controller\n",
++		       clk_name);
++		goto free_reset;
++	}
++
++	return;
++
++free_reset:
++	kfree(reset_data);
++free_clk:
++	clk_unregister(clk);
++free_div:
++	if (data->has_div)
++		kfree(div);
++free_gate:
++	kfree(gate);
++free_mux:
++	kfree(mux);
++}
++
++static struct sun4i_a10_display_clk_data sun4i_a10_tcon_ch0_data = {
++	.has_rst	= true,
++	.parents	= 4,
++	.offset_en	= 31,
++	.offset_rst	= 29,
++	.offset_mux	= 24,
++	.width_mux	= 2,
++};
++
++static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
++{
++	sun4i_a10_display_init(node, &sun4i_a10_tcon_ch0_data);
++}
++CLK_OF_DECLARE(sun4i_a10_tcon_ch0, "allwinner,sun4i-a10-tcon-ch0-clk",
++	       sun4i_a10_tcon_ch0_setup);
++
++static struct sun4i_a10_display_clk_data sun4i_a10_display_data = {
++	.has_div	= true,
++	.parents	= 3,
++	.offset_en	= 31,
++	.offset_rst	= 30,
++	.offset_mux	= 24,
++	.offset_div	= 0,
++	.width_mux	= 2,
++	.width_div	= 4,
++};
++
++static void __init sun4i_a10_display_setup(struct device_node *node)
++{
++	sun4i_a10_display_init(node, &sun4i_a10_display_data);
++}
++CLK_OF_DECLARE(sun4i_a10_display, "allwinner,sun4i-a10-display-clk",
++	       sun4i_a10_display_setup);
 -- 
 2.6.4
