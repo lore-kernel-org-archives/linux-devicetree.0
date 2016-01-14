@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 14/26] drm/modes: Rewrite the command line parser
-Date: Thu, 14 Jan 2016 16:24:57 +0100
-Message-ID: <1452785109-6172-15-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 08/26] clk: sun5i: add DRAM gates
+Date: Thu, 14 Jan 2016 16:24:51 +0100
+Message-ID: <1452785109-6172-9-git-send-email-maxime.ripard@free-electrons.com>
 References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAP4322AKGQEFVHFSUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC74322AKGQETUIKUBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1452785109-6172-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,374 +19,43 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rewrite the command line parser in order to get away from the state machine
-parsing the video mode lines.
+The Allwinner SoCs have a gate controller to gate the access to the DRAM
+clock to the some devices that need to access the DRAM directly (mostly
+display / image related IPs).
 
-Hopefully, this will allow to extend it more easily to support named modes
-and / or properties set directly on the command line.
+Use a simple gates driver to support the one found in the A13 / R8 SoCs.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/drm_modes.c | 308 +++++++++++++++++++++++++++-----------------
- 1 file changed, 191 insertions(+), 117 deletions(-)
+ Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
+ drivers/clk/sunxi/clk-simple-gates.c              | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index cd74a0953f42..5b1921b22dd6 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -30,6 +30,7 @@
-  * authorization from the copyright holder(s) and author(s).
-  */
- 
-+#include <linux/ctype.h>
- #include <linux/list.h>
- #include <linux/list_sort.h>
- #include <linux/export.h>
-@@ -1199,6 +1200,131 @@ void drm_mode_connector_list_update(struct drm_connector *connector,
- }
- EXPORT_SYMBOL(drm_mode_connector_list_update);
- 
-+static int drm_mode_parse_cmdline_bpp(const char *str, char **end_ptr,
-+				      struct drm_cmdline_mode *mode)
-+{
-+	if (str[0] != '-')
-+		return -EINVAL;
-+
-+	mode->bpp = simple_strtol(str + 1, end_ptr, 10);
-+	mode->bpp_specified = true;
-+
-+	return 0;
-+}
-+
-+static int drm_mode_parse_cmdline_refresh(const char *str, char **end_ptr,
-+					  struct drm_cmdline_mode *mode)
-+{
-+	if (str[0] != '@')
-+		return -EINVAL;
-+
-+	mode->refresh = simple_strtol(str + 1, end_ptr, 10);
-+	mode->refresh_specified = true;
-+
-+	return 0;
-+}
-+
-+static int drm_mode_parse_cmdline_extra(const char *str, int length,
-+					struct drm_connector *connector,
-+					struct drm_cmdline_mode *mode)
-+{
-+	int i;
-+
-+	for (i = 0; i < length; i++) {
-+		switch (str[i]) {
-+		case 'i':
-+			mode->interlace = true;
-+			break;
-+		case 'm':
-+			mode->margins = true;
-+			break;
-+		case 'D':
-+			if (mode->force != DRM_FORCE_UNSPECIFIED)
-+				return -EINVAL;
-+
-+			if ((connector->connector_type != DRM_MODE_CONNECTOR_DVII) &&
-+			    (connector->connector_type != DRM_MODE_CONNECTOR_HDMIB))
-+				mode->force = DRM_FORCE_ON;
-+			else
-+				mode->force = DRM_FORCE_ON_DIGITAL;
-+			break;
-+		case 'd':
-+			if (mode->force != DRM_FORCE_UNSPECIFIED)
-+				return -EINVAL;
-+
-+			mode->force = DRM_FORCE_OFF;
-+			break;
-+		case 'e':
-+			if (mode->force != DRM_FORCE_UNSPECIFIED)
-+				return -EINVAL;
-+
-+			mode->force = DRM_FORCE_ON;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int drm_mode_parse_cmdline_res_mode(const char *str, unsigned int length,
-+					   bool extras,
-+					   struct drm_connector *connector,
-+					   struct drm_cmdline_mode *mode)
-+{
-+	bool rb = false, cvt = false;
-+	int xres = 0, yres = 0;
-+	int remaining, i;
-+	char *end_ptr;
-+
-+	xres = simple_strtol(str, &end_ptr, 10);
-+
-+	if (end_ptr[0] != 'x')
-+		return -EINVAL;
-+	end_ptr++;
-+
-+	yres = simple_strtol(end_ptr, &end_ptr, 10);
-+
-+	remaining = length - (end_ptr - str);
-+	if (remaining < 0)
-+		return -EINVAL;
-+
-+	for (i = 0; i < remaining; i++) {
-+		switch (end_ptr[i]) {
-+		case 'M':
-+			cvt = true;
-+			break;
-+		case 'R':
-+			rb = true;
-+			break;
-+		default:
-+			/*
-+			 * Try to pass that to our extras parsing
-+			 * function to handle the case where the
-+			 * extras are directly after the resolution
-+			 */
-+			if (extras) {
-+				int ret = drm_mode_parse_cmdline_extra(end_ptr + i,
-+								       1,
-+								       connector,
-+								       mode);
-+				if (ret)
-+					return ret;
-+			} else {
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	mode->xres = xres;
-+	mode->yres = yres;
-+	mode->cvt = cvt;
-+	mode->rb = rb;
-+
-+	return 0;
-+}
-+
- /**
-  * drm_mode_parse_command_line_for_connector - parse command line modeline for connector
-  * @mode_option: optional per connector mode option
-@@ -1225,13 +1351,12 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 					       struct drm_cmdline_mode *mode)
- {
- 	const char *name;
--	unsigned int namelen;
--	bool res_specified = false, bpp_specified = false, refresh_specified = false;
--	unsigned int xres = 0, yres = 0, bpp = 32, refresh = 0;
--	bool yres_specified = false, cvt = false, rb = false;
--	bool interlace = false, margins = false, was_digit = false;
--	int i;
--	enum drm_connector_force force = DRM_FORCE_UNSPECIFIED;
-+	bool parse_extras = false;
-+	unsigned int bpp_off = 0, refresh_off = 0;
-+	unsigned int mode_end = 0;
-+	char *bpp_ptr = NULL, *refresh_ptr = NULL, *extra_ptr = NULL;
-+	char *bpp_end_ptr = NULL, *refresh_end_ptr = NULL;
-+	int ret;
- 
- #ifdef CONFIG_FB
- 	if (!mode_option)
-@@ -1244,128 +1369,77 @@ bool drm_mode_parse_command_line_for_connector(const char *mode_option,
- 	}
- 
- 	name = mode_option;
--	namelen = strlen(name);
--	for (i = namelen-1; i >= 0; i--) {
--		switch (name[i]) {
--		case '@':
--			if (!refresh_specified && !bpp_specified &&
--			    !yres_specified && !cvt && !rb && was_digit) {
--				refresh = simple_strtol(&name[i+1], NULL, 10);
--				refresh_specified = true;
--				was_digit = false;
--			} else
--				goto done;
--			break;
--		case '-':
--			if (!bpp_specified && !yres_specified && !cvt &&
--			    !rb && was_digit) {
--				bpp = simple_strtol(&name[i+1], NULL, 10);
--				bpp_specified = true;
--				was_digit = false;
--			} else
--				goto done;
--			break;
--		case 'x':
--			if (!yres_specified && was_digit) {
--				yres = simple_strtol(&name[i+1], NULL, 10);
--				yres_specified = true;
--				was_digit = false;
--			} else
--				goto done;
--			break;
--		case '0' ... '9':
--			was_digit = true;
--			break;
--		case 'M':
--			if (yres_specified || cvt || was_digit)
--				goto done;
--			cvt = true;
--			break;
--		case 'R':
--			if (yres_specified || cvt || rb || was_digit)
--				goto done;
--			rb = true;
--			break;
--		case 'm':
--			if (cvt || yres_specified || was_digit)
--				goto done;
--			margins = true;
--			break;
--		case 'i':
--			if (cvt || yres_specified || was_digit)
--				goto done;
--			interlace = true;
--			break;
--		case 'e':
--			if (yres_specified || bpp_specified || refresh_specified ||
--			    was_digit || (force != DRM_FORCE_UNSPECIFIED))
--				goto done;
- 
--			force = DRM_FORCE_ON;
--			break;
--		case 'D':
--			if (yres_specified || bpp_specified || refresh_specified ||
--			    was_digit || (force != DRM_FORCE_UNSPECIFIED))
--				goto done;
-+	if (!isdigit(name[0]))
-+		return false;
- 
--			if ((connector->connector_type != DRM_MODE_CONNECTOR_DVII) &&
--			    (connector->connector_type != DRM_MODE_CONNECTOR_HDMIB))
--				force = DRM_FORCE_ON;
--			else
--				force = DRM_FORCE_ON_DIGITAL;
--			break;
--		case 'd':
--			if (yres_specified || bpp_specified || refresh_specified ||
--			    was_digit || (force != DRM_FORCE_UNSPECIFIED))
--				goto done;
-+	/* Try to locate the bpp and refresh specifiers, if any */
-+	bpp_ptr = strchr(name, '-');
-+	if (bpp_ptr) {
-+		bpp_off = bpp_ptr - name;
-+		mode->bpp_specified = true;
-+	}
- 
--			force = DRM_FORCE_OFF;
--			break;
--		default:
--			goto done;
--		}
-+	refresh_ptr = strchr(name, '@');
-+	if (refresh_ptr) {
-+		refresh_off = refresh_ptr - name;
-+		mode->refresh_specified = true;
- 	}
- 
--	if (i < 0 && yres_specified) {
--		char *ch;
--		xres = simple_strtol(name, &ch, 10);
--		if ((ch != NULL) && (*ch == 'x'))
--			res_specified = true;
--		else
--			i = ch - name;
--	} else if (!yres_specified && was_digit) {
--		/* catch mode that begins with digits but has no 'x' */
--		i = 0;
-+	/* Locate the end of the name / resolution, and parse it */
-+	if (bpp_ptr && refresh_ptr) {
-+		mode_end = min(bpp_off, refresh_off);
-+	} else if (bpp_ptr) {
-+		mode_end = bpp_off;
-+	} else if (refresh_ptr) {
-+		mode_end = refresh_off;
-+	} else {
-+		mode_end = strlen(name);
-+		parse_extras = true;
- 	}
--done:
--	if (i >= 0) {
--		printk(KERN_WARNING
--			"parse error at position %i in video mode '%s'\n",
--			i, name);
--		mode->specified = false;
-+
-+	ret = drm_mode_parse_cmdline_res_mode(name, mode_end,
-+					      parse_extras,
-+					      connector,
-+					      mode);
-+	if (ret)
- 		return false;
--	}
-+	mode->specified = true;
- 
--	if (res_specified) {
--		mode->specified = true;
--		mode->xres = xres;
--		mode->yres = yres;
-+	if (bpp_ptr) {
-+		ret = drm_mode_parse_cmdline_bpp(bpp_ptr, &bpp_end_ptr, mode);
-+		if (ret)
-+			return false;
- 	}
- 
--	if (refresh_specified) {
--		mode->refresh_specified = true;
--		mode->refresh = refresh;
-+	if (refresh_ptr) {
-+		ret = drm_mode_parse_cmdline_refresh(refresh_ptr,
-+						     &refresh_end_ptr, mode);
-+		if (ret)
-+			return false;
- 	}
- 
--	if (bpp_specified) {
--		mode->bpp_specified = true;
--		mode->bpp = bpp;
-+	/*
-+	 * Locate the end of the bpp / refresh, and parse the extras
-+	 * if relevant
-+	 */
-+	if (bpp_ptr && refresh_ptr)
-+		extra_ptr = max(bpp_end_ptr, refresh_end_ptr);
-+	else if (bpp_ptr)
-+		extra_ptr = bpp_end_ptr;
-+	else if (refresh_ptr)
-+		extra_ptr = refresh_end_ptr;
-+
-+	if (extra_ptr) {
-+		int remaining = strlen(name) - (extra_ptr - name);
-+
-+		/*
-+		 * We still have characters to process, while
-+		 * we shouldn't have any
-+		 */
-+		if (remaining > 0)
-+			return false;
- 	}
--	mode->rb = rb;
--	mode->cvt = cvt;
--	mode->interlace = interlace;
--	mode->margins = margins;
--	mode->force = force;
- 
- 	return true;
- }
-@@ -1491,4 +1565,4 @@ int drm_mode_convert_umode(struct drm_display_mode *out,
- 
- out:
- 	return ret;
--}
-\ No newline at end of file
-+}
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index fe34fc56e803..2a76cc3718d4 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -57,6 +57,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+ 	"allwinner,sun4i-a10-display-clk" - for the display clocks on the A10
++	"allwinner,sun5i-a13-dram-gates-clk" - for the DRAM gates on A13
+ 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+ 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+ 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
+diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+index 0214c6548afd..5666c767fa14 100644
+--- a/drivers/clk/sunxi/clk-simple-gates.c
++++ b/drivers/clk/sunxi/clk-simple-gates.c
+@@ -112,6 +112,8 @@ CLK_OF_DECLARE(sun5i_a13_apb0, "allwinner,sun5i-a13-apb0-gates-clk",
+ 	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun5i_a13_apb1, "allwinner,sun5i-a13-apb1-gates-clk",
+ 	       sunxi_simple_gates_init);
++CLK_OF_DECLARE(sun5i_a13_dram, "allwinner,sun5i-a13-dram-gates-clk",
++	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun6i_a31_ahb1, "allwinner,sun6i-a31-ahb1-gates-clk",
+ 	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun6i_a31_apb1, "allwinner,sun6i-a31-apb1-gates-clk",
 -- 
 2.6.4
