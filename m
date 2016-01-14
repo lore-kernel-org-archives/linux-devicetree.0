@@ -1,118 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Thu, 14 Jan 2016 10:20:56 +0900
-Message-ID: <5696F7F8.108@samsung.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
- <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com>
- <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com>
- <5696665A.5030508@nvidia.com> <5696F0C4.1060904@samsung.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Thu, 14 Jan 2016 01:23:39 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+ <87oacp5zl7.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5696F0C4.1060904-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <87oacp5zl7.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.01.2016 09:50, Krzysztof Kozlowski wrote:
-> On 13.01.2016 23:59, Laxman Dewangan wrote:
->>
->> On Wednesday 13 January 2016 09:55 AM, Laxman Dewangan wrote:
->>>
->>> On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
->>>> On 13.01.2016 13:07, Laxman Dewangan wrote:
->>>>> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
->>>>
->>>>> That is also fine to me but still I am not comfortable with the config
->>>>> name and driver file name as this does not suggest the common.
->>>> The name does not matter. Really. We have a lot of drivers with a
->>>> specific device-like name and supporting different devices. To point
->>>> that your argument is invalid - your initial name of driver
->>>> "rtc-max77620.c" supported totally different "names": the max77620 and
->>>> max20024. It also wasn't suggesting something "common"...
->>> In all config string, I have mentioned the MAX20024.
->>>
->>>
->>>> With my approach we are not developing common think neither. We just
->>>> want to extend/re-use existing max77686 (or max77802) driver for new
->>>> devices. Just like everywhere else.
->>>
->>> OK, fine to me if this is acceptable.
->>> I will drop this rtc patch form this series and work in max77686
->>> driver to modify first and once merged, use this config on my defconfig.
->>>
->>
->> Here, MAX686 RTC driver needs two regmap handle, one for the rtc_regmap
->> and other for STATUS2 register access.
->>
->>         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
->> &val);
->>         if (ret < 0) {
->>                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->>                                 __func__, __LINE__, ret);
->>                 goto out;
->>         }
->>
->>
->> We can not have two regmap handle on rtc driver as both regmap (pmic and
->> rtc) registered with different i2c device.
->>
->> Also this register should not be accessed by RTC driver if we want to
->> decouple as this is very much MAX77686 register set.
->> Do we need this code?
->> static int max77686_rtc_read_alarm(struct device *dev, struct rtc_wkalrm
->> *alrm)
->> {
->>         struct max77686_rtc_info *info = dev_get_drvdata(dev);
->>         u8 data[RTC_NR_TIME];
->>         unsigned int val;
->>         int i, ret;
->>
->> ::::::::
->>        alrm->pending = 0;
->>         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
->> &val);
->>         if (ret < 0) {
->>                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->>                                 __func__, __LINE__, ret);
->>                 goto out;
->>         }
->>
->>         if (val & (1 << 4)) /* RTCA1 */
->>                 alrm->pending = 1;
->>
->> }
-> 
-> Most of the drivers set the 'pending' field when reading alarm. Your
-> original driver did not.
-> 
-> The max77802 does exactly the same (BTW, these should be merged as
-> well... I'll add this to the TODO list) so I think this is necessary.
-
-How about merging max77802 to max77686 first? The only differences I
-found are:
-1. It uses main MFD/PMIC regmap.
-   This can be solved as part of decoupling code. The driver will get
-MFD's regmap and set up its own (only on max77686). The max77802 will
-only use parent's regmap.
-
-2. It has different register address.
-   We need a register-layout/configuration structure. The logic is the
-same except few differences (e.g. presence of MAX77802_RTC_AE1).
-
-It may be easier to merge them now, before adding support for max77620?
-I could handle this probably next week or in the following week
-(assuming someone would test max77802 because I don't have the hardware).
-
-Anyway I think we should develop these RTC patches having this in mind:
-merge all of them.
-
-Best regards,
-Krzysztof
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQZXRlciBLb3JzZ2FhcmQgW21h
+aWx0bzpqYWNtZXRAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgUGV0ZXIgS29yc2dhYXJkDQo+IFNl
+bnQ6IDIwMTbE6jHUwjEzyNUgMjI6MjINCj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdA
+YXRtZWwuY29tPg0KPiBDYzogTGlhbSBHaXJkd29vZCA8bGdpcmR3b29kQGdtYWlsLmNvbT47IE1h
+cmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47DQo+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
+cm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrDQo+IFJ1dGxh
+bmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBo
+ZWxsaW9uLm9yZy51az47DQo+IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgS3J6
+eXN6dG9mIEtvemxvd3NraQ0KPiA8ay5rb3psb3dza2lAc2Ftc3VuZy5jb20+OyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgRmVycmUsIE5pY29sYXMNCj4gPE5pY29sYXMuRkVSUkVAYXRtZWwu
+Y29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgSmF2aWVyIE1hcnRpbmV6DQo+IENh
+bmlsbGFzIDxqYXZpZXJAZG93aGlsZTAub3JnPjsgTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJv
+Lm9yZz47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MiAxLzJdIHJlZ3VsYXRvcjogYWN0ODk0NWE6IGFkZCByZWd1bGF0b3Ig
+ZHJpdmVyIGZvcg0KPiBBQ1Q4OTQ1QQ0KPiANCj4gPj4+Pj4gIldlbnlvdSIgPT0gV2VueW91IFlh
+bmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4gd3JpdGVzOg0KPiANCj4gID4gVGhpcyBwYXRjaCBh
+ZGRzIG5ldyByZWd1bGF0b3IgZHJpdmVyIHRvIHN1cHBvcnQgQUNUODk0NUEgTUZEICA+IGNoaXAn
+cw0KPiByZWd1bGF0b3JzLg0KPiANCj4gID4gVGhlIEFDVDg5NDVBIGhhcyB0aHJlZSBzdGVwLWRv
+d24gREMvREMgY29udmVydGVycyBhbmQgZm91ciAgPiBsb3ctZHJvcG91dA0KPiByZWd1bGF0b3Jz
+Lg0KPiANCj4gID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVs
+LmNvbT4NCj4gDQo+IElzbid0IHRoZSByZWd1bGF0b3IgcGFydCBvZiB0aGUgYWN0ODk0NWEgaWRl
+bnRpY2FsIHRvIGFjdDg4NjU/IENhbid0IHdlIGp1c3QgdXNlIHRoZQ0KPiBleGlzdGluZyBhY3Q4
+ODY1LXJlZ3VsYXRvci5jIGRyaXZlcj8gKEUuRy4gc3VwcG9ydCA4ODY1IHZhcmlhbnQgaW4gdGhl
+IG1mZCBkcml2ZXIsDQo+IGJ1dCBvbmx5IHJlZ2lzdGVyIHRoZSByZWd1bGF0b3Igc3ViIGRldmlj
+ZT8pDQoNClllcywgdGhlIHJlZ3VsYXRvciBwYXJ0IG9mIHRoZSBhY3Q4OTQ1YSBpcyBpZGVudGlj
+YWwgdG8gYWN0ODg2NS4NCg0KQnV0IHRoZSBhY3Q4ODY1LXJlZ3VsYXRvciBkcml2ZXIgaXMgYSBz
+dHJ1Y3QgaTJjX2RyaXZlciwgIGFuZCB0aGUgbWZkIHN1Yi1kZXZpY2UgZHJpdmVyIGlzIGEgcGxh
+dGZvcm1fZHJpdmVyIGRyaXZlciwgaXQgaXMgbm90IGVhc3kgdG8gdXNlIGl0Lg0KDQo+IA0KPiAt
+LQ0KPiBCeWUsIFBldGVyIEtvcnNnYWFyZA0KDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5n
+DQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
