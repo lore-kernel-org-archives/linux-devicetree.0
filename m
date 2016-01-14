@@ -1,119 +1,55 @@
-From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/5] mtd: atmel_nand: Support variable RB_EDGE interrupts
-Date: Thu, 14 Jan 2016 11:16:19 +0100
-Message-ID: <CAGkQfmMQTBVzOoE3BTyvg73NKjtGD_0veV_zb_jLutk-6bcqGw@mail.gmail.com>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
- <1452702857-2240-3-git-send-email-romain.izard.pro@gmail.com> <20160113191409.5cd0dc82@bbrezillon>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] of: drop symbols declared by _OF_DECLARE() from modules
+Date: Thu, 14 Jan 2016 19:21:21 +0900
+Message-ID: <CAK7LNATQB1ZBHM26HGSb=hHYsjROppAaOfWGE+M6TvadR71JQg@mail.gmail.com>
+References: <1452745987-22146-1-git-send-email-yamada.masahiro@socionext.com>
+	<34759085.vISMJm6PEF@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113191409.5cd0dc82@bbrezillon>
+In-Reply-To: <34759085.vISMJm6PEF@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Arnd,
 
-2016-01-13 19:14 GMT+01:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
->> index 9d71f9e6a8de..e5d7e7e63f49 100644
->> --- a/drivers/mtd/nand/atmel_nand.c
->> +++ b/drivers/mtd/nand/atmel_nand.c
->> @@ -67,6 +67,10 @@ struct atmel_nand_caps {
->>       bool pmecc_correct_erase_page;
->>  };
+2016-01-14 19:14 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Thursday 14 January 2016 13:33:06 Masahiro Yamada wrote:
 >>
->> +struct atmel_nand_nfc_priv {
->
-> Can you rename this struct into atmel_nfc_caps to be consistant with the
-> atmel_nand_caps?
->
->> +     uint32_t rb_edge;
->
-> Actually, AFAIU, it's not encoding the type of edges, but the available
-> native R/B lines (by native I mean the R/B lines directly connected to
-> the NFC IP).
-> I suggest renaming this field avail_rb_lines, and making it a bitfield
-> (one bit per possible R/B line).
->
-
-It's already a bitfield in the end: it's the mask for the interrupt status
-register. It might have been better if it were called rb_edge_mask.
-
->> +};
->> +
->>  /* oob layout for large page size
->>   * bad block info is on bytes 0 and 1
->>   * the bytes have to be consecutives to avoid
->> @@ -111,6 +115,7 @@ struct atmel_nfc {
->>       /* Point to the sram bank which include readed data via NFC */
->>       void                    *data_in_sram;
->>       bool                    will_write_sram;
->> +     uint32_t                rb_edge;
->
-> Replace this by
->         const struct atmel_nfc_caps *caps;
->
-> so that next time you have a per-SoC particularity, you can just add it
-> to your struct atmel_nfc_caps without adding new fields to atmel_nfc.
->
-
-I'm reluctant about this, but I will do it. For me, we are exchanging
-a single probe-time copy to indirections in each interrupt handler for some
-unspecified future user. Let's hope the tradeoff is worth it.
-
->>  };
->>  static struct atmel_nfc      nand_nfc;
+>> -#ifdef CONFIG_OF
+>> +#if defined(CONFIG_OF) && !defined(MODULE)
+>>  #define _OF_DECLARE(table, name, compat, fn, fn_type)                  \
+>>         static const struct of_device_id __of_table_##name              \
+>>                 __used __section(__##table##_of_table)                  \
+>> --
 >>
->> @@ -1675,9 +1680,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
->>               nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
->>               ret = IRQ_HANDLED;
->>       }
->> -     if (pending & NFC_SR_RB_EDGE) {
->> +     if (pending & host->nfc->rb_edge) {
->>               complete(&host->nfc->comp_ready);
->> -             nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
->> +             nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->rb_edge);
 >
-> How about creating a macro that would generate the appropriate bitmask
-> for you?
->
-> Something like
->
-> #define NFC_SR_RB_EDGE_MASK(x)  ((x) << 24)
->
+> Doesn't this lead to "unused function" warnings? Maybe we can change the "__used"
+> into "__unused" when MODULE is set,
 
-It's already so verbose, it will make everything longer. Once the member name
-contains the 'mask' part, all the information will be there.
+Yes, this is my intention.
+
+I think this patch does so,
+unless I am missing something...
 
 
->> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
->> index 4d5d26221a7e..2cd9c57b1e53 100644
->> --- a/drivers/mtd/nand/atmel_nand_nfc.h
->> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
->> @@ -42,7 +42,10 @@
->>  #define              NFC_SR_UNDEF            (1 << 21)
->>  #define              NFC_SR_AWB              (1 << 22)
->>  #define              NFC_SR_ASE              (1 << 23)
->> -#define              NFC_SR_RB_EDGE          (1 << 24)
->> +#define              NFC_SR_RB_EDGE0         (1 << 24)
->> +#define              NFC_SR_RB_EDGE1         (1 << 25)
->> +#define              NFC_SR_RB_EDGE2         (1 << 26)
->> +#define              NFC_SR_RB_EDGE3         (1 << 27)
->
-> Please replace those 4 definitions by:
->
-> #define                 NFC_SR_RB_EDGE(x)       BIT(x + 24)
->
-
-The whole file could be rewritten in this form, but I see this as a
-zero-value proposition. I believe it is best to keep with local
-consistency. In fact, I will rather remove RB_EDGE1 & RB_EDGE2, as
-those are not mentioned in the datasheets.
+  #if defined(CONFIG_OF) && !defined(MODULE)
+          __used
+  #else
+          __unused
+  #endif
 
 
-Best regards,
+
+> so the compiler will automatically
+> drop all code that is only referenced from the entry.
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
