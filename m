@@ -1,41 +1,55 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ti-st: use device handles and add device tree binding
-Date: Thu, 14 Jan 2016 12:18:16 -0800
-Message-ID: <56980288.9030404@hurleysoftware.com>
-References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
- <8665E2433BC68541A24DFFCA87B70F5B23769B75@DFRE01.ent.ti.com>
- <20160114170746.GO12777@atomide.com>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
+ settings device tree options
+Date: Thu, 14 Jan 2016 12:18:59 -0800
+Message-ID: <20160114201858.GA17567@Asurada-Nvidia>
+References: <1452788982-11583-1-git-send-email-caleb@crome.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160114170746.GO12777-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452788982-11583-1-git-send-email-caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Caleb Crome <caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>
+Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2016 09:07 AM, Tony Lindgren wrote:
-> * Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> [160114 06:23]:
->> Ping on this patchset
-> 
-> I think there are several comments pending from Rob as
-> a reply to this thread on December 29th?
+On Thu, Jan 14, 2016 at 08:29:42AM -0800, Caleb Crome wrote:
+> Tuning the SSI fifo watermark & maxburst settings needs to be
+> optimized differently depending on the demands on the system.  The
+> current default of 2 is too low for high data-rate systems.  This
+> patch maintains exactly the same behavior by default (i.e defaults to
+> 2), but adds device tree options to set maxburst & fifo depth from the
+> device tree.  This is necessary because a setting of 2 simply doesn't
+> work at higher data rates.
 
-That, and this driver has _serious_ architectural problems that I don't
-see being worked on at all.
+> @@ -61,6 +61,16 @@ Optional properties:
+>  - fsl,mode:         The operating mode for the AC97 interface only.
+>                      "ac97-slave" - AC97 mode, SSI is clock slave
+>                      "ac97-master" - AC97 mode, SSI is clock master
+> +- fsl,fifo-watermark: Sets the fifo watermark.  The default is
+> +                    fifo_depth-2 words, meaning 'initiate dma transfer
+> +                    when 2 words are left in the fifo'.  At higher
+> +                    data rates (48kHz, 16-channels for example), this
+> +                    causes silent but deadly DMA xruns and channel
+> +                    slips.  For 15 word FIFOs (like on MX5, MX6) 8 is
+> +                    a good value when running at high data rates
+> +- fsl,dma-maxburst: sets the max number of words to transfer in DMA.
+> +                    This defaults to the same value as
+> +                    fsl,fifo-watermark.
 
-For example, when this driver loads and *waits for up to 5 seconds* [1]
-for a userspace component _that may not even be loaded at the time_
-is ridiculous.
+I think DT maintainers may not give a consent towards these two
+properties as they are not to describe the hardware but to hack
+software configurations. (And it seems you haven't CCed them.)
 
-Please fix the serious flaws first.
+I forgot which values you've figured out for these two properties,
+but I think those two values should work for normal cases as well:
+as SSI only has limited FIFO depth, it won't hurt (increasing too
+much latency) even if using a higher watermark configuration imo.
+So it could be a good idea to use optimized settings for all use
+cases and let other users test it.
 
-Regards,
-Peter Hurley
-
-[1] see st_kim_start()
-
+Nicolin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
