@@ -1,64 +1,77 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
- bindings for DECON-TV
-Date: Thu, 14 Jan 2016 19:49:38 +0900
-Message-ID: <56977D42.2050904@samsung.com>
-References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
- <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
- <56977A3B.8020104@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
+Date: Thu, 14 Jan 2016 12:11:39 +0100
+Message-ID: <4244898.5om31fQ1mz@wuerfel>
+References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com> <11122786.kKumQ3Dhls@wuerfel> <20160114102924.GA22340@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <56977A3B.8020104@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hyungwon Hwang <human.hwang@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160114102924.GA22340@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-KyBSb2IgSGVycmluZwoKMjAxNuuFhCAwMeyblCAxNOydvCAxOTozNuyXkCBBbmRyemVqIEhhamRh
-IOydtCjqsIApIOyTtCDquIA6Cj4gSGkgSW5raSwKPiAKPiBJdCBzZWVtcyB0aGlzIHBhdGNoIGFu
-ZCAwNC8xMCBkaWQgbm90IGdldCBwaWNrZWQgdXAgeWV0Lgo+IENvdWxkIHlvdSBtZXJnZSBpdD8K
-ClllcywgSSBjYW4uIEhvd2V2ZXIsIDA0LzEwIGlzIHJlcXVpcmVkIGZvciBhY2tlZC1ieSBmcm9t
-IGR0IG9yIFNvQyBtYWludGFpbmVyLgpLcnp5c3p0b2YgYW5kIFJvYiwgY291bGQgeW91IGdpdmUg
-bWUgYWNrZWQtYnk/CgpUaGFua3MsCklua2kgRGFlCgo+IAo+IFJlZ2FyZHMKPiBBbmRyemVqCj4g
-Cj4gT24gMTAvMjYvMjAxNSAxMjo1OSBQTSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4gREVDT04t
-VFYoRGlzcGxheSBhbmQgRW5oYW5jZW1lbnQgQ29udHJvbGxlciBmb3IgVFYpIGlzIGEgdmFyaWF0
-aW9uCj4+IG9mIERFQ09OIElQLiBJdHMgbWFpbiBwdXJwb3NlIGlzIHRvIHByb2R1Y2UgdmlkZW8g
-c3RyZWFtIGZvciBIRE1JIElQLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxh
-LmhhamRhQHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gSGkgS3J6eXN6dG9mLAo+Pgo+PiBJIGhhdmUg
-ZGVjaWRlZCB0byBza2lwIGNsZWFudXAgcGFydCBhcyBpdCB3b3VsZCByZXF1aXJlIG1vcmUgd29y
-aywKPj4gbm90IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaHNldC4KPj4KPj4gUmVnYXJkcwo+PiBBbmRy
-emVqCj4+Cj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9z
-NTQzMy1kZWNvbi50eHQgfCAzICsrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0Cj4+IGluZGV4IDNk
-ZmY3OGIuLmM5ZmQ3YjMgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRlY29uLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9zNTQzMy1kZWNvbi50eHQKPj4gQEAgLTUs
-NyArNSw4IEBAIEV4eW5vcyBzZXJpZXMgb2YgU29DcyB3aGljaCB0cmFuc2ZlcnMgdGhlIGltYWdl
-IGRhdGEgZnJvbSBhIHZpZGVvIG1lbW9yeQo+PiAgYnVmZmVyIHRvIGFuIGV4dGVybmFsIExDRCBp
-bnRlcmZhY2UuCj4+ICAKPj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+IC0tIGNvbXBhdGlibGU6
-IHZhbHVlIHNob3VsZCBiZSAic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uIjsKPj4gKy0gY29tcGF0
-aWJsZTogdmFsdWUgc2hvdWxkIGJlIG9uZSBvZjoKPj4gKwkic2Ftc3VuZyxleHlub3M1NDMzLWRl
-Y29uIiwgInNhbXN1bmcsZXh5bm9zNTQzMy1kZWNvbi10diI7Cj4+ICAtIHJlZzogcGh5c2ljYWwg
-YmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERFQ09OIHJlZ2lzdGVycyBzZXQuCj4+ICAt
-IGludGVycnVwdHM6IHNob3VsZCBjb250YWluIGEgbGlzdCBvZiBhbGwgREVDT04gSVAgYmxvY2sg
-aW50ZXJydXB0cyBpbiB0aGUKPj4gIAkgICAgICBvcmRlcjogVlNZTkMsIExDRF9TWVNURU0uIFRo
-ZSBpbnRlcnJ1cHQgc3BlY2lmaWVyIGZvcm1hdAo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJv
-bSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmctc29j
-IiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3Jn
-Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sCj4gCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Thursday 14 January 2016 11:29:24 Thierry Reding wrote:
+> 
+> It just occurred to me that none of these options really make much of a
+> difference. As Jon mentioned once we merge this series a lot of features
+> on Tegra will start to rely on PM_GENERIC_DOMAINS and hence PM. So if we
+> do want to build a kernel with a maximum of Tegra features enabled (and
+> I think a multi_v7_defconfig should include that) we'll end up with a PM
+> dependency anyway, whether forced via select or implied via depends on.
+> 
+> I'm beginning to wonder if PM really should be an option these days. The
+> disadvantages of making it optional do outweigh the advantages in my
+> opinion. I'm not saying that, in general, it's totally useless to build
+> a kernel that has no PM support, but for the more specific case where
+> you would want to enable multi-platform support I don't think there's
+> much practical advantage in allowing !PM. One of the most common build
+> warnings are triggered because of this option. Also multi-platform
+> kernels are really big already, so much so that I doubt it would make a
+> significant difference if we unconditionally built PM support. Also the
+> chances are that we'll be seeing more and more SoCs support PM and rely
+> on it, much like Tegra would with the addition of this series.
+> 
+> I imagine that we could save ourselves a lot of headaches by simply
+> enabling PM by default, whether that be via the PM Kconfig option or by
+> selecting it from ARCH_TEGRA and any other architectures that may come
+> to rely on it. Doing so would also reduce the amount of test coverage
+> that we need to do, both at compile- and runtime.
+
+I think this needs some investigation. As a general policy, we should
+not grow the kernel image size when moving from a traditional ARM
+platform to an ARCH_MULTIPLATFORM one.
+
+This is somewhat contradicted by how we already require CONFIG_OF
+to be set for multiplatform kernels, and that adds around 80kb
+to the image size.
+
+Looking at just the defconfig files, these are the ones that currently
+do not set CONFIG_PM:
+
+build/acs5k_defconfig/.config:# CONFIG_PM is not set
+build/acs5k_tiny_defconfig/.config:# CONFIG_PM is not set
+build/axm55xx_defconfig/.config:# CONFIG_PM is not set
+build/bcm2835_defconfig/.config:# CONFIG_PM is not set
+build/clps711x_defconfig/.config:# CONFIG_PM is not set
+build/ebsa110_defconfig/.config:# CONFIG_PM is not set
+build/footbridge_defconfig/.config:# CONFIG_PM is not set
+build/ks8695_defconfig/.config:# CONFIG_PM is not set
+build/netwinder_defconfig/.config:# CONFIG_PM is not set
+build/rpc_defconfig/.config:# CONFIG_PM is not set
+build/u300_defconfig/.config:# CONFIG_PM is not set
+build/vf610m4_defconfig/.config:# CONFIG_PM is not set
+
+The only ones among these are are actually multiplatform are axm55xx,
+bcm2835, and u300. I see no downsides of force-enabling PM for
+any of those, so we could decide to 'select PM' from
+CONFIG_ARCH_MULTIPLATFORM.
+
+The one usecase where we may want to have a modern machine without
+CONFIG_PM is a minimal MACH_VIRT kernel for running in a virtual
+machine or QEMU with minimal memory requirements, e.g. trying to
+squeeze a large number of guests on a single host system.
+
+	Arnd
