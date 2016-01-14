@@ -1,55 +1,47 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
- ACT8945A
-Date: Thu, 14 Jan 2016 08:07:40 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
-References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
-	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
-	<87oacp5zl7.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
- <87egdk39ji.fsf@dell.be.48ers.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
+Date: Thu, 14 Jan 2016 11:20:57 +0300
+Message-ID: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87egdk39ji.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIgS29yc2dhYXJk
-IFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtvcnNnYWFyZA0K
-PiBTZW50OiAyMDE2xOox1MIxNMjVIDE1OjI4DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5Z
-YW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+
-OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ow0KPiBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyaw0KPiBS
-dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8aWpjK2RldmljZXRy
-ZWVAaGVsbGlvbi5vcmcudWs+Ow0KPiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47
-IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296bG93c2tpQHNhbXN1bmcuY29tPjsgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0
-bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEphdmllciBNYXJ0aW5leg0K
-PiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9yZz47IExlZSBKb25lcyA8bGVlLmpvbmVzQGxp
-bmFyby5vcmc+OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBhZGQgcmVndWxh
-dG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+ID4+Pj4+ICJZYW5nLCIgPT0gWWFuZywg
-V2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+ICA+PiBJc24ndCB0
-aGUgcmVndWxhdG9yIHBhcnQgb2YgdGhlIGFjdDg5NDVhIGlkZW50aWNhbCB0byBhY3Q4ODY1PyBD
-YW4ndCB3ZSBqdXN0IHVzZQ0KPiB0aGUgID4+IGV4aXN0aW5nIGFjdDg4NjUtcmVndWxhdG9yLmMg
-ZHJpdmVyPyAoRS5HLiBzdXBwb3J0IDg4NjUgdmFyaWFudCBpbiB0aGUgbWZkDQo+IGRyaXZlciwg
-ID4+IGJ1dCBvbmx5IHJlZ2lzdGVyIHRoZSByZWd1bGF0b3Igc3ViIGRldmljZT8pDQo+IA0KPiAg
-PiBZZXMsIHRoZSByZWd1bGF0b3IgcGFydCBvZiB0aGUgYWN0ODk0NWEgaXMgaWRlbnRpY2FsIHRv
-IGFjdDg4NjUuDQo+IA0KPiAgPiBCdXQgdGhlIGFjdDg4NjUtcmVndWxhdG9yIGRyaXZlciBpcyBh
-IHN0cnVjdCBpMmNfZHJpdmVyLCBhbmQgdGhlIG1mZCAgPiBzdWItDQo+IGRldmljZSBkcml2ZXIg
-aXMgYSBwbGF0Zm9ybV9kcml2ZXIgZHJpdmVyLCBpdCBpcyBub3QgZWFzeSB0byB1c2UgID4gaXQu
-DQo+IA0KPiBCdXQgdGhlIG1mZCBkcml2ZXIgY291bGQgc3VwcG9ydCB0aGUgYWN0ODg2NSB2YXJp
-YW50IGFzIHdlbGwgKGJ5IG9ubHkgcmVnaXN0ZXJpbmcNCj4gdGhlIHJlZ3VsYXRvciBtZmQgY2Vs
-bCkuDQoNCkkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZC4NCg0KVGhlIE1GRCBzdWIgZGV2aWNlIGlz
-IHJlZ2lzdGVyZWQgYXMgYSBwbGF0Zm9ybSBkZXZpY2UsIHRoZSBleGlzdGluZyBhY3Q4ODY1IGRy
-aXZlciBpcyByZWdpc3RlcmVkIGFzIGFuIGkyY19kcml2ZXIuIEhvdyBkbyB0aGV5IG1hdGNoPyA6
-KQ0KDQpDb3VsZCB5b3UgcG9pbnQgb3V0IHdoaWNoIGV4aXRpbmcgZHJpdmVyIGZvciBtZSB0byBy
-ZWZlcmVuY2UuICBUaGFuayB5b3UhDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
+The correct name for aliases node is "aliases" not "alias".
+
+An overview of the "aliases" node usage can be found
+on the device tree usage page at devicetree.org [1].
+
+Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
+
+[1] http://devicetree.org/Device_Tree_Usage#aliases_Node
+[2] https://www.power.org/documentation/epapr-version-1-1/
+
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+index 003015a..4b6d38c 100644
+--- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -9,7 +9,7 @@
+ 	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
+ 	model = "TP-Link TL-WR1043ND Version 1";
+ 
+-	alias {
++	aliases {
+ 		serial0 = "/ahb/apb/uart@18020000";
+ 	};
+ 
+-- 
+2.6.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
