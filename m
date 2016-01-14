@@ -1,68 +1,59 @@
 From: <shh.xie@gmail.com>
-Subject: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Thu, 14 Jan 2016 16:23:59 +0800
-Message-ID: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+Subject: [PATCH 2/3] [v2] powerpc: fsl: update fman dt binding for PCS PHY
+Date: Thu, 14 Jan 2016 16:27:18 +0800
+Message-ID: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: netdev@vger.kernel.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shaohui Xie <Shaohui.Xie@freescale.com>
-
-This commit adds necessary definitions for the PHY layer to recognize
-backplane Ethernet 1000BASE-KX and 10GBASE-KR as valid PHY interfaces,
-"1000base-kx" for 1000BASE-KX, "10gbase-kr" for 10GBASE-KR.
-
-Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
----
-changes in v2:
-new patch.
-
- Documentation/devicetree/bindings/net/ethernet.txt | 4 ++--
- include/linux/phy.h                                | 6 ++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index 5d88f37..1166a5c 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -11,8 +11,8 @@ The following properties are common to the Ethernet controllers:
-   the maximum frame size (there's contradiction in ePAPR).
- - phy-mode: string, operation mode of the PHY interface; supported values are
-   "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
--  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
--  standard property;
-+  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii", "1000base-kx", "10gbase-kr";
-+  this is now a de-facto standard property;
- - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
- - phy-handle: phandle, specifies a reference to a node representing a PHY
-   device; this property is described in ePAPR and so preferred;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index d6f3641..7acecf7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -80,6 +80,8 @@ typedef enum {
- 	PHY_INTERFACE_MODE_XGMII,
- 	PHY_INTERFACE_MODE_MOCA,
- 	PHY_INTERFACE_MODE_QSGMII,
-+	PHY_INTERFACE_MODE_1000BASE_KX,
-+	PHY_INTERFACE_MODE_10GBASE_KR,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -123,6 +125,10 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "moca";
- 	case PHY_INTERFACE_MODE_QSGMII:
- 		return "qsgmii";
-+	case PHY_INTERFACE_MODE_1000BASE_KX:
-+		return "1000base-kx";
-+	case PHY_INTERFACE_MODE_10GBASE_KR:
-+		return "10gbase-kr";
- 	default:
- 		return "unknown";
- 	}
--- 
-2.1.0.27.g96db324
+RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpQQ1MgUEhZIGNh
+biBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5kIDEwR0JBU0UtS1IpLCB0aGlzIG5l
+ZWRzCnRvIGNoYW5nZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLCBzbyBhIHJl
+ZmVyZW5jZSBpcyBuZWVkZWQKZm9yIHNlcmRlcyBsYW5lLiBUaGlzIHBhdGNoIGRlc2NyaWJlcyBw
+cm9wZXJ0aWVzIG5lZWRlZCBmb3IgUENTIFBIWSB0bwpzdXBwb3J0IGJhY2twbGFuZS4KClNpZ25l
+ZC1vZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPgotLS0KY2hh
+bmdlcyBpbiB2MjoKYWRkcmVzc2VkIFJvYidzIGNvbW1lbnRzLgpiYXNlZCBvbiBodHRwOi8vcGF0
+Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNTYwOTM2LwoKIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCB8IDE0ICsrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAppbmRleCA1NWMyYzAzLi41
+Y2E5MDlhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXJwYy9mc2wvZm1hbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Bvd2VycGMvZnNsL2ZtYW4udHh0CkBAIC00MzIsNiArNDMyLDE2IEBAIGV4YW1wbGUgb2YgaG93
+IHRvIGRlZmluZSBhIFBIWSAoSW50ZXJuYWwgUEhZIGhhcyBubyBpbnRlcnJ1cHQgbGluZSkuCiAt
+IEZvciAiZnNsLGZtYW4tbWRpbyIgY29tcGF0aWJsZSBpbnRlcm5hbCBtZGlvIGJ1cywgdGhlIFBI
+WSBpcyBUQkkgUEhZLgogLSBGb3IgImZzbCxmbWFuLW1lbWFjLW1kaW8iIGNvbXBhdGlibGUgaW50
+ZXJuYWwgbWRpbyBidXMsIHRoZSBQSFkgaXMgUENTIFBIWSwKICAgUENTIFBIWSBhZGRyIG11c3Qg
+YmUgJzAnLgorICBQQ1MgUEhZIGNhbiBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5k
+IDEwR0JBU0UtS1IpLCB0aGlzIG5lZWRzIHRvCisgIGNoYW5nZSB0aGUgY29ycmVzcG9uZGluZyBz
+ZXJkZXMgbGFuZSBzZXR0aW5ncy4KKworICBQQ1MgUEhZIG5vZGUgcHJvcGVydGllcyByZXF1aXJl
+ZCBmb3IgYmFja3BsYW5lOgorCisgIC0gY29tcGF0aWJsZTogbXVzdCBiZSAiZXRoZXJuZXQtcGh5
+LWllZWU4MDIuMy1jNDUiLgorICAtIHBoeS1tb2RlOiBzdHJpbmcsIG9wZXJhdGlvbiBtb2RlIG9m
+IHRoZSBQSFkgaW50ZXJmYWNlOyBtdXN0IGJlICIxMDAwYmFzZS1reCIKKyAgICBmb3IgMTAwMEJB
+U0UtS1gsIG9yICIxMGdiYXNlLWtyIiBmb3IgMTBHQkFTRS1LUi4KKyAgLSBmc2wtbGFuZS1oYW5k
+bGU6IHBoYW5kbGUsIHNwZWNpZmllcyBhIHJlZmVyZW5jZSB0byBhIG5vZGUgcmVwcmVzZW50aW5n
+IGEgU2VyZGVzLgorICAtIGZzbC1sYW5lLXJlZzogb2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIHJl
+Z2lzdGVyIHNldCBmb3IgdGhlIHNlcmRlcyBsYW5lLgogCiBFWEFNUExFCiAKQEAgLTQ2NCw3ICs0
+NzQsMTEgQEAgbWRpb0BmMTAwMCB7CiAJZnNsLGZtYW4taW50ZXJuYWwtbWRpbzsKIAogCXBjc3Bo
+eTY6IGV0aGVybmV0LXBoeUAwIHsKKwkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktaWVlZTgw
+Mi4zLWM0NSI7CisJCXBoeS1tb2RlID0gIjEwZ2Jhc2Uta3IiOwogCQlyZWcgPSA8MHgwPjsKKwkJ
+ZnNsLWxhbmUtaGFuZGxlID0gPCZzZXJkZXM+OworCQlmc2wtbGFuZS1yZWcgPSA8MHgxOGMwIDB4
+NDA+OwogCX07CiB9OwogCi0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
+aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
+dGluZm8vbGludXhwcGMtZGV2
