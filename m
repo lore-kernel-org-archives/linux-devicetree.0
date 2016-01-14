@@ -1,7 +1,7 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v5 09/14] dt/bindings: Add bindings for PIC32 UART driver
-Date: Wed, 13 Jan 2016 18:15:42 -0700
-Message-ID: <1452734299-460-10-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH v5 07/14] dt/bindings: Add bindings for PIC32 pin control and GPIO
+Date: Wed, 13 Jan 2016 18:15:40 -0700
+Message-ID: <1452734299-460-8-git-send-email-joshua.henderson@microchip.com>
 References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,15 +9,12 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrei Pistirica <andrei.pistirica@microchip.com>
+Document the devicetree bindings for PINCTRL and GPIO found on Microchip
+PIC32 class devices.
 
-Document the devicetree bindings for the UART peripheral found on
-Microchip PIC32 class devices.
-
-Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
 Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Acked-by: Rob Herring <robh@kernel.org>
@@ -26,48 +23,134 @@ Changes since v4: None
 Changes since v3: None
 Changes since v2: None
 Changes since v1:
-	- Fix example
-	- Use UART instead of incorrect USART
-	- Document otherwise unundocumented properties
+	- Complete bindings API change to use standard bindings
 ---
- .../bindings/serial/microchip,pic32-uart.txt       |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
+ .../bindings/gpio/microchip,pic32-gpio.txt         |   49 ++++++++++++++++
+ .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 ++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt b/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
 new file mode 100644
-index 0000000..65b38bf6
+index 0000000..ef37528
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
-@@ -0,0 +1,29 @@
-+* Microchip Universal Asynchronous Receiver Transmitter (UART)
++++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+@@ -0,0 +1,49 @@
++* Microchip PIC32 GPIO devices (PIO).
 +
 +Required properties:
-+- compatible: Should be "microchip,pic32mzda-uart"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain interrupt
-+- clocks: Phandle to the clock.
-+          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+- pinctrl-names: A pinctrl state names "default" must be defined.
-+- pinctrl-0: Phandle referencing pin configuration of the UART peripheral.
-+             See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+Optional properties:
-+- cts-gpios: CTS pin for UART
++ - compatible: "microchip,pic32mzda-gpio"
++ - reg: Base address and length for the device.
++ - interrupts: The port interrupt shared by all pins.
++ - gpio-controller: Marks the port as GPIO controller.
++ - #gpio-cells: Two. The first cell is the pin number and
++   the second cell is used to specify the gpio polarity as defined in
++   defined in <dt-bindings/gpio/gpio.h>:
++      0 = GPIO_ACTIVE_HIGH
++      1 = GPIO_ACTIVE_LOW
++      2 = GPIO_OPEN_DRAIN
++ - interrupt-controller: Marks the device node as an interrupt controller.
++ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
++   is used to specify the trigger type as defined in
++   <dt-bindings/interrupt-controller/irq.h>:
++      IRQ_TYPE_EDGE_RISING
++      IRQ_TYPE_EDGE_FALLING
++      IRQ_TYPE_EDGE_BOTH
++ - clocks: Clock specifier (see clock bindings for details).
++ - microchip,gpio-bank: Specifies which bank a controller owns.
++ - gpio-ranges: Interaction with the PINCTRL subsystem.
 +
 +Example:
-+	uart1: serial@1f822000 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822000 0x50>;
-+		interrupts = <112 IRQ_TYPE_LEVEL_HIGH>,
-+			<113 IRQ_TYPE_LEVEL_HIGH>,
-+			<114 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_uart1
-+				&pinctrl_uart1_cts
-+				&pinctrl_uart1_rts>;
-+		cts-gpios = <&gpio1 15 0>;
++
++/* PORTA */
++gpio0: gpio0@1f860000 {
++	compatible = "microchip,pic32mzda-gpio";
++	reg = <0x1f860000 0x100>;
++	interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	clocks = <&PBCLK4>;
++	microchip,gpio-bank = <0>;
++	gpio-ranges = <&pic32_pinctrl 0 0 16>;
++};
++
++keys {
++	...
++
++	button@sw1 {
++		label = "ESC";
++		linux,code = <1>;
++		gpios = <&gpio0 12 0>;
 +	};
++};
+diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+new file mode 100644
+index 0000000..4b5efa5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+@@ -0,0 +1,60 @@
++* Microchip PIC32 Pin Controller
++
++Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
++../interrupt-controller/interrupts.txt for generic information regarding
++pin controller, GPIO, and interrupt bindings.
++
++PIC32 'pin configuration node' is a node of a group of pins which can be
++used for a specific device or function. This node represents configuraions of
++pins, optional function, and optional mux related configuration.
++
++Required properties for pin controller node:
++ - compatible: "microchip,pic32mada-pinctrl"
++ - reg: Address range of the pinctrl registers.
++ - clocks: Clock specifier (see clock bindings for details)
++
++Required properties for pin configuration sub-nodes:
++ - pins: List of pins to which the configuration applies.
++
++Optional properties for pin configuration sub-nodes:
++----------------------------------------------------
++ - function: Mux function for the specified pins.
++ - bias-pull-up: Enable weak pull-up.
++ - bias-pull-down: Enable weak pull-down.
++ - input-enable: Set the pin as an input.
++ - output-low: Set the pin as an output level low.
++ - output-high: Set the pin as an output level high.
++ - microchip,digital: Enable digital I/O.
++ - microchip,analog: Enable analog I/O.
++
++Example:
++
++pic32_pinctrl: pinctrl@1f801400{
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "microchip,pic32mzda-pinctrl";
++	reg = <0x1f801400 0x400>;
++	clocks = <&PBCLK1>;
++
++	pinctrl_uart2: pinctrl_uart2 {
++		uart2-tx {
++			pins = "G9";
++			function = "U2TX";
++			microchip,digital;
++			output-low;
++		};
++		uart2-rx {
++			pins = "B0";
++			function = "U2RX";
++			microchip,digital;
++			input-enable;
++		};
++	};
++};
++
++uart2: serial@1f822200 {
++	compatible = "microchip,pic32mzda-uart";
++	reg = <0x1f822200 0x50>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++};
 -- 
 1.7.9.5
