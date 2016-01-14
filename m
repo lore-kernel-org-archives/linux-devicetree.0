@@ -1,64 +1,90 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Thu, 14 Jan 2016 12:43:00 +0100
-Message-ID: <87a8o82xq3.fsf@dell.be.48ers.dk>
-References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
-	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
-	<87oacp5zl7.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
-	<87egdk39ji.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 0/5] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Thu, 14 Jan 2016 17:02:41 +0530
+Message-ID: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01> (Wenyou
-	Yang's message of "Thu, 14 Jan 2016 08:07:40 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+Add SW support for MAXIM Semiconductor's Power Management
+IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+RTC, watchdog, clocks etc.
 
-Hi,
+This series add respective driver for each of sub-modules.
 
->> 
- >>> Isn't the regulator part of the act8945a identical to act8865? Can't we just use
- >>> the existing act8865-regulator.c driver? (E.G. support 8865 variant in the mfd
- >>> driver, but only register the regulator sub device?)
- >> 
- >> > Yes, the regulator part of the act8945a is identical to act8865.
- >> 
- >> > But the act8865-regulator driver is a struct i2c_driver, and the mfd  > sub-
- >> device driver is a platform_driver driver, it is not easy to use  > it.
- >> 
- >> But the mfd driver could support the act8865 variant as well (by only registering
- >> the regulator mfd cell).
+--- 
+Changes from V1: 
+DT DOC:
+- Added units in some of properties.
+- Change the boolean property to tristate type and detail some of
+  properties.
 
- > I still don't understand.
+RTC:
+- Rename the file to rtc-max77xxx.c and make the generic implementation.
+- Direct regmap apis are used for the register access.
+- Decouped from max77620 driver.
+- Taken care of cleanup comments form V1 version.
 
- > The MFD sub device is registered as a platform device, the existing
- > act8865 driver is registered as an i2c_driver. How do they match? :)
+MFD:
+- Code cleanups per review from V1. 
+- Move register acccess APIs from header to c file.
+- Remove some of non required variable, remove duplication in error message
+ and simplify some of function implementation.
 
- > Could you point out which exiting driver for me to reference.  Thank you!
+GPIO:
+- Use the gpiochip_add_data and get the chip data from core APIs.
+- Cleanups based on comment received on mfd/rtc.
+- Avoid duplication on error message.
 
-What I'm saying is that it isn't nice that we end up with both
-act8865-regulator.c and act8954-regulator.c doing 95% the same. This can
-either be fixed by:
+Pinctrl:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
 
-- Adding act8865 support to your mfd driver (but only registering the
-  regulator subdev for act8865) and changing the existing
-  act8865-regulator driver to work as a mfd subdev (platform device)
+Regulators:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+- Taken care of review comment from Mark.
 
-- Extending the act8865-regulator driver to register as a platform
-  driver in ADDITION to a i2c driver so it can be used with mfd. The
-  driver already uses regmap so it should only be a matter of adding the
-  pdev probe/remove functions.
+Changes from V2:
+- Run coccicheck and checkpatch in strict mode for the alignment.
+- Drop RTC driver and its i2c client registartion.
+- Refactor Regulator  driver to use core API for DT parsing.
+
+Laxman Dewangan (5):
+  DT: mfd: add device-tree binding doc fro PMIC max77620/max20024
+  mfd: max77620: add core driver for MAX77620/MAX20024
+  pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+  gpio: max77620: add gpio driver for MAX77620/MAX20024
+  regulator: max77620: add regulator driver for max77620/max20024
+
+ Documentation/devicetree/bindings/mfd/max77620.txt | 397 +++++++++
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max77620.c                       | 302 +++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max77620.c                             | 898 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max77620.c                 | 703 ++++++++++++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/max77620-regulator.c             | 892 ++++++++++++++++++++
+ include/dt-bindings/mfd/max77620.h                 |  38 +
+ include/linux/mfd/max77620.h                       | 402 +++++++++
+ 15 files changed, 3679 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 drivers/gpio/gpio-max77620.c
+ create mode 100644 drivers/mfd/max77620.c
+ create mode 100644 drivers/pinctrl/pinctrl-max77620.c
+ create mode 100644 drivers/regulator/max77620-regulator.c
+ create mode 100644 include/dt-bindings/mfd/max77620.h
+ create mode 100644 include/linux/mfd/max77620.h
 
 -- 
-Venlig hilsen,
-Peter Korsgaard 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
+
