@@ -1,8 +1,10 @@
 From: kernel@martin.sperl.org
-Subject: [PATCH V3 0/6] clk: bcm2835: add additinal clocks and add frac support
-Date: Thu, 14 Jan 2016 13:45:35 +0000
-Message-ID: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH V3 4/6] clk: bcm2835: remove use of BCM2835_CLOCK_COUNT in driver
+Date: Thu, 14 Jan 2016 13:45:39 +0000
+Message-ID: <1452779142-20615-5-git-send-email-kernel@martin.sperl.org>
+References: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1452779142-20615-1-git-send-email-kernel@martin.sperl.org>
 Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Martin Sperl <kernel@martin.sperl.org>
@@ -10,51 +12,238 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-The clk-bcm2835 driver right now relies on BCM2835_CLOCK_COUNT defined
-in include/dt-binding/clocks/bcm2835.h
-With every new clock introduced this value needs to increase,
-which is not what should happen for bindings.
+As the use of BCM2835_CLOCK_COUNT in
+include/dt-bindings/clock/bcm2835.h is frowned upon as
+it needs to get modified every time a new clock gets introduced
+this patch changes the clk-bcm2835 driver to use a different
+scheme for registration of clocks and pll, so that there
+is no more need for BCM2835_CLOCK_COUNT to be defined.
 
-So we reorganize the driver so that it is no longer necessary
-to define BCM2835_CLOCK_COUNT.
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+---
+ drivers/clk/bcm/clk-bcm2835.c       |  167 ++++++++++++++++++++---------------
+ include/dt-bindings/clock/bcm2835.h |    2 -
+ 2 files changed, 94 insertions(+), 75 deletions(-)
 
-Also the driver calculates fractional clock dividers correctly,
-but it does not enable the bit to enable support in the register.
-As a minimal extension we now can also define higher order MASH
-support when defining the clocks.
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index f5d483e..6b0ebf7 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -329,7 +329,7 @@ struct bcm2835_cprman {
+ 	const char *osc_name;
 
-There is also an issue when the clock divider is < 2 - in that
-case no clock-outputis generate. The clamping code has been
-enhanced to handle this as well.
+ 	struct clk_onecell_data onecell;
+-	struct clk *clks[BCM2835_CLOCK_COUNT];
++	struct clk *clks[];
+ };
 
-Similarly there is also the clamping of the highest divider now
-limited to the highest possible integer divider instead of the
-highest possible fractional diviver.
+ static inline void cprman_write(struct bcm2835_cprman *cprman, u32 reg, u32 val)
+@@ -860,6 +860,25 @@ static const struct bcm2835_clock_data bcm2835_clock_pwm_data = {
+ 	.frac_bits = 12,
+ };
 
-Finally we add all the 23 different HW clocks that have not been
-configured in the driver.
++struct bcm2835_gate_data {
++	const char *name;
++	const char *parent;
++
++	u32 ctl_reg;
++};
++
++/*
++ * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
++ * you have the debug bit set in the power manager, which we
++ * don't bother exposing) are individual gates off of the
++ * non-stop vpu clock.
++ */
++static const struct bcm2835_gate_data bcm2835_clock_peri_image_data = {
++	.name = "peri_image",
++	.parent = "vpu",
++	.ctl_reg = CM_PERIICTL,
++};
++
+ struct bcm2835_pll {
+ 	struct clk_hw hw;
+ 	struct bcm2835_cprman *cprman;
+@@ -1600,14 +1619,81 @@ static struct clk *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 	return devm_clk_register(cprman->dev, &clock->hw);
+ }
 
-Changelog:
-	V1 -> V2: split the asoc/sound patches from the clock patches
-	      	  enable frac/mash support
-	V2 -> V3: clamp clock divider to be >= 2
-		  clamp max clock divider to be integer (not fractional)
-		  added additional limit checks for divider selection
-		    allowing fallback to lower mash levels.
-		  use a newer probing mechanism based on a single array
++static struct clk *bcm2835_register_gate(struct bcm2835_cprman *cprman,
++					 const struct bcm2835_gate_data *data)
++{
++	return clk_register_gate(cprman->dev, data->name, data->parent,
++				 CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
++				 cprman->regs + data->ctl_reg,
++				 CM_GATE_BIT, 0, &cprman->regs_lock);
++}
++
++typedef struct clk *(*bcm2835_clk_register)(struct bcm2835_cprman *cprman,
++					    const void *data);
++struct bcm2835_clk_desc {
++	bcm2835_clk_register clk_register;
++	const void *data;
++};
++
++#define _REGISTER(f, d) { .clk_register = (bcm2835_clk_register)f, \
++			  .data = d }
++#define REGISTER_PLL(d)		_REGISTER(&bcm2835_register_pll, d)
++#define REGISTER_PLL_DIV(d)	_REGISTER(&bcm2835_register_pll_divider, d)
++#define REGISTER_CLK(d)		_REGISTER(&bcm2835_register_clock, d)
++#define REGISTER_GATE(d)	_REGISTER(&bcm2835_register_gate, d)
++
++static const struct bcm2835_clk_desc clk_desc_array[] = {
++	/* register PLL */
++	[BCM2835_PLLA]		= REGISTER_PLL(&bcm2835_plla_data),
++	[BCM2835_PLLB]		= REGISTER_PLL(&bcm2835_pllb_data),
++	[BCM2835_PLLC]		= REGISTER_PLL(&bcm2835_pllc_data),
++	[BCM2835_PLLD]		= REGISTER_PLL(&bcm2835_plld_data),
++	[BCM2835_PLLH]		= REGISTER_PLL(&bcm2835_pllh_data),
++	/* the PLL dividers */
++	[BCM2835_PLLA_CORE]	= REGISTER_PLL_DIV(&bcm2835_plla_core_data),
++	[BCM2835_PLLA_PER]	= REGISTER_PLL_DIV(&bcm2835_plla_per_data),
++	[BCM2835_PLLC_CORE0]	= REGISTER_PLL_DIV(&bcm2835_pllc_core0_data),
++	[BCM2835_PLLC_CORE1]	= REGISTER_PLL_DIV(&bcm2835_pllc_core1_data),
++	[BCM2835_PLLC_CORE2]	= REGISTER_PLL_DIV(&bcm2835_pllc_core2_data),
++	[BCM2835_PLLC_PER]	= REGISTER_PLL_DIV(&bcm2835_pllc_per_data),
++	[BCM2835_PLLD_CORE]	= REGISTER_PLL_DIV(&bcm2835_plld_core_data),
++	[BCM2835_PLLD_PER]	= REGISTER_PLL_DIV(&bcm2835_plld_per_data),
++	[BCM2835_PLLH_RCAL]	= REGISTER_PLL_DIV(&bcm2835_pllh_rcal_data),
++	[BCM2835_PLLH_AUX]	= REGISTER_PLL_DIV(&bcm2835_pllh_aux_data),
++	[BCM2835_PLLH_PIX]	= REGISTER_PLL_DIV(&bcm2835_pllh_pix_data),
++	/* the clocks */
++	[BCM2835_CLOCK_TIMER]	= REGISTER_CLK(&bcm2835_clock_timer_data),
++	[BCM2835_CLOCK_OTP]	= REGISTER_CLK(&bcm2835_clock_otp_data),
++	[BCM2835_CLOCK_TSENS]	= REGISTER_CLK(&bcm2835_clock_tsens_data),
++	[BCM2835_CLOCK_VPU]	= REGISTER_CLK(&bcm2835_clock_vpu_data),
++	[BCM2835_CLOCK_V3D]	= REGISTER_CLK(&bcm2835_clock_v3d_data),
++	[BCM2835_CLOCK_ISP]	= REGISTER_CLK(&bcm2835_clock_isp_data),
++	[BCM2835_CLOCK_H264]	= REGISTER_CLK(&bcm2835_clock_h264_data),
++	[BCM2835_CLOCK_V3D]	= REGISTER_CLK(&bcm2835_clock_v3d_data),
++	[BCM2835_CLOCK_SDRAM]	= REGISTER_CLK(&bcm2835_clock_sdram_data),
++	[BCM2835_CLOCK_UART]	= REGISTER_CLK(&bcm2835_clock_uart_data),
++	[BCM2835_CLOCK_VEC]	= REGISTER_CLK(&bcm2835_clock_vec_data),
++	[BCM2835_CLOCK_HSM]	= REGISTER_CLK(&bcm2835_clock_hsm_data),
++	[BCM2835_CLOCK_EMMC]	= REGISTER_CLK(&bcm2835_clock_emmc_data),
++	[BCM2835_CLOCK_PWM]	= REGISTER_CLK(&bcm2835_clock_pwm_data),
++	/* the gates */
++	[BCM2835_CLOCK_PERI_IMAGE] = REGISTER_GATE(
++		&bcm2835_clock_peri_image_data),
++};
++
+ static int bcm2835_clk_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct clk **clks;
+ 	struct bcm2835_cprman *cprman;
+ 	struct resource *res;
++	const struct bcm2835_clk_desc *desc;
++	const size_t asize = ARRAY_SIZE(clk_desc_array);
++	size_t i;
 
-Martin Sperl (6):
-  clk: bcm2835: the minimum clock divider is 2
-  clk: bcm2835: clamp clock divider to highest integer only
-  clk: bcm2835: enable fractional and mash support
-  clk: bcm2835: remove use of BCM2835_CLOCK_COUNT in driver
-  clk: bcm2835: enable management of PCM clock
-  clk: bcm2835: add missing 22 HW-clocks.
+-	cprman = devm_kzalloc(dev, sizeof(*cprman), GFP_KERNEL);
++	cprman = devm_kzalloc(dev,
++			      sizeof(*cprman) + asize * sizeof(*clks),
++			      GFP_KERNEL);
+ 	if (!cprman)
+ 		return -ENOMEM;
 
- drivers/clk/bcm/clk-bcm2835.c       |  550 +++++++++++++++++++++++++++++------
- include/dt-bindings/clock/bcm2835.h |   25 +-
- 2 files changed, 490 insertions(+), 85 deletions(-)
+@@ -1624,80 +1710,15 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
 
+ 	platform_set_drvdata(pdev, cprman);
+
+-	cprman->onecell.clk_num = BCM2835_CLOCK_COUNT;
++	cprman->onecell.clk_num = asize;
+ 	cprman->onecell.clks = cprman->clks;
+ 	clks = cprman->clks;
+
+-	clks[BCM2835_PLLA] = bcm2835_register_pll(cprman, &bcm2835_plla_data);
+-	clks[BCM2835_PLLB] = bcm2835_register_pll(cprman, &bcm2835_pllb_data);
+-	clks[BCM2835_PLLC] = bcm2835_register_pll(cprman, &bcm2835_pllc_data);
+-	clks[BCM2835_PLLD] = bcm2835_register_pll(cprman, &bcm2835_plld_data);
+-	clks[BCM2835_PLLH] = bcm2835_register_pll(cprman, &bcm2835_pllh_data);
+-
+-	clks[BCM2835_PLLA_CORE] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_plla_core_data);
+-	clks[BCM2835_PLLA_PER] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_plla_per_data);
+-	clks[BCM2835_PLLC_CORE0] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core0_data);
+-	clks[BCM2835_PLLC_CORE1] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core1_data);
+-	clks[BCM2835_PLLC_CORE2] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core2_data);
+-	clks[BCM2835_PLLC_PER] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllc_per_data);
+-	clks[BCM2835_PLLD_CORE] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_plld_core_data);
+-	clks[BCM2835_PLLD_PER] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_plld_per_data);
+-	clks[BCM2835_PLLH_RCAL] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllh_rcal_data);
+-	clks[BCM2835_PLLH_AUX] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllh_aux_data);
+-	clks[BCM2835_PLLH_PIX] =
+-		bcm2835_register_pll_divider(cprman, &bcm2835_pllh_pix_data);
+-
+-	clks[BCM2835_CLOCK_TIMER] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_timer_data);
+-	clks[BCM2835_CLOCK_OTP] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_otp_data);
+-	clks[BCM2835_CLOCK_TSENS] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_tsens_data);
+-	clks[BCM2835_CLOCK_VPU] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_vpu_data);
+-	clks[BCM2835_CLOCK_V3D] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_v3d_data);
+-	clks[BCM2835_CLOCK_ISP] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_isp_data);
+-	clks[BCM2835_CLOCK_H264] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_h264_data);
+-	clks[BCM2835_CLOCK_V3D] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_v3d_data);
+-	clks[BCM2835_CLOCK_SDRAM] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_sdram_data);
+-	clks[BCM2835_CLOCK_UART] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_uart_data);
+-	clks[BCM2835_CLOCK_VEC] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_vec_data);
+-	clks[BCM2835_CLOCK_HSM] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_hsm_data);
+-	clks[BCM2835_CLOCK_EMMC] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_emmc_data);
+-
+-	/*
+-	 * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
+-	 * you have the debug bit set in the power manager, which we
+-	 * don't bother exposing) are individual gates off of the
+-	 * non-stop vpu clock.
+-	 */
+-	clks[BCM2835_CLOCK_PERI_IMAGE] =
+-		clk_register_gate(dev, "peri_image", "vpu",
+-				  CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
+-				  cprman->regs + CM_PERIICTL, CM_GATE_BIT,
+-				  0, &cprman->regs_lock);
+-
+-	clks[BCM2835_CLOCK_PWM] =
+-		bcm2835_register_clock(cprman, &bcm2835_clock_pwm_data);
++	for (i = 0; i < asize; i++) {
++		desc = &clk_desc_array[i];
++		if (desc)
++			clks[i] = desc->clk_register(cprman, desc->data);
++	}
+
+ 	return of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
+ 				   &cprman->onecell);
+diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
+index 61f1d20..87235ac 100644
+--- a/include/dt-bindings/clock/bcm2835.h
++++ b/include/dt-bindings/clock/bcm2835.h
+@@ -44,5 +44,3 @@
+ #define BCM2835_CLOCK_EMMC		28
+ #define BCM2835_CLOCK_PERI_IMAGE	29
+ #define BCM2835_CLOCK_PWM		30
+-
+-#define BCM2835_CLOCK_COUNT		31
 --
 1.7.10.4
 
