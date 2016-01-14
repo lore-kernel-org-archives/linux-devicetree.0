@@ -1,113 +1,81 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH V2 1/4] clk: bcm2835: avoid the use of BCM2835_CLOCK_COUNT
- in clk-bcm2835
-Date: Thu, 14 Jan 2016 13:11:02 +0100
-Message-ID: <56979056.6010407@martin.sperl.org>
-References: <1452542157-2387-1-git-send-email-kernel@martin.sperl.org>
- <1452542157-2387-2-git-send-email-kernel@martin.sperl.org>
- <20160113200012.1168.74515@quark.deferred.io>
- <20160114001358.1168.5768@quark.deferred.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160114001358.1168.5768@quark.deferred.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH v4 0/9] Add STM32 pinctrl/GPIO driver
+Date: Thu, 14 Jan 2016 13:16:26 +0100
+Message-ID: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+This is the fourth round of STM32 pinctrl series, which takes into
+account comments made by Patrice on patch 4.
 
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
 
-On 14.01.2016 01:13, Michael Turquette wrote:
-> Quoting Michael Turquette (2016-01-13 12:00:12)
->> Hi Martin,
->>
->> Quoting kernel@martin.sperl.org (2016-01-11 11:55:53)
->>>   static int bcm2835_clk_probe(struct platform_device *pdev)
->>>   {
->>>          struct device *dev = &pdev->dev;
->>>          struct clk **clks;
->>> +       size_t clk_cnt;
->>>          struct bcm2835_cprman *cprman;
->>>          struct resource *res;
->>> +       size_t i;
->>> +
->>> +       /* find the max clock index */
->>> +       clk_cnt = BCM2835_CLOCK_PERI_IMAGE; /* see below */
->>> +       for (i = 0; i < ARRAY_SIZE(bcm2835_register_clocks); i++)
->>> +               clk_cnt = max(clk_cnt, bcm2835_register_clocks[i].index);
->>> +       clk_cnt += 1;
->>
->> I'm not sure how this solution is better than using CLOCK_COUNT. Some
->> other bindings use a max value, NR_CLKS or other sentinel.
->>
->> Why did you not choose to set clk_cnt equal to BCM2835_CLOCK_PWM? Why
->> not initialize it to zero?
->
-> OK, I just caught up on the asoc/bcm2835 thread.
->
-> Really the best solution would be to have an array of all of the clks in
-> the driver and just use ARRAY_SIZE on it.
->
-> For your driver, could you make an array of clk_hw pointers and call
-> devm_clk_register on all of them in a loop? This gets rid of the big
-> pile of explicit calls in bcm2835_clk_probe.
->
-> You can also get rid of stuff like bcm2835_plla_core_data by just
-> stuffing that data into a single struct initialization. Here is a
-> snippet for how the qcom clk drivers do it:
->
-> static struct clk_pll gpll0 = {
-> 	.l_reg = 0x0004,
-> 	.m_reg = 0x0008,
-> 	.n_reg = 0x000c,
-> 	.config_reg = 0x0014,
-> 	.mode_reg = 0x0000,
-> 	.status_reg = 0x001c,
-> 	.status_bit = 17,
-> 	.clkr.hw.init = &(struct clk_init_data){
-> 		.name = "gpll0",
-> 		.parent_names = (const char *[]){ "xo" },
-> 		.num_parents = 1,
-> 		.ops = &clk_pll_ops,
-> 	},
-> };
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
 
-I did not know you could do that - that could make life easier...
+Changes since v3:
+-----------------
+ - Rebase on v4.4
+ - Fix error paths in stm32_pctrl_dt_subnode_to_map() (Patrice)
+ - Remove useless stm32_pctrl_find_function_by_pin function (Patrice)
 
-But a quick look shows that this approach probably would require a
-major rewrite of all the methods.
+Changes since v2:
+-----------------
+ - Rebase on v4.4-rc1
+ - Declare leds also for Eval board
+ - Set green led as heartbeat
+ - Collect some acks
 
-> static int bcm2835_clk_probe(struct platform_device *pdev)
-> {
-> 	...
-> 	for (i = 0; i < num_clks; i++) {
-> 		clk = devm_clk_register(dev, array_of_clks[i].hw)
-> 	...
-> }
+Changes since v1:
+-----------------
+ - Add GPIO LEDs support in DT and defconfig
+ - Changes pinmux DT bindings from macros to raw values (Daniel)
+ - Improve DT bindings documentation (Daniel)
+ - Fix some commit fixup and rebase issues.
 
-I guess I can use a slightly different approach that does not
-require as many changes, that looks like this:
+Kind regards,
+Maxime
 
-static const struct bcm2835_clk_desc clk_desc_array[] = {
-	/* register PLL */
-	[BCM2835_PLLA]          = REGISTER_PLL(&bcm2835_plla_data),
-	...
-};
-...
-static int bcm2835_clk_probe(struct platform_device *pdev)
-{
-	const size_t asize = ARRAY_SIZE(clk_desc_array);
-	...
-	for (i = 0; i < asize; i++) {
-		desc = &clk_desc_array[i];
-		if (desc)
-			clks[i] = desc->clk_register(cprman,
-						     desc->data);
-	}
-	...
-}
+Maxime Coquelin (9):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  pinctrl: Add STM32 MCUs support
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+  ARM: dts: Add leds support to STM32F429 boards
+  ARM: config: Enable GPIO Led driver in stm32_defconfig
 
-If we need to order the initialization then we can add some
-priority field to clk_desc_array and iterate over all the priority
-values.
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  126 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   19 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   13 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ arch/arm/configs/stm32_defconfig                   |    1 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  834 ++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   43 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-stm32.h        |   12 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1241 +++++++++++++++
+ 15 files changed, 4026 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
+-- 
+1.9.1
+
