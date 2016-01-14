@@ -1,7 +1,7 @@
 From: Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH v2 05/10] Input: synaptics-rmi4: Add device tree support for 2d sensors and F11
-Date: Thu, 14 Jan 2016 15:44:54 -0800
-Message-ID: <1452815094-23073-1-git-send-email-aduggan@synaptics.com>
+Subject: [PATCH v2 09/10] Input: synaptics-rmi4: Add device tree support to the SPI transport driver
+Date: Thu, 14 Jan 2016 15:45:58 -0800
+Message-ID: <1452815158-23266-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -10,73 +10,70 @@ To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2D sensors have several parameter which can be set in the platform data.
-This patch adds support for getting those values from devicetree.
+Add devicetree binding for SPI devices.
 
 Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 ---
- .../bindings/input/rmi4/rmi_2d_sensor.txt          |  56 +++++++++++
- Documentation/devicetree/bindings/input/touch.txt  |   2 +
- drivers/input/rmi4/rmi_2d_sensor.c                 | 108 +++++++++++++++++++++
- drivers/input/rmi4/rmi_2d_sensor.h                 |   3 +
- drivers/input/rmi4/rmi_f11.c                       |   7 +-
- 5 files changed, 175 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+ .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
+ drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
+ 2 files changed, 100 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
 
-diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
 new file mode 100644
-index 0000000..8510a55
+index 0000000..3b2add1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
-@@ -0,0 +1,56 @@
-+Synaptics RMI4 2D Sensor Device Binding
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+@@ -0,0 +1,57 @@
++Synaptics RMI4 SPI Device Binding
 +
 +The Synaptics RMI4 core is able to support RMI4 devices using different
 +transports and different functions. This file describes the device tree
-+bindings for devices which contain 2D sensors using Function 11 or
-+Function 12. Complete documentation for transports and other functions
-+can be found in:
++bindings for devices using the SPI transport driver. Complete documentation
++for other transports and functions can be found in
 +Documentation/devicetree/bindings/input/rmi4.
 +
-+RMI4 Function 11 and Function 12 are for 2D touch position sensing.
-+Additional documentation for F11 can be found at:
-+http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
-+
-+Optional Touch Properties:
-+Description in Documentation/devicetree/bindings/input/touch
-+- touch-inverted-x
-+- touch-inverted-y
-+- touch-swapped-x-y
-+- touch-mm-x
-+- touch-mm-y
++Required Properties:
++- compatible: syna,rmi4-spi
++- reg: Chip select address for the device
++- #address-cells: Set to 1 to indicate that the function child nodes
++		    consist of only on uint32 value.
++- #size-cells: Set to 0 to indicate that the function child nodes do not
++		have a size property.
 +
 +Optional Properties:
-+- syna,clip-x-low: Sets a minimum value for X.
-+- syna,clip-y-low: Sets a minimum value for Y.
-+- syna,clip-x-high: Sets a maximum value for X.
-+- syna,clip-y-high: Sets a maximum value for Y.
-+- syna,offset-x: Add an offset to X.
-+- syna,offset-y: Add an offset to Y.
-+- syna,delta-x-threshold: Set the minimum distance on the X axis required
-+				to generate an interrupt in reduced reporting
-+				mode.
-+- syna,delta-y-threshold: Set the minimum distance on the Y axis required
-+				to generate an interrupt in reduced reporting
-+				mode.
-+- syna,sensor-type: Set the sensor type. 1 for touchscreen 2 for touchpad.
-+- syna,disable-report-mask: Mask for disabling posiiton reporting. Used to
-+				disable reporing absolute position data.
-+- syna,rezero-wait-msec: Time in miliseconds to wait after issuing a rezero
-+				command.
++- interrupts: interrupt which the rmi device is connected to.
++- interrupt-parent: The interrupt controller.
++See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++- syna,spi-rx-delay-usec: microsecond delay after a read transfer.
++- syna,spi-tx-delay-usec: microsecond delay after a write transfer.
++
++Function Parameters:
++Parameters specific to RMI functions are contained in child nodes of the rmi device
++ node. Documentation for the parameters of each function can be found in:
++Documentation/devicetree/bindings/input/rmi4/rmi_f*.txt.
 +
 +
-+Example of a RMI4 I2C device with F11:
++
 +Example:
-+	&i2c1 {
-+		rmi4-i2c-dev@2c {
-+			compatible = "syna,rmi4-i2c";
++	spi@7000d800 {
++		rmi4-spi-dev@0 {
++			compatible = "syna,rmi4-spi";
++			reg = <0x0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			spi-max-frequency = <4000000>;
++			spi-cpha;
++			spi-cpol;
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(K, 2) 0x2>;
++			syna,spi-rx-delay-usec = <30>;
 +
-+			...
++			rmi4-f01@1 {
++				reg = <0x1>;
++				syna,nosleep-mode = <1>;
++			};
 +
 +			rmi4-f11@11 {
 +				reg = <0x11>;
@@ -85,167 +82,82 @@ index 0000000..8510a55
 +			};
 +		};
 +	};
-diff --git a/Documentation/devicetree/bindings/input/touch.txt b/Documentation/devicetree/bindings/input/touch.txt
-index 3000b5a..01e2a8b 100644
---- a/Documentation/devicetree/bindings/input/touch.txt
-+++ b/Documentation/devicetree/bindings/input/touch.txt
-@@ -18,6 +18,8 @@ Optional properties for Touchscreens:
-  - touch-inverted-y		: Y axis is inverted (boolean)
-  - touch-swapped-x-y		: X and Y axis are swapped (boolean)
- 				  Swapping is done after inverting the axis
-+ - touch-mm-x			: horizontal size of the sensor in mm
-+ - touch-mm-y			: vertical size of the sensor in mm
+diff --git a/drivers/input/rmi4/rmi_spi.c b/drivers/input/rmi4/rmi_spi.c
+index 06f3140..ec5a9d9 100644
+--- a/drivers/input/rmi4/rmi_spi.c
++++ b/drivers/input/rmi4/rmi_spi.c
+@@ -12,6 +12,7 @@
+ #include <linux/rmi.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
++#include <linux/of.h>
+ #include "rmi_driver.h"
  
- Deprecated properties for Touchscreens:
-  - x-size			: deprecated name for touch-size-x
-diff --git a/drivers/input/rmi4/rmi_2d_sensor.c b/drivers/input/rmi4/rmi_2d_sensor.c
-index 0f42439..aa9e1b9 100644
---- a/drivers/input/rmi4/rmi_2d_sensor.c
-+++ b/drivers/input/rmi4/rmi_2d_sensor.c
-@@ -219,3 +219,111 @@ int rmi_2d_sensor_configure_input(struct rmi_function *fn,
+ #define RMI_SPI_DEFAULT_XFER_BUF_SIZE	64
+@@ -359,6 +360,41 @@ static int rmi_spi_init_irq(struct spi_device *spi)
  	return 0;
  }
- EXPORT_SYMBOL_GPL(rmi_2d_sensor_configure_input);
-+
+ 
 +#ifdef CONFIG_OF
-+int rmi_2d_sensor_of_probe(struct device *dev,
-+			struct rmi_2d_sensor_platform_data *pdata)
++static int rmi_spi_of_probe(struct spi_device *spi,
++			struct rmi_device_platform_data *pdata)
 +{
++	struct device *dev = &spi->dev;
 +	int retval;
-+	u32 val;
 +
-+	pdata->axis_align.swap_axes = of_property_read_bool(dev->of_node,
-+						"touch-swapped-x-y");
-+
-+	pdata->axis_align.flip_x = of_property_read_bool(dev->of_node,
-+						"touch-inverted-x");
-+
-+	pdata->axis_align.flip_y = of_property_read_bool(dev->of_node,
-+						"touch-inverted-y");
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,clip-x-low", 1);
++	retval = rmi_of_property_read_u32(dev,
++			&pdata->spi_data.read_delay_us,
++			"syna,spi-rx-delay-usec", 1);
 +	if (retval)
 +		return retval;
 +
-+	pdata->axis_align.clip_x_low = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,clip-y-low",	1);
++	retval = rmi_of_property_read_u32(dev,
++			&pdata->spi_data.write_delay_us,
++			"syna,spi-tx-delay-usec", 1);
 +	if (retval)
 +		return retval;
-+
-+	pdata->axis_align.clip_y_low = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,clip-x-high", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.clip_x_high = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,clip-y-high", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.clip_y_high = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,offset-x", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.offset_x = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,offset-y", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.offset_y = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,delta-x-threshold",
-+						1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.delta_x_threshold = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,delta-y-threshold",
-+						1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->axis_align.delta_y_threshold = val;
-+
-+	retval = rmi_of_property_read_u32(dev, (u32 *)&pdata->sensor_type,
-+			"syna,sensor-type", 1);
-+	if (retval)
-+		return retval;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "touch-mm-x", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->x_mm = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "touch-mm-y", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->y_mm = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val,
-+				"syna,disable-report-mask", 1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->disable_report_mask = val;
-+
-+	retval = rmi_of_property_read_u32(dev, &val, "syna,rezero-wait-msec",
-+						1);
-+	if (retval)
-+		return retval;
-+
-+	pdata->rezero_wait = val;
 +
 +	return 0;
 +}
++
++static const struct of_device_id rmi_spi_of_match[] = {
++	{ .compatible = "syna,rmi4-spi" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, rmi_spi_of_match);
 +#else
-+inline int rmi_2d_sensor_of_probe(struct device *dev,
-+			struct rmi_2d_sensor_platform_data *pdata)
++static inline int rmi_spi_of_probe(struct spi_device *spi,
++				struct rmi_device_platform_data *pdata)
 +{
 +	return -ENODEV;
 +}
 +#endif
-+EXPORT_SYMBOL_GPL(rmi_2d_sensor_of_probe);
-diff --git a/drivers/input/rmi4/rmi_2d_sensor.h b/drivers/input/rmi4/rmi_2d_sensor.h
-index faf801c..ac95e88 100644
---- a/drivers/input/rmi4/rmi_2d_sensor.h
-+++ b/drivers/input/rmi4/rmi_2d_sensor.h
-@@ -69,6 +69,9 @@ struct rmi_2d_sensor {
- 	u8 y_mm;
- };
- 
-+int rmi_2d_sensor_of_probe(struct device *dev,
-+				struct rmi_2d_sensor_platform_data *pdata);
 +
- void rmi_2d_sensor_abs_process(struct rmi_2d_sensor *sensor,
- 				struct rmi_2d_sensor_abs_object *obj,
- 				int slot);
-diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
-index 00953bd..0b016f2 100644
---- a/drivers/input/rmi4/rmi_f11.c
-+++ b/drivers/input/rmi4/rmi_f11.c
-@@ -1078,8 +1078,13 @@ static int rmi_f11_initialize(struct rmi_function *fn)
- 	if (!f11)
- 		return -ENOMEM;
+ static int rmi_spi_probe(struct spi_device *spi)
+ {
+ 	struct rmi_spi_xport *rmi_spi;
+@@ -376,8 +412,13 @@ static int rmi_spi_probe(struct spi_device *spi)
  
--	if (pdata->sensor_pdata)
-+	if (fn->dev.of_node) {
-+		rc = rmi_2d_sensor_of_probe(&fn->dev, &f11->sensor_pdata);
-+		if (rc)
-+			return rc;
-+	} else if (pdata->sensor_pdata) {
- 		f11->sensor_pdata = *pdata->sensor_pdata;
+ 	pdata = &rmi_spi->xport.pdata;
+ 
+-	if (spi_pdata)
++	if (spi->dev.of_node) {
++		retval = rmi_spi_of_probe(spi, pdata);
++		if (retval)
++			return retval;
++	} else if (spi_pdata) {
+ 		*pdata = *spi_pdata;
 +	}
  
- 	f11->rezero_wait_ms = f11->sensor_pdata.rezero_wait;
- 
+ 	if (pdata->spi_data.bits_per_word)
+ 		spi->bits_per_word = pdata->spi_data.bits_per_word;
+@@ -532,6 +573,7 @@ static struct spi_driver rmi_spi_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "rmi4_spi",
+ 		.pm	= &rmi_spi_pm,
++		.of_match_table = of_match_ptr(rmi_spi_of_match),
+ 	},
+ 	.id_table	= rmi_id,
+ 	.probe		= rmi_spi_probe,
 -- 
 2.5.0
