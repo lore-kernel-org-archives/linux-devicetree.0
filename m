@@ -1,81 +1,88 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 4/5] gpio: max77620: add gpio driver for MAX77620/MAX20024
-Date: Thu, 14 Jan 2016 17:02:45 +0530
-Message-ID: <1452771166-13694-5-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V3 5/5] regulator: max77620: add regulator driver for max77620/max20024
+Date: Thu, 14 Jan 2016 17:02:46 +0530
+Message-ID: <1452771166-13694-6-git-send-email-ldewangan@nvidia.com>
 References: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
-pins. It also supports interrupts from these pins.
+MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
+multiple DCDC and LDOs. This supplies the power to different
+components of the system.
+Also these rails has configuration for ramp time, flexible
+power sequence, slew rate etc.
 
-Add GPIO driver for these pins to control via GPIO APIs.
+Add regulator driver to access these rails via regulator APIs.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
+Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
 ---
 Changes from V1:
-- Use the gpiochip_add_data and get the chip data from core APIs.
-- Cleanups based on comment received on mfd/rtc.
+- Cleanup code based on comment received on mfd/rtc.
 - Avoid duplication on error message.
 
 Changes form V2:
 - Run coccicheck and checkpatch in strict mode for the alignment.
-- update based on api changes from core.
- drivers/gpio/Kconfig         |   9 ++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-max77620.c | 302 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 312 insertions(+)
- create mode 100644 drivers/gpio/gpio-max77620.c
+- Refactor Regulator driver to use core API for DT parsing.
+- Update based on API changes.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f2b7160..b96a80c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -797,6 +797,15 @@ config GPIO_LP3943
- 	  LP3943 can be used as a GPIO expander which provides up to 16 GPIOs.
- 	  Open drain outputs are required for this usage.
+ drivers/regulator/Kconfig              |   9 +
+ drivers/regulator/Makefile             |   1 +
+ drivers/regulator/max77620-regulator.c | 892 +++++++++++++++++++++++++++++++++
+ 3 files changed, 902 insertions(+)
+ create mode 100644 drivers/regulator/max77620-regulator.c
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 8155e80..b92214b 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -343,6 +343,15 @@ config REGULATOR_MAX1586
+ 	  regulator via I2C bus. The provided regulator is suitable
+ 	  for PXA27x chips to control VCC_CORE and VCC_USIM voltages.
  
-+config GPIO_MAX77620
-+	bool "GPIO support for PMIC MAX77620 and MAX20024"
++config REGULATOR_MAX77620
++	tristate "Maxim 77620/MAX20024 voltage regulator"
 +	depends on MFD_MAX77620
 +	help
-+	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
-+	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
-+	  driver also provides interrupt support for each of the gpios.
-+	  Say yes here to enable the max77620 to be used as gpio controller.
++	  This driver controls Maxim MAX77620 voltage output regulator
++	  via I2C bus. The provided regulator is suitable for Tegra
++	  chip to control Step-Down DC-DC and LDOs. Say Y here to
++	  enable the regulator driver.
 +
- config GPIO_MSIC
- 	bool "Intel MSIC mixed signal gpio support"
- 	depends on MFD_INTEL_MSIC
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index ece7d7c..f676a2d 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
- obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
- obj-$(CONFIG_GPIO_MAX7301)	+= gpio-max7301.o
- obj-$(CONFIG_GPIO_MAX732X)	+= gpio-max732x.o
-+obj-$(CONFIG_GPIO_MAX77620)	+= gpio-max77620.o
- obj-$(CONFIG_GPIO_MB86S7X)	+= gpio-mb86s7x.o
- obj-$(CONFIG_GPIO_MC33880)	+= gpio-mc33880.o
- obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+ config REGULATOR_MAX8649
+ 	tristate "Maxim 8649 voltage regulator"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 980b194..2564c00 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
+ obj-$(CONFIG_REGULATOR_LTC3589) += ltc3589.o
+ obj-$(CONFIG_REGULATOR_MAX14577) += max14577.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
++obj-$(CONFIG_REGULATOR_MAX77620) += max77620-regulator.o
+ obj-$(CONFIG_REGULATOR_MAX8649)	+= max8649.o
+ obj-$(CONFIG_REGULATOR_MAX8660) += max8660.o
+ obj-$(CONFIG_REGULATOR_MAX8907) += max8907-regulator.o
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
 new file mode 100644
-index 0000000..dcf6099
+index 0000000..97e7572
 --- /dev/null
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -0,0 +1,302 @@
++++ b/drivers/regulator/max77620-regulator.c
+@@ -0,0 +1,892 @@
 +/*
-+ * MAXIM MAX77620 GPIO driver
++ * Maxim MAX77620 Regulator driver
 + *
 + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Mallikarjun Kasoju <mkasoju@nvidia.com>
++ *	Laxman Dewangan <ldewangan@nvidia.com>
 + *
 + * This program is free software; you can redistribute it and/or modify it
 + * under the terms and conditions of the GNU General Public License,
@@ -87,292 +94,880 @@ index 0000000..dcf6099
 + * more details.
 + */
 +
++#include <linux/init.h>
 +#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/gpio.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regulator/of_regulator.h>
 +#include <linux/mfd/max77620.h>
 +
-+#define GPIO_REG_ADDR(offset) (MAX77620_REG_GPIO0 + offset)
++#define max77620_rails(_name)	"max77620-"#_name
 +
-+struct max77620_gpio {
-+	struct gpio_chip	gpio_chip;
-+	struct device		*parent;
-+	struct device		*dev;
-+	int			gpio_irq;
-+	int			irq_base;
-+	int			gpio_base;
++/* Power Mode */
++#define MAX77620_POWER_MODE_NORMAL		3
++#define MAX77620_POWER_MODE_LPM			2
++#define MAX77620_POWER_MODE_GLPM		1
++#define MAX77620_POWER_MODE_DISABLE		0
++
++/* SD Slew Rate */
++#define MAX77620_SD_SR_13_75			0
++#define MAX77620_SD_SR_27_5			1
++#define MAX77620_SD_SR_55			2
++#define MAX77620_SD_SR_100			3
++
++#define MAX77620_FPS_SRC_NUM			3
++
++struct max77620_regulator_info {
++	u8 type;
++	u32 min_uV;
++	u32 max_uV;
++	u32 step_uV;
++	u8 fps_addr;
++	u8 volt_addr;
++	u8 cfg_addr;
++	u8 volt_mask;
++	u8 power_mode_mask;
++	u8 power_mode_shift;
++	u8 remote_sense_addr;
++	u8 remote_sense_mask;
++	struct regulator_desc desc;
 +};
 +
-+static const struct regmap_irq max77620_gpio_irqs[] = {
-+	[MAX77620_IRQ_GPIO0 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE0,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO1 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE1,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO2 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE2,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO3 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE3,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO4 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE4,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO5 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE5,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO6 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE6,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO7 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE7,
-+		.reg_offset = 0,
-+	},
++struct max77620_regulator_pdata {
++	bool glpm_enable;
++	bool sd_fsrade_disable;
++	bool disable_remote_sense_on_suspend;
++	struct regulator_init_data *reg_idata;
++	int active_fps_src;
++	int active_fps_pd_slot;
++	int active_fps_pu_slot;
++	int suspend_fps_src;
++	int suspend_fps_pd_slot;
++	int suspend_fps_pu_slot;
++	int current_mode;
 +};
 +
-+static struct regmap_irq_chip max77620_gpio_irq_chip = {
-+	.name = "max77620-gpio",
-+	.irqs = max77620_gpio_irqs,
-+	.num_irqs = ARRAY_SIZE(max77620_gpio_irqs),
-+	.num_regs = 1,
-+	.irq_reg_stride = 1,
-+	.status_base = MAX77620_REG_IRQ_LVL2_GPIO,
++struct max77620_regulator {
++	struct device *dev;
++	struct max77620_chip *max77620_chip;
++	struct max77620_regulator_info *rinfo[MAX77620_NUM_REGS];
++	struct max77620_regulator_pdata reg_pdata[MAX77620_NUM_REGS];
++	struct regulator_desc *rdesc[MAX77620_NUM_REGS];
++	int enable_power_mode[MAX77620_NUM_REGS];
++	int current_power_mode[MAX77620_NUM_REGS];
++	int active_fps_src[MAX77620_NUM_REGS];
 +};
 +
-+static int max77620_gpio_dir_input(struct gpio_chip *gc, unsigned offset)
++#define fps_src_name(fps_src)	\
++	(fps_src == FPS_SRC_0 ? "FPS_SRC_0" :	\
++	fps_src == FPS_SRC_1 ? "FPS_SRC_1" :	\
++	fps_src == FPS_SRC_2 ? "FPS_SRC_2" : "FPS_SRC_NONE")
++
++static int max77620_regulator_get_fps_src(struct max77620_regulator *pmic,
++					  int id)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	int ret;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DIR_MASK,
-+				  MAX77620_CNFG_GPIO_DIR_INPUT);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int max77620_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
 +	u8 val;
 +	int ret;
 +
-+	ret = max77620_reg_read(mgpio->parent, GPIO_REG_ADDR(offset), &val);
++	ret = max77620_reg_read(parent, rinfo->fps_addr, &val);
 +	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx read failed: %d\n", ret);
++		dev_err(pmic->dev, "Reg 0x%02x read failed %d\n",
++			rinfo->fps_addr, ret);
 +		return ret;
 +	}
 +
-+	return !!(val & MAX77620_CNFG_GPIO_INPUT_VAL_MASK);
++	return (val & MAX77620_FPS_SRC_MASK) >> MAX77620_FPS_SRC_SHIFT;
 +}
 +
-+static int max77620_gpio_dir_output(struct gpio_chip *gc, unsigned offset,
-+				    int value)
++static int max77620_regulator_set_fps_src(struct max77620_regulator *pmic,
++					  int fps_src, int id)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
 +	u8 val;
 +	int ret;
 +
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
-+	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx val update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DIR_MASK,
-+				  MAX77620_CNFG_GPIO_DIR_OUTPUT);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int max77620_gpio_set_debounce(struct gpio_chip *gc,
-+				      unsigned offset, unsigned debounce)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
-+
-+	switch (debounce) {
-+	case 0:
-+		val = MAX77620_CNFG_GPIO_DBNC_None;
++	switch (fps_src) {
++	case FPS_SRC_0:
++	case FPS_SRC_1:
++	case FPS_SRC_2:
++	case FPS_SRC_NONE:
 +		break;
-+	case 1 ... 8:
-+		val = MAX77620_CNFG_GPIO_DBNC_8ms;
-+		break;
-+	case 9 ... 16:
-+		val = MAX77620_CNFG_GPIO_DBNC_16ms;
-+		break;
-+	case 17 ... 32:
-+		val = MAX77620_CNFG_GPIO_DBNC_32ms;
-+		break;
++
++	case FPS_SRC_DEF:
++		ret = max77620_reg_read(parent, rinfo->fps_addr, &val);
++		if (ret < 0) {
++			dev_err(pmic->dev, "Reg 0x%02x read failed %d\n",
++				rinfo->fps_addr, ret);
++			return ret;
++		}
++		ret = (val & MAX77620_FPS_SRC_MASK) >> MAX77620_FPS_SRC_SHIFT;
++		pmic->active_fps_src[id] = ret;
++		return 0;
++
 +	default:
-+		dev_err(mgpio->dev, "Illegal value %u\n", debounce);
++		dev_err(pmic->dev, "Invalid FPS %d for regulator %d\n",
++			fps_src, id);
 +		return -EINVAL;
 +	}
 +
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DBNC_MASK, val);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx_DBNC update failed: %d\n", ret);
++	ret = max77620_reg_update(parent, rinfo->fps_addr,
++				  MAX77620_FPS_SRC_MASK,
++				  fps_src << MAX77620_FPS_SRC_SHIFT);
++	if (ret < 0) {
++		dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
++			rinfo->fps_addr, ret);
++		return ret;
++	}
++	pmic->active_fps_src[id] = fps_src;
++
++	return 0;
++}
++
++static int max77620_regulator_set_fps_slots(struct max77620_regulator *pmic,
++					    int id, bool is_suspend)
++{
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	unsigned int val = 0;
++	unsigned int mask = 0;
++	int pu = rpdata->active_fps_pu_slot;
++	int pd = rpdata->active_fps_pd_slot;
++	int ret = 0;
++
++	if (is_suspend) {
++		pu = rpdata->suspend_fps_pu_slot;
++		pd = rpdata->suspend_fps_pd_slot;
++	}
++
++	/* FPS power up period setting */
++	if (pu >= 0) {
++		val |= (pu << MAX77620_FPS_PU_PERIOD_SHIFT);
++		mask |= MAX77620_FPS_PU_PERIOD_MASK;
++	}
++
++	/* FPS power down period setting */
++	if (pd >= 0) {
++		val |= (pd << MAX77620_FPS_PD_PERIOD_SHIFT);
++		mask |= MAX77620_FPS_PD_PERIOD_MASK;
++	}
++
++	if (mask) {
++		ret = max77620_reg_update(parent, rinfo->fps_addr, mask, val);
++		if (ret < 0) {
++			dev_err(pmic->dev, "Reg 0x%02x update failed: %d\n",
++				rinfo->fps_addr, ret);
++			return ret;
++		}
++	}
 +
 +	return ret;
 +}
 +
-+static void max77620_gpio_set(struct gpio_chip *gc, unsigned offset,
-+			      int value)
++static int max77620_regulator_set_power_mode(struct max77620_regulator *pmic,
++					     int power_mode, int id)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	u8 mask = rinfo->power_mode_mask;
++	u8 shift = rinfo->power_mode_shift;
++	u8 addr;
++	int ret;
++
++	switch (rinfo->type) {
++	case MAX77620_REGULATOR_TYPE_SD:
++		addr = rinfo->cfg_addr;
++		break;
++	default:
++		addr = rinfo->volt_addr;
++		break;
++	}
++
++	ret = max77620_reg_update(parent, addr, mask, power_mode << shift);
++	if (ret < 0) {
++		dev_err(pmic->dev, "Regulator %d mode set failed: %d\n",
++			id, ret);
++		return ret;
++	}
++	pmic->current_power_mode[id] = power_mode;
++
++	return ret;
++}
++
++static int max77620_regulator_get_power_mode(struct max77620_regulator *pmic,
++					     int id)
++{
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	u8 mask = rinfo->power_mode_mask;
++	u8 shift = rinfo->power_mode_shift;
++	u8 val, addr;
++	int ret;
++
++	switch (rinfo->type) {
++	case MAX77620_REGULATOR_TYPE_SD:
++		addr = rinfo->cfg_addr;
++		break;
++	default:
++		addr = rinfo->volt_addr;
++		break;
++	}
++
++	ret = max77620_reg_read(parent, addr, &val);
++	if (ret < 0) {
++		dev_err(pmic->dev, "Regulator %d: Reg 0x%02x read failed: %d\n",
++			id, addr, ret);
++		return ret;
++	}
++
++	return (val & mask) >> shift;
++}
++
++static int max77620_read_slew_rate(struct max77620_regulator *pmic, int id)
++{
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	u8 rval;
++	int slew_rate;
++	int ret;
++
++	switch (rinfo->type) {
++	case MAX77620_REGULATOR_TYPE_SD:
++		ret = max77620_reg_read(parent, rinfo->cfg_addr, &rval);
++		if (ret < 0) {
++			dev_err(pmic->dev, "Register 0x%02x read failed: %d\n",
++				rinfo->cfg_addr, ret);
++			return ret;
++		}
++
++		slew_rate = (rval >> MAX77620_SD_SR_SHIFT) & 0x3;
++		switch (slew_rate) {
++		case 0:
++			slew_rate = 13750;
++			break;
++		case 1:
++			slew_rate = 27500;
++			break;
++		case 2:
++			slew_rate = 55000;
++			break;
++		case 3:
++			slew_rate = 100000;
++			break;
++		}
++		rinfo->desc.ramp_delay = slew_rate;
++		break;
++	default:
++		ret = max77620_reg_read(parent, rinfo->cfg_addr, &rval);
++		if (ret < 0) {
++			dev_err(pmic->dev, "Register 0x%02x read failed: %d\n",
++				rinfo->cfg_addr, ret);
++			return ret;
++		}
++		slew_rate = rval & 0x1;
++		switch (slew_rate) {
++		case 0:
++			slew_rate = 100000;
++			break;
++		case 1:
++			slew_rate = 5000;
++			break;
++		}
++		rinfo->desc.ramp_delay = slew_rate;
++		break;
++	}
++
++	return 0;
++}
++
++static int max77620_init_sd_fs_trade(struct max77620_regulator *pmic, int id)
++{
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
 +	u8 val;
 +	int ret;
 +
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
++	val = (rpdata->sd_fsrade_disable) ? MAX77620_SD_FSRADE_MASK : 0;
++	ret = max77620_reg_update(parent, rinfo->cfg_addr,
++				  MAX77620_SD_FSRADE_MASK, val);
 +	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIO_OUT update failed: %d\n", ret);
-+}
-+
-+static int max77620_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	return regmap_irq_get_virq(chip->gpio_irq_data, offset);
-+}
-+
-+static void max77620_gpio_irq_remove(struct max77620_gpio *mgpio)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	regmap_del_irq_chip(mgpio->gpio_irq, chip->gpio_irq_data);
-+	chip->gpio_irq_data = NULL;
-+}
-+
-+static int max77620_gpio_probe(struct platform_device *pdev)
-+{
-+	struct max77620_gpio *mgpio;
-+	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
-+	int ret;
-+	int gpio_irq;
-+
-+	gpio_irq = platform_get_irq(pdev, 0);
-+	if (gpio_irq <= 0) {
-+		dev_err(&pdev->dev, "Gpio irq not available %d\n", gpio_irq);
-+		return -ENODEV;
-+	}
-+
-+	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
-+	if (!mgpio)
-+		return -ENOMEM;
-+
-+	mgpio->parent = pdev->dev.parent;
-+	mgpio->dev = &pdev->dev;
-+	mgpio->gpio_irq = gpio_irq;
-+
-+	mgpio->gpio_chip.label = pdev->name;
-+	mgpio->gpio_chip.parent = &pdev->dev;
-+	mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
-+	mgpio->gpio_chip.get = max77620_gpio_get;
-+	mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
-+	mgpio->gpio_chip.set_debounce = max77620_gpio_set_debounce;
-+	mgpio->gpio_chip.set = max77620_gpio_set;
-+	mgpio->gpio_chip.to_irq = max77620_gpio_to_irq;
-+	mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
-+	mgpio->gpio_chip.can_sleep = 1;
-+	mgpio->gpio_chip.base = -1;
-+	mgpio->irq_base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
-+#endif
-+
-+	platform_set_drvdata(pdev, mgpio);
-+
-+	ret = gpiochip_add_data(&mgpio->gpio_chip, mgpio);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "gpio_init: Failed to add max77620_gpio\n");
-+		return ret;
-+	}
-+	mgpio->gpio_base = mgpio->gpio_chip.base;
-+
-+	ret = regmap_add_irq_chip(chip->rmap, mgpio->gpio_irq, IRQF_ONESHOT,
-+				  mgpio->irq_base,
-+				  &max77620_gpio_irq_chip,
-+				  &chip->gpio_irq_data);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to add gpio irq_chip %d\n", ret);
-+		goto fail;
-+	}
-+
-+	return 0;
-+
-+fail:
-+	gpiochip_remove(&mgpio->gpio_chip);
++		dev_err(pmic->dev, "Reg 0x%02x update failed: %d\n",
++			rinfo->cfg_addr, ret);
 +
 +	return ret;
 +}
 +
-+static int max77620_gpio_remove(struct platform_device *pdev)
++static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
 +{
-+	struct max77620_gpio *mgpio = platform_get_drvdata(pdev);
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	int ret;
 +
-+	max77620_gpio_irq_remove(mgpio);
-+	gpiochip_remove(&mgpio->gpio_chip);
++	/* Initialise sd_fstrade */
++	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD) {
++		ret = max77620_init_sd_fs_trade(pmic, id);
++		if (ret < 0)
++			return ret;
++	}
++
++	/* Update power mode */
++	ret = max77620_regulator_get_power_mode(pmic, id);
++	if (ret < 0)
++		return ret;
++
++	pmic->current_power_mode[id] = ret;
++	pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
++
++	if (rpdata->active_fps_src == FPS_SRC_DEF) {
++		ret = max77620_regulator_get_fps_src(pmic, id);
++		if (ret < 0)
++			return ret;
++		rpdata->active_fps_src = ret;
++	}
++
++	 /* If rails are externally control of FPS then enable it always. */
++	if (rpdata->active_fps_src == FPS_SRC_NONE) {
++		ret = max77620_regulator_set_power_mode(
++				pmic, pmic->enable_power_mode[id], id);
++		if (ret < 0)
++			return ret;
++	} else {
++		if (pmic->current_power_mode[id] !=
++		     pmic->enable_power_mode[id]) {
++			ret = max77620_regulator_set_power_mode(
++					pmic, pmic->enable_power_mode[id], id);
++			if (ret < 0)
++				return ret;
++		}
++	}
++
++	ret = max77620_regulator_set_fps_src(pmic, rpdata->active_fps_src, id);
++	if (ret < 0)
++		return ret;
++
++	ret = max77620_regulator_set_fps_slots(pmic, id, false);
++	if (ret < 0)
++		return ret;
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id max77620_gpio_devtype[] = {
-+	{ .name = "max77620-gpio", },
-+	{ .name = "max20024-gpio", },
++static int max77620_regulator_enable(struct regulator_dev *rdev)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	int id = rdev_get_id(rdev);
++
++	if (pmic->active_fps_src[id] != FPS_SRC_NONE)
++		return 0;
++
++	return max77620_regulator_set_power_mode(pmic,
++			pmic->enable_power_mode[id], id);
++}
++
++static int max77620_regulator_disable(struct regulator_dev *rdev)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	int id = rdev_get_id(rdev);
++
++	if (pmic->active_fps_src[id] != FPS_SRC_NONE)
++		return 0;
++
++	return max77620_regulator_set_power_mode(pmic,
++			MAX77620_POWER_MODE_DISABLE, id);
++}
++
++static int max77620_regulator_is_enabled(struct regulator_dev *rdev)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	int id = rdev_get_id(rdev);
++	int ret = 1;
++
++	if (pmic->active_fps_src[id] != FPS_SRC_NONE)
++		return 1;
++
++	ret = max77620_regulator_get_power_mode(pmic, id);
++	if (ret < 0)
++		return ret;
++
++	if (ret != MAX77620_POWER_MODE_DISABLE)
++		return 1;
++
++	return 0;
++}
++
++static int max77620_regulator_set_mode(struct regulator_dev *rdev,
++				       unsigned int mode)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	int id = rdev_get_id(rdev);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	bool fpwm = false;
++	int power_mode;
++	int ret;
++	u8 val;
++
++	switch (mode) {
++	case REGULATOR_MODE_FAST:
++		fpwm = true;
++		power_mode = MAX77620_POWER_MODE_NORMAL;
++		break;
++
++	case REGULATOR_MODE_NORMAL:
++		power_mode = MAX77620_POWER_MODE_NORMAL;
++		break;
++
++	case REGULATOR_MODE_IDLE:
++		if (rpdata->glpm_enable)
++			power_mode = MAX77620_POWER_MODE_GLPM;
++		else
++			power_mode = MAX77620_POWER_MODE_LPM;
++		break;
++
++	default:
++		dev_err(pmic->dev, "Regulator %d mode %d is invalid\n",
++			id, mode);
++		return -EINVAL;
++	}
++
++	if (rinfo->type != MAX77620_REGULATOR_TYPE_SD)
++		goto skip_fpwm;
++
++	val = (fpwm) ? MAX77620_SD_FPWM_MASK : 0;
++	ret = max77620_reg_update(parent, rinfo->cfg_addr,
++				  MAX77620_SD_FPWM_MASK, val);
++	if (ret < 0) {
++		dev_err(pmic->dev, "Reg 0x%02x update failed: %d\n",
++			rinfo->cfg_addr, ret);
++		return ret;
++	}
++	rpdata->current_mode = mode;
++
++skip_fpwm:
++	ret = max77620_regulator_set_power_mode(pmic, power_mode, id);
++	if (ret < 0)
++		return ret;
++
++	pmic->enable_power_mode[id] = power_mode;
++
++	return 0;
++}
++
++static unsigned int max77620_regulator_get_mode(struct regulator_dev *rdev)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	struct device *parent = pmic->max77620_chip->dev;
++	int id = rdev_get_id(rdev);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	int fpwm = 0;
++	int ret;
++	int pm_mode, reg_mode;
++	u8 val;
++
++	ret = max77620_regulator_get_power_mode(pmic, id);
++	if (ret < 0)
++		return 0;
++
++	pm_mode = ret;
++
++	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD) {
++		ret = max77620_reg_read(parent, rinfo->cfg_addr, &val);
++		if (ret < 0) {
++			dev_err(pmic->dev, "Reg 0x%02x read failed: %d\n",
++				rinfo->cfg_addr, ret);
++			return ret;
++		}
++		fpwm = !!(val & MAX77620_SD_FPWM_MASK);
++	}
++
++	switch (pm_mode) {
++	case MAX77620_POWER_MODE_NORMAL:
++	case MAX77620_POWER_MODE_DISABLE:
++		if (fpwm)
++			reg_mode = REGULATOR_MODE_FAST;
++		else
++			reg_mode = REGULATOR_MODE_NORMAL;
++		break;
++	case MAX77620_POWER_MODE_LPM:
++	case MAX77620_POWER_MODE_GLPM:
++		reg_mode = REGULATOR_MODE_IDLE;
++		break;
++	default:
++		return 0;
++	}
++
++	return reg_mode;
++}
++
++static int max77620_regulator_set_ramp_delay(struct regulator_dev *rdev,
++					     int ramp_delay)
++{
++	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
++	int id = rdev_get_id(rdev);
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct device *parent = pmic->max77620_chip->dev;
++	int ret, val;
++	u8 mask;
++
++	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD) {
++		if (ramp_delay <= 13750)
++			val = 0;
++		else if (ramp_delay <= 27500)
++			val = 1;
++		else if (ramp_delay <= 55000)
++			val = 2;
++		else
++			val = 3;
++		val <<= MAX77620_SD_SR_SHIFT;
++		mask = MAX77620_SD_SR_MASK;
++	} else {
++		if (ramp_delay <= 5000)
++			val = 1;
++		else
++			val = 0;
++		mask = MAX77620_LDO_SLEW_RATE_MASK;
++	}
++
++	ret = max77620_reg_update(parent, rinfo->cfg_addr, mask, val);
++	if (ret < 0)
++		dev_err(pmic->dev, "Reg 0x%02x update failed: %d\n",
++			rinfo->cfg_addr, ret);
++
++	return ret;
++}
++
++static int max77620_of_parse_cb(struct device_node *np,
++				const struct regulator_desc *desc,
++				struct regulator_config *config)
++{
++	struct max77620_regulator *pmic = config->driver_data;
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[desc->id];
++	u32 pval;
++	int ret;
++
++	rpdata->glpm_enable = of_property_read_bool(np,
++				"maxim,enable-group-low-power");
++
++	rpdata->sd_fsrade_disable = of_property_read_bool(np,
++				"maxim,disable-active-discharge");
++
++	rpdata->disable_remote_sense_on_suspend = of_property_read_bool(
++				np, "maxim,disable-remote-sense-on-suspend");
++
++	ret = of_property_read_u32(np, "maxim,active-fps-source", &pval);
++	rpdata->active_fps_src = (!ret) ? pval : FPS_SRC_DEF;
++
++	ret = of_property_read_u32(np, "maxim,active-fps-power-up-slot", &pval);
++	rpdata->active_fps_pu_slot = (!ret) ? pval : -1;
++
++	ret = of_property_read_u32(
++			np, "maxim,active-fps-power-down-slot", &pval);
++	rpdata->active_fps_pd_slot = (!ret) ? pval : -1;
++
++	ret = of_property_read_u32(np, "maxim,suspend-fps-source", &pval);
++	rpdata->suspend_fps_src = (!ret) ? pval : -1;
++
++	ret = of_property_read_u32(
++			np, "maxim,suspend-fps-power-up-slot", &pval);
++	rpdata->suspend_fps_pu_slot = (!ret) ? pval : -1;
++
++	ret = of_property_read_u32(
++			np, "maxim,suspend-fps-power-down-slot", &pval);
++	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
++
++	return max77620_init_pmic(pmic, desc->id);
++}
++
++static struct regulator_ops max77620_regulator_ops = {
++	.is_enabled = max77620_regulator_is_enabled,
++	.enable = max77620_regulator_enable,
++	.disable = max77620_regulator_disable,
++	.list_voltage = regulator_list_voltage_linear,
++	.map_voltage = regulator_map_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.set_mode = max77620_regulator_set_mode,
++	.get_mode = max77620_regulator_get_mode,
++	.set_ramp_delay = max77620_regulator_set_ramp_delay,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++};
++
++#define MAX77620_SD_CNF2_ROVS_EN_NONE	0
++#define RAIL_SD(_id, _name, _sname, _volt_mask, _min_uV, _max_uV,	\
++		_step_uV, _rs_add, _rs_mask)				\
++	[MAX77620_REGULATOR_ID_##_id] = {				\
++		.type = MAX77620_REGULATOR_TYPE_SD,			\
++		.volt_mask = MAX77620_##_volt_mask##_VOLT_MASK,		\
++		.volt_addr = MAX77620_REG_##_id,			\
++		.cfg_addr = MAX77620_REG_##_id##_CFG,			\
++		.fps_addr = MAX77620_REG_FPS_##_id,			\
++		.remote_sense_addr = _rs_add,				\
++		.remote_sense_mask = MAX77620_SD_CNF2_ROVS_EN_##_rs_mask, \
++		.min_uV = _min_uV,					\
++		.max_uV = _max_uV,					\
++		.step_uV = _step_uV,					\
++		.power_mode_mask = MAX77620_SD_POWER_MODE_MASK,		\
++		.power_mode_shift = MAX77620_SD_POWER_MODE_SHIFT,	\
++		.desc = {						\
++			.name = max77620_rails(_name),			\
++			.of_match = of_match_ptr(#_name),		\
++			.regulators_node = of_match_ptr("regulators"),	\
++			.of_parse_cb = max77620_of_parse_cb,		\
++			.supply_name = _sname,				\
++			.id = MAX77620_REGULATOR_ID_##_id,		\
++			.ops = &max77620_regulator_ops,			\
++			.n_voltages = ((_max_uV - _min_uV) / _step_uV) + 1, \
++			.min_uV = _min_uV,				\
++			.uV_step = _step_uV,				\
++			.enable_time = 500,				\
++			.vsel_mask = MAX77620_##_volt_mask##_VOLT_MASK,	\
++			.vsel_reg = MAX77620_REG_##_id,			\
++			.type = REGULATOR_VOLTAGE,			\
++		},							\
++	}
++
++#define RAIL_LDO(_id, _name, _sname, _type, _min_uV, _max_uV, _step_uV) \
++	[MAX77620_REGULATOR_ID_##_id] = {				\
++		.type = MAX77620_REGULATOR_TYPE_LDO_##_type,		\
++		.volt_mask = MAX77620_LDO_VOLT_MASK,			\
++		.volt_addr = MAX77620_REG_##_id##_CFG,			\
++		.cfg_addr = MAX77620_REG_##_id##_CFG2,			\
++		.fps_addr = MAX77620_REG_FPS_##_id,			\
++		.remote_sense_addr = 0xFF,				\
++		.min_uV = _min_uV,					\
++		.max_uV = _max_uV,					\
++		.step_uV = _step_uV,					\
++		.power_mode_mask = MAX77620_LDO_POWER_MODE_MASK,	\
++		.power_mode_shift = MAX77620_LDO_POWER_MODE_SHIFT,	\
++		.desc = {						\
++			.name = max77620_rails(_name),			\
++			.of_match = of_match_ptr(#_name),		\
++			.regulators_node = of_match_ptr("regulators"),	\
++			.of_parse_cb = max77620_of_parse_cb,		\
++			.supply_name = _sname,				\
++			.id = MAX77620_REGULATOR_ID_##_id,		\
++			.ops = &max77620_regulator_ops,			\
++			.n_voltages = ((_max_uV - _min_uV) / _step_uV) + 1, \
++			.min_uV = _min_uV,				\
++			.uV_step = _step_uV,				\
++			.enable_time = 500,				\
++			.vsel_mask = MAX77620_LDO_VOLT_MASK,		\
++			.vsel_reg = MAX77620_REG_##_id##_CFG,		\
++			.type = REGULATOR_VOLTAGE,			\
++		},							\
++	}
++
++static struct max77620_regulator_info max77620_regs_info[MAX77620_NUM_REGS] = {
++	RAIL_SD(SD0, sd0, "in-sd0", SD0, 600000, 1400000, 12500, 0x22, SD0),
++	RAIL_SD(SD1, sd1, "in-sd1", SD1, 600000, 1550000, 12500, 0x22, SD1),
++	RAIL_SD(SD2, sd2, "in-sd2", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD3, sd3, "in-sd3", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD4, sd4, "in-sd4", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++
++	RAIL_LDO(LDO0, ldo0, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO1, ldo1, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO2, ldo2, "in-ldo2",   P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO3, ldo3, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO4, ldo4, "in-ldo4-6", P, 800000, 1587500, 12500),
++	RAIL_LDO(LDO5, ldo5, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO6, ldo6, "in-ldo4-6", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO7, ldo7, "in-ldo7-8", N, 800000, 3950000, 50000),
++	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
++};
++
++static struct max77620_regulator_info max20024_regs_info[MAX77620_NUM_REGS] = {
++	RAIL_SD(SD0, sd0, "in-sd0", SD0, 800000, 1587500, 12500, 0x22, SD0),
++	RAIL_SD(SD1, sd1, "in-sd1", SD1, 600000, 3387500, 12500, 0x22, SD1),
++	RAIL_SD(SD2, sd2, "in-sd2", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD3, sd3, "in-sd3", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD4, sd4, "in-sd4", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++
++	RAIL_LDO(LDO0, ldo0, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO1, ldo1, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO2, ldo2, "in-ldo2",   P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO3, ldo3, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO4, ldo4, "in-ldo4-6", P, 800000, 1587500, 12500),
++	RAIL_LDO(LDO5, ldo5, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO6, ldo6, "in-ldo4-6", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO7, ldo7, "in-ldo7-8", N, 800000, 3950000, 50000),
++	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
++};
++
++static int max77620_regulator_probe(struct platform_device *pdev)
++{
++	struct max77620_chip *max77620_chip = dev_get_drvdata(pdev->dev.parent);
++	struct max77620_regulator_info *regulator_info;
++	struct device *dev = &pdev->dev;
++	struct regulator_config config = { };
++	struct max77620_regulator *pmic;
++	int ret = 0;
++	int id;
++
++	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
++	if (!pmic)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pmic);
++	pmic->max77620_chip = max77620_chip;
++	pmic->dev = dev;
++	if (!dev->of_node)
++		dev->of_node = pdev->dev.parent->of_node;
++
++	regulator_info = (max77620_chip->id == MAX77620) ? max77620_regs_info :
++				max20024_regs_info;
++
++	config.regmap = max77620_chip->rmap;
++	config.dev = dev;
++	config.driver_data = pmic;
++
++	for (id = 0; id < MAX77620_NUM_REGS; ++id) {
++		struct regulator_dev *rdev;
++		struct regulator_desc *rdesc;
++
++		if ((max77620_chip->id == MAX77620) &&
++		    (id == MAX77620_REGULATOR_ID_SD4))
++			continue;
++
++		rdesc = &regulator_info[id].desc;
++		pmic->rinfo[id] = &max77620_regs_info[id];
++		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
++		pmic->rdesc[id] = rdesc;
++
++		ret = max77620_read_slew_rate(pmic, id);
++		if (ret < 0)
++			return ret;
++
++		rdev = devm_regulator_register(dev, rdesc, &config);
++		if (IS_ERR(rdev)) {
++			ret = PTR_ERR(rdev);
++			dev_err(dev, "Regulator registration %s failed: %d\n",
++				rdesc->name, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int max77620_regulator_suspend(struct device *dev)
++{
++	struct max77620_regulator *pmic = dev_get_drvdata(dev);
++	struct max77620_regulator_pdata *reg_pdata;
++	struct max77620_regulator_info *rinfo;
++	struct device *parent = pmic->dev->parent;
++	int id;
++	int ret;
++
++	for (id = 0; id < MAX77620_NUM_REGS; ++id) {
++		reg_pdata = &pmic->reg_pdata[id];
++		rinfo = pmic->rinfo[id];
++		if (!reg_pdata || !rinfo)
++			continue;
++
++		if (reg_pdata->disable_remote_sense_on_suspend &&
++		    (rinfo->remote_sense_addr != 0xFF)) {
++			ret = max77620_reg_update(parent,
++						  rinfo->remote_sense_addr,
++						  rinfo->remote_sense_mask, 0);
++			if (ret < 0)
++				dev_err(dev, "Reg 0x%02x update failed: %d\n",
++					rinfo->remote_sense_addr, ret);
++		}
++
++		max77620_regulator_set_fps_slots(pmic, id, true);
++		if (reg_pdata->suspend_fps_src < 0)
++			continue;
++		max77620_regulator_set_fps_src(pmic, reg_pdata->suspend_fps_src,
++					       id);
++	}
++
++	return 0;
++}
++
++static int max77620_regulator_resume(struct device *dev)
++{
++	struct max77620_regulator *pmic = dev_get_drvdata(dev);
++	struct max77620_regulator_pdata *reg_pdata;
++	struct max77620_regulator_info *rinfo;
++	struct device *parent = pmic->dev->parent;
++	int id;
++	int ret;
++
++	for (id = 0; id < MAX77620_NUM_REGS; ++id) {
++		reg_pdata = &pmic->reg_pdata[id];
++		rinfo = pmic->rinfo[id];
++		if (!reg_pdata || !rinfo)
++			continue;
++
++		if (reg_pdata->disable_remote_sense_on_suspend &&
++		    (rinfo->remote_sense_addr != 0xFF)) {
++			ret = max77620_reg_update(parent,
++						  rinfo->remote_sense_addr,
++						  rinfo->remote_sense_mask,
++						  rinfo->remote_sense_mask);
++			if (ret < 0)
++				dev_err(dev, "Reg 0x%02x update failed: %d\n",
++					rinfo->remote_sense_addr, ret);
++		}
++
++		max77620_regulator_set_fps_slots(pmic, id, false);
++		if (reg_pdata->active_fps_src < 0)
++			continue;
++		max77620_regulator_set_fps_src(pmic, reg_pdata->active_fps_src,
++					       id);
++	}
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops max77620_regulator_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(max77620_regulator_suspend,
++				max77620_regulator_resume)
++};
++
++static const struct platform_device_id max77620_regulator_devtype[] = {
++	{ .name = "max77620-pmic", },
++	{ .name = "max20024-pmic", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(platform, max77620_gpio_devtype);
++MODULE_DEVICE_TABLE(platform, max77620_regulator_devtype);
 +
-+static struct platform_driver max77620_gpio_driver = {
-+	.driver.name	= "max77620-gpio",
-+	.driver.owner	= THIS_MODULE,
-+	.probe		= max77620_gpio_probe,
-+	.remove		= max77620_gpio_remove,
-+	.id_table	= max77620_gpio_devtype,
++static struct platform_driver max77620_regulator_driver = {
++	.probe = max77620_regulator_probe,
++	.id_table = max77620_regulator_devtype,
++	.driver = {
++		.name = "max77620-pmic",
++		.pm = &max77620_regulator_pm_ops,
++	},
 +};
 +
-+static int __init max77620_gpio_init(void)
++static int __init max77620_regulator_init(void)
 +{
-+	return platform_driver_register(&max77620_gpio_driver);
++	return platform_driver_register(&max77620_regulator_driver);
 +}
-+subsys_initcall(max77620_gpio_init);
++subsys_initcall(max77620_regulator_init);
 +
-+static void __exit max77620_gpio_exit(void)
++static void __exit max77620_reg_exit(void)
 +{
-+	platform_driver_unregister(&max77620_gpio_driver);
++	platform_driver_unregister(&max77620_regulator_driver);
 +}
-+module_exit(max77620_gpio_exit);
++module_exit(max77620_reg_exit);
 +
-+MODULE_DESCRIPTION("GPIO interface for MAX77620 and MAX20024 PMIC");
++MODULE_DESCRIPTION("MAX77620/MAX20024 regulator driver");
++MODULE_AUTHOR("Mallikarjun Kasoju <mkasoju@nvidia.com>");
 +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
-+MODULE_ALIAS("platform:max77620-gpio");
++MODULE_ALIAS("platform:max77620-pmic");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
+
