@@ -1,11 +1,13 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 00/26] drm: Add Allwinner A10 display engine support
-Date: Thu, 14 Jan 2016 16:24:43 +0100
-Message-ID: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 04/26] clk: composite: Add unregister function
+Date: Thu, 14 Jan 2016 16:24:47 +0100
+Message-ID: <1452785109-6172-5-git-send-email-maxime.ripard@free-electrons.com>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYX3322AKGQEHNFCEWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3P3322AKGQEMWMHSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1452785109-6172-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,198 +19,55 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The composite clock didn't have any unregistration function, which forced
+us to use clk_unregister directly on it.
 
-The Allwinner SoCs (except for the very latest ones) all share the
-same set of controllers, loosely coupled together to form the display
-pipeline.
+While it was already not great from an API point of view, it also meant
+that we were leaking the clk_composite structure allocated in
+clk_register_composite.
 
-Depending on the SoC, the number of instances of the controller will
-change (2 instances of each in the A10, only one in the A13, for
-example), and the output availables will change too (HDMI, composite,
-VGA on the A20, none of them on the A13).
+Add a clk_unregister_composite function to fix this.
 
-On most featured SoCs, it looks like that:
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/clk-composite.c  | 15 +++++++++++++++
+ include/linux/clk-provider.h |  1 +
+ 2 files changed, 16 insertions(+)
 
- +--------------------------------------------+
- |                    RAM                     |
- +--------------------------------------------+
-       |            |      |            |
-       v            |      |            v
- +----------------+ |      | +----------------+
- |    Frontend    | |      | |    Frontend    |
- +----------------+ |      | +----------------+
-         |          |      |         |
-         v          |      |         v
- +----------------+ |      | +----------------+
- |    Backend     |<+      +>|    Backend     |
- +----------------+          +----------------+
-         |                           |
-         v                           v
- +----------------+          +----------------+---> LVDS
- |      TCON      |          |      TCON      |---> RGB
- +----------------+          +----------------+
-       |       +---+       +---+          |
-       |           |       |              |
-       v           v       v              v
- +------------+  +------------+  +------------+---> VGA
- | TV Encoder |  |    HDMI    |  | TV Encoder |---> Composite
- +------------+  +------------+  +------------+
-
-The current code only assumes that there is a single instance of all
-the controllers. It also supports only the RGB and Composite
-interfaces.
-
-Let me know what you think,
-Maxime
-
-Changes from v1:
-  - Rebased on top of 4.4
-
-  - Merged the clock drivers for the display and TCON channel 0 clocks
-  - Replaced the container_of calls in the display reset clocks to an
-    inline function
-  - Checked the return code of of_clk_parent_fill in the clocks
-    drivers
-  - Checked the return code of of_clk_add_provider in the tcon-ch1 and
-    PLL3 clocks
-  - Added missing clocks headers
-  - Created a composite clock unregister function
-
-  - Moved the binding documentation to
-    Documentation/devicetree/bindings/display
-  - Added the clocks binding documentation
-  - Added the Olimex vendor to the list of DT vendors
-  - Moved to the OF graph representation and the component framework
-
-  - Moved the reset cells count check into the reset framework to
-    avoid duplicating the code in every xlate implementation.
-  - Made the reset_ops const
-
-  - Reworked the DRM cmdline mode parsing code to allow named mode
-  - Fixed the TV mode lookup when the mode name is not present (for
-    example because it was given by the userspace)
-
-  - Made the driver outputs optional (to avoid crashing when a board
-    doesn't have either a panel or a composite output enabled)
-  - Added multiple plane support with transparency
-  - Moved the backend registers writes commit in the CRTC atomic_flush
-    callback
-  - Removed the load / unload functions
-  - Removed the enabled booleans in my private structure and removed
-    the implicit call to disable_unused_functions in the DRM core to
-    push it in the drivers.
-  - Fixed a few bitmasks on some bitfields definition
-  - Fixed the RGB connector mode validation that was not testing the
-    right values
-
-Matthias Brugger (1):
-  clk: Add regmap support
-
-Maxime Ripard (25):
-  reset: Move DT cell size check to the core
-  reset: Make reset_control_ops const
-  clk: composite: Add unregister function
-  clk: sunxi: Add display and TCON0 clocks driver
-  clk: sunxi: Add PLL3 clock
-  clk: sunxi: Add TCON channel1 clock
-  clk: sun5i: add DRAM gates
-  ARM: sun5i: dt: Add pll3 and pll7 clocks
-  ARM: sun5i: a13: Add display and TCON clocks
-  ARM: sun5i: Add DRAM gates
-  ARM: sun5i: Add TV encoder gate to the DTSI
-  drm/fb_cma_helper: Remove implicit call to disable_unused_functions
-  drm/modes: Rewrite the command line parser
-  drm/modes: Support modes names on the command line
-  drm: Add Allwinner A10 Display Engine support
-  drm: sun4i: Add DT bindings documentation
-  drm: sun4i: Add RGB output
-  drm: sun4i: Add composite output
-  drm: sun4i: tv: Add PAL output standard
-  drm: sun4i: tv: Add NTSC output standard
-  ARM: sun5i: r8: Add display blocks to the DTSI
-  ARM: sun5i: chip: Enable the TV Encoder
-  devicetree: Add olimex vendor prefix
-  drm/panel: simple: Add timings for the Olimex LCD-OLinuXino-4.3TS
-  DO NOT MERGE: ARM: sun5i: chip: Enable the LCD panel
-
- Documentation/devicetree/bindings/clock/sunxi.txt  |   5 +
- .../display/panel/olimex,lcd-olinuxino-43-ts.txt   |   7 +
- .../bindings/display/sunxi/sun4i-drm.txt           | 228 +++++++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/sun5i-a10s.dtsi                  |   7 +-
- arch/arm/boot/dts/sun5i-a13.dtsi                   |  46 +-
- arch/arm/boot/dts/sun5i-r8-chip.dts                |  17 +
- arch/arm/boot/dts/sun5i-r8.dtsi                    | 139 ++++-
- arch/arm/boot/dts/sun5i.dtsi                       |  62 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-composite.c                        |  15 +
- drivers/clk/clk-divider.c                          |  68 ++-
- drivers/clk/clk-gate.c                             |  54 +-
- drivers/clk/clk-io.c                               |  48 ++
- drivers/clk/clk-io.h                               |  22 +
- drivers/clk/clk-mux.c                              |  94 ++-
- drivers/clk/sunxi/Makefile                         |   3 +
- drivers/clk/sunxi/clk-simple-gates.c               |   2 +
- drivers/clk/sunxi/clk-sun4i-display.c              | 241 ++++++++
- drivers/clk/sunxi/clk-sun4i-pll3.c                 |  90 +++
- drivers/clk/sunxi/clk-sun4i-tcon-ch1.c             | 154 +++++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   3 +-
- drivers/gpu/drm/drm_crtc.c                         |   3 +-
- drivers/gpu/drm/drm_fb_cma_helper.c                |   3 -
- drivers/gpu/drm/drm_fb_helper.c                    |   4 +
- drivers/gpu/drm/drm_modes.c                        | 327 ++++++----
- drivers/gpu/drm/imx/imx-drm-core.c                 |   1 +
- drivers/gpu/drm/panel/panel-simple.c               |  26 +
- drivers/gpu/drm/sti/sti_drv.c                      |   1 +
- drivers/gpu/drm/sun4i/Kconfig                      |  14 +
- drivers/gpu/drm/sun4i/Makefile                     |  12 +
- drivers/gpu/drm/sun4i/sun4i_backend.c              | 321 ++++++++++
- drivers/gpu/drm/sun4i/sun4i_backend.h              | 160 +++++
- drivers/gpu/drm/sun4i/sun4i_crtc.c                 | 120 ++++
- drivers/gpu/drm/sun4i/sun4i_crtc.h                 |  30 +
- drivers/gpu/drm/sun4i/sun4i_drv.c                  | 325 ++++++++++
- drivers/gpu/drm/sun4i/sun4i_drv.h                  |  30 +
- drivers/gpu/drm/sun4i/sun4i_framebuffer.c          |  54 ++
- drivers/gpu/drm/sun4i/sun4i_framebuffer.h          |  19 +
- drivers/gpu/drm/sun4i/sun4i_layer.c                | 160 +++++
- drivers/gpu/drm/sun4i/sun4i_layer.h                |  30 +
- drivers/gpu/drm/sun4i/sun4i_rgb.c                  | 229 +++++++
- drivers/gpu/drm/sun4i/sun4i_rgb.h                  |  18 +
- drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 521 ++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.h                 | 177 ++++++
- drivers/gpu/drm/sun4i/sun4i_tv.c                   | 675 +++++++++++++++++++++
- drivers/gpu/drm/tilcdc/tilcdc_drv.c                |   1 +
- drivers/reset/core.c                               |   6 +-
- include/drm/drm_modes.h                            |   1 +
- include/linux/clk-provider.h                       |  55 +-
- include/linux/reset-controller.h                   |   2 +-
- 52 files changed, 4455 insertions(+), 179 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino-43-ts.txt
- create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
- create mode 100644 drivers/clk/clk-io.c
- create mode 100644 drivers/clk/clk-io.h
- create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
- create mode 100644 drivers/clk/sunxi/clk-sun4i-pll3.c
- create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
- create mode 100644 drivers/gpu/drm/sun4i/Kconfig
- create mode 100644 drivers/gpu/drm/sun4i/Makefile
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_backend.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_backend.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_crtc.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_crtc.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_drv.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_drv.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_framebuffer.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_framebuffer.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_layer.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_layer.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_tcon.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_tcon.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.c
-
+diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
+index 4735de0660cc..f4c38f209594 100644
+--- a/drivers/clk/clk-composite.c
++++ b/drivers/clk/clk-composite.c
+@@ -288,3 +288,18 @@ err:
+ 	kfree(composite);
+ 	return clk;
+ }
++
++void clk_unregister_composite(struct clk *clk)
++{
++	struct clk_composite *composite;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	composite = to_clk_composite(hw);
++
++	clk_unregister(clk);
++	kfree(composite);
++}
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 0c55a37cf8f7..76c34a9622db 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -632,6 +632,7 @@ struct clk *clk_register_composite(struct device *dev, const char *name,
+ 		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
+ 		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
+ 		unsigned long flags);
++void clk_unregister_composite(struct clk *clk);
+ 
+ /***
+  * struct clk_gpio_gate - gpio gated clock
 -- 
 2.6.4
