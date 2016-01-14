@@ -1,42 +1,65 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
-Date: Thu, 14 Jan 2016 11:11:30 +0200
-Message-ID: <87y4bsa5kt.fsf@kamboji.qca.qualcomm.com>
-References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
-	<1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
-	<87io35lq2p.fsf@kamboji.qca.qualcomm.com>
-	<5695E802.7050909@compulab.co.il> <20160113172712.GI12777@atomide.com>
-	<87wprcbpyr.fsf@kamboji.qca.qualcomm.com>
-	<56976588.3060707@broadcom.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
+Date: Thu, 14 Jan 2016 10:16:30 +0100
+Message-ID: <CACRpkdaL5UFPW-=E8iVG7JFDh3=8kvfDrs+ZKRXtSRCNRAQ=RQ@mail.gmail.com>
+References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
+	<1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
+	<20160112144301.GA30932@rob-hp-laptop>
+	<569513E6.60608@nvidia.com>
+	<CAL_Jsq+ZLVNXVnQX+fYGjhqAx6aFrPNgBBXbPGTKrWoY52vMvw@mail.gmail.com>
+	<56951A98.40502@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56976588.3060707-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (Arend van Spriel's message of
-	"Thu, 14 Jan 2016 10:08:24 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <56951A98.40502@nvidia.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
-
-> On 01/14/2016 08:05 AM, Kalle Valo wrote:
->> Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> writes:
->>
->>> Yeah I'll pick the dts changes separately after the merge window as
->>> there is no dependency to the driver changes.
->>
->> Ok, I'll then take patches 1 and 2 once the merge window opens.
+On Tue, Jan 12, 2016 at 4:24 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> On Tuesday 12 January 2016 08:53 PM, Rob Herring wrote:
+>> On Tue, Jan 12, 2016 at 8:55 AM, Laxman Dewangan <ldewangan@nvidia.com>
+>> wrote:
+>>>
+>>> On Tuesday 12 January 2016 08:13 PM, Rob Herring wrote:
+>>>>
+>>>> On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
 >
-> I guess it is semantics, but the merge window is open right now so you
-> probably mean to say after the merge window closes, ie. when 4.5-rc1
-> is ready.
+>
+>> So label is exactly for this purpose of defining user meaningful names.
+>>
+> Yes, I can use the label for name. I will update the patch.
+>
+> Just for understanding, is "label" is better property name to pass the
+> specific name?
 
-Exactly. Sorry, I suck in multitasking :)
+Yes, look at this from
+arch/arm64/boot/dts/arm/juno-motherboard.dtsi:
 
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                        gpio_keys {
+                                compatible = "gpio-keys";
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+
+                                button@1 {
+                                        debounce_interval = <50>;
+                                        wakeup-source;
+                                        linux,code = <116>;
+                                        label = "POWER";
+                                        gpios = <&iofpga_gpio0 0 0x4>;
+                                };
+                                button@2 {
+                                        debounce_interval = <50>;
+                                        wakeup-source;
+                                        linux,code = <102>;
+                                        label = "HOME";
+                                        gpios = <&iofpga_gpio0 1 0x4>;
+                                };
+(...)
+
+Currently these names (POWER, HOME etc) appear nicely in
+/proc/interrupts, so I guess the same should be used for input?
+
+Yours,
+Linus Walleij
