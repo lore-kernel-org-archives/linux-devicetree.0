@@ -1,48 +1,68 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
-Date: Thu, 14 Jan 2016 11:20:57 +0300
-Message-ID: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: <shh.xie@gmail.com>
+Subject: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+Date: Thu, 14 Jan 2016 16:23:59 +0800
+Message-ID: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-The correct name for aliases node is "aliases" not "alias".
+From: Shaohui Xie <Shaohui.Xie@freescale.com>
 
-An overview of the "aliases" node usage can be found
-on the device tree usage page at devicetree.org [1].
+This commit adds necessary definitions for the PHY layer to recognize
+backplane Ethernet 1000BASE-KX and 10GBASE-KR as valid PHY interfaces,
+"1000base-kx" for 1000BASE-KX, "10gbase-kr" for 10GBASE-KR.
 
-Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
-
-[1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-[2] https://www.power.org/documentation/epapr-version-1-1/
-
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
 ---
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes in v2:
+new patch.
 
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index 003015a..4b6d38c 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -9,7 +9,7 @@
- 	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
- 	model = "TP-Link TL-WR1043ND Version 1";
+ Documentation/devicetree/bindings/net/ethernet.txt | 4 ++--
+ include/linux/phy.h                                | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 5d88f37..1166a5c 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -11,8 +11,8 @@ The following properties are common to the Ethernet controllers:
+   the maximum frame size (there's contradiction in ePAPR).
+ - phy-mode: string, operation mode of the PHY interface; supported values are
+   "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+-  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
+-  standard property;
++  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii", "1000base-kx", "10gbase-kr";
++  this is now a de-facto standard property;
+ - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+ - phy-handle: phandle, specifies a reference to a node representing a PHY
+   device; this property is described in ePAPR and so preferred;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index d6f3641..7acecf7 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -80,6 +80,8 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_XGMII,
+ 	PHY_INTERFACE_MODE_MOCA,
+ 	PHY_INTERFACE_MODE_QSGMII,
++	PHY_INTERFACE_MODE_1000BASE_KX,
++	PHY_INTERFACE_MODE_10GBASE_KR,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
  
--	alias {
-+	aliases {
- 		serial0 = "/ahb/apb/uart@18020000";
- 	};
- 
+@@ -123,6 +125,10 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "moca";
+ 	case PHY_INTERFACE_MODE_QSGMII:
+ 		return "qsgmii";
++	case PHY_INTERFACE_MODE_1000BASE_KX:
++		return "1000base-kx";
++	case PHY_INTERFACE_MODE_10GBASE_KR:
++		return "10gbase-kr";
+ 	default:
+ 		return "unknown";
+ 	}
 -- 
-2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0.27.g96db324
