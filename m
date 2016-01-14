@@ -1,128 +1,54 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] soc: mediatek: Add MT2701 scpsys driver
-Date: Thu, 14 Jan 2016 12:50:29 +0800
-Message-ID: <1452747029.5384.13.camel@mtksdaap41>
-References: <1452676288-62711-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1452676288-62711-5-git-send-email-jamesjj.liao@mediatek.com>
-	 <56967171.2070007@gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Thu, 14 Jan 2016 05:01:39 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63EBDC7@penmbx01>
+References: <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
+ <201601122010.TpAuObtz%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56967171.2070007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <201601122010.TpAuObtz%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Wed, 2016-01-13 at 16:46 +0100, Matthias Brugger wrote:
-> 
-> On 13/01/16 10:11, James Liao wrote:
-> > From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > Add scpsys driver for MT2701.
-> >
-> > Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> 
-> NAK, same as in v1. Please don't split up the driver in several code 
-> files, but find a a way to share the common code elegantly.
-> Comments below.
-
-Do you mean we should support MT8173 and MT2701 scpsys in a single file
-(such as mtk-scpsys.c)?
-
-We have lots of SoC with different power domain support. It means we
-need to add a different power domain table for a SoC, and may need to
-organize power domains (such as subdomains) for each SoC. It may not
-easy to maintain if we integrate all SoC's power domain into the same
-file.
-
-> >   drivers/soc/mediatek/Makefile            |   1 +
-> >   drivers/soc/mediatek/mtk-scpsys-mt2701.c | 170 +++++++++++++++++++++++++++++++
-> >   2 files changed, 171 insertions(+)
-> >   create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> >
-> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> > index 13f7d21..d693f7d 100644
-> > --- a/drivers/soc/mediatek/Makefile
-> > +++ b/drivers/soc/mediatek/Makefile
-> > @@ -2,3 +2,4 @@ obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
-> >   obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
-> >   obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> >   obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys-mt8173.o
-> > +obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys-mt2701.o
-> > diff --git a/drivers/soc/mediatek/mtk-scpsys-mt2701.c b/drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> > new file mode 100644
-> > index 0000000..82c00ed
-> > --- /dev/null
-> > +++ b/drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> > @@ -0,0 +1,170 @@
-> > +/*
-> > + * Copyright (c) 2015 Mediatek, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/pm_domain.h>
-> > +#include <linux/soc/mediatek/infracfg.h>
-> > +#include <dt-bindings/power/mt2701-power.h>
-> > +
-> > +#include "mtk-scpsys.h"
-> > +
-> > +#define SPM_VDE_PWR_CON			0x0210
-> > +#define SPM_MFG_PWR_CON			0x0214
-> > +#define SPM_ISP_PWR_CON			0x0238
-> > +#define SPM_DIS_PWR_CON			0x023C
-> > +#define SPM_CONN_PWR_CON		0x0280
-> > +#define SPM_BDP_PWR_CON			0x029C
-> > +#define SPM_ETH_PWR_CON			0x02A0
-> > +#define SPM_HIF_PWR_CON			0x02A4
-> > +#define SPM_IFR_MSC_PWR_CON		0x02A8
-> > +#define SPM_PWR_STATUS			0x060c
-> > +#define SPM_PWR_STATUS_2ND		0x0610
-> > +
-> > +#define CONN_PWR_STA_MASK		BIT(1)
-> > +#define DIS_PWR_STA_MASK		BIT(3)
-> > +#define MFG_PWR_STA_MASK		BIT(4)
-> > +#define ISP_PWR_STA_MASK		BIT(5)
-> > +#define VDE_PWR_STA_MASK		BIT(7)
-> > +#define BDP_PWR_STA_MASK		BIT(14)
-> > +#define ETH_PWR_STA_MASK		BIT(15)
-> > +#define HIF_PWR_STA_MASK		BIT(16)
-> > +#define IFR_MSC_PWR_STA_MASK		BIT(17)
-> 
-> Apart from SPM_BDP_PWR_CON and BDP_PWR_STA_MASK this are compatible with 
-> mt8173. So please avoid code duplication.
-> Apart you changed the define names from PWR_STATUS_* to *_STA_MASK, 
-> please keep a uniform naming across the driver.
-
-OK, I'll unify the register naming or remove some register names in next
-patch.
-
-Some duplicated code can be reduced by moving them into the internal
-head file (mtk-scpsys.h). But some init code, such as driver init
-functions, may not easy to eliminate because the probe functions need to
-customize subdomains.
-
-
-Best regards,
-
-James
-
-
+SGkgDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbToga2J1aWxkIHRlc3Qg
+cm9ib3QgW21haWx0bzpsa3BAaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE2xOox1MIxMsjVIDIwOjU1
+DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IGtidWls
+ZC1hbGxAMDEub3JnOyBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPjsgUm9iIEhlcnJp
+bmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNv
+bT47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwg
+PGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXINCj4gR2FsYSA8Z2FsYWtAY29k
+ZWF1cm9yYS5vcmc+OyBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBkb3doaWxlMC5v
+cmc+Ow0KPiBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47IEZl
+cnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBZYW5nLCBXZW55b3UNCj4gPFdlbnlvdS5ZYW5n
+QGF0bWVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzJdIG1mZDogYWRkIGRvY3Vt
+ZW50YXRpb24gZm9yIEFDVDg5NDVBIERUIGJpbmRpbmdzDQo+IA0KPiBIaSBXZW55b3UsDQo+IA0K
+PiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIGxqb25lcy1tZmQvZm9yLW1mZC1uZXh0XSBbYWxz
+byBidWlsZCB0ZXN0IEVSUk9SIG9uDQo+IHY0LjQgbmV4dC0yMDE2MDExMV0gW2lmIHlvdXIgcGF0
+Y2ggaXMgYXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzDQo+IGEg
+bm90ZSB0byBoZWxwIGltcHJvdmluZyB0aGUgc3lzdGVtXQ0KPiANCj4gdXJsOiAgICBodHRwczov
+L2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL1dlbnlvdS1ZYW5nL21mZC1hY3Q4OTQ1
+YS1hZGQtDQo+IEFjdGl2ZS1zZW1pLUFDVDg5NDVBLVBNSUMtTUZELWRyaXZlci8yMDE2MDExMi0x
+NjExNTkNCj4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC9sZWUvbWZkLmdpdCBmb3ItbWZkLW5leHQNCj4gY29uZmlnOiB4ODZfNjQtYWxsbW9k
+Y29uZmlnIChhdHRhY2hlZCBhcyAuY29uZmlnKQ0KPiByZXByb2R1Y2U6DQo+ICAgICAgICAgIyBz
+YXZlIHRoZSBhdHRhY2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gICAgICAgICBt
+YWtlIEFSQ0g9eDg2XzY0DQo+IA0KPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBieSA+
+Pik6DQo+IA0KPiAgICBkcml2ZXJzL2J1aWx0LWluLm86IEluIGZ1bmN0aW9uIGBhY3Q4OTQ1YV9p
+MmNfcHJvYmUnOg0KPiA+PiBhY3Q4OTQ1YS5jOigudGV4dCsweDIyOTQ3Nik6IHVuZGVmaW5lZCBy
+ZWZlcmVuY2UgdG8gYF9fZGV2bV9yZWdtYXBfaW5pdF9pMmMnDQo+ICAgIGRyaXZlcnMvYnVpbHQt
+aW4ubzogSW4gZnVuY3Rpb24gYGFjdDg5NDVhX2kyY19pbml0JzoNCj4gPj4gYWN0ODk0NWEuYzoo
+LmluaXQudGV4dCsweDFhNTM2KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgaTJjX3JlZ2lzdGVy
+X2RyaXZlcicNCj4gICAgZHJpdmVycy9idWlsdC1pbi5vOiBJbiBmdW5jdGlvbiBgYWN0ODk0NWFf
+aTJjX2V4aXQnOg0KPiA+PiBhY3Q4OTQ1YS5jOiguZXhpdC50ZXh0KzB4NjZmKTogdW5kZWZpbmVk
+IHJlZmVyZW5jZSB0byBgaTJjX2RlbF9kcml2ZXInDQoNClRoYW5rIHlvdSBmb3IgeW91ciB0ZXN0
+LCBJIHdpbGwgZml4IGl0Lg0KDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
