@@ -1,59 +1,51 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
- of backup battery
-Date: Thu, 14 Jan 2016 15:31:53 +0530
-Message-ID: <56977211.8070206@ti.com>
-References: <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
- <56966558.1070608@ti.com> <569669C5.2070200@ti.com>
- <20160113164856.GF12777@atomide.com> <5696896F.4090309@ti.com>
- <20160113180006.GJ12777@atomide.com>
- <2B99611A-5D2E-4D17-A17D-0150516109FD@goldelico.com>
- <56969800.5010206@ti.com>
- <D6479E92-4226-4B07-95F3-C0DF092B827C@goldelico.com>
- <5696A002.6050402@ti.com> <20160113194032.GL12777@atomide.com>
- <5696D097.3040208@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Thu, 14 Jan 2016 11:09:47 +0100
+Message-ID: <CAMuHMdXVBSjTb_-7o4rDh_S+i64QKEr-5KUnSfd3Nqt1D1TE2Q@mail.gmail.com>
+References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+	<20151116035533.GC25173@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5696D097.3040208@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <menon.nishanth@gmail.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?UTF-8?Q?Gra=c5=bevydas_Ignotas?= <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151116035533.GC25173@localhost>
+Sender: linux-sh-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
+On Mon, Nov 16, 2015 at 4:55 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
+>> In general Renesas hardware is not documented to the extent where the
+>> relationship between IP blocks on different SoCs can be assumed although
+>> they may appear to operate the same way. Furthermore the documentation
+>> typically does not specify a version for individual IP blocks. For these
+>> reasons a convention of using the SoC name in place of a version and
+>> providing SoC-specific compat strings has been adopted.
+>>
+>> Although not universally liked this convention is used in the bindings for
+>> most drivers for Renesas hardware. The purpose of this patch is to
+>> update the Renesas R-Car DMA Controller driver to follow this convention.
+>
+> Applied, thanks
 
-On Thursday 14 January 2016 04:02 AM, Nishanth Menon wrote:
-> On 01/13/2016 01:40 PM, Tony Lindgren wrote:
->
->> Anyways, considering what's been discussed, after the minimal RTC fix
->> we could also add code to allow the TWL driver optionally configure the
->> GPIO. This way the TWL driver could also check the GPIO state in case
->> some out-of-our-control mystery software goes tweak the msecure pin
->> state.
->
-> I dont even know how that will work:
-> If you are using MSECURE as it is intended to be, then you'd mux it to
-> msecure, which means that GPIO read is just a waste of time - you dont
-> even mux it to external world. Now, some SoCs like DRA7 has input lines
-> always connected. even assuming this is for such a case:
-> a) when you are running linux, you are already in nonsecure - it needs
-> no read of MSECURE GPIO to figure that out.
-> b)  when you are in secure world, Linux wont be running either.
->
-> Reading from GPIO is just misguided in my opinion. firewalls are not
-> reconfigured, and muxes are usually done a single time.
->
->   Or the RTC driver could just check that the bits really change
->> after= writing them. Then we would at least know things are not working
->> right for the TWL related RTC drivers.
->
-> that is reasonable to check, but just a overhead - anyways, just
-> isolated to palmas-rtc.. fail reason maynot always be issues with
-> MSECURE mux.. it could be very well be 32k clk fail etc.. but yeah -
-> that might give a hint that there is an issue..
->
+This patch (and this patch only) has disappeared from your next branch between
+January 6 and 7, and thus wasn't included in your pull request for v4.5.
 
-IIRC without configuring the mux mode of gpio234 to msecure mode we were 
-unable to write to the rtc registers. Hence configured it one time at boot.
+Was there a specific reason for that, or was it just an oversight?
+
+Note that the added compatible values in in use (in arm-soc/for-next).
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
