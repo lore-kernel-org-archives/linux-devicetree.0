@@ -1,96 +1,91 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Thu, 14 Jan 2016 09:50:12 +0900
-Message-ID: <5696F0C4.1060904@samsung.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
- <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com>
- <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com>
- <5696665A.5030508@nvidia.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: make more compatible for rk3036 SoCs
+Date: Thu, 14 Jan 2016 09:08:41 +0800
+Message-ID: <1452733721-28110-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5696665A.5030508@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13.01.2016 23:59, Laxman Dewangan wrote:
-> 
-> On Wednesday 13 January 2016 09:55 AM, Laxman Dewangan wrote:
->>
->> On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
->>> On 13.01.2016 13:07, Laxman Dewangan wrote:
->>>> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
->>>
->>>> That is also fine to me but still I am not comfortable with the config
->>>> name and driver file name as this does not suggest the common.
->>> The name does not matter. Really. We have a lot of drivers with a
->>> specific device-like name and supporting different devices. To point
->>> that your argument is invalid - your initial name of driver
->>> "rtc-max77620.c" supported totally different "names": the max77620 and
->>> max20024. It also wasn't suggesting something "common"...
->> In all config string, I have mentioned the MAX20024.
->>
->>
->>> With my approach we are not developing common think neither. We just
->>> want to extend/re-use existing max77686 (or max77802) driver for new
->>> devices. Just like everywhere else.
->>
->> OK, fine to me if this is acceptable.
->> I will drop this rtc patch form this series and work in max77686
->> driver to modify first and once merged, use this config on my defconfig.
->>
-> 
-> Here, MAX686 RTC driver needs two regmap handle, one for the rtc_regmap
-> and other for STATUS2 register access.
-> 
->         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
-> &val);
->         if (ret < 0) {
->                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->                                 __func__, __LINE__, ret);
->                 goto out;
->         }
-> 
-> 
-> We can not have two regmap handle on rtc driver as both regmap (pmic and
-> rtc) registered with different i2c device.
-> 
-> Also this register should not be accessed by RTC driver if we want to
-> decouple as this is very much MAX77686 register set.
-> Do we need this code?
-> static int max77686_rtc_read_alarm(struct device *dev, struct rtc_wkalrm
-> *alrm)
-> {
->         struct max77686_rtc_info *info = dev_get_drvdata(dev);
->         u8 data[RTC_NR_TIME];
->         unsigned int val;
->         int i, ret;
-> 
-> ::::::::
->        alrm->pending = 0;
->         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2,
-> &val);
->         if (ret < 0) {
->                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
->                                 __func__, __LINE__, ret);
->                 goto out;
->         }
-> 
->         if (val & (1 << 4)) /* RTCA1 */
->                 alrm->pending = 1;
-> 
-> }
+This patch will be better to support and compatible for rk3036.
+Although some other SoCs drivers also can work for rk3036, that will
+prevent some mutatin factors for drivers.
 
-Most of the drivers set the 'pending' field when reading alarm. Your
-original driver did not.
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-The max77802 does exactly the same (BTW, these should be merged as
-well... I'll add this to the TODO list) so I think this is necessary.
+ arch/arm/boot/dts/rk3036.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-BR,
-Krzysztof
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index ee457a2..7897449 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -161,7 +161,7 @@
+ 	};
+ 
+ 	usb_otg: usb@10180000 {
+-		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
++		compatible = "rockchip,rk3036-usb", "rockchip,rk3066-usb",
+ 				"snps,dwc2";
+ 		reg = <0x10180000 0x40000>;
+ 		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+@@ -176,7 +176,7 @@
+ 	};
+ 
+ 	usb_host: usb@101c0000 {
+-		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
++		compatible = "rockchip,rk3036-usb", "rockchip,rk3066-usb",
+ 				"snps,dwc2";
+ 		reg = <0x101c0000 0x40000>;
+ 		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+@@ -211,7 +211,7 @@
+ 	};
+ 
+ 	emmc: dwmmc@1021c000 {
+-		compatible = "rockchip,rk3288-dw-mshc";
++		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x1021c000 0x4000>;
+ 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 		broken-cd;
+@@ -327,7 +327,7 @@
+ 	};
+ 
+ 	i2c1: i2c@20056000 {
+-		compatible = "rockchip,rk3288-i2c";
++		compatible = "rockchip,rk3036-i2c", "rockchip,rk3288-i2c";
+ 		reg = <0x20056000 0x1000>;
+ 		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+@@ -340,7 +340,7 @@
+ 	};
+ 
+ 	i2c2: i2c@2005a000 {
+-		compatible = "rockchip,rk3288-i2c";
++		compatible = "rockchip,rk3036-i2c", "rockchip,rk3288-i2c";
+ 		reg = <0x2005a000 0x1000>;
+ 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+@@ -395,7 +395,7 @@
+ 	};
+ 
+ 	i2c0: i2c@20072000 {
+-		compatible = "rockchip,rk3288-i2c";
++		compatible = "rockchip,rk3036-i2c", "rockchip,rk3288-i2c";
+ 		reg = <0x20072000 0x1000>;
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+-- 
+1.9.1
