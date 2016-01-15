@@ -1,50 +1,55 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 09/16] soc: tegra: pmc: Ensure partitions can be
- toggled on/off by PMC
-Date: Fri, 15 Jan 2016 09:32:06 +0000
-Message-ID: <5698BC96.6040709@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
- <1449241037-22193-10-git-send-email-jonathanh@nvidia.com>
- <20160114141453.GD23082@ulmo>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v3 0/2] Introduce Innosilicon HDMI driver on Rockchip platforms
+Date: Fri, 15 Jan 2016 17:36:38 +0800
+Message-ID: <1452850598-30859-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160114141453.GD23082@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 14/01/16 14:14, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Fri, Dec 04, 2015 at 02:57:10PM +0000, Jon Hunter wrote:
->> For Tegra124 and Tegra210, the GPU partition cannot be toggled on and off
->> via the APBDEV_PMC_PWRGATE_TOGGLE_0 register. For these devices, the
->> partition is simply powered up and down via an external regulator.
->> Describe in the PMC SoC data in which devices the GPU partition can be
->> controlled via the APBDEV_PMC_PWRGATE_TOGGLE_0 register and ensure that
->> no one can incorrectly try to toggle the GPU partition via the
->> APBDEV_PMC_PWRGATE_TOGGLE_0 register.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/soc/tegra/pmc.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
-> 
-> The TRM doesn't mention anything like this. Will this be updated in the
-> TRM as well?
-
-For T210, I have requested that the partitions are updated. Looks like
-the powergate sequencing information for T210 is still missing from the
-TRM. I can request that this is added. I will make a note for T124 as
-well as it is missing.
-
-Cheers
-Jon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6CiAt
+IFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFyZCBjb21wbGlh
+bnQgdHJhbnNtaXR0ZXIKIC0gU3VwcG9ydCBIRE1JMS40IGEvYiAzRCBmdW5jdGlvbiBkZWZpbmVk
+IGluIEhETUkgMS40IGEvYiBzcGVjCiAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBvcnRz
+IGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IKICAgZGVwdGggaW4gUkdC
+CiAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBEaWdpdGFsLCBEVFMgZGlnaXRh
+bCBhdWRpbyB0cmFuc21pc3Npb24KICAgKDMyLTE5MmtIeiBGcykgdXNpbmcgSUVDNjA5NTggYW5k
+IElFQyA2MTkzNwogLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1cHBvcnRl
+ZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyCiAgIENvbnRyb2xsZQoKVGhpcyBzZXJp
+ZXMgaXMgYmFzZWQgb24gTWFyaydzIFJLMzAzNiBWT1Agc2VyaWVzLCBJIGhhdmUgY3JlYXRlZCBh
+biB0ZXN0CmJyYW5jaCB0aGF0IGNvbGxlY3RlZCBoaXMgY2hhbmdlczoKW2h0dHBzOi8vZ2l0aHVi
+LmNvbS9yb2NrY2hpcC1saW51eC9rZXJuZWwvdHJlZS9reWxpbi1kZXZlbG9wNC40LXRlc3RdCgpC
+ZXN0IHJlZ2FyZHMsCi0gWWFraXIKCgpDaGFuZ2VzIGluIHYzOgotIFVzZSBlbmNvZGVyIGVuYWJs
+ZS9kaXNhYmxlIGZ1bmN0aW9uLCBhbmQgcmVtb3ZlIHRoZSBlbmNvZGVyIERQTVMgZnVuY3Rpb24K
+LSBLZWVwIEhETUkgUExMIHBvd2VyIG9uIGluIHN0YW5kYnkgbW9kZQoKQ2hhbmdlcyBpbiB2MjoK
+LSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNvbm5lY3RvciBpbml0IChN
+YXJrKQotIFJlbW92ZSAiaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNvZGVyOyIgKE1hcmsp
+Ci0gQ29ycmVjdCB0aGUgbWlzc3BlbGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgpZYWtpciBZ
+YW5nICgyKToKICBGT1JNTElTVDogZHJtOiByb2NrY2hpcC9oZG1pOiBhZGQgSW5ub3NpbGljb24g
+SERNSSBzdXBwb3J0CiAgZHQtYmluZGluZ3M6IGFkZCBkb2N1bWVudCBmb3IgSW5ub3NpbGljb24g
+SERNSSBvbiBSb2NrY2hpcCBwbGF0Zm9ybQoKIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRt
+aS1yb2NrY2hpcC50eHQgICAgICAgIHwgIDUwICsrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOCArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAgICB8IDk5OSArKysrKysrKysrKysrKysrKysr
+KysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaCAgICAgICAgICAgICAgIHwg
+MzY0ICsrKysrKysrCiA1IGZpbGVzIGNoYW5nZWQsIDE0MjIgaW5zZXJ0aW9ucygrKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
+Y2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmgKCi0tIAoxLjkuMQoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
