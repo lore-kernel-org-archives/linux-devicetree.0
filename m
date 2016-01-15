@@ -1,88 +1,55 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Fri, 15 Jan 2016 14:41:55 -0800
-Message-ID: <CALAqxLUxh3=LhoHxqiRm_5L4G6m1Vctp=aUg+9_uAtLkFwW9bw@mail.gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-	<1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 15 Jan 2016 17:47:52 -0500
+Message-ID: <56997718.70707@codeaurora.org>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
+ <20160115145629.GI3262@leverpostej> <56990C40.4050407@codeaurora.org>
+ <20160115152257.GK3262@leverpostej> <56992987.5080603@codeaurora.org>
+ <56992D16.6070800@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, linux@roeck-us.net, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, geert+renesas@glider.be, sre@kernel.org, Olof Johansson <olof@lixom.net>, dbaryshkov@gmail.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, jun.nie@linaro.org, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, f.fainelli@gmail.com, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, cernekee@gmail.com, lkml <linux-kernel@vger.kern>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <56992D16.6070800@arm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 3:29 AM, Andy Yan <andy.yan@rock-chips.com> wrote:
-> add device tree binding document for reboot-mode driver
->
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->
-> ---
->
-> Changes in v2: None
-> Changes in v1: None
->
->  .../bindings/power/reset/reboot-mode.txt           | 41 +++++++++++++++++
->  .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++++++++++++++
->  2 files changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> new file mode 100644
-> index 0000000..81d9f66
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> @@ -0,0 +1,41 @@
-> +Generic reboot mode core map driver
-> +
-> +This driver get reboot mode arguments and call the write
-> +interface to stores the magic value in special register
-> +or ram . Then the bootloader can read it and take different
-> +action according to the argument stored.
-> +
-> +Required properties:
-> +- compatible: only support "syscon-reboot-mode" now.
-> +
-> +Each mode is represented as a sub-node of reboot_mode:
-> +
-> +Subnode required properties:
-> +- linux,mode: reboot mode command,such as "loader", "recovery", "fastboot".
-> +- loader,magic: magic number for the mode, this is vendor specific.
-> +
-> +Example:
-> +       reboot_mode {
-> +               compatible = "syscon-reboot-mode";
-> +               offset = <0x40>;
-> +
-> +               loader {
-> +                       linux,mode = "loader";
-> +                       loader,magic = <BOOT_LOADER>;
-> +               };
-> +
-> +               maskrom {
-> +                       linux,mode = "maskrom";
-> +                       loader,magic = <BOOT_MASKROM>;
-> +               };
-> +
-> +               recovery {
-> +                       linux,mode = "recovery";
-> +                       loader,magic = <BOOT_RECOVERY>;
-> +               };
-> +
-> +               fastboot {
-> +                       linux,mode = "fastboot";
-> +                       loader,magic = <BOOT_FASTBOOT>;
-> +               };
-> +        };
+On 1/15/2016 12:32 PM, Marc Zyngier wrote:
+>>> Do you have a link to that? Seeing it would help to ease my concerns.
+>> > 
+>> > The QEMU driver has not been posted yet. As far as I know, it just discovers the memory
+>> > resources on the platform object and creates mappings for the guest machine only. 
+>> > 
+>> > Shanker Donthineni and Vikram Sethi will post the QEMU patch later.
+> Then may I suggest you both synchronize your submissions? I'd really
+> like to hear from the QEMU maintainers that they are satisfied with that
+> side of the story as well.
+
+The HIDMA QEMU driver is also based on VFIO platform driver in QEMU. It is not a new concept
+or new framework. All tried and tested solutions. 
+
+The driver below is already using this feature. HIDMA is no exception. 
+I have verified functionality of HIDMA linux driver with HIDMA QEMU driver already.
+
+https://lxr.missinglinkelectronics.com/qemu/hw/arm/sysbus-fdt.c#L67
+https://lxr.missinglinkelectronics.com/qemu/hw/vfio/calxeda-xgmac.c#L18
+https://lxr.missinglinkelectronics.com/qemu/include/hw/vfio/vfio-calxeda-xgmac.h 
 
 
-So one minor thought here. While the commands are somewhat vendor
-specific, would it be a good idea for the example commands to match
-the common commands on Android devices?  For example, usually
-"bootloader" is what gets you into fastboot mode on nexus devices.
 
-thanks
--john
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
