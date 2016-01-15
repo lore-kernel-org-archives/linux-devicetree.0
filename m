@@ -1,385 +1,445 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH V4 5/7] clk: bcm2835: add missing 22 HW-clocks.
-Date: Fri, 15 Jan 2016 14:21:04 +0000
-Message-ID: <1452867667-2447-6-git-send-email-kernel@martin.sperl.org>
-References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic support for orion-r68
+Date: Fri, 15 Jan 2016 14:21:15 +0000
+Message-ID: <20160115142114.GH3262@leverpostej>
+References: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com>
+ <1452863192-29231-2-git-send-email-matthias.bgg@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452863192-29231-2-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org, romain.perier@gmail.com, amstan@chromium.org, naobsd@gmail.com, sjoerd.simons@collabora.co.uk, andy.yan@rock-chips.com, briannorris@chromium.org, treding@nvidia.com, jic23@kernel.org, arnd@arndb.de, dmitry.torokhov@gmail.com, p.zabel@pengutronix.de, mbrugger@suse.com, olof@lixom.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, Jan 15, 2016 at 02:06:32PM +0100, Matthias Brugger wrote:
+> This patch adds basic support for the Tronsmart orion r86 set-top-box.
 
-There were 22 HW clocks missing from the clock driver.
+As far as I can tell, "Orion r68" is a family of products, for which the
+"Meta" [1] and "Pro" [2] differ at least in the amount of RAM and flash,
+and also appear to differ in wireless chipset (ap6335 for Meta, ap6212
+for Pro).
 
-These have been included and int_bits and frac_bits
-have been set correctly based on information extracted
-from the broadcom videocore headers
-(http://www.broadcom.com/docs/support/videocore/Brcm_Android_ICS_Graphics_Stack.tar.gz)
+Judging by the memory node I'm guessing this is for the "Pro".
 
-For an extracted view of the registers please see:
-https://github.com/msperl/rpi-registers/blob/master/md/Region_CM.md
+This should be reflected in the model and compatible strings (in
+addition to the commit message).
 
-bcm2835_clock_per_parents has been assigned as the parent
-clock for all new clocks, but this may not be correct
-in all cases - documentation on this is not publicly
-available, so some modifications may be needed in the
-future.
+Thanks,
+Mark.
 
-There are a 3 more clocks that possibly could get implemented
-as gates instead of clocks:
+[1] http://www.tronsmart.com/products/tronsmart-orion-r68-meta
+[2] http://www.tronsmart.com/products/tronsmart-orion-r68-pro
 
-
-There are comments to indicate those.
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- drivers/clk/bcm/clk-bcm2835.c       |  260 ++++++++++++++++++++++++++++++++++-
- include/dt-bindings/clock/bcm2835.h |   22 +++
- 2 files changed, 276 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 8bc0a76..1640288 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -92,8 +92,18 @@
- #define CM_PCMDIV		0x09c
- #define CM_PWMCTL		0x0a0
- #define CM_PWMDIV		0x0a4
-+#define CM_SLIMCTL		0x0a8
-+#define CM_SLIMDIV		0x0ac
- #define CM_SMICTL		0x0b0
- #define CM_SMIDIV		0x0b4
-+#define CM_TCNTCTL		0x0c0
-+#define CM_TCNTDIV		0x0c4
-+#define CM_TECCTL		0x0c8
-+#define CM_TECDIV		0x0cc
-+#define CM_TD0CTL		0x0d0
-+#define CM_TD0DIV		0x0d4
-+#define CM_TD1CTL		0x0d8
-+#define CM_TD1DIV		0x0dc
- #define CM_TSENSCTL		0x0e0
- #define CM_TSENSDIV		0x0e4
- #define CM_TIMERCTL		0x0e8
-@@ -107,6 +117,9 @@
- #define CM_SDCCTL		0x1a8
- #define CM_SDCDIV		0x1ac
- #define CM_ARMCTL		0x1b0
-+#define CM_ARMDIV		0x1b4
-+#define CM_AVEOCTL		0x1b8
-+#define CM_AVEODIV		0x1bc
- #define CM_EMMCCTL		0x1c0
- #define CM_EMMCDIV		0x1c4
-
-@@ -829,6 +842,219 @@ static const struct bcm2835_clock_data bcm2835_clock_pcm_data = {
- 	.frac_bits = 12,
- };
-
-+static const struct bcm2835_clock_data bcm2835_clock_aveo_data = {
-+	.name = "aveo",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_AVEOCTL,
-+	.div_reg = CM_AVEODIV,
-+	.int_bits = 4,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_cam0_data = {
-+	.name = "cam0",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_CAM0CTL,
-+	.div_reg = CM_CAM0DIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_cam1_data = {
-+	.name = "cam1",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_CAM1CTL,
-+	.div_reg = CM_CAM1DIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_ccp2_data = {
-+	/* this is possibly a gate */
-+	.name = "ccp2",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_CCP2CTL,
-+	.div_reg = CM_CCP2DIV,
-+	.int_bits = 1,
-+	.frac_bits = 0,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dft_data = {
-+	.name = "dft",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DFTCTL,
-+	.div_reg = CM_DFTDIV,
-+	.int_bits = 5,
-+	.frac_bits = 0,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dpi_data = {
-+	.name = "dpi",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DPICTL,
-+	.div_reg = CM_DPIDIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dsi0e_data = {
-+	.name = "dsi0e",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DSI0ECTL,
-+	.div_reg = CM_DSI0EDIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dsi0p_data = {
-+	/* this is possibly a gate */
-+	.name = "dsi0p",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DSI0PCTL,
-+	.div_reg = CM_DSI0PDIV,
-+	.int_bits = 1,
-+	.frac_bits = 0,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dsi1e_data = {
-+	.name = "dsi1e",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DSI1ECTL,
-+	.div_reg = CM_DSI1EDIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_dsi1p_data = {
-+	/* this is possibly a gate */
-+	.name = "dsi1p",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_DSI1PCTL,
-+	.div_reg = CM_DSI1PDIV,
-+	.int_bits = 1,
-+	.frac_bits = 0,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_gnric_data = {
-+	.name = "gnric",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_GNRICCTL,
-+	.div_reg = CM_GNRICDIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_gp0_data = {
-+	.name = "gp0",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_GP0CTL,
-+	.div_reg = CM_GP0DIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_gp1_data = {
-+	.name = "gp1",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_GP1CTL,
-+	.div_reg = CM_GP1DIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_gp2_data = {
-+	.name = "gp2",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_GP2CTL,
-+	.div_reg = CM_GP2DIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_peria_data = {
-+	.name = "peria",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_PERIACTL,
-+	.div_reg = CM_PERIADIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_pulse_data = {
-+	.name = "pulse",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_PULSECTL,
-+	.div_reg = CM_PULSEDIV,
-+	.int_bits = 12,
-+	.frac_bits = 0,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_slim_data = {
-+	.name = "slim",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_SLIMCTL,
-+	.div_reg = CM_SLIMDIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_smi_data = {
-+	.name = "smi",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_SMICTL,
-+	.div_reg = CM_SMIDIV,
-+	.int_bits = 4,
-+	.frac_bits = 8,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_td0_data = {
-+	.name = "td0",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_TD0CTL,
-+	.div_reg = CM_TD0DIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_td1_data = {
-+	.name = "td1",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_TD1CTL,
-+	.div_reg = CM_TD1DIV,
-+	.int_bits = 12,
-+	.frac_bits = 12,
-+};
-+
-+static const struct bcm2835_clock_data bcm2835_clock_tec_data = {
-+	.name = "tec",
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents = bcm2835_clock_per_parents,
-+	.ctl_reg = CM_TECCTL,
-+	.div_reg = CM_TECDIV,
-+	.int_bits = 6,
-+	.frac_bits = 0,
-+};
-+
- struct bcm2835_gate_data {
- 	const char *name;
- 	const char *parent;
-@@ -836,18 +1062,18 @@ struct bcm2835_gate_data {
- 	u32 ctl_reg;
- };
-
--/*
-- * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
-- * you have the debug bit set in the power manager, which we
-- * don't bother exposing) are individual gates off of the
-- * non-stop vpu clock.
-- */
- static const struct bcm2835_gate_data bcm2835_clock_peri_image_data = {
- 	.name = "peri_image",
- 	.parent = "vpu",
- 	.ctl_reg = CM_PERIICTL,
- };
-
-+static const struct bcm2835_gate_data bcm2835_clock_sys_data = {
-+	.name = "sys",
-+	.parent = "vpu",
-+	.ctl_reg = CM_SYSCTL,
-+};
-+
- struct bcm2835_pll {
- 	struct clk_hw hw;
- 	struct bcm2835_cprman *cprman;
-@@ -1591,9 +1817,31 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 	[BCM2835_CLOCK_EMMC]	= REGISTER_CLK(&bcm2835_clock_emmc_data),
- 	[BCM2835_CLOCK_PWM]	= REGISTER_CLK(&bcm2835_clock_pwm_data),
- 	[BCM2835_CLOCK_PCM]	= REGISTER_CLK(&bcm2835_clock_pcm_data),
-+	[BCM2835_CLOCK_AVEO]	= REGISTER_CLK(&bcm2835_clock_aveo_data),
-+	[BCM2835_CLOCK_CAM0]	= REGISTER_CLK(&bcm2835_clock_cam0_data),
-+	[BCM2835_CLOCK_CAM1]	= REGISTER_CLK(&bcm2835_clock_cam1_data),
-+	[BCM2835_CLOCK_CCP2]	= REGISTER_CLK(&bcm2835_clock_ccp2_data),
-+	[BCM2835_CLOCK_DFT]	= REGISTER_CLK(&bcm2835_clock_dft_data),
-+	[BCM2835_CLOCK_DPI]	= REGISTER_CLK(&bcm2835_clock_dpi_data),
-+	[BCM2835_CLOCK_DSI0E]	= REGISTER_CLK(&bcm2835_clock_dsi0e_data),
-+	[BCM2835_CLOCK_DSI0P]	= REGISTER_CLK(&bcm2835_clock_dsi0p_data),
-+	[BCM2835_CLOCK_DSI1E]	= REGISTER_CLK(&bcm2835_clock_dsi1e_data),
-+	[BCM2835_CLOCK_DSI1P]	= REGISTER_CLK(&bcm2835_clock_dsi1p_data),
-+	[BCM2835_CLOCK_GNRIC]	= REGISTER_CLK(&bcm2835_clock_gnric_data),
-+	[BCM2835_CLOCK_GP0]	= REGISTER_CLK(&bcm2835_clock_gp0_data),
-+	[BCM2835_CLOCK_GP1]	= REGISTER_CLK(&bcm2835_clock_gp1_data),
-+	[BCM2835_CLOCK_GP2]	= REGISTER_CLK(&bcm2835_clock_gp2_data),
-+	[BCM2835_CLOCK_PERIA]	= REGISTER_CLK(&bcm2835_clock_peria_data),
-+	[BCM2835_CLOCK_PULSE]	= REGISTER_CLK(&bcm2835_clock_pulse_data),
-+	[BCM2835_CLOCK_SLIM]	= REGISTER_CLK(&bcm2835_clock_slim_data),
-+	[BCM2835_CLOCK_SMI]	= REGISTER_CLK(&bcm2835_clock_smi_data),
-+	[BCM2835_CLOCK_TD0]	= REGISTER_CLK(&bcm2835_clock_td0_data),
-+	[BCM2835_CLOCK_TD1]	= REGISTER_CLK(&bcm2835_clock_td1_data),
-+	[BCM2835_CLOCK_TEC]	= REGISTER_CLK(&bcm2835_clock_tec_data),
- 	/* the gates */
- 	[BCM2835_CLOCK_PERI_IMAGE] = REGISTER_GATE(
- 		&bcm2835_clock_peri_image_data),
-+	[BCM2835_CLOCK_SYS]	= REGISTER_GATE(&bcm2835_clock_sys_data),
- };
-
- static int bcm2835_clk_probe(struct platform_device *pdev)
-diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 9a7b4a5..d29f181 100644
---- a/include/dt-bindings/clock/bcm2835.h
-+++ b/include/dt-bindings/clock/bcm2835.h
-@@ -45,3 +45,25 @@
- #define BCM2835_CLOCK_PERI_IMAGE	29
- #define BCM2835_CLOCK_PWM		30
- #define BCM2835_CLOCK_PCM		31
-+#define BCM2835_CLOCK_AVEO		32
-+#define BCM2835_CLOCK_CAM0		33
-+#define BCM2835_CLOCK_CAM1		34
-+#define BCM2835_CLOCK_CCP2		35
-+#define BCM2835_CLOCK_DFT		36
-+#define BCM2835_CLOCK_DPI		37
-+#define BCM2835_CLOCK_DSI0E		38
-+#define BCM2835_CLOCK_DSI0P		39
-+#define BCM2835_CLOCK_DSI1E		40
-+#define BCM2835_CLOCK_DSI1P		41
-+#define BCM2835_CLOCK_GNRIC		42
-+#define BCM2835_CLOCK_GP0		43
-+#define BCM2835_CLOCK_GP1		44
-+#define BCM2835_CLOCK_GP2		45
-+#define BCM2835_CLOCK_PERIA		46
-+#define BCM2835_CLOCK_PULSE		47
-+#define BCM2835_CLOCK_SLIM		48
-+#define BCM2835_CLOCK_SMI		49
-+#define BCM2835_CLOCK_SYS		50
-+#define BCM2835_CLOCK_TD0		51
-+#define BCM2835_CLOCK_TD1		52
-+#define BCM2835_CLOCK_TEC		53
---
-1.7.10.4
-
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts  | 370 +++++++++++++++++++++
+>  3 files changed, 375 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 8e985dd..fa97d93 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -72,3 +72,7 @@ Rockchip platforms device tree bindings
+>  - Rockchip R88 board:
+>      Required root node properties:
+>        - compatible = "rockchip,r88", "rockchip,rk3368";
+> +
+> +- Tronsmart Orion R68
+> +    Required root node properties:
+> +      - compatible = "tronsmart,orion-r68", "rockchip,rk3368";
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 601e6a2..950fe63 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,4 +1,5 @@
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
+> new file mode 100644
+> index 0000000..3f71d506
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
+> @@ -0,0 +1,370 @@
+> +/*
+> + * Copyright (c) 2015 Matthias Brugger <mbrugger@suse.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3368.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip Orion R68";
+> +	compatible = "tronsmart,orion-r68", "rockchip,rk3368";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x40000000>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible = "mmc-pwrseq-emmc";
+> +		pinctrl-0 = <&emmc_reset>;
+> +		pinctrl-names = "default";
+> +		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	ext_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "ext_gmac";
+> +	};
+> +
+> +	keys: gpio-keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pwr_key>;
+> +
+> +		button@0 {
+> +			gpio-key,wakeup = <1>;
+> +			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
+> +			label = "GPIO Power";
+> +			linux,code = <116>;
+> +		};
+> +	};
+> +
+> +	leds: gpio-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		work {
+> +			gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
+> +			label = "orion:purple:led";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&led_ctl>;
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +	vcc_18: vcc18-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_18";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	/* supplies both host and otg */
+> +	vcc_host: vcc-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_vbus_drv>;
+> +		regulator-name = "vcc_host";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vccio_sd: vcc-io-sd-regulator {
+> +		regulator-name= "vccio_sd";
+> +		gpio = <&gpio0 9 GPIO_ACTIVE_LOW>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vcc_sd: vcc-sd-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sd";
+> +		gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vcc_io: vcc-io-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_io";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc_lan: vcc-lan-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_lan";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vcc_sys: vcc-sys-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vccio_wl: vccio-wl-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vccio_wl";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vdd_10: vdd-10-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_10";
+> +		regulator-min-microvolt = <1000000>;
+> +		regulator-max-microvolt = <1000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +};
+> +
+> +&emmc {
+> +	broken-cd;
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	disable-wp;
+> +	mmc-pwrseq = <&emmc_pwrseq>;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+> +	status = "okay";
+> +};
+> +
+> +&gmac {
+> +	assigned-clocks = <&cru SCLK_MAC>;
+> +	assigned-clock-parents = <&ext_gmac>;
+> +	phy-supply = <&vcc_lan>;
+> +	phy-mode = "rgmii";
+> +	clock_in_out = "input";
+> +	snps,reset-gpio = <&gpio3 12 0>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 1000000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmii_pins>;
+> +	tx_delay = <0x30>;
+> +	rx_delay = <0x10>;
+> +	status = "ok";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	vdd_cpu: syr827@40 {
+> +		compatible = "silergy,syr827";
+> +		reg = <0x40>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-name = "vdd_cpu";
+> +		regulator-enable-ramp-delay = <300>;
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <8000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	hym8563: hym8563@51 {
+> +		compatible = "haoyu,hym8563";
+> +		reg = <0x51>;
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "xin32k";
+> +		/* rtc_int is not connected */
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+> +		bias-disable;
+> +		drive-strength = <8>;
+> +	};
+> +
+> +	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
+> +		bias-pull-up;
+> +		drive-strength = <8>;
+> +	};
+> +
+> +	emmc {
+> +		emmc_bus8: emmc-bus8 {
+> +			rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 19 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 20 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 21 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 22 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 23 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 24 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 25 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		emmc-clk {
+> +			rockchip,pins = <2 4 RK_FUNC_2 &pcfg_pull_none_drv_8ma>;
+> +		};
+> +
+> +		emmc-cmd {
+> +			rockchip,pins = <1 26 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		emmc_reset: emmc-reset {
+> +			rockchip,pins = <2 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	keys {
+> +		pwr_key: pwr-key {
+> +			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		stby_pwren: stby-pwren {
+> +			rockchip,pins = <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		led_ctl: led-ctl {
+> +			rockchip,pins = <3 29 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	sdmmc {
+> +		sdmmc_clk: sdmmc-clk {
+> +			rockchip,pins = <2 9 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_cmd: sdmmc-cmd {
+> +			rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_cd: sdmmc-cd {
+> +			rockchip,pins = <2 11 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_bus1: sdmmc-bus1 {
+> +			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_bus4: sdmmc-bus4 {
+> +			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 6 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 7 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 8 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +	};
+> +
+> +	usb {
+> +		host_vbus_drv: host-vbus-drv {
+> +			rockchip,pins = <0 4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&saradc {
+> +	vref-supply = <&vcc_18>;
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +	clock-frequency = <50000000>;
+> +	clock-freq-min-max = <400000 50000000>;
+> +	cap-sd-highspeed;
+> +	supports-sd;
+> +	broken-cd;
+> +	card-detect-delay = <200>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+> +	bus-width = <4>;
+> +	num-slots = <1>;
+> +	ignore-pm-notify;
+> +	keep-power-in-suspend;
+> +
+> +	vmmc-supply = <&vcc_sd>;
+> +	vqmmc-supply = <&vccio_sd>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&wdt {
+> +	status = "okay";
+> +};
+> -- 
+> 2.6.2
+> 
