@@ -1,168 +1,118 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 15 Jan 2016 11:01:11 -0500
-Message-ID: <569917C7.9000804@codeaurora.org>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
- <20160115145629.GI3262@leverpostej> <56990CD4.6020405@arm.com>
- <20160115153656.GM3262@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20160115153656.GM3262@leverpostej>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 15 Jan 2016 17:08:00 +0100
+Message-ID: <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown> <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com> <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej> <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com> <569913A1.80606@cogentembedded.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <569913A1.80606@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/15/2016 10:36 AM, Mark Rutland wrote:
-> On Fri, Jan 15, 2016 at 03:14:28PM +0000, Marc Zyngier wrote:
->> On 15/01/16 14:56, Mark Rutland wrote:
->>> Hi,
->>>
->>> [adding KVM people, given this is meant for virtualization]
->>>
->>> On Mon, Jan 11, 2016 at 09:45:43AM -0500, Sinan Kaya wrote:
->>>> The Qualcomm Technologies HIDMA device has been designed to support
->>>> virtualization technology. The driver has been divided into two to follow
->>>> the hardware design.
->>>>
->>>> 1. HIDMA Management driver
->>>> 2. HIDMA Channel driver
->>>>
->>>> Each HIDMA HW consists of multiple channels. These channels share some set
->>>> of common parameters. These parameters are initialized by the management
->>>> driver during power up. Same management driver is used for monitoring the
->>>> execution of the channels. Management driver can change the performance
->>>> behavior dynamically such as bandwidth allocation and prioritization.
->>>>
->>>> The management driver is executed in hypervisor context and is the main
->>>> management entity for all channels provided by the device.
->>>
->>> You mention repeatedly that this is designed for virtualization, but
->>> looking at the series as it stands today I can't see how this operates
->>> from the host side.
->>
->> Nor the guest's, TBH. How do host and guest communicate, what is the
->> infrastructure, how is it meant to be used? A lot of questions, and no
->> answer whatsoever in this series.
+Hi Andrey,
+ah that is fine to learn about another project that needs some solution (however it will look like).
+
+Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>:
+
+> Hi Nikolaus,
 > 
-> I think the guest's PoV is fairly simple and understood. The DMA channel
-> is pased in as with any passthrough of any other platform device.
+> H. Nikolaus Schaller wrote:
+>> And IMHO nobody has described that he/she needs a solution to model the*data*  relationship
+>> for devices connected behind a tty port.
 > 
-> No communication with the host is necessary -- an isolated channel is
-> usable.
+> I am not sure if my case fits *data* relationship or not in this case. Some time ago I asked about state of your patches.
+> In my case I have supervising microcontroller unit (MCU) that is connected to one of UARTs on SoC.
 > 
-
-Correct, I'm behind on emails. I'm following you. 
-
-> The larger concern is isolation, given the lack of IOMMU, or anything
-> obvious w.r.t. pinning of pages.
+> This MCU implements several functions that will be implemented as MFD driver:
+> - watchdog and system reset
+> - NVMEM EEPROM
+> - HWMON sensors
+> - Input/power button
+> - and similar low level functions
 > 
-I assume the presence of an IOMMU if used in the guest machine. I wonder
-if I can place a check and make the driver fail if IOMMU driver is not present.
-
-Any ideas?
-
->>> This doesn't seem to tie into KVM or VFIO, and as far as I can tell
->>> there's no mechanism for associating channels with a particular virtual
->>> address space (i.e. no configuration of an external or internal IOMMU),
->>> nor pinning of guest pages to allow for DMA to occur safely.
->>>
->>> Given that, I'm at a loss as to how this would be used in a hypervisor
->>> context. What am I missing?
->>>
->>> Are there additional patches, or do you have some userspace that works
->>> with this in some limited configuration?
-
-I forgot to mention that these are the only kernel patches. A userspace application
-is being built as we speak by another team.
-
-The userspace application will use sysfs to communicate to the management driver. 
-The management driver knows how to change runtime characteristics like priority and
-weight.
-
-
-
->>
->> Well, this looks so far like a code dumping exercise. I'd very much
->> appreciate a HIDMA101 crash course:
->>
->> - How do host and guest communicate?
->> - How is the integration performed in the hypervisor?
->> - Does the HYP side requires any context switch (and how is that done)?
+> So in my case DTS binding looks like:
 > 
-> I don't believe this requires any context-switch -- it's the same as
-> assigning any other platform device other than additional proeprties
-> being controlled in the managament interface.
+> &uart3 {
+> 	mcu {
+> 		line-speed = <baud rate>;
+> 		watchdog {
+> 			timeout = <ms>;
+> 			...other params...
+> 		};
+> 		eeprom {
+> 			#address-cells
+> 			#size-cells
+> 			cell1 : cell@1 {
+> 				reg = <1 2>;
+> 			};
+> 			cell2 : cell@2 {
+> 				reg = <2 1>;
+> 			};
+> 		};
+> 		hwmon {
+> 			sensors-list = "voltage", "current", etc...;
+> 		}
+> 	}
+> }
 
-Agreed.
+With my proposal it would just become
+
+/ {
+	themcu: mcu {
+		uart = <&uart3>;
+		line-speed = <baud rate>;
+		watchdog {
+			timeout = <ms>;
+			...other params...
+		};
+		eeprom {
+			#address-cells
+			#size-cells
+			cell1 : cell@1 {
+				reg = <1 2>;
+			};
+			cell2 : cell@2 {
+				reg = <2 1>;
+			};
+		};
+		hwmon {
+			sensors-list = "voltage", "current", etc...;
+		}
+	}
+};
+
+Which is almost the same. Except that it allows to move your mcu node whereever you like and easily allows to change the interface to connect to a different device by
+
+&themcu {
+	uart = <&uart1>;
+};
+
+With the subnode style you would need some tricks to get the driver instance for uart3 disabled, although it is possible (everything is possible - just easier or more difficult).
 
 > 
->> - What makes it safe?
-> 
-> I'm concerned with how this is safe, and with the userspace interface.
-> e.g. if the user wants to up the QoS for a VM, how to they find the
-> right channel in sysfs  to alter?
+> This MCU receives commands and notifies MFD driver about events via UART protocol.
+> It looks like not really a slave though, more like a partnership from data flow point of view.
 
-The HW supports changing the QoS values on the flight. In order to locate the
-object, I'm exporting a 
+Yes!. That is why I started to question the term "slave".
 
-I tried to address your concern on v10 last series. Here is brief summary.
-
-Each channel device has a sysfs entry named chid.
-What:		/sys/devices/platform/hidma-*/chid
-+		/sys/devices/platform/QCOM8061:*/chid
-
-
-Each management object has one priority and weight file per channel.
-+What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/priority
-+		/sys/devices/platform/QCOM8060:*/chanops/chan*/priority
-
-Suppose you want to change the priority of a channel you assigned to guess,
-the userspace application goes and reads the chid value of the channel.
-
-Then goes to chanops/chan<chid>/ directory and can change priority and weight 
-parameters here.
-
-Here is how the directory looks like. QCOM8060:00 is a management object.
-QCOM8061:0x are the channel objects.
-
-/sys/devices/platform/QCOM8060:00# ls
-QCOM8061:00
-QCOM8061:01
-QCOM8061:02
-QCOM8061:03
-QCOM8061:04
-QCOM8061:05
-chanops
-<other common attributes>
-
-
-
+And yes, this is the second use case I am aware of: a device that just *uses" the UART to do its works and there is no /dev/tty involved.
 
 > 
->> Without any of this information (and pointer to the code to back it up),
->> I'm very reluctant to take any of this.
-> 
-> Likewise.
-> 
-> Thanks,
-> Mark.
-> 
+> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
 
+Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c. 
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
+
+In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
+
+As you see, I have a driver-specific standpoint (and not coming from user space).
+
+Thanks for sharing this example.
+
+BR,
+Nikolaus
