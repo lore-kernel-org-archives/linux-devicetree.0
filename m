@@ -1,116 +1,144 @@
-From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
-Date: Fri, 15 Jan 2016 09:54:07 +0100
-Message-ID: <CAGkQfmO94gQ61prZvF52=B_UtOTkbYxd5nnTmDhJam4q-n3T7g@mail.gmail.com>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
- <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
- <20160114011252.GA29778@rob-hp-laptop> <B256D81BAE5131468A838E5D7A243641D63EBC55@penmbx01>
- <CAL_JsqL9kbNYrGYeqT7QCsbMneJbPgoXfaHhCvL8S=t97YaCbg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
+Date: Fri, 15 Jan 2016 09:57:34 +0100
+Message-ID: <20160115085734.GG4581@lukather>
+References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160112143100.GA14628@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL9kbNYrGYeqT7QCsbMneJbPgoXfaHhCvL8S=t97YaCbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/8E7gjuj425jZz9t"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160112143100.GA14628@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Wenyou,
 
-2016-01-14 14:14 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Wed, Jan 13, 2016 at 7:17 PM, Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>=
- wrote:
->>
->>
->>> -----Original Message-----
->>> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
->>> Sent: 2016=E5=B9=B41=E6=9C=8814=E6=97=A5 9:13
->>> To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yang=
-, Wenyou
->>> <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>; Ferre,
->>> Nicolas <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>> Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5=
-D2
->>>
->>> On Wed, Jan 13, 2016 at 05:34:15PM +0100, Romain Izard wrote:
->>> > Starting with the SAMA5D2, there is a new revision of the Atmel P=
-MECC
->>> > controller that can correct 32 bits in each sector. This controll=
-er is
->>> > not 100% compatible with the previous revision that corrected a
->>> > maximum of 24 bits by sector, as some register addresses overlap.
->>> >
->>> > Using information from the device tree, we can configure the driv=
-er to
->>> > work with both versions.
->>> >
->>> > Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> > ---
->>> >  .../devicetree/bindings/mtd/atmel-nand.txt         |  7 +++++--
->>> >  drivers/mtd/nand/atmel_nand.c                      | 23 ++++++++=
-+++++++++++++-
->>> >  drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
->>> >  3 files changed, 33 insertions(+), 5 deletions(-)
->>> >
->>> > diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->>> > b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->>> > index 89b0db9801b0..90887b430f03 100644
->>> > --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->>> > +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->>> > @@ -1,7 +1,10 @@
->>> >  Atmel NAND flash
->>> >
->>> >  Required properties:
->>> > -- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5=
-d4-nand".
->>> > +- compatible: The possible values are:
->>> > +   "atmel,at91rm9200-nand"
->>> > +   "atmel,sama5d2-nand"
->>> > +   "atmel,sama5d4-nand"
->>> >  - reg : should specify localbus address and size used for the ch=
-ip,
->>> >     and hardware ECC controller if available.
->>> >     If the hardware ECC is PMECC, it should contain address and s=
-ize for
->>> > @@ -22,7 +25,7 @@ Optional properties:
->>> >    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw=
-_oob_first",
->>> >    "soft_bch".
->>> >  - atmel,has-pmecc : boolean to enable Programmable Multibit ECC =
-hardware.
->>> > -  Only supported by at91sam9x5 or later sam9 product.
->>> > +  Supported by AT91SAM9x5 or later SAM9 chips, and SAMA5 chips.
->>>
->>> What compatible string would AT91SAM9x5 be?
->>
->> "atmel,at91rm9200-nand".
->
-> Answer the question in the binding doc by saying which compatible
-> strings a property is valid for.
+--/8E7gjuj425jZz9t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm trying to rewrite the documentation for this point, and in the end =
-it
-seems to me that the line should be removed instead.
+Hi Rob,
 
-Adding the 'atmel,has-pmecc' property to a SoC device tree is the norma=
-l way
-to describe that it supports this type of controller. If we need to wri=
-te it
-in the documentation as well, it's a duplicate information that can bec=
-ome
-stale quite fast, as it was before.
+On Tue, Jan 12, 2016 at 08:31:00AM -0600, Rob Herring wrote:
+> On Tue, Jan 12, 2016 at 02:37:21PM +0100, Maxime Ripard wrote:
+> > Some boards, in order to power devices that have a quite high power
+> > consumption, wire multiple regulators in parallel.
+> >=20
+> > In such a case, the regulators need to be kept in sync, all of them bei=
+ng
+> > enabled or disabled in parallel.
+> >=20
+> > This also requires to expose only the voltages that are common to all t=
+he
+> > regulators.
+> >=20
+> > Eventually support for changing the voltage in parallel should be added
+> > too, possibly with delays between each other to avoid having a too brut=
+al
+> > peak consumption.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  .../bindings/regulator/coupled-voltage.txt         |  18 ++
+> >  drivers/regulator/Kconfig                          |   8 +
+> >  drivers/regulator/Makefile                         |   1 +
+> >  drivers/regulator/coupled-voltage-regulator.c      | 299 +++++++++++++=
+++++++++
+> >  4 files changed, 326 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/coupled=
+-voltage.txt
+> >  create mode 100644 drivers/regulator/coupled-voltage-regulator.c
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/regulator/coupled-voltag=
+e.txt b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
+> > new file mode 100644
+> > index 000000000000..f5401aab52f2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
+> > @@ -0,0 +1,18 @@
+> > +Coupled voltage regulators
+> > +
+> > +Required properties:
+> > +- compatible		: Must be "coupled-voltage-regulator".
+> > +
+> > +Optional properties:
+> > +- vinX-supply		: Phandle to the regulators it aggregates
+> > +
+> > +Any property defined as part of the core regulator binding defined in
+> > +regulator.txt can also be used.
+> > +
+> > +Example:
+> > +	vcc_wifi: wifi_reg {
+> > +		compatible =3D "coupled-voltage-regulator";
+> > +		regulator-name =3D "vcc-wifi";
+> > +		vin0-supply =3D <&reg_ldo3>;
+> > +		vin1-supply =3D <&reg_ldo4>;
+> > +	};
+>=20
+> Why not just make ?-supply a list of phandles? That would be simpler=20
+> than a virtual regulator.
 
-In the end, I believe the best path is to describe better what PMECC is=
-,
-instead of describing as "the controller found in this kind of chip".
+I'm not sure I get what you're saying. Do you want to remove that
+driver entirely, or just allow the -supply properties in the device
+tree to take a list?
 
-Best regards,
+In the former case, the rationale behind this driver is that the
+regulators powering a device also have to be kept in sync, both by
+enabling and disabling all of them at once, but also by all having
+them at the same voltages.
+
+We could push that code in the consumer drivers, but that has some
+significant drawbacks:
+  - That would duplicate that code in all the drivers, leading to the
+    usual drawbacks of code duplication, especially when it's not
+    really trivial to handle (or at least, when there's a few
+    gotchas).
+  - When you come to consider it from an hardware point of view, the
+    device usually have a single pin that powers it. It's the board
+    designer that chose to route that pin to multiple regulators, so
+    it's really the board that is wired that way, and putting that
+    code in the consumer drivers would be an abstraction leak imho.
+  - We might not even have a driver for these regulators, or at least
+    one that play by the rules. In our case, that's an out-of-tree
+    WiFi driver.
+
+In the latter case, I remember Mark saying several times that he was
+not in favour of such a change, even recently:
+https://lkml.org/lkml/2015/10/14/238
+
+Thanks!
+Maxime
+
 --=20
-Romain Izard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--/8E7gjuj425jZz9t
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWmLR+AAoJEBx+YmzsjxAgIZ4P/jGepAik0Zz+jSj6dKWWF/u5
+5bVS80g3/PDER2GfXHpghOoAn6bUjUABrLZ40RKdBmW56LXy1wrOQyNt/swMNAFy
+IFxsI5VYb9idAE5jD0ZZAmJx8CyRg1zfBTJiykcTPztUJskFJ1090olHRlDOgDLr
+KTTWyD1y0VN0Aao6D/keZ2Tt7zvPneiDprFYekATrJyfgQLFYZtXWWk2LMjDrc6Z
+KLmJ9YfdnOqp2vvXuNvk5S/D2XOOhxbU2LnBEChKfHRWJVRv1bDSGKZBsWeGh4Ox
+xXSL99TCSvy8etKC2HUOq5snfzFL8FY2Jt/T5XmFxHdtVY4TsToQogFV3/DhqGtM
+PZ2JS1gGcYp5Xc/ieaLAso7OWYoKUHpkCdOFodibBEFdwP/d2H9kDFvc/UmpKdKC
+8I+fnnWLjNyHEuVNrCa/TqlWZLoSZMd26IdHabsQ53ES8VHt7PZkd6zAILNX5PrT
+qUCUZohnjfee+2ziFuImGfQA9OCqdHTqSynxHOLn0yknzZUoSE/1oxJR0xfRf/x8
+O6CTETdOmLp+1iWMb/ewP2nB8J9E2aGovgcTFbU7ywrQc0Ml+Q0UGb5u34mfoGOa
+i6UIkx4mOAUFN/Wvz0l7HNmfKrWzn+OWzw/+NseFfX585OJQzeWCPMVXTpnLWwIo
+QO5oduiEsdV0qQ56DlDR
+=HLqn
+-----END PGP SIGNATURE-----
+
+--/8E7gjuj425jZz9t--
