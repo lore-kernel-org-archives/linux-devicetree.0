@@ -1,112 +1,54 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
- disable_unused_functions
-Date: Fri, 15 Jan 2016 11:17:30 +0100
-Message-ID: <20160115101730.GH19130@phenom.ffwll.local>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
- <2014724.QmjXVju9UW@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <2014724.QmjXVju9UW@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexander Kaplan <alex@nextthing.co>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/8] mtd: atmel_nand: Simplify error messages
+Date: Fri, 15 Jan 2016 11:34:56 +0100
+Message-ID: <1452854102-6125-3-git-send-email-romain.izard.pro@gmail.com>
+References: <1452854102-6125-1-git-send-email-romain.izard.pro@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452854102-6125-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMTUsIDIwMTYgYXQgMDE6MTM6MDVBTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBNYXhpbWUsCj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4g
-T24gVGh1cnNkYXkgMTQgSmFudWFyeSAyMDE2IDE2OjI0OjU2IE1heGltZSBSaXBhcmQgd3JvdGU6
-Cj4gPiBUaGUgZHJtX2ZiZGV2X2NtYV9pbml0IGZ1bmN0aW9uIGFsd2F5cyBjYWxscyB0aGUKPiA+
-IGRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zLiBTaW5jZSBpdCdzIHBhcnQgb2Yg
-dGhlIHVzdWFsIHByb2JlCj4gPiBwcm9jZXNzLCBhbGwgdGhlIGRyaXZlcnMgdXNpbmcgdGhhdCBo
-ZWxwZXIgd2lsbCBlbmQgdXAgaGF2aW5nIHRoZWlyIGVuY29kZXIKPiA+IGFuZCBDUlRDIGRpc2Fi
-bGUgZnVuY3Rpb25zIGNhbGxlZCBhdCBwcm9iZSBpZiB0aGVpciBkZXZpY2UgaGFzIG5vdCBiZWVu
-Cj4gPiByZXBvcnRlZCBhcyBlbmFibGVkLgo+ID4gCj4gPiBUaGlzIGNvdWxkIGJlIGZpeGVkIGJ5
-IHJlYWRpbmcgb3V0IGZyb20gdGhlIHJlZ2lzdGVycyB0aGUgY3VycmVudCBzdGF0ZSBvZgo+ID4g
-dGhlIGRldmljZSBpZiBpdCBpcyBlbmFibGVkLCBidXQgZXZlbiB0aGF0IHdpbGwgbm90IGhhbmRs
-ZSB0aGUgY2FzZSB3aGVyZQo+ID4gdGhlIGRldmljZSBpcyBhY3R1YWxseSBkaXNhYmxlZC4KPiA+
-IAo+ID4gTW9yZW92ZXIsIHRoZSBkcml2ZXJzIHVzaW5nIHRoZSBhdG9taWMgbW9kZXNldHRpbmcg
-ZXhwZWN0IHRoYXQgdGhlaXIgZW5hYmxlCj4gPiBhbmQgZGlzYWJsZSBjYWxsYmFjayB0byBiZSBj
-YWxsZWQgd2hlbiB0aGUgZGV2aWNlIGlzIGFscmVhZHkgZW5hYmxlZCBvcgo+ID4gZGlzYWJsZWQg
-KHJlc3BlY3RpdmVseSkuCj4gPiAKPiA+IFdlIGNhbiBob3dldmVyIGZpeCB0aGlzIGlzc3VlIGJ5
-IG1vdmluZyB0aGUgY2FsbCB0bwo+ID4gZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlv
-bnMgb3V0IG9mIGRybV9mYmRldl9jbWFfaW5pdCBhbmQgbWFrZSB0aGUKPiA+IGRyaXZlcnMgbmVl
-ZGluZyBpdCAoYWxsIHRoZSBkcml2ZXJzIGNhbGxpbmcgZHJtX2ZiZGV2X2NtYV9pbml0IGFuZCBu
-b3QKPiA+IHVzaW5nIHRoZSBhdG9taWMgbW9kZXNldHRpbmcpIGV4cGxpY2l0bHkgY2FsbCBpdC4K
-PiAKPiBJJ2QgcmF0aGVyIGFkZCBpdCB0byBhbGwgZHJpdmVycyB0aGF0IGNhbGwgZHJtX2ZiZGV2
-X2NtYV9pbml0KCkuIEFsbCB0aGUgCj4gYXRvbWljIG9uZXMgbXVzdCBoYXZlIHNwZWNpYWwgY29k
-ZSB0byBjb3BlIHdpdGggaXQgdGhhdCBjb3VsZCBiZSByZW5kZXJlZCAKPiB1c2VsZXNzIGJ5IHRo
-ZSByZW1vdmFsIG9mIHRoZSBkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucygpIGNh
-bGwuIFRoYXQgCj4gY29kZSBzaG91bGQgYmUgcmVtb3ZlZCB0b28sIGFuZCBpdCB3b3VsZCBiZSBl
-YXNpZXIgdG8gY2hlY2sgZHJpdmVycyBvbmUgYnkgb25lIAo+IGFuZCBmaXhpbmcgdGhlbSBpbmRp
-dmlkdWFsbHkgKG91dHNpZGUgb2YgdGhpcyBwYXRjaCBzZXJpZXMsIHVubGVzcyB5b3UgaW5zaXN0
-IAo+IDstKSkgd2hlbiByZW1vdmluZyB0aGUgZXhwbGljaXQgZHJtX2hlbHBlcl9kaXNhYmxlX3Vu
-dXNlZF9mdW5jdGlvbnMoKSBjYWxsLiAKCkkgaGFkIHRoZSBzYW1lIHRob3VnaHQsIGJ1dCBmaWd1
-cmVkIHRoZXJlJ3MgcmVhbGx5IG5vIGdvb2QgcmVhc29uIGV2ZXIgdG8KZG8gdGhpcy4gSSBzdXNw
-ZWN0IG1vc3Qgb2YgdGhhdCBkaXNhYmxlX3VudXNlZF9mdW5jdGlvbiBzdHVmZiB3ZSBoYXZlIGFs
-bApvdmVyIGlzIHN1cHJlbWUgY2FyZ28tY3VsdCBhbnl3YXkgOy0pCgo+IE90aGVyIHRoYW4gdGhh
-dCB0aGUgcGF0Y2ggbG9va3MgZmluZSB0byBtZS4KClNvIHdlbnQgYWhlYWQgYW5kIGFwcGxpZWQg
-dG8gZHJtLW1pc2MuCi1EYW5pZWwKCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJk
-IDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIHwgMyAtLS0KPiA+ICBkcml2ZXJzL2dwdS9kcm0v
-aW14L2lteC1kcm0tY29yZS5jICB8IDEgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9zdGkvc3RpX2Ry
-di5jICAgICAgIHwgMSArCj4gPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMg
-fCAxICsKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
-LSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBl
-ci5jCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIGluZGV4IGMxOWE2
-MjU2MTE4My4uZGFhOThkODgxMTQyCj4gPiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9kcm1fZmJfY21hX2hlbHBlci5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2ZiX2Nt
-YV9oZWxwZXIuYwo+ID4gQEAgLTM0OCw5ICszNDgsNiBAQCBzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAq
-ZHJtX2ZiZGV2X2NtYV9pbml0KHN0cnVjdAo+ID4gZHJtX2RldmljZSAqZGV2LAo+ID4gCj4gPiAg
-CX0KPiA+IAo+ID4gLQkvKiBkaXNhYmxlIGFsbCB0aGUgcG9zc2libGUgb3V0cHV0cy9jcnRjcyBi
-ZWZvcmUgZW50ZXJpbmcgS01TIG1vZGUgKi8KPiA+IC0JZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNl
-ZF9mdW5jdGlvbnMoZGV2KTsKPiA+IC0KPiA+ICAJcmV0ID0gZHJtX2ZiX2hlbHBlcl9pbml0aWFs
-X2NvbmZpZyhoZWxwZXIsIHByZWZlcnJlZF9icHApOwo+ID4gIAlpZiAocmV0IDwgMCkgewo+ID4g
-IAkJZGV2X2VycihkZXYtPmRldiwgIkZhaWxlZCB0byBzZXQgaW5pdGlhbCBodyBjb25maWd1cmF0
-aW9uLlxuIik7Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNv
-cmUuYwo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jIGluZGV4IDdiOTkw
-YjRlOTZkMi4uZTFkYjU3NzkxZmM5Cj4gPiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9pbXgvaW14LWRybS1jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvaW14LWRy
-bS1jb3JlLmMKPiA+IEBAIC0zMTIsNiArMzEyLDcgQEAgc3RhdGljIGludCBpbXhfZHJtX2RyaXZl
-cl9sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sCj4gPiB1bnNpZ25lZCBsb25nIGZsYWdzKSBk
-ZXZfd2Fybihkcm0tPmRldiwgIkludmFsaWQgbGVnYWN5ZmJfZGVwdGguIAo+ID4gRGVmYXVsdGlu
-ZyB0byAxNmJwcFxuIik7IGxlZ2FjeWZiX2RlcHRoID0gMTY7Cj4gPiAgCX0KPiA+ICsJZHJtX2hl
-bHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoZHJtKTsKPiA+ICAJaW14ZHJtLT5mYmhlbHBl
-ciA9IGRybV9mYmRldl9jbWFfaW5pdChkcm0sIGxlZ2FjeWZiX2RlcHRoLAo+ID4gIAkJCQlkcm0t
-Pm1vZGVfY29uZmlnLm51bV9jcnRjLCBNQVhfQ1JUQyk7Cj4gPiAgCWlmIChJU19FUlIoaW14ZHJt
-LT5mYmhlbHBlcikpIHsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9k
-cnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdGkvc3RpX2Rydi5jCj4gPiBpbmRleCAxNDY5OTg3OTQ5
-ZDguLjUwNmI1NjI2ZjNlZCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdGkvc3Rp
-X2Rydi5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYwo+ID4gQEAgLTE2
-MCw2ICsxNjAsNyBAQCBzdGF0aWMgaW50IHN0aV9sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYs
-IHVuc2lnbmVkCj4gPiBsb25nIGZsYWdzKQo+ID4gCj4gPiAgCWRybV9tb2RlX2NvbmZpZ19yZXNl
-dChkZXYpOwo+ID4gCj4gPiArCWRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKGRl
-dik7Cj4gPiAgCWRybV9mYmRldl9jbWFfaW5pdChkZXYsIDMyLAo+ID4gIAkJCSAgIGRldi0+bW9k
-ZV9jb25maWcubnVtX2NydGMsCj4gPiAgCQkJICAgZGV2LT5tb2RlX2NvbmZpZy5udW1fY29ubmVj
-dG9yKTsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYu
-Ywo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyBpbmRleCA4NzZjYWQ1
-OGIxZjkuLjI0YmUzMWQ2OTcwMQo+ID4gMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-dGlsY2RjL3RpbGNkY19kcnYuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxj
-ZGNfZHJ2LmMKPiA+IEBAIC0yOTQsNiArMjk0LDcgQEAgc3RhdGljIGludCB0aWxjZGNfbG9hZChz
-dHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB1bnNpZ25lZAo+ID4gbG9uZyBmbGFncykgYnJlYWs7Cj4g
-PiAgCX0KPiA+IAo+ID4gKwlkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucyhkZXYp
-Owo+ID4gIAlwcml2LT5mYmRldiA9IGRybV9mYmRldl9jbWFfaW5pdChkZXYsIGJwcCwKPiA+ICAJ
-CQlkZXYtPm1vZGVfY29uZmlnLm51bV9jcnRjLAo+ID4gIAkJCWRldi0+bW9kZV9jb25maWcubnVt
-X2Nvbm5lY3Rvcik7Cj4gCj4gLS0gCj4gUmVnYXJkcywKPiAKPiBMYXVyZW50IFBpbmNoYXJ0Cj4g
-CgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
-aHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+The error messages when the ECC controller is misconfigured through the
+device tree are very precise. As a result they can (and will) get
+obsolete when new revisions of the controller appear.
+
+Simplify them before adding the support for the new revision.
+
+Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v2: split from the 32-bit ECC enabling patch
+
+ drivers/mtd/nand/atmel_nand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+index b8abf14e1298..6e548fc3ab7b 100644
+--- a/drivers/mtd/nand/atmel_nand.c
++++ b/drivers/mtd/nand/atmel_nand.c
+@@ -1549,7 +1549,7 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+ 		if ((val != 2) && (val != 4) && (val != 8) && (val != 12) &&
+ 				(val != 24)) {
+ 			dev_err(host->dev,
+-				"Unsupported PMECC correction capability: %d; should be 2, 4, 8, 12 or 24\n",
++				"Required ECC strength not supported: %u\n",
+ 				val);
+ 			return -EINVAL;
+ 		}
+@@ -1559,7 +1559,7 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+ 	if (of_property_read_u32(np, "atmel,pmecc-sector-size", &val) == 0) {
+ 		if ((val != 512) && (val != 1024)) {
+ 			dev_err(host->dev,
+-				"Unsupported PMECC sector size: %d; should be 512 or 1024 bytes\n",
++				"Required ECC sector size not supported: %u\n",
+ 				val);
+ 			return -EINVAL;
+ 		}
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
