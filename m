@@ -1,111 +1,168 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] reset: img: Add pistachio reset controller binding
- document
-Date: Fri, 15 Jan 2016 16:57:19 +0100
-Message-ID: <1452873439.6067.86.camel@pengutronix.de>
-References: <1452869073-27608-1-git-send-email-james.hartley@imgtec.com>
-	 <1452869073-27608-2-git-send-email-james.hartley@imgtec.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 15 Jan 2016 11:01:11 -0500
+Message-ID: <569917C7.9000804@codeaurora.org>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
+ <20160115145629.GI3262@leverpostej> <56990CD4.6020405@arm.com>
+ <20160115153656.GM3262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452869073-27608-2-git-send-email-james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Damien Horsley <damien.horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <20160115153656.GM3262@leverpostej>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 15.01.2016, 14:44 +0000 schrieb James Hartley:
-> From: "Damien.Horsley" <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 1/15/2016 10:36 AM, Mark Rutland wrote:
+> On Fri, Jan 15, 2016 at 03:14:28PM +0000, Marc Zyngier wrote:
+>> On 15/01/16 14:56, Mark Rutland wrote:
+>>> Hi,
+>>>
+>>> [adding KVM people, given this is meant for virtualization]
+>>>
+>>> On Mon, Jan 11, 2016 at 09:45:43AM -0500, Sinan Kaya wrote:
+>>>> The Qualcomm Technologies HIDMA device has been designed to support
+>>>> virtualization technology. The driver has been divided into two to follow
+>>>> the hardware design.
+>>>>
+>>>> 1. HIDMA Management driver
+>>>> 2. HIDMA Channel driver
+>>>>
+>>>> Each HIDMA HW consists of multiple channels. These channels share some set
+>>>> of common parameters. These parameters are initialized by the management
+>>>> driver during power up. Same management driver is used for monitoring the
+>>>> execution of the channels. Management driver can change the performance
+>>>> behavior dynamically such as bandwidth allocation and prioritization.
+>>>>
+>>>> The management driver is executed in hypervisor context and is the main
+>>>> management entity for all channels provided by the device.
+>>>
+>>> You mention repeatedly that this is designed for virtualization, but
+>>> looking at the series as it stands today I can't see how this operates
+>>> from the host side.
+>>
+>> Nor the guest's, TBH. How do host and guest communicate, what is the
+>> infrastructure, how is it meant to be used? A lot of questions, and no
+>> answer whatsoever in this series.
 > 
-> Add binding document for the Pistachio SoC reset controller
+> I think the guest's PoV is fairly simple and understood. The DMA channel
+> is pased in as with any passthrough of any other platform device.
 > 
-> Signed-off-by: Damien.Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/reset/img,pistachio-reset.txt         |   51 ++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/img,pistachio-reset.txt
+> No communication with the host is necessary -- an isolated channel is
+> usable.
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/img,pistachio-reset.txt b/Documentation/devicetree/bindings/reset/img,pistachio-reset.txt
-> new file mode 100644
-> index 0000000..12558d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/img,pistachio-reset.txt
-> @@ -0,0 +1,51 @@
-> +Pistachio Reset Controller
-> +=============================================================================
-> +
-> +This binding describes a reset controller device that is used to enable and
-> +disable individual IP blocks within the Pistachio SoC using "soft reset"
-> +control bits found in the Pistachio SoC top level registers.
-> +
-> +The actual action taken when soft reset is asserted is hardware dependent.
-> +However, when asserted it may not be possible to access the hardware's
-> +registers, and following an assert/deassert sequence the hardware's previous
-> +state may no longer be valid.
-> +
-> +Please refer to Documentation/devicetree/bindings/reset/reset.txt
-> +for common reset controller binding usage.
-> +
-> +Required properties:
-> +
-> +- compatible: Contains "img,pistachio-reset"
-> +
-> +- img,cr-periph: Contains a phandle to the peripheral control syscon
-> +                    node which contains the soft reset register
-> +
-> +- #reset-cells: Contains 1
-> +
-> +Example:
-> +
-> +	pistachio_reset: reset-controller {
-> +		compatible = "img,pistachio-reset";
-> +		img,cr-periph = <&cr_periph>;
-> +		#reset-cells = <1>;
-> +	};
 
-If this is just a register in the cr_periph syscon, why not put the
-reset-controller node inside the cr_periph node:
+Correct, I'm behind on emails. I'm following you. 
 
-    cr_periph: syscon@xyz {
-        compatible = "syscon", "simple-mfd";
-        pistachio_reset: reset-controller {
-            compatible = "img,pistachio-reset";
-            #reset-cells = <1>;
-        };
-    };
+> The larger concern is isolation, given the lack of IOMMU, or anything
+> obvious w.r.t. pinning of pages.
+> 
+I assume the presence of an IOMMU if used in the guest machine. I wonder
+if I can place a check and make the driver fail if IOMMU driver is not present.
 
-And in the driver use 
-    syscon_node_to_regmap(np->parent);
-instead of
-    syscon_regmap_lookup_by_phandle(np, "img,cr-periph");
-?
+Any ideas?
 
-Do you need a reg property, or is will the register offset be 0 in all
-pistachio variants?
+>>> This doesn't seem to tie into KVM or VFIO, and as far as I can tell
+>>> there's no mechanism for associating channels with a particular virtual
+>>> address space (i.e. no configuration of an external or internal IOMMU),
+>>> nor pinning of guest pages to allow for DMA to occur safely.
+>>>
+>>> Given that, I'm at a loss as to how this would be used in a hypervisor
+>>> context. What am I missing?
+>>>
+>>> Are there additional patches, or do you have some userspace that works
+>>> with this in some limited configuration?
 
-> +Specifying reset control of devices
-> +=======================================
-> +
-> +Device nodes should specify the reset channel required in their "resets"
-> +property, containing a phandle to the pistachio reset device node and an
-> +index specifying which reset to use, as described in
-> +Documentation/devicetree/bindings/reset/reset.txt.
-> +
-> +Example:
-> +
-> +	spdif_out: spdif-out@18100d00 {
-> +		...
-> +		resets = <&pistachio_reset PISTACHIO_RESET_SPDIF_OUT>;
-> +		reset-names = "rst";
+I forgot to mention that these are the only kernel patches. A userspace application
+is being built as we speak by another team.
 
-reset-names is not needed for devices that only have one reset.
+The userspace application will use sysfs to communicate to the management driver. 
+The management driver knows how to change runtime characteristics like priority and
+weight.
 
-regards
-Philipp
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>>
+>> Well, this looks so far like a code dumping exercise. I'd very much
+>> appreciate a HIDMA101 crash course:
+>>
+>> - How do host and guest communicate?
+>> - How is the integration performed in the hypervisor?
+>> - Does the HYP side requires any context switch (and how is that done)?
+> 
+> I don't believe this requires any context-switch -- it's the same as
+> assigning any other platform device other than additional proeprties
+> being controlled in the managament interface.
+
+Agreed.
+
+> 
+>> - What makes it safe?
+> 
+> I'm concerned with how this is safe, and with the userspace interface.
+> e.g. if the user wants to up the QoS for a VM, how to they find the
+> right channel in sysfs  to alter?
+
+The HW supports changing the QoS values on the flight. In order to locate the
+object, I'm exporting a 
+
+I tried to address your concern on v10 last series. Here is brief summary.
+
+Each channel device has a sysfs entry named chid.
+What:		/sys/devices/platform/hidma-*/chid
++		/sys/devices/platform/QCOM8061:*/chid
+
+
+Each management object has one priority and weight file per channel.
++What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/priority
++		/sys/devices/platform/QCOM8060:*/chanops/chan*/priority
+
+Suppose you want to change the priority of a channel you assigned to guess,
+the userspace application goes and reads the chid value of the channel.
+
+Then goes to chanops/chan<chid>/ directory and can change priority and weight 
+parameters here.
+
+Here is how the directory looks like. QCOM8060:00 is a management object.
+QCOM8061:0x are the channel objects.
+
+/sys/devices/platform/QCOM8060:00# ls
+QCOM8061:00
+QCOM8061:01
+QCOM8061:02
+QCOM8061:03
+QCOM8061:04
+QCOM8061:05
+chanops
+<other common attributes>
+
+
+
+
+> 
+>> Without any of this information (and pointer to the code to back it up),
+>> I'm very reluctant to take any of this.
+> 
+> Likewise.
+> 
+> Thanks,
+> Mark.
+> 
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
