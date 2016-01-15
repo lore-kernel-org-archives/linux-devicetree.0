@@ -1,195 +1,70 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Fri, 15 Jan 2016 18:07:10 +0100
-Message-ID: <1452877630.6067.97.camel@pengutronix.de>
-References: <1452849447-25025-1-git-send-email-peter.chen@freescale.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH v2 03/16] Xen: xlate: Use page_to_xen_pfn
+ instead of page_to_pfn
+Date: Fri, 15 Jan 2016 17:08:46 +0000
+Message-ID: <alpine.DEB.2.02.1601151558010.16178@kaball.uk.xensource.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-4-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452849447-25025-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452840929-19612-4-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 15.01.2016, 17:17 +0800 schrieb Peter Chen:
-> Although most of USB devices are hot-plug's, there are still some devices
-> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> If these kinds of USB devices are multiple functions, and they can supply
-> other interfaces like i2c, gpios for other devices, we may need to
-> describe these at device tree.
+On Fri, 15 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> In this commit, it uses "reg" in dts as port number to match the port
-> number decided by USB core, if they are the same, then the device node
-> is for the device we are creating for USB core.
+> Use page_to_xen_pfn in case of 64KB page.
 > 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Changes for v3:
-> - typo: s/descirbe/describe/
+>  drivers/xen/xlate_mmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Changes for v2:
-> - Fix build error reported by kbuild robot, lack of "static" for
->   inline usb_of_get_child_node  
-> - Fix typo, "devcie_node" -> "device_node"
-> - Add kernel-doc for of_node at struct usb_device
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index 9692656..b9fcc2c 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -227,7 +227,7 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>  		return rc;
+>  	}
+>  	for (i = 0; i < nr_grant_frames; i++)
+> -		pfns[i] = page_to_pfn(pages[i]);
+> +		pfns[i] = page_to_xen_pfn(pages[i]);
+
+Shannon, thanks for the patch.
+
+Keeping in mind that in the 64K case, kernel pages are 64K but xen pages
+are still 4K, I think you also need to allocate
+(nr_grant_frames/XEN_PFN_PER_PAGE) kernel pages (assuming that they are
+allocated contiguously): nr_grant_frames refers to 4K pages, while
+xen_xlate_map_ballooned_pages is allocating pages on a 64K granularity
+(sizeof(pages[0]) == 64K).
+
+Be careful that alloc_xenballooned_pages deals with 64K pages (because
+it deals with kernel pages), while xen_pfn_t is always 4K based (because
+it deals with Xen pfns).
+
+Please test it with and without CONFIG_ARM64_64K_PAGES. Thanks!
+
+
+
+>  	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+>  	if (!vaddr) {
+> -- 
+> 2.0.4
 > 
-> Changes from RFC:
-> - Fix the error address for binding doc, and add compatible for binding doc
-> - Change get child node API from "usb_of_find_node" to
->     "usb_of_get_child_node"
-> - Delete unecessary header files
-> - One typo
 > 
->  .../devicetree/bindings/usb/usb-device.txt         | 17 ++++++++
->  drivers/usb/core/Makefile                          |  2 +-
->  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
->  drivers/usb/core/usb.c                             |  8 +++-
->  include/linux/usb.h                                |  3 ++
->  include/linux/usb/of.h                             |  7 ++++
->  6 files changed, 81 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
->  create mode 100644 drivers/usb/core/of.c
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> new file mode 100644
-> index 0000000..0468834
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> @@ -0,0 +1,17 @@
-> +Generic USB Device Properties
-> +
-> +Usually, we only use device tree for hard wired USB device.
-> +The reference binding doc is from:
-> +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-> +
-> +Required properties:
-> +- compatible: usbVID,PID
-
-According to the binding doc that could be any of:
-1) usbVID,PID.REV.configCN
-2) usbVID,PID.REV
-3) usbVID,PID.configCN
-4) usbVID,PID
-5) usbVID,classDC.DSC.DPROTO
-6) usbVID,classDC.DSC
-7) usbVID,classDC
-8) usb,classDC.DSC.DPROTO
-9) usb,classDC.DSC
-10) usb,classDC
-11) usb,device
-
-> +- reg: the port number which this device is connecting to.
-
-Should it be noted here that the port number range is 1-255?
-
-> +
-> +
-> +Example:
-> +
-> +hub: genesys@01 {
-
-According to the referenced document, the address representation should
-be "hexadecimal with leading zeroes suppressed".
-
-> +	compatible = "usb05e3,0608";
-> +	reg = <0x01>;
-> +};
-> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> index 2f6f932..9780877 100644
-> --- a/drivers/usb/core/Makefile
-> +++ b/drivers/usb/core/Makefile
-> @@ -5,7 +5,7 @@
->  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
->  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
->  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
-> -usbcore-y += port.o
-> +usbcore-y += port.o of.o
->  
->  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
->  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-> new file mode 100644
-> index 0000000..2289700
-> --- /dev/null
-> +++ b/drivers/usb/core/of.c
-> @@ -0,0 +1,47 @@
-> +/*
-> + * of.c		The helpers for hcd device tree support
-> + *
-> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2  of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +
-> +/**
-> + * usb_of_get_child_node - Find the device node match port number
-> + * @parent: the parent device node
-> + * @portnum: the port number which device is connecting
-> + *
-> + * Find the node from device tree according to its port number.
-> + *
-> + * Return: On success, a pointer to the device node, %NULL on failure.
-> + */
-> +struct device_node *usb_of_get_child_node(struct device_node *parent,
-> +					int portnum)
-> +{
-> +	struct device_node *node;
-> +	u32 port;
-> +
-> +	for_each_child_of_node(parent, node) {
-> +		if (!of_property_read_u32(node, "reg", &port)) {
-> +			if (port == portnum)
-> +				return node;
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_of_get_child_node);
-> +
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index 77e4c9b..64c094e 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -36,6 +36,7 @@
->  #include <linux/mutex.h>
->  #include <linux/workqueue.h>
->  #include <linux/debugfs.h>
-> +#include <linux/usb/of.h>
->  
->  #include <asm/io.h>
->  #include <linux/scatterlist.h>
-> @@ -502,11 +503,14 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
->  	dev->connect_time = jiffies;
->  	dev->active_duration = -jiffies;
->  #endif
-> -	if (root_hub)	/* Root hub always ok [and always wired] */
-> +	if (root_hub) {	/* Root hub always ok [and always wired] */
->  		dev->authorized = 1;
-> -	else {
-> +		dev->of_node = bus->controller->of_node;
-
-Why can't the root_hub reuse dev->dev.of_node?
-
-regards
-Philipp
-
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
+> http://lists.xen.org/xen-devel
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
