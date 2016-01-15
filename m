@@ -1,868 +1,511 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 15 Jan 2016 14:56:29 +0000
-Message-ID: <20160115145629.GI3262@leverpostej>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 15 Jan 2016 16:05:45 +0100
+Message-ID: <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown> <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com> <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej> <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115110106.GA3262@leverpostej>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160115110106.GA3262@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-[adding KVM people, given this is meant for virtualization]
+Am 15.01.2016 um 12:01 schrieb Mark Rutland <mark.rutland@arm.com>:
 
-On Mon, Jan 11, 2016 at 09:45:43AM -0500, Sinan Kaya wrote:
-> The Qualcomm Technologies HIDMA device has been designed to support
-> virtualization technology. The driver has been divided into two to follow
-> the hardware design.
+> On Fri, Jan 15, 2016 at 10:34:51AM +0100, H. Nikolaus Schaller wrote:
+>> Hi Mark,
+>> 
+>> Am 13.01.2016 um 20:15 schrieb Mark Rutland <mark.rutland@arm.com>:
+>> 
+>>> On Tue, Jan 12, 2016 at 02:28:00PM +0100, H. Nikolaus Schaller wrote:
+>>>> Hi Tomeu,
+>>>> 
+>>>> Am 12.01.2016 um 14:06 schrieb Tomeu Vizoso <tomeu@tomeuvizoso.net>:
+>>>> 
+>>>>> On 11 May 2015 at 03:56, NeilBrown <neil@brown.name> wrote:
+>>>>>> Hi all,
+>>>>>> here is version 4 of my "UART slave device" patch set, previously
+>>>>>> known as "tty slave devices".
+>>>>> 
+>>>>> Hi Neil,
+>>>>> 
+>>>>> do you (or someone else) have plans to continue this work in the short
+>>>>> or medium term?
+>>>> 
+>>>> yes, there is something in our upstreaming pipeline. This one works for us on top of 4.4.0:
+>>>> 
+>>>> <http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/misc/w2sg-tty-slave2-v4>
+>>>> 
+>>>> There is one point still to be solved: the exact style of the DT bindings.
+>>>> 
+>>>> We have an idea how a driver can implement two different styles (child node AND phandle)
+>>>> so that it is up to the DTS developer to use the one that best fits into the existing DTS.
+>>> 
+>>> From my perspective as a binding maintainer, and as I stated before, the
+>>> child node approach made the most sense and was most consistent with the
+>> 
+>>> way we handle other devices.
+>> 
+>> I simply don't see that this is the most common way other devices are handled.
+>> 
+>> I find many counter-examples which use phandles:
+>> * gpios
+>> * regulators
+>> * iio channels used by other drivers (e.g. iio-hwmon)
+>> * phy devices
+>> * timers
+>> * pwms
+>> * interrupts
+>> * dma
 > 
-> 1. HIDMA Management driver
-> 2. HIDMA Channel driver
+> As was previously described to you, in these cases phandles are used
+> when these are _resources_ used by another device, not for the main
+> programmer-visible interface to the device.
+
+Ah, I think I finally begin to understand the rule you are following:
+
+	If a device's data interface can be seen in user space, this interface
+	is sort of a "main interface" and must be modelled in DT by a
+	parent-child relationship.
+
+But then you obviously ignore the basic rule that DT describes hardware
+in an OS agnostic way and mix it up with programmer-visible interfaces
+and a not well defined concept of "main" and "other" interfaces.
+
+So I doubt that this rule is really necessary. A different OS could use the
+same DT but not provide a programmer's interface at all.
+
+Or is this no longer a general goal of DT to be OS agnostic?
+
+Now I also think I better understand what you meant by "main interface"
+a while ago.
+
+For me, when looking into a chip data sheet, the main interface is a sometimes
+arbitrary. Or when viewing it through device driver implementors glasses
+I may end up with a different main interface.
+
+>From the hardware schematics, I can't read which interface is "main". I can
+only read which components and signals are connected. So the information
+what is "main" must come from somewhere else, but not the hardware.
+
+You appear to have a definition based on Linux user space interfaces
+which is distinct from mine and at least explains why the discussion takes
+so long and we don't come to a common view.
+
 > 
-> Each HIDMA HW consists of multiple channels. These channels share some set
-> of common parameters. These parameters are initialized by the management
-> driver during power up. Same management driver is used for monitoring the
-> execution of the channels. Management driver can change the performance
-> behavior dynamically such as bandwidth allocation and prioritization.
+> Conceptually, A UART slave is far closer to SPI or I2C, where the slave
+> is represented as a sub-node.
+
+Only if you have the goal to describe the data/command path ("main interface")
+in DT.
+
+I mentioned it several times: USB-PHYs use the phandle approach to attach
+a single PHY to the usb controller, although there is usually some ULPI-"bus"
+interface (12 parallel wires) between. And the PHY is clearly more "slave" than
+the usb controller, isn't it?
+
+But with phandle, the usb controller is a _resource_ for the PHY. So would
+you say this is wrong?
+
+This is the design pattern (for DT and drivers) we have copied for our tty-slave
+proposal.
+
+> I wasn't aware of any instances of timers being referred to by phandle
+> by other devices -- that seems distinctly odd. Where do you see that
+> happening.
+
+I found it in connection with dmtimer / pwm on OMAP3. May be a rare exception
+and that may be a special type of OMAP timers.
+
 > 
-> The management driver is executed in hypervisor context and is the main
-> management entity for all channels provided by the device.
-
-You mention repeatedly that this is designed for virtualization, but
-looking at the series as it stands today I can't see how this operates
-from the host side.
-
-This doesn't seem to tie into KVM or VFIO, and as far as I can tell
-there's no mechanism for associating channels with a particular virtual
-address space (i.e. no configuration of an external or internal IOMMU),
-nor pinning of guest pages to allow for DMA to occur safely.
-
-Given that, I'm at a loss as to how this would be used in a hypervisor
-context. What am I missing?
-
-Are there additional patches, or do you have some userspace that works
-with this in some limited configuration?
-
-Thanks,
-Mark.
-
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++++++
->  drivers/dma/qcom/Kconfig                           |  11 +
->  drivers/dma/qcom/Makefile                          |   2 +
->  drivers/dma/qcom/hidma_mgmt.c                      | 302 +++++++++++++++++++++
->  drivers/dma/qcom/hidma_mgmt.h                      |  39 +++
->  drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 ++++++++++++++++++++
->  6 files changed, 746 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
->  create mode 100644 drivers/dma/qcom/hidma_mgmt.c
->  create mode 100644 drivers/dma/qcom/hidma_mgmt.h
->  create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+>> * mcbsp (see e.g. http://lxr.free-electrons.com/source/arch/arm/boot/dts/omap3-n900.dts#L127)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-hidma-mgmt b/Documentation/ABI/testing/sysfs-platform-hidma-mgmt
-> new file mode 100644
-> index 0000000..c2fb5d0
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-hidma-mgmt
-> @@ -0,0 +1,97 @@
-> +What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/priority
-> +		/sys/devices/platform/QCOM8060:*/chanops/chan*/priority
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains either 0 or 1 and indicates if the DMA channel is a
-> +		low priority (0) or high priority (1) channel.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/weight
-> +		/sys/devices/platform/QCOM8060:*/chanops/chan*/weight
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains 0..15 and indicates the weight of the channel among
-> +		equal priority channels during round robin scheduling.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/chreset_timeout_cycles
-> +		/sys/devices/platform/QCOM8060:*/chreset_timeout_cycles
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains the platform specific cycle value to wait after a
-> +		reset command is issued. If the value is chosen too short,
-> +		then the HW will issue a reset failure interrupt. The value
-> +		is platform specific and should not be changed without
-> +		consultance.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/dma_channels
-> +		/sys/devices/platform/QCOM8060:*/dma_channels
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains the number of dma channels supported by one instance
-> +		of HIDMA hardware. The value may change from chip to chip.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/hw_version_major
-> +		/sys/devices/platform/QCOM8060:*/hw_version_major
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Version number major for the hardware.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/hw_version_minor
-> +		/sys/devices/platform/QCOM8060:*/hw_version_minor
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Version number minor for the hardware.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/max_rd_xactions
-> +		/sys/devices/platform/QCOM8060:*/max_rd_xactions
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains a value between 0 and 31. Maximum number of
-> +		read transactions that can be issued back to back.
-> +		Choosing a higher number gives better performance but
-> +		can also cause performance reduction to other peripherals
-> +		sharing the same bus.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/max_read_request
-> +		/sys/devices/platform/QCOM8060:*/max_read_request
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Size of each read request. The value needs to be a power
-> +		of two and can be between 128 and 1024.
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/max_wr_xactions
-> +		/sys/devices/platform/QCOM8060:*/max_wr_xactions
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Contains a value between 0 and 31. Maximum number of
-> +		write transactions that can be issued back to back.
-> +		Choosing a higher number gives better performance but
-> +		can also cause performance reduction to other peripherals
-> +		sharing the same bus.
-> +
-> +
-> +What:		/sys/devices/platform/hidma-mgmt*/max_write_request
-> +		/sys/devices/platform/QCOM8060:*/max_write_request
-> +Date:		Nov 2015
-> +KernelVersion:	4.4
-> +Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-> +Description:
-> +		Size of each write request. The value needs to be a power
-> +		of two and can be between 128 and 1024.
-> diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-> index f17c272..ebe5b8c 100644
-> --- a/drivers/dma/qcom/Kconfig
-> +++ b/drivers/dma/qcom/Kconfig
-> @@ -6,3 +6,14 @@ config QCOM_BAM_DMA
->  	---help---
->  	  Enable support for the QCOM BAM DMA controller.  This controller
->  	  provides DMA capabilities for a variety of on-chip devices.
-> +
-> +config QCOM_HIDMA_MGMT
-> +	tristate "Qualcomm Technologies HIDMA Management support"
-> +	select DMA_ENGINE
-> +	help
-> +	  Enable support for the Qualcomm Technologies HIDMA Management.
-> +	  Each DMA device requires one management interface driver
-> +	  for basic initialization before QCOM_HIDMA channel driver can
-> +	  start managing the channels. In a virtualized environment,
-> +	  the guest OS would run QCOM_HIDMA channel driver and the
-> +	  hypervisor would run the QCOM_HIDMA_MGMT management driver.
-> diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
-> index f612ae3..bfea699 100644
-> --- a/drivers/dma/qcom/Makefile
-> +++ b/drivers/dma/qcom/Makefile
-> @@ -1 +1,3 @@
->  obj-$(CONFIG_QCOM_BAM_DMA) += bam_dma.o
-> +obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
-> +hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
-> diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
-> new file mode 100644
-> index 0000000..ef491b8
-> --- /dev/null
-> +++ b/drivers/dma/qcom/hidma_mgmt.c
-> @@ -0,0 +1,302 @@
-> +/*
-> + * Qualcomm Technologies HIDMA DMA engine Management interface
-> + *
-> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/dmaengine.h>
-> +#include <linux/acpi.h>
-> +#include <linux/of.h>
-> +#include <linux/property.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/bitops.h>
-> +
-> +#include "hidma_mgmt.h"
-> +
-> +#define HIDMA_QOS_N_OFFSET		0x300
-> +#define HIDMA_CFG_OFFSET		0x400
-> +#define HIDMA_MAX_BUS_REQ_LEN_OFFSET	0x41C
-> +#define HIDMA_MAX_XACTIONS_OFFSET	0x420
-> +#define HIDMA_HW_VERSION_OFFSET	0x424
-> +#define HIDMA_CHRESET_TIMEOUT_OFFSET	0x418
-> +
-> +#define HIDMA_MAX_WR_XACTIONS_MASK	GENMASK(4, 0)
-> +#define HIDMA_MAX_RD_XACTIONS_MASK	GENMASK(4, 0)
-> +#define HIDMA_WEIGHT_MASK		GENMASK(6, 0)
-> +#define HIDMA_MAX_BUS_REQ_LEN_MASK	GENMASK(15, 0)
-> +#define HIDMA_CHRESET_TIMEOUT_MASK	GENMASK(19, 0)
-> +
-> +#define HIDMA_MAX_WR_XACTIONS_BIT_POS	16
-> +#define HIDMA_MAX_BUS_WR_REQ_BIT_POS	16
-> +#define HIDMA_WRR_BIT_POS		8
-> +#define HIDMA_PRIORITY_BIT_POS		15
-> +
-> +#define HIDMA_AUTOSUSPEND_TIMEOUT	2000
-> +#define HIDMA_MAX_CHANNEL_WEIGHT	15
-> +
-> +int hidma_mgmt_setup(struct hidma_mgmt_dev *mgmtdev)
-> +{
-> +	unsigned int i;
-> +	u32 val;
-> +
-> +	if (!is_power_of_2(mgmtdev->max_write_request) ||
-> +	    (mgmtdev->max_write_request < 128) ||
-> +	    (mgmtdev->max_write_request > 1024)) {
-> +		dev_err(&mgmtdev->pdev->dev, "invalid write request %d\n",
-> +			mgmtdev->max_write_request);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!is_power_of_2(mgmtdev->max_read_request) ||
-> +	    (mgmtdev->max_read_request < 128) ||
-> +	    (mgmtdev->max_read_request > 1024)) {
-> +		dev_err(&mgmtdev->pdev->dev, "invalid read request %d\n",
-> +			mgmtdev->max_read_request);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (mgmtdev->max_wr_xactions > HIDMA_MAX_WR_XACTIONS_MASK) {
-> +		dev_err(&mgmtdev->pdev->dev,
-> +			"max_wr_xactions cannot be bigger than %ld\n",
-> +			HIDMA_MAX_WR_XACTIONS_MASK);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (mgmtdev->max_rd_xactions > HIDMA_MAX_RD_XACTIONS_MASK) {
-> +		dev_err(&mgmtdev->pdev->dev,
-> +			"max_rd_xactions cannot be bigger than %ld\n",
-> +			HIDMA_MAX_RD_XACTIONS_MASK);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < mgmtdev->dma_channels; i++) {
-> +		if (mgmtdev->priority[i] > 1) {
-> +			dev_err(&mgmtdev->pdev->dev,
-> +				"priority can be 0 or 1\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (mgmtdev->weight[i] > HIDMA_MAX_CHANNEL_WEIGHT) {
-> +			dev_err(&mgmtdev->pdev->dev,
-> +				"max value of weight can be %d.\n",
-> +				HIDMA_MAX_CHANNEL_WEIGHT);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* weight needs to be at least one */
-> +		if (mgmtdev->weight[i] == 0)
-> +			mgmtdev->weight[i] = 1;
-> +	}
-> +
-> +	pm_runtime_get_sync(&mgmtdev->pdev->dev);
-> +	val = readl(mgmtdev->virtaddr + HIDMA_MAX_BUS_REQ_LEN_OFFSET);
-> +	val &= ~(HIDMA_MAX_BUS_REQ_LEN_MASK << HIDMA_MAX_BUS_WR_REQ_BIT_POS);
-> +	val |= mgmtdev->max_write_request << HIDMA_MAX_BUS_WR_REQ_BIT_POS;
-> +	val &= ~HIDMA_MAX_BUS_REQ_LEN_MASK;
-> +	val |= mgmtdev->max_read_request;
-> +	writel(val, mgmtdev->virtaddr + HIDMA_MAX_BUS_REQ_LEN_OFFSET);
-> +
-> +	val = readl(mgmtdev->virtaddr + HIDMA_MAX_XACTIONS_OFFSET);
-> +	val &= ~(HIDMA_MAX_WR_XACTIONS_MASK << HIDMA_MAX_WR_XACTIONS_BIT_POS);
-> +	val |= mgmtdev->max_wr_xactions << HIDMA_MAX_WR_XACTIONS_BIT_POS;
-> +	val &= ~HIDMA_MAX_RD_XACTIONS_MASK;
-> +	val |= mgmtdev->max_rd_xactions;
-> +	writel(val, mgmtdev->virtaddr + HIDMA_MAX_XACTIONS_OFFSET);
-> +
-> +	mgmtdev->hw_version =
-> +	    readl(mgmtdev->virtaddr + HIDMA_HW_VERSION_OFFSET);
-> +	mgmtdev->hw_version_major = (mgmtdev->hw_version >> 28) & 0xF;
-> +	mgmtdev->hw_version_minor = (mgmtdev->hw_version >> 16) & 0xF;
-> +
-> +	for (i = 0; i < mgmtdev->dma_channels; i++) {
-> +		u32 weight = mgmtdev->weight[i];
-> +		u32 priority = mgmtdev->priority[i];
-> +
-> +		val = readl(mgmtdev->virtaddr + HIDMA_QOS_N_OFFSET + (4 * i));
-> +		val &= ~(1 << HIDMA_PRIORITY_BIT_POS);
-> +		val |= (priority & 0x1) << HIDMA_PRIORITY_BIT_POS;
-> +		val &= ~(HIDMA_WEIGHT_MASK << HIDMA_WRR_BIT_POS);
-> +		val |= (weight & HIDMA_WEIGHT_MASK) << HIDMA_WRR_BIT_POS;
-> +		writel(val, mgmtdev->virtaddr + HIDMA_QOS_N_OFFSET + (4 * i));
-> +	}
-> +
-> +	val = readl(mgmtdev->virtaddr + HIDMA_CHRESET_TIMEOUT_OFFSET);
-> +	val &= ~HIDMA_CHRESET_TIMEOUT_MASK;
-> +	val |= mgmtdev->chreset_timeout_cycles & HIDMA_CHRESET_TIMEOUT_MASK;
-> +	writel(val, mgmtdev->virtaddr + HIDMA_CHRESET_TIMEOUT_OFFSET);
-> +
-> +	pm_runtime_mark_last_busy(&mgmtdev->pdev->dev);
-> +	pm_runtime_put_autosuspend(&mgmtdev->pdev->dev);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(hidma_mgmt_setup);
-> +
-> +static int hidma_mgmt_probe(struct platform_device *pdev)
-> +{
-> +	struct hidma_mgmt_dev *mgmtdev;
-> +	struct resource *res;
-> +	void __iomem *virtaddr;
-> +	int irq;
-> +	int rc;
-> +	u32 val;
-> +
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev, HIDMA_AUTOSUSPEND_TIMEOUT);
-> +	pm_runtime_use_autosuspend(&pdev->dev);
-> +	pm_runtime_set_active(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +	pm_runtime_get_sync(&pdev->dev);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	virtaddr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(virtaddr)) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "irq resources not found\n");
-> +		rc = irq;
-> +		goto out;
-> +	}
-> +
-> +	mgmtdev = devm_kzalloc(&pdev->dev, sizeof(*mgmtdev), GFP_KERNEL);
-> +	if (!mgmtdev) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	mgmtdev->pdev = pdev;
-> +	mgmtdev->addrsize = resource_size(res);
-> +	mgmtdev->virtaddr = virtaddr;
-> +
-> +	rc = device_property_read_u32(&pdev->dev, "dma-channels",
-> +				      &mgmtdev->dma_channels);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "number of channels missing\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = device_property_read_u32(&pdev->dev,
-> +				      "channel-reset-timeout-cycles",
-> +				      &mgmtdev->chreset_timeout_cycles);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "channel reset timeout missing\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = device_property_read_u32(&pdev->dev, "max-write-burst-bytes",
-> +				      &mgmtdev->max_write_request);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "max-write-burst-bytes missing\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = device_property_read_u32(&pdev->dev, "max-read-burst-bytes",
-> +				      &mgmtdev->max_read_request);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "max-read-burst-bytes missing\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = device_property_read_u32(&pdev->dev, "max-write-transactions",
-> +				      &mgmtdev->max_wr_xactions);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "max-write-transactions missing\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = device_property_read_u32(&pdev->dev, "max-read-transactions",
-> +				      &mgmtdev->max_rd_xactions);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "max-read-transactions missing\n");
-> +		goto out;
-> +	}
-> +
-> +	mgmtdev->priority = devm_kcalloc(&pdev->dev,
-> +					 mgmtdev->dma_channels,
-> +					 sizeof(*mgmtdev->priority),
-> +					 GFP_KERNEL);
-> +	if (!mgmtdev->priority) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	mgmtdev->weight = devm_kcalloc(&pdev->dev,
-> +				       mgmtdev->dma_channels,
-> +				       sizeof(*mgmtdev->weight), GFP_KERNEL);
-> +	if (!mgmtdev->weight) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	rc = hidma_mgmt_setup(mgmtdev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "setup failed\n");
-> +		goto out;
-> +	}
-> +
-> +	/* start the HW */
-> +	val = readl(mgmtdev->virtaddr + HIDMA_CFG_OFFSET);
-> +	val |= 1;
-> +	writel(val, mgmtdev->virtaddr + HIDMA_CFG_OFFSET);
-> +
-> +	rc = hidma_mgmt_init_sys(mgmtdev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "sysfs setup failed\n");
-> +		goto out;
-> +	}
-> +
-> +	dev_info(&pdev->dev,
-> +		 "HW rev: %d.%d @ %pa with %d physical channels\n",
-> +		 mgmtdev->hw_version_major, mgmtdev->hw_version_minor,
-> +		 &res->start, mgmtdev->dma_channels);
-> +
-> +	platform_set_drvdata(pdev, mgmtdev);
-> +	pm_runtime_mark_last_busy(&pdev->dev);
-> +	pm_runtime_put_autosuspend(&pdev->dev);
-> +	return 0;
-> +out:
-> +	pm_runtime_put_sync_suspend(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +	return rc;
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_ACPI)
-> +static const struct acpi_device_id hidma_mgmt_acpi_ids[] = {
-> +	{"QCOM8060"},
-> +	{},
-> +};
-> +#endif
-> +
-> +static const struct of_device_id hidma_mgmt_match[] = {
-> +	{.compatible = "qcom,hidma-mgmt-1.0",},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hidma_mgmt_match);
-> +
-> +static struct platform_driver hidma_mgmt_driver = {
-> +	.probe = hidma_mgmt_probe,
-> +	.driver = {
-> +		   .name = "hidma-mgmt",
-> +		   .of_match_table = hidma_mgmt_match,
-> +		   .acpi_match_table = ACPI_PTR(hidma_mgmt_acpi_ids),
-> +	},
-> +};
-> +
-> +module_platform_driver(hidma_mgmt_driver);
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/dma/qcom/hidma_mgmt.h b/drivers/dma/qcom/hidma_mgmt.h
-> new file mode 100644
-> index 0000000..f7daf33
-> --- /dev/null
-> +++ b/drivers/dma/qcom/hidma_mgmt.h
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Qualcomm Technologies HIDMA Management common header
-> + *
-> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +struct hidma_mgmt_dev {
-> +	u8 hw_version_major;
-> +	u8 hw_version_minor;
-> +
-> +	u32 max_wr_xactions;
-> +	u32 max_rd_xactions;
-> +	u32 max_write_request;
-> +	u32 max_read_request;
-> +	u32 dma_channels;
-> +	u32 chreset_timeout_cycles;
-> +	u32 hw_version;
-> +	u32 *priority;
-> +	u32 *weight;
-> +
-> +	/* Hardware device constants */
-> +	void __iomem *virtaddr;
-> +	resource_size_t addrsize;
-> +
-> +	struct kobject **chroots;
-> +	struct platform_device *pdev;
-> +};
-> +
-> +int hidma_mgmt_init_sys(struct hidma_mgmt_dev *dev);
-> +int hidma_mgmt_setup(struct hidma_mgmt_dev *mgmtdev);
-> diff --git a/drivers/dma/qcom/hidma_mgmt_sys.c b/drivers/dma/qcom/hidma_mgmt_sys.c
-> new file mode 100644
-> index 0000000..7f252fb
-> --- /dev/null
-> +++ b/drivers/dma/qcom/hidma_mgmt_sys.c
-> @@ -0,0 +1,295 @@
-> +/*
-> + * Qualcomm Technologies HIDMA Management SYS interface
-> + *
-> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/sysfs.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "hidma_mgmt.h"
-> +
-> +struct hidma_chan_attr {
-> +	struct hidma_mgmt_dev *mdev;
-> +	int index;
-> +	struct kobj_attribute attr;
-> +};
-> +
-> +struct hidma_mgmt_fileinfo {
-> +	char *name;
-> +	int mode;
-> +	int (*get)(struct hidma_mgmt_dev *mdev);
-> +	int (*set)(struct hidma_mgmt_dev *mdev, u64 val);
-> +};
-> +
-> +#define IMPLEMENT_GETSET(name)					\
-> +static int get_##name(struct hidma_mgmt_dev *mdev)		\
-> +{								\
-> +	return mdev->name;					\
-> +}								\
-> +static int set_##name(struct hidma_mgmt_dev *mdev, u64 val)	\
-> +{								\
-> +	u64 tmp;						\
-> +	int rc;							\
-> +								\
-> +	tmp = mdev->name;					\
-> +	mdev->name = val;					\
-> +	rc = hidma_mgmt_setup(mdev);				\
-> +	if (rc)							\
-> +		mdev->name = tmp;				\
-> +	return rc;						\
-> +}
-> +
-> +#define DECLARE_ATTRIBUTE(name, mode)				\
-> +	{#name, mode, get_##name, set_##name}
-> +
-> +IMPLEMENT_GETSET(hw_version_major)
-> +IMPLEMENT_GETSET(hw_version_minor)
-> +IMPLEMENT_GETSET(max_wr_xactions)
-> +IMPLEMENT_GETSET(max_rd_xactions)
-> +IMPLEMENT_GETSET(max_write_request)
-> +IMPLEMENT_GETSET(max_read_request)
-> +IMPLEMENT_GETSET(dma_channels)
-> +IMPLEMENT_GETSET(chreset_timeout_cycles)
-> +
-> +static int set_priority(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-> +{
-> +	u64 tmp;
-> +	int rc;
-> +
-> +	if (i >= mdev->dma_channels)
-> +		return -EINVAL;
-> +
-> +	tmp = mdev->priority[i];
-> +	mdev->priority[i] = val;
-> +	rc = hidma_mgmt_setup(mdev);
-> +	if (rc)
-> +		mdev->priority[i] = tmp;
-> +	return rc;
-> +}
-> +
-> +static int set_weight(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-> +{
-> +	u64 tmp;
-> +	int rc;
-> +
-> +	if (i >= mdev->dma_channels)
-> +		return -EINVAL;
-> +
-> +	tmp = mdev->weight[i];
-> +	mdev->weight[i] = val;
-> +	rc = hidma_mgmt_setup(mdev);
-> +	if (rc)
-> +		mdev->weight[i] = tmp;
-> +	return rc;
-> +}
-> +
-> +static struct hidma_mgmt_fileinfo hidma_mgmt_files[] = {
-> +	DECLARE_ATTRIBUTE(hw_version_major, S_IRUGO),
-> +	DECLARE_ATTRIBUTE(hw_version_minor, S_IRUGO),
-> +	DECLARE_ATTRIBUTE(dma_channels, S_IRUGO),
-> +	DECLARE_ATTRIBUTE(chreset_timeout_cycles, S_IRUGO),
-> +	DECLARE_ATTRIBUTE(max_wr_xactions, (S_IRUGO | S_IWUGO)),
-> +	DECLARE_ATTRIBUTE(max_rd_xactions, (S_IRUGO | S_IWUGO)),
-> +	DECLARE_ATTRIBUTE(max_write_request, (S_IRUGO | S_IWUGO)),
-> +	DECLARE_ATTRIBUTE(max_read_request, (S_IRUGO | S_IWUGO)),
-> +};
-> +
-> +static ssize_t show_values(struct device *dev, struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct hidma_mgmt_dev *mdev = platform_get_drvdata(pdev);
-> +	unsigned int i;
-> +
-> +	buf[0] = 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-> +		if (strcmp(attr->attr.name, hidma_mgmt_files[i].name) == 0) {
-> +			sprintf(buf, "%d\n", hidma_mgmt_files[i].get(mdev));
-> +			break;
-> +		}
-> +	}
-> +	return strlen(buf);
-> +}
-> +
-> +static ssize_t set_values(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t count)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct hidma_mgmt_dev *mdev = platform_get_drvdata(pdev);
-> +	unsigned long tmp;
-> +	unsigned int i;
-> +	int rc;
-> +
-> +	rc = kstrtoul(buf, 0, &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-> +		if (strcmp(attr->attr.name, hidma_mgmt_files[i].name) == 0) {
-> +			rc = hidma_mgmt_files[i].set(mdev, tmp);
-> +			if (rc)
-> +				return rc;
-> +
-> +			break;
-> +		}
-> +	}
-> +	return count;
-> +}
-> +
-> +static ssize_t show_values_channel(struct kobject *kobj,
-> +				   struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct hidma_chan_attr *chattr;
-> +	struct hidma_mgmt_dev *mdev;
-> +
-> +	buf[0] = 0;
-> +	chattr = container_of(attr, struct hidma_chan_attr, attr);
-> +	mdev = chattr->mdev;
-> +	if (strcmp(attr->attr.name, "priority") == 0)
-> +		sprintf(buf, "%d\n", mdev->priority[chattr->index]);
-> +	else if (strcmp(attr->attr.name, "weight") == 0)
-> +		sprintf(buf, "%d\n", mdev->weight[chattr->index]);
-> +
-> +	return strlen(buf);
-> +}
-> +
-> +static ssize_t set_values_channel(struct kobject *kobj,
-> +				  struct kobj_attribute *attr, const char *buf,
-> +				  size_t count)
-> +{
-> +	struct hidma_chan_attr *chattr;
-> +	struct hidma_mgmt_dev *mdev;
-> +	unsigned long tmp;
-> +	int rc;
-> +
-> +	chattr = container_of(attr, struct hidma_chan_attr, attr);
-> +	mdev = chattr->mdev;
-> +
-> +	rc = kstrtoul(buf, 0, &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (strcmp(attr->attr.name, "priority") == 0) {
-> +		rc = set_priority(mdev, chattr->index, tmp);
-> +		if (rc)
-> +			return rc;
-> +	} else if (strcmp(attr->attr.name, "weight") == 0) {
-> +		rc = set_weight(mdev, chattr->index, tmp);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	return count;
-> +}
-> +
-> +static int create_sysfs_entry(struct hidma_mgmt_dev *dev, char *name, int mode)
-> +{
-> +	struct device_attribute *attrs;
-> +	char *name_copy;
-> +
-> +	attrs = devm_kmalloc(&dev->pdev->dev,
-> +			     sizeof(struct device_attribute), GFP_KERNEL);
-> +	if (!attrs)
-> +		return -ENOMEM;
-> +
-> +	name_copy = devm_kstrdup(&dev->pdev->dev, name, GFP_KERNEL);
-> +	if (!name_copy)
-> +		return -ENOMEM;
-> +
-> +	attrs->attr.name = name_copy;
-> +	attrs->attr.mode = mode;
-> +	attrs->show = show_values;
-> +	attrs->store = set_values;
-> +	sysfs_attr_init(&attrs->attr);
-> +
-> +	return device_create_file(&dev->pdev->dev, attrs);
-> +}
-> +
-> +static int create_sysfs_entry_channel(struct hidma_mgmt_dev *mdev, char *name,
-> +				      int mode, int index,
-> +				      struct kobject *parent)
-> +{
-> +	struct hidma_chan_attr *chattr;
-> +	char *name_copy;
-> +
-> +	chattr = devm_kmalloc(&mdev->pdev->dev, sizeof(*chattr), GFP_KERNEL);
-> +	if (!chattr)
-> +		return -ENOMEM;
-> +
-> +	name_copy = devm_kstrdup(&mdev->pdev->dev, name, GFP_KERNEL);
-> +	if (!name_copy)
-> +		return -ENOMEM;
-> +
-> +	chattr->mdev = mdev;
-> +	chattr->index = index;
-> +	chattr->attr.attr.name = name_copy;
-> +	chattr->attr.attr.mode = mode;
-> +	chattr->attr.show = show_values_channel;
-> +	chattr->attr.store = set_values_channel;
-> +	sysfs_attr_init(&chattr->attr.attr);
-> +
-> +	return sysfs_create_file(parent, &chattr->attr.attr);
-> +}
-> +
-> +int hidma_mgmt_init_sys(struct hidma_mgmt_dev *mdev)
-> +{
-> +	unsigned int i;
-> +	int rc;
-> +	int required;
-> +	struct kobject *chanops;
-> +
-> +	required = sizeof(*mdev->chroots) * mdev->dma_channels;
-> +	mdev->chroots = devm_kmalloc(&mdev->pdev->dev, required, GFP_KERNEL);
-> +	if (!mdev->chroots)
-> +		return -ENOMEM;
-> +
-> +	chanops = kobject_create_and_add("chanops", &mdev->pdev->dev.kobj);
-> +	if (!chanops)
-> +		return -ENOMEM;
-> +
-> +	/* create each channel directory here */
-> +	for (i = 0; i < mdev->dma_channels; i++) {
-> +		char name[20];
-> +
-> +		snprintf(name, sizeof(name), "chan%d", i);
-> +		mdev->chroots[i] = kobject_create_and_add(name, chanops);
-> +		if (!mdev->chroots[i])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	/* populate common parameters */
-> +	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-> +		rc = create_sysfs_entry(mdev, hidma_mgmt_files[i].name,
-> +					hidma_mgmt_files[i].mode);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	/* populate parameters that are per channel */
-> +	for (i = 0; i < mdev->dma_channels; i++) {
-> +		rc = create_sysfs_entry_channel(mdev, "priority",
-> +						(S_IRUGO | S_IWUGO), i,
-> +						mdev->chroots[i]);
-> +		if (rc)
-> +			return rc;
-> +
-> +		rc = create_sysfs_entry_channel(mdev, "weight",
-> +						(S_IRUGO | S_IWUGO), i,
-> +						mdev->chroots[i]);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(hidma_mgmt_init_sys);
-> -- 
-> Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> Subsystem type bindings are more of a special case, and regardless the
+> components have nodes in the relevant portions of the DT.
+
 > 
+>> * mmc-pwr-seq-simple (which does not even describe a physical piece of hardware)
+> 
+> If this is so different, how is it relevant?
+
+It could as well be subnode of the affected mmc interface or mmc-slave, but obviously it
+isn't grouped there, and uses a phandle to refer to its &mmc "master".
+
+Its function is quite similar what we need for our GPS chip: control power sequences
+of a remote device.
+
+> 
+>> All of them define the provider in one node. And refer to it by a phandle in another node
+>> where they are used.
+>> 
+>> So I see a lot of provider-consumer relationships modeled by phandles but not by child nodes.
+> 
+> I agree that provider-consumer type relationships are typically
+> described in this manner.
+
+Ok.
+
+> 
+> However, master-slave relationships are not.
+
+It looks as if you see a significant difference between provider-consumer and master-slave
+relationship which I was not sure of which applies to what and where you make the distinction.
+
+By the way: what exactly makes the UART on the SoC side "master" and the UART on the connected
+device a "slave" (except the user-space view)?
+
+UARTs per se have no master-slave roles and are symmetrical (contrary to SPI and I2C where it
+is well defined). Rather, both are formally DTE connected by a null-modem.
+
+This is another substantial difference between UART and I2C/SPI besides addressability.
+
+> 
+>> Next, if I look up real world DT sources, child nodes have in a majority of cases a
+>> reg = <...> or ranges = <...> entry to define specific addresses of each child node and
+>> to distinguish between them.
+>> 
+>> This is not always the case (e.g. children of the root node) but often. Therefore I assume
+>> the child-node pattern is mainly intended for distinguishing between multiple *addressable*
+>> subdevices connected to a single provider, i.e. some sort of "shared bus".
+> 
+> We can have MMC controllers that only have a single sub-device, yet this
+> may have a node for this, rather than using phandles. The addressability
+> has no bearing.
+
+I admit that there are exceptions and MMC slaves (e.g. a single WiFi chip) is one
+of them, but there are many cases where subnodes are addressable. e.g. I2C, SPI.
+and e.g. the whole internal structure of SoCs.
+
+A source of wisdom is
+
+http://devicetree.org/Device_Tree_Usage#How_Addressing_Works
+
+Although not explicitly said it gives me the impression that the parent-child
+pattern is always tightly related with addresses and address translation
+(including the degenerate case of reg = <0> which could be thought to apply
+to the MMC example).
+
+And it mentions for "Non Memory Mapped Devices" nodes "Instead the
+parent device's driver would perform indirect access on behalf of the CPU".
+
+So this document could be interpreted as that a parent driver *must* translate
+addresses of children which would be exactly contrary to the view you describe
+to me that there is no bearing.
+
+Is this document wrong or irrelevant to our device trees (please give me a link
+to a better document)?
+
+> 
+>> In the specific problem I (and Neil) want to solve (GTA04 devices and
+>> more to come), the UART is simply a provider of serial data lines and
+>> power control events (or whatever the driver implementations want to
+>> do with the knowledge about this connection).
+>> 
+>> Although we have multiple such uart-device connections, they are all
+>> individual point-to-point.
+>> 
+>> Not a bus structure with multiple clients. So there are several simple
+>> provider-consumer relations.  Hence there is no urgent need for
+>> addresses of multiple child nodes of a single UART and no reg/ranges
+>> property.
+> 
+> As above, the addressability doesn't matter.
+> 
+>> Of course, with the child node approach it would give the flexibility
+>> to introduce such
+>> a feature easily in the future - but I don't see a use case. Not even at the horizon.
+>> 
+>> And I wonder how I should implement a driver if a child node provides a reg property.
+>> Should I invent and implement a protocol layer to make the UART an addressable bus?
+> 
+> Why would it have a reg property if it were a UART slave?
+
+Under the assumption that addressability matters and multiple parent-child
+nodes are usually used for addressable slaves. To group all of them under
+a single master. Then we would need reg = <1> etc. handled by the uart master
+driver.
+
+> 
+> If a device has multiple slave interfaces, it requires separate nodes
+> for these. In that case, you'd need to group those together with phandle
+> references.
+
+Yes.
+
+> 
+>> But the chip I connect to an UART does not understand that and I can't change it.
+> 
+> I don't follow what you mean by this. In what way does the binding
+> description affect the physical device? Are you talking about a driver?
+
+It is meant to comment about addressability discussion and protocol layer. If there is a
+protocol layer, the chip must be able to understand the protocol for addresses. And since
+I can't change the chip I can't introduce addresses. Hence can't make the uart-slave an
+addressable chip. This limits the subnode approach to a single subnode and always
+makes it a degenerate "bus".
+
+> 
+>> So it is probably not expected by the uart-slaves story - and I have no need for addressability
+>> of multiple subnodes.
+>> 
+>> So I conclude: the single chip is the consumer of a simple UART provider and should therefore
+>> be described as a connection through a phandle. Like in all the other DT examples listed
+>> above. The best description is IMHO:
+>> 
+>> https://www.kernel.org/doc/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>> 
+>> At least this is how I see the DT world when going through some device tree files
+>> and trying to deduce what the common style is.
+>> 
+>> This appears to be opposite to what you say: "most consistent with the way we
+>> handle other devices". I only find that other devices which understand some addressing
+>> scheme are handled that way.
+> 
+> It's consistent with the way we handle *slave* devices (i.e. we describe
+> the programming interface on a sub-node to the device that provides
+> access to that programming interface).
+
+Ok, I understand, based on your programming interface view.
+
+This means:
+
+user-space -> /dev/tty* -> UART -> chip
+
+> 
+> The phandle case describes side-band interfaces.
+
+Probably this is the key.
+
+In my PoV the data interface (programmer's API) already works (through /dev/tty*)
+without need to change DT. E.g. if the GPS chip is powered on by U-Boot.
+
+What is missing in kernel.org is just that the driver of a slave can know when to
+power up/down.
+
+Therefore the driver just needs to know the UART and ask for state information.
+Exactly the same as e.g. some driver might need to access the iio interface
+of some other device.
+
+Now the question is: is this a side-band interface or not?
+
+IMHO yes.
+
+There is also another use case to consider that was mentioned long ago: someone
+wanted to hide an UART from the tty layer so that it is not visible to the user
+space at all and the "slave" driver wraps it effectively inside the kernel.
+
+In that case a "slave" device driver uses the whole UART as a _resource_ to
+get access to the AT commands or whatever the chip understands and
+can present the data to user space with a different API (e.g. iio).
+
+Then, it would be obvious that the device driver has its own node and
+uses some phandle to know about the SoC UART it is connected to.
+
+This would be
+
+user-space ->/sys/bus/iio -> chip -> UART
+
+It appears to be impossible to correctly model both UART slave relations
+in a single DT...
+
+> 
+>>> I don't understand what the benefit of supporting two styles of
+>>> description would be, relative to the maintenance cost.
+>> 
+>> Supporting both styles is a proposal to make both of us happy.
+>> 
+>> And there isn't much to be maintained. It is just a notice in the bindings document
+>> of uart-slaves that the phandle is optional, if the node is the single child node of an
+>> UART. If it isn't a subnode of an UART, or not at index 0, the phandle is needed
+>> to describe the cross-reference. So it can be seen as a simple extension to move
+>> the node outside but keep the link.
+>> 
+>> A rough estimate is that it requires just ~20 lines to implement in our driver (unless
+>> we need locks, error handling etc.).
+>> 
+>> Then, the DT developers (like me) can decide which style better fits into the DTS
+>> structure that already exists, when adding a salve device to some UART.
+> 
+> Which then leads to confusion as DTs are arbitrarily different for no
+> real reason. That makes things harder to maintain, even if only ~20
+> lines of code were necessary.
+
+1 line in DT + location
+~20 lines in tty-driver code
+
+> 
+>> My experience from almost daily work with device trees is that phandles give
+>> more flexibility in expressing the hardware structure in DT language. And they
+>> allow to better group properties. In this case: "I am connected to interface ...".
+>> 
+>> And the allow to easily modify it by includes and overlays to describe small hardware
+>> variants ("I am now connected to a different interface ..."). Moving a subnode between
+>> parents is difficult without multiple well designed include files, while for phandle
+>> there is a simple idiom:
+>> 
+>> 	#include <existing.dts(i)>
+>> 	&child { link = <&new-parent>; };
+>> 
+>> IMHO this is easy to read and understand. And I have used that pattern several
+>> times, e.g. for "adding" hardware to some evaluation board without touching the
+>> original DTS. So I don't want to miss it in this case.
+>> 
+>>> Nor do I
+>>> understand your fixation with the phandle approach,
+>> 
+>> Well, because I don't understand your fixation on the child node approach for this
+>> non-addressable point-to-point connection. Why prepare for a feature that nobody
+>> really needs and has asked for?
+> 
+> Addressability was not my main concern. Consistency with other "bus"
+> types is a major concern. See below for what I mean by "bus", as we are
+> clearly using the term differently.
+
+> 
+>> To be more specific:
+>> 
+>> * I find that the phandle approach better (more flexible) suits the problem I want to have solved.
+>> * there is no need for multiple child nodes for a point-to-point connection, because UART is rarely used as a bus.
+> 
+> In Linux terminology a "bus" is effectively anything that provides us
+> with a programming interface to some number of devices.
+
+This "number of devices" is why I think addressability is a natural consequence of "bus".
+
+> That number may
+> be 1 (i.e. a point-to-point connection is just a particular case of a
+> "bus").
+
+Yes, of course there are degenerate cases where addressability can be ignored 
+(0 or 1 bus client).
+
+> 
+> That is what I mean when I talk about a "bus", and that is why I believe
+> that UARTs should be treated as with other busses if we are going to
+> handle slave devices.
+
+> 
+> I appreciate that this is not quite its usual meaning
+
+It is not far from my definition, except that you deny that multiple devices always need
+some addressing mechanism. Which you can only ignore if there is a degenerate
+case of a point-to-point connection.
+
+What your definition does not describe is the distinction between "payload" and
+side-band information.
+
+And again you argue with Linux terminology and programming interface when
+trying to describe hardware.
+
+> 
+>> * I see a lot of examples where phandles are intensively used and there it appears to be right to do so.
+>> 
+>> I just know that you conclude "child nodes made the most sense and was most consistent".
+>> 
+>> But I still wonder why. It does not appear to match what I observe in arch/arm/boot/dts
+>> and the problem I want to solve.
+>> 
+>>> given it has been
+>>> repeatedly disagreed with by binding maintainers.
+>> 
+>> Binding maintainers may sometimes be as wrong as I may be here. This needs a discussion
+>> but not a circular argument, that it already has been disagreed repeatedly.
+> 
+> We all make mistakes, certainly.
+> 
+> However, you have ignored the distinction that has been described
+> repeatedly w.r.t. slaves vs random side-band relationships.
+
+No, not at all.
+
+I just insist (and have also repeated several times) that for our device problem is just a side-band
+relationship that needs to be modeled.
+
+And IMHO nobody has described that he/she needs a solution to model the *data* relationship
+for devices connected behind a tty port.
+
+> 
+>> I may have missed it, but I am also not aware that there was a technical analysis of both
+>> approaches, comparing the pro's and con's. I had received requests to show code for the
+>> phandle approach and we provided it.
+>> 
+>> Coming to different conclusions can happen, if requirements are weighted differently. Or
+>> the problem to be solved is not completely understood. But then, the requirements and
+>> assumptions should be discussed (which is difficult on a patch-review-based discussion list).
+>> 
+>> On a more general level, the key problem is that *I* have to write and maintain a
+>> multitude of board specific DTS files (not all of them in mainline) using the style
+>> *you* decide.
+> 
+> While myself and others will be having to maintain bindings and
+> infrastructure for whatever is used. I appreciate one style might be
+> more painful in some cases, but that pain isn't necessarily only
+> constrained to dts authors.
+
+Please explain your pain by the phandle (only) approach or the pain
+for the non-dts authors you mention.
+
+We will provide a bindings document, examples and 2-3 drivers and board,dts using it.
+
+What do you expect to have to maintain?
+
+IMHO your work is exactly the same for both variants.
+
+> 
+>> A style which I don't feel to be the "right" one, because it is less flexible (e.g. swapping
+>> child nodes between parents in board variants).
+>> 
+>> Summary: your decision gives flexibility for future expansion that I do not need (and
+>> probably nobody else) and does not provide the flexibility I need today (and others
+>> might appreciate).
+>> 
+>> So what should I do? Except being fixed on the phandle approach, repeating my arguments
+>> and describe requirements. And submitting our code and bindings document proposal
+>> every now and then?
+> 
+> Follow the advice from myself and others, and describe the device as a
+> slave, under the UART providing access to the programmers' interface.
+
+Yes, that would be obviously the easiest for you :)
+
+I would have to work with a DT structure that I don't see necessary to solve my problem,
+and have the additional pain with arranging the board.dts files in an easy to maintain
+way (can't use simple phandle overwriting).
+
+> By
+> your own admission that works, it's simply that you don't like the style
+> of the dts.
+
+It is not a simple dislike. I think it is the wrong solution (harming future development if cast
+into concrete) for the practical problems I (and maybe others) have to be solved.
+
+After all (it is a very complex topic which is probably the reason why almost nobody jumps
+in to argue), I think we have condensed it into that we simply have different goals/problems
+to be solved and different starting points:
+
+* you want to see that DT describes the data (=main) interface from the uart to the chip. This
+   is based on looking which programmer-visible "main" interfaces are available to user space (a
+   rule which I doubt is needed and helpful for an OS agnostic formal hardware description).
+  You see the SoC UART as "master" and the chip as "slave" (even if there are no clear master-slave
+   roles in UART serial interfaces).
+
+* I want to describe the side-band interface from the chip to the uart to be able to know how to
+   control power of the chip and can even ignore that there is any user space API. This makes
+   the UART a status resource to be queried by the "slave".
+
+>From each of both goals it is clear that we come to different conclusions about the right way.
+
+And I wonder if the wording "uart-slave" is misleading? Is "uart-control" better? Or "uart-client"?
+
+So we do not have to discuss solutions and which one is right but the problem to be solved.
+
+Now what can I do to convince you and accept my view and the problem I want to
+solve for Linux?
+
+BR and thanks for clarifying your PoV,
+Nikolaus
