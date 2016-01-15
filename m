@@ -1,26 +1,99 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
- settings device tree options
-Date: Thu, 14 Jan 2016 19:31:19 -0600
-Message-ID: <56984BE7.2050303@tabi.org>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org>
- <20160114201858.GA17567@Asurada-Nvidia>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
+ series RTC IP
+Date: Thu, 14 Jan 2016 22:50:07 -0300
+Message-ID: <CABxcv=kqQc1DNmMJ1PAQkB7d=w9V4-85kJXtOXRPpwpXn7to8A@mail.gmail.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+	<1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
+	<569594F0.4020007@samsung.com>
+	<5695CD73.5010709@nvidia.com>
+	<5695D268.3060705@samsung.com>
+	<5695D1AF.9000806@nvidia.com>
+	<5696665A.5030508@nvidia.com>
+	<5696F0C4.1060904@samsung.com>
+	<5696F7F8.108@samsung.com>
+	<56978BA1.9050409@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160114201858.GA17567@Asurada-Nvidia>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>, Caleb Crome <caleb@crome.org>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56978BA1.9050409@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux GPIO List <linux-gpio@vger.kernel.org>, rtc-linux@googlegroups.com, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Nicolin Chen wrote:
-> I think DT maintainers may not give a consent towards these two
-> properties as they are not to describe the hardware but to hack
-> software configurations. (And it seems you haven't CCed them.)
+Hello,
 
-I admit it's a grey area, but the hardware doesn't work if you use the 
-wrong value, and it is a fixed value per device.  A p1022ds would use a 
-different value than in in i.MX6, and once you pick a value, it's the 
-same no matter which sample rate, buffer size, etc you choose.
+On Thu, Jan 14, 2016 at 8:50 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> On Thursday 14 January 2016 06:50 AM, Krzysztof Kozlowski wrote:
+>> On 14.01.2016 09:50, Krzysztof Kozlowski wrote:
+
+[snip]
+
+>>>
+>>> The max77802 does exactly the same (BTW, these should be merged as
+>>> well... I'll add this to the TODO list) so I think this is necessary.
+>>
+>> How about merging max77802 to max77686 first? The only differences I
+>> found are:
+>> 1. It uses main MFD/PMIC regmap.
+>>     This can be solved as part of decoupling code. The driver will get
+>> MFD's regmap and set up its own (only on max77686). The max77802 will
+>> only use parent's regmap.
+>>
+>> 2. It has different register address.
+>>     We need a register-layout/configuration structure. The logic is the
+>> same except few differences (e.g. presence of MAX77802_RTC_AE1).
+>>
+>> It may be easier to merge them now, before adding support for max77620?
+
+Agreed.
+
+When I originally posted the max77802 support, I had separate MFD,
+RTC, regulator and clock drivers and the feedback (IIRC) was that the
+MFD and clock blocks were too similar to the max77686 so I extended
+those drivers instead of adding new ones. But that the RTC and
+regulator blocks were different so a separate driver was justified...
+but it's true that are not that different and rtc-max77686 could be
+extended and rtc-max77802 removed.
+
+In fact, the ChromiumOS vendor tree has a single RTC driver for both
+max77686 and max77802:
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/rtc/rtc-max77xxx.c
+
+>> I could handle this probably next week or in the following week
+>> (assuming someone would test max77802 because I don't have the hardware).
+>>
+
+I could also work on this next week if you want. After all I feel
+guilty for the code duplication :-)
+
+>> Anyway I think we should develop these RTC patches having this in mind:
+>> merge all of them.
+>>
+>
+> I think we can do the merging of max77802 and max77686 at second step.
+>
+> At first, lets decouple the rtc-max77686.c with its mfd driver. This will
+> give better picture how will it be done.
+
+I don't quite understand what you mean by decoupling here, the
+max77686 MFD driver today is not highly coupled to their cells devices
+drivers since it supports both max77802 and max77686 already. Yes,
+some changes will be needed but I think those should be small.
+
+> Once this is there then max77620 can use this and in parallel, can be work
+> for max77802 to use the same driver.
+>
+>
+> Let's first conclude and get accpepted for max77686 and max77620 as both of
+> us have related HW to verify the changes.
+>
+
+I agree with Krzysztof that merging first before extending makes more
+sense but I don't have a strong opinion on this and can be done as a
+followup as well.
+
+Best regards,
+Javier
