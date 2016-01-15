@@ -1,66 +1,61 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 24/26] devicetree: Add olimex vendor prefix
-Date: Fri, 15 Jan 2016 09:05:03 +0100
-Message-ID: <20160115080503.GA11036@lukather>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452785109-6172-25-git-send-email-maxime.ripard@free-electrons.com>
- <20160115031543.GA25640@rob-hp-laptop>
- <1957693252.53435.d0a9f334-1bed-484f-886a-05dfab0e0dfa.open-xchange@email.1und1.de>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Fri, 15 Jan 2016 08:38:50 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63F102C@penmbx01>
+References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
+	<1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
+	<87pox41dy9.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
+ <8737tzz33h.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMWQ4K2AKGQELAB5CFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1957693252.53435.d0a9f334-1bed-484f-886a-05dfab0e0dfa.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8737tzz33h.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Fri, Jan 15, 2016 at 07:41:35AM +0100, Stefan Wahren wrote:
-> 
-> > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 15. Januar 2016 um 04:15 geschrieben:
-> >
-> >
-> > On Thu, Jan 14, 2016 at 04:25:07PM +0100, Maxime Ripard wrote:
-> > > Olimex is an open source hardware boards vendors based in Bulgaria.
-> > >
-> > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > > Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > > 1 file changed, 1 insertion(+)
-> >
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >
-> 
-> I don't think we need this twice.
-> 
-> It's already committed:
-> 
-> 2193377bdade ("DT: add Olimex to vendor prefixes")
-
-Hmm, indeed.
-
-Sorry for the noise, I'll drop the commit.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---MGYHOYXEY6WxJCY8--
+SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
+S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
+cnNnYWFyZA0KPiBTZW50OiAyMDE2xOox1MIxNcjVIDE1OjU4DQo+IFRvOiBZYW5nLCBXZW55b3Ug
+PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFy
+by5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gUGF3ZWwgTW9sbCA8
+cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
+IElhbg0KPiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBH
+YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47DQo+IEZlcnJl
+LCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9y
+Zz47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2NSAxLzJdIG1mZDogYWN0ODk0NWE6IGFkZCBBY3RpdmUtc2VtaSBBQ1Q4OTQ1
+QSBQTUlDDQo+IE1GRCBkcml2ZXINCj4gDQo+ID4+Pj4+ICJZYW5nLCIgPT0gWWFuZywgV2VueW91
+IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+IEhpLA0KPiANCj4gID4+IFdo
+eSBub3QgbWFrZSBpdCBhIHRyaXN0YXRlIGluc3RlYWQ/IEhhdmluZyByZWd1bGF0b3JzIGFzIG1v
+ZHVsZXMgaXMgcGVyaGFwcw0KPiBub3QgYSAgPj4gdmVyeSB3aXNlIHRoaW5nIHRvIGRvLCBidXQg
+Y29uY2VwdHVhbGx5IEkgZG9uJ3Qgc2VlIHdoeSB0aGlzIGNvZGUgY291bGRuJ3QNCj4gYmUgYSAg
+Pj4gbW9kdWxlLg0KPiANCj4gID4gWWVzLCB5b3UgYXJlIHJpZ2h0LiBpdCBjYW4gYmUgdXNlIGEg
+dHJpc3RhdGUuDQo+IA0KPiBPaywgZ29vZC4NCj4gDQo+ID4+ID4gKwlhY3Q4OTQ1YSA9IGRldm1f
+a3phbGxvYygmaTJjLT5kZXYsIHNpemVvZigqYWN0ODk0NWEpLA0KPiA+PiA+ICtHRlBfS0VSTkVM
+KTsNCj4gID4+ID4gKwlpZiAoIWFjdDg5NDVhKQ0KPiAgPj4gPiArCQlyZXR1cm4gLUVOT01FTTsN
+Cj4gID4+ID4gKw0KPiAgPj4NCj4gID4+IFdoYXQgaXMgdGhlIHBvaW50IG9mIHRoaXMgc3RydWN0
+dXJlIChhbmQgdGhlIGhlYWRlciBmaWxlKT8gQ2FuJ3QgdGhlIHN1YmRldmljZXMNCj4ganVzdCAg
+Pj4gZG8gZGV2X2dldF9yZWdtYXAoZGV2LT5wYXJlbnQpPyByZWd1bGF0b3JfcmVnaXN0ZXIoKSBh
+ZmFpayBhbHJlYWR5IGRvZXMNCj4gdGhpcyBieSAgPj4gZGVmYXVsdC4NCj4gDQo+ICA+IFllcywg
+SSByZS1yZWFkIHJlZ3VsYXRvcl9yZWdpc3RlcigpIGNvZGUuIEl0IGRpZCBkbyBkZXZfZ2V0X3Jl
+Z21hcChkZXYtDQo+ID5wYXJlbnQpLg0KPiANCj4gID4gSSB0aGluayB0aGlzIHN0cnVjdHVyZSBz
+aG91bGQgYmUgcG9pbnRlZCBieSBkZXYtPnBhcmVudCwgdGhpcyBzdHJ1Y3R1cmUgaXMNCj4gbmVj
+ZXNzYXJ5Lg0KPiANCj4gID4gWWVzIHJlZ3VsYXRvciBkcml2ZXIgc2hvdWxkIGJlIHNpbXBsZXIu
+DQo+IA0KPiAgPiBNb3Jlb3ZlciwgaXQgaXMgdXNlZCBieSBhbm90aGVyIHN1YiBkZXZpY2UsIGNo
+YXJnZXIuIFdoaWNoIGRvbid0IHN1Y2ggY29kZS4NCj4gDQo+IEJ1dCB0aGUgY2hhcmdlciBkcml2
+ZXIgY2FuIGp1c3QgYXMgd2VsbCBkbzoNCj4gDQo+IGRldl9nZXRfcmVnbWFwKGRldi0+cGFyZW50
+KTsNCj4gDQo+IGluc3RlYWQgb2Y6DQo+IA0KPiBkZXZfZ2V0X2RydmRhdGEocGRldi0+ZGV2LnBh
+cmVudCktPnJlZ21hcC4NCg0KVW5kZXJzdGFuZC4gDQoNClRoYW5rIHlvdSENCg0KDQpCZXN0IFJl
+Z2FyZHMsDQpXZW55b3UgWWFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
