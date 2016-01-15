@@ -1,54 +1,61 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 2/4] power: reset: add reboot mode driver
-Date: Fri, 15 Jan 2016 12:27:57 -0800
-Message-ID: <CALAqxLVNUG_cVbavXC34sNPv68jbMghti31+PrgQ7mpPngXh6g@mail.gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-	<1452598319-8324-1-git-send-email-andy.yan@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1452598319-8324-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, linux@roeck-us.net, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, geert+renesas@glider.be, sre@kernel.org, Olof Johansson <olof@lixom.net>, dbaryshkov@gmail.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, jun.nie@linaro.org, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, f.fainelli@gmail.com, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, cernekee@gmail.com, lkml <linux-kernel@vger.kern>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 15 Jan 2016 21:35:22 +0100
+Message-ID: <2F29C78B-8895-4065-A7D9-19F40BA3BF16@goldelico.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown> <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com> <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej> <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115194022.GA8371@amd>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160115194022.GA8371@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 3:31 AM, Andy Yan <andy.yan@rock-chips.com> wrote:
-> This driver parse the reboot commands like "reboot loader"
-> and "reboot recovery" to get a boot mode described in the
-> device tree , then call the write interfae to store the boot
-> mode in some persistent storage  like special register or ram,
-> which can be read by the bootloader after system reboot, then
-> the bootloader can take different action according to the mode
-> stored.
->
-> This is commonly used on Android based devices, which in order
-> to reboot the device into fastboot or recovery mode.
->
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
+Am 15.01.2016 um 20:40 schrieb Pavel Machek <pavel@ucw.cz>:
 
-Hey Andy!
-  Thanks for keeping this work going! I've just successfully reworked
-my Nexus7 tree to use your implementation (using the syscon version,
-setting up a syscon for IMEM as Bjorn had requested earlier).
+> On Fri 2016-01-15 10:34:51, H. Nikolaus Schaller wrote:
+>> Hi Mark,
+>> 
+>> Am 13.01.2016 um 20:15 schrieb Mark Rutland <mark.rutland@arm.com>:
+>> 
+>>> On Tue, Jan 12, 2016 at 02:28:00PM +0100, H. Nikolaus Schaller wrote:
+>>>> Hi Tomeu,
+>>>> 
+>>>> Am 12.01.2016 um 14:06 schrieb Tomeu Vizoso <tomeu@tomeuvizoso.net>:
+>>>> 
+>>>>> On 11 May 2015 at 03:56, NeilBrown <neil@brown.name> wrote:
+>>>>>> Hi all,
+>>>>>> here is version 4 of my "UART slave device" patch set, previously
+>>>>>> known as "tty slave devices".
+>>>>> 
+>>>>> Hi Neil,
+>>>>> 
+>>>>> do you (or someone else) have plans to continue this work in the short
+>>>>> or medium term?
+>>>> 
+>>>> yes, there is something in our upstreaming pipeline. This one works for us on top of 4.4.0:
+>>>> 
+>>>> <http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/misc/w2sg-tty-slave2-v4>
+>>>> 
+>>>> There is one point still to be solved: the exact style of the DT bindings.
+>>>> 
+>>>> We have an idea how a driver can implement two different styles (child node AND phandle)
+>>>> so that it is up to the DTS developer to use the one that best fits into the existing DTS.
+>>> 
+>>> From my perspective as a binding maintainer, and as I stated before, the
+>>> child node approach made the most sense and was most consistent with the
+>> 
+>>> way we handle other devices.
+>> 
+>> I simply don't see that this is the most common way other devices
+>> are handled.
+> 
+> You promised to shut up once maintainers speak, that happened, and you
+> did not shut up. Just do it now.
 
-All is working well so far!
+Nobody has asked for your unqualified and not helpful comments.
 
-The one thing I was working on supporting with my own version that
-seems to be missing here are for devices that use string based codes,
-rather then magic numbers.
-
-This was mostly a theoretical issue. I think the Galaxy Nexus used it,
-and when I was looking at some of the HTC devices, they support a text
-based reason along with the magic code, but at least in some
-implementations the text mode isn't used, so I suspect there its just
-for extra debugging.  So this may not be critical to solve until
-someone tries to add support for such a device.
-
-Anyway, I'm going to look at porting this to the HiKey board next
-(which just uses reserved ram, not syscon), so I'll try to do a an
-SRAM driver implementaiton to see how that goes.
-
-thanks!
--john
+So please shut up yourself and stop to disturb Free Software projects.
