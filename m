@@ -1,53 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [patch v3 net-next 1/2] dts: hisi: fixes no syscon fault when
- init mdio
-Date: Thu, 14 Jan 2016 20:17:18 -0600
-Message-ID: <20160115021718.GA24459@rob-hp-laptop>
-References: <1452668999-443-1-git-send-email-yankejian@huawei.com>
- <1452668999-443-2-git-send-email-yankejian@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] dt: bindings: add bindings for ipq4019 wifi block
+Date: Thu, 14 Jan 2016 20:20:21 -0600
+Message-ID: <20160115022021.GA27099@rob-hp-laptop>
+References: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452668999-443-2-git-send-email-yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.wei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+In-Reply-To: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Raja Mani <rmani@qti.qualcomm.com>
+Cc: agross@codeaurora.org, devicetree@vger.kernel.org, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 03:09:58PM +0800, Kejian Yan wrote:
-> When linux start up, we get the log below:
-> "Hi-HNS_MDIO 803c0000.mdio: no syscon hisilicon,peri-c-subctrl
-> mdio_bus mdio@803c0000: mdio sys ctl reg has not maped"
+On Wed, Jan 13, 2016 at 11:26:44AM +0530, Raja Mani wrote:
+> Add device tree binding documentation details for wifi block present
+> in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
 > 
-> The source code about the subctrl is dealt syscon, but dts doesn't.
-> It cause such fault, so this patch adds the syscon info on dts files to
-> fixes it.
+> Right now, ath10k wireless driver has support for PCI based wlan devices.
+> There is a plan to extend ath10k driver to support wifi devices which are
+> connected over AHB as well (enumeration will happen via device tree node).
+> For AHB based devices (ie, ipq4019), all wifi properties are supplied via
+> device tree (including irq, reg addr, cal data,etc).
 > 
-> Signed-off-by: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
 > ---
-> change log:
-> v3:
->  1) uses capital letter at the beginning of sentences
->  2) updates the right device node name
+> v3 changes:
+>   - Removed core-id - [Rob]
+>   - Documented which compatible string corresponds to pci devices
+>     and which corresponds to ahb devices. - [Rob]
 > 
-> v2:
->  1) updates the related documented in the binding as well
->  2) uses the normal naming conventions using '-' instead of '_'
+> v2 changes:
+>  - Improved "core-id" description - [Rob]
+>  - Removed "status" documentation - [Rob]
+>  - Added description which properties are applicable
+>    for ahb and which are applicable for pci devices - [Rob]
+>  - Improved commit msg to explain the context.
+>  - Renamed "qca,msi_addr" to "qcom,msi_addr" and
+>    "qca,msi_base" to "qcom,msi_base" to follow uniformity.
 > 
-> v1:
->  first submit
-> 
-> v2 patch link: https://lkml.org/lkml/2015/12/7/80
-> v1 patch link: https://lkml.org/lkml/2015/11/28/3
-> ---
->  .../devicetree/bindings/arm/hisilicon/hisilicon.txt      | 16 ++++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hip05.dtsi                 |  5 +++++
->  arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi             |  4 ++--
->  3 files changed, 23 insertions(+), 2 deletions(-)
+>  .../bindings/net/wireless/qcom,ath10k.txt          | 89 ++++++++++++++++++++--
+>  1 file changed, 84 insertions(+), 5 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A few typos, otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index edefc26..bf8c0f8c 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -1,17 +1,46 @@
+>  * Qualcomm Atheros ath10k wireless devices
+>  
+> -For ath10k devices the calibration data can be provided through Device
+> -Tree. The node is a child node of the PCI controller.
+> -
+>  Required properties:
+> --compatible : Should be "qcom,ath10k"
+> +- compatible: Should be one of the following:
+> +	* "qcom,ath10k"
+> +	* "qcom,ipq4019-wifi"
+> +
+> +PCI based devices uses compatible string "qcom,ath10k" and takes only
+> +calibration data via "qcom,ath10k-calibration-data". Reset of the properties
+
+s/Reset/Rest/
+
+> +are not applicable for PCI based devices.
+> +
+> +AHB based devices (ie, ipq4019) uses compatible string "qcom,ipq4019-wifi"
+
+s/ie,/i.e./
+
+> +and also uses most of the properties defined in this doc.
