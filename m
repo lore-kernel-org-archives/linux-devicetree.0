@@ -1,77 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dt: bindings: add bindings for ipq4019 wifi block
-Date: Thu, 14 Jan 2016 20:20:21 -0600
-Message-ID: <20160115022021.GA27099@rob-hp-laptop>
-References: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 next-next] net: hns: enet specifies a reference to dsaf
+Date: Thu, 14 Jan 2016 20:28:00 -0600
+Message-ID: <20160115022800.GA29856@rob-hp-laptop>
+References: <1452654880-28980-1-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Raja Mani <rmani@qti.qualcomm.com>
-Cc: agross@codeaurora.org, devicetree@vger.kernel.org, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1452654880-28980-1-git-send-email-yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haifeng.wei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 11:26:44AM +0530, Raja Mani wrote:
-> Add device tree binding documentation details for wifi block present
-> in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
+On Wed, Jan 13, 2016 at 11:14:40AM +0800, Kejian Yan wrote:
+> This patch replace the assoication between dsaf and enet from string
+> matching to object reference. It requires the DTS to be updated within
+> BIOS. Thanks god it can be done for all released boards.
 > 
-> Right now, ath10k wireless driver has support for PCI based wlan devices.
-> There is a plan to extend ath10k driver to support wifi devices which are
-> connected over AHB as well (enumeration will happen via device tree node).
-> For AHB based devices (ie, ipq4019), all wifi properties are supplied via
-> device tree (including irq, reg addr, cal data,etc).
-> 
-> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
+> Signed-off-by: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
-> v3 changes:
->   - Removed core-id - [Rob]
->   - Documented which compatible string corresponds to pci devices
->     and which corresponds to ahb devices. - [Rob]
-> 
-> v2 changes:
->  - Improved "core-id" description - [Rob]
->  - Removed "status" documentation - [Rob]
->  - Added description which properties are applicable
->    for ahb and which are applicable for pci devices - [Rob]
->  - Improved commit msg to explain the context.
->  - Renamed "qca,msi_addr" to "qcom,msi_addr" and
->    "qca,msi_base" to "qcom,msi_base" to follow uniformity.
-> 
->  .../bindings/net/wireless/qcom,ath10k.txt          | 89 ++++++++++++++++++++--
->  1 file changed, 84 insertions(+), 5 deletions(-)
+> change log:
+> v2:
+>  merge the two patches into one to allow bisection.
 
-A few typos, otherwise:
-
-Acked-by: Rob Herring <robh@kernel.org>
 
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index edefc26..bf8c0f8c 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -1,17 +1,46 @@
->  * Qualcomm Atheros ath10k wireless devices
->  
-> -For ath10k devices the calibration data can be provided through Device
-> -Tree. The node is a child node of the PCI controller.
-> -
->  Required properties:
-> --compatible : Should be "qcom,ath10k"
-> +- compatible: Should be one of the following:
-> +	* "qcom,ath10k"
-> +	* "qcom,ipq4019-wifi"
-> +
-> +PCI based devices uses compatible string "qcom,ath10k" and takes only
-> +calibration data via "qcom,ath10k-calibration-data". Reset of the properties
+> v1:
+>  first submit.
+> 
+> v1 patch reference:
+>  https://lkml.org/lkml/2015/12/5/11
+>  https://lkml.org/lkml/2015/12/5/12
+> ---
+>  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt    |  5 +----
+>  .../devicetree/bindings/net/hisilicon-hns-nic.txt     |  7 ++++---
+>  arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi          | 19 +++++++++----------
 
-s/Reset/Rest/
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +are not applicable for PCI based devices.
-> +
-> +AHB based devices (ie, ipq4019) uses compatible string "qcom,ipq4019-wifi"
+>  drivers/net/ethernet/hisilicon/hns/hnae.c             | 17 +++++++----------
+>  drivers/net/ethernet/hisilicon/hns/hnae.h             |  7 +++++--
+>  drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c     |  4 ++++
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c    | 10 +---------
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h    |  1 +
+>  drivers/net/ethernet/hisilicon/hns/hns_enet.c         | 13 +++++++++----
+>  drivers/net/ethernet/hisilicon/hns/hns_enet.h         |  2 +-
+>  10 files changed, 42 insertions(+), 43 deletions(-)
 
-s/ie,/i.e./
-
-> +and also uses most of the properties defined in this doc.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
