@@ -1,82 +1,173 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] reset: img: Add pistachio reset controller binding
- document
-Date: Fri, 15 Jan 2016 17:48:31 +0100
-Message-ID: <1452876511.6067.92.camel@pengutronix.de>
-References: <1452869073-27608-1-git-send-email-james.hartley@imgtec.com>
-	  <1452869073-27608-2-git-send-email-james.hartley@imgtec.com>
-	 <1452873439.6067.86.camel@pengutronix.de> <56991F23.8010500@imgtec.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V12 2/7] dma: hidma: Add Device Tree support
+Date: Fri, 15 Jan 2016 11:49:50 -0500
+Message-ID: <5699232E.60809@codeaurora.org>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-3-git-send-email-okaya@codeaurora.org>
+ <20160115151637.GJ3262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56991F23.8010500-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Damien Horsley <damien.horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160115151637.GJ3262@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 15.01.2016, 16:32 +0000 schrieb James Hartley:
-> Hi Philipp,
+On 1/15/2016 10:16 AM, Mark Rutland wrote:
+> On Mon, Jan 11, 2016 at 09:45:42AM -0500, Sinan Kaya wrote:
+>> Add documentation for the Qualcomm Technologies HIDMA driver.
 > 
-> Thanks for the quick review,
-> 
-> On 01/15/16 15:57, Philipp Zabel wrote:
-> > Am Freitag, den 15.01.2016, 14:44 +0000 schrieb James Hartley:
-> [..]
-> >> +Example:
-> >> +
-> >> +	pistachio_reset: reset-controller {
-> >> +		compatible = "img,pistachio-reset";
-> >> +		img,cr-periph = <&cr_periph>;
-> >> +		#reset-cells = <1>;
-> >> +	};
-> > If this is just a register in the cr_periph syscon, why not put the
-> > reset-controller node inside the cr_periph node:
-> >
-> >      cr_periph: syscon@xyz {
-> >          compatible = "syscon", "simple-mfd";
-> >          pistachio_reset: reset-controller {
-> >              compatible = "img,pistachio-reset";
-> >              #reset-cells = <1>;
-> >          };
-> >      };
-> >
-> > And in the driver use
-> >      syscon_node_to_regmap(np->parent);
-> > instead of
-> >      syscon_regmap_lookup_by_phandle(np, "img,cr-periph");
-> > ?
-> 
-> Yes that makes sense, I'll look at changing that for a V2 patchset.
-> 
-> > Do you need a reg property, or is will the register offset be 0 in all
-> > pistachio variants?
-> 
-> The offset will always be 0 for all pistachio variants.
+> s/driver/binding/
 
-Ok.
+Changed.
 
-> [..]
-> > +Example:
-> > +
-> > +	spdif_out: spdif-out@18100d00 {
-> > +		...
-> > +		resets = <&pistachio_reset PISTACHIO_RESET_SPDIF_OUT>;
-> > +		reset-names = "rst";
-> > reset-names is not needed for devices that only have one reset.
 > 
-> Agreed, but there are already audio drivers that pistachio uses that 
-> have been merged upstream
-> using this name in their dt-entries - is there any harm in leaving it in?
+> 
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 79 ++++++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> new file mode 100644
+>> index 0000000..0e6ed1f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> @@ -0,0 +1,79 @@
+>> +Qualcomm Technologies HIDMA Management interface
+>> +
+>> +Qualcomm Technologies HIDMA is a high speed DMA device. It only supports
+>> +memcpy and memset capabilities. It has been designed for virtualized
+>> +environments.
+>> +
+>> +Each HIDMA HW instance consists of multiple DMA channels. These channels
+>> +share the same bandwidth. The bandwidth utilization can be parititioned
+>> +among channels based on the priority and weight assignments.
+>> +
+>> +There are only two priority levels and 15 weigh assignments possible.
+>> +
+>> +Other parameters here determine how much of the system bus this HIDMA
+>> +instance can use like maximum read/write request and and number of bytes to
+>> +read/write in a single burst.
+>> +
+>> +Main node required properties:
+>> +- compatible: "qcom,hidma-mgmt-1.0";
+>> +- reg: Address range for DMA device
+>> +- dma-channels: Number of channels supported by this DMA controller.
+>> +- max-write-burst-bytes: Maximum write burst in bytes. A memcpy requested is
+>> +  fragmented to multiples of this amount.
+>> +- max-read-burst-bytes: Maximum read burst in bytes. A memcpy request is
+>> +  fragmented to multiples of this amount.
+>> +- max-write-transactions: Maximum write transactions to perform in a burst
+>> +- max-read-transactions: Maximum read transactions to perform in a burst
+> 
+> Just to check, where do these max-* values come from?
+These are HW bus parameters like the burst count and 
+size of each burst. These values change based on the SoC this IP is in use.
 
-That was just a remark. As long as this requirement is there from the
-beginning and it is used consistently, I don't mind.
+> 
+> Are they some correctness requirement of the bus this is attached to?
+You can starve other peripherals if you use incorrect values as the bus is 
+shared with other peripherals. Yes, correctness is required.
 
-best regards
-Philipp
+> 
+> Are they tuning values?
+Correct value is necessary for functioning. I'd consider weight and priority
+as the only tuning parameters. 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> The latter doesn't really belong in the DT. Given they're writeable from
+> the driver, it seems like that's what they are...
+
+Good catch. Those should have been read-only. I wanted to be able to export these
+information to the userspace app. I'll fix the sysfs to make them read-only.
+
+> 
+>> +- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
+> 
+> I'm not sure what this means. Could you elaborate on this is?
+After each reset command, HW starts a timer. This is the time HW waits before it declares
+reset failed.
+
+> 
+>> +
+>> +Sub-nodes:
+>> +
+>> +HIDMA has one or more DMA channels that are used to move data from one
+>> +memory location to another.
+>> +
+>> +Each DMA channel is described as a sub-node under the management object.
+>> +When a transfer channel is given to the guest operating system, only the channel
+>> +object is created. The drivers have support for both flat and hierarchical
+>> +configuration.
+> 
+> Don't mention drivers here.
+> 
+> All you need to state is that when the OS is not in control of the
+> management interface (i.e. it's a guest), the channel nodes appear on
+> their own, not under a management node.
+
+Replaced the above paragraph with yours.
+
+> 
+> Other than the above questions, this looks ok to me.
+> 
+> Thanks,
+> Mark.
+> 
+>> +
+>> +Required properties:
+>> +- compatible: must contain "qcom,hidma-1.0"
+>> +- reg: Addresses for the transfer and event channel
+>> +- interrupts: Should contain the event interrupt
+>> +- desc-count: Number of asynchronous requests this channel can handle
+>> +- channel-index: The HW event channel completions will be delivered.
+>> +
+>> +Example:
+>> +
+>> +Hypervisor OS configuration:
+>> +
+>> +	hidma-mgmt@f9984000 = {
+>> +		compatible = "qcom,hidma-mgmt-1.0";
+>> +		reg = <0xf9984000 0x15000>;
+>> +		dma-channels = <6>;
+>> +		max-write-burst-bytes = <1024>;
+>> +		max-read-burst-bytes = <1024>;
+>> +		max-write-transactions = <31>;
+>> +		max-read-transactions = <31>;
+>> +		channel-reset-timeout-cycles = <0x500>;
+>> +
+>> +		hidma_24: dma-controller@0x5c050000 {
+>> +			compatible = "qcom,hidma-1.0";
+>> +			reg = <0 0x5c050000 0x0 0x1000>,
+>> +			      <0 0x5c0b0000 0x0 0x1000>;
+>> +			interrupts = <0 389 0>;
+>> +			desc-count = <10>;
+>> +			channel-index = <4>;
+>> +		};
+>> +	};
+>> +
+>> +Guest OS configuration:
+>> +
+>> +	hidma_24: dma-controller@0x5c050000 {
+>> +		compatible = "qcom,hidma-1.0";
+>> +		reg = <0 0x5c050000 0x0 0x1000>,
+>> +		      <0 0x5c0b0000 0x0 0x1000>;
+>> +		interrupts = <0 389 0>;
+>> +		desc-count = <10>;
+>> +		channel-index = <4>;
+>> +	};
+>> -- 
+>> Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+>>
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
