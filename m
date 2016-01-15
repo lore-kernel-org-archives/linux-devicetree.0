@@ -1,74 +1,56 @@
-From: Caleb Crome <caleb@crome.org>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark
- and maxburst settings device tree options
-Date: Fri, 15 Jan 2016 09:03:28 -0800
-Message-ID: <CAG5mAdy553q4Te5755575WaiLxGRp43h=WVH6QzF7idsaCnhbg@mail.gmail.com>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org>
- <20160114201858.GA17567@Asurada-Nvidia> <56984BE7.2050303@tabi.org>
- <20160115131325.GW6588@sirena.org.uk> <5698F846.5080604@tabi.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V12 2/7] dma: hidma: Add Device Tree support
+Date: Fri, 15 Jan 2016 12:05:19 -0500
+Message-ID: <569926CF.6030205@codeaurora.org>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-3-git-send-email-okaya@codeaurora.org>
+ <20160115151637.GJ3262@leverpostej> <20160115153054.GL3262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5698F846.5080604@tabi.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Timur Tabi <timur@tabi.org>
-Cc: devicetree@vger.kernel.org, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Xiubo Li <Xiubo.Lee@gmail.com>, Takashi Iwai <tiwai@suse.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Mark Brown <broonie@kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160115153054.GL3262@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 5:46 AM, Timur Tabi <timur@tabi.org> wrote:
-> Mark Brown wrote:
->>>
->>> >I admit it's a grey area, but the hardware doesn't work if you use the
->>> > wrong
->>> >value, and it is a fixed value per device.  A p1022ds would use a
->>> > different
->>> >value than in in i.MX6, and once you pick a value, it's the same no
->>> > matter
->>> >which sample rate, buffer size, etc you choose.
->
->
->> Caleb's original message suggested this was rate dependant.
->
+On 1/15/2016 10:30 AM, Mark Rutland wrote:
+> Further to my reply below, I'm generally uncomfortable with some
+> properties (max-* need a better description if they are a HW
+> requirement, and probably should not be present otherwise). 
 
+I'll add more description. 
 
->
-> Yeah, I just noticed that.  In that case, I agree that a device tree
-> property is inappropriate, unless it's an array that contains tuples of
-> sample rates and watermark/maxburst settings.  That would get unwieldy very
-> easily, though.
+> I'm also
+> concerned that information necessary for the advertised use-case of the
+> device (e.g. IOMMUs) is missing [1], and we're missing parts of the
+> story necessary to review this for correctness.
 
+OK. Let me work on this. I tried to capture as much documentation as possible
+into the series before. One reviewer said I should add it. Another reviewer said I should 
+remove it. 
 
-The rate dependance is only a *potential* issue.  I suspect that a
-value of 4 should be functional for all rates and chips.  The only
-trade off is more DMA requests/bursts.
+Where would be the best place to document the use case? 
+- In the source file?
+- In the commit message?
+- In the device-tree documentation?
 
-In a typical 15 word fifo, 48kHz, stereo, single fifo DMA system,  the
-old value was 15-2 = 13, which would mean 7385 13-word DMA
-bursts/second.    A new value of 4 would mean 24,000 4-word DMA
-bursts/second.
+I'll try to write up something based on your and Mark Zyngier's questions for the 
+next release.
 
-Is that consequential for anybody?  It's about the same total
-bandwidth on the system, but just broken up into smaller chunks (I
-don't know what the overhead is for a DMA burst)
+> 
+> Until that's settled, I don't think this is ready yet, and I don't think
+> this should be picked up.
+> 
+> I'm sorry to say that at this stage, as I realise that may sound
+> obstructive. That's not my intention, and I hope we can figure out those
+> details quickly.
 
-In a high channel count system (16 channels @ 48kHz), the old value
-doesn't work, and the new value would mean 192,000 4-word DMA
-bursts/second, which works on my MX6.  So given that 192000 works
-fine, I'm not sure that the difference in a typical system would
-matter at all.
+I hope so too. I'm going towards V20 with small nitpicks rather than the good 
+feedback like yours.
 
-If nobody objects, we can just set the value to 4 and be done with it.
-
-Another question:  is the watermark ever going to be different than
-maxburst?  Is there any reason to have them different?
-
--Caleb
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
