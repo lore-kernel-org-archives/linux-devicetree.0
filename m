@@ -1,55 +1,83 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 15 Jan 2016 17:47:52 -0500
-Message-ID: <56997718.70707@codeaurora.org>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
- <20160115145629.GI3262@leverpostej> <56990C40.4050407@codeaurora.org>
- <20160115152257.GK3262@leverpostej> <56992987.5080603@codeaurora.org>
- <56992D16.6070800@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <56992D16.6070800@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+Date: Fri, 15 Jan 2016 23:57:21 +0100
+Message-ID: <56997951.90304@gmail.com>
+References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+ <20160114164418.GD19773@lunn.ch>
+ <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: Shaohui Xie <shaohui.xie@nxp.com>, Andrew Lunn <andrew@lunn.ch>, "shh.xie@gmail.com" <shh.xie@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/15/2016 12:32 PM, Marc Zyngier wrote:
->>> Do you have a link to that? Seeing it would help to ease my concerns.
->> > 
->> > The QEMU driver has not been posted yet. As far as I know, it just discovers the memory
->> > resources on the platform object and creates mappings for the guest machine only. 
->> > 
->> > Shanker Donthineni and Vikram Sethi will post the QEMU patch later.
-> Then may I suggest you both synchronize your submissions? I'd really
-> like to hear from the QEMU maintainers that they are satisfied with that
-> side of the story as well.
+On 15.01.2016 05:01, Shaohui Xie wrote:
+>> -----Original Message-----
+>> From: Andrew Lunn [mailto:andrew@lunn.ch]
+>> Sent: Friday, January 15, 2016 12:44 AM
+>> To: shh.xie@gmail.com
+>> Cc: devicetree@vger.kernel.org; netdev@vger.kernel.org; linuxppc-
+>> dev@lists.ozlabs.org; f.fainelli@gmail.com; davem@davemloft.net; Shaohui Xie
+>> Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+>>
+>> On Thu, Jan 14, 2016 at 04:23:59PM +0800, shh.xie@gmail.com wrote:
+>>> From: Shaohui Xie <Shaohui.Xie@freescale.com>
+>>>
+>>> This commit adds necessary definitions for the PHY layer to recognize
+>>> backplane Ethernet 1000BASE-KX and 10GBASE-KR as valid PHY interfaces,
+>>> "1000base-kx" for 1000BASE-KX, "10gbase-kr" for 10GBASE-KR.
+>>>
+>>> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
+>>> ---
+>>> changes in v2:
+>>> new patch.
 
-The HIDMA QEMU driver is also based on VFIO platform driver in QEMU. It is not a new concept
-or new framework. All tried and tested solutions. 
+Shaohui,
 
-The driver below is already using this feature. HIDMA is no exception. 
-I have verified functionality of HIDMA linux driver with HIDMA QEMU driver already.
+it would be more useful to describe _what_ is new here compared to v1.
 
-https://lxr.missinglinkelectronics.com/qemu/hw/arm/sysbus-fdt.c#L67
-https://lxr.missinglinkelectronics.com/qemu/hw/vfio/calxeda-xgmac.c#L18
-https://lxr.missinglinkelectronics.com/qemu/include/hw/vfio/vfio-calxeda-xgmac.h 
+Anyway:
 
+>>>  Documentation/devicetree/bindings/net/ethernet.txt | 4 ++--
+>>>  include/linux/phy.h                                | 6 ++++++
+>>>  2 files changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt
+>>> b/Documentation/devicetree/bindings/net/ethernet.txt
+>>> index 5d88f37..1166a5c 100644
+>>> --- a/Documentation/devicetree/bindings/net/ethernet.txt
+>>> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
+>>> @@ -11,8 +11,8 @@ The following properties are common to the Ethernet
+>> controllers:
+>>>    the maximum frame size (there's contradiction in ePAPR).
+>>>  - phy-mode: string, operation mode of the PHY interface; supported values are
+>>>    "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii",
+>>> "rgmii", "rgmii-id",
+>>> -  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a
+>>> de-facto
+>>> -  standard property;
+>>> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii", "1000base-kx",
+>>> + "10gbase-kr";  this is now a de-facto standard property;
+>>
+>> I know very little about this, so i'm just asking a question. None of the other
+>> interface modes contain a bit rate. So is the bit rate needed for your two new
+>> modes?
+> 
+> 1000BASE-KX and 10GBASE-KR are terms in IEEE802.3, so as XGMII and GMII. 
+> There are interfaces could be different bit rates but same types, 
+> e.g. 100BASE-LX10 and 1000BASE-LX10, or 40GBASE-KR4 and 100GBASE-KR4, 
+> having bit rate is clear to represent hardware.
+> 
 
+If you look at the list of possible values for "phy-mode" you'd see that
+none of it describes a PHY-to-PHY connection but all are for MAC-to-PHY
+connections. Also, names above suggest it already: MII is short for
+media _independent_ interface.
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+I copy Andrew's concerns and think that neither 10000base-kx nor
+10gbase-kr belong in the list of phy-mode properties.
+
+Sebastian
