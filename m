@@ -1,86 +1,64 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Sat, 16 Jan 2016 00:03:37 +0100
-Message-ID: <5216704.YbueADHOOR@wuerfel>
-References: <Pine.LNX.4.44L0.1601151006330.1533-100000@iolanthe.rowland.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] dtc: create tool to diff device trees
+Date: Fri, 15 Jan 2016 15:14:17 -0800
+Message-ID: <56997D49.6000203@gmail.com>
+References: <568EB672.6060300@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1601151006330.1533-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <568EB672.6060300@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, david@gibson.dropbear.id.au, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 January 2016 10:11:06 Alan Stern wrote:
-> On Fri, 15 Jan 2016, Arnd Bergmann wrote:
+Hi Rob,
+
+On 1/7/2016 11:03 AM, Frank Rowand wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
 > 
-> > On Friday 15 January 2016 17:17:27 Peter Chen wrote:
-> > > Although most of USB devices are hot-plug's, there are still some devices
-> > > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> > > If these kinds of USB devices are multiple functions, and they can supply
-> > > other interfaces like i2c, gpios for other devices, we may need to
-> > > describe these at device tree.
-> > > 
-> > > In this commit, it uses "reg" in dts as port number to match the port
-> > > number decided by USB core, if they are the same, then the device node
-> > > is for the device we are creating for USB core.
-> > > 
-> > > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > 
-> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > 
-> > 
-> > Just one last question:
-> > 
-> > >  	dev->active_duration = -jiffies;
-> > >  #endif
-> > > -	if (root_hub)	/* Root hub always ok [and always wired] */
-> > > +	if (root_hub) {	/* Root hub always ok [and always wired] */
-> > >  		dev->authorized = 1;
-> > > -	else {
-> > > +		dev->of_node = bus->controller->of_node;
-> > 
-> > 
-> > You are adding the of_node of the controller to the root hub, which I
-> > guess means that we now have two 'struct device' instances with the
-> > same of_node. They have different bus_types, so I think that is ok,
-> > but I wonder if it would be better to leave out the of_node for the
-> > root hub to avoid the confusion. Can you think of a case where we
-> > actually want to add properties for the root hub that we can't do
-> > more easily in the host controller?
+> Create script to diff device trees.
 > 
-> There may not be any such cases, but there's still a good reason for
-> setting the root hub's of_node pointer: to initialize the recursion
-> along the USB device tree.
+> The device tree can be in any of the forms recognized by the dtc compiler:
+>   - source
+>   - binary blob
+>   - file system tree (from /proc/devicetree)
 > 
-> This leaves the question of whether OF will always use the same node to
-> represent the host controller and the root hub.  In other words, if a
-> motherboard has a fixed device plugged into a fixed root-hub port, will
-> the DT description make that device a child of the host controller?  
-> Or will there be a node in between (to represent the root hub)?
+> If the device tree is a source file, then it is pre-processed in the
+> same way as it would be when built in the linux kernel source tree
+> before diffing.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> ---
+> 
+> Tools to develop and debug device tree are somewhat inadequate.  This is a
+> small step in improving the situation.
+> 
+> Rationale for and examples of using the script are provided in slides
+> 1 - 78 of the elce 2015 presentation "Solving Device Tree Issues",
+> which can be found at:
+> 
+>    http://elinux.org/images/0/04/Dt_debugging_elce_2015_151006_0421.pdf
+> 
+> (The script was named dtdiff instead of dtx_diff in the presentation.)
+> 
+> Changes in v2:
+>   - Remove dt-bindings from list of includes in cpp_flags
+>   - Remove arch_dtc_flags, which were generated from the arch specific
+>     dts makefile
+>   - Reformat to 8 character tabs
+>   - compile_to_dts(): added back missing return for binary blob
+> 
+> 
+>  scripts/dtc/dtx_diff |  343 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 343 insertions(+)
 
-Good question. I'm sure the answer is somewhere in this document
+< snip >
 
-http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+Did v2 resolve your issues, or would you like some additional changes?
 
-but unfortunately I don't understand USB addressing well enough
-to answer this. I think the key sentence is the definition of the
-"reg" property:
+Thanks,
 
-| prop-encoded-array: one integer, encoded as with encode-int.
-| The "reg" property for a device node shall consist of the number of the
-| USB hub port or the USB host controller port to which this USB device
-| is attached. As specified in [2] section 11.11.2.1, port numbers range
-| from 1 to 255.
-
-Does the root hub have a port number relative to the host controller,
-or is it identical to the host controller from the addressing
-perspective?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frank
