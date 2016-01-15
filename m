@@ -1,94 +1,111 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 15 Jan 2016 15:36:56 +0000
-Message-ID: <20160115153656.GM3262@leverpostej>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
- <20160115145629.GI3262@leverpostej>
- <56990CD4.6020405@arm.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v2 01/16] Xen: ACPI: Hide UART used by Xen
+Date: Fri, 15 Jan 2016 15:39:54 +0000
+Message-ID: <alpine.DEB.2.02.1601151522460.16178@kaball.uk.xensource.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-2-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56990CD4.6020405@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, christoffer.dall@linaro.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452840929-19612-2-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 03:14:28PM +0000, Marc Zyngier wrote:
-> On 15/01/16 14:56, Mark Rutland wrote:
-> > Hi,
-> > 
-> > [adding KVM people, given this is meant for virtualization]
-> > 
-> > On Mon, Jan 11, 2016 at 09:45:43AM -0500, Sinan Kaya wrote:
-> >> The Qualcomm Technologies HIDMA device has been designed to support
-> >> virtualization technology. The driver has been divided into two to follow
-> >> the hardware design.
-> >>
-> >> 1. HIDMA Management driver
-> >> 2. HIDMA Channel driver
-> >>
-> >> Each HIDMA HW consists of multiple channels. These channels share some set
-> >> of common parameters. These parameters are initialized by the management
-> >> driver during power up. Same management driver is used for monitoring the
-> >> execution of the channels. Management driver can change the performance
-> >> behavior dynamically such as bandwidth allocation and prioritization.
-> >>
-> >> The management driver is executed in hypervisor context and is the main
-> >> management entity for all channels provided by the device.
-> > 
-> > You mention repeatedly that this is designed for virtualization, but
-> > looking at the series as it stands today I can't see how this operates
-> > from the host side.
+On Fri, 15 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Nor the guest's, TBH. How do host and guest communicate, what is the
-> infrastructure, how is it meant to be used? A lot of questions, and no
-> answer whatsoever in this series.
-
-I think the guest's PoV is fairly simple and understood. The DMA channel
-is pased in as with any passthrough of any other platform device.
-
-No communication with the host is necessary -- an isolated channel is
-usable.
-
-The larger concern is isolation, given the lack of IOMMU, or anything
-obvious w.r.t. pinning of pages.
-
-> > This doesn't seem to tie into KVM or VFIO, and as far as I can tell
-> > there's no mechanism for associating channels with a particular virtual
-> > address space (i.e. no configuration of an external or internal IOMMU),
-> > nor pinning of guest pages to allow for DMA to occur safely.
-> > 
-> > Given that, I'm at a loss as to how this would be used in a hypervisor
-> > context. What am I missing?
-> > 
-> > Are there additional patches, or do you have some userspace that works
-> > with this in some limited configuration?
+> ACPI 6.0 introduces a new table STAO to list the devices which are used
+> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> UART is used by Xen. So here it hides UART from Dom0.
 > 
-> Well, this looks so far like a code dumping exercise. I'd very much
-> appreciate a HIDMA101 crash course:
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> CC: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> (supporter:ACPI)
+> CC: Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (supporter:ACPI)
+> CC: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:ACPI)
+> ---
+>  drivers/acpi/bus.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> - How do host and guest communicate?
-> - How is the integration performed in the hypervisor?
-> - Does the HYP side requires any context switch (and how is that done)?
+> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+> index a212cef..d7a559f 100644
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -46,6 +46,7 @@ ACPI_MODULE_NAME("bus");
+>  struct acpi_device *acpi_root;
+>  struct proc_dir_entry *acpi_root_dir;
+>  EXPORT_SYMBOL(acpi_root_dir);
+> +static u64 spcr_uart_addr;
+>  
+>  #ifdef CONFIG_X86
+>  #ifdef CONFIG_ACPI_CUSTOM_DSDT
+> @@ -93,6 +94,17 @@ acpi_status acpi_bus_get_status_handle(acpi_handle handle,
+>  {
+>  	acpi_status status;
+>  
+> +	if (spcr_uart_addr != 0xffffffffffffffff) {
 
-I don't believe this requires any context-switch -- it's the same as
-assigning any other platform device other than additional proeprties
-being controlled in the managament interface.
+Please #define something like EFI_INVALID_TABLE_ADDR and use it here
+instead of 0xffffffffffffffff for readability. Also spcr_uart_addr could
+be initialized where it is defined.
 
-> - What makes it safe?
+Maybe it could be better to move this check into a separate function and
+only call acpi_set_device_status if spcr_uart_addr != addr?
 
-I'm concerned with how this is safe, and with the userspace interface.
-e.g. if the user wants to up the QoS for a VM, how to they find the
-right channel in sysfs  to alter?
 
-> Without any of this information (and pointer to the code to back it up),
-> I'm very reluctant to take any of this.
+> +		u64 addr;
+> +
+> +		status = acpi_evaluate_integer(handle, METHOD_NAME__ADR, NULL,
+> +					       &addr);
+> +		if (ACPI_SUCCESS(status) && (addr == spcr_uart_addr)) {
+> +			*sta = 0;
+> +			return AE_OK;
+> +		}
+> +	}
+> +
+>  	status = acpi_evaluate_integer(handle, "_STA", NULL, sta);
+>  	if (ACPI_SUCCESS(status))
+>  		return AE_OK;
+> @@ -1069,6 +1081,8 @@ EXPORT_SYMBOL_GPL(acpi_kobj);
+>  static int __init acpi_init(void)
+>  {
+>  	int result;
+> +	acpi_status status;
+> +	struct acpi_table_stao *stao_ptr;
+>  
+>  	if (acpi_disabled) {
+>  		printk(KERN_INFO PREFIX "Interpreter disabled.\n");
+> @@ -1081,6 +1095,22 @@ static int __init acpi_init(void)
+>  		acpi_kobj = NULL;
+>  	}
+>  
+> +	/* If there is STAO table, check whether it needs to ignore the UART
+> +	 * device in SPCR table.
+> +	 */
+> +	spcr_uart_addr = 0xffffffffffffffff;
+> +	status = acpi_get_table(ACPI_SIG_STAO, 0,
+> +				(struct acpi_table_header **)&stao_ptr);
+> +	if (ACPI_SUCCESS(status)) {
+> +		if (stao_ptr->ignore_uart) {
 
-Likewise.
+if (ACPI_SUCCESS(status) && stao_ptr->ignore_uart) {
 
-Thanks,
-Mark.
+
+> +			struct acpi_table_spcr *spcr_ptr;
+> +
+> +			acpi_get_table(ACPI_SIG_SPCR, 0,
+> +				       (struct acpi_table_header **)&spcr_ptr);
+
+Maybe we should check that acpi_get_table succeeded, even though it
+should at this point.
+
+
+> +			spcr_uart_addr = spcr_ptr->serial_port.address;
+> +		}
+> +	}
+> +
+>  	init_acpi_device_notify();
+>  	result = acpi_bus_init();
+>  	if (result) {
