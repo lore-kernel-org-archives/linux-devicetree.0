@@ -1,70 +1,88 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 15 Jan 2016 16:40:51 -0600
-Message-ID: <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
- <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej>
- <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115110106.GA3262@leverpostej>
- <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com> <569913A1.80606@cogentembedded.com>
- <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com> <56992959.2020204@hurleysoftware.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
+ reboot-mode driver
+Date: Fri, 15 Jan 2016 14:41:55 -0800
+Message-ID: <CALAqxLUxh3=LhoHxqiRm_5L4G6m1Vctp=aUg+9_uAtLkFwW9bw@mail.gmail.com>
+References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
+	<1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56992959.2020204@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, linux@roeck-us.net, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, geert+renesas@glider.be, sre@kernel.org, Olof Johansson <olof@lixom.net>, dbaryshkov@gmail.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, jun.nie@linaro.org, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, f.fainelli@gmail.com, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, cernekee@gmail.com, lkml <linux-kernel@vger.kern>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 11:16 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
-> On 01/15/2016 08:08 AM, H. Nikolaus Schaller wrote:
->> Hi Andrey,
->> ah that is fine to learn about another project that needs some solution (however it will look like).
->>
->> Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>:
->>
->>> Hi Nikolaus,
->>>
->>> H. Nikolaus Schaller wrote:
-
-[...]
-
->>> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
->>
->> Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c.
->>
->> We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
->>
->> In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
->>
->> As you see, I have a driver-specific standpoint (and not coming from user space).
->>
->> Thanks for sharing this example.
+On Tue, Jan 12, 2016 at 3:29 AM, Andy Yan <andy.yan@rock-chips.com> wrote:
+> add device tree binding document for reboot-mode driver
 >
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 >
-> I'd like to see the exemplar slave driver be something more complicated than
-> trivial on-off, before hacking in junk into the serial core.
+> ---
 >
-> As it stands, this gps could be supported on any uart driver that implements
-> mctrl gpios (which is trivial with the serial mctrl gpio helpers).
+> Changes in v2: None
+> Changes in v1: None
 >
-> Not that I'm against uart slave device support, just that I don't think hacks
-> is the way to go about it.
+>  .../bindings/power/reset/reboot-mode.txt           | 41 +++++++++++++++++
+>  .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++++++++++++++
+>  2 files changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+> new file mode 100644
+> index 0000000..81d9f66
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+> @@ -0,0 +1,41 @@
+> +Generic reboot mode core map driver
+> +
+> +This driver get reboot mode arguments and call the write
+> +interface to stores the magic value in special register
+> +or ram . Then the bootloader can read it and take different
+> +action according to the argument stored.
+> +
+> +Required properties:
+> +- compatible: only support "syscon-reboot-mode" now.
+> +
+> +Each mode is represented as a sub-node of reboot_mode:
+> +
+> +Subnode required properties:
+> +- linux,mode: reboot mode command,such as "loader", "recovery", "fastboot".
+> +- loader,magic: magic number for the mode, this is vendor specific.
+> +
+> +Example:
+> +       reboot_mode {
+> +               compatible = "syscon-reboot-mode";
+> +               offset = <0x40>;
+> +
+> +               loader {
+> +                       linux,mode = "loader";
+> +                       loader,magic = <BOOT_LOADER>;
+> +               };
+> +
+> +               maskrom {
+> +                       linux,mode = "maskrom";
+> +                       loader,magic = <BOOT_MASKROM>;
+> +               };
+> +
+> +               recovery {
+> +                       linux,mode = "recovery";
+> +                       loader,magic = <BOOT_RECOVERY>;
+> +               };
+> +
+> +               fastboot {
+> +                       linux,mode = "fastboot";
+> +                       loader,magic = <BOOT_FASTBOOT>;
+> +               };
+> +        };
 
-I assume line disciplines seemed a good solution at the time, but they
-seem like a hack to me.
 
-> What I'd like to see is a split of the serial core into a tty driver and a
-> standalone device abstraction. Anything else is just workarounds.
+So one minor thought here. While the commands are somewhat vendor
+specific, would it be a good idea for the example commands to match
+the common commands on Android devices?  For example, usually
+"bootloader" is what gets you into fastboot mode on nexus devices.
 
-+1 on that. We need a proper subsystem for in kernel drivers of
-connected UART devices.
-
-The kernel is where all the work is, not the DT bindings, so we should
-spend our time on the kernel side. There's already a fairly clean
-split between serial core and tty layer, so it should be possible to
-use serial core without too much surgery to all the UART drivers.
-
-Rob
+thanks
+-john
