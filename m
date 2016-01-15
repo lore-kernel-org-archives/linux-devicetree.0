@@ -1,74 +1,93 @@
-From: Andrey Vostrikov <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 15 Jan 2016 18:43:29 +0300
-Message-ID: <569913A1.80606@cogentembedded.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
- <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
- <20160113191542.GA12086@leverpostej>
- <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
- <20160115110106.GA3262@leverpostej>
- <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
+ charging of backup battery
+Date: Fri, 15 Jan 2016 07:47:14 -0800
+Message-ID: <20160115154645.GA3904@atomide.com>
+References: <2B99611A-5D2E-4D17-A17D-0150516109FD@goldelico.com>
+ <56969800.5010206@ti.com>
+ <D6479E92-4226-4B07-95F3-C0DF092B827C@goldelico.com>
+ <5696A002.6050402@ti.com>
+ <20160113194032.GL12777@atomide.com>
+ <5696D097.3040208@gmail.com>
+ <56977211.8070206@ti.com>
+ <5697DD4C.8010701@ti.com>
+ <20160114183510.GP12777@atomide.com>
+ <D8D33064-B36E-41C9-AA08-353FF8A64367@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69F8E1E5-EF49-4C8E-88E9-973F82F7102E-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <D8D33064-B36E-41C9-AA08-353FF8A64367@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Nishanth Menon <nm@ti.com>, Keerthy <a0393675@ti.com>, Nishanth Menon <menon.nishanth@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+* H. Nikolaus Schaller <hns@goldelico.com> [160115 06:34]:
+> Am 14.01.2016 um 19:35 schrieb Tony Lindgren <tony@atomide.com>:
+> > updated patch, please retest that hwclock -w works properly with
+> > the RTC patch in this thread.
+> 
+> I tried and it works.
+> 
+> But then I found that you did set MUX_MODE7. Which is safe-mode.
 
-H. Nikolaus Schaller wrote:
-> And IMHO nobody has described that he/she needs a solution to model the*data*  relationship
-> for devices connected behind a tty port.
+Oops, that's a typo, sorry!
 
-I am not sure if my case fits *data* relationship or not in this case. Some time ago I asked about state of your patches.
-In my case I have supervising microcontroller unit (MCU) that is connected to one of UARTs on SoC.
+> And in safe-mode the gpio8_234/msecure ball should be "L".
+> 
+> Then I experimented a little and it appears that you can remove
+> the gpio-hog entry:
+> 
+> root@letux:~# devmem2 0x4A002980
+> /dev/mem opened.
+> Memory mapped at address 0xb6f48000.
+> Value at address 0x4A002980 (0xb6f48980): 0x1080006
+> root@letux:~# hwclock
+> Fri Jan 15 13:32:52 2016  -0.726651 seconds
+> root@letux:~# 
+> 
+> Or even mux the gpio to PIN_INPUT_PULLDOWN | MUX_MODE6:
 
-This MCU implements several functions that will be implemented as MFD driver:
-  - watchdog and system reset
-  - NVMEM EEPROM
-  - HWMON sensors
-  - Input/power button
-  - and similar low level functions
+Hmm interesting. Have to test here too. FYI, it might be also worth
+draining the back-up battery with a small resistor while testing
+to make sure there's no initial state in the PMIC.
 
-So in my case DTS binding looks like:
+> root@letux:~# devmem2 0x4A002980
+> /dev/mem opened.
+> Memory mapped at address 0xb6f35000.
+> Value at address 0x4A002980 (0xb6f35980): 0x108010E
+> root@letux:~# hwclock
+> Fri Jan 15 14:30:05 2016  -1.155714 seconds
+> root@letux:~# 
+> 
+> So I now wonder if the twl6037 variant on the OMAP5432EVM really has
+> the gpio7 enabled as msecure input (there is some mention of OTP variants
+> in the Palmas docs I have, but I don't have the one of the exact chip variant used
+> on the EVM).
+>
+> If it were disabled by OTP (and then I assume it is automatically write-unprotected),
+> then we would simply have a useless connection from gpio8_234 to Palmas...
+> 
+> So the outcome might depend on the Palmas chip version that is used on any
+> board that includes the omap5-board-common.dtsi.
 
-&uart3 {
-	mcu {
-		line-speed = <baud rate>;
-		watchdog {
-			timeout = <ms>;
-			...other params...
-		};
-		eeprom {
-			#address-cells
-			#size-cells
-			cell1 : cell@1 {
-				reg = <1 2>;
-			};
-			cell2 : cell@2 {
-				reg = <2 1>;
-			};
-		};
-		hwmon {
-			sensors-list = "voltage", "current", etc...;
-		}
-	}
-}
+Could be different version yeah.
 
-This MCU receives commands and notifies MFD driver about events via UART protocol.
-It looks like not really a slave though, more like a partnership from data flow point of view.
+> And the main difference between hwclock not-working and working on the omap5evm
+> should be the nirq1 part of your patch!
 
-There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
+OK so best to go back to square one with the testing with just the nirq1
+change.
 
+> Please can someone else confirm that hwclock works without any init for
+> the msecure line and that I did not have a false positive by some other reason?
 
-Best regards,
-Andrey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just to be sure.. Have you tested with hwclock -w and made sure it
+changes the time? Otherwise you may have started the RTC with some
+earlier kernel and it still keeps on ticking so the read test is
+not enough.
+
+Regards,
+
+Tony
