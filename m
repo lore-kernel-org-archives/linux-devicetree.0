@@ -1,41 +1,36 @@
-From: Andrey Gusakov <andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/10] Input: synaptics-rmi4: Add device tree support
- for RMI4 I2C devices
-Date: Fri, 15 Jan 2016 14:24:15 +0300
-Message-ID: <CAFmnZc3Ce40CT9V8X223aPxfbRXUcRX5RvK=0GitQ5yrPVXhOg@mail.gmail.com>
-References: <1452815059-22980-1-git-send-email-aduggan@synaptics.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] devicetree: bindings: Add vendor prefix for Tronsmart
+Date: Fri, 15 Jan 2016 14:06:31 +0100
+Message-ID: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452815059-22980-1-git-send-email-aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christopher Heiny <cheiny-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Stephen Chandler Paul <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vincent Huang <vincent.huang-8LB1SX4YFO85ffrT631h+Q@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 2:44 AM, Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org> wrote:
->
-> Add devicetree binding for I2C devices and add bindings for optional
-> parameters in the function drivers. Parameters for function drivers are
-> defined in child nodes for each of the functions.
->
-> Signed-off-by: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-...
-> +#ifdef CONFIG_OF
-> +static void rmi_function_of_probe(struct rmi_function *fn)
-> +{
-> +       char of_name[8];
-> +
-> +       snprintf(of_name, sizeof(of_name), "rmi4-f%02x",
-> +               fn->fd.function_number);
-> +       fn->dev.of_node = of_find_node_by_name(
-> +                               fn->rmi_dev->xport->dev->of_node, of_name);
-> +}
->
-Name like "rmi4-f11" including 0 terminator does not fit in 8 chars.
-This leads to the inability to find the correct OF node and get settings.
+Tronsmart is a China based company building consumer electronic
+devices.
 
-Sorry for previous HTML noise.
+Signed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 55df1d4..f787742 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -231,6 +231,7 @@ toshiba	Toshiba Corporation
+ toumaz	Toumaz
+ tplink	TP-LINK Technologies Co., Ltd.
+ tronfy	Tronfy
++tronsmart	Tronsmart
+ truly	Truly Semiconductors Limited
+ upisemi	uPI Semiconductor Corp.
+ usi	Universal Scientific Industrial Co., Ltd.
+-- 
+2.6.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
