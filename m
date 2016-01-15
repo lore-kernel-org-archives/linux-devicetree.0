@@ -1,33 +1,138 @@
-From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
- settings device tree options
-Date: Fri, 15 Jan 2016 07:46:46 -0600
-Message-ID: <5698F846.5080604@tabi.org>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org>
- <20160114201858.GA17567@Asurada-Nvidia> <56984BE7.2050303@tabi.org>
- <20160115131325.GW6588@sirena.org.uk>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic support for orion-r68
+Date: Fri, 15 Jan 2016 15:03:52 +0100
+Message-ID: <2174023.jkjdoEECkq@phil>
+References: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com> <1452863192-29231-2-git-send-email-matthias.bgg@gmail.com> <CABxcv=m+hK3xS8_fYNns-xE5DaLHD0D_Yj8McjM72Y_5V=YmSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160115131325.GW6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CABxcv=m+hK3xS8_fYNns-xE5DaLHD0D_Yj8McjM72Y_5V=YmSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caleb Crome <caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mbrugger-IBi9RG/b67k@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Olof
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown wrote:
->> >I admit it's a grey area, but the hardware doesn't work if you use the wrong
->> >value, and it is a fixed value per device.  A p1022ds would use a different
->> >value than in in i.MX6, and once you pick a value, it's the same no matter
->> >which sample rate, buffer size, etc you choose.
+Hi Javier,
 
-> Caleb's original message suggested this was rate dependant.
+Am Freitag, 15. Januar 2016, 10:28:44 schrieb Javier Martinez Canillas:
+> This is not a complete review but I just wanted to comment on two
+> things that I noticed:
 
-Yeah, I just noticed that.  In that case, I agree that a device tree 
-property is inappropriate, unless it's an array that contains tuples of 
-sample rates and watermark/maxburst settings.  That would get unwieldy 
-very easily, though.
+same for me for now :-)
+
+
+> On Fri, Jan 15, 2016 at 10:06 AM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> [snip]
+> 
+> > +       };
+> > +
+> > +       vcc_18: vcc18-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc_18";
+> > +               regulator-min-microvolt = <1800000>;
+> > +               regulator-max-microvolt = <1800000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_sys>;
+> > +       };
+> > +
+> > +       /* supplies both host and otg */
+> > +       vcc_host: vcc-host-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&host_vbus_drv>;
+> > +               regulator-name = "vcc_host";
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_sys>;
+> > +       };
+> > +
+> > +       vccio_sd: vcc-io-sd-regulator {
+> > +               regulator-name= "vccio_sd";
+> > +               gpio = <&gpio0 9 GPIO_ACTIVE_LOW>;
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +       };
+> > +
+> > +       vcc_sd: vcc-sd-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc_sd";
+> > +               gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_io>;
+> > +       };
+> > +
+> > +       vcc_io: vcc-io-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc_io";
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_sys>;
+> > +       };
+> > +
+> > +       vcc_lan: vcc-lan-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc_lan";
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_io>;
+> > +       };
+> > +
+> > +       vcc_sys: vcc-sys-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vcc_sys";
+> > +               regulator-min-microvolt = <5000000>;
+> > +               regulator-max-microvolt = <5000000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +       };
+> > +
+> > +       vccio_wl: vccio-wl-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vccio_wl";
+> > +               regulator-min-microvolt = <3300000>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_io>;
+> > +       };
+> > +
+> > +       vdd_10: vdd-10-regulator {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "vdd_10";
+> > +               regulator-min-microvolt = <1000000>;
+> > +               regulator-max-microvolt = <1000000>;
+> > +               regulator-always-on;
+> > +               regulator-boot-on;
+> > +               vin-supply = <&vcc_sys>;
+> > +       };
+> > +};
+> 
+> There is only one regulator that is not marked as always-on. This will
+> prevent the regulator subsystem to disable unused regulators. Do you
+> really need all of them to be always-on?
+
+I do believe the regulators should be more or less correct. Sadly there are 
+no real schematics for that specific device available, but the reference 
+design for rk3368-based tv-boxes uses a hirarchy of hard-wired individual 
+regulators without any ability to control for most of them [aka always on].
+
+And due to the r68 not sporting any different real pmic, I'd believe the 
+Orion will most likely also follow that scheme.
+
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
