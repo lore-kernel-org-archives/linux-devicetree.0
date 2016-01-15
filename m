@@ -1,42 +1,62 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark
- and maxburst settings device tree options
-Date: Fri, 15 Jan 2016 11:23:21 -0800
-Message-ID: <20160115192320.GA12418@Asurada-Nvidia>
-References: <1452788982-11583-1-git-send-email-caleb@crome.org>
- <20160114201858.GA17567@Asurada-Nvidia> <56984BE7.2050303@tabi.org>
- <20160115131325.GW6588@sirena.org.uk> <5698F846.5080604@tabi.org>
- <CAG5mAdy553q4Te5755575WaiLxGRp43h=WVH6QzF7idsaCnhbg@mail.gmail.com>
- <20160115183824.GB31703@Asurada-Nvidia>
- <CAG5mAdyXPtnnZvGcWrhhbv7wuamz_xbRsn76VXdbE1yZRgx_Mg@mail.gmail.com>
- <20160115185736.GC31703@Asurada-Nvidia>
- <CAG5mAdyUfSuCqA4_342MS2AyshvuyeiYsjQyRqifmqVhn4T2xA@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 15 Jan 2016 20:40:22 +0100
+Message-ID: <20160115194022.GA8371@amd>
+References: <20150511013540.5709.93626.stgit@notabene.brown>
+ <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
+ <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+ <20160113191542.GA12086@leverpostej>
+ <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAG5mAdyUfSuCqA4_342MS2AyshvuyeiYsjQyRqifmqVhn4T2xA@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Caleb Crome <caleb@crome.org>
-Cc: devicetree@vger.kernel.org, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Timur Tabi <timur@tabi.org>, Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 11:10:29AM -0800, Caleb Crome wrote:
- 
-> Shall I submit a patch that sets the value to 4 for for any/all of the
-> above?  Should it be different based on whether fiq is enabled.  Maybe
-> set it to 4 for whenever DMA is used, and to 13 whenever FIQ is used?
+On Fri 2016-01-15 10:34:51, H. Nikolaus Schaller wrote:
+> Hi Mark,
+> 
+> Am 13.01.2016 um 20:15 schrieb Mark Rutland <mark.rutland@arm.com>:
+> 
+> > On Tue, Jan 12, 2016 at 02:28:00PM +0100, H. Nikolaus Schaller wrote:
+> >> Hi Tomeu,
+> >> 
+> >> Am 12.01.2016 um 14:06 schrieb Tomeu Vizoso <tomeu@tomeuvizoso.net>:
+> >> 
+> >>> On 11 May 2015 at 03:56, NeilBrown <neil@brown.name> wrote:
+> >>>> Hi all,
+> >>>> here is version 4 of my "UART slave device" patch set, previously
+> >>>> known as "tty slave devices".
+> >>> 
+> >>> Hi Neil,
+> >>> 
+> >>> do you (or someone else) have plans to continue this work in the short
+> >>> or medium term?
+> >> 
+> >> yes, there is something in our upstreaming pipeline. This one works for us on top of 4.4.0:
+> >> 
+> >> <http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/misc/w2sg-tty-slave2-v4>
+> >> 
+> >> There is one point still to be solved: the exact style of the DT bindings.
+> >> 
+> >> We have an idea how a driver can implement two different styles (child node AND phandle)
+> >> so that it is up to the DTS developer to use the one that best fits into the existing DTS.
+> > 
+> > From my perspective as a binding maintainer, and as I stated before, the
+> > child node approach made the most sense and was most consistent with the
+> 
+> > way we handle other devices.
+> 
+> I simply don't see that this is the most common way other devices
+> are handled.
 
-A possible solution:
-Use the original settings (depth - 2) as a common configuration
-in the main probe() and overwrite it in the fsl_ssi_imx_probe()
-if detecting a use_dma flag.
+You promised to shut up once maintainers speak, that happened, and you
+did not shut up. Just do it now.
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
