@@ -1,183 +1,136 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 15 Jan 2016 09:43:39 -0800
-Message-ID: <56992FCB.3030101@hurleysoftware.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
- <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
- <20160113191542.GA12086@leverpostej>
- <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
- <20160115110106.GA3262@leverpostej>
- <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
- <569913A1.80606@cogentembedded.com>
- <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
- <56992959.2020204@hurleysoftware.com>
- <572D2BBD-1CB4-4048-87AE-23DE16AC2AD4@goldelico.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 15 Jan 2016 12:44:08 -0500
+Message-ID: <56992FE8.4000606@codeaurora.org>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
+ <20160115145629.GI3262@leverpostej> <56990CD4.6020405@arm.com>
+ <569912F3.9040507@codeaurora.org> <56992C4E.6010606@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <572D2BBD-1CB4-4048-87AE-23DE16AC2AD4@goldelico.com>
+In-Reply-To: <56992C4E.6010606@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, christoffer.dall@linaro.org, Vikram Sethi <vikrams@codeaurora.org>, shankerd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2016 09:32 AM, H. Nikolaus Schaller wrote:
-> Hi Peter,
-> 
-> Am 15.01.2016 um 18:16 schrieb Peter Hurley <peter@hurleysoftware.com>:
-> 
->> On 01/15/2016 08:08 AM, H. Nikolaus Schaller wrote:
->>> Hi Andrey,
->>> ah that is fine to learn about another project that needs some solution (however it will look like).
->>>
->>> Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>:
->>>
->>>> Hi Nikolaus,
->>>>
->>>> H. Nikolaus Schaller wrote:
->>>>> And IMHO nobody has described that he/she needs a solution to model the*data*  relationship
->>>>> for devices connected behind a tty port.
->>>>
->>>> I am not sure if my case fits *data* relationship or not in this case. Some time ago I asked about state of your patches.
->>>> In my case I have supervising microcontroller unit (MCU) that is connected to one of UARTs on SoC.
->>>>
->>>> This MCU implements several functions that will be implemented as MFD driver:
->>>> - watchdog and system reset
->>>> - NVMEM EEPROM
->>>> - HWMON sensors
->>>> - Input/power button
->>>> - and similar low level functions
->>>>
->>>> So in my case DTS binding looks like:
->>>>
->>>> &uart3 {
->>>> 	mcu {
->>>> 		line-speed = <baud rate>;
->>>> 		watchdog {
->>>> 			timeout = <ms>;
->>>> 			...other params...
->>>> 		};
->>>> 		eeprom {
->>>> 			#address-cells
->>>> 			#size-cells
->>>> 			cell1 : cell@1 {
->>>> 				reg = <1 2>;
->>>> 			};
->>>> 			cell2 : cell@2 {
->>>> 				reg = <2 1>;
->>>> 			};
->>>> 		};
->>>> 		hwmon {
->>>> 			sensors-list = "voltage", "current", etc...;
->>>> 		}
->>>> 	}
->>>> }
->>>
->>> With my proposal it would just become
->>>
->>> / {
->>> 	themcu: mcu {
->>> 		uart = <&uart3>;
->>> 		line-speed = <baud rate>;
->>> 		watchdog {
->>> 			timeout = <ms>;
->>> 			...other params...
->>> 		};
->>> 		eeprom {
->>> 			#address-cells
->>> 			#size-cells
->>> 			cell1 : cell@1 {
->>> 				reg = <1 2>;
->>> 			};
->>> 			cell2 : cell@2 {
->>> 				reg = <2 1>;
->>> 			};
->>> 		};
->>> 		hwmon {
->>> 			sensors-list = "voltage", "current", etc...;
->>> 		}
->>> 	}
->>> };
->>>
->>> Which is almost the same. Except that it allows to move your mcu node whereever you like and easily allows to change the interface to connect to a different device by
->>>
->>> &themcu {
->>> 	uart = <&uart1>;
->>> };
->>>
->>> With the subnode style you would need some tricks to get the driver instance for uart3 disabled, although it is possible (everything is possible - just easier or more difficult).
->>>
->>>>
->>>> This MCU receives commands and notifies MFD driver about events via UART protocol.
->>>> It looks like not really a slave though, more like a partnership from data flow point of view.
->>>
->>> Yes!. That is why I started to question the term "slave".
->>>
->>> And yes, this is the second use case I am aware of: a device that just *uses" the UART to do its works and there is no /dev/tty involved.
->>>
->>>>
->>>> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
->>>
->>> Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c. 
->>>
->>> We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
->>>
->>> In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
->>>
->>> As you see, I have a driver-specific standpoint (and not coming from user space).
->>>
->>> Thanks for sharing this example.
 >>
+>> Sure, I'm ready to answer any questions. This is really a VFIO platform course. Not
+>> a HIDMA driver course. The approach is not different if you assign a platfom 
+>> SATA (AHCI) or SDHC driver to a guest machine.
+> 
+> I happen to have an idea of how VFIO works...
+> 
+
+OK. Good to know that we are speaking the same language.
+
 >>
->> I'd like to see the exemplar slave driver be something more complicated than
->> trivial on-off, before hacking in junk into the serial core.
+>> The summary is that:
+>> - IOMMU takes care of the mappings via VFIO driver.
+>> - Guest machine owns the HW. No hypervisor interaction.
+> 
+> Then it might be worth mentioning all of this
+> 
+
+Sure thing. I'm trying to locate where the right place would be.
+I'll target commit message and source code for now.
+
 >>
->> As it stands, this gps could be supported on any uart driver that implements
->> mctrl gpios (which is trivial with the serial mctrl gpio helpers).
-> 
-> in the GPS case basic mctrl is not enough because the "partner" driver must get meta-data
-> that there is data activity. This is something mctrl can't provide.
-
-A binary state is hardly "meta-data". What is the purpose of the rx notification?
-
-
-> And the GPS chip does not need a simple gpio state to power on/off but an on/off toggle impulse.
-
-Genericity. If this chip needs such a state mechanism, then that should be reflected
-generically in gpio support, and we're back to trivial mctrl.
-
-
-> In our case there are no mctrl gpios (omap) but part of our driver proposal is just to
-> forward changes of the mctrl bits to the partner driver.
-
-Please feel free to submit patches for mctrl gpios for the omap-serial driver.
-
-
->> Not that I'm against uart slave device support, just that I don't think hacks
->> is the way to go about it.
+>>>
+>>> - How do host and guest communicate?
+>> They don't.
 >>
->> What I'd like to see is a split of the serial core into a tty driver and a
->> standalone device abstraction. Anything else is just workarounds.
+>>> - How is the integration performed in the hypervisor?
+>> Hypervisor has a bunch of channel resources. For each guest machine, the channel gets
+>> unbound from the hypervisor. Channels get bind to each VFIO platform device and then
+>> control is given to the guest machine.
+> 
+> And what does the hypervisor do with those in the meantime? Above, you
+> say "Guest machine owns the HW". 
 
-I think you misunderstand what I mean by "standalone device abstraction"; let me
-be clearer: "standalone UART device abstraction".
+The guest machine owns the channel HW which runs independent of the management HW.
 
-Regards,
-Peter Hurley
+> So what is that hypervisor code used
+> for? Is that your reset driver?
 
-> Here (was rebased from what I had submitted to LKML a while ago):
+The HIDMA "management" driver which runs at the hypervisor owns the management HW. 
+Management driver serves two purposes.
+
+1. Common bus parameter configuration (could be called reset driver).
+2. Fine tuning the HW resources.
+
+Multiple HIDMA channels share common HW resources. The management driver is able to change 
+the priority (high/low) and weight (round-robin priority) of each HIDMA channel on the flight. 
+
+The system administrator will use a userspace application to allocate HW resources to each channel via
+the management driver.
+
+The management driver does some common configuration too for these parameters. 
+The management interface also has to be enabled before any channel can be enabled.
+
+- max-write-burst-bytes: Maximum write burst in bytes that HIDMA can 
+  occupy the bus for in a single transaction. A memcpy requested is 
+  fragmented to multiples of this amount. This parameter is used while
+  writing into destination memory. Setting this value incorrectly can
+  starve other peripherals in the system.
+- max-read-burst-bytes: Maximum read burst in bytes that HIDMA can
+  occupy the bus for in a single transaction. A memcpy request is
+  fragmented to multiples of this amount. This parameter is used while
+  reading the source memory. Setting this value incorrectly can starve
+  other peripherals in the system.
+- max-write-transactions: This value is how many times a write burst is 
+  applied back to back while writing to the destination before yielding 
+  the bus.
+- max-read-transactions: This value is how many times a read burst is
+  applied back to back while reading the source before a yielding the bus.
+- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
+  Once a reset is applied to the HW, HW starts a timer for reset operation
+  to confirm. If reset is not completed within this time, HW reports reset
+  failure. 
+
 > 
-> 1. serial core (two patches add API for any such partner drivers)
+> You may want to drop the "hypervisor" designation, BTW, because this has
+> no real connection to virtualisation.
 > 
-> http://git.goldelico.com/?p=gta04-kernel.git;a=commit;h=c75ab51483e56afe08f56de104b5ed3fa1d6b0e8
-> http://git.goldelico.com/?p=gta04-kernel.git;a=commit;h=f910d951fcf816fce3261814d7f8c46ac6b35e68
+
+Would you use host/guest relationship?
+
+>>
+>> Once the guest machine is shutdown, VFIO driver still owns the channel device. It can
+>> assign the device to another guest machine.
+>>
+>>> - Does the HYP side requires any context switch (and how is that done)?
+>> No communication is needed.
+>>
+>>> - What makes it safe?
+>> No communication is needed.
+>>
+>>>
+>>> Without any of this information (and pointer to the code to back it up),
+>>> I'm very reluctant to take any of this.
+>>
+>> Please let me know what exactly is not clear. 
+>>
+>> You don't write a virtualization driver for 8139too driver. The driver works whether it is running in the 
+>> guest machine or the hypervisor. 
 > 
-> 2. standalone driver example (using the new API)
+> Exactly. No hypervisor code needed whatsoever. So please get rid of this
+> hypervisor nonsense! ;-)
 > 
-> http://git.goldelico.com/?p=gta04-kernel.git;a=commit;h=4fd1dbd4e915d741dddd264d6f87396e72351b3a
+
+I need the management driver for administrative purposes and common initialization. 
+I like the split SW design as it follows the HW design too.
+
+> Thanks,
 > 
-> BR and thanks,
-> Nikolaus
+> 	M.
 > 
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
