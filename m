@@ -1,54 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Fri, 15 Jan 2016 12:11:27 +0100
-Message-ID: <22377526.4ksCBpoDgG@wuerfel>
-References: <1452849447-25025-1-git-send-email-peter.chen@freescale.com>
+From: Andrey Gusakov <andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] Input: synaptics-rmi4: Add device tree support
+ for RMI4 I2C devices
+Date: Fri, 15 Jan 2016 14:24:15 +0300
+Message-ID: <CAFmnZc3Ce40CT9V8X223aPxfbRXUcRX5RvK=0GitQ5yrPVXhOg@mail.gmail.com>
+References: <1452815059-22980-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452849447-25025-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1452815059-22980-1-git-send-email-aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christopher Heiny <cheiny-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Stephen Chandler Paul <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vincent Huang <vincent.huang-8LB1SX4YFO85ffrT631h+Q@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 January 2016 17:17:27 Peter Chen wrote:
-> Although most of USB devices are hot-plug's, there are still some devices
-> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> If these kinds of USB devices are multiple functions, and they can supply
-> other interfaces like i2c, gpios for other devices, we may need to
-> describe these at device tree.
-> 
-> In this commit, it uses "reg" in dts as port number to match the port
-> number decided by USB core, if they are the same, then the device node
-> is for the device we are creating for USB core.
-> 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Fri, Jan 15, 2016 at 2:44 AM, Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org> wrote:
+>
+> Add devicetree binding for I2C devices and add bindings for optional
+> parameters in the function drivers. Parameters for function drivers are
+> defined in child nodes for each of the functions.
+>
+> Signed-off-by: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
+...
+> +#ifdef CONFIG_OF
+> +static void rmi_function_of_probe(struct rmi_function *fn)
+> +{
+> +       char of_name[8];
+> +
+> +       snprintf(of_name, sizeof(of_name), "rmi4-f%02x",
+> +               fn->fd.function_number);
+> +       fn->dev.of_node = of_find_node_by_name(
+> +                               fn->rmi_dev->xport->dev->of_node, of_name);
+> +}
+>
+Name like "rmi4-f11" including 0 terminator does not fit in 8 chars.
+This leads to the inability to find the correct OF node and get settings.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-
-Just one last question:
-
->  	dev->active_duration = -jiffies;
->  #endif
-> -	if (root_hub)	/* Root hub always ok [and always wired] */
-> +	if (root_hub) {	/* Root hub always ok [and always wired] */
->  		dev->authorized = 1;
-> -	else {
-> +		dev->of_node = bus->controller->of_node;
-
-
-You are adding the of_node of the controller to the root hub, which I
-guess means that we now have two 'struct device' instances with the
-same of_node. They have different bus_types, so I think that is ok,
-but I wonder if it would be better to leave out the of_node for the
-root hub to avoid the confusion. Can you think of a case where we
-actually want to add properties for the root hub that we can't do
-more easily in the host controller?
-
-	Arnd
+Sorry for previous HTML noise.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
