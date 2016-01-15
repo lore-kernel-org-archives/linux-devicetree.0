@@ -1,48 +1,214 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/26] reset: Make reset_control_ops const
-Date: Fri, 15 Jan 2016 16:50:18 +0100
-Message-ID: <1452873018.6067.79.camel@pengutronix.de>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
-	 <1452785109-6172-3-git-send-email-maxime.ripard@free-electrons.com>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [Xen-devel] [PATCH v2 02/16] xen/grant-table: Move
+ xlated_setup_gnttab_pages to common place
+Date: Fri, 15 Jan 2016 15:53:40 +0000
+Message-ID: <alpine.DEB.2.02.1601151553330.16178@kaball.uk.xensource.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-3-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452785109-6172-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452840929-19612-3-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, julien.grall@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 14.01.2016, 16:24 +0100 schrieb Maxime Ripard:
-> The ops pointer is holding a pointer to a structure that is usually not
-> modified. Make it const.
+On Fri, 15 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  include/linux/reset-controller.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Move xlated_setup_gnttab_pages to common place, so it can be reused by
+> ARM to setup grant table.
 > 
-> diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
-> index ce6b962ffed4..a3a5bcdb1d02 100644
-> --- a/include/linux/reset-controller.h
-> +++ b/include/linux/reset-controller.h
-> @@ -38,7 +38,7 @@ struct of_phandle_args;
->   * @nr_resets: number of reset controls in this reset controller device
+> Rename it to xen_xlate_map_ballooned_pages.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+
+Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+
+
+>  arch/x86/xen/grant-table.c | 57 +++++--------------------------------------
+>  drivers/xen/xlate_mmu.c    | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/xen/xen-ops.h      |  2 ++
+>  3 files changed, 69 insertions(+), 51 deletions(-)
+> 
+> diff --git a/arch/x86/xen/grant-table.c b/arch/x86/xen/grant-table.c
+> index e079500..de4144c 100644
+> --- a/arch/x86/xen/grant-table.c
+> +++ b/arch/x86/xen/grant-table.c
+> @@ -111,63 +111,18 @@ int arch_gnttab_init(unsigned long nr_shared)
+>  }
+>  
+>  #ifdef CONFIG_XEN_PVH
+> -#include <xen/balloon.h>
+>  #include <xen/events.h>
+> -#include <linux/slab.h>
+> -static int __init xlated_setup_gnttab_pages(void)
+> -{
+> -	struct page **pages;
+> -	xen_pfn_t *pfns;
+> -	void *vaddr;
+> -	int rc;
+> -	unsigned int i;
+> -	unsigned long nr_grant_frames = gnttab_max_grant_frames();
+> -
+> -	BUG_ON(nr_grant_frames == 0);
+> -	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+> -	if (!pages)
+> -		return -ENOMEM;
+> -
+> -	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
+> -	if (!pfns) {
+> -		kfree(pages);
+> -		return -ENOMEM;
+> -	}
+> -	rc = alloc_xenballooned_pages(nr_grant_frames, pages);
+> -	if (rc) {
+> -		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
+> -			nr_grant_frames, rc);
+> -		kfree(pages);
+> -		kfree(pfns);
+> -		return rc;
+> -	}
+> -	for (i = 0; i < nr_grant_frames; i++)
+> -		pfns[i] = page_to_pfn(pages[i]);
+> -
+> -	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+> -	if (!vaddr) {
+> -		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+> -			nr_grant_frames, rc);
+> -		free_xenballooned_pages(nr_grant_frames, pages);
+> -		kfree(pages);
+> -		kfree(pfns);
+> -		return -ENOMEM;
+> -	}
+> -	kfree(pages);
+> -
+> -	xen_auto_xlat_grant_frames.pfn = pfns;
+> -	xen_auto_xlat_grant_frames.count = nr_grant_frames;
+> -	xen_auto_xlat_grant_frames.vaddr = vaddr;
+> -
+> -	return 0;
+> -}
+> -
+> +#include <xen/xen-ops.h>
+>  static int __init xen_pvh_gnttab_setup(void)
+>  {
+>  	if (!xen_pvh_domain())
+>  		return -ENODEV;
+>  
+> -	return xlated_setup_gnttab_pages();
+> +	xen_auto_xlat_grant_frames.count = gnttab_max_grant_frames();
+> +
+> +	return xen_xlate_map_ballooned_pages(&xen_auto_xlat_grant_frames.pfn,
+> +					     &xen_auto_xlat_grant_frames.vaddr,
+> +					     xen_auto_xlat_grant_frames.count);
+>  }
+>  /* Call it _before_ __gnttab_init as we need to initialize the
+>   * xen_auto_xlat_grant_frames first. */
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index 5063c5e..9692656 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -29,6 +29,8 @@
 >   */
->  struct reset_controller_dev {
-> -	struct reset_control_ops *ops;
-> +	const struct reset_control_ops *ops;
->  	struct module *owner;
->  	struct list_head list;
->  	struct device_node *of_node;
-
-Applied, thanks.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+> +#include <linux/slab.h>
+> +#include <linux/vmalloc.h>
+>  
+>  #include <asm/xen/hypercall.h>
+>  #include <asm/xen/hypervisor.h>
+> @@ -37,6 +39,7 @@
+>  #include <xen/page.h>
+>  #include <xen/interface/xen.h>
+>  #include <xen/interface/memory.h>
+> +#include <xen/balloon.h>
+>  
+>  typedef void (*xen_gfn_fn_t)(unsigned long gfn, void *data);
+>  
+> @@ -185,3 +188,61 @@ int xen_xlate_unmap_gfn_range(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(xen_xlate_unmap_gfn_range);
+> +
+> +/**
+> + * xen_xlate_map_ballooned_pages - map a new set of ballooned pages
+> + * @gfns: returns the array of corresponding GFNs
+> + * @virt: returns the virtual address of the mapped region
+> + * @nr_grant_frames: number of GFNs
+> + * @return 0 on success, error otherwise
+> + *
+> + * This allocates a set of ballooned pages and maps them into the
+> + * kernel's address space.
+> + */
+> +int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+> +					 unsigned long nr_grant_frames)
+> +{
+> +	struct page **pages;
+> +	xen_pfn_t *pfns;
+> +	void *vaddr;
+> +	int rc;
+> +	unsigned int i;
+> +
+> +	BUG_ON(nr_grant_frames == 0);
+> +	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+> +	if (!pages)
+> +		return -ENOMEM;
+> +
+> +	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
+> +	if (!pfns) {
+> +		kfree(pages);
+> +		return -ENOMEM;
+> +	}
+> +	rc = alloc_xenballooned_pages(nr_grant_frames, pages);
+> +	if (rc) {
+> +		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
+> +			nr_grant_frames, rc);
+> +		kfree(pages);
+> +		kfree(pfns);
+> +		return rc;
+> +	}
+> +	for (i = 0; i < nr_grant_frames; i++)
+> +		pfns[i] = page_to_pfn(pages[i]);
+> +
+> +	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+> +	if (!vaddr) {
+> +		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+> +			nr_grant_frames, rc);
+> +		free_xenballooned_pages(nr_grant_frames, pages);
+> +		kfree(pages);
+> +		kfree(pfns);
+> +		return -ENOMEM;
+> +	}
+> +	kfree(pages);
+> +
+> +	*gfns = pfns;
+> +	*virt = vaddr;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(xen_xlate_map_ballooned_pages);
+> diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
+> index e4e214a..42be31a 100644
+> --- a/include/xen/xen-ops.h
+> +++ b/include/xen/xen-ops.h
+> @@ -80,6 +80,8 @@ int xen_xlate_remap_gfn_array(struct vm_area_struct *vma,
+>  			      struct page **pages);
+>  int xen_xlate_unmap_gfn_range(struct vm_area_struct *vma,
+>  			      int nr, struct page **pages);
+> +int xen_xlate_map_ballooned_pages(xen_pfn_t **pfns, void **vaddr,
+> +				  unsigned long nr_grant_frames);
+>  
+>  bool xen_running_on_version_or_later(unsigned int major, unsigned int minor);
+>  
+> -- 
+> 2.0.4
+> 
+> 
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xen.org
+> http://lists.xen.org/xen-devel
+> 
