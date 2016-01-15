@@ -1,139 +1,68 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic support for orion-r68
-Date: Fri, 15 Jan 2016 10:28:44 -0300
-Message-ID: <CABxcv=m+hK3xS8_fYNns-xE5DaLHD0D_Yj8McjM72Y_5V=YmSw@mail.gmail.com>
-References: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com>
-	<1452863192-29231-2-git-send-email-matthias.bgg@gmail.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH] gpio: max77620: fix of_table.cocci warnings
+Date: Fri, 15 Jan 2016 14:44:08 +0100 (CET)
+Message-ID: <alpine.DEB.2.10.1601151443290.2515@hadrien>
+References: <alpine.DEB.2.10.1601111146380.2512@hadrien> <CACRpkdbUG_cR8AZt0HmiNApy+g3Xy58BkjFXST-1gNqXqYJvGw@mail.gmail.com> <20160114094742.GC28745@x1> <56976CE7.8070708@nvidia.com> <CACRpkdaV6e2SeAGE5C6_W6_0qbwMG6RaL+b+8o+JoyuJR-Y=Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452863192-29231-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CACRpkdaV6e2SeAGE5C6_W6_0qbwMG6RaL+b+8o+JoyuJR-Y=Hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, mbrugger-IBi9RG/b67k@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Ol
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?ISO-8859-2?Q?Pawe=B3_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chaitanya Bandi <bandi>
 List-Id: devicetree@vger.kernel.org
 
-Hello Matthias,
 
-This is not a complete review but I just wanted to comment on two
-things that I noticed:
 
-On Fri, Jan 15, 2016 at 10:06 AM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, 15 Jan 2016, Linus Walleij wrote:
 
-[snip]
+> On Thu, Jan 14, 2016 at 10:39 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > On Thursday 14 January 2016 03:17 PM, Lee Jones wrote:
+> >> On Thu, 14 Jan 2016, Linus Walleij wrote:
+> >>
+> >>> On Mon, Jan 11, 2016 at 11:48 AM, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+> >>> wrote:
+> >>>
+> >>>> Make sure (of/i2c/platform)_device_id tables are NULL terminated
+> >>>>
+> >>>> Generated by: scripts/coccinelle/misc/of_table.cocci
+> >>>>
+> >>>> CC: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>>> Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> >>>> Signed-off-by: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+> >>>> ---
+> >>>>
+> >>>> Please take the patch only if it's a positive warning. Thanks!
+> >>>
+> >>> This is merged into the MFD subsystem for the moment so patches
+> >>> have to go through Lee.
+> >>>
+> >>> Alternatively I can go back and fix it up later.
+> >>
+> >> Pull request for v4.5 has already been sent.
+> >>
+> >> Feel free to take the patch into your tree post -rc1.
+> >
+> > Is the driver gpio-max77620 applied?
+>
+> Nah, I misunderstood it, don't worry. Lee just merged the core
+> driver(s). I have no idea what Julia's patch is based on, I was
+> confused by this mail so I assumed it was in the tree but it
+> was not. The world is full of mysteries :D
 
-> +       };
-> +
-> +       vcc_18: vcc18-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_18";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_sys>;
-> +       };
-> +
-> +       /* supplies both host and otg */
-> +       vcc_host: vcc-host-regulator {
-> +               compatible = "regulator-fixed";
-> +               gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&host_vbus_drv>;
-> +               regulator-name = "vcc_host";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_sys>;
-> +       };
-> +
-> +       vccio_sd: vcc-io-sd-regulator {
-> +               regulator-name= "vccio_sd";
-> +               gpio = <&gpio0 9 GPIO_ACTIVE_LOW>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +       };
-> +
-> +       vcc_sd: vcc-sd-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_sd";
-> +               gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_io>;
-> +       };
-> +
-> +       vcc_io: vcc-io-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_io";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_sys>;
-> +       };
-> +
-> +       vcc_lan: vcc-lan-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_lan";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_io>;
-> +       };
-> +
-> +       vcc_sys: vcc-sys-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_sys";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vccio_wl: vccio-wl-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vccio_wl";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_io>;
-> +       };
-> +
-> +       vdd_10: vdd-10-regulator {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vdd_10";
-> +               regulator-min-microvolt = <1000000>;
-> +               regulator-max-microvolt = <1000000>;
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               vin-supply = <&vcc_sys>;
-> +       };
-> +};
+I don't know either.  It came to me via kbuild.  It may be derived from a
+submitted patch rather than aready committed code.
 
-There is only one regulator that is not marked as always-on. This will
-prevent the regulator subsystem to disable unused regulators. Do you
-really need all of them to be always-on?
+julia
 
-> +
-> +&emmc {
-> +       broken-cd;
-> +       bus-width = <8>;
-> +       cap-mmc-highspeed;
-> +       disable-wp;
-> +       mmc-pwrseq = <&emmc_pwrseq>;
-> +       non-removable;
-
-Non-removable assumes always present so there is no need for
-broken-cd. In fact, these two properties are mutually exclusive
-according to Documentation/devicetree/bindings/mmc/mmc.txt.
-
-Best regards,
-Javier
+>
+> > I think still there is discussion going on the patches?
+>
+> Sure let's work on this for the next cycle.
+>
+> Yours,
+> Linus Walleij
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
