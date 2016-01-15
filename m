@@ -1,83 +1,86 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Fri, 15 Jan 2016 23:57:21 +0100
-Message-ID: <56997951.90304@gmail.com>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Shaohui Xie <shaohui.xie@nxp.com>, Andrew Lunn <andrew@lunn.ch>, "shh.xie@gmail.com" <shh.xie@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, Shaohui Xie <Shaohui.Xie@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Sat, 16 Jan 2016 00:03:37 +0100
+Message-ID: <5216704.YbueADHOOR@wuerfel>
+References: <Pine.LNX.4.44L0.1601151006330.1533-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1601151006330.1533-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15.01.2016 05:01, Shaohui Xie wrote:
->> -----Original Message-----
->> From: Andrew Lunn [mailto:andrew@lunn.ch]
->> Sent: Friday, January 15, 2016 12:44 AM
->> To: shh.xie@gmail.com
->> Cc: devicetree@vger.kernel.org; netdev@vger.kernel.org; linuxppc-
->> dev@lists.ozlabs.org; f.fainelli@gmail.com; davem@davemloft.net; Shaohui Xie
->> Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
->>
->> On Thu, Jan 14, 2016 at 04:23:59PM +0800, shh.xie@gmail.com wrote:
->>> From: Shaohui Xie <Shaohui.Xie@freescale.com>
->>>
->>> This commit adds necessary definitions for the PHY layer to recognize
->>> backplane Ethernet 1000BASE-KX and 10GBASE-KR as valid PHY interfaces,
->>> "1000base-kx" for 1000BASE-KX, "10gbase-kr" for 10GBASE-KR.
->>>
->>> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
->>> ---
->>> changes in v2:
->>> new patch.
-
-Shaohui,
-
-it would be more useful to describe _what_ is new here compared to v1.
-
-Anyway:
-
->>>  Documentation/devicetree/bindings/net/ethernet.txt | 4 ++--
->>>  include/linux/phy.h                                | 6 ++++++
->>>  2 files changed, 8 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt
->>> b/Documentation/devicetree/bindings/net/ethernet.txt
->>> index 5d88f37..1166a5c 100644
->>> --- a/Documentation/devicetree/bindings/net/ethernet.txt
->>> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
->>> @@ -11,8 +11,8 @@ The following properties are common to the Ethernet
->> controllers:
->>>    the maximum frame size (there's contradiction in ePAPR).
->>>  - phy-mode: string, operation mode of the PHY interface; supported values are
->>>    "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii",
->>> "rgmii", "rgmii-id",
->>> -  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a
->>> de-facto
->>> -  standard property;
->>> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii", "1000base-kx",
->>> + "10gbase-kr";  this is now a de-facto standard property;
->>
->> I know very little about this, so i'm just asking a question. None of the other
->> interface modes contain a bit rate. So is the bit rate needed for your two new
->> modes?
+On Friday 15 January 2016 10:11:06 Alan Stern wrote:
+> On Fri, 15 Jan 2016, Arnd Bergmann wrote:
 > 
-> 1000BASE-KX and 10GBASE-KR are terms in IEEE802.3, so as XGMII and GMII. 
-> There are interfaces could be different bit rates but same types, 
-> e.g. 100BASE-LX10 and 1000BASE-LX10, or 40GBASE-KR4 and 100GBASE-KR4, 
-> having bit rate is clear to represent hardware.
+> > On Friday 15 January 2016 17:17:27 Peter Chen wrote:
+> > > Although most of USB devices are hot-plug's, there are still some devices
+> > > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> > > If these kinds of USB devices are multiple functions, and they can supply
+> > > other interfaces like i2c, gpios for other devices, we may need to
+> > > describe these at device tree.
+> > > 
+> > > In this commit, it uses "reg" in dts as port number to match the port
+> > > number decided by USB core, if they are the same, then the device node
+> > > is for the device we are creating for USB core.
+> > > 
+> > > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > 
+> > 
+> > Just one last question:
+> > 
+> > >  	dev->active_duration = -jiffies;
+> > >  #endif
+> > > -	if (root_hub)	/* Root hub always ok [and always wired] */
+> > > +	if (root_hub) {	/* Root hub always ok [and always wired] */
+> > >  		dev->authorized = 1;
+> > > -	else {
+> > > +		dev->of_node = bus->controller->of_node;
+> > 
+> > 
+> > You are adding the of_node of the controller to the root hub, which I
+> > guess means that we now have two 'struct device' instances with the
+> > same of_node. They have different bus_types, so I think that is ok,
+> > but I wonder if it would be better to leave out the of_node for the
+> > root hub to avoid the confusion. Can you think of a case where we
+> > actually want to add properties for the root hub that we can't do
+> > more easily in the host controller?
 > 
+> There may not be any such cases, but there's still a good reason for
+> setting the root hub's of_node pointer: to initialize the recursion
+> along the USB device tree.
+> 
+> This leaves the question of whether OF will always use the same node to
+> represent the host controller and the root hub.  In other words, if a
+> motherboard has a fixed device plugged into a fixed root-hub port, will
+> the DT description make that device a child of the host controller?  
+> Or will there be a node in between (to represent the root hub)?
 
-If you look at the list of possible values for "phy-mode" you'd see that
-none of it describes a PHY-to-PHY connection but all are for MAC-to-PHY
-connections. Also, names above suggest it already: MII is short for
-media _independent_ interface.
+Good question. I'm sure the answer is somewhere in this document
 
-I copy Andrew's concerns and think that neither 10000base-kx nor
-10gbase-kr belong in the list of phy-mode properties.
+http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
 
-Sebastian
+but unfortunately I don't understand USB addressing well enough
+to answer this. I think the key sentence is the definition of the
+"reg" property:
+
+| prop-encoded-array: one integer, encoded as with encode-int.
+| The "reg" property for a device node shall consist of the number of the
+| USB hub port or the USB host controller port to which this USB device
+| is attached. As specified in [2] section 11.11.2.1, port numbers range
+| from 1 to 255.
+
+Does the root hub have a port number relative to the host controller,
+or is it identical to the host controller from the addressing
+perspective?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
