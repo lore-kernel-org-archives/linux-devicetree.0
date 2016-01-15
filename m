@@ -1,54 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] [v2] powerpc: fsl: update fman dt binding for PCS PHY
-Date: Thu, 14 Jan 2016 20:53:41 -0600
-Message-ID: <20160115025341.GA13316@rob-hp-laptop>
-References: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
+Subject: Re: [PATCH V3 1/5] DT: mfd: add device-tree binding doc fro PMIC
+ max77620/max20024
+Date: Thu, 14 Jan 2016 20:55:13 -0600
+Message-ID: <20160115025513.GA14066@rob-hp-laptop>
+References: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com>
+ <1452771166-13694-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: shh.xie@gmail.com
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
+In-Reply-To: <1452771166-13694-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 04:27:18PM +0800, shh.xie@gmail.com wrote:
-> From: Shaohui Xie <Shaohui.Xie@freescale.com>
+On Thu, Jan 14, 2016 at 05:02:42PM +0530, Laxman Dewangan wrote:
+> The MAXIM PMIC MAX77620 and MAX20024 are power management IC
+> which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
+> watchdog etc.
 > 
-> PCS PHY can support backplane (1000BASE-KX and 10GBASE-KR), this needs
-> to change corresponding serdes lane settings, so a reference is needed
-> for serdes lane. This patch describes properties needed for PCS PHY to
-> support backplane.
+> Add DT binding document for the different functionality of
+> this device.
 > 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 > ---
-> changes in v2:
-> addressed Rob's comments.
-> based on http://patchwork.ozlabs.org/patch/560936/
+> Changes from V1: 
+> - Added units in some of properties.
+> - Change the boolean property to tristate type and detail some of
+>   properties.
 > 
->  Documentation/devicetree/bindings/powerpc/fsl/fman.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> Change from V2:
+> - added unit in period related dt property.
 > 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> index 55c2c03..5ca909a 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> @@ -432,6 +432,16 @@ example of how to define a PHY (Internal PHY has no interrupt line).
->  - For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
->  - For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
->    PCS PHY addr must be '0'.
-> +  PCS PHY can support backplane (1000BASE-KX and 10GBASE-KR), this needs to
-> +  change the corresponding serdes lane settings.
-> +
-> +  PCS PHY node properties required for backplane:
-> +
-> +  - compatible: must be "ethernet-phy-ieee802.3-c45".
-> +  - phy-mode: string, operation mode of the PHY interface; must be "1000base-kx"
-> +    for 1000BASE-KX, or "10gbase-kr" for 10GBASE-KR.
-> +  - fsl-lane-handle: phandle, specifies a reference to a node representing a Serdes.
-> +  - fsl-lane-reg: offset and length of the register set for the serdes lane.
+>  Documentation/devicetree/bindings/mfd/max77620.txt | 397 +++++++++++++++++++++
+>  include/dt-bindings/mfd/max77620.h                 |  38 ++
+>  2 files changed, 435 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+>  create mode 100644 include/dt-bindings/mfd/max77620.h
 
-These should be fsl,... not fsl-...
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
