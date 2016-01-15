@@ -1,88 +1,87 @@
+Return-Path: <andrey.gusakov@cogentembedded.com>
 MIME-Version: 1.0
-In-Reply-To: <20160111175422.GA17070@nl1lxl-107192.ttg.global>
-References: <cover.1452447124.git.oreste.salerno@tomtom.com>
-	<dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
-	<20160111030156.GA18656@rob-hp-laptop>
-	<20160111175422.GA17070@nl1lxl-107192.ttg.global>
-Date: Mon, 11 Jan 2016 17:51:50 -0600
-Message-ID: <CAL_JsqJtccZPk3HV5YrToMNmQEZVjLCZOqw_vkJ8a6=oU7Tp6Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] Input: cyttsp - add device tree bindings
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Oreste Salerno <oreste.salerno@tomtom.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, fery@cypress.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1452815059-22980-1-git-send-email-aduggan@synaptics.com>
+References: <1452815059-22980-1-git-send-email-aduggan@synaptics.com>
+Date: Fri, 15 Jan 2016 14:20:03 +0300
+Message-ID: <CAFmnZc0FctH3t6q4-YSNe3X0x4QMtMVuh94md+ywibrj8uW9og@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] Input: synaptics-rmi4: Add device tree support
+ for RMI4 I2C devices
+From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Content-Type: multipart/alternative; boundary=001a113f6abcb2760205295d95c2
+To: Andrew Duggan <aduggan@synaptics.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+--001a113f6abcb2760205295d95c2
+Content-Type: text/plain; charset=UTF-8
 
+Hi
 
-On Mon, Jan 11, 2016 at 11:54 AM, Oreste Salerno <oreste.salerno@tomtom.com> wrote:
-> On Sun, Jan 10, 2016 at 09:01:56PM -0600, Rob Herring wrote:
->> On Sun, Jan 10, 2016 at 06:36:08PM +0100, Oreste Salerno wrote:
->> > Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
->> > ---
->> >  .../bindings/input/touchscreen/cyttsp.txt          |  82 +++++++++++++
->> >  drivers/input/touchscreen/cyttsp_core.c            | 134 +++++++++++++++++++--
->> >  include/linux/input/cyttsp.h                       |   3 +
->> >  3 files changed, 212 insertions(+), 7 deletions(-)
->> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
->> > new file mode 100644
->> > index 0000000..2dc5c65
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
->> > @@ -0,0 +1,82 @@
->> > +* Cypress cyttsp touchscreen controller
->> > +
->> > +Required properties:
->> > +- compatible               : must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
->> > +- reg                      : Device I2C address or SPI chip select number
->> > +- spi-max-frequency        : Maximum SPI clocking speed of the device (for cyttsp-spi)
->> > +- interrupt-parent : the phandle for the gpio controller
->> > +                     (see interrupt binding[0]).
->> > +- interrupts               : (gpio) interrupt to which the chip is connected
->> > +                     (see interrupt binding[0]).
->> > +- reset-gpios              : the reset gpio the chip is connected to
->> > +                     (see GPIO binding[1] for more details).
->> > +- touchscreen-size-x       : horizontal resolution of touchscreen (in pixels)
->> > +- touchscreen-size-y       : vertical resolution of touchscreen (in pixels)
->> > +- bootloader-key   : the 8-byte bootloader key that is required to switch
->> > +                     the chip from bootloader mode (default mode) to
->> > +                     application mode.
->> > +                     This property has to be specified as an array of 8
->> > +                     '/bits/ 8' values.
->> > +
->> > +Optional properties:
->> > +- active-distance  : the distance in pixels beyond which a touch must move
->> > +                     before movement is detected and reported by the device.
->> > +                     Valid values: 0-15.
->>
->> Wouldn't this be the same as touchscreen-fuzz-(x|y) which is the
->> replacement for the deprecated moving-threshold?
->>
+On Fri, Jan 15, 2016 at 2:44 AM, Andrew Duggan <aduggan@synaptics.com>
+wrote:
+
+> Add devicetree binding for I2C devices and add bindings for optional
+> parameters in the function drivers. Parameters for function drivers are
+> defined in child nodes for each of the functions.
 >
-> It is somewhat related. But I understand that the touchscreen-fuzz-(x|y) properties
-> are meant to be used as parameters passed to input_set_abs_params(), which are used
-> for a SW-based jitter filtering.
-> The active-distance value instead is used to set a HW register in the chip which
-> effectively performs the filtering in the HW.
-> The driver is currently passing 0 as fuzz parameter to input_set_abs_params().
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 >
->> > +- active-interval-ms       : the minimum period in ms between consecutive
->> > +                     scanning/processing cycles when the chip is in active mode.
->> > +                     Valid values: 0-255.
->> > +- lowpower-interval-ms     : the minimum period in ms between consecutive
->> > +                     scanning/processing cycles when the chip is in low-power mode.
->> > +                     Valid values: 0-2550
->> > +- touch-timeout-ms : minimum time in ms spent in the active power state while no
->> > +                     touches are detected before entering low-power mode.
->> > +                     Valid values: 0-2550
->> > +
->>
->> Otherwise, looks fine.
+...
+
 >
-> I am still waiting for a review from the driver maintainer (Ferruh Yigit), but I see
-> that he hasn't been actively reviewing patches for the cyttsp* drivers for a while.
-> I wonder what would be the process in this case?
+> +#ifdef CONFIG_OF
+> +static void rmi_function_of_probe(struct rmi_function *fn)
+> +{
+> +       char of_name[8];
+> +
+> +       snprintf(of_name, sizeof(of_name), "rmi4-f%02x",
+> +               fn->fd.function_number);
+> +       fn->dev.of_node = of_find_node_by_name(
+> +                               fn->rmi_dev->xport->dev->of_node, of_name);
+> +}
 >
+> Name like "rmi4-f11" including 0 terminator does not fit in 8 chars.
+This leads to the inability to find the correct OF node and get settings.
+
+--001a113f6abcb2760205295d95c2
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi <br><div><div class=3D"gmail_extra"><br><div class=3D"g=
+mail_quote">On Fri, Jan 15, 2016 at 2:44 AM, Andrew Duggan <span dir=3D"ltr=
+">&lt;<a href=3D"mailto:aduggan@synaptics.com" target=3D"_blank">aduggan@sy=
+naptics.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=
+g-left:1ex">Add devicetree binding for I2C devices and add bindings for opt=
+ional<br>
+parameters in the function drivers. Parameters for function drivers are<br>
+defined in child nodes for each of the functions.<br>
+<br>
+Signed-off-by: Andrew Duggan &lt;<a href=3D"mailto:aduggan@synaptics.com" t=
+arget=3D"_blank">aduggan@synaptics.com</a>&gt;<br></blockquote><div>... <br=
+></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
+border-left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
++#ifdef CONFIG_OF<br>
++static void rmi_function_of_probe(struct rmi_function *fn)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0char of_name[8];<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0snprintf(of_name, sizeof(of_name), &quot;rmi4-f=
+%02x&quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fn-&gt;fd.function_=
+number);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0fn-&gt;dev.of_node =3D of_find_node_by_name(<br=
 >
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fn-&gt;rmi_dev-&gt;xport-&gt;dev-&gt;=
+of_node, of_name);<br>
++}<span><font color=3D"#888888"><br>
+<br>
+</font></span></blockquote></div>Name like &quot;rmi4-f11&quot; including 0=
+ terminator does not fit in 8 chars.<span id=3D"result_box" class=3D"" lang=
+=3D"en"><span class=3D""><br>This leads to</span> <span class=3D"">the inab=
+ility to find</span> <span class=3D"">the correct OF node and get settings.=
+</span></span> </div></div></div>
+
+--001a113f6abcb2760205295d95c2--
