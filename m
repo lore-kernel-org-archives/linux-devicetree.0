@@ -1,86 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] ARM: perf: Set ARMv7 SDER SUNIDEN bit
-Date: Thu, 14 Jan 2016 20:50:30 -0600
-Message-ID: <20160115025030.GA8883@rob-hp-laptop>
-References: <20140805144831.25462.18149.stgit@localhost>
- <20140805144833.25462.46011.stgit@localhost>
- <20140806104947.GD25953@arm.com>
- <53E22E0B.7080907@parkeon.com>
- <20140807173316.GH31101@arm.com>
- <20160106145500.GA92797@gandalf.middle.earth.net>
- <20160112171109.GJ15737@arm.com>
- <20160114043626.GA45778@gandalf.middle.earth.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] [v2] powerpc: fsl: update fman dt binding for PCS PHY
+Date: Thu, 14 Jan 2016 20:53:41 -0600
+Message-ID: <20160115025341.GA13316@rob-hp-laptop>
+References: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160114043626.GA45778-f9ZlEuEWxVcBGMgAZHU0458/Q/RUDjKW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Shawn Guao <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pooya Keshavarzi <Pooya.Keshavarzi-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1452760038-12442-1-git-send-email-shh.xie@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: shh.xie@gmail.com
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, f.fainelli@gmail.com, davem@davemloft.net, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 11:36:26PM -0500, George G. Davis wrote:
-> From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+On Thu, Jan 14, 2016 at 04:27:18PM +0800, shh.xie@gmail.com wrote:
+> From: Shaohui Xie <Shaohui.Xie@freescale.com>
 > 
-> ARMv7 counters other than the CPU cycle counter only work if the Secure
-> Debug Enable Register (SDER) SUNIDEN bit is set.
+> PCS PHY can support backplane (1000BASE-KX and 10GBASE-KR), this needs
+> to change corresponding serdes lane settings, so a reference is needed
+> for serdes lane. This patch describes properties needed for PCS PHY to
+> support backplane.
 > 
-> Since access to the SDER is only possible in secure state, it will
-> only be done if the device tree property "secure-reg-access" is set.
-> 
-> Without this:
-> # perf stat -e cycles,instructions sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->           14606094 cycles                    #    0.000 GHz
->                  0 instructions              #    0.00  insns per cycle
-> 
-> After applying:
-> # perf stat -e cycles,instructions sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->            5843809 cycles
->            2566484 instructions              #    0.44  insns per cycle
-> 
->        1.020144000 seconds time elapsed
-> 
-> Some platforms (eg i.MX53) may also need additional platform specific
-> setup.
-> 
-> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: George G. Davis <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
 > ---
-> Changes in v4:
-> - Reword commit message to clarify that this change is ARMv7 specific.
-> - Clarify that secure-reg-access property is only valid for ARMv7 CPUs
->   and is not supported on anything else (in particular, the arm64
->   port requires you to boot in non-secure mode).
-> - Convert on_each_cpu(armv7pmu_enable_secure_access, NULL, 1) call in
->   armv7pmu_init() to in-lined code in ->reset callback, since that is
->   called off the back of a CPU hotplug notifier when the PMU may need
->   to be reinitialised.
-> Changes in v3:
-> - Pooya Keshavarzi:
->   * v2 review comment fixups
->   * Use on_each_cpu() to set SUNIDEN on all CPUs
->   * Move armv7pmu_enable_secure_access() call from armv7pmu_start() to
->     armv7_a8_map_event() such that is called only once instead of each
->     time `perf` is executed
-> - George G. Davis:
->   * Fixup to apply after file renames due to commit fa8ad78 (arm: perf:
->     factor arm_pmu core out to drivers)
->   * Fix checkpatch 'CHECK: Prefer using the BIT macro' issue
-> ---
->  Documentation/devicetree/bindings/arm/pmu.txt | 10 ++++++++++
+> changes in v2:
+> addressed Rob's comments.
+> based on http://patchwork.ozlabs.org/patch/560936/
+> 
+>  Documentation/devicetree/bindings/powerpc/fsl/fman.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> index 55c2c03..5ca909a 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -432,6 +432,16 @@ example of how to define a PHY (Internal PHY has no interrupt line).
+>  - For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
+>  - For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
+>    PCS PHY addr must be '0'.
+> +  PCS PHY can support backplane (1000BASE-KX and 10GBASE-KR), this needs to
+> +  change the corresponding serdes lane settings.
+> +
+> +  PCS PHY node properties required for backplane:
+> +
+> +  - compatible: must be "ethernet-phy-ieee802.3-c45".
+> +  - phy-mode: string, operation mode of the PHY interface; must be "1000base-kx"
+> +    for 1000BASE-KX, or "10gbase-kr" for 10GBASE-KR.
+> +  - fsl-lane-handle: phandle, specifies a reference to a node representing a Serdes.
+> +  - fsl-lane-reg: offset and length of the register set for the serdes lane.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+These should be fsl,... not fsl-...
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
