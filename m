@@ -1,163 +1,94 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH v2 09/10] Input: synaptics-rmi4: Add device tree support to the SPI transport driver
-Date: Thu, 14 Jan 2016 15:45:58 -0800
-Message-ID: <1452815158-23266-1-git-send-email-aduggan@synaptics.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Fri, 15 Jan 2016 01:16:11 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
+References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
+	<1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
+ <87pox41dy9.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87pox41dy9.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for SPI devices.
-
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
- drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
- 2 files changed, 100 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-
-diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-new file mode 100644
-index 0000000..3b2add1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-@@ -0,0 +1,57 @@
-+Synaptics RMI4 SPI Device Binding
-+
-+The Synaptics RMI4 core is able to support RMI4 devices using different
-+transports and different functions. This file describes the device tree
-+bindings for devices using the SPI transport driver. Complete documentation
-+for other transports and functions can be found in
-+Documentation/devicetree/bindings/input/rmi4.
-+
-+Required Properties:
-+- compatible: syna,rmi4-spi
-+- reg: Chip select address for the device
-+- #address-cells: Set to 1 to indicate that the function child nodes
-+		    consist of only on uint32 value.
-+- #size-cells: Set to 0 to indicate that the function child nodes do not
-+		have a size property.
-+
-+Optional Properties:
-+- interrupts: interrupt which the rmi device is connected to.
-+- interrupt-parent: The interrupt controller.
-+See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+- syna,spi-rx-delay-usec: microsecond delay after a read transfer.
-+- syna,spi-tx-delay-usec: microsecond delay after a write transfer.
-+
-+Function Parameters:
-+Parameters specific to RMI functions are contained in child nodes of the rmi device
-+ node. Documentation for the parameters of each function can be found in:
-+Documentation/devicetree/bindings/input/rmi4/rmi_f*.txt.
-+
-+
-+
-+Example:
-+	spi@7000d800 {
-+		rmi4-spi-dev@0 {
-+			compatible = "syna,rmi4-spi";
-+			reg = <0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			spi-max-frequency = <4000000>;
-+			spi-cpha;
-+			spi-cpol;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(K, 2) 0x2>;
-+			syna,spi-rx-delay-usec = <30>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f11@11 {
-+				reg = <0x11>;
-+				touch-inverted-y;
-+				syna,sensor-type = <2>;
-+			};
-+		};
-+	};
-diff --git a/drivers/input/rmi4/rmi_spi.c b/drivers/input/rmi4/rmi_spi.c
-index 06f3140..ec5a9d9 100644
---- a/drivers/input/rmi4/rmi_spi.c
-+++ b/drivers/input/rmi4/rmi_spi.c
-@@ -12,6 +12,7 @@
- #include <linux/rmi.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
-+#include <linux/of.h>
- #include "rmi_driver.h"
- 
- #define RMI_SPI_DEFAULT_XFER_BUF_SIZE	64
-@@ -359,6 +360,41 @@ static int rmi_spi_init_irq(struct spi_device *spi)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static int rmi_spi_of_probe(struct spi_device *spi,
-+			struct rmi_device_platform_data *pdata)
-+{
-+	struct device *dev = &spi->dev;
-+	int retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.read_delay_us,
-+			"syna,spi-rx-delay-usec", 1);
-+	if (retval)
-+		return retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.write_delay_us,
-+			"syna,spi-tx-delay-usec", 1);
-+	if (retval)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rmi_spi_of_match[] = {
-+	{ .compatible = "syna,rmi4-spi" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rmi_spi_of_match);
-+#else
-+static inline int rmi_spi_of_probe(struct spi_device *spi,
-+				struct rmi_device_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int rmi_spi_probe(struct spi_device *spi)
- {
- 	struct rmi_spi_xport *rmi_spi;
-@@ -376,8 +412,13 @@ static int rmi_spi_probe(struct spi_device *spi)
- 
- 	pdata = &rmi_spi->xport.pdata;
- 
--	if (spi_pdata)
-+	if (spi->dev.of_node) {
-+		retval = rmi_spi_of_probe(spi, pdata);
-+		if (retval)
-+			return retval;
-+	} else if (spi_pdata) {
- 		*pdata = *spi_pdata;
-+	}
- 
- 	if (pdata->spi_data.bits_per_word)
- 		spi->bits_per_word = pdata->spi_data.bits_per_word;
-@@ -532,6 +573,7 @@ static struct spi_driver rmi_spi_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "rmi4_spi",
- 		.pm	= &rmi_spi_pm,
-+		.of_match_table = of_match_ptr(rmi_spi_of_match),
- 	},
- 	.id_table	= rmi_id,
- 	.probe		= rmi_spi_probe,
--- 
-2.5.0
+SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
+S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
+cnNnYWFyZA0KPiBTZW50OiAyMDE2xOox1MIxNMjVIDIxOjM1DQo+IFRvOiBZYW5nLCBXZW55b3Ug
+PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFy
+by5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gUGF3ZWwgTW9sbCA8
+cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
+IElhbg0KPiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBH
+YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47DQo+IEZlcnJl
+LCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9y
+Zz47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2NSAxLzJdIG1mZDogYWN0ODk0NWE6IGFkZCBBY3RpdmUtc2VtaSBBQ1Q4OTQ1
+QSBQTUlDDQo+IE1GRCBkcml2ZXINCj4gDQo+ID4+Pj4+ICJXZW55b3UiID09IFdlbnlvdSBZYW5n
+IDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+ICA+IFRoaXMgcGF0Y2ggYWRk
+cyBzdXBwb3J0IGZvciB0aGUgQWN0aXZlLXNlbWkgQUNUODk0NUEgUE1JQy4NCj4gID4gSXQgaXMg
+YSBNdWx0aSBGdW5jdGlvbiBEZXZpY2Ugd2l0aCB0aGUgZm9sbG93aW5nIHN1YmRldmljZXM6DQo+
+ICA+ICAtIFJlZ3VsYXRvcg0KPiAgPiAgLSBDaGFyZ2VyDQo+IA0KPiAgPiBJdCBpcyBpbnRlcmZh
+Y2VkIHRvIHRoZSBob3N0IGNvbnRyb2xsZXIgdXNpbmcgSTJDIGludGVyZmFjZSwgID4gQUNUODk0
+NUEgaXMgYSBjaGlsZA0KPiBkZXZpY2Ugb2YgdGhlIEkyQy4NCj4gDQo+ICA+IFNpZ25lZC1vZmYt
+Ynk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+ICA+IFJldmlld2VkLWJ5Og0K
+PiBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT4gID4gLS0tDQo+
+IA0KPiAgPiBDaGFuZ2VzIGluIHY1Og0KPiAgPiAgLSBjaGFuZ2UgZGVwZW5kcyBvbiB0byAnSTJD
+PXknLg0KPiANCj4gV2h5IG5vdCBtYWtlIGl0IGEgdHJpc3RhdGUgaW5zdGVhZD8gSGF2aW5nIHJl
+Z3VsYXRvcnMgYXMgbW9kdWxlcyBpcyBwZXJoYXBzIG5vdCBhDQo+IHZlcnkgd2lzZSB0aGluZyB0
+byBkbywgYnV0IGNvbmNlcHR1YWxseSBJIGRvbid0IHNlZSB3aHkgdGhpcyBjb2RlIGNvdWxkbid0
+IGJlIGENCj4gbW9kdWxlLg0KDQpZZXMsIHlvdSBhcmUgcmlnaHQuIGl0IGNhbiBiZSB1c2UgYSB0
+cmlzdGF0ZS4NCg0KPiANCj4gID4gK2NvbmZpZyBNRkRfQUNUODk0NUENCj4gID4gKwlib29sICJB
+Y3RpdmUtc2VtaSBBQ1Q4OTQ1QSINCj4gID4gKwlzZWxlY3QgTUZEX0NPUkUNCj4gID4gKwlzZWxl
+Y3QgUkVHTUFQX0kyQw0KPiAgPiArCWRlcGVuZHMgb24gSTJDPXkgJiYgT0YNCj4gID4gKwloZWxw
+DQo+ICA+ICsJICBTdXBwb3J0IGZvciB0aGUgQUNUODk0NUEgUE1JQyBmcm9tIEFjdGl2ZS1zZW1p
+LiBUaGlzIGRldmljZQ0KPiAgPiArCSAgZmVhdHVyZXMgdGhyZWUgc3RlcC1kb3duIERDL0RDIGNv
+bnZlcnRlcnMgYW5kIGZvdXIgbG93LWRyb3BvdXQNCj4gID4gKwkgIGxpbmVhciByZWd1bGF0b3Jz
+LCBhbG9uZyB3aXRoIGEgY29tcGxldGUgQWN0aXZlUGF0aCBiYXR0ZXJ5DQo+ICA+ICsJICBjaGFy
+Z2VyLg0KPiAgPiArDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvYWN0
+ODk0NWEuYw0KPiAgPiBAQCAtMCwwICsxLDEwOSBAQA0KPiAgPiArLyoNCj4gID4gKyAqIE1GRCBk
+cml2ZXIgZm9yIEFjdGl2ZS1zZW1pIEFDVDg5NDVhIFBNSUMgID4gKyAqICA+ICsgKiBDb3B5cmln
+aHQgKEMpDQo+IDIwMTUgQXRtZWwgQ29ycG9yYXRpb24uDQo+ICA+ICsgKg0KPiAgPiArICogQXV0
+aG9yOiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPiAgPiArICogID4gKyAqIFRo
+aXMNCj4gcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
+bmQvb3IgbW9kaWZ5IGl0ICA+ICsgKiB1bmRlciAgdGhlDQo+IHRlcm1zIG9mIHRoZSBHTlUgR2Vu
+ZXJhbCAgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5IHRoZSAgPiArICogRnJlZQ0KPiBT
+b2Z0d2FyZSBGb3VuZGF0aW9uOyAgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3Ig
+KGF0IHlvdXIgID4gKyAqIG9wdGlvbikgYW55DQo+IGxhdGVyIHZlcnNpb24uDQo+ICA+ICsgKi8N
+Cj4gID4gKw0KPiAgPiArI2luY2x1ZGUgPGxpbnV4L2kyYy5oPg0KPiAgPiArI2luY2x1ZGUgPGxp
+bnV4L21mZC9hY3Q4OTQ1YS5oPg0KPiAgPiArI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+DQo+
+ICA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICA+ICsjaW5jbHVkZSA8bGludXgvb2Zf
+ZGV2aWNlLmg+DQo+ICA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ICA+ICsNCj4gID4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgYWN0ODk0NWFfZGV2c1tdID0gew0KPiAgPiAr
+CXsNCj4gID4gKwkJLm5hbWUgPSAiYWN0ODk0NWEtcG1pYyIsDQo+ICA+ICsJCS5vZl9jb21wYXRp
+YmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLXJlZ3VsYXRvciIsDQo+ICA+ICsJfSwNCj4gID4g
+Kwl7DQo+ICA+ICsJCS5uYW1lID0gImFjdDg5NDVhLWNoYXJnZXIiLA0KPiAgPiArCQkub2ZfY29t
+cGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1YS1jaGFyZ2VyIiwNCj4gID4gKwl9LA0KPiAg
+PiArfTsNCj4gID4gKw0KPiAgPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfY29uZmlnIGFj
+dDg5NDVhX3JlZ21hcF9jb25maWcgPSB7DQo+ICA+ICsJLnJlZ19iaXRzID0gOCwNCj4gID4gKwku
+dmFsX2JpdHMgPSA4LA0KPiAgPiArfTsNCj4gID4gKw0KPiAgPiArc3RhdGljIGludCBhY3Q4OTQ1
+YV9pMmNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywNCj4gID4gKwkJCSAgICAgIGNvbnN0
+IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4gID4gK3sNCj4gID4gKwlzdHJ1Y3QgYWN0ODk0
+NWFfZGV2ICphY3Q4OTQ1YTsNCj4gID4gKwlpbnQgcmV0Ow0KPiAgPiArDQo+ICA+ICsJYWN0ODk0
+NWEgPSBkZXZtX2t6YWxsb2MoJmkyYy0+ZGV2LCBzaXplb2YoKmFjdDg5NDVhKSwgR0ZQX0tFUk5F
+TCk7DQo+ICA+ICsJaWYgKCFhY3Q4OTQ1YSkNCj4gID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ICA+
+ICsNCj4gDQo+IFdoYXQgaXMgdGhlIHBvaW50IG9mIHRoaXMgc3RydWN0dXJlIChhbmQgdGhlIGhl
+YWRlciBmaWxlKT8gQ2FuJ3QgdGhlIHN1YmRldmljZXMganVzdA0KPiBkbyBkZXZfZ2V0X3JlZ21h
+cChkZXYtPnBhcmVudCk/IHJlZ3VsYXRvcl9yZWdpc3RlcigpIGFmYWlrIGFscmVhZHkgZG9lcyB0
+aGlzIGJ5DQo+IGRlZmF1bHQuDQoNClllcywgSSByZS1yZWFkIHJlZ3VsYXRvcl9yZWdpc3Rlcigp
+IGNvZGUuIEl0IGRpZCBkbyBkZXZfZ2V0X3JlZ21hcChkZXYtPnBhcmVudCkuDQoNCkkgdGhpbmsg
+dGhpcyBzdHJ1Y3R1cmUgc2hvdWxkIGJlIHBvaW50ZWQgYnkgZGV2LT5wYXJlbnQsIHRoaXMgc3Ry
+dWN0dXJlIGlzIG5lY2Vzc2FyeS4NCg0KWWVzIHJlZ3VsYXRvciBkcml2ZXIgc2hvdWxkIGJlIHNp
+bXBsZXIuDQoNCk1vcmVvdmVyLCBpdCBpcyB1c2VkIGJ5IGFub3RoZXIgc3ViIGRldmljZSwgY2hh
+cmdlci4gV2hpY2ggZG9uJ3Qgc3VjaCBjb2RlLg0KDQo+IA0KPiAtLQ0KPiBCeWUsIFBldGVyIEtv
+cnNnYWFyZA0KDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
