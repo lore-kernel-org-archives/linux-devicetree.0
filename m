@@ -1,130 +1,62 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V1 06/10] of: Add bindings of hw-trips for soctherm
-Date: Fri, 15 Jan 2016 15:21:03 +0800
-Message-ID: <56989DDF.2060004@nvidia.com>
-References: <1452672022-387-1-git-send-email-wni@nvidia.com> <20160113152527.GF2588@ulmo>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Fri, 15 Jan 2016 08:58:10 +0100
+Message-ID: <8737tzz33h.fsf@dell.be.48ers.dk>
+References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
+	<1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
+	<87pox41dy9.fsf@dell.be.48ers.dk>
+	<B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113152527.GF2588@ulmo>
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01> (Wenyou
+	Yang's message of "Fri, 15 Jan 2016 01:16:11 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+>>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
 
+Hi,
 
-On 2016=E5=B9=B401=E6=9C=8813=E6=97=A5 23:25, Thierry Reding wrote:
-> * PGP Signed by an unknown key
->=20
-> Cc'ing devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, please make sure to always Cc that
-> list on device tree binding patches.
->=20
-> On Wed, Jan 13, 2016 at 04:00:22PM +0800, Wei Ni wrote:
->> Add hw-trips sub-node for soctherm, which is
->> used to describe the hardware trip points for
->> each soctherm sensors.
->=20
-> Perhaps you should mention Tegra in the subject and the commit messag=
-e?
->=20
-> Also please use all of the 72 columns that are at your disposal when
-> writing commit messages.
->=20
->> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/thermal/tegra-soctherm.txt | 29 +++++++++++=
-+++++++++++
->>  1 file changed, 29 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/tegra-socther=
-m.txt b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
->> index 6b68cd150405..77aef0b4968b 100644
->> --- a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
->> +++ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
->> @@ -26,6 +26,18 @@ Required properties :
->>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h>=
- for a
->>      list of valid values when referring to thermal sensors.
->> =20
->> +Optional properties:
->> +- hw-trips : A sub-node which is a container of hardware trip point=
-s
->> +    for each sensors.
->=20
-> Perhaps call the node "trip-points"? "hw-" seems kind of redundant si=
-nce
-> DT is a hardware description, and "trips" isn't a very good abbreviat=
-ion
-> for "trip-points".
+ >> Why not make it a tristate instead? Having regulators as modules is perhaps not a
+ >> very wise thing to do, but conceptually I don't see why this code couldn't be a
+ >> module.
 
-In the linux thermal framework, it has the node definition "trips" and =
-have
-sysfs interface named as "trip-points", these "trip" are set for SW. If=
- we also
-use the "trip-points" in here, it will make confusion.
-I used "hw-", because it's different with the SW trip-points, the trip-=
-points
-under it are for the Tegra to shutdown/reset from HW, or trigger the
-HW-throttle. (not SW throttle, see below)
-How about "hw-trip-points"?
+ > Yes, you are right. it can be use a tristate.
 
->=20
->> +  * sensors: Sub-nodes which are used to describe the HW trip point=
-s info,
->> +        must be named as "cpu", "gpu", "mem", "pll".
->> +      Properties:
->> +      - therm-temp : Shutdown temperature in millicelsius, once the
->> +        temperature of this sensor is higher than the therm-temp, t=
-he system
->> +        will be reset or shutdown.
->=20
-> Why not call the property "shutdown-temperature" if that's what it is=
-=2E
+Ok, good.
 
-This is the shutdown/reset temperature. The Tegra's SPEC calls it as th=
-ermtrip
-event, when the temperature touch this value, it will trigger the therm=
-trip
-event, and then will cause the system reset or shutdown, it depends on =
-the HW
-platform design. So I named it as "therm-temp".
-I think it's better to change to "thermtrip-temperature".
+>> > +	act8945a = devm_kzalloc(&i2c->dev, sizeof(*act8945a), GFP_KERNEL);
+ >> > +	if (!act8945a)
+ >> > +		return -ENOMEM;
+ >> > +
+ >> 
+ >> What is the point of this structure (and the header file)? Can't the subdevices just
+ >> do dev_get_regmap(dev->parent)? regulator_register() afaik already does this by
+ >> default.
 
->=20
->> +      - throt-temp : HW throttle temperature in millicelsius, once =
-the
->> +        temperature of this sensor is higher than the throt-temp, t=
-he HW
->> +        throttle will be triggered in soctherm. (Not implement yet)
->=20
-> "throttle-temperature" would be a better name in my opinion. More typ=
-ing
-> perhaps but less chance of getting the abbreviations wrong. Also ther=
-e's
-> no need for the "(Not implement yet)" because the binding isn't about=
- an
-> implementation, it's about the hardware description. If you have no c=
-ode
-> that uses this, a safer option might be to just drop it for now.
+ > Yes, I re-read regulator_register() code. It did do dev_get_regmap(dev->parent).
 
-The Tegra soctherm support throttle function, when the temperature touc=
-h the
-trip point, the HW will skip the CPU/GPU' pulse, so I called it as HW t=
-hrottle.
-=46or the SW throttle, the SW will cap the CPU/GPU or other clocks freq=
-uencies.
-Anyway, since we didn't support it yet, I will drop it for now.
+ > I think this structure should be pointed by dev->parent, this structure is necessary.
 
->=20
-> Thierry
->=20
-> * Unknown Key
-> * 0x7F3EB3A1
->=20
+ > Yes regulator driver should be simpler.
+
+ > Moreover, it is used by another sub device, charger. Which don't such code.
+
+But the charger driver can just as well do:
+
+dev_get_regmap(dev->parent);
+
+instead of:
+
+dev_get_drvdata(pdev->dev.parent)->regmap.
+
+-- 
+Venlig hilsen,
+Peter Korsgaard 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
