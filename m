@@ -1,57 +1,44 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
-Date: Fri, 15 Jan 2016 10:48:21 -0800
-Message-ID: <56993EF5.9040008@gmail.com>
-References: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
+From: Caleb Crome <caleb@crome.org>
+Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
+ settings device tree options
+Date: Fri, 15 Jan 2016 10:49:04 -0800
+Message-ID: <CAG5mAdyXPtnnZvGcWrhhbv7wuamz_xbRsn76VXdbE1yZRgx_Mg@mail.gmail.com>
+References: <1452788982-11583-1-git-send-email-caleb@crome.org>
+ <20160114201858.GA17567@Asurada-Nvidia> <56984BE7.2050303@tabi.org>
+ <20160115131325.GW6588@sirena.org.uk> <5698F846.5080604@tabi.org>
+ <CAG5mAdy553q4Te5755575WaiLxGRp43h=WVH6QzF7idsaCnhbg@mail.gmail.com> <20160115183824.GB31703@Asurada-Nvidia>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452759657-7114-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160115183824.GB31703@Asurada-Nvidia>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Timur Tabi <timur@tabi.org>, Mark Brown <broonie@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2016 12:20 AM, Antony Pavlov wrote:
-> The correct name for aliases node is "aliases" not "alias".
+On Fri, Jan 15, 2016 at 10:38 AM, Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> On Fri, Jan 15, 2016 at 09:03:28AM -0800, Caleb Crome wrote:
 >
-> An overview of the "aliases" node usage can be found
-> on the device tree usage page at devicetree.org [1].
+>> If nobody objects, we can just set the value to 4 and be done with it.
 >
-> Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
+> I agree. And we may apply it only to i.MX platforms with DMA if
+> other platform owners feel comfortable with the previous settings.
 >
-> [1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-> [2] https://www.power.org/documentation/epapr-version-1-1/
+>> Another question:  is the watermark ever going to be different than
+>> maxburst?  Is there any reason to have them different?
 >
-> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->   arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> index 003015a..4b6d38c 100644
-> --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> @@ -9,7 +9,7 @@
->   	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
->   	model = "TP-Link TL-WR1043ND Version 1";
->
-> -	alias {
-> +	aliases {
->   		serial0 = "/ahb/apb/uart@18020000";
->   	};
+> The watermark is merely a threshold to trigger a DMA request. The
+> only relationship with the burst size is that each burst transfer
+> should not carry more data than the number of empty slots; FIFO
+> under/overflow occurs otherwise. So it's just more efficient and
+> safer to set an identical value to both of them. I don't think
+> it will cause functional problems to set TFWM to 4 and burst size
+> to 1 -- It just lets DMA operate in a single data transfer mode.
 
-What uses this alias?  If the answer is nothing (likely, as it was 
-broken and nobody seems to have noticed), just remove the whole thing.
+If there is no penalty for setting maxburst to 1 (or 2 in the case of
+dual fifo I think), then should we just set both the watermark and
+maxburst to 1?
 
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess the real difference would be when you're in FIQ mode.  In FIQ
+mode, the penalty of an interrupt per word would be pretty bad, but in
+DMA mode, if we just set both to 1, we should be fine, right?
