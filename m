@@ -1,188 +1,112 @@
-From: romain izard <romain.izard-Tny/h2m1dROW3RwJEphJ61AUjnlXr6A1@public.gmane.org>
-Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
-Date: Fri, 15 Jan 2016 11:06:53 +0100
-Message-ID: <CAGkQfmPPat_rs9wtB2auzEathhWHcc7GMTTJeW_0FKmrHMzF_g@mail.gmail.com>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
- <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com> <20160114101910.4e772968@bbrezillon>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
+ disable_unused_functions
+Date: Fri, 15 Jan 2016 11:17:30 +0100
+Message-ID: <20160115101730.GH19130@phenom.ffwll.local>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452785109-6172-14-git-send-email-maxime.ripard@free-electrons.com>
+ <2014724.QmjXVju9UW@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160114101910.4e772968@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <2014724.QmjXVju9UW@avalon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexander Kaplan <alex@nextthing.co>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-2016-01-14 10:19 GMT+01:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Wed, 13 Jan 2016 17:34:15 +0100
-> Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Starting with the SAMA5D2, there is a new revision of the Atmel PMECC
->> controller that can correct 32 bits in each sector. This controller is
->> not 100% compatible with the previous revision that corrected a maximum
->> of 24 bits by sector, as some register addresses overlap.
->>
->> Using information from the device tree, we can configure the driver to
->> work with both versions.
->>
->> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mtd/atmel-nand.txt         |  7 +++++--
->>  drivers/mtd/nand/atmel_nand.c                      | 23 +++++++++++++++++++++-
->>  drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
->>  3 files changed, 33 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> index 89b0db9801b0..90887b430f03 100644
->> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> @@ -1,7 +1,10 @@
->>  Atmel NAND flash
->>
->>  Required properties:
->> -- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5d4-nand".
->> +- compatible: The possible values are:
->> +     "atmel,at91rm9200-nand"
->> +     "atmel,sama5d2-nand"
->> +     "atmel,sama5d4-nand"
->>  - reg : should specify localbus address and size used for the chip,
->>       and hardware ECC controller if available.
->>       If the hardware ECC is PMECC, it should contain address and size for
->> @@ -22,7 +25,7 @@ Optional properties:
->>    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
->>    "soft_bch".
->>  - atmel,has-pmecc : boolean to enable Programmable Multibit ECC hardware.
->> -  Only supported by at91sam9x5 or later sam9 product.
->> +  Supported by AT91SAM9x5 or later SAM9 chips, and SAMA5 chips.
->>  - atmel,pmecc-cap : error correct capability for Programmable Multibit ECC
->>    Controller. Supported values are: 2, 4, 8, 12, 24.
->>  - atmel,pmecc-sector-size : sector size for ECC computation. Supported values
->> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
->> index e5d7e7e63f49..6fe50e2d291f 100644
->> --- a/drivers/mtd/nand/atmel_nand.c
->> +++ b/drivers/mtd/nand/atmel_nand.c
->> @@ -65,6 +65,7 @@ module_param(on_flash_bbt, int, 0);
->>
->>  struct atmel_nand_caps {
->>       bool pmecc_correct_erase_page;
->> +     uint8_t pmecc_max_correction;
->>  };
->>
->>  struct atmel_nand_nfc_priv {
->> @@ -146,6 +147,7 @@ struct atmel_nand_host {
->>       int                     pmecc_cw_len;   /* Length of codeword */
->>
->>       void __iomem            *pmerrloc_base;
->> +     void __iomem            *pmerrloc_el_base;
->>       void __iomem            *pmecc_rom_base;
->>
->>       /* lookup table for alpha_to and index_of */
->> @@ -817,7 +819,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
->>       sector_size = host->pmecc_sector_size;
->>
->>       while (err_nbr) {
->> -             tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_base, i) - 1;
->> +             tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_el_base, i) - 1;
->>               byte_pos = tmp / 8;
->>               bit_pos  = tmp % 8;
->>
->> @@ -1208,6 +1210,8 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
->>               err_no = PTR_ERR(host->pmerrloc_base);
->>               goto err;
->>       }
->
-> How about putting the comment you added below here:
->
-> /*
->  * The ATMEL_PMERRLOC_ELx register location depends on the number of
->  * bits corrected by the PMECC controller. Pre-calculate the
->  * pmerrloc_el_base according to the PMECC capabilities.
->  */
->
-Here, this comment is paraphrasing the code. That's not very useful.
-
->> +     host->pmerrloc_el_base = host->pmerrloc_base + ATMEL_PMERRLOC_SIGMAx +
->> +             (host->caps->pmecc_max_correction + 1) * 4;
->>
->>       if (!host->has_no_lookup_table) {
->>               regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
->> @@ -2307,17 +2311,34 @@ static int atmel_nand_remove(struct platform_device *pdev)
->>       return 0;
->>  }
->>
->> +/*
->> + * AT91RM9200 does not have PMECC or PMECC Errloc peripherals for
->> + * BCH ECC. Combined with the "atmel,has-pmecc", it is used to describe
->> + * devices from the SAM9 family that have those.
->> + */
->>  static struct atmel_nand_caps at91rm9200_caps = {
->>       .pmecc_correct_erase_page = false,
->> +     .pmecc_max_correction = 24,
->>  };
->>
->>  static struct atmel_nand_caps sama5d4_caps = {
->>       .pmecc_correct_erase_page = true,
->> +     .pmecc_max_correction = 24,
->> +};
->> +
->> +/*
->> + * The PMECC Errloc controller starting in SAMA5D2 is not compatible,
->> + * as the increased correction strength requires more registers.
->> + */
->> +static struct atmel_nand_caps sama5d2_caps = {
->> +     .pmecc_correct_erase_page = true,
->> +     .pmecc_max_correction = 32,
->>  };
->>
->>  static const struct of_device_id atmel_nand_dt_ids[] = {
->>       { .compatible = "atmel,at91rm9200-nand", .data = &at91rm9200_caps },
->>       { .compatible = "atmel,sama5d4-nand", .data = &sama5d4_caps },
->> +     { .compatible = "atmel,sama5d2-nand", .data = &sama5d2_caps },
->>       { /* sentinel */ }
->>  };
->>
->> diff --git a/drivers/mtd/nand/atmel_nand_ecc.h b/drivers/mtd/nand/atmel_nand_ecc.h
->> index 668e7358f19b..ec964c43c932 100644
->> --- a/drivers/mtd/nand/atmel_nand_ecc.h
->> +++ b/drivers/mtd/nand/atmel_nand_ecc.h
->> @@ -108,7 +108,11 @@
->>  #define              PMERRLOC_ERR_NUM_MASK           (0x1f << 8)
->>  #define              PMERRLOC_CALC_DONE              (1 << 0)
->>  #define ATMEL_PMERRLOC_SIGMAx                0x028   /* Error location SIGMA x */
->> -#define ATMEL_PMERRLOC_ELx           0x08c   /* Error location x */
->> +
->> +/*
->> + * The ATMEL_PMERRLOC_ELx register location depends from the number of
->> + * bits corrected by the PMECC controller. Do not use it.
->> + */
->>
->>  /* Register access macros for PMECC */
->>  #define pmecc_readl_relaxed(addr, reg) \
->> @@ -136,7 +140,7 @@
->>       readl_relaxed((addr) + ATMEL_PMERRLOC_SIGMAx + ((n) * 4))
->>
->>  #define pmerrloc_readl_el_relaxed(addr, n) \
->> -     readl_relaxed((addr) + ATMEL_PMERRLOC_ELx + ((n) * 4))
->> +     readl_relaxed((addr) + ((n) * 4))
->
-> Another option would have been to pass the maximum ECC strength here,
-> and modify the ATMEL_PMERRLOC_ELx macro to take a max_strength argument
-> and return the adjusted ELx offset.
-> Anyway, both solutions work for me.
->
-The current solution makes it easier to keep within the 80 character limit.
-The memory/computing tradeoff is so small it won't change anything.
-
->>
->>  /* Galois field dimension */
->>  #define PMECC_GF_DIMENSION_13                        13
-
-Best regards,
--- 
-Romain Izard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKYW4gMTUsIDIwMTYgYXQgMDE6MTM6MDVBTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiBIaSBNYXhpbWUsCj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4g
+T24gVGh1cnNkYXkgMTQgSmFudWFyeSAyMDE2IDE2OjI0OjU2IE1heGltZSBSaXBhcmQgd3JvdGU6
+Cj4gPiBUaGUgZHJtX2ZiZGV2X2NtYV9pbml0IGZ1bmN0aW9uIGFsd2F5cyBjYWxscyB0aGUKPiA+
+IGRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zLiBTaW5jZSBpdCdzIHBhcnQgb2Yg
+dGhlIHVzdWFsIHByb2JlCj4gPiBwcm9jZXNzLCBhbGwgdGhlIGRyaXZlcnMgdXNpbmcgdGhhdCBo
+ZWxwZXIgd2lsbCBlbmQgdXAgaGF2aW5nIHRoZWlyIGVuY29kZXIKPiA+IGFuZCBDUlRDIGRpc2Fi
+bGUgZnVuY3Rpb25zIGNhbGxlZCBhdCBwcm9iZSBpZiB0aGVpciBkZXZpY2UgaGFzIG5vdCBiZWVu
+Cj4gPiByZXBvcnRlZCBhcyBlbmFibGVkLgo+ID4gCj4gPiBUaGlzIGNvdWxkIGJlIGZpeGVkIGJ5
+IHJlYWRpbmcgb3V0IGZyb20gdGhlIHJlZ2lzdGVycyB0aGUgY3VycmVudCBzdGF0ZSBvZgo+ID4g
+dGhlIGRldmljZSBpZiBpdCBpcyBlbmFibGVkLCBidXQgZXZlbiB0aGF0IHdpbGwgbm90IGhhbmRs
+ZSB0aGUgY2FzZSB3aGVyZQo+ID4gdGhlIGRldmljZSBpcyBhY3R1YWxseSBkaXNhYmxlZC4KPiA+
+IAo+ID4gTW9yZW92ZXIsIHRoZSBkcml2ZXJzIHVzaW5nIHRoZSBhdG9taWMgbW9kZXNldHRpbmcg
+ZXhwZWN0IHRoYXQgdGhlaXIgZW5hYmxlCj4gPiBhbmQgZGlzYWJsZSBjYWxsYmFjayB0byBiZSBj
+YWxsZWQgd2hlbiB0aGUgZGV2aWNlIGlzIGFscmVhZHkgZW5hYmxlZCBvcgo+ID4gZGlzYWJsZWQg
+KHJlc3BlY3RpdmVseSkuCj4gPiAKPiA+IFdlIGNhbiBob3dldmVyIGZpeCB0aGlzIGlzc3VlIGJ5
+IG1vdmluZyB0aGUgY2FsbCB0bwo+ID4gZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlv
+bnMgb3V0IG9mIGRybV9mYmRldl9jbWFfaW5pdCBhbmQgbWFrZSB0aGUKPiA+IGRyaXZlcnMgbmVl
+ZGluZyBpdCAoYWxsIHRoZSBkcml2ZXJzIGNhbGxpbmcgZHJtX2ZiZGV2X2NtYV9pbml0IGFuZCBu
+b3QKPiA+IHVzaW5nIHRoZSBhdG9taWMgbW9kZXNldHRpbmcpIGV4cGxpY2l0bHkgY2FsbCBpdC4K
+PiAKPiBJJ2QgcmF0aGVyIGFkZCBpdCB0byBhbGwgZHJpdmVycyB0aGF0IGNhbGwgZHJtX2ZiZGV2
+X2NtYV9pbml0KCkuIEFsbCB0aGUgCj4gYXRvbWljIG9uZXMgbXVzdCBoYXZlIHNwZWNpYWwgY29k
+ZSB0byBjb3BlIHdpdGggaXQgdGhhdCBjb3VsZCBiZSByZW5kZXJlZCAKPiB1c2VsZXNzIGJ5IHRo
+ZSByZW1vdmFsIG9mIHRoZSBkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucygpIGNh
+bGwuIFRoYXQgCj4gY29kZSBzaG91bGQgYmUgcmVtb3ZlZCB0b28sIGFuZCBpdCB3b3VsZCBiZSBl
+YXNpZXIgdG8gY2hlY2sgZHJpdmVycyBvbmUgYnkgb25lIAo+IGFuZCBmaXhpbmcgdGhlbSBpbmRp
+dmlkdWFsbHkgKG91dHNpZGUgb2YgdGhpcyBwYXRjaCBzZXJpZXMsIHVubGVzcyB5b3UgaW5zaXN0
+IAo+IDstKSkgd2hlbiByZW1vdmluZyB0aGUgZXhwbGljaXQgZHJtX2hlbHBlcl9kaXNhYmxlX3Vu
+dXNlZF9mdW5jdGlvbnMoKSBjYWxsLiAKCkkgaGFkIHRoZSBzYW1lIHRob3VnaHQsIGJ1dCBmaWd1
+cmVkIHRoZXJlJ3MgcmVhbGx5IG5vIGdvb2QgcmVhc29uIGV2ZXIgdG8KZG8gdGhpcy4gSSBzdXNw
+ZWN0IG1vc3Qgb2YgdGhhdCBkaXNhYmxlX3VudXNlZF9mdW5jdGlvbiBzdHVmZiB3ZSBoYXZlIGFs
+bApvdmVyIGlzIHN1cHJlbWUgY2FyZ28tY3VsdCBhbnl3YXkgOy0pCgo+IE90aGVyIHRoYW4gdGhh
+dCB0aGUgcGF0Y2ggbG9va3MgZmluZSB0byBtZS4KClNvIHdlbnQgYWhlYWQgYW5kIGFwcGxpZWQg
+dG8gZHJtLW1pc2MuCi1EYW5pZWwKCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJk
+IDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIHwgMyAtLS0KPiA+ICBkcml2ZXJzL2dwdS9kcm0v
+aW14L2lteC1kcm0tY29yZS5jICB8IDEgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9zdGkvc3RpX2Ry
+di5jICAgICAgIHwgMSArCj4gPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMg
+fCAxICsKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
+LSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBl
+ci5jCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIGluZGV4IGMxOWE2
+MjU2MTE4My4uZGFhOThkODgxMTQyCj4gPiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9kcm1fZmJfY21hX2hlbHBlci5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2ZiX2Nt
+YV9oZWxwZXIuYwo+ID4gQEAgLTM0OCw5ICszNDgsNiBAQCBzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAq
+ZHJtX2ZiZGV2X2NtYV9pbml0KHN0cnVjdAo+ID4gZHJtX2RldmljZSAqZGV2LAo+ID4gCj4gPiAg
+CX0KPiA+IAo+ID4gLQkvKiBkaXNhYmxlIGFsbCB0aGUgcG9zc2libGUgb3V0cHV0cy9jcnRjcyBi
+ZWZvcmUgZW50ZXJpbmcgS01TIG1vZGUgKi8KPiA+IC0JZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNl
+ZF9mdW5jdGlvbnMoZGV2KTsKPiA+IC0KPiA+ICAJcmV0ID0gZHJtX2ZiX2hlbHBlcl9pbml0aWFs
+X2NvbmZpZyhoZWxwZXIsIHByZWZlcnJlZF9icHApOwo+ID4gIAlpZiAocmV0IDwgMCkgewo+ID4g
+IAkJZGV2X2VycihkZXYtPmRldiwgIkZhaWxlZCB0byBzZXQgaW5pdGlhbCBodyBjb25maWd1cmF0
+aW9uLlxuIik7Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNv
+cmUuYwo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jIGluZGV4IDdiOTkw
+YjRlOTZkMi4uZTFkYjU3NzkxZmM5Cj4gPiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9pbXgvaW14LWRybS1jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvaW14LWRy
+bS1jb3JlLmMKPiA+IEBAIC0zMTIsNiArMzEyLDcgQEAgc3RhdGljIGludCBpbXhfZHJtX2RyaXZl
+cl9sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sCj4gPiB1bnNpZ25lZCBsb25nIGZsYWdzKSBk
+ZXZfd2Fybihkcm0tPmRldiwgIkludmFsaWQgbGVnYWN5ZmJfZGVwdGguIAo+ID4gRGVmYXVsdGlu
+ZyB0byAxNmJwcFxuIik7IGxlZ2FjeWZiX2RlcHRoID0gMTY7Cj4gPiAgCX0KPiA+ICsJZHJtX2hl
+bHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoZHJtKTsKPiA+ICAJaW14ZHJtLT5mYmhlbHBl
+ciA9IGRybV9mYmRldl9jbWFfaW5pdChkcm0sIGxlZ2FjeWZiX2RlcHRoLAo+ID4gIAkJCQlkcm0t
+Pm1vZGVfY29uZmlnLm51bV9jcnRjLCBNQVhfQ1JUQyk7Cj4gPiAgCWlmIChJU19FUlIoaW14ZHJt
+LT5mYmhlbHBlcikpIHsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9k
+cnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdGkvc3RpX2Rydi5jCj4gPiBpbmRleCAxNDY5OTg3OTQ5
+ZDguLjUwNmI1NjI2ZjNlZCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdGkvc3Rp
+X2Rydi5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9kcnYuYwo+ID4gQEAgLTE2
+MCw2ICsxNjAsNyBAQCBzdGF0aWMgaW50IHN0aV9sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYs
+IHVuc2lnbmVkCj4gPiBsb25nIGZsYWdzKQo+ID4gCj4gPiAgCWRybV9tb2RlX2NvbmZpZ19yZXNl
+dChkZXYpOwo+ID4gCj4gPiArCWRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKGRl
+dik7Cj4gPiAgCWRybV9mYmRldl9jbWFfaW5pdChkZXYsIDMyLAo+ID4gIAkJCSAgIGRldi0+bW9k
+ZV9jb25maWcubnVtX2NydGMsCj4gPiAgCQkJICAgZGV2LT5tb2RlX2NvbmZpZy5udW1fY29ubmVj
+dG9yKTsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYu
+Ywo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyBpbmRleCA4NzZjYWQ1
+OGIxZjkuLjI0YmUzMWQ2OTcwMQo+ID4gMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+dGlsY2RjL3RpbGNkY19kcnYuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxj
+ZGNfZHJ2LmMKPiA+IEBAIC0yOTQsNiArMjk0LDcgQEAgc3RhdGljIGludCB0aWxjZGNfbG9hZChz
+dHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB1bnNpZ25lZAo+ID4gbG9uZyBmbGFncykgYnJlYWs7Cj4g
+PiAgCX0KPiA+IAo+ID4gKwlkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1bmN0aW9ucyhkZXYp
+Owo+ID4gIAlwcml2LT5mYmRldiA9IGRybV9mYmRldl9jbWFfaW5pdChkZXYsIGJwcCwKPiA+ICAJ
+CQlkZXYtPm1vZGVfY29uZmlnLm51bV9jcnRjLAo+ID4gIAkJCWRldi0+bW9kZV9jb25maWcubnVt
+X2Nvbm5lY3Rvcik7Cj4gCj4gLS0gCj4gUmVnYXJkcywKPiAKPiBMYXVyZW50IFBpbmNoYXJ0Cj4g
+CgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
+aHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
