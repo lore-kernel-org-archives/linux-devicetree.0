@@ -1,426 +1,56 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Add basic support for orion-r68
-Date: Fri, 15 Jan 2016 14:06:32 +0100
-Message-ID: <1452863192-29231-2-git-send-email-matthias.bgg@gmail.com>
-References: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 1/1] ASoC: fsl_ssi: Make fifo watermark and maxburst
+ settings device tree options
+Date: Fri, 15 Jan 2016 13:13:25 +0000
+Message-ID: <20160115131325.GW6588@sirena.org.uk>
+References: <1452788982-11583-1-git-send-email-caleb@crome.org>
+ <20160114201858.GA17567@Asurada-Nvidia>
+ <56984BE7.2050303@tabi.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j+wdmHMkwJXioevW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452863192-29231-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56984BE7.2050303-N01EOCouUvQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caleb Crome <caleb-EebDDntmC0DYtjvyW6yDsg@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic support for the Tronsmart orion r86 set-top-box.
 
-Signed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm64/boot/dts/rockchip/Makefile              |   1 +
- arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts  | 370 +++++++++++++++++++++
- 3 files changed, 375 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
+--j+wdmHMkwJXioevW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 8e985dd..fa97d93 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -72,3 +72,7 @@ Rockchip platforms device tree bindings
- - Rockchip R88 board:
-     Required root node properties:
-       - compatible = "rockchip,r88", "rockchip,rk3368";
-+
-+- Tronsmart Orion R68
-+    Required root node properties:
-+      - compatible = "tronsmart,orion-r68", "rockchip,rk3368";
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 601e6a2..950fe63 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
-new file mode 100644
-index 0000000..3f71d506
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
-@@ -0,0 +1,370 @@
-+/*
-+ * Copyright (c) 2015 Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3368.dtsi"
-+
-+/ {
-+	model = "Rockchip Orion R68";
-+	compatible = "tronsmart,orion-r68", "rockchip,rk3368";
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		pinctrl-0 = <&emmc_reset>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	ext_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+	};
-+
-+	keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key>;
-+
-+		button@0 {
-+			gpio-key,wakeup = <1>;
-+			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+			label = "GPIO Power";
-+			linux,code = <116>;
-+		};
-+	};
-+
-+	leds: gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		work {
-+			gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
-+			label = "orion:purple:led";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&led_ctl>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	vcc_18: vcc18-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	/* supplies both host and otg */
-+	vcc_host: vcc-host-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		regulator-name = "vcc_host";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vccio_sd: vcc-io-sd-regulator {
-+		regulator-name= "vccio_sd";
-+		gpio = <&gpio0 9 GPIO_ACTIVE_LOW>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_sd: vcc-sd-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sd";
-+		gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vcc_io: vcc-io-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_io";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vcc_lan: vcc-lan-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_lan";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vccio_wl: vccio-wl-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_wl";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vdd_10: vdd-10-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_10";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+};
-+
-+&emmc {
-+	broken-cd;
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	disable-wp;
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	non-removable;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-+	status = "okay";
-+};
-+
-+&gmac {
-+	assigned-clocks = <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>;
-+	phy-supply = <&vcc_lan>;
-+	phy-mode = "rgmii";
-+	clock_in_out = "input";
-+	snps,reset-gpio = <&gpio3 12 0>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	tx_delay = <0x30>;
-+	rx_delay = <0x10>;
-+	status = "ok";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	vdd_cpu: syr827@40 {
-+		compatible = "silergy,syr827";
-+		reg = <0x40>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu";
-+		regulator-enable-ramp-delay = <300>;
-+		regulator-min-microvolt = <712500>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-ramp-delay = <8000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	hym8563: hym8563@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "xin32k";
-+		/* rtc_int is not connected */
-+	};
-+};
-+
-+&pinctrl {
-+	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
-+		bias-disable;
-+		drive-strength = <8>;
-+	};
-+
-+	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
-+		bias-pull-up;
-+		drive-strength = <8>;
-+	};
-+
-+	emmc {
-+		emmc_bus8: emmc-bus8 {
-+			rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 19 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 20 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 21 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 22 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 23 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 24 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
-+					<1 25 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		emmc-clk {
-+			rockchip,pins = <2 4 RK_FUNC_2 &pcfg_pull_none_drv_8ma>;
-+		};
-+
-+		emmc-cmd {
-+			rockchip,pins = <1 26 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		emmc_reset: emmc-reset {
-+			rockchip,pins = <2 3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	keys {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+
-+	leds {
-+		stby_pwren: stby-pwren {
-+			rockchip,pins = <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		led_ctl: led-ctl {
-+			rockchip,pins = <3 29 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdmmc {
-+		sdmmc_clk: sdmmc-clk {
-+			rockchip,pins = <2 9 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
-+		};
-+
-+		sdmmc_cmd: sdmmc-cmd {
-+			rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		sdmmc_cd: sdmmc-cd {
-+			rockchip,pins = <2 11 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		sdmmc_bus1: sdmmc-bus1 {
-+			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		sdmmc_bus4: sdmmc-bus4 {
-+			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<2 6 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<2 7 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<2 8 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+	};
-+
-+	usb {
-+		host_vbus_drv: host-vbus-drv {
-+			rockchip,pins = <0 4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&saradc {
-+	vref-supply = <&vcc_18>;
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	clock-frequency = <50000000>;
-+	clock-freq-min-max = <400000 50000000>;
-+	cap-sd-highspeed;
-+	supports-sd;
-+	broken-cd;
-+	card-detect-delay = <200>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	bus-width = <4>;
-+	num-slots = <1>;
-+	ignore-pm-notify;
-+	keep-power-in-suspend;
-+
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vccio_sd>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
--- 
-2.6.2
+On Thu, Jan 14, 2016 at 07:31:19PM -0600, Timur Tabi wrote:
+> Nicolin Chen wrote:
+> >I think DT maintainers may not give a consent towards these two
+> >properties as they are not to describe the hardware but to hack
+> >software configurations. (And it seems you haven't CCed them.)
 
+> I admit it's a grey area, but the hardware doesn't work if you use the wrong
+> value, and it is a fixed value per device.  A p1022ds would use a different
+> value than in in i.MX6, and once you pick a value, it's the same no matter
+> which sample rate, buffer size, etc you choose.
+
+Caleb's original message suggested this was rate dependant.
+
+--j+wdmHMkwJXioevW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWmPB0AAoJECTWi3JdVIfQoBQH/RScBQjliEB8YD00kgMqAphM
+qeqMqi728TCgNwVu73ZXsJg2bE1szryQKR5DjQEvbgU8svZo470nV2qfPd+4dNct
+CTANdZ0NjuhpV8IKZZYCYjtyZiQli0MdOlYaD8bhYzeRXaE/mSHD1X0p1yt63tZk
+0EzJzaABBysmd8Ywy9vJ2imthGUJoDheZSJsGHfm4IBINgshFn/UwhNUw3f1uW2m
+gYxrJwY4MgJwN858n3vd4hQcQoWIiuOASeI8rd00eEf8yZbkKVICUVXHp5DltsPs
+XCG+/Yi36TXGNHThYAeh0BSWzLV5+urBOYbqMuhAQaZJJULjEQAkqhI+O0/P+cw=
+=n08r
+-----END PGP SIGNATURE-----
+
+--j+wdmHMkwJXioevW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
