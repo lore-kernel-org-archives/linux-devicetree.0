@@ -1,186 +1,143 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
- charging of backup battery
-Date: Fri, 15 Jan 2016 09:10:20 -0800
-Message-ID: <20160115171019.GC3904@atomide.com>
-References: <56969800.5010206@ti.com>
- <D6479E92-4226-4B07-95F3-C0DF092B827C@goldelico.com>
- <5696A002.6050402@ti.com>
- <20160113194032.GL12777@atomide.com>
- <5696D097.3040208@gmail.com>
- <56977211.8070206@ti.com>
- <5697DD4C.8010701@ti.com>
- <20160114183510.GP12777@atomide.com>
- <D8D33064-B36E-41C9-AA08-353FF8A64367@goldelico.com>
- <20160115154645.GA3904@atomide.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 15 Jan 2016 09:16:09 -0800
+Message-ID: <56992959.2020204@hurleysoftware.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown>
+ <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
+ <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+ <20160113191542.GA12086@leverpostej>
+ <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
+ <20160115110106.GA3262@leverpostej>
+ <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+ <569913A1.80606@cogentembedded.com>
+ <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160115154645.GA3904-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CB69F6F0-B40B-47D1-B175-8401F43288C5-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Keerthy <a0393675-l0cyMroinI0@public.gmane.org>, Nishanth Menon <menon.nishanth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Andrey Vostrikov <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [160115 07:48]:
-> * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160115 06:34]:
-> > I tried and it works.
-> > 
-> > But then I found that you did set MUX_MODE7. Which is safe-mode.
+On 01/15/2016 08:08 AM, H. Nikolaus Schaller wrote:
+> Hi Andrey,
+> ah that is fine to learn about another project that needs some solution (however it will look like).
 > 
-> Oops, that's a typo, sorry!
+> Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>:
 > 
-> > And in safe-mode the gpio8_234/msecure ball should be "L".
-> > 
-> > Then I experimented a little and it appears that you can remove
-> > the gpio-hog entry:
-> > 
-> > root@letux:~# devmem2 0x4A002980
-> > /dev/mem opened.
-> > Memory mapped at address 0xb6f48000.
-> > Value at address 0x4A002980 (0xb6f48980): 0x1080006
-> > root@letux:~# hwclock
-> > Fri Jan 15 13:32:52 2016  -0.726651 seconds
-> > root@letux:~# 
-> > 
-> > Or even mux the gpio to PIN_INPUT_PULLDOWN | MUX_MODE6:
+>> Hi Nikolaus,
+>>
+>> H. Nikolaus Schaller wrote:
+>>> And IMHO nobody has described that he/she needs a solution to model the*data*  relationship
+>>> for devices connected behind a tty port.
+>>
+>> I am not sure if my case fits *data* relationship or not in this case. Some time ago I asked about state of your patches.
+>> In my case I have supervising microcontroller unit (MCU) that is connected to one of UARTs on SoC.
+>>
+>> This MCU implements several functions that will be implemented as MFD driver:
+>> - watchdog and system reset
+>> - NVMEM EEPROM
+>> - HWMON sensors
+>> - Input/power button
+>> - and similar low level functions
+>>
+>> So in my case DTS binding looks like:
+>>
+>> &uart3 {
+>> 	mcu {
+>> 		line-speed = <baud rate>;
+>> 		watchdog {
+>> 			timeout = <ms>;
+>> 			...other params...
+>> 		};
+>> 		eeprom {
+>> 			#address-cells
+>> 			#size-cells
+>> 			cell1 : cell@1 {
+>> 				reg = <1 2>;
+>> 			};
+>> 			cell2 : cell@2 {
+>> 				reg = <2 1>;
+>> 			};
+>> 		};
+>> 		hwmon {
+>> 			sensors-list = "voltage", "current", etc...;
+>> 		}
+>> 	}
+>> }
 > 
-> Hmm interesting. Have to test here too. FYI, it might be also worth
-> draining the back-up battery with a small resistor while testing
-> to make sure there's no initial state in the PMIC.
-
-Looks like the bootloader has mux mode 0x118 here for me. That does
-not work for hwclock -w. Also commenting out the GPIO hog makes the
-hwclock -w stop working for me. So looks like I need both the mux
-and GPIO hog for hwclock -w to work.
-
-I've also retested the patch I sent yesterday with MUX_MODE7 typo,
-and hwclock -w does not work with that one. I must have fat fingered
-that somehow yesterday and not retested. I have not retested the
-msecure muxing but presumably that alone works too still for me.
-
-> > So the outcome might depend on the Palmas chip version that is used on any
-> > board that includes the omap5-board-common.dtsi.
+> With my proposal it would just become
 > 
-> Could be different version yeah.
+> / {
+> 	themcu: mcu {
+> 		uart = <&uart3>;
+> 		line-speed = <baud rate>;
+> 		watchdog {
+> 			timeout = <ms>;
+> 			...other params...
+> 		};
+> 		eeprom {
+> 			#address-cells
+> 			#size-cells
+> 			cell1 : cell@1 {
+> 				reg = <1 2>;
+> 			};
+> 			cell2 : cell@2 {
+> 				reg = <2 1>;
+> 			};
+> 		};
+> 		hwmon {
+> 			sensors-list = "voltage", "current", etc...;
+> 		}
+> 	}
+> };
+> 
+> Which is almost the same. Except that it allows to move your mcu node whereever you like and easily allows to change the interface to connect to a different device by
+> 
+> &themcu {
+> 	uart = <&uart1>;
+> };
+> 
+> With the subnode style you would need some tricks to get the driver instance for uart3 disabled, although it is possible (everything is possible - just easier or more difficult).
+> 
+>>
+>> This MCU receives commands and notifies MFD driver about events via UART protocol.
+>> It looks like not really a slave though, more like a partnership from data flow point of view.
+> 
+> Yes!. That is why I started to question the term "slave".
+> 
+> And yes, this is the second use case I am aware of: a device that just *uses" the UART to do its works and there is no /dev/tty involved.
+> 
+>>
+>> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
+> 
+> Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c. 
+> 
+> We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
+> 
+> In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
+> 
+> As you see, I have a driver-specific standpoint (and not coming from user space).
+> 
+> Thanks for sharing this example.
 
-This could be still the case though. Or you did not test with
-hwclock -w? Or there's some persistent state in the PMIC that
-is only cleared after draining the back-up battery.
 
-Anyways, updated patch below with the mux mode fixed. I also updated
-the comments a bit.
+I'd like to see the exemplar slave driver be something more complicated than
+trivial on-off, before hacking in junk into the serial core.
+
+As it stands, this gps could be supported on any uart driver that implements
+mctrl gpios (which is trivial with the serial mctrl gpio helpers).
+
+Not that I'm against uart slave device support, just that I don't think hacks
+is the way to go about it.
+
+What I'd like to see is a split of the serial core into a tty driver and a
+standalone device abstraction. Anything else is just workarounds.
 
 Regards,
-
-Tony
-
-8< ---------------------
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Mon, 11 Jan 2016 14:35:24 -0800
-Subject: [PATCH] ARM: dts: Fix omap5 PMIC control lines for RTC writes
-
-The palmas PMIC has two control lines that need to be muxed properly
-for things to work. The sys_nirq pin is used for interrupts, and msecure
-pin is used for enabling writes to some PMIC registers.
-
-Without these pins configured properly things can fail in mysterious
-ways. For example, we can't update the RTC registers on palmas PMIC
-unless the msecure pin is configured. And this is probably the reason
-why we had RTC missing from the omap5 dts file.
-
-According to "OMAP5430 ES2.0 Data Manual [Public] VErsion A (Rev. F)"
-swps052f.pdf, mux mode 1 is for sys_drm_msecure so in theory there's
-should be no need to configure it as a GPIO pin.
-
-However, it seems there are some reliability issues using the msecure
-mux mode. And the TI trees configure the msecure pin as GPIO out high
-instead.
-
-As the PMIC only cares that the msecure line is high to allow access
-to the RTC registers, let's use a GPIO hog as suggested by Nishanth
-Menon <nm-l0cyMroinI0@public.gmane.org>. Also the use of the internal pull was considered
-but supposedly that may not be capable of keeping the line high in
-a noisy environment.
-
-If we ever see high security omap5 products in the mainline tree,
-those need to skip the msecure pin muxing and ignore setting the GPIO
-hog. Chances are the related pin mux registers are locked in that case
-and the msecure pin is managed by whatever software may be running in
-the ARM TrustZone.
-
-Who knows what the original intention of the msecure pin was. Maybe
-it was supposed to prevent the system time to be set back for some
-game demo modes to time out? Anyways, it seems that later PMICs like
-tps659037 have recycled this pin for "powerhold" and devices like
-beagle-x15 do not need changes to the msecure pin configuration.
-
-To avoid further confusion with TWL variant PMICs, beagle-x15 does
-not have a back-up battery for RTC palmas. Instead the mcp79410 RTC
-is used with rtc-ds1307 driver. There is a "powerhold" jumper j5
-holes near the palmas PMIC, and shorting it seems to power up
-beagle-x15 automatically. It is unknown if it also has other side
-effects to the beagle-x15 power up sequence.
-
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # v4.4
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -130,6 +130,16 @@
- 	};
- };
- 
-+&gpio8 {
-+	/* TI trees use GPIO instead of msecure, see also muxing */
-+	p234 {
-+		gpio-hog;
-+		gpios = <10 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "gpio8_234/msecure";
-+	};
-+};
-+
- &omap5_pmx_core {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <
-@@ -213,6 +223,13 @@
- 		>;
- 	};
- 
-+	/* TI trees use GPIO mode; msecure mode does not work reliably? */
-+	palmas_msecure_pins: palmas_msecure_pins {
-+		pinctrl-single,pins = <
-+			OMAP5_IOPAD(0x180, PIN_OUTPUT | MUX_MODE6) /* gpio8_234 */
-+		>;
-+	};
-+
- 	usbhost_pins: pinmux_usbhost_pins {
- 		pinctrl-single,pins = <
- 			0x84 (PIN_INPUT | MUX_MODE0) /* usbb2_hsic_strobe */
-@@ -278,6 +295,12 @@
- 			&usbhost_wkup_pins
- 	>;
- 
-+	palmas_sys_nirq_pins: pinmux_palmas_sys_nirq_pins {
-+		pinctrl-single,pins = <
-+			OMAP5_IOPAD(0x068, PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq1 */
-+		>;
-+	};
-+
- 	usbhost_wkup_pins: pinmux_usbhost_wkup_pins {
- 		pinctrl-single,pins = <
- 			0x1A (PIN_OUTPUT | MUX_MODE0) /* fref_clk1_out, USB hub clk */
-@@ -345,6 +368,8 @@
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,system-power-controller;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&palmas_sys_nirq_pins &palmas_msecure_pins>;
- 
- 		extcon_usb3: palmas_usb {
- 			compatible = "ti,palmas-usb-vid";
+Peter Hurley
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
