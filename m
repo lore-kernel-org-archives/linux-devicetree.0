@@ -1,54 +1,54 @@
 From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/8] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
-Date: Fri, 15 Jan 2016 11:34:54 +0100
-Message-ID: <1452854102-6125-1-git-send-email-romain.izard.pro@gmail.com>
+Subject: [PATCH v2 1/8] mtd: atmel_nand: Do not warn on bitflips
+Date: Fri, 15 Jan 2016 11:34:55 +0100
+Message-ID: <1452854102-6125-2-git-send-email-romain.izard.pro@gmail.com>
+References: <1452854102-6125-1-git-send-email-romain.izard.pro@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452854102-6125-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The NAND Flash controller for SAMA5D2 has small differences that make it
-impossible to use the existing driver for SAMA5D3. This patchset uses the
-device tree's compatible string to get those differences, and the code is
-slightly modified to handle them.
+When using multi-bit ECC, it is normal for the NAND Flash driver to
+correct bit errors during the life of the product. Those errors will
+only be cleared once a threshold has been reached, and corrections can
+occur regularly before this.
 
-Base on v4.4
+Use only dev_dbg and not dev_info to report the bitflips, to keep the
+system log clean when everything works correctly.
 
-To apply on the Atmel Linux 4.1 branch, support for of_device_get_match_data
-needs to be backported, or the function itself open coded.
+Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by:  Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+v2: no change
 
-Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
-existing SAMA5D2 board with NAND Flash memory (yet).
+ drivers/mtd/nand/atmel_nand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-V2 -> V1:
-- Rebase on v4.4
-- Use of_device_get_match_data
-- Split message cleanup
-- Reword a small part of the atmel_nand device tree binding
-- Use 'caps' for all private data structures
-
-RFC -> V1:
-- Split the support of 32-bit ECC on SAMA5D2 in two commits
-- Fix the missing ECC strength configuration code
-
-Romain Izard (8):
-  mtd: atmel_nand: Do not warn on bitflips
-  mtd: atmel_nand: Simplify error messages
-  mtd: atmel_nand: Use of_device_get_match_data
-  mtd: atmel_nand: Support variable RB_EDGE interrupts
-  dt-bindings: atmel_nand: Reword the documenation
-  mtd: atmel_nand: Support PMECC on SAMA5D2
-  mtd: atmel_nand: Support 32-bit ECC strength
-  ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
-
- .../devicetree/bindings/mtd/atmel-nand.txt         | 31 ++++----
- arch/arm/boot/dts/sama5d2.dtsi                     | 38 +++++++++
- drivers/mtd/nand/atmel_nand.c                      | 89 +++++++++++++++++-----
- drivers/mtd/nand/atmel_nand_ecc.h                  |  9 ++-
- drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
- 5 files changed, 136 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+index 583cdd9bb971..b8abf14e1298 100644
+--- a/drivers/mtd/nand/atmel_nand.c
++++ b/drivers/mtd/nand/atmel_nand.c
+@@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 			*(buf + byte_pos) ^= (1 << bit_pos);
+ 
+ 			pos = sector_num * host->pmecc_sector_size + byte_pos;
+-			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
++			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+ 				pos, bit_pos, err_byte, *(buf + byte_pos));
+ 		} else {
+ 			/* Bit flip in OOB area */
+@@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 			ecc[tmp] ^= (1 << bit_pos);
+ 
+ 			pos = tmp + nand_chip->ecc.layout->eccpos[0];
+-			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
++			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+ 				pos, bit_pos, err_byte, ecc[tmp]);
+ 		}
+ 
 -- 
 2.5.0
 
