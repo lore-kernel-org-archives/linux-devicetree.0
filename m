@@ -1,40 +1,61 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 24/26] devicetree: Add olimex vendor prefix
-Date: Fri, 15 Jan 2016 07:41:35 +0100 (CET)
-Message-ID: <1957693252.53435.d0a9f334-1bed-484f-886a-05dfab0e0dfa.open-xchange@email.1und1.de>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452785109-6172-25-git-send-email-maxime.ripard@free-electrons.com>
- <20160115031543.GA25640@rob-hp-laptop>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 04/16] arm/xen: Use xen_xlate_map_ballooned_pages to setup grant table
+Date: Fri, 15 Jan 2016 14:55:17 +0800
+Message-ID: <1452840929-19612-5-git-send-email-zhaoshenglong@huawei.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160115031543.GA25640@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Wynter Woods <wynter@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-sunxi@googlegroups.com, David Airlie <airlied@linux.ie>, Alexander Kaplan <alex@nextthing.co>, Daniel Vetter <daniel@ffwll.ch>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Mike Turquette <mturquette@baylibre.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452840929-19612-1-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> Rob Herring <robh@kernel.org> hat am 15. Januar 2016 um 04:15 geschrieben:
->
->
-> On Thu, Jan 14, 2016 at 04:25:07PM +0100, Maxime Ripard wrote:
-> > Olimex is an open source hardware boards vendors based in Bulgaria.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> > Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > 1 file changed, 1 insertion(+)
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
+Use xen_xlate_map_ballooned_pages to setup grant table. Then it doesn't
+rely on DT or ACPI to pass the start address and size of grant table.
 
-I don't think we need this twice.
+Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/xen/enlighten.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-It's already committed:
-
-2193377bdade ("DT: add Olimex to vendor prefixes")
-
-Regards
-Stefan
+diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+index afe6175..6d90a62 100644
+--- a/arch/arm/xen/enlighten.c
++++ b/arch/arm/xen/enlighten.c
+@@ -266,18 +266,10 @@ static int __init xen_guest_init(void)
+ {
+ 	struct xen_add_to_physmap xatp;
+ 	struct shared_info *shared_info_page = NULL;
+-	struct resource res;
+-	phys_addr_t grant_frames;
+ 
+ 	if (!xen_domain())
+ 		return 0;
+ 
+-	if (of_address_to_resource(xen_node, GRANT_TABLE_PHYSADDR, &res)) {
+-		pr_err("Xen grant table base address not found\n");
+-		return -ENODEV;
+-	}
+-	grant_frames = res.start;
+-
+ 	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+ 	if (!xen_events_irq) {
+ 		pr_err("Xen event channel interrupt not found\n");
+@@ -312,7 +304,10 @@ static int __init xen_guest_init(void)
+ 	if (xen_vcpu_info == NULL)
+ 		return -ENOMEM;
+ 
+-	if (gnttab_setup_auto_xlat_frames(grant_frames)) {
++	xen_auto_xlat_grant_frames.count = gnttab_max_grant_frames();
++	if (xen_xlate_map_ballooned_pages(&xen_auto_xlat_grant_frames.pfn,
++					  &xen_auto_xlat_grant_frames.vaddr,
++					  xen_auto_xlat_grant_frames.count)) {
+ 		free_percpu(xen_vcpu_info);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.0.4
