@@ -1,150 +1,120 @@
-From: Naoki FUKAUMI <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic support for orion-r68
-Date: Sat, 16 Jan 2016 10:22:40 +0900
-Message-ID: <CAFnsNoQ0Y11kQaTiQL-xEoTxAbZW4vzZDFrZC8ccS4egBx4NEg@mail.gmail.com>
-References: <1452863192-29231-1-git-send-email-matthias.bgg@gmail.com>
-	<1452863192-29231-2-git-send-email-matthias.bgg@gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: [PATCH v3 0/2] ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM/Ixora carrier board
+Date: Sat, 16 Jan 2016 02:51:05 +0100
+Message-ID: <1452909067-1998-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452863192-29231-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Lucas Stach <l.stach@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stefan Agner <stefan@agner.ch>, Joshua Clayton <stillcompiling@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-this is not full review.
+This patch series adds support for Toradex Apalis iMX6Q/D SoM module [1=
+] and
+Ixora carrier board [2].
 
-On Fri, Jan 15, 2016 at 10:06 PM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Petr =C5=A0tetiar has simply taken content of DTSes from Toradex's Git =
+tree [3],
+removed not mainlined stuff and fixed all errors returned by checkpatch=
+ script.
 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> index 8e985dd..fa97d93 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> @@ -72,3 +72,7 @@ Rockchip platforms device tree bindings
->  - Rockchip R88 board:
->      Required root node properties:
->        - compatible = "rockchip,r88", "rockchip,rk3368";
-> +
-> +- Tronsmart Orion R68
-> +    Required root node properties:
-> +      - compatible = "tronsmart,orion-r68", "rockchip,rk3368";
+Please note that RESET_MOCI# used as mini-PCIe PERST# is not directly
+GPIO1_IO28 but rather inverted (e.g. active-high and ored with RESETBMC=
+U coming
+off the PMIC but that is not relevant in this context). As changing the
+reset-gpio polarity wasn't previously supported Petr =C5=A0tetiar's
+"PCI: imx6: Fix reset-gpio to work with active low GPIO" fix [4] is nee=
+ded.
 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
-> new file mode 100644
-> index 0000000..3f71d506
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68.dts
-> @@ -0,0 +1,370 @@
-> +/*
-> + * Copyright (c) 2015 Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3368.dtsi"
-> +
-> +/ {
-> +       model = "Rockchip Orion R68";
-> +       compatible = "tronsmart,orion-r68", "rockchip,rk3368";
-> +
-> +       chosen {
-> +               stdout-path = "serial2:115200n8";
-> +       };
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x40000000>;
-> +       };
+1. https://www.toradex.com/computer-on-modules/apalis-arm-family/freesc=
+ale-imx-6
+2. https://www.toradex.com/products/carrier-boards/ixora-carrier-board
+3. https://git.toradex.com/cgit/linux-toradex.git/log/?h=3Dtoradex_imx_=
+3.14.28_1.0.0_ga
+4. https://patchwork.ozlabs.org/patch/552886/
 
-there are (at least) 4 models/revisions in Tronsmart Orion R68, Meta
-or Pro, 100M or 1000M ethernet. probably there are more variants from
-other vendors based on same board.
-I don't say all variants need to be supported here now, but it may
-need few more description.
+Changes in v3:
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- move I2C DDC enablement and assignement handling into carrier board D=
+TS where it belongs
+- move CAN nodes up a little to keep the alphabetical order
+- added an explanatory comment about PWR_I2C usage
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- fix comment concerning Apalis GPIO usage as GPIO7 is only used for PC=
+Ie switch reset on Apalis Evaluation board
+- move I2C DDC handling into carrier board DTS where it belongs
+- simplify RTC alias
 
-I have Orion R68 Meta 1000M version. there is a label on the board,
-"Netxeon RK68G V2.0 2G/16G/AP6335". it might be called
-"netxeon,rk68g-v2.0" or something like that.
+Changes in v2:
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
 
-> +       leds: gpio-leds {
-> +               compatible = "gpio-leds";
-> +
-> +               work {
-> +                       gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
-> +                       label = "orion:purple:led";
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&led_ctl>;
-> +                       default-state = "on";
-> +               };
-> +       };
+Petr =C5=A0tetiar (2):
+  ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM
+  ARM: dts: imx6: Add support for Toradex Ixora carrier board
 
-> +       leds {
-> +               stby_pwren: stby-pwren {
-> +                       rockchip,pins = <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +
-> +               led_ctl: led-ctl {
-> +                       rockchip,pins = <3 29 RK_FUNC_GPIO &pcfg_pull_none>;
-> +               };
-> +       };
+ arch/arm/boot/dts/Makefile               |    1 +
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts |  275 ++++++++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 1012 ++++++++++++++++++++++=
+++++++++
+ 3 files changed, 1288 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-apalis.dtsi
 
-on my board, there is no "purple" LED, <&gpio3 29 GPIO_ACTIVE_HIGH> is
-red LED, <&gpio0 12 GPIO_ACTIVE_HIGH> is blue LED.
-
-did you already confirm all GPIO connection written in your dts?
-
-> +&uart2 {
-> +       status = "okay";
-> +};
-
-uart4 is working for me. (as a console)
-
-Regards,
-
---
-FUKAUMI Naoki
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+2.5.0
