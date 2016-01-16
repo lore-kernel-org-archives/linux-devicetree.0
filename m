@@ -1,76 +1,102 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Sat, 16 Jan 2016 11:40:32 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1601161115050.11338-100000@netrider.rowland.org>
-References: <5216704.YbueADHOOR@wuerfel>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5216704.YbueADHOOR@wuerfel>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V2 2/3] ARM: bcm2835: I2S: use new
+	register-range and clock framework
+Date: Sat, 16 Jan 2016 17:47:50 +0100
+Message-ID: <25D01EDB-5DD2-4604-B42E-97BB1D186EBD@martin.sperl.org>
+References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org>
+ <1452602149-5875-3-git-send-email-kernel@martin.sperl.org>
+ <569A6134.6070504@lategoodbye.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <569A6134.6070504@lategoodbye.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Stefan Wahren <info@lategoodbye.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, Takashi Iwai <tiwai@suse.com>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 16 Jan 2016, Arnd Bergmann wrote:
 
-> > This leaves the question of whether OF will always use the same node to
-> > represent the host controller and the root hub.  In other words, if a
-> > motherboard has a fixed device plugged into a fixed root-hub port, will
-> > the DT description make that device a child of the host controller?  
-> > Or will there be a node in between (to represent the root hub)?
-> 
-> Good question. I'm sure the answer is somewhere in this document
-> 
-> http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-> 
-> but unfortunately I don't understand USB addressing well enough
-> to answer this. I think the key sentence is the definition of the
-> "reg" property:
-> 
-> | prop-encoded-array: one integer, encoded as with encode-int.
-> | The "reg" property for a device node shall consist of the number of the
-> | USB hub port or the USB host controller port to which this USB device
-> | is attached. As specified in [2] section 11.11.2.1, port numbers range
-> | from 1 to 255.
-> 
-> Does the root hub have a port number relative to the host controller,
-> or is it identical to the host controller from the addressing
-> perspective?
+> On 16.01.2016, at 16:26, Stefan Wahren <info@lategoodbye.de> wrote:
+> =
 
-The root hub does not have a port number relative to the host
-controller.  In a sense, the root hub is _part_ of the host controller;
-it represents the controller's connection to the USB bus (whereas the
-logical device we commonly associate with the host controller
-represents the controller's connection to the upstream PCI/whatever
-bus).
+> Hi Martin,
+> =
 
-You can also ask whether port numbers relative to the root hub are
-the same as the port numbers relative to the controller.  Under normal
-circumstances they are the same.  However, it is possible that they
-will be different for USB-3 host controllers (!).
+> [add Mike and Remi]
+> =
 
-This is because USB-3 uses two buses per controller: the legacy
-Low-Speed/Full-Speed/High-Speed bus compatible with USB-1.1 and USB-2
-devices, and the new SuperSpeed bus compatible with USB-3 devices.  
-Even though there's only the one controller, each bus has its own root
-hub and the ports for each root hub are numbered starting from 1.  
-Thus, for example, an xHCI controller with 6 LS/FS/HS ports and 3 SS
-ports would have a USB-2 root hub with ports 1-6 and a USB-3 root hub
-with ports 1-3.  However, xHCI treats the controller as a single entity
-and numbers all the ports sequentially; thus the controller would have
-ports 1-9.  (Even though the three SS ports would be the same physical
-objects as three of the LS/FS/HS ports -- USB-3 ports literally contain
-two independent sets of signal wires.)
+> Am 12.01.2016 um 13:35 schrieb kernel@martin.sperl.org:
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>> =
 
-This isn't merely a convention in the specifications; the hardware
-actually uses both numbering schemes (although I don't know about USB-3
-controllers other than xHCI; they might be different).  Untangling this
-mess might be difficult.  I don't know how existing DT files handle it.
+>> Since the move to the new clock framework with commit 94cb7f76caa0
+>> ("ARM: bcm2835: Switch to using the new clock driver support.")
+>> the bcm2835-i2s driver was no longer working.
+>> =
 
-Alan Stern
+>> This patch fixes the address ranges:
+>> * remove the PCM clock register range that is owned by the clockmanager
+>> * fix the length, which did not include the last register of this device
+>> =
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> It also adds the required pcm-clock.
+>> =
+
+>> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+>> ---
+>>  arch/arm/boot/dts/bcm2835.dtsi |    5 ++---
+> =
+
+> this won't apply, because the file has been renamed to bcm283x.dtsi.
+
+Well - this "rename=94 was and still is not merged upstream, so it is an
+unfortunate circumstance as I am going on vacation and can not create a
+new patchset until I return. So please take it as a template
+when applying it.
+
+> =
+
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>> =
+
+>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.=
+dtsi
+>> index aef64de..83d9787 100644
+>> --- a/arch/arm/boot/dts/bcm2835.dtsi
+>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+>> @@ -120,9 +120,8 @@
+>> =
+
+>>  		i2s: i2s@7e203000 {
+>>  			compatible =3D "brcm,bcm2835-i2s";
+>> -			reg =3D <0x7e203000 0x20>,
+>> -			      <0x7e101098 0x02>;
+>> -
+>> +			reg =3D <0x7e203000 0x24>;
+>> +			clocks =3D <&clocks BCM2835_CLOCK_PCM>;
+> =
+
+> After applying clk series ([PATCH V4 0/7] clk: bcm2835: add clocks and ad=
+d MASH support) and this series the pcm clock is an orphan.
+> =
+
+> Do we need to add "assigned-clocks" to the i2s node just like for pwm [1]?
+
+In my experience it is not needed for PCM, as the clock is set by the
+bcm2835-i2s driver, so I left it out.
+
+As I do not know how the orphan PWM clock would be used I can not comment
+if this is really needed with PWM or not - it would just set the default
+clock if it got referenced in the DT.
+
+Thanks,
+	Martin
