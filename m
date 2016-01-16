@@ -1,192 +1,100 @@
-From: Constantine Shulyupin <const@MakeLinux.com>
-Subject: [PATCH v10] dt-bindings: hwmon/nct7802
-Date: Sat, 16 Jan 2016 22:11:08 +0200
-Message-ID: <1452975068-30290-1-git-send-email-const@MakeLinux.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Sat, 16 Jan 2016 17:31:57 -0600
+Message-ID: <20160116233157.GA7774@rob-hp-laptop>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+ <20160113191542.GA12086@leverpostej>
+ <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
+ <20160115110106.GA3262@leverpostej>
+ <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+ <569913A1.80606@cogentembedded.com>
+ <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
+ <56992959.2020204@hurleysoftware.com>
+ <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
+ <744620565.20160116103445@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <744620565.20160116103445@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Constantine Shulyupin <const@MakeLinux.com>
+To: Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>
+Cc: Rob Herring <robherring2@gmail.com>, Peter Hurley <peter@hurleysoftware.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Introduced subnodes sensor, fan and peci with properties.
+On Sat, Jan 16, 2016 at 10:34:45AM +0300, Vostrikov Andrey wrote:
+> Hi, Rob.
+> 
+> > On Fri, Jan 15, 2016 at 11:16 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
+> >> On 01/15/2016 08:08 AM, H. Nikolaus Schaller wrote:
+> >>> Hi Andrey,
+> >>> ah that is fine to learn about another project that needs some solution (however it will look like).
+> >>>
+> >>> Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>:
+> >>>
+> >>>> Hi Nikolaus,
+> >>>>
+> >>>> H. Nikolaus Schaller wrote:
+> 
+> > [...]
+> 
+> >>>> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
+> >>>
+> >>> Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c.
+> >>>
+> >>> We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
+> >>>
+> >>> In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
+> >>>
+> >>> As you see, I have a driver-specific standpoint (and not coming from user space).
+> >>>
+> >>> Thanks for sharing this example.
+> >>
+> >>
+> >> I'd like to see the exemplar slave driver be something more complicated than
+> >> trivial on-off, before hacking in junk into the serial core.
+> >>
+> >> As it stands, this gps could be supported on any uart driver that implements
+> >> mctrl gpios (which is trivial with the serial mctrl gpio helpers).
+> >>
+> >> Not that I'm against uart slave device support, just that I don't think hacks
+> >> is the way to go about it.
+> 
+> > I assume line disciplines seemed a good solution at the time, but they
+> > seem like a hack to me.
+> What would be best implementation in following use case:
+> - there are several microcontrollers/devices that use same protocol on top of UART (<STX>-<DATA>-<CRC>-<ETX>)
+> - microcontoller could provide several functions to system, e.g. watchdog, HWMON etc., that not require user space interaction
+> - there are several implementations of firmware that use different commands/events transferred as <DATA> and different <CRC> algorithms installed on several HW variants
 
-Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
----
+Yes, and combo chips with BT, FM radio and/or NFC muxed on UART port are 
+quite common.
 
-Changed in v10:
-- Added space in address-cells and size-cells trying to avoid 
-  error "The message contains HTML subpart"
+> If we take picture from Nikolaus's email:
+> device <--> uart <--> serial-core <-- new hooks ---> device driver <---> protocol interfaces
+> 
+> It would be nice to have a layer such as line discipline between serial core and device driver to use high level API to transfer data via UART.
+> But current implementation of line disciplines is intended to be used from user space and via tty layer.
 
-Changed in v9:
-- Fixed nuvoton,nct7802-sensor
-- Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
+We'll probably need to support some sort of layers or plugins to 
+provide both muxing and protocol support. Even in the single function 
+case, we'll need to be able to have BT chip driver and generic BT HCI 
+protocol modules.
 
-Changed in v8:
-- added senor type "local"
-- Compatible nodes converted to senor types "vcore", "vcc"
+> >> What I'd like to see is a split of the serial core into a tty driver and a
+> >> standalone device abstraction. Anything else is just workarounds.
+> 
+> > +1 on that. We need a proper subsystem for in kernel drivers of
+> > connected UART devices.
+> 
+> Yes, such implementation will help. There is a need for interface like UART BUS that will probe devices without user space.
+> Serial I/O for input subsystem defines new type of bus and uses dedicated line discipline, but it still unable to start driver by itself and requires call from 'inputattach' to open port, assign line discipline and go to forever wait on 'read'.
 
-Changed in v7:
-- sensors type (thermistor, thermistor, voltage) and pwm type
-selected with type property instead of compatible property.
+I looked at serio a bit to see if it could be used or expanded. There is 
+the line discipline, but then there are serial drivers which connect to 
+serio (or tty layer) directly. The SUN serial ports and keyboard are an 
+example IIRC. That may have been the only one... I found that serio is 
+pretty limited and doesn't provide much of a starting point. It's 
+functionality could be rolled into some new though.
 
-Changed in v6:
-- Removed previous definition.
-- Introduced subnodes sensor, fan and peci with properties.
-
-Changed in v5:
-- Fixed typos
-
-Changed in v4:
-- Removed registers initialization by names
-- Added properties nuvoton,sensor*-type
-
-Changed in v3:
-- Fixed vendor prefix
-- Added short registers description,
-  full registers description is available at
-https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
-
-Changed in v2:
-- Removed nct7802,reg-init
-- Added registers initialization by names
-
-Introduced in v1:
- - nct7802,reg-init
----
- .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
- 1 file changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-new file mode 100644
-index 0000000..cf983b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-@@ -0,0 +1,125 @@
-+Nuvoton NCT7802Y Hardware Monitoring IC
-+
-+Required node properties:
-+
-+ - "compatible": must be "nuvoton,nct7802"
-+ - "reg": I2C bus address of the device
-+ - #address-cells = <1>;
-+ - #size-cells = <0>;
-+
-+Optional subnodes:
-+
-+Sensor subnodes properties:
-+ - "compatible", allowed values:
-+	 - "nuvoton,nct7802-sensor"
-+ - "sensor-type", allowed values:
-+	"thermal-diode"
-+	"thermistor"
-+	"voltage"
-+	"local" (only one instance, no "reg" required)
-+For sensors of types "thermal-diode", "thermistor" and "voltage" required
-+ - "reg": sensor index in range 0 .. 2
-+
-+Except sensor at address 2 can't be "thermal-diode".
-+
-+Voltage monitor subnodes properties:
-+ - "compatible", allowed values:
-+	 - "nuvoton,nct7802-vmon"
-+ - "vmon-type", allowed values:
-+	"vcore"
-+	"vcc"
-+ - "reg" is not used because there is only one instance of
-+ vcore and vcc voltage monitors.
-+
-+Fan subnodes:
-+
-+Fan tachometer subnode (input):
-+
-+Required properties:
-+ - "reg" :sensor index of in range 0 .. 2.
-+ - "compatible", should be "nuvoton,nct7802-fan-in"
-+
-+Fan PWM (or DC) subnode (output or control):
-+
-+Required properties:
-+ - "reg" :sensor index of in range 0 .. 2.
-+ - "compatible", should be "nuvoton,nct7802-fan-ctl"
-+Optional boolean properties:
-+ - "direct-current" :direct current powered fan instead default PWM
-+ - "invert" :inverted polarity
-+ - "open-drain" :open-drain output instead push pull
-+
-+Subnode "peci" properties:
-+ - "reg" :sensor index in range 0 .. 1
-+ - "compatible", should be "nuvoton,nct7802-peci"
-+
-+Not defined sensors, fans and PECI modules will be disabled.
-+
-+Example nct7802 node:
-+
-+nct7802-example@28 {
-+	compatible = "nuvoton,nct7802";
-+	reg = <0x28>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	local-sensor {
-+		compatible = "nuvoton,nct7802-sensor";
-+		sensor-type = "local";
-+	};
-+	sensor@0 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <0>;
-+		sensor-type = "thermal-diode";
-+	};
-+	sensor@1 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <1>;
-+		sensor-type = "thermistor";
-+	};
-+	sensor@2 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <2>;
-+		sensor-type = "voltage";
-+	};
-+	vcc {
-+		compatible = "nuvoton,nct7802-vmon";
-+		sensor-type = "vcc";
-+	};
-+	vcore {
-+		compatible = "nuvoton,nct7802-vmon";
-+		sensor-type = "vcore";
-+	};
-+	fan-in@0 {
-+		compatible = "nuvoton,nct7802-fan-in";
-+		reg = <0>;
-+	};
-+	fan-in@1 {
-+		compatible = "nuvoton,nct7802-fan-in";
-+		reg = <1>;
-+	};
-+	fan-ctl@0 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <0>;
-+	};
-+	dc-fan-ctl@1 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <1>;
-+		direct-current;
-+		open-drain;
-+		invert;
-+	};
-+	pwm-fan-ctl@2 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <2>;
-+		open-drain;
-+		invert;
-+	};
-+	peci@0 {
-+		compatible = "nuvoton,nct7802-peci";
-+		reg = <0>;
-+	};
-+	peci@1 {
-+		compatible = "nuvoton,nct7802-peci";
-+		reg = <1>;
-+	};
-+};
--- 
-1.9.1
+Rob
