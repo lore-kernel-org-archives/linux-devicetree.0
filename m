@@ -1,29 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 12/16] ARM: Xen: Document UEFI support on Xen ARM
- virtual platforms
-Date: Sat, 16 Jan 2016 21:43:51 -0600
-Message-ID: <20160117034351.GA16103@rob-hp-laptop>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
- <1452840929-19612-13-git-send-email-zhaoshenglong@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 01/14] dt/bindings: Add bindings for PIC32 interrupt
+ controller
+Date: Sat, 16 Jan 2016 21:57:11 -0600
+Message-ID: <20160117035711.GA26226@rob-hp-laptop>
+References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
+ <1452734299-460-2-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <1452840929-19612-13-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+In-Reply-To: <1452734299-460-2-git-send-email-joshua.henderson@microchip.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Joshua Henderson <joshua.henderson@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, ralf@linux-mips.org, Cristian Birsan <cristian.birsan@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 02:55:25PM +0800, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Jan 13, 2016 at 06:15:34PM -0700, Joshua Henderson wrote:
+> From: Cristian Birsan <cristian.birsan@microchip.com>
 > 
-> Add a "uefi" node under /hypervisor node in FDT, then Linux kernel could
-> scan this to get the UEFI information.
+> Document the devicetree bindings for the interrupt controller on
+> Microchip PIC32 class devices.
 > 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
 > ---
->  Documentation/devicetree/bindings/arm/xen.txt | 42 +++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
+> Changes since v4:
+> 	- Add new microchip,external-interrupts property
+> 	- Provide a better description of some of the features
+> 	- Clean up formatting
+> Changes since v3: None
+> Changes since v2: None
+> Changes since v1:
+> 	- Remove hardware interrupt priorities from interrupt controller DT
+> 	  bindings.
+> ---
+>  .../interrupt-controller/microchip,pic32-evic.txt  |   67 ++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
