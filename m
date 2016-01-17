@@ -1,100 +1,125 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Sat, 16 Jan 2016 17:31:57 -0600
-Message-ID: <20160116233157.GA7774@rob-hp-laptop>
-References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
- <20160113191542.GA12086@leverpostej>
- <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
- <20160115110106.GA3262@leverpostej>
- <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
- <569913A1.80606@cogentembedded.com>
- <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
- <56992959.2020204@hurleysoftware.com>
- <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
- <744620565.20160116103445@cogentembedded.com>
+Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
+Date: Sat, 16 Jan 2016 18:04:34 -0600
+Message-ID: <20160117000434.GB7774@rob-hp-laptop>
+References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160112143100.GA14628@rob-hp-laptop>
+ <20160115085734.GG4581@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <744620565.20160116103445@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>
-Cc: Rob Herring <robherring2@gmail.com>, Peter Hurley <peter@hurleysoftware.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
+In-Reply-To: <20160115085734.GG4581@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 16, 2016 at 10:34:45AM +0300, Vostrikov Andrey wrote:
-> Hi, Rob.
+On Fri, Jan 15, 2016 at 09:57:34AM +0100, Maxime Ripard wrote:
+> Hi Rob,
 > 
-> > On Fri, Jan 15, 2016 at 11:16 AM, Peter Hurley <peter@hurleysoftware.com> wrote:
-> >> On 01/15/2016 08:08 AM, H. Nikolaus Schaller wrote:
-> >>> Hi Andrey,
-> >>> ah that is fine to learn about another project that needs some solution (however it will look like).
-> >>>
-> >>> Am 15.01.2016 um 16:43 schrieb Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>:
-> >>>
-> >>>> Hi Nikolaus,
-> >>>>
-> >>>> H. Nikolaus Schaller wrote:
-> 
-> > [...]
-> 
-> >>>> There is no user space code involved in this case as whole interactions are between drivers (just a kick to open /dev/ttyXXX using sys_open, as there is no way to start probe on uart_slave bus and assign line discipline).
-> >>>
-> >>> Exactly this is what we want to provide as API for the drivers by our patches to serial-core.c.
-> >>>
-> >>> We want to allow such a "partner" device to take a line-speed property e.g. from its DT node (or a 9600 constant as for our GPS chip) and ask the UART driver to set the required clocks. Or to get the driver notified that someone has opened the /dev/tty* etc. So make it possible to use some UART from another driver.
-> >>>
-> >>> In the long run it should be possible to use the UART even if there is no /dev/tty client or interface in user-space but that is something not perfectly working (there is some initialization race in the tty/serial subsystem we have not yet understood).
-> >>>
-> >>> As you see, I have a driver-specific standpoint (and not coming from user space).
-> >>>
-> >>> Thanks for sharing this example.
-> >>
-> >>
-> >> I'd like to see the exemplar slave driver be something more complicated than
-> >> trivial on-off, before hacking in junk into the serial core.
-> >>
-> >> As it stands, this gps could be supported on any uart driver that implements
-> >> mctrl gpios (which is trivial with the serial mctrl gpio helpers).
-> >>
-> >> Not that I'm against uart slave device support, just that I don't think hacks
-> >> is the way to go about it.
-> 
-> > I assume line disciplines seemed a good solution at the time, but they
-> > seem like a hack to me.
-> What would be best implementation in following use case:
-> - there are several microcontrollers/devices that use same protocol on top of UART (<STX>-<DATA>-<CRC>-<ETX>)
-> - microcontoller could provide several functions to system, e.g. watchdog, HWMON etc., that not require user space interaction
-> - there are several implementations of firmware that use different commands/events transferred as <DATA> and different <CRC> algorithms installed on several HW variants
+> On Tue, Jan 12, 2016 at 08:31:00AM -0600, Rob Herring wrote:
+> > On Tue, Jan 12, 2016 at 02:37:21PM +0100, Maxime Ripard wrote:
+> > > Some boards, in order to power devices that have a quite high power
+> > > consumption, wire multiple regulators in parallel.
+> > > 
+> > > In such a case, the regulators need to be kept in sync, all of them being
+> > > enabled or disabled in parallel.
+> > > 
+> > > This also requires to expose only the voltages that are common to all the
+> > > regulators.
 
-Yes, and combo chips with BT, FM radio and/or NFC muxed on UART port are 
-quite common.
+[...]
 
-> If we take picture from Nikolaus's email:
-> device <--> uart <--> serial-core <-- new hooks ---> device driver <---> protocol interfaces
+> > > +Coupled voltage regulators
+> > > +
+> > > +Required properties:
+> > > +- compatible		: Must be "coupled-voltage-regulator".
+> > > +
+> > > +Optional properties:
+> > > +- vinX-supply		: Phandle to the regulators it aggregates
+> > > +
+> > > +Any property defined as part of the core regulator binding defined in
+> > > +regulator.txt can also be used.
+> > > +
+> > > +Example:
+> > > +	vcc_wifi: wifi_reg {
+> > > +		compatible = "coupled-voltage-regulator";
+> > > +		regulator-name = "vcc-wifi";
+> > > +		vin0-supply = <&reg_ldo3>;
+> > > +		vin1-supply = <&reg_ldo4>;
+> > > +	};
+> > 
+> > Why not just make ?-supply a list of phandles? That would be simpler 
+> > than a virtual regulator.
 > 
-> It would be nice to have a layer such as line discipline between serial core and device driver to use high level API to transfer data via UART.
-> But current implementation of line disciplines is intended to be used from user space and via tty layer.
+> I'm not sure I get what you're saying. Do you want to remove that
+> driver entirely, or just allow the -supply properties in the device
+> tree to take a list?
 
-We'll probably need to support some sort of layers or plugins to 
-provide both muxing and protocol support. Even in the single function 
-case, we'll need to be able to have BT chip driver and generic BT HCI 
-protocol modules.
+Both actually, I think. If a power supply input for a device has 2 
+supplies connected then list both of them for that device rather than 
+create a virtual device in DT. Of course, you could keep a virtual 
+regulator independent of DT. That is more of an implementation choice.
 
-> >> What I'd like to see is a split of the serial core into a tty driver and a
-> >> standalone device abstraction. Anything else is just workarounds.
-> 
-> > +1 on that. We need a proper subsystem for in kernel drivers of
-> > connected UART devices.
-> 
-> Yes, such implementation will help. There is a need for interface like UART BUS that will probe devices without user space.
-> Serial I/O for input subsystem defines new type of bus and uses dedicated line discipline, but it still unable to start driver by itself and requires call from 'inputattach' to open port, assign line discipline and go to forever wait on 'read'.
+> In the former case, the rationale behind this driver is that the
+> regulators powering a device also have to be kept in sync, both by
+> enabling and disabling all of them at once, but also by all having
+> them at the same voltages.
 
-I looked at serio a bit to see if it could be used or expanded. There is 
-the line discipline, but then there are serial drivers which connect to 
-serio (or tty layer) directly. The SUN serial ports and keyboard are an 
-example IIRC. That may have been the only one... I found that serio is 
-pretty limited and doesn't provide much of a starting point. It's 
-functionality could be rolled into some new though.
+None of this has anything to do with the binding other than you can 
+write a regulator driver and already have the mechanism to instantiate 
+it with DT.
+
+> We could push that code in the consumer drivers, but that has some
+> significant drawbacks:
+>   - That would duplicate that code in all the drivers, leading to the
+>     usual drawbacks of code duplication, especially when it's not
+>     really trivial to handle (or at least, when there's a few
+>     gotchas).
+
+Either you could keep the driver and the consumer driver is responsible 
+for instantiating the regulator. It could also be implemented as a helper 
+library in the regulator core. 
+
+>   - When you come to consider it from an hardware point of view, the
+>     device usually have a single pin that powers it. It's the board
+>     designer that chose to route that pin to multiple regulators, so
+>     it's really the board that is wired that way, and putting that
+>     code in the consumer drivers would be an abstraction leak imho.
+
+That's a good point. Perhaps the regulator core needs to be able to 
+parse the list and return the single ptr to the virtual regulator.
+
+>   - We might not even have a driver for these regulators, or at least
+>     one that play by the rules. In our case, that's an out-of-tree
+>     WiFi driver.
+
+Support of out of tree things has never been a winning argument for 
+upstream.
+
+With an out of tree binding as well?
+
+> In the latter case, I remember Mark saying several times that he was
+> not in favour of such a change, even recently:
+> https://lkml.org/lkml/2015/10/14/238
+
+I think this case is somewhat different. What I'm suggesting is closer 
+to the hardware which is what Mark also argued for, but we should let 
+him speak. If the input supply name on a device is VCC and you have REG1 
+and REG2 attached, then having "vcc-supply = <&REG1>, <&REG2>;" makes 
+perfect sense in terms of matching the h/w.
+
+Also, simplefb is not a good thing to compare with. 
 
 Rob
