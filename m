@@ -1,132 +1,111 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
-Date: Sat, 16 Jan 2016 22:05:52 -0600
-Message-ID: <20160117040552.GA28704@rob-hp-laptop>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
- <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
- <20160114011252.GA29778@rob-hp-laptop>
- <B256D81BAE5131468A838E5D7A243641D63EBC55@penmbx01>
- <CAL_JsqL9kbNYrGYeqT7QCsbMneJbPgoXfaHhCvL8S=t97YaCbg@mail.gmail.com>
- <CAGkQfmO94gQ61prZvF52=B_UtOTkbYxd5nnTmDhJam4q-n3T7g@mail.gmail.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 1/3] ti-st: use device handles and add device tree
+ binding
+Date: Sun, 17 Jan 2016 07:57:01 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B2376B680@DFRE01.ent.ti.com>
+References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
+ <8665E2433BC68541A24DFFCA87B70F5B23759A5B@DFRE01.ent.ti.com>
+ <20151229183534.GM12450@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGkQfmO94gQ61prZvF52=B_UtOTkbYxd5nnTmDhJam4q-n3T7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20151229183534.GM12450@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 09:54:07AM +0100, Romain Izard wrote:
-> Hi Rob, Wenyou,
->=20
-> 2016-01-14 14:14 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> > On Wed, Jan 13, 2016 at 7:17 PM, Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nA@public.gmane.org=
-m> wrote:
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> >>> Sent: 2016=E5=B9=B41=E6=9C=8814=E6=97=A5 9:13
-> >>> To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ya=
-ng, Wenyou
-> >>> <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>; Ferr=
-e,
-> >>> Nicolas <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >>> Subject: Re: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAM=
-A5D2
-> >>>
-> >>> On Wed, Jan 13, 2016 at 05:34:15PM +0100, Romain Izard wrote:
-> >>> > Starting with the SAMA5D2, there is a new revision of the Atmel=
- PMECC
-> >>> > controller that can correct 32 bits in each sector. This contro=
-ller is
-> >>> > not 100% compatible with the previous revision that corrected a
-> >>> > maximum of 24 bits by sector, as some register addresses overla=
-p.
-> >>> >
-> >>> > Using information from the device tree, we can configure the dr=
-iver to
-> >>> > work with both versions.
-> >>> >
-> >>> > Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> > ---
-> >>> >  .../devicetree/bindings/mtd/atmel-nand.txt         |  7 +++++-=
--
-> >>> >  drivers/mtd/nand/atmel_nand.c                      | 23 ++++++=
-+++++++++++++++-
-> >>> >  drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++=
+U29ycnkgZm9yIHRoZSBkZWxheWVkIHJlc3BvbnNlLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBT
+ZW50OiBUdWVzZGF5LCBEZWNlbWJlciAyOSwgMjAxNSA4OjM2IFBNDQo+IFRvOiBSZWl6ZXIsIEV5
+YWwNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1vbWFwQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgcGF3ZWwu
+bW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVs
+bGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOyB0b255QGF0b21pZGUuY29tOw0KPiBs
+aW51eEBhcm0ubGludXgub3JnLnVrDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXSB0aS1zdDog
+dXNlIGRldmljZSBoYW5kbGVzIGFuZCBhZGQgZGV2aWNlIHRyZWUgYmluZGluZw0KPiANCj4gT24g
+V2VkLCBEZWMgMjMsIDIwMTUgYXQgMTE6Mzg6MjlBTSArMDAwMCwgUmVpemVyLCBFeWFsIHdyb3Rl
+Og0KPiA+IC0gQWRkIHN1cHBvcnQgZm9yIGdldHRpbmcgdGhlIHBsYXRmb3JtIGRhdGEgd2hpY2gg
+aW5jbHVkZXMgdGhlIHVhcnQNCj4gPiAgIHVzZWQgYW5kIGdwaW8gcGluIHVzZWQgZm9yIGVuYWJs
+ZSBmcm9tIGRldmljZSB0cmVlLg0KPiA+DQo+ID4gLSBGaXggdGhlIGltcGxlbWVudGF0aW9uIGZv
+ciB1c2luZyBkZXZpY2UgaGFuZGxlIGZvciB0aGUgdWFydCBhbmQNCj4gPiAgIGdwaW9kIGZvciB0
+aGUgZW5hYmxlIHBpbiwgaW5zdGVhZCBvZiBkZXZpY2UgbmFtZSAoYXMgc3RyaW5nKSB1c2VkDQo+
+ID4gICBmb3IgdGhlIHVhcnQgYW5kIHBpbyBudW1iZXIgd2hpY2ggYXJlIGJvdGggYmFkIHByYWN0
+aWNlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRXlhbCBSZWl6ZXIgPGV5YWxyQHRpLmNvbT4N
+Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2MvdGkt
+c3QudHh0IHwgICA0MiArKysrKysNCj4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9wZGF0YS1xdWly
+a3MuYyAgICAgICAgICAgICAgIHwgICAxNiArKy0NCj4gPiAgZHJpdmVycy9taXNjL3RpLXN0L3N0
+X2tpbS5jICAgICAgICAgICAgICAgICAgICAgIHwgIDE1OSArKysrKysrKysrKysrKysrLS0tLS0t
+DQo+ID4gIGRyaXZlcnMvbWlzYy90aS1zdC9zdF9sbC5jICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMTYgKystDQo+ID4gIGluY2x1ZGUvbGludXgvdGlfd2lsaW5rX3N0LmggICAgICAgICAgICAg
+ICAgICAgICB8ICAgMTMgKy0NCj4gDQo+IEknZCBzdWdnZXN0IHlvdSBsb29rIGF0IGNvbW1pdCBj
+MGJkMWI5ZTU4OTU5YzUgKFJldmVydCAidGktc3Q6IGFkZCBkZXZpY2UNCj4gdHJlZSBzdXBwb3J0
+IikgZmlyc3QuDQo+IA0KPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDE5MCBpbnNlcnRpb25zKCspLCA1
+NiBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0LnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0LnR4dA0KPiA+IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2MvdGktc3QudHh0DQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi40NDkwZGE2DQo+ID4gLS0tIC9kZXYv
+bnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3Rp
+LXN0LnR4dA0KPiA+IEBAIC0wLDAgKzEsNDIgQEANCj4gPiArVEkgV2lsaW5rIDYvNy84ICh3bDEy
+eHgvd2wxOHh4KSBTaGFyZWQgdHJhbnNwb3J0IGRyaXZlcg0KPiANCj4gQmluZGluZ3Mgc2hvdWxk
+bid0IGJlIGRlc2NyaWJpbmcgZHJpdmVycy4uLg0KPiANCg0KT0ssIHVuZGVyc3Rvb2QNCg0KPiA+
+ICsNCj4gPiArVEnigJlzIFdpcmVsZXNzIENvbm5lY3Rpdml0eSBjaGlwcyBzdXBwb3J0IEJsdWV0
+b290aCAoQlQpLCBXaUZpLCBhbmQNCj4gPiArR1BTIHRlY2hub2xvZ3kgY29yZXMgaW4gYSBzaW5n
+bGUgZGllLg0KPiA+ICsNCj4gPiArU3VjaCBhIG11bHRpLWNvcmUgY29tYm8gY2hpcCB3aWxsIGJl
+IGludGVyZmFjZWQgdG8gdGhlIGFwcGxpY2F0aW9uDQo+ID4gK3Byb2Nlc3NvciB1c2luZyBhIHNp
+bmdsZSBwaHlzaWNhbCBwb3J0IChsaWtlIFVBUlQpLg0KPiA+ICsNCj4gPiArU2hhcmVkIFRyYW5z
+cG9ydCAoU1QpIHNvZnR3YXJlIGVuYWJsZXMgQlQgYW5kIEdQUyBwcm90b2NvbHMgb3INCj4gPiAr
+c29mdHdhcmUgY29tcG9uZW50cyB0byBpbnRlcmFjdCB3aXRoIHRoZWlyIHJlc3BlY3RpdmUgY29y
+ZXMgb3ZlciBzaW5nbGUNCj4gcGh5c2ljYWwgcG9ydC4NCj4gPiArU1QgdXNlcyBsb2dpY2FsIGNo
+YW5uZWxzLCBvdmVyIHBoeXNpY2FsIHRyYW5zcG9ydCwgdG8gY29tbXVuaWNhdGUNCj4gPiArd2l0
+aCBpbmRpdmlkdWFsIGNvcmVzLg0KPiA+ICsNCj4gPiArTG9naWNhbCBjaGFubmVscyAxLCAyLCAz
+LCBhbmQgNCBhcmUgdXNlZCBmb3IgQlQgcGFja2V0cywgY2hhbm5lbCA4DQo+ID4gK2ZvciBGTSwg
+Y2hhbm5lbCA5IGZvciBHUFMgYW5kIGNoYW5uZWxzIDMwLCAzMSwgMzIsIGFuZCAzMyBhcmUgdXNl
+ZA0KPiA+ICtmb3IgQ2hpcCBQb3dlciBNYW5hZ2VtZW50IChQTSkuDQo+IA0KPiBBbGwgdGhpcyBp
+cyBpcnJlbGV2YW50IGZvciBhIGJpbmRpbmcuDQo+IA0KDQpPSywgdW5kZXJzdG9vZA0KDQo+ID4g
+Kw0KPiA+ICtUaGlzIG5vZGUgcHJvdmlkZXMgcHJvcGVydGllcyBmb3IgcGFzc2luZyBwYXJhbWV0
+ZXJzIHRvIHRoZSB0aSBzaGFyZWQNCj4gPiArdHJhbnNwb3J0IGRyaXZlci4NCj4gPiArDQo+ID4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSB0aGUg
+Zm9sbG93aW5nOg0KPiA+ICsgICAgKiAia2ltIiAtIHRpLXN0IHBhcmFtZXRlcnMNCj4gDQo+IFdo
+byBpcyBraW0/IENlcnRhaW5seSBub3QgYSBkZXNjcmlwdGlvbiBvZiBhIGgvdyBibG9jay4NCg0K
+Tm90IHN1cmUgYWJvdXQgdGhlIG9yaWdpbiBvZiB0aGlzIG5hbWUgYnV0IGFjY29yZGluZyB0byB0
+aGUgZm9sbG93aW5nIGxpbms6DQpodHRwOi8vcHJvY2Vzc29ycy53aWtpLnRpLmNvbS9pbmRleC5w
+aHAvU2hhcmVkX1RyYW5zcG9ydF9Ecml2ZXINCktJTSBpcyAiS2VybmVsIEluaXRpYWxpemF0aW9u
+IE1hbmFnZXIiIHRoYXQgZW5hYmxlcyBjb21tdW5pY2F0aW9uIHdpdGggQlQgYW5kIEdQUyBjb3Jl
+cy4NCg0KPiANCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKyAtIG5zaHV0
+ZG93bi1ncGlvcyA6IHNwZWNpZmllcyBhdHRyaWJ1dGVzIGZvciBncGlvIHBpbmcgdXNlZCBmb3Ig
+ZW5hYmxpbmcNCj4gPiArCXRoZSBibHVldG9vdGgsZ3BzIGFuZCBGTSBzdWIgc3lzdGVtcw0KPiA+
+ICsgLSBzZXJpYWwtZGV2aWNlIDogdGhlIHBoYW5kbGUgZm9yIHRoZSBwaGlzaWNhbCB1YXJ0IHVz
+ZWQgZm9yIGludGVyYWN0aW5nDQo+ID4gKyAJd2l0aCB0aGUgd2lsaW5rIGRldmljZQ0KPiANCj4g
+VGhlcmUgaGF2ZSBiZWVuIG11bHRpcGxlIGRpc2N1c3Npb25zIG9uIHNlcmlhbCBzbGF2ZSBkZXZp
+Y2VzIHJlY2VudGx5Lg0KPiBJJ20gbm90IGdvaW5nIHRvIGFjY2VwdCBhbnkgZGV2aWNlIGJpbmRp
+bmcgd2l0aG91dCBhIGNvbW1vbiB1YXJ0IHNsYXZlDQo+IGRldmljZSBiaW5kaW5nIGZpcnN0Lg0K
+PiANCg0KUGVyaGFwcyBJIGFtIHJlYWRpbmcgaXQgd3JvbmcgYnV0IEkgdGhpbmsgdGhpcyBpcyBh
+IGRpZmZlcmVudCBkaXNjdXNzaW9uLg0KVGhlIHNoYXJlZCB0cmFuc3BvcnQgZHJpdmVyIGlzIGFs
+cmVhZHkgaW4gdGhlIGtlcm5lbCBmb3IgcHJldHR5IGxvbmcgdGltZS4gDQpBRkFJSyB0aGUgb3Jp
+Z2luYWwgYXV0aG9yIGlzIG5vdCBhcm91bmQgdG8gbWFpbnRhaW4gaXQuDQpDdXJyZW50bHkgaXQg
+aXMgdXNlbGVzcyAgYXMgbm8gYmluZGluZ3MgZXhpc3QgZm9yIGl0IGFuZCBhbGwgY3VzdG9tZXJz
+IEkgaGF2ZSBzZWVuIHVzaW5nIHRpX3N0IHRoYXQgdXBncmFkZSANCnRvIG5ld2VyIGtlcm5lbHMg
+aGF2ZSBicm9rZW4gc3VwcG9ydCBhbmQgaGF2ZSB0byBtYW51YWxseSBwYXRjaCB0aGUga2VybmVs
+IGZvciBhZGRpbmcgYmluZGluZ3MgZm9yIGl0Lg0KDQpIYXZpbmcgYSBuZXcgdWFydCBzbGF2ZSBk
+ZXZpY2UgdGhhdCBtYXkgcHJvdmlkZSBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgaXMgYSBkaWZmZXJl
+bnQgZGlzY3Vzc2lvbiBhcyBpdCB3b3VsZCANCnJlcXVpcmUgYSB0b3RhbCBkaWZmZXJlbnQgaW1w
+bGVtZW50YXRpb24uDQpCdXQgd2hhdCBkbyB3ZSBkbyBub3cgd2l0aCB0aGUgaW1wbGVtZW50YXRp
+b24gdGhhdCBpcyBhbHJlYWR5IHRoZXJlLiANCkRvbid0IHdlIHdhbnQgaXQgdG8gd29yayBhbmQg
+YXQgbGVhc3QgaGF2ZSB3b3JraW5nIGJpbmRpbmdzIGZvciBpdD8NCg0KPiA+ICsgLSBmbG93X2Nu
+dHJsIDogSW5kaWNhdGVzIGlmIHVhcnQgZmxvdyBjb250cm9sIGlzIHVzZWQNCj4gPiArIC0gZmxv
+d19jbnRybCA6IHVhcnQgYmF1ZCByYXRlIGluIEJQUw0KPiANCj4gVHlwbyBoZXJlLCBidXQgdGhl
+c2Ugc2hvdWxkIGJlIHBhcnQgb2YgYSBjb21tb24gc2VyaWFsIHNsYXZlIGJpbmRpbmcuDQo+IA0K
+PiBEb24ndCB1c2UgJ18nIGluIHByb3BlcnR5IG5hbWVzLg0KPiANCg0KV2lsbCBmaXggdGhpcw0K
+DQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiAra2ltIHsNCj4gPiArCWNvbXBhdGli
+bGUgPSAia2ltIjsNCj4gPiArCW5zaHV0ZG93bi1ncGlvcyA9IDwmZ3BpbzMgMjEgR1BJT19BQ1RJ
+VkVfSElHSD47DQo+ID4gKwlzZXJpYWwtZGV2aWNlID0gPCZ1YXJ0MT47DQo+ID4gKwlmbG93X2Nu
+dHJsID0gPDE+Ow0KPiA+ICsJZmxvd19jbnRybCA9IDwzMDAwMDAwPjsNCj4gPiArfTsNCj4gPiAr
+DQoNCkJlc3QgUmVnYXJkcywNCkV5YWwNCg==
 --
-> >>> >  3 files changed, 33 insertions(+), 5 deletions(-)
-> >>> >
-> >>> > diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.t=
-xt
-> >>> > b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> >>> > index 89b0db9801b0..90887b430f03 100644
-> >>> > --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> >>> > +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> >>> > @@ -1,7 +1,10 @@
-> >>> >  Atmel NAND flash
-> >>> >
-> >>> >  Required properties:
-> >>> > -- compatible : should be "atmel,at91rm9200-nand" or "atmel,sam=
-a5d4-nand".
-> >>> > +- compatible: The possible values are:
-> >>> > +   "atmel,at91rm9200-nand"
-> >>> > +   "atmel,sama5d2-nand"
-> >>> > +   "atmel,sama5d4-nand"
-> >>> >  - reg : should specify localbus address and size used for the =
-chip,
-> >>> >     and hardware ECC controller if available.
-> >>> >     If the hardware ECC is PMECC, it should contain address and=
- size for
-> >>> > @@ -22,7 +25,7 @@ Optional properties:
-> >>> >    Supported values are: "none", "soft", "hw", "hw_syndrome", "=
-hw_oob_first",
-> >>> >    "soft_bch".
-> >>> >  - atmel,has-pmecc : boolean to enable Programmable Multibit EC=
-C hardware.
-> >>> > -  Only supported by at91sam9x5 or later sam9 product.
-> >>> > +  Supported by AT91SAM9x5 or later SAM9 chips, and SAMA5 chips=
-=2E
-> >>>
-> >>> What compatible string would AT91SAM9x5 be?
-> >>
-> >> "atmel,at91rm9200-nand".
-> >
-> > Answer the question in the binding doc by saying which compatible
-> > strings a property is valid for.
->=20
-> I'm trying to rewrite the documentation for this point, and in the en=
-d it
-> seems to me that the line should be removed instead.
->=20
-> Adding the 'atmel,has-pmecc' property to a SoC device tree is the nor=
-mal way
-> to describe that it supports this type of controller. If we need to w=
-rite it
-> in the documentation as well, it's a duplicate information that can b=
-ecome
-> stale quite fast, as it was before.
->=20
-> In the end, I believe the best path is to describe better what PMECC =
-is,
-> instead of describing as "the controller found in this kind of chip".
-
-Okay, that is important too. We are wanting to move binding=20
-documentation to something more structured where we can do some amount=20
-of validation of dts files against binding documentation. So that is wh=
-y=20
-I am thinking in terms of having the information to validate a dts. But=
-=20
-we are a ways off from doing such a thing.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
