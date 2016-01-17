@@ -1,45 +1,58 @@
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] hw_random: bcm63xx-rng: allow building for BMIPS_GENERIC
-Date: Sun, 17 Jan 2016 10:03:56 +0100
-Message-ID: <1453021437-12531-3-git-send-email-noltari@gmail.com>
+        <noltari@gmail.com>
+Subject: [PATCH 1/2] bmips: improve BCM6328 device tree
+Date: Sun, 17 Jan 2016 11:02:34 +0100
+Message-ID: <1453024955-13570-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have device tree support and BCM6368 is supported in BMIPS_=
-GENERIC,
-we can use it for BMIPS_GENERIC too.
+Adds bcm6328-leds node to bcm6328.dtsi
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 ---
- drivers/char/hw_random/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/boot/dts/brcm/bcm6328.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kc=
-onfig
-index dbf2271..8d89590 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -77,7 +77,7 @@ config HW_RANDOM_ATMEL
+diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/=
+brcm/bcm6328.dtsi
+index 41891c1..d61b161 100644
+--- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
+@@ -31,6 +31,7 @@
+ 	};
 =20
- config HW_RANDOM_BCM63XX
- 	tristate "Broadcom BCM63xx Random Number Generator support"
--	depends on BCM63XX
-+	depends on BCM63XX || BMIPS_GENERIC
- 	default HW_RANDOM
- 	---help---
- 	  This driver provides kernel-side support for the Random Number
+ 	aliases {
++		leds0 =3D &leds0;
+ 		uart0 =3D &uart0;
+ 	};
+=20
+@@ -82,5 +83,13 @@
+ 			offset =3D <0x28>;
+ 			mask =3D <0x1>;
+ 		};
++
++		leds0: led-controller@10000800 {
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			compatible =3D "brcm,bcm6328-leds";
++			reg =3D <0x10000800 0x24>;
++			status =3D "disabled";
++		};
+ 	};
+ };
 --=20
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
