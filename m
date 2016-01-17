@@ -1,116 +1,117 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Sun, 17 Jan 2016 18:57:35 +0100
-Message-ID: <1D5F146E-D347-453B-9158-8D269F8DA99C@goldelico.com>
-References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej> <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com> <569913A1.80606@cogentembedded.com> <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com> <56992959.2020204@hurleysoftware.com> <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com> <744620565.20160116103445@cogentembedded.com> <20160116233157.GA7774@rob-hp-laptop> <3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com> <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Rob Herring <robh@kernel.org>, Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Peter Hurley <peter@hurleysoftware.com>, Rob Herring <robherring2@gmail.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net, NeilBrown <neil@brown.name>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
+ to be predictable and never exceed the requested rate
+Date: Sun, 17 Jan 2016 19:51:43 +0100
+Message-ID: <20160117185143.GL4581@lukather>
+References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
+ <1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
+ <20151227210946.GL30359@lukather>
+ <CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
+ <20160110181428.GH9631@lukather>
+ <CAGNoLaNi72=T6SzGK-Y-b1X6jNx6M-c2oMSQ85sREp9REs5SKQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dZihrQ6eCIduWT38"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQOF562AKGQEJHPLDXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGNoLaNi72=T6SzGK-Y-b1X6jNx6M-c2oMSQ85sREp9REs5SKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+--dZihrQ6eCIduWT38
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Am 17.01.2016 um 15:19 schrieb One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>:
+Hi,
 
->> When translating the system requirements you have provided and mixing
->> with mine, I think we need:
->> 
->> 1. mechanism to receive characters sent by the peer MCU
+On Sun, Jan 10, 2016 at 10:11:11PM +0100, Marcus Weseloh wrote:
+> >> >> -     /* Ensure that we have a parent clock fast enough */
+> >> >> +     /*
+> >> >> +      * Ensure that the parent clock is set to twice the max speed
+> >> >> +      * of the spi device (possibly rounded up by the clk driver)
+> >> >> +      */
+> >> >>       mclk_rate = clk_get_rate(sspi->mclk);
+> >> >> -     if (mclk_rate < (2 * tfr->speed_hz)) {
+> >> >> -             clk_set_rate(sspi->mclk, 2 * tfr->speed_hz);
+> >> >> +     if (spi->max_speed_hz != sspi->cur_max_speed ||
+> >> >> +         mclk_rate != sspi->cur_mclk) {
+> >> >
+> >> > Do you need to cache the values? As far as I'm aware, you end up doing
+> >> > the computation all the time anyway.
+> >>
+> >> By caching the values we optimize the case when a single SPI slave
+> >> device (or even multiple slave devices with the same max_speed) are
+> >> used multiple times in a row. In that case, we're saving two calls:
+> >> clk_set_rate and clk_get_rate. I was unsure about how expensive the
+> >> clk_* calls were, so I thought it would be safer use caching. But
+> >> maybe it's not worth the extra code?
+> >
+> > Unless you can point that there's a significant performance
+> > difference, I'm not sure it's worth it.
 > 
-> Low level driver queue of some kind
+> I did actually notice a significant transfer latency when a new mod0
+> clock frequency is set, probably due to the __delay in
+> drivers/clk/sunxi/clk-factors.c (line 147). So my feeling is that the
+> caching is worth it... at least for the case when there are two slave
+> devices with different transfer speeds accessing the same SPI module.
 
-Yes, could be useful. Depends on what the peer drivers need.
+I'm not sure we even need that delay in the first place, at least not
+for all the clocks using factor.
 
-Some might just have a simple state engine so that they can
-process each character as it is incoming and place it into
-one of several receive queues managed by the driver. So they
-do not need a central queue for incoming characters.
+AFAIK, the only case where it's useful is for PLL, and all of them
+have a bit you can busy-wait on that will let you know when the clock
+has stabilized.
 
+> >> [...]
+> >> >> -     div = mclk_rate / (2 * tfr->speed_hz);
+> >> >> -     if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+> >> >> -             if (div > 0)
+> >> >> -                     div--;
+> >> >> -
+> >> >> +     div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
+> >> >
+> >> > Isn't it exactly the same thing as mclk_rate / (2 * tfr->speed_hz) ?
+> >>
+> >> It is quite often, but not in all cases. The plain division rounds to
+> >> the nearest integer, so it rounds down sometimes. Consider the
+> >> following case: we have a slow SPI device with a spi-max-frequency of
+> >> 50kHz. Our clock driver can't find a clock as slow as 100kHz, so it
+> >> sets mclk to 214,285Hz.
+> >>
+> >> Using the old calculation we get: 214,285 / (2 * 50,000) = 2, so div =
+> >> 1 as the old code subtracts 1 two lines further down
+> >> The new calculation results in: DIV_ROUND_UP(214,285, 2 * 50,000)  =
+> >> 3, so div = 2 if we add the -1
+> >
+> > Except that you have that extra - 1 after your DIV_ROUND_UP
+> > calculation in the line you add.  so you have to remove 1 from that
+> > line above, and then 1 again when we set the register, which ends up
+> > being the exact same thing, or am I missing something?
 > 
->> 2. mechanism to send characters to the peer (or a block for firmware download)
-> 
-> Ditto (maybe even netlink)
+> The -1 after the DIV_ROUND_UP is already the -1 that is needed to set
+> the register. There's no need for another -1 after that (and there
+> isn't one in the code).
 
-I haven't yet coded anything for that requirement but the UART already appears to
-have a TX queue. So it should suffice to append the characters to it and they are
-queued up.
+I was probably hallucinating :) My bad.
 
-> 
->> 3. mechanism to open/close the UART (even if there is no user space/tty client)
-> 
-> So don't use the tty layer in the first place
+That being said, I still have a hard time figuring out what would not
+be solved simply by removing the div--, which seems to match what your
+commit log says.
 
-For the implementation I propose, we aren't using the tty layer in the first place. We
-use the struct uart_port which is a glue layer in serial-core.c
+Thanks!
+Maxime
 
-I think I should reformulate this requirement (we need it for our GPS chip driver):
-
-3. mechanism to open/close the UART by the peer driver (for power management of the
-UART), even if it there is a user-space tty client for the same UART which might or might
-not be open at any time. Manage that in an optimal way.
-
-For the GPS chip I am only interested in mctrl and if characters are received. But
-I still want them to arrive at user space through a standard tty interface. So a solution
-that does not interwork and cooperate with the tty layer is not a useable solution for
-my requirements.
-
-> 
->> 4. mechanism to set the struct termios of the UART (baud rate etc.)
-> 
-> Can be done without the tty layer.
-
-Yes, our implementation does it without. A struct termios is passed down to the
-UART hardware driver which translates it into clock divider settings etc. but
-ignores some fields. This is the way it is already done today for tcsetattr() after
-rippling down through higher level layers:
-
-http://lxr.free-electrons.com/source/drivers/tty/serial/serial_core.c#L458
-
-> 
->> 5. mechanism to be notified that user space has opened/closed the tty port or changes mctrl
->> 6. mechanism to prevent the tty layer to present a /dev/tty* to user space at all
-> 
-> This sounds the wrong way up entirely.
-> 
-> Instead of trying to make the tty layer do weird stuff, make the driver
-> present a tty that is only the things that it wants to be exposed as a
-> tty if any. If there are none then don't use the tty layer at all.
-
-The reason appears to sit here:
-
-http://lxr.free-electrons.com/source/drivers/tty/serial/serial_core.c#L2725
-
-This means that as soon as some UART is successfully probed, a new tty
-interface is created for it. So we simply have to optionally disable it. This is
-described by requirement 6.
-
-Sounds easier to me than rearranging the whole tty / serial-core stuff.
-I prefer to leave that really big task as an exercise to someone else...
-
-> 
-> We have lots of interfaces to random MCUs. Many of them talk "serial"
-> protocols, almost none of them pretend to be the tty layer.
-
-If there are may devices (I assume you think of a serial mouse or touchscreen
-for example) that can be implemented to talk "serial", they still can do,
-should do and do not need to use this new API. It is not intended to be
-a replacement for mature and good solutions.
-
-But we have some cases where we need it because we can't get the
-problems solved at higher layers.
-
-This layer is also chosen with execution speed in mind. The closer to the
-hardware driver, the faster it is. But it should not touch the ~50 different
-UART drivers we have and work with any of them. This is why I think
-serial-core and struct uart_port is the right level. Even if it looks like a hack.
-
-So please wait until I have updated the patch set of our proposal. Then you
-can see that we do not directly touch the tty layer.
-
-Thanks,
-Nikolaus
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--dZihrQ6eCIduWT38--
