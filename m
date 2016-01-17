@@ -1,204 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10] dt-bindings: hwmon/nct7802
-Date: Sat, 16 Jan 2016 18:10:26 -0600
-Message-ID: <20160117001026.GA5305@rob-hp-laptop>
-References: <1452975068-30290-1-git-send-email-const@MakeLinux.com>
+Subject: Re: [PATCH v4 2/3] Documentation: mailbox: Add APM X-Gene SLIMpro
+ mailbox dts documentation
+Date: Sat, 16 Jan 2016 18:13:21 -0600
+Message-ID: <20160117001321.GA7791@rob-hp-laptop>
+References: <CABb+yY2zHycEmsVvp8OFwpJ1PZgrEPpV-oOe56wgFJ=EE0nTcg@mail.gmail.com>
+ <cover.1452912126.git.dhdang@apm.com>
+ <efac1dfff3e6893516f527f47b82f889635122a7.1452912126.git.dhdang@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452975068-30290-1-git-send-email-const@MakeLinux.com>
+In-Reply-To: <efac1dfff3e6893516f527f47b82f889635122a7.1452912126.git.dhdang@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Constantine Shulyupin <const@MakeLinux.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Duc Dang <dhdang@apm.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 16, 2016 at 10:11:08PM +0200, Constantine Shulyupin wrote:
-> Introduced subnodes sensor, fan and peci with properties.
+On Fri, Jan 15, 2016 at 06:57:18PM -0800, Duc Dang wrote:
+> This adds the APM X-Gene SLIMpro mailbox device tree
+> node documentation.
 > 
-> Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
-
-I acked v9. Please add acks when posting new versions unless the changes 
-are significant.
-
-
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> Signed-off-by: Duc Dang <dhdang@apm.com>
 > ---
+> Changes since v3:
+>         - Rebase over v4.4
+>         - Change number of mailbox IRQs to 8
+> 	- Fix white spaces, typos.
 > 
-> Changed in v10:
-> - Added space in address-cells and size-cells trying to avoid 
->   error "The message contains HTML subpart"
+>  .../bindings/mailbox/xgene-slimpro-mailbox.txt     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
 > 
-> Changed in v9:
-> - Fixed nuvoton,nct7802-sensor
-> - Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
-> 
-> Changed in v8:
-> - added senor type "local"
-> - Compatible nodes converted to senor types "vcore", "vcc"
-> 
-> Changed in v7:
-> - sensors type (thermistor, thermistor, voltage) and pwm type
-> selected with type property instead of compatible property.
-> 
-> Changed in v6:
-> - Removed previous definition.
-> - Introduced subnodes sensor, fan and peci with properties.
-> 
-> Changed in v5:
-> - Fixed typos
-> 
-> Changed in v4:
-> - Removed registers initialization by names
-> - Added properties nuvoton,sensor*-type
-> 
-> Changed in v3:
-> - Fixed vendor prefix
-> - Added short registers description,
->   full registers description is available at
-> https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
-> 
-> Changed in v2:
-> - Removed nct7802,reg-init
-> - Added registers initialization by names
-> 
-> Introduced in v1:
->  - nct7802,reg-init
-> ---
->  .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> diff --git a/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
 > new file mode 100644
-> index 0000000..cf983b3
+> index 0000000..91774d7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-> @@ -0,0 +1,125 @@
-> +Nuvoton NCT7802Y Hardware Monitoring IC
+> +++ b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
+> @@ -0,0 +1,35 @@
+> +The APM X-Gene SLIMpro mailbox is used to communicate messages between
+> +the ARM64 processors and the Cortex M3 (dubbed SLIMpro). It uses a simple
+> +interrupt based door bell mechanism and can exchange simple messages using the
+> +internal registers.
 > +
-> +Required node properties:
-> +
-> + - "compatible": must be "nuvoton,nct7802"
-> + - "reg": I2C bus address of the device
-> + - #address-cells = <1>;
-> + - #size-cells = <0>;
-> +
-> +Optional subnodes:
-> +
-> +Sensor subnodes properties:
-> + - "compatible", allowed values:
-> +	 - "nuvoton,nct7802-sensor"
-> + - "sensor-type", allowed values:
-> +	"thermal-diode"
-> +	"thermistor"
-> +	"voltage"
-> +	"local" (only one instance, no "reg" required)
-> +For sensors of types "thermal-diode", "thermistor" and "voltage" required
-> + - "reg": sensor index in range 0 .. 2
-> +
-> +Except sensor at address 2 can't be "thermal-diode".
-> +
-> +Voltage monitor subnodes properties:
-> + - "compatible", allowed values:
-> +	 - "nuvoton,nct7802-vmon"
-> + - "vmon-type", allowed values:
-> +	"vcore"
-> +	"vcc"
-> + - "reg" is not used because there is only one instance of
-> + vcore and vcc voltage monitors.
-> +
-> +Fan subnodes:
-> +
-> +Fan tachometer subnode (input):
+> +There are total of 7 interrupts in this mailbox. Each used for an individual
+> +door bell (or mailbox channel).
 > +
 > +Required properties:
-> + - "reg" :sensor index of in range 0 .. 2.
-> + - "compatible", should be "nuvoton,nct7802-fan-in"
+> +- compatible:	Should be as "apm,xgene-slimpro-mbox".
 > +
-> +Fan PWM (or DC) subnode (output or control):
+> +- reg:		Contains the mailbox register address range.
 > +
-> +Required properties:
-> + - "reg" :sensor index of in range 0 .. 2.
-> + - "compatible", should be "nuvoton,nct7802-fan-ctl"
-> +Optional boolean properties:
-> + - "direct-current" :direct current powered fan instead default PWM
-> + - "invert" :inverted polarity
-> + - "open-drain" :open-drain output instead push pull
+> +- interrupts:	8 interrupts must be from 0 to 7, interrupt 0 define the
+> +		the interrupt for mailbox channel 0 and interrupt 1 for
+> +		mailbox channel 1 and so likewise for the reminder.
 > +
-> +Subnode "peci" properties:
-> + - "reg" :sensor index in range 0 .. 1
-> + - "compatible", should be "nuvoton,nct7802-peci"
+> +- #mbox-cells:	only one to specify the mailbox channel number.
 > +
-> +Not defined sensors, fans and PECI modules will be disabled.
+> +Example:
 > +
-> +Example nct7802 node:
-> +
-> +nct7802-example@28 {
-> +	compatible = "nuvoton,nct7802";
-> +	reg = <0x28>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	local-sensor {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		sensor-type = "local";
-> +	};
-> +	sensor@0 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <0>;
-> +		sensor-type = "thermal-diode";
-> +	};
-> +	sensor@1 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <1>;
-> +		sensor-type = "thermistor";
-> +	};
-> +	sensor@2 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <2>;
-> +		sensor-type = "voltage";
-> +	};
-> +	vcc {
-> +		compatible = "nuvoton,nct7802-vmon";
-> +		sensor-type = "vcc";
-> +	};
-> +	vcore {
-> +		compatible = "nuvoton,nct7802-vmon";
-> +		sensor-type = "vcore";
-> +	};
-> +	fan-in@0 {
-> +		compatible = "nuvoton,nct7802-fan-in";
-> +		reg = <0>;
-> +	};
-> +	fan-in@1 {
-> +		compatible = "nuvoton,nct7802-fan-in";
-> +		reg = <1>;
-> +	};
-> +	fan-ctl@0 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <0>;
-> +	};
-> +	dc-fan-ctl@1 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <1>;
-> +		direct-current;
-> +		open-drain;
-> +		invert;
-> +	};
-> +	pwm-fan-ctl@2 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <2>;
-> +		open-drain;
-> +		invert;
-> +	};
-> +	peci@0 {
-> +		compatible = "nuvoton,nct7802-peci";
-> +		reg = <0>;
-> +	};
-> +	peci@1 {
-> +		compatible = "nuvoton,nct7802-peci";
-> +		reg = <1>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+> +Mailbox Node:
+> +		slimpro-mbox: slimpro-mbox@10540000 {
+
+Nit: just use mailbox@ or mbox@ (whatever others are using) for node 
+name. Otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
