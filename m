@@ -1,90 +1,62 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2 16/26] drm: Add Allwinner A10 Display
- Engine support
-Date: Sun, 17 Jan 2016 14:58:39 +0200
-Message-ID: <1453035519.13209.1.camel@plaes.org>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
-	 <1452785109-6172-17-git-send-email-maxime.ripard@free-electrons.com>
-	 <1452957104.12419.12.camel@plaes.org>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Sun, 17 Jan 2016 14:19:12 +0000
+Message-ID: <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+	<20160113191542.GA12086@leverpostej>
+	<1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
+	<20160115110106.GA3262@leverpostej>
+	<69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+	<569913A1.80606@cogentembedded.com>
+	<CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
+	<56992959.2020204@hurleysoftware.com>
+	<CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
+	<744620565.20160116103445@cogentembedded.com>
+	<20160116233157.GA7774@rob-hp-laptop>
+	<3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452957104.12419.12.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <3D5F35D7-31B5-4E68-875F-7DD492EF0316-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2016-01-16 at 17:11 +0200, Priit Laes wrote:
-> On Thu, 2016-01-14 at 16:24 +0100, Maxime Ripard wrote:
-> > The Allwinner A10 and subsequent SoCs share the same display
-> > pipeline, with
-> > variations in the number of controllers (1 or 2), or the presence
-> > or not of
-> > some output (HDMI, TV, VGA) or not.
-[...]
-> > diff --git a/drivers/gpu/drm/sun4i/sun4i_framebuffer.c
-> > b/drivers/gpu/drm/sun4i/sun4i_framebuffer.c
-> > new file mode 100644
-> > index 000000000000..68072b8cddab
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/sun4i/sun4i_framebuffer.c
-> > @@ -0,0 +1,54 @@
-> > +/*
-> > + * Copyright (C) 2015 Free Electrons
-> > + * Copyright (C) 2015 NextThing Co
-> > + *
-> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License as
-> > + * published by the Free Software Foundation; either version 2 of
-> > + * the License, or (at your option) any later version.
-> > + */
-> > +
-> > +#include <drm/drm_fb_cma_helper.h>
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drmP.h>
-> > +
-> > +#include "sun4i_drv.h"
-> > +
-> > +static void sun4i_de_output_poll_changed(struct drm_device *drm)
-> > +{
-> > +	struct sun4i_drv *drv =3D drm->dev_private;
-> > +
-> > +	if (drv->fbdev)
-> > +		drm_fbdev_cma_hotplug_event(drv->fbdev);
-> > +}
-> > +
-> > +static const struct drm_mode_config_funcs
-> > sun4i_de_mode_config_funcs
-> > =3D {
-> > +	.output_poll_changed	=3D
-> > sun4i_de_output_poll_changed,
-> > +	.atomic_check		=3D drm_atomic_helper_check,
-> > +	.atomic_commit		=3D drm_atomic_helper_commit,
-> > +	.fb_create		=3D drm_fb_cma_create,
-> > +};
-> > +
-> > +struct drm_fbdev_cma *sun4i_framebuffer_init(struct drm_device
-> > *drm)
-> > +{
-> > +	drm_mode_config_reset(drm);
-> > +
-> > +	drm->mode_config.max_width =3D 8192;
-> > +	drm->mode_config.max_height =3D 8192;
->=C2=A0
-> Shouldn't these be 1920 x 1080 as per A10 User manual?
+> When translating the system requirements you have provided and mixing
+> with mine, I think we need:
+> 
+> 1. mechanism to receive characters sent by the peer MCU
 
-I was wrong here. 8192x8192 it is.
+Low level driver queue of some kind
 
->
+> 2. mechanism to send characters to the peer (or a block for firmware download)
 
-P=C3=A4ikest,
-Priit Laes :)
+Ditto (maybe even netlink)
+
+> 3. mechanism to open/close the UART (even if there is no user space/tty client)
+
+So don't use the tty layer in the first place
+
+> 4. mechanism to set the struct termios of the UART (baud rate etc.)
+
+Can be done without the tty layer.
+
+> 5. mechanism to be notified that user space has opened/closed the tty port or changes mctrl
+> 6. mechanism to prevent the tty layer to present a /dev/tty* to user space at all
+
+This sounds the wrong way up entirely.
+
+Instead of trying to make the tty layer do weird stuff, make the driver
+present a tty that is only the things that it wants to be exposed as a
+tty if any. If there are none then don't use the tty layer at all.
+
+We have lots of interfaces to random MCUs. Many of them talk "serial"
+protocols, almost none of them pretend to be the tty layer.
+
+Alan
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
