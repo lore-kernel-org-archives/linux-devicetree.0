@@ -1,110 +1,98 @@
-From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 1/3] ti-st: use device handles and add device tree
- binding
-Date: Sun, 17 Jan 2016 07:57:01 +0000
-Message-ID: <8665E2433BC68541A24DFFCA87B70F5B2376B680@DFRE01.ent.ti.com>
-References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
- <8665E2433BC68541A24DFFCA87B70F5B23759A5B@DFRE01.ent.ti.com>
- <20151229183534.GM12450@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Sun, 17 Jan 2016 09:53:48 +0100
+Message-ID: <3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160113191542.GA12086@leverpostej> <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com> <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com> <569913A1.80606@cogentembedded.com> <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com> <56992959.2020204@hurleysoftware.com> <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com> <744620565.20160116103445@cogentembedded.com> <20160116233157.GA7774@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151229183534.GM12450@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20160116233157.GA7774@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIHRoZSBkZWxheWVkIHJlc3BvbnNlLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBT
-ZW50OiBUdWVzZGF5LCBEZWNlbWJlciAyOSwgMjAxNSA4OjM2IFBNDQo+IFRvOiBSZWl6ZXIsIEV5
-YWwNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1vbWFwQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgcGF3ZWwu
-bW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVs
-bGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOyB0b255QGF0b21pZGUuY29tOw0KPiBs
-aW51eEBhcm0ubGludXgub3JnLnVrDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXSB0aS1zdDog
-dXNlIGRldmljZSBoYW5kbGVzIGFuZCBhZGQgZGV2aWNlIHRyZWUgYmluZGluZw0KPiANCj4gT24g
-V2VkLCBEZWMgMjMsIDIwMTUgYXQgMTE6Mzg6MjlBTSArMDAwMCwgUmVpemVyLCBFeWFsIHdyb3Rl
-Og0KPiA+IC0gQWRkIHN1cHBvcnQgZm9yIGdldHRpbmcgdGhlIHBsYXRmb3JtIGRhdGEgd2hpY2gg
-aW5jbHVkZXMgdGhlIHVhcnQNCj4gPiAgIHVzZWQgYW5kIGdwaW8gcGluIHVzZWQgZm9yIGVuYWJs
-ZSBmcm9tIGRldmljZSB0cmVlLg0KPiA+DQo+ID4gLSBGaXggdGhlIGltcGxlbWVudGF0aW9uIGZv
-ciB1c2luZyBkZXZpY2UgaGFuZGxlIGZvciB0aGUgdWFydCBhbmQNCj4gPiAgIGdwaW9kIGZvciB0
-aGUgZW5hYmxlIHBpbiwgaW5zdGVhZCBvZiBkZXZpY2UgbmFtZSAoYXMgc3RyaW5nKSB1c2VkDQo+
-ID4gICBmb3IgdGhlIHVhcnQgYW5kIHBpbyBudW1iZXIgd2hpY2ggYXJlIGJvdGggYmFkIHByYWN0
-aWNlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRXlhbCBSZWl6ZXIgPGV5YWxyQHRpLmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2MvdGkt
-c3QudHh0IHwgICA0MiArKysrKysNCj4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9wZGF0YS1xdWly
-a3MuYyAgICAgICAgICAgICAgIHwgICAxNiArKy0NCj4gPiAgZHJpdmVycy9taXNjL3RpLXN0L3N0
-X2tpbS5jICAgICAgICAgICAgICAgICAgICAgIHwgIDE1OSArKysrKysrKysrKysrKysrLS0tLS0t
-DQo+ID4gIGRyaXZlcnMvbWlzYy90aS1zdC9zdF9sbC5jICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMTYgKystDQo+ID4gIGluY2x1ZGUvbGludXgvdGlfd2lsaW5rX3N0LmggICAgICAgICAgICAg
-ICAgICAgICB8ICAgMTMgKy0NCj4gDQo+IEknZCBzdWdnZXN0IHlvdSBsb29rIGF0IGNvbW1pdCBj
-MGJkMWI5ZTU4OTU5YzUgKFJldmVydCAidGktc3Q6IGFkZCBkZXZpY2UNCj4gdHJlZSBzdXBwb3J0
-IikgZmlyc3QuDQo+IA0KPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDE5MCBpbnNlcnRpb25zKCspLCA1
-NiBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0LnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0LnR4dA0KPiA+IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2MvdGktc3QudHh0DQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi40NDkwZGE2DQo+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3Rp
-LXN0LnR4dA0KPiA+IEBAIC0wLDAgKzEsNDIgQEANCj4gPiArVEkgV2lsaW5rIDYvNy84ICh3bDEy
-eHgvd2wxOHh4KSBTaGFyZWQgdHJhbnNwb3J0IGRyaXZlcg0KPiANCj4gQmluZGluZ3Mgc2hvdWxk
-bid0IGJlIGRlc2NyaWJpbmcgZHJpdmVycy4uLg0KPiANCg0KT0ssIHVuZGVyc3Rvb2QNCg0KPiA+
-ICsNCj4gPiArVEnigJlzIFdpcmVsZXNzIENvbm5lY3Rpdml0eSBjaGlwcyBzdXBwb3J0IEJsdWV0
-b290aCAoQlQpLCBXaUZpLCBhbmQNCj4gPiArR1BTIHRlY2hub2xvZ3kgY29yZXMgaW4gYSBzaW5n
-bGUgZGllLg0KPiA+ICsNCj4gPiArU3VjaCBhIG11bHRpLWNvcmUgY29tYm8gY2hpcCB3aWxsIGJl
-IGludGVyZmFjZWQgdG8gdGhlIGFwcGxpY2F0aW9uDQo+ID4gK3Byb2Nlc3NvciB1c2luZyBhIHNp
-bmdsZSBwaHlzaWNhbCBwb3J0IChsaWtlIFVBUlQpLg0KPiA+ICsNCj4gPiArU2hhcmVkIFRyYW5z
-cG9ydCAoU1QpIHNvZnR3YXJlIGVuYWJsZXMgQlQgYW5kIEdQUyBwcm90b2NvbHMgb3INCj4gPiAr
-c29mdHdhcmUgY29tcG9uZW50cyB0byBpbnRlcmFjdCB3aXRoIHRoZWlyIHJlc3BlY3RpdmUgY29y
-ZXMgb3ZlciBzaW5nbGUNCj4gcGh5c2ljYWwgcG9ydC4NCj4gPiArU1QgdXNlcyBsb2dpY2FsIGNo
-YW5uZWxzLCBvdmVyIHBoeXNpY2FsIHRyYW5zcG9ydCwgdG8gY29tbXVuaWNhdGUNCj4gPiArd2l0
-aCBpbmRpdmlkdWFsIGNvcmVzLg0KPiA+ICsNCj4gPiArTG9naWNhbCBjaGFubmVscyAxLCAyLCAz
-LCBhbmQgNCBhcmUgdXNlZCBmb3IgQlQgcGFja2V0cywgY2hhbm5lbCA4DQo+ID4gK2ZvciBGTSwg
-Y2hhbm5lbCA5IGZvciBHUFMgYW5kIGNoYW5uZWxzIDMwLCAzMSwgMzIsIGFuZCAzMyBhcmUgdXNl
-ZA0KPiA+ICtmb3IgQ2hpcCBQb3dlciBNYW5hZ2VtZW50IChQTSkuDQo+IA0KPiBBbGwgdGhpcyBp
-cyBpcnJlbGV2YW50IGZvciBhIGJpbmRpbmcuDQo+IA0KDQpPSywgdW5kZXJzdG9vZA0KDQo+ID4g
-Kw0KPiA+ICtUaGlzIG5vZGUgcHJvdmlkZXMgcHJvcGVydGllcyBmb3IgcGFzc2luZyBwYXJhbWV0
-ZXJzIHRvIHRoZSB0aSBzaGFyZWQNCj4gPiArdHJhbnNwb3J0IGRyaXZlci4NCj4gPiArDQo+ID4g
-K1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSB0aGUg
-Zm9sbG93aW5nOg0KPiA+ICsgICAgKiAia2ltIiAtIHRpLXN0IHBhcmFtZXRlcnMNCj4gDQo+IFdo
-byBpcyBraW0/IENlcnRhaW5seSBub3QgYSBkZXNjcmlwdGlvbiBvZiBhIGgvdyBibG9jay4NCg0K
-Tm90IHN1cmUgYWJvdXQgdGhlIG9yaWdpbiBvZiB0aGlzIG5hbWUgYnV0IGFjY29yZGluZyB0byB0
-aGUgZm9sbG93aW5nIGxpbms6DQpodHRwOi8vcHJvY2Vzc29ycy53aWtpLnRpLmNvbS9pbmRleC5w
-aHAvU2hhcmVkX1RyYW5zcG9ydF9Ecml2ZXINCktJTSBpcyAiS2VybmVsIEluaXRpYWxpemF0aW9u
-IE1hbmFnZXIiIHRoYXQgZW5hYmxlcyBjb21tdW5pY2F0aW9uIHdpdGggQlQgYW5kIEdQUyBjb3Jl
-cy4NCg0KPiANCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKyAtIG5zaHV0
-ZG93bi1ncGlvcyA6IHNwZWNpZmllcyBhdHRyaWJ1dGVzIGZvciBncGlvIHBpbmcgdXNlZCBmb3Ig
-ZW5hYmxpbmcNCj4gPiArCXRoZSBibHVldG9vdGgsZ3BzIGFuZCBGTSBzdWIgc3lzdGVtcw0KPiA+
-ICsgLSBzZXJpYWwtZGV2aWNlIDogdGhlIHBoYW5kbGUgZm9yIHRoZSBwaGlzaWNhbCB1YXJ0IHVz
-ZWQgZm9yIGludGVyYWN0aW5nDQo+ID4gKyAJd2l0aCB0aGUgd2lsaW5rIGRldmljZQ0KPiANCj4g
-VGhlcmUgaGF2ZSBiZWVuIG11bHRpcGxlIGRpc2N1c3Npb25zIG9uIHNlcmlhbCBzbGF2ZSBkZXZp
-Y2VzIHJlY2VudGx5Lg0KPiBJJ20gbm90IGdvaW5nIHRvIGFjY2VwdCBhbnkgZGV2aWNlIGJpbmRp
-bmcgd2l0aG91dCBhIGNvbW1vbiB1YXJ0IHNsYXZlDQo+IGRldmljZSBiaW5kaW5nIGZpcnN0Lg0K
-PiANCg0KUGVyaGFwcyBJIGFtIHJlYWRpbmcgaXQgd3JvbmcgYnV0IEkgdGhpbmsgdGhpcyBpcyBh
-IGRpZmZlcmVudCBkaXNjdXNzaW9uLg0KVGhlIHNoYXJlZCB0cmFuc3BvcnQgZHJpdmVyIGlzIGFs
-cmVhZHkgaW4gdGhlIGtlcm5lbCBmb3IgcHJldHR5IGxvbmcgdGltZS4gDQpBRkFJSyB0aGUgb3Jp
-Z2luYWwgYXV0aG9yIGlzIG5vdCBhcm91bmQgdG8gbWFpbnRhaW4gaXQuDQpDdXJyZW50bHkgaXQg
-aXMgdXNlbGVzcyAgYXMgbm8gYmluZGluZ3MgZXhpc3QgZm9yIGl0IGFuZCBhbGwgY3VzdG9tZXJz
-IEkgaGF2ZSBzZWVuIHVzaW5nIHRpX3N0IHRoYXQgdXBncmFkZSANCnRvIG5ld2VyIGtlcm5lbHMg
-aGF2ZSBicm9rZW4gc3VwcG9ydCBhbmQgaGF2ZSB0byBtYW51YWxseSBwYXRjaCB0aGUga2VybmVs
-IGZvciBhZGRpbmcgYmluZGluZ3MgZm9yIGl0Lg0KDQpIYXZpbmcgYSBuZXcgdWFydCBzbGF2ZSBk
-ZXZpY2UgdGhhdCBtYXkgcHJvdmlkZSBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgaXMgYSBkaWZmZXJl
-bnQgZGlzY3Vzc2lvbiBhcyBpdCB3b3VsZCANCnJlcXVpcmUgYSB0b3RhbCBkaWZmZXJlbnQgaW1w
-bGVtZW50YXRpb24uDQpCdXQgd2hhdCBkbyB3ZSBkbyBub3cgd2l0aCB0aGUgaW1wbGVtZW50YXRp
-b24gdGhhdCBpcyBhbHJlYWR5IHRoZXJlLiANCkRvbid0IHdlIHdhbnQgaXQgdG8gd29yayBhbmQg
-YXQgbGVhc3QgaGF2ZSB3b3JraW5nIGJpbmRpbmdzIGZvciBpdD8NCg0KPiA+ICsgLSBmbG93X2Nu
-dHJsIDogSW5kaWNhdGVzIGlmIHVhcnQgZmxvdyBjb250cm9sIGlzIHVzZWQNCj4gPiArIC0gZmxv
-d19jbnRybCA6IHVhcnQgYmF1ZCByYXRlIGluIEJQUw0KPiANCj4gVHlwbyBoZXJlLCBidXQgdGhl
-c2Ugc2hvdWxkIGJlIHBhcnQgb2YgYSBjb21tb24gc2VyaWFsIHNsYXZlIGJpbmRpbmcuDQo+IA0K
-PiBEb24ndCB1c2UgJ18nIGluIHByb3BlcnR5IG5hbWVzLg0KPiANCg0KV2lsbCBmaXggdGhpcw0K
-DQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiAra2ltIHsNCj4gPiArCWNvbXBhdGli
-bGUgPSAia2ltIjsNCj4gPiArCW5zaHV0ZG93bi1ncGlvcyA9IDwmZ3BpbzMgMjEgR1BJT19BQ1RJ
-VkVfSElHSD47DQo+ID4gKwlzZXJpYWwtZGV2aWNlID0gPCZ1YXJ0MT47DQo+ID4gKwlmbG93X2Nu
-dHJsID0gPDE+Ow0KPiA+ICsJZmxvd19jbnRybCA9IDwzMDAwMDAwPjsNCj4gPiArfTsNCj4gPiAr
-DQoNCkJlc3QgUmVnYXJkcywNCkV5YWwNCg==
+Hi,
+
+Am 17.01.2016 um 00:31 schrieb Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+
+> On Sat, Jan 16, 2016 at 10:34:45AM +0300, Vostrikov Andrey wrote:
+>> What would be best implementation in following use case:
+>> - there are several microcontrollers/devices that use same protocol on top of UART (<STX>-<DATA>-<CRC>-<ETX>)
+>> - microcontoller could provide several functions to system, e.g. watchdog, HWMON etc., that not require user space interaction
+>> - there are several implementations of firmware that use different commands/events transferred as <DATA> and different <CRC> algorithms installed on several HW variants
+> 
+> Yes, and combo chips with BT, FM radio and/or NFC muxed on UART port are 
+> quite common.
+
+Indeed. Which raises another DT modelling question: should each component
+have its own node (and individual compatible string) or should there be a node
+for the whole combo chip. And is it the child of MMC/SDIO or of the UART?
+
+But let's postpone this difficult thing.
+
+> 
+>> If we take picture from Nikolaus's email:
+>> device <--> uart <--> serial-core <-- new hooks ---> device driver <---> protocol interfaces
+>> 
+>>> +1 on that. We need a proper subsystem for in kernel drivers of
+>>> connected UART devices.
+>> 
+>> Yes, such implementation will help. There is a need for interface like UART BUS that will probe devices without user space.
+>> Serial I/O for input subsystem defines new type of bus and uses dedicated line discipline, but it still unable to start driver by itself and requires call from 'inputattach' to open port, assign line discipline and go to forever wait on 'read'.
+> 
+> I looked at serio a bit to see if it could be used or expanded. There is 
+> the line discipline, but then there are serial drivers which connect to 
+> serio (or tty layer) directly. The SUN serial ports and keyboard are an 
+> example IIRC. That may have been the only one... I found that serio is 
+> pretty limited and doesn't provide much of a starting point. It's 
+> functionality could be rolled into some new though.
+
+I think the best location is serial-core.c. It connects the tty layer with the SoC
+specific uart drivers.
+
+So the picture of data/control flow looks like:
+
+user-space <-> /dev/TTY* <-> tty layer <-+
+                                         +--> serial-core.c  <-> UART hardware driver <-> null-modem <-> UART <-> peer MCU
+peer device driver <---------------------+
+
+This needs a new peer device API for device drivers which is provided
+by the serial core.
+
+When translating the system requirements you have provided and mixing
+with mine, I think we need:
+
+1. mechanism to receive characters sent by the peer MCU
+2. mechanism to send characters to the peer (or a block for firmware download)
+3. mechanism to open/close the UART (even if there is no user space/tty client)
+4. mechanism to set the struct termios of the UART (baud rate etc.)
+5. mechanism to be notified that user space has opened/closed the tty port or changes mctrl
+6. mechanism to prevent the tty layer to present a /dev/tty* to user space at all
+
+Then, we just need a normal device driver for the peer device (you can call
+it "plugin"). This driver module can implement all needed state engines
+I am aware of (power control, packetization, multiplexing).
+
+Is anything missing?
+
+Our implementation proposal from October already solves parts of this (1, 3, 4, 5)
+and I have now some ideas how the missing ones could easily be added.
+
+So please give me some days to develop it a little to post a patch set
+which includes sketches for the extensions. And I want to add a blueprint for
+a driver for the more complex situation with firmware download & protocol engine.
+
+But please note that I will not be able to test sending of characters, since
+none of my drivers or peer devices needs that or can handle.
+
+Therefore the code will not be tested and sometimes just a sketch to
+transport the idea. It will need quite some work and help to get it stabilized.
+
+Regards and thanks,
+Nikolaus
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
