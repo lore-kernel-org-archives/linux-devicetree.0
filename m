@@ -1,7 +1,7 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 2/4] MIPS: dts: qca: introduces AR9331 devicetree
-Date: Mon, 18 Jan 2016 02:56:25 +0300
-Message-ID: <1453074987-3356-3-git-send-email-antonynpavlov@gmail.com>
+Subject: [RFC 3/4] MIPS: ath79: add initial support for TP-LINK MR3020
+Date: Mon, 18 Jan 2016 02:56:26 +0300
+Message-ID: <1453074987-3356-4-git-send-email-antonynpavlov@gmail.com>
 References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1453074987-3356-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,9 +10,13 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet).
-The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
-typically used in very cheap Access Points and Routers.
+Currently only the UART, SPI-flash and LEDs are supported.
+
+Links:
+
+  * http://www.tp-link.com/en/products/details/?model=TL-MR3020
+  * http://wiki.openwrt.org/toh/tp-link/tl-mr3020
+  * https://wikidevi.com/wiki/TP-LINK_TL-MR3020
 
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
@@ -20,126 +24,111 @@ Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/boot/dts/qca/ar9331.dtsi | 113 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+ arch/mips/ath79/Kconfig              |  5 +++
+ arch/mips/boot/dts/qca/Makefile      |  1 +
+ arch/mips/boot/dts/qca/tl_mr3020.dts | 68 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 74 insertions(+)
 
-diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
+index 13c04cf..bbd7a1f 100644
+--- a/arch/mips/ath79/Kconfig
++++ b/arch/mips/ath79/Kconfig
+@@ -81,6 +81,11 @@ choice
+ 		bool "TL-WR1043ND Version 1"
+ 		select BUILTIN_DTB
+ 		select SOC_AR913X
++
++	config DTB_TL_MR3020
++		bool "TL-MR3020"
++		select BUILTIN_DTB
++		select SOC_AR933X
+ endchoice
+ 
+ endmenu
+diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
+index 2d61455d..8c96d67 100644
+--- a/arch/mips/boot/dts/qca/Makefile
++++ b/arch/mips/boot/dts/qca/Makefile
+@@ -3,6 +3,7 @@ dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
+ 
+ # Select a DTB to build in the kernel
+ obj-$(CONFIG_DTB_TL_WR1043ND_V1)	+= ar9132_tl_wr1043nd_v1.dtb.o
++obj-$(CONFIG_DTB_TL_MR3020)		+= tl_mr3020.dtb.o
+ 
+ # Force kbuild to make empty built-in.o if necessary
+ obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/qca/tl_mr3020.dts b/arch/mips/boot/dts/qca/tl_mr3020.dts
 new file mode 100644
-index 0000000..49513b0
+index 0000000..571989b
 --- /dev/null
-+++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-@@ -0,0 +1,113 @@
-+#include <dt-bindings/clock/ar933x-clk.h>
++++ b/arch/mips/boot/dts/qca/tl_mr3020.dts
+@@ -0,0 +1,68 @@
++/dts-v1/;
++
++#include "ar9331.dtsi"
++#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
-+	compatible = "qca,ar9331";
++	model = "TP-Link TL-MR3020";
++	compatible = "tplink,tl-mr3020";
 +
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++	aliases {
++		serial0 = &uart;
++	};
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x2000000>;
++	};
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mips,mips24Kc";
-+			reg = <0>;
++	leds {
++		compatible = "gpio-leds";
++
++		wlan {
++			label = "tp-link:green:wlan";
++			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		lan {
++			label = "tp-link:green:lan";
++			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		wps {
++			label = "tp-link:green:wps";
++			gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		led3g {
++			label = "tp-link:green:3g";
++			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
++			default-state = "off";
 +		};
 +	};
++};
 +
-+	cpuintc: interrupt-controller {
-+		compatible = "qca,ar7100-cpu-intc";
++&uart {
++	status = "okay";
++};
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
++&gpio {
++	status = "okay";
++};
 +
-+		qca,ddr-wb-channel-interrupts = <2>, <3>;
-+		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>;
-+	};
++&spi {
++	num-chipselects = <1>;
++	status = "okay";
 +
-+	ahb {
-+		compatible = "simple-bus";
-+		ranges;
-+
++	/* Spansion S25FL032PIF SPI flash */
++	spiflash: m25p80@0 {
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+
-+		apb {
-+			compatible = "simple-bus";
-+			ranges;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			interrupt-parent = <&miscintc>;
-+
-+			ddr_ctrl: memory-controller@18000000 {
-+				compatible = "qca,ar7240-ddr-controller";
-+				reg = <0x18000000 0x100>;
-+
-+				#qca,ddr-wb-channel-cells = <1>;
-+			};
-+
-+			uart: uart@18020000 {
-+				compatible = "qca,ar9330-uart";
-+				reg = <0x18020000 0x14>;
-+
-+				interrupts = <3>;
-+
-+				clocks = <&pll AR933X_CLK_UART>;
-+
-+				status = "disabled";
-+			};
-+
-+			gpio: gpio@18040000 {
-+				compatible = "qca,ar7100-gpio";
-+				reg = <0x18040000 0x34>;
-+				interrupts = <2>;
-+
-+				ngpios = <30>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+
-+				status = "disabled";
-+			};
-+
-+			pll: pll-controller@18050000 {
-+				compatible = "qca,ar9330-pll";
-+				reg = <0x18050000 0x20>;
-+
-+				#clock-cells = <1>;
-+			};
-+
-+			miscintc: interrupt-controller@18060010 {
-+				compatible = "qca,ar7240-misc-intc";
-+				reg = <0x18060010 0x4>;
-+
-+				interrupt-parent = <&cpuintc>;
-+				interrupts = <6>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+
-+			spi: spi@1f000000 {
-+				compatible = "qca,ar7100-spi";
-+				reg = <0x1f000000 0x10>;
-+
-+				clocks = <&pll AR933X_CLK_AHB>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				status = "disabled";
-+			};
-+		};
++		compatible = "m25p80";
++		spi-max-frequency = <104000000>;
++		reg = <0>;
 +	};
 +};
 -- 
