@@ -1,97 +1,111 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
- bindings for DECON-TV
-Date: Mon, 18 Jan 2016 08:45:33 +0900
-Message-ID: <569C279D.1020705@samsung.com>
-References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
- <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
- <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <56977D42.2050904@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Rob Herring <robh+dt@kernel.org>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more devicetree-friendly
+Date: Mon, 18 Jan 2016 02:56:24 +0300
+Message-ID: <1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
+References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453074987-3356-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.01.2016 19:49, Inki Dae wrote:
-> + Rob Herring
->=20
-> 2016=EB=85=84 01=EC=9B=94 14=EC=9D=BC 19:36=EC=97=90 Andrzej Hajda =EC=
-=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
->> Hi Inki,
->>
->> It seems this patch and 04/10 did not get picked up yet.
->> Could you merge it?
->=20
-> Yes, I can. However, 04/10 is required for acked-by from dt or SoC ma=
-intainer.
-> Krzysztof and Rob, could you give me acked-by?
->=20
-> Thanks,
-> Inki Dae
+At the moment ar933x of-enabled drivers use use clock names
+(e.g. "uart" or "ahb") to get clk descriptor.
+On the other hand Documentation/devicetree/bindings/clock/clock-bindings.txt
+states that the 'clocks' property is required for passing clk
+to clock consumers.
 
-My ack is really not required, because this is a binding for a specific
-driver from video subsystem. It does not fall into the arm/mach-exynos
-nor the dts/*exynos*.
+This commit prepares ar933x clk code for using 'clocks' property
+in the clock consumers code.
 
-Anyway I reviewed the patch on 28th of October and Rob acked it on 13th
-of November.
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/mips/ath79/clock.c                | 20 +++++++++++++-------
+ include/dt-bindings/clock/ar933x-clk.h | 22 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 7 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
+index eb5117c..4c20813 100644
+--- a/arch/mips/ath79/clock.c
++++ b/arch/mips/ath79/clock.c
+@@ -156,6 +156,10 @@ static void __init ar913x_clocks_init(void)
+ 	clk_add_alias("uart", NULL, "ahb", NULL);
+ }
+ 
++#include <dt-bindings/clock/ar933x-clk.h>
++
++static struct clk *ar933x_clks[AR933X_CLK_END];
++
+ static void __init ar933x_clocks_init(void)
+ {
+ 	unsigned long ref_rate;
+@@ -167,6 +171,9 @@ static void __init ar933x_clocks_init(void)
+ 	u32 freq;
+ 	u32 t;
+ 
++	clk_data.clks = ar933x_clks;
++	clk_data.clk_num = AR933X_CLK_END;
++
+ 	t = ath79_reset_rr(AR933X_RESET_REG_BOOTSTRAP);
+ 	if (t & AR933X_BOOTSTRAP_REF_CLK_40)
+ 		ref_rate = (40 * 1000 * 1000);
+@@ -209,13 +216,12 @@ static void __init ar933x_clocks_init(void)
+ 		ahb_rate = freq / t;
+ 	}
+ 
+-	ath79_add_sys_clkdev("ref", ref_rate);
+-	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
+-	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
+-	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+-
+-	clk_add_alias("wdt", NULL, "ahb", NULL);
+-	clk_add_alias("uart", NULL, "ref", NULL);
++	ar933x_clks[AR933X_CLK_REF] = ath79_add_sys_clkdev("ref", ref_rate);
++	ar933x_clks[AR933X_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
++	ar933x_clks[AR933X_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
++	ar933x_clks[AR933X_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
++	ar933x_clks[AR933X_CLK_WDT] = ath79_add_sys_clkdev("wdt", ahb_rate);
++	ar933x_clks[AR933X_CLK_UART] = ath79_add_sys_clkdev("uart", ref_rate);
+ }
+ 
+ static u32 __init ar934x_get_pll_freq(u32 ref, u32 ref_div, u32 nint, u32 nfrac,
+diff --git a/include/dt-bindings/clock/ar933x-clk.h b/include/dt-bindings/clock/ar933x-clk.h
+new file mode 100644
+index 0000000..ed9e5d5
+--- /dev/null
++++ b/include/dt-bindings/clock/ar933x-clk.h
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2014, 2016 Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#ifndef __DT_BINDINGS_AR933X_CLK_H
++#define __DT_BINDINGS_AR933X_CLK_H
++
++#define AR933X_CLK_REF		0
++#define AR933X_CLK_CPU		1
++#define AR933X_CLK_DDR		2
++#define AR933X_CLK_AHB		3
++#define AR933X_CLK_WDT		4
++#define AR933X_CLK_UART		5
++
++#define AR933X_CLK_END		6
++
++#endif /* __DT_BINDINGS_AR933X_CLK_H */
+-- 
+2.6.2
 
-
->>
->> Regards
->> Andrzej
->>
->> On 10/26/2015 12:59 PM, Andrzej Hajda wrote:
->>> DECON-TV(Display and Enhancement Controller for TV) is a variation
->>> of DECON IP. Its main purpose is to produce video stream for HDMI I=
-P.
->>>
->>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->>> ---
->>> Hi Krzysztof,
->>>
->>> I have decided to skip cleanup part as it would require more work,
->>> not related to this patchset.
->>>
->>> Regards
->>> Andrzej
->>>
->>>  Documentation/devicetree/bindings/video/exynos5433-decon.txt | 3 +=
-+-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/video/exynos5433-dec=
-on.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>> index 3dff78b..c9fd7b3 100644
->>> --- a/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>> +++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>> @@ -5,7 +5,8 @@ Exynos series of SoCs which transfers the image dat=
-a from a video memory
->>>  buffer to an external LCD interface.
->>> =20
->>>  Required properties:
->>> -- compatible: value should be "samsung,exynos5433-decon";
->>> +- compatible: value should be one of:
->>> +	"samsung,exynos5433-decon", "samsung,exynos5433-decon-tv";
->>>  - reg: physical base address and length of the DECON registers set=
-=2E
->>>  - interrupts: should contain a list of all DECON IP block interrup=
-ts in the
->>>  	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-sams=
-ung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->=20
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
