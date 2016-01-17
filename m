@@ -1,37 +1,28 @@
-From: Martin Michlmayr <tbm@cyrius.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: kirkwood-openrd: fix SD slot default
- configuration
-Date: Sun, 17 Jan 2016 14:43:17 -0800
-Message-ID: <20160117224316.GA26018@jirafa.cyrius.com>
+From: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd: fix pin names for UART/SD
+ selection
+Date: Sun, 17 Jan 2016 15:03:54 -0800
+Message-ID: <20160117230354.GB26018@jirafa.cyrius.com>
 References: <1452629253-21748-1-git-send-email-aaro.koskinen@iki.fi>
- <1452629253-21748-2-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452629253-21748-2-git-send-email-aaro.koskinen@iki.fi>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1452629253-21748-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Aaro Koskinen <aaro.koskinen@iki.fi> [2016-01-12 22:07]:
-> The SD card slot was enabled by default with legacy booting.
-> It does not work anymore with DT boot. Fix by providing GPIO configuration
-> that matches the old default.
+* Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> [2016-01-12 22:07]:
+> The UART/SD pin names are swapped, fix that.
 
-Tested-by: Rick Thomas <rbthomas@pobox.com>
-Reviewed-by: Martin Michlmayr <tbm@cyrius.com>
+Reviewed-by: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>
 
 -- 
 Martin Michlmayr
 http://www.cyrius.com/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
