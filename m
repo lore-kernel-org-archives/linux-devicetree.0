@@ -1,53 +1,61 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 0/5 RFC] mmc: sdhci-iproc: add bcm2835 support
-Date: Sun, 17 Jan 2016 14:58:59 +0000
-Message-ID: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <stefan.wahren@i2se.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] Nokia N950 modem support
+Date: Sun, 17 Jan 2016 16:49:04 +0100
+Message-ID: <1453045749-22642-1-git-send-email-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series based on the suggestion of Scott Branden to implement
-bcm2835 support into sdhci-iproc [1].
+Hi,
 
-These changes provide the following advantages:
-  * no need to maintain a separate driver for bcm2835
-  * improve support and test coverage of bcm2835 mmc support
-  * get the rid of SDHCI_CAPABILITIES hack in bcm2835_sdhci_readl
-  * increase write performance by avoiding delays in write ops
+This patchset adds support for the N950 modem. Afterwards it can be
+used with ofono in the same way, that the N900's modem can be used [0].
 
-Patch 1 and 2 adopt two sdhci-bcm2835 fixes to sdhci-iproc. The third patch
-tries to specify as much quirks as possible in the bcm283x.dtsi as possible.
-Patch 4 and 5 are the actually changes for bcm2835 support.
+In addition to the kernel patchset, ofono must be modified slightly, though.
+The cbs interface from the N950 modem seems to be broken resulting in modem
+reset. The below ofono patch is enough to get it running for the N950.
 
-These series has been tested on Raspberry Pi B with dd (direct I/O):
+[0] https://lkml.org/lkml/2014/5/10/167
 
-sdhci-bcm2835
+-- Sebastian
 
-378 kB/s WRITE
-10,6 MB/s READ
+diff --git a/plugins/n900.c b/plugins/n900.c
+index 44e2e75df3d9..1454d010cb2c 100644
+--- a/plugins/n900.c
++++ b/plugins/n900.c
+@@ -507,7 +507,7 @@ static void n900_post_online(struct ofono_modem *modem)
+ 
+ 	ofono_netreg_create(modem, 0, "isimodem", isi->modem);
+ 	ofono_sms_create(modem, 0, "isimodem", isi->modem);
+-	ofono_cbs_create(modem, 0, "isimodem", isi->modem);
++	//ofono_cbs_create(modem, 0, "isimodem", isi->modem);
+ 	ofono_ussd_create(modem, 0, "isimodem", isi->modem);
+ 	ofono_call_settings_create(modem, 0, "isimodem", isi->modem);
+ 	ofono_call_barring_create(modem, 0, "isimodem", isi->modem);
+---
 
-sdhci-iproc (after applying patch series)
+Sebastian Reichel (5):
+  ARM: OMAP2+: hwmod data: Add SSI data for omap36xx
+  ARM: dts: OMAP3-N950-N9: Enable SSI module
+  HSI: nokia-modem: add n950 and n9 support
+  HSI: ssi-protocol: Use handshake logic from n950
+  ARM: dts: OMAP3-N950-N9: Enable modem
 
-881 kB/s WRITE
-10,8 MB/s READ
-
-[1] - https://lkml.org/lkml/2015/12/22/525
-
-Stefan Wahren (5):
-  mmc: sdhci-iproc: Clean up platform allocations if shdci init fails
-  mmc: sdhci-iproc: Actually enable the clock
-  ARM: bcm283x: specify sdhci quirks in dtsi file
-  mmc: sdhci-iproc: add bcm2835 support
-  DT: sdhci-iproc: add bcm2835 compatible
-
- .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |    5 ++-
- arch/arm/boot/dts/bcm283x.dtsi                     |    2 ++
- drivers/mmc/host/Kconfig                           |    6 ++--
- drivers/mmc/host/sdhci-iproc.c                     |   33 ++++++++++++++++++--
- 4 files changed, 39 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/hsi/nokia-modem.txt        | 12 ++--
+ arch/arm/boot/dts/omap3-n9.dts                     |  4 ++
+ arch/arm/boot/dts/omap3-n950-n9.dtsi               | 64 ++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-n950.dts                   |  4 ++
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c         | 13 +++--
+ drivers/hsi/clients/nokia-modem.c                  |  2 +
+ drivers/hsi/clients/ssi_protocol.c                 | 16 ++----
+ 7 files changed, 93 insertions(+), 22 deletions(-)
 
 -- 
-1.7.9.5
+2.7.0.rc3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
