@@ -1,47 +1,118 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: chipidea: add CI_HDRC_TURN_VBUS_EARLY_ON for
- imx23
-Date: Mon, 18 Jan 2016 10:07:14 +0800
-Message-ID: <20160118020713.GA8150@shlinux2>
-References: <1451407269-14905-1-git-send-email-stefan.wahren@i2se.com>
- <245634301.105525.a366f7cd-6533-4e6a-9506-5cc94a8288bd.open-xchange@email.1und1.de>
+From: Qiang Zhao <qiang.zhao@nxp.com>
+Subject: RE: [PATCH 3/6] QE: Add uqe_serial document to bindings
+Date: Mon, 18 Jan 2016 03:28:37 +0000
+Message-ID: <AM3PR04MB11853658AFD54DFEB49EC3B791C00@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+ <1452219494-31947-3-git-send-email-qiang.zhao@nxp.com>
+ <20160108201225.GA9813@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <245634301.105525.a366f7cd-6533-4e6a-9506-5cc94a8288bd.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "Priyanka.Jain@freescale.com" <Priyanka.Jain@freescale.com>, "oss@buserror.net" <oss@buserror.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 07:56:31PM +0100, Stefan Wahren wrote:
-> Hi Peter,
+Hi Rob,
+
+Please, is there any update regarding of my question?
+Thank you!
+
+Best Regards
+Zhao Qiang
+
+> -----Original Message-----
+> From: Qiang Zhao
+> Sent: Monday, January 11, 2016 4:19 PM
+> To: 'Rob Herring' <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linuxppc-
+> dev@lists.ozlabs.org; Priyanka.Jain@freescale.com; oss@buserror.net
+> Subject: RE: [PATCH 3/6] QE: Add uqe_serial document to bindings
 > 
-> > Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 29. Dezember 2015 um 17:41
-> > geschrieben:
+> On Fri, Jan 09, 2016 at 04:12AM, Rob Herring <robh@kernel.org> wrote:
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Saturday, January 09, 2016 4:12 AM
+> > To: Qiang Zhao <qiang.zhao@nxp.com>
+> > Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linuxppc- dev@lists.ozlabs.org; Priyanka.Jain@freescale.com;
+> > oss@buserror.net
+> > Subject: Re: [PATCH 3/6] QE: Add uqe_serial document to bindings
 > >
+> > On Fri, Jan 08, 2016 at 10:18:11AM +0800, Zhao Qiang wrote:
+> > > Add uqe_serial document to
+> > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > >
+> > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> > > ---
+> > >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt       | 20
+> > ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.tx
+> > > t
+> > > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.tx
+> > > t
+> > > new file mode 100644
+> > > index 0000000..e677599
+> > > --- /dev/null
+> > > +++
+> b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
+> > > +++ txt
+> > > @@ -0,0 +1,20 @@
+> > > +* Serial
+> > > +
+> > > +Currently defined compatibles:
+> > > +- ucc_uart
+> > > +
+> > > +Properties for ucc_uart:
+> > > +device_type : which type the device is
 > >
-> > Until now the imx23 uses the imx27 platform flag. But the
-> > imx23 needs the flag CI_HDRC_TURN_VBUS_EARLY_ON, too. So
-> > fix this by adding a separate platform flag.
-> >
-> > Suggested-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> > ---
-> > drivers/usb/chipidea/ci_hdrc_imx.c | 6 ++++++
-> > 1 file changed, 6 insertions(+)
-> >
+> > Drop this please.
 > 
-> is the series okay?
-
-Yes, it is ok, already at my patch queue
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yes, I will drop it in next version.
+> 
+> >
+> > > +port-number : port number of UCC-UART
+> >
+> > Use aliases instead.
+> 
+> I don't understand, can you explain more?
+> 
+> >
+> > > +rx-clock-name : which clock QE use for RX tx-clock-name : which
+> > > +clock QE use for TX
+> >
+> > These should use the clock binding.
+> 
+> This property means which clock source the UCC use, the QE just use this
+> property to route UCC clock to clock source.
+> The clock source maybe either internal or outside(from clock input pin).
+> So clock binding is not apply in this case.
+> 
+> >
+> > > +
+> > > +Example:
+> > > +
+> > > +	serial: ucc@2200 {
+> > > +		device_type = "serial";
+> > > +		compatible = "ucc_uart";
+> > > +		port-number = <1>;
+> > > +		rx-clock-name = "brg2";
+> > > +		tx-clock-name = "brg2";
+> > > +	};
+> > > --
+> > > 2.1.0.27.g96db324
+> > >
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > > in the body of a message to majordomo@vger.kernel.org More
+> majordomo
+> > > info at  http://vger.kernel.org/majordomo-info.html
+> Best Regards
+> Zhao Qiang
