@@ -1,52 +1,87 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v3 4/4] PCI: rcar: add device tree support for r8a7793
-Date: Mon, 18 Jan 2016 14:09:45 +0900
-Message-ID: <1453093785-21067-5-git-send-email-horms+renesas@verge.net.au>
-References: <1453093785-21067-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1453093785-21067-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Yao Yuan <yao.yuan@nxp.com>
+Subject: RE: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
+ compatible string
+Date: Mon, 18 Jan 2016 06:43:18 +0000
+Message-ID: <AM2PR04MB07222950482F090A9448115E89C00@AM2PR04MB0722.eurprd04.prod.outlook.com>
+References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
+ <20151229183501.GH12450@rob-hp-laptop>
+ <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
+ <AM2PR04MB07220B81AE758762CB6B13D489CA0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <CAL_Jsq+FVonqh8EbY4FFqHzxGZ_kDWGoC2jKNiGioEV96FXD+w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+FVonqh8EbY4FFqHzxGZ_kDWGoC2jKNiGioEV96FXD+w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Simply document new compatibility string.
-As a previous patch adds a generic R-Car Gen2 compatibility string
-there appears to be no need for a driver updates.
-
-By documenting this compat sting it may be used in DTSs shipped, for
-example as part of ROMs. It must be used in conjunction with the Gen2
-fallback compat string. At this time there are no known differences between
-the r8a7793 IP block and that implemented by the driver for the Gen2
-fallback compat string. Thus there is no need to update the driver as the
-use of the Gen2 fallback compat string will activate the correct code in
-the current driver while leaving the option for r8a7793-specific driver
-code to be activated in an updated driver should the need arise.
-
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Rob Herring <robh@kernel.org>
-
----
-* The r8a7792 is omitted from this change as the hardware in question
-  does not appear to be present on that SoC.
-
-v3
-* Enhance changelog to explain why this is useful
----
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-index 6b4d2f798386..d529530b27d2 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -4,6 +4,7 @@ Required properties:
- compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
- 	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
- 	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
-+	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
- 
- 	    When compatible with the generic version, nodes must list the
--- 
-2.1.4
+T24gV2VkLCBKYW4gMTMsIDIwMTYgYXQgMDY6MTMgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBNb24sIEphbiAxMSwgMjAxNiBhdCAxMDozNiBQTSwgWWFvIFl1YW4gPHlhby55dWFuQG54cC5j
+b20+IHdyb3RlOg0KPiA+IE9uIFRodSwgRGVjIDMxLCAyMDE1IGF0IDEwOjM1UE0sIFlhbyBZdWFu
+IDx5YW8ueXVhbkBueHAuY29tPiB3cm90ZToNCj4gPj4gT24gV2VkLCBEZWMgMzAsIDIwMTUgYXQg
+MTE6MjAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+PiA+IE9uIFR1ZSwgRGVjIDI5LCAyMDE1
+IGF0IDk6MTcgUE0sIFlhbyBZdWFuIDx5YW8ueXVhbkBueHAuY29tPiB3cm90ZToNCj4gPj4gPiA+
+IEhpIFJvYiwNCj4gPj4gPiA+DQo+ID4+ID4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KPiA+
+PiA+ID4gU28geW91IG1lYW4gdGhhdCBJIHNob3VsZCBhZGQgdGhlIGNvbW1pdCBtZXNzYWdlIGZv
+ciB3aHkgSSBhZGQNCj4gPj4gPiA+IHRoaXMgbmV3DQo+ID4+ID4gY29tcGF0aWJsZT8NCj4gPj4g
+Pg0KPiA+PiA+IFBsZWFzZSBkb24ndCB0b3AgcG9zdCBvbiB0aGUgbGlzdHMuDQo+ID4+ID4NCj4g
+Pj4gPiBObywgdGhlIGJpbmRpbmcgZG9jIHNob3VsZCBleHBsYWluIHdoYXQgYXJlIHZhbGlkIGNv
+bWJpbmF0aW9ucyBvZg0KPiA+PiA+IGNvbXBhdGlibGUgc3RyaW5ncyBhbmQgdGhlIG9yZGVyIHdo
+ZW4gdGhlIGR0cyBjYW4gaGF2ZSBtdWx0aXBsZQ0KPiA+PiA+IHN0cmluZ3MuIEZvciBleGFtcGxl
+LCBpcyB0aGlzIHZhbGlkOg0KPiA+PiA+DQo+ID4+ID4gY29tcGF0aWJsZSA9ICJmc2wsdmY2MTAt
+ZHNwaSIsICJmc2wsbHMyMDgwYS1kc3BpIjsNCj4gPj4gPg0KPiA+PiA+IEluIG90aGVyIHdvcmRz
+LCBJIHNob3VsZCBiZSBhYmxlIHRvIGNoZWNrIGEgZHRzIGZpbGUgYWdhaW5zdCB3aGF0DQo+ID4+
+ID4gdGhlIGJpbmRpbmcgZG9jIHNheXMuDQo+ID4+ID4NCj4gPj4gPiBSb2INCj4gPj4NCj4gPj4g
+T0ssIEkgZ290IGl0Lg0KPiA+PiBUaGUgImZzbCx2ZjYxMC1kc3BpIiwgImZzbCxsczEwMjFhLXYx
+LjAtZHNwaSIsICJmc2wsbHMyMDg1YS1kc3BpIiBpcw0KPiA+PiB2YWxpZCBhbmQgdXNlZCBpbiBk
+cml2ZXIuDQo+ID4+IEJ1dCAiZnNsLGxzMjA4MGEtZHNwaSIgaXMganVzdCB1c2VkIGZvciBwbGF0
+Zm9ybSBmbGFnLg0KPiA+PiBDb3VsZCB5b3UgaGVscCB0byBnaXZlIGFuIGV4YW1wbGUgdGhhdCBo
+b3cgY2FuIEkgZXhwbGFpbiBpdCBpbiBEb2N1bWVudHM/DQo+ID4+IE9yIHNob3VsZCBJIG5vdCB3
+cml0ZSB0aGlzIGNvbXBhdGlibGUgaW4gRG9jdW1lbnQuDQo+ID4+DQo+ID4+IEkgZmluZCB0aGF0
+IG1hbnkgY29tcGF0aWJsZSBzdHJpbmdzIGxpa2UgdGhpcyAobm90IHZhbGlkIGp1c3QgYQ0KPiA+
+PiBwbGF0Zm9ybSBmbGFnKSBmb3Igb3RoZXIgZHJpdmVyIGFyZSBub3QgcmVjb3JkIGluIGRvY3Vt
+ZW50Lg0KPiANCj4gV2VsbCwgdGhpbmdzIHNuZWFrIGluIHdpdGhvdXQgZ2V0dGluZyBkb2N1bWVu
+dGVkLiBBbHNvLCBsb3RzIG9mIFBQQyBiaW5kaW5ncw0KPiBwcmVkYXRlIG91ciBkb2N1bWVudGF0
+aW9uIHJlcXVpcmVtZW50Lg0KPiANCj4gPj4NCj4gPj4gVGhhbmtzLg0KPiA+Pg0KPiA+PiBZdWFu
+IFlhbw0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+IEhvdyBhYm91dCBsaWtlIHRoaXM6DQo+ID4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZnNsLXF1YWRz
+cGkudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2ZzbC1x
+dWFkc3BpLnR4dA0KPiA+IGluZGV4IDAwYzU4N2IuLjdhOWE1MjMgMTAwNjQ0DQo+ID4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9mc2wtcXVhZHNwaS50eHQNCj4g
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2ZzbC1xdWFkc3Bp
+LnR4dA0KPiA+IEBAIC00LDYgKzQsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgIC0g
+Y29tcGF0aWJsZSA6IFNob3VsZCBiZSAiZnNsLHZmNjEwLXFzcGkiLCAiZnNsLGlteDZzeC1xc3Bp
+IiwNCj4gPiAgICAgICAgICAgICAgICAgICJmc2wsaW14N2QtcXNwaSIsICJmc2wsaW14NnVsLXFz
+cGkiLA0KPiA+ICAgICAgICAgICAgICAgICAgImZzbCxsczEwMjEtcXNwaSINCj4gPiArICAgICAg
+IEludmFsaWQgY29tcGF0aWJsZSBqdXN0IGZvciBTT0MgZmxhZzoNCj4gPiArICAgICAgICAgICAg
+ICAgImZzbCxsczIwODBhLXFzcGkiDQo+IA0KPiBUaGlzIGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBt
+ZS4gVHlwaWNhbGx5LCB3ZSBzZWUgc29tZXRoaW5nIGxpa2U6DQo+IA0KPiBTaG91bGQgYmUgb25l
+IG9mOg0KPiAgICJ2ZW5kb3Isc29jMS1kZXZpY2UiDQo+ICAgInZlbmRvcixzb2MyLWRldmljZSIN
+Cj4gRm9sbG93ZWQgYnkgInZlbmRvcixzb2MwLWRldmljZSINCj4gDQo+IFNvbWV0aW1lIHRoZSBs
+YXN0IGVudHJ5IGlzIGEgZ2VuZXJpYyBzdHJpbmcuIEhlcmUgc29jMCBpcyB0aGUgZmlyc3QgU09D
+IHdpdGggdGhlDQo+IGJsb2NrLiBMYXRlciBTT0NzIGhhdmUgInRoZSBzYW1lIiBibG9jaywgYnV0
+IG5ldyBjb21wYXRpYmxlIHN0cmluZ3MgaW4gYWRkaXRpb24NCj4gaW4gY2FzZSBhbnkgY2hhbmdl
+cyBvciBlcnJhdGEgYXJlIGZvdW5kIHRoYXQgdGhlIGRyaXZlciBuZWVkcyB0byBkZWFsIHdpdGgu
+DQo+IA0KDQpIaSBSb2IsDQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLA0KU28gaG93IGFi
+b3V0IGxpa2UgdGhpczoNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvZnNsLXF1YWRzcGkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbXRkL2ZzbC1xdWFkc3BpLnR4dA0KQEAgLTIsNyArMiwxMCBAQA0KDQogUmVxdWlyZWQgcHJv
+cGVydGllczoNCiAgIC0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAiZnNsLHZmNjEwLXFzcGkiLCAi
+ZnNsLGlteDZzeC1xc3BpIiwNCi0gICAgICAgICAgICAgICAgImZzbCxpbXg3ZC1xc3BpIiwgImZz
+bCxpbXg2dWwtcXNwaSINCisgICAgICAgICAgICAgICAgImZzbCxpbXg3ZC1xc3BpIiwgImZzbCxp
+bXg2dWwtcXNwaSIsDQorICAgICAgICAgICAgICAgICJmc2wsbHMxMDIxYS1xc3BpIiwNCisgICAg
+ICAgICAgICAgICAgT3INCisgICAgICAgICAgICAgICAgImZzbCxsczIwODBhLXFzcGkiIGZvbGxv
+d2VkIGJ5ICJmc2wsbHMxMDIxYS1xc3BpIiwNCg0KQnV0IGlmIHdlIGFkZCBhZGRpdGlvbiBpbmZv
+cm1hdGlvbiBpbiBiaW5naW5nIGRvY3VtZW50cywgb25jZSBhbnkgY2hhbmdlcyBvciBlcnJhdGEg
+YXJlIGZvdW5kIHRoYXQgdGhlIGRyaXZlciBuZWVkcyB0byBkZWFsIChzdWNoIGFzICJ2ZW5kb3Is
+c29jMS1kZXZpY2UiKSwgdGhlIGJpbmdpbmcgZG9jdW1lbnQgc2hvdWxkIGFsc28gYmUgdXBkYXRl
+LiANCkJlY2F1c2UgYXQgdGhhdCB0aW1lIHRoZSBkcml2ZXIgc2hvdWxkIGFsc28gbWF0Y2ggInZl
+bmRvcixzb2MxLWRldmljZSINClNvIGF0IHRoYXQgdGltZSB3ZSBjYW4ndCBzYXkgInZlbmRvcixz
+b2MxLWRldmljZSJzaG91bGQgZm9sbG93ZWQgYnkgInZlbmRvcixzb2MwLWRldmljZSINCg0KSXQg
+c2VlbXMgdGhlIG9ubHkgYmVuZWZpdCB0aGF0IG1heSBrZWVwIHRoZSBkdHMgbm8gY2hhbmdlcy4N
+Cg0KVGhhbmtzLg0KWWFvDQo=
