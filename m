@@ -1,166 +1,44 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH v2 14/16] Xen: EFI: Parse DT parameters for
- Xen specific UEFI
-Date: Mon, 18 Jan 2016 15:41:03 +0000
-Message-ID: <alpine.DEB.2.02.1601181533010.16178@kaball.uk.xensource.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
- <1452840929-19612-15-git-send-email-zhaoshenglong@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452840929-19612-15-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org
+From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt/bindings: Add bindings documentation for TI ADS117x ADC
+Date: Mon, 18 Jan 2016 17:04:51 +0100
+Message-ID: <1453133092-29521-2-git-send-email-florian.vaussard@heig-vd.ch>
+References: <1453133092-29521-1-git-send-email-florian.vaussard@heig-vd.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453133092-29521-1-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janusz Krzysztofik <jkrzyszt-NCk8gXQAEuFz6jiHbVrK7g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC'ing Matt Fleming
+Currently the binding is only made of the compatible string.
 
-On Fri, 15 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Add a new function to parse DT parameters for Xen specific UEFI just
-> like the way for normal UEFI. Then it could reuse the existing codes.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/ti,ads117x.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,ads117x.txt
 
-Please CC the maintainers, use ./scripts/get_maintainer.pl to find out
-who they are.
+diff --git a/Documentation/devicetree/bindings/sound/ti,ads117x.txt b/Documentation/devicetree/bindings/sound/ti,ads117x.txt
+new file mode 100644
+index 0000000..c1c2741
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ti,ads117x.txt
+@@ -0,0 +1,11 @@
++Texas Intstruments ADS117x ADC
++
++Required properties:
++
++  - compatible : "ti,ads117x"
++
++Example:
++
++ads1178 {
++	compatible = "ti,ads117x";
++};
+-- 
+2.1.0
 
-
->  drivers/firmware/efi/efi.c | 45 ++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 38 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 027ca21..2dbc2ac 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of_fdt.h>
->  #include <linux/io.h>
->  #include <linux/platform_device.h>
-> +#include <xen/xen.h>
->  
->  struct efi __read_mostly efi = {
->  	.mps			= EFI_INVALID_TABLE_ADDR,
-> @@ -498,12 +499,14 @@ device_initcall(efi_load_efivars);
->  		FIELD_SIZEOF(struct efi_fdt_params, field) \
->  	}
->  
-> -static __initdata struct {
-> +struct params {
->  	const char name[32];
->  	const char propname[32];
->  	int offset;
->  	int size;
-> -} dt_params[] = {
-> +};
-> +
-> +static struct params fdt_params[] __initdata = {
->  	UEFI_PARAM("System Table", "linux,uefi-system-table", system_table),
->  	UEFI_PARAM("MemMap Address", "linux,uefi-mmap-start", mmap),
->  	UEFI_PARAM("MemMap Size", "linux,uefi-mmap-size", mmap_size),
-> @@ -511,6 +514,14 @@ static __initdata struct {
->  	UEFI_PARAM("MemMap Desc. Version", "linux,uefi-mmap-desc-ver", desc_ver)
->  };
->  
-> +static struct params xen_fdt_params[] __initdata = {
-> +	UEFI_PARAM("System Table", "xen,uefi-system-table", system_table),
-> +	UEFI_PARAM("MemMap Address", "xen,uefi-mmap-start", mmap),
-> +	UEFI_PARAM("MemMap Size", "xen,uefi-mmap-size", mmap_size),
-> +	UEFI_PARAM("MemMap Desc. Size", "xen,uefi-mmap-desc-size", desc_size),
-> +	UEFI_PARAM("MemMap Desc. Version", "xen,uefi-mmap-desc-ver", desc_ver)
-> +};
-> +
->  struct param_info {
->  	int found;
->  	void *params;
-> @@ -520,15 +531,28 @@ static int __init fdt_find_uefi_params(unsigned long node, const char *uname,
->  				       int depth, void *data)
->  {
->  	struct param_info *info = data;
-> +	struct params *dt_params;
-> +	unsigned int size;
->  	const void *prop;
->  	void *dest;
->  	u64 val;
->  	int i, len;
->  
-> -	if (depth != 1 || strcmp(uname, "chosen") != 0)
-> -		return 0;
-> +	if (efi_enabled(EFI_PARAVIRT)) {
-> +		if (depth != 2 || strcmp(uname, "uefi") != 0)
-
-You are already introducing this check in the previous patch when
-setting EFI_PARAVIRT, why do this again now?  But if we need to do this
-check again, then, like Mark suggested, it should be done against the
-full path.
-
-Also you added below to efi_get_fdt_params:
-
-	if (efi_enabled(EFI_PARAVIRT))
-		dt_params = xen_fdt_params;
-	else
-		dt_params = fdt_params;
-
-efi_get_fdt_params is the sole caller of fdt_find_uefi_params: it makes
-sense to set dt_params only once, then pass it to fdt_find_uefi_params
-as parameter.
-
-
-> +			return 0;
->  
-> -	for (i = 0; i < ARRAY_SIZE(dt_params); i++) {
-> +		dt_params = xen_fdt_params;
-> +		size = ARRAY_SIZE(xen_fdt_params);
-> +	} else {
-> +		if (depth != 1 || strcmp(uname, "chosen") != 0)
-> +			return 0;
-> +
-> +		dt_params = fdt_params;
-> +		size = ARRAY_SIZE(fdt_params);
-> +	}
-> +
-> +	for (i = 0; i < size; i++) {
->  		prop = of_get_flat_dt_prop(node, dt_params[i].propname, &len);
->  		if (!prop)
->  			return 0;
-> @@ -552,6 +576,7 @@ static int __init fdt_find_uefi_params(unsigned long node, const char *uname,
->  int __init efi_get_fdt_params(struct efi_fdt_params *params)
->  {
->  	struct param_info info;
-> +	struct params *dt_params;
->  	int ret;
->  
->  	pr_info("Getting EFI parameters from FDT:\n");
-> @@ -559,12 +584,18 @@ int __init efi_get_fdt_params(struct efi_fdt_params *params)
->  	info.found = 0;
->  	info.params = params;
->  
-> +	if (efi_enabled(EFI_PARAVIRT))
-> +		dt_params = xen_fdt_params;
-> +	else
-> +		dt_params = fdt_params;
-> +
->  	ret = of_scan_flat_dt(fdt_find_uefi_params, &info);
-> -	if (!info.found)
-> +	if (!info.found) {
->  		pr_info("UEFI not found.\n");
-> -	else if (!ret)
-> +	} else if (!ret) {
->  		pr_err("Can't find '%s' in device tree!\n",
->  		       dt_params[info.found].name);
-> +	}
->  
->  	return ret;
->  }
-> -- 
-> 2.0.4
-> 
-> 
-> 
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
-> http://lists.xen.org/xen-devel
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
