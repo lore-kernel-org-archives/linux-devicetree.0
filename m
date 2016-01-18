@@ -1,91 +1,75 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH v2 07/16] Xen: ARM: Add support for mapping
- AMBA device mmio
-Date: Mon, 18 Jan 2016 11:58:48 +0000
-Message-ID: <alpine.DEB.2.02.1601181158210.16178@kaball.uk.xensource.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
- <1452840929-19612-8-git-send-email-zhaoshenglong@huawei.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
+ series RTC IP
+Date: Mon, 18 Jan 2016 17:31:43 +0530
+Message-ID: <569CD427.3090106@nvidia.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-6-git-send-email-ldewangan@nvidia.com> <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com> <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com> <5696665A.5030508@nvidia.com> <5696F0C4.1060904@samsung.com> <5696F7F8.108@samsung.com> <56978BA1.9050409@nvidia.com> <CABxcv=kqQc1DNmMJ1PAQkB7d=w9V4-85kJXtOXRPpwpXn7to8A@mail.gmail.com> <569C699F.10407@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452840929-19612-8-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <569C699F.10407@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux GPIO List <linux-gpio@vger.kernel.org>, rtc-linux@googlegroups.com, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Add a bus_notifier for AMBA bus device in order to map the device
-> mmio regions when DOM0 booting with ACPI.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+On Monday 18 January 2016 09:57 AM, Krzysztof Kozlowski wrote:
+> On 15.01.2016 10:50, Javier Martinez Canillas wrote:
+>> Hello,
+>>
+>> On Thu, Jan 14, 2016 at 8:50 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>>> On Thursday 14 January 2016 06:50 AM, Krzysztof Kozlowski wrote:
+>>>> On 14.01.2016 09:50, Krzysztof Kozlowski wrote:
+>> [snip]
+>>
+>>>>> The max77802 does exactly the same (BTW, these should be merged as
+>>>>> well... I'll add this to the TODO list) so I think this is necessary.
+>>>> How about merging max77802 to max77686 first? The only differences I
+>>>> found are:
+>>>> 1. It uses main MFD/PMIC regmap.
+>>>>      This can be solved as part of decoupling code. The driver will get
+>>>> MFD's regmap and set up its own (only on max77686). The max77802 will
+>>>> only use parent's regmap.
+>>>>
+>>>> 2. It has different register address.
+>>>>      We need a register-layout/configuration structure. The logic is the
+>>>> same except few differences (e.g. presence of MAX77802_RTC_AE1).
+>>>>
+>>>> It may be easier to merge them now, before adding support for max77620?
+>> Agreed.
+>>
+>> When I originally posted the max77802 support, I had separate MFD,
+>> RTC, regulator and clock drivers and the feedback (IIRC) was that the
+>> MFD and clock blocks were too similar to the max77686 so I extended
+>> those drivers instead of adding new ones. But that the RTC and
+>> regulator blocks were different so a separate driver was justified...
+>> but it's true that are not that different and rtc-max77686 could be
+>> extended and rtc-max77802 removed.
+> Great!
+>
+>> In fact, the ChromiumOS vendor tree has a single RTC driver for both
+>> max77686 and max77802:
+>>
+>> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/rtc/rtc-max77xxx.c
+>>
+>>>> I could handle this probably next week or in the following week
+>>>> (assuming someone would test max77802 because I don't have the hardware).
+>>>>
+>> I could also work on this next week if you want. After all I feel
+>> guilty for the code duplication :-)
+> So feel free to take that job from me. :) I will happily do the testing
+> and provide complains (I mean, comments).
+>
 
+Hi Javier,
+If you can provide the patch for moving MAX77802 to MAX77686 then I can 
+create the other change to move the regmap and i2c dummy client for rtc 
+of max77686 to rtc driver from core on top of your change. This will  
+completely decouple the rtc driver from core and so will be easy to use 
+for other chip MAX77620.
 
->  drivers/xen/arm-device.c | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/drivers/xen/arm-device.c b/drivers/xen/arm-device.c
-> index 7d902ea..9978f8d 100644
-> --- a/drivers/xen/arm-device.c
-> +++ b/drivers/xen/arm-device.c
-> @@ -138,3 +138,46 @@ static int __init register_xen_platform_notifier(void)
->  }
->  
->  arch_initcall(register_xen_platform_notifier);
-> +
-> +#ifdef CONFIG_ARM_AMBA
-> +#include <linux/amba/bus.h>
-> +
-> +static int xen_amba_notifier(struct notifier_block *nb,
-> +			     unsigned long action, void *data)
-> +{
-> +	struct amba_device *adev = to_amba_device(data);
-> +	int r = 0;
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		r = xen_map_device_mmio(&adev->res, 1);
-> +		break;
-> +	case BUS_NOTIFY_DEL_DEVICE:
-> +		r = xen_unmap_device_mmio(&adev->res, 1);
-> +		break;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> +	if (r)
-> +		dev_err(&adev->dev, "AMBA: Failed to %s device %s MMIO!\n",
-> +			action == BUS_NOTIFY_ADD_DEVICE ? "map" :
-> +			(action == BUS_NOTIFY_DEL_DEVICE ? "unmap" : "?"),
-> +			adev->dev.init_name);
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block amba_device_nb = {
-> +	.notifier_call = xen_amba_notifier,
-> +};
-> +
-> +static int __init register_xen_amba_notifier(void)
-> +{
-> +	if (!xen_initial_domain() || acpi_disabled)
-> +		return 0;
-> +
-> +	return bus_register_notifier(&amba_bustype, &amba_device_nb);
-> +}
-> +
-> +arch_initcall(register_xen_amba_notifier);
-> +#endif
-> -- 
-> 2.0.4
-> 
-> 
-> 
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
-> http://lists.xen.org/xen-devel
-> 
+Thanks,
+Laxman
+
