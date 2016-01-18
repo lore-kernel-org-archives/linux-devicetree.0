@@ -1,56 +1,45 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Mon, 18 Jan 2016 15:13:09 +0800
-Message-ID: <20160118071309.GC8150@shlinux2>
-References: <1452877630.6067.97.camel@pengutronix.de>
- <Pine.LNX.4.44L0.1601151220020.1533-100000@iolanthe.rowland.org>
+From: Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+Date: Mon, 18 Jan 2016 07:23:27 +0000
+Message-ID: <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
+References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+ <20160114164418.GD19773@lunn.ch>
+ <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+ <56997951.90304@gmail.com> <5699B211.5070602@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1601151220020.1533-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5699B211.5070602-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 12:30:41PM -0500, Alan Stern wrote:
-> On Fri, 15 Jan 2016, Philipp Zabel wrote:
-> 
-> > > +- reg: the port number which this device is connecting to.
-> > 
-> > Should it be noted here that the port number range is 1-255?
-> 
-> Actually the range is 1 - 31 (defined by USB_MAXCHILDREN set in 
-> include/uapi/linux/usb/ch11.h).
-> 
-> > > @@ -502,11 +503,14 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
-> > >  	dev->connect_time = jiffies;
-> > >  	dev->active_duration = -jiffies;
-> > >  #endif
-> > > -	if (root_hub)	/* Root hub always ok [and always wired] */
-> > > +	if (root_hub) {	/* Root hub always ok [and always wired] */
-> > >  		dev->authorized = 1;
-> > > -	else {
-> > > +		dev->of_node = bus->controller->of_node;
-> > 
-> > Why can't the root_hub reuse dev->dev.of_node?
-> 
-> Indeed, there's no need to add an .of_node field to struct usb_device, 
-> since the embedded struct device already contains an .of_node field.
-> 
-
-No, the usb_device needs the .of_node field.
-
-The devices belong to platform bus contains device node.
-The devices (usb device) belong to USB bus which are created
-dynamically do not contain device node.
-
--- 
-
-Best Regards,
-Peter Chen
+PiA+IElmIHlvdSBsb29rIGF0IHRoZSBsaXN0IG9mIHBvc3NpYmxlIHZhbHVlcyBmb3IgInBoeS1t
+b2RlIiB5b3UnZCBzZWUNCj4gPiB0aGF0IG5vbmUgb2YgaXQgZGVzY3JpYmVzIGEgUEhZLXRvLVBI
+WSBjb25uZWN0aW9uIGJ1dCBhbGwgYXJlIGZvcg0KPiA+IE1BQy10by1QSFkgY29ubmVjdGlvbnMu
+IEFsc28sIG5hbWVzIGFib3ZlIHN1Z2dlc3QgaXQgYWxyZWFkeTogTUlJIGlzDQo+ID4gc2hvcnQg
+Zm9yIG1lZGlhIF9pbmRlcGVuZGVudF8gaW50ZXJmYWNlLg0KPiA+DQo+ID4gSSBjb3B5IEFuZHJl
+dydzIGNvbmNlcm5zIGFuZCB0aGluayB0aGF0IG5laXRoZXIgMTAwMDBiYXNlLWt4IG5vcg0KPiA+
+IDEwZ2Jhc2Uta3IgYmVsb25nIGluIHRoZSBsaXN0IG9mIHBoeS1tb2RlIHByb3BlcnRpZXMuDQo+
+IA0KPiBJIGNvbmN1ciB3aXRoIHRoYXQgYXMgd2VsbCwgaWYgdGhlIHBoeSBjb25uZWN0aW9uIGRv
+ZXMgbm90IHJlYWxseSBtYXR0ZXIgaGVyZSwNCj4gb3IgZG9lcyBub3Qgc2VlbSBsaWtlIGEgZ29v
+ZCBmaXQsIG1heWJlIHdlIHNob3VsZCBoYXZlIGEgZGlmZmVyZW50IHByb3BlcnR5LCBvcg0KPiBq
+dXN0IGRlZmluZSB0aGUgaGFyZHdhcmUgaW50ZXJmYWNlIGEgbGl0dGxlIGRpZmZlcmVudGx5Pw0K
+UmlnaHQsICdwaHktbW9kZScgaXMgbm90IGEgZ29vZCBmaXQgZm9yIGJhY2twbGFuZXMsIGhvdyBh
+Ym91dCBhIG5ldyBwcm9wZXJ0eSBsaWtlDQonYmFja3BsYW5lLW1vZGUnIG9yIHNvbWV0aGluZywg
+bGlrZSBiZWxvdzoNCg0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25l
+dC9waHkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3Bo
+eS50eHQNCkBAIC0zMyw2ICszMyw5IEBAIE9wdGlvbmFsIFByb3BlcnRpZXM6DQogLSBicm9rZW4t
+dHVybi1hcm91bmQ6IElmIHNldCwgaW5kaWNhdGVzIHRoZSBQSFkgZGV2aWNlIGRvZXMgbm90IGNv
+cnJlY3RseQ0KICAgcmVsZWFzZSB0aGUgdHVybiBhcm91bmQgbGluZSBsb3cgYXQgdGhlIGVuZCBv
+ZiBhIE1ESU8gdHJhbnNhY3Rpb24uDQogDQorLSBiYWNrcGxhbmUtbW9kZTogc3RyaW5nLCBvcGVy
+YXRpb24gbW9kZSBvZiB0aGUgYmFja3BsYW5lIFBIWTsNCisgIG11c3QgYmUgIjEwMDBiYXNlLWt4
+IiBmb3IgMTAwMEJBU0UtS1gsIG9yICIxMGdiYXNlLWtyIiBmb3IgMTBHQkFTRS1LUi4NCisNCiBF
+eGFtcGxlOg0KIA0KIGV0aGVybmV0LXBoeUAwIHsNCg0KVGhhbmsgeW91IQ0KDQpTaGFvaHVpDQo=
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
