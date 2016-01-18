@@ -1,118 +1,50 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
- bindings for DECON-TV
-Date: Mon, 18 Jan 2016 18:54:44 +0900
-Message-ID: <569CB664.3090806@samsung.com>
-References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
- <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
- <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
- <569C279D.1020705@samsung.com>
+From: Qiang Zhao <qiang.zhao@nxp.com>
+Subject: RE: [PATCH 3/6] QE: Add uqe_serial document to bindings
+Date: Mon, 18 Jan 2016 09:24:34 +0000
+Message-ID: <AM3PR04MB11851EDA91BA3C1D7386BC8D91C00@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+ <1452219494-31947-3-git-send-email-qiang.zhao@nxp.com>
+ <CADRPPNS3qT+=zz60UKRSYwxpaphcE7e04SntOQ==RjoOfhQ68Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <569C279D.1020705@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CADRPPNS3qT+=zz60UKRSYwxpaphcE7e04SntOQ==RjoOfhQ68Q@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Li Yang <leoli@freescale.com>
+Cc: "oss@buserror.net" <oss@buserror.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, "Priyanka.Jain@freescale.com" <Priyanka.Jain@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-2016=EB=85=84 01=EC=9B=94 18=EC=9D=BC 08:45=EC=97=90 Krzysztof Kozlowsk=
-i =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
-> On 14.01.2016 19:49, Inki Dae wrote:
->> + Rob Herring
->>
->> 2016=EB=85=84 01=EC=9B=94 14=EC=9D=BC 19:36=EC=97=90 Andrzej Hajda =EC=
-=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
->>> Hi Inki,
->>>
->>> It seems this patch and 04/10 did not get picked up yet.
->>> Could you merge it?
->>
->> Yes, I can. However, 04/10 is required for acked-by from dt or SoC m=
-aintainer.
->> Krzysztof and Rob, could you give me acked-by?
->>
->> Thanks,
->> Inki Dae
->=20
-> My ack is really not required, because this is a binding for a specif=
-ic
-> driver from video subsystem. It does not fall into the arm/mach-exyno=
-s
-> nor the dts/*exynos*.
->=20
-> Anyway I reviewed the patch on 28th of October and Rob acked it on 13=
-th
-> of November.
-
-I meant 04/10 not 09/10 patch. :)
-
-Thanks,
-Inki Dae
-
->=20
-> Best regards,
-> Krzysztof
->=20
->=20
->>>
->>> Regards
->>> Andrzej
->>>
->>> On 10/26/2015 12:59 PM, Andrzej Hajda wrote:
->>>> DECON-TV(Display and Enhancement Controller for TV) is a variation
->>>> of DECON IP. Its main purpose is to produce video stream for HDMI =
-IP.
->>>>
->>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->>>> ---
->>>> Hi Krzysztof,
->>>>
->>>> I have decided to skip cleanup part as it would require more work,
->>>> not related to this patchset.
->>>>
->>>> Regards
->>>> Andrzej
->>>>
->>>>  Documentation/devicetree/bindings/video/exynos5433-decon.txt | 3 =
-++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/video/exynos5433-de=
-con.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>>> index 3dff78b..c9fd7b3 100644
->>>> --- a/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>>> +++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
->>>> @@ -5,7 +5,8 @@ Exynos series of SoCs which transfers the image da=
-ta from a video memory
->>>>  buffer to an external LCD interface.
->>>> =20
->>>>  Required properties:
->>>> -- compatible: value should be "samsung,exynos5433-decon";
->>>> +- compatible: value should be one of:
->>>> +	"samsung,exynos5433-decon", "samsung,exynos5433-decon-tv";
->>>>  - reg: physical base address and length of the DECON registers se=
-t.
->>>>  - interrupts: should contain a list of all DECON IP block interru=
-pts in the
->>>>  	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-sam=
-sung-soc" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>>
->>
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
+T24gRnJpLCBKYW4gMTgsIDIwMTYgYXQgMDU6MTAgUE0sIExpIFlhbmcgPGxlb2xpQGZyZWVzY2Fs
+ZS5jb20+d3JvdGU6DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IHBrdS5s
+ZW9AZ21haWwuY29tIFttYWlsdG86cGt1Lmxlb0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBMaSBZ
+YW5nDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAxOCwgMjAxNiA1OjEwIFBNDQo+IFRvOiBRaWFu
+ZyBaaGFvIDxxaWFuZy56aGFvQG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbGttbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47DQo+IGxpbnV4cHBjLWRl
+diA8bGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc+OyBQcml5YW5rYS5KYWluQGZyZWVzY2Fs
+ZS5jb207DQo+IG9zc0BidXNlcnJvci5uZXQNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzZdIFFF
+OiBBZGQgdXFlX3NlcmlhbCBkb2N1bWVudCB0byBiaW5kaW5ncw0KPiANCj4gT24gRnJpLCBKYW4g
+OCwgMjAxNiBhdCAxMDoxOCBBTSwgWmhhbyBRaWFuZyA8cWlhbmcuemhhb0BueHAuY29tPiB3cm90
+ZToNCj4gPiBBZGQgdXFlX3NlcmlhbCBkb2N1bWVudCB0bw0KPiA+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvdXFlX3NlcmlhbC50eHQNCj4gDQo+
+IEFzIHlvdSBoYXZlIHN1Ym1pdHRlZCBwYXRjaCB0byBtb3ZlIFFFIGNvZGUgZnJvbSBhcmNoL3Bv
+d2VycGMgaW50bw0KPiBkcml2ZXJzL3NvYy9mc2wgZm9yIHRoZSByZXVzZSBvZiBBUk0gYW5kIHBv
+d2VycGMsICB5b3Ugc2hvdWxkIGFsc28gbW92ZSB0aGUNCj4gYmluZGluZyBkb2N1bWVudHMgb3V0
+IG9mIHRoZSBwb3dlcnBjIGZvbGRlciBpbnRvIGEgbW9yZSBjb21tb24gcGxhY2UgYW5kDQo+IGFk
+ZCBuZXcgYmluZGluZ3MgaW4gdGhlIG5ldyBsb2NhdGlvbi4NCg0KVGhhbmsgeW91IGZvciB5b3Vy
+IHJlY29tbWVuZGF0aW9uLiANCkhvdyBhYm91dCBjcmVhdGUgYSBuZXcgZGlyZWN0b3J5IG5hbWVk
+IHFlIHVuZGVyICJEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvIj8gDQpPciB5b3Ug
+aGF2ZSBhIGJldHRlciBzdWdnZXN0aW9uPw0KDQpSZWdhcmRzIA0KLVpoYW8gUWlhbmcNCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
+YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
