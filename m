@@ -1,46 +1,62 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Mon, 18 Jan 2016 11:39:06 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1601181129340.25155-100000@netrider.rowland.org>
-References: <20160118071309.GC8150@shlinux2>
+From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Subject: [PATCH v9 5/6] PCI: generic: Make pci-host-generic driver numa aware
+Date: Mon, 18 Jan 2016 22:06:04 +0530
+Message-ID: <1453134965-6125-6-git-send-email-gkulkarni@caviumnetworks.com>
+References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160118071309.GC8150@shlinux2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hoga
+Cc: gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jan 2016, Peter Chen wrote:
+update numa_node of device associated with pci bus.
+moved down devm_kzalloc to allocate from node memory.
 
-> > > Why can't the root_hub reuse dev->dev.of_node?
-> > 
-> > Indeed, there's no need to add an .of_node field to struct usb_device, 
-> > since the embedded struct device already contains an .of_node field.
-> > 
-> 
-> No, the usb_device needs the .of_node field.
+Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+---
+ drivers/pci/host/pci-host-generic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-It already _has_ an .of_node field, in its embedded struct device.
-
-> The devices belong to platform bus contains device node.
-> The devices (usb device) belong to USB bus which are created
-> dynamically do not contain device node.
-
-I don't know what you mean.  struct usb_device _does_ contain an 
-embedded struct device.  It doesn't matter the structures are created 
-dynamically, statically, or any other way; this field is part of the 
-structure definition.
-
-Suppose udev is a pointer to struct usb_device.  Then udev->dev is a
-struct device and udev->dev.of_node is a pointer to struct device_node.  
-You don't need to add a new udev->of_node field; just use
-udev->dev.of_node instead.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index 5434c90..0e1ce06 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -215,11 +215,9 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+-	struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
++	struct gen_pci *pci;
+ 	struct pci_bus *bus, *child;
+ 
+-	if (!pci)
+-		return -ENOMEM;
+ 
+ 	type = of_get_property(np, "device_type", NULL);
+ 	if (!type || strcmp(type, "pci")) {
+@@ -230,6 +228,11 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	of_pci_check_probe_only();
+ 
+ 	of_id = of_match_node(gen_pci_of_match, np);
++	set_dev_node(dev, of_node_to_nid(np));
++	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
++	if (!pci)
++		return -ENOMEM;
++
+ 	pci->cfg.ops = (struct gen_pci_cfg_bus_ops *)of_id->data;
+ 	pci->host.dev.parent = dev;
+ 	INIT_LIST_HEAD(&pci->host.windows);
+-- 
+1.8.1.4
