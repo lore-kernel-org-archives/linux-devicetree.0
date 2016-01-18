@@ -1,67 +1,111 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v12 0/18] Add Analogix Core Display Port Driver
-Date: Mon, 18 Jan 2016 18:48:38 +0800
-Message-ID: <569CC306.8030207@rock-chips.com>
-References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
- <2322926.s1viZ6tSS3@phil> <1670568.VBNHbJuGkf@phil>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 12/16] ARM: Xen: Document UEFI support on Xen ARM
+ virtual platforms
+Date: Mon, 18 Jan 2016 10:51:15 +0000
+Message-ID: <20160118105115.GD21067@leverpostej>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-13-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1670568.VBNHbJuGkf@phil>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452840929-19612-13-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpTb3JyeSBmb3IgdGhlIGRlbGF5IHJlcGx5IDspCgpPbiAwMS8xNy8yMDE2IDEw
-OjI1IFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBIaSBZYWtpciwKPgo+IEFtIE1pdHR3b2No
-LCAxMy4gSmFudWFyIDIwMTYsIDE1OjU5OjUxIHNjaHJpZWIgSGVpa28gU3R1ZWJuZXI6Cj4+IEFt
-IE1pdHR3b2NoLCAyMy4gRGV6ZW1iZXIgMjAxNSwgMjA6MjU6Mzggc2NocmllYiBZYWtpciBZYW5n
-Ogo+Pj4gICAgIFRoZSBTYW1zdW5nIEV4eW5vcyBlRFAgY29udHJvbGxlciBhbmQgUm9ja2NoaXAg
-UkszMjg4IGVEUCBjb250cm9sbGVyCj4+Pgo+Pj4gc2hhcmUgdGhlIHNhbWUgSVAsIHNvIGEgbG90
-IG9mIHBhcnRzIGNhbiBiZSByZS11c2VkLiBJIHNwbGl0IHRoZSBjb21tb24KPj4+IGNvZGUgaW50
-byBicmlkZ2UgZGlyZWN0b3J5LCB0aGVuIHJrMzI4OCBhbmQgZXh5bm9zIG9ubHkgbmVlZCB0byBr
-ZWVwCj4+PiBzb21lIHBsYXRmb3JtIGNvZGUuIENhdXNlIEkgY2FuJ3QgZmluZCB0aGUgZXhhY3Qg
-SVAgbmFtZSBvZiBleHlub3MgZHAKPj4+IGNvbnRyb2xsZXIsIHNvIEkgZGVjaWRlIHRvIG5hbWUg
-ZHAgY29yZSBkcml2ZXIgd2l0aCAiYW5hbG9naXgiIHdoaWNoIEkKPj4+IGZpbmQgaW4gcmszMjg4
-IGVEUCBUUk0KPj4gY291bGQgeW91IHJlYmFzZSB5b3VyIHBhdGNoZXMgb24gdG9wIG9mIERhdmUn
-cyBkcm0tbmV4dCBicmFuY2ggWzBdIHBsZWFzZT8KPj4gVGhlIGV4eW5vcyBwYXJ0IGdvdCBzb21l
-IGNvbnN0IGF0dHJpYnV0ZXMgZm9yIHRoZSAqX2Z1bmNfb3BzIHN0cnVjdHMgYW5kCj4+IGRybV9l
-bmNvZGVyX2luaXQgZ290IGFuIGFkZGl0aW9uYWwgcGFyYW1ldGVyLgpTdXJlCj4+IEknbSBzdGls
-bCBob3BpbmcgdGhhdCB3ZSBjYW4gZ2V0IHRoaXMgZmluYWxseSBjb21taXR0ZWQgb25jZSA0LjUt
-cmMxIGlzCj4+IHJlbGVhc2VkIGluIDEuNSB3ZWVrcyA6LSkgLgo+Pgo+PiBJIGRpZCB0cnkgdG8g
-bWVyZ2UgdGhpbmdzIHRvZ2V0aGVyIFsxXSwgdGhlIHN5c3RlbSBhdCBsZWFzdCBjb21lcyB1cCBh
-bmQKPj4gZGV0ZWN0cyB0aGUgcGFuZWwgKEVESUQgaXMgcmVhZCBjb3JyZWN0bHkgYW5kIGl0IHR1
-cm5zIHRoZSBiYWNrbGlnaHQgb24pCj4+IGJ1dCBJIGRvbid0IHNlZSBhbnkgb3V0cHV0IG9uIHRo
-ZSBkaXNwbGF5IC0gaGRtaSB3b3JrcyBmaW5lIHRob3VnaCBhbmQKPj4gWDExIGlzIGNsYWltaW5n
-IGV2ZXJ5dGhpbmcgdG8gYmUgZmluZSBpbiBib3RoIGNhc2VzLgpIbW1tLi4uLiBJIHdvdWxkIGRv
-dWJsZSBjaGVjayBpbiBteSBzaWRlLgo+PiBTbyBJIGRvbid0IGtub3cgeWV0IGlmIEkgbWFkZSBh
-IG1pc3Rha2Ugd2hlbiBwdXR0aW5nIHRoaXMgdG9nZXRoZXIgb3IKPj4gdGhlcmUgaXMgYW4gaXNz
-dWUgb24gdGhlIGRyaXZlci1zaWRlLgo+IEkgd2FzIGFibGUgdG8gZGVidWcgdGhpcyBhIGJpdCBt
-b3JlLCBhbmQgaXQgc2VlbXMgdGhlIGVuY29kZXJfaGVscGVyX2Z1bmNzCj4gZG9uJ3QgbGlrZSB0
-aGUgcHJlcGFyZS9jb21taXQgY2FsbGJhY2tzIGFuZCBsaWtlIGVuYWJsZSBiZXR0ZXIuCkFoLi4u
-Li4gWWVwLCBBdG9taWMgaGVscGVyIHNlZW1zIHdvdWxkbid0IGNhbGwgdGhlIHByZXBhZXIvY29t
-bWl0LCAKaW5zdGVhZCB3ZSBjYW4gdXNlIHRoZSBlbmJhbGUvZGlzYWJsZSBoZWxwZXIgZnVuY3Rp
-b25zLgo+IFNvIHdoZW4gSSBkbyBzb21ldGhpbmcgc2ltaWxhciB0byBNYXJrcyBwYXRjaCBhOGVl
-ZjcxZDM4ZGEgKCJkcm0vcm9ja2NoaXA6Cj4gZHdfaGRtaTogdXNlIGVuY29kZXIgZW5hYmxlIGZ1
-bmN0aW9uIiksIGxpa2UgaW4gdGhlIGF0dGFjaGVkIHBhdGNoICh0byBiZQo+IGZvbGRlZCBpbnRv
-IHRoZSBvcmlnaW5hbCBhZGRpdGlvbiBvZiB0aG9zZSBmdW5jdGlvbnMpLCBJIGdldCBkaXNwbGF5
-IG91dHB1dAo+IGFnYWluLgoKVGhhbmtzIGZvciB5b3VyIHBhdGllbnQgZGVidWcsIEkgd291bGQg
-c2VuZCB0aGUgbmV3IHZlcnNpb24gb3V0IHNvb24gIDspCgotIFlha2lyCj4KPiBIZWlrbwo+Cj4+
-IFswXSBodHRwOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvfmFpcmxpZWQvbGludXgvbG9nLz9oPWRy
-bS1uZXh0Cj4+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vbW1pbmQvbGludXgtcm9ja2NoaXAvdHJl
-ZS90bXAvYW5hbG9naXhkcF92MTItdmV5cm9uCj4+IEkgbGVmdCBvdXQgcGF0Y2gxNiwgcGVyIHlv
-dXIgdGFsayB3aXRoIEppbmdvbyBhbmQgbWUgbm90IHNlZWluZyBhbnkgQVVYCj4+IENIIGVycm9y
-cyB3aXRob3V0IGl0LgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Fri, Jan 15, 2016 at 02:55:25PM +0800, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Add a "uefi" node under /hypervisor node in FDT, then Linux kernel could
+> scan this to get the UEFI information.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/xen.txt | 42 +++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> index 0f7b9c2..fbc17ae 100644
+> --- a/Documentation/devicetree/bindings/arm/xen.txt
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -15,6 +15,36 @@ the following properties:
+>  - interrupts: the interrupt used by Xen to inject event notifications.
+>    A GIC node is also required.
+>  
+> +To support UEFI on Xen ARM virtual platforms, Xen pupulates the FDT "uefi" node
+> +under /hypervisor with following parameters:
+
+s/pupulates/populates/
+
+> +
+> +________________________________________________________________________________
+> +Name                      | Size   | Description
+> +================================================================================
+> +xen,uefi-system-table     | 64-bit | Guest physical address of the UEFI System
+> +			  |	   | Table.
+> +--------------------------------------------------------------------------------
+> +xen,uefi-mmap-start       | 64-bit | Guest physical address of the UEFI memory
+> +			  |	   | map.
+> +--------------------------------------------------------------------------------
+> +xen,uefi-mmap-size        | 32-bit | Size in bytes of the UEFI memory map
+> +                          |        | pointed to in previous entry.
+> +--------------------------------------------------------------------------------
+> +xen,uefi-mmap-desc-size   | 32-bit | Size in bytes of each entry in the UEFI
+> +                          |        | memory map.
+> +--------------------------------------------------------------------------------
+> +xen,uefi-mmap-desc-ver    | 32-bit | Version of the mmap descriptor format.
+> +--------------------------------------------------------------------------------
+> +
+> +Below is the format of the mmap descriptor.
+> +typedef struct {
+> +	u32 type;
+> +	u32 pad;
+> +	u64 phys_addr;
+> +	u64 virt_addr;
+> +	u64 num_pages;
+> +	u64 attribute;
+> +} efi_memory_desc_t;
+
+I don't think we should describe this here, as it duplicates the UEFI
+spec, and is techincally incorrect the above is only guaranteed to be
+the prefix of each memory descriptor -- that's why the
+uefi-mmap-desc-size property exists.
+
+We don't do this in Documentation/arm/uefi.txt, and I don't see why we
+should do so here.
+
+Does Xen handle arbitrary size memory map descriptors? I'm not sure what
+new information might be passed in future additions to the descriptor
+format, and I'm not sure what should happen in the Dom0 case.
+
+>  Example (assuming #address-cells = <2> and #size-cells = <2>):
+>  
+> @@ -22,4 +52,16 @@ hypervisor {
+>  	compatible = "xen,xen-4.3", "xen,xen";
+>  	reg = <0 0xb0000000 0 0x20000>;
+>  	interrupts = <1 15 0xf08>;
+> +	uefi {
+> +		xen,uefi-system-table = <0xXXXXXXXX>;
+> +		xen,uefi-mmap-start = <0xXXXXXXXX>;
+> +		xen,uefi-mmap-size = <0xXXXXXXXX>;
+> +		xen,uefi-mmap-desc-size = <0xXXXXXXXX>;
+> +		xen,uefi-mmap-desc-ver = <0xXXXXXXXX>;
+> +        };
+>  };
+> +
+> +These "xen,uefi-*" parameters are similar to those in Documentation/arm/uefi.txt
+> +which are used by normal UEFI. But to Xen ARM virtual platforms, it needs to
+> +introduce a Xen specific UEFI and it doesn't want to mix with normal UEFI.
+> +Therefore, it defines these parameters under /hypervisor node.
+
+Could we please describe what that actual difference is?
+
+I know that the OS must handle a system table differently under Xen, but
+this doesn't describe what it should do.
+
+I assume that the OS can handle the memory map in an identical fashion
+to when it is native. Is that true?
+
+Mark.
