@@ -1,64 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH V12 2/7] dma: hidma: Add Device Tree support
-Date: Mon, 18 Jan 2016 11:39:36 +0000
-Message-ID: <20160118113935.GI21067@leverpostej>
+Date: Mon, 18 Jan 2016 11:49:32 +0000
+Message-ID: <20160118114931.GJ21067@leverpostej>
 References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
  <1452523550-8920-3-git-send-email-okaya@codeaurora.org>
  <20160115151637.GJ3262@leverpostej>
- <20160115153054.GL3262@leverpostej>
- <569926CF.6030205@codeaurora.org>
+ <5699232E.60809@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <569926CF.6030205@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <5699232E.60809-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 12:05:19PM -0500, Sinan Kaya wrote:
-> On 1/15/2016 10:30 AM, Mark Rutland wrote:
-> > Further to my reply below, I'm generally uncomfortable with some
-> > properties (max-* need a better description if they are a HW
-> > requirement, and probably should not be present otherwise). 
+> >> +Main node required properties:
+> >> +- compatible: "qcom,hidma-mgmt-1.0";
+> >> +- reg: Address range for DMA device
+> >> +- dma-channels: Number of channels supported by this DMA controller.
+> >> +- max-write-burst-bytes: Maximum write burst in bytes. A memcpy requested is
+> >> +  fragmented to multiples of this amount.
+> >> +- max-read-burst-bytes: Maximum read burst in bytes. A memcpy request is
+> >> +  fragmented to multiples of this amount.
+> >> +- max-write-transactions: Maximum write transactions to perform in a burst
+> >> +- max-read-transactions: Maximum read transactions to perform in a burst
+> > 
+> > Just to check, where do these max-* values come from?
+> These are HW bus parameters like the burst count and 
+> size of each burst. These values change based on the SoC this IP is in use.
 > 
-> I'll add more description. 
+> > 
+> > Are they some correctness requirement of the bus this is attached to?
+> You can starve other peripherals if you use incorrect values as the bus is 
+> shared with other peripherals. Yes, correctness is required.
+
+Is that a property of the system known statically, or one determined by
+testing the system under particular workloads? It feels like the latter
+(though I appreciate that not starving other masters is certainly a
+correctness property regardless of how this is derived).
+
+I'd have expected the bus this is plugged into to have appropriate QoS
+settings pre-configured so as to avoid starvation, though it sounds like
+that's not possible here?
+
+> > Are they tuning values?
+> Correct value is necessary for functioning. I'd consider weight and priority
+> as the only tuning parameters. 
 > 
-> > I'm also
-> > concerned that information necessary for the advertised use-case of the
-> > device (e.g. IOMMUs) is missing [1], and we're missing parts of the
-> > story necessary to review this for correctness.
+> > 
+> > The latter doesn't really belong in the DT. Given they're writeable from
+> > the driver, it seems like that's what they are...
 > 
-> OK. Let me work on this. I tried to capture as much documentation as possible
-> into the series before. One reviewer said I should add it. Another reviewer said I should 
-> remove it. 
+> Good catch. Those should have been read-only. I wanted to be able to export these
+> information to the userspace app. I'll fix the sysfs to make them read-only.
 > 
-> Where would be the best place to document the use case? 
-> - In the source file?
-> - In the commit message?
-> - In the device-tree documentation?
+> > 
+> >> +- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
+> > 
+> > I'm not sure what this means. Could you elaborate on this is?
+> After each reset command, HW starts a timer. This is the time HW waits before it declares
+> reset failed.
 
-Mostly the cover letter, but to varying degrees some information should
-appear in the commit messages, documentation, and code.
+Is that a reset command sent to the HIDMA by the OS, or a reset command
+from the HIDMA to something else?
 
-The cover letter should give a high-level overview sufficient to get
-reviewing (e.g. that should point out we expect isolation by IOMMUs).
-There should also be pointers to related components (i.e. the QEMU
-driver intended to communicate with this).
+What does it do when it declares a reset as failed?
 
-Things subject to change should go in the cover letter, as it's not
-permanent.
+How can the OS make use of this information? It has no idea of the
+clocks input to the HIDMA, so it has no idea how long a cycle is.
 
-If something strongly influences the design in a way that's non-obvious,
-then that will probably remain non-obvious. For that, there should
-certainly be something in the commit message. If it's something that
-will be hit in general usage of the binding (or forms part of the
-contract of the binding), that should be described in the binding
-documentation.
+Is this programmed by the OS?
 
-If there's some caveat other developers need to be aware of, drop a
-comment in the code.
+Is the particular duration in cycles a requirement of some other agent?
 
 Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
