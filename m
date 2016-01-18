@@ -1,114 +1,61 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V12 2/7] dma: hidma: Add Device Tree support
-Date: Mon, 18 Jan 2016 09:04:30 -0500
-Message-ID: <569CF0EE.7010706@codeaurora.org>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-3-git-send-email-okaya@codeaurora.org>
- <20160115151637.GJ3262@leverpostej> <5699232E.60809@codeaurora.org>
- <20160118114931.GJ21067@leverpostej>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Mon, 18 Jan 2016 20:07:32 +0530
+Message-ID: <20160118143731.GQ11130@localhost>
+References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+ <20151116035533.GC25173@localhost>
+ <CAMuHMdXVBSjTb_-7o4rDh_S+i64QKEr-5KUnSfd3Nqt1D1TE2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160118114931.GJ21067@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXVBSjTb_-7o4rDh_S+i64QKEr-5KUnSfd3Nqt1D1TE2Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/18/2016 6:49 AM, Mark Rutland wrote:
->>>> +Main node required properties:
->>>> +- compatible: "qcom,hidma-mgmt-1.0";
->>>> +- reg: Address range for DMA device
->>>> +- dma-channels: Number of channels supported by this DMA controller.
->>>> +- max-write-burst-bytes: Maximum write burst in bytes. A memcpy requested is
->>>> +  fragmented to multiples of this amount.
->>>> +- max-read-burst-bytes: Maximum read burst in bytes. A memcpy request is
->>>> +  fragmented to multiples of this amount.
->>>> +- max-write-transactions: Maximum write transactions to perform in a burst
->>>> +- max-read-transactions: Maximum read transactions to perform in a burst
->>>
->>> Just to check, where do these max-* values come from?
->> These are HW bus parameters like the burst count and 
->> size of each burst. These values change based on the SoC this IP is in use.
->>
->>>
->>> Are they some correctness requirement of the bus this is attached to?
->> You can starve other peripherals if you use incorrect values as the bus is 
->> shared with other peripherals. Yes, correctness is required.
+On Thu, Jan 14, 2016 at 11:09:47AM +0100, Geert Uytterhoeven wrote:
+> Hi Vinod,
 > 
-> Is that a property of the system known statically, or one determined by
-> testing the system under particular workloads? It feels like the latter
-> (though I appreciate that not starving other masters is certainly a
-> correctness property regardless of how this is derived).
+> On Mon, Nov 16, 2015 at 4:55 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
+> >> In general Renesas hardware is not documented to the extent where the
+> >> relationship between IP blocks on different SoCs can be assumed although
+> >> they may appear to operate the same way. Furthermore the documentation
+> >> typically does not specify a version for individual IP blocks. For these
+> >> reasons a convention of using the SoC name in place of a version and
+> >> providing SoC-specific compat strings has been adopted.
+> >>
+> >> Although not universally liked this convention is used in the bindings for
+> >> most drivers for Renesas hardware. The purpose of this patch is to
+> >> update the Renesas R-Car DMA Controller driver to follow this convention.
+> >
+> > Applied, thanks
 > 
-
-It is known statically and is determined through simulations according to the SoC design.
-It is later verified on chip. Once verified, these values never change. 
-Values change from one SoC to another. 
-
-> I'd have expected the bus this is plugged into to have appropriate QoS
-> settings pre-configured so as to avoid starvation, though it sounds like
-> that's not possible here?
-
-There are some very safe values but they are not correct until validated on the chip.
-
+> This patch (and this patch only) has disappeared from your next branch between
+> January 6 and 7, and thus wasn't included in your pull request for v4.5.
 > 
->>> Are they tuning values?
->> Correct value is necessary for functioning. I'd consider weight and priority
->> as the only tuning parameters. 
->>
->>>
->>> The latter doesn't really belong in the DT. Given they're writeable from
->>> the driver, it seems like that's what they are...
->>
->> Good catch. Those should have been read-only. I wanted to be able to export these
->> information to the userspace app. I'll fix the sysfs to make them read-only.
->>
->>>
->>>> +- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
->>>
->>> I'm not sure what this means. Could you elaborate on this is?
->> After each reset command, HW starts a timer. This is the time HW waits before it declares
->> reset failed.
+> Was there a specific reason for that, or was it just an oversight?
 > 
-> Is that a reset command sent to the HIDMA by the OS, or a reset command
-> from the HIDMA to something else?
-
-First one. 
-
-As I said on another email, The HIDMA channel driver resets the transfer and event channels 
-before using them. The reset command is intended for the HIDMA HW itself.
-
-> 
-> What does it do when it declares a reset as failed?
-> 
-
-The channel probe will fail with reset failed message.
-
-> How can the OS make use of this information? It has no idea of the
-> clocks input to the HIDMA, so it has no idea how long a cycle is.
-> 
-This is a HW parameter. The OS doesn't use timers or any other facility to time correctness. 
-
-The HIDMA channel driver issues a reset and then waits for confirmation while polling a status
-register. If no confirmation is received, then the HW is assumed broken or incorrectly configured.
-The HW channel is removed from the OS access.
-
-> Is this programmed by the OS?
-The HIDMA management driver programs this value to the HW. It is not consumed by the OS directly.
-
-> 
-> Is the particular duration in cycles a requirement of some other agent?
-It is a requirement of the HW. Not the OS.
-
-> 
-> Thanks,
-> Mark.
-> 
+> Note that the added compatible values in in use (in arm-soc/for-next).
 
 
+Hi Geert,
+
+That only means I messed up. I apply patches to for-linus or topic branches
+and then merge all topics to for-linus and send that to Linus.
+
+In this case I didn't see this in any of the topics or for-linus which means
+I applied to next which I usually trash and keep rebuiling on latest -rc.
+
+Now git helped me track this commit on a deleted branch (which reminds us
+what a wonderful thing git is... screwed up, dont worrry git is our
+superhero to rescue).
+
+I have cherry-picked this patch and applied to for-4.5 branch and will
+send to Linus in few days along with few more fixes.
+
+Thanks for reporting
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+~Vinod
