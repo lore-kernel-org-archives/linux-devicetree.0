@@ -1,426 +1,85 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] memory: mediatek: Add SMI driver
-Date: Mon, 18 Jan 2016 11:11:28 +0100
-Message-ID: <569CBA50.7000400@gmail.com>
-References: <1450426183-1571-1-git-send-email-yong.wu@mediatek.com>
-	<1450426183-1571-4-git-send-email-yong.wu@mediatek.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
+ bindings for DECON-TV
+Date: Mon, 18 Jan 2016 11:12:00 +0100
+Message-ID: <569CBA70.8000107@samsung.com>
+References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
+ <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
+ <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
+ <569C279D.1020705@samsung.com> <569CB664.3090806@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1450426183-1571-4-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <569CB664.3090806@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hyungwon Hwang <human.hwang@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18/12/15 09:09, Yong Wu wrote:
-> This patch add SMI(Smart Multimedia Interface) driver. This driver
-> is responsible to enable/disable iommu and control the power domain
-> and clocks of each local arbiter.
->
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/memory/Kconfig     |   8 ++
->   drivers/memory/Makefile    |   1 +
->   drivers/memory/mtk-smi.c   | 268 +++++++++++++++++++++++++++++++++++++++++++++
->   include/soc/mediatek/smi.h |  58 ++++++++++
->   4 files changed, 335 insertions(+)
->   create mode 100644 drivers/memory/mtk-smi.c
->   create mode 100644 include/soc/mediatek/smi.h
->
-> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-> index 6f31546..51d5cd2 100644
-> --- a/drivers/memory/Kconfig
-> +++ b/drivers/memory/Kconfig
-> @@ -114,6 +114,14 @@ config JZ4780_NEMC
->   	  the Ingenic JZ4780. This controller is used to handle external
->   	  memory devices such as NAND and SRAM.
->
-> +config MTK_SMI
-> +	bool
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	help
-> +	  This driver is for the Memory Controller module in MediaTek SoCs,
-> +	  mainly help enable/disable iommu and control the power domain and
-> +	  clocks for each local arbiter.
-> +
->   source "drivers/memory/tegra/Kconfig"
->
->   endif
-> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
-> index 1c46af5..890bdf4 100644
-> --- a/drivers/memory/Makefile
-> +++ b/drivers/memory/Makefile
-> @@ -15,5 +15,6 @@ obj-$(CONFIG_FSL_IFC)		+= fsl_ifc.o
->   obj-$(CONFIG_MVEBU_DEVBUS)	+= mvebu-devbus.o
->   obj-$(CONFIG_TEGRA20_MC)	+= tegra20-mc.o
->   obj-$(CONFIG_JZ4780_NEMC)	+= jz4780-nemc.o
-> +obj-$(CONFIG_MTK_SMI)		+= mtk-smi.o
->
->   obj-$(CONFIG_TEGRA_MC)		+= tegra/
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> new file mode 100644
-> index 0000000..3714f604
-> --- /dev/null
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -0,0 +1,268 @@
-> +/*
-> + * Copyright (c) 2014-2015 MediaTek Inc.
-> + * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/component.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <soc/mediatek/smi.h>
-> +
-> +#define SMI_LARB_MMU_EN		0xf00
-> +
-> +struct mtk_smi {
-> +	struct device	*dev;
-> +	struct clk	*clk_apb, *clk_smi;
-> +};
-> +
-> +struct mtk_smi_larb { /* larb: local arbiter */
-> +	struct mtk_smi  smi;
-> +	void __iomem	*base;
-> +	struct device	*smi_common_dev;
-> +	u32		*mmu;
-> +};
-> +
-> +static int mtk_smi_enable(const struct mtk_smi *smi)
-> +{
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(smi->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(smi->clk_apb);
-> +	if (ret)
-> +		goto err_put_pm;
-> +
-> +	ret = clk_prepare_enable(smi->clk_smi);
-> +	if (ret)
-> +		goto err_disable_apb;
-> +
-> +	return 0;
-> +
-> +err_disable_apb:
-> +	clk_disable_unprepare(smi->clk_apb);
-> +err_put_pm:
-> +	pm_runtime_put_sync(smi->dev);
-> +	return ret;
-> +}
-> +
-> +static void mtk_smi_disable(const struct mtk_smi *smi)
-> +{
-> +	clk_disable_unprepare(smi->clk_smi);
-> +	clk_disable_unprepare(smi->clk_apb);
-> +	pm_runtime_put_sync(smi->dev);
-> +}
-> +
-> +int mtk_smi_larb_get(struct device *larbdev)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
-> +	struct mtk_smi *common = dev_get_drvdata(larb->smi_common_dev);
-> +	int ret;
-> +
-> +	/* Enable the smi-common's power and clocks */
-> +	ret = mtk_smi_enable(common);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Enable the larb's power and clocks */
-> +	ret = mtk_smi_enable(&larb->smi);
-> +	if (ret) {
-> +		mtk_smi_disable(common);
-> +		return ret;
-> +	}
-> +
-> +	/* Configure the iommu info */
-> +	if (larb->mmu)
-> +		writel(*larb->mmu, larb->base + SMI_LARB_MMU_EN);
-
-Can there be a larb that does not have a mmu id defined?
-Phandles for the iommu need always to have a mtk_m4u_id defined, so I 
-don't see the case where this can happen?
-
-Why did you changed this value to a pointer and added the if?
-
-> +
-> +	return 0;
-> +}
-> +
-> +void mtk_smi_larb_put(struct device *larbdev)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
-> +	struct mtk_smi *common = dev_get_drvdata(larb->smi_common_dev);
-> +
-
-Would it make sense to write SMI_LARB_MMU_EN here again to eventually 
-turn off mmus?
-
-Other then this, the driver looks fine to me.
-
-Regards,
-Matthias
-
-> +	mtk_smi_disable(&larb->smi);
-> +	mtk_smi_disable(common);
-> +}
-> +
-> +static int
-> +mtk_smi_larb_bind(struct device *dev, struct device *master, void *data)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> +	struct mtk_smi_iommu *smi_iommu = data;
-> +	unsigned int         i;
-> +
-> +	for (i = 0; i < smi_iommu->larb_nr; i++) {
-> +		if (dev == smi_iommu->larb_imu[i].dev) {
-> +			larb->mmu = &smi_iommu->larb_imu[i].mmu;
-> +			return 0;
-> +		}
-> +	}
-> +	return -ENODEV;
-> +}
-> +
-> +static void
-> +mtk_smi_larb_unbind(struct device *dev, struct device *master, void *data)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> +
-> +	larb->mmu = NULL;
-> +}
-> +
-> +static const struct component_ops mtk_smi_larb_component_ops = {
-> +	.bind = mtk_smi_larb_bind,
-> +	.unbind = mtk_smi_larb_unbind,
-> +};
-> +
-> +static int mtk_smi_larb_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_smi_larb *larb;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *smi_node;
-> +	struct platform_device *smi_pdev;
-> +
-> +	if (!dev->pm_domain)
-> +		return -EPROBE_DEFER;
-> +
-> +	larb = devm_kzalloc(dev, sizeof(*larb), GFP_KERNEL);
-> +	if (!larb)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	larb->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(larb->base))
-> +		return PTR_ERR(larb->base);
-> +
-> +	larb->smi.clk_apb = devm_clk_get(dev, "apb");
-> +	if (IS_ERR(larb->smi.clk_apb))
-> +		return PTR_ERR(larb->smi.clk_apb);
-> +
-> +	larb->smi.clk_smi = devm_clk_get(dev, "smi");
-> +	if (IS_ERR(larb->smi.clk_smi))
-> +		return PTR_ERR(larb->smi.clk_smi);
-> +	larb->smi.dev = dev;
-> +
-> +	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
-> +	if (!smi_node)
-> +		return -EINVAL;
-> +
-> +	smi_pdev = of_find_device_by_node(smi_node);
-> +	of_node_put(smi_node);
-> +	if (smi_pdev) {
-> +		larb->smi_common_dev = &smi_pdev->dev;
-> +	} else {
-> +		dev_err(dev, "Failed to get the smi_common device\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pm_runtime_enable(dev);
-> +	platform_set_drvdata(pdev, larb);
-> +	return component_add(dev, &mtk_smi_larb_component_ops);
-> +}
-> +
-> +static int mtk_smi_larb_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +	component_del(&pdev->dev, &mtk_smi_larb_component_ops);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mtk_smi_larb_of_ids[] = {
-> +	{ .compatible = "mediatek,mt8173-smi-larb",},
-> +	{}
-> +};
-> +
-> +static struct platform_driver mtk_smi_larb_driver = {
-> +	.probe	= mtk_smi_larb_probe,
-> +	.remove = mtk_smi_larb_remove,
-> +	.driver	= {
-> +		.name = "mtk-smi-larb",
-> +		.of_match_table = mtk_smi_larb_of_ids,
-> +	}
-> +};
-> +
-> +static int mtk_smi_common_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mtk_smi *common;
-> +
-> +	if (!dev->pm_domain)
-> +		return -EPROBE_DEFER;
-> +
-> +	common = devm_kzalloc(dev, sizeof(*common), GFP_KERNEL);
-> +	if (!common)
-> +		return -ENOMEM;
-> +	common->dev = dev;
-> +
-> +	common->clk_apb = devm_clk_get(dev, "apb");
-> +	if (IS_ERR(common->clk_apb))
-> +		return PTR_ERR(common->clk_apb);
-> +
-> +	common->clk_smi = devm_clk_get(dev, "smi");
-> +	if (IS_ERR(common->clk_smi))
-> +		return PTR_ERR(common->clk_smi);
-> +
-> +	pm_runtime_enable(dev);
-> +	platform_set_drvdata(pdev, common);
-> +	return 0;
-> +}
-> +
-> +static int mtk_smi_common_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mtk_smi_common_of_ids[] = {
-> +	{ .compatible = "mediatek,mt8173-smi-common", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver mtk_smi_common_driver = {
-> +	.probe	= mtk_smi_common_probe,
-> +	.remove = mtk_smi_common_remove,
-> +	.driver	= {
-> +		.name = "mtk-smi-common",
-> +		.of_match_table = mtk_smi_common_of_ids,
-> +	}
-> +};
-> +
-> +static int __init mtk_smi_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = platform_driver_register(&mtk_smi_common_driver);
-> +	if (ret != 0) {
-> +		pr_err("Failed to register SMI driver\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = platform_driver_register(&mtk_smi_larb_driver);
-> +	if (ret != 0) {
-> +		pr_err("Failed to register SMI-LARB driver\n");
-> +		goto err_unreg_smi;
-> +	}
-> +	return ret;
-> +
-> +err_unreg_smi:
-> +	platform_driver_unregister(&mtk_smi_common_driver);
-> +	return ret;
-> +}
-> +subsys_initcall(mtk_smi_init);
-> diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
-> new file mode 100644
-> index 0000000..6ab11fa
-> --- /dev/null
-> +++ b/include/soc/mediatek/smi.h
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Copyright (c) 2014-2015 MediaTek Inc.
-> + * Author: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#ifndef MTK_IOMMU_SMI_H
-> +#define MTK_IOMMU_SMI_H
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/device.h>
-> +
-> +#ifdef CONFIG_MTK_SMI
-> +
-> +#define MTK_LARB_NR_MAX		8
-> +
-> +#define MTK_SMI_MMU_EN(port)	BIT(port)
-> +
-> +struct mtk_smi_larb_iommu {
-> +	struct device *dev;
-> +	unsigned int   mmu;
-> +};
-> +
-> +struct mtk_smi_iommu {
-> +	unsigned int larb_nr;
-> +	struct mtk_smi_larb_iommu larb_imu[MTK_LARB_NR_MAX];
-> +};
-> +
-> +/*
-> + * mtk_smi_larb_get: Enable the power domain and clocks for this local arbiter.
-> + *                   It also initialize some basic setting(like iommu).
-> + * mtk_smi_larb_put: Disable the power domain and clocks for this local arbiter.
-> + * Both should be called in non-atomic context.
-> + *
-> + * Returns 0 if successful, negative on failure.
-> + */
-> +int mtk_smi_larb_get(struct device *larbdev);
-> +void mtk_smi_larb_put(struct device *larbdev);
-> +
-> +#else
-> +
-> +static inline int mtk_smi_larb_get(struct device *larbdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void mtk_smi_larb_put(struct device *larbdev) { }
-> +
-> +#endif
-> +
-> +#endif
->
+SGkgSW5raSwKCk9uIDAxLzE4LzIwMTYgMTA6NTQgQU0sIElua2kgRGFlIHdyb3RlOgo+Cj4gMjAx
+NuuFhCAwMeyblCAxOOydvCAwODo0NeyXkCBLcnp5c3p0b2YgS296bG93c2tpIOydtCjqsIApIOyT
+tCDquIA6Cj4+IE9uIDE0LjAxLjIwMTYgMTk6NDksIElua2kgRGFlIHdyb3RlOgo+Pj4gKyBSb2Ig
+SGVycmluZwo+Pj4KPj4+IDIwMTbrhYQgMDHsm5QgMTTsnbwgMTk6Mzbsl5AgQW5kcnplaiBIYWpk
+YSDsnbQo6rCAKSDsk7Qg6riAOgo+Pj4+IEhpIElua2ksCj4+Pj4KPj4+PiBJdCBzZWVtcyB0aGlz
+IHBhdGNoIGFuZCAwNC8xMCBkaWQgbm90IGdldCBwaWNrZWQgdXAgeWV0Lgo+Pj4+IENvdWxkIHlv
+dSBtZXJnZSBpdD8KPj4+IFllcywgSSBjYW4uIEhvd2V2ZXIsIDA0LzEwIGlzIHJlcXVpcmVkIGZv
+ciBhY2tlZC1ieSBmcm9tIGR0IG9yIFNvQyBtYWludGFpbmVyLgo+Pj4gS3J6eXN6dG9mIGFuZCBS
+b2IsIGNvdWxkIHlvdSBnaXZlIG1lIGFja2VkLWJ5Pwo+Pj4KPj4+IFRoYW5rcywKPj4+IElua2kg
+RGFlCj4+IE15IGFjayBpcyByZWFsbHkgbm90IHJlcXVpcmVkLCBiZWNhdXNlIHRoaXMgaXMgYSBi
+aW5kaW5nIGZvciBhIHNwZWNpZmljCj4+IGRyaXZlciBmcm9tIHZpZGVvIHN1YnN5c3RlbS4gSXQg
+ZG9lcyBub3QgZmFsbCBpbnRvIHRoZSBhcm0vbWFjaC1leHlub3MKPj4gbm9yIHRoZSBkdHMvKmV4
+eW5vcyouCj4+Cj4+IEFueXdheSBJIHJldmlld2VkIHRoZSBwYXRjaCBvbiAyOHRoIG9mIE9jdG9i
+ZXIgYW5kIFJvYiBhY2tlZCBpdCBvbiAxM3RoCj4+IG9mIE5vdmVtYmVyLgo+IEkgbWVhbnQgMDQv
+MTAgbm90IDA5LzEwIHBhdGNoLiA6KQoKVGhlcmUgaXMgZG9jdW1lbnQgaW4ga2VybmVsIHdpdGgg
+Y2xlYXIgZXhwbGFuYXRpb24gYWJvdXQgdGhlIHN1YmplY3Q6CkRvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9zdWJtaXR0aW5nLXBhdGNoZXMudHh0LgpTZWUgZXNwZWNpYWxseSBwYXJh
+Z3JhcGggSUkuMiBbMV0uCgpbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+dWJtaXR0aW5nLXBhdGNoZXMudHh0I0w1MAoKUmVnYXJkcwpBbmRyemVqCgo+Cj4gVGhhbmtzLAo+
+IElua2kgRGFlCj4KPj4gQmVzdCByZWdhcmRzLAo+PiBLcnp5c3p0b2YKPj4KPj4KPj4+PiBSZWdh
+cmRzCj4+Pj4gQW5kcnplago+Pj4+Cj4+Pj4gT24gMTAvMjYvMjAxNSAxMjo1OSBQTSwgQW5kcnpl
+aiBIYWpkYSB3cm90ZToKPj4+Pj4gREVDT04tVFYoRGlzcGxheSBhbmQgRW5oYW5jZW1lbnQgQ29u
+dHJvbGxlciBmb3IgVFYpIGlzIGEgdmFyaWF0aW9uCj4+Pj4+IG9mIERFQ09OIElQLiBJdHMgbWFp
+biBwdXJwb3NlIGlzIHRvIHByb2R1Y2UgdmlkZW8gc3RyZWFtIGZvciBIRE1JIElQLgo+Pj4+Pgo+
+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+
+Pj4+PiAtLS0KPj4+Pj4gSGkgS3J6eXN6dG9mLAo+Pj4+Pgo+Pj4+PiBJIGhhdmUgZGVjaWRlZCB0
+byBza2lwIGNsZWFudXAgcGFydCBhcyBpdCB3b3VsZCByZXF1aXJlIG1vcmUgd29yaywKPj4+Pj4g
+bm90IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaHNldC4KPj4+Pj4KPj4+Pj4gUmVnYXJkcwo+Pj4+PiBB
+bmRyemVqCj4+Pj4+Cj4+Pj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
+ZW8vZXh5bm9zNTQzMy1kZWNvbi50eHQgfCAzICsrLQo+Pj4+PiAgMSBmaWxlIGNoYW5nZWQsIDIg
+aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVj
+b24udHh0Cj4+Pj4+IGluZGV4IDNkZmY3OGIuLmM5ZmQ3YjMgMTAwNjQ0Cj4+Pj4+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRlY29uLnR4
+dAo+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5
+bm9zNTQzMy1kZWNvbi50eHQKPj4+Pj4gQEAgLTUsNyArNSw4IEBAIEV4eW5vcyBzZXJpZXMgb2Yg
+U29DcyB3aGljaCB0cmFuc2ZlcnMgdGhlIGltYWdlIGRhdGEgZnJvbSBhIHZpZGVvIG1lbW9yeQo+
+Pj4+PiAgYnVmZmVyIHRvIGFuIGV4dGVybmFsIExDRCBpbnRlcmZhY2UuCj4+Pj4+ICAKPj4+Pj4g
+IFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+IC0tIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBi
+ZSAic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uIjsKPj4+Pj4gKy0gY29tcGF0aWJsZTogdmFsdWUg
+c2hvdWxkIGJlIG9uZSBvZjoKPj4+Pj4gKwkic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uIiwgInNh
+bXN1bmcsZXh5bm9zNTQzMy1kZWNvbi10diI7Cj4+Pj4+ICAtIHJlZzogcGh5c2ljYWwgYmFzZSBh
+ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERFQ09OIHJlZ2lzdGVycyBzZXQuCj4+Pj4+ICAtIGlu
+dGVycnVwdHM6IHNob3VsZCBjb250YWluIGEgbGlzdCBvZiBhbGwgREVDT04gSVAgYmxvY2sgaW50
+ZXJydXB0cyBpbiB0aGUKPj4+Pj4gIAkgICAgICBvcmRlcjogVlNZTkMsIExDRF9TWVNURU0uIFRo
+ZSBpbnRlcnJ1cHQgc3BlY2lmaWVyIGZvcm1hdAo+Pj4+IC0tCj4+Pj4gVG8gdW5zdWJzY3JpYmUg
+ZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmct
+c29jIiBpbgo+Pj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJu
+ZWwub3JnCj4+Pj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9y
+Zy9tYWpvcmRvbW8taW5mby5odG1sCj4+Pj4KPj4+Pgo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBm
+cm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtc2Ftc3VuZy1z
+b2MiIGluCj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwu
+b3JnCj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
+b3Jkb21vLWluZm8uaHRtbAo+Pgo+PgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
