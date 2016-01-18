@@ -1,61 +1,75 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH 1/2] bmips: add BCM6358 support
-Date: Mon, 18 Jan 2016 14:35:48 +0100
-Message-ID: <CAOiHx=kD2Rj4wKpXkHeMYP8efuBA1PjirqxpX4RNkrTyNARV4A@mail.gmail.com>
-References: <1453030101-14794-1-git-send-email-noltari@gmail.com>
- <0BC6030C-7485-4193-B86D-E690BF673952@gmail.com> <BF36180D-DB32-42A5-AFF7-2B282F5A81DC@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] ARM: SoC: add a new platform, UniPhier (arch/arm/mach-uniphier)
+Date: Mon, 18 Jan 2016 14:49:39 +0100
+Message-ID: <4241029.3TORj3rutI@wuerfel>
+References: <1431058034-5508-1-git-send-email-yamada.masahiro@socionext.com> <2230140.n6kW8LSSaP@wuerfel> <CAK7LNAQkfSqYs7jJ6Zn0HS6FBRcXbonmNZ0eV_QS0mYeS8adbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <BF36180D-DB32-42A5-AFF7-2B282F5A81DC@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, MIPS Mailing List <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAQkfSqYs7jJ6Zn0HS6FBRcXbonmNZ0eV_QS0mYeS8adbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akira.tsukamoto-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 18 January 2016 19:54:08 Masahiro Yamada wrote:
+> 2015-05-13 16:48 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Wednesday 13 May 2015 16:00:21 Masahiro Yamada wrote:
+> >
+> > No worries, if you are unsure you can always ask us on the mailing
+> > list or on the #armlinux channel on irc.freenode.net.
+> >
+> > If you have more than a few patches at once, we'd always appreciate
+> > a pull request, for a couple of patches, emails to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org plus
+> > linux-arm-kernel are fine as well.
+> >
+> > When you do pull requests, please split them up according to larger
+> > topics, e.g. send dts changes separately from code changes, and
+> > separate bug fixes, cleanups and new feature support.
+> >
+> > Often when you add a new driver, that will require sending the driver
+> > code to a subsystem maintainer, and the dts changes to us. If everything
+> > goes well, your DT bindings are both forward and backward compatible,
+> > so they can get merged independently. If you ever have interdependencies
+> > between them, talk to us first so we can find a solution.
+> >
+> > For sending pull requests, it would be good to have a gpg key that
+> > is signed by other well-known kernel developers. If you have such
+> > a key, you can also request a kernel.org account to host a git tree
+> > there, or you can host a git tree somewhere on your company's domain.
+> > A public hosting service like github is not as good for us, but we
+> > can deal with it when you are still ramping up your infrastructure.
+> > Let me know if you need help finding kernel developers to sign your key.
+> 
+> 
+> About 7 months have passed since I became a sub-arch maintainer (ARM/UniPhier),
+> and I am hoping now I deserve to have the gpg key thing you mentioned.
+> 
+> Could you help me get a key and a kernel.org account to host a git tree?
+> 
+> It would make it easier to get SoC-specific things in
+> without loading you and Olof.
 
-On 18 January 2016 at 10:42, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@=
-gmail.com> wrote:
-> I can refine it to support a custom offset for each cpu instead of a =
-generic one, but defining a custom offset for new SoCs such as BCM6368 =
-or BCM6328 would actually break them, since that way the address wouldn=
-'t be remapped to 0xb0000000.
-> See: https://github.com/torvalds/linux/blob/master/arch/mips/include/=
-asm/io.h#L213
-> In those CPUs the remapping is done automatically (from 0x10000000 to=
- 0xb0000000), since the registers are located in the low 512MB of addre=
-ss space (0x1fffffffULL).
->
-> However, the older CPUs such as BCM6358 (or BCM3368) need that custom=
- ioremap, since those registers aren't located in the low 512MB of addr=
-ess space.
-> If you want, I can do something like this: https://gist.github.com/No=
-ltari/bc5fe029c52cf053a454
-> And after that we could add other CPUs such as the BCM3368, which nee=
-ds a different offset: "{ "brcm,bcm3368", 0xfff80000 }"
->
-> What do you think? Should we keep a generic offset (0xfff00000) or sh=
-ould we add SoC specific compatible strings with each custom offset?
+Getting the kernel.org account should be straightforward once you have
+a signed gpg key, see the description in https://www.kernel.org/category/faq.html
 
-How about using the arm approach [1] and adding support for
-registering static mappings? That way we avoid adding a custom
-plat_ioremap() and keep the amount of bmips code to a minimum.
+If you don't have a gpg key yet, please generate one with 4096 bits
+keylength now. It's good to get as many signatures as possible from people
+that already have signatures by other kernel contributors. The complication
+is that you anyone who signs your key needs to verify your identity, otherwise
+the signature method would not be helpful.
 
+I have added three people to Cc that might be able you here: I understand that
+you live in Osaka, so Simon Horman would be physically the closest in Kobe.
+Takahiro Akashi works at Socionext in Tokyo, and I think you already know Akira
+Tsukamoto.
 
-Jonas
+If you happen to be in the same place with one of them, or maybe they have
+already signed the key of someone close by.
 
-[1]:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/=
-?id=3Ded8fd2186a4e4f3b98434093b56f9b793d48443e
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/=
-?id=3D101eeda38c0ab8a4f916176e325d9e036d981a24
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
