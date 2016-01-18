@@ -1,61 +1,90 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
-Date: Mon, 18 Jan 2016 20:07:32 +0530
-Message-ID: <20160118143731.GQ11130@localhost>
-References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
- <20151116035533.GC25173@localhost>
- <CAMuHMdXVBSjTb_-7o4rDh_S+i64QKEr-5KUnSfd3Nqt1D1TE2Q@mail.gmail.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH v2 09/16] arm/xen: Get event-channel irq
+ through HVM_PARAM when booting with ACPI
+Date: Mon, 18 Jan 2016 14:38:27 +0000
+Message-ID: <alpine.DEB.2.02.1601181351400.16178@kaball.uk.xensource.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-10-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXVBSjTb_-7o4rDh_S+i64QKEr-5KUnSfd3Nqt1D1TE2Q@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452840929-19612-10-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 11:09:47AM +0100, Geert Uytterhoeven wrote:
-> Hi Vinod,
+On Fri, 15 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> On Mon, Nov 16, 2015 at 4:55 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
-> >> In general Renesas hardware is not documented to the extent where the
-> >> relationship between IP blocks on different SoCs can be assumed although
-> >> they may appear to operate the same way. Furthermore the documentation
-> >> typically does not specify a version for individual IP blocks. For these
-> >> reasons a convention of using the SoC name in place of a version and
-> >> providing SoC-specific compat strings has been adopted.
-> >>
-> >> Although not universally liked this convention is used in the bindings for
-> >> most drivers for Renesas hardware. The purpose of this patch is to
-> >> update the Renesas R-Car DMA Controller driver to follow this convention.
-> >
-> > Applied, thanks
+> When booting with ACPI, it could get the event-channel irq through
+> HVM_PARAM_CALLBACK_IRQ.
 > 
-> This patch (and this patch only) has disappeared from your next branch between
-> January 6 and 7, and thus wasn't included in your pull request for v4.5.
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/xen/enlighten.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
 > 
-> Was there a specific reason for that, or was it just an oversight?
-> 
-> Note that the added compatible values in in use (in arm-soc/for-next).
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 6d90a62..4e78c49 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/time64.h>
+>  #include <linux/timekeeping.h>
+>  #include <linux/timekeeper_internal.h>
+> +#include <linux/acpi.h>
+>  
+>  #include <linux/mm.h>
+>  
+> @@ -270,7 +271,34 @@ static int __init xen_guest_init(void)
+>  	if (!xen_domain())
+>  		return 0;
+>  
+> -	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+> +	if (!acpi_disabled) {
+> +#ifdef CONFIG_ACPI
+
+I think it would be best to move the acpi specific and DT specific
+initializations out of xen_guest_init. Then at the beginning of
+xen_guest_init, call only the one that applies.  The acpi init function
+could be ifdef'ed CONFIG_ACPI. Making sure that acpi_disabled is 1 when
+!CONFIG_ACPI, we could even avoid all ifdef's from xen_guest_init.
+
+The rest is good, thanks.
 
 
-Hi Geert,
-
-That only means I messed up. I apply patches to for-linus or topic branches
-and then merge all topics to for-linus and send that to Linus.
-
-In this case I didn't see this in any of the topics or for-linus which means
-I applied to next which I usually trash and keep rebuiling on latest -rc.
-
-Now git helped me track this commit on a deleted branch (which reminds us
-what a wonderful thing git is... screwed up, dont worrry git is our
-superhero to rescue).
-
-I have cherry-picked this patch and applied to for-4.5 branch and will
-send to Linus in few days along with few more fixes.
-
-Thanks for reporting
--- 
-~Vinod
+> +		struct xen_hvm_param a;
+> +		int interrupt, trigger, polarity;
+> +
+> +		a.domid = DOMID_SELF;
+> +		a.index = HVM_PARAM_CALLBACK_IRQ;
+> +		xen_events_irq = 0;
+> +		if (!HYPERVISOR_hvm_op(HVMOP_get_param, &a)) {
+> +			if ((a.value >> 56) == 3) {
+> +				interrupt = a.value & 0xff;
+> +				trigger = ((a.value >> 8) & 0x1)
+> +					  ? ACPI_EDGE_SENSITIVE
+> +					  : ACPI_LEVEL_SENSITIVE;
+> +				polarity = ((a.value >> 8) & 0x2)
+> +					  ? ACPI_ACTIVE_LOW
+> +					  : ACPI_ACTIVE_HIGH;
+> +				xen_events_irq = acpi_register_gsi(NULL,
+> +								   interrupt,
+> +								   trigger,
+> +								   polarity);
+> +			}
+> +		}
+> +
+> +#endif
+> +	} else {
+> +		xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+> +	}
+> +
+>  	if (!xen_events_irq) {
+>  		pr_err("Xen event channel interrupt not found\n");
+>  		return -ENODEV;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
