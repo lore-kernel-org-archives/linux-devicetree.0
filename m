@@ -1,100 +1,131 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v7 0/4] ARM: SoC: add a new platform, UniPhier (arch/arm/mach-uniphier)
-Date: Mon, 18 Jan 2016 19:54:08 +0900
-Message-ID: <CAK7LNAQkfSqYs7jJ6Zn0HS6FBRcXbonmNZ0eV_QS0mYeS8adbA@mail.gmail.com>
-References: <1431058034-5508-1-git-send-email-yamada.masahiro@socionext.com>
-	<2101307.fSn8Z2ZyBq@wuerfel>
-	<CAK7LNASyJmyUcKNecdhWjXbd615=9XcMxeLxC7y_z+psO03BbQ@mail.gmail.com>
-	<2230140.n6kW8LSSaP@wuerfel>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 13/16] ARM: XEN: Set EFI_PARAVIRT if Xen supports EFI
+Date: Mon, 18 Jan 2016 10:57:32 +0000
+Message-ID: <20160118105732.GE21067@leverpostej>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-14-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2230140.n6kW8LSSaP@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: arm@kernel.org, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452840929-19612-14-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Fri, Jan 15, 2016 at 02:55:26PM +0800, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Check if there is "uefi" node in the DT. If so, set EFI_PARAVIRT flag.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/xen/enlighten.c | 23 +++++++++++++++++++++++
+>  arch/arm64/kernel/efi.c  |  5 +++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 5d0fe68..485e117 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/timekeeping.h>
+>  #include <linux/timekeeper_internal.h>
+>  #include <linux/acpi.h>
+> +#include <linux/efi.h>
+>  
+>  #include <linux/mm.h>
+>  
+> @@ -248,6 +249,19 @@ static int __init fdt_find_xen_node(unsigned long node, const char *uname,
+>  	return 0;
+>  }
+>  
+> +static int __init fdt_find_uefi_node(unsigned long node, const char *uname,
+> +				     int depth, void *data)
+> +{
+> +	bool *found = data;
+> +
+> +	if (depth != 2 || strcmp(uname, "uefi") != 0)
+> +		return 0;
+> +
+> +	*found = true;
+> +
+> +	return 1;
+> +}
 
+I don't like this. What if we had to add a uefi node in the !Xen case
+for some reason?
 
-2015-05-13 16:48 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wednesday 13 May 2015 16:00:21 Masahiro Yamada wrote:
->> 2015-05-13 0:00 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
->> > On Friday 08 May 2015 13:07:10 Masahiro Yamada wrote:
->> > Welcome as our latest new maintainer. In the future, please send
->> > any follow-up patches for the architecture specific code to
->> > arm@kernel.org in addition to the normal recipients, once you
->> > consider them ready to be applied.
->>
->>
->> Please teach me a little more because I am not experienced enough
->> in this community.
->>
->>
->> I checked MAINTAINERS, but I could not find arm@kernel.org.
->> Is it documented somewhere?
->>
->> I found ARM SUB-ARCHITECTURES entry in that file, but it does not mention
->> the responsible individuals.
->> (I assume, you and Olof are the ones.)
->>
->
-> We normally only take patches from subarch maintainers that know who
-> we are and how it works, but we don't want to be Cc'd on every single
-> patch, so we don't have an entry in MAINTAINERS directly.
->
->> I have one more question.
->>
->> Are you receiving pull requests from each sub-arch maintainer?
->> Or should every patch be submitted to arm@kernel.org and
->> applied by you (or other ARM-SoC maintainers)?
->>
->> I have not earned enough reputations in this ML, so I know
->> it is too early for me to handle pull-reqs.
->>
->> I understand the general development process of Linux, but
->> the maintainership of the ARM-SoC subsystem looks more hierarchized, so
->> I just want to know its development process correctly.
->
-> No worries, if you are unsure you can always ask us on the mailing
-> list or on the #armlinux channel on irc.freenode.net.
->
-> If you have more than a few patches at once, we'd always appreciate
-> a pull request, for a couple of patches, emails to arm@kernel.org plus
-> linux-arm-kernel are fine as well.
->
-> When you do pull requests, please split them up according to larger
-> topics, e.g. send dts changes separately from code changes, and
-> separate bug fixes, cleanups and new feature support.
->
-> Often when you add a new driver, that will require sending the driver
-> code to a subsystem maintainer, and the dts changes to us. If everything
-> goes well, your DT bindings are both forward and backward compatible,
-> so they can get merged independently. If you ever have interdependencies
-> between them, talk to us first so we can find a solution.
->
-> For sending pull requests, it would be good to have a gpg key that
-> is signed by other well-known kernel developers. If you have such
-> a key, you can also request a kernel.org account to host a git tree
-> there, or you can host a git tree somewhere on your company's domain.
-> A public hosting service like github is not as good for us, but we
-> can deal with it when you are still ramping up your infrastructure.
-> Let me know if you need help finding kernel developers to sign your key.
->
->         Arnd
+You want to look for /hypervisor/uefi, specifically when the hypervisor
+compatible contains "xen,xen".
 
+It would be better to find the "/hypervisor" node, checking for the
+compatible string, then walk within that in the Xen-specific init
+routine.
 
-About 7 months have passed since I became a sub-arch maintainer (ARM/UniPhier),
-and I am hoping now I deserve to have the gpg key thing you mentioned.
+> +
+>  /*
+>   * see Documentation/devicetree/bindings/arm/xen.txt for the
+>   * documentation of the Xen Device Tree format.
+> @@ -255,6 +269,8 @@ static int __init fdt_find_xen_node(unsigned long node, const char *uname,
+>  #define GRANT_TABLE_PHYSADDR 0
+>  void __init xen_early_init(void)
+>  {
+> +	bool uefi_found = false;
+> +
+>  	of_scan_flat_dt(fdt_find_xen_node, NULL);
+>  	if (!xen_node.found) {
+>  		pr_debug("No Xen support\n");
+> @@ -279,6 +295,13 @@ void __init xen_early_init(void)
+>  
+>  	if (!console_set_on_cmdline && !xen_initial_domain())
+>  		add_preferred_console("hvc", 0, NULL);
+> +
+> +	if (IS_ENABLED(CONFIG_XEN_EFI)) {
+> +		/* Check if Xen support UEFI */
+> +		of_scan_flat_dt(fdt_find_uefi_node, &uefi_found);
+> +		if (uefi_found)
+> +			set_bit(EFI_PARAVIRT, &efi.flags);
+> +	}
+>  }
 
-Could you help me get a key and a kernel.org account to host a git tree?
+This alone is insufficient given that we haven't parsed the rest of the
+/hypervisor/uefi properties. Is the kernel resilient such that this
+patch alone will not result in a panic?
 
-It would make it easier to get SoC-specific things in
-without loading you and Olof.
+I think it would be best for this to be in the same patch as the rest of
+the hypervisor UEFI property parsing, being unified with that.
 
+Mark.
 
-
--- 
-Best Regards
-Masahiro Yamada
+>  static int __init xen_guest_init(void)
+> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> index 4eeb171..16c6b72 100644
+> --- a/arch/arm64/kernel/efi.c
+> +++ b/arch/arm64/kernel/efi.c
+> @@ -288,6 +288,11 @@ static int __init arm64_enable_runtime_services(void)
+>  		return 0;
+>  	}
+>  
+> +	if (efi_enabled(EFI_PARAVIRT)) {
+> +		pr_info("EFI runtime services access via paravirt.\n");
+> +		return -1;
+> +	}
+> +
+>  	pr_info("Remapping and enabling EFI services.\n");
+>  
+>  	mapsize = memmap.map_end - memmap.map;
+> -- 
+> 2.0.4
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
