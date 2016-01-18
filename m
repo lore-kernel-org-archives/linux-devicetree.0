@@ -1,51 +1,26 @@
-From: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V3 0/2] reset: img: Add pistachio SoC reset support
-Date: Mon, 18 Jan 2016 13:12:36 +0000
-Message-ID: <1453122758-651-1-git-send-email-james.hartley@imgtec.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx6: Add support for Toradex Apalis
+ iMX6Q/D SoM
+Date: Mon, 18 Jan 2016 11:20:31 -0200
+Message-ID: <CAOMZO5ABVgiopLtO02vSkwc6hDe_nSSHGOkFHX5jVn42iohAyw@mail.gmail.com>
+References: <1452909067-1998-1-git-send-email-marcel.ziswiler@toradex.com>
+	<1452909067-1998-2-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452909067-1998-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Damien Horsley <damien.horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series provides the reset controller driver and documentation for the
-pistachio SoC. 
+On Fri, Jan 15, 2016 at 11:51 PM, Marcel Ziswiler
+<marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org> wrote:
 
-Further platform support and a device tree will be posted via the MIPS
-mailing list shortly.
+> +&ssi1 {
+> +       fsl,mode = "i2s-slave";
 
-These patches are based on linux-next.
-
-Changes from V2:
-	Following further feedback received from Philipp Zabel:
-	- Moved pistachio-resets.h from 
-		dt-bindings/reset-controller/ to
-		dt-bindingd/reset/
-	- Improved return code and mask handling 
-
-Changes from V1:
-	- Following feedback from Philipp Zabel, the reset controller node
-	is now inside the cr_periph node which allows syscon to access via
-	parent instead of looking up by phandle.
-
-Damien.Horsley (2):
-  reset: img: Add pistachio reset controller binding document
-  reset: img: Add Pistachio reset controller driver
-
- .../bindings/reset/img,pistachio-reset.txt         |   51 ++++++
- drivers/reset/Makefile                             |    1 +
- drivers/reset/reset-pistachio.c                    |  162 ++++++++++++++++++++
- .../reset-controller/pistachio-resets.h            |   36 +++++
- 4 files changed, 250 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/img,pistachio-reset.txt
- create mode 100644 drivers/reset/reset-pistachio.c
- create mode 100644 include/dt-bindings/reset-controller/pistachio-resets.h
-
--- 
-1.7.9.5
-
+This line should be removed.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
