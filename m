@@ -1,119 +1,72 @@
 From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Subject: RE: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
-Date: Mon, 18 Jan 2016 09:17:00 +0000
-Message-ID: <F1B223389110CE49B4CF055ABA2E5D3D78CF6844@XAP-PVEXMBX02.xlnx.xilinx.com>
+Date: Mon, 18 Jan 2016 09:34:54 +0000
+Message-ID: <F1B223389110CE49B4CF055ABA2E5D3D78CF6875@XAP-PVEXMBX02.xlnx.xilinx.com>
 References: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
- <20160115021016.GA19573@rob-hp-laptop>
+ <20160113153113.GL6491@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160115021016.GA19573@rob-hp-laptop>
+In-Reply-To: <20160113153113.GL6491@xsjsorenbubuntu>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Friday, January 15, 2016 7:40 AM
-> To: Subbaraya Sundeep Bhatta
-> Cc: kishon-l0cyMroinI0@public.gmane.org; balbi-l0cyMroinI0@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Subbaraya Sundeep
-> Bhatta
-> Subject: Re: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
-> 
-> On Wed, Jan 13, 2016 at 07:43:24PM +0530, Subbaraya Sundeep Bhatta wrote:
-> > This patch adds the document describing dt bindings for ZynqMP PHY.
-> > ZynqMP SOC has a High Speed Processing System Gigabit Transceiver
-> > which provides PHY capabilties to USB, SATA, PCIE, Display Port and
-> > Ehernet SGMII controllers.
-> >
-> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  v2:
-> > 	modified to use phy cells as 2.
-> >
-> >  .../devicetree/bindings/phy/phy-zynqmp.txt         | 103
-> +++++++++++++++++++++
-> >  1 file changed, 103 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> > b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> > new file mode 100644
-> > index 0000000..975cf21
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> > @@ -0,0 +1,103 @@
-> > +Xilinx ZynqMP PHY binding
-> > +
-> > +This binding describes a ZynqMP PHY device that is used to control
-> > +ZynqMP High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides
-> > +four lanes and are used by USB, SATA, PCIE, Display port and Ethernet
-> SGMMI controllers.
-> 
-> s/SGMMI/SGMII/
-
-Yeah, I will change it.
-> 
-> > +
-> > +Required properties (controller (parent) node):
-> > +- compatible    : Should be "xlnx,zynqmp-psgtr"
-> > +
-> > +- reg		: Address and length of register sets for each device in
-> > +		  "reg-names"
-> > +- reg-names     : The names of the register addresses corresponding to the
-> > +		  registers filled in "reg":
-> > +			- serdes: SERDES block register set
-> > +			- siou: SIOU block register set
-> > +			- lpd: Low power domain peripherals reset control
-> > +			- fpd: Full power domain peripherals reset control
-> > +
-> > +-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
-> > +			  termination resistance can be out of spec due to a
-> > +			  bug in the calibration logic. This issue will be fixed
-> > +			  in silicon in future versions.
-> > +
-> > +Required nodes	:  A sub-node is required for each lane the controller
-> > +		   provides.
-> > +
-> > +Required properties (port (child) nodes):
-> > +lane0:
-> > +- #phy-cells	: Should be 2
-> > +		  Cell after port phandle is device type from:
-> > +			- <PHY_TYPE_PCIE 0>
-> > +			- <PHY_TYPE_SATA 0>
-> > +			- <PHY_TYPE_USB3 0>
-> > +			- <PHY_TYPE_DP 1>
-> > +			- <PHY_TYPE_SGMII 0>
-> 
-> What is the 2nd cell for? The phandle doesn't count for the size.
-
-ZynMP SoC has 2 USB controllers, 1 SATA controller with 2 lanes,
-1 PCIe controller with 4 lanes, 1 Display port with 2 lanes and
-4 SGMII controllers. PHY provides 4 output lanes only for 14(PIPE) inputs 
-(as mentioned above: 2 + 2 + 4 + 2+ 4 = 14). All the inputs are routed
-to PHY output lanes with a Mux (Interconnect matrix). Only some combinations
-are valid i.e, one cannot set mux to use USB1 on lane 0 as such. Here second
-cell is input number.
- <PHY_TYPE_PCIE 0> derives to PCIe's lane 0 input in driver for which lane 0 of
-PHY can be used.  The valid inputs of each PHY output lane are mentioned here.
-
-> 
-> However, I would simplify this to get rid of the sub nodes and set lane in the 1st
-> cell and the type in the 2nd cell.
-
-Sorry I did not get you on how to get rid of sub nodes. Could you please explain?
-
-Thanks,
-Sundeep
-> 
-> Rob
+SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
+IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBX
+ZWRuZXNkYXksIEphbnVhcnkgMTMsIDIwMTYgOTowMSBQTQ0KPiBUbzogU3ViYmFyYXlhIFN1bmRl
+ZXAgQmhhdHRhDQo+IENjOiBraXNob25AdGkuY29tOyByb2JoQGtlcm5lbC5vcmc7IGJhbGJpQHRp
+LmNvbTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgU3ViYmFyYXlhIFN1bmRl
+ZXAgQmhhdHRhDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8zXSBwaHk6IHp5bnFtcDogQWRk
+IGR0IGJpbmRpbmdzIGZvciBaeW5xTVAgUEhZLg0KPiANCj4gT24gV2VkLCAyMDE2LTAxLTEzIGF0
+IDA3OjQzUE0gKzA1MzAsIFN1YmJhcmF5YSBTdW5kZWVwIEJoYXR0YSB3cm90ZToNCj4gPiBUaGlz
+IHBhdGNoIGFkZHMgdGhlIGRvY3VtZW50IGRlc2NyaWJpbmcgZHQgYmluZGluZ3MgZm9yIFp5bnFN
+UCBQSFkuDQo+ID4gWnlucU1QIFNPQyBoYXMgYSBIaWdoIFNwZWVkIFByb2Nlc3NpbmcgU3lzdGVt
+IEdpZ2FiaXQgVHJhbnNjZWl2ZXINCj4gPiB3aGljaCBwcm92aWRlcyBQSFkgY2FwYWJpbHRpZXMg
+dG8gVVNCLCBTQVRBLCBQQ0lFLCBEaXNwbGF5IFBvcnQgYW5kDQo+ID4gRWhlcm5ldCBTR01JSSBj
+b250cm9sbGVycy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFN1YmJhcmF5YSBTdW5kZWVwIEJo
+YXR0YSA8c2JoYXR0YUB4aWxpbnguY29tPg0KPiANCj4gSSBtaXNzZWQgdGhlIHYyIGhlbmNlIGFn
+YWluLg0KPiANCj4gPiAtLS0NCj4gPiAgdjI6DQo+ID4gCW1vZGlmaWVkIHRvIHVzZSBwaHkgY2Vs
+bHMgYXMgMi4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFt
+cC50eHQgICAgICAgICB8IDEwMw0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDEwMyBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFtcC50eHQNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
+L3BoeS16eW5xbXAudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGh5L3BoeS16eW5xbXAudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAw
+MDAwMDAwLi45NzVjZjIxDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFtcC50eHQNCj4gPiBAQCAtMCwwICsx
+LDEwMyBAQA0KPiA+ICtYaWxpbnggWnlucU1QIFBIWSBiaW5kaW5nDQo+ID4gKw0KPiA+ICtUaGlz
+IGJpbmRpbmcgZGVzY3JpYmVzIGEgWnlucU1QIFBIWSBkZXZpY2UgdGhhdCBpcyB1c2VkIHRvIGNv
+bnRyb2wNCj4gPiArWnlucU1QIEhpZ2ggU3BlZWQgR2lnYWJpdCBUcmFuc2NlaXZlcihHVCkuIFp5
+bnFNUCBQUyBHVFIgcHJvdmlkZXMNCj4gPiArZm91ciBsYW5lcyBhbmQgYXJlIHVzZWQgYnkgVVNC
+LCBTQVRBLCBQQ0lFLCBEaXNwbGF5IHBvcnQgYW5kIEV0aGVybmV0DQo+IFNHTU1JIGNvbnRyb2xs
+ZXJzLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllcyAoY29udHJvbGxlciAocGFyZW50
+KSBub2RlKToNCj4gPiArLSBjb21wYXRpYmxlICAgIDogU2hvdWxkIGJlICJ4bG54LHp5bnFtcC1w
+c2d0ciINCj4gPiArDQo+ID4gKy0gcmVnCQk6IEFkZHJlc3MgYW5kIGxlbmd0aCBvZiByZWdpc3Rl
+ciBzZXRzIGZvciBlYWNoIGRldmljZSBpbg0KPiA+ICsJCSAgInJlZy1uYW1lcyINCj4gPiArLSBy
+ZWctbmFtZXMgICAgIDogVGhlIG5hbWVzIG9mIHRoZSByZWdpc3RlciBhZGRyZXNzZXMgY29ycmVz
+cG9uZGluZyB0byB0aGUNCj4gPiArCQkgIHJlZ2lzdGVycyBmaWxsZWQgaW4gInJlZyI6DQo+ID4g
+KwkJCS0gc2VyZGVzOiBTRVJERVMgYmxvY2sgcmVnaXN0ZXIgc2V0DQo+ID4gKwkJCS0gc2lvdTog
+U0lPVSBibG9jayByZWdpc3RlciBzZXQNCj4gPiArCQkJLSBscGQ6IExvdyBwb3dlciBkb21haW4g
+cGVyaXBoZXJhbHMgcmVzZXQgY29udHJvbA0KPiA+ICsJCQktIGZwZDogRnVsbCBwb3dlciBkb21h
+aW4gcGVyaXBoZXJhbHMgcmVzZXQgY29udHJvbA0KPiANCj4gVGhlIHJlc2V0IHJlZ2lzdGVycyBz
+aG91bGQgbm90IGJlIGRpcmVjdGx5IG1vZGlmaWVkIGJ5IExpbnV4LiBBbnkgYWNjZXNzIHRvDQo+
+IHJlc2V0cyBpcyBsaWtlbHkgcmVxdWlyaW5nIGEgcmVzZXQgY29udHJvbGxlciB0aGF0IHVzZXMg
+cGxhdGZvcm0gRlcgdG8gbW9kaWZ5IHRoZQ0KPiByZXNldHMuDQoNCk9rIEkgd2lsbCBmaXggdGhp
+cyBhbmQgc2VuZCBuZXh0IGl0ZXJhdGlvbi4NCg0KPiA+ICsNCj4gPiArLXhsbngsdHhfdGVybWlu
+YXRpb25fZml4OiBJbmNsdWRlIGZpeCBmb3IgYSBmdW5jdGlvbmFsIGlzc3VlIGluIHRoZSBHVC4g
+VGhlIFRYDQo+ID4gKwkJCSAgdGVybWluYXRpb24gcmVzaXN0YW5jZSBjYW4gYmUgb3V0IG9mIHNw
+ZWMgZHVlIHRvIGENCj4gPiArCQkJICBidWcgaW4gdGhlIGNhbGlicmF0aW9uIGxvZ2ljLiBUaGlz
+IGlzc3VlIHdpbGwgYmUgZml4ZWQNCj4gPiArCQkJICBpbiBzaWxpY29uIGluIGZ1dHVyZSB2ZXJz
+aW9ucy4NCj4gDQo+IFRoZSBzaWxpY29uIHZlcnNpb24gaXMgcnVuLXRpbWUgZGV0ZWN0YWJsZS4g
+VGhlcmUgc2hvdWxkIGJlIGEgd2F5IHRvIGdldCBhd2F5DQo+IHdpdGhvdXQgdGhpcyBwcm9wZXJ0
+eS4NCg0KT2sgSSB3aWxsIGZpeCB0aGlzIGFuZCBzZW5kIG5leHQgaXRlcmF0aW9uLg0KDQpUaGFu
+a3MsDQpTdW5kZWVwLg0KPiANCj4gCVPDtnJlbg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
