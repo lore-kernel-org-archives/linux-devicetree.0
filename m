@@ -1,91 +1,33 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Mon, 18 Jan 2016 16:15:10 +0800
-Message-ID: <20160118081510.GF8150@shlinux2>
-References: <5216704.YbueADHOOR@wuerfel>
- <Pine.LNX.4.44L0.1601161115050.11338-100000@netrider.rowland.org>
+From: Li Yang <leoli@freescale.com>
+Subject: Re: [PATCH v9 3/3] ARM64: dts: add LS1043a-RDB board support
+Date: Mon, 18 Jan 2016 16:36:26 +0800
+Message-ID: <CADRPPNRAotJo3j=JSPJG+ntw2SedSBm-Nad4-Fjv+fjUFKoJmQ@mail.gmail.com>
+References: <1450949873-34260-1-git-send-email-Zhiqiang.Hou@freescale.com>
+	<1450949873-34260-3-git-send-email-Zhiqiang.Hou@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1601161115050.11338-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1450949873-34260-3-git-send-email-Zhiqiang.Hou@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Zhiqiang Hou <Zhiqiang.Hou@freescale.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Scott Wood <scottwood@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Hu Vincent <Mingkai.Hu@freescale.com>, Hou Zhiqiang <B48286@freescale.com>, Shaohui Xie <Shaohui.Xie@freescale.com>, Wenbin Song <Wenbin.Song@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 16, 2016 at 11:40:32AM -0500, Alan Stern wrote:
-> On Sat, 16 Jan 2016, Arnd Bergmann wrote:
-> 
-> > > This leaves the question of whether OF will always use the same node to
-> > > represent the host controller and the root hub.  In other words, if a
-> > > motherboard has a fixed device plugged into a fixed root-hub port, will
-> > > the DT description make that device a child of the host controller?  
-> > > Or will there be a node in between (to represent the root hub)?
-> > 
-> > Good question. I'm sure the answer is somewhere in this document
-> > 
-> > http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-> > 
-> > but unfortunately I don't understand USB addressing well enough
-> > to answer this. I think the key sentence is the definition of the
-> > "reg" property:
-> > 
-> > | prop-encoded-array: one integer, encoded as with encode-int.
-> > | The "reg" property for a device node shall consist of the number of the
-> > | USB hub port or the USB host controller port to which this USB device
-> > | is attached. As specified in [2] section 11.11.2.1, port numbers range
-> > | from 1 to 255.
-> > 
-> > Does the root hub have a port number relative to the host controller,
-> > or is it identical to the host controller from the addressing
-> > perspective?
-> 
-> The root hub does not have a port number relative to the host
-> controller.  In a sense, the root hub is _part_ of the host controller;
-> it represents the controller's connection to the USB bus (whereas the
-> logical device we commonly associate with the host controller
-> represents the controller's connection to the upstream PCI/whatever
-> bus).
-> 
-> You can also ask whether port numbers relative to the root hub are
-> the same as the port numbers relative to the controller.  Under normal
-> circumstances they are the same.  However, it is possible that they
-> will be different for USB-3 host controllers (!).
-> 
-> This is because USB-3 uses two buses per controller: the legacy
-> Low-Speed/Full-Speed/High-Speed bus compatible with USB-1.1 and USB-2
-> devices, and the new SuperSpeed bus compatible with USB-3 devices.  
-> Even though there's only the one controller, each bus has its own root
-> hub and the ports for each root hub are numbered starting from 1.  
-> Thus, for example, an xHCI controller with 6 LS/FS/HS ports and 3 SS
-> ports would have a USB-2 root hub with ports 1-6 and a USB-3 root hub
-> with ports 1-3.  However, xHCI treats the controller as a single entity
-> and numbers all the ports sequentially; thus the controller would have
-> ports 1-9.  (Even though the three SS ports would be the same physical
-> objects as three of the LS/FS/HS ports -- USB-3 ports literally contain
-> two independent sets of signal wires.)
+On Thu, Dec 24, 2015 at 5:37 PM, Zhiqiang Hou
+<Zhiqiang.Hou@freescale.com> wrote:
+> From: Shaohui Xie <Shaohui.Xie@freescale.com>
+>
+> Signed-off-by: Shaohui Xie <Shaohui.Xie@freescale.com>
+> Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
+> Signed-off-by: Wenbin Song <Wenbin.Song@freescale.com>
+> Signed-off-by: Hou Zhiqiang <B48286@freescale.com>
+> ---
+> V9:
+>  - Add root node compatible property.
 
-Sorry, I have not USB-3 platform now.
-I have several questions:
+An early version of the patch is already accepted.  Can you re-base
+the update on the latest arm-soc tree?
+https://git.kernel.org/cgit/linux/kernel/git/arm/arm-soc.git/log/?h=for-next
 
-- For USB-3, how many times hub_configure() will be called for root hub?
-One or two?
-
-- Which the value of hub->descriptor->bNbrPorts for root hub?
-
-> 
-> This isn't merely a convention in the specifications; the hardware
-> actually uses both numbering schemes (although I don't know about USB-3
-> controllers other than xHCI; they might be different).  Untangling this
-> mess might be difficult.  I don't know how existing DT files handle it.
-> 
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Leo
