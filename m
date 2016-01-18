@@ -1,87 +1,89 @@
-From: Yao Yuan <yao.yuan@nxp.com>
-Subject: RE: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
- compatible string
-Date: Mon, 18 Jan 2016 06:43:18 +0000
-Message-ID: <AM2PR04MB07222950482F090A9448115E89C00@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
- <20151229183501.GH12450@rob-hp-laptop>
- <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
- <AM2PR04MB07220B81AE758762CB6B13D489CA0@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <CAL_Jsq+FVonqh8EbY4FFqHzxGZ_kDWGoC2jKNiGioEV96FXD+w@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] bmips: add BCM6358 support
+Date: Sun, 17 Jan 2016 22:49:25 -0800
+Message-ID: <0BC6030C-7485-4193-B86D-E690BF673952@gmail.com>
+References: <1453030101-14794-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+FVonqh8EbY4FFqHzxGZ_kDWGoC2jKNiGioEV96FXD+w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453030101-14794-1-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMTMsIDIwMTYgYXQgMDY6MTMgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
-biBNb24sIEphbiAxMSwgMjAxNiBhdCAxMDozNiBQTSwgWWFvIFl1YW4gPHlhby55dWFuQG54cC5j
-b20+IHdyb3RlOg0KPiA+IE9uIFRodSwgRGVjIDMxLCAyMDE1IGF0IDEwOjM1UE0sIFlhbyBZdWFu
-IDx5YW8ueXVhbkBueHAuY29tPiB3cm90ZToNCj4gPj4gT24gV2VkLCBEZWMgMzAsIDIwMTUgYXQg
-MTE6MjAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+PiA+IE9uIFR1ZSwgRGVjIDI5LCAyMDE1
-IGF0IDk6MTcgUE0sIFlhbyBZdWFuIDx5YW8ueXVhbkBueHAuY29tPiB3cm90ZToNCj4gPj4gPiA+
-IEhpIFJvYiwNCj4gPj4gPiA+DQo+ID4+ID4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KPiA+
-PiA+ID4gU28geW91IG1lYW4gdGhhdCBJIHNob3VsZCBhZGQgdGhlIGNvbW1pdCBtZXNzYWdlIGZv
-ciB3aHkgSSBhZGQNCj4gPj4gPiA+IHRoaXMgbmV3DQo+ID4+ID4gY29tcGF0aWJsZT8NCj4gPj4g
-Pg0KPiA+PiA+IFBsZWFzZSBkb24ndCB0b3AgcG9zdCBvbiB0aGUgbGlzdHMuDQo+ID4+ID4NCj4g
-Pj4gPiBObywgdGhlIGJpbmRpbmcgZG9jIHNob3VsZCBleHBsYWluIHdoYXQgYXJlIHZhbGlkIGNv
-bWJpbmF0aW9ucyBvZg0KPiA+PiA+IGNvbXBhdGlibGUgc3RyaW5ncyBhbmQgdGhlIG9yZGVyIHdo
-ZW4gdGhlIGR0cyBjYW4gaGF2ZSBtdWx0aXBsZQ0KPiA+PiA+IHN0cmluZ3MuIEZvciBleGFtcGxl
-LCBpcyB0aGlzIHZhbGlkOg0KPiA+PiA+DQo+ID4+ID4gY29tcGF0aWJsZSA9ICJmc2wsdmY2MTAt
-ZHNwaSIsICJmc2wsbHMyMDgwYS1kc3BpIjsNCj4gPj4gPg0KPiA+PiA+IEluIG90aGVyIHdvcmRz
-LCBJIHNob3VsZCBiZSBhYmxlIHRvIGNoZWNrIGEgZHRzIGZpbGUgYWdhaW5zdCB3aGF0DQo+ID4+
-ID4gdGhlIGJpbmRpbmcgZG9jIHNheXMuDQo+ID4+ID4NCj4gPj4gPiBSb2INCj4gPj4NCj4gPj4g
-T0ssIEkgZ290IGl0Lg0KPiA+PiBUaGUgImZzbCx2ZjYxMC1kc3BpIiwgImZzbCxsczEwMjFhLXYx
-LjAtZHNwaSIsICJmc2wsbHMyMDg1YS1kc3BpIiBpcw0KPiA+PiB2YWxpZCBhbmQgdXNlZCBpbiBk
-cml2ZXIuDQo+ID4+IEJ1dCAiZnNsLGxzMjA4MGEtZHNwaSIgaXMganVzdCB1c2VkIGZvciBwbGF0
-Zm9ybSBmbGFnLg0KPiA+PiBDb3VsZCB5b3UgaGVscCB0byBnaXZlIGFuIGV4YW1wbGUgdGhhdCBo
-b3cgY2FuIEkgZXhwbGFpbiBpdCBpbiBEb2N1bWVudHM/DQo+ID4+IE9yIHNob3VsZCBJIG5vdCB3
-cml0ZSB0aGlzIGNvbXBhdGlibGUgaW4gRG9jdW1lbnQuDQo+ID4+DQo+ID4+IEkgZmluZCB0aGF0
-IG1hbnkgY29tcGF0aWJsZSBzdHJpbmdzIGxpa2UgdGhpcyAobm90IHZhbGlkIGp1c3QgYQ0KPiA+
-PiBwbGF0Zm9ybSBmbGFnKSBmb3Igb3RoZXIgZHJpdmVyIGFyZSBub3QgcmVjb3JkIGluIGRvY3Vt
-ZW50Lg0KPiANCj4gV2VsbCwgdGhpbmdzIHNuZWFrIGluIHdpdGhvdXQgZ2V0dGluZyBkb2N1bWVu
-dGVkLiBBbHNvLCBsb3RzIG9mIFBQQyBiaW5kaW5ncw0KPiBwcmVkYXRlIG91ciBkb2N1bWVudGF0
-aW9uIHJlcXVpcmVtZW50Lg0KPiANCj4gPj4NCj4gPj4gVGhhbmtzLg0KPiA+Pg0KPiA+PiBZdWFu
-IFlhbw0KPiA+DQo+ID4gSGkgUm9iLA0KPiA+IEhvdyBhYm91dCBsaWtlIHRoaXM6DQo+ID4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZnNsLXF1YWRz
-cGkudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2ZzbC1x
-dWFkc3BpLnR4dA0KPiA+IGluZGV4IDAwYzU4N2IuLjdhOWE1MjMgMTAwNjQ0DQo+ID4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9mc2wtcXVhZHNwaS50eHQNCj4g
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2ZzbC1xdWFkc3Bp
-LnR4dA0KPiA+IEBAIC00LDYgKzQsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgIC0g
-Y29tcGF0aWJsZSA6IFNob3VsZCBiZSAiZnNsLHZmNjEwLXFzcGkiLCAiZnNsLGlteDZzeC1xc3Bp
-IiwNCj4gPiAgICAgICAgICAgICAgICAgICJmc2wsaW14N2QtcXNwaSIsICJmc2wsaW14NnVsLXFz
-cGkiLA0KPiA+ICAgICAgICAgICAgICAgICAgImZzbCxsczEwMjEtcXNwaSINCj4gPiArICAgICAg
-IEludmFsaWQgY29tcGF0aWJsZSBqdXN0IGZvciBTT0MgZmxhZzoNCj4gPiArICAgICAgICAgICAg
-ICAgImZzbCxsczIwODBhLXFzcGkiDQo+IA0KPiBUaGlzIGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBt
-ZS4gVHlwaWNhbGx5LCB3ZSBzZWUgc29tZXRoaW5nIGxpa2U6DQo+IA0KPiBTaG91bGQgYmUgb25l
-IG9mOg0KPiAgICJ2ZW5kb3Isc29jMS1kZXZpY2UiDQo+ICAgInZlbmRvcixzb2MyLWRldmljZSIN
-Cj4gRm9sbG93ZWQgYnkgInZlbmRvcixzb2MwLWRldmljZSINCj4gDQo+IFNvbWV0aW1lIHRoZSBs
-YXN0IGVudHJ5IGlzIGEgZ2VuZXJpYyBzdHJpbmcuIEhlcmUgc29jMCBpcyB0aGUgZmlyc3QgU09D
-IHdpdGggdGhlDQo+IGJsb2NrLiBMYXRlciBTT0NzIGhhdmUgInRoZSBzYW1lIiBibG9jaywgYnV0
-IG5ldyBjb21wYXRpYmxlIHN0cmluZ3MgaW4gYWRkaXRpb24NCj4gaW4gY2FzZSBhbnkgY2hhbmdl
-cyBvciBlcnJhdGEgYXJlIGZvdW5kIHRoYXQgdGhlIGRyaXZlciBuZWVkcyB0byBkZWFsIHdpdGgu
-DQo+IA0KDQpIaSBSb2IsDQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLA0KU28gaG93IGFi
-b3V0IGxpa2UgdGhpczoNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-dGQvZnNsLXF1YWRzcGkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL2ZzbC1xdWFkc3BpLnR4dA0KQEAgLTIsNyArMiwxMCBAQA0KDQogUmVxdWlyZWQgcHJv
-cGVydGllczoNCiAgIC0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAiZnNsLHZmNjEwLXFzcGkiLCAi
-ZnNsLGlteDZzeC1xc3BpIiwNCi0gICAgICAgICAgICAgICAgImZzbCxpbXg3ZC1xc3BpIiwgImZz
-bCxpbXg2dWwtcXNwaSINCisgICAgICAgICAgICAgICAgImZzbCxpbXg3ZC1xc3BpIiwgImZzbCxp
-bXg2dWwtcXNwaSIsDQorICAgICAgICAgICAgICAgICJmc2wsbHMxMDIxYS1xc3BpIiwNCisgICAg
-ICAgICAgICAgICAgT3INCisgICAgICAgICAgICAgICAgImZzbCxsczIwODBhLXFzcGkiIGZvbGxv
-d2VkIGJ5ICJmc2wsbHMxMDIxYS1xc3BpIiwNCg0KQnV0IGlmIHdlIGFkZCBhZGRpdGlvbiBpbmZv
-cm1hdGlvbiBpbiBiaW5naW5nIGRvY3VtZW50cywgb25jZSBhbnkgY2hhbmdlcyBvciBlcnJhdGEg
-YXJlIGZvdW5kIHRoYXQgdGhlIGRyaXZlciBuZWVkcyB0byBkZWFsIChzdWNoIGFzICJ2ZW5kb3Is
-c29jMS1kZXZpY2UiKSwgdGhlIGJpbmdpbmcgZG9jdW1lbnQgc2hvdWxkIGFsc28gYmUgdXBkYXRl
-LiANCkJlY2F1c2UgYXQgdGhhdCB0aW1lIHRoZSBkcml2ZXIgc2hvdWxkIGFsc28gbWF0Y2ggInZl
-bmRvcixzb2MxLWRldmljZSINClNvIGF0IHRoYXQgdGltZSB3ZSBjYW4ndCBzYXkgInZlbmRvcixz
-b2MxLWRldmljZSJzaG91bGQgZm9sbG93ZWQgYnkgInZlbmRvcixzb2MwLWRldmljZSINCg0KSXQg
-c2VlbXMgdGhlIG9ubHkgYmVuZWZpdCB0aGF0IG1heSBrZWVwIHRoZSBkdHMgbm8gY2hhbmdlcy4N
-Cg0KVGhhbmtzLg0KWWFvDQo=
+On January 17, 2016 3:28:20 AM PST, "=C3=81lvaro Fern=C3=A1ndez Rojas" =
+<noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>BCM6358 has a shared TLB which conflicts with current SMP support, so
+>it must
+>be disabled for now.
+>BCM6358 uses >=3D 0xfff00000 addresses for internal registers, which n=
+eed
+>to be
+>remapped (by using a simplified version of BRCM63xx ioremap.h).
+>
+>Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>---
+> arch/mips/bmips/setup.c                    | 10 +++++++++
+>arch/mips/include/asm/mach-bmips/ioremap.h | 33
+>++++++++++++++++++++++++++++++
+> 2 files changed, 43 insertions(+)
+> create mode 100644 arch/mips/include/asm/mach-bmips/ioremap.h
+>
+>diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+>index 3553528..38b5bd5 100644
+>--- a/arch/mips/bmips/setup.c
+>+++ b/arch/mips/bmips/setup.c
+>@@ -95,6 +95,15 @@ static void bcm6328_quirks(void)
+> 		bcm63xx_fixup_cpu1();
+> }
+>=20
+>+static void bcm6358_quirks(void)
+>+{
+>+	/*
+>+	 * BCM6358 needs special handling for its shared TLB, so
+>+	 * disable SMP for now
+>+	 */
+>+	bmips_smp_enabled =3D 0;
+>+}
+
+That part looks good.
+
+>+
+> static void bcm6368_quirks(void)
+> {
+> 	bcm63xx_fixup_cpu1();
+>@@ -104,6 +113,7 @@ static const struct bmips_quirk bmips_quirk_list[]
+>=3D {
+> 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
+> 	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
+> 	{ "brcm,bcm6328",		&bcm6328_quirks			},
+>+	{ "brcm,bcm6358",		&bcm6358_quirks			},
+> 	{ "brcm,bcm6368",		&bcm6368_quirks			},
+> 	{ "brcm,bcm63168",		&bcm6368_quirks			},
+> 	{ },
+
+<snip>
+
+>+
+>+static inline int is_bmips_internal_registers(phys_addr_t offset)
+>+{
+>+	if (offset >=3D 0xfff00000)
+>+		return 1;
+>+
+>+	return 0;
+
+That should probably be refined to be looking at the SoC/CPU you are ru=
+nning on, using eventually of_machine_is_compatible on the SoC-specific=
+ compatible string. For instance, on 6368 and newer, the physical regis=
+ter offset moves to PA 0x1000_0000.
+
+Thanks!
+
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
