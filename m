@@ -1,57 +1,60 @@
-From: Shaohui Xie <shaohui.xie@nxp.com>
-Subject: RE: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Mon, 18 Jan 2016 08:50:18 +0000
-Message-ID: <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <56997951.90304@gmail.com> <5699B211.5070602@gmail.com>
- <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <569C9CD2.10301@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Mon, 18 Jan 2016 09:06:15 +0000
+Message-ID: <569CAB07.8020200@arm.com>
+References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+ <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
+ <20160115145629.GI3262@leverpostej> <56990C40.4050407@codeaurora.org>
+ <20160115152257.GK3262@leverpostej> <56992987.5080603@codeaurora.org>
+ <56992D16.6070800@arm.com> <56997718.70707@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <569C9CD2.10301@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, "shh.xie@gmail.com" <shh.xie@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "davem@davemloft.net" <davem@davemloft.net>, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <56997718.70707@codeaurora.org>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Sinan Kaya <okaya@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTZWJhc3RpYW4gSGVzc2VsYmFy
-dGggW21haWx0bzpzZWJhc3RpYW4uaGVzc2VsYmFydGhAZ21haWwuY29tXQ0KPiBTZW50OiBNb25k
-YXksIEphbnVhcnkgMTgsIDIwMTYgNDowNiBQTQ0KPiBUbzogU2hhb2h1aSBYaWU7IEZsb3JpYW4g
-RmFpbmVsbGk7IEFuZHJldyBMdW5uOyBzaGgueGllQGdtYWlsLmNvbQ0KPiBDYzogZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLQ0KPiBk
-ZXZAbGlzdHMub3psYWJzLm9yZzsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgU2hhb2h1aSBYaWUNCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCAxLzNdW3YyXSBuZXQ6IHBoeTogaW50cm9kdWNlIDEwMDBCQVNF
-LUtYIGFuZCAxMEdCQVNFLUtSDQo+IA0KPiBPbiAxOC4wMS4yMDE2IDA4OjIzLCBTaGFvaHVpIFhp
-ZSB3cm90ZToNCj4gPj4+IElmIHlvdSBsb29rIGF0IHRoZSBsaXN0IG9mIHBvc3NpYmxlIHZhbHVl
-cyBmb3IgInBoeS1tb2RlIiB5b3UnZCBzZWUNCj4gPj4+IHRoYXQgbm9uZSBvZiBpdCBkZXNjcmli
-ZXMgYSBQSFktdG8tUEhZIGNvbm5lY3Rpb24gYnV0IGFsbCBhcmUgZm9yDQo+ID4+PiBNQUMtdG8t
-UEhZIGNvbm5lY3Rpb25zLiBBbHNvLCBuYW1lcyBhYm92ZSBzdWdnZXN0IGl0IGFscmVhZHk6IE1J
-SSBpcw0KPiA+Pj4gc2hvcnQgZm9yIG1lZGlhIF9pbmRlcGVuZGVudF8gaW50ZXJmYWNlLg0KPiA+
-Pj4NCj4gPj4+IEkgY29weSBBbmRyZXcncyBjb25jZXJucyBhbmQgdGhpbmsgdGhhdCBuZWl0aGVy
-IDEwMDAwYmFzZS1reCBub3INCj4gPj4+IDEwZ2Jhc2Uta3IgYmVsb25nIGluIHRoZSBsaXN0IG9m
-IHBoeS1tb2RlIHByb3BlcnRpZXMuDQo+ID4+DQo+ID4+IEkgY29uY3VyIHdpdGggdGhhdCBhcyB3
-ZWxsLCBpZiB0aGUgcGh5IGNvbm5lY3Rpb24gZG9lcyBub3QgcmVhbGx5DQo+ID4+IG1hdHRlciBo
-ZXJlLCBvciBkb2VzIG5vdCBzZWVtIGxpa2UgYSBnb29kIGZpdCwgbWF5YmUgd2Ugc2hvdWxkIGhh
-dmUgYQ0KPiA+PiBkaWZmZXJlbnQgcHJvcGVydHksIG9yIGp1c3QgZGVmaW5lIHRoZSBoYXJkd2Fy
-ZSBpbnRlcmZhY2UgYSBsaXR0bGUNCj4gZGlmZmVyZW50bHk/DQo+ID4gUmlnaHQsICdwaHktbW9k
-ZScgaXMgbm90IGEgZ29vZCBmaXQgZm9yIGJhY2twbGFuZXMsIGhvdyBhYm91dCBhIG5ldw0KPiA+
-IHByb3BlcnR5IGxpa2UgJ2JhY2twbGFuZS1tb2RlJyBvciBzb21ldGhpbmcsIGxpa2UgYmVsb3c6
-DQo+IA0KPiBIbW0uIFdlIGFscmVhZHkgaGF2ZSBhIHNwZWVkIHByb3BlcnR5IGZvciB0aGF0IHlv
-dSBjYW4gdXNlIGZvciAxMDAwLCAxMDAwMCwNCj4gNDAwMDAuIExlYXZlcyB0aGUgbWVkaWEtdHlw
-ZSwgZS5nLiBjb3BwZXIgb3Igd2hhdGV2ZXIuDQpbUy5IXSBZb3UgbWVhbiB0aGUgcHJvcGVydHkg
-J21heC1zcGVlZCc/IHRoZSBwcm9ibGVtIGlzIHRoZSBtZWRpYS10eXBlIG1hdHRlcnMuDQpQbGVh
-c2Ugc2VlIGJlbG93Lg0KDQo+IA0KPiBDdXJyZW50bHksIHlvdSBmYWlsIHRvIGNvbnZpbmNlIG1l
-IHRoYXQgaXQgaXMgcmVxdWlyZWQgdG8gZGVzY3JpYmUgdGhlIG1lZGlhDQo+IHR5cGUgYXQgYWxs
-LiBXZSBoYXZlIGNvbWUgYSBsb25nIHdheSB3aXRoIGRpZmZlcmVudCBtZWRpYSB3aXRob3V0IGRl
-c2NyaWJpbmcgdGhlDQo+IFBIWS10by1QSFkgbWVkaWEgdHlwZS4NCj4gDQo+IFdoYXQgbWFrZXMg
-dGhlIGJhY2twbGFuZSBzZXR1cCBzbyBzcGVjaWFsPw0KW1MuSF0gdGhlIGZzbCBiYWNrcGxhbmUs
-IGUuZy4gMTBHQkFTRS1LUiwgbmVlZHMgc29mdHdhcmUgdG8gaGFuZGxlIGxpbmsgdHJhaW5pbmcs
-DQpJdCdzIHRvIHRyYWluIGxpbmsgcGFydG5lciwgYW5kIHRyYWluZWQgYnkgbGluayBwYXJ0bmVy
-IHBhcmFsbGVsLg0KDQpCdXQgaWYgbWVkaWEgdHlwZSBpcyBub3QgY29wcGVyLCBlLmcuIG9wdGlj
-YWwgbW9kdWxlLCB3ZSB3b24ndCBuZWVkIHRoaXMuDQoNClRoYW5rIHlvdSENCg0KU2hhb2h1aSAN
-Cg==
+On 15/01/16 22:47, Sinan Kaya wrote:
+> On 1/15/2016 12:32 PM, Marc Zyngier wrote:
+>>>> Do you have a link to that? Seeing it would help to ease my concerns.
+>>>>
+>>>> The QEMU driver has not been posted yet. As far as I know, it just discovers the memory
+>>>> resources on the platform object and creates mappings for the guest machine only. 
+>>>>
+>>>> Shanker Donthineni and Vikram Sethi will post the QEMU patch later.
+>> Then may I suggest you both synchronize your submissions? I'd really
+>> like to hear from the QEMU maintainers that they are satisfied with that
+>> side of the story as well.
+> 
+> The HIDMA QEMU driver is also based on VFIO platform driver in QEMU. It is not a new concept
+> or new framework. All tried and tested solutions. 
+> 
+> The driver below is already using this feature. HIDMA is no exception. 
+> I have verified functionality of HIDMA linux driver with HIDMA QEMU driver already.
+
+That you have tested what you propose is the minimum you can do.
+
+> https://lxr.missinglinkelectronics.com/qemu/hw/arm/sysbus-fdt.c#L67
+> https://lxr.missinglinkelectronics.com/qemu/hw/vfio/calxeda-xgmac.c#L18
+> https://lxr.missinglinkelectronics.com/qemu/include/hw/vfio/vfio-calxeda-xgmac.h 
+
+None of which warrants that what you're doing is the right thing. Since
+nobody has seen your QEMU code, I'm not going to take any bet.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
