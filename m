@@ -1,73 +1,175 @@
-From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
-Date: Mon, 18 Jan 2016 09:34:54 +0000
-Message-ID: <F1B223389110CE49B4CF055ABA2E5D3D78CF6875@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
- <20160113153113.GL6491@xsjsorenbubuntu>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
+ to be predictable and never exceed the requested rate
+Date: Mon, 18 Jan 2016 10:40:59 +0100
+Message-ID: <CAGNoLaNa4=AwYVrgHMfLSSg_FyMWGVy-gazH6nM4vVN26ZcwgA@mail.gmail.com>
+References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
+	<1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
+	<20151227210946.GL30359@lukather>
+	<CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
+	<20160110181428.GH9631@lukather>
+	<CAGNoLaNi72=T6SzGK-Y-b1X6jNx6M-c2oMSQ85sREp9REs5SKQ@mail.gmail.com>
+	<20160117185143.GL4581@lukather>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113153113.GL6491@xsjsorenbubuntu>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDFO74UEV4IRBK7G6K2AKGQE2KO3V4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160117185143.GL4581@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
-IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBX
-ZWRuZXNkYXksIEphbnVhcnkgMTMsIDIwMTYgOTowMSBQTQ0KPiBUbzogU3ViYmFyYXlhIFN1bmRl
-ZXAgQmhhdHRhDQo+IENjOiBraXNob25AdGkuY29tOyByb2JoQGtlcm5lbC5vcmc7IGJhbGJpQHRp
-LmNvbTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgU3ViYmFyYXlhIFN1bmRl
-ZXAgQmhhdHRhDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8zXSBwaHk6IHp5bnFtcDogQWRk
-IGR0IGJpbmRpbmdzIGZvciBaeW5xTVAgUEhZLg0KPiANCj4gT24gV2VkLCAyMDE2LTAxLTEzIGF0
-IDA3OjQzUE0gKzA1MzAsIFN1YmJhcmF5YSBTdW5kZWVwIEJoYXR0YSB3cm90ZToNCj4gPiBUaGlz
-IHBhdGNoIGFkZHMgdGhlIGRvY3VtZW50IGRlc2NyaWJpbmcgZHQgYmluZGluZ3MgZm9yIFp5bnFN
-UCBQSFkuDQo+ID4gWnlucU1QIFNPQyBoYXMgYSBIaWdoIFNwZWVkIFByb2Nlc3NpbmcgU3lzdGVt
-IEdpZ2FiaXQgVHJhbnNjZWl2ZXINCj4gPiB3aGljaCBwcm92aWRlcyBQSFkgY2FwYWJpbHRpZXMg
-dG8gVVNCLCBTQVRBLCBQQ0lFLCBEaXNwbGF5IFBvcnQgYW5kDQo+ID4gRWhlcm5ldCBTR01JSSBj
-b250cm9sbGVycy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFN1YmJhcmF5YSBTdW5kZWVwIEJo
-YXR0YSA8c2JoYXR0YUB4aWxpbnguY29tPg0KPiANCj4gSSBtaXNzZWQgdGhlIHYyIGhlbmNlIGFn
-YWluLg0KPiANCj4gPiAtLS0NCj4gPiAgdjI6DQo+ID4gCW1vZGlmaWVkIHRvIHVzZSBwaHkgY2Vs
-bHMgYXMgMi4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFt
-cC50eHQgICAgICAgICB8IDEwMw0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDEwMyBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFtcC50eHQNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
-L3BoeS16eW5xbXAudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGh5L3BoeS16eW5xbXAudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAw
-MDAwMDAwLi45NzVjZjIxDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXp5bnFtcC50eHQNCj4gPiBAQCAtMCwwICsx
-LDEwMyBAQA0KPiA+ICtYaWxpbnggWnlucU1QIFBIWSBiaW5kaW5nDQo+ID4gKw0KPiA+ICtUaGlz
-IGJpbmRpbmcgZGVzY3JpYmVzIGEgWnlucU1QIFBIWSBkZXZpY2UgdGhhdCBpcyB1c2VkIHRvIGNv
-bnRyb2wNCj4gPiArWnlucU1QIEhpZ2ggU3BlZWQgR2lnYWJpdCBUcmFuc2NlaXZlcihHVCkuIFp5
-bnFNUCBQUyBHVFIgcHJvdmlkZXMNCj4gPiArZm91ciBsYW5lcyBhbmQgYXJlIHVzZWQgYnkgVVNC
-LCBTQVRBLCBQQ0lFLCBEaXNwbGF5IHBvcnQgYW5kIEV0aGVybmV0DQo+IFNHTU1JIGNvbnRyb2xs
-ZXJzLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllcyAoY29udHJvbGxlciAocGFyZW50
-KSBub2RlKToNCj4gPiArLSBjb21wYXRpYmxlICAgIDogU2hvdWxkIGJlICJ4bG54LHp5bnFtcC1w
-c2d0ciINCj4gPiArDQo+ID4gKy0gcmVnCQk6IEFkZHJlc3MgYW5kIGxlbmd0aCBvZiByZWdpc3Rl
-ciBzZXRzIGZvciBlYWNoIGRldmljZSBpbg0KPiA+ICsJCSAgInJlZy1uYW1lcyINCj4gPiArLSBy
-ZWctbmFtZXMgICAgIDogVGhlIG5hbWVzIG9mIHRoZSByZWdpc3RlciBhZGRyZXNzZXMgY29ycmVz
-cG9uZGluZyB0byB0aGUNCj4gPiArCQkgIHJlZ2lzdGVycyBmaWxsZWQgaW4gInJlZyI6DQo+ID4g
-KwkJCS0gc2VyZGVzOiBTRVJERVMgYmxvY2sgcmVnaXN0ZXIgc2V0DQo+ID4gKwkJCS0gc2lvdTog
-U0lPVSBibG9jayByZWdpc3RlciBzZXQNCj4gPiArCQkJLSBscGQ6IExvdyBwb3dlciBkb21haW4g
-cGVyaXBoZXJhbHMgcmVzZXQgY29udHJvbA0KPiA+ICsJCQktIGZwZDogRnVsbCBwb3dlciBkb21h
-aW4gcGVyaXBoZXJhbHMgcmVzZXQgY29udHJvbA0KPiANCj4gVGhlIHJlc2V0IHJlZ2lzdGVycyBz
-aG91bGQgbm90IGJlIGRpcmVjdGx5IG1vZGlmaWVkIGJ5IExpbnV4LiBBbnkgYWNjZXNzIHRvDQo+
-IHJlc2V0cyBpcyBsaWtlbHkgcmVxdWlyaW5nIGEgcmVzZXQgY29udHJvbGxlciB0aGF0IHVzZXMg
-cGxhdGZvcm0gRlcgdG8gbW9kaWZ5IHRoZQ0KPiByZXNldHMuDQoNCk9rIEkgd2lsbCBmaXggdGhp
-cyBhbmQgc2VuZCBuZXh0IGl0ZXJhdGlvbi4NCg0KPiA+ICsNCj4gPiArLXhsbngsdHhfdGVybWlu
-YXRpb25fZml4OiBJbmNsdWRlIGZpeCBmb3IgYSBmdW5jdGlvbmFsIGlzc3VlIGluIHRoZSBHVC4g
-VGhlIFRYDQo+ID4gKwkJCSAgdGVybWluYXRpb24gcmVzaXN0YW5jZSBjYW4gYmUgb3V0IG9mIHNw
-ZWMgZHVlIHRvIGENCj4gPiArCQkJICBidWcgaW4gdGhlIGNhbGlicmF0aW9uIGxvZ2ljLiBUaGlz
-IGlzc3VlIHdpbGwgYmUgZml4ZWQNCj4gPiArCQkJICBpbiBzaWxpY29uIGluIGZ1dHVyZSB2ZXJz
-aW9ucy4NCj4gDQo+IFRoZSBzaWxpY29uIHZlcnNpb24gaXMgcnVuLXRpbWUgZGV0ZWN0YWJsZS4g
-VGhlcmUgc2hvdWxkIGJlIGEgd2F5IHRvIGdldCBhd2F5DQo+IHdpdGhvdXQgdGhpcyBwcm9wZXJ0
-eS4NCg0KT2sgSSB3aWxsIGZpeCB0aGlzIGFuZCBzZW5kIG5leHQgaXRlcmF0aW9uLg0KDQpUaGFu
-a3MsDQpTdW5kZWVwLg0KPiANCj4gCVPDtnJlbg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+2016-01-17 19:51 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Sun, Jan 10, 2016 at 10:11:11PM +0100, Marcus Weseloh wrote:
+>> >> >> -     /* Ensure that we have a parent clock fast enough */
+>> >> >> +     /*
+>> >> >> +      * Ensure that the parent clock is set to twice the max speed
+>> >> >> +      * of the spi device (possibly rounded up by the clk driver)
+>> >> >> +      */
+>> >> >>       mclk_rate = clk_get_rate(sspi->mclk);
+>> >> >> -     if (mclk_rate < (2 * tfr->speed_hz)) {
+>> >> >> -             clk_set_rate(sspi->mclk, 2 * tfr->speed_hz);
+>> >> >> +     if (spi->max_speed_hz != sspi->cur_max_speed ||
+>> >> >> +         mclk_rate != sspi->cur_mclk) {
+>> >> >
+>> >> > Do you need to cache the values? As far as I'm aware, you end up doing
+>> >> > the computation all the time anyway.
+>> >>
+>> >> By caching the values we optimize the case when a single SPI slave
+>> >> device (or even multiple slave devices with the same max_speed) are
+>> >> used multiple times in a row. In that case, we're saving two calls:
+>> >> clk_set_rate and clk_get_rate. I was unsure about how expensive the
+>> >> clk_* calls were, so I thought it would be safer use caching. But
+>> >> maybe it's not worth the extra code?
+>> >
+>> > Unless you can point that there's a significant performance
+>> > difference, I'm not sure it's worth it.
+>>
+>> I did actually notice a significant transfer latency when a new mod0
+>> clock frequency is set, probably due to the __delay in
+>> drivers/clk/sunxi/clk-factors.c (line 147). So my feeling is that the
+>> caching is worth it... at least for the case when there are two slave
+>> devices with different transfer speeds accessing the same SPI module.
+>
+> I'm not sure we even need that delay in the first place, at least not
+> for all the clocks using factor.
+>
+> AFAIK, the only case where it's useful is for PLL, and all of them
+> have a bit you can busy-wait on that will let you know when the clock
+> has stabilized.
+
+OK, I didn't know that. Does that mean you would like me to drop the
+caching from this patch and prepare a patch to remove the __delay from
+clk-factors?
+
+>> >> [...]
+>> >> >> -     div = mclk_rate / (2 * tfr->speed_hz);
+>> >> >> -     if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+>> >> >> -             if (div > 0)
+>> >> >> -                     div--;
+>> >> >> -
+>> >> >> +     div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
+>> >> >
+>> >> > Isn't it exactly the same thing as mclk_rate / (2 * tfr->speed_hz) ?
+>> >>
+>> >> It is quite often, but not in all cases. The plain division rounds to
+>> >> the nearest integer, so it rounds down sometimes. Consider the
+>> >> following case: we have a slow SPI device with a spi-max-frequency of
+>> >> 50kHz. Our clock driver can't find a clock as slow as 100kHz, so it
+>> >> sets mclk to 214,285Hz.
+>> >>
+>> >> Using the old calculation we get: 214,285 / (2 * 50,000) = 2, so div =
+>> >> 1 as the old code subtracts 1 two lines further down
+>> >> The new calculation results in: DIV_ROUND_UP(214,285, 2 * 50,000)  =
+>> >> 3, so div = 2 if we add the -1
+>> >
+>> > Except that you have that extra - 1 after your DIV_ROUND_UP
+>> > calculation in the line you add.  so you have to remove 1 from that
+>> > line above, and then 1 again when we set the register, which ends up
+>> > being the exact same thing, or am I missing something?
+>>
+>> The -1 after the DIV_ROUND_UP is already the -1 that is needed to set
+>> the register. There's no need for another -1 after that (and there
+>> isn't one in the code).
+>
+> I was probably hallucinating :) My bad.
+>
+> That being said, I still have a hard time figuring out what would not
+> be solved simply by removing the div--, which seems to match what your
+> commit log says.
+
+I'm probably not doing a good job explaining the change. Let me try it
+with a few examples. Consider the following three approaches:
+
+A (original, unpatched version):
+========================
+div = mclk_rate / (2 * tfr->speed_hz);
+if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+        if (div > 0)
+               div--;
+} else {
+...
+}
+
+B (original version, but with div-- removed):
+=================================
+div = mclk_rate / (2 * tfr->speed_hz);
+if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+   ...
+} else {
+...
+}
+
+C (version after this patch):
+=====================
+div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
+if (div <= SUN4I_CLK_CTL_CDR2_MASK) {
+   ...
+} else {
+   ...
+}
+
+And now the following values for mclk, tfr->speed and the resulting
+div and SPI_CLK
+
+tfr->speed_hz = 50,000
+mclk = 214,285
+A: div = 1, SPI_CLK = 53,571(!)
+B: div = 2, SPI_CLK = 35,714
+C: div = 2, SPI_CLK = 35,714
+
+tfr->speed_hz = 50,000
+mclk = 200,000
+A: div = 1, SPI_CLK = 50,000
+B: div = 2, SPI_CLK = 33,333(!)
+C: div = 1, SPI_CLK = 50,000
+
+tfr->speed_hz = 650,000
+mclk = 1,6000,000
+A: div = 11, SPI_CLK = 666,667(!)
+B: div = 12, SPI_CLK = 615,385
+C: div = 12, SPI_CLK = 615,385
+
+tfr->speed_hz = 1,000,000
+mclk = 2,000,000
+A: div = 0, SPI_CLK = 1,000,000
+B: div = 1, SPI_CLK = 500,000(!)
+C: div = 0, SPI_CLK = 1,000,000
+
+I hope that makes it a little bit easier to understand the change. Of
+course, the change only makes sense if you agree that the acutal SPI
+transfer speed should never exceed the requested speed. Which I think
+is the right approach... but maybe you think otherwise?
+
+Thanks for taking the time to look at this so carefully!
+
+Marcus
