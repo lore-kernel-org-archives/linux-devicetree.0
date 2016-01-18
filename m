@@ -1,71 +1,111 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [Xen-devel] [PATCH v2 08/16] xen/hvm/params: Add a new delivery
- type for event-channel in HVM_PARAM_CALLBACK_IRQ
-Date: Mon, 18 Jan 2016 12:46:43 +0000
-Message-ID: <alpine.DEB.2.02.1601181244300.16178@kaball.uk.xensource.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
- <1452840929-19612-9-git-send-email-zhaoshenglong@huawei.com>
- <alpine.DEB.2.02.1601181205110.16178@kaball.uk.xensource.com>
- <569CDDB7.9030103@citrix.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
+ series RTC IP
+Date: Mon, 18 Jan 2016 09:52:28 -0300
+Message-ID: <CABxcv=mOjtE6awpJ2He=5pcGh1z24cOhezO4JYxtc2TGC5upEw@mail.gmail.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+	<1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
+	<569594F0.4020007@samsung.com>
+	<5695CD73.5010709@nvidia.com>
+	<5695D268.3060705@samsung.com>
+	<5695D1AF.9000806@nvidia.com>
+	<5696665A.5030508@nvidia.com>
+	<5696F0C4.1060904@samsung.com>
+	<5696F7F8.108@samsung.com>
+	<56978BA1.9050409@nvidia.com>
+	<CABxcv=kqQc1DNmMJ1PAQkB7d=w9V4-85kJXtOXRPpwpXn7to8A@mail.gmail.com>
+	<569C699F.10407@samsung.com>
+	<569CD427.3090106@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <569CDDB7.9030103@citrix.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, julien.grall@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, zhaoshenglong@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <569CD427.3090106@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux GPIO List <linux-gpio@vger.kernel.org>, rtc-linux@googlegroups.com, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jan 2016, Andrew Cooper wrote:
-> On 18/01/16 12:38, Stefano Stabellini wrote:
-> > On Fri, 15 Jan 2016, Shannon Zhao wrote:
-> >> From: Shannon Zhao <shannon.zhao@linaro.org>
-> >>
-> >> Add a new delivery type:
-> >> val[63:56] == 3: val[15:8] is flag: val[7:0] is a PPI.
-> >> To the flag, bit 0 stands the interrupt mode is edge(1) or level(0) and
-> >> bit 1 stands the interrupt polarity is active low(1) or high(0).
-> >>
-> >> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> >> ---
-> >>  include/xen/interface/hvm/params.h | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
-> >> index a6c7991..550688a 100644
-> >> --- a/include/xen/interface/hvm/params.h
-> >> +++ b/include/xen/interface/hvm/params.h
-> >> @@ -34,6 +34,11 @@
-> >>   *                  Domain = val[47:32], Bus  = val[31:16],
-> >>   *                  DevFn  = val[15: 8], IntX = val[ 1: 0]
-> >>   * val[63:56] == 2: val[7:0] is a vector number.
-> >> + * val[63:56] == 3: val[15:8] is flag of event-channel interrupt:
-> >> + *                      bit 0: interrupt is edge(1) or level(0) triggered
-> >> + *                      bit 1: interrupt is active low(1) or high(0)
-> >> + *                  val[7:0] is PPI number used by event-channel.
-> >> + *                  This is only used by ARM/ARM64.
-> >>   * If val == 0 then CPU0 event-channel notifications are not delivered.
-> >>   */
-> >>  #define HVM_PARAM_CALLBACK_IRQ 0
-> > Andrew, I think that this patch is correct. Looking back at your
-> > previous comment (http://marc.info/?l=devicetree&m=144804014214262&w=2),
-> > is it possible that you were confused by enum callback_via_type, which
-> > is internal to Xen and offset'ed by 1 compared to the described values
-> > in xen/include/public/hvm/params.h?
-> >
-> > If not, and indeed somebody introduced one more field but failed to
-> > document it, then I suggest she sends a patch to fix the issue as soon
-> > as possible.
-> 
-> I was indeed confused - the ABI is utterly mad.
+Hello Laxman and Krzysztof,
 
-All right. In that case, Shannon, you can add my
+On Mon, Jan 18, 2016 at 9:01 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>
+> On Monday 18 January 2016 09:57 AM, Krzysztof Kozlowski wrote:
+>>
+>> On 15.01.2016 10:50, Javier Martinez Canillas wrote:
+>>>
+>>> Hello,
+>>>
+>>> On Thu, Jan 14, 2016 at 8:50 AM, Laxman Dewangan <ldewangan@nvidia.com>
+>>> wrote:
+>>>>
+>>>> On Thursday 14 January 2016 06:50 AM, Krzysztof Kozlowski wrote:
+>>>>>
+>>>>> On 14.01.2016 09:50, Krzysztof Kozlowski wrote:
+>>>
+>>> [snip]
+>>>
+>>>>>> The max77802 does exactly the same (BTW, these should be merged as
+>>>>>> well... I'll add this to the TODO list) so I think this is necessary.
+>>>>>
+>>>>> How about merging max77802 to max77686 first? The only differences I
+>>>>> found are:
+>>>>> 1. It uses main MFD/PMIC regmap.
+>>>>>      This can be solved as part of decoupling code. The driver will get
+>>>>> MFD's regmap and set up its own (only on max77686). The max77802 will
+>>>>> only use parent's regmap.
+>>>>>
+>>>>> 2. It has different register address.
+>>>>>      We need a register-layout/configuration structure. The logic is
+>>>>> the
+>>>>> same except few differences (e.g. presence of MAX77802_RTC_AE1).
+>>>>>
+>>>>> It may be easier to merge them now, before adding support for max77620?
+>>>
+>>> Agreed.
+>>>
+>>> When I originally posted the max77802 support, I had separate MFD,
+>>> RTC, regulator and clock drivers and the feedback (IIRC) was that the
+>>> MFD and clock blocks were too similar to the max77686 so I extended
+>>> those drivers instead of adding new ones. But that the RTC and
+>>> regulator blocks were different so a separate driver was justified...
+>>> but it's true that are not that different and rtc-max77686 could be
+>>> extended and rtc-max77802 removed.
+>>
+>> Great!
+>>
+>>> In fact, the ChromiumOS vendor tree has a single RTC driver for both
+>>> max77686 and max77802:
+>>>
+>>>
+>>> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/rtc/rtc-max77xxx.c
+>>>
+>>>>> I could handle this probably next week or in the following week
+>>>>> (assuming someone would test max77802 because I don't have the
+>>>>> hardware).
+>>>>>
+>>> I could also work on this next week if you want. After all I feel
+>>> guilty for the code duplication :-)
+>>
+>> So feel free to take that job from me. :) I will happily do the testing
+>> and provide complains (I mean, comments).
+>>
+>
+> Hi Javier,
+> If you can provide the patch for moving MAX77802 to MAX77686 then I can
+> create the other change to move the regmap and i2c dummy client for rtc of
+> max77686 to rtc driver from core on top of your change. This will
+> completely decouple the rtc driver from core and so will be easy to use for
+> other chip MAX77620.
+>
 
-Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Ok, sounds like a plan. I'll just do the change to extend rtc-max77686
+to support the max77802 rtc then and let the other change to you.
 
+I'll work on this today once I finish other task that I'm currently working on.
 
-> However, this change does need rebasing over c/s ca5c54b, which was the
-> result of the original discussion.
+> Thanks,
+> Laxman
+>
 
-c/s ca5c54b is for Xen, while this is a Linux patch (Linux has its own
-set of Xen headers).
+Best regards,
+Javier
