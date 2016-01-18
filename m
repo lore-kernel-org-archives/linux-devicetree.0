@@ -1,53 +1,307 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: Add bindings documentation for TI
- ADS117x ADC
-Date: Mon, 18 Jan 2016 16:34:21 +0000
-Message-ID: <20160118163421.GJ6588@sirena.org.uk>
-References: <1453133092-29521-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1453133092-29521-2-git-send-email-florian.vaussard@heig-vd.ch>
+From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v9 2/6] Documentation, dt, arm64/arm: dt bindings for numa.
+Date: Mon, 18 Jan 2016 22:06:01 +0530
+Message-ID: <1453134965-6125-3-git-send-email-gkulkarni@caviumnetworks.com>
+References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S4NLt4ipYM5IQHam"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453133092-29521-2-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+In-Reply-To: <1453134965-6125-1-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Janusz Krzysztofik <jkrzyszt-NCk8gXQAEuFz6jiHbVrK7g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fenghua.yu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, james.hog
+Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+DT bindings for numa mapping of memory, cores and IOs.
 
---S4NLt4ipYM5IQHam
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/numa.txt | 272 +++++++++++++++++++++++++
+ 1 file changed, 272 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
 
-On Mon, Jan 18, 2016 at 05:04:51PM +0100, Florian Vaussard wrote:
-> Currently the binding is only made of the compatible string.
+diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+new file mode 100644
+index 0000000..734e5b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/numa.txt
+@@ -0,0 +1,272 @@
++==============================================================================
++NUMA binding description.
++==============================================================================
++
++==============================================================================
++1 - Introduction
++==============================================================================
++
++Systems employing a Non Uniform Memory Access (NUMA) architecture contain
++collections of hardware resources including processors, memory, and I/O buses,
++that comprise what is commonly known as a NUMA node.
++Processor accesses to memory within the local NUMA node is generally faster
++than processor accesses to memory outside of the local NUMA node.
++DT defines interfaces that allow the platform to convey NUMA node
++topology information to OS.
++
++==============================================================================
++2 - numa-node-id
++==============================================================================
++
++For the purpose of identification, each NUMA node is associated with a unique
++token known as a node id. For the purpose of this binding
++a node id is a 32-bit integer.
++
++A device node is associated with a NUMA node by the presence of a
++numa-node-id property which contains the node id of the device.
++
++Example:
++	/* numa node 0 */
++	numa-node-id = <0>;
++
++	/* numa node 1 */
++	numa-node-id = <1>;
++
++==============================================================================
++3 - distance-map
++==============================================================================
++
++The device tree node distance-map describes the relative
++distance (memory latency) between all numa nodes.
++
++- compatible : Should at least contain "numa-distance-map-v1".
++
++- distance-matrix
++  This property defines a matrix to describe the relative distances
++  between all numa nodes.
++  It is represented as a list of node pairs and their relative distance.
++
++  Note:
++	1. Each entry represents distance from first node to second node.
++	The distances are equal in either direction.
++	2. The distance from a node to self (local distance) is represented
++	with value 10 and all internode distance should be represented with
++	a value greater than 10.
++	3. distance-matrix should have entries in lexicographical ascending
++	order of nodes.
++	4. There must be only one device node distance-map which must reside in the root node.
++
++Example:
++	4 nodes connected in mesh/ring topology as below,
++
++		0_______20______1
++		|               |
++		|               |
++		20             20
++		|               |
++		|               |
++		|_______________|
++		3       20      2
++
++	if relative distance for each hop is 20,
++	then internode distance would be,
++	      0 -> 1 = 20
++	      1 -> 2 = 20
++	      2 -> 3 = 20
++	      3 -> 0 = 20
++	      0 -> 2 = 40
++	      1 -> 3 = 40
++
++     and dt presentation for this distance matrix is,
++
++		distance-map {
++			 compatible = "numa-distance-map-v1";
++			 distance-matrix = <0 0  10>,
++					   <0 1  20>,
++					   <0 2  40>,
++					   <0 3  20>,
++					   <1 0  20>,
++					   <1 1  10>,
++					   <1 2  20>,
++					   <1 3  40>,
++					   <2 0  40>,
++					   <2 1  20>,
++					   <2 2  10>,
++					   <2 3  20>,
++					   <3 0  20>,
++					   <3 1  40>,
++					   <3 2  20>,
++					   <3 3  10>;
++		};
++
++==============================================================================
++4 - Example dts
++==============================================================================
++
++2 sockets system consists of 2 boards connected through ccn bus and
++each board having one socket/soc of 8 cpus, memory and pci bus.
++
++	memory@00c00000 {
++		device_type = "memory";
++		reg = <0x0 0x00c00000 0x0 0x80000000>;
++		/* node 0 */
++		numa-node-id = <0>;
++	};
++
++	memory@10000000000 {
++		device_type = "memory";
++		reg = <0x100 0x00000000 0x0 0x80000000>;
++		/* node 1 */
++		numa-node-id = <1>;
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "psci";
++			/* node 0 */
++			numa-node-id = <0>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@002 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x002>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@003 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x003>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@004 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x004>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@005 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x005>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@006 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x006>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@007 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x007>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@008 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x008>;
++			enable-method = "psci";
++			/* node 1 */
++			numa-node-id = <1>;
++		};
++		cpu@009 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x009>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00a {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00a>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00b {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00b>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00c {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00c>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00d {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00d>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00e {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00e>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00f {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00f>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++	};
++
++	pcie0: pcie0@0x8480,00000000 {
++		compatible = "arm,armv8";
++		device_type = "pci";
++		bus-range = <0 255>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
++		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>;
++		/* node 0 */
++		numa-node-id = <0>;
++        };
++
++	pcie1: pcie1@0x9480,00000000 {
++		compatible = "arm,armv8";
++		device_type = "pci";
++		bus-range = <0 255>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0x9480 0x00000000 0 0x10000000>;  /* Configuration space */
++		ranges = <0x03000000 0x9010 0x00000000 0x9010 0x00000000 0x70 0x00000000>;
++		/* node 1 */
++		numa-node-id = <1>;
++        };
++
++	distance-map {
++		compatible = "numa-distance-map-v1";
++		distance-matrix = <0 0 10>,
++				  <0 1 20>,
++				  <1 1 10>;
++	};
+-- 
+1.8.1.4
 
-Please use subject lines matching the style for the subsystem.
-
-> +  - compatible : "ti,ads117x"
-
-Compatible strings shouldn't have wildcards in them, they should specify
-a particular device - this way if we start caring about differences
-later we don't have problems with old DTs.
-
---S4NLt4ipYM5IQHam
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWnRQMAAoJECTWi3JdVIfQYIEH/0ZZaN8aPZCNjFK92rXVUUMt
-lCRpcPNzBoHkSpihA44RGQJ98f5egMa0gtmlLV/BVAxNnZwNOrm+bUaXWHQdGPUh
-F3FeezPStjCwDZuVl75eXqMGKM87ySvi0P9d8+MH14MFfx6lvct99G0OPH0da3gr
-fWfupvM43/9D8VDRNpXHexV7ChBtLufvK9ezLfNK4LrXKP1DWE7QvVAHdHH1Q3kB
-mWgH0yRS3rqxPTUDy85ngWeuWEXMHuo7a1/12k8OMyDvl92qoYXsceCz9n5VcHIs
-h3laHmc1+lbFT6o1SIlm+EV63uWLBnqphh4pVrwaTbn8S4wwmLW87BmdPG/Gxho=
-=zi2K
------END PGP SIGNATURE-----
-
---S4NLt4ipYM5IQHam--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
