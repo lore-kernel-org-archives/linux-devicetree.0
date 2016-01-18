@@ -1,60 +1,30 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Mon, 18 Jan 2016 09:06:15 +0000
-Message-ID: <569CAB07.8020200@arm.com>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
- <20160115145629.GI3262@leverpostej> <56990C40.4050407@codeaurora.org>
- <20160115152257.GK3262@leverpostej> <56992987.5080603@codeaurora.org>
- <56992D16.6070800@arm.com> <56997718.70707@codeaurora.org>
+From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 3/6] QE: Add uqe_serial document to bindings
+Date: Mon, 18 Jan 2016 17:10:00 +0800
+Message-ID: <CADRPPNS3qT+=zz60UKRSYwxpaphcE7e04SntOQ==RjoOfhQ68Q@mail.gmail.com>
+References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+	<1452219494-31947-3-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <56997718.70707@codeaurora.org>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Sinan Kaya <okaya@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452219494-31947-3-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/01/16 22:47, Sinan Kaya wrote:
-> On 1/15/2016 12:32 PM, Marc Zyngier wrote:
->>>> Do you have a link to that? Seeing it would help to ease my concerns.
->>>>
->>>> The QEMU driver has not been posted yet. As far as I know, it just discovers the memory
->>>> resources on the platform object and creates mappings for the guest machine only. 
->>>>
->>>> Shanker Donthineni and Vikram Sethi will post the QEMU patch later.
->> Then may I suggest you both synchronize your submissions? I'd really
->> like to hear from the QEMU maintainers that they are satisfied with that
->> side of the story as well.
-> 
-> The HIDMA QEMU driver is also based on VFIO platform driver in QEMU. It is not a new concept
-> or new framework. All tried and tested solutions. 
-> 
-> The driver below is already using this feature. HIDMA is no exception. 
-> I have verified functionality of HIDMA linux driver with HIDMA QEMU driver already.
+On Fri, Jan 8, 2016 at 10:18 AM, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org> wrote:
+> Add uqe_serial document to
+> Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
 
-That you have tested what you propose is the minimum you can do.
+As you have submitted patch to move QE code from arch/powerpc into
+drivers/soc/fsl for the reuse of ARM and powerpc,  you should also
+move the binding documents out of the powerpc folder into a more
+common place and add new bindings in the new location.
 
-> https://lxr.missinglinkelectronics.com/qemu/hw/arm/sysbus-fdt.c#L67
-> https://lxr.missinglinkelectronics.com/qemu/hw/vfio/calxeda-xgmac.c#L18
-> https://lxr.missinglinkelectronics.com/qemu/include/hw/vfio/vfio-calxeda-xgmac.h 
-
-None of which warrants that what you're doing is the right thing. Since
-nobody has seen your QEMU code, I'm not going to take any bet.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+Leo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
