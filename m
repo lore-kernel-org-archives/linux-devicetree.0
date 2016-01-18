@@ -1,35 +1,46 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more
- devicetree-friendly
-Date: Mon, 18 Jan 2016 20:57:25 +0100
-Message-ID: <20160118205725.0a16be8e@tock>
-References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
-	<1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: AM4372: Add the wkup_m3_ipc node
+Date: Mon, 18 Jan 2016 14:17:47 -0600
+Message-ID: <569D486B.6080000@ti.com>
+References: <1437167284-25659-1-git-send-email-d-gerlach@ti.com>
+ <1437167284-25659-5-git-send-email-d-gerlach@ti.com>
+ <20150805103155.GB16878@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453074987-3356-2-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150805103155.GB16878@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, Santosh Shilimkar <ssantosh@kernel.org>, Suman Anna <s-anna@ti.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jan 2016 02:56:24 +0300
-Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Tony,
+On 08/05/2015 05:31 AM, Tony Lindgren wrote:
+> * Dave Gerlach <d-gerlach@ti.com> [150717 14:10]:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> Add the Wakeup M3 IPC device node for the wkup_m3_ipc driver on
+>> AM4372 SoC. This node uses the IPC registers, part of the Control
+>> Module, and is therefore added as a child of the scm node.
+>
+> Applying the last two patches in this series into omap-for-v4.3/dt
+> thanks.
+>
+> Probably the send-no-irq quirk you can do in the driver based
+> on the compatible flag like I suggested in the related mailbox
+> thread so not applying those until that's been discussed.
 
-> At the moment ar933x of-enabled drivers use use clock names
-> (e.g. "uart" or "ahb") to get clk descriptor.
-> On the other hand
-> Documentation/devicetree/bindings/clock/clock-bindings.txt states
-> that the 'clocks' property is required for passing clk to clock
-> consumers.
+Now that this compatible flag for the mbox driver has been accepted 
+here: 8e3c5952144f ("mailbox/omap: Add ti,mbox-send-noirq quirk to fix 
+AM33xx CPU Idle") can the first two patches in this series get picked 
+up. I tested applying to v4.4 and they still apply cleanly.
 
-This patch is not need, you should set the clock-names property in
-the relevant device nodes instead.
+Regards,
+Dave
 
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Regards,
+>
+> Tony
+>
