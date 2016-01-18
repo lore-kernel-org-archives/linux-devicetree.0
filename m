@@ -1,148 +1,110 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] bmips: add BCM6358 support
-Date: Mon, 18 Jan 2016 11:22:53 -0800
-Message-ID: <569D3B8D.6040603@gmail.com>
-References: <1453030101-14794-1-git-send-email-noltari@gmail.com>
- <0BC6030C-7485-4193-B86D-E690BF673952@gmail.com>
- <BF36180D-DB32-42A5-AFF7-2B282F5A81DC@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] ARM: dts: sunxi: Add sunxi-itead-core-common.dtsi
+Date: Mon, 18 Jan 2016 20:38:27 +0100
+Message-ID: <20160118193827.GQ4581@lukather>
+References: <1452766555-16409-1-git-send-email-codekipper@gmail.com>
+ <1452766555-16409-2-git-send-email-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <BF36180D-DB32-42A5-AFF7-2B282F5A81DC@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jogo@openwrt.org, cernekee@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lCKkSrrNUaKEhaIQ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNH66S2AKGQEVDXOWDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452766555-16409-2-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(please don't top post)
+--lCKkSrrNUaKEhaIQ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Le 18/01/2016 01:42, =C3=81lvaro Fern=C3=A1ndez Rojas a =C3=A9crit :
-> I can refine it to support a custom offset for each cpu instead of a =
-generic one, but defining a custom offset for new SoCs such as BCM6368 =
-or BCM6328 would actually break them, since that way the address wouldn=
-'t be remapped to 0xb0000000.
-> See: https://github.com/torvalds/linux/blob/master/arch/mips/include/=
-asm/io.h#L213
-> In those CPUs the remapping is done automatically (from 0x10000000 to=
- 0xb0000000), since the registers are located in the low 512MB of addre=
-ss space (0x1fffffffULL).
+On Thu, Jan 14, 2016 at 11:15:51AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Itead have a core module board that can be populated with either
+> an Allwinner A10 or A20 SoC. This patch creates a common dtsi
+> which these boards can use.
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sunxi-itead-core-common.dtsi | 99 ++++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+> new file mode 100644
+> index 0000000..0074f7b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+> @@ -0,0 +1,99 @@
+> +/*
+> + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-These registers are always accessible AFAIR, either through KSEG3
-(0xFF00_0000), or through KSEG1 (0xB000_0000) for newer SoCs, and in
-arch/mips/include/asm/io.h, the first thing we do is call
-plat_ioremap(), if the address returned is valid, we just bail out and
-do not execute the snippet you are indicating.
+Didn't you take that code from the other itead board?
 
->=20
-> However, the older CPUs such as BCM6358 (or BCM3368) need that custom=
- ioremap, since those registers aren't located in the low 512MB of addr=
-ess space.
-> If you want, I can do something like this: https://gist.github.com/No=
-ltari/bc5fe029c52cf053a454
-> And after that we could add other CPUs such as the BCM3368, which nee=
-ds a different offset: "{ "brcm,bcm3368", 0xfff80000 }"
->=20
-> What do you think? Should we keep a generic offset (0xfff00000) or sh=
-ould we add SoC specific compatible strings with each custom offset?
+It seems wrong to remove the original author from the copyright list.
 
-I would prefer we maintain the existing logic from
-arch/mips/include/asm/mach-bcm63xx/ioremap.h. If needed we could do thi=
-s
-in a two level step, where plat_ioremap() calls a helper function, and
-this helper function has been scanning the Device Tree for the bus
-register space.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
 
-Jonas' suggestion works too.
+You're not using any of these headers.
 
->=20
-> Regards,
-> =C3=81lvaro.
->=20
->> El 18 ene 2016, a las 7:49, Florian Fainelli <f.fainelli@gmail.com> =
-escribi=C3=B3:
->>
->>> On January 17, 2016 3:28:20 AM PST, "=C3=81lvaro Fern=C3=A1ndez Roj=
-as" <noltari@gmail.com> wrote:
->>> BCM6358 has a shared TLB which conflicts with current SMP support, =
-so
->>> it must
->>> be disabled for now.
->>> BCM6358 uses >=3D 0xfff00000 addresses for internal registers, whic=
-h need
->>> to be
->>> remapped (by using a simplified version of BRCM63xx ioremap.h).
->>>
->>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->>> ---
->>> arch/mips/bmips/setup.c                    | 10 +++++++++
->>> arch/mips/include/asm/mach-bmips/ioremap.h | 33
->>> ++++++++++++++++++++++++++++++
->>> 2 files changed, 43 insertions(+)
->>> create mode 100644 arch/mips/include/asm/mach-bmips/ioremap.h
->>>
->>> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
->>> index 3553528..38b5bd5 100644
->>> --- a/arch/mips/bmips/setup.c
->>> +++ b/arch/mips/bmips/setup.c
->>> @@ -95,6 +95,15 @@ static void bcm6328_quirks(void)
->>>        bcm63xx_fixup_cpu1();
->>> }
->>>
->>> +static void bcm6358_quirks(void)
->>> +{
->>> +    /*
->>> +     * BCM6358 needs special handling for its shared TLB, so
->>> +     * disable SMP for now
->>> +     */
->>> +    bmips_smp_enabled =3D 0;
->>> +}
->>
->> That part looks good.
->>
->>> +
->>> static void bcm6368_quirks(void)
->>> {
->>>    bcm63xx_fixup_cpu1();
->>> @@ -104,6 +113,7 @@ static const struct bmips_quirk bmips_quirk_lis=
-t[]
->>> =3D {
->>>    { "brcm,bcm3384-viper",        &bcm3384_viper_quirks        },
->>>    { "brcm,bcm33843-viper",    &bcm3384_viper_quirks        },
->>>    { "brcm,bcm6328",        &bcm6328_quirks            },
->>> +    { "brcm,bcm6358",        &bcm6358_quirks            },
->>>    { "brcm,bcm6368",        &bcm6368_quirks            },
->>>    { "brcm,bcm63168",        &bcm6368_quirks            },
->>>    { },
->>
->> <snip>
->>
->>> +
->>> +static inline int is_bmips_internal_registers(phys_addr_t offset)
->>> +{
->>> +    if (offset >=3D 0xfff00000)
->>> +        return 1;
->>> +
->>> +    return 0;
->>
->> That should probably be refined to be looking at the SoC/CPU you are=
- running on, using eventually of_machine_is_compatible on the SoC-speci=
-fic compatible string. For instance, on 6368 and newer, the physical re=
-gister offset moves to PA 0x1000_0000.
->>
->> Thanks!
->>
->> --=20
->> Florian
+Thanks!
+Maxime
 
-
---=20
-=46lorian
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--lCKkSrrNUaKEhaIQ--
