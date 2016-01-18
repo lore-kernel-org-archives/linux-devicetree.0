@@ -1,85 +1,86 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
- bindings for DECON-TV
-Date: Mon, 18 Jan 2016 11:12:00 +0100
-Message-ID: <569CBA70.8000107@samsung.com>
-References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
- <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
- <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
- <569C279D.1020705@samsung.com> <569CB664.3090806@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Mon, 18 Jan 2016 11:24:47 +0100
+Message-ID: <4938288.BbhleXAYOc@wuerfel>
+References: <Pine.LNX.4.44L0.1601161115050.11338-100000@netrider.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <569CB664.3090806@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hyungwon Hwang <human.hwang@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1601161115050.11338-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSW5raSwKCk9uIDAxLzE4LzIwMTYgMTA6NTQgQU0sIElua2kgRGFlIHdyb3RlOgo+Cj4gMjAx
-NuuFhCAwMeyblCAxOOydvCAwODo0NeyXkCBLcnp5c3p0b2YgS296bG93c2tpIOydtCjqsIApIOyT
-tCDquIA6Cj4+IE9uIDE0LjAxLjIwMTYgMTk6NDksIElua2kgRGFlIHdyb3RlOgo+Pj4gKyBSb2Ig
-SGVycmluZwo+Pj4KPj4+IDIwMTbrhYQgMDHsm5QgMTTsnbwgMTk6Mzbsl5AgQW5kcnplaiBIYWpk
-YSDsnbQo6rCAKSDsk7Qg6riAOgo+Pj4+IEhpIElua2ksCj4+Pj4KPj4+PiBJdCBzZWVtcyB0aGlz
-IHBhdGNoIGFuZCAwNC8xMCBkaWQgbm90IGdldCBwaWNrZWQgdXAgeWV0Lgo+Pj4+IENvdWxkIHlv
-dSBtZXJnZSBpdD8KPj4+IFllcywgSSBjYW4uIEhvd2V2ZXIsIDA0LzEwIGlzIHJlcXVpcmVkIGZv
-ciBhY2tlZC1ieSBmcm9tIGR0IG9yIFNvQyBtYWludGFpbmVyLgo+Pj4gS3J6eXN6dG9mIGFuZCBS
-b2IsIGNvdWxkIHlvdSBnaXZlIG1lIGFja2VkLWJ5Pwo+Pj4KPj4+IFRoYW5rcywKPj4+IElua2kg
-RGFlCj4+IE15IGFjayBpcyByZWFsbHkgbm90IHJlcXVpcmVkLCBiZWNhdXNlIHRoaXMgaXMgYSBi
-aW5kaW5nIGZvciBhIHNwZWNpZmljCj4+IGRyaXZlciBmcm9tIHZpZGVvIHN1YnN5c3RlbS4gSXQg
-ZG9lcyBub3QgZmFsbCBpbnRvIHRoZSBhcm0vbWFjaC1leHlub3MKPj4gbm9yIHRoZSBkdHMvKmV4
-eW5vcyouCj4+Cj4+IEFueXdheSBJIHJldmlld2VkIHRoZSBwYXRjaCBvbiAyOHRoIG9mIE9jdG9i
-ZXIgYW5kIFJvYiBhY2tlZCBpdCBvbiAxM3RoCj4+IG9mIE5vdmVtYmVyLgo+IEkgbWVhbnQgMDQv
-MTAgbm90IDA5LzEwIHBhdGNoLiA6KQoKVGhlcmUgaXMgZG9jdW1lbnQgaW4ga2VybmVsIHdpdGgg
-Y2xlYXIgZXhwbGFuYXRpb24gYWJvdXQgdGhlIHN1YmplY3Q6CkRvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zdWJtaXR0aW5nLXBhdGNoZXMudHh0LgpTZWUgZXNwZWNpYWxseSBwYXJh
-Z3JhcGggSUkuMiBbMV0uCgpbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-dWJtaXR0aW5nLXBhdGNoZXMudHh0I0w1MAoKUmVnYXJkcwpBbmRyemVqCgo+Cj4gVGhhbmtzLAo+
-IElua2kgRGFlCj4KPj4gQmVzdCByZWdhcmRzLAo+PiBLcnp5c3p0b2YKPj4KPj4KPj4+PiBSZWdh
-cmRzCj4+Pj4gQW5kcnplago+Pj4+Cj4+Pj4gT24gMTAvMjYvMjAxNSAxMjo1OSBQTSwgQW5kcnpl
-aiBIYWpkYSB3cm90ZToKPj4+Pj4gREVDT04tVFYoRGlzcGxheSBhbmQgRW5oYW5jZW1lbnQgQ29u
-dHJvbGxlciBmb3IgVFYpIGlzIGEgdmFyaWF0aW9uCj4+Pj4+IG9mIERFQ09OIElQLiBJdHMgbWFp
-biBwdXJwb3NlIGlzIHRvIHByb2R1Y2UgdmlkZW8gc3RyZWFtIGZvciBIRE1JIElQLgo+Pj4+Pgo+
-Pj4+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+
-Pj4+PiAtLS0KPj4+Pj4gSGkgS3J6eXN6dG9mLAo+Pj4+Pgo+Pj4+PiBJIGhhdmUgZGVjaWRlZCB0
-byBza2lwIGNsZWFudXAgcGFydCBhcyBpdCB3b3VsZCByZXF1aXJlIG1vcmUgd29yaywKPj4+Pj4g
-bm90IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaHNldC4KPj4+Pj4KPj4+Pj4gUmVnYXJkcwo+Pj4+PiBB
-bmRyemVqCj4+Pj4+Cj4+Pj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvdmlk
-ZW8vZXh5bm9zNTQzMy1kZWNvbi50eHQgfCAzICsrLQo+Pj4+PiAgMSBmaWxlIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVjb24udHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2V4eW5vczU0MzMtZGVj
-b24udHh0Cj4+Pj4+IGluZGV4IDNkZmY3OGIuLmM5ZmQ3YjMgMTAwNjQ0Cj4+Pj4+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9leHlub3M1NDMzLWRlY29uLnR4
-dAo+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5
-bm9zNTQzMy1kZWNvbi50eHQKPj4+Pj4gQEAgLTUsNyArNSw4IEBAIEV4eW5vcyBzZXJpZXMgb2Yg
-U29DcyB3aGljaCB0cmFuc2ZlcnMgdGhlIGltYWdlIGRhdGEgZnJvbSBhIHZpZGVvIG1lbW9yeQo+
-Pj4+PiAgYnVmZmVyIHRvIGFuIGV4dGVybmFsIExDRCBpbnRlcmZhY2UuCj4+Pj4+ICAKPj4+Pj4g
-IFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+IC0tIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBi
-ZSAic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uIjsKPj4+Pj4gKy0gY29tcGF0aWJsZTogdmFsdWUg
-c2hvdWxkIGJlIG9uZSBvZjoKPj4+Pj4gKwkic2Ftc3VuZyxleHlub3M1NDMzLWRlY29uIiwgInNh
-bXN1bmcsZXh5bm9zNTQzMy1kZWNvbi10diI7Cj4+Pj4+ICAtIHJlZzogcGh5c2ljYWwgYmFzZSBh
-ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERFQ09OIHJlZ2lzdGVycyBzZXQuCj4+Pj4+ICAtIGlu
-dGVycnVwdHM6IHNob3VsZCBjb250YWluIGEgbGlzdCBvZiBhbGwgREVDT04gSVAgYmxvY2sgaW50
-ZXJydXB0cyBpbiB0aGUKPj4+Pj4gIAkgICAgICBvcmRlcjogVlNZTkMsIExDRF9TWVNURU0uIFRo
-ZSBpbnRlcnJ1cHQgc3BlY2lmaWVyIGZvcm1hdAo+Pj4+IC0tCj4+Pj4gVG8gdW5zdWJzY3JpYmUg
-ZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmct
-c29jIiBpbgo+Pj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJu
-ZWwub3JnCj4+Pj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9y
-Zy9tYWpvcmRvbW8taW5mby5odG1sCj4+Pj4KPj4+Pgo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBm
-cm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtc2Ftc3VuZy1z
-b2MiIGluCj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwu
-b3JnCj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
-b3Jkb21vLWluZm8uaHRtbAo+Pgo+PgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Saturday 16 January 2016 11:40:32 Alan Stern wrote:
+> On Sat, 16 Jan 2016, Arnd Bergmann wrote:
+> 
+> > > This leaves the question of whether OF will always use the same node to
+> > > represent the host controller and the root hub.  In other words, if a
+> > > motherboard has a fixed device plugged into a fixed root-hub port, will
+> > > the DT description make that device a child of the host controller?  
+> > > Or will there be a node in between (to represent the root hub)?
+> > 
+> > Good question. I'm sure the answer is somewhere in this document
+> > 
+> > http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> > 
+> > but unfortunately I don't understand USB addressing well enough
+> > to answer this. I think the key sentence is the definition of the
+> > "reg" property:
+> > 
+> > | prop-encoded-array: one integer, encoded as with encode-int.
+> > | The "reg" property for a device node shall consist of the number of the
+> > | USB hub port or the USB host controller port to which this USB device
+> > | is attached. As specified in [2] section 11.11.2.1, port numbers range
+> > | from 1 to 255.
+> > 
+> > Does the root hub have a port number relative to the host controller,
+> > or is it identical to the host controller from the addressing
+> > perspective?
+> 
+> The root hub does not have a port number relative to the host
+> controller.  In a sense, the root hub is _part_ of the host controller;
+> it represents the controller's connection to the USB bus (whereas the
+> logical device we commonly associate with the host controller
+> represents the controller's connection to the upstream PCI/whatever
+> bus).
+> 
+> You can also ask whether port numbers relative to the root hub are
+> the same as the port numbers relative to the controller.  Under normal
+> circumstances they are the same.  However, it is possible that they
+> will be different for USB-3 host controllers (!).
+> 
+> This is because USB-3 uses two buses per controller: the legacy
+> Low-Speed/Full-Speed/High-Speed bus compatible with USB-1.1 and USB-2
+> devices, and the new SuperSpeed bus compatible with USB-3 devices.  
+> Even though there's only the one controller, each bus has its own root
+> hub and the ports for each root hub are numbered starting from 1.  
+> Thus, for example, an xHCI controller with 6 LS/FS/HS ports and 3 SS
+> ports would have a USB-2 root hub with ports 1-6 and a USB-3 root hub
+> with ports 1-3.  However, xHCI treats the controller as a single entity
+> and numbers all the ports sequentially; thus the controller would have
+> ports 1-9.  (Even though the three SS ports would be the same physical
+> objects as three of the LS/FS/HS ports -- USB-3 ports literally contain
+> two independent sets of signal wires.)
+> 
+> This isn't merely a convention in the specifications; the hardware
+> actually uses both numbering schemes (although I don't know about USB-3
+> controllers other than xHCI; they might be different).  Untangling this
+> mess might be difficult.  I don't know how existing DT files handle it.
+
+Existing DTS files never list USB devices, and the specification has
+been largely unused even on real OF since it was written an eternity
+ago (way before USB3).
+
+I think the sanest interpretation is if we assume the addressing in
+DT uses the single number space (port 1-9 in your example), so we
+don't need to add in the root port as an extra device node that would
+complicate matters.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
