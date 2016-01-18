@@ -1,62 +1,34 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v2 11/16] ARM64: ACPI: Check if it runs on Xen to enable
- or disable ACPI
-Date: Mon, 18 Jan 2016 15:07:58 +0000
-Message-ID: <alpine.DEB.2.02.1601181505200.16178@kaball.uk.xensource.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
- <1452840929-19612-12-git-send-email-zhaoshenglong@huawei.com>
- <20160118104142.GC21067@leverpostej>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+Date: Mon, 18 Jan 2016 16:15:00 +0100
+Message-ID: <20160118151500.GD923@lunn.ch>
+References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
+ <20160114164418.GD19773@lunn.ch>
+ <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+ <56997951.90304@gmail.com>
+ <5699B211.5070602@gmail.com>
+ <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
+ <569C9CD2.10301@gmail.com>
+ <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160118104142.GC21067@leverpostej>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB1664AB0E483F01F1641059FFE8C00-mr6QIVyDiCHTAO9RNConP89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jan 2016, Mark Rutland wrote:
-> On Fri, Jan 15, 2016 at 02:55:24PM +0800, Shannon Zhao wrote:
-> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
-> > a /hypervisor node in DT. So check if it needs to enable ACPI.
-> > 
-> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm64/kernel/acpi.c | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> > index d1ce8e2..4e92be0 100644
-> > --- a/arch/arm64/kernel/acpi.c
-> > +++ b/arch/arm64/kernel/acpi.c
-> > @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
-> >  {
-> >  	/*
-> >  	 * Return 1 as soon as we encounter a node at depth 1 that is
-> > -	 * not the /chosen node.
-> > +	 * not the /chosen node, or /hypervisor node when running on Xen.
-> >  	 */
-> > -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
-> > -		return 1;
-> > +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
-> > +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
-> > +			return 1;
-> > +	}
-> > +
-> >  	return 0;
-> >  }
+> [S.H] the fsl backplane, e.g. 10GBASE-KR, needs software to handle link training,
+> It's to train link partner, and trained by link partner parallel.
 > 
-> As this is changing the semantic of an "empty" DT, we should consider
-> now if there's anything else that might also need to exist in an "empty"
-> DT. We don't want to change this again in future if we don't have to,
-> given the compatiblity nightmare that's sure to result.
-> 
-> We should also consider if the "hypervisor" node name is sufficient (I
-> think it is, but let's not assume anything).
+> But if media type is not copper, e.g. optical module, we won't need this.
 
->From Xen point of view I think it is enough: real hardware is described
-in ACPI anyway and anything hypervisor related can be done via
-hypercalls once Xen support is discovered, for which the hypervisor node
-is sufficient.
+So what we actually need to know is copper vs fibre?
+
+   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
