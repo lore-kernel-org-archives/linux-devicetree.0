@@ -1,133 +1,118 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v6 3/3] dt/bindings: qcom_nandc: Add DT bindings
-Date: Mon, 18 Jan 2016 15:20:34 +0530
-Message-ID: <1453110634-25995-4-git-send-email-architt@codeaurora.org>
-References: <1451971501-18160-1-git-send-email-architt@codeaurora.org>
- <1453110634-25995-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1453110634-25995-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: computersforpeace@gmail.com, boris.brezillon@free-electrons.com
-Cc: linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
+ bindings for DECON-TV
+Date: Mon, 18 Jan 2016 18:54:44 +0900
+Message-ID: <569CB664.3090806@samsung.com>
+References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
+ <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
+ <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
+ <569C279D.1020705@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <569C279D.1020705@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for the Qualcomm NAND controller driver.
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
-v6:
-  - Update compatible tring to something more specific
-  - Refer to nand.txt for standard properties
-  - In the example, use 'partitions' node to hold the partition subnodes
+2016=EB=85=84 01=EC=9B=94 18=EC=9D=BC 08:45=EC=97=90 Krzysztof Kozlowsk=
+i =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> On 14.01.2016 19:49, Inki Dae wrote:
+>> + Rob Herring
+>>
+>> 2016=EB=85=84 01=EC=9B=94 14=EC=9D=BC 19:36=EC=97=90 Andrzej Hajda =EC=
+=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+>>> Hi Inki,
+>>>
+>>> It seems this patch and 04/10 did not get picked up yet.
+>>> Could you merge it?
+>>
+>> Yes, I can. However, 04/10 is required for acked-by from dt or SoC m=
+aintainer.
+>> Krzysztof and Rob, could you give me acked-by?
+>>
+>> Thanks,
+>> Inki Dae
+>=20
+> My ack is really not required, because this is a binding for a specif=
+ic
+> driver from video subsystem. It does not fall into the arm/mach-exyno=
+s
+> nor the dts/*exynos*.
+>=20
+> Anyway I reviewed the patch on 28th of October and Rob acked it on 13=
+th
+> of November.
 
-v5:
-- Make changes to incorporate chip select sub nodes (brcmnand taken as
-  reference)
+I meant 04/10 not 09/10 patch. :)
 
-v3:
-- Don't use '0x' when specifying nand controller address space
-- Add optional property for on-flash bbt usage
+Thanks,
+Inki Dae
 
- .../devicetree/bindings/mtd/qcom_nandc.txt         | 86 ++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-new file mode 100644
-index 0000000..70dd511
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -0,0 +1,86 @@
-+* Qualcomm NAND controller
-+
-+Required properties:
-+- compatible:		should be "qcom,ipq806x-nand"
-+- reg:			MMIO address range
-+- clocks:		must contain core clock and always on clock
-+- clock-names:		must contain "core" for the core clock and "aon" for the
-+			always on clock
-+- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-+			controller node and the channel number to be used for
-+			NAND. Refer to dma.txt and qcom_adm.txt for more details
-+- dma-names:		must be "rxtx"
-+- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+- qcom,data-crci:	must contain the ADM data type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+- #address-cells:	<1> - subnodes give the chip-select number
-+- #size-cells:		<0>
-+
-+* NAND chip-select
-+
-+Each controller may contain one or more subnodes to represent enabled
-+chip-selects which (may) contain NAND flash chips. Their properties are as
-+follows.
-+
-+Required properties:
-+- compatible:		should contain "qcom,nandcs"
-+- reg:			a single integer representing the chip-select
-+			number (e.g., 0, 1, 2, etc.)
-+- #address-cells:	see partition.txt
-+- #size-cells:		see partition.txt
-+- nand-ecc-strength:	see nand.txt
-+- nand-ecc-step-size:	must be 512. see nand.txt for more details.
-+
-+Optional properties:
-+- nand-bus-width:	see nand.txt
-+
-+Each nandcs device node may optionally contain a 'partitions' sub-node, which
-+further contains sub-nodes describing the flash partition mapping. See
-+partition.txt for more detail.
-+
-+Example:
-+
-+nand@1ac00000 {
-+	compatible = "qcom,ebi2-nandc";
-+	reg = <0x1ac00000 0x800>;
-+
-+	clocks = <&gcc EBI2_CLK>,
-+		 <&gcc EBI2_AON_CLK>;
-+	clock-names = "core", "aon";
-+
-+	dmas = <&adm_dma 3>;
-+	dma-names = "rxtx";
-+	qcom,cmd-crci = <15>;
-+	qcom,data-crci = <3>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	nandcs@0 {
-+		compatible = "qcom,nandcs";
-+		reg = <0>;
-+
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-bus-width = <8>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "boot-nand";
-+				reg = <0 0x58a0000>;
-+			};
-+
-+			partition@58a0000 {
-+				label = "fs-nand";
-+				reg = <0x58a0000 0x4000000>;
-+			};
-+		};
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+>=20
+> Best regards,
+> Krzysztof
+>=20
+>=20
+>>>
+>>> Regards
+>>> Andrzej
+>>>
+>>> On 10/26/2015 12:59 PM, Andrzej Hajda wrote:
+>>>> DECON-TV(Display and Enhancement Controller for TV) is a variation
+>>>> of DECON IP. Its main purpose is to produce video stream for HDMI =
+IP.
+>>>>
+>>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>>>> ---
+>>>> Hi Krzysztof,
+>>>>
+>>>> I have decided to skip cleanup part as it would require more work,
+>>>> not related to this patchset.
+>>>>
+>>>> Regards
+>>>> Andrzej
+>>>>
+>>>>  Documentation/devicetree/bindings/video/exynos5433-decon.txt | 3 =
+++-
+>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/video/exynos5433-de=
+con.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+>>>> index 3dff78b..c9fd7b3 100644
+>>>> --- a/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+>>>> +++ b/Documentation/devicetree/bindings/video/exynos5433-decon.txt
+>>>> @@ -5,7 +5,8 @@ Exynos series of SoCs which transfers the image da=
+ta from a video memory
+>>>>  buffer to an external LCD interface.
+>>>> =20
+>>>>  Required properties:
+>>>> -- compatible: value should be "samsung,exynos5433-decon";
+>>>> +- compatible: value should be one of:
+>>>> +	"samsung,exynos5433-decon", "samsung,exynos5433-decon-tv";
+>>>>  - reg: physical base address and length of the DECON registers se=
+t.
+>>>>  - interrupts: should contain a list of all DECON IP block interru=
+pts in the
+>>>>  	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-sam=
+sung-soc" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>>
+>>
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
+ng-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>=20
