@@ -1,187 +1,93 @@
-From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Subject: [RFC PATCH v9 6/6] topology,
- cleanup: Avoid redefinition of cpumask_of_pcibus in asm header files.
-Date: Mon, 18 Jan 2016 22:06:05 +0530
-Message-ID: <1453134965-6125-7-git-send-email-gkulkarni@caviumnetworks.com>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Mon, 18 Jan 2016 11:46:30 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1601181139150.25155-100000@netrider.rowland.org>
+References: <20160118081510.GF8150@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hoga
-Cc: gpkulkarni@gmail.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160118081510.GF8150@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At present cpumask_of_pcibus is defined for !CONFIG_NUMA and moving out
-to common will allow to use for numa too. This also avoids
-redefinition of this macro in respective architecture header files.
+On Mon, 18 Jan 2016, Peter Chen wrote:
 
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
----
- arch/arm64/include/asm/topology.h   | 3 ---
- arch/ia64/include/asm/topology.h    | 4 ----
- arch/metag/include/asm/topology.h   | 3 ---
- arch/powerpc/include/asm/topology.h | 4 ----
- arch/s390/include/asm/pci.h         | 2 +-
- arch/s390/include/asm/topology.h    | 1 +
- arch/sh/include/asm/topology.h      | 3 ---
- arch/x86/include/asm/pci.h          | 2 +-
- arch/x86/include/asm/topology.h     | 1 +
- include/asm-generic/topology.h      | 4 ++--
- 10 files changed, 6 insertions(+), 21 deletions(-)
+> On Sat, Jan 16, 2016 at 11:40:32AM -0500, Alan Stern wrote:
+> > On Sat, 16 Jan 2016, Arnd Bergmann wrote:
+> > 
+> > > > This leaves the question of whether OF will always use the same node to
+> > > > represent the host controller and the root hub.  In other words, if a
+> > > > motherboard has a fixed device plugged into a fixed root-hub port, will
+> > > > the DT description make that device a child of the host controller?  
+> > > > Or will there be a node in between (to represent the root hub)?
+> > > 
+> > > Good question. I'm sure the answer is somewhere in this document
+> > > 
+> > > http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> > > 
+> > > but unfortunately I don't understand USB addressing well enough
+> > > to answer this. I think the key sentence is the definition of the
+> > > "reg" property:
+> > > 
+> > > | prop-encoded-array: one integer, encoded as with encode-int.
+> > > | The "reg" property for a device node shall consist of the number of the
+> > > | USB hub port or the USB host controller port to which this USB device
+> > > | is attached. As specified in [2] section 11.11.2.1, port numbers range
+> > > | from 1 to 255.
+> > > 
+> > > Does the root hub have a port number relative to the host controller,
+> > > or is it identical to the host controller from the addressing
+> > > perspective?
+> > 
+> > The root hub does not have a port number relative to the host
+> > controller.  In a sense, the root hub is _part_ of the host controller;
+> > it represents the controller's connection to the USB bus (whereas the
+> > logical device we commonly associate with the host controller
+> > represents the controller's connection to the upstream PCI/whatever
+> > bus).
+> > 
+> > You can also ask whether port numbers relative to the root hub are
+> > the same as the port numbers relative to the controller.  Under normal
+> > circumstances they are the same.  However, it is possible that they
+> > will be different for USB-3 host controllers (!).
+> > 
+> > This is because USB-3 uses two buses per controller: the legacy
+> > Low-Speed/Full-Speed/High-Speed bus compatible with USB-1.1 and USB-2
+> > devices, and the new SuperSpeed bus compatible with USB-3 devices.  
+> > Even though there's only the one controller, each bus has its own root
+> > hub and the ports for each root hub are numbered starting from 1.  
+> > Thus, for example, an xHCI controller with 6 LS/FS/HS ports and 3 SS
+> > ports would have a USB-2 root hub with ports 1-6 and a USB-3 root hub
+> > with ports 1-3.  However, xHCI treats the controller as a single entity
+> > and numbers all the ports sequentially; thus the controller would have
+> > ports 1-9.  (Even though the three SS ports would be the same physical
+> > objects as three of the LS/FS/HS ports -- USB-3 ports literally contain
+> > two independent sets of signal wires.)
+> 
+> Sorry, I have not USB-3 platform now.
+> I have several questions:
+> 
+> - For USB-3, how many times hub_configure() will be called for root hub?
+> One or two?
 
-diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
-index 8b57339..6e1f62c 100644
---- a/arch/arm64/include/asm/topology.h
-+++ b/arch/arm64/include/asm/topology.h
-@@ -26,9 +26,6 @@ const struct cpumask *cpu_coregroup_mask(int cpu);
- 
- struct pci_bus;
- int pcibus_to_node(struct pci_bus *bus);
--#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ?		\
--				 cpu_all_mask :				\
--				 cpumask_of_node(pcibus_to_node(bus)))
- 
- #endif /* CONFIG_NUMA */
- 
-diff --git a/arch/ia64/include/asm/topology.h b/arch/ia64/include/asm/topology.h
-index 3ad8f69..2778eb6 100644
---- a/arch/ia64/include/asm/topology.h
-+++ b/arch/ia64/include/asm/topology.h
-@@ -58,10 +58,6 @@ void build_cpu_to_node_map(void);
- 
- extern void arch_fix_phys_package_id(int num, u32 slot);
- 
--#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ?		\
--				 cpu_all_mask :				\
--				 cpumask_of_node(pcibus_to_node(bus)))
--
- #include <asm-generic/topology.h>
- 
- #endif /* _ASM_IA64_TOPOLOGY_H */
-diff --git a/arch/metag/include/asm/topology.h b/arch/metag/include/asm/topology.h
-index e95f874..b285196 100644
---- a/arch/metag/include/asm/topology.h
-+++ b/arch/metag/include/asm/topology.h
-@@ -9,9 +9,6 @@
- #define cpumask_of_node(node)	((void)node, cpu_online_mask)
- 
- #define pcibus_to_node(bus)	((void)(bus), -1)
--#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ? \
--					cpu_all_mask : \
--					cpumask_of_node(pcibus_to_node(bus)))
- 
- #endif
- 
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index 8b3b46b..eee025d 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -32,10 +32,6 @@ static inline int pcibus_to_node(struct pci_bus *bus)
- }
- #endif
- 
--#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ?		\
--				 cpu_all_mask :				\
--				 cpumask_of_node(pcibus_to_node(bus)))
--
- extern int __node_distance(int, int);
- #define node_distance(a, b) __node_distance(a, b)
- 
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index c873e68..539fb2d 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -205,7 +205,7 @@ static inline int __pcibus_to_node(const struct pci_bus *bus)
- }
- 
- static inline const struct cpumask *
--cpumask_of_pcibus(const struct pci_bus *bus)
-+__cpumask_of_pcibus(const struct pci_bus *bus)
- {
- 	return cpu_online_mask;
- }
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index 94fc55f..280eafc 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -78,6 +78,7 @@ static inline const struct cpumask *cpumask_of_node(int node)
- #define parent_node(node) (node)
- 
- #define pcibus_to_node(bus) __pcibus_to_node(bus)
-+#define cpumask_of_pcibus(bus) __cpumask_of_pcibus(bus)
- 
- #define node_distance(a, b) __node_distance(a, b)
- 
-diff --git a/arch/sh/include/asm/topology.h b/arch/sh/include/asm/topology.h
-index b0a282d..357983d 100644
---- a/arch/sh/include/asm/topology.h
-+++ b/arch/sh/include/asm/topology.h
-@@ -9,9 +9,6 @@
- #define cpumask_of_node(node)	((void)node, cpu_online_mask)
- 
- #define pcibus_to_node(bus)	((void)(bus), -1)
--#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ? \
--					cpu_all_mask : \
--					cpumask_of_node(pcibus_to_node(bus)))
- 
- #endif
- 
-diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-index 4625943..4a6f358 100644
---- a/arch/x86/include/asm/pci.h
-+++ b/arch/x86/include/asm/pci.h
-@@ -121,7 +121,7 @@ static inline int __pcibus_to_node(const struct pci_bus *bus)
- }
- 
- static inline const struct cpumask *
--cpumask_of_pcibus(const struct pci_bus *bus)
-+__cpumask_of_pcibus(const struct pci_bus *bus)
- {
- 	int node;
- 
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 0fb4648..980f6ee 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -91,6 +91,7 @@ extern void setup_node_to_cpumask_map(void);
- #define parent_node(node) (node)
- 
- #define pcibus_to_node(bus) __pcibus_to_node(bus)
-+#define cpumask_of_pcibus(bus) __cpumask_of_pcibus(bus)
- 
- extern int __node_distance(int, int);
- #define node_distance(a, b) __node_distance(a, b)
-diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-index fc824e2..ee305f1 100644
---- a/include/asm-generic/topology.h
-+++ b/include/asm-generic/topology.h
-@@ -54,14 +54,14 @@
- #define pcibus_to_node(bus)	((void)(bus), -1)
- #endif
- 
-+#endif	/* !CONFIG_NUMA */
-+
- #ifndef cpumask_of_pcibus
- #define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ?		\
- 				 cpu_all_mask :				\
- 				 cpumask_of_node(pcibus_to_node(bus)))
- #endif
- 
--#endif	/* CONFIG_NUMA */
--
- #if !defined(CONFIG_NUMA) || !defined(CONFIG_HAVE_MEMORYLESS_NODES)
- 
- #ifndef set_numa_mem
--- 
-1.8.1.4
+Two times.  Once for the legacy bus's root hub and once for the 
+SuperSpeed bus's root hub.
+
+If you have a PC with an xHCI controller, you can see this easily by
+running "lsusb -v" or looking at /sys/kernel/debug/usb/devices.  There
+will be two root hubs listed for the same controller, one with bcdUSB
+set to 2.0 (or maybe 2.1) and one with bcdUSB set to 3.0.
+
+> - Which the value of hub->descriptor->bNbrPorts for root hub?
+
+In the example above, the legacy root hub would have bNbrPorts set to 6 
+and the SS root hub would have bNbrPorts set to 3.
+
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
