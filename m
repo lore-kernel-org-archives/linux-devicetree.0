@@ -1,137 +1,61 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v4] drm/rockchip: hdmi: add Innosilicon HDMI support
-Date: Tue, 19 Jan 2016 11:50:29 +0800
-Message-ID: <569DB285.1000009@rock-chips.com>
-References: <1453128123-29155-1-git-send-email-ykk@rock-chips.com>
- <1453128140-29208-1-git-send-email-ykk@rock-chips.com>
- <20160118171514.GG19062@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160118171514.GG19062@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Zheng Yang <zhengyang@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ben Chan <benchan@google.com>, linux-arm-kernel@lists.infradead.org
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 0/1] Introduce Innosilicon HDMI driver on Rockchip platforms
+Date: Tue, 19 Jan 2016 11:59:01 +0800
+Message-ID: <1453175941-18066-1-git-send-email-ykk@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsbCwKClRoYW5rcyBmb3IgeW91ciBjb21tZW50cyA6LUQKCk9uIDAxLzE5LzIwMTYg
-MDE6MTUgQU0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiBIaSwKPgo+IFNvbWUg
-Y29tbWVudHMgYmVsb3cuLi4KPgo+IE9uIE1vbiwgSmFuIDE4LCAyMDE2IGF0IDEwOjQyOjIwUE0g
-KzA4MDAsIFlha2lyIFlhbmcgd3JvdGU6Cj4+ICtzdGF0aWMgaW50IGlubm9faGRtaV9jb25maWdf
-dmlkZW9fYXZpKHN0cnVjdCBpbm5vX2hkbWkgKmhkbWkpCj4+ICt7Cj4+ICsJY2hhciBpbmZvW0hE
-TUlfU0laRV9BVklfSU5GT0ZSQU1FXSA9IHswfTsKPj4gKwlpbnQgYXZpX2NvbG9yX21vZGU7Cj4+
-ICsJaW50IGk7Cj4+ICsKPj4gKwloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0NPTlRST0xfUEFDS0VU
-X0JVRl9JTkRFWCwgSU5GT0ZSQU1FX0FWSSk7Cj4+ICsKPj4gKwlpbmZvWzBdID0gMHg4MjsKPj4g
-KwlpbmZvWzFdID0gMHgwMjsKPj4gKwlpbmZvWzJdID0gMHgwRDsKPj4gKwlpbmZvWzNdID0gaW5m
-b1swXSArIGluZm9bMV0gKyBpbmZvWzJdOwo+PiArCj4+ICsJaWYgKGhkbWktPmhkbWlfZGF0YS5l
-bmNfb3V0X2Zvcm1hdCA9PSBIRE1JX0NPTE9SU1BBQ0VfUkdCKQo+PiArCQlhdmlfY29sb3JfbW9k
-ZSA9IEFWSV9DT0xPUl9NT0RFX1JHQjsKPj4gKwllbHNlIGlmIChoZG1pLT5oZG1pX2RhdGEuZW5j
-X291dF9mb3JtYXQgPT0gSERNSV9DT0xPUlNQQUNFX1lVVjQ0NCkKPj4gKwkJYXZpX2NvbG9yX21v
-ZGUgPSBBVklfQ09MT1JfTU9ERV9ZQ0JDUjQ0NDsKPj4gKwllbHNlIGlmIChoZG1pLT5oZG1pX2Rh
-dGEuZW5jX291dF9mb3JtYXQgPT0gSERNSV9DT0xPUlNQQUNFX1lVVjQyMikKPj4gKwkJYXZpX2Nv
-bG9yX21vZGUgPSBBVklfQ09MT1JfTU9ERV9ZQ0JDUjQyMjsKPj4gKwllbHNlCj4+ICsJCWF2aV9j
-b2xvcl9tb2RlID0gQVZJX0NPTE9SX01PREVfUkdCOwo+PiArCj4+ICsJaW5mb1s0XSA9IChhdmlf
-Y29sb3JfbW9kZSA8PCA1KTsKPj4gKwlpbmZvWzVdID0gKEFWSV9DT0xPUklNRVRSWV9OT19EQVRB
-IDw8IDYpIHwKPj4gKwkJICAoQVZJX0NPREVEX0ZSQU1FX0FTUEVDVF9OT19EQVRBIDw8IDQpIHwK
-Pj4gKwkJICBBQ1RJVkVfQVNQRUNUX1JBVEVfU0FNRV9BU19DT0RFRF9GUkFNRTsKPj4gKwo+PiAr
-CWluZm9bNl0gPSAwOwo+PiArCWluZm9bN10gPSBoZG1pLT5oZG1pX2RhdGEudmljOwo+PiArCj4+
-ICsJaWYgKGhkbWktPmhkbWlfZGF0YS52aWMgPT0gNiB8fCBoZG1pLT5oZG1pX2RhdGEudmljID09
-IDcgfHwKPj4gKwkgICAgaGRtaS0+aGRtaV9kYXRhLnZpYyA9PSAyMSB8fCBoZG1pLT5oZG1pX2Rh
-dGEudmljID09IDIyKQo+PiArCQlpbmZvWzhdID0gMTsKPj4gKwllbHNlCj4+ICsJCWluZm9bOF0g
-PSAwOwo+PiArCj4+ICsJLyogQ2FsY3VsYXRlIGF2aSBpbmZvIGZyYW1lIGNoZWNLc3VtICovCj4+
-ICsJZm9yIChpID0gNDsgaSA8IEhETUlfU0laRV9BVklfSU5GT0ZSQU1FOyBpKyspCj4+ICsJCWlu
-Zm9bM10gKz0gaW5mb1tpXTsKPj4gKwlpbmZvWzNdID0gMHgxMDAgLSBpbmZvWzNdOwo+PiArCj4+
-ICsJZm9yIChpID0gMDsgaSA8IEhETUlfU0laRV9BVklfSU5GT0ZSQU1FOyBpKyspCj4+ICsJCWhk
-bWlfd3JpdGViKGhkbWksIEhETUlfQ09OVFJPTF9QQUNLRVRfQUREUiArIGksIGluZm9baV0pOwo+
-PiArCj4+ICsJcmV0dXJuIDA7Cj4gSXMgdGhlcmUgYSByZWFzb24gd2h5IHRoZSBoZWxwZXJzIGlu
-IGRyaXZlcnMvdmlkZW8vaGRtaS5jIGNhbid0IGJlIHVzZWQKPiB0byBnZW5lcmF0ZSB0aGlzPwo+
-Cj4gaGRtaV9hdmlfaW5mb2ZyYW1lX2luaXQgLyBoZG1pX2F2aV9pbmZvZnJhbWVfcGFjayBhbmQK
-PiBkcm1faGRtaV9hdmlfaW5mb2ZyYW1lX2Zyb21fZGlzcGxheV9tb2RlID8KCkdyZWF0LCB0aGFu
-a3MgZm9yIHBvaW50IG91dCwgaXQgd291bGQgbWFrZSBjb2RlIG11Y2ggY2xlYW4gd2l0aCB0aG9z
-ZSAKaGVscGVyIGZ1bmN0aW9ucy4KCj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgaW5ub19oZG1p
-X2NvbmZpZ192aWRlb192c2koc3RydWN0IGlubm9faGRtaSAqaGRtaSkKPj4gK3sKPj4gKwljaGFy
-IGluZm9bSERNSV9TSVpFX1ZTSV9JTkZPRlJBTUVdID0gezB9Owo+PiArCWludCBpOwo+PiArCj4+
-ICsJaGRtaV9tb2RiKGhkbWksIEhETUlfUEFDS0VUX1NFTkRfQVVUTywgbV9QQUNLRVRfVlNJX0VO
-LAo+PiArCQkgIHZfUEFDS0VUX1ZTSV9FTigwKSk7Cj4+ICsKPj4gKwloZG1pX3dyaXRlYihoZG1p
-LCBIRE1JX0NPTlRST0xfUEFDS0VUX0JVRl9JTkRFWCwgSU5GT0ZSQU1FX1ZTSSk7Cj4+ICsKPj4g
-KwkvKiBIZWFkZXIgQnl0ZXMgKi8KPj4gKwlpbmZvWzBdID0gMHg4MTsKPj4gKwlpbmZvWzFdID0g
-MHgwMTsKPj4gKwo+PiArCS8qIFBCMSAtIFBCMyBjb250YWluIHRoZSAyNGJpdCBJRUVFIFJlZ2lz
-dHJhdGlvbiBJZGVudGlmaWVyICovCj4+ICsJaW5mb1s0XSA9IDB4MDM7Cj4+ICsJaW5mb1s1XSA9
-IDB4MGM7Cj4+ICsJaW5mb1s2XSA9IDB4MDA7Cj4+ICsKPj4gKwkvKiBQQjQgLSBIRE1JX1ZpZGVv
-X0Zvcm1hdCBpbnRvIGJpdHMgNzo1ICovCj4+ICsJaW5mb1s3XSA9IDA7Cj4+ICsKPj4gKwkvKgo+
-PiArCSAqIFBCNSAtIERlcGVuZGluZyBvbiB0aGUgdmlkZW8gZm9ybWF0LCB0aGlzIGJ5dGUgd2ls
-bCBjb250YWluCj4+ICsJICogZWl0aGVyIHRoZSBIRE1JX1ZJQyBjb2RlIGluIGJ1dHMgNzowLCBP
-UiB0aGUgM0RfU3RydWN0dXJlIGluCj4+ICsJICogYml0cyA3OjQuCj4+ICsJICovCj4+ICsJaW5m
-b1syXSA9IDB4MDYgLSAyOwo+PiArCWluZm9bOF0gPSAwOwo+PiArCWluZm9bOV0gPSAwOwo+PiAr
-Cj4+ICsJaW5mb1szXSA9IGluZm9bMF0gKyBpbmZvWzFdICsgaW5mb1syXTsKPj4gKwo+PiArCS8q
-IENhbGN1bGF0ZSBpbmZvIGZyYW1lIGNoZWNLc3VtICovCj4+ICsJZm9yIChpID0gNDsgaSA8IEhE
-TUlfU0laRV9WU0lfSU5GT0ZSQU1FOyBpKyspCj4+ICsJCWluZm9bM10gKz0gaW5mb1tpXTsKPj4g
-KwlpbmZvWzNdID0gMHgxMDAgLSBpbmZvWzNdOwo+PiArCj4+ICsJZm9yIChpID0gMDsgaSA8IEhE
-TUlfU0laRV9WU0lfSU5GT0ZSQU1FOyBpKyspCj4+ICsJCWhkbWlfd3JpdGViKGhkbWksIEhETUlf
-Q09OVFJPTF9QQUNLRVRfQUREUiArIGksIGluZm9baV0pOwo+PiArCj4+ICsJaGRtaV9tb2RiKGhk
-bWksIEhETUlfUEFDS0VUX1NFTkRfQVVUTywgbV9QQUNLRVRfVlNJX0VOLAo+PiArCQkgIHZfUEFD
-S0VUX1ZTSV9FTigxKSk7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPiBoZG1pX3ZlbmRvcl9pbmZvZnJh
-bWVfaW5pdCAvIGhkbWlfdmVuZG9yX2luZm9mcmFtZV9wYWNrPwo+Cj4gWW91IGNhbiBwcm9iYWJs
-eSB1c2UgdGhlIHNhbWUgZnVuY3Rpb24gdG8gdXBsb2FkIHRoZSBjb250cm9sIHBhY2tldAo+IHRv
-byAtIHNvbWV0aGluZyBsaWtlOgo+Cj4gc3RhdGljIGludCBpbm5vX2hkbWlfdXBsb2FkX2ZyYW1l
-KHN0cnVjdCBpbm5vX2hkbWkgKmhkbWksIGludCBzZXR1cF9yYywKPiAJdW5pb24gaGRtaV9pbmZv
-ZnJhbWUgKmZyYW1lLCB1MzIgbWFzaywgdTMyIGRpc2FibGUsIHUzMiBlbmFibGUpCj4gewo+IAlp
-ZiAobWFzaykKPiAJCWhkbWlfbW9kYihoZG1pLCBIRE1JX1BBQ0tFVF9TRU5EX0FVVE8sIG1hc2ss
-IGRpc2FibGUpOwo+Cj4gCWlmIChzZXR1cF9yYyA+PSAwKSB7Cj4gCQl1OCBwYWNrZWRfZnJhbWVb
-WU9VUl9NQVhJTVVNX0lORk9fRlJBTUVfU0laRV07Cj4gCQlzc2l6ZV90IHJjLCBpOwo+Cj4gCQly
-YyA9IGhkbWlfaW5mb2ZyYW1lX3BhY2soZnJhbWUsIHBhY2tlZF9mcmFtZSwKPiAJCQkJCSBzaXpl
-b2YocGFja2VkX2ZyYW1lKSk7Cj4gCQlpZiAocmMgPCAwKQo+IAkJCXJldHVybiByYzsKPgo+IAkJ
-Zm9yIChpID0gMDsgaSA8IHJjOyBpKyspCj4gCQkJaGRtaV93cml0ZWIoaGRtaSwgSERNSV9DT05U
-Uk9MX1BBQ0tFVF9BRERSICsgaSwgYnVmW2ldKTsKPgo+IAkJaWYgKG1hc2spCj4gCQkJaGRtaV9t
-b2RiKGhkbWksIEhETUlfUEFDS0VUX1NFTkRfQVVUTywgbWFzaywgZW5hYmxlKTsKPiAJfQo+Cj4g
-CXJldHVybiBzZXR1cF9yYzsKPiB9Cj4KPiBzdGF0aWMgaW50IGlubm9faGRtaV9jb25maWdfdmlk
-ZW9fdnNpKHN0cnVjdCBpbm5vX2hkbWkgKmhkbWkpCj4gewo+IAl1bmlvbiBoZG1pX2luZm9mcmFt
-ZSBmcmFtZTsKPgo+IAlyYyA9IGRybV9oZG1pX3ZlbmRvcl9pbmZvZnJhbWVfZnJvbV9kaXNwbGF5
-X21vZGUoJmZyYW1lLnZlbmRvci5oZG1pLAo+IAkJCQkJCQkgdGhlX2RybV9kaXNwbGF5X21vZGUp
-Owo+Cj4gCXJldHVybiBpbm5vX2hkbWlfdXBsb2FkX2ZyYW1lKGhkbWksIHJjLCAmZnJhbWUsIG1f
-UEFDS0VUX1ZTSV9FTiwKPiAJCQkJICAgICAgdl9QQUNLRVRfVlNJX0VOKDApLCB2X1BBQ0tFVF9W
-U0lfRU4oMSkpOwo+IH0KPgoKQWguLi4uIGFwcHJlY2lhdGUgZm9yIHRoZSBjb2RlLCAgaXQncyBn
-cmVhdCBzdWdnZXN0LCB0aGFua3MuCgpBbHNvIEkgZm91bmQgYSBtaXN0YWtlbiB3aXRoIHByZXZp
-b3VzICJpbm5vX2hkbWlfY29uZmlnX3ZpZGVvX3ZzaSIKZnVuY3Rpb24gdGhhdCB3ZSBkb24ndCBu
-ZWVkIHRvIHNlbmQgdGhlIEhETUkgdmVuZG9yIGluZm9mcmFtZXMgaWYKd2UgYXJlIG5vdCB1c2lu
-ZyBhIDRLIG9yIHN0ZXJlb3Njb3BpYyAzRCBtb2RlLiAgOikKCj4+ICtzdGF0aWMgaW50IGlubm9f
-aGRtaV9pMmNfd2FpdChzdHJ1Y3QgaW5ub19oZG1pICpoZG1pKQo+PiArewo+PiArCXN0cnVjdCBp
-bm5vX2hkbWlfaTJjICppMmMgPSBoZG1pLT5pMmM7Cj4+ICsJaW50IHN0YXQ7Cj4+ICsKPj4gKwlz
-dGF0ID0gd2FpdF9mb3JfY29tcGxldGlvbl90aW1lb3V0KCZpMmMtPmNtcCwgSFogLyAxMCk7Cj4+
-ICsJaWYgKCFzdGF0KSB7Cj4+ICsJCXN0YXQgPSB3YWl0X2Zvcl9jb21wbGV0aW9uX3RpbWVvdXQo
-JmkyYy0+Y21wLCBIWiAvIDEwKTsKPj4gKwkJaWYgKCFzdGF0KQo+PiArCQkJcmV0dXJuIC1FQUdB
-SU47Cj4gV2hhdCdzIHRoZSByZWFzb24gZm9yIHRoaXMgZG91YmxlIHdhaXRfZm9yX2NvbXBsZXRp
-b24/ICBUaGlzIHByb2JhYmx5Cj4gbmVlZHMgYSBjb21tZW50LCBvdGhlcndpc2UgaXQgbG9va3Mg
-bGlrZSBzb21lIHdlaXJkIGN1dC1uLXBhc3RlIGVycm9yLgoKWWVwLCB5b3UgJ3JlIHJpZ2h0LCBk
-b24ndCBuZWVkIGRvdWJsZSB3YWl0IGhlcmUuCgo+PiArc3RhdGljIGludCBpbm5vX2hkbWlfaTJj
-X3dyaXRlKHN0cnVjdCBpbm5vX2hkbWkgKmhkbWksIHN0cnVjdCBpMmNfbXNnICptc2dzKQo+PiAr
-ewo+PiArCXN0cnVjdCBpbm5vX2hkbWlfaTJjICppMmMgPSBoZG1pLT5pMmM7Cj4gWW91IHNlZW0g
-dG8gaGF2ZSBhIGxvY2FsIGkyYyBwb2ludGVyLi4uCkFoLCBnb3QgaXQgIDspCj4+ICsKPj4gKwkv
-Kgo+PiArCSAqIFRoZSBEREMgbW9kdWxlIG9ubHkgc3VwcG9ydCByZWFkIEVESUQgbWVzc2FnZSwg
-c28KPj4gKwkgKiB3ZSBhc3N1bWUgdGhhdCBlYWNoIHdvcmQgd3JpdGUgdG8gdGhpcyBpMmMgYWRh
-cHRlcgo+PiArCSAqIHNob3VsZCBiZSB0aGUgb2Zmc2V0IG9mIEVESUQgd29yZCBhZGRyZXNzLgo+
-PiArCSAqLwo+PiArCWlmICgobXNncy0+bGVuICE9IDEpIHx8Cj4+ICsJICAgICgobXNncy0+YWRk
-ciAhPSBERENfQUREUikgJiYgKG1zZ3MtPmFkZHIgIT0gRERDX1NFR01FTlRfQUREUikpKQo+PiAr
-CQlyZXR1cm4gLUVJTlZBTDsKPj4gKwo+PiArCXJlaW5pdF9jb21wbGV0aW9uKCZpMmMtPmNtcCk7
-Cj4+ICsKPj4gKwlpZiAobXNncy0+YWRkciA9PSBERENfU0VHTUVOVF9BRERSKQo+PiArCQloZG1p
-LT5pMmMtPnNlZ21lbnRfYWRkciA9IG1zZ3MtPmJ1ZlswXTsKPj4gKwlpZiAobXNncy0+YWRkciA9
-PSBERENfQUREUikKPj4gKwkJaGRtaS0+aTJjLT5kZGNfYWRkciA9IG1zZ3MtPmJ1ZlswXTsKPj4g
-Kwo+PiArCS8qIFNldCBlZGlkIGZpZm8gZmlyc3QgYWRkciAqLwo+PiArCWhkbWlfd3JpdGViKGhk
-bWksIEhETUlfRURJRF9GSUZPX09GRlNFVCwgMHgwMCk7Cj4+ICsKPj4gKwkvKiBTZXQgZWRpZCB3
-b3JkIGFkZHJlc3MgMHgwMC8weDgwICovCj4+ICsJaGRtaV93cml0ZWIoaGRtaSwgSERNSV9FRElE
-X1dPUkRfQUREUiwgaGRtaS0+aTJjLT5kZGNfYWRkcik7Cj4+ICsKPj4gKwkvKiBTZXQgZWRpZCBz
-ZWdtZW50IHBvaW50ZXIgKi8KPj4gKwloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0VESURfU0VHTUVO
-VF9QT0lOVEVSLCBoZG1pLT5pMmMtPnNlZ21lbnRfYWRkcik7Cj4gYnV0IHRoZW4geW91IGRvbid0
-IHVzZSBpdCBpbiB0aGUgZm91ciBsb2NhdGlvbnMgYWJvdmUuCj4KPgoKVGhhbmtzLAotIFlha2ly
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+Here are a brief introduction to Innosilicon HDMI IP:
+ - Support HDMI 1.4a, HDCP 1.2 and DVI 1.0 standard compliant transmitter
+ - Support HDMI1.4 a/b 3D function defined in HDMI 1.4 a/b spec
+ - Digital video interface supports a pixel size of 24, 30, 36, 48bits color
+   depth in RGB
+ - S/PDIF output supports PCM, Dolby Digital, DTS digital audio transmission
+   (32-192kHz Fs) using IEC60958 and IEC 61937
+ - The EDID and CEC function are also supported by Innosilicon HDMI Transmitter
+   Controlle
+
+
+Changes in v5:
+- Use hdmi_infoframe helper functions to packed the infoframe (Russell)
+- Remove the unused double wait_for_completion_timeout for ddc transfer (Russell)
+- Remove the unused local variable in "inno_hdmi_i2c_write()" function (Russell)
+
+Changes in v4:
+- Modify the commit title "drm/rockchip: hdmi: ..." (Mark)
+- Correct the "DKMS" to "DPMS" (Mark)
+- Fix over 80 characters problems (Mark)
+- Remove encoder .prepare/.commit helper functions, and move the vop mode
+  configure function into encoder .enable helper functions. (Mark)
+
+Changes in v3:
+- Use encoder enable/disable function, and remove the encoder DPMS function
+- Keep HDMI PLL power on in standby mode
+
+Changes in v2:
+- Using DRM atomic helper functions for connector init (Mark)
+- Remove "hdmi->connector.encoder = encoder;" (Mark)
+
+Yakir Yang (1):
+  drm/rockchip: hdmi: add Innosilicon HDMI support
+
+ drivers/gpu/drm/rockchip/Kconfig     |   8 +
+ drivers/gpu/drm/rockchip/Makefile    |   1 +
+ drivers/gpu/drm/rockchip/inno_hdmi.c | 941 +++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/rockchip/inno_hdmi.h | 362 ++++++++++++++
+ 4 files changed, 1312 insertions(+)
+ create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.c
+ create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
