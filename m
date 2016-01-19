@@ -1,97 +1,150 @@
-From: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Subject: Re: [PATCH v9 5/6] PCI: generic: Make pci-host-generic driver numa aware
-Date: Tue, 19 Jan 2016 11:28:56 +0530
-Message-ID: <CAFpQJXXESn1EA5kotVOH2oLbRUSpOLf6+MeWG1pY_GhUP+4vVQ@mail.gmail.com>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1453134965-6125-6-git-send-email-gkulkarni@caviumnetworks.com>
-	<569D23AF.9050503@gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 09/10] dt-bindings: video: exynos5433-decon: add
+ bindings for DECON-TV
+Date: Tue, 19 Jan 2016 15:34:23 +0900
+Message-ID: <569DD8EF.90703@samsung.com>
+References: <CAJKOXPfXrEwu1egSnLxwYofu_scskkPRKOjOCskObPFn9yVcJw@mail.gmail.com>
+ <1445860796-23045-1-git-send-email-a.hajda@samsung.com>
+ <56977A3B.8020104@samsung.com> <56977D42.2050904@samsung.com>
+ <569C279D.1020705@samsung.com> <569CB664.3090806@samsung.com>
+ <569CBA70.8000107@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <569D23AF.9050503@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>, Will Deacon <Will.Deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, rfranz@cavium.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "msalter@redhat.com" <msalter@redhat.com>, Rob Herring <robh+dt@kernel.org>, Steve Capper <steve.capper@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <569CBA70.8000107@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 11:11 PM, David Daney <ddaney.cavm@gmail.com> wrote:
-> On 01/18/2016 08:36 AM, Ganapatrao Kulkarni wrote:
->>
->> update numa_node of device associated with pci bus.
->> moved down devm_kzalloc to allocate from node memory.
->>
->> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
->> ---
->>   drivers/pci/host/pci-host-generic.c | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/host/pci-host-generic.c
->> b/drivers/pci/host/pci-host-generic.c
->> index 5434c90..0e1ce06 100644
->> --- a/drivers/pci/host/pci-host-generic.c
->> +++ b/drivers/pci/host/pci-host-generic.c
->> @@ -215,11 +215,9 @@ static int gen_pci_probe(struct platform_device
->> *pdev)
->>         const struct of_device_id *of_id;
->>         struct device *dev = &pdev->dev;
->>         struct device_node *np = dev->of_node;
->> -       struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
->> +       struct gen_pci *pci;
->>         struct pci_bus *bus, *child;
->>
->> -       if (!pci)
->> -               return -ENOMEM;
->>
->>         type = of_get_property(np, "device_type", NULL);
->>         if (!type || strcmp(type, "pci")) {
->> @@ -230,6 +228,11 @@ static int gen_pci_probe(struct platform_device
->> *pdev)
->>         of_pci_check_probe_only();
->>
->>         of_id = of_match_node(gen_pci_of_match, np);
->> +       set_dev_node(dev, of_node_to_nid(np));
->
->
-> This shouldn't be done in individual platform_drivers, but instead in the
-> device probing code.
->
-> There is code that does this in drivers/of/platform.c and
-> drivers/of/device.c  Is that not being called for the pci-host-gweneric
-> devices?  If not, we should figure out why, and perhaps attempt to fix it
-> rather than doing it here.
-is it more appropriate to call of_platform_device_create ?
 
---- a/drivers/pci/host/pci-host-generic.c
-+++ b/drivers/pci/host/pci-host-generic.c
-@@ -24,6 +24,7 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/platform_device.h>
-+#include <linux/of_platform.h>
 
- struct gen_pci;
-
-@@ -466,7 +467,7 @@ static int gen_pci_probe(struct platform_device *pdev)
-        of_pci_check_probe_only();
-
-        of_id = of_match_node(gen_pci_of_match, np);
--       set_dev_node(dev, of_node_to_nid(np));
-+       of_platform_device_create(np, NULL, NULL);
-        pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-        if (!pci)
-                return -ENOMEM;
-
->
->
->
->> +       pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
->> +       if (!pci)
->> +               return -ENOMEM;
->> +
->>         pci->cfg.ops = (struct gen_pci_cfg_bus_ops *)of_id->data;
->>         pci->host.dev.parent = dev;
->>         INIT_LIST_HEAD(&pci->host.windows);
+2016=EB=85=84 01=EC=9B=94 18=EC=9D=BC 19:12=EC=97=90 Andrzej Hajda =EC=9D=
+=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> Hi Inki,
+>=20
+> On 01/18/2016 10:54 AM, Inki Dae wrote:
 >>
->
-thanks
-Ganapat
+>> 2016=EB=85=84 01=EC=9B=94 18=EC=9D=BC 08:45=EC=97=90 Krzysztof Kozlo=
+wski =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+>>> On 14.01.2016 19:49, Inki Dae wrote:
+>>>> + Rob Herring
+>>>>
+>>>> 2016=EB=85=84 01=EC=9B=94 14=EC=9D=BC 19:36=EC=97=90 Andrzej Hajda=
+ =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+>>>>> Hi Inki,
+>>>>>
+>>>>> It seems this patch and 04/10 did not get picked up yet.
+>>>>> Could you merge it?
+>>>> Yes, I can. However, 04/10 is required for acked-by from dt or SoC=
+ maintainer.
+>>>> Krzysztof and Rob, could you give me acked-by?
+>>>>
+>>>> Thanks,
+>>>> Inki Dae
+>>> My ack is really not required, because this is a binding for a spec=
+ific
+>>> driver from video subsystem. It does not fall into the arm/mach-exy=
+nos
+>>> nor the dts/*exynos*.
+>>>
+>>> Anyway I reviewed the patch on 28th of October and Rob acked it on =
+13th
+>>> of November.
+>> I meant 04/10 not 09/10 patch. :)
+>=20
+> There is document in kernel with clear explanation about the subject:
+> Documentation/devicetree/bindings/submitting-patches.txt.
+> See especially paragraph II.2 [1].
+>=20
+> [1]: Documentation/devicetree/bindings/submitting-patches.txt#L50
+
+Got it. The document says,
+"For driver (not subsystem) bindings: If you are comfortable with the
+ binding, and it hasn't received an Acked-by from the devicetree
+ maintainers after a few weeks, go ahead and take it."
+
+Thanks,
+Inki Dae
+
+>=20
+> Regards
+> Andrzej
+>=20
+>>
+>> Thanks,
+>> Inki Dae
+>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>>
+>>>>> Regards
+>>>>> Andrzej
+>>>>>
+>>>>> On 10/26/2015 12:59 PM, Andrzej Hajda wrote:
+>>>>>> DECON-TV(Display and Enhancement Controller for TV) is a variati=
+on
+>>>>>> of DECON IP. Its main purpose is to produce video stream for HDM=
+I IP.
+>>>>>>
+>>>>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>>>>>> ---
+>>>>>> Hi Krzysztof,
+>>>>>>
+>>>>>> I have decided to skip cleanup part as it would require more wor=
+k,
+>>>>>> not related to this patchset.
+>>>>>>
+>>>>>> Regards
+>>>>>> Andrzej
+>>>>>>
+>>>>>>  Documentation/devicetree/bindings/video/exynos5433-decon.txt | =
+3 ++-
+>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/video/exynos5433-=
+decon.txt b/Documentation/devicetree/bindings/video/exynos5433-decon.tx=
+t
+>>>>>> index 3dff78b..c9fd7b3 100644
+>>>>>> --- a/Documentation/devicetree/bindings/video/exynos5433-decon.t=
+xt
+>>>>>> +++ b/Documentation/devicetree/bindings/video/exynos5433-decon.t=
+xt
+>>>>>> @@ -5,7 +5,8 @@ Exynos series of SoCs which transfers the image =
+data from a video memory
+>>>>>>  buffer to an external LCD interface.
+>>>>>> =20
+>>>>>>  Required properties:
+>>>>>> -- compatible: value should be "samsung,exynos5433-decon";
+>>>>>> +- compatible: value should be one of:
+>>>>>> +	"samsung,exynos5433-decon", "samsung,exynos5433-decon-tv";
+>>>>>>  - reg: physical base address and length of the DECON registers =
+set.
+>>>>>>  - interrupts: should contain a list of all DECON IP block inter=
+rupts in the
+>>>>>>  	      order: VSYNC, LCD_SYSTEM. The interrupt specifier format
+>>>>> --
+>>>>> To unsubscribe from this list: send the line "unsubscribe linux-s=
+amsung-soc" in
+>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
+l
+>>>>>
+>>>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-sam=
+sung-soc" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>>
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>=20
