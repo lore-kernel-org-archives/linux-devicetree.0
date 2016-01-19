@@ -1,254 +1,59 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v12.1 05/17] dt-bindings: add document for analogix display port driver
-Date: Tue, 19 Jan 2016 18:00:43 +0800
-Message-ID: <1453197643-13130-1-git-send-email-ykk@rock-chips.com>
-References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450873538-18304-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH V7 0/6] i2c: qup: Add support for v2 tags and bam dma
+Date: Tue, 19 Jan 2016 15:32:40 +0530
+Message-ID: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Analogix dp driver is split from exynos dp driver, so we just
-make an copy of exynos_dp.txt, and then simplify exynos_dp.txt
+i2c: qup: Add support for v2 tags and bam dma
 
-Beside update some exynos dtsi file with the latest change
-according to the devicetree binding documents.
+QUP from version 2.1.1 onwards, supports a new format of i2c command tags.
+Tag codes instructs the controller to perform a operation like read/write.
+This new tagging version is required for adding bam dma capabilities.
+V2 tags supports transfer of more than 256 bytes in a single i2c transaction.
+Also adding bam dma support facilitates transferring each i2c_msg in i2c_msgs
+without a 'stop' bit in between which is required for some of the clients.
 
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-There is no new changes in v12.1, but just rebase the whole patches on
-top of Dave's drm-next branch [0] (Heiko)
+Tested this series on apq8074 dragon board eeprom client on i2c bus1
 
-Changes in v12.1: None
-Changes in v12: None
-Changes in v11: None
-Changes in v10:
-- Add the ack from Rob Herring
+[V7] Added tested-by tags and fixed a small comment
 
-Changes in v9: None
-Changes in v8:
-- Correct the right document path of display-timing.txt (Heiko)
-- Correct the misspell of 'from' to 'frm'. (Heiko)
+[V6] Added review tags and fixed a checkpatch warning in patch 4/6.
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- Split all DTS changes, and provide backward compatibility. Mark old
-  properties as deprecated but still support them. (Krzysztof)
-- Update "analogix,hpd-gpio" to "hpd-gpios" prop name. (Rob)
-- Deprecated some properties which could parsed from Edid/Mode/DPCD. (Thierry)
-    "analogix,color-space" & "analogix,color-depth"   &
-    "analogix,link-rate"   & "analogix,lane-count"    &
-    "analogix,ycbcr-coeff" & "analogix,dynamic-range" &
-    "vsync-active-high"    & "hsync-active-high"      & "interlaces"
+[V5] Addressed few more comments from Ivan T. Ivanov.
+     Squashed patch 2 and 3 as no point in having only few lines of
+     common code between v1 and v2 tags for increased complexity.
+     Couple of non functional review comments fixes in patch 3, 4.
+     Added a change in patch 4 to have proper transfer completion in
+     a corner case. patch 5, 6 unchanged.
 
-Changes in v3:
-- Add devicetree binding documents. (Heiko)
-- Remove sync pol & colorimetry properies from the new analogix dp driver
-  devicetree binding. (Thierry)
-- Update the exist exynos dtsi file with the latest DP DT properies.
+[V4] Added a patch to factor out some common code.
+     Removed support for freq > 400KHZ as per comments.
+     Addressed comments from Ivan T. Ivanov to keep the code for
+     V2 support in a separate path.
+     Changed the authorship of V2 tags support patch.
 
-Changes in v2: None
+[V3] Added support to coalesce each i2c_msg in i2c_msgs for fifo and
+     block mode in Patch 2. Also addressed further code comments.
 
- .../bindings/display/bridge/analogix_dp.txt        | 50 ++++++++++++
- .../bindings/display/exynos/exynos_dp.txt          | 92 ++++++----------------
- 2 files changed, 76 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+     http://comments.gmane.org/gmane.linux.drivers.i2c/22497
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-new file mode 100644
-index 0000000..7659a7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-@@ -0,0 +1,50 @@
-+Analogix Display Port bridge bindings
-+
-+Required properties for dp-controller:
-+	-compatible:
-+		platform specific such as:
-+		 * "samsung,exynos5-dp"
-+		 * "rockchip,rk3288-dp"
-+	-reg:
-+		physical base address of the controller and length
-+		of memory mapped region.
-+	-interrupts:
-+		interrupt combiner values.
-+	-clocks:
-+		from common clock binding: handle to dp clock.
-+	-clock-names:
-+		from common clock binding: Shall be "dp".
-+	-interrupt-parent:
-+		phandle to Interrupt combiner node.
-+	-phys:
-+		from general PHY binding: the phandle for the PHY device.
-+	-phy-names:
-+		from general PHY binding: Should be "dp".
-+
-+Optional properties for dp-controller:
-+	-hpd-gpios:
-+		Hotplug detect GPIO.
-+		Indicates which GPIO should be used for hotplug detection
-+	-port@[X]: SoC specific port nodes with endpoint definitions as defined
-+		in Documentation/devicetree/bindings/media/video-interfaces.txt,
-+		please refer to the SoC specific binding document:
-+		* Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-+		* Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-+
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+-------------------------------------------------------------------------------
-+
-+Example:
-+
-+	dp-controller {
-+		compatible = "samsung,exynos5-dp";
-+		reg = <0x145b0000 0x10000>;
-+		interrupts = <10 3>;
-+		interrupt-parent = <&combiner>;
-+		clocks = <&clock 342>;
-+		clock-names = "dp";
-+
-+		phys = <&dp_phy>;
-+		phy-names = "dp";
-+	};
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-index fe4a7a2..4fa8aca 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-@@ -1,20 +1,3 @@
--Device-Tree bindings for Samsung Exynos Embedded DisplayPort Transmitter(eDP)
--
--DisplayPort is industry standard to accommodate the growing board adoption
--of digital display technology within the PC and CE industries.
--It consolidates the internal and external connection methods to reduce device
--complexity and cost. It also supports necessary features for important cross
--industry applications and provides performance scalability to enable the next
--generation of displays that feature higher color depths, refresh rates, and
--display resolutions.
--
--eDP (embedded display port) device is compliant with Embedded DisplayPort
--standard as follows,
--- DisplayPort standard 1.1a for Exynos5250 and Exynos5260.
--- DisplayPort standard 1.3 for Exynos5422s and Exynos5800.
--
--eDP resides between FIMD and panel or FIMD and bridge such as LVDS.
--
- The Exynos display port interface should be configured based on
- the type of panel connected to it.
- 
-@@ -48,26 +31,6 @@ Required properties for dp-controller:
- 		from general PHY binding: the phandle for the PHY device.
- 	-phy-names:
- 		from general PHY binding: Should be "dp".
--	-samsung,color-space:
--		input video data format.
--			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
--	-samsung,dynamic-range:
--		dynamic range for input video data.
--			VESA = 0, CEA = 1
--	-samsung,ycbcr-coeff:
--		YCbCr co-efficients for input video.
--			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
--	-samsung,color-depth:
--		number of bits per colour component.
--			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
--	-samsung,link-rate:
--		link rate supported by the panel.
--			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
--	-samsung,lane-count:
--		number of lanes supported by the panel.
--			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
--	- display-timings: timings for the connected panel as described by
--		Documentation/devicetree/bindings/display/display-timing.txt
- 
- Optional properties for dp-controller:
- 	-interlaced:
-@@ -83,17 +46,30 @@ Optional properties for dp-controller:
- 		Hotplug detect GPIO.
- 			Indicates which GPIO should be used for hotplug
- 			detection
--Video interfaces:
--  Device node can contain video interface port nodes according to [1].
--  The following are properties specific to those nodes:
--
--  endpoint node connected to bridge or panel node:
--   - remote-endpoint: specifies the endpoint in panel or bridge node.
--		      This node is required in all kinds of exynos dp
--		      to represent the connection between dp and bridge
--		      or dp and panel.
--
--[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+	-video interfaces: Device node can contain video interface port
-+			nodes according to [1].
-+	- display-timings: timings for the connected panel as described by
-+		Documentation/devicetree/bindings/display/panel/display-timing.txt
-+
-+For the below properties, please refer to Analogix DP binding document:
-+ * Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-+	-phys (required)
-+	-phy-names (required)
-+	-hpd-gpios (optional)
-+
-+Deprecated properties for DisplayPort:
-+-interlaced:            deprecated prop that can parsed from drm_display_mode.
-+-vsync-active-high:     deprecated prop that can parsed from drm_display_mode.
-+-hsync-active-high:     deprecated prop that can parsed from drm_display_mode.
-+-samsung,ycbcr-coeff:   deprecated prop that can parsed from drm_display_mode.
-+-samsung,dynamic-range: deprecated prop that can parsed from drm_display_mode.
-+-samsung,color-space:   deprecated prop that can parsed from drm_display_info.
-+-samsung,color-depth:   deprecated prop that can parsed from drm_display_info.
-+-samsung,link-rate:     deprecated prop that can reading from monitor by dpcd method.
-+-samsung,lane-count:    deprecated prop that can reading from monitor by dpcd method.
-+-samsung,hpd-gpio:      deprecated name for hpd-gpios.
-+
-+-------------------------------------------------------------------------------
- 
- Example:
- 
-@@ -112,13 +88,6 @@ SOC specific portion:
- 
- Board Specific portion:
- 	dp-controller {
--		samsung,color-space = <0>;
--		samsung,dynamic-range = <0>;
--		samsung,ycbcr-coeff = <0>;
--		samsung,color-depth = <1>;
--		samsung,link-rate = <0x0a>;
--		samsung,lane-count = <4>;
--
- 		display-timings {
- 			native-mode = <&lcd_timing>;
- 			lcd_timing: 1366x768 {
-@@ -135,18 +104,9 @@ Board Specific portion:
- 		};
- 
- 		ports {
--			port {
-+			port@0 {
- 				dp_out: endpoint {
--					remote-endpoint = <&dp_in>;
--				};
--			};
--		};
--
--		panel {
--			...
--			port {
--				dp_in: endpoint {
--					remote-endpoint = <&dp_out>;
-+					remote-endpoint = <&bridge_in>;
- 				};
- 			};
- 		};
+[V2] Addressed comments from Ivan T. Ivanov, Andy Gross [v1] Initial Version
+
+Sricharan R (6):
+  i2c: qup: Change qup_wait_writeready function to use for all timeouts
+  i2c: qup: Add V2 tags support
+  i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
+  i2c: qup: Add bam dma capabilities
+  dts: msm8974: Add blsp2_bam dma node
+  dts: msm8974: Add dma channels for blsp2_i2c1 node
+
+ arch/arm/boot/dts/qcom-msm8974.dtsi |  14 +-
+ drivers/i2c/busses/i2c-qup.c        | 922 ++++++++++++++++++++++++++++++++++--
+ 2 files changed, 887 insertions(+), 49 deletions(-)
+
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
