@@ -1,199 +1,132 @@
-From: kernel@martin.sperl.org
-Subject: [RFC 9/9] clk: bcm2835: expose raw clock-registers via debugfs
-Date: Tue, 19 Jan 2016 14:51:40 +0000
-Message-ID: <1453215100-2382-10-git-send-email-kernel@martin.sperl.org>
-References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH v2 03/16] Xen: xlate: Use page_to_xen_pfn
+ instead of page_to_pfn
+Date: Tue, 19 Jan 2016 14:59:39 +0000
+Message-ID: <alpine.DEB.2.02.1601191456370.9400@kaball.uk.xensource.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com>
+ <1452840929-19612-4-git-send-email-zhaoshenglong@huawei.com>
+ <alpine.DEB.2.02.1601151558010.16178@kaball.uk.xensource.com>
+ <569C7363.80106@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <569C7363.80106-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Mon, 18 Jan 2016, Shannon Zhao wrote:
+> On 2016/1/16 1:08, Stefano Stabellini wrote:
+> > On Fri, 15 Jan 2016, Shannon Zhao wrote:
+> >> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>
+> >> Use page_to_xen_pfn in case of 64KB page.
+> >>
+> >> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  drivers/xen/xlate_mmu.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> >> index 9692656..b9fcc2c 100644
+> >> --- a/drivers/xen/xlate_mmu.c
+> >> +++ b/drivers/xen/xlate_mmu.c
+> >> @@ -227,7 +227,7 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+> >>  		return rc;
+> >>  	}
+> >>  	for (i = 0; i < nr_grant_frames; i++)
+> >> -		pfns[i] = page_to_pfn(pages[i]);
+> >> +		pfns[i] = page_to_xen_pfn(pages[i]);
+> > 
+> > Shannon, thanks for the patch.
+> > 
+> > Keeping in mind that in the 64K case, kernel pages are 64K but xen pages
+> > are still 4K, I think you also need to allocate
+> > (nr_grant_frames/XEN_PFN_PER_PAGE) kernel pages (assuming that they are
+> > allocated contiguously): nr_grant_frames refers to 4K pages, while
+> > xen_xlate_map_ballooned_pages is allocating pages on a 64K granularity
+> > (sizeof(pages[0]) == 64K).
+> > 
+> > Be careful that alloc_xenballooned_pages deals with 64K pages (because
+> > it deals with kernel pages), while xen_pfn_t is always 4K based (because
+> > it deals with Xen pfns).
+> > 
+> > Please test it with and without CONFIG_ARM64_64K_PAGES. Thanks!
+> > 
+> Stefano, thanks for your explanation. How about below patch?
 
-For debugging purposes under some circumstance
-it helps to be able to see the actual clock registers.
+Good work, it looks like you covered all bases, I think it should work,
+but I haven't tested it myself. Just one note below.
 
-E.g: when looking at the clock divider it is helpful to
-see what the actual clock divider is.
 
-This patch exposes all the clock registers specific to each
-clock/pll/pll-divider via debugfs.
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index 9692656..e1f7c95 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -207,9 +207,12 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t
+> **gfns, void **virt,
+>         void *vaddr;
+>         int rc;
+>         unsigned int i;
+> +       unsigned long nr_pages;
+> +       xen_pfn_t xen_pfn = 0;
+> 
+>         BUG_ON(nr_grant_frames == 0);
+> -       pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+> +       nr_pages = DIV_ROUND_UP(nr_grant_frames, XEN_PFN_PER_PAGE);
+> +       pages = kcalloc(nr_pages, sizeof(pages[0]), GFP_KERNEL);
+>         if (!pages)
+>                 return -ENOMEM;
+> 
+> @@ -218,22 +221,25 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t
+> **gfns, void **virt,
+>                 kfree(pages);
+>                 return -ENOMEM;
+>         }
+> -       rc = alloc_xenballooned_pages(nr_grant_frames, pages);
+> +       rc = alloc_xenballooned_pages(nr_pages, pages);
+>         if (rc) {
+> -               pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n",
+> __func__,
+> -                       nr_grant_frames, rc);
+> +               pr_warn("%s Couldn't balloon alloc %ld pages rc:%d\n",
+> __func__,
+> +                       nr_pages, rc);
+>                 kfree(pages);
+>                 kfree(pfns);
+>                 return rc;
+>         }
+> -       for (i = 0; i < nr_grant_frames; i++)
+> -               pfns[i] = page_to_pfn(pages[i]);
+> +       for (i = 0; i < nr_grant_frames; i++) {
+> +               if ((i % XEN_PFN_PER_PAGE) == 0)
+> +                       xen_pfn = page_to_xen_pfn(pages[i /
+> XEN_PFN_PER_PAGE]);
+> +               pfns[i] = xen_pfn++;
+> +       }
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- drivers/clk/bcm/clk-bcm2835.c |  101 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+We might want to:
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index c381cb1..29abae6 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -40,6 +40,7 @@
- #include <linux/clk-provider.h>
- #include <linux/clkdev.h>
- #include <linux/clk/bcm2835.h>
-+#include <linux/debugfs.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -379,6 +380,27 @@ static inline u32 cprman_read(struct bcm2835_cprman *cprman, u32 reg)
- 	return readl(cprman->regs + reg);
- }
- 
-+static int bcm2835_debugfs_regset(struct bcm2835_cprman *cprman, u32 base,
-+				  struct debugfs_reg32 *regs, size_t nregs,
-+				  struct dentry *dentry)
-+{
-+	struct dentry *regdump;
-+	struct debugfs_regset32 *regset;
-+
-+	regset = devm_kzalloc(cprman->dev, sizeof(*regset), GFP_KERNEL);
-+	if (!regset)
-+		return -ENOMEM;
-+
-+	regset->regs = regs;
-+	regset->nregs = nregs;
-+	regset->base = cprman->regs + base;
-+
-+	regdump = debugfs_create_regset32("regdump", S_IRUGO, dentry,
-+					  regset);
-+
-+	return regdump ? 0 : -ENOMEM;
-+}
-+
- /*
-  * These are fixed clocks. They're probably not all root clocks and it may
-  * be possible to turn them on and off but until this is mapped out better
-@@ -1360,6 +1382,36 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
- 	return 0;
- }
- 
-+static int bcm2835_pll_debug_init(struct clk_hw *hw,
-+				  struct dentry *dentry)
-+{
-+	struct bcm2835_pll *pll = container_of(hw, struct bcm2835_pll, hw);
-+	struct bcm2835_cprman *cprman = pll->cprman;
-+	const struct bcm2835_pll_data *data = pll->data;
-+	struct debugfs_reg32 *regs;
-+
-+	regs = devm_kzalloc(cprman->dev, 7 * sizeof(*regs), GFP_KERNEL);
-+	if (!regs)
-+		return -ENOMEM;
-+
-+	regs[0].name = "cm_ctrl";
-+	regs[0].offset = data->cm_ctrl_reg;
-+	regs[1].name = "a2w_ctrl";
-+	regs[1].offset = data->a2w_ctrl_reg;
-+	regs[2].name = "frac";
-+	regs[2].offset = data->frac_reg;
-+	regs[3].name = "ana0";
-+	regs[3].offset = data->ana_reg_base + 0 * 4;
-+	regs[4].name = "ana1";
-+	regs[4].offset = data->ana_reg_base + 1 * 4;
-+	regs[5].name = "ana2";
-+	regs[5].offset = data->ana_reg_base + 2 * 4;
-+	regs[6].name = "ana3";
-+	regs[6].offset = data->ana_reg_base + 3 * 4;
-+
-+	return bcm2835_debugfs_regset(cprman, 0, regs, 7, dentry);
-+}
-+
- static const struct clk_ops bcm2835_pll_clk_ops = {
- 	.is_prepared = bcm2835_pll_is_on,
- 	.prepare = bcm2835_pll_on,
-@@ -1367,6 +1419,7 @@ static const struct clk_ops bcm2835_pll_clk_ops = {
- 	.recalc_rate = bcm2835_pll_get_rate,
- 	.set_rate = bcm2835_pll_set_rate,
- 	.round_rate = bcm2835_pll_round_rate,
-+	.debug_init = bcm2835_pll_debug_init,
- };
- 
- struct bcm2835_pll_divider {
-@@ -1461,6 +1514,26 @@ static int bcm2835_pll_divider_set_rate(struct clk_hw *hw,
- 	return 0;
- }
- 
-+static int bcm2835_pll_divider_debug_init(struct clk_hw *hw,
-+					  struct dentry *dentry)
-+{
-+	struct bcm2835_pll_divider *divider = bcm2835_pll_divider_from_hw(hw);
-+	struct bcm2835_cprman *cprman = divider->cprman;
-+	const struct bcm2835_pll_divider_data *data = divider->data;
-+	struct debugfs_reg32 *regs;
-+
-+	regs = devm_kzalloc(cprman->dev, 7 * sizeof(*regs), GFP_KERNEL);
-+	if (!regs)
-+		return -ENOMEM;
-+
-+	regs[0].name = "cm";
-+	regs[0].offset = data->cm_reg;
-+	regs[1].name = "a2w";
-+	regs[1].offset = data->a2w_reg;
-+
-+	return bcm2835_debugfs_regset(cprman, 0, regs, 2, dentry);
-+}
-+
- static const struct clk_ops bcm2835_pll_divider_clk_ops = {
- 	.is_prepared = bcm2835_pll_divider_is_on,
- 	.prepare = bcm2835_pll_divider_on,
-@@ -1468,6 +1541,7 @@ static const struct clk_ops bcm2835_pll_divider_clk_ops = {
- 	.recalc_rate = bcm2835_pll_divider_get_rate,
- 	.set_rate = bcm2835_pll_divider_set_rate,
- 	.round_rate = bcm2835_pll_divider_round_rate,
-+	.debug_init = bcm2835_pll_divider_debug_init,
- };
- 
- /*
-@@ -1854,6 +1928,31 @@ static u8 bcm2835_clock_get_parent(struct clk_hw *hw)
- 	return -EINVAL;
- }
- 
-+static struct debugfs_reg32 bcm2835_debugfs_clock_reg32[] = {
-+	{
-+		.name = "ctl",
-+		.offset = 0,
-+	},
-+	{
-+		.name = "div",
-+		.offset = 4,
-+	},
-+};
-+
-+static int bcm2835_clock_debug_init(struct clk_hw *hw,
-+				    struct dentry *dentry)
-+{
-+	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
-+	struct bcm2835_cprman *cprman = clock->cprman;
-+	const struct bcm2835_clock_data *data = clock->data;
-+
-+	return bcm2835_debugfs_regset(
-+		cprman, data->ctl_reg,
-+		bcm2835_debugfs_clock_reg32,
-+		ARRAY_SIZE(bcm2835_debugfs_clock_reg32),
-+		dentry);
-+}
-+
- static const struct clk_ops bcm2835_clock_clk_ops = {
- 	.is_prepared = bcm2835_clock_is_on,
- 	.prepare = bcm2835_clock_on,
-@@ -1863,6 +1962,7 @@ static const struct clk_ops bcm2835_clock_clk_ops = {
- 	.determine_rate = bcm2835_clock_determine_rate,
- 	.set_parent = bcm2835_clock_set_parent,
- 	.get_parent = bcm2835_clock_get_parent,
-+	.debug_init = bcm2835_clock_debug_init,
- };
- 
- static int bcm2835_vpu_clock_is_on(struct clk_hw *hw)
-@@ -1881,6 +1981,7 @@ static const struct clk_ops bcm2835_vpu_clock_clk_ops = {
- 	.determine_rate = bcm2835_clock_determine_rate,
- 	.set_parent = bcm2835_clock_set_parent,
- 	.get_parent = bcm2835_clock_get_parent,
-+	.debug_init = bcm2835_clock_debug_init,
- };
- 
- static struct device_node *bcm2835_find_dt_node(
--- 
-1.7.10.4
+  pfns[i] = pfn_to_gfn(xen_pfn++);
 
+for consistency, even though for autotranslate guests pfn_to_gfn always
+returns pfn.
+
+
+> -       vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+> +       vaddr = vmap(pages, nr_pages, 0, PAGE_KERNEL);
+>         if (!vaddr) {
+> -               pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+> -                       nr_grant_frames, rc);
+> -               free_xenballooned_pages(nr_grant_frames, pages);
+> +               pr_warn("%s Couldn't map %ld pages rc:%d\n", __func__,
+> +                       nr_pages, rc);
+> +               free_xenballooned_pages(nr_pages, pages);
+>                 kfree(pages);
+>                 kfree(pfns);
+>                 return -ENOMEM;
+> 
+> -- 
+> Shannon
+> 
