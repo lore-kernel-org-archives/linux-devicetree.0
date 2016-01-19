@@ -1,42 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Tue, 19 Jan 2016 12:23:17 -0600
-Message-ID: <20160119182317.GA3681@rob-hp-laptop>
-References: <1453171111-21921-1-git-send-email-xuejiancheng@huawei.com>
- <1453171111-21921-2-git-send-email-xuejiancheng@huawei.com>
+From: "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
+Subject: RE: [PATCH 2/2] power: Add support for TI BQ24261 charger
+Date: Tue, 19 Jan 2016 18:27:42 +0000
+Message-ID: <D854C92F57B1B347B57E531E78D05EAD57A23CA0@BGSMSX104.gar.corp.intel.com>
+References: <1446136455-20752-1-git-send-email-ramakrishna.pallala@intel.com>
+	<1446136455-20752-3-git-send-email-ramakrishna.pallala@intel.com>
+	<CAHp75Vde8ZFXZC9SzKSaXS8TThJd1u=+UMHPOiTWZvY1P4xKqw@mail.gmail.com>
+	<D854C92F57B1B347B57E531E78D05EAD57A22F3D@BGSMSX104.gar.corp.intel.com>
+ <CAHp75VcBAHg3trt45xVr6m9ppDyv+TSZEEVsWra3QVRWGKfC1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453171111-21921-2-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcBAHg3trt45xVr6m9ppDyv+TSZEEVsWra3QVRWGKfC1g@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 19, 2016 at 10:38:26AM +0800, Jiancheng Xue wrote:
-> The CRG(Clock and Reset Generator) block provides clock
-> and reset signals for other modules in hi3519 soc.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> ---
->  .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++++
-
-I already acked this. Please add ack's when posting new versions.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/clk/hisilicon/Kconfig                      |   7 ++
->  drivers/clk/hisilicon/Makefile                     |   2 +
->  drivers/clk/hisilicon/clk-hi3519.c                 | 132 +++++++++++++++++++++
->  drivers/clk/hisilicon/clk.c                        |  23 ++--
->  drivers/clk/hisilicon/clk.h                        |  14 +--
->  drivers/clk/hisilicon/reset.c                      | 130 ++++++++++++++++++++
->  drivers/clk/hisilicon/reset.h                      |  32 +++++
->  include/dt-bindings/clock/hi3519-clock.h           |  40 +++++++
->  9 files changed, 411 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
->  create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
->  create mode 100644 drivers/clk/hisilicon/reset.c
->  create mode 100644 drivers/clk/hisilicon/reset.h
->  create mode 100644 include/dt-bindings/clock/hi3519-clock.h
+PiBPbiBUdWUsIEphbiAxOSwgMjAxNiBhdCAzOjI2IEFNLCBQYWxsYWxhLCBSYW1ha3Jpc2huYQ0K
+PiA8cmFtYWtyaXNobmEucGFsbGFsYUBpbnRlbC5jb20+IHdyb3RlOg0KPiA+PiBPbiBUaHUsIE9j
+dCAyOSwgMjAxNSBhdCA2OjM0IFBNLCBSYW1ha3Jpc2huYSBQYWxsYWxhDQo+ID4+IDxyYW1ha3Jp
+c2huYS5wYWxsYWxhQGludGVsLmNvbT4gd3JvdGU6DQo+ID4+ID4gQWRkIG5ldyBjaGFyZ2VyIGRy
+aXZlciBzdXBwb3J0IGZvciBUSSBCUTI0MjYxIGNoYXJnZXIgSUMuDQo+ID4+ID4NCj4gPj4gPiBU
+SSBCUTI0MjYxIGNoYXJnZXIgZHJpdmVyIHJlbGllcyBvbiBleHRjb24gbm90aWZpY2F0aW9ucyB0
+byBnZXQgdGhlDQo+ID4+ID4gY2hhcmdlciBjYWJsZSB0eXBlIGFuZCBiYXNlZCBvbiB0aGF0IGl0
+IHdpbGwgc2V0IHRoZSBjaGFyZ2luZyBwYXJhbWV0ZXJzLg0KPiANCj4gPj4gPiArLyogQlEyNDI2
+MSByZWdpc3RlcnMgKi8NCj4gPj4gPiArI2RlZmluZSBCUTI0MjYxX1NUQVRfQ1RSTDBfQUREUiAg
+ICAgICAgICAgICAgICAweDAwDQo+ID4+ID4gKyNkZWZpbmUgQlEyNDI2MV9DVFJMX0FERFIgICAg
+ICAgICAgICAgIDB4MDENCj4gPj4gPiArI2RlZmluZSBCUTI0MjYxX0JBVFRfVk9MX0NUUkxfQURE
+UiAgICAgMHgwMg0KPiA+PiA+ICsjZGVmaW5lIEJRMjQyNjFfVkVORE9SX1JFVl9BRERSICAgICAg
+ICAgICAgICAgIDB4MDMNCj4gPj4gPiArI2RlZmluZSBCUTI0MjYxX1RFUk1fRkNDX0FERFIgICAg
+ICAgICAgMHgwNA0KPiA+PiA+ICsjZGVmaW5lIEJRMjQyNjFfVklORFBNX1NUQVRfQUREUiAgICAg
+ICAweDA1DQo+ID4+ID4gKyNkZWZpbmUgQlEyNDI2MV9TVF9OVENfTU9OX0FERFIgICAgICAgICAg
+ICAgICAgMHgwNg0KPiA+PiA+ICsNCj4gPj4gPiArI2RlZmluZSBCUTI0MjYxX1JFU0VUX0VOQUJM
+RSAgICAgICAgICAgQklUKDcpDQo+ID4+ID4gKw0KPiA+Pg0KPiA+PiBNaWdodCBiZSBhIGdvb2Qg
+aWRlYSB0byBwdXQgY29tbWVudCBsaW5lIHByZWNlZGVkIGVhY2ggZ3JvdXAgdG8gcmVmZXINCj4g
+Pj4gd2hpY2ggcmVnaXN0ZXIgaXQgY292ZXJzLg0KPiA+IE9rLg0KPiA+DQo+ID4+DQo+ID4+ID4g
+KyNkZWZpbmUgQlEyNDI2MV9GQVVMVF9NQVNLICAgICAgICAgICAgIEdFTk1BU0soMiwgMCkNCj4g
+Pj4NCj4gPj4gRWl0aGVyIHVzZSBHRU5NQVNLIGluIGVhY2ggY2FzZSwgb3IgcHV0IHBsYWluIG51
+bWJlci4NCj4gPj4NCj4gPiBPay4NCj4gDQo+IExvb2tpbmcgdG8geW91ciBkZWZpbml0aW9ucyBh
+Z2FpbiBJIGNhbiBzYXkgdGhhdCBHRU5NQVNLIGlzIG1vcmUgcmVhZGFibGUuDQo+IFJlZ2FyZGlu
+ZyB0byBCSVQoKSBtYWNybyB5b3UgaGF2ZSB0byBkbyBzbWFydCBjaG9pY2UgaW4gZWFjaCBjYXNl
+IHNlcGFyYXRlbHkuDQoNCkkgZG9u4oCZdCBmZWVsIGNvbWZvcnRhYmxlIHRvIG1peCBHRU5NQVNL
+IGFuZCBub3JtYWwgYml0IHNldHRpbmdzLiBJIHdpbGwganVzdCBzdGljayB0byBvbGQgZmFzaGlv
+bmVkIHdheSA6LSkNCg0KVGhhbmtzLA0KUmFtDQo=
