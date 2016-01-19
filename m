@@ -1,96 +1,74 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH V3 5/5] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Tue, 19 Jan 2016 16:26:08 +0900
-Message-ID: <569DE510.8090606@samsung.com>
-References: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com>
- <1452771166-13694-6-git-send-email-ldewangan@nvidia.com>
- <569DC9AD.7000504@samsung.com> <569DDFEE.4080307@nvidia.com>
+From: ntelkar@codeaurora.org
+Subject: Re: [PATCH V6 0/6] i2c: qup: Add support for v2 tags and bam dma
+Date: Tue, 19 Jan 2016 07:48:49 -0000
+Message-ID: <e45ba8b5efc13a4eda4b5c1b2282facc.squirrel@www.codeaurora.org>
+References: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <569DDFEE.4080307@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, wsa@the-dreams.de, srichara@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.01.2016 16:04, Laxman Dewangan wrote:
-> Thanks for review.
-> Here is my view on the some of the review comment.
-> 
-> On Tuesday 19 January 2016 10:59 AM, Krzysztof Kozlowski wrote:
->> On 14.01.2016 20:32, Laxman Dewangan wrote:
-> 
->> +    return ret;
->> +}
->> +
->> +static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
->> +{
->> This function seems to be used only from max77620_of_parse_cb(). I would
->> find easier to read if this was located before definition of
->> max77620_of_parse_cb(). Can you move it (or you had other idea of
->> placing algorithm)?
-> 
-> I wanted to keep all local function on top which is used on this file
-> and not the regulator ops.
-> Then implement regulator ops and then probe.
-> Let me see if I can do anything here.
+Added SMB support on top of these patches and tested  i2c with ipmitool.
+It works as expected.
+Tested-by: ntelkar@codeaurora.org
 
-Ah, OK then. That kind of order makes sense as well.
-
-> 
->>
->>> +             pmic->enable_power_mode[id]) {
->>> +            ret = max77620_regulator_set_power_mode(
->>> +                    pmic, pmic->enable_power_mode[id], id);
->> The 'pmic' argument should be after opening parenthesis, not at new line.
-> 
-> This is done for indenting alignment. I am using checkpatch --strict
-> option and for this the next line should be on same column of first
-> charcter after opening parenthesis.
-> To avoid this error, if we want to re-align the indenting for next line
-> then left the line empty after "(".
-
-But the next line is not aligned with the function call. So the 'strict'
-is not followed and the code is less readable. Instead this should be
-something like:
-
-+			ret = max77620_regulator_set_power_mode(pmic
-+					pmic->enable_power_mode[id],
-					id);
-
-You cannot align it with function call anyway (to many indentations and
-too long name of function).
-
-> 
-> +
-> +static int __init max77620_regulator_init(void)
-> +{
-> +    return platform_driver_register(&max77620_regulator_driver);
-> +}
-> +subsys_initcall(max77620_regulator_init);
-> +
-> 
->> Does it have to be subsys_initcall? Any special requirements for
->> ordering the drivers? Probe deferring is encouraged instead.
->>
->>
-> 
-> 
-> This is to make sure th regulators are ready before other driver get
-> probed. This is basic need of some of driver and hence subsys_initcall.
-> I will move to module_init() as some of other PMIC driver (as3722) is in
-> the module init and used in tegra platform so not seeing much issue on
-> this.
-
-The other driver should support deferred probe and then the problem is
-somehow solved. There are some rare cases when this does not work yet
-but then please describe exactly which driver cannot work with it.
-
-For example max77802 regulator works well.
-
-Best regards,
-Krzysztof
-
+> i2c: qup: Add support for v2 tags and bam dma
+>
+> QUP from version 2.1.1 onwards, supports a new format of i2c command tags.
+> Tag codes instructs the controller to perform a operation like read/write.
+> This new tagging version supports and is required for adding bam dma
+> capabilities. V2 tags supports transfer of more than 256 bytes in a single
+> i2c
+> transaction. Also adding bam dma support facilitates transferring each
+> i2c_msg
+> in i2c_msgs without a 'stop' bit in between which is required for some of
+> the clients.
+>
+> Tested this series on apq8074 dragon board eeprom client on i2c bus1
+>
+> [V6] Added review tags and fixed a checkpatch warning in patch 4/6.
+>
+> [V5] Addressed few more comments from Ivan T. Ivanov.
+>      Squashed patch 2 and 3 as no point in having only few lines of
+>      common code between v1 and v2 tags for increased complexity.
+>      Couple of non functional review comments fixes in patch 3, 4.
+>      Added a change in patch 4 to have proper transfer completion in
+>      a corner case. patch 5, 6 unchanged.
+>
+> [V4] Added a patch to factor out some common code.
+>      Removed support for freq > 400KHZ as per comments.
+>      Addressed comments from Ivan T. Ivanov to keep the code for
+>      V2 support in a separate path.
+>      Changed the authorship of V2 tags support patch.
+>
+> [V3] Added support to coalesce each i2c_msg in i2c_msgs for fifo and
+>      block mode in Patch 2. Also addressed further code comments.
+>
+>      http://comments.gmane.org/gmane.linux.drivers.i2c/22497
+>
+> [V2] Addressed comments from Ivan T. Ivanov, Andy Gross [v1] Initial
+> Version
+>
+> Sricharan R (6):
+>   i2c: qup: Change qup_wait_writeready function to use for all timeouts
+>   i2c: qup: Add V2 tags support
+>   i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
+>   i2c: qup: Add bam dma capabilities
+>   dts: msm8974: Add blsp2_bam dma node
+>   dts: msm8974: Add dma channels for blsp2_i2c1 node
+>
+>  arch/arm/boot/dts/qcom-msm8974.dtsi |  14 +-
+>  drivers/i2c/busses/i2c-qup.c        | 922
+> ++++++++++++++++++++++++++++++++++--
+>  2 files changed, 887 insertions(+), 49 deletions(-)
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+>
