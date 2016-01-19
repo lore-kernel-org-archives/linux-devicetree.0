@@ -1,162 +1,119 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V7 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
-Date: Tue, 19 Jan 2016 15:32:43 +0530
-Message-ID: <1453197766-18976-4-git-send-email-sricharan@codeaurora.org>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v12.1 06/17] ARM: dts: exynos/dp: remove some properties that
+ deprecated by analogix_dp driver
+Date: Tue, 19 Jan 2016 18:02:48 +0800
+Message-ID: <1453197768-13253-1-git-send-email-ykk@rock-chips.com>
+References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The definition of i2c_msg says that
-
-"If this is the last message in a group, it is followed by a STOP.
-Otherwise it is followed by the next @i2c_msg transaction segment,
-beginning with a (repeated) START"
-
-So the expectation is that there is no 'STOP' bit inbetween individual
-i2c_msg segments with repeated 'START'. The QUP i2c hardware has no way
-to inform that there should not be a 'STOP' at the end of transaction.
-The only way to implement this is to coalesce all the i2c_msg in i2c_msgs
-in to one transaction and transfer them. Adding the support for the same.
-
-This is required for some clients like touchscreen which keeps
-incrementing counts across individual transfers and 'STOP' bit inbetween
-resets the counter, which is not required.
-
-This patch adds the support in non-dma mode.
-
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Reviewed-by: Andy Gross <andy.gross@linaro.org>
-Tested-by: Archit Taneja <architt@codeaurora.org>
-Tested-by: Telkar Nagender <ntelkar@codeaurora.org>
----
- drivers/i2c/busses/i2c-qup.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 715d4d7..f9009d6 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -112,6 +112,7 @@
- #define SET_BIT				0x1
- #define RESET_BIT			0x0
- #define ONE_BYTE			0x1
-+#define QUP_I2C_MX_CONFIG_DURING_RUN   BIT(31)
- 
- struct qup_i2c_block {
- 	int	count;
-@@ -147,6 +148,12 @@ struct qup_i2c_dev {
- 	/* QUP core errors */
- 	u32			qup_err;
- 
-+	/* To check if this is the last msg */
-+	bool			is_last;
-+
-+	/* To configure when bus is in run state */
-+	int			config_run;
-+
- 	struct completion	xfer;
- };
- 
-@@ -269,7 +276,7 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 		status = readl(qup->base + QUP_I2C_STATUS);
- 
- 		if (((opflags & op) >> shift) == val) {
--			if (op == QUP_OUT_NOT_EMPTY) {
-+			if ((op == QUP_OUT_NOT_EMPTY) && qup->is_last) {
- 				if (!(status & I2C_STATUS_BUS_ACTIVE))
- 					return 0;
- 			} else {
-@@ -290,6 +297,8 @@ static void qup_i2c_set_write_mode_v2(struct qup_i2c_dev *qup,
- 	/* Number of entries to shift out, including the tags */
- 	int total = msg->len + qup->blk.tx_tag_len;
- 
-+	total |= qup->config_run;
-+
- 	if (total < qup->out_fifo_sz) {
- 		/* FIFO mode */
- 		writel(QUP_REPACK_EN, qup->base + QUP_IO_MODE);
-@@ -443,7 +452,7 @@ static int qup_i2c_set_tags(u8 *tags, struct qup_i2c_dev *qup,
- 	}
- 
- 	/* Send _STOP commands for the last block */
--	if (qup->blk.pos == (qup->blk.count - 1)) {
-+	if ((qup->blk.pos == (qup->blk.count - 1)) && qup->is_last) {
- 		if (msg->flags & I2C_M_RD)
- 			tags[len++] = QUP_TAG_V2_DATARD_STOP;
- 		else
-@@ -581,7 +590,6 @@ static int qup_i2c_write_one(struct qup_i2c_dev *qup, struct i2c_msg *msg)
- 
- 	/* Wait for the outstanding data in the fifo to drain */
- 	ret = qup_i2c_wait_ready(qup, QUP_OUT_NOT_EMPTY, RESET_BIT, ONE_BYTE);
--
- err:
- 	disable_irq(qup->irq);
- 	qup->msg = NULL;
-@@ -608,18 +616,20 @@ static void qup_i2c_set_read_mode_v2(struct qup_i2c_dev *qup, int len)
- 	int tx_len = qup->blk.tx_tag_len;
- 
- 	len += qup->blk.rx_tag_len;
-+	len |= qup->config_run;
-+	tx_len |= qup->config_run;
- 
- 	if (len < qup->in_fifo_sz) {
- 		/* FIFO mode */
- 		writel(QUP_REPACK_EN, qup->base + QUP_IO_MODE);
--		writel(len, qup->base + QUP_MX_READ_CNT);
- 		writel(tx_len, qup->base + QUP_MX_WRITE_CNT);
-+		writel(len, qup->base + QUP_MX_READ_CNT);
- 	} else {
- 		/* BLOCK mode (transfer data on chunks) */
- 		writel(QUP_INPUT_BLK_MODE | QUP_REPACK_EN,
- 		       qup->base + QUP_IO_MODE);
--		writel(len, qup->base + QUP_MX_INPUT_CNT);
- 		writel(tx_len, qup->base + QUP_MX_OUTPUT_CNT);
-+		writel(len, qup->base + QUP_MX_INPUT_CNT);
- 	}
- }
- 
-@@ -866,6 +876,12 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 			goto out;
- 		}
- 
-+		qup->is_last = (idx == (num - 1));
-+		if (idx)
-+			qup->config_run = QUP_I2C_MX_CONFIG_DURING_RUN;
-+		else
-+			qup->config_run = 0;
-+
- 		reinit_completion(&qup->xfer);
- 
- 		if (msgs[idx].flags & I2C_M_RD)
-@@ -873,13 +889,13 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 		else
- 			ret = qup_i2c_write_one_v2(qup, &msgs[idx]);
- 
--		if (!ret)
--			ret = qup_i2c_change_state(qup, QUP_RESET_STATE);
--
- 		if (ret)
- 			break;
- 	}
- 
-+	if (!ret)
-+		ret = qup_i2c_change_state(qup, QUP_RESET_STATE);
-+
- 	if (ret == 0)
- 		ret = num;
- out:
-@@ -1057,6 +1073,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 	i2c_set_adapdata(&qup->adap, qup);
- 	qup->adap.dev.parent = qup->dev;
- 	qup->adap.dev.of_node = pdev->dev.of_node;
-+	qup->is_last = 1;
-+
- 	strlcpy(qup->adap.name, "QUP I2C adapter", sizeof(qup->adap.name));
- 
- 	pm_runtime_set_autosuspend_delay(qup->dev, MSEC_PER_SEC);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+QWZ0ZXIgZXh5bm9zX2RwIGhhdmUgYmVlbiBzcGxpdCB0aGUgY29tbW9uIElQIGNvZGUgaW50byBh
+bmFsb2dpeF9kcCBkcml2ZXIsCnRoZSBhbmFsb2dpeF9kcCBkcml2ZXIgaGF2ZSBkZXByZWNhdGVk
+IHNvbWUgU2Ftc3VuZyBwbGF0Zm9ybSBwcm9wZXJ0aWVzIHdoaWNoCmNvdWxkIGJlIGR5bmFtaWNh
+bGx5IHBhcnNlZCBmcm9tIEVESUQvTU9ERS9EUENEIG1lc3NhZ2UsIHNvIHRoaXMgaXMgYW4gdXBk
+YXRlCmZvciBFeHlub3MgRFRTIGZpbGUgZm9yIGRwLWNvbnRyb2xsZXIuCgpCZXNpZGUgdGhlIGJh
+Y2t3YXJkIGNvbXBhdGliaWxpdHkgaXMgZnVsbHkgcHJlc2VydmVkLCBzbyB0aGVyZSBhcmUgbm8K
+YmlzZWN0YWJpbGl0eSBicmVhayB0aGF0IG1ha2UgdGhpcyBjaGFuZ2UgaW4gYSBzZXBhcmF0ZSBw
+YXRjaC4KClNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KUmV2
+aWV3ZWQtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGsua296bG93c2tpQHNhbXN1bmcuY29tPgpU
+ZXN0ZWQtYnk6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNv
+bT4KLS0tClRoZXJlIGlzIG5vIG5ldyBjaGFuZ2VzIGluIHYxMi4xLCBidXQganVzdCByZWJhc2Ug
+dGhlIHdob2xlIHBhdGNoZXMgb24KdG9wIG9mIERhdmUncyBkcm0tbmV4dCBicmFuY2ggWzBdIChI
+ZWlrbykKCkNoYW5nZXMgaW4gdjEyLjE6IE5vbmUKQ2hhbmdlcyBpbiB2MTI6IE5vbmUKQ2hhbmdl
+cyBpbiB2MTE6IE5vbmUKQ2hhbmdlcyBpbiB2MTA6IE5vbmUKQ2hhbmdlcyBpbiB2OTogTm9uZQpD
+aGFuZ2VzIGluIHY4OiBOb25lCkNoYW5nZXMgaW4gdjc6IE5vbmUKQ2hhbmdlcyBpbiB2NjoKLSBG
+aXggUGVhY2ggUGl0IGhwZCBwcm9wZXJ0eSBuYW1lIGVycm9yOgotICAgICAgIGhwZC1ncGlvID0g
+PCZncHgyIDYgMD47CisgICAgICAgaHBkLWdwaW9zID0gPCZncHgyIDYgMD47CgpDaGFuZ2VzIGlu
+IHY1OgotIENvcnJlY3QgdGhlIG1pc3NwZWxsIGluIGNvbW1pdCBtZXNzYWdlLiAoS3J6eXN6dG9m
+KQoKQ2hhbmdlcyBpbiB2NDoKLSBTZXBhcmF0ZSBhbGwgRFRTIGNoYW5nZXMgdG8gYSBzZXBhcmF0
+ZSBwYXRjaC4gKEtyenlzenRvZikKCkNoYW5nZXMgaW4gdjM6IE5vbmUKQ2hhbmdlcyBpbiB2Mjog
+Tm9uZQoKIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtYXJuZGFsZS5kdHMgICAgICB8IDIg
+LS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc21kazUyNTAuZHRzICAgICB8IDIgLS0K
+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc25vdy1jb21tb24uZHRzaSB8IDQgKy0tLQog
+YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zcHJpbmcuZHRzICAgICAgIHwgNCArLS0tCiBh
+cmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMgICAgfCA0ICstLS0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtc21kazU0MjAuZHRzICAgICB8IDIgLS0KIGFyY2gv
+YXJtL2Jvb3QvZHRzL2V4eW5vczU4MDAtcGVhY2gtcGkuZHRzICAgICB8IDIgLS0KIDcgZmlsZXMg
+Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9h
+cmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRzIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cwppbmRleCBjMDAwNTMyLi5iMTc5MGNmIDEwMDY0NAot
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRzCisrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtYXJuZGFsZS5kdHMKQEAgLTEyNCw4ICsxMjQsNiBAQAog
+JmRwIHsKIAlzdGF0dXMgPSAib2theSI7CiAJc2Ftc3VuZyxjb2xvci1zcGFjZSA9IDwwPjsKLQlz
+YW1zdW5nLGR5bmFtaWMtcmFuZ2UgPSA8MD47Ci0Jc2Ftc3VuZyx5Y2Jjci1jb2VmZiA9IDwwPjsK
+IAlzYW1zdW5nLGNvbG9yLWRlcHRoID0gPDE+OwogCXNhbXN1bmcsbGluay1yYXRlID0gPDB4MGE+
+OwogCXNhbXN1bmcsbGFuZS1jb3VudCA9IDw0PjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2V4eW5vczUyNTAtc21kazUyNTAuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1
+MC1zbWRrNTI1MC5kdHMKaW5kZXggMGY1ZGNkNC4uZjMwYzJkYiAxMDA2NDQKLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbWRrNTI1MC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvZXh5bm9zNTI1MC1zbWRrNTI1MC5kdHMKQEAgLTgwLDggKzgwLDYgQEAKIAogJmRwIHsKIAlz
+YW1zdW5nLGNvbG9yLXNwYWNlID0gPDA+OwotCXNhbXN1bmcsZHluYW1pYy1yYW5nZSA9IDwwPjsK
+LQlzYW1zdW5nLHljYmNyLWNvZWZmID0gPDA+OwogCXNhbXN1bmcsY29sb3ItZGVwdGggPSA8MT47
+CiAJc2Ftc3VuZyxsaW5rLXJhdGUgPSA8MHgwYT47CiAJc2Ftc3VuZyxsYW5lLWNvdW50ID0gPDQ+
+OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LWNvbW1vbi5k
+dHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zbm93LWNvbW1vbi5kdHNpCmluZGV4
+IDBhN2Y0MDguLmVlOTQxMTAgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUy
+NTAtc25vdy1jb21tb24uZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLXNu
+b3ctY29tbW9uLmR0c2kKQEAgLTIzNiwxMiArMjM2LDEwIEBACiAJcGluY3RybC1uYW1lcyA9ICJk
+ZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmRwX2hwZD47CiAJc2Ftc3VuZyxjb2xvci1zcGFjZSA9
+IDwwPjsKLQlzYW1zdW5nLGR5bmFtaWMtcmFuZ2UgPSA8MD47Ci0Jc2Ftc3VuZyx5Y2Jjci1jb2Vm
+ZiA9IDwwPjsKIAlzYW1zdW5nLGNvbG9yLWRlcHRoID0gPDE+OwogCXNhbXN1bmcsbGluay1yYXRl
+ID0gPDB4MGE+OwogCXNhbXN1bmcsbGFuZS1jb3VudCA9IDwyPjsKLQlzYW1zdW5nLGhwZC1ncGlv
+ID0gPCZncHgwIDcgR1BJT19BQ1RJVkVfSElHSD47CisJaHBkLWdwaW9zID0gPCZncHgwIDcgR1BJ
+T19BQ1RJVkVfSElHSD47CiAKIAlwb3J0cyB7CiAJCXBvcnRAMCB7CmRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9leHlub3M1MjUwLXNwcmluZy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9l
+eHlub3M1MjUwLXNwcmluZy5kdHMKaW5kZXggYzFlZGQ2ZC4uOTE4ODFkNyAxMDA2NDQKLS0tIGEv
+YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1zcHJpbmcuZHRzCisrKyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL2V4eW5vczUyNTAtc3ByaW5nLmR0cwpAQCAtNzQsMTIgKzc0LDEwIEBACiAJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmRwX2hwZF9ncGlvPjsKIAlzYW1z
+dW5nLGNvbG9yLXNwYWNlID0gPDA+OwotCXNhbXN1bmcsZHluYW1pYy1yYW5nZSA9IDwwPjsKLQlz
+YW1zdW5nLHljYmNyLWNvZWZmID0gPDA+OwogCXNhbXN1bmcsY29sb3ItZGVwdGggPSA8MT47CiAJ
+c2Ftc3VuZyxsaW5rLXJhdGUgPSA8MHgwYT47CiAJc2Ftc3VuZyxsYW5lLWNvdW50ID0gPDE+Owot
+CXNhbXN1bmcsaHBkLWdwaW8gPSA8JmdwYzMgMCBHUElPX0FDVElWRV9ISUdIPjsKKwlocGQtZ3Bp
+b3MgPSA8JmdwYzMgMCBHUElPX0FDVElWRV9ISUdIPjsKIH07CiAKICZlaGNpIHsKZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cwppbmRleCA3MmJhNmYwLi44YmFmNDBh
+IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMK
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1wZWFjaC1waXQuZHRzCkBAIC0xNDgs
+MTIgKzE0OCwxMCBAQAogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0g
+PCZkcF9ocGRfZ3Bpbz47CiAJc2Ftc3VuZyxjb2xvci1zcGFjZSA9IDwwPjsKLQlzYW1zdW5nLGR5
+bmFtaWMtcmFuZ2UgPSA8MD47Ci0Jc2Ftc3VuZyx5Y2Jjci1jb2VmZiA9IDwwPjsKIAlzYW1zdW5n
+LGNvbG9yLWRlcHRoID0gPDE+OwogCXNhbXN1bmcsbGluay1yYXRlID0gPDB4MDY+OwogCXNhbXN1
+bmcsbGFuZS1jb3VudCA9IDwyPjsKLQlzYW1zdW5nLGhwZC1ncGlvID0gPCZncHgyIDYgR1BJT19B
+Q1RJVkVfSElHSD47CisJaHBkLWdwaW9zID0gPCZncHgyIDYgR1BJT19BQ1RJVkVfSElHSD47CiAK
+IAlwb3J0cyB7CiAJCXBvcnRAMCB7CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlu
+b3M1NDIwLXNtZGs1NDIwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtc21kazU0
+MjAuZHRzCmluZGV4IGFjMzVhZWYuLmY2NzM0NGYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2V4eW5vczU0MjAtc21kazU0MjAuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
+czU0MjAtc21kazU0MjAuZHRzCkBAIC05Myw4ICs5Myw2IEBACiAJcGluY3RybC1uYW1lcyA9ICJk
+ZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmRwX2hwZD47CiAJc2Ftc3VuZyxjb2xvci1zcGFjZSA9
+IDwwPjsKLQlzYW1zdW5nLGR5bmFtaWMtcmFuZ2UgPSA8MD47Ci0Jc2Ftc3VuZyx5Y2Jjci1jb2Vm
+ZiA9IDwwPjsKIAlzYW1zdW5nLGNvbG9yLWRlcHRoID0gPDE+OwogCXNhbXN1bmcsbGluay1yYXRl
+ID0gPDB4MGE+OwogCXNhbXN1bmcsbGFuZS1jb3VudCA9IDw0PjsKZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2V4eW5vczU4MDAtcGVhY2gtcGkuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+ZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKaW5kZXggMWNjMmU5NS4uZmMyMzJiZSAxMDA2NDQKLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKQEAgLTE0OCw4ICsxNDgsNiBAQAog
+CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZkcF9ocGRfZ3Bpbz47
+CiAJc2Ftc3VuZyxjb2xvci1zcGFjZSA9IDwwPjsKLQlzYW1zdW5nLGR5bmFtaWMtcmFuZ2UgPSA8
+MD47Ci0Jc2Ftc3VuZyx5Y2Jjci1jb2VmZiA9IDwwPjsKIAlzYW1zdW5nLGNvbG9yLWRlcHRoID0g
+PDE+OwogCXNhbXN1bmcsbGluay1yYXRlID0gPDB4MGE+OwogCXNhbXN1bmcsbGFuZS1jb3VudCA9
+IDwyPjsKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
