@@ -1,76 +1,79 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 0/5 RFC] mmc: sdhci-iproc: add bcm2835 support
-Date: Tue, 19 Jan 2016 13:00:08 -0800
-Message-ID: <87bn8hcmjr.fsf@eliezer.anholt.net>
-References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
+Date: Wed, 20 Jan 2016 00:43:36 +0100
+Message-ID: <20160120004336.2b89a5f6@tock>
+References: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
+        <56993EF5.9040008@gmail.com>
+        <20160116080205.0b6e84c9e531b0cfd845b67b@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20160116080205.0b6e84c9e531b0cfd845b67b@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: Aban Bedel <albeu@free.fr>, David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Sat, 16 Jan 2016 08:02:05 +0300
+Antony Pavlov <antonynpavlov@gmail.com> wrote:
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+> On Fri, 15 Jan 2016 10:48:21 -0800
+> David Daney <ddaney.cavm@gmail.com> wrote:
+> 
+> > On 01/14/2016 12:20 AM, Antony Pavlov wrote:
+> > > The correct name for aliases node is "aliases" not "alias".
+> > >
+> > > An overview of the "aliases" node usage can be found
+> > > on the device tree usage page at devicetree.org [1].
+> > >
+> > > Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
+> > >
+> > > [1] http://devicetree.org/Device_Tree_Usage#aliases_Node
+> > > [2] https://www.power.org/documentation/epapr-version-1-1/
+> > >
+> > > Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+> > > Cc: Alban Bedel <albeu@free.fr>
+> > > Cc: linux-mips@linux-mips.org
+> > > Cc: devicetree@vger.kernel.org
+> > > ---
+> > >   arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> > > b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts index
+> > > 003015a..4b6d38c 100644 ---
+> > > a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts +++
+> > > b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts @@ -9,7 +9,7 @@
+> > >   	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
+> > >   	model = "TP-Link TL-WR1043ND Version 1";
+> > >
+> > > -	alias {
+> > > +	aliases {
+> > >   		serial0 = "/ahb/apb/uart@18020000";
+> > >   	};
+> > 
+> > What uses this alias?  If the answer is nothing (likely, as it was 
+> > broken and nobody seems to have noticed), just remove the whole
+> > thing.
+> 
+> I have used ar9132_tl_wr1043nd_v1.dts as a template for AR9331-based
+> board dts-file. AR9331 uses it's own very special UART implementation
+> (the ar933x_uart.c driver is used). ar933x_uart.c relies on alias and
+> does not work if alias is not set. I have not yet runned linux on
+> TL-WR1034ND, but I suppose that uart alias is not actually used for
+> TL-WR1034ND and this aliases node can be safely removed.
+> 
+> Alban, have you any comments?
 
-> This patch series based on the suggestion of Scott Branden to implement
-> bcm2835 support into sdhci-iproc [1].
->
-> These changes provide the following advantages:
->   * no need to maintain a separate driver for bcm2835
->   * improve support and test coverage of bcm2835 mmc support
->   * get the rid of SDHCI_CAPABILITIES hack in bcm2835_sdhci_readl
->   * increase write performance by avoiding delays in write ops
->
-> Patch 1 and 2 adopt two sdhci-bcm2835 fixes to sdhci-iproc. The third patch
-> tries to specify as much quirks as possible in the bcm283x.dtsi as possible.
-> Patch 4 and 5 are the actually changes for bcm2835 support.
->
-> These series has been tested on Raspberry Pi B with dd (direct I/O):
->
-> sdhci-bcm2835
->
-> 378 kB/s WRITE
-> 10,6 MB/s READ
->
-> sdhci-iproc (after applying patch series)
->
-> 881 kB/s WRITE
-> 10,8 MB/s READ
+David is right, we should just remove it.
 
-I started a while ago at looking at merging the sdhost driver (for the
-other controller on these boards that you can use instead), since
-apparently the hardware's a better choice to use.  This looks like a
-really nice simplification for us for the Arasan mode, though.  Would
-you also want to delete the old 2835 driver after this series?
-
-These patches are all:
-
-Acked-by: Eric Anholt <eric@anholt.net>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWnqPYAAoJELXWKTbR/J7oT74P/Ax4kgCcgPMOlc8iG3mR6iHu
-BmWtYAScqp6vFIbA8tM4CRK+oKx7Lh4tLmLLkqU12wBN573r2jAeUDstEbOiebmF
-JmKtlRB/fSkaMwPRek41wYBYYEiWODVPQW92FArupafpMtyiYVX+hISdaJwZ6GCJ
-3+EGfLSobk2ODzcjqQII6JV9J06Tagb2852h4xmoJW85Drg82yBA0RbHDuFwptzq
-XyhcyzL0Dkx9toWlcxiUy6aZ9wdNQBzykv0Xv17Gt1gjdU1ZqNIg9KBzVZimvhl7
-X0Vx4BcXrX/WOX0AsGtYYoGw+2axuR4rHylHTng94rNJIEU7rw01hkyRwbxx/wOy
-Pw6QQunYTkW73YCTmqmE/CH2xPKcTTcWOznAAM0tbR4Q9SYcuecju6WWn7sQJlzw
-ukLyyWOWR1vlYLcY47fj2wlQGuuRoPG/lmJKYkVsEy8x5BqErbjAjLSs9WwiB22s
-5X0ZW5IIb+8nDqTY/bjVlYO00AJVs7LciJR02hz15aWFj9AbnKzPwQCopx43BCbX
-TCWlFNGglWG50dPF5RtcfVSbX3aZM1dZ5dJ4Ut3Mqj6h46/2zXbwJM0rEV6PG5F2
-THIJqA/bRPYre4KT8E4Zxc+kPlXqEAeob8u+Qr+LJq/qBdlqiLcvYs7lMfJ3lSVq
-Eo0l8gslvCuwELK4cUp7
-=lNTC
------END PGP SIGNATURE-----
---=-=-=--
+Alban
