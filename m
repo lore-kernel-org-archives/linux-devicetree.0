@@ -1,7 +1,7 @@
 From: kernel@martin.sperl.org
-Subject: [RFC 4/9] clk: bcm2835: reorganize bcm2835_clock_determine_rate
-Date: Tue, 19 Jan 2016 14:51:35 +0000
-Message-ID: <1453215100-2382-5-git-send-email-kernel@martin.sperl.org>
+Subject: [RFC 6/9] clk: bcm2835: allow to define a minimum fractional divider in DT
+Date: Tue, 19 Jan 2016 14:51:37 +0000
+Message-ID: <1453215100-2382-7-git-send-email-kernel@martin.sperl.org>
 References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
@@ -12,137 +12,63 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Reorganize bcm2835_clock_determine_rate so that the per
-clock frequency calculation is separated from the
-selection logic.
+Allow to define a minimum fractional divider to use
+in the devicetree.
 
-This allows for different clock selection policies
-to be use while keeping code common.
+This is primarily used to reduce clock-jitter introduced
+by the fractional/MASH divider.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c |   98 +++++++++++++++++++++++++++++------------
- 1 file changed, 70 insertions(+), 28 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 48c1ad0..f1ab525 100644
+index e5313ba..7048ca5 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1668,44 +1668,86 @@ unlock_exit:
- 	return 0;
- }
- 
--static int bcm2835_clock_determine_rate(struct clk_hw *hw,
--		struct clk_rate_request *req)
-+struct bcm2835_rates {
-+	struct clk_hw *parent;
-+	unsigned long rate;
-+	unsigned long prate;
-+	u32 div;
-+	divmash dmash;
-+};
-+
-+static int bcm2835_clock_determine_rate_set(struct clk_rate_request *req,
-+					    struct bcm2835_rates *best)
+@@ -711,6 +711,8 @@ struct bcm2835_clock_data {
+ 	u32 int_bits;
+ 	/* Number of fractional bits in the divider */
+ 	u32 frac_bits;
++	/* the minimum divider to allow when fractional */
++	u32 min_frac_div;
+ 	/* the mash value to use - see CM_MASH */
+ 	enum bcm2835_clock_mash_type mash;
+ 	bool mash_forced;
+@@ -1709,13 +1711,21 @@ static int bcm2835_clock_determine_closest_rate(struct clk_hw *hw,
+ 						struct bcm2835_rates *rates,
+ 						size_t rate_cnt)
  {
--	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
--	struct clk_hw *parent, *best_parent = NULL;
--	unsigned long rate, best_rate = 0;
--	unsigned long prate, best_prate = 0;
-+	req->best_parent_hw = best->parent;
-+	req->best_parent_rate = best->prate;
-+	req->rate = best->rate;
-+
-+	return 0;
-+}
-+
-+static int bcm2835_clock_determine_closest_rate(struct clk_hw *hw,
-+						struct clk_rate_request *req,
-+						struct bcm2835_rates *rates,
-+						size_t rate_cnt)
-+{
-+	struct bcm2835_rates *best = NULL;
++	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
++	const struct bcm2835_clock_data *data = clock->data;
+ 	struct bcm2835_rates *best = NULL;
  	size_t i;
--	divmash dm;
--	u32 div;
  
--	/*
--	 * Select parent clock that results in the closest but lower rate
--	 */
--	for (i = 0; i < clk_hw_get_num_parents(hw); ++i) {
--		parent = clk_hw_get_parent_by_index(hw, i);
--		if (!parent)
-+	/* find best matching */
-+	for (i = 0; i < rate_cnt; i++) {
-+		if (rates[i].rate > req->rate)
-+			continue;
-+		if (!best) {
-+			best = &rates[i];
-+			continue;
-+		}
-+		/* find the closest */
-+		if (rates[i].rate > best->rate) {
-+			best = &rates[i];
-+			continue;
-+		}
-+		/* if identical then use highest divider */
-+		if ((rates[i].rate == best->rate) &&
-+		    (rates[i].div > best->div)) {
-+			best = &rates[i];
+ 	/* find best matching */
+ 	for (i = 0; i < rate_cnt; i++) {
++		/* do not look at anything above the requested rate */
+ 		if (rates[i].rate > req->rate)
  			continue;
--		prate = clk_hw_get_rate(parent);
--		dm = bcm2835_clock_choose_div(hw, req->rate, prate, true);
--		div = divmash_get_div(dm);
--		rate = bcm2835_clock_rate_from_divisor(clock, prate, div);
--		if (rate > best_rate && rate <= req->rate) {
--			best_parent = parent;
--			best_prate = prate;
--			best_rate = rate;
++		/* if we have a divider that is not "safe", then ignore */
++		if (divmash_get_divf(rates[i].dmash) &&
++		    (rates[i].div < data->min_frac_div))
++			continue;
++		/* if we are the first */
+ 		if (!best) {
+ 			best = &rates[i];
+ 			continue;
+@@ -2094,6 +2104,10 @@ static const struct bcm2835_clock_data *bcm2835_register_clock_of(
+ 			break;
  		}
  	}
++	/* add support for min fractional divider */
++	err = of_property_read_u32(nc, "brcm,min-fract-div", &value);
++	if (!err)
++		data->min_frac_div = value << CM_DIV_FRAC_BITS;
  
--	if (!best_parent)
--		return -EINVAL;
-+	if (best)
-+		return bcm2835_clock_determine_rate_set(req, best);
-+
-+	/* nothing found */
-+	return -EINVAL;
-+}
- 
--	req->best_parent_hw = best_parent;
--	req->best_parent_rate = best_prate;
-+static int bcm2835_clock_determine_rate(struct clk_hw *hw,
-+					struct clk_rate_request *req)
-+{
-+	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
-+	struct bcm2835_rates rates[BIT(CM_SRC_BITS)];
-+	size_t i, rate_cnt = 0;
-+	divmash dm;
- 
--	req->rate = best_rate;
-+	/* fill in rates */
-+	for (i = 0; i < clk_hw_get_num_parents(hw); ++i) {
-+		rates[rate_cnt].parent = clk_hw_get_parent_by_index(hw, i);
-+		if (!rates[rate_cnt].parent)
-+			continue;
-+		rates[rate_cnt].prate = clk_hw_get_rate(
-+			rates[rate_cnt].parent);
-+		dm = bcm2835_clock_choose_div(
-+			hw, req->rate, rates[rate_cnt].prate, true);
-+		rates[rate_cnt].div =  divmash_get_div(dm);
-+		rates[rate_cnt].rate = bcm2835_clock_rate_from_divisor(
-+			clock, rates[rate_cnt].prate, rates[rate_cnt].div);
-+		rate_cnt++;
-+	}
- 
--	return 0;
-+	/* choose the "closest" one */
-+	return bcm2835_clock_determine_closest_rate(hw, req, rates,
-+						    rate_cnt);
- }
- 
- static int _bcm2835_clk_set_parent(struct bcm2835_cprman *cprman,
+ 	/* and return the result */
+ 	return data;
 -- 
 1.7.10.4
 
