@@ -1,54 +1,84 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Tue, 19 Jan 2016 10:52:54 +0800
-Message-ID: <20160119025254.GA24548@shlinux2>
-References: <20160118071309.GC8150@shlinux2>
- <Pine.LNX.4.44L0.1601181129340.25155-100000@netrider.rowland.org>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
+Subject: [PATCH v6 0/6] ARM: hisi: Add initial support including clock driver for Hi3519 soc.
+Date: Tue, 19 Jan 2016 10:38:25 +0800
+Message-ID: <1453171111-21921-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1601181129340.25155-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 11:39:06AM -0500, Alan Stern wrote:
-> On Mon, 18 Jan 2016, Peter Chen wrote:
-> 
-> > > > Why can't the root_hub reuse dev->dev.of_node?
-> > > 
-> > > Indeed, there's no need to add an .of_node field to struct usb_device, 
-> > > since the embedded struct device already contains an .of_node field.
-> > > 
-> > 
-> > No, the usb_device needs the .of_node field.
-> 
-> It already _has_ an .of_node field, in its embedded struct device.
-> 
-> > The devices belong to platform bus contains device node.
-> > The devices (usb device) belong to USB bus which are created
-> > dynamically do not contain device node.
-> 
-> I don't know what you mean.  struct usb_device _does_ contain an 
-> embedded struct device.  It doesn't matter the structures are created 
-> dynamically, statically, or any other way; this field is part of the 
-> structure definition.
-> 
-> Suppose udev is a pointer to struct usb_device.  Then udev->dev is a
-> struct device and udev->dev.of_node is a pointer to struct device_node.  
-> You don't need to add a new udev->of_node field; just use
-> udev->dev.of_node instead.
-> 
+Hello,
 
-Yes, you are right.
+Hi3519 soc is mainly used for ip camera and sport DV solutions. This patchset adds initial support
+for Hi3519 soc. It includes clock driver, arch configuration, debug uart configuration and device tree.
+It has been tested on hi3519 reference board.
+
+Any comments will be appreciated!
+
+Thanks!
+
+Change Log
+----------
+v6:
+-Change clock driver to a real platform driver
+
+v5:
+-Adjust clock and reset controller driver code
+
+v4:
+-Rebase to v4.4-rc7
+-Divide patches according to Rob's comments
+-Add spi nodes in hi3519-demb.dts
+
+v3:
+-Rebase to v4.4-rc4
+-Adjust according to Arnd's comments
+-Remove ARCH_HI3519, using ARCH_HISI directly
+
+v2:
+-Rebase to v4.4-rc3
+-Put dt-binding doc and header file in a separate patch.
+-Delete unused clocks definitions.
+-Adjust the ARCH_xxx order in Kconfig file
+-Rename ARCH_HI3xxx to ARCH_36xx
+
+Jiancheng Xue (6):
+  clk: hisilicon: add CRG driver for hi3519 soc
+  ARM: hisi: add compatible string for Hi3519 soc
+  ARM: config: hisi: enable CONFIG_RESET_CONTROLLER
+  ARM: debug: add hi3519 debug uart
+  ARM: dt-bindings: add device tree bindings for Hi3519 sysctrl
+  ARM: dts: add dts files for Hi3519
+
+ .../bindings/arm/hisilicon/hi3519-sysctrl.txt      |  14 ++
+ .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++
+ arch/arm/Kconfig.debug                             |  10 ++
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/hi3519-demb.dts                  |  42 +++++
+ arch/arm/boot/dts/hi3519.dtsi                      | 187 +++++++++++++++++++++
+ arch/arm/configs/hisi_defconfig                    |   1 +
+ arch/arm/mach-hisi/hisilicon.c                     |  23 +--
+ drivers/clk/hisilicon/Kconfig                      |   7 +
+ drivers/clk/hisilicon/Makefile                     |   2 +
+ drivers/clk/hisilicon/clk-hi3519.c                 | 132 +++++++++++++++
+ drivers/clk/hisilicon/clk.c                        |  23 ++-
+ drivers/clk/hisilicon/clk.h                        |  14 +-
+ drivers/clk/hisilicon/reset.c                      | 130 ++++++++++++++
+ drivers/clk/hisilicon/reset.h                      |  32 ++++
+ include/dt-bindings/clock/hi3519-clock.h           |  40 +++++
+ 16 files changed, 671 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hi3519-sysctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+ create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
+ create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+ create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
+ create mode 100644 drivers/clk/hisilicon/reset.c
+ create mode 100644 drivers/clk/hisilicon/reset.h
+ create mode 100644 include/dt-bindings/clock/hi3519-clock.h
 
 -- 
+1.9.1
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
