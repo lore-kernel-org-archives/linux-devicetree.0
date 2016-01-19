@@ -1,113 +1,40 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 4/5 RFC] mmc: sdhci-iproc: add bcm2835 support
-Date: Tue, 19 Jan 2016 10:32:45 +0900
-Message-ID: <569D923D.60306@samsung.com>
-References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
- <1453042744-16196-5-git-send-email-stefan.wahren@i2se.com>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 3/6] ARM: config: hisi: enable CONFIG_RESET_CONTROLLER
+Date: Tue, 19 Jan 2016 10:38:28 +0800
+Message-ID: <1453171111-21921-4-git-send-email-xuejiancheng@huawei.com>
+References: <1453171111-21921-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1453042744-16196-5-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453171111-21921-1-git-send-email-xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2016 11:59 PM, Stefan Wahren wrote:
-> Scott Branden from Broadcom said that the BCM2835 eMMC IP core is
-> very similar to IPROC and share most of the quirks. So use this driver
-> instead of separate one.
-> 
-> The sdhci-iproc contains a better workaround for the clock domain
-> crossing problem which doesn't need any delays. This results in a
-> better write performance.
-> 
-> Btw we get the rid of the SDHCI_CAPABILITIES hack in the sdhci_readl
-> function.
-> 
-> Suggested-by: Scott Branden <sbranden@broadcom.com>
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/mmc/host/Kconfig       |    6 +++---
->  drivers/mmc/host/sdhci-iproc.c |   20 ++++++++++++++++++--
->  2 files changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 1526b8a..60de1e4 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -318,15 +318,15 @@ config MMC_SDHCI_F_SDH30
->  	  If unsure, say N.
->  
->  config MMC_SDHCI_IPROC
-> -	tristate "SDHCI platform support for the iProc SD/MMC Controller"
-> -	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> +	tristate "SDHCI support for the BCM2835 & iProc SD/MMC Controller"
-> +	depends on ARCH_BCM2835 || ARCH_BCM_IPROC || COMPILE_TEST
->  	depends on MMC_SDHCI_PLTFM
->  	default ARCH_BCM_IPROC
->  	select MMC_SDHCI_IO_ACCESSORS
->  	help
->  	  This selects the iProc SD/MMC controller.
->  
-> -	  If you have an IPROC platform with SD or MMC devices,
-> +	  If you have a BCM2835 or IPROC platform with SD or MMC devices,
->  	  say Y or M here.
->  
->  	  If unsure, say N.
-> diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
-> index 55bc348..88399eb 100644
-> --- a/drivers/mmc/host/sdhci-iproc.c
-> +++ b/drivers/mmc/host/sdhci-iproc.c
-> @@ -167,7 +167,20 @@ static const struct sdhci_iproc_data iproc_data = {
->  	.caps1 = 0x00000064,
->  };
->  
-> +static const struct sdhci_pltfm_data sdhci_bcm2835_pltfm_data = {
-> +	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
-> +		| SDHCI_QUIRK_MISSING_CAPS,
-> +	.ops = &sdhci_iproc_ops,
-> +};
-> +
-> +static const struct sdhci_iproc_data bcm2835_data = {
-> +	.pdata = &sdhci_bcm2835_pltfm_data,
-> +	.caps = SDHCI_CAN_VDD_330,
-> +	.caps1 = 0x00000000,
-> +};
-> +
->  static const struct of_device_id sdhci_iproc_of_match[] = {
-> +	{ .compatible = "brcm,bcm2835-sdhci", .data = &bcm2835_data },
->  	{ .compatible = "brcm,sdhci-iproc-cygnus", .data = &iproc_data },
->  	{ }
->  };
-> @@ -180,6 +193,7 @@ static int sdhci_iproc_probe(struct platform_device *pdev)
->  	struct sdhci_host *host;
->  	struct sdhci_iproc_host *iproc_host;
->  	struct sdhci_pltfm_host *pltfm_host;
-> +	struct device_node *np = pdev->dev.of_node;
->  	int ret;
->  
->  	match = of_match_device(sdhci_iproc_of_match, &pdev->dev);
-> @@ -199,8 +213,10 @@ static int sdhci_iproc_probe(struct platform_device *pdev)
->  	mmc_of_parse(host->mmc);
->  	sdhci_get_of_property(pdev);
->  
-> -	/* Enable EMMC 1/8V DDR capable */
-> -	host->mmc->caps |= MMC_CAP_1_8V_DDR;
-> +	if (of_device_is_compatible(np, "brcm,sdhci-iproc-cygnus")) {
-> +		/* Enable EMMC 1/8V DDR capable */
-> +		host->mmc->caps |= MMC_CAP_1_8V_DDR;
-> +	}
+enable CONFIG_RESET_CONTROLLER in hisi_defconfig
 
-Why don't you use the property in device tree?
-It can be parsed MMC_CAP_1_8V_DDR as property of "mmc-ddr-1_8v".
+Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/configs/hisi_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Best Regards,
-Jaehoon Chung
+diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
+index b2e340b..ba62c07 100644
+--- a/arch/arm/configs/hisi_defconfig
++++ b/arch/arm/configs/hisi_defconfig
+@@ -75,6 +75,7 @@ CONFIG_DMADEVICES=y
+ CONFIG_DW_DMAC=y
+ CONFIG_PL330_DMA=y
+ CONFIG_PWM=y
++CONFIG_RESET_CONTROLLER=y
+ CONFIG_PHY_HIX5HD2_SATA=y
+ CONFIG_EXT4_FS=y
+ CONFIG_TMPFS=y
+-- 
+1.9.1
 
->  
->  	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(pltfm_host->clk)) {
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
