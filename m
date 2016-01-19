@@ -1,123 +1,189 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Tue, 19 Jan 2016 16:31:27 +0800
-Message-ID: <569DF45F.3050908@rock-chips.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
- <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
- <CALAqxLUxh3=LhoHxqiRm_5L4G6m1Vctp=aUg+9_uAtLkFwW9bw@mail.gmail.com>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH v2 10/16] ARM: XEN: Move xen_early_init()
+ before efi_init()
+Date: Tue, 19 Jan 2016 16:36:32 +0800
+Message-ID: <569DF590.6030105@huawei.com>
+References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com> <1452840929-19612-11-git-send-email-zhaoshenglong@huawei.com> <alpine.DEB.2.02.1601181445210.16178@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLUxh3=LhoHxqiRm_5L4G6m1Vctp=aUg+9_uAtLkFwW9bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1601181445210.16178-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lkml <linux-kernel-u79uwXL29Tb/PtFMR13I2A@public.gmane.org>
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John:
 
-On 2016=E5=B9=B401=E6=9C=8816=E6=97=A5 06:41, John Stultz wrote:
-> On Tue, Jan 12, 2016 at 3:29 AM, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org> w=
-rote:
->> add device tree binding document for reboot-mode driver
+
+On 2016/1/18 22:59, Stefano Stabellini wrote:
+> On Fri, 15 Jan 2016, Shannon Zhao wrote:
+>> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Move xen_early_init() before efi_init(), then when calling efi_init()
+>> could initialize Xen specific UEFI.
 >>
+>> Check if it runs on Xen hypervisor through the flat dts.
+>>
+>> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >> ---
+>>  arch/arm/xen/enlighten.c  | 56 ++++++++++++++++++++++++++++++++++-------------
+>>  arch/arm64/kernel/setup.c |  2 +-
+>>  2 files changed, 42 insertions(+), 16 deletions(-)
 >>
->> Changes in v2: None
->> Changes in v1: None
->>
->>   .../bindings/power/reset/reboot-mode.txt           | 41 ++++++++++=
-+++++++
->>   .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++=
-++++++++++++
->>   2 files changed, 93 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/reset/r=
-eboot-mode.txt
->>   create mode 100644 Documentation/devicetree/bindings/power/reset/s=
-yscon-reboot-mode.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mo=
-de.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> new file mode 100644
->> index 0000000..81d9f66
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> @@ -0,0 +1,41 @@
->> +Generic reboot mode core map driver
+>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>> index 4e78c49..5d0fe68 100644
+>> --- a/arch/arm/xen/enlighten.c
+>> +++ b/arch/arm/xen/enlighten.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/irqreturn.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>> +#include <linux/of_fdt.h>
+>>  #include <linux/of_irq.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/cpuidle.h>
+>> @@ -52,8 +53,6 @@ struct xen_memory_region xen_extra_mem[XEN_EXTRA_MEM_MAX_REGIONS] __initdata;
+>>  
+>>  static __read_mostly unsigned int xen_events_irq;
+>>  
+>> -static __initdata struct device_node *xen_node;
+>> -
+>>  int xen_remap_domain_gfn_array(struct vm_area_struct *vma,
+>>  			       unsigned long addr,
+>>  			       xen_pfn_t *gfn, int nr,
+>> @@ -222,6 +221,33 @@ static irqreturn_t xen_arm_callback(int irq, void *arg)
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> +static __initdata struct {
+>> +	const char *compat;
+>> +	const char *prefix;
+>> +	const char *version;
+>> +	bool found;
+>> +} xen_node = {"xen,xen", "xen,xen-", NULL, false};
 >> +
->> +This driver get reboot mode arguments and call the write
->> +interface to stores the magic value in special register
->> +or ram . Then the bootloader can read it and take different
->> +action according to the argument stored.
+>> +static int __init fdt_find_xen_node(unsigned long node, const char *uname,
+>> +				    int depth, void *data)
+>> +{
+>> +	const void *s = NULL;
+>> +	int len;
 >> +
->> +Required properties:
->> +- compatible: only support "syscon-reboot-mode" now.
+>> +	if (depth != 1 || strcmp(uname, "hypervisor") != 0)
+>> +		return 0;
 >> +
->> +Each mode is represented as a sub-node of reboot_mode:
+>> +	if (of_flat_dt_is_compatible(node, xen_node.compat))
+>> +		xen_node.found = true;
 >> +
->> +Subnode required properties:
->> +- linux,mode: reboot mode command,such as "loader", "recovery", "fa=
-stboot".
->> +- loader,magic: magic number for the mode, this is vendor specific.
+>> +	s = of_get_flat_dt_prop(node, "compatible", &len);
+>> +	if (strlen(xen_node.prefix) + 3  < len &&
+>> +	    !strncmp(xen_node.prefix, s, strlen(xen_node.prefix)))
+>> +		xen_node.version = s + strlen(xen_node.prefix);
 >> +
->> +Example:
->> +       reboot_mode {
->> +               compatible =3D "syscon-reboot-mode";
->> +               offset =3D <0x40>;
+>> +	return 0;
+>> +}
 >> +
->> +               loader {
->> +                       linux,mode =3D "loader";
->> +                       loader,magic =3D <BOOT_LOADER>;
->> +               };
+>>  /*
+>>   * see Documentation/devicetree/bindings/arm/xen.txt for the
+>>   * documentation of the Xen Device Tree format.
+>> @@ -229,26 +255,18 @@ static irqreturn_t xen_arm_callback(int irq, void *arg)
+>>  #define GRANT_TABLE_PHYSADDR 0
+>>  void __init xen_early_init(void)
+>>  {
+>> -	int len;
+>> -	const char *s = NULL;
+>> -	const char *version = NULL;
+>> -	const char *xen_prefix = "xen,xen-";
+>> -
+>> -	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+>> -	if (!xen_node) {
+>> +	of_scan_flat_dt(fdt_find_xen_node, NULL);
+>> +	if (!xen_node.found) {
+>>  		pr_debug("No Xen support\n");
+>>  		return;
+>>  	}
+>> -	s = of_get_property(xen_node, "compatible", &len);
+>> -	if (strlen(xen_prefix) + 3  < len &&
+>> -			!strncmp(xen_prefix, s, strlen(xen_prefix)))
+>> -		version = s + strlen(xen_prefix);
+>> -	if (version == NULL) {
 >> +
->> +               maskrom {
->> +                       linux,mode =3D "maskrom";
->> +                       loader,magic =3D <BOOT_MASKROM>;
->> +               };
->> +
->> +               recovery {
->> +                       linux,mode =3D "recovery";
->> +                       loader,magic =3D <BOOT_RECOVERY>;
->> +               };
->> +
->> +               fastboot {
->> +                       linux,mode =3D "fastboot";
->> +                       loader,magic =3D <BOOT_FASTBOOT>;
->> +               };
->> +        };
->
-> So one minor thought here. While the commands are somewhat vendor
-> specific, would it be a good idea for the example commands to match
-> the common commands on Android devices?  For example, usually
-> "bootloader" is what gets you into fastboot mode on nexus devices.
->
-> thanks
-> -john
->
->
->
->
+>> +	if (xen_node.version == NULL) {
+>>  		pr_debug("Xen version not found\n");
+>>  		return;
+>>  	}
+> 
+> This is going to access data within the fdt, after it has been
+> unflattened (by the unflatten_device_tree call). Is that allowed?
+> 
+> If that's not allowed, then you could copy the version string to
+> xen_node.version, rather than just copying the pointer. Otherwise you
+> could move the version check entirely within fdt_find_xen_node and
+> remove the version field from xen_node.
+> 
+A little confused. Since here we move xen_early_init before efi_init and
+before unflatten_device_tree as well, at this moment in xen_early_init
+the fdt is flattened. The xen_node.version is only set in
+fdt_find_xen_node and accessed in xen_early_init.
 
-   When I run the "adb help" , I got the following message:
-   adb reboot [bootloader|recovery] - reboots the device, optionally=20
-into the bootloader or recovery program
-   adb reboot-bootloader        - reboots the device into the bootloade=
-r
+> 
+>> -	pr_info("Xen %s support found\n", version);
+>> +	pr_info("Xen %s support found\n", xen_node.version);
+>>  
+>>  	xen_domain_type = XEN_HVM_DOMAIN;
+>>  
+>> @@ -296,6 +314,14 @@ static int __init xen_guest_init(void)
+>>  		}
+>>  #endif
+>>  	} else {
+>> +		struct device_node *xen_node;
+>> +
+>> +		xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+>> +		if (!xen_node) {
+>> +			pr_debug("No Xen support\n");
+>> +			return -ENODEV;
+>> +		}
+> 
+> It makes sense to move this into a DT specific init function called from
+> xen_guest_init. Also, given that at this point we know that a Xen node
+> should be present, it makes sense to return EFAULT on error, instead of
+> ENODEV. The error message could be changed to something like: "Xen
+> support was detected before, but it has disappeared" and should be
+> pr_err.
+> 
+OK, thanks.
+> 
+>>  		xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+>>  	}
+>>  
+>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>> index 8119479..a4a2878 100644
+>> --- a/arch/arm64/kernel/setup.c
+>> +++ b/arch/arm64/kernel/setup.c
+>> @@ -313,6 +313,7 @@ void __init setup_arch(char **cmdline_p)
+>>  	 */
+>>  	local_async_enable();
+>>  
+>> +	xen_early_init();
+>>  	efi_init();
+>>  	arm64_memblock_init();
+>>  
+>> @@ -334,7 +335,6 @@ void __init setup_arch(char **cmdline_p)
+>>  	} else {
+>>  		psci_acpi_init();
+>>  	}
+>> -	xen_early_init();
+>>  
+>>  	cpu_read_bootcpu_ops();
+>>  	smp_init_cpus();
+> 
+> .
+> 
 
-   It  only says "adb reboot-bootloader" will reboot the device into=20
-bootloader, not specific to fastboot.
-
-   I add @Simon from Google here, maybe he can give some suggestions.
-
-
+-- 
+Shannon
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
