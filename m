@@ -1,56 +1,69 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] power: Add support for TI BQ24261 charger
-Date: Tue, 19 Jan 2016 09:02:32 +0200
-Message-ID: <CAHp75VcBAHg3trt45xVr6m9ppDyv+TSZEEVsWra3QVRWGKfC1g@mail.gmail.com>
-References: <1446136455-20752-1-git-send-email-ramakrishna.pallala@intel.com>
-	<1446136455-20752-3-git-send-email-ramakrishna.pallala@intel.com>
-	<CAHp75Vde8ZFXZC9SzKSaXS8TThJd1u=+UMHPOiTWZvY1P4xKqw@mail.gmail.com>
-	<D854C92F57B1B347B57E531E78D05EAD57A22F3D@BGSMSX104.gar.corp.intel.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V3 5/5] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Tue, 19 Jan 2016 12:34:14 +0530
+Message-ID: <569DDFEE.4080307@nvidia.com>
+References: <1452771166-13694-1-git-send-email-ldewangan@nvidia.com> <1452771166-13694-6-git-send-email-ldewangan@nvidia.com> <569DC9AD.7000504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <D854C92F57B1B347B57E531E78D05EAD57A22F3D@BGSMSX104.gar.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <569DC9AD.7000504@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 19, 2016 at 3:26 AM, Pallala, Ramakrishna
-<ramakrishna.pallala@intel.com> wrote:
->> On Thu, Oct 29, 2015 at 6:34 PM, Ramakrishna Pallala
->> <ramakrishna.pallala@intel.com> wrote:
->> > Add new charger driver support for TI BQ24261 charger IC.
->> >
->> > TI BQ24261 charger driver relies on extcon notifications to get the
->> > charger cable type and based on that it will set the charging parameters.
+Thanks for review.
+Here is my view on the some of the review comment.
 
->> > +/* BQ24261 registers */
->> > +#define BQ24261_STAT_CTRL0_ADDR                0x00
->> > +#define BQ24261_CTRL_ADDR              0x01
->> > +#define BQ24261_BATT_VOL_CTRL_ADDR     0x02
->> > +#define BQ24261_VENDOR_REV_ADDR                0x03
->> > +#define BQ24261_TERM_FCC_ADDR          0x04
->> > +#define BQ24261_VINDPM_STAT_ADDR       0x05
->> > +#define BQ24261_ST_NTC_MON_ADDR                0x06
->> > +
->> > +#define BQ24261_RESET_ENABLE           BIT(7)
->> > +
->>
->> Might be a good idea to put comment line preceded each group to refer which
->> register it covers.
-> Ok.
+On Tuesday 19 January 2016 10:59 AM, Krzysztof Kozlowski wrote:
+> On 14.01.2016 20:32, Laxman Dewangan wrote:
+
+> +	return ret;
+> +}
+> +
+> +static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
+> +{
+> This function seems to be used only from max77620_of_parse_cb(). I would
+> find easier to read if this was located before definition of
+> max77620_of_parse_cb(). Can you move it (or you had other idea of
+> placing algorithm)?
+
+I wanted to keep all local function on top which is used on this file 
+and not the regulator ops.
+Then implement regulator ops and then probe.
+Let me see if I can do anything here.
+
 >
->>
->> > +#define BQ24261_FAULT_MASK             GENMASK(2, 0)
->>
->> Either use GENMASK in each case, or put plain number.
->>
-> Ok.
+>> +		     pmic->enable_power_mode[id]) {
+>> +			ret = max77620_regulator_set_power_mode(
+>> +					pmic, pmic->enable_power_mode[id], id);
+> The 'pmic' argument should be after opening parenthesis, not at new line.
 
-Looking to your definitions again I can say that GENMASK is more
-readable. Regarding to BIT() macro you have to do smart choice in each
-case separately.
+This is done for indenting alignment. I am using checkpatch --strict 
+option and for this the next line should be on same column of first 
+charcter after opening parenthesis.
+To avoid this error, if we want to re-align the indenting for next line 
+then left the line empty after "(".
 
--- 
-With Best Regards,
-Andy Shevchenko
++
++static int __init max77620_regulator_init(void)
++{
++	return platform_driver_register(&max77620_regulator_driver);
++}
++subsys_initcall(max77620_regulator_init);
++
+
+> Does it have to be subsys_initcall? Any special requirements for
+> ordering the drivers? Probe deferring is encouraged instead.
+>
+>
+
+
+This is to make sure th regulators are ready before other driver get 
+probed. This is basic need of some of driver and hence subsys_initcall.
+I will move to module_init() as some of other PMIC driver (as3722) is in 
+the module init and used in tegra platform so not seeing much issue on this.
+
+
