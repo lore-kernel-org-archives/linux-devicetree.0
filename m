@@ -1,7 +1,7 @@
 From: kernel@martin.sperl.org
-Subject: [RFC 8/9] dt-bindings: bcm2835: document optional per clock dt-nodes
-Date: Tue, 19 Jan 2016 14:51:39 +0000
-Message-ID: <1453215100-2382-9-git-send-email-kernel@martin.sperl.org>
+Subject: [RFC 5/9] clk: bcm2835: prefer clocks that use integer dividers
+Date: Tue, 19 Jan 2016 14:51:36 +0000
+Message-ID: <1453215100-2382-6-git-send-email-kernel@martin.sperl.org>
 References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
@@ -12,65 +12,65 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Document how to modify per clock default behaviour
-via the device-tree.
+To reduce possible jitter prefer integer dividers over
+fractional dividers.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- .../bindings/clock/brcm,bcm2835-cprman.txt         |   33 ++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c |   26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-index e56a1df..794c4ac 100644
---- a/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-@@ -17,6 +17,26 @@ Required properties:
- 		  found in include/dt-bindings/clock/bcm2835.h
- - reg:		Specifies base physical address and size of the registers
- - clocks:	The external oscillator clock phandle
-+- #address-cells number of cells required to define a clock
-+- #size-cells    Should be 0
-+
-+Subnodes:
-+
-+It is possible to apply optional settings per clock to modify clock
-+selection behaviour.
-+For each clock there may be a subnode that may contain the following:
-+
-+Required properties:
-+- reg                 -  clock id
-+
-+Optional properties:
-+- parent-clock-names  - list of parrent-clock names
-+  		        this list is validated againt the default list
-+		        of parent clocks and is used in this order.
-+- brcm,clock-selector - the clock selector to use
-+- brcm,mash-max-order - the maximum order of the fractional divider
-+- brcm,min-fract-div  - the minimum divider required when using
-+  		      	the fractional divider
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index f1ab525..e5313ba 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1686,6 +1686,24 @@ static int bcm2835_clock_determine_rate_set(struct clk_rate_request *req,
+ 	return 0;
+ }
  
- Example:
- 
-@@ -33,6 +53,19 @@ Example:
- 		#clock-cells = <1>;
- 		reg = <0x7e101000 0x2000>;
- 		clocks = <&clk_osc>;
++static int bcm2835_clock_determine_integer_rate(struct clk_hw *hw,
++						struct clk_rate_request *req,
++						struct bcm2835_rates *rates,
++						size_t rate_cnt)
++{
++	size_t i;
 +
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	/* find first matching */
++	for (i = 0; i < rate_cnt; i++) {
++		if (!divmash_get_divf(rates[i].dmash))
++			return bcm2835_clock_determine_rate_set(req,
++								&rates[i]);
++	}
 +
-+		/* custom settings for the PCM clock */
-+		clock@BCM2835_CLOCK_PCM {
-+			 reg = <BCM2835_CLOCK_PCM>;
-+			 parent-clock-names = "xosc", "plld_per";
-+			 brcm,clock-selector =
-+				  <BCM2835_CHOOSE_CLOCK_INTEGER_THEN_FRAC>;
-+			 brcm,mash-max-order = <BCM2835_MASH_ORDER_3>;
-+			 brcm,min-fract-div = <20>;
-+		};
- 	};
++	/* nothing found */
++	return -EINVAL;
++}
++
+ static int bcm2835_clock_determine_closest_rate(struct clk_hw *hw,
+ 						struct clk_rate_request *req,
+ 						struct bcm2835_rates *rates,
+@@ -1729,6 +1747,7 @@ static int bcm2835_clock_determine_rate(struct clk_hw *hw,
+ 	struct bcm2835_rates rates[BIT(CM_SRC_BITS)];
+ 	size_t i, rate_cnt = 0;
+ 	divmash dm;
++	int err;
  
- 	i2c0: i2c@7e205000 {
+ 	/* fill in rates */
+ 	for (i = 0; i < clk_hw_get_num_parents(hw); ++i) {
+@@ -1745,7 +1764,12 @@ static int bcm2835_clock_determine_rate(struct clk_hw *hw,
+ 		rate_cnt++;
+ 	}
+ 
+-	/* choose the "closest" one */
++	/* find integer rates with preference */
++	err = bcm2835_clock_determine_integer_rate(hw, req, rates, rate_cnt);
++	if (!err)
++		return 0;
++
++	/* otherwise choose the "closest" one */
+ 	return bcm2835_clock_determine_closest_rate(hw, req, rates,
+ 						    rate_cnt);
+ }
 -- 
 1.7.10.4
 
