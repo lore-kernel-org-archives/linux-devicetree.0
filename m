@@ -1,218 +1,199 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [RFC 7/9] clk: bcm2835: allow clock choosing mechanims to be selected in DT
-Date: Tue, 19 Jan 2016 14:51:38 +0000
-Message-ID: <1453215100-2382-8-git-send-email-kernel@martin.sperl.org>
+From: kernel@martin.sperl.org
+Subject: [RFC 9/9] clk: bcm2835: expose raw clock-registers via debugfs
+Date: Tue, 19 Jan 2016 14:51:40 +0000
+Message-ID: <1453215100-2382-10-git-send-email-kernel@martin.sperl.org>
 References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453215100-2382-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Allow the clock choosing mechanism to be selected in the
-devicetree.
+For debugging purposes under some circumstance
+it helps to be able to see the actual clock registers.
 
-There are 3 options that can get selected right now:
-* BCM2835_CHOOSE_CLOCK_INTEGER
-  - only integer dividers are used (fails otherwise)
-* BCM2835_CHOOSE_CLOCK_CLOSEST
-  - choose the clock that is closest to the target rate
-* BCM2835_CHOOSE_CLOCK_INTEGER_THEN_FRAC
-  - integer dividers are preferred,
-    otherwise uses the clock that is closest to
-    the target rate
-  - this is the default implementation used
+E.g: when looking at the clock divider it is helpful to
+see what the actual clock divider is.
 
-If there is a need for a different policy, then that can
-get implemented and selected using this mechanism.
+This patch exposes all the clock registers specific to each
+clock/pll/pll-divider via debugfs.
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   92 ++++++++++++++++++++++++++---------
- include/dt-bindings/clock/bcm2835.h |    6 +++
- 2 files changed, 74 insertions(+), 24 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c |  101 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 7048ca5..c381cb1 100644
+index c381cb1..29abae6 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -697,6 +697,14 @@ static const struct bcm2835_pll_divider_data bcm2835_pllh_pix_data = {
- 	.fixed_divider = 10,
- };
- 
-+struct bcm2835_rates {
-+	struct clk_hw *parent;
-+	unsigned long rate;
-+	unsigned long prate;
-+	u32 div;
-+	divmash dmash;
-+};
-+
- struct bcm2835_clock_data {
- 	const char *name;
- 
-@@ -718,6 +726,12 @@ struct bcm2835_clock_data {
- 	bool mash_forced;
- 
- 	bool is_vpu_clock;
-+
-+	/* the determine rate function */
-+	int (*choose_clock)(struct clk_hw *hw,
-+			    struct clk_rate_request *req,
-+			    struct bcm2835_rates *rates,
-+			    size_t rate_cnt);
- };
- 
- static const char *const bcm2835_clock_per_parents[] = {
-@@ -1670,14 +1684,6 @@ unlock_exit:
- 	return 0;
+@@ -40,6 +40,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/clk/bcm2835.h>
++#include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -379,6 +380,27 @@ static inline u32 cprman_read(struct bcm2835_cprman *cprman, u32 reg)
+ 	return readl(cprman->regs + reg);
  }
  
--struct bcm2835_rates {
--	struct clk_hw *parent;
--	unsigned long rate;
--	unsigned long prate;
--	u32 div;
--	divmash dmash;
--};
--
- static int bcm2835_clock_determine_rate_set(struct clk_rate_request *req,
- 					    struct bcm2835_rates *best)
- {
-@@ -1688,10 +1694,10 @@ static int bcm2835_clock_determine_rate_set(struct clk_rate_request *req,
- 	return 0;
- }
- 
--static int bcm2835_clock_determine_integer_rate(struct clk_hw *hw,
--						struct clk_rate_request *req,
--						struct bcm2835_rates *rates,
--						size_t rate_cnt)
-+static int bcm2835_clock_choose_integer_div(struct clk_hw *hw,
-+					    struct clk_rate_request *req,
-+					    struct bcm2835_rates *rates,
-+					    size_t rate_cnt)
- {
- 	size_t i;
- 
-@@ -1706,10 +1712,10 @@ static int bcm2835_clock_determine_integer_rate(struct clk_hw *hw,
- 	return -EINVAL;
- }
- 
--static int bcm2835_clock_determine_closest_rate(struct clk_hw *hw,
--						struct clk_rate_request *req,
--						struct bcm2835_rates *rates,
--						size_t rate_cnt)
-+static int bcm2835_clock_choose_closest_rate(struct clk_hw *hw,
-+					     struct clk_rate_request *req,
-+					     struct bcm2835_rates *rates,
-+					     size_t rate_cnt)
- {
- 	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
- 	const struct bcm2835_clock_data *data = clock->data;
-@@ -1750,14 +1756,30 @@ static int bcm2835_clock_determine_closest_rate(struct clk_hw *hw,
- 	return -EINVAL;
- }
- 
-+static int bcm2835_clock_choose_int_then_frac(struct clk_hw *hw,
-+					      struct clk_rate_request *req,
-+					      struct bcm2835_rates *rates,
-+					      size_t rate_cnt)
++static int bcm2835_debugfs_regset(struct bcm2835_cprman *cprman, u32 base,
++				  struct debugfs_reg32 *regs, size_t nregs,
++				  struct dentry *dentry)
 +{
-+	int err;
++	struct dentry *regdump;
++	struct debugfs_regset32 *regset;
 +
-+	/* find integer rates with preference */
-+	err = bcm2835_clock_choose_integer_div(hw, req, rates, rate_cnt);
-+	if (!err)
-+		return 0;
++	regset = devm_kzalloc(cprman->dev, sizeof(*regset), GFP_KERNEL);
++	if (!regset)
++		return -ENOMEM;
 +
-+	/* find the closest rate */
-+	return bcm2835_clock_choose_closest_rate(hw, req, rates, rate_cnt);
++	regset->regs = regs;
++	regset->nregs = nregs;
++	regset->base = cprman->regs + base;
++
++	regdump = debugfs_create_regset32("regdump", S_IRUGO, dentry,
++					  regset);
++
++	return regdump ? 0 : -ENOMEM;
 +}
 +
- static int bcm2835_clock_determine_rate(struct clk_hw *hw,
- 					struct clk_rate_request *req)
- {
- 	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
-+	const struct bcm2835_clock_data *data = clock->data;
- 	struct bcm2835_rates rates[BIT(CM_SRC_BITS)];
- 	size_t i, rate_cnt = 0;
- 	divmash dm;
--	int err;
- 
- 	/* fill in rates */
- 	for (i = 0; i < clk_hw_get_num_parents(hw); ++i) {
-@@ -1774,14 +1796,12 @@ static int bcm2835_clock_determine_rate(struct clk_hw *hw,
- 		rate_cnt++;
- 	}
- 
--	/* find integer rates with preference */
--	err = bcm2835_clock_determine_integer_rate(hw, req, rates, rate_cnt);
--	if (!err)
--		return 0;
-+	/* if we have a custom rate selection , then use that one */
-+	if (data->choose_clock)
-+		return data->choose_clock(hw, req, rates, rate_cnt);
- 
--	/* otherwise choose the "closest" one */
--	return bcm2835_clock_determine_closest_rate(hw, req, rates,
--						    rate_cnt);
-+	/* otherwise choose the "int-then-frac" one */
-+	return bcm2835_clock_choose_int_then_frac(hw, req, rates, rate_cnt);
+ /*
+  * These are fixed clocks. They're probably not all root clocks and it may
+  * be possible to turn them on and off but until this is mapped out better
+@@ -1360,6 +1382,36 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	return 0;
  }
  
- static int _bcm2835_clk_set_parent(struct bcm2835_cprman *cprman,
-@@ -2108,6 +2128,30 @@ static const struct bcm2835_clock_data *bcm2835_register_clock_of(
- 	err = of_property_read_u32(nc, "brcm,min-fract-div", &value);
- 	if (!err)
- 		data->min_frac_div = value << CM_DIV_FRAC_BITS;
-+	/* choose alternate clock selector */
-+	err = of_property_read_u32(nc, "brcm,clock-selector", &value);
-+	if (!err) {
-+		switch (value) {
-+		case BCM2835_CHOOSE_CLOCK_DEFAULT:
-+		case BCM2835_CHOOSE_CLOCK_INTEGER_THEN_FRAC:
-+			data->choose_clock =
-+				bcm2835_clock_choose_int_then_frac;
-+			break;
-+		case BCM2835_CHOOSE_CLOCK_INTEGER:
-+			data->choose_clock =
-+				bcm2835_clock_choose_integer_div;
-+			break;
-+		case BCM2835_CHOOSE_CLOCK_CLOSEST:
-+			data->choose_clock =
-+				bcm2835_clock_choose_closest_rate;
-+			break;
-+		default:
-+			dev_err(dev,
-+				"clock %s: undefined clock-selector: %d\n",
-+				data->name, value);
-+			break;
-+		}
-+	}
- 
- 	/* and return the result */
- 	return data;
-diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index eb73380..b00880e 100644
---- a/include/dt-bindings/clock/bcm2835.h
-+++ b/include/dt-bindings/clock/bcm2835.h
-@@ -76,3 +76,9 @@
- 
- #define BCM2835_MASH_INTEGER		BCM2835_MASH_NONE
- #define BCM2835_MASH_FRAC		BCM2835_MASH_ORDER_1
++static int bcm2835_pll_debug_init(struct clk_hw *hw,
++				  struct dentry *dentry)
++{
++	struct bcm2835_pll *pll = container_of(hw, struct bcm2835_pll, hw);
++	struct bcm2835_cprman *cprman = pll->cprman;
++	const struct bcm2835_pll_data *data = pll->data;
++	struct debugfs_reg32 *regs;
 +
-+/* the possible clock selectors */
-+#define BCM2835_CHOOSE_CLOCK_DEFAULT		0
-+#define BCM2835_CHOOSE_CLOCK_INTEGER		1
-+#define BCM2835_CHOOSE_CLOCK_INTEGER_THEN_FRAC	2
-+#define BCM2835_CHOOSE_CLOCK_CLOSEST		3
++	regs = devm_kzalloc(cprman->dev, 7 * sizeof(*regs), GFP_KERNEL);
++	if (!regs)
++		return -ENOMEM;
++
++	regs[0].name = "cm_ctrl";
++	regs[0].offset = data->cm_ctrl_reg;
++	regs[1].name = "a2w_ctrl";
++	regs[1].offset = data->a2w_ctrl_reg;
++	regs[2].name = "frac";
++	regs[2].offset = data->frac_reg;
++	regs[3].name = "ana0";
++	regs[3].offset = data->ana_reg_base + 0 * 4;
++	regs[4].name = "ana1";
++	regs[4].offset = data->ana_reg_base + 1 * 4;
++	regs[5].name = "ana2";
++	regs[5].offset = data->ana_reg_base + 2 * 4;
++	regs[6].name = "ana3";
++	regs[6].offset = data->ana_reg_base + 3 * 4;
++
++	return bcm2835_debugfs_regset(cprman, 0, regs, 7, dentry);
++}
++
+ static const struct clk_ops bcm2835_pll_clk_ops = {
+ 	.is_prepared = bcm2835_pll_is_on,
+ 	.prepare = bcm2835_pll_on,
+@@ -1367,6 +1419,7 @@ static const struct clk_ops bcm2835_pll_clk_ops = {
+ 	.recalc_rate = bcm2835_pll_get_rate,
+ 	.set_rate = bcm2835_pll_set_rate,
+ 	.round_rate = bcm2835_pll_round_rate,
++	.debug_init = bcm2835_pll_debug_init,
+ };
+ 
+ struct bcm2835_pll_divider {
+@@ -1461,6 +1514,26 @@ static int bcm2835_pll_divider_set_rate(struct clk_hw *hw,
+ 	return 0;
+ }
+ 
++static int bcm2835_pll_divider_debug_init(struct clk_hw *hw,
++					  struct dentry *dentry)
++{
++	struct bcm2835_pll_divider *divider = bcm2835_pll_divider_from_hw(hw);
++	struct bcm2835_cprman *cprman = divider->cprman;
++	const struct bcm2835_pll_divider_data *data = divider->data;
++	struct debugfs_reg32 *regs;
++
++	regs = devm_kzalloc(cprman->dev, 7 * sizeof(*regs), GFP_KERNEL);
++	if (!regs)
++		return -ENOMEM;
++
++	regs[0].name = "cm";
++	regs[0].offset = data->cm_reg;
++	regs[1].name = "a2w";
++	regs[1].offset = data->a2w_reg;
++
++	return bcm2835_debugfs_regset(cprman, 0, regs, 2, dentry);
++}
++
+ static const struct clk_ops bcm2835_pll_divider_clk_ops = {
+ 	.is_prepared = bcm2835_pll_divider_is_on,
+ 	.prepare = bcm2835_pll_divider_on,
+@@ -1468,6 +1541,7 @@ static const struct clk_ops bcm2835_pll_divider_clk_ops = {
+ 	.recalc_rate = bcm2835_pll_divider_get_rate,
+ 	.set_rate = bcm2835_pll_divider_set_rate,
+ 	.round_rate = bcm2835_pll_divider_round_rate,
++	.debug_init = bcm2835_pll_divider_debug_init,
+ };
+ 
+ /*
+@@ -1854,6 +1928,31 @@ static u8 bcm2835_clock_get_parent(struct clk_hw *hw)
+ 	return -EINVAL;
+ }
+ 
++static struct debugfs_reg32 bcm2835_debugfs_clock_reg32[] = {
++	{
++		.name = "ctl",
++		.offset = 0,
++	},
++	{
++		.name = "div",
++		.offset = 4,
++	},
++};
++
++static int bcm2835_clock_debug_init(struct clk_hw *hw,
++				    struct dentry *dentry)
++{
++	struct bcm2835_clock *clock = bcm2835_clock_from_hw(hw);
++	struct bcm2835_cprman *cprman = clock->cprman;
++	const struct bcm2835_clock_data *data = clock->data;
++
++	return bcm2835_debugfs_regset(
++		cprman, data->ctl_reg,
++		bcm2835_debugfs_clock_reg32,
++		ARRAY_SIZE(bcm2835_debugfs_clock_reg32),
++		dentry);
++}
++
+ static const struct clk_ops bcm2835_clock_clk_ops = {
+ 	.is_prepared = bcm2835_clock_is_on,
+ 	.prepare = bcm2835_clock_on,
+@@ -1863,6 +1962,7 @@ static const struct clk_ops bcm2835_clock_clk_ops = {
+ 	.determine_rate = bcm2835_clock_determine_rate,
+ 	.set_parent = bcm2835_clock_set_parent,
+ 	.get_parent = bcm2835_clock_get_parent,
++	.debug_init = bcm2835_clock_debug_init,
+ };
+ 
+ static int bcm2835_vpu_clock_is_on(struct clk_hw *hw)
+@@ -1881,6 +1981,7 @@ static const struct clk_ops bcm2835_vpu_clock_clk_ops = {
+ 	.determine_rate = bcm2835_clock_determine_rate,
+ 	.set_parent = bcm2835_clock_set_parent,
+ 	.get_parent = bcm2835_clock_get_parent,
++	.debug_init = bcm2835_clock_debug_init,
+ };
+ 
+ static struct device_node *bcm2835_find_dt_node(
 -- 
 1.7.10.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
