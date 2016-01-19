@@ -1,68 +1,136 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 11/16] ARM64: ACPI: Check if it runs on Xen to enable
- or disable ACPI
-Date: Tue, 19 Jan 2016 16:41:11 +0800
-Message-ID: <569DF6A7.8030709@huawei.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com> <1452840929-19612-12-git-send-email-zhaoshenglong@huawei.com> <20160118104142.GC21067@leverpostej> <alpine.DEB.2.02.1601181505200.16178@kaball.uk.xensource.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1601181505200.16178-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] arm64: dts: r8a7795: Complete SYS-DMAC nodes
+Date: Tue, 19 Jan 2016 10:06:21 +0100
+Message-ID: <1453194381-13974-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Complete the dma-controller nodes for SYS-DMAC 0 to 2.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+  - Tested with SCIF1, SCIF2, SCIF3, HSCIF1, HSCIF3, HSCIF4, and MSIOF2.
 
-On 2016/1/18 23:07, Stefano Stabellini wrote:
-> On Mon, 18 Jan 2016, Mark Rutland wrote:
->> > On Fri, Jan 15, 2016 at 02:55:24PM +0800, Shannon Zhao wrote:
->>> > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> > > 
->>> > > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
->>> > > a /hypervisor node in DT. So check if it needs to enable ACPI.
->>> > > 
->>> > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> > > ---
->>> > >  arch/arm64/kernel/acpi.c | 12 ++++++++----
->>> > >  1 file changed, 8 insertions(+), 4 deletions(-)
->>> > > 
->>> > > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
->>> > > index d1ce8e2..4e92be0 100644
->>> > > --- a/arch/arm64/kernel/acpi.c
->>> > > +++ b/arch/arm64/kernel/acpi.c
->>> > > @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
->>> > >  {
->>> > >  	/*
->>> > >  	 * Return 1 as soon as we encounter a node at depth 1 that is
->>> > > -	 * not the /chosen node.
->>> > > +	 * not the /chosen node, or /hypervisor node when running on Xen.
->>> > >  	 */
->>> > > -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
->>> > > -		return 1;
->>> > > +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
->>> > > +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
->>> > > +			return 1;
->>> > > +	}
->>> > > +
->>> > >  	return 0;
->>> > >  }
->> > 
->> > As this is changing the semantic of an "empty" DT, we should consider
->> > now if there's anything else that might also need to exist in an "empty"
->> > DT. We don't want to change this again in future if we don't have to,
->> > given the compatiblity nightmare that's sure to result.
->> > 
->> > We should also consider if the "hypervisor" node name is sufficient (I
->> > think it is, but let's not assume anything).
->>From Xen point of view I think it is enough: real hardware is described
-> in ACPI anyway and anything hypervisor related can be done via
-> hypercalls once Xen support is discovered, for which the hypervisor node
-> is sufficient.
+v2:
+  - Switch to final CPG/MSSR bindings,
+  - Use SoC-specific bindings,
+  - (H)SCIF1 RX DMA now works, too.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 93 ++++++++++++++++++++++++++++++--
+ 1 file changed, 90 insertions(+), 3 deletions(-)
 
-Yes, I think the hypervisor node is sufficient for current Xen ACPI support.
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index bb353cde125333b9..221a8f5d24afaa61 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -333,15 +333,102 @@
+ 		};
+ 
+ 		dmac0: dma-controller@e6700000 {
+-			/* Empty node for now */
++			compatible = "renesas,dmac-r8a7795",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe6700000 0 0x10000>;
++			interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 219>;
++			clock-names = "fck";
++			power-domains = <&cpg>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
+ 		};
+ 
+ 		dmac1: dma-controller@e7300000 {
+-			/* Empty node for now */
++			compatible = "renesas,dmac-r8a7795",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7300000 0 0x10000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 218>;
++			clock-names = "fck";
++			power-domains = <&cpg>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
+ 		};
+ 
+ 		dmac2: dma-controller@e7310000 {
+-			/* Empty node for now */
++			compatible = "renesas,dmac-r8a7795",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7310000 0 0x10000>;
++			interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 431 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 217>;
++			clock-names = "fck";
++			power-domains = <&cpg>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
+ 		};
+ 
+ 		avb: ethernet@e6800000 {
 -- 
-Shannon
+1.9.1
