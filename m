@@ -1,92 +1,49 @@
-From: =?gb2312?B?QmVhbiBIdW8gu/Sx87HzIChiZWFuaHVvKQ==?=
-	<beanhuo@micron.com>
-Subject: RE: [PATCH linux-next v2 01/14] mtd: spi-nor: remove
- micron_quad_enable()
-Date: Wed, 20 Jan 2016 05:13:31 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6310BF57A75@NTXXIAMBX02.xacn.micron.com>
+From: <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC 0/3] MT8173 CMDQ support
+Date: Wed, 20 Jan 2016 13:14:37 +0800
+Message-ID: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, "marex@denx.de" <marex@denx.de>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBNZXNzYWdlLUlEOg0KPiAJPDYxNzdmNzMxN2ZlMTE5MjJlMWQxYjZkYzQ1NDhhZmJhZjBjY2Vi
-ZGQuMTQ1MjI2ODM0NS5naXQuY3lyaWxsZS4NCj4gcGl0Y2hlbkBhdG1lbC5jb20+DQo+IA0KPiBD
-b250ZW50LVR5cGU6IHRleHQvcGxhaW4NCj4gDQo+IFRoaXMgcGF0Y2ggcmVtb3ZlIHRoZSBtaWNy
-b25fcXVhZF9lbmFibGUoKSBmdW5jdGlvbiB3aGljaCBmb3JjZSB0aGUgUXVhZA0KPiBTUEkgbW9k
-ZS4gSG93ZXZlciwgb25jZSB0aGlzIG1vZGUgaXMgZW5hYmxlZCwgdGhlIE1pY3JvbiBtZW1vcnkg
-ZXhwZWN0DQo+IEFMTA0KPiBjb21tYW5kcyB0byB1c2UgdGhlIFNQSSA0LTQtNCBwcm90b2NvbC4g
-SGVuY2UgYSBmYWlsdXJlIGRvZXMgb2NjdXIgd2hlbg0KPiBjYWxsaW5nIHNwaV9ub3Jfd2FpdF90
-aWxsX3JlYWR5KCkgcmlnaHQgYWZ0ZXIgdGhlIHVwZGF0ZSBvZiB0aGUgRW5oYW5jZWQNCj4gVm9s
-YXRpbGUgQ29uZmlndXJhdGlvbiBSZWdpc3RlciAoRVZDUikgaW4gdGhlIG1pY3Jvbl9xdWFkX2Vu
-YWJsZSgpIGFzDQo+IHRoZSBTUEkgY29udHJvbGxlciBkcml2ZXIgaXMgbm90IGF3YXJlIGFib3V0
-IHRoZSBwcm90b2NvbCBjaGFuZ2UuDQo+IFNpbmNlIHRoZXJlIGlzIGFsbW9zdCBubyBwZXJmb3Jt
-YW5jZSBpbmNyZWFzZSB1c2luZyBGYXN0IFJlYWQgNC00LTQNCj4gY29tbWFuZHMgaW5zdGVhZCBv
-ZiBGYXN0IFJlYWQgMS0xLTQgY29tbWFuZHMsIHdlIHJhdGhlciBrZWVwIG9uIHVzaW5nDQo+IHRo
-ZQ0KPiBFeHRlbmRlZCBTUEkgbW9kZSB0aGFuIGVuYWJsaW5nIHRoZSBRdWFkIFNQSSBtb2RlLg0K
-PiANCj4gTGV0J3MgdGFrZSB0aGUgZXhhbXBsZSBvZiB0aGUgcHJldHR5IHN0YW5kYXJkIHVzZSBv
-ZiA4IGR1bW15IGN5Y2xlcyBkdXJpbmcNCj4gRmFzdCBSZWFkIG9wZXJhdGlvbnMgb24gNjRLQiBl
-cmFzZSBzZWN0b3JzOg0KPiANCj4gRmFzdCBSZWFkIDEtMS00IHJlcXVpcmVzIDggY3ljbGVzIGZv
-ciB0aGUgY29tbWFuZCwgdGhlbiAyNCBjeWNsZXMgZm9yIHRoZQ0KPiAzYnl0ZSBhZGRyZXNzIGZv
-bGxvd2VkIGJ5IDggZHVtbXkgY2xvY2sgY3ljbGVzIGFuZCBmaW5hbGx5IDY1NTM2KjIgY3ljbGVz
-DQo+IGZvciB0aGUgcmVhZCBkYXRhOyBzbyAxMzExMTIgY2xvY2sgY3ljbGVzLg0KPiANCj4gT24g
-dGhlIG90aGVyIGhhbmQgdGhlIEZhc3QgUmVhZCA0LTQtNCB3b3VsZCByZXF1aXJlIDIgY3ljbGVz
-IGZvciB0aGUNCj4gY29tbWFuZCwgdGhlbiA2IGN5Y2xlcyBmb3IgdGhlIDNieXRlIGFkZHJlc3Mg
-Zm9sbG93ZWQgYnkgOCBkdW1teSBjbG9jaw0KPiBjeWNsZXMgYW5kIGZpbmFsbHkgNjU1MzYqMiBj
-eWNsZXMgZm9yIHRoZSByZWFkIGRhdGEuIFNvIDEzMTA4OCBjbG9jaw0KPiBjeWNsZXMuIFRoZSB0
-aGVvcmljYWwgYmFuZHdpZHRoIGluY3JlYXNlIGlzIDAuMCUuDQo+IA0KPiBOb3cgdXNpbmcgRmFz
-dCBSZWFkIG9wZXJhdGlvbnMgb24gNTEyYnl0ZSBwYWdlczoNCj4gRmFzdCBSZWFkIDEtMS00IG5l
-ZWRzIDgrMjQrOCsoNTEyKjIpID0gMTA2NCBjbG9jayBjeWNsZXMgd2hlcmVhcyBGYXN0DQo+IFJl
-YWQgNC00LTQgd291bGQgcmVxdWlyZXMgMis2KzgrKDUxMioyKSA9IDEwNDAgY2xvY2sgY3ljbGVz
-LiBIZW5jZSB0aGUNCj4gdGhlb3JpY2FsIGJhbmR3aWR0aCBpbmNyZWFzZSBpcyAyLjMlLg0KPiBD
-b25zZWN1dGl2ZSByZWFkcyBmb3Igbm9uIHNlcXVlbnRpYWwgcGFnZXMgaXMgbm90IGEgcmVsZXZh
-bnQgdXNlIGNhc2Ugc28NCj4gVGhlIFF1YWQgU1BJIG1vZGUgaXMgbm90IHdvcnRoIGl0Lg0KPg0K
-PiBtdGRfc3BlZWR0ZXN0IHNlZW1zIHRvIGNvbmZpcm0gdGhlc2UgZmlndXJlcy4NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IEN5cmlsbGUgUGl0Y2hlbiA8Y3lyaWxsZS5waXRjaGVuQGF0bWVsLmNvbT4N
-Cj4gRml4ZXM6IDU0OGNkM2FiNTRkYSAoIm10ZDogc3BpLW5vcjogQWRkIHF1YWQgSS9PIHN1cHBv
-cnQgZm9yIE1pY3JvbiBTUEkNCj4gTk9SIikNCj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9y
-L3NwaS1ub3IuYyB8IDQ2ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNDUgZGVsZXRpb25zKC0pDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgYi9kcml2ZXJz
-L210ZC9zcGktbm9yL3NwaS1ub3IuYw0KPiBpbmRleCBlZDBjMTljNTU4YjUuLjMwMjhjMDY1NDdj
-MSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4gKysrIGIv
-ZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4gQEAgLTExMDAsNDUgKzExMDAsNiBAQCBz
-dGF0aWMgaW50IHNwYW5zaW9uX3F1YWRfZW5hYmxlKHN0cnVjdCBzcGlfbm9yDQo+ICpub3IpDQo+
-ICAJcmV0dXJuIDA7DQo+ICB9DQo+IA0KPiAtc3RhdGljIGludCBtaWNyb25fcXVhZF9lbmFibGUo
-c3RydWN0IHNwaV9ub3IgKm5vcikNCj4gLXsNCj4gLQlpbnQgcmV0Ow0KPiAtCXU4IHZhbDsNCj4g
-LQ0KPiAtCXJldCA9IG5vci0+cmVhZF9yZWcobm9yLCBTUElOT1JfT1BfUkRfRVZDUiwgJnZhbCwg
-MSk7DQo+IC0JaWYgKHJldCA8IDApIHsNCj4gLQkJZGV2X2Vycihub3ItPmRldiwgImVycm9yICVk
-IHJlYWRpbmcgRVZDUlxuIiwgcmV0KTsNCj4gLQkJcmV0dXJuIHJldDsNCj4gLQl9DQo+IC0NCj4g
-LQl3cml0ZV9lbmFibGUobm9yKTsNCj4gLQ0KPiAtCS8qIHNldCBFVkNSLCBlbmFibGUgcXVhZCBJ
-L08gKi8NCj4gLQlub3ItPmNtZF9idWZbMF0gPSB2YWwgJiB+RVZDUl9RVUFEX0VOX01JQ1JPTjsN
-Cj4gLQlyZXQgPSBub3ItPndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XRF9FVkNSLCBub3ItPmNt
-ZF9idWYsIDEpOw0KPiAtCWlmIChyZXQgPCAwKSB7DQo+IC0JCWRldl9lcnIobm9yLT5kZXYsICJl
-cnJvciB3aGlsZSB3cml0aW5nIEVWQ1IgcmVnaXN0ZXJcbiIpOw0KPiAtCQlyZXR1cm4gcmV0Ow0K
-PiAtCX0NCj4gLQ0KPiAtCXJldCA9IHNwaV9ub3Jfd2FpdF90aWxsX3JlYWR5KG5vcik7DQo+IC0J
-aWYgKHJldCkNCj4gLQkJcmV0dXJuIHJldDsNCj4gLQ0KPiAtCS8qIHJlYWQgRVZDUiBhbmQgY2hl
-Y2sgaXQgKi8NCj4gLQlyZXQgPSBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09QX1JEX0VWQ1Is
-ICZ2YWwsIDEpOw0KPiAtCWlmIChyZXQgPCAwKSB7DQo+IC0JCWRldl9lcnIobm9yLT5kZXYsICJl
-cnJvciAlZCByZWFkaW5nIEVWQ1JcbiIsIHJldCk7DQo+IC0JCXJldHVybiByZXQ7DQo+IC0JfQ0K
-PiAtCWlmICh2YWwgJiBFVkNSX1FVQURfRU5fTUlDUk9OKSB7DQo+IC0JCWRldl9lcnIobm9yLT5k
-ZXYsICJNaWNyb24gRVZDUiBRdWFkIGJpdCBub3QgY2xlYXJcbiIpOw0KPiAtCQlyZXR1cm4gLUVJ
-TlZBTDsNCj4gLQl9DQo+IC0NCj4gLQlyZXR1cm4gMDsNCj4gLX0NCj4gLQ0KPiAgc3RhdGljIGlu
-dCBzZXRfcXVhZF9tb2RlKHN0cnVjdCBzcGlfbm9yICpub3IsIGNvbnN0IHN0cnVjdCBmbGFzaF9p
-bmZvICppbmZvKQ0KPiAgew0KPiAgCWludCBzdGF0dXM7DQo+IEBAIC0xMTUyLDEyICsxMTEzLDcg
-QEAgc3RhdGljIGludCBzZXRfcXVhZF9tb2RlKHN0cnVjdCBzcGlfbm9yICpub3IsDQo+IGNvbnN0
-IHN0cnVjdCBmbGFzaF9pbmZvICppbmZvKQ0KPiAgCQl9DQo+ICAJCXJldHVybiBzdGF0dXM7DQo+
-ICAJY2FzZSBTTk9SX01GUl9NSUNST046DQo+IC0JCXN0YXR1cyA9IG1pY3Jvbl9xdWFkX2VuYWJs
-ZShub3IpOw0KPiAtCQlpZiAoc3RhdHVzKSB7DQo+IC0JCQlkZXZfZXJyKG5vci0+ZGV2LCAiTWlj
-cm9uIHF1YWQtcmVhZCBub3QgZW5hYmxlZFxuIik7DQo+IC0JCQlyZXR1cm4gLUVJTlZBTDsNCj4g
-LQkJfQ0KPiAtCQlyZXR1cm4gc3RhdHVzOw0KPiArCQlyZXR1cm4gMDsNCj4gIAlkZWZhdWx0Og0K
-PiAgCQlzdGF0dXMgPSBzcGFuc2lvbl9xdWFkX2VuYWJsZShub3IpOw0KPiAgCQlpZiAoc3RhdHVz
-KSB7DQo+IC0tDQo+IDEuOC4yLjINCj4gDQo+IA0KPiANCj4gDQoNCkhpLCBDeXJsbGUNCk1pY3Jv
-bl9xdWFkX2VuYWJsZSgpIGZ1bmN0aW9uIGlzIGp1c3QgZm9yIGhvdyB0byBlbmFibGUgTWljcm9u
-IHNwaSBub3IgUXVhZCBtb2RlLA0KZG9lcyBub3QgZm9yY2UgdG8gdXNlIFNQSSBub3IgcXVhZCBt
-b2RlLiBpZiBkb2VzIG5vdCBuZWVkIFNQSSBOT1IgcXVhZCBtb2RlLA0Kd2h5IHNwaS1ub3IuYyBu
-ZWVkIHNldF9xdWFkX21vZGUoKSwgYWNjb3JkaW5nIHRvIHlvdXIgcGF0Y2gsIHRoaXMgZnVuY3Rp
-b24gYWxzbyBuZWVkIHRvDQpiZSByZW1vdmVkPw0KQW5vdGhlciBxdWVzdGlvbiwgaWYgdGhlcmUg
-aXMgdXNlciB3YW50IHRvIGVuYWJsZSBTUEkgbm9yIHF1YWQgbW9kZSwgaG93IHRvIGRvPw0K
+
+Hi,
+
+This is the first version to add Mediatek MT8173 Command Queue(CMDQ)
+support. The CMDQ is used to help read/write registers with critical
+time limitation, such as updating display configuration during the
+vblank. It controls Global Command Engine (GCE) hardware to achieve
+this requirement.
+
+These patches have a build dependency on top of v4.4-rc1.
+
+Best regards,
+HS Liao
+
+HS Liao (3):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  arm64: dts: mt8173: Add GCE node
+  CMDQ: Mediatek CMDQ driver
+
+ .../devicetree/bindings/soc/mediatek/gce.txt       |   33 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |    8 +
+ drivers/soc/mediatek/Kconfig                       |   10 +
+ drivers/soc/mediatek/Makefile                      |    1 +
+ drivers/soc/mediatek/mtk-cmdq.c                    | 3532 ++++++++++++++++++++
+ include/soc/mediatek/cmdq.h                        |  225 ++
+ 6 files changed, 3809 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+ create mode 100644 include/soc/mediatek/cmdq.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
