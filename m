@@ -1,124 +1,495 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Wed, 20 Jan 2016 13:53:44 -0600
-Message-ID: <CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
- <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
- <20160120182840.GA15741@rob-hp-laptop> <CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v15 6/6] ARM: socfpga: fpga bridge driver support
+Date: Wed, 20 Jan 2016 13:24:27 -0600
+Message-ID: <1453317867-10422-7-git-send-email-atull@opensource.altera.com>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Andy Yan <andy.yan@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Reichel <sre@kernel.org>, Olof Johansson <olof@lixom.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 12:47 PM, John Stultz <john.stultz@linaro.org> wrote:
-> On Wed, Jan 20, 2016 at 10:28 AM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Jan 12, 2016 at 07:29:49PM +0800, Andy Yan wrote:
->>> add device tree binding document for reboot-mode driver
->>>
->>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->>>
->>> ---
->>>
->>> Changes in v2: None
->>> Changes in v1: None
->>>
->>>  .../bindings/power/reset/reboot-mode.txt           | 41 +++++++++++++++++
->>>  .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++++++++++++++
->>>  2 files changed, 93 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->>>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->>> new file mode 100644
->>> index 0000000..81d9f66
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->>> @@ -0,0 +1,41 @@
->>> +Generic reboot mode core map driver
->>> +
->>> +This driver get reboot mode arguments and call the write
->>> +interface to stores the magic value in special register
->>> +or ram . Then the bootloader can read it and take different
->>> +action according to the argument stored.
->>> +
->>> +Required properties:
->>> +- compatible: only support "syscon-reboot-mode" now.
->>> +
->>> +Each mode is represented as a sub-node of reboot_mode:
->>> +
->>> +Subnode required properties:
->>> +- linux,mode: reboot mode command,such as "loader", "recovery", "fastboot".
->>> +- loader,magic: magic number for the mode, this is vendor specific.
->>> +
->>> +Example:
->>> +     reboot_mode {
->>
->> reboot-mode instead please.
->>
->>> +             compatible = "syscon-reboot-mode";
->>> +             offset = <0x40>;
->>
->> This doc by itself is a little confusing. For example, is a child of the
->> syscon node? I would remove offset (and perhaps compatible) from this
->> example.
->>
->>> +
->>> +             loader {
->>> +                     linux,mode = "loader";
->>> +                     loader,magic = <BOOT_LOADER>;
->>> +             };
->>
->> Sorry, my previous suggestion was not clear. I'm suggesting get rid of
->> the subnodes and just do properties like this:
->>
->> loader = <BOOT_LOADER>;
->> maskrom = <BOOT_MASKROM>;
->>
->> That's the same amount of information unless node names and linux,mode
->> values are going to diverge. Do they need to? I can't see a reason.
->
->
-> It seems like devices already have a number of various different
-> vendor specific commands.  So this sort of flexibility helps us adapt
-> the driver to different hardware/system environments (which may use
-> different conventions then what Android commonly uses).
->
-> Unless I'm misunderstanding you and you're instead suggesting we can
-> dynamically parse the command mode from the node name?
+From: Alan Tull <atull@opensource.altera.com>
 
-Yes, except it would be the property name. The driver could either
-iterate over the properties of the reboot-mode node or lookup the
-property when it has the reboot reason string. We generally like to
-parse everything up front at probe, but the latter would be somewhat
-easier to implement. Perhaps we would want to prefix nodes with
-"mode-" or something.
+Supports Altera SOCFPGA bridges:
+ * fpga2sdram
+ * fpga2hps
+ * hps2fpga
+ * lwhps2fpga
 
-Vendors can certainly still add their own (e.g.
-vendor,halt-and-catch-fire = <0xdead>).
+Allows enabling/disabling the bridges through the FPGA
+Bridge Framework API functions.
 
-The question here really is will we ever need additional data for each
-mode (in the DT) besides "magic". We can do some amount of extending
-the property like allowing more that single 32-bit value. We can't mix
-strings and integers though. If we don't need that, then lets go with
-the more concise approach. This isn't really an evolving area.
-Selecting boot mode/device has existed for a long time on PCs (it is
-fixed list in the IPMI spec for example). So I can't imagine that we'd
-have to extend this, but I'd like to hear thoughts on it. You had
-mentioned the Galaxy Nexus having a value and a string, but I'd find
-it surprising if the bootloader actually uses the string.
+The fpga2sdram driver only supports enabling and disabling
+of the ports that been configured early on.  This is due to
+a hardware limitation where the read, write, and command
+ports on the fpga2sdram bridge can only be reconfigured
+while there are no transactions to the sdram, i.e. when
+running out of OCRAM before the kernel boots.
 
-> That said, I agree we should try to push vendors to using the same
-> conventions when they are providing the same functionality. But I'm
-> not sure we should enforce that by making vendors introduce a new dt
-> binding for every new reboot command they want to implement.
+Device tree property 'init-val' configures the driver to
+enable or disable the bridge during probe.  If the property
+does not exist, the driver will leave the bridge in its
+current state.
 
-Either way they need to document it. It's either a new linux,mode
-value or a new property name. Vendors are free to add whatever they
-want, but for upstream it has to go thru review.
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+v2:  Use resets instead of directly writing reset registers
+v12: Bump version to align with simple-fpga-bus version
+     Get rid of the sysfs interface
+     fpga2sdram: get configuration stored in handoff register
+v13: Remove unneeded WARN_ON
+     Change property from init-val to bridge-enable
+     Checkpatch cleanup
+     Fix email address
+v14: use module_platform_driver
+     remove unused struct field and some #defines
+     don't really need exclamation points on error msgs
+     *const* struct fpga_bridge_ops
+v15: No change in this patch for v15 of this patch set
+---
+ drivers/fpga/Kconfig             |    7 ++
+ drivers/fpga/Makefile            |    1 +
+ drivers/fpga/altera-fpga2sdram.c |  174 +++++++++++++++++++++++++++++++
+ drivers/fpga/altera-hps2fpga.c   |  213 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 395 insertions(+)
+ create mode 100644 drivers/fpga/altera-fpga2sdram.c
+ create mode 100644 drivers/fpga/altera-hps2fpga.c
 
-Rob
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 6ac916b..30ebe42 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -38,6 +38,13 @@ config FPGA_AREA
+          Enable FPGA Area which supports programming FPGAs under control of
+ 	 Device Tree.
+ 
++config SOCFPGA_FPGA_BRIDGE
++	bool "Altera SoCFPGA FPGA Bridges"
++	depends on ARCH_SOCFPGA && FPGA_BRIDGE
++	help
++	  Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
++	  devices.
++
+ endif # FPGA
+ 
+ endmenu
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index 4f7e49f..3efc132 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ 
+ # FPGA Bridge Drivers
+ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
++obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
+ 
+ # High Level Interfaces
+ obj-$(CONFIG_FPGA_AREA)			+= fpga-area.o
+diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
+new file mode 100644
+index 0000000..91f4a40
+--- /dev/null
++++ b/drivers/fpga/altera-fpga2sdram.c
+@@ -0,0 +1,174 @@
++/*
++ * FPGA to SDRAM Bridge Driver for Altera SoCFPGA Devices
++ *
++ *  Copyright (C) 2013-2015 Altera Corporation, All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/*
++ * This driver manages a bridge between an FPGA and the SDRAM used by the ARM
++ * host processor system (HPS).
++ *
++ * The bridge contains 4 read ports, 4 write ports, and 6 command ports.
++ * Reconfiguring these ports requires that no SDRAM transactions occur during
++ * reconfiguration.  The code reconfiguring the ports cannot run out of SDRAM
++ * nor can the FPGA access the SDRAM during reconfiguration.  This driver does
++ * not support reconfiguring the ports.  The ports are configured by code
++ * running out of on chip ram before Linux is started and the configuration
++ * is passed in a handoff register in the system manager.
++ *
++ * This driver supports enabling and disabling of the configured ports, which
++ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
++ * uses the same port configuration.  Bridges must be disabled before
++ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
++ */
++
++#include <linux/fpga/fpga-bridge.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++
++#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x80
++#define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_MSK	0x00003fff
++#define ALT_SDR_CTL_FPGAPORTRST_RD_SHIFT	0
++#define ALT_SDR_CTL_FPGAPORTRST_WR_SHIFT	4
++#define ALT_SDR_CTL_FPGAPORTRST_CTRL_SHIFT	8
++
++#define SYSMGR_ISWGRP_HANDOFF3          (0x8C)
++#define ISWGRP_HANDOFF_FPGA2SDR         SYSMGR_ISWGRP_HANDOFF3
++
++#define F2S_BRIDGE_NAME "fpga2sdram"
++
++struct alt_fpga2sdram_data {
++	struct device *dev;
++	struct regmap *sdrctl;
++	int mask;
++};
++
++static int alt_fpga2sdram_enable_show(struct fpga_bridge *bridge)
++{
++	struct alt_fpga2sdram_data *priv = bridge->priv;
++	int value;
++
++	regmap_read(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST, &value);
++
++	return (value & priv->mask) == priv->mask;
++}
++
++static inline int _alt_fpga2sdram_enable_set(struct alt_fpga2sdram_data *priv,
++					     bool enable)
++{
++	return regmap_update_bits(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST,
++				  priv->mask, enable ? priv->mask : 0);
++}
++
++static int alt_fpga2sdram_enable_set(struct fpga_bridge *bridge, bool enable)
++{
++	return _alt_fpga2sdram_enable_set(bridge->priv, enable);
++}
++
++struct prop_map {
++	char *prop_name;
++	u32 *prop_value;
++	u32 prop_max;
++};
++
++static const struct fpga_bridge_ops altera_fpga2sdram_br_ops = {
++	.enable_set = alt_fpga2sdram_enable_set,
++	.enable_show = alt_fpga2sdram_enable_show,
++};
++
++static const struct of_device_id altera_fpga_of_match[] = {
++	{ .compatible = "altr,socfpga-fpga2sdram-bridge" },
++	{},
++};
++
++static int alt_fpga_bridge_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct alt_fpga2sdram_data *priv;
++	u32 enable;
++	struct regmap *sysmgr;
++	int ret = 0;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++
++	priv->sdrctl = syscon_regmap_lookup_by_compatible("altr,sdr-ctl");
++	if (IS_ERR(priv->sdrctl)) {
++		dev_err(dev, "regmap for altr,sdr-ctl lookup failed.\n");
++		return PTR_ERR(priv->sdrctl);
++	}
++
++	sysmgr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
++	if (IS_ERR(priv->sdrctl)) {
++		dev_err(dev, "regmap for altr,sys-mgr lookup failed.\n");
++		return PTR_ERR(sysmgr);
++	}
++
++	/* Get f2s bridge configuration saved in handoff register */
++	regmap_read(sysmgr, SYSMGR_ISWGRP_HANDOFF3, &priv->mask);
++
++	ret = fpga_bridge_register(dev, F2S_BRIDGE_NAME,
++				   &altera_fpga2sdram_br_ops, priv);
++	if (ret)
++		return ret;
++
++	dev_info(dev, "driver initialized with handoff %08x\n", priv->mask);
++
++	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
++		if (enable > 1) {
++			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
++		} else {
++			dev_info(dev, "%s bridge\n",
++				 (enable ? "enabling" : "disabling"));
++			ret = _alt_fpga2sdram_enable_set(priv, enable);
++			if (ret) {
++				fpga_bridge_unregister(&pdev->dev);
++				return ret;
++			}
++		}
++	}
++
++	return ret;
++}
++
++static int alt_fpga_bridge_remove(struct platform_device *pdev)
++{
++	fpga_bridge_unregister(&pdev->dev);
++
++	return 0;
++}
++
++MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
++
++static struct platform_driver altera_fpga_driver = {
++	.probe = alt_fpga_bridge_probe,
++	.remove = alt_fpga_bridge_remove,
++	.driver = {
++		.name	= "altera_fpga2sdram_bridge",
++		.of_match_table = of_match_ptr(altera_fpga_of_match),
++	},
++};
++
++module_platform_driver(altera_fpga_driver);
++
++MODULE_DESCRIPTION("Altera SoCFPGA FPGA to SDRAM Bridge");
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/fpga/altera-hps2fpga.c b/drivers/fpga/altera-hps2fpga.c
+new file mode 100644
+index 0000000..c15df47
+--- /dev/null
++++ b/drivers/fpga/altera-hps2fpga.c
+@@ -0,0 +1,213 @@
++/*
++ * FPGA to/from HPS Bridge Driver for Altera SoCFPGA Devices
++ *
++ *  Copyright (C) 2013-2015 Altera Corporation, All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/*
++ * This driver manages bridges on a Altera SOCFPGA between the ARM host
++ * processor system (HPS) and the embedded FPGA.
++ *
++ * This driver supports enabling and disabling of the configured ports, which
++ * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
++ * uses the same port configuration.  Bridges must be disabled before
++ * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
++ */
++
++#include <linux/clk.h>
++#include <linux/fpga/fpga-bridge.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++#define ALT_L3_REMAP_OFST			0x0
++#define ALT_L3_REMAP_MPUZERO_MSK		0x00000001
++#define ALT_L3_REMAP_H2F_MSK			0x00000008
++#define ALT_L3_REMAP_LWH2F_MSK			0x00000010
++
++#define HPS2FPGA_BRIDGE_NAME			"hps2fpga"
++#define LWHPS2FPGA_BRIDGE_NAME			"lwhps2fpga"
++#define FPGA2HPS_BRIDGE_NAME			"fpga2hps"
++
++struct altera_hps2fpga_data {
++	const char *name;
++	struct reset_control *bridge_reset;
++	struct regmap *l3reg;
++	/* The L3 REMAP register is write only, so keep a cached value. */
++	unsigned int l3_remap_value;
++	unsigned int remap_mask;
++	struct clk *clk;
++};
++
++static int alt_hps2fpga_enable_show(struct fpga_bridge *bridge)
++{
++	struct altera_hps2fpga_data *priv = bridge->priv;
++
++	return reset_control_status(priv->bridge_reset);
++}
++
++static int _alt_hps2fpga_enable_set(struct altera_hps2fpga_data *priv,
++				    bool enable)
++{
++	int ret;
++
++	/* bring bridge out of reset */
++	if (enable)
++		ret = reset_control_deassert(priv->bridge_reset);
++	else
++		ret = reset_control_assert(priv->bridge_reset);
++	if (ret)
++		return ret;
++
++	/* Allow bridge to be visible to L3 masters or not */
++	if (priv->remap_mask) {
++		priv->l3_remap_value |= ALT_L3_REMAP_MPUZERO_MSK;
++
++		if (enable)
++			priv->l3_remap_value |= priv->remap_mask;
++		else
++			priv->l3_remap_value &= ~priv->remap_mask;
++
++		ret = regmap_write(priv->l3reg, ALT_L3_REMAP_OFST,
++				   priv->l3_remap_value);
++	}
++
++	return ret;
++}
++
++static int alt_hps2fpga_enable_set(struct fpga_bridge *bridge, bool enable)
++{
++	return _alt_hps2fpga_enable_set(bridge->priv, enable);
++}
++
++static const struct fpga_bridge_ops altera_hps2fpga_br_ops = {
++	.enable_set = alt_hps2fpga_enable_set,
++	.enable_show = alt_hps2fpga_enable_show,
++};
++
++static struct altera_hps2fpga_data hps2fpga_data  = {
++	.name = HPS2FPGA_BRIDGE_NAME,
++	.remap_mask = ALT_L3_REMAP_H2F_MSK,
++};
++
++static struct altera_hps2fpga_data lwhps2fpga_data  = {
++	.name = LWHPS2FPGA_BRIDGE_NAME,
++	.remap_mask = ALT_L3_REMAP_LWH2F_MSK,
++};
++
++static struct altera_hps2fpga_data fpga2hps_data  = {
++	.name = FPGA2HPS_BRIDGE_NAME,
++};
++
++static const struct of_device_id altera_fpga_of_match[] = {
++	{ .compatible = "altr,socfpga-hps2fpga-bridge",
++	  .data = &hps2fpga_data },
++	{ .compatible = "altr,socfpga-lwhps2fpga-bridge",
++	  .data = &lwhps2fpga_data },
++	{ .compatible = "altr,socfpga-fpga2hps-bridge",
++	  .data = &fpga2hps_data },
++	{},
++};
++
++static int alt_fpga_bridge_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct altera_hps2fpga_data *priv;
++	const struct of_device_id *of_id;
++	u32 enable;
++	int ret;
++
++	of_id = of_match_device(altera_fpga_of_match, dev);
++	priv = (struct altera_hps2fpga_data *)of_id->data;
++
++	priv->bridge_reset = devm_reset_control_get(dev, priv->name);
++	if (IS_ERR(priv->bridge_reset)) {
++		dev_err(dev, "Could not get %s reset control\n", priv->name);
++		return PTR_ERR(priv->bridge_reset);
++	}
++
++	priv->l3reg = syscon_regmap_lookup_by_compatible("altr,l3regs");
++	if (IS_ERR(priv->l3reg)) {
++		dev_err(dev, "regmap for altr,l3regs lookup failed\n");
++		return PTR_ERR(priv->l3reg);
++	}
++
++	priv->clk = of_clk_get(dev->of_node, 0);
++	if (IS_ERR(priv->clk)) {
++		dev_err(dev, "no clock specified\n");
++		return PTR_ERR(priv->clk);
++	}
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret) {
++		dev_err(dev, "could not enable clock\n");
++		return -EBUSY;
++	}
++
++	ret = fpga_bridge_register(dev, priv->name, &altera_hps2fpga_br_ops,
++				   priv);
++	if (ret)
++		return ret;
++
++	if (!of_property_read_u32(dev->of_node, "bridge-enable", &enable)) {
++		if (enable > 1) {
++			dev_warn(dev, "invalid bridge-enable %u > 1\n", enable);
++		} else {
++			dev_info(dev, "%s bridge\n",
++				 (enable ? "enabling" : "disabling"));
++
++			ret = _alt_hps2fpga_enable_set(priv, enable);
++			if (ret) {
++				fpga_bridge_unregister(&pdev->dev);
++				return ret;
++			}
++		}
++	}
++
++	return ret;
++}
++
++static int alt_fpga_bridge_remove(struct platform_device *pdev)
++{
++	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
++	struct altera_hps2fpga_data *priv = bridge->priv;
++
++	fpga_bridge_unregister(&pdev->dev);
++
++	clk_disable_unprepare(priv->clk);
++	clk_put(priv->clk);
++
++	return 0;
++}
++
++MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
++
++static struct platform_driver alt_fpga_bridge_driver = {
++	.probe = alt_fpga_bridge_probe,
++	.remove = alt_fpga_bridge_remove,
++	.driver = {
++		.name	= "altera_hps2fpga_bridge",
++		.of_match_table = of_match_ptr(altera_fpga_of_match),
++	},
++};
++
++module_platform_driver(alt_fpga_bridge_driver);
++
++MODULE_DESCRIPTION("Altera SoCFPGA HPS to FPGA Bridge");
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+1.7.9.5
+
