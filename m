@@ -1,77 +1,59 @@
-From: Lakshmi Sai Krishna Potthuri
-	<lakshmi.sai.krishna.potthuri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [LINUX PATCH 1/5] mmc: Workaround for the issue in auto tuning
- mode.
-Date: Wed, 20 Jan 2016 05:21:24 +0000
-Message-ID: <4FF8F58FAA9D5D4193D4E554E4352C5902C52798@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1453213055-35563-1-git-send-email-lakshmis@xilinx.com>
- <CAGb2v655SF-CUbZKKTif0toHqJ61Z4P4_QzQacfQL9EN0Y0zZQ@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH V4 2/5] mfd: max77620: add core driver for MAX77620/MAX20024
+Date: Wed, 20 Jan 2016 14:22:37 +0900
+Message-ID: <569F199D.9020207@samsung.com>
+References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com>
+ <1453198783-28383-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v655SF-CUbZKKTif0toHqJ61Z4P4_QzQacfQL9EN0Y0zZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Emil P. Lenchak" <emill-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>devicetree <devicetr>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <1453198783-28383-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, vreddytalla@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hlbi1ZdSBUc2Fp
-IFttYWlsdG86d2Vuc0Bjc2llLm9yZ10NCj4gU2VudDogVHVlc2RheSwgSmFudWFyeSAxOSwgMjAx
-NiA4OjMyIFBNDQo+IFRvOiBMYWtzaG1pIFNhaSBLcmlzaG5hIFBvdHRodXJpDQo+IENjOiBNaWNo
-YWwgU2ltZWs7IFNvcmVuIEJyaW5rbWFubjsgVWxmIEhhbnNzb247IEtldmluIEhhbzsgRW1pbCBQ
-LiBMZW5jaGFrOw0KPiBUb2JpYXMgS2xhdXNlcjsgU3VkZWVwIEhvbGxhOyBBZHJpYW4gSHVudGVy
-OyBKaXNoZW5nIFpoYW5nOyBJdmFuIFQuIEl2YW5vdjsNCj4gU2NvdHQgQnJhbmRlbjsgVmluY2Vu
-dCBZYW5nOyBIYWlibyBDaGVuOyBNYXJlayBWYXN1dDsNCj4gbHVkb3ZpYy5kZXNyb2NoZXNAYXRt
-ZWwuY29tOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9sbDsgTWFyayBSdXRsYW5kOyBJYW4NCj4gQ2Ft
-cGJlbGw7IEt1bWFyIEdhbGE7IFN1bWFuIFRyaXBhdGhpOyBTaGF3biBMaW47IGRldmljZXRyZWU7
-IEhhcmluaQ0KPiBLYXRha2FtOyBsaW51eC1tbWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWw7IExha3NobWkgU2FpIEtyaXNobmENCj4gUG90dGh1cmk7IEFuaXJ1ZGhhIFNhcmFuZ2k7IFB1
-bm5haWFoIENob3VkYXJ5IEthbGx1cmk7IGxpbnV4LWFybS1rZXJuZWwNCj4gU3ViamVjdDogUmU6
-IFtMSU5VWCBQQVRDSCAxLzVdIG1tYzogV29ya2Fyb3VuZCBmb3IgdGhlIGlzc3VlIGluIGF1dG8N
-Cj4gdHVuaW5nIG1vZGUuDQo+DQo+IEhpLA0KPg0KPiBPbiBUdWUsIEphbiAxOSwgMjAxNiBhdCAx
-MDoxNyBQTSwgUCBMIFNhaSBLcmlzaG5hDQo+IDxsYWtzaG1pLnNhaS5rcmlzaG5hLnBvdHRodXJp
-QHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IER1cmluZyB0aGUgYXV0byB0dW5pbmcgbW9kZSBvZiBT
-RFIxMDQsIGEgY291cGxlIG9mIHRyYW5zYWN0aW9ucyBvbg0KPiA+IHJ4X3RhcF92YWx1ZSB3aGlj
-aCBhcmUgbm90IGluY3JlbWVudGFsIG9yIGRlY3JlbWVudGFsIGJ5IDEuDQo+ID4gU2luY2UgdGhl
-IERMTCBzdXBwb3J0cyBvbmx5IGluY3JlbWVudC9kZWNyZW1lbnQgYnkgMSBkdXJpbmcgZHluYW1p
-Yw0KPiA+IGNoYW5nZSwgb2JzZXJ2ZWQgdW5leHBlY3RlZCBkZWxheXMgZHVyaW5nIGJvdGggdGhl
-c2UgdHJhbnNhY3Rpb25zLg0KPiA+IFRoZSBmaXJzdCB0cmFuc2FjdGlvbiBvY2N1cnMgd2hlbiB0
-aGUgdGFwIHZhbHVlIHJlYWNoZWQgMHgxRiwgaXQgd2lsbA0KPiA+IHJlc2V0IHRvIDB4MCBhbmQg
-Z28gdGlsbCAweDcuIFRoaXMgdHJhbnNhY3Rpb24gY2FuIGJlIGF2b2lkZWQgYnkNCj4gPiBjaGFu
-Z2luZyB0aGUgY29yZWNmZ19kaXMxcDV4dHVuaW5nY250IHRvIDEnYjEgd2hpY2ggaXMgY3VycmVu
-dGx5IHRpZWQNCj4gPiB0byAxJ2IwIGluIHRoZSBSVEwuDQo+ID4gVGhlIHNlY29uZCB0cmFuc2Fj
-dGlvbiBvY2N1cnMgYWZ0ZXIgdGhlIHR1bmluZyBpcyBjb21wbGV0ZWQuDQo+ID4gT25jZSB0aGUg
-dHVuaW5nIGlzIGRvbmUsIHRoZSB0dW5pbmcgZnNtIGluIHRoZSBob3N0IGNvbnRyb2xsZXINCj4g
-PiBjYWxjdWxhdGVzIHRoZSBhdmVyYWdlIHBhdHRlcm4gbWF0Y2ggYW5kIHdpbGwgd3JpdGUgdGhl
-IHZhbHVlIG9uIHRoZQ0KPiA+IHJ4IHRhcCB2YWx1ZS4gVGhlcmVmb3JlIG9ic2VydmVkIGEgdHJh
-bnNhY3Rpb24gZnJvbSAweDcgdG8gdGhlIGZpbmFsDQo+ID4gdmFsdWUgd2hpY2ggbmVlZCBub3Qg
-YmUgYSBpbmNyZW1lbnQvZGVjcmVtZW50IHZhbHVlLg0KPiA+IEJlY2F1c2Ugb2YgdGhpcyBpc3N1
-ZSBETEwgdHVuaW5nIHdpbGwgbm90IGJlIGFjY3VyYXRlIGFuZCBTRFI1MCwNCj4gPiBTRFIxMDQg
-JiBIUzIwMCBtb2RlcyBtYXkgbm90IHdvcmsuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgd29y
-a2Fyb3VuZCB0byBjaGFuZ2UgdGhlIFNEIGNsb2NrIGFmdGVyIHR1bmluZyBkb25lIHRvDQo+ID4g
-cHJvdmlkZSBhY2N1cmF0ZSBETEwgdHVuaW5nIGZvciBTRFI1MCwNCj4gPiBTRDEwNCAmIEhTMjAw
-IG1vZGVzLg0KPiA+DQo+ID4gQWZ0ZXIgcmVjZWl2aW5nIHRoZSB0dW5pbmcgZG9uZSwgcHJvZ3Jh
-bSAiU0RDTEsgRnJlcXVlbmN5IFNlbGVjdCINCj4gPiBvZiBjbG9jayBjb250cm9sIHJlZ2lzdGVy
-IHdpdGggYSB2YWx1ZSBkaWZmZXJlbnQgZnJvbSB0aGUgZGVzaXJlZA0KPiA+IHZhbHVlLiBXYWl0
-IGZvciB0aGUgIkludGVybmFsIENsb2NrIFN0YWJsZSIgYml0IG9mIHRoZSBjbG9jayBjb250cm9s
-DQo+ID4gcmVnaXN0ZXIgYW5kIHByb2dyYW0gdGhlIGRlc2lyZWQgZnJlcXVlbmN5Lg0KPg0KPiBE
-b2VzIHRoaXMgc2VyaWVzIGFwcGx5IHRvIGFueSBub24tQXJhc2FuIG9yIG5vbi1zZGhjaSBtbWMg
-aG9zdHM/DQo+IFRoZSBzdWJqZWN0IGRvZXMgbm90IGluZGljYXRlIGEgc3BlY2lmaWMgcGxhdGZv
-cm0uDQoNClRoaXMgc2VyaWVzIGlzIGFwcGxpY2FibGUgb25seSBmb3IgWnlucSBVbHRyYXNjYWwr
-IE1QU29DIHdoaWNoDQp1c2VzIEFyYXNhbiBTREhDSS4NClNvcnJ5LCBJIHdpbGwgY2hhbmdlIHRo
-ZSBkZXNjcmlwdGlvbiB0byBpbmRpY2F0ZSB0aGUgc2FtZS4NClRoZSBEVCBwcm9wZXJ0eSB1c2Vk
-IGlzIG1hZGUgZ2VuZXJpYyBidXQgdGhlIHR1bmluZyB1c2VkIGlzDQpTcGVjaWZpYyB0byB0aGlz
-IFNvQy4NCg0KUmVnYXJkcw0KU2FpIEtyaXNobmENCg0KDQpUaGlzIGVtYWlsIGFuZCBhbnkgYXR0
-YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUgc29sZSB1c2Ugb2YgdGhlIG5hbWVkIHJlY2lw
-aWVudChzKSBhbmQgY29udGFpbihzKSBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gdGhhdCBtYXkg
-YmUgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQgb3IgY29weXJpZ2h0ZWQgdW5kZXIgYXBwbGljYWJs
-ZSBsYXcuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIGRvIG5vdCByZWFk
-LCBjb3B5LCBvciBmb3J3YXJkIHRoaXMgZW1haWwgbWVzc2FnZSBvciBhbnkgYXR0YWNobWVudHMu
-IERlbGV0ZSB0aGlzIGVtYWlsIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBpbW1lZGlhdGVs
-eS4NCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 19.01.2016 19:19, Laxman Dewangan wrote:
+> MAX77620/MAX20024 are Power Management IC from the MAXIM.
+> It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
+> watchdog, clock etc.
+> 
+> Add MFD drier to provides common support for accessing the
+> device; additional drivers is developed on respected subsystem
+> in order to use the functionality of the device.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
+> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+> ---
+> Changes from V1:
+> - Code cleanups per review from V1. 
+> - Move register acccess APIs from header to c file.
+> - Remove some of non required variable, remove duplication in error message
+>  and simplify some of function implementation.
+> - Register RTC driver such that it can get the regmap handle form parent device
+> 
+> Changes from V2:
+> - Run coccicheck and checkpatch in strict mode for the alignment.
+> - Drop RTC driver and its i2c client registration.
+> 
+> Changes from V3: 
+> - Change all sys initcall to module driver.
+> - change the max77620_read argument to unisgned int from u8.
+> 
+>  drivers/mfd/Kconfig          |  15 +
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/max77620.c       | 871 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max77620.h | 404 ++++++++++++++++++++
+>  4 files changed, 1291 insertions(+)
+>  create mode 100644 drivers/mfd/max77620.c
+>  create mode 100644 include/linux/mfd/max77620.h
+> 
+
+
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
+
