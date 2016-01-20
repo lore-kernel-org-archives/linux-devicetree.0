@@ -1,55 +1,35 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v6 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Wed, 20 Jan 2016 09:43:10 +0800
-Message-ID: <569EE62E.3040003@huawei.com>
-References: <1453171111-21921-1-git-send-email-xuejiancheng@huawei.com>
- <1453171111-21921-2-git-send-email-xuejiancheng@huawei.com>
- <20160119182317.GA3681@rob-hp-laptop>
+From: zhangqing <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v3 0/3] SoC: rockchip: support power domain for RK3368
+Date: Wed, 20 Jan 2016 02:28:05 -0800
+Message-ID: <569F6135.1070902@rock-chips.com>
+References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160119182317.GA3681@rob-hp-laptop>
+In-Reply-To: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+To: heiko@sntech.de, wxt@rock-chips.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 2016/1/20 2:23, Rob Herring wrote:
-> On Tue, Jan 19, 2016 at 10:38:26AM +0800, Jiancheng Xue wrote:
->> The CRG(Clock and Reset Generator) block provides clock
->> and reset signals for other modules in hi3519 soc.
->>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
->> ---
->>  .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++++
-> 
-> I already acked this. Please add ack's when posting new versions.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-Hi Rob,
 
-I see. Thank you very much.
+On 01/11/2016 02:36 AM, zhangqing wrote:
+> add pd id in rk3368-power.h
+> modify pm_domains.c to support RK3368 SoC
+> add RK3368 document for Rockchip power domains
+>
+> zhangqing (3):
+>    dt-bindings: add power-domain header for RK3368 SoCs
+>    soc: rockchip: power-domain: Modify power domain driver for rk3368
+>    dt-bindings: modify document of Rockchip power domains
 
-Regards,
-Jiancheng
-
->>  drivers/clk/hisilicon/Kconfig                      |   7 ++
->>  drivers/clk/hisilicon/Makefile                     |   2 +
->>  drivers/clk/hisilicon/clk-hi3519.c                 | 132 +++++++++++++++++++++
->>  drivers/clk/hisilicon/clk.c                        |  23 ++--
->>  drivers/clk/hisilicon/clk.h                        |  14 +--
->>  drivers/clk/hisilicon/reset.c                      | 130 ++++++++++++++++++++
->>  drivers/clk/hisilicon/reset.h                      |  32 +++++
->>  include/dt-bindings/clock/hi3519-clock.h           |  40 +++++++
->>  9 files changed, 411 insertions(+), 15 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
->>  create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
->>  create mode 100644 drivers/clk/hisilicon/reset.c
->>  create mode 100644 drivers/clk/hisilicon/reset.h
->>  create mode 100644 include/dt-bindings/clock/hi3519-clock.h
-> 
-> .
-> 
+Are there any other questions about the three patches.Please review.
+>
+>   .../bindings/soc/rockchip/power_domain.txt         | 21 ++++++++++++++
+>   drivers/soc/rockchip/pm_domains.c                  | 33 ++++++++++++++++++++++
+>   include/dt-bindings/power/rk3368-power.h           | 28 ++++++++++++++++++
+>   3 files changed, 82 insertions(+)
+>   create mode 100644 include/dt-bindings/power/rk3368-power.h
+>
