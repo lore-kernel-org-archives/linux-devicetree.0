@@ -1,78 +1,89 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH v2 08/16] xen/hvm/params: Add a new delivery
- type for event-channel in HVM_PARAM_CALLBACK_IRQ
-Date: Wed, 20 Jan 2016 14:33:49 +0800
-Message-ID: <569F2A4D.9070006@huawei.com>
-References: <1452840929-19612-1-git-send-email-zhaoshenglong@huawei.com> <1452840929-19612-9-git-send-email-zhaoshenglong@huawei.com> <alpine.DEB.2.02.1601181205110.16178@kaball.uk.xensource.com> <569CDDB7.9030103@citrix.com> <alpine.DEB.2.02.1601181244300.16178@kaball.uk.xensource.com> <569CE00C.5050406@citrix.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/6] Add clock support for Mediatek MT2701
+Date: Wed, 20 Jan 2016 14:35:41 +0800
+Message-ID: <1453271747-57397-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <569CE00C.5050406-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset is based on 4.4-rc7, add clock and reset controller
+support for Mediatek MT2701.
 
+This patchset also refined makefile and Kconfig to support configurable
+multiple SoC clock support.
 
-On 2016/1/18 20:52, Andrew Cooper wrote:
-> On 18/01/16 12:46, Stefano Stabellini wrote:
->> > On Mon, 18 Jan 2016, Andrew Cooper wrote:
->>> >> On 18/01/16 12:38, Stefano Stabellini wrote:
->>>> >>> On Fri, 15 Jan 2016, Shannon Zhao wrote:
->>>>> >>>> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> >>>>
->>>>> >>>> Add a new delivery type:
->>>>> >>>> val[63:56] == 3: val[15:8] is flag: val[7:0] is a PPI.
->>>>> >>>> To the flag, bit 0 stands the interrupt mode is edge(1) or level(0) and
->>>>> >>>> bit 1 stands the interrupt polarity is active low(1) or high(0).
->>>>> >>>>
->>>>> >>>> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> >>>> ---
->>>>> >>>>  include/xen/interface/hvm/params.h | 5 +++++
->>>>> >>>>  1 file changed, 5 insertions(+)
->>>>> >>>>
->>>>> >>>> diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
->>>>> >>>> index a6c7991..550688a 100644
->>>>> >>>> --- a/include/xen/interface/hvm/params.h
->>>>> >>>> +++ b/include/xen/interface/hvm/params.h
->>>>> >>>> @@ -34,6 +34,11 @@
->>>>> >>>>   *                  Domain = val[47:32], Bus  = val[31:16],
->>>>> >>>>   *                  DevFn  = val[15: 8], IntX = val[ 1: 0]
->>>>> >>>>   * val[63:56] == 2: val[7:0] is a vector number.
->>>>> >>>> + * val[63:56] == 3: val[15:8] is flag of event-channel interrupt:
->>>>> >>>> + *                      bit 0: interrupt is edge(1) or level(0) triggered
->>>>> >>>> + *                      bit 1: interrupt is active low(1) or high(0)
->>>>> >>>> + *                  val[7:0] is PPI number used by event-channel.
->>>>> >>>> + *                  This is only used by ARM/ARM64.
->>>>> >>>>   * If val == 0 then CPU0 event-channel notifications are not delivered.
->>>>> >>>>   */
->>>>> >>>>  #define HVM_PARAM_CALLBACK_IRQ 0
->>>> >>> Andrew, I think that this patch is correct. Looking back at your
->>>> >>> previous comment (http://marc.info/?l=devicetree&m=144804014214262&w=2),
->>>> >>> is it possible that you were confused by enum callback_via_type, which
->>>> >>> is internal to Xen and offset'ed by 1 compared to the described values
->>>> >>> in xen/include/public/hvm/params.h?
->>>> >>>
->>>> >>> If not, and indeed somebody introduced one more field but failed to
->>>> >>> document it, then I suggest she sends a patch to fix the issue as soon
->>>> >>> as possible.
->>> >> I was indeed confused - the ABI is utterly mad.
->> > All right. In that case, Shannon, you can add my
->> >
->> > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
->> >
->> >
->>> >> However, this change does need rebasing over c/s ca5c54b, which was the
->>> >> result of the original discussion.
->> > c/s ca5c54b is for Xen, while this is a Linux patch (Linux has its own
->> > set of Xen headers).
-> All ABI changes need to happen in the Xen public headers first.  This
-> patch cannot be accepted yet.
-So you mean it should port c/s ca5c54b to Linux first? Then add this
-change based on that?
+There is only a minor change since v3, which is correcting the parent
+of mm_mdp_bls_26m.
 
-Thanks,
--- 
-Shannon
+changes since v3:
+- Change the parent of mm_mdp_bls_26m from clk26m to pwm_sel.
+
+changes since v2:
+- Fix ethsys definition.
+- Replace read-modify-write with regmap_update_bits() in clock operations.
+- Move mt2701-resets.h to include/dt-bindings/reset/.
+- Add hifsys reset patch from John Crispin.
+
+changes since v1:
+- Document MT2701 compatible strings.
+
+James Liao (2):
+  clk: mediatek: Refine the makefile to support multiple clock drivers
+  dt-bindings: ARM: Mediatek: Document bindings for MT2701
+
+Shunli Wang (4):
+  clk: mediatek: Add dt-bindings for MT2701 clocks
+  clk: mediatek: Add MT2701 clock support
+  reset: mediatek: Add MT2701 reset controller dt-binding file
+  reset: mediatek: Add MT2701 reset driver
+
+James Liao (2):
+  clk: mediatek: Refine the makefile to support multiple clock drivers
+  dt-bindings: ARM: Mediatek: Document bindings for MT2701
+
+Shunli Wang (4):
+  clk: mediatek: Add dt-bindings for MT2701 clocks
+  clk: mediatek: Add MT2701 clock support
+  reset: mediatek: Add MT2701 reset controller dt-binding file
+  reset: mediatek: Add MT2701 reset driver
+
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+ .../bindings/arm/mediatek/mediatek,bdpsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |    1 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/mediatek/Kconfig                       |   31 +
+ drivers/clk/mediatek/Makefile                      |    7 +-
+ drivers/clk/mediatek/clk-gate.c                    |   52 +
+ drivers/clk/mediatek/clk-gate.h                    |    2 +
+ drivers/clk/mediatek/clk-mt2701.c                  | 1216 ++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |   25 +
+ drivers/clk/mediatek/clk-mtk.h                     |   35 +-
+ include/dt-bindings/clock/mt2701-clk.h             |  481 ++++++++
+ include/dt-bindings/reset/mt2701-resets.h          |   83 ++
+ 20 files changed, 2000 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+ create mode 100644 drivers/clk/mediatek/Kconfig
+ create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+ create mode 100644 include/dt-bindings/clock/mt2701-clk.h
+ create mode 100644 include/dt-bindings/reset/mt2701-resets.h
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
