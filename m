@@ -1,60 +1,47 @@
-From: Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Wed, 20 Jan 2016 23:09:39 +0300
-Message-ID: <691920039.20160120230939@cogentembedded.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
-  <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
-  <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
-  <20160113191542.GA12086@leverpostej>
-  <1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
-  <20160115110106.GA3262@leverpostej>
-  <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
-  <569913A1.80606@cogentembedded.com>
-  <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
-  <56992959.2020204@hurleysoftware.com>
-  <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
-  <744620565.20160116103445@cogentembedded.com>
-  <CAKdAkRQh7xSgOXERhA8EjXEfX5m-PTTjiv757X7FYxK=bhfpww@mail.gmail.com>
-Reply-To: Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
+ reboot-mode driver
+Date: Wed, 20 Jan 2016 12:25:44 -0800
+Message-ID: <CALAqxLVY7mg2arS7u63fRow8Ln2u7hbrfFf1h2UcoojtwJMRyw@mail.gmail.com>
+References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
+	<1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
+	<20160120182840.GA15741@rob-hp-laptop>
+	<CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
+	<CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKdAkRQh7xSgOXERhA8EjXEfX5m-PTTjiv757X7FYxK=bhfpww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Yan <andy.yan@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Reichel <sre@kernel.org>, Olof Johansson <olof@lixom.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Dmitry.
+On Wed, Jan 20, 2016 at 11:53 AM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jan 20, 2016 at 12:47 PM, John Stultz <john.stultz@linaro.org> wrote:
+> The question here really is will we ever need additional data for each
+> mode (in the DT) besides "magic". We can do some amount of extending
+> the property like allowing more that single 32-bit value. We can't mix
+> strings and integers though. If we don't need that, then lets go with
+> the more concise approach. This isn't really an evolving area.
+> Selecting boot mode/device has existed for a long time on PCs (it is
+> fixed list in the IPMI spec for example). So I can't imagine that we'd
+> have to extend this, but I'd like to hear thoughts on it. You had
+> mentioned the Galaxy Nexus having a value and a string, but I'd find
+> it surprising if the bootloader actually uses the string.
 
-> On Fri, Jan 15, 2016 at 11:34 PM, Vostrikov Andrey
-> <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
->>
->> Yes, such implementation will help. There is a need for interface like UART BUS that will probe devices without user space.
->> Serial I/O for input subsystem defines new type of bus and uses dedicated line discipline, but it still unable to start driver by itself and requires call from 'inputattach' to open port, assign line discipline and go to forever wait on 'read'.
+So I've been told the galaxy nexus and possibly other older TI
+hardware used only a string.
 
-> That was done mainly because almost none of the serial protocols could
-> be auto-probed, so device initialization/setup was moved out of kernel
-> and thus we have the separate line discipline and inputattach utility.
+And the HTC implementations I've seen have code for both a string and
+command to be placed, but usually don't actually copy anything to the
+string address (which suggest its not used by the bootloader, as you
+note).
 
-This  is understandable for "dummy" devices like mice, that only
-report input events.
+Either way, we'd have to extend or implement a new driver, but that's
+a bridge I think we can cross later when we see such hardware support
+upstream (rather then try to create a super driver that handles
+everything a creative firmware developer could come up with).
 
-But  in  case there is "intellectual" MCU, that must reply on specific
-commands  with specific response - it could be auto-probed. Especially
-when it is hardwired. Unfortunately, there  is  no  API  to  do  it.
-Opening  port and attaching line discipline  from  kernel  side
-does  not  look good. The only example is '/dev/console', which is
-implemented that way.
-
-> Thanks.
-
--- 
-Best regards,
-Andrey Vostrikov
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks
+-john
