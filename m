@@ -1,136 +1,143 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 2/6] Documentation, dt, arm64/arm: dt bindings for
- numa.
-Date: Wed, 20 Jan 2016 08:18:06 -0600
-Message-ID: <20160120141806.GA8434@rob-hp-laptop>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1453134965-6125-3-git-send-email-gkulkarni@caviumnetworks.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Wed, 20 Jan 2016 15:19:36 +0100
+Message-ID: <5639398.uJHXq6DsMC@wuerfel>
+References: <4405270.vcz87Q878u@wuerfel> <2538302.jXP5WXojXY@wuerfel> <20160120125026.GA16519@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453134965-6125-3-git-send-email-gkulkarni@caviumnetworks.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hogan@imgtec.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160120125026.GA16519@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 10:06:01PM +0530, Ganapatrao Kulkarni wrote:
-> DT bindings for numa mapping of memory, cores and IOs.
+On Wednesday 20 January 2016 20:50:26 Peter Chen wrote:
+> On Wed, Jan 20, 2016 at 10:07:13AM +0100, Arnd Bergmann wrote:
+> > On Wednesday 20 January 2016 11:48:39 Peter Chen wrote:
+> > > > 
+> > > > > Alternatively, you could use one of the high bits of the 'reg' value
+> > > > > to indicate which root hub is used. I'm sure that would work as
+> > > > > well, but be less obvious.
+> > > > 
+> > > > It's probably best to stick with the same numbering that the hardware 
+> > > > uses.
+> > > 
+> > > Seems we are talking about root hub, not the device in the
+> > > root hub. So for multiple ports controller, we have to own node for 
+> > > root hub. Assume your example, there is a genesys HUB at physical
+> > > port 1, I suggest a dts node description like below, please correct
+> > > me if anything wrong.
+> > > 
+> > > &usb1 {
+> > >         roothub_1: nxp@1 {
+> > >                 compatible = "usb15a2,007d";
+> > >                 reg = <0x01>;
+> > > 
+> > >                 hub: genesys@1 {
+> > >                         compatible = "usb05e3,0608";
+> > >                         reg = <0x01>;
+> > >                 };
+> > >         };
+> > > 
+> > >         roothub_2: nxp@2 {
+> > >                 compatible = "usb15a2,007d";
+> > >                 reg = <0x02>;
+> > >         };
+> > > 
+> > >         ...
+> > > 
+> > >         roothub_7: nxp@7 {
+> > >                 compatible = "usb15a2,007d";
+> > >                 reg = <0x07>;
+> > > 
+> > >                 hub: genesys@1 {
+> > >                         compatible = "usb05e3,0608";
+> > >                         reg = <0x01>;
+> > >                 };
+> > >         };
+> > > 
+> > >         ...
+> > > 
+> > >         roothub_9: nxp@9 {
+> > >                 compatible = "usb15a2,007d";
+> > >                 reg = <0x09>;
+> > >         };
+> > > };
+> > 
+> > This looks wrong to me: if I understand it right, you are now modeling
+> > each port of the root hub as a separate hub, so you end up with
+> > a total of 11 hub nodes when there should only be one or two.
+> > 
 > 
-> Reviewed-by: Robert Richter <rrichter@cavium.com>
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-> ---
->  Documentation/devicetree/bindings/arm/numa.txt | 272 +++++++++++++++++++++++++
->  1 file changed, 272 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
-
-This is looks okay to me, but some cosmetic things on the example.
-
-> +==============================================================================
-> +4 - Example dts
-> +==============================================================================
-> +
-> +2 sockets system consists of 2 boards connected through ccn bus and
-> +each board having one socket/soc of 8 cpus, memory and pci bus.
-> +
-> +	memory@00c00000 {
-
-Drop the leading 0s on unit addresses.
-
-> +		device_type = "memory";
-> +		reg = <0x0 0x00c00000 0x0 0x80000000>;
-> +		/* node 0 */
-> +		numa-node-id = <0>;
-> +	};
-> +
-> +	memory@10000000000 {
-> +		device_type = "memory";
-> +		reg = <0x100 0x00000000 0x0 0x80000000>;
-> +		/* node 1 */
-> +		numa-node-id = <1>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@000 {
-
-Same here (leaving one of course).
-
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x000>;
-> +			enable-method = "psci";
-> +			/* node 0 */
-> +			numa-node-id = <0>;
-> +		};
-> +		cpu@001 {
-
-and so on...
-
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x001>;
-
-Either all leading 0s or none.
-
-> +			reg = <0x0 0x008>;
-> +			enable-method = "psci";
-> +			/* node 1 */
-
-Kind of a pointless comment.
-
-Wouldn't each cluster of cpus for a given numa node be in a different 
-cpu affinity? Certainly not required by the architecture, but the common 
-case at least.
-
-> +			numa-node-id = <1>;
-> +		};
-
-[...]
-
-> +	pcie0: pcie0@0x8480,00000000 {
-
-Drop the 0x and the comma.
-
-> +		compatible = "arm,armv8";
-> +		device_type = "pci";
-> +		bus-range = <0 255>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-> +		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>;
-> +		/* node 0 */
-> +		numa-node-id = <0>;
-> +        };
-> +
-> +	pcie1: pcie1@0x9480,00000000 {
-
-ditto
-
-> +		compatible = "arm,armv8";
-> +		device_type = "pci";
-> +		bus-range = <0 255>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		reg = <0x9480 0x00000000 0 0x10000000>;  /* Configuration space */
-> +		ranges = <0x03000000 0x9010 0x00000000 0x9010 0x00000000 0x70 0x00000000>;
-> +		/* node 1 */
-> +		numa-node-id = <1>;
-> +        };
-> +
-> +	distance-map {
-> +		compatible = "numa-distance-map-v1";
-> +		distance-matrix = <0 0 10>,
-> +				  <0 1 20>,
-> +				  <1 1 10>;
-> +	};
-> -- 
-> 1.8.1.4
+> How about below from both driver and device tree view:
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1. From the USB driver view
+> 
+> 			USB Controller
+> 				|
+> 				|
+> 	   ---------------------|----------------
+> 		|				|	
+> 	    root hub(HS)		root hub(SS, optional)
+> 		|				|
+> 	---------------------		-------------------------	
+> 	|	|	... |		|	  |         |
+>       port 1	port 2	   port 6	port 1	port 2	  port 3
+> 	|				|
+>      genesys hub (if HS)	      genesys hub (if SS)	
+> 
+> 2. dts node:
+> 
+> &usb1 {
+>         port_1: nxp@1 {
+>                 compatible = "usb15a2,007d";
+>                 reg = <0x01>;
+> 
+>                 hub: genesys@1 {
+>                         compatible = "usb05e3,0608";
+>                         reg = <0x01>;
+>                 };
+>         };
+> 
+>         port_2: nxp@2 {
+>                 compatible = "usb15a2,007d";
+>                 reg = <0x02>;
+>         };
+> 
+>         ...
+> 
+>         port_7: nxp@7 {
+>                 compatible = "usb15a2,007d";
+>                 reg = <0x07>;
+> 
+>                 hub: genesys@1 {
+>                         compatible = "usb05e3,0608";
+>                         reg = <0x01>;
+>                 };
+>         };
+> 
+>         ...
+> 
+>         port_9: nxp@9 {
+>                 compatible = "usb15a2,007d";
+>                 reg = <0x09>;
+>         };
+> };
+> 
+> - If the above are ok, is it ok we add two nodes for the same device
+> in case the speed negotiation is different at some situations?
+> - Usually, it should be ok we only add nodes at device tree which
+> the hard wired device on it, like port_1 and port 7 at above, right?
+
+This looks identical to the version before, what is the difference?
+
+You still list 11 hubs here, I'm completely puzzled what the meaning
+of those should be.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
