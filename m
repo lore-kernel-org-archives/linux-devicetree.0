@@ -1,26 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/5 RFC] DT: sdhci-iproc: add bcm2835 compatible
-Date: Wed, 20 Jan 2016 10:50:24 -0600
-Message-ID: <20160120165024.GA31174@rob-hp-laptop>
-References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
- <1453042744-16196-6-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/4] dt/bindings: serial: bcm2835: add binding
+ documentation for bcm2835-aux-uart
+Date: Wed, 20 Jan 2016 10:51:47 -0600
+Message-ID: <20160120165147.GA31775@rob-hp-laptop>
+References: <1453032932-2512-1-git-send-email-kernel@martin.sperl.org>
+ <1453032932-2512-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453042744-16196-6-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+In-Reply-To: <1453032932-2512-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 02:59:04PM +0000, Stefan Wahren wrote:
-> Since sdhci-iproc can support bcm2835 we need to add the
-> compatible string to the binding.
+On Sun, Jan 17, 2016 at 12:15:29PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Add binding documentation for the bcm2835-aux-uart driver.
+> 
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Changelog:
+> 	V2->V3: fixed naming convention for node
 > ---
->  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  .../bindings/serial/brcm,bcm2835-aux-uart.txt        |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
