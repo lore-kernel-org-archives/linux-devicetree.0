@@ -1,35 +1,60 @@
-From: zhangqing <zhangqing@rock-chips.com>
-Subject: Re: [PATCH v3 0/3] SoC: rockchip: support power domain for RK3368
-Date: Wed, 20 Jan 2016 02:28:05 -0800
-Message-ID: <569F6135.1070902@rock-chips.com>
-References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH] arm64: dts: Add PSCI function IDs for cpu-{on,off} on
+ exynos7
+Date: Wed, 20 Jan 2016 08:22:41 +0530
+Message-ID: <569EF679.5040909@samsung.com>
+References: <1453198884-28723-1-git-send-email-alim.akhtar@samsung.com>
+ <20160119103224.GA25024@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, wxt@rock-chips.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20160119103224.GA25024@leverpostej>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, k.kozlowski@samsung.com, devicetree@vger.kernel.org, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-
-On 01/11/2016 02:36 AM, zhangqing wrote:
-> add pd id in rk3368-power.h
-> modify pm_domains.c to support RK3368 SoC
-> add RK3368 document for Rockchip power domains
+On 01/19/2016 04:02 PM, Mark Rutland wrote:
+> On Tue, Jan 19, 2016 at 03:51:24PM +0530, Alim Akhtar wrote:
+>> This patch adds cpu-{on,off} function IDs as per PSCI specification,
+>> with this we can boot multiple CPUs and can use cpu hotplug on
+>> exynos7 platform.
+>>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> ---
+>>   arch/arm64/boot/dts/exynos/exynos7.dtsi |    2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> index f9c5a549c2c0..1a2bb3b453e5 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> @@ -65,6 +65,8 @@
+>>   	psci {
+>>   		compatible = "arm,psci-0.2";
+>>   		method = "smc";
+>> +		cpu_on = <0xC4000003>;
+>> +		cpu_off = <0x84000002>;
+>>   	};
 >
-> zhangqing (3):
->    dt-bindings: add power-domain header for RK3368 SoCs
->    soc: rockchip: power-domain: Modify power domain driver for rk3368
->    dt-bindings: modify document of Rockchip power domains
-
-Are there any other questions about the three patches.Please review.
+> There is no need for this patch.
 >
->   .../bindings/soc/rockchip/power_domain.txt         | 21 ++++++++++++++
->   drivers/soc/rockchip/pm_domains.c                  | 33 ++++++++++++++++++++++
->   include/dt-bindings/power/rk3368-power.h           | 28 ++++++++++++++++++
->   3 files changed, 82 insertions(+)
->   create mode 100644 include/dt-bindings/power/rk3368-power.h
+> The "arm,psci-0.2" compatible string implicitly tells the kernel that
+> the full set of mandatory PSCI 0.2 functions are present, with the IDs
+> mandated by PSCI 0.2. That includes CPU_ON and CPU_OFF amongst others.
+>
+> The only reason to provide IDs is to function on kernels without PSCI
+> 0.2 support. Given the compatible string hasn't been updated for that,
+> this is insufficient for that case.
+>
+Ah, right, this patch is not required for psci,0.2, thanks for 
+clarification.
+sorry for the noise.
+
+> Thanks,
+> Mark.
+>
 >
