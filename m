@@ -1,80 +1,85 @@
-From: Lakshmi Sai Krishna Potthuri
-	<lakshmi.sai.krishna.potthuri@xilinx.com>
-Subject: RE: [LINUX PATCH 1/5] mmc: Workaround for the issue in auto tuning
- mode.
-Date: Wed, 20 Jan 2016 06:02:12 +0000
-Message-ID: <4FF8F58FAA9D5D4193D4E554E4352C5902C527CE@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1453213055-35563-1-git-send-email-lakshmis@xilinx.com>
- <20160119175757.GR19062@n2100.arm.linux.org.uk>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Wed, 20 Jan 2016 14:08:16 +0800
+Message-ID: <1453270097-53853-4-git-send-email-jamesjj.liao@mediatek.com>
+References: <1453270097-53853-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160119175757.GR19062@n2100.arm.linux.org.uk>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hao <haokexin@gmail.com>, "Emil P. Lenchak" <emill@xilinx.com>, Tobias Klauser <tklauser@distanz.ch>, Sudeep Holla <Sudeep.Holla@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Jisheng Zhang <jszhang@marvell.com>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, Scott Branden <sbranden@broadcom.com>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Haibo Chen <haibo.chen@freescale.com>, Marek Vasut <marex@denx.de>, "ludovic.desroches@atmel.com" <ludovic.desroches@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Tripathi <stripathi@apm.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.ker
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453270097-53853-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-> -----Original Message-----
-> From: Russell King - ARM Linux [mailto:linux@arm.linux.org.uk]
-> Sent: Tuesday, January 19, 2016 11:28 PM
-> To: Lakshmi Sai Krishna Potthuri
-> Cc: Michal Simek; Soren Brinkmann; Ulf Hansson; Kevin Hao; Emil P. Lenchak;
-> Tobias Klauser; Sudeep Holla; Adrian Hunter; Jisheng Zhang; Ivan T. Ivanov;
-> Scott Branden; Vincent Yang; Haibo Chen; Marek Vasut;
-> ludovic.desroches@atmel.com; Rob Herring; Pawel Moll; Mark Rutland; Ian
-> Campbell; Kumar Gala; Suman Tripathi; Shawn Lin;
-> devicetree@vger.kernel.org; Harini Katakam; linux-mmc@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Lakshmi Sai Krishna Potthuri; Anirudha
-> Sarangi; Punnaiah Choudary Kalluri; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [LINUX PATCH 1/5] mmc: Workaround for the issue in auto
-> tuning mode.
->
-<snip>
-> > +
-> > +   /*
-> > +    * As per controller erratum, program the SDCLK Frequency
-> > +    * Select of clock control register with a value, say
-> > +    * clock/2. Wait for the Internal clock stable and program
-> > +    * the desired frequency.
-> > +    */
-> > +   host->ops->set_clock(host, clock/2);
->
-> The comment above says "wait for the internal clock stable" - I see no wait in
-> here.  Does the code actually conform with the comment?
+Add power dt-bindings for MT2701.
 
-Wait for internal clock stable is taken care of inside
-set_clock()
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |  6 +++--
+ include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/power/mt2701-power.h
 
-<snip>
-> > +   if ((host->quirks2 & SDHCI_QUIRK2_BROKEN_TUNING) &&
-> > +           (tuning_loop_counter >= 0) && (ctrl &
-> SDHCI_CTRL_TUNED_CLK)) {
-> > +           host->ops->tune_clk(host);
-> > +   }
->
-> Do we need this "SDHCI_QUIRK2_BROKEN_TUNING" quirk at all?  What's
-> wrong
-> with:
->
->       if (host->ops->tune_clk && tuning_loop_counter >= 0 &&
->           ctrl & SDHCI_CTRL_TUNED_CLK)
->               host->ops->tune_clk(host);
->
-> here?
->
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index a6c8afc..807d87f 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -9,10 +9,12 @@ domain control.
+ 
+ The driver implements the Generic PM domain bindings described in
+ power/power_domain.txt. It provides the power domains defined in
+-include/dt-bindings/power/mt8173-power.h.
++include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
+ 
+ Required properties:
+-- compatible: Must be "mediatek,mt8173-scpsys"
++- compatible: Should be:
++	- "mediatek,mt8173-scpsys"
++	- "mediatek,mt2701-scpsys"
+ - #power-domain-cells: Must be 1
+ - reg: Address range of the SCPSYS unit
+ - infracfg: must contain a phandle to the infracfg controller
+diff --git a/include/dt-bindings/power/mt2701-power.h b/include/dt-bindings/power/mt2701-power.h
+new file mode 100644
+index 0000000..64cc826
+--- /dev/null
++++ b/include/dt-bindings/power/mt2701-power.h
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2015 MediaTek Inc.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_POWER_MT2701_POWER_H
++#define _DT_BINDINGS_POWER_MT2701_POWER_H
++
++#define MT2701_POWER_DOMAIN_CONN	0
++#define MT2701_POWER_DOMAIN_DISP	1
++#define MT2701_POWER_DOMAIN_MFG		2
++#define MT2701_POWER_DOMAIN_VDEC	3
++#define MT2701_POWER_DOMAIN_ISP		4
++#define MT2701_POWER_DOMAIN_BDP		5
++#define MT2701_POWER_DOMAIN_ETH		6
++#define MT2701_POWER_DOMAIN_HIF		7
++#define MT2701_POWER_DOMAIN_IFR_MSC	8
++
++#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
+-- 
+1.9.1
 
-tune_clock is provided as part of ops and will always be present.
-Other users of arasan and this driver might not have tuning broken
-And won't use this manual tuning.
-
-Regards
-Sai Krishna
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
