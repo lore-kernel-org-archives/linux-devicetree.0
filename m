@@ -1,77 +1,371 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] regulator: act8945a: add regulator driver for
- ACT8945A
-Date: Wed, 20 Jan 2016 07:37:36 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63F6228@penmbx01>
-References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
-	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
-	<87oacp5zl7.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
-	<87egdk39ji.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
- <87a8o82xq3.fsf@dell.be.48ers.dk>
+From: Kejian Yan <yankejian@huawei.com>
+Subject: [patch v3 net-next] net: hns: enet specifies a reference to dsaf
+Date: Wed, 20 Jan 2016 16:00:19 +0800
+Message-ID: <1453276819-22062-1-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87a8o82xq3.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangdaode@hisilicon.com, liguozhu@huawei.com, arnd@arndb.de, fengguang.wu@intel.com, salil.mehta@huawei.com, andriy.shevchenko@linux.intel.com, lisheng011@huawei.com
+Cc: haifeng.wei@huawei.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
-S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
-cnNnYWFyZA0KPiBTZW50OiAyMDE2xOox1MIxNMjVIDE5OjQzDQo+IFRvOiBZYW5nLCBXZW55b3Ug
-PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBn
-bWFpbC5jb20+OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ow0KPiBSb2IgSGVycmlu
-ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsg
-TWFyaw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8aWpj
-K2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+Ow0KPiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVy
-b3JhLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296bG93c2tpQHNhbXN1bmcuY29t
-PjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFz
-LkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEphdmllciBN
-YXJ0aW5leg0KPiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUwLm9yZz47IExlZSBKb25lcyA8bGVl
-LmpvbmVzQGxpbmFyby5vcmc+OyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBh
-ZGQgcmVndWxhdG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+ID4+Pj4+ICJZYW5nLCIg
-PT0gWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+IHdyaXRlczoNCj4gDQo+IEhp
-LA0KPiANCj4gPj4NCj4gID4+PiBJc24ndCB0aGUgcmVndWxhdG9yIHBhcnQgb2YgdGhlIGFjdDg5
-NDVhIGlkZW50aWNhbCB0byBhY3Q4ODY1PyBDYW4ndCB3ZSBqdXN0DQo+IHVzZSAgPj4+IHRoZSBl
-eGlzdGluZyBhY3Q4ODY1LXJlZ3VsYXRvci5jIGRyaXZlcj8gKEUuRy4gc3VwcG9ydCA4ODY1IHZh
-cmlhbnQgaW4gdGhlDQo+IG1mZCAgPj4+IGRyaXZlciwgYnV0IG9ubHkgcmVnaXN0ZXIgdGhlIHJl
-Z3VsYXRvciBzdWIgZGV2aWNlPykgID4+ICA+PiA+IFllcywgdGhlDQo+IHJlZ3VsYXRvciBwYXJ0
-IG9mIHRoZSBhY3Q4OTQ1YSBpcyBpZGVudGljYWwgdG8gYWN0ODg2NS4NCj4gID4+DQo+ICA+PiA+
-IEJ1dCB0aGUgYWN0ODg2NS1yZWd1bGF0b3IgZHJpdmVyIGlzIGEgc3RydWN0IGkyY19kcml2ZXIs
-IGFuZCB0aGUgbWZkICA+IHN1Yi0NCj4gICA+PiBkZXZpY2UgZHJpdmVyIGlzIGEgcGxhdGZvcm1f
-ZHJpdmVyIGRyaXZlciwgaXQgaXMgbm90IGVhc3kgdG8gdXNlICA+IGl0Lg0KPiAgPj4NCj4gID4+
-IEJ1dCB0aGUgbWZkIGRyaXZlciBjb3VsZCBzdXBwb3J0IHRoZSBhY3Q4ODY1IHZhcmlhbnQgYXMg
-d2VsbCAoYnkgb25seQ0KPiByZWdpc3RlcmluZyAgPj4gdGhlIHJlZ3VsYXRvciBtZmQgY2VsbCku
-DQo+IA0KPiAgPiBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQuDQo+IA0KPiAgPiBUaGUgTUZEIHN1
-YiBkZXZpY2UgaXMgcmVnaXN0ZXJlZCBhcyBhIHBsYXRmb3JtIGRldmljZSwgdGhlIGV4aXN0aW5n
-ICA+IGFjdDg4NjUNCj4gZHJpdmVyIGlzIHJlZ2lzdGVyZWQgYXMgYW4gaTJjX2RyaXZlci4gSG93
-IGRvIHRoZXkgbWF0Y2g/IDopDQo+IA0KPiAgPiBDb3VsZCB5b3UgcG9pbnQgb3V0IHdoaWNoIGV4
-aXRpbmcgZHJpdmVyIGZvciBtZSB0byByZWZlcmVuY2UuICBUaGFuayB5b3UhDQo+IA0KPiBXaGF0
-IEknbSBzYXlpbmcgaXMgdGhhdCBpdCBpc24ndCBuaWNlIHRoYXQgd2UgZW5kIHVwIHdpdGggYm90
-aCBhY3Q4ODY1LXJlZ3VsYXRvci5jDQo+IGFuZCBhY3Q4OTU0LXJlZ3VsYXRvci5jIGRvaW5nIDk1
-JSB0aGUgc2FtZS4gVGhpcyBjYW4gZWl0aGVyIGJlIGZpeGVkIGJ5Og0KPiANCj4gLSBBZGRpbmcg
-YWN0ODg2NSBzdXBwb3J0IHRvIHlvdXIgbWZkIGRyaXZlciAoYnV0IG9ubHkgcmVnaXN0ZXJpbmcg
-dGhlDQo+ICAgcmVndWxhdG9yIHN1YmRldiBmb3IgYWN0ODg2NSkgYW5kIGNoYW5naW5nIHRoZSBl
-eGlzdGluZw0KPiAgIGFjdDg4NjUtcmVndWxhdG9yIGRyaXZlciB0byB3b3JrIGFzIGEgbWZkIHN1
-YmRldiAocGxhdGZvcm0gZGV2aWNlKQ0KPiANCj4gLSBFeHRlbmRpbmcgdGhlIGFjdDg4NjUtcmVn
-dWxhdG9yIGRyaXZlciB0byByZWdpc3RlciBhcyBhIHBsYXRmb3JtDQo+ICAgZHJpdmVyIGluIEFE
-RElUSU9OIHRvIGEgaTJjIGRyaXZlciBzbyBpdCBjYW4gYmUgdXNlZCB3aXRoIG1mZC4gVGhlDQo+
-ICAgZHJpdmVyIGFscmVhZHkgdXNlcyByZWdtYXAgc28gaXQgc2hvdWxkIG9ubHkgYmUgYSBtYXR0
-ZXIgb2YgYWRkaW5nIHRoZQ0KPiAgIHBkZXYgcHJvYmUvcmVtb3ZlIGZ1bmN0aW9ucy4NCg0KQWZ0
-ZXIgdGhpbmsgdHdpY2UsIEkgdGhpbmsgdGhpcyB3aWxsIGNvbXBsaWNhdGVzIHRoZSBhY3Q4ODY1
-LXJlZ3VsYXRvciBkcml2ZXIuDQoNCk1vcmVvdmVyLCBhZnRlciBmb2xsb3dpbmcgdXAgdGhlIE1h
-cmsncyBhZHZpY2UsIGEgbG90IHJlZHVuZGFudCBjb2RlIGlzIHJlbW92ZWQgZnJvbSBhY3Q4OTQ1
-YS1yZWd1bGF0ZXIgZHJpdmVyLiBJdCBpcyB2ZXJ5IHNpbXBsZSBub3cuDQoNClNvIEkgdGhpbmsg
-aXQgaXMgYmV0dGVyIHRvIGtlZXAgYSBzZXBhcmF0ZSBhY3Q4OTQ1YS1yZWd1bGF0b3IgZHJpdmVy
-Lg0KDQpUaGFuayB5b3UgZm9yIGRldGFpbGVkIGRlc2NyaXB0aW9uLg0KDQoNCkJlc3QgUmVnYXJk
-cywNCldlbnlvdSBZYW5nDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch replace the assoication between dsaf and enet from string
+matching to object reference. It requires the DTS to be updated within
+BIOS. Thanks god it can be done for all released boards.
+
+Signed-off-by: Kejian Yan <yankejian@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Yisen Zhuang <yisen.zhuang@huawei.com>
+---
+change log:
+v3:
+ removes Redundant lines
+
+v2:
+ merge the two patches into one to allow bisection.
+
+v1:
+ first submit.
+
+v2 patch reference:
+ http://permalink.gmane.org/gmane.linux.kernel/2125399
+
+v1 patch reference:
+ https://lkml.org/lkml/2015/12/5/11
+ https://lkml.org/lkml/2015/12/5/12
+---
+ .../devicetree/bindings/net/hisilicon-hns-dsaf.txt    |  5 +----
+ .../devicetree/bindings/net/hisilicon-hns-nic.txt     |  7 ++++---
+ arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi          | 19 +++++++++----------
+ drivers/net/ethernet/hisilicon/hns/hnae.c             | 17 +++++++----------
+ drivers/net/ethernet/hisilicon/hns/hnae.h             |  7 +++++--
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c     |  4 ++++
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c    | 10 +---------
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h    |  1 +
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c         | 15 +++++++++------
+ drivers/net/ethernet/hisilicon/hns/hns_enet.h         |  2 +-
+ 10 files changed, 42 insertions(+), 45 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+index 80411b2..ecacfa4 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+@@ -4,8 +4,6 @@ Required properties:
+ - compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
+   "hisilicon,hns-dsaf-v1" is for hip05.
+   "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
+-- dsa-name: dsa fabric name who provide this interface.
+-  should be "dsafX", X is the dsaf id.
+ - mode: dsa fabric mode string. only support one of dsaf modes like these:
+ 		"2port-64vf",
+ 		"6port-16rss",
+@@ -26,9 +24,8 @@ Required properties:
+ 
+ Example:
+ 
+-dsa: dsa@c7000000 {
++dsaf0: dsa@c7000000 {
+ 	compatible = "hisilicon,hns-dsaf-v1";
+-	dsa_name = "dsaf0";
+ 	mode = "6port-16rss";
+ 	interrupt-parent = <&mbigen_dsa>;
+ 	reg = <0x0 0xC0000000 0x0 0x420000
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+index 41d19be..e6a9d1c 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+@@ -4,8 +4,9 @@ Required properties:
+ - compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
+   "hisilicon,hns-nic-v1" is for hip05.
+   "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
+-- ae-name: accelerator name who provides this interface,
+-  is simply a name referring to the name of name in the accelerator node.
++- ae-handle: accelerator engine handle for hns,
++  specifies a reference to the associating hardware driver node.
++  see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+ - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
+   connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
+   are called debug ports.
+@@ -41,7 +42,7 @@ Example:
+ 
+ 	ethernet@0{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <0>;
+ 		local-mac-address = [a2 14 e4 4b 56 76];
+ 	};
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+index da7b6e6..933cba3 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+@@ -23,9 +23,8 @@ soc0: soc@000000000 {
+ 		};
+ 	};
+ 
+-	dsa: dsa@c7000000 {
++	dsaf0: dsa@c7000000 {
+ 		compatible = "hisilicon,hns-dsaf-v1";
+-		dsa_name = "dsaf0";
+ 		mode = "6port-16rss";
+ 		interrupt-parent = <&mbigen_dsa>;
+ 
+@@ -127,7 +126,7 @@ soc0: soc@000000000 {
+ 
+ 	eth0: ethernet@0{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <0>;
+ 		local-mac-address = [00 00 00 01 00 58];
+ 		status = "disabled";
+@@ -135,14 +134,14 @@ soc0: soc@000000000 {
+ 	};
+ 	eth1: ethernet@1{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <1>;
+ 		status = "disabled";
+ 		dma-coherent;
+ 	};
+ 	eth2: ethernet@2{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <2>;
+ 		local-mac-address = [00 00 00 01 00 5a];
+ 		status = "disabled";
+@@ -150,7 +149,7 @@ soc0: soc@000000000 {
+ 	};
+ 	eth3: ethernet@3{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <3>;
+ 		local-mac-address = [00 00 00 01 00 5b];
+ 		status = "disabled";
+@@ -158,7 +157,7 @@ soc0: soc@000000000 {
+ 	};
+ 	eth4: ethernet@4{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <4>;
+ 		local-mac-address = [00 00 00 01 00 5c];
+ 		status = "disabled";
+@@ -166,7 +165,7 @@ soc0: soc@000000000 {
+ 	};
+ 	eth5: ethernet@5{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <5>;
+ 		local-mac-address = [00 00 00 01 00 5d];
+ 		status = "disabled";
+@@ -174,7 +173,7 @@ soc0: soc@000000000 {
+ 	};
+ 	eth6: ethernet@6{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <6>;
+ 		local-mac-address = [00 00 00 01 00 5e];
+ 		status = "disabled";
+@@ -182,7 +181,7 @@ soc0: soc@000000000 {
+ 	};
+ 	eth7: ethernet@7{
+ 		compatible = "hisilicon,hns-nic-v1";
+-		ae-name = "dsaf0";
++		ae-handle = <&dsaf0>;
+ 		port-id = <7>;
+ 		local-mac-address = [00 00 00 01 00 5f];
+ 		status = "disabled";
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
+index b364529..3bfe36f 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.c
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+@@ -95,21 +95,17 @@ static struct hnae_buf_ops hnae_bops = {
+ static int __ae_match(struct device *dev, const void *data)
+ {
+ 	struct hnae_ae_dev *hdev = cls_to_ae_dev(dev);
+-	const char *ae_id = data;
+ 
+-	if (!strncmp(ae_id, hdev->name, AE_NAME_SIZE))
+-		return 1;
+-
+-	return 0;
++	return hdev->dev->of_node == data;
+ }
+ 
+-static struct hnae_ae_dev *find_ae(const char *ae_id)
++static struct hnae_ae_dev *find_ae(const struct device_node *ae_node)
+ {
+ 	struct device *dev;
+ 
+-	WARN_ON(!ae_id);
++	WARN_ON(!ae_node);
+ 
+-	dev = class_find_device(hnae_class, NULL, ae_id, __ae_match);
++	dev = class_find_device(hnae_class, NULL, ae_node, __ae_match);
+ 
+ 	return dev ? cls_to_ae_dev(dev) : NULL;
+ }
+@@ -316,7 +312,8 @@ EXPORT_SYMBOL(hnae_reinit_handle);
+  * return handle ptr or ERR_PTR
+  */
+ struct hnae_handle *hnae_get_handle(struct device *owner_dev,
+-				    const char *ae_id, u32 port_id,
++				    const struct device_node *ae_node,
++				    u32 port_id,
+ 				    struct hnae_buf_ops *bops)
+ {
+ 	struct hnae_ae_dev *dev;
+@@ -324,7 +321,7 @@ struct hnae_handle *hnae_get_handle(struct device *owner_dev,
+ 	int i, j;
+ 	int ret;
+ 
+-	dev = find_ae(ae_id);
++	dev = find_ae(ae_node);
+ 	if (!dev)
+ 		return ERR_PTR(-ENODEV);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h b/drivers/net/ethernet/hisilicon/hns/hnae.h
+index 6ca94dc..1cbcb9f 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.h
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
+@@ -524,8 +524,11 @@ struct hnae_handle {
+ 
+ #define ring_to_dev(ring) ((ring)->q->dev->dev)
+ 
+-struct hnae_handle *hnae_get_handle(struct device *owner_dev, const char *ae_id,
+-				    u32 port_id, struct hnae_buf_ops *bops);
++struct hnae_handle *hnae_get_handle(struct device *owner_dev,
++				    const struct device_node *ae_node,
++				    u32 port_id,
++				    struct hnae_buf_ops *bops);
++
+ void hnae_put_handle(struct hnae_handle *handle);
+ int hnae_ae_register(struct hnae_ae_dev *dev, struct module *owner);
+ void hnae_ae_unregister(struct hnae_ae_dev *dev);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+index 522b264..a0070d0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+@@ -847,6 +847,7 @@ static struct hnae_ae_ops hns_dsaf_ops = {
+ int hns_dsaf_ae_init(struct dsaf_device *dsaf_dev)
+ {
+ 	struct hnae_ae_dev *ae_dev = &dsaf_dev->ae_dev;
++	static atomic_t id = ATOMIC_INIT(-1);
+ 
+ 	switch (dsaf_dev->dsaf_ver) {
+ 	case AE_VERSION_1:
+@@ -858,6 +859,9 @@ int hns_dsaf_ae_init(struct dsaf_device *dsaf_dev)
+ 	default:
+ 		break;
+ 	}
++
++	snprintf(ae_dev->name, AE_NAME_SIZE, "%s%d", DSAF_DEVICE_NAME,
++		 (int)atomic_inc_return(&id));
+ 	ae_dev->ops = &hns_dsaf_ops;
+ 	ae_dev->dev = dsaf_dev->dev;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index 1c33bd0..9439f04 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -35,7 +35,7 @@ int hns_dsaf_get_cfg(struct dsaf_device *dsaf_dev)
+ 	int ret, i;
+ 	u32 desc_num;
+ 	u32 buf_size;
+-	const char *name, *mode_str;
++	const char *mode_str;
+ 	struct device_node *np = dsaf_dev->dev->of_node;
+ 
+ 	if (of_device_is_compatible(np, "hisilicon,hns-dsaf-v1"))
+@@ -43,14 +43,6 @@ int hns_dsaf_get_cfg(struct dsaf_device *dsaf_dev)
+ 	else
+ 		dsaf_dev->dsaf_ver = AE_VERSION_2;
+ 
+-	ret = of_property_read_string(np, "dsa_name", &name);
+-	if (ret) {
+-		dev_err(dsaf_dev->dev, "get dsaf name fail, ret=%d!\n", ret);
+-		return ret;
+-	}
+-	strncpy(dsaf_dev->ae_dev.name, name, AE_NAME_SIZE);
+-	dsaf_dev->ae_dev.name[AE_NAME_SIZE - 1] = '\0';
+-
+ 	ret = of_property_read_string(np, "mode", &mode_str);
+ 	if (ret) {
+ 		dev_err(dsaf_dev->dev, "get dsaf mode fail, ret=%d!\n", ret);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+index 31c312f..40205b9 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
+@@ -18,6 +18,7 @@ struct hns_mac_cb;
+ 
+ #define DSAF_DRV_NAME "hns_dsaf"
+ #define DSAF_MOD_VERSION "v1.0"
++#define DSAF_DEVICE_NAME "dsaf"
+ 
+ #define HNS_DSAF_DEBUG_NW_REG_OFFSET 0x100000
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 0e30846..3f77ff7 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -1802,7 +1802,7 @@ static int hns_nic_try_get_ae(struct net_device *ndev)
+ 	int ret;
+ 
+ 	h = hnae_get_handle(&priv->netdev->dev,
+-			    priv->ae_name, priv->port_id, NULL);
++			    priv->ae_node, priv->port_id, NULL);
+ 	if (IS_ERR_OR_NULL(h)) {
+ 		ret = PTR_ERR(h);
+ 		dev_dbg(priv->dev, "has not handle, register notifier!\n");
+@@ -1880,13 +1880,16 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 	else
+ 		priv->enet_ver = AE_VERSION_2;
+ 
+-	ret = of_property_read_string(node, "ae-name", &priv->ae_name);
+-	if (ret)
+-		goto out_read_string_fail;
++	priv->ae_node = (void *)of_parse_phandle(node, "ae-handle", 0);
++	if (IS_ERR_OR_NULL(priv->ae_node)) {
++		ret = PTR_ERR(priv->ae_node);
++		dev_err(dev, "not find ae-handle\n");
++		goto out_read_prop_fail;
++	}
+ 
+ 	ret = of_property_read_u32(node, "port-id", &priv->port_id);
+ 	if (ret)
+-		goto out_read_string_fail;
++		goto out_read_prop_fail;
+ 
+ 	hns_init_mac_addr(ndev);
+ 
+@@ -1945,7 +1948,7 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 
+ out_notify_fail:
+ 	(void)cancel_work_sync(&priv->service_task);
+-out_read_string_fail:
++out_read_prop_fail:
+ 	free_netdev(ndev);
+ 	return ret;
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.h b/drivers/net/ethernet/hisilicon/hns/hns_enet.h
+index 4b75270..c68ab3d 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.h
+@@ -51,7 +51,7 @@ struct hns_nic_ops {
+ };
+ 
+ struct hns_nic_priv {
+-	const char *ae_name;
++	const struct device_node *ae_node;
+ 	u32 enet_ver;
+ 	u32 port_id;
+ 	int phy_mode;
+-- 
+2.4.1
