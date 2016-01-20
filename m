@@ -1,72 +1,37 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Wed, 20 Jan 2016 16:53:04 +0900
-Message-ID: <569F3CE0.6020107@samsung.com>
-References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
- <1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
- <87pox41dy9.fsf@dell.be.48ers.dk>
- <B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
- <8737tzz33h.fsf@dell.be.48ers.dk>
- <B256D81BAE5131468A838E5D7A243641D63F61F4@penmbx01>
- <87d1swvgv8.fsf@dell.be.48ers.dk> <569F3C45.7090109@atmel.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/4] net: mvneta: support more than one clk
+Date: Wed, 20 Jan 2016 16:06:19 +0800
+Message-ID: <1453277183-5412-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <569F3C45.7090109-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.01.2016 16:50, Yang, Wenyou wrote:
-> Hi Peter,
-> 
-> On 2016/1/20 15:40, Peter Korsgaard wrote:
->>>>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
->> Hi,
->>
->>>> But the charger driver can just as well do:
->>   >>
->>   >> dev_get_regmap(dev->parent);
->>   >>
->>   >> instead of:
->>   >>
->>   >> dev_get_drvdata(pdev->dev.parent)->regmap.
->>
->>   > For regulator, it works use the core do dev_get_regmap(dev->parent),
->>   > but for charger, it need to export *act8945a.
->>
->> Why?
-> 
-> There is a callback (*get_property)(...), who will read the charger
-> register via regmap,
-> 
-> but it doesn't provide the argument for regmap.
-> 
-> include/linux/power_supply.h
-> 
-> struct power_supply_desc {
->         [ ... ]
->         int (*get_property)(struct power_supply *psy,
->                              enum power_supply_property psp,
->                              union power_supply_propval *val);
->         [ ... ]
-> 
-> }
-> 
->>
->> Just like the regulator core does, your battery driver can do:
->>
->> dev_get_regmap(dev->parent);
->>
+Some platforms may provide more than one clk for the mvneta IP, for
+example Marvell BG4CT provides "core" clk for the mac core, and "axi"
+clk for the AXI bus logic.
 
-Why can't you store the pointer to regmap as power supply driver data?
-There is really no need for the structure containing only one pointer.
+This series tries to addess the "more than one clk" issue. Note: to
+support BG4CT, we have lots of refactor work to do, eg. BG4CT doesn't
+have mbus concept etc.
 
-BR,
-Krzysztof
+Jisheng Zhang (4):
+  net: mvneta: sort the headers in alphabetic order
+  net: mvneta: Try to get named core clock first
+  net: mvneta: mmc: get optional axi clk
+  net: mvneta: update clocks property and document additional
+    clock-names
+
+ .../bindings/net/marvell-armada-370-neta.txt       |  6 +++-
+ drivers/net/ethernet/marvell/mvneta.c              | 36 ++++++++++++++--------
+ 2 files changed, 28 insertions(+), 14 deletions(-)
+
+-- 
+2.7.0.rc3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
