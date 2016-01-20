@@ -1,52 +1,65 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCH 1/6] dma: enable mxs-dma for imx6ul
-Date: Wed, 20 Jan 2016 13:57:01 +0100
-Message-ID: <1453294626-17608-2-git-send-email-LW@KARO-electronics.de>
-References: <1453294626-17608-1-git-send-email-LW@KARO-electronics.de>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCH 2/4] ARM: dts: imx53: fix LVDS data-mapping and data-width
+Date: Wed, 20 Jan 2016 14:09:20 +0100
+Message-ID: <1453295362-18798-3-git-send-email-LW@KARO-electronics.de>
+References: <1453295362-18798-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453294626-17608-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453295362-18798-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-The mxs-dma unit is also available on i.MX6UL. Make it possible to
-select it in Kconfig.
-
-Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 ---
- drivers/dma/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx53-tx53-x13x.dts | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 79b1390..2516524 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -341,12 +341,13 @@ config MV_XOR
+diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/=
+imx53-tx53-x13x.dts
+index 6480471..6d0b526 100644
+--- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
++++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+@@ -183,13 +183,14 @@
+ 	status =3D "okay";
 =20
- config MXS_DMA
- 	bool "MXS DMA support"
--	depends on SOC_IMX23 || SOC_IMX28 || SOC_IMX6Q
-+	depends on SOC_IMX23 || SOC_IMX28 || SOC_IMX6Q || SOC_MX6UL
- 	select STMP_DEVICE
- 	select DMA_ENGINE
- 	help
- 	  Support the MXS DMA engine. This engine including APBH-DMA
--	  and APBX-DMA is integrated into Freescale i.MX23/28/MX6Q/MX6DL chip=
-s.
-+	  and APBX-DMA is integrated into Freescale
-+	  i.MX23/28/MX6Q/MX6DL/MX6UL chips.
+ 	lvds0: lvds-channel@0 {
+-		fsl,data-mapping =3D "jeida";
+-		fsl,data-width =3D <24>;
++		fsl,data-mapping =3D "spwg";
++		fsl,data-width =3D <18>;
+ 		status =3D "okay";
 =20
- config MX3_IPU
- 	bool "MX3x Image Processing Unit support"
+ 		display-timings {
+-			native-mode =3D <&lvds_timing0>;
+-			lvds_timing0: hsd100pxn1 {
++			native-mode =3D <&lvds0_timing0>;
++
++			lvds0_timing0: hsd100pxn1 {
+ 				clock-frequency =3D <65000000>;
+ 				hactive =3D <1024>;
+ 				vactive =3D <768>;
+@@ -208,13 +209,14 @@
+ 	};
+=20
+ 	lvds1: lvds-channel@1 {
+-		fsl,data-mapping =3D "jeida";
+-		fsl,data-width =3D <24>;
++		fsl,data-mapping =3D "spwg";
++		fsl,data-width =3D <18>;
+ 		status =3D "okay";
+=20
+ 		display-timings {
+-			native-mode =3D <&lvds_timing1>;
+-			lvds_timing1: hsd100pxn1 {
++			native-mode =3D <&lvds1_timing0>;
++
++			lvds1_timing0: hsd100pxn1 {
+ 				clock-frequency =3D <65000000>;
+ 				hactive =3D <1024>;
+ 				vactive =3D <768>;
 --=20
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
