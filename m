@@ -1,60 +1,134 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH] arm64: dts: Add PSCI function IDs for cpu-{on,off} on
- exynos7
-Date: Wed, 20 Jan 2016 08:22:41 +0530
-Message-ID: <569EF679.5040909@samsung.com>
-References: <1453198884-28723-1-git-send-email-alim.akhtar@samsung.com>
- <20160119103224.GA25024@leverpostej>
+From: =?utf-8?B?QmVhbiBIdW8g6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>
+Subject: RE: [PATCH linux-next 0/5] mtd: spi-nor: add driver for Atmel QSPI
+ controller
+Date: Wed, 20 Jan 2016 03:41:04 +0000
+Message-ID: <A765B125120D1346A63912DDE6D8B6310BF57A4B@NTXXIAMBX02.xacn.micron.com>
+References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
+ <20151207193441.GO120110@google.com>
+ <A765B125120D1346A63912DDE6D8B6310BF53437@NTXXIAMBX02.xacn.micron.com>
+ <20151218002901.GE10460@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20160119103224.GA25024@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, k.kozlowski@samsung.com, devicetree@vger.kernel.org, kgene@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151218002901.GE10460@google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vigneshr@ti.com" <vigneshr@ti.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 01/19/2016 04:02 PM, Mark Rutland wrote:
-> On Tue, Jan 19, 2016 at 03:51:24PM +0530, Alim Akhtar wrote:
->> This patch adds cpu-{on,off} function IDs as per PSCI specification,
->> with this we can boot multiple CPUs and can use cpu hotplug on
->> exynos7 platform.
->>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> ---
->>   arch/arm64/boot/dts/exynos/exynos7.dtsi |    2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> index f9c5a549c2c0..1a2bb3b453e5 100644
->> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->> @@ -65,6 +65,8 @@
->>   	psci {
->>   		compatible = "arm,psci-0.2";
->>   		method = "smc";
->> +		cpu_on = <0xC4000003>;
->> +		cpu_off = <0x84000002>;
->>   	};
->
-> There is no need for this patch.
->
-> The "arm,psci-0.2" compatible string implicitly tells the kernel that
-> the full set of mandatory PSCI 0.2 functions are present, with the IDs
-> mandated by PSCI 0.2. That includes CPU_ON and CPU_OFF amongst others.
->
-> The only reason to provide IDs is to function on kernels without PSCI
-> 0.2 support. Given the compatible string hasn't been updated for that,
-> this is insufficient for that case.
->
-Ah, right, this patch is not required for psci,0.2, thanks for 
-clarification.
-sorry for the noise.
-
-> Thanks,
-> Mark.
->
->
+SGksIEJyaWFuDQpTb3JyeSBmb3IgcmVzcG9uc2UgdGhpcyB0b28gbGF0ZXIuIFBsZWFzZSBzZWUg
+bXkgY29tbWVudCBiZWxvdzoNCiANCj4gSGkgQmVhbiwNCj4gDQo+IE9uIFR1ZSwgRGVjIDA4LCAy
+MDE1IGF0IDA2OjIxOjAwQU0gKzAwMDAsIEJlYW4gSHVvIOmcjeaWjOaWjCB3cm90ZToNCj4gPiA+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBCcmlhbiBOb3JyaXMgW21h
+aWx0bzpjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb21dDQo+ID4gPg0KPiA+ID4gSSdsbCBhZG1p
+dCBJJ20gYSBsaXR0bGUgZnV6enkgb24gdGhlIGRpZmZlcmVuY2VzIGJldHdlZW4gZHVhbCBhbmQN
+Cj4gPiA+IHF1YWQgbW9kZXMgb24gdmFyaW91cyBmbGFzaCBtYW51ZmFjdHVyZXJzLiBDYW4geW91
+IGhlbHAgY2xlYXIgaXQgdXAgZm9yDQo+IG1lPw0KPiA+DQo+ID4gRm9yIE1pY3JvbiBTUEkgTk9S
+IHNwaSBxdWFkIG1vZGUsIG1lYW5zIHRoYXQgUWF1ZCBJL08gcHJvdG90b2NvbCwgaXQNCj4gPiBm
+b2xsb3dzIEkvTyBCdXMgd2lkdGggaXMgY29tbWFuZC1hZGRyZXNzLURhdGEgNC00LTQsIGF0IHRo
+aXMgdGltZSwNCj4gPiBEUTAsRFExLERRMixEUTMgYXJlIGFsbCB1c2VkIHRvIHRyYW5zZmVyIGFk
+ZHJlc3MvY29tbWFuZC9kYXRhLiBGb3INCj4gPiB0aGlzIG1heWJlIG5vdCB0aGUgc2FtZSBiZXR3
+ZWVuIGRpZmZlcmVudCBmbGFzaCBtYW51ZmFjdHVyZXMuIEZvcg0KPiA+IGV4YW1wbGUsIGZvciBT
+cGFuc2lvbiBRc3BpIE5PUiwgaXRzIGFsbCBpbnN0cnVjdGlvbnMgYXJlIHRyYW5zZmVycmVkDQo+
+ID4gZnJvbSBob3N0IHRvIG1lbW9yeSBhcyBhIHNpbmdsZSBiaXQgc2VyaWFsIHNlcXVlbmNlIG9u
+IHRoZSBEUTAgc2lnbmFsLCBldmVuDQo+IHVuZGVyIFF1YWQgbW9kZS4gIER1YWwgbW9kZSB0aGUg
+c2FtZSBhcyBRYXVkIG1vZGUgc2NlbmFyaW8uDQo+ID4NCj4gPiBmb3IgU1BJIE5PUiAxLTEtNCwg
+bWVhbnMgY29tbWFuZCBhbmQgYWRkcmVzcyBhcmUgdHJhbnNmZXJyZWQgb24gdGhlDQo+ID4gRFEw
+LCBidXQgZm9yIGRhdGEsIGJlaW5nIHRyYW5zZmVycmVkIG9uIERRMCxEUTEsRFEyLERRMy5Gb3Ig
+dGhpcywgaXQNCj4gPiBpcyB0aGUgc2FtZSBiZXR3ZWVuIGRpZmZlcmVudCBmbGFzaCBtYW51ZmFj
+dHVyZXJzLiBPZiBjb3Vyc2UsIGF0IHRoaXMNCj4gPiBtb21lbnQsIFNQSSBOT1Igc2hvdWxkIHdv
+cmsgdW5kZXIgZXh0ZW5kZWQgSS9PIG1vZGUuDQo+IA0KPiBPSywgc28gdG8gbWFrZSB0aGVzZSBz
+dGF0ZW1lbnRzICptdWNoKiBzaG9ydGVyOg0KPiANCj4gICogTWljcm9uICJRdWFkIE1vZGUiIG1l
+YW5zIHB1dHRpbmcgdGhlIGZsYXNoIGluIGEgNC80LzQgbW9kZQ0KCVllcy4NCj4gICogU3BhbnNp
+b24gKGFuZCBhbGwgb3RoZXJzPykgYXJlIHVzaW5nIDEvMS80IG1vZGVzDQoJUGVyIG15IGV4cGVy
+aWVuY2UsIFNwYW5zaW9uIGFyZSB1c2luZyAxLzQvNCBpbiBxdWFkIG1vZGUsDQoJQnV0IE1hY3Jv
+bml4IGlzIHRoZSBzYW1lIHdpdGggTWljcm9uLCBhbHNvIHB1dHRpbmcgZmxhc2ggaW50byA0LzQv
+NCBtb2RlLg0KDQo+IA0KPiBDb3JyZWN0Pw0KPiANCj4gPiA+IEkgdGhpbmsgc29tZSBvZiB0aGUg
+Y29tbWVudHMgb24gcGF0Y2ggMiBoZWxwIHRvbywgYnV0IEknbGwganVzdA0KPiA+ID4gY29tbWVu
+dCBoZXJlIGZvciBub3cuDQo+ID4gPiBJdCBsb29rcyBsaWtlIHRoZSBjdXJyZW50IGRyaXZlciBo
+YXMgcHJvYmxlbXMgcmVnYXJkaW5nIHRoZSBub24NCj4gPiA+IDEteC15IG1vZGVzIChlLmcuLCA0
+LTQtNCksIHJpZ2h0PyBCdXQgSSBzZWUgdGhhdCBzcGktbm9yLmMgbmV2ZXINCj4gPiA+IHRyaWVz
+IHRvIHNlbmQgYSA0XzRfNCBjb21tYW5kOyBpdCBvbmx5IHNldHMgcmVhZF9vcGNvZGUgdG8NCj4g
+PiA+IFNQSU5PUl9PUF9SRUFEXzFfMV97MSwyLDR9LiBTbyBpcyB0aGlzIGFuIG92ZXJzaWdodCBp
+biBwYXRjaGVzIGxpa2UNCj4gQmVhbidzIHBhdGNoPw0KPiA+DQo+ID4gRm9yIFNQSU5PUl9PUF9S
+RUFEXzFfMV97MSwyLDR9IGNvbW1hbmRzLCBTcGkgTk9SIGFjdHVhbGx5IHdvcmtzDQo+IHVuZGVy
+DQo+ID4gRXh0ZW5kZWQgSS9PIG1vZGUsIG5vdCBRdWFkIG1vZGUuIFRoZXkganVzdCBwdXNoIFNw
+aSBOT1Igb3V0cHV0IGRhdGENCj4gPiBieSBRdWFkIG1vZGUsIENvbW1hbmQgYW5kIGFkZHJlc3Mg
+c3RpbGwgZm9sbG93aW5nIGV4dGVuZGVkIEkvTyBtb2RlLg0KPiANCj4gVGhlIG5hbWluZyBpcyBj
+b25mdXNpbmcgZW5vdWdoIGhlcmUuLi4gc28gaW4geW91ciB3b3JkcywgImV4dGVuZGVkIg0KPiBt
+ZWFucyAxLzEvezEsMiw0fSAoaS5lLiwgY29tbWFuZCwgYW5kIG1heWJlIGFkZHJlc3MsIHVzZSAx
+IGxpbmUsIGJ1dCBkYXRhDQo+IGdvZXMgb24gNCk/IEFuZCAicXVhZCIgbWVhbnMgNC80LzQ/DQoN
+CkV4dGVuZGVkIG1vZGUgOg0KbWVhbnMgaXQgaXMgdGhlIHN0YW5kYXJkIHNwaSBpbnRlcmZhY2Us
+IGNvbW1hbmQgYW5kIA0KQWRkcmVzcyB1c2UgMSBsaW5lLCBhbmQgaG93IG1hbnkgbGluZXMgYmVp
+bmcgdXNlZCBieSBkYXRhLCBpdCBkZXBlbmRzIG9uDQpTcGVjaWZpZWQgY29tbWFuZCwgZm9yIGV4
+YW1wbGUsIGZhc3QgcmVhZCBjb21tYW5kLCB1c2VzIDQgbGluZXMuDQoNCg0KPiA+IEZvciA0LTQt
+NCBJL08gcHJvdG9jb2wsIFNQSSBOT1Igc2hvdWxkIGNoYW5nZSB0byBRdWFkIG1vZGUoanVzdCBh
+cyBteQ0KPiA+IHBhdGNoKSwgb2YgY291cnNlLCBTUEkgY29udHJvbGxlciBzaG91bGQgc3VwcG9y
+dCB0aGlzLiBmb3IgTWljcm9uIFFzcGkNCj4gPiBOT1IsIHVuZGVyIHF1YWQgbW9kZSwgYWxsIGNv
+bW1hbmRzL2FkZHJlc3MvZGF0YSBhcmUgdHJhbnNmZXJyZWQgb24NCj4gPiBEUTAsRFExLERRMixE
+UTMgc2lnbmFscy4gTm8gbWF0dGVyIHdoYXQga2luZCBvZiBjb21tYW5kLg0KPiANCj4gT0ssIHNv
+IEkgdGhpbmsgeW91ciBwYXRjaCBpcyBicm9rZW46DQo+IA0KPiA+ID4gICAgIGNvbW1pdCA1NDhj
+ZDNhYjU0ZGEgKCJtdGQ6IHNwaS1ub3I6IEFkZCBxdWFkIEkvTyBzdXBwb3J0IGZvcg0KPiBNaWNy
+b24NCj4gPiA+ICAgICBTUEkgTk9SIikNCj4gDQo+IEhvdyBkaWQgeW91IHRlc3QgdGhpcz8gU3Bl
+Y2lmaWNhbGx5LCB0aGlzIGNhbid0IHBvc3NpYmx5IGhhdmUgd29ya2VkIHdpdGggYQ0KPiByZWd1
+bGFyIGRyaXZlcnMvc3BpLyBjb250cm9sbGVycywgc2luY2U6DQo+IA0KPiAgKGEpIHlvdSdyZSBl
+bmFibGluZyA0LzQvNCAoaS5lLiwgIlF1YWQgbW9kZSIpIG9uIHRoZSBmbGFzaCBidXQNCj4gIChi
+KSBtMjVwODBfcmVhZCgpIG9ubHkgc2V0cyAucnhfYml0cyBmb3IgdGhlIGRhdGE7IGkuZS4sIGl0
+J3MgdXNpbmcNCj4gIDEvMS80IChpLmUuLCAiRXh0ZW5kZWQgbW9kZSIpDQoNCj4gSSdtIHRlbXB0
+ZWQgdG8gZXNzZW50aWFsbHkgcmV2ZXJ0IHRoYXQsIGFzIGl0IGxvb2tzIGVzc2VudGlhbGx5IHVu
+dGVzdGVkLiBJdA0KPiB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgYSBjbGVhbmVyIGJhc2VsaW5lIGJl
+Zm9yZSB0cnlpbmcgdG8gZXh0ZW5kIGl0IHdpdGgNCj4gQ3lyaWxsZSdzIHdvcmsuDQoNCkRlZmlu
+aXRlbHkgLGZvciBteSBwYXRjaCAsIGl0IGlzIHRlc3RlZCBhbmQgdmVyaWZpZWQgT0suIEJ1dCBJ
+IGFkZCBhIGhvb3QgZnVuY3Rpb24gaW4gbTI1cDgwLmMNClRvIHB1dCBzcGkgY29udHJvbGxlciBp
+bnRvIHF1YWQgbW9kZSBhcyBsb25nIGFzIHNwaSBub3Igc3dpdGNoIGludG8gcXVhZCBtb2RlLg0K
+Rm9yIHRoaXMgaG9vayBmdW5jdGlvbiBwYXRjaCBpcyBhbiBpbmRlcGVuZGVudCBwYXRjaCB3aXRo
+IG15IHBhdGNoLCBJIGRpZCBub3Qgc3VibWl0Lg0KQmVjYXVzZSBpZiB3ZSBkb24ndCB1c2UgbTI1
+cDgwLmMgZHJpdmVyLCB1c2UgbmV3IHNwaSBzdHJ1Y3R1cmUoc3VjaCBhcyA6IGRyaXZlci9tdGQv
+c3BpLW5vci9mc2xfcXVhZHNwaS5jKQ0Kc3BpIGNvbnRyb2xsZXIgZHJpdmVyLCBUaGlzIGhvb2sg
+ZnVuY3Rpb24gcGF0Y2ggaXMgbm90IG5lY2Vzc2FyeS4NCg0KPiBDeXJpbGxlLCB3aGF0IGRvIHlv
+dSB0aGluaz8gSXMgbXkgYW5hbHlzaXMgYXQgYWxsIGNvcnJlY3QgaGVyZT8gKFNvcnJ5IGlmIHRo
+aXMgaXMNCj4gYWRkcmVzc2VkIGVsc2V3aGVyZTsgdGhlcmUncyBhIGxvdCBvZiB0ZXh0IGluIHRo
+aXMgY29udmVyc2F0aW9uLCBidXQgSSdtIGdldHRpbmcNCj4gaHVuZyB1cCB2ZXJ5IGVhcmx5Likg
+QW5kIGlmIHNvLCBkb2VzIGl0IGh1cnQgdG8ganVzdCBkcm9wIE1pY3JvbiAiUXVhZCBtb2RlIg0K
+PiAoNC80LzQpPw0KPiAoQUlVSSwgdGhpcyB3b24ndCBleGFjdGx5IGJlIGEgcGFuYWNlYSwgc2lu
+Y2UgeW91IG1lbnRpb24gYm9vdGxvYWRlcnMgdGhhdA0KPiBzdGFydCB1cyBvZmYgaW4gcXVhZCBt
+b2RlLCBzbyB3ZSBjYW4ndCB1c2Ugc2luZ2xlIEkvTyAweDlmIFJFQUQNCj4gSUQuKQ0KPiANCj4g
+PiA+IFdoeSB3b3VsZCB3ZSBldmVuIG5lZWQgdG8gZW5hYmxlIHF1YWQgbW9kZXMgbGlrZSB0aGF0
+LCBpZiB3ZSdyZSBub3QNCj4gPiA+IGdvaW5nIHRvIHNlbmQgdGhlIDQtNC00IG9wY29kZXM/DQo+
+ID4gSSB0aGluaywgaW4gb3JkZXIgdG8gaGlnaCBzcGVlZCBTUEkgTk9SLCBhZnRlciBlbmFibGUg
+cXVhZCBtb2RlLA0KPiA+IFNQSU5PUl9PUF9SRUFEXzFfMV97MSwyLDR9IGNvbW1hbmRzIGRvbid0
+IG5lZWQgYW55IG1vcmUsIG5vcm1hbA0KPiByZWFkDQo+ID4gY29tbWFuZCAoMHgwMykgQ2FuIGlt
+cGxlbWVudCBhcyB0aGVtLg0KPiANCj4gT0suIFRoYXQncyBvZGQsIGJ1dCBJIGd1ZXNzIGl0IGRv
+ZXNuJ3QgbWF0dGVyIG11Y2guIEl0IGp1c3QgbWFrZXMgaXQgYSBsaXR0bGUgbGVzcw0KPiBvYnZp
+b3VzIHdoYXQncyBnb2luZyBvbi4NCj4gDQo+ID4gPiBNeSBuZXh0IHF1ZXN0aW9uIChpZiBteSB1
+bmRlcnN0YW5kaW5nIGlzIHJvdWdobHkgY29ycmVjdCkgaXMsIGRvIHdlDQo+ID4gPiBuZWVkIHRo
+ZQ0KPiA+ID4gNC00LTQgbW9kZXMsIGFuZCB3aGF0IHJpc2tzIGNvbWUgd2l0aCB0aGVtPyBJIHVu
+ZGVyc3RhbmQgd2UgY2FuDQo+ID4gPiBzaG9ydGVuIHRoZSBjb21tYW5kIGFuZCBhZGRyZXNzIHBo
+YXNlcywgYnV0IGRvZXMgdGhhdCBhbG9uZSB5aWVsZA0KPiA+ID4gbXVjaCBwZXJmb3JtYW5jZSBi
+ZW5lZml0PyBBbmQgSSB0aGluayB0aGUgcmlzayBpcyB0aGF0IGEgZ2l2ZW4NCj4gPiA+IHN5c3Rl
+bSBtaWdodCBub3QgYmUgcHJlcGFyZWQgZm9yIHRoZSBmbGFzaCB0byBiZSBpbiBhIDQtNC00IG1v
+ZGUsIGlmDQo+ID4gPiB0aGUgYm9vdCBjb2RlIHRyaWVzIHRvIHVzZSAxLXgteSBjb21tYW5kcy4N
+Cj4gPg0KPiA+IEFzIGZhciBhcyBteSBjdXJyZW50IGV4cGVyaWVuY2UgYW5kIGtub3dsZWRnZSwg
+dGhpcyBzdGlsbCBuZWVkIHRvIGJlDQo+ID4gZW5hYmxlZCwgZXNwZWNpYWxseSBmb3IgZmFzdCBi
+b290LCBhbmQgc29tZSBJT1QgZGV2aWNlcyB0byBzdG9yZSBpbmZvIGludG8NCj4gU1BJIE5PUi4N
+Cj4gDQo+IERvIHlvdSBoYXZlIGFueSBkYXRhIHRvIGFib3V0IHRoZSBzcGVlZD8gQW5kIHlvdSBo
+YXZlbid0IGFkZHJlc3NlZCB0aGUNCj4gcmlza3MuIFRoZXJlIGFyZSBkZWZpbml0ZWx5IHJpc2tz
+LiBDeXJpbGxlIGxvb2tzIGxpa2UgaGUncyB0cnlpbmcgdG8gYWRkcmVzcyB0aGUNCj4gcmlza3Mg
+KGUuZy4sIHVzZSB2b2xhdGlsZSBtb2RlcyB3aGVuZXZlciBwb3NzaWJsZSksIGJ1dCBpdCBkb2Vz
+bid0IHNlZW0gdGhhdA0KPiB5b3UgYXJlLg0KPiA+IEZvciB0aGlzIHBhdGNoZXMsIG15IGN1cnJl
+bnQgY29uY2VybiBpcyB0aGF0IGhvc3Qgc2lkZSBob3cgdG8gZ2V0DQo+ID4gZGlmZmVyZW50IEkv
+TyBwcm90b2NvbCBjaGFuZ2VzLCBhbmQgZGlzdGluZ3Vpc2ggYmV0d2VlbiBkaWZmZXJlbnQgZmxh
+c2gNCj4gbWFudWZhY3R1cmVycyBJL08gbW9kZS4NCj4gDQo+IEJyaWFuDQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
