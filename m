@@ -1,94 +1,76 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] MIPS: dts: tl_wr1043nd_v1: fix "aliases" node name
-Date: Wed, 20 Jan 2016 18:22:59 +0300
-Message-ID: <20160120182259.914f0e9be896bd2576391e3b@gmail.com>
-References: <1452759657-7114-1-git-send-email-antonynpavlov@gmail.com>
-	<56993EF5.9040008@gmail.com>
-	<20160116080205.0b6e84c9e531b0cfd845b67b@gmail.com>
-	<20160120004336.2b89a5f6@tock>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [LINUX PATCH 4/5] Documentation: mmc: Updated the binding doc for
+ Arasan SDHCI.
+Date: Wed, 20 Jan 2016 09:05:22 -0600
+Message-ID: <CAL_JsqLAwzFc2X2UKF5scYuf_h3xNcLibnMLhFnKZR_=0=JR8w@mail.gmail.com>
+References: <1453213055-35563-1-git-send-email-lakshmis@xilinx.com>
+ <1453213055-35563-4-git-send-email-lakshmis@xilinx.com> <20160119171611.GA2708@rob-hp-laptop>
+ <4FF8F58FAA9D5D4193D4E554E4352C5902C527B7@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160120004336.2b89a5f6@tock>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4FF8F58FAA9D5D4193D4E554E4352C5902C527B7@XAP-PVEXMBX02.xlnx.xilinx.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lakshmi Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Cc: Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hao <haokexin@gmail.com>, "Emil P. Lenchak" <emill@xilinx.com>, Tobias Klauser <tklauser@distanz.ch>, Sudeep Holla <Sudeep.Holla@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Jisheng Zhang <jszhang@marvell.com>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, Scott Branden <sbranden@broadcom.com>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Haibo Chen <haibo.chen@freescale.com>, Marek Vasut <marex@denx.de>, "ludovic.desroches@atmel.com" <ludovic.desroches@atmel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Tripathi <stripathi@apm.com>, Shawn Lin <shawn.lin@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Jan 2016 00:43:36 +0100
-Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+On Tue, Jan 19, 2016 at 11:51 PM, Lakshmi Sai Krishna Potthuri
+<lakshmi.sai.krishna.potthuri@xilinx.com> wrote:
+> Hi,
+>
+>> -----Original Message-----
+>> From: Rob Herring [mailto:robh@kernel.org]
+>> Sent: Tuesday, January 19, 2016 10:46 PM
+>> To: Lakshmi Sai Krishna Potthuri
+>> Cc: Michal Simek; Soren Brinkmann; Ulf Hansson; Kevin Hao; Emil P. Lenchak;
+>> Tobias Klauser; Sudeep Holla; Adrian Hunter; Jisheng Zhang; Ivan T. Ivanov;
+>> Scott Branden; Vincent Yang; Haibo Chen; Marek Vasut;
+>> ludovic.desroches@atmel.com; Pawel Moll; Mark Rutland; Ian Campbell;
+>> Kumar Gala; Suman Tripathi; Shawn Lin; devicetree@vger.kernel.org; Harini
+>> Katakam; linux-mmc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> Lakshmi Sai Krishna Potthuri; Anirudha Sarangi; Punnaiah Choudary Kalluri;
+>> linux-arm-kernel@lists.infradead.org
+>> Subject: Re: [LINUX PATCH 4/5] Documentation: mmc: Updated the binding
+>> doc for Arasan SDHCI.
+>>
+>> On Tue, Jan 19, 2016 at 07:47:34PM +0530, P L Sai Krishna wrote:
+>> > This patch adds broken-mmc-highspeed property to the binding doc for
+>> > Arasan SDHCI.
+>> >
+>> > Signed-off-by: P L Sai Krishna <lakshmis@xilinx.com>
+>> > ---
+> <snip>
+>> > -
+>> > +  - broken-mmc-highspeed: Indicates to force
+>> > +                           the controller to use in standard speed.
+>>
+>> We already have the inverse of this with "cap-mmc-highspeed".
+>>
+>> The only potential problem is it will need to be added to existing DTs if you
+>> start disabling high speed by default. Maybe that's not an issue for users of
+>> the Arasan driver.
+>>
+>
+> It might be an issue for other users.
+> I know that it will be an issue for older Xilinx SoC (Zynq), for ex.
+>
+>> Otherwise, you should determine this with a more specific compatible string.
+>>
+>
+> Since this feature might be broken on any SoC, I thought it would be
+> good to provide a dt property.
+> Using a compatibility string will offer no flexibility as per board or silicon.
 
-> On Sat, 16 Jan 2016 08:02:05 +0300
-> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->=20
-> > On Fri, 15 Jan 2016 10:48:21 -0800
-> > David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >=20
-> > > On 01/14/2016 12:20 AM, Antony Pavlov wrote:
-> > > > The correct name for aliases node is "aliases" not "alias".
-> > > >
-> > > > An overview of the "aliases" node usage can be found
-> > > > on the device tree usage page at devicetree.org [1].
-> > > >
-> > > > Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [=
-2].
-> > > >
-> > > > [1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-> > > > [2] https://www.power.org/documentation/epapr-version-1-1/
-> > > >
-> > > > Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> > > > Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> > > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > > ---
-> > > >   arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
-> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> > > > b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts index
-> > > > 003015a..4b6d38c 100644 ---
-> > > > a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts +++
-> > > > b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts @@ -9,7 +9,7=
- @@
-> > > >   	compatible =3D "tplink,tl-wr1043nd-v1", "qca,ar9132";
-> > > >   	model =3D "TP-Link TL-WR1043ND Version 1";
-> > > >
-> > > > -	alias {
-> > > > +	aliases {
-> > > >   		serial0 =3D "/ahb/apb/uart@18020000";
-> > > >   	};
-> > >=20
-> > > What uses this alias?  If the answer is nothing (likely, as it wa=
-s=20
-> > > broken and nobody seems to have noticed), just remove the whole
-> > > thing.
-> >=20
-> > I have used ar9132_tl_wr1043nd_v1.dts as a template for AR9331-base=
-d
-> > board dts-file. AR9331 uses it's own very special UART implementati=
-on
-> > (the ar933x_uart.c driver is used). ar933x_uart.c relies on alias a=
-nd
-> > does not work if alias is not set. I have not yet runned linux on
-> > TL-WR1034ND, but I suppose that uart alias is not actually used for
-> > TL-WR1034ND and this aliases node can be safely removed.
-> >=20
-> > Alban, have you any comments?
->=20
-> David is right, we should just remove it.
+I've thought about this some more. Since this is an override of the
+SDHCI capabilities register, I'm okay with this property. However, it
+should be common to all SDHCI controller and handled in the core SDHCI
+code. Another way this could be handled is directly provide an
+override value for the capability register in the DT. Then we don't
+have to provide a property for every capability bit.
 
-Ok.
+Additionally, the Arasan binding needs to have SOC specific compatible
+strings. IP vendor strings alone have been proven often to be
+insufficient.
 
-Several days ago I have got one TP-Link WR1043ND v1.8, so I can prepare
-the patch, check it on my real hardware and then send it to the maillis=
-t.
-
---=A0
-Best regards,
-=A0 Antony Pavlov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
