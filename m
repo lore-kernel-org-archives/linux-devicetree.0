@@ -1,65 +1,124 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v15 0/6] altera fpga area and fpga bus
-Date: Wed, 20 Jan 2016 13:24:21 -0600
-Message-ID: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
+ reboot-mode driver
+Date: Wed, 20 Jan 2016 13:53:44 -0600
+Message-ID: <CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
+References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
+ <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
+ <20160120182840.GA15741@rob-hp-laptop> <CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Andy Yan <andy.yan@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Reichel <sre@kernel.org>, Olof Johansson <olof@lixom.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+On Wed, Jan 20, 2016 at 12:47 PM, John Stultz <john.stultz@linaro.org> wrote:
+> On Wed, Jan 20, 2016 at 10:28 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Tue, Jan 12, 2016 at 07:29:49PM +0800, Andy Yan wrote:
+>>> add device tree binding document for reboot-mode driver
+>>>
+>>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v2: None
+>>> Changes in v1: None
+>>>
+>>>  .../bindings/power/reset/reboot-mode.txt           | 41 +++++++++++++++++
+>>>  .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++++++++++++++
+>>>  2 files changed, 93 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>>>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>>> new file mode 100644
+>>> index 0000000..81d9f66
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>>> @@ -0,0 +1,41 @@
+>>> +Generic reboot mode core map driver
+>>> +
+>>> +This driver get reboot mode arguments and call the write
+>>> +interface to stores the magic value in special register
+>>> +or ram . Then the bootloader can read it and take different
+>>> +action according to the argument stored.
+>>> +
+>>> +Required properties:
+>>> +- compatible: only support "syscon-reboot-mode" now.
+>>> +
+>>> +Each mode is represented as a sub-node of reboot_mode:
+>>> +
+>>> +Subnode required properties:
+>>> +- linux,mode: reboot mode command,such as "loader", "recovery", "fastboot".
+>>> +- loader,magic: magic number for the mode, this is vendor specific.
+>>> +
+>>> +Example:
+>>> +     reboot_mode {
+>>
+>> reboot-mode instead please.
+>>
+>>> +             compatible = "syscon-reboot-mode";
+>>> +             offset = <0x40>;
+>>
+>> This doc by itself is a little confusing. For example, is a child of the
+>> syscon node? I would remove offset (and perhaps compatible) from this
+>> example.
+>>
+>>> +
+>>> +             loader {
+>>> +                     linux,mode = "loader";
+>>> +                     loader,magic = <BOOT_LOADER>;
+>>> +             };
+>>
+>> Sorry, my previous suggestion was not clear. I'm suggesting get rid of
+>> the subnodes and just do properties like this:
+>>
+>> loader = <BOOT_LOADER>;
+>> maskrom = <BOOT_MASKROM>;
+>>
+>> That's the same amount of information unless node names and linux,mode
+>> values are going to diverge. Do they need to? I can't see a reason.
+>
+>
+> It seems like devices already have a number of various different
+> vendor specific commands.  So this sort of flexibility helps us adapt
+> the driver to different hardware/system environments (which may use
+> different conventions then what Android commonly uses).
+>
+> Unless I'm misunderstanding you and you're instead suggesting we can
+> dynamically parse the command mode from the node name?
 
-For v15, I'm not using the FPGA Manager as the bus.  I'm adding a FPGA Bus;
-the FPGA Manager and bridges go below it.
+Yes, except it would be the property name. The driver could either
+iterate over the properties of the reboot-mode node or lookup the
+property when it has the reboot reason string. We generally like to
+parse everything up front at probe, but the latter would be somewhat
+easier to implement. Perhaps we would want to prefix nodes with
+"mode-" or something.
 
-I've gotten enough feedback that my proposals are Altera specific that I am
-going with that and changing the bindings to include an 'altr,' prefix.
+Vendors can certainly still add their own (e.g.
+vendor,halt-and-catch-fire = <0xdead>).
 
-I've combined the bindings document and the other Documentation/fpga/ document
-and done a rewrite there.
+The question here really is will we ever need additional data for each
+mode (in the DT) besides "magic". We can do some amount of extending
+the property like allowing more that single 32-bit value. We can't mix
+strings and integers though. If we don't need that, then lets go with
+the more concise approach. This isn't really an evolving area.
+Selecting boot mode/device has existed for a long time on PCs (it is
+fixed list in the IPMI spec for example). So I can't imagine that we'd
+have to extend this, but I'd like to hear thoughts on it. You had
+mentioned the Galaxy Nexus having a value and a string, but I'd find
+it surprising if the bootloader actually uses the string.
 
-Anybody who tried the previous patchset will not have much changes to do to get
-this going.  The changes are:
- * The live tree has a 'altr,fpga-bus' which contains the FPGA Manager and
-    FPGA Bridges.
- * The target path in your overlays needs to be adjusted accordingly.
+> That said, I agree we should try to push vendors to using the same
+> conventions when they are providing the same functionality. But I'm
+> not sure we should enforce that by making vendors introduce a new dt
+> binding for every new reboot command they want to implement.
 
-That said, the changes for each of these submissions is getting to be less and
-less; most of these patches are unchanged for v15.
+Either way they need to document it. It's either a new linux,mode
+value or a new property name. Vendors are free to add whatever they
+want, but for upstream it has to go thru review.
 
-Alan Tull (6):
-  fpga: add bindings document for fpga area and fpga bus
-  add sysfs document for fpga bridge class
-  ARM: socfpga: add bindings document for fpga bridge drivers
-  fpga: add fpga bridge framework
-  fpga: fpga-area and fpga-bus: device tree control for FPGA
-  ARM: socfpga: fpga bridge driver support
-
- Documentation/ABI/testing/sysfs-class-fpga-bridge  |   11 +
- .../bindings/fpga/altera-fpga-bus-fpga-area.txt    |  452 ++++++++++++++++++++
- .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +
- .../bindings/fpga/altera-hps2fpga-bridge.txt       |   43 ++
- drivers/fpga/Kconfig                               |   21 +
- drivers/fpga/Makefile                              |    7 +
- drivers/fpga/altera-fpga2sdram.c                   |  174 ++++++++
- drivers/fpga/altera-hps2fpga.c                     |  213 +++++++++
- drivers/fpga/fpga-area.c                           |  352 +++++++++++++++
- drivers/fpga/fpga-bridge.c                         |  388 +++++++++++++++++
- include/linux/fpga/fpga-bridge.h                   |   56 +++
- 11 files changed, 1732 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
- create mode 100644 drivers/fpga/fpga-area.c
- create mode 100644 drivers/fpga/fpga-bridge.c
- create mode 100644 include/linux/fpga/fpga-bridge.h
-
--- 
-1.7.9.5
-
+Rob
