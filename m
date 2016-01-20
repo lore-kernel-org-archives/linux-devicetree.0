@@ -1,457 +1,505 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control for FPGA
-Date: Wed, 20 Jan 2016 13:24:26 -0600
-Message-ID: <1453317867-10422-6-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v15 1/6] fpga: add bindings document for fpga area and fpga bus
+Date: Wed, 20 Jan 2016 13:24:22 -0600
+Message-ID: <1453317867-10422-2-git-send-email-atull@opensource.altera.com>
 References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
 Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-FPGA Area and FPGA Bus support programming FPGA under control of
-the Device Tree.
-
-A FPGA Bus contains the devices necessary for programming an
-FPGA.
-
-When a Device Tree Overlay containing a FPGA Area is
-applied, the FPGA Area will be probed and will:
- * check to see if there is an image to program to a FPGA
- * get references to the FPGA manager and bridges if any
- * disable FPGA bridges to prevent spurious data on busses
- * reprogram the FPGA
- * enable the specified FPGA bridges
- * populate the child devices
-
-Removing the Device Tree Overlay is also supported.
-
-This supports fpga use where hardware blocks on a fpga will
-need drivers.
+New bindings document for FPGA Area for reprogramming
+FPGA's under Device Tree control
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
-v9:  initial version (this patch added during rest of patchset's v9)
-v10: request deferral if fpga mgr or bridges not available yet
-     cleanup as fpga manager core goes into the real kernel
-     Don't assume bridges are disabled before programming FPGA
-     Don't hang onto reference for fpga manager
-     Move to staging/simple-fpga-bus
+v9:  initial version added to this patchset
+v10: s/fpga/FPGA/g
+     replace DT overlay example with slightly more complicated example
+     move to staging/simple-fpga-bus
 v11: No change in this patch for v11 of the patch set
 v12: Moved out of staging.
-     Use fpga bridges framework.
-v13: If no bridges are specified, assume we don't need any.
-     Clean up debug messages
-     Some dev_info -> dev_dbg
-     Remove unneeded #include
-     Fix size of array of pointers
-     Don't need to specify .owner
-     Use common binding: firmware-name
-v14: OK it's not a simple bus.  Call it "FPGA Area"
-     Remove bindings that specify FPGA manager and FPGA bridges
-     Use parent FPGA bridge and bridges that are its peers
-     Use ancestor FPGA Manager
-v15: Add altr,fpga-bus implementation
-     Change compatible string "fpga-area" -> "altr,fpga-area"
+     Changed to use FPGA bridges framework instead of resets
+     for bridges.
+v13: bridge@0xff20000 -> bridge@ff200000, etc
+     Leave out directly talking about overlays
+     Remove regs and clocks directly under simple-fpga-bus in example
+     Use common "firmware-name" binding instead of "fpga-firmware"
+v14: Use firmware-name in bindings description
+     Call it FPGA Area
+     Remove bindings that specify FPGA Manager and FPGA Bridges
+v15: Cleanup as per Rob's comments
+     Combine usage doc with bindings document
+     Document as being Altera specific
+     Additions and changes to add FPGA Bus
 ---
- drivers/fpga/Kconfig     |    7 +
- drivers/fpga/Makefile    |    3 +
- drivers/fpga/fpga-area.c |  352 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 362 insertions(+)
- create mode 100644 drivers/fpga/fpga-area.c
+ .../bindings/fpga/altera-fpga-bus-fpga-area.txt    |  452 ++++++++++++++++++++
+ 1 file changed, 452 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index b6cfd89..6ac916b 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -31,6 +31,13 @@ config FPGA_BRIDGE
-          Say Y here if you want to support bridges connected between host
- 	 processors and FPGAs or between FPGAs.
- 
-+config FPGA_AREA
-+       bool "Device Tree Based FPGA Reprogramming"
-+       depends on FPGA_BRIDGE
-+       help
-+         Enable FPGA Area which supports programming FPGAs under control of
-+	 Device Tree.
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 4baef00..4f7e49f 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -11,3 +11,6 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- 
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-+
-+# High Level Interfaces
-+obj-$(CONFIG_FPGA_AREA)			+= fpga-area.o
-diff --git a/drivers/fpga/fpga-area.c b/drivers/fpga/fpga-area.c
+diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt b/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
 new file mode 100644
-index 0000000..cec332f
+index 0000000..8ea38ca
 --- /dev/null
-+++ b/drivers/fpga/fpga-area.c
-@@ -0,0 +1,352 @@
-+/*
-+ * FPGA Tree Area Support for Device Tree controlled FPGA reprogramming
-+ *
-+ *  Copyright (C) 2013-2015 Altera Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
+@@ -0,0 +1,452 @@
++Altera FPGA Area and FPGA Bus Device Tree Binding
 +
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
++Alan Tull 2016
 +
-+/*
-+ * In the case of a FPGA doing full reconfiguration, the area == the whole
-+ * FPGA.  In the case of partial reconfiguration, several areas can be
-+ * reconfigured separately.
-+ */
++ CONTENTS
++ - Introduction
++ - Terminology
++ - Overview
++ - Constraints
++ - FPGA Bus
++ - FPGA Area
++ - Supported Use Models
++ - Sequence
++ - Device Tree Examples
 +
-+/**
-+ * struct fpga_area
-+ * @mgr:	FPGA Manager
-+ * @flags:	Flags for reconfiguration
-+ * @firmware_name: Name of FPGA image file
-+ * @bridge_list: Linked list of FPGA bridges controlled by area
-+ * @br:		FPGA Bridge corresponding to area
-+ * @bus_np:	device node of ancestor FPGA Bus
-+ */
-+struct fpga_area {
-+	struct fpga_manager *mgr;
-+	u32 flags;
-+	const char *firmware_name;
-+	struct list_head bridge_list;
-+	struct fpga_bridge *br;
-+	struct device_node *bus_np;
++
++Introduction
++============
++
++FPGA Buses and FPGA Areas are introduced as a way to solve the problem of how to
++reprogram an Altera FPGA under an operating system and have the new hardware
++show up in the device tree.  By adding these bindings to the Device Tree, a
++system can have the information needed to do the FPGA programming to add the
++desired hardware, and also the information about the devices to be added to the
++Device Tree once the programming has succeeded.
++
++
++Terminology
++===========
++
++Full Reconfiguration
++ * The entire FPGA is programmed.
++
++Partial Reconfiguration (PR)
++ * The FPGA is broken up into regions.  One of these regions is reprogrammed
++   while the rest of the FPGA is not affected.  Not all FPGA's support this.
++
++FPGA Manager & FPGA Manager Framework
++ * An FPGA Manager is a hardware block that programs an FPGA under the control
++   of a host processor.
++ * The FPGA Manager Framework provides drivers and functions to program an
++   FPGA.
++
++FPGA Bridge & FPGA Bridge Framework
++ * Provides drivers and functions to control bridges that enable/disable
++   data to the FPGA.
++ * FPGA Bridges should be disabled while the FPGA is being programmed to
++   prevent spurious data on the bus.
++ * FPGA Bridges may not be needed in implementations where the FPGA Manager
++   handles this.
++
++Freeze Blocks
++ * Freeze Blocks function as FPGA Bridges within the FPGA fabric.  In the case
++   of PR, the buses from the processor are split within the FPGA.  Each PR
++   region gets its own split of the buses, protected by an independently
++   controlled Freeze Block.  Several busses may be connected to a single
++   PR region; a Freeze Block controls the traffic of all these busses
++   together.
++
++Controlling Bridge
++ * The processor and FPGA may be connected by multiple FPGA Bridges.  In a text
++   based hierarchy, it is difficult to show this properly as a device would
++   have several parents.
++ * The bridge that handles register access to the FPGA is designated the
++   "controlling" bridge.
++ * The controlling bridge will be the target point under which the overlay is
++   inserted.
++
++
++Overview
++========
++
++This binding introduces the FPGA Bus and FPGA Area.
++
++An FPGA Bus is a virtualized bus that contains the devices needed to be able to
++program an FPGA device.  It contains a child FPGA Manager and may contain child
++FPGA Bridges, if needed.  The FPGA Manager is the hardware block that handles
++programming the FPGA.  FPGA Bridges function to prevent spurious data from the
++FPGA going on the processor busses during FPGA programming.  In the case of
++partial reconfiguration, additional bridges (Freeze Blocks) for each
++reconfiguration region are required.
++
++An FPGA Area contains information about a section of an FPGA (in the case of
++partial reconfiguration or the whole FPGA (for full reconfiguration).  The FPGA
++Area contains the name of the FPGA image file to be programmed and the child
++devices that will be contained in the FPGA after programming.
++
++The intended use is that device tree overlays can be used to add hardware to an
++FPGA while an operating system is running.  In that case, the FPGA Bus and its
++associated information will exist in the live device tree, while FPGA Areas are
++added to the device tree by applying device tree overlays while the operating
++system is running.  Loading such an overlay will cause the FPGA to be programmed
++and the child devices to be populated.  Removing an overlay will cause the
++devices to be removed from the device tree and free up those FPGA resources.
++
++
++Constraints
++===========
++
++It is beyond the scope of this document to fully describe all the FPGA design
++constraints required to make partial reconfiguration work[1] [2], but a few
++deserve quick mention.  A partial reconfiguration FPGA image must have
++boundary connections that line up with those the current programming of the
++FPGA.  Also, those during programming, those connections must be frozen.  This
++can be achieved by "Freeze Blocks" which are FPGA Bridges that exist on the FPGA
++fabric prior to the partial reconfiguration.
++
++
++FPGA Bus
++========
++
++An FPGA bus is a virtualized bus that specifies the devices needed to program an
++FPGA.
++
++Required properties:
++- compatible : should contain "altr,fpga-bus" and "simple-bus"
++	       "simple-bus" is required to allow populating the child nodes.
++
++A FPGA Bus should contain an FPGA Manager as a child node.
++
++A FPGA Bus may require FPGA Bridges as child nodes if the FPGA Manager does not
++control the hardware bridges.
++
++The FPGA Bridge that allows memory mapped register access is designated the
++"controlling" bridge.  This bridge serves as the insertion point of DT overlays.
++Both the FPGA Area and the controlling bridge require the "simple-bus"
++compatibility string to allow populating the child nodes contained in the
++overlay.
++
++In the example below, fpgamgr@ff706000 would be used to do any programming
++operations on the FPGA and the two bridges specified would be disabled
++during the programming and re-enabled afterwards if the programming
++succeeds.
++
++Example:
++	fpgabus@0 {
++		compatible = "altr,fpga-bus", "simple-bus";
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++
++		fpgamgr@ff706000 {
++			compatible = "altr,socfpga-fpga-mgr";
++			reg = <0xff706000 0x1000
++			       0xffb90000 0x1000>;
++			interrupts = <0 175 4>;
++		};
++
++		bridge@0 {
++			compatible = "altr,socfpga-lwhps2fpga-bridge",
++				     "simple-bus";
++			resets = <&rst LWHPS2FPGA_RESET>;
++			reset-names = "lwhps2fpga";
++			clocks = <&l4_main_clk>;
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++			ranges;
++		};
++
++		bridge@1 {
++			compatible = "altr,socfpga-hps2fpga-bridge";
++			resets = <&rst HPS2FPGA_RESET>;
++			reset-names = "hps2fpga";
++			clocks = <&l4_main_clk>;
++		};
++	};
++
++FPGA Area
++=========
++
++An FPGA Area details information about a section of an FPGA including the FPGA
++image needed to program it and the hardware contained once it is programmed.
++
++An FPGA Area corresponds to the whole FPGA in the case of full reconfiguration
++or a section of an FPGA in the case of partial reconfiguration.
++
++Required properties:
++- compatible : should contain "altr,fpga-area"
++- #address-cells, #size-cells, ranges: must be present to handle address space
++  mapping for children.
++
++Optional properties:
++- firmware-name : should contain the name of an FPGA image file located on the
++  firmware search path.
++- partial-reconfig : boolean property should be defined if partial
++  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
++  is done.
++
++In the example below, the target path is the controlling bridge of the FPGA Bus
++example.  The FPGA would be programmed with the image contained in the
++"soc_system.rbf" specified.  Assuming programming succeeds, the child devices
++would be populated afterwords.  In this particular example, ranges has two
++chip selects as one memory region is tied to the host processor and the
++other is a memory region on the FPGA.
++
++If there are no bridges in the FPGA Bus, the target path would point to
++the FPGA Manager.
++
++Example:
++
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc/fpgamgr@ff706000/bridge@0";
++		__overlay__ {
++			#address-cells = <1>;
++		        #size-cells = <1>;
++
++			bridge@ff200000 {
++				compatible = "fpga-area";
++
++				#address-cells = <2>;
++				#size-cells = <1>;
++
++				ranges = <0 0x00000000 0xc0000000 0x00010000>,
++					 <1 0x00020000 0xff220000 0x00000008>,
++					 <1 0x00010040 0xff210040 0x00000020>;
++
++				firmware-name = "soc_system.rbf";
++
++				onchip_memory2_0: memory@0 {
++					device_type = "memory";
++					compatible = "altr,onchipmem-15.1";
++					reg = <0 0x00000000 0x00010000>;
++				};
++
++				jtag_uart: serial@100020000 {
++					compatible = "altr,juart-1.0";
++					reg = <1 0x00020000 0x00000008>;
++					interrupt-parent = <&intc>;
++					interrupts = <0 42 4>;
++				};
++
++				led_pio: gpio@100010040 {
++					compatible = "altr,pio-1.0";
++					reg = <1 0x00010040 0x00000020>;
++					altr,gpio-bank-width = <4>;
++					#gpio-cells = <2>;
++					gpio-controller;
++				};
++			};
++		};
++	};
 +};
 +
-+/**
-+ * fpga_area_get_parent_peer_bridges - get bridges that are peers of parent
-+ * @area: FPGA Area struct
-+ *
-+ * Intended to support case where multiple bridges need to be disabled
-+ * during FPGA reprogramming.
-+ *
-+ * Finds the FPGA bridge that is the parent of @area in the device tree.
-+ * Creates a linked list of FPGA bridges that includes the parent bridge and
-+ * its peers.  Gets an exclusive reference to each of these bridges as they
-+ * are added to the list.  The list of bridges is saved in @area's
-+ * fpga_bridge struct.
-+ *
-+ * These bridges must be disabled while the FPGA is being reprogrammed to
-+ * support the children of the @area bridge and enabled after FPGA
-+ * programming is finished.
-+ *
-+ * For the use case where no FPGA bridges are required, the parent node should
-+ * be a FPGA Manager.  In this case, the bridge list will end up empty.
-+ *
-+ * Returns error code or 0 for success.  Returns 0 if the parent is a FPGA
-+ * manager.
-+ */
-+static int fpga_area_get_parent_peer_bridges(struct fpga_area *area)
-+{
-+	struct device_node *parent, *child;
-+	struct fpga_bridge *bridge;
-+	int ret;
++Supported Use Models
++====================
 +
-+	/* Create a list of bridges that are peers of area's parent */
-+	parent = of_get_parent(area->br->dev.of_node);
-+	parent = of_get_next_parent(parent);
++Here's a list of supported use models.  We may need to add more.  Some uses are
++specific to one FPGA device or another.
 +
-+	for_each_child_of_node(parent, child) {
-+		/* If node is a bridge, get it and add to list */
-+		ret = fpga_bridge_get_to_list(child, &area->bridge_list);
++ * No FPGA Bridges
++   In this case, the FPGA Manager which programs the FPGA also handles the
++   bridges.  No FPGA Bridge devices are needed for full reconfiguration.
 +
-+		/* if any of the bridges are in use, give up */
-+		if (ret == -EBUSY) {
-+			fpga_bridges_put(&area->bridge_list);
-+			of_node_put(parent);
-+			return PTR_ERR(bridge);
-+		}
-+	}
-+	of_node_put(parent);
++   The DT overlay will specify the FPGA Manager as the overlay target.
 +
-+	return 0;
-+}
++ * Full reconfiguration with bridges
++   In the case, there are several bridges between the processor and FPGA, that
++   need to be disabled during full reconfiguration.  The live DT before the
++   overlay is applied will have an FPGA Bus.
 +
-+/**
-+ * fpga_area_get_bridges - create list of exclusive references to fpga bridges
-+ * @area: FPGA Area struct
-+ *
-+ * Get exclusive references to a FPGA bridge or bridges.
-+ * In the case of full reconfiguration build a list of bridges that are the
-+ * parent of @area and its peers.  We are reprogramming the full FPGA and
-+ * need to have no communication on the processor/FPGA bridges while that
-+ * is happening
-+ * In the case of partial reconfiguration, only add the parent of @area to
-+ * the list.  This one bridge is a freeze block which is in the FPGA itself
-+ * and is downstream from its parent bridge and the parent's peers.
-+ *
-+ * Return 0 for success. Return -ENODEV is there are no bridges.
-+ * Pass other error codes ultimately from of_fpga_bridge_get() such as:
-+ * Return -EBUSY if any of the bridges were already gotten.
-+ */
-+static int fpga_area_get_bridges(struct fpga_area *area)
-+{
-+	struct device_node *parent;
-+	int ret = 0;
++   The DT overlay will specify the controlling bridge as the overlay target.
 +
-+	/* If parent is FPGA Manager, no bridges to get */
-+	parent = of_get_parent(area->br->dev.of_node);
-+	if (parent == area->mgr->dev.of_node) {
-+		of_node_put(parent);
-+		return -ENODEV;
-+	}
++ * Partial reconfiguration with bridges in the FPGA
++   In this case, the FPGA will have more than one section that will be
++   programmed separately.  Other sections may be active on the bus while FPGA
++   is being programmed.  To manage this, Freeze blocks need to exist on the FPGA
++   that can freeze all the buses going to one FPGA area while the buses are
++   enabled for other sections.
 +
-+	if (area->flags & FPGA_MGR_PARTIAL_RECONFIG)
-+		ret = fpga_bridge_get_to_list(parent, &area->bridge_list);
-+	else
-+		ret = fpga_area_get_parent_peer_bridges(area);
++Sequence
++========
 +
-+	of_node_put(parent);
++When a DT overlay is loaded, the FPGA Area will be probed and will do the
++following:
++ 1. Disable the FPGA Bridges.
++ 2. Use the the FPGA manager core to program the FPGA.
++ 3. Enable the FPGA Bridges.
++ 4. Call of_platform_populate resulting in device drivers getting probed.
 +
-+	return ret;
-+}
++When the overlay is removed, the FPGA Area in it is removed.  This causes the
++child nodes to be removed and then the bridges are disabled.
 +
-+/**
-+ * fpga_area_load - program the FPGA based on info in area
-+ * @area: FPGA Area struct
-+ *
-+ * Program the FPGA that the area has a reference to.
-+ *
-+ * Returns 0 for success or error codes passed down from
-+ * fpga_mgr_firmware_load()
-+ */
-+static int fpga_area_load(struct fpga_area *area)
-+{
-+	return fpga_mgr_firmware_load(area->mgr,
-+				      area->flags,
-+				      area->firmware_name);
-+}
++Device Tree Examples
++====================
 +
-+/**
-+ * fpga_area_get_bus - find ancestor FPGA Bus, get a reference
-+ * @area: FPGA Area struct
-+ *
-+ * Returns 0 for success or -ENODEV if not a child of a FPGA Bus.
-+ */
-+static int fpga_area_get_bus(struct fpga_area *area)
-+{
-+	struct device_node *np = area->br->dev.of_node;
++The intention of this section is to give some simple examples, focusing on
++the placement of the elements detailed above, especially:
++ * FPGA Bus and associated FPGA Manager and FPGA Bridges
++ * FPGA Area and associated properties
++ * simple-bus
++ * ranges
++ * target-path
 +
-+	of_node_get(np);
++For the purposes of this section, I'm dividing the Device Tree into two parts,
++each with its own requirements.  The two parts are:
++ * The live DT prior to the overlay being added
++ * The DT overlay
 +
-+	while (np && !of_device_is_compatible(np, "altr,fpga-bus"))
-+		np = of_get_next_parent(np);
++The live Device Tree must contain an FPGA Bus, which has a child FPGA Manager to
++handle programming the FPGA.  If FPGA Bridges need to be involved, they show up
++in the DT as direct children of the FPGA Bus.  During full reconfiguration, the
++FPGA Area will disable any bridges that are direct children of the FPGA Bus and
++will re-enable them after FPGA programming has succeeded.
 +
-+	if (!np)
-+		return -ENODEV;
++The Device Tree Overlay will contain:
++ * "target-path"
++   The insertion point where the the contents of the overlay will go into the
++   live tree.
++ * "ranges"
++ * "firmware-name"
++   Specifies the name of the FPGA image file on the firmware search
++   path.  The search path is described in the firmware class documentation.
++ * "partial-reconfig"
++   This binding is a boolean and should be present if partial reconfiguration
++   is to be done.
++ * child nodes corresponding to hardware that will be loaded in this region of
++   the FPGA.
 +
-+	area->bus_np = np;
 +
-+	return 0;
-+}
++Device Tree Example: Partial Reconfiguration with no Bridges
++============================================================
 +
-+/**
-+ * fpga_area_put_bus - put FPGA Bus saved in @area
-+ * @area: FPGA Area struct
-+ */
-+static void fpga_area_put_bus(struct fpga_area *area)
-+{
-+	of_node_put(area->bus_np);
-+	area->bus_np = NULL;
-+}
++Live Device Tree contains:
++	fpgamgr@ffd03000 {
++		compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
++		clocks = <&l4_mp_clk>;
++		resets = <&rst FPGAMGR_RESET>;
++		reset-names = "fpgamgr";
++		reg = <0xffd03000 0x1000
++		       0xffcfe400 0x1000>;
 +
-+/**
-+ * fpga_area_get_manager - get exclusive reference for FPGA Manager
-+ * @area: FPGA Area struct
-+ *
-+ * One of the ancestor nodes of the FPGA Area should be a FPGA Bus.  One of
-+ * the children of that FPGA Bus should be a FPGA Manager.
-+ * Assuming that fpga_area_get_bus() has already found the bus, this function
-+ * finds the FPGA Manager and saves it in the area struct.
-+ *
-+ * Return: 0 for success or IS_ERR() condition containing error code.
-+ */
-+static int fpga_area_get_manager(struct fpga_area *area)
-+{
-+	struct device_node  *child;
-+	struct fpga_manager *mgr;
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++	};
 +
-+	for_each_child_of_node(area->bus_np, child) {
-+		mgr = of_fpga_mgr_get(child);
-+		if (IS_ERR(mgr))
-+			continue;
++DT Overlay contains:
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc/fpgamgr@ffd03000";  /* targeted to the manager */
++		__overlay__ {
++			#address-cells = <1>;
++		        #size-cells = <1>;
 +
-+		area->mgr = mgr;
-+		return 0;
-+	}
++			area@0 {
++				compatible = "fpga-area";
 +
-+	return -ENODEV;
-+}
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x10010 0xff210010 0x10>;
 +
-+/**
-+ * fpga_area_put_manager - put exclusive reference to FPGA Manager
-+ * @area: FPGA Area struct
-+ */
-+static void fpga_area_put_manager(struct fpga_area *area)
-+{
-+	fpga_mgr_put(area->mgr);
-+	area->mgr = NULL;
-+}
++				firmware-name = "fit_pr_v1.rbf";
++				partial-reconfig;
 +
-+/**
-+ * fpga_area_probe - probe function for FPGA area
-+ * @pdev: platform device
-+ *
-+ * If there is an image to program to a FPGA, get the FPGA Manager and bridges,
-+ * reprogram the FPGA, and  populate the child devices.
-+ *
-+ * If there are FPGA Bridges, this function will hold the references to the
-+ * bridges; they are released in fpga_area_remove().
-+ *
-+ * Return:  0 for success, -EBUSY if someone already got the bridges or manager.
-+ */
-+static int fpga_area_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct fpga_area *area;
-+	int ret;
-+
-+	area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
-+	if (!area)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&area->bridge_list);
-+
-+	ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
-+	if (ret)
-+		return ret;
-+	area->br = dev_get_drvdata(dev);
-+
-+	if (of_property_read_string(np, "firmware-name",
-+				    &area->firmware_name)) {
-+		of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-+		return 0;
-+	}
-+
-+	if (of_property_read_bool(np, "partial-reconfig"))
-+		area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
-+
-+	ret = fpga_area_get_bus(area);
-+	if (ret) {
-+		dev_dbg(dev, "Should be child of a FPGA Bus");
-+		goto err_unreg;
-+	}
-+
-+	ret = fpga_area_get_manager(area);
-+	if (ret) {
-+		dev_dbg(dev, "Could not find FPGA Manager");
-+		goto err_unreg;
-+	}
-+
-+	/* Give up if there is an error other than no bridges. */
-+	ret = fpga_area_get_bridges(area);
-+	if (ret && ret != -ENODEV)
-+		goto err_release;
-+
-+	ret = fpga_bridges_disable(&area->bridge_list);
-+	if (ret)
-+		goto err_release;
-+
-+	ret = fpga_area_load(area);
-+	if (ret)
-+		goto err_release;
-+
-+	ret = fpga_bridges_enable(&area->bridge_list);
-+	if (ret)
-+		goto err_release;
-+
-+	/* If successful, put the mgr, but keep the bridges */
-+	fpga_area_put_manager(area);
-+
-+	of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-+
-+	return 0;
-+
-+err_release:
-+	fpga_bridges_put(&area->bridge_list);
-+	fpga_area_put_manager(area);
-+err_unreg:
-+	fpga_bridge_unregister(dev);
-+
-+	return ret;
-+}
-+
-+/**
-+ * fpga_area_remove - remove a FPGA area
-+ * @pdev: platform device
-+ *
-+ * Called when an FPGA Area is removed.  If there are any FPGA Bridges in the
-+ * area's bridge list, disable them and put them.
-+ *
-+ * Return: 0
-+ */
-+static int fpga_area_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct fpga_bridge *bridge = dev_get_drvdata(dev);
-+	struct fpga_area *area = bridge->priv;
-+
-+	fpga_area_put_bus(area);
-+
-+	fpga_bridges_disable(&area->bridge_list);
-+	fpga_bridges_put(&area->bridge_list);
-+
-+	fpga_bridge_unregister(dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id fpga_area_of_match[] = {
-+	{ .compatible = "fpga-area", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, fpga_area_of_match);
-+
-+static struct platform_driver fpga_area_driver = {
-+	.probe = fpga_area_probe,
-+	.remove = fpga_area_remove,
-+	.driver = {
-+		.name	= "FPGA Area",
-+		.of_match_table = of_match_ptr(fpga_area_of_match),
-+	},
++				gpio@100010010 {
++					compatible = "altr,pio-1.0";
++					reg = <0x10010 0x10>;
++					altr,ngpio = <4>;
++					#gpio-cells = <0x2>;
++					gpio-controller;
++				};
++			};
++		};
++	};
 +};
 +
-+module_platform_driver(fpga_area_driver);
 +
-+MODULE_DESCRIPTION("Altera FPGA Bus");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
++Device Tree Example: Full Reconfiguration with Bridges
++======================================================
++
++Live Device Tree contains:
++	fpgamgr@ff706000 {
++		compatible = "altr,socfpga-fpga-mgr", "simple-bus";
++		reg = <0xff706000 0x1000
++		       0xffb90000 0x1000>;
++		interrupts = <0 175 4>;
++
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++
++		bridge@0 {
++			/* both the manager and the controlling bridge have
++			 * the added simple-bus compatible to allow child
++			 * devices to be populated. */
++			compatible = "altr,socfpga-lwhps2fpga-bridge",
++				     "simple-bus";
++			resets = <&rst LWHPS2FPGA_RESET>;
++			reset-names = "lwhps2fpga";
++			clocks = <&l4_main_clk>;
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++			ranges;
++		};
++
++		bridge@1 {
++			/* In the case of full reconfiguration, both bridge@0
++			 * and bridge@1 will be disabled during FPGA
++			 * programming and enabled afterwards. */
++			compatible = "altr,socfpga-hps2fpga-bridge";
++			resets = <&rst HPS2FPGA_RESET>;
++			reset-names = "hps2fpga";
++			clocks = <&l4_main_clk>;
++		};
++	};
++
++DT Overlay contains:
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc/fpgamgr@ff706000/bridge@0"; /* controlling bridge */
++		__overlay__ {
++			#address-cells = <1>;
++		        #size-cells = <1>;
++
++			area@0 {
++				compatible = "fpga-area";
++
++				#address-cells = <2>;
++				#size-cells = <1>;
++				ranges = <0 0x00000000 0xc0000000 0x00010000>,
++					 <1 0x00020000 0xff220000 0x00000008>;
++
++				firmware-name = "soc_system.rbf";
++
++				onchip_memory2_0: memory@0 {
++					device_type = "memory";
++					compatible = "altr,onchipmem-15.1";
++					reg = <0 0x00000000 0x00010000>;
++				};
++
++				jtag_uart: serial@100020000 {
++					compatible = "altr,juart-1.0";
++					reg = <1 0x00020000 0x00000008>;
++					interrupt-parent = <&intc>;
++					interrupts = <0 42 4>;
++					clocks = <&osc2>;
++				};
++			};
++		};
++	};
++};
++
++--
++[1] www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_partrecon.pdf
++[2] tspace.library.utoronto.ca/bitstream/1807/67932/1/Byma_Stuart_A_201411_MAS_thesis.pdf
 -- 
 1.7.9.5
-
