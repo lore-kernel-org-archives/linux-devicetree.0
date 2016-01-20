@@ -1,70 +1,106 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv2 12/16] ARM: dts: imx6ul: add gpmi support
-Date: Wed, 20 Jan 2016 11:09:05 +0100
-Message-ID: <1453284549-16363-13-git-send-email-LW@KARO-electronics.de>
-References: <1452619291-13625-1-git-send-email-LW@KARO-electronics.de>
- <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>, Bai Ping <b51503@freescale.com>, Frank Li <Frank.Li@freescale.com>, Fugang Duan <B38611@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] net: mvneta: mmc: get optional axi clk
+Date: Wed, 20 Jan 2016 12:03:03 +0100
+Message-ID: <569F6967.9040302@gmail.com>
+References: <1453277183-5412-1-git-send-email-jszhang@marvell.com>
+ <1453277183-5412-4-git-send-email-jszhang@marvell.com>
+ <1525e5fba70.2764.107cef0f820c2f5d7b7f41463071c310@gmail.com>
+ <20160120174223.53ccc36b@xhacker>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160120174223.53ccc36b@xhacker>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the device node for the i.MX6UL GPMI interface and the related
-APBH DMA which is necessary for the GPMI to work properly.
+On 01/20/2016 10:42 AM, Jisheng Zhang wrote:
+> On Wed, 20 Jan 2016 10:31:18 +0100 Sebastian Hesselbarth  wrote:
+>
+>> On January 20, 2016 9:15:22 AM Jisheng Zhang wrote:
+>>
+>>> Some platforms may provide more than one clk for the mvneta IP, for
+>>> example Marvell BG4CT provides "core" clk for the mac core, and
+>>> "axi" clk for the AXI bus logic. Obviously this "axi" clk also need to
+>>> be enabled. This patch adds this optional "axi" clk support.
+>>
+>> Jisheng,
+>>
+>> although I do not expect mvneta to appear on a non-AXI bus
+>> anytime soon, how about naming the clock "bus" instead?
+>
+> Good question. IIRC, this IP expects AXI bus, but I'll check with HW people.
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/imx6ul.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Actually, I am quite sure the current IP requires AXI. But my comment
+was more about to make the binding a little bit more flexible to
+_future_ variants/SoCs we may stumble upon.
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.d=
-tsi
-index 985c1b1..8499b3d 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -141,6 +141,39 @@
- 			reg =3D <0x00900000 0x20000>;
- 		};
-=20
-+		dma_apbh: dma-apbh@01804000 {
-+			compatible =3D "fsl,imx6q-dma-apbh", "fsl,imx28-dma-apbh";
-+			reg =3D <0x01804000 0x2000>;
-+			interrupts =3D <0 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <0 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <0 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <0 13 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "gpmi0", "gpmi1", "gpmi2", "gpmi3";
-+			#dma-cells =3D <1>;
-+			dma-channels =3D <4>;
-+			clocks =3D <&clks IMX6UL_CLK_APBHDMA>;
-+		};
-+
-+		gpmi: gpmi-nand@01806000         {
-+			compatible =3D "fsl,imx6q-gpmi-nand";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <1>;
-+			reg =3D <0x01806000 0x2000>, <0x01808000 0x2000>;
-+			reg-names =3D "gpmi-nand", "bch";
-+			interrupts =3D <0 15 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "bch";
-+			clocks =3D <&clks IMX6UL_CLK_GPMI_IO>,
-+				 <&clks IMX6UL_CLK_GPMI_APB>,
-+				 <&clks IMX6UL_CLK_GPMI_BCH>,
-+				 <&clks IMX6UL_CLK_GPMI_BCH_APB>,
-+				 <&clks IMX6UL_CLK_PER_BCH>;
-+			clock-names =3D "gpmi_io", "gpmi_apb", "gpmi_bch",
-+				      "gpmi_bch_apb", "per1_bch";
-+			dmas =3D <&dma_apbh 0>;
-+			dma-names =3D "rx-tx";
-+			status =3D "disabled";
-+		};
-+
- 		aips1: aips-bus@02000000 {
- 			compatible =3D "fsl,aips-bus", "simple-bus";
- 			#address-cells =3D <1>;
---=20
-2.1.4
+Naming the clock "bus" or "dma" will work for the current _and_ future
+IPs, while "axi" may not.
+
+Sebastian
+
+>>
+>> If you know the clock is only required for bus master DMA but
+>> not for register access, "dma" would be an even better name.
+>>
+>> Sebastian
+>>
+>>
+>>> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   drivers/net/ethernet/marvell/mvneta.c | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/drivers/net/ethernet/marvell/mvneta.c
+>>> b/drivers/net/ethernet/marvell/mvneta.c
+>>> index aca0a73..6bb709a 100644
+>>> --- a/drivers/net/ethernet/marvell/mvneta.c
+>>> +++ b/drivers/net/ethernet/marvell/mvneta.c
+>>> @@ -373,6 +373,8 @@ struct mvneta_port {
+>>>
+>>>   	/* Core clock */
+>>>   	struct clk *clk;
+>>> +	/* AXI clock */
+>>> +	struct clk *clk_axi;
+>>>   	u8 mcast_count[256];
+>>>   	u16 tx_ring_size;
+>>>   	u16 rx_ring_size;
+>>> @@ -3615,6 +3617,10 @@ static int mvneta_probe(struct platform_device *pdev)
+>>>
+>>>   	clk_prepare_enable(pp->clk);
+>>>
+>>> +	pp->clk_axi = devm_clk_get(&pdev->dev, "axi");
+>>> +	if (!IS_ERR(pp->clk_axi))
+>>> +		clk_prepare_enable(pp->clk_axi);
+>>> +
+>>>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>   	pp->base = devm_ioremap_resource(&pdev->dev, res);
+>>>   	if (IS_ERR(pp->base)) {
+>>> @@ -3727,6 +3733,7 @@ err_free_ports:
+>>>   	free_percpu(pp->ports);
+>>>   err_clk:
+>>>   	clk_disable_unprepare(pp->clk);
+>>> +	clk_disable_unprepare(pp->clk_axi);
+>>>   err_put_phy_node:
+>>>   	of_node_put(phy_node);
+>>>   err_free_irq:
+>>> @@ -3744,6 +3751,7 @@ static int mvneta_remove(struct platform_device *pdev)
+>>>
+>>>   	unregister_netdev(dev);
+>>>   	clk_disable_unprepare(pp->clk);
+>>> +	clk_disable_unprepare(pp->clk_axi);
+>>>   	free_percpu(pp->ports);
+>>>   	free_percpu(pp->stats);
+>>>   	irq_dispose_mapping(dev->irq);
+>>> --
+>>> 2.7.0.rc3
+>>>
+>>
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
