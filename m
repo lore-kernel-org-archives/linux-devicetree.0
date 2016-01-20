@@ -1,55 +1,68 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Wed, 20 Jan 2016 08:41:55 +0100
-Message-ID: <878u3kvgsc.fsf@dell.be.48ers.dk>
-References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
-	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
-	<87oacp5zl7.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBC6E@penmbx01>
-	<87egdk39ji.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63EBEC7@penmbx01>
-	<87a8o82xq3.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63F6228@penmbx01>
+From: "Yang, Wenyou" <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Wed, 20 Jan 2016 15:50:29 +0800
+Message-ID: <569F3C45.7090109@atmel.com>
+References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
+ <1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
+ <87pox41dy9.fsf@dell.be.48ers.dk>
+ <B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
+ <8737tzz33h.fsf@dell.be.48ers.dk>
+ <B256D81BAE5131468A838E5D7A243641D63F61F4@penmbx01>
+ <87d1swvgv8.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63F6228@penmbx01> (Wenyou
-	Yang's message of "Wed, 20 Jan 2016 07:37:36 +0000")
+In-Reply-To: <87d1swvgv8.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+Hi Peter,
 
-Hi,
+On 2016/1/20 15:40, Peter Korsgaard wrote:
+>>>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+> Hi,
+>
+>>> But the charger driver can just as well do:
+>   >>
+>   >> dev_get_regmap(dev->parent);
+>   >>
+>   >> instead of:
+>   >>
+>   >> dev_get_drvdata(pdev->dev.parent)->regmap.
+>
+>   > For regulator, it works use the core do dev_get_regmap(dev->parent),
+>   > but for charger, it need to export *act8945a.
+>
+> Why?
 
->> > The MFD sub device is registered as a platform device, the existing  > act8865
- >> driver is registered as an i2c_driver. How do they match? :)
- >> 
- >> > Could you point out which exiting driver for me to reference.  Thank you!
- >> 
- >> What I'm saying is that it isn't nice that we end up with both act8865-regulator.c
- >> and act8954-regulator.c doing 95% the same. This can either be fixed by:
- >> 
- >> - Adding act8865 support to your mfd driver (but only registering the
- >> regulator subdev for act8865) and changing the existing
- >> act8865-regulator driver to work as a mfd subdev (platform device)
- >> 
- >> - Extending the act8865-regulator driver to register as a platform
- >> driver in ADDITION to a i2c driver so it can be used with mfd. The
- >> driver already uses regmap so it should only be a matter of adding the
- >> pdev probe/remove functions.
+There is a callback (*get_property)(...), who will read the charger 
+register via regmap,
 
- > After think twice, I think this will complicates the act8865-regulator driver.
+but it doesn't provide the argument for regmap.
 
-I don't think it will add a lot of complication (E.G. basically just the
-platform probe/remove functions), but Ok - I'll wait and see your
-simplified driver.
+include/linux/power_supply.h
 
--- 
-Venlig hilsen,
-Peter Korsgaard 
+struct power_supply_desc {
+         [ ... ]
+         int (*get_property)(struct power_supply *psy,
+                              enum power_supply_property psp,
+                              union power_supply_propval *val);
+         [ ... ]
+
+}
+
+>
+> Just like the regulator core does, your battery driver can do:
+>
+> dev_get_regmap(dev->parent);
+>
+
+Best Regards,
+Wenyou Yang
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
