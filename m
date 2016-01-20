@@ -1,99 +1,118 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Wed, 20 Jan 2016 10:47:34 -0800
-Message-ID: <CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-	<1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
-	<20160120182840.GA15741@rob-hp-laptop>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v15 3/6] ARM: socfpga: add bindings document for fpga bridge drivers
+Date: Wed, 20 Jan 2016 13:24:24 -0600
+Message-ID: <1453317867-10422-4-git-send-email-atull@opensource.altera.com>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160120182840.GA15741@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Yan <andy.yan@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, linux@roeck-us.net, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, geert+renesas@glider.be, sre@kernel.org, Olof Johansson <olof@lixom.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lorenzo.pieralisi@arm.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 10:28 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Jan 12, 2016 at 07:29:49PM +0800, Andy Yan wrote:
->> add device tree binding document for reboot-mode driver
->>
->> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->>
->> ---
->>
->> Changes in v2: None
->> Changes in v1: None
->>
->>  .../bindings/power/reset/reboot-mode.txt           | 41 +++++++++++++++++
->>  .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++++++++++++++
->>  2 files changed, 93 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> new file mode 100644
->> index 0000000..81d9f66
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> @@ -0,0 +1,41 @@
->> +Generic reboot mode core map driver
->> +
->> +This driver get reboot mode arguments and call the write
->> +interface to stores the magic value in special register
->> +or ram . Then the bootloader can read it and take different
->> +action according to the argument stored.
->> +
->> +Required properties:
->> +- compatible: only support "syscon-reboot-mode" now.
->> +
->> +Each mode is represented as a sub-node of reboot_mode:
->> +
->> +Subnode required properties:
->> +- linux,mode: reboot mode command,such as "loader", "recovery", "fastboot".
->> +- loader,magic: magic number for the mode, this is vendor specific.
->> +
->> +Example:
->> +     reboot_mode {
->
-> reboot-mode instead please.
->
->> +             compatible = "syscon-reboot-mode";
->> +             offset = <0x40>;
->
-> This doc by itself is a little confusing. For example, is a child of the
-> syscon node? I would remove offset (and perhaps compatible) from this
-> example.
->
->> +
->> +             loader {
->> +                     linux,mode = "loader";
->> +                     loader,magic = <BOOT_LOADER>;
->> +             };
->
-> Sorry, my previous suggestion was not clear. I'm suggesting get rid of
-> the subnodes and just do properties like this:
->
-> loader = <BOOT_LOADER>;
-> maskrom = <BOOT_MASKROM>;
->
-> That's the same amount of information unless node names and linux,mode
-> values are going to diverge. Do they need to? I can't see a reason.
+From: Alan Tull <atull@opensource.altera.com>
 
+Add bindings documentation for Altera SOCFPGA bridges:
+ * fpga2sdram
+ * fpga2hps
+ * hps2fpga
+ * lwhps2fpga
 
-It seems like devices already have a number of various different
-vendor specific commands.  So this sort of flexibility helps us adapt
-the driver to different hardware/system environments (which may use
-different conventions then what Android commonly uses).
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+v2:  separate into 2 documents for the 2 drivers
+v12: bump version to line up with simple-fpga-bus version
+     remove Linux specific notes such as references to sysfs
+     move non-DT specific documentation elsewhere
+     remove bindings that would have been used to pass configuration
+     clean up formatting
+v13: Remove 'label' property
+     Change property from init-val to bridge-enable
+     Fix email address
+v14: Add resets
+     Change order of bridges to put lw bridge (controlling bridge) first
+v15: No change in this patch for v15 of this patch set
+---
+ .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +++++++
+ .../bindings/fpga/altera-hps2fpga-bridge.txt       |   43 ++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
 
-Unless I'm misunderstanding you and you're instead suggesting we can
-dynamically parse the command mode from the node name?
+diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+new file mode 100644
+index 0000000..81e2f06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+@@ -0,0 +1,15 @@
++Altera FPGA To SDRAM Bridge Driver
++
++Required properties:
++- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
++
++Optional properties:
++- bridge-enable		: 0 if driver should disable bridge at startup
++			  1 if driver should enable bridge at startup
++			  Default is to leave bridge in current state.
++
++Example:
++	fpga2sdram_br: fpgabridge@3 {
++		compatible = "altr,socfpga-fpga2sdram-bridge";
++		bridge-enable = <0>;
++	};
+diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+new file mode 100644
+index 0000000..16db3b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+@@ -0,0 +1,43 @@
++Altera FPGA/HPS Bridge Driver
++
++Required properties:
++- compatible	: Should contain one of:
++		  "altr,socfpga-lwhps2fpga-bridge",
++		  "altr,socfpga-hps2fpga-bridge", or
++		  "altr,socfpga-fpga2hps-bridge"
++- reset-names	: Should contain one of:
++		  "lwhps2fpga",
++		  "hps2fpga", or
++		  "fpga2hps"
++- resets	: Phandle and reset specifier for the reset listed in
++		  reset-names
++- clocks	: Clocks used by this module.
++
++Optional properties:
++- bridge-enable	: 0 if driver should disable bridge at startup.
++		  1 if driver should enable bridge at startup.
++		  Default is to leave bridge in its current state.
++
++Example:
++	hps_fpgabridge0: fpgabridge@0 {
++		compatible = "altr,socfpga-lwhps2fpga-bridge";
++		resets = <&rst LWHPS2FPGA_RESET>;
++		reset-names = "lwhps2fpga";
++		clocks = <&l4_main_clk>;
++		bridge-enable = <0>;
++	};
++
++	hps_fpgabridge1: fpgabridge@1 {
++		compatible = "altr,socfpga-hps2fpga-bridge";
++		resets = <&rst HPS2FPGA_RESET>;
++		reset-names = "hps2fpga";
++		clocks = <&l4_main_clk>;
++		bridge-enable = <1>;
++	};
++
++	hps_fpgabridge2: fpgabridge@2 {
++		compatible = "altr,socfpga-fpga2hps-bridge";
++		resets = <&rst FPGA2HPS_RESET>;
++		reset-names = "fpga2hps";
++		clocks = <&l4_main_clk>;
++	};
+-- 
+1.7.9.5
 
-That said, I agree we should try to push vendors to using the same
-conventions when they are providing the same functionality. But I'm
-not sure we should enforce that by making vendors introduce a new dt
-binding for every new reboot command they want to implement.
-
-thanks
--john
