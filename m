@@ -1,38 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] HSI: nokia-modem: add n950 and n9 support
-Date: Wed, 20 Jan 2016 10:49:19 -0600
-Message-ID: <20160120164919.GA29749@rob-hp-laptop>
-References: <1453045749-22642-1-git-send-email-sre@kernel.org>
- <1453045749-22642-4-git-send-email-sre@kernel.org>
+Subject: Re: [PATCH 5/5 RFC] DT: sdhci-iproc: add bcm2835 compatible
+Date: Wed, 20 Jan 2016 10:50:24 -0600
+Message-ID: <20160120165024.GA31174@rob-hp-laptop>
+References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
+ <1453042744-16196-6-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453045749-22642-4-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1453042744-16196-6-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 04:49:07PM +0100, Sebastian Reichel wrote:
-> The Nokia N950 and Nokia N9 also have a SSI connected
-> modem, which use the same protocols as the Nokia N900,
-> but with slightly other GPIO setup and increased link
-
-"slightly other" does not make sense.
-
-> speed (96000 kbps instead of 55000 kbps).
+On Sun, Jan 17, 2016 at 02:59:04PM +0000, Stefan Wahren wrote:
+> Since sdhci-iproc can support bcm2835 we need to add the
+> compatible string to the binding.
 > 
-> Since it's unclear, if the N950 and the N9 use exactly
-> the same modem, each of them gets their own compatible
-> string.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
->  Documentation/devicetree/bindings/hsi/nokia-modem.txt | 12 +++++++-----
->  drivers/hsi/clients/nokia-modem.c                     |  2 ++
->  2 files changed, 9 insertions(+), 5 deletions(-)
-
-Otherwise,
+>  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |    5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
