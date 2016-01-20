@@ -1,7 +1,7 @@
 From: <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RFC 1/3] dt-bindings: soc: Add documentation for the MediaTek GCE unit
-Date: Wed, 20 Jan 2016 13:14:38 +0800
-Message-ID: <1453266881-16849-2-git-send-email-hs.liao@mediatek.com>
+Subject: [RFC 2/3] arm64: dts: mt8173: Add GCE node
+Date: Wed, 20 Jan 2016 13:14:39 +0800
+Message-ID: <1453266881-16849-3-git-send-email-hs.liao@mediatek.com>
 References: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,54 +14,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-This adds documentation for the MediaTek Global Command Engine (GCE) unit
-found in MT8173 SoCs.
+This patch adds the device node of the GCE hardware for CMDQ module.
 
 Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/soc/mediatek/gce.txt       |   33 ++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/gce.txt b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
-new file mode 100644
-index 0000000..878b11e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
-@@ -0,0 +1,33 @@
-+MediaTek GCE
-+===============
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 4dd5f93..4474e2f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -273,6 +273,14 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		gce: gce@10212000 {
++			compatible = "mediatek,mt8173-gce";
++			reg = <0 0x10212000 0 0x1000>;
++			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
 +
-+The Global Command Engine (GCE) is used to help read/write registers with
-+critical time limitation, such as updating display configuration during the
-+vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
-+Currently, the GCE only supports display related hardwares, but we expect
-+it can be extended to other hardwares for future requirements.
-+
-+Required properties:
-+- compatible: Must be "mediatek,mt8173-gce"
-+- reg: Address range of the GCE unit
-+- interrupts: The interrupt signal from the GCE block
-+- clock: Clocks according to the common clock binding
-+- clock-names: Must be "gce" to stand for GCE clock
-+
-+Example:
-+
-+	gce: gce@10212000 {
-+		compatible = "mediatek,mt8173-gce";
-+		reg = <0 0x10212000 0 0x1000>;
-+		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_GCE>;
-+		clock-names = "gce";
-+	};
-+
-+	mmsys: clock-controller@14000000 {
-+		compatible = "mediatek,mt8173-mmsys", "syscon";
-+		reg = <0 0x14000000 0 0x1000>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		#clock-cells = <1>;
-+		mediatek,gce = <&gce>;
-+	};
+ 		gic: interrupt-controller@10220000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
 -- 
 1.7.9.5
 
