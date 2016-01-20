@@ -1,62 +1,75 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCHv2 09/16] ARM: dts: imx6ul: add flexcan support
-Date: Wed, 20 Jan 2016 11:09:02 +0100
-Message-ID: <1453284549-16363-10-git-send-email-LW@KARO-electronics.de>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCHv2 05/16] ARM: dts: imx6ul: specify proper clocks for the PWM nodes
+Date: Wed, 20 Jan 2016 11:08:58 +0100
+Message-ID: <1453284549-16363-6-git-send-email-LW@KARO-electronics.de>
 References: <1452619291-13625-1-git-send-email-LW@KARO-electronics.de>
  <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453284549-16363-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Anson Huang <b20788@freescale.com>, Bai Ping <b51503@freescale.com>, Frank Li <Frank.Li@freescale.com>, Fugang Duan <B38611@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the i.MX6UL flexcan interfaces.
+i.MX6UL PWMs require real clocks. Define the appropriate clocks for
+the PWM units.
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/imx6ul.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.d=
 tsi
-index 9c719b2..9c873a6 100644
+index e6e3e54..3aba0bb 100644
 --- a/arch/arm/boot/dts/imx6ul.dtsi
 +++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -292,6 +292,26 @@
- 				status =3D "disabled";
+@@ -508,8 +508,8 @@
+ 				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x020f0000 0x4000>;
+ 				interrupts =3D <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6UL_CLK_DUMMY>,
+-					 <&clks IMX6UL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6UL_CLK_PWM5>,
++					 <&clks IMX6UL_CLK_PWM5>;
+ 				clock-names =3D "ipg", "per";
+ 				#pwm-cells =3D <2>;
  			};
-=20
-+			can1: flexcan@02090000 {
-+				compatible =3D "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
-+				reg =3D <0x02090000 0x4000>;
-+				interrupts =3D <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clks IMX6UL_CLK_CAN1_IPG>,
-+					 <&clks IMX6UL_CLK_CAN1_SERIAL>;
-+				clock-names =3D "ipg", "per";
-+				status =3D "disabled";
-+			};
-+
-+			can2: flexcan@02094000 {
-+				compatible =3D "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
-+				reg =3D <0x02094000 0x4000>;
-+				interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clks IMX6UL_CLK_CAN2_IPG>,
-+					 <&clks IMX6UL_CLK_CAN2_SERIAL>;
-+				clock-names =3D "ipg", "per";
-+				status =3D "disabled";
-+			};
-+
- 			gpt1: gpt@02098000 {
- 				compatible =3D "fsl,imx6ul-gpt", "fsl,imx6sx-gpt";
- 				reg =3D <0x02098000 0x4000>;
+@@ -518,8 +518,8 @@
+ 				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x020f4000 0x4000>;
+ 				interrupts =3D <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6UL_CLK_DUMMY>,
+-					 <&clks IMX6UL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6UL_CLK_PWM6>,
++					 <&clks IMX6UL_CLK_PWM6>;
+ 				clock-names =3D "ipg", "per";
+ 				#pwm-cells =3D <2>;
+ 			};
+@@ -528,8 +528,8 @@
+ 				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x020f8000 0x4000>;
+ 				interrupts =3D <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6UL_CLK_DUMMY>,
+-					 <&clks IMX6UL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6UL_CLK_PWM7>,
++					 <&clks IMX6UL_CLK_PWM7>;
+ 				clock-names =3D "ipg", "per";
+ 				#pwm-cells =3D <2>;
+ 			};
+@@ -538,8 +538,8 @@
+ 				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x020fc000 0x4000>;
+ 				interrupts =3D <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6UL_CLK_DUMMY>,
+-					 <&clks IMX6UL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6UL_CLK_PWM8>,
++					 <&clks IMX6UL_CLK_PWM8>;
+ 				clock-names =3D "ipg", "per";
+ 				#pwm-cells =3D <2>;
+ 			};
 --=20
 2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
