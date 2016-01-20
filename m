@@ -1,47 +1,38 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
-Date: Wed, 20 Jan 2016 08:40:11 +0100
-Message-ID: <87d1swvgv8.fsf@dell.be.48ers.dk>
-References: <1452747845-2962-1-git-send-email-wenyou.yang@atmel.com>
-	<1452747845-2962-2-git-send-email-wenyou.yang@atmel.com>
-	<87pox41dy9.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63ECA51@penmbx01>
-	<8737tzz33h.fsf@dell.be.48ers.dk>
-	<B256D81BAE5131468A838E5D7A243641D63F61F4@penmbx01>
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: cm-t335: add peripherals - part 2
+Date: Wed, 20 Jan 2016 09:40:25 +0200
+Message-ID: <569F39E9.2070506@compulab.co.il>
+References: <1451475695-26921-1-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63F61F4@penmbx01> (Wenyou
-	Yang's message of "Wed, 20 Jan 2016 07:26:56 +0000")
+In-Reply-To: <1451475695-26921-1-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Yang," == Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+Gentle ping
 
-Hi,
-
->> But the charger driver can just as well do:
- >> 
- >> dev_get_regmap(dev->parent);
- >> 
- >> instead of:
- >> 
- >> dev_get_drvdata(pdev->dev.parent)->regmap.
-
- > For regulator, it works use the core do dev_get_regmap(dev->parent),
- > but for charger, it need to export *act8945a.
-
-Why?
-
-Just like the regulator core does, your battery driver can do:
-
-dev_get_regmap(dev->parent);
+On 12/30/2015 01:41 PM, Uri Mashiach wrote:
+> Add support for the following peripherals:
+> - CAN BUS
+> - Touchscreen
+> - Audio
+>
+> Uri Mashiach (3):
+>    ARM: dts: cm-t335: Add support for CAN bus
+>    ARM: dts: cm-t335: add touchscreen support
+>    ARM: dts: cm-t335: add audio support
+>
+>   arch/arm/boot/dts/am335x-cm-t335.dts | 116 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 116 insertions(+)
+>
 
 -- 
-Venlig hilsen,
-Peter Korsgaard 
+Regards,
+Uri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
