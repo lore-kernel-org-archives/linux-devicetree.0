@@ -1,43 +1,457 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Wed, 20 Jan 2016 11:38:44 -0800
-Message-ID: <CAKdAkRQh7xSgOXERhA8EjXEfX5m-PTTjiv757X7FYxK=bhfpww@mail.gmail.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
-	<CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
-	<481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
-	<20160113191542.GA12086@leverpostej>
-	<1CD6CA14-AE4F-444F-A9A2-CF9B9485F2DC@goldelico.com>
-	<20160115110106.GA3262@leverpostej>
-	<69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
-	<569913A1.80606@cogentembedded.com>
-	<CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
-	<56992959.2020204@hurleysoftware.com>
-	<CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
-	<744620565.20160116103445@cogentembedded.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control for FPGA
+Date: Wed, 20 Jan 2016 13:24:26 -0600
+Message-ID: <1453317867-10422-6-git-send-email-atull@opensource.altera.com>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <744620565.20160116103445-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 15, 2016 at 11:34 PM, Vostrikov Andrey
-<andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
->
-> Yes, such implementation will help. There is a need for interface like UART BUS that will probe devices without user space.
-> Serial I/O for input subsystem defines new type of bus and uses dedicated line discipline, but it still unable to start driver by itself and requires call from 'inputattach' to open port, assign line discipline and go to forever wait on 'read'.
+From: Alan Tull <atull@opensource.altera.com>
 
-That was done mainly because almost none of the serial protocols could
-be auto-probed, so device initialization/setup was moved out of kernel
-and thus we have the separate line discipline and inputattach utility.
+FPGA Area and FPGA Bus support programming FPGA under control of
+the Device Tree.
 
-Thanks.
+A FPGA Bus contains the devices necessary for programming an
+FPGA.
 
+When a Device Tree Overlay containing a FPGA Area is
+applied, the FPGA Area will be probed and will:
+ * check to see if there is an image to program to a FPGA
+ * get references to the FPGA manager and bridges if any
+ * disable FPGA bridges to prevent spurious data on busses
+ * reprogram the FPGA
+ * enable the specified FPGA bridges
+ * populate the child devices
+
+Removing the Device Tree Overlay is also supported.
+
+This supports fpga use where hardware blocks on a fpga will
+need drivers.
+
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v9:  initial version (this patch added during rest of patchset's v9)
+v10: request deferral if fpga mgr or bridges not available yet
+     cleanup as fpga manager core goes into the real kernel
+     Don't assume bridges are disabled before programming FPGA
+     Don't hang onto reference for fpga manager
+     Move to staging/simple-fpga-bus
+v11: No change in this patch for v11 of the patch set
+v12: Moved out of staging.
+     Use fpga bridges framework.
+v13: If no bridges are specified, assume we don't need any.
+     Clean up debug messages
+     Some dev_info -> dev_dbg
+     Remove unneeded #include
+     Fix size of array of pointers
+     Don't need to specify .owner
+     Use common binding: firmware-name
+v14: OK it's not a simple bus.  Call it "FPGA Area"
+     Remove bindings that specify FPGA manager and FPGA bridges
+     Use parent FPGA bridge and bridges that are its peers
+     Use ancestor FPGA Manager
+v15: Add altr,fpga-bus implementation
+     Change compatible string "fpga-area" -> "altr,fpga-area"
+---
+ drivers/fpga/Kconfig     |    7 +
+ drivers/fpga/Makefile    |    3 +
+ drivers/fpga/fpga-area.c |  352 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 362 insertions(+)
+ create mode 100644 drivers/fpga/fpga-area.c
+
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index b6cfd89..6ac916b 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -31,6 +31,13 @@ config FPGA_BRIDGE
+          Say Y here if you want to support bridges connected between host
+ 	 processors and FPGAs or between FPGAs.
+ 
++config FPGA_AREA
++       bool "Device Tree Based FPGA Reprogramming"
++       depends on FPGA_BRIDGE
++       help
++         Enable FPGA Area which supports programming FPGAs under control of
++	 Device Tree.
++
+ endif # FPGA
+ 
+ endmenu
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index 4baef00..4f7e49f 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -11,3 +11,6 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ 
+ # FPGA Bridge Drivers
+ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
++
++# High Level Interfaces
++obj-$(CONFIG_FPGA_AREA)			+= fpga-area.o
+diff --git a/drivers/fpga/fpga-area.c b/drivers/fpga/fpga-area.c
+new file mode 100644
+index 0000000..cec332f
+--- /dev/null
++++ b/drivers/fpga/fpga-area.c
+@@ -0,0 +1,352 @@
++/*
++ * FPGA Tree Area Support for Device Tree controlled FPGA reprogramming
++ *
++ *  Copyright (C) 2013-2015 Altera Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/fpga/fpga-bridge.h>
++#include <linux/fpga/fpga-mgr.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++
++/*
++ * In the case of a FPGA doing full reconfiguration, the area == the whole
++ * FPGA.  In the case of partial reconfiguration, several areas can be
++ * reconfigured separately.
++ */
++
++/**
++ * struct fpga_area
++ * @mgr:	FPGA Manager
++ * @flags:	Flags for reconfiguration
++ * @firmware_name: Name of FPGA image file
++ * @bridge_list: Linked list of FPGA bridges controlled by area
++ * @br:		FPGA Bridge corresponding to area
++ * @bus_np:	device node of ancestor FPGA Bus
++ */
++struct fpga_area {
++	struct fpga_manager *mgr;
++	u32 flags;
++	const char *firmware_name;
++	struct list_head bridge_list;
++	struct fpga_bridge *br;
++	struct device_node *bus_np;
++};
++
++/**
++ * fpga_area_get_parent_peer_bridges - get bridges that are peers of parent
++ * @area: FPGA Area struct
++ *
++ * Intended to support case where multiple bridges need to be disabled
++ * during FPGA reprogramming.
++ *
++ * Finds the FPGA bridge that is the parent of @area in the device tree.
++ * Creates a linked list of FPGA bridges that includes the parent bridge and
++ * its peers.  Gets an exclusive reference to each of these bridges as they
++ * are added to the list.  The list of bridges is saved in @area's
++ * fpga_bridge struct.
++ *
++ * These bridges must be disabled while the FPGA is being reprogrammed to
++ * support the children of the @area bridge and enabled after FPGA
++ * programming is finished.
++ *
++ * For the use case where no FPGA bridges are required, the parent node should
++ * be a FPGA Manager.  In this case, the bridge list will end up empty.
++ *
++ * Returns error code or 0 for success.  Returns 0 if the parent is a FPGA
++ * manager.
++ */
++static int fpga_area_get_parent_peer_bridges(struct fpga_area *area)
++{
++	struct device_node *parent, *child;
++	struct fpga_bridge *bridge;
++	int ret;
++
++	/* Create a list of bridges that are peers of area's parent */
++	parent = of_get_parent(area->br->dev.of_node);
++	parent = of_get_next_parent(parent);
++
++	for_each_child_of_node(parent, child) {
++		/* If node is a bridge, get it and add to list */
++		ret = fpga_bridge_get_to_list(child, &area->bridge_list);
++
++		/* if any of the bridges are in use, give up */
++		if (ret == -EBUSY) {
++			fpga_bridges_put(&area->bridge_list);
++			of_node_put(parent);
++			return PTR_ERR(bridge);
++		}
++	}
++	of_node_put(parent);
++
++	return 0;
++}
++
++/**
++ * fpga_area_get_bridges - create list of exclusive references to fpga bridges
++ * @area: FPGA Area struct
++ *
++ * Get exclusive references to a FPGA bridge or bridges.
++ * In the case of full reconfiguration build a list of bridges that are the
++ * parent of @area and its peers.  We are reprogramming the full FPGA and
++ * need to have no communication on the processor/FPGA bridges while that
++ * is happening
++ * In the case of partial reconfiguration, only add the parent of @area to
++ * the list.  This one bridge is a freeze block which is in the FPGA itself
++ * and is downstream from its parent bridge and the parent's peers.
++ *
++ * Return 0 for success. Return -ENODEV is there are no bridges.
++ * Pass other error codes ultimately from of_fpga_bridge_get() such as:
++ * Return -EBUSY if any of the bridges were already gotten.
++ */
++static int fpga_area_get_bridges(struct fpga_area *area)
++{
++	struct device_node *parent;
++	int ret = 0;
++
++	/* If parent is FPGA Manager, no bridges to get */
++	parent = of_get_parent(area->br->dev.of_node);
++	if (parent == area->mgr->dev.of_node) {
++		of_node_put(parent);
++		return -ENODEV;
++	}
++
++	if (area->flags & FPGA_MGR_PARTIAL_RECONFIG)
++		ret = fpga_bridge_get_to_list(parent, &area->bridge_list);
++	else
++		ret = fpga_area_get_parent_peer_bridges(area);
++
++	of_node_put(parent);
++
++	return ret;
++}
++
++/**
++ * fpga_area_load - program the FPGA based on info in area
++ * @area: FPGA Area struct
++ *
++ * Program the FPGA that the area has a reference to.
++ *
++ * Returns 0 for success or error codes passed down from
++ * fpga_mgr_firmware_load()
++ */
++static int fpga_area_load(struct fpga_area *area)
++{
++	return fpga_mgr_firmware_load(area->mgr,
++				      area->flags,
++				      area->firmware_name);
++}
++
++/**
++ * fpga_area_get_bus - find ancestor FPGA Bus, get a reference
++ * @area: FPGA Area struct
++ *
++ * Returns 0 for success or -ENODEV if not a child of a FPGA Bus.
++ */
++static int fpga_area_get_bus(struct fpga_area *area)
++{
++	struct device_node *np = area->br->dev.of_node;
++
++	of_node_get(np);
++
++	while (np && !of_device_is_compatible(np, "altr,fpga-bus"))
++		np = of_get_next_parent(np);
++
++	if (!np)
++		return -ENODEV;
++
++	area->bus_np = np;
++
++	return 0;
++}
++
++/**
++ * fpga_area_put_bus - put FPGA Bus saved in @area
++ * @area: FPGA Area struct
++ */
++static void fpga_area_put_bus(struct fpga_area *area)
++{
++	of_node_put(area->bus_np);
++	area->bus_np = NULL;
++}
++
++/**
++ * fpga_area_get_manager - get exclusive reference for FPGA Manager
++ * @area: FPGA Area struct
++ *
++ * One of the ancestor nodes of the FPGA Area should be a FPGA Bus.  One of
++ * the children of that FPGA Bus should be a FPGA Manager.
++ * Assuming that fpga_area_get_bus() has already found the bus, this function
++ * finds the FPGA Manager and saves it in the area struct.
++ *
++ * Return: 0 for success or IS_ERR() condition containing error code.
++ */
++static int fpga_area_get_manager(struct fpga_area *area)
++{
++	struct device_node  *child;
++	struct fpga_manager *mgr;
++
++	for_each_child_of_node(area->bus_np, child) {
++		mgr = of_fpga_mgr_get(child);
++		if (IS_ERR(mgr))
++			continue;
++
++		area->mgr = mgr;
++		return 0;
++	}
++
++	return -ENODEV;
++}
++
++/**
++ * fpga_area_put_manager - put exclusive reference to FPGA Manager
++ * @area: FPGA Area struct
++ */
++static void fpga_area_put_manager(struct fpga_area *area)
++{
++	fpga_mgr_put(area->mgr);
++	area->mgr = NULL;
++}
++
++/**
++ * fpga_area_probe - probe function for FPGA area
++ * @pdev: platform device
++ *
++ * If there is an image to program to a FPGA, get the FPGA Manager and bridges,
++ * reprogram the FPGA, and  populate the child devices.
++ *
++ * If there are FPGA Bridges, this function will hold the references to the
++ * bridges; they are released in fpga_area_remove().
++ *
++ * Return:  0 for success, -EBUSY if someone already got the bridges or manager.
++ */
++static int fpga_area_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct fpga_area *area;
++	int ret;
++
++	area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
++	if (!area)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(&area->bridge_list);
++
++	ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
++	if (ret)
++		return ret;
++	area->br = dev_get_drvdata(dev);
++
++	if (of_property_read_string(np, "firmware-name",
++				    &area->firmware_name)) {
++		of_platform_populate(np, of_default_bus_match_table, NULL, dev);
++		return 0;
++	}
++
++	if (of_property_read_bool(np, "partial-reconfig"))
++		area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
++
++	ret = fpga_area_get_bus(area);
++	if (ret) {
++		dev_dbg(dev, "Should be child of a FPGA Bus");
++		goto err_unreg;
++	}
++
++	ret = fpga_area_get_manager(area);
++	if (ret) {
++		dev_dbg(dev, "Could not find FPGA Manager");
++		goto err_unreg;
++	}
++
++	/* Give up if there is an error other than no bridges. */
++	ret = fpga_area_get_bridges(area);
++	if (ret && ret != -ENODEV)
++		goto err_release;
++
++	ret = fpga_bridges_disable(&area->bridge_list);
++	if (ret)
++		goto err_release;
++
++	ret = fpga_area_load(area);
++	if (ret)
++		goto err_release;
++
++	ret = fpga_bridges_enable(&area->bridge_list);
++	if (ret)
++		goto err_release;
++
++	/* If successful, put the mgr, but keep the bridges */
++	fpga_area_put_manager(area);
++
++	of_platform_populate(np, of_default_bus_match_table, NULL, dev);
++
++	return 0;
++
++err_release:
++	fpga_bridges_put(&area->bridge_list);
++	fpga_area_put_manager(area);
++err_unreg:
++	fpga_bridge_unregister(dev);
++
++	return ret;
++}
++
++/**
++ * fpga_area_remove - remove a FPGA area
++ * @pdev: platform device
++ *
++ * Called when an FPGA Area is removed.  If there are any FPGA Bridges in the
++ * area's bridge list, disable them and put them.
++ *
++ * Return: 0
++ */
++static int fpga_area_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct fpga_bridge *bridge = dev_get_drvdata(dev);
++	struct fpga_area *area = bridge->priv;
++
++	fpga_area_put_bus(area);
++
++	fpga_bridges_disable(&area->bridge_list);
++	fpga_bridges_put(&area->bridge_list);
++
++	fpga_bridge_unregister(dev);
++
++	return 0;
++}
++
++static const struct of_device_id fpga_area_of_match[] = {
++	{ .compatible = "fpga-area", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, fpga_area_of_match);
++
++static struct platform_driver fpga_area_driver = {
++	.probe = fpga_area_probe,
++	.remove = fpga_area_remove,
++	.driver = {
++		.name	= "FPGA Area",
++		.of_match_table = of_match_ptr(fpga_area_of_match),
++	},
++};
++
++module_platform_driver(fpga_area_driver);
++
++MODULE_DESCRIPTION("Altera FPGA Bus");
++MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
++MODULE_LICENSE("GPL v2");
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
+
