@@ -1,128 +1,102 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 5/5] ARM: dts: rockchip: add support mipi panel
- tv080wum-nl0
-Date: Wed, 20 Jan 2016 23:25:03 +0100
-Message-ID: <4804270.fNNME6HN13@phil>
-References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
- <1649978.zzK0Pex4sR@phil> <569EDE2F.6060400@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv3 2/2] gpio: sn65hvs885: Add DT binding documentation
+Date: Wed, 20 Jan 2016 16:25:54 -0600
+Message-ID: <CAL_JsqLC+DWGh90qemZzBM=3sxDqH9sZ_mLKQ9u3c0g7obK-Yw@mail.gmail.com>
+References: <1453198940-31410-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1453198940-31410-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <20160119172040.GA8857@rob-hp-laptop> <569F816D.1000309@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <569EDE2F.6060400-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <569F816D.1000309@prevas.dk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Sean_Nyekj=C3=A6r?= <sean.nyekjaer@prevas.dk>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 20. Januar 2016, 09:09:03 schrieb Chris Zhong:
-> Hi Heiko
-> 
-> On 01/20/2016 03:26 AM, Heiko Stuebner wrote:
-> > Hi Chris,
-> > 
-> > Am Mittwoch, 6. Januar 2016, 12:03:57 schrieb Chris Zhong:
-> >> This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
-> >> of rk3288 evb board.
-> >> 
-> >> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > [...]
-> > 
-> >> diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts
-> >> b/arch/arm/boot/dts/rk3288-evb-act8846.dts index e662147..7d5475b
-> >> 100644
-> >> --- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
-> >> +++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-> >> @@ -50,6 +50,8 @@
-> >> 
-> >>   		gpio = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> >>   		pinctrl-names = "default";
-> >>   		pinctrl-0 = <&lcd_en>;
-> >> 
-> >> +		regulator-always-on;
-> >> +		regulator-boot-on;
-> > 
-> > Is this only needed for the panel itself and can you try to get the
-> > panel
-> > supplies set up correctly instead in that case please?
-> 
-> It is not only for panel, LCDC_VDD need this supply too.
-> And rk3288-evb-rk808.dts has set this regulator to always on, so I do
-> the same thing in here.
+On Wed, Jan 20, 2016 at 6:45 AM, Sean Nyekj=C3=A6r <sean.nyekjaer@preva=
+s.dk> wrote:
+> Hi
+>
+> Yes i need to add the gpio-controller and #gpio-cells. But i'm not ex=
+actly
+> sure what gpio-cells means and its difficult to find in documentation=
+=2E
 
-ok, so we keep the regulator-always-on for now, but could probably still add 
-the supply to the panel as well? That way once vcc_lcd handling is complete 
-in the future, we don't get surprises :-)
+#*-cells are standard properties that a producer sets for clients to
+describe their connection and are necessary to know how to parse
+properties such as *-gpios in this case.
 
-I guess I can add that power-supply property myself when applying.
+> I found this in the documentation:
+> #gpio-cells: The first cell is the GPIO number and the second cell is=
+ used
+> to specify the GPIO polarity.
+>
+> This device only supports inputs so the gpio-cells option needs to be=
+ <1>
+> or ??
+> #gpio-cells =3D <1>;
 
+Most controllers use 2 even if 2nd field is unused. You can use the
+2nd field for inputs too. For example, specify that a detect line is
+active high or low for detect.
 
-Heiko
+Rob
 
-> 
-> >>   		regulator-name = "vcc_lcd";
-> >>   		vin-supply = <&vcc_io>;
-> >>   	
-> >>   	};
-> >> 
-> >> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
-> >> b/arch/arm/boot/dts/rk3288-evb.dtsi index 4faabdb..0c91858 100644
-> >> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> >> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> >> @@ -47,7 +47,7 @@
-> >> 
-> >>   		reg = <0x0 0x80000000>;
-> >>   	
-> >>   	};
-> >> 
-> >> -	backlight {
-> >> +	backlight: backlight {
-> >> 
-> >>   		compatible = "pwm-backlight";
-> >>   		brightness-levels = <
-> >>   		
-> >>   			  0   1   2   3   4   5   6   7
-> >> 
-> >> @@ -183,6 +183,16 @@
-> >> 
-> >>   	status = "okay";
-> >>   
-> >>   };
-> >> 
-> >> +&mipi_dsi {
-> >> +	status = "okay";
-> >> +	panel {
-> >> +		compatible ="boe,tv080wum-nl0";
-> >> +		reg = <0>;
-> >> +		backlight = <&backlight>;
-> >> +		status = "okay";
-> > 
-> > in the evb-schematics I see, vcc_lcd as supply for the panel.
-> > 
-> > So I'd think the panel node here should have a
-> > 
-> > 	power-supply = <&vcc_lcd>;
-> > 
-> > instead of having the always-on above?
-> > 
-> > 
-> > Thanks
-> > Heiko
-> > 
-> >> +	};
-> >> +};
-> >> +
-> >> 
-> >>   &sdmmc {
-> >>   
-> >>   	bus-width = <4>;
-> >>   	cap-mmc-highspeed;
+>
+> /Sean
+>
+>
+> On 2016-01-19 18:20, Rob Herring wrote:
+>>
+>> On Tue, Jan 19, 2016 at 11:22:20AM +0100, Sean Nyekjaer wrote:
+>>>
+>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+>>> ---
+>>>   Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt | 9
+>>> +++++++++
+>>>   1 file changed, 9 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885=
+=2Etxt
+>>> b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+>>> new file mode 100644
+>>> index 0000000..56679ac
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+>>> @@ -0,0 +1,9 @@
+>>> +* TI SN65HVS885 digital-input serializer
+>>> +
+>>> +Example:
+>>> +       sn65hvs885@3 {
+>>> +               compatible =3D "sn65hvs885";
+>>> +               spi-max-frequency =3D <10000000>;
+>>> +               reg =3D <0>;
+>>
+>> What about all the standard gpio controller properties?
+>>
+>>> +       };
+>>> +
+>>> --
+>>> 2.7.0
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetre=
+e" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
