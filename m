@@ -1,26 +1,94 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: xiic: Implement Power management
-Date: Wed, 20 Jan 2016 14:41:48 +0530
-Message-ID: <CAKfKVtHxgwuKO6sKTWMQv+M=kDwpdMdY72WNm22so_eYB2cFuw@mail.gmail.com>
-References: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] soc: mediatek: Refine scpsys to support multiple
+ platform
+Date: Wed, 20 Jan 2016 17:14:04 +0800
+Message-ID: <1453281244.16515.3.camel@mtksdaap41>
+References: <1453270097-53853-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1453270097-53853-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451893834-1066-1-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1453270097-53853-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 4, 2016 at 1:20 PM, Shubhrajyoti Datta
-<shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Enable power management. This patch enables the clocks
-> before transfer and disables after the transfer.
->
-> Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
+On Wed, 2016-01-20 at 14:08 +0800, James Liao wrote:
+> Refine scpsys driver common code to support multiple SoC / platform.
+> 
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+<...>
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.h b/drivers/soc/mediatek/mtk-scpsys.h
+> new file mode 100644
+> index 0000000..e435bc3
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mtk-scpsys.h
+> @@ -0,0 +1,55 @@
+> +#ifndef __DRV_SOC_MTK_H
+> +#define __DRV_SOC_MTK_H
+> +
+> +enum clk_id {
+> +	CLK_NONE,
+> +	CLK_MM,
+> +	CLK_MFG,
+> +	CLK_VENC,
+> +	CLK_VENC_LT,
+> +	CLK_MAX,
+> +};
+> +
+> +#define MAX_CLKS	2
+> +
+> +struct scp_domain_data {
+> +	const char *name;
+> +	u32 sta_mask;
+> +	int ctl_offs;
+> +	u32 sram_pdn_bits;
+> +	u32 sram_pdn_ack_bits;
+> +	u32 bus_prot_mask;
+> +	enum clk_id clk_id[MAX_CLKS];
+> +	bool active_wakeup;
+> +};
+> +
+> +struct scp;
+> +
+> +struct scp_domain {
+> +	struct generic_pm_domain genpd;
+> +	struct scp *scp;
+> +	struct clk *clk[MAX_CLKS];
+> +	u32 sta_mask;
+> +	void __iomem *ctl_addr;
+> +	u32 sram_pdn_bits;
+> +	u32 sram_pdn_ack_bits;
+> +	u32 bus_prot_mask;
+> +	bool active_wakeup;
+> +	struct regulator *supply;
+> +};
+> +
+> +struct scp {
+> +	struct scp_domain *domains;
+> +	struct genpd_onecell_data pd_data;
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct regmap *infracfg;
+> +};
+> +
+> +struct scp *init_scp(struct platform_device *pdev,
+> +			const struct scp_domain_data *scp_domain_data, int num);
+> +
+> +void mtk_register_power_domains(struct platform_device *pdev,
+> +				struct scp *scp, int num);
+> +
+> +#endif /* __DRV_SOC_MTK_H */
 
-If there are no further comments can this be considered for merge?
+After merge, only mtk-scpsys.c will use this file. I think it make sense
+to just include them in mtk-scpsys.c. Also init_scp and
+mtk_register_power_domains can be static now.
+
+Joe.C
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
