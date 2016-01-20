@@ -1,78 +1,47 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 1/4] net: mvneta: sort the headers in alphabetic order
-Date: Wed, 20 Jan 2016 16:06:20 +0800
-Message-ID: <1453277183-5412-2-git-send-email-jszhang@marvell.com>
-References: <1453277183-5412-1-git-send-email-jszhang@marvell.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] SoC: rockchip: support power domain for RK3368
+Date: Wed, 20 Jan 2016 09:26:45 +0100
+Message-ID: <3061119.C8moAIEzLL@phil>
+References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com> <569F6135.1070902@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1453277183-5412-1-git-send-email-jszhang@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thomas.petazzoni@free-electrons.com, davem@davemloft.net, mw@semihalf.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <569F6135.1070902-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sorting the headers in alphabetic order will help to reduce the conflict
-when adding new headers in the future.
+Hi Elaine,
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
- drivers/net/ethernet/marvell/mvneta.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Am Mittwoch, 20. Januar 2016, 02:28:05 schrieb zhangqing:
+> On 01/11/2016 02:36 AM, zhangqing wrote:
+> > add pd id in rk3368-power.h
+> > modify pm_domains.c to support RK3368 SoC
+> > add RK3368 document for Rockchip power domains
+> > 
+> > zhangqing (3):
+> >    dt-bindings: add power-domain header for RK3368 SoCs
+> >    soc: rockchip: power-domain: Modify power domain driver for rk3368
+> >    dt-bindings: modify document of Rockchip power domains
+> 
+> Are there any other questions about the three patches.Please review.
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index fabc8df..79e0c7d 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -11,28 +11,28 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
--#include <linux/kernel.h>
--#include <linux/netdevice.h>
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
- #include <linux/etherdevice.h>
--#include <linux/platform_device.h>
--#include <linux/skbuff.h>
--#include <linux/inetdevice.h>
-+#include <linux/kernel.h>
- #include <linux/mbus.h>
- #include <linux/module.h>
--#include <linux/interrupt.h>
-+#include <linux/netdevice.h>
- #include <linux/if_vlan.h>
--#include <net/ip.h>
--#include <net/ipv6.h>
-+#include <linux/inetdevice.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
--#include <net/tso.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
--#include <linux/of_address.h>
- #include <linux/phy.h>
--#include <linux/clk.h>
--#include <linux/cpu.h>
-+#include <linux/platform_device.h>
-+#include <linux/skbuff.h>
-+#include <net/ip.h>
-+#include <net/ipv6.h>
-+#include <net/tso.h>
- 
- /* Registers */
- #define MVNETA_RXQ_CONFIG_REG(q)                (0x1400 + ((q) << 2))
--- 
-2.7.0.rc3
+actually the patches look fine. I just need to wait for 4.5-rc1 to be 
+released (probably sunday) before I can apply them.
+
+
+Heiko
+
+> 
+> >   .../bindings/soc/rockchip/power_domain.txt         | 21 ++++++++++++++
+> >   drivers/soc/rockchip/pm_domains.c                  | 33
+> >   ++++++++++++++++++++++ include/dt-bindings/power/rk3368-power.h      
+> >       | 28 ++++++++++++++++++ 3 files changed, 82 insertions(+)
+> >   create mode 100644 include/dt-bindings/power/rk3368-power.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
