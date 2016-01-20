@@ -1,47 +1,61 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Wed, 20 Jan 2016 12:25:44 -0800
-Message-ID: <CALAqxLVY7mg2arS7u63fRow8Ln2u7hbrfFf1h2UcoojtwJMRyw@mail.gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-	<1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
-	<20160120182840.GA15741@rob-hp-laptop>
-	<CALAqxLVvJqL60nKfrDiZ+p-1ujxuG72iUN3DCvEE3WJ9bpnGLA@mail.gmail.com>
-	<CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 0/5 RFC] mmc: sdhci-iproc: add bcm2835 support
+Date: Wed, 20 Jan 2016 22:18:06 +0100 (CET)
+Message-ID: <374314185.237972.d69bddce-8c03-4cf7-b6d6-f0cbd113f569.open-xchange@email.1und1.de>
+References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
+ <87bn8hcmjr.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+suCyqSi+cJiVLuA0aZKSciAaeUKW9A5Y_X_3wyW60Ug@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Yan <andy.yan@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Reichel <sre@kernel.org>, Olof Johansson <olof@lixom.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <87bn8hcmjr.fsf@eliezer.anholt.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Jon Mason <jonmason@broadcom.com>
+Cc: kernel@martin.sperl.org, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 11:53 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jan 20, 2016 at 12:47 PM, John Stultz <john.stultz@linaro.org> wrote:
-> The question here really is will we ever need additional data for each
-> mode (in the DT) besides "magic". We can do some amount of extending
-> the property like allowing more that single 32-bit value. We can't mix
-> strings and integers though. If we don't need that, then lets go with
-> the more concise approach. This isn't really an evolving area.
-> Selecting boot mode/device has existed for a long time on PCs (it is
-> fixed list in the IPMI spec for example). So I can't imagine that we'd
-> have to extend this, but I'd like to hear thoughts on it. You had
-> mentioned the Galaxy Nexus having a value and a string, but I'd find
-> it surprising if the bootloader actually uses the string.
 
-So I've been told the galaxy nexus and possibly other older TI
-hardware used only a string.
+> Eric Anholt <eric@anholt.net> hat am 19. Januar 2016 um 22:00 geschrieben:
+>
+>
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+>
+> > This patch series based on the suggestion of Scott Branden to implement
+> > bcm2835 support into sdhci-iproc [1].
+> >
+> > These changes provide the following advantages:
+> > * no need to maintain a separate driver for bcm2835
+> > * improve support and test coverage of bcm2835 mmc support
+> > * get the rid of SDHCI_CAPABILITIES hack in bcm2835_sdhci_readl
+> > * increase write performance by avoiding delays in write ops
+> >
+> > Patch 1 and 2 adopt two sdhci-bcm2835 fixes to sdhci-iproc. The third patch
+> > tries to specify as much quirks as possible in the bcm283x.dtsi as possible.
+> > Patch 4 and 5 are the actually changes for bcm2835 support.
+> >
+> > These series has been tested on Raspberry Pi B with dd (direct I/O):
+> >
+> > sdhci-bcm2835
+> >
+> > 378 kB/s WRITE
+> > 10,6 MB/s READ
+> >
+> > sdhci-iproc (after applying patch series)
+> >
+> > 881 kB/s WRITE
+> > 10,8 MB/s READ
+>
+> I started a while ago at looking at merging the sdhost driver (for the
+> other controller on these boards that you can use instead), since
+> apparently the hardware's a better choice to use. This looks like a
+> really nice simplification for us for the Arasan mode, though. Would
+> you also want to delete the old 2835 driver after this series?
 
-And the HTC implementations I've seen have code for both a string and
-command to be placed, but usually don't actually copy anything to the
-string address (which suggest its not used by the bootloader, as you
-note).
+Yes, that would be a necessary step. I don't know when it's the right time.
 
-Either way, we'd have to extend or implement a new driver, but that's
-a bridge I think we can cross later when we see such hardware support
-upstream (rather then try to create a super driver that handles
-everything a creative firmware developer could come up with).
+What is the usual procedure for such a necessary driver?
 
-thanks
--john
+>
+> These patches are all:
+>
+> Acked-by: Eric Anholt <eric@anholt.net>
