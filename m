@@ -1,85 +1,70 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Wed, 20 Jan 2016 07:38:13 +0100
-Message-ID: <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
- <20160112221211.GB22188@codeaurora.org> <5695BE65.3070409@huawei.com>
- <20160113185707.1168.85601@quark.deferred.io> <56979F9F.5080201@huawei.com>
- <5698A650.5010600@huawei.com> <CAL_JsqJPcPgS=cKNqv9j5Ch3ZHbUmci1LRedBWV1gV=5kCz68Q@mail.gmail.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Wed, 20 Jan 2016 14:40:33 +0800
+Message-ID: <1453272035-22233-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJPcPgS=cKNqv9j5Ch3ZHbUmci1LRedBWV1gV=5kCz68Q@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: xuejiancheng <xuejiancheng@huawei.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yanhaifeng@hisilic
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19 January 2016 at 19:20, Rob Herring <robh+dt@kernel.org> wrote:
-> On Fri, Jan 15, 2016 at 1:57 AM, xuejiancheng <xuejiancheng@huawei.com> wrote:
->>
->> On 2016/1/14 21:16, xuejiancheng wrote:
->>> Hi Mike,
->>>
->>> On 2016/1/14 2:57, Michael Turquette wrote:
->>>> Quoting xuejiancheng (2016-01-12 19:03:01)
->>>>> Hi Stephen,
->>>>>    Thank you very much for your reply.
->>>>>
->>>>> On 2016/1/13 6:12, Stephen Boyd wrote:
->>>>>> On 01/08, Jiancheng Xue wrote:
->>>>>>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
->>>>>>> index e434854..b6baebf 100644
->>>>>>> --- a/drivers/clk/hisilicon/Kconfig
->>>>>>> +++ b/drivers/clk/hisilicon/Kconfig
->>>>>>> @@ -1,3 +1,10 @@
->>>>>>> +config COMMON_CLK_HI3519
->>>>>>> +    tristate "Clock Driver for Hi3519"
->>>>>>
->>>>>> It looks like this has to be bool. Otherwise it needs to be a
->>>>>> platform driver and the hisilicon APIs need to be exported and
->>>>>> lose their __init markings.
->>>>>>
->>>>> Yes,it's a problem. I will fix it in next version. Thank you.
->>>>
->>>> The best solution would be to make this clock driver a real platform
->>>> driver.
->>>>
->>> Now the work clock of the clocksource timer-sp804 is provided by this driver. So
->>> it need to be registered early by CLK_OF_DECLARE. If the timer clock is treated
->>> as a fixed-clock provider, this driver can be implemented as a platform driver.
->>> Then the crg device must be registered before other clock consumer devices.Accordingly
->>> the crg device node must be written above all other clock consumer devices node in dts files.
->>> I think it is also a dependence.
->>>
->>> Can you help me understand why it is better to make this driver a platform driver?
->>> Thank you very much!
->>>
->> arch_initcall(customize_machine)
->> -->of_platform_populate
->>    -->of_platform_bus_create
->>      -->of_amba_device_create
->>         -->amba_device_add
->>            -->amba_get_enable_pclk
->> The call sequence above shows that the clock of the amba device must be registered before
->> amba_device_add. The clock of "arm,pl011" uart is registered in the probe function of the
->> platform driver "hi3519-crg". So the platform device "hi3519-crg" must be created before
->> the amba device "arm,pl011" uart.
->
-> It is a problem, but Tomeu had a fix to support deferred probes here.
-> That was part of the on-demand probing series, but maybe it needs to
-> be applied separately if we are moving clock drivers to platform
-> drivers.
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
 
-Hi,
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
 
-Marek Szyprowski has kindly taken those two patches as part of a series of him:
+Changes in v6:
+ - change MFD_ACT8945A type from bool to tristate.
+ - revert depends on to 'I2C'.
+ - change the regulator name.
 
-http://lkml.kernel.org/g/1450868368-5650-1-git-send-email-m.szyprowski@samsung.com
+Changes in v5:
+ - change depends on to 'I2C=y'.
 
-I think it would be great if you could test them and report.
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
 
-Thanks,
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
 
-Tomeu
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
+
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
+
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   82 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 ++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  109 ++++++++++++++++++++
+ include/linux/mfd/act8945a.h                       |   21 ++++
+ 5 files changed, 224 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
+ create mode 100644 include/linux/mfd/act8945a.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
