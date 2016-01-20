@@ -1,121 +1,55 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] regulator: add documentation for ACT8945A's regulator DT bindings
-Date: Wed, 20 Jan 2016 14:55:06 +0800
-Message-ID: <1453272906-23183-3-git-send-email-wenyou.yang@atmel.com>
-References: <1453272906-23183-1-git-send-email-wenyou.yang@atmel.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Wed, 20 Jan 2016 07:12:40 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63F61A7@penmbx01>
+References: <1452218938-10621-1-git-send-email-wenyou.yang@atmel.com>
+ <1452218938-10621-2-git-send-email-wenyou.yang@atmel.com>
+ <20160115175757.GA6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453272906-23183-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160115175757.GA6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the DT bindings of the regulator
-subdevice of ACT8945A MFD.
-
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-
-Changes in v3:
- - change the regulator name.
-
-Changes in v2:
- - add Acked-by Rob Herring.
-
- .../bindings/regulator/act8945a-regulator.txt      |   78 ++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-new file mode 100644
-index 0000000..0e08a3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-@@ -0,0 +1,78 @@
-+Device-Tree bindings for regulators of Active-semi ACT8945A Multi-Function Device
-+
-+Required properties:
-+ - compatible: "active-semi,act8945a-regulator"
-+
-+Optional properties:
-+- active-semi,vsel-high: Indicates if the VSEL pin is set to logic-high.
-+  If this property is missing, assume the VSEL pin is set to logic-low.
-+
-+Optional input supply properties:
-+  - vp1-supply: The input supply for REG_DCDC1
-+  - vp2-supply: The input supply for REG_DCDC2
-+  - vp3-supply: The input supply for REG_DCDC3
-+  - inl45-supply: The input supply for REG_LDO1 and REG_LDO2
-+  - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
-+
-+Any standard regulator properties can be used to configure the single regulator.
-+
-+The valid names for regulators are:
-+	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
-+
-+Example:
-+
-+	pmic {
-+		compatible = "active-semi,act8945a-regulator";
-+		active-semi,vsel-high;
-+
-+		regulators {
-+			vdd_1v35_reg: REG_DCDC1 {
-+				regulator-name = "VDD_1V35";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_1v2_reg: REG_DCDC2 {
-+				regulator-name = "VDD_1V2";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_reg: REG_DCDC3 {
-+				regulator-name = "VDD_3V3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_fuse_reg: REG_LDO1 {
-+				regulator-name = "VDD_FUSE";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_lp_reg: REG_LDO2 {
-+				regulator-name = "VDD_3V3_LP";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_led_reg: REG_LDO3 {
-+				regulator-name = "VDD_LED";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_sdhc_1v8_reg: REG_LDO4 {
-+				regulator-name = "VDD_SDHC_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
-
+SGkgTWFyaywNCg0KVGhhbmsgeW91IGZvciB5b3VyIHJldmlldy4NCg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrIEJyb3duIFttYWlsdG86YnJvb25pZUBrZXJuZWwu
+b3JnXQ0KPiBTZW50OiAyMDE2xOox1MIxNsjVIDE6NTgNCj4gVG86IFlhbmcsIFdlbnlvdSA8V2Vu
+eW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogTGlhbSBHaXJkd29vZCA8bGdpcmR3b29kQGdtYWls
+LmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBQYXdlbCBNb2xsIDxw
+YXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsg
+SWFuDQo+IENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdh
+bGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsNCj4gRmVycmUsIE5pY29sYXMgPE5pY29sYXMuRkVS
+UkVAYXRtZWwuY29tPjsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHJlZ3VsYXRvcjogYWN0ODk0NWE6IGFkZCBy
+ZWd1bGF0b3IgZHJpdmVyIGZvciBBQ1Q4OTQ1QQ0KPiANCj4gT24gRnJpLCBKYW4gMDgsIDIwMTYg
+YXQgMTA6MDg6NTdBTSArMDgwMCwgV2VueW91IFlhbmcgd3JvdGU6DQo+IA0KPiA+ICsJbnAgPSBv
+Zl9nZXRfY2hpbGRfYnlfbmFtZShwZGV2LT5kZXYub2Zfbm9kZSwgInJlZ3VsYXRvcnMiKTsNCj4g
+PiArCWlmICghbnApIHsNCj4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJyZWd1bGF0b3Igbm9k
+ZSBub3QgZm91bmRcbiIpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsN
+Cj4gPiArCW1hdGNoZXMgPSBhY3Q4OTQ1YV9tYXRjaGVzOw0KPiA+ICsJbnVtX21hdGNoZXMgPSBB
+UlJBWV9TSVpFKGFjdDg5NDVhX21hdGNoZXMpOw0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3JlZ3Vs
+YXRvcl9tYXRjaCgmcGRldi0+ZGV2LCBucCwgbWF0Y2hlcywgbnVtX21hdGNoZXMpOw0KPiANCj4g
+RG9uJ3Qgb3BlbiBjb2RlIHRoaXMsIHVzZSB0aGUgY29yZSByZWd1bGF0b3JzX25vZGUgYW5kIG9m
+X21hdGNoIGltcGxlbWVudGF0aW9uDQo+IGluc3RlYWQuDQoNCkdvb2QuIEluIHRoZSBuZXh0IHZl
+cnNpb24sIEkgdXNlIHRoZSBjb2RlIGltcGxlbWVudGF0aW9uLCBhbmQgcmVtb3ZlIHRoZSByZWR1
+bmRhbnQgY29kZS4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4NCg0KPiANCj4gPiArCQlk
+ZXZfaW5mbyhhY3Q4OTQ1YV9kZXYtPmRldiwgIiVzIHJlZ3VsYXRvciByZWdpc3RlcmVkXG4iLA0K
+PiA+ICsJCQlkZXNjLT5uYW1lKTsNCj4gDQo+IFRoaXMgaXMganVzdCBub2lzZSwgcGxlYXNlIHJl
+bW92ZSBpdCAtIGxldCB0aGUgY29yZSBoYW5kbGUgbm90aWZ5aW5nIHVzZXJzLg0KDQpJdCBpcyBm
+aXhlZCBpbiB2ZXJzaW9uIDIuDQoNCj4gDQo+ID4gK3N0YXRpYyBpbnQgX19pbml0IGFjdDg5NDVh
+X3BtaWNfaW5pdCh2b2lkKSB7DQo+ID4gKwlyZXR1cm4gcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVy
+KCZhY3Q4OTQ1YV9wbWljX2RyaXZlcik7DQo+ID4gK30NCj4gPiArc3Vic3lzX2luaXRjYWxsKGFj
+dDg5NDVhX3BtaWNfaW5pdCk7DQo+IA0KPiBQbGVhc2UgdXNlIG1vZHVsZV9wbGF0Zm9ybV9kcml2
+ZXIoKSB1bmxlc3MgdGhlcmUgaXMgYSBzdHJvbmcgcmVhc29uIHRvIGRvDQo+IG90aGVyd2lzZS4N
+Cg0KSXQgaXMgZml4ZWQgaW4gdmVyc2lvbiAyIHRvby4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55
+b3UgWWFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
