@@ -1,33 +1,53 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: dts: apq8016-sbc: Add aliases to spi device.
-Date: Thu, 21 Jan 2016 18:38:42 +0000
-Message-ID: <1453401522-27291-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v12.1 07/17] drm: rockchip: dp: add rockchip platform dp driver
+Date: Thu, 21 Jan 2016 20:11:45 +0100
+Message-ID: <7132332.jmLRiUjx3U@phil>
+References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com> <1453197893-13413-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1453197893-13413-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds aliases to spi device so that it can get proper bus
-number rather than a random number.
+Hi Yakir,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Am Dienstag, 19. Januar 2016, 18:04:53 schrieb Yakir Yang:
+> Rockchip have three clocks for dp controller, we leave pclk_edp
+> to analogix_dp driver control, and keep the sclk_edp_24m and
+> sclk_edp in platform driver.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index db17c5d..6eb096e 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -24,6 +24,8 @@
- 		i2c0	= &blsp_i2c2;
- 		i2c1	= &blsp_i2c6;
- 		i2c3	= &blsp_i2c4;
-+		spi0	= &blsp_spi5;
-+		spi1	= &blsp_spi3;
- 	};
- 
- 	chosen {
--- 
-1.9.1
+[...]
+
+> +static int rockchip_dp_drm_create_encoder(struct rockchip_dp_device *dp)
+> +{
+> +	struct drm_encoder *encoder = &dp->encoder;
+> +	struct drm_device *drm_dev = dp->drm_dev;
+> +	struct device *dev = dp->dev;
+> +	int ret;
+> +
+> +	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm_dev,
+> +							     dev->of_node);
+> +	DRM_DEBUG_KMS("possible_crtcs = 0x%x\n", encoder->possible_crtcs);
+> +
+> +	ret = drm_encoder_init(drm_dev, encoder, &rockchip_dp_encoder_funcs,
+> +			       DRM_MODE_ENCODER_TMDS);
+
+should be
++			       DRM_MODE_ENCODER_TMDS, NULL);
+
+Exynos-side seems to be ok though.
+
+With the adapted v12.1 patches it applies cleanly and display is working as 
+well. So with the thing above fixed, you could resubmit a full v13, 
+especially as you want to drop patch 16 as discussed there.
+
+
+Heiko
