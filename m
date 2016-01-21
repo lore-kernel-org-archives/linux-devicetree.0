@@ -1,52 +1,48 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ARM: zx296702-ad1: remove deprecated supports-highspeed
-Date: Thu, 21 Jan 2016 17:01:45 +0800
-Message-ID: <1453366905-3964-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
+Date: Thu, 21 Jan 2016 10:12:41 +0100
+Message-ID: <20160121091241.GS7192@pali>
+References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Pavel Machek <pavel@ucw.cz>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-supports-highspeed property is deprecated for dw_mmc,
-this patch replace it with cap-sd-highspeed and cap-mmc-highspeed.
-
-Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
- arch/arm/boot/dts/zx296702-ad1.dts | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/zx296702-ad1.dts b/arch/arm/boot/dts/zx296702-ad1.dts
-index 081f980..bfbcd805d 100644
---- a/arch/arm/boot/dts/zx296702-ad1.dts
-+++ b/arch/arm/boot/dts/zx296702-ad1.dts
-@@ -19,7 +19,8 @@
- 
- &mmc0 {
- 	num-slots = <1>;
--	supports-highspeed;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
- 	non-removable;
- 	disable-wp;
- 	status = "okay";
-@@ -32,7 +33,8 @@
- 
- &mmc1 {
- 	num-slots = <1>;
--	supports-highspeed;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
- 	non-removable;
- 	disable-wp;
- 	status = "okay";
--- 
-2.3.7
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0dXJkYXkgMjYgRGVjZW1iZXIgMjAxNSAwMDo0MDoxMiBQYWxpIFJvaMOhciB3cm90ZToK
+PiBUaGlzIHBhdGNoIGFkZHMgYWRwMTY1MyBkZXZpY2UgaW50byBuOTAwIERUIHN0cnVjdHVyZS4g
+RFQgc3VwcG9ydCBpbgo+IGFkcDE2NTMgZHJpdmVyIGlzIHRoZXJlIHNpbmNlIHY0LjItcmMxIHZl
+cnNpb24uCj4gCj4gU2lnbmVkLW9mZi1ieTogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwu
+Y29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1uOTAwLmR0cyB8ICAgMTUgKysr
+KysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLW45MDAuZHRzIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvb21hcDMtbjkwMC5kdHMKPiBpbmRleCA1ZjVlMGYzLi5iYTkzNjQyIDEwMDY0NAo+IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLW45MDAuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvb21hcDMtbjkwMC5kdHMKPiBAQCAtNTIyLDYgKzUyMiwyMSBAQAo+ICAJCWFtc3Rhb3Ms
+Y292ZXItY29tcC1nYWluID0gPDE2PjsKPiAgCX07Cj4gIAo+ICsJYWRwMTY1MzogbGVkLWNvbnRy
+b2xsZXJAMzAgewo+ICsJCWNvbXBhdGlibGUgPSAiYWRpLGFkcDE2NTMiOwo+ICsJCXJlZyA9IDww
+eDMwPjsKPiArCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW8zIDI0IEdQSU9fQUNUSVZFX0hJR0g+OyAv
+KiA4OCAqLwo+ICsKPiArCQlmbGFzaCB7Cj4gKwkJCWZsYXNoLXRpbWVvdXQtdXMgPSA8NTAwMDAw
+PjsKPiArCQkJZmxhc2gtbWF4LW1pY3JvYW1wID0gPDMyMDAwMD47Cj4gKwkJCWxlZC1tYXgtbWlj
+cm9hbXAgPSA8NTAwMDA+Owo+ICsJCX07Cj4gKwkJaW5kaWNhdG9yIHsKPiArCQkJbGVkLW1heC1t
+aWNyb2FtcCA9IDwxNzUwMD47Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJbHA1NTIzOiBscDU1MjNA
+MzIgewo+ICAJCWNvbXBhdGlibGUgPSAibmF0aW9uYWwsbHA1NTIzIjsKPiAgCQlyZWcgPSA8MHgz
+Mj47CgpQSU5HLCB3aG8gY2FuIHRha2UgdGhpcyBwYXRjaD8KCkkgc3RpbGwgZG8gbm90IHNlZSBp
+dCBpbiBsaW51cyB0cmVlIG5vciBpbiBvdGhlcnMgbGlrZSBhcm0tc29jLi4uCgotLSAKUGFsaSBS
+b2jDoXIKcGFsaS5yb2hhckBnbWFpbC5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
