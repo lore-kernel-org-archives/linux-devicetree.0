@@ -1,73 +1,57 @@
-Return-Path: <yankejian@huawei.com>
-Subject: Re: [PATCH v2 next-next] net: hns: enet specifies a reference to dsaf
-References: <1452654073-28039-1-git-send-email-yankejian@huawei.com>
- <20160112.215437.1621931833367908392.davem@davemloft.net>
-From: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
-Message-ID: <5695BDBE.5020403@huawei.com>
-Date: Wed, 13 Jan 2016 11:00:14 +0800
+Return-Path: <psonek2@seznam.cz>
+From: Radek Polak <psonek2@seznam.cz>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Thu, 21 Jan 2016 11:01:09 +0100
+Message-ID: <1554849.ev0zdSM3Dl@rp-core>
+In-Reply-To: <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com> <20160120174610.1c64239a@lxorguk.ukuu.org.uk> <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20160112.215437.1621931833367908392.davem@davemloft.net>
-Content-Type: multipart/alternative;
-	boundary="------------010708060905020204060002"
-To: David Miller <davem@davemloft.net>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangdaode@hisilicon.com, liguozhu@huawei.com, arnd@arndb.de, fengguang.wu@intel.com, salil.mehta@huawei.com, andriy.shevchenko@linux.intel.com, lisheng011@huawei.com, haifeng.wei@huawei.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+Content-Type: multipart/alternative; boundary="nextPart6732326.BIPVdmqoIm"
+Content-Transfer-Encoding: 7Bit
+To: gta04-owner@goldelico.com
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Peter Hurley <peter@hurleysoftware.com>, Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, NeilBrown <neil@brown.name>, Marek Belisko <marek@goldelico.com>, Jiri Slaby <jslaby@suse.cz>, tomeu@tomeuvizoso.net
 List-ID: <devicetree@vger.kernel.org>
 
---------------010708060905020204060002
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+This is a multi-part message in MIME format.
 
-Hi David,
+--nextPart6732326.BIPVdmqoIm
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-   i am sorry for the /wrong operation. i will pay more attention next time. /
+On Wednesday 20 of January 2016 19:03:14 H. Nikolaus Schaller wrote:
 
-Best Regards,
-Kejian Yan
+> The assumption that there is  "the" user space of a given platform is 
+wrong.
 
-On 2016/1/13 10:54, David Miller wrote:
-> This is so confusing.  Why are you submitting a singleton patch and
-> then a 2 patch series for the same exact hns driver?
->
-> Please do not do this.
->
-> .
->
+You can bundle initramfs with daemon that does the GPS power control.
+
+QtMoko and some old SHR versions use initramfs [1] for advanced boot 
+options. IMO it works great and could be extended to control GPS. And 
+your kernel with such initramfs will have GPS always powered properly.
+
+Radek
 
 
---------------010708060905020204060002
-Content-Type: text/html; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+[1] https://github.com/radekp/gta04-init
 
-<html>
-  <head>
-    <meta content="text/html; charset=windows-1252"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <pre wrap="">Hi David,
+--nextPart6732326.BIPVdmqoIm
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/html; charset="us-ascii"
 
-   i am sorry for the <em style="font-style: normal; font-weight: normal; font-family: arial,sans-serif; font-size: small; font-variant: normal; letter-spacing: normal; line-height: 18.2px; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; background-color: rgb(255, 255, 255);">wrong operation. i will pay more attention next time.
-</em></pre>
-    Best Regards,<br>
-    Kejian Yan<br>
-    <br>
-    <div class="moz-cite-prefix">On 2016/1/13 10:54, David Miller wrote:<br>
-    </div>
-    <blockquote
-      cite="mid:20160112.215437.1621931833367908392.davem@davemloft.net"
-      type="cite">
-      <pre wrap="">
-This is so confusing.  Why are you submitting a singleton patch and
-then a 2 patch series for the same exact hns driver?
-
-Please do not do this.
-
-.
-
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------010708060905020204060002--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'DejaVu Sans Mono'; font-size:9pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">On Wednesday 20 of January 2016 19:03:14 H. Nikolaus Schaller wrote:</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt; The assumption that there is  &quot;the&quot; user space of a given platform is wrong.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">You can bundle initramfs with daemon that does the GPS power control.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">QtMoko and some old SHR versions use initramfs [1] for advanced boot options. IMO it works great and could be extended to control GPS. And your kernel with such initramfs will have GPS always powered properly.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Radek</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[1] https://github.com/radekp/gta04-init</p></body></html>
+--nextPart6732326.BIPVdmqoIm--
