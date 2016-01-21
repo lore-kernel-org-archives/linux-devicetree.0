@@ -1,62 +1,97 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] 8250: uniphier: allow modular build with 8250 console
-Date: Thu, 21 Jan 2016 08:09:13 -0600
-Message-ID: <CAL_JsqKCnxenDN-5OP1yqAyyW1-cuhs47CeosAj12hr89e6CrA@mail.gmail.com>
-References: <3965359.aMgb8o9MaG@wuerfel> <CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g@mail.gmail.com>
- <4548262.MV5j98YUVi@wuerfel>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
+Date: Thu, 21 Jan 2016 14:32:16 +0000
+Message-ID: <56A0EBF0.2020703@linaro.org>
+References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com> <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com> <566E94CA.1050700@linaro.org> <56A0A5E1.5050105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4548262.MV5j98YUVi@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Hurley <peter@hurleysoftware.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56A0A5E1.5050105-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 6:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 21 January 2016 20:39:03 Masahiro Yamada wrote:
->> 2016-01-14 7:33 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
->> > The recently added uniphier 8250 port driver supports early console
->> > probing, and it supports being built as a module, but the combination
->> > of the two fails to link:
->> >
->> > ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
->> >
->> > Given that earlycon support in a loadable module makes no sense,
->> > making that code conditional on 'MODULE' is a correct solution.
->> >
->> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> > Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
->> >
->> > diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
->> > index bab6b3ae2540..1b7bd26555b7 100644
->> > --- a/drivers/tty/serial/8250/8250_uniphier.c
->> > +++ b/drivers/tty/serial/8250/8250_uniphier.c
->> > @@ -35,7 +35,7 @@ struct uniphier8250_priv {
->> >         spinlock_t atomic_write_lock;
->> >  };
->> >
->> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
->> > +#if defined(CONFIG_SERIAL_8250_CONSOLE) && !defined(MODULE)
->> >  static int __init uniphier_early_console_setup(struct earlycon_device *device,
->> >                                                const char *options)
->> >  {
->> >
->> >
+
+
+On 21/01/16 09:33, Matthias Brugger wrote:
+>
+>
+> On 14/12/15 11:07, Srinivas Kandagatla wrote:
+>> Hi Andrew,
 >>
+>> On 14/12/15 04:27, Daniel Kurtz wrote:
+>>> Hi Srinivas,
+>>>
+>>> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
+>>> <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>> This patch adds EFUSE support driver which is used by other drivers
+>>>> like thermal sensor and HDMI impedance.
+>>>>
+>>>> There are some efuses these fuses store things like calibration data,
+>>>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
+>>>> read out this data for configuring the driver.
+>>>>
+>>>> Change in v2:
+>>>> 1. Rebase to 4.4-rc1
+>>>> 2. Modify the driver Makefile for more consistent with other drivers
+>>>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and
+>>>> "mediatek,efuse"
+>>>
+>>> Do you still plan to queue this for v4.5?
+>>>
+>> Sorry guys, for the long delay in replying your pings, got busy with
+>> regular office stuff :-)
 >>
->> If my patch (https://patchwork.kernel.org/patch/8029331/) is accepted,
->> this build error will be fixed as well.  But I doubt it is accepted soon...
->>
->> So, I am OK with this workaround to fix "make allmodconfig".
->>
->> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Yes, It should go in v4.5, I did send request with my sign-off to Greg,
+>> he should take it via char-misc tree.
 >>
 >
-> Good point. Adding the DT maintainers to Cc. Guys, any chance of you
-> picking up Masahiro's patch for 4.5?
+> I can't see this patches in the char-misc tree [1].
+> Can you please double check?
 
-I will if you can update the commit log with the details here about it
-fixing an actual problem.
+Hi Matthias,
+Thanks for the patience. You should expect them to see after v4.5-rc1, 
+that's when Greg said he would push the patches.
 
-Rob
+thanks,
+srini
+>
+> Thanks,
+> Matthias
+>
+> [1] https://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/
+>
+>> Thanks,
+>> srini
+>>>>
+>>>> Andrew-CT Chen (3):
+>>>>    dt-bindings: add document of mediatek efuse driver
+>>>>    nvmem: mediatek: Add Mediatek EFUSE driver
+>>>>    dts: arm64: Add EFUSE device node
+>>>>
+>>>>   .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++++++
+>>>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  5 ++
+>>>>   drivers/nvmem/Kconfig                              | 11 +++
+>>>>   drivers/nvmem/Makefile                             |  2 +
+>>>>   drivers/nvmem/mtk-efuse.c                          | 89
+>>>> ++++++++++++++++++++++
+>>>>   5 files changed, 143 insertions(+)
+>>>>   create mode 100644
+>>>> Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+>>>>   create mode 100644 drivers/nvmem/mtk-efuse.c
+>>>>
+>>>> --
+>>>> 1.9.1
+>>>>
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe
+>>>> linux-kernel" in
+>>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
