@@ -1,78 +1,118 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
-Date: Thu, 21 Jan 2016 14:49:14 +0000
-Message-ID: <56A0EFEA.506@linaro.org>
-References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com> <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com> <566E94CA.1050700@linaro.org> <56A0A5E1.5050105@gmail.com> <56A0EBF0.2020703@linaro.org> <56A0EF61.5080500@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 07/11] of: Add bindings of hw-trips for soctherm
+Date: Thu, 21 Jan 2016 15:52:51 +0100
+Message-ID: <20160121145251.GD32301@ulmo>
+References: <1453111448-12445-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56A0EF61.5080500@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/3yNEOqWowh/8j+e"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1453111448-12445-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--/3yNEOqWowh/8j+e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 21/01/16 14:46, Matthias Brugger wrote:
->
->
-> On 21/01/16 15:32, Srinivas Kandagatla wrote:
->>
->>
->> On 21/01/16 09:33, Matthias Brugger wrote:
->>>
->>>
->>> On 14/12/15 11:07, Srinivas Kandagatla wrote:
->>>> Hi Andrew,
->>>>
->>>> On 14/12/15 04:27, Daniel Kurtz wrote:
->>>>> Hi Srinivas,
->>>>>
->>>>> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
->>>>> <andrew-ct.chen@mediatek.com> wrote:
->>>>>> This patch adds EFUSE support driver which is used by other drivers
->>>>>> like thermal sensor and HDMI impedance.
->>>>>>
->>>>>> There are some efuses these fuses store things like calibration data,
->>>>>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
->>>>>> read out this data for configuring the driver.
->>>>>>
->>>>>> Change in v2:
->>>>>> 1. Rebase to 4.4-rc1
->>>>>> 2. Modify the driver Makefile for more consistent with other drivers
->>>>>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and
->>>>>> "mediatek,efuse"
->>>>>
->>>>> Do you still plan to queue this for v4.5?
->>>>>
->>>> Sorry guys, for the long delay in replying your pings, got busy with
->>>> regular office stuff :-)
->>>>
->>>> Yes, It should go in v4.5, I did send request with my sign-off to Greg,
->>>> he should take it via char-misc tree.
->>>>
->>>
->>> I can't see this patches in the char-misc tree [1].
->>> Can you please double check?
->>
->> Hi Matthias,
->> Thanks for the patience. You should expect them to see after v4.5-rc1,
->> that's when Greg said he would push the patches.
->>
->
-> I'm a bit puzzled. Wouldn't that mean that they will get into mainline
-> for v4.6.
+On Mon, Jan 18, 2016 at 06:04:08PM +0800, Wei Ni wrote:
+> Add hw-trips sub-node for soctherm, which is
+> used to describe the hardware trip points for
+> each soctherm sensors.
 
-The delay was due to Christmas holidays, this driver is 4.5 material, so 
-it would endup in v4.5-rc2 instead of v4.5-rc1.
+Please make use of the full 78 characters in each line. Otherwise looks
+good to me.
 
-thanks
-srini
-> I just want to know if I can take patch 3/3 through my v4.5-next branch
-> (which eventually will be merged into v4.6-rc1) or if I have to wait.
+Oh, also make sure to Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org on device tree
+binding patches. Doing that now, hence quoting verbatim.
 
->
-> Thanks,
-> Matthias
+Thierry
+
+>=20
+> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/thermal/tegra-soctherm.txt | 24 ++++++++++++++++=
+++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt=
+ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> index 6b68cd150405..75dc9dbe7e1a 100644
+> --- a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> +++ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> @@ -26,6 +26,15 @@ Required properties :
+>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h> for a
+>      list of valid values when referring to thermal sensors.
+> =20
+> +Optional properties:
+> +- hw-trip-points : A sub-node which is a container of hardware trip poin=
+ts
+> +    for each sensors.
+> +  * sensors: Sub-nodes which are used to describe the HW trip points inf=
+o,
+> +        must be named as "cpu", "gpu", "mem", "pll".
+> +      Properties:
+> +      - thermtrip-temperature : Shutdown or reset temperature in millice=
+lsius,
+> +        once the temperature of this sensor is higher than the
+> +        thermtrip-temperature, the system will be shutdown or reset.
+> =20
+>  Example :
+> =20
+> @@ -40,6 +49,21 @@ Example :
+>  		reset-names =3D "soctherm";
+> =20
+>  		#thermal-sensor-cells =3D <1>;
+> +
+> +		hw-trip-points {
+> +			cpu {
+> +				thermtrip-temperature =3D <103000>;
+> +			};
+> +			gpu {
+> +				thermtrip-temperature =3D <103500>;
+> +			};
+> +			mem {
+> +				thermtrip-temperature =3D <103500>;
+> +			};
+> +			pll {
+> +				thermtrip-temperature =3D <105000>;
+> +			};
+> +		};
+>  	};
+> =20
+>  Example: referring to thermal sensors :
+> --=20
+> 1.9.1
+>=20
+
+--/3yNEOqWowh/8j+e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWoPDCAAoJEN0jrNd/PrOhgHQP/0A4EQ9vvJA3H57hVKRACe5z
+1KAezYKbFod0rQHDvO0ISQQFSwYO1MnTq4qEiJdfaw1/DGbbxPUSfBJ8B6y0w+GV
+TOQJb/kec28bXuhbMFPGnL0VoFnPNoagzFaSNsjETEJo8RdkFQ3PD4CO/Rl2QuUh
+Ue8SS96ohqlWfC3HbdjQMpp6RGWlHKYm74eLurGWjlqoYXQs0DjJkBXYJeVo1sbQ
+tnAhhEbNwtpMIcZY2VCeImz4v8fFgT+SG44Wj1tWwfMy/7VuWnpS5r0SFZ7173iL
+ZxllPrkQa6JJi3O3rkS1zzymEoAgWOvtusPDA/xKl13tP2KEQGhr6QuDBu6vBZzM
+WNRSB2IxjvCgGaDGaplRFN/QyaRp1p+tEiBgbZhNkZl+Chbrus9Oa/Es8XDhWpsZ
+uilzK0oX7m+7SGctxiGfzW1wcin4eAj8A7H2xgwxYKMg1eme24XWd9YXjUJsSe7h
+lavknsccBpzAlIUHnfat/K4Fuj9UoG0kIrKwK+80RXo4X/EzdH+qKnefgnteKwxN
+6TyHeY5AupZGg3HNQE4+vRw3k0HjvSp360/7us+cofrA1Rf4v/lgMc1tlrklX484
+saVBmn/nj/LOfsuqVc5qvhhYYcxg3sl4nc+49SdBHALPWKXniQr4lkPuEdHVUiu2
+mLbCGKaASfAodNs0vH+N
+=Pb8u
+-----END PGP SIGNATURE-----
+
+--/3yNEOqWowh/8j+e--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
