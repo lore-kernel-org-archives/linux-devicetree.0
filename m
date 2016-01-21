@@ -1,62 +1,52 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Thu, 21 Jan 2016 22:12:50 +0100
-Message-ID: <20160121211250.GK9991@lunn.ch>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <56997951.90304@gmail.com>
- <5699B211.5070602@gmail.com>
- <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <569C9CD2.10301@gmail.com>
- <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160118151500.GD923@lunn.ch>
- <VI1PR04MB1664DFBC53F08C5CE7EBF22AE8C10@VI1PR04MB1664.eurprd04.prod.outlook.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 1/4] Input: cyttsp - use devres managed resource
+ allocations
+Date: Thu, 21 Jan 2016 13:32:43 -0800
+Message-ID: <20160121213243.GD39970@dtor-ws>
+References: <cover.1453403916.git.oreste.salerno@tomtom.com>
+ <20e9f0188f07fc420912b3defa747303be3cf290.1453403916.git.oreste.salerno@tomtom.com>
+ <20160121192924.GB39970@dtor-ws>
+ <20160121202205.GA20324@nl1lxl-107192.ttg.global>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB1664DFBC53F08C5CE7EBF22AE8C10-mr6QIVyDiCHTAO9RNConP89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20160121202205.GA20324@nl1lxl-107192.ttg.global>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oreste Salerno <oreste.salerno@tomtom.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 19, 2016 at 05:00:35AM +0000, Shaohui Xie wrote:
-> > -----Original Message-----
-> > From: Andrew Lunn [mailto:andrew-g2DYL2Zd6BY@public.gmane.org]
-> > Sent: Monday, January 18, 2016 11:15 PM
-> > To: Shaohui Xie
-> > Cc: Sebastian Hesselbarth; Florian Fainelli; shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
-> > dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; Shaohui Xie
-> > Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
+On Thu, Jan 21, 2016 at 09:22:05PM +0100, Oreste Salerno wrote:
+> On Thu, Jan 21, 2016 at 11:29:24AM -0800, Dmitry Torokhov wrote:
+> > Hi Oreste,
 > > 
-> > > [S.H] the fsl backplane, e.g. 10GBASE-KR, needs software to handle
-> > > link training, It's to train link partner, and trained by link partner
-> > parallel.
-> > >
-> > > But if media type is not copper, e.g. optical module, we won't need this.
+> > On Thu, Jan 21, 2016 at 08:21:13PM +0100, Oreste Salerno wrote:
+> > > Use devm_() functions for allocating memory, input device and IRQ.
+> > > 
 > > 
-> > So what we actually need to know is copper vs fibre?
+> > ...
+> > 
+> > > @@ -625,11 +620,8 @@ EXPORT_SYMBOL_GPL(cyttsp_probe);
+> > >  
+> > >  void cyttsp_remove(struct cyttsp *ts)
+> > >  {
+> > > -	free_irq(ts->irq, ts);
+> > > -	input_unregister_device(ts->input);
+> > >  	if (ts->pdata->exit)
+> > >  		ts->pdata->exit();
+> > > -	kfree(ts);
+> > 
+> > This is not quite correct as it changes the operations order... Given
+> > that it is going to be removed in the next patch I guess it is OK, but
+> > ideally you can add a custom devm action to shut off the chip.
+> >
+> 
+> You mean a devm action to call pdata->exit() ? OK, I could do that.
 
-> Copper is not enough to indicate backplane, since backplane is
-> always copper, but copper is not always backplane.
+Yes.
 
-O.K, lets try again....
+Thanks.
 
-If it is copper backplane you need to perform training.
-
-Looking at the driver probe function, it is either 1000BASE-KX, no
-training needed, or else it is 10GBASE-RK and training is needed.
-
-Looking at fsl_backplane_config_aneg() you expect phydev->speed to be
-set, and from the speed you then kick of either KR autoneg or KX
-autoneg. Could you also start the training at this point? Use the
-speed to indicate if training is needed?
-
-      Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
