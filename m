@@ -1,51 +1,38 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2] of: drop symbols declared by _OF_DECLARE() from modules
-Date: Fri, 22 Jan 2016 01:33:51 +0900
-Message-ID: <1453394031-16578-1-git-send-email-yamada.masahiro@socionext.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
+Date: Thu, 21 Jan 2016 08:38:57 -0800
+Message-ID: <20160121163857.GH19432@atomide.com>
+References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+ <20160121091241.GS7192@pali>
+ <20160121092909.GH5783@n2100.arm.linux.org.uk>
+ <20160121101828.GA7411@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160121101828.GA7411@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The users of this macro (OF_EARLYCON_DECLARE, CLK_OF_DECLARE,
-IRQCHIP_DECLARE, etc.) are only parsed in the early boot stage.
-Such symbols contained in modules are never used.
+* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [160121 02:19]:
+> On Thu 2016-01-21 09:29:10, Russell King - ARM Linux wrote:
+> > The merge window is open, which is when development code that was merged
+> > in good time prior to the merge window is sent upstream to Linus.  Linux
+> > maintainers may choose not to merge new code into their tree to avoid
+> > disrupting the utility of linux-next until the merge window has
+> > closed.
+> 
+> Support for new hardware is normally allowed after -rc1.
 
-This commit fixes the link error introduced by commit b8d20e06eaad
-("serial: 8250_uniphier: add earlycon support"); the combination
-of CONFIG_SERIAL_8250_UNIPHIER=m and CONFIG_SERIAL_8250_CONSOLE=y
-fails to link:
+Yeah most maintainers avoid looking at new code until -rc1. Or until
+regresssions are out of the way. So patience please. Fixes are
+welcome any time though.
 
-ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
+Regards,
 
-Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-
-Changes in v2:
-  - Describe the bug fixed by this commit
-
- include/linux/of.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index dd10626..dc6e396 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -929,7 +929,7 @@ static inline int of_get_available_child_count(const struct device_node *np)
- 	return num;
- }
- 
--#ifdef CONFIG_OF
-+#if defined(CONFIG_OF) && !defined(MODULE)
- #define _OF_DECLARE(table, name, compat, fn, fn_type)			\
- 	static const struct of_device_id __of_table_##name		\
- 		__used __section(__##table##_of_table)			\
--- 
-1.9.1
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
