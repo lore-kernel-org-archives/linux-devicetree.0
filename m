@@ -1,58 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Thu, 21 Jan 2016 16:28:02 +0000
-Message-ID: <20160121162802.GL6588@sirena.org.uk>
-References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160112143100.GA14628@rob-hp-laptop>
- <20160115085734.GG4581@lukather>
- <20160117000434.GB7774@rob-hp-laptop>
- <20160118162538.GH6588@sirena.org.uk>
- <20160121154649.GE3997@lukather>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH v15 2/6] add sysfs document for fpga bridge class
+Date: Thu, 21 Jan 2016 10:32:55 -0600
+Message-ID: <alpine.DEB.2.02.1601211031170.8804@linuxheads99>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <1453317867-10422-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="boHZdxlSbghjKFo0"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160121154649.GE3997@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453317867-10422-3-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 20 Jan 2016, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
 
---boHZdxlSbghjKFo0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add documentation for new FPGA bridge class's sysfs interface.
+> 
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-On Thu, Jan 21, 2016 at 04:46:49PM +0100, Maxime Ripard wrote:
+I've received two emails that there was no patch in this email.  The
+copy I received has 11 lines of changes, adding one file
+Documentation/ABI/testing/sysfs-class-fpga-bridge
 
-> I guess a separate driver would make it easier to deal with cases like
-> the one you suggested (shutting down when the load is going to be
-> lower). I don't see how we could have a good DT representation of that
-> if we're going to use lists.
+Alan
 
-We can have a driver regardless of what the DT looks like, it's a
-question of how things get instantiated.
-
-> Anyway, I'm fine with both approaches, just let me know what you
-> prefer.
-
-Without seeing an implementation of the lists it's hard to say.
-
---boHZdxlSbghjKFo0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWoQcRAAoJECTWi3JdVIfQ0WwH/ie8Jsrj02xCh+AvVoygbMRD
-Kbxl5hORPDiEGOtoWawhkV3jXKJEoDoB3/8dt8sxupSTcjGyf4aP9r1aSbHWUUyp
-7YHD2Jm0B/nbgKwy542iH5gGmnfkwrqAaH8Fe5v3Yj6adkVFImfCrngFPeKEmnuY
-nYqsnbyydfT0y0M33f2t2RVMrQU+N3fAsuKD3Th3T8lIH/TAzVBxwpLm+pm5Y+fg
-n3/qSo4v1gs0tecORc71pQHKWQ/lptjHpsY0UXn9hRPDjOLLVEEBC/HQ+E3Sd3cJ
-R0Eg/PQx8EpfLwEc82tS1+NVrqKUtp5c09McB3kaLQEou6RXtKeg7v2tU9sW1Yw=
-=EAMn
------END PGP SIGNATURE-----
-
---boHZdxlSbghjKFo0--
+> --
+> v15: Document added in v15 of patch set
+> ---
+>  Documentation/ABI/testing/sysfs-class-fpga-bridge |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+> new file mode 100644
+> index 0000000..312ae2c
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+> @@ -0,0 +1,11 @@
+> +What:		/sys/class/fpga_bridge/<bridge>/name
+> +Date:		January 2016
+> +KernelVersion:	4.5
+> +Contact:	Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> +Description:	Name of low level FPGA bridge driver.
+> +
+> +What:		/sys/class/fpga_bridge/<bridge>/state
+> +Date:		January 2016
+> +KernelVersion:	4.5
+> +Contact:	Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> +Description:	Show bridge state as "enabled" or "disabled"
+> -- 
+> 1.7.9.5
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
