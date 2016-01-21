@@ -1,96 +1,124 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Thu, 21 Jan 2016 17:48:32 +0800
-Message-ID: <20160121094832.GA22037@shlinux2>
-References: <4405270.vcz87Q878u@wuerfel>
- <5639398.uJHXq6DsMC@wuerfel>
- <20160121031524.GA29893@shlinux2>
- <1989217.907WTZoGvq@wuerfel>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more
+ devicetree-friendly
+Date: Thu, 21 Jan 2016 13:17:11 +0300
+Message-ID: <20160121131711.a7315d3ca6233e50ec824544@gmail.com>
+References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
+	<1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
+	<20160118205725.0a16be8e@tock>
+	<20160121031215.250b826347fd9c179b031288@gmail.com>
+	<20160121091217.379b6239@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1989217.907WTZoGvq@wuerfel>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121091217.379b6239@tock>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 09:41:20AM +0100, Arnd Bergmann wrote:
-> On Thursday 21 January 2016 11:15:24 Peter Chen wrote:
-> > 
-> > Just adding from device driver view and change the name from "roohub" to
-> > "port".
-> > 
-> > It is the port number (1-9), but not the root hub number.
-> > 
-> > At the most of embedded platforms, we have only one port per controller.
-> > For example, at the non-hub boards, if there are two Standard-A ports,
-> > there are from two different USB controllers.
-> > But for Alan's case, it has six ports, and all from the one USB controller,
-> > port 1 to port 6 are from the HS root hub, port 7 to port 9 are from the SS
-> > root hub.
-> > 
-> > For the single port controller platform, the dts will be like below, port_1 is
-> > under the HS root hub, port_2 is under the SS root hub.
-> > 
-> > &usb1 {
-> >         port_1: nxp@1 {
-> >                 compatible = "usb15a2,007d";
-> >                 reg = <0x01>;
-> > 
-> >                 hub: genesys@1 {
-> >                         compatible = "usb05e3,0608";
-> >                         reg = <0x01>;
-> >                 };
-> >         };
-> > 
-> >         port_2: nxp@2 {
-> >                 compatible = "usb15a2,007d";
-> >                 reg = <0x02>;
-> > 
-> >                 hub: genesys@1 {
-> >                         compatible = "usb05e3,0608";
-> >                         reg = <0x01>;
-> >                 };
-> >         };
-> > };
-> 
-> But why are you modeling ports of the root hub as hubs themselves?
-> 
-> I would expect the example above to look like
-> 
-> &usb1 {
->         hub@1 {
->                 compatible = "usb05e3,0608";
->                 reg = <0x01>;
->         };
-> 
-> 	hub@2 {
->                 compatible = "usb05e3,0608";
->                 reg = <0x01>;
->         };
-> };
+On Thu, 21 Jan 2016 09:12:17 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-You are right, I should not add root hub or port description in
-device tree, only the description for the device on that port is enough.
+> On Thu, 21 Jan 2016 03:12:15 +0300
+> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> > On Mon, 18 Jan 2016 20:57:25 +0100
+> > Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+> >=20
+> > > On Mon, 18 Jan 2016 02:56:24 +0300
+> > > Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > >=20
+> > > > At the moment ar933x of-enabled drivers use use clock names
+> > > > (e.g. "uart" or "ahb") to get clk descriptor.
+> > > > On the other hand
+> > > > Documentation/devicetree/bindings/clock/clock-bindings.txt stat=
+es
+> > > > that the 'clocks' property is required for passing clk to clock
+> > > > consumers.
+> > >=20
+> > > This patch is not need, you should set the clock-names property i=
+n
+> > > the relevant device nodes instead.
+> >=20
+> > This patch is needed for AR9331!
+> >=20
+> > In ar933x_clocks_init() we have
+> >=20
+> >         ath79_add_sys_clkdev("ref", ref_rate);
+> >         clks[0] =3D ath79_add_sys_clkdev("cpu", cpu_rate);
+> >         clks[1] =3D ath79_add_sys_clkdev("ddr", ddr_rate);
+> >         clks[2] =3D ath79_add_sys_clkdev("ahb", ahb_rate);
+> >=20
+> >         clk_add_alias("wdt", NULL, "ahb", NULL);
+> >         clk_add_alias("uart", NULL, "ref", NULL);
+> >=20
+> > "uart" is an alias for "ref". But "ref" is not visible via device t=
+ree!
+> >=20
+> > I see this error message on ar933x-uart start:
+> > =20
+> >      ERROR: could not get clock /ahb/apb/uart@18020000:uart(0)
+>=20
+> The ref clock should be defined in the board DTS, I now see that it i=
+s
+> missing in yours. What you need to do is to define the clock-names
+> property in the Soc DTS, that allow the names lookup to work. Then in
+> the board DTS you can define the clock property to connect it to the
+> proper parent.=20
+>=20
+> I'm also working on supporting the QCA9558 and the clock tree is simi=
+lar.
+> See https://github.com/AlbanBedel/linux/commit/d6c8f8adfce08972c6
+> as example.
 
-> 
-> So two hubs at ports 1 and 2 of the USB controller that integrates
-> the root hub and shares a device node with it.
-> 
+Current ath79 clock.c code does not read ref clock from devicetree!
+So you can set any clock rate value in board DTS but it will has no eff=
+ect
+on the real clk calculation.
 
-Ok, so the "reg" is the address for certain root hub (HS or SS), not
-the unity address for the whole controller, if it is, do we really
-need to add two nodes for one physical port, HS and SS will not be used
-at the same time. And if the reg is the same, how can we know
-which node is from current recognized device.
+A more reasonable solution is used for CI20 board.
+In arch/mips/boot/dts/ingenic/jz4780.dtsi we have
 
--- 
+	ext: ext {
+		compatible =3D "fixed-clock";
+		#clock-cells =3D <0>;
+	};
 
-Best Regards,
-Peter Chen
+=2E..
+
+	cgu: jz4780-cgu@10000000 {
+		compatible =3D "ingenic,jz4780-cgu";
+		reg =3D <0x10000000 0x100>;
+
+		clocks =3D <&ext>, <&rtc>;
+		clock-names =3D "ext", "rtc";
+
+		#clock-cells =3D <1>;
+	};
+
+
+In arch/mips/boot/dts/ingenic/ci20.dts we have
+
+&ext {
+	clock-frequency =3D <48000000>;
+};
+
+At last drivers/clk/ingenic/jz4780-cgu.c registers this "ext" clock
+as a parent of most other subordianate clocks. So there is no magic
+frequency constants in drivers/clk/ingenic!
+
+In arch/mips/ath79/clocks.c we have a very different situation:
+the reference clock frequences are already hardcoded in C-code so there=
+ is
+no need to mention them in devicetree files.
+
+--=A0
+Best regards,
+=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
