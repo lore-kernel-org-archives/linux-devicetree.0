@@ -1,62 +1,91 @@
-From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: imx7d: add arch timer
-Date: Thu, 21 Jan 2016 16:39:14 -0600
-Message-ID: <CAHrpEqS2upM1FANu9tjzmwxscOH3Y56S7naj7sPF9dKmn51_zw@mail.gmail.com>
-References: <1452014237-12848-1-git-send-email-Frank.Li@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] Drivers: MUSB: Davinci MUSB: added DT support
+Date: Thu, 21 Jan 2016 17:07:51 -0600
+Message-ID: <20160121230751.GA3991@rob-hp-laptop>
+References: <1453387999-4485-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452014237-12848-1-git-send-email-Frank.Li-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1453387999-4485-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 5, 2016 at 11:17 AM, Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org> wrote:
-> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Since uboot v2016.01-rc2, which supported basic psci for i.mx7d.
-> So imx7d's second core can be enabled by psci.
->
-> Without arch timer, every timer event will be boardcasted to each core.
-> arch timer has local timer irq for each core.
->
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Thu, Jan 21, 2016 at 03:53:19PM +0100, Petr Kulhavy wrote:
+> TI DaVinci MUSB driver equipped with DeviceTree support.
+> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+> 
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 > ---
+>  .../devicetree/bindings/usb/da8xx-usb.txt          |  52 +++++++
+>  drivers/usb/musb/da8xx.c                           | 166 +++++++++++++++++++++
+>  include/linux/platform_data/usb-davinci.h          |   3 +-
+>  3 files changed, 220 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> new file mode 100644
+> index 0000000..c81d665
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
 
-Ping
+Follow the compatible string for the filename (with wildcards is fine).
 
->
-> Change from v1 to v2:
->  * refine commit message show the relationship between smp and arch timer
->
->  arch/arm/boot/dts/imx7d.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> index 489604a..a621af6 100644
-> --- a/arch/arm/boot/dts/imx7d.dtsi
-> +++ b/arch/arm/boot/dts/imx7d.dtsi
-> @@ -119,6 +119,15 @@
->                 clock-output-names = "osc";
->         };
->
-> +       timer {
-> +               compatible = "arm,armv7-timer";
-> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +               interrupt-parent = <&intc>;
-> +       };
+> @@ -0,0 +1,52 @@
+> +TI DaVinci MUSB
 > +
->         etr@30086000 {
->                 compatible = "arm,coresight-tmc", "arm,primecell";
->                 reg = <0x30086000 0x1000>;
-> --
-> 2.5.2
->
+> +Required properties:
+> +
+> + - compatible : Should be "ti,da850-musb" or "ti,da830-musb"
+> +
+> + - mode : USB mode. "1" signifies HOST, "2" represents PERIPHERAL,
+> +     "3" represents OTG.
+
+Surely we have a similar property defined already. Don't create 
+something new.
+
+> +
+> + - power : This signifies the maximum current the controller can
+> +     supply in host mode. The unit size is 2mA, the maximum value is 510mA.
+
+You should model this as a regulator.
+
+> + - num-eps : Specifies the number of endpoints. This is also a
+> +     MUSB configuration-specific setting.
+
+Just spell out endpoints.
+
+> +
+> + - multipoint : Should be "1" indicating the musb controller supports
+> +     multipoint. This is a MUSB configuration-specific setting.
+
+What does multipoint mean?
+
+> + - ram-bits : Specifies the ram address size.
+
+Needs a better description. Then it probably needs a better name too, 
+but without a description I can't tell what that would be.
+
+> +
+> +
+> +Optional properties:
+> +
+> + - da8xx,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
+> +     Supported values: "0" for external pin, "1" for internal PLL.
+
+How about a boolean property instead. Name it based on the less used 
+option (external pin I'm guessing).
+
+> + - da8xx,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
+> +     frequency in Hz in case the clock is generated by the internal PLL.
+> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+
+da8xx is not a vendor.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
