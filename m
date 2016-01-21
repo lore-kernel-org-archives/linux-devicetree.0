@@ -1,57 +1,77 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v15 0/6] altera fpga area and fpga bus
-Date: Thu, 21 Jan 2016 10:42:39 -0600
-Message-ID: <alpine.DEB.2.02.1601211036480.8804@linuxheads99>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <CAAtXAHfars7GUJhFCj2r6JpYzrX4pyaicaWbihAorVWOSxORTw@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] 8250: uniphier: allow modular build with 8250 console
+Date: Fri, 22 Jan 2016 01:50:01 +0900
+Message-ID: <CAK7LNARo+rpKVDAY_h9vPKh_1vteYgjNS=nf0ukz2ThzPNxvmg@mail.gmail.com>
+References: <3965359.aMgb8o9MaG@wuerfel>
+	<CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g@mail.gmail.com>
+	<4548262.MV5j98YUVi@wuerfel>
+	<CAL_JsqKCnxenDN-5OP1yqAyyW1-cuhs47CeosAj12hr89e6CrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHfars7GUJhFCj2r6JpYzrX4pyaicaWbihAorVWOSxORTw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKCnxenDN-5OP1yqAyyW1-cuhs47CeosAj12hr89e6CrA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Hurley <peter@hurleysoftware.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Jan 2016, Moritz Fischer wrote:
+Hi Rob.
 
-> Hi Alan,
-> 
-> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> >
-> > For v15, I'm not using the FPGA Manager as the bus.  I'm adding a FPGA Bus;
-> > the FPGA Manager and bridges go below it.
-> >
-> > I've gotten enough feedback that my proposals are Altera specific that I am
-> > going with that and changing the bindings to include an 'altr,' prefix.
-> 
-> I hope this wasn't a misunderstanding of one of my earlier remarks. I
-> think the fpga-area & fpga bus
-> parts do apply to to Xilinx FPGAs, too. I think for fpga-area and
-> fpga-bus we could drop the 'altr' prefix.
 
-Yes, I would very much like to drop the altr prefix if we have general
-acceptance that this isn't all Altera specific.  I'll need to rename
-altera-fpga-bus-fpga-area.txt to drop the 'altera-' prefix and clean
-up a little there.
+2016-01-21 23:09 GMT+09:00 Rob Herring <robh+dt@kernel.org>:
+> On Thu, Jan 21, 2016 at 6:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Thursday 21 January 2016 20:39:03 Masahiro Yamada wrote:
+>>> 2016-01-14 7:33 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
+>>> > The recently added uniphier 8250 port driver supports early console
+>>> > probing, and it supports being built as a module, but the combination
+>>> > of the two fails to link:
+>>> >
+>>> > ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
+>>> >
+>>> > Given that earlycon support in a loadable module makes no sense,
+>>> > making that code conditional on 'MODULE' is a correct solution.
+>>> >
+>>> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> > Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
+>>> >
+>>> > diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+>>> > index bab6b3ae2540..1b7bd26555b7 100644
+>>> > --- a/drivers/tty/serial/8250/8250_uniphier.c
+>>> > +++ b/drivers/tty/serial/8250/8250_uniphier.c
+>>> > @@ -35,7 +35,7 @@ struct uniphier8250_priv {
+>>> >         spinlock_t atomic_write_lock;
+>>> >  };
+>>> >
+>>> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
+>>> > +#if defined(CONFIG_SERIAL_8250_CONSOLE) && !defined(MODULE)
+>>> >  static int __init uniphier_early_console_setup(struct earlycon_device *device,
+>>> >                                                const char *options)
+>>> >  {
+>>> >
+>>> >
+>>>
+>>>
+>>> If my patch (https://patchwork.kernel.org/patch/8029331/) is accepted,
+>>> this build error will be fixed as well.  But I doubt it is accepted soon...
+>>>
+>>> So, I am OK with this workaround to fix "make allmodconfig".
+>>>
+>>> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>>
+>>
+>> Good point. Adding the DT maintainers to Cc. Guys, any chance of you
+>> picking up Masahiro's patch for 4.5?
+>
+> I will if you can update the commit log with the details here about it
+> fixing an actual problem.
 
-If you want to send me a Xilinx example of usage for me to include in that
-document, that would be useful also.  I think you might have sent me
-something a while ago, but I can't find it now.
+I did so in v2.
 
-> 
-> >
-> > I've combined the bindings document and the other Documentation/fpga/ document
-> > and done a rewrite there.
-> 
-> Looks great!
-> 
-> I'll test it on hardware and look at the patches individually,
+Thanks!
 
-Thank you!
 
-> 
-> Cheers,
-> 
-> Moritz
-> 
+
+
+-- 
+Best Regards
+Masahiro Yamada
