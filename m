@@ -1,92 +1,91 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Thu, 21 Jan 2016 16:46:49 +0100
-Message-ID: <20160121154649.GE3997@lukather>
-References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160112143100.GA14628@rob-hp-laptop>
- <20160115085734.GG4581@lukather>
- <20160117000434.GB7774@rob-hp-laptop>
- <20160118162538.GH6588@sirena.org.uk>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
+Date: Thu, 21 Jan 2016 17:20:37 +0100
+Message-ID: <20160121162035.GG647@ulmo.nvidia.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <15127971.1juVbocOjP@wuerfel>
+ <20151228092054.GA29195@ulmo.nvidia.com>
+ <2250962.OgUpqMgY4k@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ulDeV4rPMk/y39in"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2250962.OgUpqMgY4k@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <20160118162538.GH6588@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---T6xhMxlHU34Bk0ad
+--ulDeV4rPMk/y39in
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Jan 18, 2016 at 04:25:38PM +0000, Mark Brown wrote:
-> > >   - When you come to consider it from an hardware point of view, the
-> > >     device usually have a single pin that powers it. It's the board
-> > >     designer that chose to route that pin to multiple regulators, so
-> > >     it's really the board that is wired that way, and putting that
-> > >     code in the consumer drivers would be an abstraction leak imho.
+On Mon, Dec 28, 2015 at 04:35:46PM +0100, Arnd Bergmann wrote:
+> On Monday 28 December 2015 10:20:56 Thierry Reding wrote:
+> > > > > HTC apparently uses a separate RAM area to pass the reboot reason,
+> > > > > and they have a driver to store that, which is separate from the
+> > > > > driver that they use for actually rebooting the machine.
+> > > >=20
+> > > > I wasn't very clear, but the PMC_SCRATCH0 register is used to store=
+ the
+> > > > reset reason. It supports the recovery mode, which I think is reall=
+y an
+> > > > Android thing, "bootloader" will typically cause the bootloader not=
+ to
+> > > > boot anything, and "forced-recovery" will go into a recovery mode t=
+hat
+> > > > is used to bootstrap the device (usually by uploading a "miniloader"
+> > > > that initializes RAM, downloads a bootloader for booting or flashin=
+g an
+> > > > operating system, ...).
+> > > >=20
+> > > > The write that resets the SoC is to a different register.
+> > >=20
+> > > So is this scratch register interpreted by some maskrom code, or by c=
+ode that
+> > > can be provided by the OEM?
+> >=20
+> > My understanding is that its interpreted both by what's called BootROM
+> > on Tegra (I guess that's what you call "maskrom code") and the system's
+> > bootloader. The BootROM cannot typically be replaced by the OEM, but it
+> > is quite typical for the bootloader to differ between devices.
 >=20
-> > That's a good point. Perhaps the regulator core needs to be able to=20
-> > parse the list and return the single ptr to the virtual regulator.
->=20
-> Exactly, if we don't want to represent the combination directly.  For
-> most uses it's probably OK but I can see us in a situation where we
-> might want to do things like only use one of the regulators in low load
-> situations where we might want to attach properties to the merge of the
-> two regulators rather than just referencing them both.  I'm not sure
-> that's realistic though or that we wouldn't just be working that use
-> case out dynamically at runtime.
->=20
-> I'm ambivalent on which way is better, it does complicate the
-> implementation to support doing this as lists and while it makes the DT
-> more elegant I'm not clear that it's worth the effort especially when it
-> comes to constraint combining.  But perhaps the implementation turns out
-> to be simpler than I would anticiapte.
+> Ok, so not maskrom (which would not be OEM specific, but hardcoded for
+> the chip) but rather some form of PROM. This means we can only guess
+> that all OEMs use the same protocol but in theory someone could have
+> implemented an incompatible BootROM, but it's also possible that HTC
+> just ignore the register entirely and implement the same thing separately.
 
-I guess a separate driver would make it easier to deal with cases like
-the one you suggested (shutting down when the load is going to be
-lower). I don't see how we could have a good DT representation of that
-if we're going to use lists.
+I wasn't being clear, the BootROM is hardcoded for the chip, I'm not
+aware of a way to replace it once the chip's taped out.
 
-Anyway, I'm fine with both approaches, just let me know what you
-prefer.
+Thierry
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---T6xhMxlHU34Bk0ad
+--ulDeV4rPMk/y39in
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJWoP1pAAoJEBx+YmzsjxAg2WoQALz5XpYUq/ir5Nb/9TTI1l4O
-Lh8yMuO1KGxWo2YWn/uptldSixwgzSACueUw0mH323daeCMsurcNGGS/aD5nTG6I
-bD0Wafw+nH6AQLPSQXUwDRTaGlGTo+j78Uv3xwJTlayrIqMDREZ2p7XzpDEBQB1a
-YM4KdNXmz5NhdNwPC+fewAEYjLrcPSf6GjRKr1X9sx0IRwgpczNQTzLLNNkUEYxA
-btTlio0vsWii9Yb4A/HupVA9IN1n1CNW91J6c1wtF0EeiI+Fxl44pViz5wrAFpX3
-2d345AM4ePaj3PSWQJAGxhHio1vr6Kc+eLkGt+5aYUXhPZX5qyVyDycYunwJ82Sy
-syi29D9LnbAoOQCg3Vh7ExNHs/usLWozs8MVzC3KKfanBwuuQ0fKkCPRLE1uQct5
-PFO2ePzXyymve0Xnp6nh3aKVCBL7TqmPMYfVQwsWHgP5IV/2jILdzsFoOqSduw/0
-Ak+Cm1A5W3jGlsIt/0d/4jF3iy9ZHxANQXvVycqw3U2vEnsvKsFCnqfClDbALecS
-ls7V87OSTIkITygIHaiNzuth1QoFbkelnd8VLWEi/zP7MWBDglSNwGPw+yHulfLm
-2QHix0j1IQwBIm5HJZwJ5A4OHUf0iFDCwqtezQV3fuWSa6JU5I8Wjv8wovxVi1jJ
-NrH3k9d5ac2rQzEciVts
-=XKbZ
+iQIcBAABCAAGBQJWoQVTAAoJEN0jrNd/PrOhrTUQAJ6jgKk7HnaFcXXrFjxoSrUA
+Oswvi3LQav1rsFNVKp3vC/NUkdgZJVcl2Qr8AluGtJFvCqZxI0AQfCbuNbEtB/dq
+Fa/wPTenfl0eWJkSyUdxkW6OWkSqMobxZ4pXkJ+saW3ixjLs0/2mArsh1/RjPC3b
+lgIfII5j8rxRIZi8RdSiPzPIWc1+w+3bZhkhW52qpmd9q4o7yrhbzRofNDevDg39
+ELkTPUmm1FyEwTYDbQ9rc7YY/1Nx3rBOTEct0Y76sU0OdRbeykNkJYlNZkL47/E3
+omR2V+9LEMUVIOuEyG0iOzaKmBU0VtO5v5LSqbduRirwX196pSlSBR9A9xqnaa1q
+5ha3aKIbVaeRKSSE0xCAoJJyyXKuclOgEvvla10HsgBuI0V3zzFbJJFCjN+o146c
+eos5VvmakQrbam+kwVyARuME8RCIS/1C6Xbq/wYACFHAtYA0oleLUe/7W2ZgTEoE
+bojfEI8saWOTgML6IQq+lpHQQZSKBodv7EJN5YkGkn4L9kn5je7NXUp2YRtWp6ow
+gjNL7qhqgfc66wOqHuXJmsiUwZ1eZM1RgHTzmgAFrksH/9xbVLI5cpuhxVhNNX8N
+pB9JqSEuzqC0idU0hwhVebxnIfWYT5J2FWOkfFcYhz8V1uv+bT+4xUkkw8Ys73ww
+qoLvb0VT53+agu6EIYD1
+=GaH6
 -----END PGP SIGNATURE-----
 
---T6xhMxlHU34Bk0ad--
+--ulDeV4rPMk/y39in--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
