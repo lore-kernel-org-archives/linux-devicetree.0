@@ -1,35 +1,71 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control
- for FPGA
-Date: Thu, 21 Jan 2016 15:44:34 +0100
-Message-ID: <CAAtXAHeNXyro3=TOoHehFQMTFdwWD5oBxS3H5cvxiuZx+Zvehw@mail.gmail.com>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
-	<1453317867-10422-6-git-send-email-atull@opensource.altera.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
+Date: Thu, 21 Jan 2016 15:46:57 +0100
+Message-ID: <56A0EF61.5080500@gmail.com>
+References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
+ <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
+ <566E94CA.1050700@linaro.org> <56A0A5E1.5050105@gmail.com>
+ <56A0EBF0.2020703@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1453317867-10422-6-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56A0EBF0.2020703@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
 
-minor nits inline:
 
-On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
+On 21/01/16 15:32, Srinivas Kandagatla wrote:
+>
+>
+> On 21/01/16 09:33, Matthias Brugger wrote:
+>>
+>>
+>> On 14/12/15 11:07, Srinivas Kandagatla wrote:
+>>> Hi Andrew,
+>>>
+>>> On 14/12/15 04:27, Daniel Kurtz wrote:
+>>>> Hi Srinivas,
+>>>>
+>>>> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
+>>>> <andrew-ct.chen@mediatek.com> wrote:
+>>>>> This patch adds EFUSE support driver which is used by other drivers
+>>>>> like thermal sensor and HDMI impedance.
+>>>>>
+>>>>> There are some efuses these fuses store things like calibration data,
+>>>>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
+>>>>> read out this data for configuring the driver.
+>>>>>
+>>>>> Change in v2:
+>>>>> 1. Rebase to 4.4-rc1
+>>>>> 2. Modify the driver Makefile for more consistent with other drivers
+>>>>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and
+>>>>> "mediatek,efuse"
+>>>>
+>>>> Do you still plan to queue this for v4.5?
+>>>>
+>>> Sorry guys, for the long delay in replying your pings, got busy with
+>>> regular office stuff :-)
+>>>
+>>> Yes, It should go in v4.5, I did send request with my sign-off to Greg,
+>>> he should take it via char-misc tree.
+>>>
+>>
+>> I can't see this patches in the char-misc tree [1].
+>> Can you please double check?
+>
+> Hi Matthias,
+> Thanks for the patience. You should expect them to see after v4.5-rc1,
+> that's when Greg said he would push the patches.
+>
 
-> v15: Add altr,fpga-bus implementation
->      Change compatible string "fpga-area" -> "altr,fpga-area"
+I'm a bit puzzled. Wouldn't that mean that they will get into mainline 
+for v4.6.
+I just want to know if I can take patch 3/3 through my v4.5-next branch 
+(which eventually will be merged into v4.6-rc1) or if I have to wait.
 
-Doesn't look that way down there. Or am I reading the code wrong?
-
-> +static const struct of_device_id fpga_area_of_match[] = {
-> +       { .compatible = "fpga-area", },
-
-I'm fine with keeping it as fpga-area, this isn't altera specific imho
-
-Cheers,
-
-Moritz
+Thanks,
+Matthias
