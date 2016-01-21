@@ -1,49 +1,54 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
-Date: Thu, 21 Jan 2016 11:26:11 +0100
-Message-ID: <20160121112611.34e17cb2@ipc1.ka-ro>
-References: <1453292992-1788-1-git-send-email-LW@KARO-electronics.de>
-	<1453292992-1788-2-git-send-email-LW@KARO-electronics.de>
-	<20160120164258.GF6588@sirena.org.uk>
-	<20160121080524.27af489f@ipc1.ka-ro>
-	<20160121102015.GI6588@sirena.org.uk>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 1/3] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: drop
+ unused alias node
+Date: Thu, 21 Jan 2016 11:31:41 +0100
+Message-ID: <20160121113141.66ac374c@tock>
+References: <1453370345-16688-1-git-send-email-antonynpavlov@gmail.com>
+	<1453370345-16688-2-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160121102015.GI6588@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453370345-16688-2-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 21 Jan 2016 12:59:03 +0300
+Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> On Thu, Jan 21, 2016 at 08:05:24AM +0100, Lothar Wa=C3=9Fmann wrote:
-> > > On Wed, Jan 20, 2016 at 01:29:51PM +0100, Lothar Wa=C3=9Fmann wro=
-te:
->=20
-> > > > This pin is used as IRQ pin for the LTC3589 PMIC on the Ka-Ro
-> > > > electronics TX48 module. Make the IRQ optional in the driver an=
-d use a
-> > > > polling routine instead if no IRQ is specified in DT.
-> > > > Otherwise the driver will continuously generate interrupts and =
-make
-> > > > the system unusable.
->=20
-> > > How will the driver generate interrupts if there is no interrupt
-> > > physically present in the system?
->=20
-> > It's using timer interrupts to poll the LTC3589 state.
->=20
-> I know that is what your patch does, my question is why you say in yo=
-ur
-> commit log that "Otherwise the driver will continuously generate
-> interrupts and make the system unusable".
->
-Because the interrupt is level triggered and the polarity of the
-EXTINT pin is inverted, the interrupt will be constantly active when
-the IRQ pin of the LTC3589 is inactive.
+This will need at least a small log that explain that why it is useless.
+This board only have this one serial, so replacing the default of 0
+with 0 does nothing usefull.
 
+Alban
 
-Lothar Wa=C3=9Fmann
+> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> index 003015a..a6108f8 100644
+> --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> @@ -9,10 +9,6 @@
+>  	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
+>  	model = "TP-Link TL-WR1043ND Version 1";
+>  
+> -	alias {
+> -		serial0 = "/ahb/apb/uart@18020000";
+> -	};
+> -
+>  	memory@0 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x2000000>;
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
