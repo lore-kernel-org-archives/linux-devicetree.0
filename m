@@ -1,85 +1,71 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
-Date: Thu, 21 Jan 2016 10:33:21 +0100
-Message-ID: <56A0A5E1.5050105@gmail.com>
-References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
- <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
- <566E94CA.1050700@linaro.org>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: zx296702-ad1: remove deprecated supports-highspeed
+Date: Thu, 21 Jan 2016 18:44:03 +0900
+Message-ID: <56A0A863.1010103@samsung.com>
+References: <1453366905-3964-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566E94CA.1050700@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1453366905-3964-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi, Shaw.
 
+On 01/21/2016 06:01 PM, Shawn Lin wrote:
+> supports-highspeed property is deprecated for dw_mmc,
+> this patch replace it with cap-sd-highspeed and cap-mmc-highspeed.
+> 
+> Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  arch/arm/boot/dts/zx296702-ad1.dts | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/zx296702-ad1.dts b/arch/arm/boot/dts/zx296702-ad1.dts
+> index 081f980..bfbcd805d 100644
+> --- a/arch/arm/boot/dts/zx296702-ad1.dts
+> +++ b/arch/arm/boot/dts/zx296702-ad1.dts
+> @@ -19,7 +19,8 @@
+>  
+>  &mmc0 {
+>  	num-slots = <1>;
+> -	supports-highspeed;
+> +	cap-sd-highspeed;
+> +	cap-mmc-highspeed;
+>  	non-removable;
+>  	disable-wp;
+>  	status = "okay";
 
-On 14/12/15 11:07, Srinivas Kandagatla wrote:
-> Hi Andrew,
->
-> On 14/12/15 04:27, Daniel Kurtz wrote:
->> Hi Srinivas,
->>
->> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
->> <andrew-ct.chen@mediatek.com> wrote:
->>> This patch adds EFUSE support driver which is used by other drivers
->>> like thermal sensor and HDMI impedance.
->>>
->>> There are some efuses these fuses store things like calibration data,
->>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
->>> read out this data for configuring the driver.
->>>
->>> Change in v2:
->>> 1. Rebase to 4.4-rc1
->>> 2. Modify the driver Makefile for more consistent with other drivers
->>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and
->>> "mediatek,efuse"
->>
->> Do you still plan to queue this for v4.5?
->>
-> Sorry guys, for the long delay in replying your pings, got busy with
-> regular office stuff :-)
->
-> Yes, It should go in v4.5, I did send request with my sign-off to Greg,
-> he should take it via char-misc tree.
->
+I saw the below codes..
 
-I can't see this patches in the char-misc tree [1].
-Can you please double check?
+slot@0 {
+	reg = <0>;
+	bus-width = <4>;
+};
 
-Thanks,
-Matthias
+Slot is also deprecated.. You can change those..
 
-[1] https://git.kernel.org/cgit/linux/kernel/git/gregkh/char-misc.git/
+Best Regards,
+Jaehoon Chung
 
-> Thanks,
-> srini
->>>
->>> Andrew-CT Chen (3):
->>>    dt-bindings: add document of mediatek efuse driver
->>>    nvmem: mediatek: Add Mediatek EFUSE driver
->>>    dts: arm64: Add EFUSE device node
->>>
->>>   .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++++++
->>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  5 ++
->>>   drivers/nvmem/Kconfig                              | 11 +++
->>>   drivers/nvmem/Makefile                             |  2 +
->>>   drivers/nvmem/mtk-efuse.c                          | 89
->>> ++++++++++++++++++++++
->>>   5 files changed, 143 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
->>>   create mode 100644 drivers/nvmem/mtk-efuse.c
->>>
->>> --
->>> 1.9.1
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe
->>> linux-kernel" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>> Please read the FAQ at  http://www.tux.org/lkml/
+> @@ -32,7 +33,8 @@
+>  
+>  &mmc1 {
+>  	num-slots = <1>;
+> -	supports-highspeed;
+> +	cap-sd-highspeed;
+> +	cap-mmc-highspeed;
+>  	non-removable;
+>  	disable-wp;
+>  	status = "okay";
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
