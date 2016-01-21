@@ -1,115 +1,58 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v15 1/6] fpga: add bindings document for fpga area and
- fpga bus
-Date: Thu, 21 Jan 2016 16:00:23 +0100
-Message-ID: <CAAtXAHfkQnxZtphRyjUn6qgW=9RMpcJ_CDa4vKgzATsw_NVYWQ@mail.gmail.com>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
-	<1453317867-10422-2-git-send-email-atull@opensource.altera.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Thu, 21 Jan 2016 10:21:15 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org>
+References: <3851350.Ox9dssDdWY@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1453317867-10422-2-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3851350.Ox9dssDdWY@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+On Thu, 21 Jan 2016, Arnd Bergmann wrote:
 
-I tried getting a simple example to work with overlays, however so far
-I failed getting
-the child nodes to probe drivers, maybe you have an idea? The fpga
-image is loaded just fine.
+> On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
+> > 
+> > > 
+> > > So two hubs at ports 1 and 2 of the USB controller that integrates
+> > > the root hub and shares a device node with it.
+> > > 
+> > Ok, so the "reg" is the address for certain root hub (HS or SS), not
+> > the unity address for the whole controller, if it is, do we really
+> > need to add two nodes for one physical port, HS and SS will not be used
+> > at the same time. And if the reg is the same, how can we know
+> > which node is from current recognized device.
+> 
+> The "reg" is the address that the parent device uses to talk to the child
+> device. If you know which of the two that child is attached to, then I
+> think you don't need both, but I think we have to use the entire addressing.
+> 
+> In Alan's example, there are six HS ports and three SS ports, but as I
+> understand it, there is no guarantee that the numbering between the two
+> is identical, and that the three SS ports always refer to the three HS
+> ports. In particular for devices soldered on-board (rather than connected
+> through a standard plug), I would guess that it is possible to connect
+> them to separate child devices though I have to admit that I do not
+> understand enough of the standard to know for sure.
 
-in dts:
+The spec allows for a lot of flexibility.  It even allows for "tier 
+mismatches", in which (for example) the SS connection for a particular 
+port is routed directly to the root hub while the HS connection for the 
+same port is routed through an intermediate hub!
 
-               fpga_bus@0 {
-                       compatible = "altr,fpga-bus", "simple-bus";
-                       #address-cells = <1>;
-                       #size-cells = <1>;
-                       ranges;
+There is only one major constraint: With the exception of hubs, no USB
+device is allowed to use both the SS and the HS buses at the same time.  
+A device has to decide on one speed and use only the corresponding bus.  
+USB-3 hubs, on the other hand, are required to connect to both buses.  
+They appear as two separate logical devices: a SS hub on the SS bus and
+a HS hub on the HS bus.
 
-                       fpga_mgr0: devcfg@f8007000 {
-                               compatible = "xlnx,zynq-devcfg-1.0",
-"simple-bus";
-                               reg = <0xf8007000 0x100>;
-                               interrupt-parent = <&intc>;
-                               interrupts = <0 8 4>;
-                               clocks = <&clkc 12>;
-                               clock-names = "ref_clk";
-                               syscon = <&slcr>;
+Alan Stern
 
-                               #address-cells = <1>;
-                               #size-cells = <1>;
-                               ranges;
-                       };
-              };
-
-overlay:
-
-fragment@0 {
-        target-path = "/amba/devcfg@f8007000";
-        __overlay__ {
-                #address-cells = <1>;
-                #size-cells = <1>;
-
-                area@0 {
-                        compatible = "fpga-area";
-                        #address-cells = <1>;
-                        #size-cells = <1>;
-                        ranges;
-
-                        firmware-name = "dmac.bin";
-
-                        axi_dma0: axidma@40000000 {
-                                compatible = "xlnx,axi-dma-1.00.a";
-                                reg = <0x40000000 0x10000>;
-                               #dma-cells = <1>;
-                               xlnx,include-sg = <1>;
-                               xlnx,include-dre = <1>;
-                              status = "okay";
-                              [...]
-                       };
-                };
-        };
-};
-
-
-I also stumbled across those while looking through the examples:
-
-> +Example:
-> +
-> +/dts-v1/;
-> +/plugin/;
-
-/dts-v1/ / plugin/; the above syntax is deprecated:
-
-Warning (deprecated_plugin_syntax): Use '/dts-v1/ /plugin/'; syntax.
-/dts-v1/; /plugin/; is going to be removed in next versions
-
-> +Device Tree Example: Partial Reconfiguration with no Bridges
-> +============================================================
-> +
-> +Live Device Tree contains:
-> +       fpgamgr@ffd03000 {
-> +               compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
-> +               clocks = <&l4_mp_clk>;
-> +               resets = <&rst FPGAMGR_RESET>;
-> +               reset-names = "fpgamgr";
-> +               reg = <0xffd03000 0x1000
-> +                      0xffcfe400 0x1000>;
-> +
-> +               #address-cells = <0x1>;
-> +               #size-cells = <0x1>;
-> +               ranges;
-> +       };
-> +
-> +DT Overlay contains:
-> +/dts-v1/;
-> +/plugin/;
-
-see above
-
-Cheers,
-
-Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
