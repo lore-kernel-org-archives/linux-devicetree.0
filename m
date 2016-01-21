@@ -1,53 +1,39 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v12.1 07/17] drm: rockchip: dp: add rockchip platform dp driver
-Date: Thu, 21 Jan 2016 20:11:45 +0100
-Message-ID: <7132332.jmLRiUjx3U@phil>
-References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com> <1453197893-13413-1-git-send-email-ykk@rock-chips.com>
+From: Oreste Salerno <oreste.salerno@tomtom.com>
+Subject: [PATCH v4 2/4] Input: cyttsp - check return value of input_mt_init_slots
+Date: Thu, 21 Jan 2016 20:21:14 +0100
+Message-ID: <d2d63491f1fe7fc63940f97810dcf40b10906b35.1453403916.git.oreste.salerno@tomtom.com>
+References: <cover.1453403916.git.oreste.salerno@tomtom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1453197893-13413-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <cover.1453403916.git.oreste.salerno@tomtom.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, oreste.salerno@tomtom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Yakir,
+Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
+---
+ drivers/input/touchscreen/cyttsp_core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Am Dienstag, 19. Januar 2016, 18:04:53 schrieb Yakir Yang:
-> Rockchip have three clocks for dp controller, we leave pclk_edp
-> to analogix_dp driver control, and keep the sclk_edp_24m and
-> sclk_edp in platform driver.
-> 
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> ---
+diff --git a/drivers/input/touchscreen/cyttsp_core.c b/drivers/input/touchscreen/cyttsp_core.c
+index 3c2ee84..10379bc 100644
+--- a/drivers/input/touchscreen/cyttsp_core.c
++++ b/drivers/input/touchscreen/cyttsp_core.c
+@@ -584,7 +584,11 @@ struct cyttsp *cyttsp_probe(const struct cyttsp_bus_ops *bus_ops,
+ 	input_set_abs_params(input_dev, ABS_MT_TOUCH_MAJOR,
+ 			     0, CY_MAXZ, 0, 0);
+ 
+-	input_mt_init_slots(input_dev, CY_MAX_ID, 0);
++	error = input_mt_init_slots(input_dev, CY_MAX_ID, 0);
++	if (error) {
++		dev_err(dev, "Unable to init MT slots.\n");
++		goto err_platform_exit;
++	}
+ 
+ 	error = devm_request_threaded_irq(dev, ts->irq, NULL, cyttsp_irq,
+ 					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-- 
+1.9.1
 
-[...]
-
-> +static int rockchip_dp_drm_create_encoder(struct rockchip_dp_device *dp)
-> +{
-> +	struct drm_encoder *encoder = &dp->encoder;
-> +	struct drm_device *drm_dev = dp->drm_dev;
-> +	struct device *dev = dp->dev;
-> +	int ret;
-> +
-> +	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm_dev,
-> +							     dev->of_node);
-> +	DRM_DEBUG_KMS("possible_crtcs = 0x%x\n", encoder->possible_crtcs);
-> +
-> +	ret = drm_encoder_init(drm_dev, encoder, &rockchip_dp_encoder_funcs,
-> +			       DRM_MODE_ENCODER_TMDS);
-
-should be
-+			       DRM_MODE_ENCODER_TMDS, NULL);
-
-Exynos-side seems to be ok though.
-
-With the adapted v12.1 patches it applies cleanly and display is working as 
-well. So with the thing above fixed, you could resubmit a full v13, 
-especially as you want to drop patch 16 as discussed there.
-
-
-Heiko
