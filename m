@@ -1,39 +1,57 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
-Date: Thu, 21 Jan 2016 08:38:57 -0800
-Message-ID: <20160121163857.GH19432@atomide.com>
-References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
- <20160121091241.GS7192@pali>
- <20160121092909.GH5783@n2100.arm.linux.org.uk>
- <20160121101828.GA7411@amd>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v15 0/6] altera fpga area and fpga bus
+Date: Thu, 21 Jan 2016 10:42:39 -0600
+Message-ID: <alpine.DEB.2.02.1601211036480.8804@linuxheads99>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <CAAtXAHfars7GUJhFCj2r6JpYzrX4pyaicaWbihAorVWOSxORTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160121101828.GA7411@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHfars7GUJhFCj2r6JpYzrX4pyaicaWbihAorVWOSxORTw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [160121 02:19]:
-> On Thu 2016-01-21 09:29:10, Russell King - ARM Linux wrote:
-> > The merge window is open, which is when development code that was merged
-> > in good time prior to the merge window is sent upstream to Linus.  Linux
-> > maintainers may choose not to merge new code into their tree to avoid
-> > disrupting the utility of linux-next until the merge window has
-> > closed.
+On Thu, 21 Jan 2016, Moritz Fischer wrote:
+
+> Hi Alan,
 > 
-> Support for new hardware is normally allowed after -rc1.
+> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> >
+> > For v15, I'm not using the FPGA Manager as the bus.  I'm adding a FPGA Bus;
+> > the FPGA Manager and bridges go below it.
+> >
+> > I've gotten enough feedback that my proposals are Altera specific that I am
+> > going with that and changing the bindings to include an 'altr,' prefix.
+> 
+> I hope this wasn't a misunderstanding of one of my earlier remarks. I
+> think the fpga-area & fpga bus
+> parts do apply to to Xilinx FPGAs, too. I think for fpga-area and
+> fpga-bus we could drop the 'altr' prefix.
 
-Yeah most maintainers avoid looking at new code until -rc1. Or until
-regresssions are out of the way. So patience please. Fixes are
-welcome any time though.
+Yes, I would very much like to drop the altr prefix if we have general
+acceptance that this isn't all Altera specific.  I'll need to rename
+altera-fpga-bus-fpga-area.txt to drop the 'altera-' prefix and clean
+up a little there.
 
-Regards,
+If you want to send me a Xilinx example of usage for me to include in that
+document, that would be useful also.  I think you might have sent me
+something a while ago, but I can't find it now.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> >
+> > I've combined the bindings document and the other Documentation/fpga/ document
+> > and done a rewrite there.
+> 
+> Looks great!
+> 
+> I'll test it on hardware and look at the patches individually,
+
+Thank you!
+
+> 
+> Cheers,
+> 
+> Moritz
+> 
