@@ -1,144 +1,136 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v2 4/7] MIPS: ath79: add initial support for TP-LINK MR3020
-Date: Fri, 22 Jan 2016 01:34:21 +0300
-Message-ID: <1453415664-20307-5-git-send-email-antonynpavlov@gmail.com>
-References: <1453415664-20307-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453415664-20307-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: dts: porter: add sound support
+Date: Thu, 21 Jan 2016 14:36:01 -0800 (PST)
+Message-ID: <1872468.4EonQLNEFn@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently only the UART, SPI-flash and LEDs are supported.
+Define the Porter board dependent part of the R8A7791 sound device node.
+Add device node for Asahi Kasei AK4642 stereo codec  to the I2C2 bus.
+Add the "simple-audio-card" device node to interconnect the SoC sound
+device  and the codec.
 
-Links:
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-  * http://www.tp-link.com/en/products/details/?model=TL-MR3020
-  * http://wiki.openwrt.org/toh/tp-link/tl-mr3020
-  * https://wikidevi.com/wiki/TP-LINK_TL-MR3020
-
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/ath79/Kconfig              |  5 +++
- arch/mips/boot/dts/qca/Makefile      |  1 +
- arch/mips/boot/dts/qca/tl_mr3020.dts | 72 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 78 insertions(+)
+This patch is against 'renesas-devel-20160121-v4.4' tag of Simon Horman's
+'renesas.git' repo.
 
-diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
-index 13c04cf..4fd53ae 100644
---- a/arch/mips/ath79/Kconfig
-+++ b/arch/mips/ath79/Kconfig
-@@ -77,6 +77,11 @@ choice
- 	help
- 	  Select a devicetree that should be built into the kernel.
- 
-+	config DTB_TL_MR3020
-+		bool "TL-MR3020"
-+		select BUILTIN_DTB
-+		select SOC_AR933X
-+
- 	config DTB_TL_WR1043ND_V1
- 		bool "TL-WR1043ND Version 1"
- 		select BUILTIN_DTB
-diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
-index 2d61455d..ae47e35 100644
---- a/arch/mips/boot/dts/qca/Makefile
-+++ b/arch/mips/boot/dts/qca/Makefile
-@@ -2,6 +2,7 @@
- dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
- 
- # Select a DTB to build in the kernel
-+obj-$(CONFIG_DTB_TL_MR3020)		+= tl_mr3020.dtb.o
- obj-$(CONFIG_DTB_TL_WR1043ND_V1)	+= ar9132_tl_wr1043nd_v1.dtb.o
- 
- # Force kbuild to make empty built-in.o if necessary
-diff --git a/arch/mips/boot/dts/qca/tl_mr3020.dts b/arch/mips/boot/dts/qca/tl_mr3020.dts
-new file mode 100644
-index 0000000..ca00836
---- /dev/null
-+++ b/arch/mips/boot/dts/qca/tl_mr3020.dts
-@@ -0,0 +1,72 @@
-+/dts-v1/;
-+
-+#include "ar9331.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "TP-Link TL-MR3020";
-+	compatible = "tplink,tl-mr3020";
-+
-+	aliases {
-+		serial0 = &uart;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x2000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		wlan {
-+			label = "tp-link:green:wlan";
-+			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		lan {
-+			label = "tp-link:green:lan";
-+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		wps {
-+			label = "tp-link:green:wps";
-+			gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led3g {
-+			label = "tp-link:green:3g";
-+			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&ref {
-+	clock-frequency = <25000000>;
-+};
-+
-+&uart {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
-+&spi {
-+	num-chipselects = <1>;
-+	status = "okay";
-+
-+	/* Spansion S25FL032PIF SPI flash */
-+	spiflash: s25sl032p@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25sl032p", "jedec,spi-nor";
-+		spi-max-frequency = <104000000>;
-+		reg = <0>;
-+	};
-+};
--- 
-2.6.2
+ arch/arm/boot/dts/r8a7791-porter.dts |   71 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -8,6 +8,17 @@
+  * kind, whether express or implied.
+  */
+ 
++/*
++ * SSI-AK4642
++ *
++ * SW3: 1: AK4642
++ *      3: ADV7511
++ *
++ * This command is required before playback/capture:
++ *
++ *	amixer set "LINEOUT Mixer DACL" on
++ */
++
+ /dts-v1/;
+ #include "r8a7791.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+@@ -101,6 +112,30 @@
+ 		#clock-cells = <0>;
+ 		clock-frequency = <74250000>;
+ 	};
++
++	x14_clk: x14-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <11289600>;
++		clock-output-names = "audio_clock";
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++
++		simple-audio-card,format = "left_j";
++		simple-audio-card,bitclock-master = <&soundcodec>;
++		simple-audio-card,frame-master = <&soundcodec>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&rcar_sound>;
++		};
++
++		soundcodec: simple-audio-card,codec {
++			sound-dai = <&ak4642>;
++			clocks = <&x14_clk>;
++		};
++	};
+ };
+ 
+ &extal_clk {
+@@ -167,6 +202,16 @@
+ 		renesas,groups = "du_rgb888", "du_sync", "du_disp", "du_clk_out_0";
+ 		renesas,function = "du";
+ 	};
++
++	ssi_pins: sound {
++		renesas,groups = "ssi0129_ctrl", "ssi0_data", "ssi1_data";
++		renesas,function = "ssi";
++	};
++
++	audio_clk_pins: audio_clk {
++		renesas,groups = "audio_clk_a";
++		renesas,function = "audio_clk";
++	};
+ };
+ 
+ &scif0 {
+@@ -257,6 +302,12 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 
++	ak4642: codec@12 {
++		compatible = "asahi-kasei,ak4642";
++		#sound-dai-cells = <0>;
++		reg = <0x12>;
++	};
++
+ 	composite-in@20 {
+ 		compatible = "adi,adv7180";
+ 		reg = <0x20>;
+@@ -385,3 +436,23 @@
+ 		};
+ 	};
+ };
++
++&rcar_sound {
++	pinctrl-0 = <&ssi_pins &audio_clk_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	/* Single DAI */
++	#sound-dai-cells = <0>;
++
++	rcar_sound,dai {
++		dai0 {
++			playback = <&ssi0>;
++			capture  = <&ssi1>;
++		};
++	};
++};
++
++&ssi1 {
++	shared-pin;
++};
