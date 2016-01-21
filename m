@@ -1,39 +1,62 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] Documentation: rockchip-dw-mshc: add RK3368 dw-mshc description
-Date: Thu, 21 Jan 2016 20:32:09 +0800
-Message-ID: <1453379529-5148-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] 8250: uniphier: allow modular build with 8250 console
+Date: Thu, 21 Jan 2016 08:09:13 -0600
+Message-ID: <CAL_JsqKCnxenDN-5OP1yqAyyW1-cuhs47CeosAj12hr89e6CrA@mail.gmail.com>
+References: <3965359.aMgb8o9MaG@wuerfel> <CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g@mail.gmail.com>
+ <4548262.MV5j98YUVi@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4548262.MV5j98YUVi@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Hurley <peter@hurleysoftware.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-rk3368 dtsi file add dw-mshc compatible "rockchip,rk3368-dw-mshc"
-but didn't add it into rockchip-dw-mshc.txt.
+On Thu, Jan 21, 2016 at 6:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 21 January 2016 20:39:03 Masahiro Yamada wrote:
+>> 2016-01-14 7:33 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
+>> > The recently added uniphier 8250 port driver supports early console
+>> > probing, and it supports being built as a module, but the combination
+>> > of the two fails to link:
+>> >
+>> > ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
+>> >
+>> > Given that earlycon support in a loadable module makes no sense,
+>> > making that code conditional on 'MODULE' is a correct solution.
+>> >
+>> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> > Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
+>> >
+>> > diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+>> > index bab6b3ae2540..1b7bd26555b7 100644
+>> > --- a/drivers/tty/serial/8250/8250_uniphier.c
+>> > +++ b/drivers/tty/serial/8250/8250_uniphier.c
+>> > @@ -35,7 +35,7 @@ struct uniphier8250_priv {
+>> >         spinlock_t atomic_write_lock;
+>> >  };
+>> >
+>> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
+>> > +#if defined(CONFIG_SERIAL_8250_CONSOLE) && !defined(MODULE)
+>> >  static int __init uniphier_early_console_setup(struct earlycon_device *device,
+>> >                                                const char *options)
+>> >  {
+>> >
+>> >
+>>
+>>
+>> If my patch (https://patchwork.kernel.org/patch/8029331/) is accepted,
+>> this build error will be fixed as well.  But I doubt it is accepted soon...
+>>
+>> So, I am OK with this workaround to fix "make allmodconfig".
+>>
+>> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>
+> Good point. Adding the DT maintainers to Cc. Guys, any chance of you
+> picking up Masahiro's patch for 4.5?
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+I will if you can update the commit log with the details here about it
+fixing an actual problem.
 
- Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index 3dc13b6..634e249 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -13,6 +13,7 @@ Required Properties:
- 	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
- 							before RK3288
- 	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
-+	- "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
- 
- Optional Properties:
- * clocks: from common clock binding: if ciu_drive and ciu_sample are
--- 
-2.3.7
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
