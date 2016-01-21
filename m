@@ -1,136 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: porter: add sound support
-Date: Thu, 21 Jan 2016 14:36:01 -0800 (PST)
-Message-ID: <1872468.4EonQLNEFn@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: imx7d: add arch timer
+Date: Thu, 21 Jan 2016 16:39:14 -0600
+Message-ID: <CAHrpEqS2upM1FANu9tjzmwxscOH3Y56S7naj7sPF9dKmn51_zw@mail.gmail.com>
+References: <1452014237-12848-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452014237-12848-1-git-send-email-Frank.Li-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Porter board dependent part of the R8A7791 sound device node.
-Add device node for Asahi Kasei AK4642 stereo codec  to the I2C2 bus.
-Add the "simple-audio-card" device node to interconnect the SoC sound
-device  and the codec.
+On Tue, Jan 5, 2016 at 11:17 AM, Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org> wrote:
+> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
+> Since uboot v2016.01-rc2, which supported basic psci for i.mx7d.
+> So imx7d's second core can be enabled by psci.
+>
+> Without arch timer, every timer event will be boardcasted to each core.
+> arch timer has local timer irq for each core.
+>
+> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Ping
 
----
-This patch is against 'renesas-devel-20160121-v4.4' tag of Simon Horman's
-'renesas.git' repo.
-
- arch/arm/boot/dts/r8a7791-porter.dts |   71 +++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -8,6 +8,17 @@
-  * kind, whether express or implied.
-  */
- 
-+/*
-+ * SSI-AK4642
-+ *
-+ * SW3: 1: AK4642
-+ *      3: ADV7511
-+ *
-+ * This command is required before playback/capture:
-+ *
-+ *	amixer set "LINEOUT Mixer DACL" on
-+ */
-+
- /dts-v1/;
- #include "r8a7791.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-@@ -101,6 +112,30 @@
- 		#clock-cells = <0>;
- 		clock-frequency = <74250000>;
- 	};
-+
-+	x14_clk: x14-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <11289600>;
-+		clock-output-names = "audio_clock";
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+
-+		simple-audio-card,format = "left_j";
-+		simple-audio-card,bitclock-master = <&soundcodec>;
-+		simple-audio-card,frame-master = <&soundcodec>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&rcar_sound>;
-+		};
-+
-+		soundcodec: simple-audio-card,codec {
-+			sound-dai = <&ak4642>;
-+			clocks = <&x14_clk>;
-+		};
-+	};
- };
- 
- &extal_clk {
-@@ -167,6 +202,16 @@
- 		renesas,groups = "du_rgb888", "du_sync", "du_disp", "du_clk_out_0";
- 		renesas,function = "du";
- 	};
-+
-+	ssi_pins: sound {
-+		renesas,groups = "ssi0129_ctrl", "ssi0_data", "ssi1_data";
-+		renesas,function = "ssi";
-+	};
-+
-+	audio_clk_pins: audio_clk {
-+		renesas,groups = "audio_clk_a";
-+		renesas,function = "audio_clk";
-+	};
- };
- 
- &scif0 {
-@@ -257,6 +302,12 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 
-+	ak4642: codec@12 {
-+		compatible = "asahi-kasei,ak4642";
-+		#sound-dai-cells = <0>;
-+		reg = <0x12>;
-+	};
-+
- 	composite-in@20 {
- 		compatible = "adi,adv7180";
- 		reg = <0x20>;
-@@ -385,3 +436,23 @@
- 		};
- 	};
- };
-+
-+&rcar_sound {
-+	pinctrl-0 = <&ssi_pins &audio_clk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	/* Single DAI */
-+	#sound-dai-cells = <0>;
-+
-+	rcar_sound,dai {
-+		dai0 {
-+			playback = <&ssi0>;
-+			capture  = <&ssi1>;
-+		};
-+	};
-+};
-+
-+&ssi1 {
-+	shared-pin;
-+};
+>
+> Change from v1 to v2:
+>  * refine commit message show the relationship between smp and arch timer
+>
+>  arch/arm/boot/dts/imx7d.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+> index 489604a..a621af6 100644
+> --- a/arch/arm/boot/dts/imx7d.dtsi
+> +++ b/arch/arm/boot/dts/imx7d.dtsi
+> @@ -119,6 +119,15 @@
+>                 clock-output-names = "osc";
+>         };
+>
+> +       timer {
+> +               compatible = "arm,armv7-timer";
+> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +               interrupt-parent = <&intc>;
+> +       };
+> +
+>         etr@30086000 {
+>                 compatible = "arm,coresight-tmc", "arm,primecell";
+>                 reg = <0x30086000 0x1000>;
+> --
+> 2.5.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
