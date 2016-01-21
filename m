@@ -1,117 +1,125 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 RESEND 4/4] arm64: dts: enable idle states for Hi6220
-Date: Thu, 21 Jan 2016 18:53:50 +0800
-Message-ID: <1453373630-4693-5-git-send-email-leo.yan@linaro.org>
-References: <1453373630-4693-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453373630-4693-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Leo Yan <leo.yan@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Yu Dongbin <yudongbin@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Wei Xu <xuwei5@hisilicon.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more
+ devicetree-friendly
+Date: Thu, 21 Jan 2016 12:03:20 +0100
+Message-ID: <20160121120320.217c8a03@tock>
+References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
+	<1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
+	<20160118205725.0a16be8e@tock>
+	<20160121031215.250b826347fd9c179b031288@gmail.com>
+	<20160121091217.379b6239@tock>
+	<20160121131711.a7315d3ca6233e50ec824544@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121131711.a7315d3ca6233e50ec824544-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add cpu and cluster level's low power state for Hi6220.
+On Thu, 21 Jan 2016 13:17:11 +0300
+Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+> On Thu, 21 Jan 2016 09:12:17 +0100
+> Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+> 
+> > On Thu, 21 Jan 2016 03:12:15 +0300
+> > Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > 
+> > > On Mon, 18 Jan 2016 20:57:25 +0100
+> > > Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+> > > 
+> > > > On Mon, 18 Jan 2016 02:56:24 +0300
+> > > > Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > 
+> > > > > At the moment ar933x of-enabled drivers use use clock names
+> > > > > (e.g. "uart" or "ahb") to get clk descriptor.
+> > > > > On the other hand
+> > > > > Documentation/devicetree/bindings/clock/clock-bindings.txt states
+> > > > > that the 'clocks' property is required for passing clk to clock
+> > > > > consumers.
+> > > > 
+> > > > This patch is not need, you should set the clock-names property in
+> > > > the relevant device nodes instead.
+> > > 
+> > > This patch is needed for AR9331!
+> > > 
+> > > In ar933x_clocks_init() we have
+> > > 
+> > >         ath79_add_sys_clkdev("ref", ref_rate);
+> > >         clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
+> > >         clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
+> > >         clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
+> > > 
+> > >         clk_add_alias("wdt", NULL, "ahb", NULL);
+> > >         clk_add_alias("uart", NULL, "ref", NULL);
+> > > 
+> > > "uart" is an alias for "ref". But "ref" is not visible via device tree!
+> > > 
+> > > I see this error message on ar933x-uart start:
+> > >  
+> > >      ERROR: could not get clock /ahb/apb/uart@18020000:uart(0)
+> > 
+> > The ref clock should be defined in the board DTS, I now see that it is
+> > missing in yours. What you need to do is to define the clock-names
+> > property in the Soc DTS, that allow the names lookup to work. Then in
+> > the board DTS you can define the clock property to connect it to the
+> > proper parent. 
+> > 
+> > I'm also working on supporting the QCA9558 and the clock tree is similar.
+> > See https://github.com/AlbanBedel/linux/commit/d6c8f8adfce08972c6
+> > as example.
+> 
+> Current ath79 clock.c code does not read ref clock from devicetree!
+> So you can set any clock rate value in board DTS but it will has no effect
+> on the real clk calculation.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 781681a..6fb1697 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -53,11 +53,35 @@
- 			};
- 		};
- 
-+		idle-states {
-+			entry-method = "psci";
-+
-+			CPU_SLEEP: cpu-sleep {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <700>;
-+				exit-latency-us = <250>;
-+				min-residency-us = <1000>;
-+			};
-+
-+			CLUSTER_SLEEP: cluster-sleep {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x1010000>;
-+				entry-latency-us = <1000>;
-+				exit-latency-us = <700>;
-+				min-residency-us = <2700>;
-+				wakeup-latency-us = <1500>;
-+			};
-+		};
-+
- 		cpu0: cpu@0 {
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -65,6 +89,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -72,6 +97,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -79,6 +105,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -86,6 +113,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -93,6 +121,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -100,6 +129,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -107,6 +137,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 	};
- 
--- 
-1.9.1
+Yes, the ath79 clock is broken in this respect, however the uart driver
+isn't and it will use the clock it receive. The fixed oscillator works
+fine on QCA9558 which also use the ref clock for the uart.
+
+> A more reasonable solution is used for CI20 board.
+> In arch/mips/boot/dts/ingenic/jz4780.dtsi we have
+> 
+> 	ext: ext {
+> 		compatible = "fixed-clock";
+> 		#clock-cells = <0>;
+> 	};
+> 
+> ...
+> 
+> 	cgu: jz4780-cgu@10000000 {
+> 		compatible = "ingenic,jz4780-cgu";
+> 		reg = <0x10000000 0x100>;
+> 
+> 		clocks = <&ext>, <&rtc>;
+> 		clock-names = "ext", "rtc";
+> 
+> 		#clock-cells = <1>;
+> 	};
+> 
+> 
+> In arch/mips/boot/dts/ingenic/ci20.dts we have
+> 
+> &ext {
+> 	clock-frequency = <48000000>;
+> };
+> 
+> At last drivers/clk/ingenic/jz4780-cgu.c registers this "ext" clock
+> as a parent of most other subordianate clocks. So there is no magic
+> frequency constants in drivers/clk/ingenic!
+> 
+> In arch/mips/ath79/clocks.c we have a very different situation:
+> the reference clock frequences are already hardcoded in C-code so there is
+> no need to mention them in devicetree files.
+
+No, we need to fix the code to only use the hard coded values for the
+legacy platforms.
+
+Alban
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
