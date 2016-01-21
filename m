@@ -1,87 +1,40 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] MIPS: dts: qca: ar9132: drop unused extosc mentions
-Date: Thu, 21 Jan 2016 12:59:04 +0300
-Message-ID: <1453370345-16688-3-git-send-email-antonynpavlov@gmail.com>
-References: <1453370345-16688-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453370345-16688-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
+Date: Thu, 21 Jan 2016 10:03:06 +0000
+Message-ID: <20160121100306.GI5783@n2100.arm.linux.org.uk>
+References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+ <20160121091241.GS7192@pali>
+ <20160121092909.GH5783@n2100.arm.linux.org.uk>
+ <20160121095004.GW7192@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160121095004.GW7192@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-At the moment ar913x_clocks_init() does not use extosc node at all,
-the reference clock rate is hardcoded inside arch/mips/ath79/clock.c
+On Thu, Jan 21, 2016 at 10:50:04AM +0100, Pali Roh=E1r wrote:
+> Ok, but for whole month I do not see any response that somebody take
+> this patch into some queue or tree. Which could means that patch was
+> either ignored or is living somewhere and could be lost.
 
-    #define AR913X_BASE_FREQ        5000000
+You sent it the day after Christmas day, when people were most likely
+on their Christmas break doing family stuff, and there was only one
+week after the traditional Christmas/New year break before the merge
+window opened.
 
-    ...
+So, discounting Christmas and the merge window, your patch has only
+been around for one week - a week where maintainers would have been
+stabilising their tree(s) in preparation for the merge window opening.
 
-    static void __init ar913x_clocks_init(void)
-    {
-            ref_rate = AR913X_BASE_FREQ;
+Please be patient; the merge window closes this Sunday, and I suspect
+"normal service" will be resumed shortly thereafter.
 
-    ...
-
-            ath79_add_sys_clkdev("ref", ref_rate);
-
-Also please see the commits 'MIPS: ath79: Fix the ar913x reference clock rate'
-and 'MIPS: ath79: Fix the ar724x clock calculation' in Alban Bedel's
-github ath79 branch https://github.com/AlbanBedel/linux/tree/ath79
-
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/mips/boot/dts/qca/ar9132.dtsi               |  3 ---
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 10 ----------
- 2 files changed, 13 deletions(-)
-
-diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index 13d0439..84787e30 100644
---- a/arch/mips/boot/dts/qca/ar9132.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -87,9 +87,6 @@
- 						"qca,ar9130-pll";
- 				reg = <0x18050000 0x20>;
- 
--				clock-names = "ref";
--				/* The board must provides the ref clock */
--
- 				#clock-cells = <1>;
- 				clock-output-names = "cpu", "ddr", "ahb";
- 			};
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index a6108f8..10905f6 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -14,21 +14,11 @@
- 		reg = <0x0 0x2000000>;
- 	};
- 
--	extosc: oscillator {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <40000000>;
--	};
--
- 	ahb {
- 		apb {
- 			uart@18020000 {
- 				status = "okay";
- 			};
--
--			pll-controller@18050000 {
--				clocks = <&extosc>;
--			};
- 		};
- 
- 		spi@1f000000 {
--- 
-2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
