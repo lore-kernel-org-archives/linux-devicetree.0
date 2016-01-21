@@ -1,41 +1,48 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] net: mvneta: support more than one clk
-Date: Thu, 21 Jan 2016 12:05:32 -0800 (PST)
-Message-ID: <20160121.120532.2109574129268460718.davem@davemloft.net>
-References: <1453289245-2061-1-git-send-email-jszhang@marvell.com>
+From: Oreste Salerno <oreste.salerno@tomtom.com>
+Subject: Re: [PATCH v4 1/4] Input: cyttsp - use devres managed resource
+ allocations
+Date: Thu, 21 Jan 2016 21:22:05 +0100
+Message-ID: <20160121202205.GA20324@nl1lxl-107192.ttg.global>
+References: <cover.1453403916.git.oreste.salerno@tomtom.com>
+ <20e9f0188f07fc420912b3defa747303be3cf290.1453403916.git.oreste.salerno@tomtom.com>
+ <20160121192924.GB39970@dtor-ws>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453289245-2061-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160121192924.GB39970@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Date: Wed, 20 Jan 2016 19:27:21 +0800
+On Thu, Jan 21, 2016 at 11:29:24AM -0800, Dmitry Torokhov wrote:
+> Hi Oreste,
+> 
+> On Thu, Jan 21, 2016 at 08:21:13PM +0100, Oreste Salerno wrote:
+> > Use devm_() functions for allocating memory, input device and IRQ.
+> > 
+> 
+> ...
+> 
+> > @@ -625,11 +620,8 @@ EXPORT_SYMBOL_GPL(cyttsp_probe);
+> >  
+> >  void cyttsp_remove(struct cyttsp *ts)
+> >  {
+> > -	free_irq(ts->irq, ts);
+> > -	input_unregister_device(ts->input);
+> >  	if (ts->pdata->exit)
+> >  		ts->pdata->exit();
+> > -	kfree(ts);
+> 
+> This is not quite correct as it changes the operations order... Given
+> that it is going to be removed in the next patch I guess it is OK, but
+> ideally you can add a custom devm action to shut off the chip.
+>
 
-> Some platforms may provide more than one clk for the mvneta IP, for
-> example Marvell BG4CT provides "core" clk for the mac core, and "axi"
-> clk for the AXI bus logic.
-> 
-> This series tries to addess the "more than one clk" issue. Note: to
-> support BG4CT, we have lots of refactor work to do, eg. BG4CT doesn't
-> have mbus concept etc.
-> 
-> Since v2:
->  - Name the optional clock as "bus", which is a bit more flexible.
-> 
-> Since v1:
->  - Add Thomas Acks to patch1 and patch2.
->  - make sure the headers are really sorted (some headers are still
->    unsorted in v1).
->  - disable axi clk before disabling core clk, Thank Thomas.
->  - update dt binding as Thomas suggested.
+You mean a devm action to call pdata->exit() ? OK, I could do that.
 
-Series applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks.
+> 
+> -- 
+> Dmitry
