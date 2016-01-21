@@ -1,54 +1,61 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] Documentation: Update the APM X-Gene SoC EDAC DTS
- binding for missing RB
-Date: Wed, 20 Jan 2016 15:14:07 -0800
-Message-ID: <CAPw-ZT=ThVjyTtOrs3GSukrsvasbokk1p3XT24sZxXBP5MS0PQ@mail.gmail.com>
-References: <1453250812-15097-1-git-send-email-lho@apm.com>
-	<1453250812-15097-2-git-send-email-lho@apm.com>
-	<20160120183543.GK23186@pd.tnic>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more
+ devicetree-friendly
+Date: Thu, 21 Jan 2016 03:12:15 +0300
+Message-ID: <20160121031215.250b826347fd9c179b031288@gmail.com>
+References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
+	<1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
+	<20160118205725.0a16be8e@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160120183543.GK23186-fF5Pk5pvG8Y@public.gmane.org>
+In-Reply-To: <20160118205725.0a16be8e@tock>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 18 Jan 2016 20:57:25 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-On Wed, Jan 20, 2016 at 10:35 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Tue, Jan 19, 2016 at 05:46:50PM -0700, Loc Ho wrote:
->>  This patch updates the APM X-Gene SoC EDAC documentation binding to
->>  reference the missing register bus for the the SoC EDAC.
->>
->>  Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
->>  ---
->>   .../devicetree/bindings/edac/apm-xgene-edac.txt    |   12 ++++++++++++
->>   1 files changed, 12 insertions(+), 0 deletions(-)
->>
->>  diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->>  index 78e2a31..17b29af 100644
->>  --- a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->>  +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->>  @@ -20,6 +20,12 @@ Required properties:
->>   - interrupts            : Interrupt-specifier for MCU, PMD, L3, or SoC error
->>                         IRQ(s).
->>
->>  +Optional property:
->>  +- regmap-rb         : Regmap of the register bus resource. This properity
->>  +                      is optional only for compatibility. If the RB
->>  +                      erorr conditions are not cleared, it will
->
-> s/erorr/error/
->
-> Please integrate a spellchecker into your patch creation workflow.
+> On Mon, 18 Jan 2016 02:56:24 +0300
+> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> > At the moment ar933x of-enabled drivers use use clock names
+> > (e.g. "uart" or "ahb") to get clk descriptor.
+> > On the other hand
+> > Documentation/devicetree/bindings/clock/clock-bindings.txt states
+> > that the 'clocks' property is required for passing clk to clock
+> > consumers.
+>=20
+> This patch is not need, you should set the clock-names property in
+> the relevant device nodes instead.
 
-I will integrate aspell into the patch creation workflow and shoot for
-an update version sometime this Friday.
+This patch is needed for AR9331!
 
--Loc
+In ar933x_clocks_init() we have
+
+        ath79_add_sys_clkdev("ref", ref_rate);
+        clks[0] =3D ath79_add_sys_clkdev("cpu", cpu_rate);
+        clks[1] =3D ath79_add_sys_clkdev("ddr", ddr_rate);
+        clks[2] =3D ath79_add_sys_clkdev("ahb", ahb_rate);
+
+        clk_add_alias("wdt", NULL, "ahb", NULL);
+        clk_add_alias("uart", NULL, "ref", NULL);
+
+"uart" is an alias for "ref". But "ref" is not visible via device tree!
+
+I see this error message on ar933x-uart start:
+=20
+     ERROR: could not get clock /ahb/apb/uart@18020000:uart(0)
+
+=20
+--=A0
+Best regards,
+=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
