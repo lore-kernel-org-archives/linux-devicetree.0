@@ -1,151 +1,231 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Thu, 21 Jan 2016 14:27:57 +0800
-Message-ID: <56A07A6D.3010406@rock-chips.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
- <1452598189-8272-1-git-send-email-andy.yan@rock-chips.com>
- <20160120182840.GA15741@rob-hp-laptop>
+From: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+Subject: [PATCH v4 1/2] gpio: add TI SN65HVS885 spi industrial input serializer driver
+Date: Thu, 21 Jan 2016 07:41:35 +0100
+Message-ID: <1453358496-4902-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160120182840.GA15741@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob:
-    thanks for your review.
-On 2016=E5=B9=B401=E6=9C=8821=E6=97=A5 02:28, Rob Herring wrote:
-> On Tue, Jan 12, 2016 at 07:29:49PM +0800, Andy Yan wrote:
->> add device tree binding document for reboot-mode driver
->>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> ---
->>
->> Changes in v2: None
->> Changes in v1: None
->>
->>   .../bindings/power/reset/reboot-mode.txt           | 41 ++++++++++=
-+++++++
->>   .../bindings/power/reset/syscon-reboot-mode.txt    | 52 ++++++++++=
-++++++++++++
->>   2 files changed, 93 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/reset/r=
-eboot-mode.txt
->>   create mode 100644 Documentation/devicetree/bindings/power/reset/s=
-yscon-reboot-mode.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mo=
-de.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> new file mode 100644
->> index 0000000..81d9f66
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> @@ -0,0 +1,41 @@
->> +Generic reboot mode core map driver
->> +
->> +This driver get reboot mode arguments and call the write
->> +interface to stores the magic value in special register
->> +or ram . Then the bootloader can read it and take different
->> +action according to the argument stored.
->> +
->> +Required properties:
->> +- compatible: only support "syscon-reboot-mode" now.
->> +
->> +Each mode is represented as a sub-node of reboot_mode:
->> +
->> +Subnode required properties:
->> +- linux,mode: reboot mode command,such as "loader", "recovery", "fa=
-stboot".
->> +- loader,magic: magic number for the mode, this is vendor specific.
->> +
->> +Example:
->> +	reboot_mode {
-> reboot-mode instead please.
->
+Simple gpiolib driver for TI SN65HVS885 industrial input serializer.
+The TI SN65HVS885 only support inputs.
 
-     Sorry, I have already correct it in DT file, forget it here. It=20
-will be changed in next version.
+Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll@prevas.dk>
+---
+Changes since v3:
+- none
 
->> +		compatible =3D "syscon-reboot-mode";
->> +		offset =3D <0x40>;
-> This doc by itself is a little confusing. For example, is a child of =
-the
-> syscon node? I would remove offset (and perhaps compatible) from this
-> example.
+Changes since v2:
+- Wrong SPI mode. The correct mode is MODE 0
 
-    Yes, is a child of a syscon mapped node. For example, Rockchip=20
-platform use a register of PMU(rk3066/rk3288) or GRF(rk3036), PMU and=20
-GRF are aleady mapped by syscon.
-    offset and compatible are used by write interface driver like=20
-syscon-reboot-mode.c. If you don't like it appear in the core map doc, =
-I=20
-will move it to the syscon-reboot-mode.txt?
->> +
->> +		loader {
->> +			linux,mode =3D "loader";
->> +			loader,magic =3D <BOOT_LOADER>;
->> +		};
-> Sorry, my previous suggestion was not clear. I'm suggesting get rid o=
-f
-> the subnodes and just do properties like this:
->
-> loader =3D <BOOT_LOADER>;
-> maskrom =3D <BOOT_MASKROM>;
->
-> That's the same amount of information unless node names and linux,mod=
-e
-> values are going to diverge. Do they need to? I can't see a reason.
+ drivers/gpio/Kconfig           |   9 ++-
+ drivers/gpio/Makefile          |   1 +
+ drivers/gpio/gpio-sn65hvs885.c | 144 +++++++++++++++++++++++++++++++++=
+++++++++
+ 3 files changed, 152 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/gpio/gpio-sn65hvs885.c
 
-     Because the command"linux,mode" and value"loader,magic" is vendor=20
-specific. I don't know what commands and how many mode other platform=20
-will use. So as John says in his reply, this sort of flexibility help u=
-s=20
-adapt the driver to different hardware/system environments.
->
-> We need to be clear what loader means. More specifically, it is boot
-> into bootloader shell.
-     Actually, Rockchip platform will reboot into a bootloader download=
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index cb212eb..d320f50 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1018,6 +1018,13 @@ config GPIO_MC33880
+ 	  SPI driver for Freescale MC33880 high-side/low-side switch.
+ 	  This provides GPIO interface supporting inputs and outputs.
 =20
-mode with this command. This mode can download faster than maskrom=20
-download mode.
->> +
->> +		maskrom {
-> In theory, the bootrom could have multiple modes. This typically mean=
-s a
-> USB download mode. So perhaps a more precise name would be
-> "rom-download".
->
-> In chips I'm familiar with the bootrom mode is selected via a differe=
-nt
-> mechanism than the secondary bootloader modes, but I suppose the same
-> mechanism could be used.
-    Yes , they use the same mechanism.
->> +			linux,mode =3D "maskrom";
->> +			loader,magic =3D <BOOT_MASKROM>;
->> +		};
->> +
->> +		recovery {
->> +			linux,mode =3D "recovery";
->> +			loader,magic =3D <BOOT_RECOVERY>;
->> +		};
->> +
->> +		fastboot {
->> +			linux,mode =3D "fastboot";
->> +			loader,magic =3D <BOOT_FASTBOOT>;
->> +		};
->
->
->
-
++config GPIO_SN65HVS885
++        tristate "Texas Instruments sn65hvs885 input serializer 8-bit =
+shift register"
++        depends on SPI_MASTER && OF
++        help
++          Driver for Texas Instruments sn65hvs885 input serializer.
++          This provides a GPIO interface supporting inputs.
++
+ endmenu
+=20
+ menu "SPI or I2C GPIO expanders"
+@@ -1031,8 +1038,6 @@ config GPIO_MCP23S08
+ 	  This provides a GPIO interface supporting inputs and outputs.
+ 	  The I2C versions of the chips can be used as interrupt-controller.
+=20
+-endmenu
+-
+ menu "USB GPIO expanders"
+ 	depends on USB
+=20
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 548e9b5..db7d035 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -120,3 +120,4 @@ obj-$(CONFIG_GPIO_XTENSA)	+=3D gpio-xtensa.o
+ obj-$(CONFIG_GPIO_ZEVIO)	+=3D gpio-zevio.o
+ obj-$(CONFIG_GPIO_ZYNQ)		+=3D gpio-zynq.o
+ obj-$(CONFIG_GPIO_ZX)		+=3D gpio-zx.o
++obj-$(CONFIG_GPIO_SN65HVS885)	+=3D gpio-sn65hvs885.o
+diff --git a/drivers/gpio/gpio-sn65hvs885.c b/drivers/gpio/gpio-sn65hvs=
+885.c
+new file mode 100644
+index 0000000..6dceecc
+--- /dev/null
++++ b/drivers/gpio/gpio-sn65hvs885.c
+@@ -0,0 +1,144 @@
++/*
++ * Copyright (C) 2015 Sean Nyekjaer, Prevas
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/spi/spi.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++
++#define SN65HVS885_NUMBER_GPIOS	8
++
++struct sn65hvs885_chip {
++	struct gpio_chip gpio_chip;
++	int latch_gpio;
++	struct mutex lock;	/* protect from simultaneous accesses */
++};
++
++static struct sn65hvs885_chip *sn65hvs885_gpio_to_chip(struct gpio_chi=
+p *gc)
++{
++	return container_of(gc, struct sn65hvs885_chip, gpio_chip);
++}
++
++static int sn65hvs885_get_value(struct gpio_chip *gc, unsigned offset)
++{
++	struct sn65hvs885_chip *chip =3D sn65hvs885_gpio_to_chip(gc);
++	struct spi_device *spi =3D to_spi_device(chip->gpio_chip.dev);
++	int ret;
++	u8 pin =3D offset % SN65HVS885_NUMBER_GPIOS;
++	u8 d8;
++	struct spi_transfer t =3D {
++		.rx_buf =3D &d8,
++		.len =3D 1,
++	};
++
++	if (gpio_is_valid(chip->latch_gpio)) {
++		gpio_set_value_cansleep(chip->latch_gpio, 0);
++		gpio_set_value_cansleep(chip->latch_gpio, 1);
++	}
++
++	mutex_lock(&chip->lock);
++	spi_sync_transfer(spi, &t, 1);
++	mutex_unlock(&chip->lock);
++	ret =3D (d8 >> pin) & 0x1;
++
++	return ret;
++}
++
++static int sn65hvs885_probe(struct spi_device *spi)
++{
++	struct sn65hvs885_chip *chip;
++	int ret;
++
++	spi->bits_per_word =3D 8;
++
++	ret =3D spi_setup(spi);
++	if (ret < 0)
++		return ret;
++
++	chip =3D devm_kzalloc(&spi->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, chip);
++
++	chip->gpio_chip.label =3D spi->modalias;
++	chip->gpio_chip.get =3D sn65hvs885_get_value;
++	chip->gpio_chip.base =3D -1;
++	chip->gpio_chip.ngpio =3D SN65HVS885_NUMBER_GPIOS;
++	chip->gpio_chip.can_sleep =3D true;
++	chip->gpio_chip.dev =3D &spi->dev;
++	chip->gpio_chip.owner =3D THIS_MODULE;
++
++	mutex_init(&chip->lock);
++
++	chip->latch_gpio =3D of_get_named_gpio(spi->dev.of_node, "latch-gpio"=
+, 0);
++	if (chip->latch_gpio < 0) {
++		dev_err(&spi->dev, "latch-gpio property not found\n");
++		return -ENODEV;
++	}
++
++	if (gpio_is_valid(chip->latch_gpio)) {
++		ret =3D devm_gpio_request_one(&spi->dev,
++					    chip->latch_gpio,
++					    GPIOF_OUT_INIT_HIGH, "gpio-latch");
++		if (ret) {
++			dev_err(&spi->dev, "unable to get latch gpio\n");
++			return -ENODEV;
++		}
++	}
++
++	ret =3D gpiochip_add(&chip->gpio_chip);
++
++	if (ret !=3D 0) {
++		mutex_destroy(&chip->lock);
++		devm_gpio_free(&spi->dev, chip->latch_gpio);
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int sn65hvs885_remove(struct spi_device *spi)
++{
++	struct sn65hvs885_chip *chip =3D spi_get_drvdata(spi);
++
++	devm_gpio_free(&spi->dev, chip->latch_gpio);
++
++	gpiochip_remove(&chip->gpio_chip);
++
++	mutex_destroy(&chip->lock);
++
++	return 0;
++}
++
++static const struct spi_device_id sn65hvs885_id[] =3D {
++	{"sn65hvs885", 0},
++	{}
++};
++
++MODULE_DEVICE_TABLE(spi, sn65hvs885_id);
++
++static struct spi_driver sn65hvs885_driver =3D {
++	.driver =3D {
++		   .name =3D "sn65hvs885",
++		   .owner =3D THIS_MODULE,
++		   },
++	.probe =3D sn65hvs885_probe,
++	.remove =3D sn65hvs885_remove,
++	.id_table =3D sn65hvs885_id,
++};
++
++module_spi_driver(sn65hvs885_driver);
++
++MODULE_AUTHOR("Sean Nyekjaer <sean.nyekjaer@prevas.dk>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("sn65hvs885 Industrial input serializer");
+--=20
+2.7.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
