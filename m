@@ -1,21 +1,101 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: Complete SYS-DMAC nodes
-Date: Thu, 21 Jan 2016 12:35:52 +0900
-Message-ID: <20160121033552.GA20911@verge.net.au>
-References: <1453194381-13974-1-git-send-email-geert+renesas@glider.be>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: ARM: Mediatek: Document bindings
+ for MT2701
+Date: Thu, 21 Jan 2016 13:18:57 +0800
+Message-ID: <1453353537.5384.33.camel@mtksdaap41>
+References: <1453271747-57397-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1453271747-57397-3-git-send-email-jamesjj.liao@mediatek.com>
+	 <20160120163236.GA21035@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453194381-13974-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160120163236.GA21035@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Crispin <blogic@openwrt.org>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 19, 2016 at 10:06:21AM +0100, Geert Uytterhoeven wrote:
-> Complete the dma-controller nodes for SYS-DMAC 0 to 2.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Rob,
 
-Thanks, I have queued this up.
+On Wed, 2016-01-20 at 10:32 -0600, Rob Herring wrote:
+> On Wed, Jan 20, 2016 at 02:35:43PM +0800, James Liao wrote:
+> > This patch adds the binding documentation for apmixedsys, bdpsys,
+> > ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
+> > vdecsys for Mediatek MT2701.
+> > 
+> > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> > Tested-by: John Crispin <blogic@openwrt.org>
+> > ---
+> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
+> >  .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++++
+> >  .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++++
+> >  .../bindings/arm/mediatek/mediatek,hifsys.txt      | 22 ++++++++++++++++++++++
+> >  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  1 +
+> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
+> >  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  1 +
+> >  .../bindings/arm/mediatek/mediatek,pericfg.txt     |  1 +
+> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
+> >  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  1 +
+> >  10 files changed, 73 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> > index 936166f..a701e19 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> > @@ -6,6 +6,7 @@ The Mediatek apmixedsys controller provides the PLLs to the system.
+> >  Required Properties:
+> >  
+> >  - compatible: Should be:
+> > +	- "mediatek,mt2701-apmixedsys"
+> >  	- "mediatek,mt8135-apmixedsys"
+> >  	- "mediatek,mt8173-apmixedsys"
+> >  - #clock-cells: Must be 1
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+> > new file mode 100644
+> > index 0000000..4137196
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+> > @@ -0,0 +1,22 @@
+> > +Mediatek bdpsys controller
+> > +============================
+> > +
+> > +The Mediatek bdpsys controller provides various clocks to the system.
+> 
+> As you clarified these blocks provide more that just clocks. Please list 
+> all the functions here and on the others.
+
+Some blocks may provide clock and reset controller at the same time. But
+most of them will not provide functions directly. Instead, some DT
+blocks which provide specific functions may refer to these controller
+nodes due to it need to access the same register space.
+
+For example, scpsys (the power domain provider) refers to infracfg
+because it need to control infracfg registers when power on/off domains:
+
+	scpsys: scpsys@10006000 {
+		compatible = "mediatek,mt2701-scpsys";
+		#power-domain-cells = <1>;
+		reg = <0 0x10006000 0 0x1000>;
+		infracfg = <&infracfg>;
+	};
+
+So I think it should not need to list all functions for each blocks
+here.
+
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible: Should be:
+> > +	- "mediatek,mt2701-bdpsys", "syscon"
+> > +- #clock-cells: Must be 1
+> > +
+> > +The bdpsys controller uses the common clk binding from
+> > +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> > +
+
+
