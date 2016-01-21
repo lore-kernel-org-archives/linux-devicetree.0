@@ -1,66 +1,45 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3: Include missing bandgap data for
- ti-soc-thermal driver
-Date: Thu, 21 Jan 2016 10:47:18 +0100
-Message-ID: <20160121094718.GV7192@pali>
-References: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v15 0/6] altera fpga area and fpga bus
+Date: Thu, 21 Jan 2016 10:48:28 +0100
+Message-ID: <CAAtXAHfars7GUJhFCj2r6JpYzrX4pyaicaWbihAorVWOSxORTw@mail.gmail.com>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Pavel Machek <pavel@ucw.cz>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453317867-10422-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 26 December 2015 00:32:25 Pali Roh=C3=A1r wrote:
-> Driver for omap3 with documentation is there since v4.4-rc1.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> ---
->  arch/arm/boot/dts/omap34xx.dtsi |    5 +++++
->  arch/arm/boot/dts/omap36xx.dtsi |    5 +++++
->  2 files changed, 10 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap=
-34xx.dtsi
-> index 4f6b2d5..c3f488f 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -54,6 +54,11 @@
->  				#size-cells =3D <0>;
->  			};
->  		};
-> +
-> +		bandgap {
-> +			reg =3D <0x48002524 0x4>;
-> +			compatible =3D "ti,omap34xx-bandgap";
-> +		};
->  	};
->  };
-> =20
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap=
-36xx.dtsi
-> index 86253de..00f98c1 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -86,6 +86,11 @@
->  				#size-cells =3D <0>;
->  			};
->  		};
-> +
-> +		bandgap {
-> +			reg =3D <0x48002524 0x4>;
-> +			compatible =3D "ti,omap36xx-bandgap";
-> +		};
->  	};
->  };
-> =20
+Hi Alan,
 
-PING! Who can take this patch?
+On Wed, Jan 20, 2016 at 8:24 PM,  <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> For v15, I'm not using the FPGA Manager as the bus.  I'm adding a FPGA Bus;
+> the FPGA Manager and bridges go below it.
+>
+> I've gotten enough feedback that my proposals are Altera specific that I am
+> going with that and changing the bindings to include an 'altr,' prefix.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+I hope this wasn't a misunderstanding of one of my earlier remarks. I
+think the fpga-area & fpga bus
+parts do apply to to Xilinx FPGAs, too. I think for fpga-area and
+fpga-bus we could drop the 'altr' prefix.
+
+>
+> I've combined the bindings document and the other Documentation/fpga/ document
+> and done a rewrite there.
+
+Looks great!
+
+I'll test it on hardware and look at the patches individually,
+
+Cheers,
+
+Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
