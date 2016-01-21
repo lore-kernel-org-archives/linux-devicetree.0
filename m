@@ -1,48 +1,85 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
-Date: Thu, 21 Jan 2016 10:12:41 +0100
-Message-ID: <20160121091241.GS7192@pali>
+Date: Thu, 21 Jan 2016 09:29:10 +0000
+Message-ID: <20160121092909.GH5783@n2100.arm.linux.org.uk>
 References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+ <20160121091241.GS7192@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Pavel Machek <pavel@ucw.cz>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20160121091241.GS7192@pali>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0dXJkYXkgMjYgRGVjZW1iZXIgMjAxNSAwMDo0MDoxMiBQYWxpIFJvaMOhciB3cm90ZToK
-PiBUaGlzIHBhdGNoIGFkZHMgYWRwMTY1MyBkZXZpY2UgaW50byBuOTAwIERUIHN0cnVjdHVyZS4g
-RFQgc3VwcG9ydCBpbgo+IGFkcDE2NTMgZHJpdmVyIGlzIHRoZXJlIHNpbmNlIHY0LjItcmMxIHZl
-cnNpb24uCj4gCj4gU2lnbmVkLW9mZi1ieTogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwu
-Y29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1uOTAwLmR0cyB8ICAgMTUgKysr
-KysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLW45MDAuZHRzIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvb21hcDMtbjkwMC5kdHMKPiBpbmRleCA1ZjVlMGYzLi5iYTkzNjQyIDEwMDY0NAo+IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLW45MDAuZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvb21hcDMtbjkwMC5kdHMKPiBAQCAtNTIyLDYgKzUyMiwyMSBAQAo+ICAJCWFtc3Rhb3Ms
-Y292ZXItY29tcC1nYWluID0gPDE2PjsKPiAgCX07Cj4gIAo+ICsJYWRwMTY1MzogbGVkLWNvbnRy
-b2xsZXJAMzAgewo+ICsJCWNvbXBhdGlibGUgPSAiYWRpLGFkcDE2NTMiOwo+ICsJCXJlZyA9IDww
-eDMwPjsKPiArCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW8zIDI0IEdQSU9fQUNUSVZFX0hJR0g+OyAv
-KiA4OCAqLwo+ICsKPiArCQlmbGFzaCB7Cj4gKwkJCWZsYXNoLXRpbWVvdXQtdXMgPSA8NTAwMDAw
-PjsKPiArCQkJZmxhc2gtbWF4LW1pY3JvYW1wID0gPDMyMDAwMD47Cj4gKwkJCWxlZC1tYXgtbWlj
-cm9hbXAgPSA8NTAwMDA+Owo+ICsJCX07Cj4gKwkJaW5kaWNhdG9yIHsKPiArCQkJbGVkLW1heC1t
-aWNyb2FtcCA9IDwxNzUwMD47Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJbHA1NTIzOiBscDU1MjNA
-MzIgewo+ICAJCWNvbXBhdGlibGUgPSAibmF0aW9uYWwsbHA1NTIzIjsKPiAgCQlyZWcgPSA8MHgz
-Mj47CgpQSU5HLCB3aG8gY2FuIHRha2UgdGhpcyBwYXRjaD8KCkkgc3RpbGwgZG8gbm90IHNlZSBp
-dCBpbiBsaW51cyB0cmVlIG5vciBpbiBvdGhlcnMgbGlrZSBhcm0tc29jLi4uCgotLSAKUGFsaSBS
-b2jDoXIKcGFsaS5yb2hhckBnbWFpbC5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The merge window is open, which is when development code that was merge=
+d
+in good time prior to the merge window is sent upstream to Linus.  Linu=
+x
+maintainers may choose not to merge new code into their tree to avoid
+disrupting the utility of linux-next until the merge window has closed.
+
+linux-next is an integration tree to help find merge conflicts, it
+exists to assist with the merge windows, not as a general test ground.
+Thus, linux-next must only contain code for either the current open
+merge window, or if the merge window is closed, the next merge window.
+
+On Thu, Jan 21, 2016 at 10:12:41AM +0100, Pali Roh=E1r wrote:
+> On Saturday 26 December 2015 00:40:12 Pali Roh=E1r wrote:
+> > This patch adds adp1653 device into n900 DT structure. DT support i=
+n
+> > adp1653 driver is there since v4.2-rc1 version.
+> >=20
+> > Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/omap3-n900.dts |   15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/o=
+map3-n900.dts
+> > index 5f5e0f3..ba93642 100644
+> > --- a/arch/arm/boot/dts/omap3-n900.dts
+> > +++ b/arch/arm/boot/dts/omap3-n900.dts
+> > @@ -522,6 +522,21 @@
+> >  		amstaos,cover-comp-gain =3D <16>;
+> >  	};
+> > =20
+> > +	adp1653: led-controller@30 {
+> > +		compatible =3D "adi,adp1653";
+> > +		reg =3D <0x30>;
+> > +		enable-gpios =3D <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
+> > +
+> > +		flash {
+> > +			flash-timeout-us =3D <500000>;
+> > +			flash-max-microamp =3D <320000>;
+> > +			led-max-microamp =3D <50000>;
+> > +		};
+> > +		indicator {
+> > +			led-max-microamp =3D <17500>;
+> > +		};
+> > +	};
+> > +
+> >  	lp5523: lp5523@32 {
+> >  		compatible =3D "national,lp5523";
+> >  		reg =3D <0x32>;
+>=20
+> PING, who can take this patch?
+>=20
+> I still do not see it in linus tree nor in others like arm-soc...
+>=20
+> --=20
+> Pali Roh=E1r
+> pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+--=20
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
