@@ -1,129 +1,42 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv8 3/4] ARM: socfpga: enable L2 cache ECC on startup
-Date: Thu, 21 Jan 2016 11:34:27 -0600
-Message-ID: <1453397668-32094-3-git-send-email-tthayer@opensource.altera.com>
-References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add Mediatek MT2701 SMP support
+Date: Thu, 21 Jan 2016 18:36:44 +0100
+Message-ID: <56A1172C.5070509@gmail.com>
+References: <1452168584-25394-1-git-send-email-louis.yu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452168584-25394-1-git-send-email-louis.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Louis Yu <louis.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-This patch enables the ECC for L2 cache on machine startup. The ECC has to
-be enabled before data is stored in memory otherwise the ECC will fail on
-reads.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
-v8: Address community suggestions for strings. Fix string based on
-    maintainer feedback. Update year in header.
-v7: unmap locally scoped mapped_l2_edac_addr and add of_node_put(np)
-v6: Remove pr_debug() & update year in header.
----
- arch/arm/mach-socfpga/Makefile   |    1 +
- arch/arm/mach-socfpga/core.h     |    1 +
- arch/arm/mach-socfpga/l2_cache.c |   43 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c  |    2 ++
- 4 files changed, 47 insertions(+)
- create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+On 07/01/16 13:09, Louis Yu wrote:
+> This patchset is based on 4.4-rc8 and [1], and contains smp support
+> for Mediatek MT2701. MT2701 contains 4 CA7 cores.
+>
+> This patchset adds related SMP support for Mediatek MT2701.
+>
+> [1] https://patchwork.kernel.org/patch/7248471/
+>
+> Louis Yu (2):
+>    ARM: mediatek: add mt2701 smp bringup code
+>    ARM: dts: mt2701: enable basic SMP bringup for mt2701
+>
+>   arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
+>   arch/arm/mach-mediatek/platsmp.c |    1 +
+>   2 files changed, 13 insertions(+)
+>
 
-diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-index b8f9e23..e9ab7c9 100644
---- a/arch/arm/mach-socfpga/Makefile
-+++ b/arch/arm/mach-socfpga/Makefile
-@@ -5,3 +5,4 @@
- obj-y					:= socfpga.o
- obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
- obj-$(CONFIG_SOCFPGA_SUSPEND)	+= pm.o self-refresh.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C)	+= l2_cache.o
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index 5bc6ea8..eb55d66 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -36,6 +36,7 @@
- 
- extern void socfpga_init_clocks(void);
- extern void socfpga_sysmgr_init(void);
-+void socfpga_init_l2_ecc(void);
- 
- extern void __iomem *sys_manager_base_addr;
- extern void __iomem *rst_manager_base_addr;
-diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
-new file mode 100644
-index 0000000..d390602
---- /dev/null
-+++ b/arch/arm/mach-socfpga/l2_cache.c
-@@ -0,0 +1,43 @@
-+/*
-+ * Copyright Altera Corporation (C) 2016. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+
-+void socfpga_init_l2_ecc(void)
-+{
-+	struct device_node *np;
-+	void __iomem *mapped_l2_edac_addr;
-+
-+	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-l2-ecc");
-+	if (!np) {
-+		pr_err("Unable to find socfpga-l2-ecc in dtb\n");
-+		return;
-+	}
-+
-+	mapped_l2_edac_addr = of_iomap(np, 0);
-+	if (!mapped_l2_edac_addr) {
-+		of_node_put(np);
-+		pr_err("Unable to find L2 ECC mapping in dtb\n");
-+		return;
-+	}
-+
-+	/* Enable ECC */
-+	writel(0x01, mapped_l2_edac_addr);
-+	iounmap(mapped_l2_edac_addr);
-+
-+	of_node_put(np);
-+}
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index a1c0efa..dd1ff07 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -59,6 +59,8 @@ static void __init socfpga_init_irq(void)
- {
- 	irqchip_init();
- 	socfpga_sysmgr_init();
-+	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
-+		socfpga_init_l2_ecc();
- }
- 
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
--- 
-1.7.9.5
+Applied to v4.5-next/(soc,dts)
+
+Thanks.
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
