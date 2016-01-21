@@ -1,368 +1,180 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4 3/4] Input: cyttsp - switch to using device properties
-Date: Thu, 21 Jan 2016 11:35:46 -0800
-Message-ID: <20160121193546.GC39970@dtor-ws>
-References: <cover.1453403916.git.oreste.salerno@tomtom.com>
- <03a328d762d8ed654095d9a6edf648bc1c7fa262.1453403916.git.oreste.salerno@tomtom.com>
- <20160121192552.GA31579@nl1lxl-107192.ttg.global>
+From: =?UTF-8?q?St=C3=A9phan=20Kochen?= <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCH 3/3] lm90: register with thermal zones
+Date: Thu, 21 Jan 2016 20:34:37 +0100
+Message-ID: <1453404877-17897-4-git-send-email-stephan@kochen.nl>
+References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160121192552.GA31579@nl1lxl-107192.ttg.global>
-Sender: linux-input-owner@vger.kernel.org
-To: Oreste Salerno <oreste.salerno@tomtom.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453404877-17897-1-git-send-email-stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
+Cc: =?UTF-8?q?St=C3=A9phan=20Kochen?= <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 08:25:53PM +0100, Oreste Salerno wrote:
-> On Thu, Jan 21, 2016 at 08:21:15PM +0100, Oreste Salerno wrote:
-> > Drop support for platform data passed via a C-structure and switch to
-> > device properties instead, which should make the driver compatible
-> > with all platforms: OF, ACPI and static boards. Static boards should
-> > use property sets to communicate device parameters to the driver.
-> > 
-> > Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
-> > ---
-> >  .../bindings/input/touchscreen/cyttsp.txt          |  95 ++++++++++++
-> >  drivers/input/touchscreen/cyttsp_core.c            | 167 ++++++++++++++-------
-> >  drivers/input/touchscreen/cyttsp_core.h            |  10 +-
-> >  drivers/input/touchscreen/cyttsp_i2c.c             |  10 --
-> >  drivers/input/touchscreen/cyttsp_spi.c             |  10 --
-> >  include/linux/input/cyttsp.h                       |  15 --
-> >  6 files changed, 213 insertions(+), 94 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> > new file mode 100644
-> > index 0000000..b0fccae
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> > @@ -0,0 +1,95 @@
-> > +* Cypress cyttsp touchscreen controller
-> > +
-> > +Required properties:
-> > + - compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
-> > + - reg			: Device I2C address or SPI chip select number
-> > + - spi-max-frequency	: Maximum SPI clocking speed of the device (for cyttsp-spi)
-> > + - interrupt-parent	: the phandle for the gpio controller
-> > +			  (see interrupt binding[0]).
-> > + - interrupts		: (gpio) interrupt to which the chip is connected
-> > +			  (see interrupt binding[0]).
-> > + - reset-gpios		: the reset gpio the chip is connected to
-> > +			  (see GPIO binding[1] for more details).
+Any lm90-driven node in the device tree can now be referenced in therma=
+l
+zones. One thermal zone device is registered for each sensor present.
 
-Why do we have to have reset gpio available? If platform firmware powers up and
-resets the controller and keeps it's power do they have to expose reset
-gpio?
+Signed-off-by: St=C3=A9phan Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/hwmon/lm90.txt |  8 ++++
+ drivers/hwmon/lm90.c                             | 54 ++++++++++++++++=
+++++++++
+ 2 files changed, 62 insertions(+)
 
-Also, maybe you also need to wire up power supply support (maybe a
-follwup patch)?
+diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Documen=
+tation/devicetree/bindings/hwmon/lm90.txt
+index 045e94b..da9aae7 100644
+--- a/Documentation/devicetree/bindings/hwmon/lm90.txt
++++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
+@@ -28,6 +28,13 @@ Required node properties:
+=20
+ - vcc-supply: vcc regulator for the supply voltage.
+=20
++- #thermal-sensor-cells: Should be 1. See ../../thermal/thermal.txt fo=
+r a
++                         description of this property. Use the followi=
+ng
++                         values to refer to a specific sensor:
++                         0: chip internal sensor
++                         1: external sensor
++                         2: second external sensor, if present
++
+ Optional properties:
+ - interrupts: Contains a single interrupt specifier which describes th=
+e
+               LM90 "-ALERT" pin output.
+@@ -81,4 +88,5 @@ temp-sensor {
+ 	remote-high =3D <80000>;
+ 	remote-critical =3D <90000>;
+ 	remote-offset =3D <(-62125)>;
++	#thermal-sensor-cells =3D <1>;
+ }
+diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
+index 8ae8791..4577916 100644
+--- a/drivers/hwmon/lm90.c
++++ b/drivers/hwmon/lm90.c
+@@ -95,6 +95,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/sysfs.h>
++#include <linux/thermal.h>
+ #include <linux/interrupt.h>
+ #include <linux/regulator/consumer.h>
+=20
+@@ -207,6 +208,8 @@ enum chips { lm90, adm1032, lm99, lm86, max6657, ma=
+x6659, adt7461, max6680,
+ #define MAX6696_STATUS2_R2OT2	(1 << 6) /* remote2 emergency limit trip=
+ped */
+ #define MAX6696_STATUS2_LOT2	(1 << 7) /* local emergency limit tripped=
+ */
+=20
++#define LM90_NUM_SENSORS(d) (((d)->flags & LM90_HAVE_TEMP3) ? 3 : 2)
++
+ /*
+  * Driver data (common to all clients)
+  */
+@@ -365,6 +368,13 @@ enum lm90_temp11_reg_index {
+  * Client data (each client gets its own)
+  */
+=20
++struct lm90_sensor {
++	struct lm90_data *data;
++	int index;
++
++	struct thermal_zone_device *tz;
++};
++
+ struct lm90_data {
+ 	struct i2c_client *client;
+ 	struct device *hwmon_dev;
+@@ -390,6 +400,10 @@ struct lm90_data {
+ 	s16 temp11[TEMP11_REG_NUM];
+ 	u8 temp_hyst;
+ 	u16 alarms; /* bitvector (upper 8 bits for max6695/96) */
++
++#ifdef CONFIG_THERMAL_OF
++	struct lm90_sensor sensors[3];
++#endif
+ };
+=20
+ /*
+@@ -1275,6 +1289,23 @@ static DEVICE_ATTR(pec, S_IWUSR | S_IRUGO,
+ 	lm90_sysfs_show_pec, lm90_sysfs_set_pec);
+=20
+ /*
++ * Thermal zone code
++ */
++
++#ifdef CONFIG_THERMAL_OF
++static int lm90_of_get_temp(void *data, int *out_temp)
++{
++	struct lm90_sensor *sensor =3D data;
++	*out_temp =3D lm90_get_temp11(sensor->data, sensor->index);
++	return 0;
++}
++
++static const struct thermal_zone_of_device_ops lm90_of_thermal_ops =3D=
+ {
++	.get_temp =3D lm90_of_get_temp,
++};
++#endif
++
++/*
+  * Real code
+  */
+=20
+@@ -1653,6 +1684,7 @@ static int lm90_probe(struct i2c_client *client,
+ 	struct regulator *regulator;
+ 	int groups =3D 0;
+ 	int err;
++	unsigned int i;
+=20
+ 	regulator =3D devm_regulator_get(dev, "vcc");
+ 	if (IS_ERR(regulator))
+@@ -1737,6 +1769,20 @@ static int lm90_probe(struct i2c_client *client,
+ 		}
+ 	}
+=20
++#ifdef CONFIG_THERMAL_OF
++	data->sensors[0].index =3D LOCAL_TEMP;
++	data->sensors[1].index =3D REMOTE_TEMP;
++	data->sensors[2].index =3D REMOTE2_TEMP;
++	for (i =3D 0; i < LM90_NUM_SENSORS(data); i++) {
++		data->sensors[i].data =3D data;
++		data->sensors[i].tz =3D thermal_zone_of_sensor_register(
++			dev, i, &data->sensors[i],
++			&lm90_of_thermal_ops);
++		if (IS_ERR(data->sensors[i].tz))
++			data->sensors[i].tz =3D NULL;
++	}
++#endif
++
+ 	return 0;
+=20
+ exit_unregister:
+@@ -1753,6 +1799,14 @@ exit_restore:
+ static int lm90_remove(struct i2c_client *client)
+ {
+ 	struct lm90_data *data =3D i2c_get_clientdata(client);
++#ifdef CONFIG_THERMAL_OF
++	unsigned int i;
++
++	for (i =3D 0; i < LM90_NUM_SENSORS(data); i++) {
++		thermal_zone_of_sensor_unregister(&client->dev,
++						  data->sensors[i].tz);
++	}
++#endif
+=20
+ 	hwmon_device_unregister(data->hwmon_dev);
+ 	device_remove_file(&client->dev, &dev_attr_pec);
+--=20
+2.5.0
 
-
-> > + - touchscreen-size-x	: horizontal resolution of touchscreen (in pixels)
-> > + - touchscreen-size-y	: vertical resolution of touchscreen (in pixels)
-
-Do these have to be mandatory? Will not the driver work without them?
-
-> 
-> I decided to explicitly specify the generic touchscreen properties here (instead of
-> referring to touchscreen.txt) because not all properties listed in touchscreen.txt
-> are actually parsed by the driver.
-
-Fair enough.
-
-Thanks.
-
-> 
-> > + - bootloader-key	: the 8-byte bootloader key that is required to switch
-> > +			  the chip from bootloader mode (default mode) to
-> > +			  application mode.
-> > +			  This property has to be specified as an array of 8
-> > +			  '/bits/ 8' values.
-> > +
-> > +Optional properties:
-> > + - touchscreen-fuzz-x	: horizontal noise value of the absolute input device
-> > +			  (in pixels)
-> > + - touchscreen-fuzz-y	: vertical noise value of the absolute input device
-> > +			  (in pixels)
-> > + - active-distance	: the distance in pixels beyond which a touch must move
-> > +			  before movement is detected and reported by the device.
-> > +			  Valid values: 0-15.
-> > + - active-interval-ms	: the minimum period in ms between consecutive
-> > +			  scanning/processing cycles when the chip is in active mode.
-> > +			  Valid values: 0-255.
-> > + - lowpower-interval-ms	: the minimum period in ms between consecutive
-> > +			  scanning/processing cycles when the chip is in low-power mode.
-> > +			  Valid values: 0-2550
-> > + - touch-timeout-ms	: minimum time in ms spent in the active power state while no
-> > +			  touches are detected before entering low-power mode.
-> > +			  Valid values: 0-2550
-> > + - use-handshake	: enable register-based handshake (boolean). This should
-> > +			  only be used if the chip is configured to use 'blocking
-> > +			  communication with timeout' (in this case the device
-> > +			  generates an interrupt at the end of every
-> > +			  scanning/processing cycle).
-> > +
-> > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> > +
-> > +Example:
-> > +	&i2c1 {
-> > +		/* ... */
-> > +		cyttsp@a {
-> > +			compatible = "cypress,cyttsp-i2c";
-> > +			reg = <0xa>;
-> > +			interrupt-parent = <&gpio0>;
-> > +			interrupts = <28 0>;
-> > +			reset-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-> > +
-> > +			touchscreen-size-x = <800>;
-> > +			touchscreen-size-y = <480>;
-> > +			touchscreen-fuzz-x = <4>;
-> > +			touchscreen-fuzz-y = <7>;
-> > +
-> > +			bootloader-key = /bits/ 8 <0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08>;
-> > +			active-distance = <8>;
-> > +			active-interval-ms = <0>;
-> > +			lowpower-interval-ms = <200>;
-> > +			touch-timeout-ms = <100>;
-> > +		};
-> > +
-> > +		/* ... */
-> > +	};
-> > +
-> > +	&mcspi1 {
-> > +		/* ... */
-> > +		cyttsp@0 {
-> > +			compatible = "cypress,cyttsp-spi";
-> > +			spi-max-frequency = <6000000>;
-> > +			reg = <0>;
-> > +			interrupt-parent = <&gpio0>;
-> > +			interrupts = <28 0>;
-> > +			reset-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-> > +
-> > +			touchscreen-size-x = <800>;
-> > +			touchscreen-size-y = <480>;
-> > +			touchscreen-fuzz-x = <4>;
-> > +			touchscreen-fuzz-y = <7>;
-> > +
-> > +			bootloader-key = /bits/ 8 <0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08>;
-> > +			active-distance = <8>;
-> > +			active-interval-ms = <0>;
-> > +			lowpower-interval-ms = <200>;
-> > +			touch-timeout-ms = <100>;
-> > +		};
-> > +
-> > +		/* ... */
-> > +	};
-> > diff --git a/drivers/input/touchscreen/cyttsp_core.c b/drivers/input/touchscreen/cyttsp_core.c
-> > index 10379bc..92b459d 100644
-> > --- a/drivers/input/touchscreen/cyttsp_core.c
-> > +++ b/drivers/input/touchscreen/cyttsp_core.c
-> > @@ -30,9 +30,12 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/input.h>
-> >  #include <linux/input/mt.h>
-> > +#include <linux/input/touchscreen.h>
-> >  #include <linux/gpio.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/property.h>
-> > +#include <linux/gpio/consumer.h>
-> >  
-> >  #include "cyttsp_core.h"
-> >  
-> > @@ -57,6 +60,7 @@
-> >  #define CY_DELAY_DFLT			20 /* ms */
-> >  #define CY_DELAY_MAX			500
-> >  #define CY_ACT_DIST_DFLT		0xF8
-> > +#define CY_ACT_DIST_MASK		0x0F
-> >  #define CY_HNDSHK_BIT			0x80
-> >  /* device mode bits */
-> >  #define CY_OPERATE_MODE			0x00
-> > @@ -120,7 +124,7 @@ static int ttsp_send_command(struct cyttsp *ts, u8 cmd)
-> >  
-> >  static int cyttsp_handshake(struct cyttsp *ts)
-> >  {
-> > -	if (ts->pdata->use_hndshk)
-> > +	if (ts->use_hndshk)
-> >  		return ttsp_send_command(ts,
-> >  				ts->xy_data.hst_mode ^ CY_HNDSHK_BIT);
-> >  
-> > @@ -142,9 +146,9 @@ static int cyttsp_exit_bl_mode(struct cyttsp *ts)
-> >  	u8 bl_cmd[sizeof(bl_command)];
-> >  
-> >  	memcpy(bl_cmd, bl_command, sizeof(bl_command));
-> > -	if (ts->pdata->bl_keys)
-> > +	if (ts->bl_keys)
-> >  		memcpy(&bl_cmd[sizeof(bl_command) - CY_NUM_BL_KEYS],
-> > -			ts->pdata->bl_keys, CY_NUM_BL_KEYS);
-> > +			ts->bl_keys, CY_NUM_BL_KEYS);
-> >  
-> >  	error = ttsp_write_block_data(ts, CY_REG_BASE,
-> >  				      sizeof(bl_cmd), bl_cmd);
-> > @@ -217,14 +221,14 @@ static int cyttsp_set_sysinfo_regs(struct cyttsp *ts)
-> >  {
-> >  	int retval = 0;
-> >  
-> > -	if (ts->pdata->act_intrvl != CY_ACT_INTRVL_DFLT ||
-> > -	    ts->pdata->tch_tmout != CY_TCH_TMOUT_DFLT ||
-> > -	    ts->pdata->lp_intrvl != CY_LP_INTRVL_DFLT) {
-> > +	if (ts->act_intrvl != CY_ACT_INTRVL_DFLT ||
-> > +	    ts->tch_tmout != CY_TCH_TMOUT_DFLT ||
-> > +	    ts->lp_intrvl != CY_LP_INTRVL_DFLT) {
-> >  
-> >  		u8 intrvl_ray[] = {
-> > -			ts->pdata->act_intrvl,
-> > -			ts->pdata->tch_tmout,
-> > -			ts->pdata->lp_intrvl
-> > +			ts->act_intrvl,
-> > +			ts->tch_tmout,
-> > +			ts->lp_intrvl
-> >  		};
-> >  
-> >  		/* set intrvl registers */
-> > @@ -263,7 +267,7 @@ out:
-> >  
-> >  static int cyttsp_act_dist_setup(struct cyttsp *ts)
-> >  {
-> > -	u8 act_dist_setup = ts->pdata->act_dist;
-> > +	u8 act_dist_setup = ts->act_dist;
-> >  
-> >  	/* Init gesture; active distance setup */
-> >  	return ttsp_write_block_data(ts, CY_REG_ACT_DIST,
-> > @@ -528,45 +532,107 @@ static void cyttsp_close(struct input_dev *dev)
-> >  		cyttsp_disable(ts);
-> >  }
-> >  
-> > +static int cyttsp_parse_properties(struct cyttsp *ts)
-> > +{
-> > +	struct device *dev = ts->dev;
-> > +	u32 dt_value;
-> > +	int ret;
-> > +
-> > +	ts->bl_keys = devm_kzalloc(dev, CY_NUM_BL_KEYS, GFP_KERNEL);
-> > +	if (!ts->bl_keys)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Set some default values */
-> > +	ts->use_hndshk = false;
-> > +	ts->act_dist = CY_ACT_DIST_DFLT;
-> > +	ts->act_intrvl = CY_ACT_INTRVL_DFLT;
-> > +	ts->tch_tmout = CY_TCH_TMOUT_DFLT;
-> > +	ts->lp_intrvl = CY_LP_INTRVL_DFLT;
-> > +
-> > +	ret = device_property_read_u8_array(dev, "bootloader-key",
-> > +					    ts->bl_keys, CY_NUM_BL_KEYS);
-> > +	if (ret) {
-> > +		dev_err(dev,
-> > +			"bootloader-key property could not be retrieved\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ts->use_hndshk = device_property_present(dev, "use-handshake");
-> > +
-> > +	if (!device_property_read_u32(dev, "active-distance", &dt_value)) {
-> > +		if (dt_value > 15) {
-> > +			dev_err(dev, "active-distance (%u) must be [0-15]\n",
-> > +				dt_value);
-> > +			return -EINVAL;
-> > +		}
-> > +		ts->act_dist &= ~CY_ACT_DIST_MASK;
-> > +		ts->act_dist |= dt_value;
-> > +	}
-> > +
-> > +	if (!device_property_read_u32(dev, "active-interval-ms", &dt_value)) {
-> > +		if (dt_value > 255) {
-> > +			dev_err(dev, "active-interval-ms (%u) must be [0-255]\n",
-> > +				dt_value);
-> > +			return -EINVAL;
-> > +		}
-> > +		ts->act_intrvl = dt_value;
-> > +	}
-> > +
-> > +	if (!device_property_read_u32(dev, "lowpower-interval-ms", &dt_value)) {
-> > +		if (dt_value > 2550) {
-> > +			dev_err(dev, "lowpower-interval-ms (%u) must be [0-2550]\n",
-> > +				dt_value);
-> > +			return -EINVAL;
-> > +		}
-> > +		/* Register value is expressed in 0.01s / bit */
-> > +		ts->lp_intrvl = dt_value / 10;
-> > +	}
-> > +
-> > +	if (!device_property_read_u32(dev, "touch-timeout-ms", &dt_value)) {
-> > +		if (dt_value > 2550) {
-> > +			dev_err(dev, "touch-timeout-ms (%u) must be [0-2550]\n",
-> > +				dt_value);
-> > +			return -EINVAL;
-> > +		}
-> > +		/* Register value is expressed in 0.01s / bit */
-> > +		ts->tch_tmout = dt_value/10;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  struct cyttsp *cyttsp_probe(const struct cyttsp_bus_ops *bus_ops,
-> >  			    struct device *dev, int irq, size_t xfer_buf_size)
-> >  {
-> > -	const struct cyttsp_platform_data *pdata = dev_get_platdata(dev);
-> >  	struct cyttsp *ts;
-> >  	struct input_dev *input_dev;
-> >  	int error;
-> >  
-> > -	if (!pdata || !pdata->name || irq <= 0) {
-> > -		error = -EINVAL;
-> > -		goto err_out;
-> > -	}
-> > -
-> >  	ts = devm_kzalloc(dev, sizeof(*ts) + xfer_buf_size, GFP_KERNEL);
-> >  	input_dev = devm_input_allocate_device(dev);
-> > -	if (!ts || !input_dev) {
-> > -		error = -ENOMEM;
-> > -		goto err_out;
-> > -	}
-> > +	if (!ts || !input_dev)
-> > +		return ERR_PTR(-ENOMEM);
-> >  
-> >  	ts->dev = dev;
-> >  	ts->input = input_dev;
-> > -	ts->pdata = dev_get_platdata(dev);
-> >  	ts->bus_ops = bus_ops;
-> >  	ts->irq = irq;
-> >  
-> > +	ts->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(ts->reset_gpio)) {
-> > +		error = PTR_ERR(ts->reset_gpio);
-> > +		dev_err(dev, "Failed to request reset gpio, error %d\n", error);
-> > +		return ERR_PTR(error);
-> > +	}
-> > +
-> > +	error = cyttsp_parse_properties(ts);
-> > +	if (error)
-> > +		return ERR_PTR(error);
-> > +
-> >  	init_completion(&ts->bl_ready);
-> >  	snprintf(ts->phys, sizeof(ts->phys), "%s/input0", dev_name(dev));
-> >  
-> > -	if (pdata->init) {
-> > -		error = pdata->init();
-> > -		if (error) {
-> > -			dev_err(ts->dev, "platform init failed, err: %d\n",
-> > -				error);
-> > -			goto err_out;
-> > -		}
-> > -	}
-> > -
-> > -	input_dev->name = pdata->name;
-> > +	input_dev->name = "cyttsp";
-
-Is there a friendlier name we could use? It is exported in
-/proc/bus/input/devices and usually is more descriptive.
-
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
