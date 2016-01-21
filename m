@@ -1,52 +1,53 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 2/3] MIPS: dts: qca: ar9132: drop unused extosc mentions
-Date: Thu, 21 Jan 2016 11:52:18 +0100
-Message-ID: <20160121115218.6fa21a3a@tock>
-References: <1453370345-16688-1-git-send-email-antonynpavlov@gmail.com>
-	<1453370345-16688-3-git-send-email-antonynpavlov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453370345-16688-3-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 RESEND 0/4] arm64: Hi6220: enable CPU idle states
+Date: Thu, 21 Jan 2016 18:53:46 +0800
+Message-ID: <1453373630-4693-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Leo Yan <leo.yan@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Yu Dongbin <yudongbin@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Wei Xu <xuwei5@hisilicon.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Jan 2016 12:59:04 +0300
-Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+This patch series is to enable CPU idle states for Hi6220.
 
-> At the moment ar913x_clocks_init() does not use extosc node at all,
-> the reference clock rate is hardcoded inside arch/mips/ath79/clock.c
-> 
->     #define AR913X_BASE_FREQ        5000000
-> 
->     ...
-> 
->     static void __init ar913x_clocks_init(void)
->     {
->             ref_rate = AR913X_BASE_FREQ;
-> 
->     ...
-> 
->             ath79_add_sys_clkdev("ref", ref_rate);
-> 
-> Also please see the commits 'MIPS: ath79: Fix the ar913x reference clock rate'
-> and 'MIPS: ath79: Fix the ar724x clock calculation' in Alban Bedel's
-> github ath79 branch https://github.com/AlbanBedel/linux/tree/ath79
+Hi6220 uses PSCIv0.2 compliance interface, so directly use ARM's generic
+CPUIdle driver. Patch 1 is to reserve memory regions so make sure MCU can
+work well to handle power controlling; Patch 2/3 enable sp804 timer as
+broadcast timer during idle states; Patch 4 registers CPU power down state
+and cluster power down state.
 
-Yes, the reference clock definition is not yet used by the code, but
-the binding define it as required. This is because a proper
-implementation would need the reference clock rate.
+Patch 1 "arm64: dts: Reserve memory regions for hi6220" reserves memory
+regions by carve out from memory node; This follows up Mark Rutland's
+suggestion to avoid risks, such like kernel's linear mapping for reserved
+secure memory region may introduce speculative accesses triggering aborts
+from trustzone controller (TZC) and potential cache alias problem.
 
-It would be better to fix the code to get rid of the hard coded rates
-when using DT. I haven't done so yet because I wanted to first get DT
-support without too many changes, but that's on the TODO list along with
-moving to drivers/clk.
+Rob Herring expressed reservations for this method and says "regions should
+be marked as reserved, it's not really worth holding up this platform
+further", so appreciate Rob helped to make progress for this series.
 
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The resend patch series have been rebased on mainline kernel, and tested on
+Hikey board. During testing I found CPUIdle menu governor is broken, this
+bug has been reported by Sudeep; Rafael J. Wysocki already has committed
+patch [1] to fix this issue. Testing pass after applied Rafael's patch.
+
+Changes from v1:
+* According to Sudeep's review, fix binding for idle-states
+* According to Rob's review, due timers share same clock source with apb
+  clock, so just only pass one clock phandle
+
+[1] http://article.gmane.org/gmane.linux.kernel.commits.head/573361
+
+
+Leo Yan (4):
+  arm64: dts: Reserve memory regions for hi6220
+  arm64: Kconfig: select sp804 timer for ARCH_HISI
+  arm64: dts: add sp804 timer node for Hi6220
+  arm64: dts: enable idle states for Hi6220
+
+ arch/arm64/Kconfig.platforms                   |  1 +
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 40 ++++++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 4 deletions(-)
+
+-- 
+1.9.1
