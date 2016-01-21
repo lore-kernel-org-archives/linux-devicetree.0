@@ -1,40 +1,44 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
-Date: Thu, 21 Jan 2016 10:03:06 +0000
-Message-ID: <20160121100306.GI5783@n2100.arm.linux.org.uk>
-References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
- <20160121091241.GS7192@pali>
- <20160121092909.GH5783@n2100.arm.linux.org.uk>
- <20160121095004.GW7192@pali>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Thu, 21 Jan 2016 11:10:28 +0100
+Message-ID: <3851350.Ox9dssDdWY@wuerfel>
+References: <4405270.vcz87Q878u@wuerfel> <1989217.907WTZoGvq@wuerfel> <20160121094832.GA22037@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160121095004.GW7192@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121094832.GA22037@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 10:50:04AM +0100, Pali Roh=E1r wrote:
-> Ok, but for whole month I do not see any response that somebody take
-> this patch into some queue or tree. Which could means that patch was
-> either ignored or is living somewhere and could be lost.
+On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
+> 
+> > 
+> > So two hubs at ports 1 and 2 of the USB controller that integrates
+> > the root hub and shares a device node with it.
+> > 
+> Ok, so the "reg" is the address for certain root hub (HS or SS), not
+> the unity address for the whole controller, if it is, do we really
+> need to add two nodes for one physical port, HS and SS will not be used
+> at the same time. And if the reg is the same, how can we know
+> which node is from current recognized device.
 
-You sent it the day after Christmas day, when people were most likely
-on their Christmas break doing family stuff, and there was only one
-week after the traditional Christmas/New year break before the merge
-window opened.
+The "reg" is the address that the parent device uses to talk to the child
+device. If you know which of the two that child is attached to, then I
+think you don't need both, but I think we have to use the entire addressing.
 
-So, discounting Christmas and the merge window, your patch has only
-been around for one week - a week where maintainers would have been
-stabilising their tree(s) in preparation for the merge window opening.
+In Alan's example, there are six HS ports and three SS ports, but as I
+understand it, there is no guarantee that the numbering between the two
+is identical, and that the three SS ports always refer to the three HS
+ports. In particular for devices soldered on-board (rather than connected
+through a standard plug), I would guess that it is possible to connect
+them to separate child devices though I have to admit that I do not
+understand enough of the standard to know for sure.
 
-Please be patient; the merge window closes this Sunday, and I suspect
-"normal service" will be resumed shortly thereafter.
-
---=20
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
