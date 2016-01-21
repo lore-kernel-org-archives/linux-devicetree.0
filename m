@@ -1,89 +1,96 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
-Date: Thu, 21 Jan 2016 10:50:04 +0100
-Message-ID: <20160121095004.GW7192@pali>
-References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
- <20160121091241.GS7192@pali>
- <20160121092909.GH5783@n2100.arm.linux.org.uk>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Thu, 21 Jan 2016 17:48:32 +0800
+Message-ID: <20160121094832.GA22037@shlinux2>
+References: <4405270.vcz87Q878u@wuerfel>
+ <5639398.uJHXq6DsMC@wuerfel>
+ <20160121031524.GA29893@shlinux2>
+ <1989217.907WTZoGvq@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160121092909.GH5783@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pavel Machek <pavel@ucw.cz>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1989217.907WTZoGvq@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ok, but for whole month I do not see any response that somebody take
-this patch into some queue or tree. Which could means that patch was
-either ignored or is living somewhere and could be lost.
+On Thu, Jan 21, 2016 at 09:41:20AM +0100, Arnd Bergmann wrote:
+> On Thursday 21 January 2016 11:15:24 Peter Chen wrote:
+> > 
+> > Just adding from device driver view and change the name from "roohub" to
+> > "port".
+> > 
+> > It is the port number (1-9), but not the root hub number.
+> > 
+> > At the most of embedded platforms, we have only one port per controller.
+> > For example, at the non-hub boards, if there are two Standard-A ports,
+> > there are from two different USB controllers.
+> > But for Alan's case, it has six ports, and all from the one USB controller,
+> > port 1 to port 6 are from the HS root hub, port 7 to port 9 are from the SS
+> > root hub.
+> > 
+> > For the single port controller platform, the dts will be like below, port_1 is
+> > under the HS root hub, port_2 is under the SS root hub.
+> > 
+> > &usb1 {
+> >         port_1: nxp@1 {
+> >                 compatible = "usb15a2,007d";
+> >                 reg = <0x01>;
+> > 
+> >                 hub: genesys@1 {
+> >                         compatible = "usb05e3,0608";
+> >                         reg = <0x01>;
+> >                 };
+> >         };
+> > 
+> >         port_2: nxp@2 {
+> >                 compatible = "usb15a2,007d";
+> >                 reg = <0x02>;
+> > 
+> >                 hub: genesys@1 {
+> >                         compatible = "usb05e3,0608";
+> >                         reg = <0x01>;
+> >                 };
+> >         };
+> > };
+> 
+> But why are you modeling ports of the root hub as hubs themselves?
+> 
+> I would expect the example above to look like
+> 
+> &usb1 {
+>         hub@1 {
+>                 compatible = "usb05e3,0608";
+>                 reg = <0x01>;
+>         };
+> 
+> 	hub@2 {
+>                 compatible = "usb05e3,0608";
+>                 reg = <0x01>;
+>         };
+> };
 
-On Thursday 21 January 2016 09:29:10 Russell King - ARM Linux wrote:
-> The merge window is open, which is when development code that was mer=
-ged
-> in good time prior to the merge window is sent upstream to Linus.  Li=
-nux
-> maintainers may choose not to merge new code into their tree to avoid
-> disrupting the utility of linux-next until the merge window has close=
-d.
->=20
-> linux-next is an integration tree to help find merge conflicts, it
-> exists to assist with the merge windows, not as a general test ground=
-=2E
-> Thus, linux-next must only contain code for either the current open
-> merge window, or if the merge window is closed, the next merge window=
-=2E
->=20
-> On Thu, Jan 21, 2016 at 10:12:41AM +0100, Pali Roh=C3=A1r wrote:
-> > On Saturday 26 December 2015 00:40:12 Pali Roh=C3=A1r wrote:
-> > > This patch adds adp1653 device into n900 DT structure. DT support=
- in
-> > > adp1653 driver is there since v4.2-rc1 version.
-> > >=20
-> > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > ---
-> > >  arch/arm/boot/dts/omap3-n900.dts |   15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts=
-/omap3-n900.dts
-> > > index 5f5e0f3..ba93642 100644
-> > > --- a/arch/arm/boot/dts/omap3-n900.dts
-> > > +++ b/arch/arm/boot/dts/omap3-n900.dts
-> > > @@ -522,6 +522,21 @@
-> > >  		amstaos,cover-comp-gain =3D <16>;
-> > >  	};
-> > > =20
-> > > +	adp1653: led-controller@30 {
-> > > +		compatible =3D "adi,adp1653";
-> > > +		reg =3D <0x30>;
-> > > +		enable-gpios =3D <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-> > > +
-> > > +		flash {
-> > > +			flash-timeout-us =3D <500000>;
-> > > +			flash-max-microamp =3D <320000>;
-> > > +			led-max-microamp =3D <50000>;
-> > > +		};
-> > > +		indicator {
-> > > +			led-max-microamp =3D <17500>;
-> > > +		};
-> > > +	};
-> > > +
-> > >  	lp5523: lp5523@32 {
-> > >  		compatible =3D "national,lp5523";
-> > >  		reg =3D <0x32>;
-> >=20
-> > PING, who can take this patch?
-> >=20
-> > I still do not see it in linus tree nor in others like arm-soc...
-> >=20
-> > --=20
-> > Pali Roh=C3=A1r
-> > pali.rohar@gmail.com
->=20
+You are right, I should not add root hub or port description in
+device tree, only the description for the device on that port is enough.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> 
+> So two hubs at ports 1 and 2 of the USB controller that integrates
+> the root hub and shares a device node with it.
+> 
+
+Ok, so the "reg" is the address for certain root hub (HS or SS), not
+the unity address for the whole controller, if it is, do we really
+need to add two nodes for one physical port, HS and SS will not be used
+at the same time. And if the reg is the same, how can we know
+which node is from current recognized device.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
