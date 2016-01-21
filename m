@@ -1,131 +1,135 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv8 4/4] ARM: socfpga: Enable OCRAM ECC on startup
-Date: Thu, 21 Jan 2016 11:34:28 -0600
-Message-ID: <1453397668-32094-4-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv8 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC entries
+Date: Thu, 21 Jan 2016 11:34:26 -0600
+Message-ID: <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
 References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-This patch enables the ECC for On-Chip RAM on machine startup. The ECC
-has to be enabled before data is stored in memory otherwise the ECC will
-fail on reads.
+Adding the device tree entries and bindings needed to support
+the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+an earlier patch to declare and setup On-chip RAM properly.
+http://www.spinics.net/lists/devicetree/msg51117.html
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 ---
-v8: Address community comments on strings. Fix match strings based
-    on maintainer feedback. Update year in header.
-v7: enable OCRAM ECC during platform init
-v6: Implement OCRAM discovery changes from community. Add
-    of_node_put(). Remove be32_to_cpup(). Use __init() which
-    allows removal of .init_machine(). Update year in header.
+v8: Fix node names to include chip family and use ecc manager
+    to better describe the driver. Rename socfpga-edac.txt to
+    socfpga-eccmgr.txt.
+v7: No Change
+v6: Change to nested EDAC device nodes based on community
+    feedback. Remove L2 syscon. Use consolidated binding.
+v3-5: No Change
+v2: Remove OCRAM declaration and reference prior patch.
 ---
- arch/arm/mach-socfpga/Makefile  |    1 +
- arch/arm/mach-socfpga/core.h    |    1 +
- arch/arm/mach-socfpga/ocram.c   |   50 +++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c |    3 +++
- 4 files changed, 55 insertions(+)
- create mode 100644 arch/arm/mach-socfpga/ocram.c
+ .../bindings/arm/altera/socfpga-eccmgr.txt         |   49 ++++++++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |   20 ++++++++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
 
-diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-index e9ab7c9..ed15db1 100644
---- a/arch/arm/mach-socfpga/Makefile
-+++ b/arch/arm/mach-socfpga/Makefile
-@@ -6,3 +6,4 @@ obj-y					:= socfpga.o
- obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
- obj-$(CONFIG_SOCFPGA_SUSPEND)	+= pm.o self-refresh.o
- obj-$(CONFIG_EDAC_ALTERA_L2C)	+= l2_cache.o
-+obj-$(CONFIG_EDAC_ALTERA_OCRAM)	+= ocram.o
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index eb55d66..575195b 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -37,6 +37,7 @@
- extern void socfpga_init_clocks(void);
- extern void socfpga_sysmgr_init(void);
- void socfpga_init_l2_ecc(void);
-+void socfpga_init_ocram_ecc(void);
- 
- extern void __iomem *sys_manager_base_addr;
- extern void __iomem *rst_manager_base_addr;
-diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
 new file mode 100644
-index 0000000..3791335
+index 0000000..4f45690
 --- /dev/null
-+++ b/arch/arm/mach-socfpga/ocram.c
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright Altera Corporation (C) 2016. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/io.h>
-+#include <linux/genalloc.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+@@ -0,0 +1,49 @@
++Altera SoCFPGA ECC Manager
++This driver uses the EDAC framework to implement the SOCFPGA ECC Manager.
++The ECC Manager counts and corrects single bit errors and counts/handles
++double bit errors which are uncorrectable.
 +
-+#define ALTR_OCRAM_CLEAR_ECC          0x00000018
-+#define ALTR_OCRAM_ECC_EN             0x00000019
++Required Properties:
++- compatible : Should be "altr,socfpga-ecc-manager"
++- #address-cells: must be 1
++- #size-cells: must be 1
++- ranges : standard definition, should translate from local addresses
 +
-+void socfpga_init_ocram_ecc(void)
-+{
-+	struct device_node *np;
-+	void __iomem *mapped_ocr_edac_addr;
++Subcomponents:
 +
-+	/* Find the OCRAM EDAC device tree node */
-+	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-ocram-ecc");
-+	if (!np) {
-+		pr_err("Unable to find socfpga-ocram-ecc\n");
-+		return;
-+	}
++L2 Cache ECC
++Required Properties:
++- compatible : Should be "altr,socfpga-l2-ecc"
++- reg : Address and size for ECC error interrupt clear registers.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
 +
-+	mapped_ocr_edac_addr = of_iomap(np, 0);
-+	if (!mapped_ocr_edac_addr) {
-+		of_node_put(np);
-+		pr_err("Unable to map OCRAM ecc regs.\n");
-+		return;
-+	}
++On Chip RAM ECC
++Required Properties:
++- compatible : Should be "altr,socfpga-ocram-ecc"
++- reg : Address and size for ECC error interrupt clear registers.
++- iram : phandle to On-Chip RAM definition.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
 +
-+	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
-+	writel(ALTR_OCRAM_CLEAR_ECC, mapped_ocr_edac_addr);
-+	writel(ALTR_OCRAM_ECC_EN, mapped_ocr_edac_addr);
++Example:
 +
-+	iounmap(mapped_ocr_edac_addr);
-+	of_node_put(np);
-+}
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index dd1ff07..7e0aad2 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -61,6 +61,9 @@ static void __init socfpga_init_irq(void)
- 	socfpga_sysmgr_init();
- 	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
- 		socfpga_init_l2_ecc();
++	eccmgr: eccmgr@0xffd08140 {
++		compatible = "altr,socfpga-ecc-manager";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
-+		socfpga_init_ocram_ecc();
- }
++		l2-ecc@ffd08140 {
++			compatible = "altr,socfpga-l2-ecc";
++			reg = <0xffd08140 0x4>;
++			interrupts = <0 36 1>, <0 37 1>;
++		};
++
++		ocram-ecc@ffd08144 {
++			compatible = "altr,socfpga-ocram-ecc";
++			reg = <0xffd08144 0x4>;
++			iram = <&ocram>;
++			interrupts = <0 178 1>, <0 179 1>;
++		};
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 39c470e..9bb383e 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -656,6 +656,26 @@
+ 			status = "disabled";
+ 		};
  
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
++		eccmgr: eccmgr@0xffd08140 {
++			compatible = "altr,socfpga-ecc-manager";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			l2-ecc@ffd08140 {
++				compatible = "altr,socfpga-l2-ecc";
++				reg = <0xffd08140 0x4>;
++				interrupts = <0 36 1>, <0 37 1>;
++			};
++
++			ocram-ecc@ffd08144 {
++				compatible = "altr,socfpga-ocram-ecc";
++				reg = <0xffd08144 0x4>;
++				iram = <&ocram>;
++				interrupts = <0 178 1>, <0 179 1>;
++			};
++		};
++
+ 		L2: l2-cache@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
 -- 
 1.7.9.5
-
