@@ -1,27 +1,66 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v15 2/6] add sysfs document for fpga bridge class
-Date: Thu, 21 Jan 2016 13:20:18 +0100
-Message-ID: <CAAtXAHeOa_pzr8U_W46Vc02kL5oUBP_5gPGRShEsUAF8PqgHeQ@mail.gmail.com>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
-	<1453317867-10422-3-git-send-email-atull@opensource.altera.com>
-	<yw1x60ynp1nw.fsf@unicorn.mansr.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] 8250: uniphier: allow modular build with 8250 console
+Date: Thu, 21 Jan 2016 13:21:08 +0100
+Message-ID: <4548262.MV5j98YUVi@wuerfel>
+References: <3965359.aMgb8o9MaG@wuerfel> <CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <yw1x60ynp1nw.fsf@unicorn.mansr.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 1:17 PM, M=C3=A5ns Rullg=C3=A5rd <mans@mansr.co=
-m> wrote:
+On Thursday 21 January 2016 20:39:03 Masahiro Yamada wrote:
+> 2016-01-14 7:33 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > The recently added uniphier 8250 port driver supports early console
+> > probing, and it supports being built as a module, but the combination
+> > of the two fails to link:
+> >
+> > ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
+> >
+> > Given that earlycon support in a loadable module makes no sense,
+> > making that code conditional on 'MODULE' is a correct solution.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+> > index bab6b3ae2540..1b7bd26555b7 100644
+> > --- a/drivers/tty/serial/8250/8250_uniphier.c
+> > +++ b/drivers/tty/serial/8250/8250_uniphier.c
+> > @@ -35,7 +35,7 @@ struct uniphier8250_priv {
+> >         spinlock_t atomic_write_lock;
+> >  };
+> >
+> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
+> > +#if defined(CONFIG_SERIAL_8250_CONSOLE) && !defined(MODULE)
+> >  static int __init uniphier_early_console_setup(struct earlycon_device *device,
+> >                                                const char *options)
+> >  {
+> >
+> >
+> 
+> 
+> If my patch (https://patchwork.kernel.org/patch/8029331/) is accepted,
+> this build error will be fixed as well.  But I doubt it is accepted soon...
+> 
+> So, I am OK with this workaround to fix "make allmodconfig".
+> 
+> Acked-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> 
 
-> I don't see a patch in this email.
+Good point. Adding the DT maintainers to Cc. Guys, any chance of you
+picking up Masahiro's patch for 4.5?
 
-So it's not just me :-)
+It can't hurt to have both patches merged, so it would still be good
+to have mine in the serial driver fixes, but we can live with either
+of the two to fix the build.
 
-Cheers,
-
-Moritz
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
