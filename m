@@ -1,75 +1,40 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more
- devicetree-friendly
-Date: Thu, 21 Jan 2016 09:12:17 +0100
-Message-ID: <20160121091217.379b6239@tock>
-References: <1453074987-3356-1-git-send-email-antonynpavlov@gmail.com>
-        <1453074987-3356-2-git-send-email-antonynpavlov@gmail.com>
-        <20160118205725.0a16be8e@tock>
-        <20160121031215.250b826347fd9c179b031288@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC 2/9] clk: bcm2835: add support for parent selection in DT
+Date: Thu, 21 Jan 2016 09:26:42 +0100
+Message-ID: <20160121082642.GB13237@pengutronix.de>
+References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
+ <1453215100-2382-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160121031215.250b826347fd9c179b031288@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Aban Bedel <albeu@free.fr>, linux-mips@linux-mips.org, Yegor Yefremov <yegorslists@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453215100-2382-3-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: kernel@martin.sperl.org
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Jan 2016 03:12:15 +0300
-Antony Pavlov <antonynpavlov@gmail.com> wrote:
+Martin,
 
-> On Mon, 18 Jan 2016 20:57:25 +0100
-> Alban <albeu@free.fr> wrote:
+On Tue, Jan 19, 2016 at 02:51:33PM +0000, kernel@martin.sperl.org wrote:
+> From: Martin Sperl <kernel@martin.sperl.org>
 > 
-> > On Mon, 18 Jan 2016 02:56:24 +0300
-> > Antony Pavlov <antonynpavlov@gmail.com> wrote:
-> > 
-> > > At the moment ar933x of-enabled drivers use use clock names
-> > > (e.g. "uart" or "ahb") to get clk descriptor.
-> > > On the other hand
-> > > Documentation/devicetree/bindings/clock/clock-bindings.txt states
-> > > that the 'clocks' property is required for passing clk to clock
-> > > consumers.
-> > 
-> > This patch is not need, you should set the clock-names property in
-> > the relevant device nodes instead.
+> Allow for a per clock custom selection of clocks in the device tree.
 > 
-> This patch is needed for AR9331!
-> 
-> In ar933x_clocks_init() we have
-> 
->         ath79_add_sys_clkdev("ref", ref_rate);
->         clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
->         clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
->         clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-> 
->         clk_add_alias("wdt", NULL, "ahb", NULL);
->         clk_add_alias("uart", NULL, "ref", NULL);
-> 
-> "uart" is an alias for "ref". But "ref" is not visible via device tree!
-> 
-> I see this error message on ar933x-uart start:
->  
->      ERROR: could not get clock /ahb/apb/uart@18020000:uart(0)
+> Basic setup in dt looks like this:
+>   clock@BCM2835_CLOCK_PCM {
+>     reg = <BCM2835_CLOCK_PCM>;
+>     parent-clock-names = "xosc", "plld_per", "plla_per", "pll_aux_per";
+>   };
 
-The ref clock should be defined in the board DTS, I now see that it is
-missing in yours. What you need to do is to define the clock-names
-property in the Soc DTS, that allow the names lookup to work. Then in
-the board DTS you can define the clock property to connect it to the
-proper parent. 
+Isn't this the same as the already existing assigned-clock-parents property?
+If yes, that should be used.
 
-I'm also working on supporting the QCA9558 and the clock tree is similar.
-See https://github.com/AlbanBedel/linux/commit/d6c8f8adfce08972c6
-as example.
+Sascha
 
-Alban
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
