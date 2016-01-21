@@ -1,48 +1,51 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: AM4372: Add the wkup_m3_ipc node
-Date: Thu, 21 Jan 2016 13:55:49 -0800
-Message-ID: <20160121215549.GP19432@atomide.com>
-References: <1437167284-25659-1-git-send-email-d-gerlach@ti.com>
- <1437167284-25659-5-git-send-email-d-gerlach@ti.com>
- <20150805103155.GB16878@atomide.com>
- <569D486B.6080000@ti.com>
+From: Oreste Salerno <oreste.salerno-Jdzig1fPfSTQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 0/4] Add device tree support to the cyttsp driver
+Date: Thu, 21 Jan 2016 23:21:28 +0100
+Message-ID: <cover.1453414661.git.oreste.salerno@tomtom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <569D486B.6080000-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fery-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oreste.salerno-Jdzig1fPfSTQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [160118 12:18]:
-> Hi Tony,
-> On 08/05/2015 05:31 AM, Tony Lindgren wrote:
-> >* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150717 14:10]:
-> >>From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> >>
-> >>Add the Wakeup M3 IPC device node for the wkup_m3_ipc driver on
-> >>AM4372 SoC. This node uses the IPC registers, part of the Control
-> >>Module, and is therefore added as a child of the scm node.
-> >
-> >Applying the last two patches in this series into omap-for-v4.3/dt
-> >thanks.
-> >
-> >Probably the send-no-irq quirk you can do in the driver based
-> >on the compatible flag like I suggested in the related mailbox
-> >thread so not applying those until that's been discussed.
-> 
-> Now that this compatible flag for the mbox driver has been accepted here:
-> 8e3c5952144f ("mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU
-> Idle") can the first two patches in this series get picked up. I tested
-> applying to v4.4 and they still apply cleanly.
+Implement a number of updates for the cyttsp driver to be able to parse generic
+ACPI/of/static properties and drop support for platform data (no platform data
+user is present in the kernel tree).
 
-OK applying into omap-for-v4.5/fixes thanks.
+---
+Changes in v5:
+  Use custom devm action to turn off the chip
+  Make reset gpio and touchscreen size properties optional
+Changes in v4:
+  Major rework based on Dmitry's review:
+  - Use device_property_read() functions instead of of_property()
+  - Use touchscreen_parse_properties to parse common properties
+  - Drop support for platform data
+  - Used devres managed allocations
+Changes in v3:
+  - Rework binding names and descriptions
+Changes in v2:
+  - Fix err_cast.cocci warning in patch 2/3
+Oreste Salerno (4):
+  Input: cyttsp - use devres managed resource allocations
+  Input: cyttsp - check return value of input_mt_init_slots
+  Input: cyttsp - switch to using device properties
+  Input: cyttsp - perform hard reset of the chip during probe
 
-Regards,
+ .../bindings/input/touchscreen/cyttsp.txt          |  95 ++++++++++
+ drivers/input/touchscreen/cyttsp_core.c            | 193 +++++++++++++--------
+ drivers/input/touchscreen/cyttsp_core.h            |  10 +-
+ drivers/input/touchscreen/cyttsp_i2c.c             |  10 --
+ drivers/input/touchscreen/cyttsp_spi.c             |  10 --
+ include/linux/input/cyttsp.h                       |  15 --
+ 6 files changed, 228 insertions(+), 105 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
 
-Tony
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
