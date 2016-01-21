@@ -1,48 +1,29 @@
-From: Oreste Salerno <oreste.salerno@tomtom.com>
-Subject: Re: [PATCH v4 1/4] Input: cyttsp - use devres managed resource
- allocations
-Date: Thu, 21 Jan 2016 21:22:05 +0100
-Message-ID: <20160121202205.GA20324@nl1lxl-107192.ttg.global>
-References: <cover.1453403916.git.oreste.salerno@tomtom.com>
- <20e9f0188f07fc420912b3defa747303be3cf290.1453403916.git.oreste.salerno@tomtom.com>
- <20160121192924.GB39970@dtor-ws>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v15 1/6] fpga: add bindings document for fpga area and
+ fpga bus
+Date: Thu, 21 Jan 2016 21:33:36 +0100
+Message-ID: <CAAtXAHfuUd_PnAp4AFLhi+7_yDseXapVFE+nyGJu+81rQ2yYkw@mail.gmail.com>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+	<1453317867-10422-2-git-send-email-atull@opensource.altera.com>
+	<CAAtXAHfkQnxZtphRyjUn6qgW=9RMpcJ_CDa4vKgzATsw_NVYWQ@mail.gmail.com>
+	<alpine.DEB.2.02.1601211114160.8804@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160121192924.GB39970@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1601211114160.8804@linuxheads99>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 11:29:24AM -0800, Dmitry Torokhov wrote:
-> Hi Oreste,
-> 
-> On Thu, Jan 21, 2016 at 08:21:13PM +0100, Oreste Salerno wrote:
-> > Use devm_() functions for allocating memory, input device and IRQ.
-> > 
-> 
-> ...
-> 
-> > @@ -625,11 +620,8 @@ EXPORT_SYMBOL_GPL(cyttsp_probe);
-> >  
-> >  void cyttsp_remove(struct cyttsp *ts)
-> >  {
-> > -	free_irq(ts->irq, ts);
-> > -	input_unregister_device(ts->input);
-> >  	if (ts->pdata->exit)
-> >  		ts->pdata->exit();
-> > -	kfree(ts);
-> 
-> This is not quite correct as it changes the operations order... Given
-> that it is going to be removed in the next patch I guess it is OK, but
-> ideally you can add a custom devm action to shut off the chip.
->
+Hi Alan,
 
-You mean a devm action to call pdata->exit() ? OK, I could do that.
+On Thu, Jan 21, 2016 at 6:21 PM, atull <atull@opensource.altera.com> wrote:
 
-> Thanks.
-> 
-> -- 
-> Dmitry
+>           target-path = "/amba/fpga_bus@0/devcfg@f8007000";
+
+derp ... building in the driver helps ... all good on your side ;-)
+
+Cheers,
+
+Moritz
