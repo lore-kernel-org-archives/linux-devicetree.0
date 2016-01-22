@@ -1,68 +1,98 @@
-From: zhongkaihua <zhongkaihua@huawei.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFYzIDEvM10gYXJtNjQ6IGR0czogQWRkIEhpNjIyMCBn?=
- =?gb2312?Q?pio_configuration_nodes?=
-Date: Fri, 22 Jan 2016 09:00:23 +0000
-Message-ID: <191FB6491B9FFA40828A83010D6755E9299D97A3@SZXEMI501-MBS.china.huawei.com>
-References: <1453200681-26406-1-git-send-email-zhongkaihua@huawei.com>
- <569E3C0F.3040603@arm.com>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] Drivers: MUSB: Davinci MUSB: added DT support
+Date: Fri, 22 Jan 2016 10:03:16 +0100
+Message-ID: <56A1F054.704@barix.com>
+References: <1453387999-4485-1-git-send-email-petr@barix.com>
+ <20160121230751.GA3991@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <569E3C0F.3040603@arm.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wangbintian <bintian.wang@huawei.com>, Xuyiping <xuyiping@hisilicon.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Dan zhao <dan.zhao@hisilicon.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, "Wangfei (William,
- Euler)" <w.f@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121230751.GA3991@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 2016/1/19 21:37, Sudeep Holla wrote:
->
->
-> On 19/01/16 10:51, Zhong Kaihua wrote:
->> arm64: dts: Add Hi6220 gpio configuration nodes
+thanks a lot for your comments. I admit I got inspired by the 
+usb/omap-usb.txt  and usb/am33xx-usb.txt bindings
+which use identical keywords, mode, num-eps, ram-bits, power and 
+multipoint as all these chips use the same or similar MUSB core.
+ From your comments I have the feeling these are not the best bindings 
+to take as an example.
+What would you recommend as a good example then?
+
+Regards
+Petr
+
+On 22.01.2016 00:07, Rob Herring wrote:
+> On Thu, Jan 21, 2016 at 03:53:19PM +0100, Petr Kulhavy wrote:
+>> TI DaVinci MUSB driver equipped with DeviceTree support.
+>> Tested with AM1808 board and USB2.0 (OTG) in host mode.
 >>
->> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
->>                 Kong Xinwei <kong.kongxinwei@hisilicon.com>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Petr Kulhavy<petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 >> ---
->>   .../devicetree/bindings/gpio/gpio-hi6220.txt       |  23 +
->>   arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   1 +
->>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 259 +++++++++
->>   arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi      | 607 +++++++++++++++++++++
->>   4 files changed, 890 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
->>   create mode 100644 arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
+>>   .../devicetree/bindings/usb/da8xx-usb.txt          |  52 +++++++
+>>   drivers/usb/musb/da8xx.c                           | 166 +++++++++++++++++++++
+>>   include/linux/platform_data/usb-davinci.h          |   3 +-
+>>   3 files changed, 220 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
 >> new file mode 100644
->> index 0000000..a9cbf21
+>> index 0000000..c81d665
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
->> @@ -0,0 +1,23 @@
->> +Hisilicon Hi6220 GPIO controller bindings
+>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> Follow the compatible string for the filename (with wildcards is fine).
+>
+>> @@ -0,0 +1,52 @@
+>> +TI DaVinci MUSB
 >> +
 >> +Required properties:
->> +    - compatible: "arm,pl061","arm,primecell"
->> +    - gpio-controller: Marks the device node as a GPIO controller.
->> +    - #gpio-cells: Should be 2. See gpio.txt in this directory for a
->> +         description of    the cells format.
->> +    - interrupt-controller: Mark the device node as an interrupt controller
 >> +
+>> + - compatible : Should be "ti,da850-musb" or "ti,da830-musb"
+>> +
+>> + - mode : USB mode. "1" signifies HOST, "2" represents PERIPHERAL,
+>> +     "3" represents OTG.
+> Surely we have a similar property defined already. Don't create
+> something new.
 >
-> Why do you need extra binding document here as the compatible is same as
-> [1] ? You can extend that if required and add example there IMO.
+>> +
+>> + - power : This signifies the maximum current the controller can
+>> +     supply in host mode. The unit size is 2mA, the maximum value is 510mA.
+> You should model this as a regulator.
 >
-
-Ok, I will remove the binding document in the next version. Thanks.
+>> + - num-eps : Specifies the number of endpoints. This is also a
+>> +     MUSB configuration-specific setting.
+> Just spell out endpoints.
+>
+>> +
+>> + - multipoint : Should be "1" indicating the musb controller supports
+>> +     multipoint. This is a MUSB configuration-specific setting.
+> What does multipoint mean?
+>
+>> + - ram-bits : Specifies the ram address size.
+> Needs a better description. Then it probably needs a better name too,
+> but without a description I can't tell what that would be.
+>
+>> +
+>> +
+>> +Optional properties:
+>> +
+>> + - da8xx,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
+>> +     Supported values: "0" for external pin, "1" for internal PLL.
+> How about a boolean property instead. Name it based on the less used
+> option (external pin I'm guessing).
+>
+>> + - da8xx,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
+>> +     frequency in Hz in case the clock is generated by the internal PLL.
+>> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+> da8xx is not a vendor.
+>
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
