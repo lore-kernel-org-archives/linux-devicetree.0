@@ -1,100 +1,63 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control
- for FPGA
-Date: Fri, 22 Jan 2016 10:37:26 -0600
-Message-ID: <alpine.DEB.2.02.1601221021130.1187@linuxheads99>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <1453317867-10422-6-git-send-email-atull@opensource.altera.com> <CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Fri, 22 Jan 2016 10:49:52 -0600
+Message-ID: <CAL_JsqL_cVMzNb2VmsJND11zZd6MEBqV1fgp7yy212Le8J2jvg@mail.gmail.com>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+ <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
+ <569913A1.80606@cogentembedded.com> <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
+ <56992959.2020204@hurleysoftware.com> <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
+ <744620565.20160116103445@cogentembedded.com> <20160116233157.GA7774@rob-hp-laptop>
+ <3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com> <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
+ <1D5F146E-D347-453B-9158-8D269F8DA99C@goldelico.com> <20160117193849.69d00c28@lxorguk.ukuu.org.uk>
+ <37DCE36D-0A5E-41C5-BDA4-857DCF9F2DD1@goldelico.com> <20160118111926.0882b422@lxorguk.ukuu.org.uk>
+ <07F3B6C0-0C87-478C-B6DD-5C0EECB42D0D@goldelico.com> <20160118220319.051c9cc0@lxorguk.ukuu.org.uk>
+ <C1E6AFE7-1EF2-4C70-8BE2-82F5CD7DDE22@goldelico.com> <9E37C552-361C-4A54-980E-E3BFFF834302@goldelico.com>
+ <20160120174610.1c64239a@lxorguk.ukuu.org.uk> <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
+ <CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com>
+In-Reply-To: <CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Peter Hurley <peter@hurleysoftware.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Jan 2016, Moritz Fischer wrote:
+On Fri, Jan 22, 2016 at 9:45 AM, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
+> On 20 January 2016 at 19:03, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>
+>> Am 20.01.2016 um 18:46 schrieb One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>:
+>>
+>>>> The problem is that *I* have no control over user space. But I also don't want
+>>>> to say to my users "that is not my problem - get it solved yourself". This does
+>>>> not help them.
+>>>
+>>> Stuffing things into the kernel because the user space of a given
+>>> platform can't get itself organised isn't helpful to the other billion
+>>> plus Linux devices out there.
+>>
+>> The assumption that there is  "the" user space of a given platform is wrong.
+>
+> I'm a bit surprised at the arguments being exchanged here regarding
+> why the kernel may or may not deal with the detail that a (say) BT
+> chip is behind a uart.
+>
+> I would have expected that the main (and IMO sufficient) reason why
+> the kernel should do it is because the particular bus used to connect
+> a BT chip to the CPU is a hw detail that a kernel that does its job
+> should keep to itself. Same as userspace not needing to care if a BT
+> chip is behind SDIO or USB, why does it have to tell the kernel behind
+> which UART a BT chip is sitting?
 
-> Alan,
-> 
-> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
-> 
-> > +static int fpga_area_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       struct device_node *np = dev->of_node;
-> > +       struct fpga_area *area;
-> > +       int ret;
-> > +
-> > +       area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
-> > +       if (!area)
-> > +               return -ENOMEM;
-> > +
-> > +       INIT_LIST_HEAD(&area->bridge_list);
-> > +
-> > +       ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
-> > +       if (ret)
-> > +               return ret;
-> > +       area->br = dev_get_drvdata(dev);
-> > +
-> > +       if (of_property_read_string(np, "firmware-name",
-> > +                                   &area->firmware_name)) {
-> > +               of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-> > +               return 0;
-> > +       }
-> 
-> This is the use case where the bootloader loaded the fpga, and you
-> just want to populate
-> the devices in the fabric, right?
+Thanks for writing exactly what I had not gotten around to writing.
+You are exactly right. While historically UART devices where not
+probe-able like SDIO (in theory) and USB are and maybe that was a
+reason to handle in userspace, we do have the technology to describe
+the UART connections now.
 
-Hi Moritz,
+Adding Marcel who has also previously commented on the reasons why
+this belongs in the kernel [1].
 
-Yes
+Rob
 
-> 
-> > +       if (of_property_read_bool(np, "partial-reconfig"))
-> > +               area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
-> > +
-> > +       ret = fpga_area_get_bus(area);
-> > +       if (ret) {
-> > +               dev_dbg(dev, "Should be child of a FPGA Bus");
-> > +               goto err_unreg;
-> > +       }
-> 
-> Looking at socfpga.dtsi, would that mean that the fpgamgr0 node would
-> need to become a subnode of fpgabus@0 at the same place?
-> 
-> i.e. /soc/fpgamgr@ff706000 -> /soc/fpgabus@0/fpgamgr@ff706000
-> 
-> and the ranges property would be used to translate to the fpga memory
-> mapped space?
-> 
-> I know we're going back and forth on this. I think Rob brought up a
-> similar question:
-> "Does the bus really go thru the fpgamgr and then the bridge as this
-> implies? Or fpgamgr is a sideband controller?"
-> 
-> To which I think the answer is 'sideband' controller, yet with the new
-> bindings it looks like
-> the bus goes through the fpgamgr.
-
-Yeah, let's get this right.  First, let's be clear on the reason for FPGA Bus to
-exist.  There may be >1 FPGA in a system.  I want the FPGA Bus bring together
-the bridges and manager that are associated with a certain FPGA.  This allows
-the system designer to specify which FPGA is getting programmed with which
-image/hardware.  So at minimum, we need some way of associating a FPGA Bus with
-a FPGA Manager.
-
-As far as the target path is concerned, in the case of no bridges, we could have
-the overlay target the FPGA Bus instead of the FPGA Manager.  That may be more
-logical.  This would just be a documentation change; I think fpga-area.c will
-work OK if you specify the FPGA bus as your target (the manager still has to
-be a child of the bus so the bus knows what manager to use).
-
-Alan
-
-> 
-> Cheers,
-> 
-> Moritz
-> 
+[1] https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2015-August/002212.html
