@@ -1,225 +1,250 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] lm90: initialize parameters from devicetree
-Date: Fri, 22 Jan 2016 06:53:44 -0800
-Message-ID: <56A24278.8050909@roeck-us.net>
-References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
- <1453404877-17897-3-git-send-email-stephan@kochen.nl>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv8 1/4] EDAC, altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Fri, 22 Jan 2016 09:35:16 -0600
+Message-ID: <56A24C34.3000303@opensource.altera.com>
+References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+ <56A1C5DE.1080501@mentor.com>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453404877-17897-3-git-send-email-stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?St=c3=a9phan_Kochen?= <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <56A1C5DE.1080501@mentor.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2016 11:34 AM, St=C3=A9phan Kochen wrote:
-> Allow a device tree to set initial temperature sensor parameters.
->
-> Userspace can still override actual values through sysfs.
->
-> Signed-off-by: St=C3=A9phan Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/hwmon/lm90.txt | 40 +++++++++++++=
-++++
->   drivers/hwmon/lm90.c                             | 55 +++++++++++++=
-+++++++++--
->   2 files changed, 92 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Docum=
-entation/devicetree/bindings/hwmon/lm90.txt
-> index e863248..045e94b 100644
-> --- a/Documentation/devicetree/bindings/hwmon/lm90.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
-> @@ -33,6 +33,38 @@ Optional properties:
->                 LM90 "-ALERT" pin output.
->                 See interrupt-controller/interrupts.txt for the forma=
-t.
->
-> +- update-interval: Interval at which temperatures are sampled,
-> +  Type: unsigned   in milliseconds.
-> +  Size: one cell
-> +
-> +- local-low:      Valid temperature range for the chip internal sens=
-or,
-> +  local-high:     outside which the alert will be set. Values are in
-> +  local-critical: millicelcius.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- remote-low:      Valid temperature range for the external sensor,
-> +  remote-high:     outside which the alert will be set. Values are i=
-n
-> +  remote-critical: millicelciius.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- remote-offset:   Where available, an external sensor temperature o=
-ffset.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- local-emergency:  On max6659, max6695 and max6696, a configurable
-> +  remote-emergency: 3rd upper bound on temperature.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- remote2-low:      On max6695 and max6696, a second external sensor=
-=2E
-> +  remote2-high:
-> +  remote2-critical:
-> +  remote2-emergency:
-> +  Type: signed
-> +  Size: one cell
-> +
+Hi Vladimir,
 
-This very much smells like configuration, not hardware description.
 
-Having said that, the thermal subsystem does something similar. This ra=
-ises even more
-questions, though. Since patch 3 of the series introduces registration =
-with the thermal
-subsystem, it seems to me that the thermal subsystem should provide any=
- limits used
-to program the chips, and that there should be a mechanism for the ther=
-mal subsystem
-to interact with the driver to both set the limits and to be informed i=
-f a limit
-is exceeded.
+On 01/22/2016 12:02 AM, Vladimir Zapolskiy wrote:
+> Hi Thor,
+>
+> On 21.01.2016 19:34, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Adding L2 Cache and On-Chip RAM EDAC support for the
+>> Altera SoCs using the EDAC device  model. The SDRAM
+>> controller is using the Memory Controller model.
+>>
+>> Each type of ECC is individually configurable.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+>
+> You are sending a change authored by yourself for review, but you add Dinh's
+> SoB, what's his role here?
+>
+> See Documentation/SubmittingPatches "Sign your work".
+>
+> [snip]
 
-Also, _if_ such a set of properties is introduced and accepted by the d=
-evicetree
-reviewers, it should probably be a set of properties which applies to _=
-all_ hardware
-monitoring drivers, not just to one. Even if support is not implemented=
- immediately
-in the hwmon core, the properties should be usable in a generic way, an=
-d not
-reflect sysfs attribute names used by the hwmon subsystem.
+While I was working in a different group at Altera last year, Dinh 
+submitted the previous patch revision so I kept his signed off by for 
+continuity. I'll just use myself in the future. Thank you for clarifying.
 
-Thanks,
-Guenter
+>
+>> +/*
+>> + * altr_edac_device_probe()
+>> + *	This is a generic EDAC device driver that will support
+>> + *	various Altera memory devices such as the L2 cache ECC and
+>> + *	OCRAM ECC as well as the memories for other peripherals.
+>> + *	Module specific initialization is done by passing the
+>> + *	function index in the device tree.
+>> + */
+>> +static int altr_edac_device_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *dci;
+>> +	struct altr_edac_device_dev *drvdata;
+>> +	struct resource *r;
+>> +	int res = 0;
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	char *ecc_name = (char *)np->name;
+>> +	static int dev_instance;
+>> +	struct dentry *debugfs;
+>> +
+>> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "Unable to open devm\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!r) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "Unable to get mem resource\n");
+>
+> Missing devres_release_group(&pdev->dev, NULL) on error path.
+>
+Yes. Thank you.
 
->   Example LM90 node:
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
+>> +				     dev_name(&pdev->dev))) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "%s:Error requesting mem region\n", ecc_name);
 >
->   temp-sensor {
-> @@ -41,4 +73,12 @@ temp-sensor {
->   	vcc-supply =3D <&palmas_ldo6_reg>;
->   	interrupt-parent =3D <&gpio>;
->   	interrupts =3D <TEGRA_GPIO(O, 4) IRQ_TYPE_LEVEL_LOW>;
-> +	update-interval =3D <500>;
-> +	local-low =3D <5000>;
-> +	local-high =3D <80000>;
-> +	local-critical =3D <90000>;
-> +	remote-low =3D <5000>;
-> +	remote-high =3D <80000>;
-> +	remote-critical =3D <90000>;
-> +	remote-offset =3D <(-62125)>;
->   }
-> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
-> index 88daf72..8ae8791 100644
-> --- a/drivers/hwmon/lm90.c
-> +++ b/drivers/hwmon/lm90.c
-> @@ -93,6 +93,7 @@
->   #include <linux/hwmon.h>
->   #include <linux/err.h>
->   #include <linux/mutex.h>
-> +#include <linux/of.h>
->   #include <linux/sysfs.h>
->   #include <linux/interrupt.h>
->   #include <linux/regulator/consumer.h>
-> @@ -1504,8 +1505,16 @@ static void lm90_restore_conf(struct i2c_clien=
-t *client, struct lm90_data *data)
->   static void lm90_init_client(struct lm90_data *data)
->   {
->   	struct i2c_client *client =3D data->client;
-> +	struct device *dev =3D &client->dev;
->   	u8 config, convrate;
-> +	u32 ms;
-> +#ifdef CONFIG_OF
-> +	s32 temp;
-> +#endif
+> See above.
 >
-> +	/*
-> +	 * Save old conversion rate.
-> +	 */
->   	if (lm90_read_reg(client, LM90_REG_R_CONVRATE, &convrate) < 0) {
->   		dev_warn(&client->dev, "Failed to read convrate register!\n");
->   		convrate =3D LM90_DEF_CONVRATE_RVAL;
-> @@ -1515,14 +1524,24 @@ static void lm90_init_client(struct lm90_data=
- *data)
->   	/*
->   	 * Start the conversions.
->   	 */
-> -	lm90_set_convrate_locked(data, 500);  /* 500ms / 2Hz  */
-> +#ifdef CONFIG_OF
-> +	if (of_property_read_u32(dev->of_node, "update-interval", &ms) < 0)
-> +#endif
-> +		ms =3D 500;  /* default rate: 2Hz */
-> +	lm90_set_convrate_locked(data, ms);
-> +
-> +	/*
-> +	 * Save old config
-> +	 */
->   	if (lm90_read_reg(client, LM90_REG_R_CONFIG1, &config) < 0) {
-> -		dev_warn(&client->dev, "Initialization failed!\n");
-> +		dev_warn(dev, "Initialization failed!\n");
->   		return;
->   	}
->   	data->config_orig =3D config;
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
+>> +					 1, ecc_name, 1, 0, NULL, 0,
+>> +					 dev_instance++);
+>> +
+>> +	if (!dci) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "%s: Unable to allocate EDAC device\n", ecc_name);
 >
-> -	/* Check Temperature Range Select */
-> +	/*
-> +	 * Check Temperature Range Select
-> +	 */
->   	if (data->kind =3D=3D adt7461 || data->kind =3D=3D tmp451) {
->   		if (config & 0x04)
->   			data->flags |=3D LM90_FLAG_ADT7461_EXT;
-> @@ -1545,6 +1564,36 @@ static void lm90_init_client(struct lm90_data =
-*data)
->   	config &=3D 0xBF;	/* run */
->   	if (config !=3D data->config_orig) /* Only write if changed */
->   		i2c_smbus_write_byte_data(client, LM90_REG_W_CONFIG1, config);
-> +
-> +#ifdef CONFIG_OF
-> +	/*
-> +	 * Set initial values from devicetree
-> +	 */
-> +#define INIT_REG(_property, _index, _bits) { \
-> +	if (of_property_read_s32(dev->of_node, _property, &temp) =3D=3D 0) =
-\
-> +		lm90_set_temp##_bits##_locked(data, _index, temp); \
-> +}
-> +	INIT_REG("local-low", LOCAL_LOW, 8);
-> +	INIT_REG("local-high", LOCAL_HIGH, 8);
-> +	INIT_REG("local-critical", LOCAL_CRIT, 8);
-> +	INIT_REG("remote-low", REMOTE_LOW, 11);
-> +	INIT_REG("remote-high", REMOTE_HIGH, 11);
-> +	INIT_REG("remote-critical", REMOTE_CRIT, 8);
-> +	if (data->flags & LM90_HAVE_OFFSET) {
-> +		INIT_REG("remote-offset", REMOTE_OFFSET, 11);
-> +	}
-> +	if (data->flags & LM90_HAVE_EMERGENCY) {
-> +		INIT_REG("local-emergency", LOCAL_EMERG, 8);
-> +		INIT_REG("remote-emergency", REMOTE_EMERG, 8);
-> +	}
-> +	if (data->flags & LM90_HAVE_TEMP3) {
-> +		INIT_REG("remote2-low", REMOTE2_LOW, 11);
-> +		INIT_REG("remote2-high", REMOTE2_HIGH, 11);
-> +		INIT_REG("remote2-critical", REMOTE2_CRIT, 8);
-> +		INIT_REG("remote2-emergency", REMOTE2_EMERG, 8);
-> +	}
-> +#undef INIT_REG
-> +#endif
->   }
+> See above.
 >
->   static bool lm90_is_tripped(struct i2c_client *client, u16 *status)
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	drvdata = dci->pvt_info;
+>> +	dci->dev = &pdev->dev;
+>> +	platform_set_drvdata(pdev, dci);
+>> +	drvdata->edac_dev_name = ecc_name;
+>> +
+>> +	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+>> +	if (!drvdata->base)
+>> +		goto err;
+>> +
+>> +	/* Get driver specific data for this EDAC device */
+>> +	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
+>> +
+>> +	/* Check specific dependencies for the module */
+>> +	if (drvdata->data->setup) {
+>> +		res = drvdata->data->setup(pdev, drvdata->base);
+>> +		if (res < 0)
+>> +			goto err;
+>> +	}
+>> +
+>> +	drvdata->sb_irq = platform_get_irq(pdev, 0);
+>> +	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
+>> +			       altr_edac_device_handler,
+>> +			       0, dev_name(&pdev->dev), dci);
+>> +	if (res < 0)
+>> +		goto err;
+>> +
+>> +	drvdata->db_irq = platform_get_irq(pdev, 1);
+>> +	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
+>> +			       altr_edac_device_handler,
+>> +			       0, dev_name(&pdev->dev), dci);
+>> +	if (res < 0)
+>> +		goto err;
+>> +
+>> +	dci->mod_name = "Altera ECC Manager";
+>> +	dci->dev_name = drvdata->edac_dev_name;
+>> +
+>> +	debugfs = edac_debugfs_create_dir(ecc_name);
+>> +	if (debugfs)
+>> +		altr_create_edacdev_dbgfs(dci, drvdata->data, debugfs);
+>> +
+>> +	if (edac_device_add_device(dci))
+>> +		goto err;
+>> +
+>> +	devres_close_group(&pdev->dev, NULL);
+>> +
+>> +	return 0;
+>> +err:
+>> +	edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, res);
+>> +	devres_release_group(&pdev->dev, NULL);
+>> +	edac_device_free_ctl_info(dci);
+>> +
+>> +	return res;
+>> +}
+>> +
+>> +static int altr_edac_device_remove(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
+>> +
+>> +	edac_device_del_device(&pdev->dev);
+>> +	edac_device_free_ctl_info(dci);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver altr_edac_device_driver = {
+>> +	.probe =  altr_edac_device_probe,
+>> +	.remove = altr_edac_device_remove,
+>> +	.driver = {
+>> +		.name = "altr_edac_device",
+>> +		.of_match_table = altr_edac_device_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(altr_edac_device_driver);
+>> +
+>> +/*********************** OCRAM EDAC Device Functions *********************/
+>> +
+>> +#ifdef CONFIG_EDAC_ALTERA_OCRAM
+>> +
+>> +static void *ocram_alloc_mem(size_t size, void **other)
+>> +{
+>> +	struct device_node *np;
+>> +	struct gen_pool *gp;
+>> +	void *sram_addr;
+>> +
+>> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-ocram-ecc");
+>> +	if (!np)
+>> +		return NULL;
+>> +
+>> +	gp = of_gen_pool_get(np, "iram", 0);
+>> +	if (!gp) {
+>> +		of_node_put(np);
+>> +		return NULL;
+>> +	}
+>> +	of_node_put(np);
+>
+> 	gp = of_gen_pool_get(np, "iram", 0);
+> 	of_node_put(np);
+> 	if (!gp)
+> 		return NULL;
+>
+> version is better.
 >
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm sorry, can you elaborate? Are you saying I should return something 
+other than NULL?
+
+>> +
+>> +	sram_addr = (void *)gen_pool_alloc(gp, size / sizeof(size_t));
+>> +	if (!sram_addr)
+>> +		return NULL;
+>> +
+>> +	memset(sram_addr, 0, size);
+>
+> Potential memory corruption, you allocate (size / sizeof(size_t)) bytes and
+> then write size bytes.
+>
+
+Yes, good catch. I thought I'd fixed this but missed it when I came back.
+
+>> +	wmb();	/* Ensure data is written out */
+>> +
+>> +	*other = gp;	/* Remember this handle for freeing  later */
+>> +
+>> +	return sram_addr;
+>> +}
+>> +
+>> +static void ocram_free_mem(void *p, size_t size, void *other)
+>> +{
+>> +	gen_pool_free((struct gen_pool *)other, (u32)p, size / sizeof(size_t));
+>
+> See a comment above.
+>
+>> +}
+>> +
+>
+> --
+> With best wishes,
+> Vladimir
+>
+
+Thank you for reviewing.
