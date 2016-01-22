@@ -1,155 +1,101 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v13 17/17] drm: bridge: analogix/dp: Fix the possible dead
- lock in bridge disable time
-Date: Fri, 22 Jan 2016 09:56:42 +0800
-Message-ID: <1453427802-24787-1-git-send-email-ykk@rock-chips.com>
-References: <1453427614-23053-1-git-send-email-ykk@rock-chips.com>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 1/3] dt-bindings: soc: Add documentation for the MediaTek
+ GCE unit
+Date: Fri, 22 Jan 2016 11:38:13 +0800
+Message-ID: <1453433893.15298.13.camel@mtksdaap41>
+References: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
+	 <1453266881-16849-2-git-send-email-hs.liao@mediatek.com>
+	 <20160120163826.GA23400@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1453427614-23053-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160120163826.GA23400@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SXQgbWF5IGNhdXNlZCBhIGRlYWQgbG9jayBpZiB3ZSBmbHVzaCB0aGUgaHBkIHdvcmsgaW4gYnJp
-ZGdlIGRpc2FibGUgdGltZS4KClRoZSBub3JtYWwgZmxvdyB3b3VsZCBsaWtlOgogIElOIC0tPiBE
-Uk0gSU9DVEwKICAgICAgICAxLiBBY3F1aXJlIGNydGNfd3dfY2xhc3NfbXV0ZXggKERSTSBJT0NU
-TCkKICBJTiAtLT4gYW5hbG9naXhfZHBfYnJpZGdlCiAgICAgICAgMi4gQWNxdWlyZSBocGQgd29y
-ayBsb2NrIChGbHVzaCBocGQgd29yaykKICAgICAgICAzLiBIUEQgd29yayBhbHJlYWR5IGluIGlk
-bGUsIG5vIG5lZWQgdG8gcnVuIHRoZSB3b3JrIGZ1bmN0aW9uLgogIE9VVCA8LS0gYW5hbG9naXhf
-ZHBfYnJpZGdlCiAgT1VUIDwtLSBEUk0gSU9DVEwKClRoZSBkZWFkIGxvY2sgZmxvdyB3b3VsZCBs
-aWtlOgogIElOIC0tPiBEUk0gSU9DVEwKICAgICAgICAxLiBBY3F1aXJlIGNydGNfd3dfY2xhc3Nf
-bXV0ZXggKERSTSBJT0NUTCkKICBJTiAtLT4gYW5hbG9naXhfZHBfYnJpZGdlCiAgICAgICAgMi4g
-QWNxdWlyZSBocGQgd29yayBsb2NrIChGbHVzaCBocGQgd29yaykKICBJTiAtLT4gYW5hbG9naXhf
-ZHBfaG90cGx1ZwogIElOIC0tPiBkcm1faGVscGVyX2hwZF9pcnFfZXZlbnQKICAgICAgICAzLiBB
-Y3F1aXJlIG1vZGVfY29uZmlnIGxvY2sgKFRoaXMgbG9jayBhbHJlYWR5IGhhdmUgYmVlbiBhY3F1
-aXJlZCBpbiBwcmV2aW91cyBzdGVwIDEpCioqIERlYWQgTG9jayBOb3cgKioKCkl0J3Mgd3Jvbmcg
-dG8gZmx1c2ggdGhlIGhwZCB3b3JrIGluIGJyaWRnZS0+ZGlzYWJsZSB0aW1lLCBJIGd1ZXNzIHRo
-ZQpvcmlnaW5hbCBjb2RlIGp1c3Qgd2FudCB0byBlbnN1cmUgdGhlIGRlbGF5IHdvcmsgbXVzdCBi
-ZSBmaW5pc2ggYmVmb3JlCmVuY29kZXIgZGlzYWJsZWQuCgpUaGUgZmx1c2ggd29yayBpbiBicmlk
-Z2UgZGlzYWJsZSB0aW1lIGlzIHRyeSB0byBlbnN1cmUgdGhlIEhQRCBldmVudAp3b24ndCBiZSBt
-aXNzZWQgYmVmb3JlIGRpc3BsYXkgY2FyZCBkaXNhYmxlZCwgYWN0dWFsbHkgd2UgY2FuIHRha2Ug
-YQpmYXN0IHJlc3BvbmQgd2F5KGludGVycnVwdCB0aHJlYWQpIHRvIHVwZGF0ZSBEUk0gSFBEIGV2
-ZW50IHRvIGZpeCB0aGUKZGVsYXkgdXBkYXRlIGFuZCBwb3NzaWJsZSBkZWFkIGxvY2suCgpTaWdu
-ZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Ci0tLQpDaGFuZ2VzIGlu
-IHYxMzogTm9uZQpDaGFuZ2VzIGluIHYxMjogTm9uZQpDaGFuZ2VzIGluIHYxMTogTm9uZQpDaGFu
-Z2VzIGluIHYxMDogTm9uZQpDaGFuZ2VzIGluIHY5OiBOb25lCkNoYW5nZXMgaW4gdjg6IE5vbmUK
-Q2hhbmdlcyBpbiB2NzogTm9uZQpDaGFuZ2VzIGluIHY2OiBOb25lCkNoYW5nZXMgaW4gdjU6IE5v
-bmUKQ2hhbmdlcyBpbiB2NDogTm9uZQpDaGFuZ2VzIGluIHYzOiBOb25lCkNoYW5nZXMgaW4gdjI6
-IE5vbmUKCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUu
-YyB8IDYyICsrKysrKysrKystLS0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5h
-bG9naXgvYW5hbG9naXhfZHBfY29yZS5oIHwgIDMgKy0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-YW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMgIHwgMjYgKysrKysrKysrCiAzIGZpbGVzIGNoYW5n
-ZWQsIDU1IGluc2VydGlvbnMoKyksIDM2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5jIGIvZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmMKaW5kZXggNTI5MmIyOC4u
-NzY5OTU5NyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFs
-b2dpeF9kcF9jb3JlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFs
-b2dpeF9kcF9jb3JlLmMKQEAgLTg1MSw0NyArODUxLDQwIEBAIHN0YXRpYyB2b2lkIGFuYWxvZ2l4
-X2RwX2VuYWJsZV9zY3JhbWJsZShzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCwKIAl9CiB9
-CiAKLXN0YXRpYyBpcnFyZXR1cm5fdCBhbmFsb2dpeF9kcF9pcnFfaGFuZGxlcihpbnQgaXJxLCB2
-b2lkICphcmcpCitzdGF0aWMgaXJxcmV0dXJuX3QgYW5hbG9naXhfZHBfaGFyZGlycShpbnQgaXJx
-LCB2b2lkICphcmcpCiB7CiAJc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAgPSBhcmc7Ci0K
-KwlpcnFyZXR1cm5fdCByZXQgPSBJUlFfTk9ORTsKIAllbnVtIGRwX2lycV90eXBlIGlycV90eXBl
-OwogCiAJaXJxX3R5cGUgPSBhbmFsb2dpeF9kcF9nZXRfaXJxX3R5cGUoZHApOwotCXN3aXRjaCAo
-aXJxX3R5cGUpIHsKLQljYXNlIERQX0lSUV9UWVBFX0hQX0NBQkxFX0lOOgotCQlkZXZfZGJnKGRw
-LT5kZXYsICJSZWNlaXZlZCBpcnEgLSBjYWJsZSBpblxuIik7Ci0JCXNjaGVkdWxlX3dvcmsoJmRw
-LT5ob3RwbHVnX3dvcmspOwotCQlhbmFsb2dpeF9kcF9jbGVhcl9ob3RwbHVnX2ludGVycnVwdHMo
-ZHApOwotCQlicmVhazsKLQljYXNlIERQX0lSUV9UWVBFX0hQX0NBQkxFX09VVDoKLQkJZGV2X2Ri
-ZyhkcC0+ZGV2LCAiUmVjZWl2ZWQgaXJxIC0gY2FibGUgb3V0XG4iKTsKLQkJYW5hbG9naXhfZHBf
-Y2xlYXJfaG90cGx1Z19pbnRlcnJ1cHRzKGRwKTsKLQkJYnJlYWs7Ci0JY2FzZSBEUF9JUlFfVFlQ
-RV9IUF9DSEFOR0U6Ci0JCS8qCi0JCSAqIFdlIGdldCB0aGVzZSBjaGFuZ2Ugbm90aWZpY2F0aW9u
-cyBvbmNlIGluIGEgd2hpbGUsIGJ1dCB0aGVyZQotCQkgKiBpcyBub3RoaW5nIHdlIGNhbiBkbyB3
-aXRoIHRoZW0uIEp1c3QgaWdub3JlIGl0IGZvciBub3cgYW5kCi0JCSAqIG9ubHkgaGFuZGxlIGNh
-YmxlIGNoYW5nZXMuCi0JCSAqLwotCQlkZXZfZGJnKGRwLT5kZXYsICJSZWNlaXZlZCBpcnEgLSBo
-b3RwbHVnIGNoYW5nZTsgaWdub3JpbmcuXG4iKTsKLQkJYW5hbG9naXhfZHBfY2xlYXJfaG90cGx1
-Z19pbnRlcnJ1cHRzKGRwKTsKLQkJYnJlYWs7Ci0JZGVmYXVsdDoKLQkJZGV2X2VycihkcC0+ZGV2
-LCAiUmVjZWl2ZWQgaXJxIC0gdW5rbm93biB0eXBlIVxuIik7Ci0JCWJyZWFrOworCWlmIChpcnFf
-dHlwZSAhPSBEUF9JUlFfVFlQRV9VTktOT1dOKSB7CisJCWFuYWxvZ2l4X2RwX211dGVfaHBkX2lu
-dGVycnVwdChkcCk7CisJCXJldCA9IElSUV9XQUtFX1RIUkVBRDsKIAl9Ci0JcmV0dXJuIElSUV9I
-QU5ETEVEOworCisJcmV0dXJuIHJldDsKIH0KIAotc3RhdGljIHZvaWQgYW5hbG9naXhfZHBfaG90
-cGx1ZyhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspCitzdGF0aWMgaXJxcmV0dXJuX3QgYW5hbG9n
-aXhfZHBfaXJxX3RocmVhZChpbnQgaXJxLCB2b2lkICphcmcpCiB7Ci0Jc3RydWN0IGFuYWxvZ2l4
-X2RwX2RldmljZSAqZHA7CisJc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAgPSBhcmc7CisJ
-ZW51bSBkcF9pcnFfdHlwZSBpcnFfdHlwZTsKKworCWlycV90eXBlID0gYW5hbG9naXhfZHBfZ2V0
-X2lycV90eXBlKGRwKTsKKwlpZiAoaXJxX3R5cGUgJiBEUF9JUlFfVFlQRV9IUF9DQUJMRV9JTiB8
-fAorCSAgICBpcnFfdHlwZSAmIERQX0lSUV9UWVBFX0hQX0NBQkxFX09VVCkgeworCQlkZXZfZGJn
-KGRwLT5kZXYsICJEZXRlY3RlZCBjYWJsZSBzdGF0dXMgY2hhbmdlZCFcbiIpOworCQlpZiAoZHAt
-PmRybV9kZXYpCisJCQlkcm1faGVscGVyX2hwZF9pcnFfZXZlbnQoZHAtPmRybV9kZXYpOworCX0K
-IAotCWRwID0gY29udGFpbmVyX29mKHdvcmssIHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UsIGhv
-dHBsdWdfd29yayk7CisJaWYgKGlycV90eXBlICE9IERQX0lSUV9UWVBFX1VOS05PV04pIHsKKwkJ
-YW5hbG9naXhfZHBfY2xlYXJfaG90cGx1Z19pbnRlcnJ1cHRzKGRwKTsKKwkJYW5hbG9naXhfZHBf
-dW5tdXRlX2hwZF9pbnRlcnJ1cHQoZHApOworCX0KIAotCWlmIChkcC0+ZHJtX2RldikKLQkJZHJt
-X2hlbHBlcl9ocGRfaXJxX2V2ZW50KGRwLT5kcm1fZGV2KTsKKwlyZXR1cm4gSVJRX0hBTkRMRUQ7
-CiB9CiAKIHN0YXRpYyB2b2lkIGFuYWxvZ2l4X2RwX2NvbW1pdChzdHJ1Y3QgYW5hbG9naXhfZHBf
-ZGV2aWNlICpkcCkKQEAgLTEwNzcsNyArMTA3MCw2IEBAIHN0YXRpYyB2b2lkIGFuYWxvZ2l4X2Rw
-X2JyaWRnZV9kaXNhYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCiAJfQogCiAJZGlzYWJs
-ZV9pcnEoZHAtPmlycSk7Ci0JZmx1c2hfd29yaygmZHAtPmhvdHBsdWdfd29yayk7CiAJcGh5X3Bv
-d2VyX29mZihkcC0+cGh5KTsKIAogCWlmIChkcC0+cGxhdF9kYXRhLT5wb3dlcl9vZmYpCkBAIC0x
-MzM2LDggKzEzMjgsNiBAQCBpbnQgYW5hbG9naXhfZHBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYs
-IHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAogCQlyZXR1cm4gLUVOT0RFVjsKIAl9CiAKLQlJ
-TklUX1dPUksoJmRwLT5ob3RwbHVnX3dvcmssIGFuYWxvZ2l4X2RwX2hvdHBsdWcpOwotCiAJcG1f
-cnVudGltZV9lbmFibGUoZGV2KTsKIAogCXBoeV9wb3dlcl9vbihkcC0+cGh5KTsKQEAgLTEzNTEs
-OCArMTM0MSwxMCBAQCBpbnQgYW5hbG9naXhfZHBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
-cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAogCiAJYW5hbG9naXhfZHBfaW5pdF9kcChkcCk7CiAK
-LQlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGRwLT5pcnEsIGFuYWxvZ2l4X2Rw
-X2lycV9oYW5kbGVyLAotCQkJICAgICAgIGlycV9mbGFncywgImFuYWxvZ2l4LWRwIiwgZHApOwor
-CXJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoJnBkZXYtPmRldiwgZHAtPmlycSwKKwkJ
-CQkJYW5hbG9naXhfZHBfaGFyZGlycSwKKwkJCQkJYW5hbG9naXhfZHBfaXJxX3RocmVhZCwKKwkJ
-CQkJaXJxX2ZsYWdzLCAiYW5hbG9naXgtZHAiLCBkcCk7CiAJaWYgKHJldCkgewogCQlkZXZfZXJy
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBpcnFcbiIpOwogCQlnb3RvIGVycl9kaXNh
-YmxlX3BtX3J1bnRpbWU7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxv
-Z2l4L2FuYWxvZ2l4X2RwX2NvcmUuaCBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgv
-YW5hbG9naXhfZHBfY29yZS5oCmluZGV4IDQwYTA3NTkuLmE0ZTEzMzAgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5oCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5oCkBAIC0xNzIs
-NyArMTcyLDYgQEAgc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSB7CiAKIAlzdHJ1Y3QgdmlkZW9f
-aW5mbwl2aWRlb19pbmZvOwogCXN0cnVjdCBsaW5rX3RyYWluCWxpbmtfdHJhaW47Ci0Jc3RydWN0
-IHdvcmtfc3RydWN0CWhvdHBsdWdfd29yazsKIAlzdHJ1Y3QgcGh5CQkqcGh5OwogCWludAkJCWRw
-bXNfbW9kZTsKIAlpbnQJCQlocGRfZ3BpbzsKQEAgLTE5MSw2ICsxOTAsOCBAQCB2b2lkIGFuYWxv
-Z2l4X2RwX2luaXRfaW50ZXJydXB0KHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKTsKIHZv
-aWQgYW5hbG9naXhfZHBfcmVzZXQoc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApOwogdm9p
-ZCBhbmFsb2dpeF9kcF9zd3Jlc2V0KHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKTsKIHZv
-aWQgYW5hbG9naXhfZHBfY29uZmlnX2ludGVycnVwdChzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNl
-ICpkcCk7Cit2b2lkIGFuYWxvZ2l4X2RwX211dGVfaHBkX2ludGVycnVwdChzdHJ1Y3QgYW5hbG9n
-aXhfZHBfZGV2aWNlICpkcCk7Cit2b2lkIGFuYWxvZ2l4X2RwX3VubXV0ZV9ocGRfaW50ZXJydXB0
-KHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKTsKIGVudW0gcGxsX3N0YXR1cyBhbmFsb2dp
-eF9kcF9nZXRfcGxsX2xvY2tfc3RhdHVzKHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKTsK
-IHZvaWQgYW5hbG9naXhfZHBfc2V0X3BsbF9wb3dlcl9kb3duKHN0cnVjdCBhbmFsb2dpeF9kcF9k
-ZXZpY2UgKmRwLCBib29sIGVuYWJsZSk7CiB2b2lkIGFuYWxvZ2l4X2RwX3NldF9hbmFsb2dfcG93
-ZXJfZG93bihzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCwKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCmluZGV4IGNiYTNmZmQuLjQ5
-MjA1ZWYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9n
-aXhfZHBfcmVnLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dp
-eF9kcF9yZWcuYwpAQCAtMTg1LDYgKzE4NSwzMiBAQCB2b2lkIGFuYWxvZ2l4X2RwX2NvbmZpZ19p
-bnRlcnJ1cHQoc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCiAJd3JpdGVsKHJlZywgZHAt
-PnJlZ19iYXNlICsgQU5BTE9HSVhfRFBfSU5UX1NUQV9NQVNLKTsKIH0KIAordm9pZCBhbmFsb2dp
-eF9kcF9tdXRlX2hwZF9pbnRlcnJ1cHQoc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCit7
-CisJdTMyIHJlZzsKKworCS8qIDA6IG1hc2ssIDE6IHVubWFzayAqLworCXJlZyA9IHJlYWRsKGRw
-LT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0NPTU1PTl9JTlRfTUFTS180KTsKKwlyZWcgJj0gfkNP
-TU1PTl9JTlRfTUFTS180OworCXdyaXRlbChyZWcsIGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQ
-X0NPTU1PTl9JTlRfTUFTS180KTsKKworCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxP
-R0lYX0RQX0lOVF9TVEFfTUFTSyk7CisJcmVnICY9IH5JTlRfU1RBX01BU0s7CisJd3JpdGVsKHJl
-ZywgZHAtPnJlZ19iYXNlICsgQU5BTE9HSVhfRFBfSU5UX1NUQV9NQVNLKTsKK30KKwordm9pZCBh
-bmFsb2dpeF9kcF91bm11dGVfaHBkX2ludGVycnVwdChzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNl
-ICpkcCkKK3sKKwl1MzIgcmVnOworCisJLyogMDogbWFzaywgMTogdW5tYXNrICovCisJcmVnID0g
-Q09NTU9OX0lOVF9NQVNLXzQ7CisJd3JpdGVsKHJlZywgZHAtPnJlZ19iYXNlICsgQU5BTE9HSVhf
-RFBfQ09NTU9OX0lOVF9NQVNLXzQpOworCisJcmVnID0gSU5UX1NUQV9NQVNLOworCXdyaXRlbChy
-ZWcsIGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0lOVF9TVEFfTUFTSyk7Cit9CisKIGVudW0g
-cGxsX3N0YXR1cyBhbmFsb2dpeF9kcF9nZXRfcGxsX2xvY2tfc3RhdHVzKHN0cnVjdCBhbmFsb2dp
-eF9kcF9kZXZpY2UgKmRwKQogewogCXUzMiByZWc7Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Rob,
+
+On Wed, 2016-01-20 at 10:38 -0600, Rob Herring wrote:
+> On Wed, Jan 20, 2016 at 01:14:38PM +0800, hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > This adds documentation for the MediaTek Global Command Engine (GCE) unit
+> > found in MT8173 SoCs.
+> > 
+> > Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/gce.txt       |   33 ++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/gce.txt b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
+> > new file mode 100644
+> > index 0000000..878b11e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
+> > @@ -0,0 +1,33 @@
+> > +MediaTek GCE
+> > +===============
+> > +
+> > +The Global Command Engine (GCE) is used to help read/write registers with
+> > +critical time limitation, such as updating display configuration during the
+> > +vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
+> > +Currently, the GCE only supports display related hardwares, but we expect
+> > +it can be extended to other hardwares for future requirements.
+> 
+> That's a hardware limitation or just s/w is only using it for display? 
+> If the latter, that's not really relevant to this binding and should be 
+> removed.
+
+Just s/w is only using it for display.
+I will remove it from next patch.
+
+> > +
+> > +Required properties:
+> > +- compatible: Must be "mediatek,mt8173-gce"
+> > +- reg: Address range of the GCE unit
+> > +- interrupts: The interrupt signal from the GCE block
+> > +- clock: Clocks according to the common clock binding
+> > +- clock-names: Must be "gce" to stand for GCE clock
+> > +
+> > +Example:
+> > +
+> > +	gce: gce@10212000 {
+> > +		compatible = "mediatek,mt8173-gce";
+> > +		reg = <0 0x10212000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&infracfg CLK_INFRA_GCE>;
+> > +		clock-names = "gce";
+> > +	};
+> > +
+> > +	mmsys: clock-controller@14000000 {
+> > +		compatible = "mediatek,mt8173-mmsys", "syscon";
+> > +		reg = <0 0x14000000 0 0x1000>;
+> > +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> > +		#clock-cells = <1>;
+> > +		mediatek,gce = <&gce>;
+> 
+> Not documented.
+
+It's just an example about how gce is used by display mmsys.
+After I discussed with Mediatek display owner,
+we think this can be moved to display device tree document.
+Do you agree with this suggestion?
+If so, I will remove it from next patch, too.
+
+> > +	};
+> > -- 
+> > 1.7.9.5
+
+Thanks,
+HS Liao
+> > 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
