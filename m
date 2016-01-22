@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/2] arm64: dts: r8a7795: Add USB3.0 host device nodes
-Date: Fri, 22 Jan 2016 19:03:22 +0900
-Message-ID: <1453457003-7720-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/2] arm64: dts: salvator-x: enable usb3.0 host channel 0
+Date: Fri, 22 Jan 2016 19:03:23 +0900
+Message-ID: <1453457003-7720-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1453457003-7720-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,36 +14,20 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 221a8f5..119549e 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -862,5 +862,23 @@
- 			clocks = <&cpg CPG_MOD 815>;
- 			status = "disabled";
- 		};
-+
-+		xhci0: usb@ee000000 {
-+			compatible = "renesas,xhci-r8a7795";
-+			reg = <0 0xee000000 0 0xc00>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 328>;
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		xhci1: usb@ee0400000 {
-+			compatible = "renesas,xhci-r8a7795";
-+			reg = <0 0xee040000 0 0xc00>;
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 327>;
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+index 265d12f..9af1e3f 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+@@ -249,3 +249,7 @@
+ 		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
  	};
  };
++
++&xhci0 {
++	status = "okay";
++};
 -- 
 1.9.1
