@@ -1,56 +1,83 @@
-From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 22 Jan 2016 16:45:38 +0100
-Message-ID: <CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
-References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
- <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
- <569913A1.80606@cogentembedded.com> <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
- <56992959.2020204@hurleysoftware.com> <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
- <744620565.20160116103445@cogentembedded.com> <20160116233157.GA7774@rob-hp-laptop>
- <3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com> <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
- <1D5F146E-D347-453B-9158-8D269F8DA99C@goldelico.com> <20160117193849.69d00c28@lxorguk.ukuu.org.uk>
- <37DCE36D-0A5E-41C5-BDA4-857DCF9F2DD1@goldelico.com> <20160118111926.0882b422@lxorguk.ukuu.org.uk>
- <07F3B6C0-0C87-478C-B6DD-5C0EECB42D0D@goldelico.com> <20160118220319.051c9cc0@lxorguk.ukuu.org.uk>
- <C1E6AFE7-1EF2-4C70-8BE2-82F5CD7DDE22@goldelico.com> <9E37C552-361C-4A54-980E-E3BFFF834302@goldelico.com>
- <20160120174610.1c64239a@lxorguk.ukuu.org.uk> <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Fri, 22 Jan 2016 10:55:01 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1601221023350.1626-100000@iolanthe.rowland.org>
+References: <2404899.20LhULZo7N@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vostrikov Andrey <andrey.vostrikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2404899.20LhULZo7N@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2016 at 19:03, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
->
-> Am 20.01.2016 um 18:46 schrieb One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>:
->
->>> The problem is that *I* have no control over user space. But I also don't want
->>> to say to my users "that is not my problem - get it solved yourself". This does
->>> not help them.
->>
->> Stuffing things into the kernel because the user space of a given
->> platform can't get itself organised isn't helpful to the other billion
->> plus Linux devices out there.
->
-> The assumption that there is  "the" user space of a given platform is wrong.
+On Fri, 22 Jan 2016, Arnd Bergmann wrote:
 
-I'm a bit surprised at the arguments being exchanged here regarding
-why the kernel may or may not deal with the detail that a (say) BT
-chip is behind a uart.
+> > > 		hub@3 { /* same external  hub, highspeed mode */
+> > > 			compatible = "usb2109,0812.591",
+> > > 				     "usb2109,0812",
+> > > 				     "usb2109,class9.0.1",
+> > > 				     "usb2109,class9.0",
+> > > 				     "usb2109,class9";
+> > > 
+> > > 			#address-cells = <1>;
+> > > 			#size-cells = <0>;
+> > > 			reg = <3>;
+> > > 
+> > 
+> > Why "reg" is 3 here?
+> 
+> My mistake. It should be hub@1 and reg=<1>;
+> 
+> I accidentally confused the port number and the device number.
 
-I would have expected that the main (and IMO sufficient) reason why
-the kernel should do it is because the particular bus used to connect
-a BT chip to the CPU is a hw detail that a kernel that does its job
-should keep to itself. Same as userspace not needing to care if a BT
-chip is behind SDIO or USB, why does it have to tell the kernel behind
-which UART a BT chip is sitting?
+I thought you did it this way because you were numbering the SS
+root-hub ports 1-2 and the HS root-hub ports 3-4.
 
-Regards,
+There's something I should have made clear earlier.  This scheme for
+putting SS and HS USB-3 root-hub ports in the same number space is part
+of the xHCI spec.  It's not AFAIK required (or even mentioned) by the
+USB-3 spec, which means other types of USB-3 host controllers might do
+it differently.
 
-Tomeu
+The scheme which numbers SS and HS ports separately, both starting from
+1, is mandated by the USB-3 spec for non-root hubs.  But since that
+spec doesn't say much about root hubs, the OS is free to treat them
+however it likes.  We have chosen to make root hubs appear as similar
+as possible to non-root hubs; however I believe that Windows (for
+example) may do things differently.
+
+At any rate, since DT strives to reflect the actual hardware 
+properties, you probably should use the xHCI numbering scheme when 
+describing the ports of an xHCI root hub.
+
+
+> > > Is it possible to have a hub in an interface of a multifunction device
+> > > or are they always single-configuration single-interface devices?
+> > > 
+> > 
+> > I have not seen such kinds of devices, but it is possible in theory.
+> 
+> Ok, so if the USB spec allows it, we should probably try to handle it too.
+
+No, the spec does not allow it.  In fact, the spec divides all USB 
+devices into two classes: hubs and functions.  A function is anything 
+that isn't a hub.  And a hub is never allowed to contain more than one 
+configuration and interface.
+
+The spec does allow for multiple functions to be packaged in the same 
+physical device.  In this case, the physical device contains a hub 
+along with various functions permanently connected to it.
+
+For example, the old Apple USB keyboards are compound devices.  They
+contain an internal 3-port hub; one of the ports is permanently wired
+to the keyboard controller and the other two are exposed to the user,
+allowing a mouse and something else to be attached.
+
+Alan Stern
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
