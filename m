@@ -1,75 +1,66 @@
-From: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH 1/3] lm90: separate register accessors from sysfs
-Date: Fri, 22 Jan 2016 23:00:57 +0100
-Message-ID: <20160122220056.GA21534@Stephans-iMac.lan>
-References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
- <1453404877-17897-2-git-send-email-stephan@kochen.nl>
- <56A23FD2.9040009@roeck-us.net>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv8 1/4] EDAC, altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Fri, 22 Jan 2016 16:05:51 -0600
+Message-ID: <56A2A7BF.1000307@opensource.altera.com>
+References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+ <56A1C5DE.1080501@mentor.com> <56A24C34.3000303@opensource.altera.com>
+ <56A25F59.5070306@mentor.com> <20160122180830.GH9806@pd.tnic>
+Reply-To: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56A23FD2.9040009-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20160122180830.GH9806-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Guenter,
 
-Thanks for the taking the time to review!
 
-You are absolutely right. I will split this up, more carefully check
-coding style and simply do away with unnecessary changes.
+On 01/22/2016 12:08 PM, Borislav Petkov wrote:
+> On Fri, Jan 22, 2016 at 06:56:57PM +0200, Vladimir Zapolskiy wrote:
+>> it sounds like the author of the original change is Dinh, but if you agreed
+>> about authorship transfer, then "From: Thor Thayer" statement should be
+>> correct, but in any case your SoB should follow Dinh's SoB, if you decide to
+>> keep the latter one.
+>>
+>> This consideration may apply to the other changes in the changeset as well.
+>
+> So the patch author should be in the From:
+>
+> If Thor has changed the original patch considerably, then you Thor and
+> Dinh could decide amongst each other who should be the author.
+>
+> If Thor becomes the author and lands in From:, then the commit message
+> could state something like "based on original work from Dinh" or
+> "Originally-from: Dinh" and so on. "git log" has some examples.
+>
+> The SOB chain shows who handled the patch on its way upstream. So in
+> this case, it should be:
+>
+> SOB: Dinh (if From: is Dinh - otherwise Originally-by:)
+> SOB: Thor
+> SOB: Boris
+>
+> if I'm going to pick it up and send it to Linus.
+>
+> Ok?
+>
+OK. Thank you for the explanation, it is much clearer now. I apologize 
+for creating this confusion.
 
-Regarding:
+I was the original author for the previous versions of patches (1-6) but 
+since I was out for a portion of last year, Dinh picked up version 7 and 
+submitted it.
 
-On Fri, Jan 22, 2016 at 06:42:26AM -0800, Guenter Roeck wrote:
-> On 01/21/2016 11:34 AM, St=E9phan Kochen wrote:
-> >+#define SELECT_REGS(_reg, _channel) { \
-> >+	high =3D LM90_REG_W_##_reg##H; \
-> >+	low =3D LM90_REG_W_##_reg##L; \
-> >+	channel =3D _channel; \
-> >+}
->=20
-> We have been trying to get rid of function defines such as this one.
-> Most of the time it increases code size, and reduces readability.
-> Plus, it increases the amount of time we have to spend reviewing
-> the code to ensure it is correct.
->=20
-> >+	switch (index) {
-> >+	case REMOTE_LOW:    SELECT_REGS(REMOTE_LOW,  0); break;
-> >+	case REMOTE_HIGH:   SELECT_REGS(REMOTE_HIGH, 0); break;
-> >+	case REMOTE_OFFSET: SELECT_REGS(REMOTE_OFFS, 0); break;
-> >+	case REMOTE2_LOW:   SELECT_REGS(REMOTE_LOW,  1); break;
-> >+	case REMOTE2_HIGH:  SELECT_REGS(REMOTE_HIGH, 1); break;
-> >+	default: return;
->=20
-> ... and, in this case, introduces checkpatch errors.
+Since I'm taking it back over, Dinh and I agreed that I'll be the only 
+signoff from now on. Additionally, I'll make sure I'm the From: going 
+forward.
 
-Should I simply unfold the macro here? Another option would be an array
-of structs like in set_temp8, but it'd have some gaps here. Or is some
-other construct preferred?
-
-I guess this is where I snuck in another change (which I will separate)=
-,
-to replace SENSOR_DEVICE_ATTR_2 with regular ATTR. The setter args of
-_ATTR_2 were using literal numbers to point into an array defined in th=
-e
-setter function. (Maybe to avoid exactly the kind of thing I built
-here.)
-
-Would it be an idea to combine temp8 and temp11 variants, and let the
-getters and setters figure out what kind of register access to do based
-on register index?
-
-Thanks again,
-
---=20
-St=E9phan Kochen
+Thor
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
