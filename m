@@ -1,235 +1,72 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCHv8 1/4] EDAC, altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Fri, 22 Jan 2016 08:02:06 +0200
-Message-ID: <56A1C5DE.1080501@mentor.com>
-References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Fri, 22 Jan 2016 14:44:45 +0800
+Message-ID: <1453445087-2791-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thor,
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
 
-On 21.01.2016 19:34, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Adding L2 Cache and On-Chip RAM EDAC support for the
-> Altera SoCs using the EDAC device  model. The SDRAM
-> controller is using the Memory Controller model.
-> 
-> Each type of ECC is individually configurable.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
 
-You are sending a change authored by yourself for review, but you add Dinh's
-SoB, what's his role here?
+Changes in v7:
+ - remove struct act8945a_dev to .c file.
+ - remove unused .h file.
 
-See Documentation/SubmittingPatches "Sign your work".
+Changes in v6:
+ - change MFD_ACT8945A type from bool to tristate.
+ - revert depends on to 'I2C'.
+ - change the regulator name.
 
-[snip]
+Changes in v5:
+ - change depends on to 'I2C=y'.
 
-> +/*
-> + * altr_edac_device_probe()
-> + *	This is a generic EDAC device driver that will support
-> + *	various Altera memory devices such as the L2 cache ECC and
-> + *	OCRAM ECC as well as the memories for other peripherals.
-> + *	Module specific initialization is done by passing the
-> + *	function index in the device tree.
-> + */
-> +static int altr_edac_device_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *dci;
-> +	struct altr_edac_device_dev *drvdata;
-> +	struct resource *r;
-> +	int res = 0;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	char *ecc_name = (char *)np->name;
-> +	static int dev_instance;
-> +	struct dentry *debugfs;
-> +
-> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "Unable to open devm\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!r) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "Unable to get mem resource\n");
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
 
-Missing devres_release_group(&pdev->dev, NULL) on error path.
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
 
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
-> +				     dev_name(&pdev->dev))) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "%s:Error requesting mem region\n", ecc_name);
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
 
-See above.
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
 
-> +		return -EBUSY;
-> +	}
-> +
-> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
-> +					 1, ecc_name, 1, 0, NULL, 0,
-> +					 dev_instance++);
-> +
-> +	if (!dci) {
-> +		edac_printk(KERN_ERR, EDAC_DEVICE,
-> +			    "%s: Unable to allocate EDAC device\n", ecc_name);
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++++++
+ drivers/mfd/Kconfig                                |   11 ++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  112 ++++++++++++++++++++
+ 4 files changed, 206 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
 
-See above.
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	drvdata = dci->pvt_info;
-> +	dci->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, dci);
-> +	drvdata->edac_dev_name = ecc_name;
-> +
-> +	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> +	if (!drvdata->base)
-> +		goto err;
-> +
-> +	/* Get driver specific data for this EDAC device */
-> +	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
-> +
-> +	/* Check specific dependencies for the module */
-> +	if (drvdata->data->setup) {
-> +		res = drvdata->data->setup(pdev, drvdata->base);
-> +		if (res < 0)
-> +			goto err;
-> +	}
-> +
-> +	drvdata->sb_irq = platform_get_irq(pdev, 0);
-> +	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
-> +			       altr_edac_device_handler,
-> +			       0, dev_name(&pdev->dev), dci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	drvdata->db_irq = platform_get_irq(pdev, 1);
-> +	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
-> +			       altr_edac_device_handler,
-> +			       0, dev_name(&pdev->dev), dci);
-> +	if (res < 0)
-> +		goto err;
-> +
-> +	dci->mod_name = "Altera ECC Manager";
-> +	dci->dev_name = drvdata->edac_dev_name;
-> +
-> +	debugfs = edac_debugfs_create_dir(ecc_name);
-> +	if (debugfs)
-> +		altr_create_edacdev_dbgfs(dci, drvdata->data, debugfs);
-> +
-> +	if (edac_device_add_device(dci))
-> +		goto err;
-> +
-> +	devres_close_group(&pdev->dev, NULL);
-> +
-> +	return 0;
-> +err:
-> +	edac_printk(KERN_ERR, EDAC_DEVICE,
-> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, res);
-> +	devres_release_group(&pdev->dev, NULL);
-> +	edac_device_free_ctl_info(dci);
-> +
-> +	return res;
-> +}
-> +
-> +static int altr_edac_device_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
-> +
-> +	edac_device_del_device(&pdev->dev);
-> +	edac_device_free_ctl_info(dci);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver altr_edac_device_driver = {
-> +	.probe =  altr_edac_device_probe,
-> +	.remove = altr_edac_device_remove,
-> +	.driver = {
-> +		.name = "altr_edac_device",
-> +		.of_match_table = altr_edac_device_of_match,
-> +	},
-> +};
-> +module_platform_driver(altr_edac_device_driver);
-> +
-> +/*********************** OCRAM EDAC Device Functions *********************/
-> +
-> +#ifdef CONFIG_EDAC_ALTERA_OCRAM
-> +
-> +static void *ocram_alloc_mem(size_t size, void **other)
-> +{
-> +	struct device_node *np;
-> +	struct gen_pool *gp;
-> +	void *sram_addr;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-ocram-ecc");
-> +	if (!np)
-> +		return NULL;
-> +
-> +	gp = of_gen_pool_get(np, "iram", 0);
-> +	if (!gp) {
-> +		of_node_put(np);
-> +		return NULL;
-> +	}
-> +	of_node_put(np);
-
-	gp = of_gen_pool_get(np, "iram", 0);
-	of_node_put(np);
-	if (!gp)
-		return NULL;
-
-version is better.
-
-> +
-> +	sram_addr = (void *)gen_pool_alloc(gp, size / sizeof(size_t));
-> +	if (!sram_addr)
-> +		return NULL;
-> +
-> +	memset(sram_addr, 0, size);
-
-Potential memory corruption, you allocate (size / sizeof(size_t)) bytes and
-then write size bytes.
-
-> +	wmb();	/* Ensure data is written out */
-> +
-> +	*other = gp;	/* Remember this handle for freeing  later */
-> +
-> +	return sram_addr;
-> +}
-> +
-> +static void ocram_free_mem(void *p, size_t size, void *other)
-> +{
-> +	gen_pool_free((struct gen_pool *)other, (u32)p, size / sizeof(size_t));
-
-See a comment above.
-
-> +}
-> +
+-- 
+1.7.9.5
 
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
