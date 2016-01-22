@@ -1,43 +1,54 @@
-From: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH 3/3] lm90: register with thermal zones
-Date: Sat, 23 Jan 2016 00:02:40 +0100
-Message-ID: <20160122230239.GA22301@Stephans-iMac.lan>
-References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
- <1453404877-17897-4-git-send-email-stephan@kochen.nl>
- <20160122224542.GA26117@rob-hp-laptop>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH v4 1/3] mailbox: Add support for APM X-Gene platform
+ mailbox driver
+Date: Fri, 22 Jan 2016 15:05:23 -0800
+Message-ID: <CADaLNDmRL-PcwaM7=V_711cLDz=sf-BOycX7EnPcxtY8f_cEYg@mail.gmail.com>
+References: <abff73c051fd06a9dd3b04a1e7957ad5a9b69a18.1452912126.git.dhdang@apm.com>
+ <201601162056.dOHk9NgN%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160122224542.GA26117@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201601162056.dOHk9NgN%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, Jassi Brar <jassisinghbrar@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 04:45:42PM -0600, Rob Herring wrote:
-> On Thu, Jan 21, 2016 at 08:34:37PM +0100, St=E9phan Kochen wrote:
-> > +- #thermal-sensor-cells: Should be 1. See ../../thermal/thermal.tx=
-t for a
-> > +                         description of this property. Use the fol=
-lowing
-> > +                         values to refer to a specific sensor:
-> > +                         0: chip internal sensor
-> > +                         1: external sensor
-> > +                         2: second external sensor, if present
->=20
-> From my read of an LM90 datasheet, there is only an onchip sensor and=
- a=20
-> single external one.
+On Sat, Jan 16, 2016 at 4:31 AM, kbuild test robot <lkp@intel.com> wrote:
+> Hi Duc,
+>
+> [auto build test WARNING on robh/for-next]
+> [also build test WARNING on v4.4 next-20160115]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Duc-Dang/mailbox-Add-support-for-APM-X-Gene-platform-mailbox-driver/20160116-110535
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
+> config: arm64-allyesconfig (attached as .config)
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64
+>
+> All warnings (new ones prefixed by >>):
+>
+>>> WARNING: vmlinux.o(.data+0xfd6260): Section mismatch in reference from the variable slimpro_mbox_driver to the variable .init.text:$x
+>    The variable slimpro_mbox_driver references
+>    the variable __init $x
+>    If the reference is valid then annotate the
+>    variable with or __refdata (see linux/init.h) or name the variable:
 
-MAX6695 and MAX6696 have two external sensors, and also use the lm90
-driver. (The LM90_HAVE_TEMP3 flag in the code.)
+I fixed the build warning, will post and updated after further comment
+from Jassi.
 
---=20
-St=E9phan Kochen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I did not catch it before posting my patch because I did not compile
+with  CONFIG_DEBUG_SECTION_MISMATCH=y. I will make sure I have this
+option enabled for my build process going forward.
+
+Regards,
+Duc Dang.
+>
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
