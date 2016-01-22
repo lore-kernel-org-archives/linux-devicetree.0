@@ -1,63 +1,274 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 22 Jan 2016 10:49:52 -0600
-Message-ID: <CAL_JsqL_cVMzNb2VmsJND11zZd6MEBqV1fgp7yy212Le8J2jvg@mail.gmail.com>
-References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
- <20160115110106.GA3262@leverpostej> <69F8E1E5-EF49-4C8E-88E9-973F82F7102E@goldelico.com>
- <569913A1.80606@cogentembedded.com> <CB69F6F0-B40B-47D1-B175-8401F43288C5@goldelico.com>
- <56992959.2020204@hurleysoftware.com> <CAL_JsqL=Wotz4FuoV7PULfZNfSV=S_q0iOzkckVA3NDDzMdfZQ@mail.gmail.com>
- <744620565.20160116103445@cogentembedded.com> <20160116233157.GA7774@rob-hp-laptop>
- <3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com> <20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
- <1D5F146E-D347-453B-9158-8D269F8DA99C@goldelico.com> <20160117193849.69d00c28@lxorguk.ukuu.org.uk>
- <37DCE36D-0A5E-41C5-BDA4-857DCF9F2DD1@goldelico.com> <20160118111926.0882b422@lxorguk.ukuu.org.uk>
- <07F3B6C0-0C87-478C-B6DD-5C0EECB42D0D@goldelico.com> <20160118220319.051c9cc0@lxorguk.ukuu.org.uk>
- <C1E6AFE7-1EF2-4C70-8BE2-82F5CD7DDE22@goldelico.com> <9E37C552-361C-4A54-980E-E3BFFF834302@goldelico.com>
- <20160120174610.1c64239a@lxorguk.ukuu.org.uk> <39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
- <CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCHv8 1/4] EDAC, altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Fri, 22 Jan 2016 18:56:57 +0200
+Message-ID: <56A25F59.5070306@mentor.com>
+References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+ <56A1C5DE.1080501@mentor.com> <56A24C34.3000303@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Peter Hurley <peter@hurleysoftware.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56A24C34.3000303@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 9:45 AM, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
-> On 20 January 2016 at 19:03, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Hi Thor,
+
+On 22.01.2016 17:35, Thor Thayer wrote:
+> Hi Vladimir,
+> 
+> 
+> On 01/22/2016 12:02 AM, Vladimir Zapolskiy wrote:
+>> Hi Thor,
 >>
->> Am 20.01.2016 um 18:46 schrieb One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>:
->>
->>>> The problem is that *I* have no control over user space. But I also don't want
->>>> to say to my users "that is not my problem - get it solved yourself". This does
->>>> not help them.
+>> On 21.01.2016 19:34, tthayer@opensource.altera.com wrote:
+>>> From: Thor Thayer <tthayer@opensource.altera.com>
 >>>
->>> Stuffing things into the kernel because the user space of a given
->>> platform can't get itself organised isn't helpful to the other billion
->>> plus Linux devices out there.
+>>> Adding L2 Cache and On-Chip RAM EDAC support for the
+>>> Altera SoCs using the EDAC device  model. The SDRAM
+>>> controller is using the Memory Controller model.
+>>>
+>>> Each type of ECC is individually configurable.
+>>>
+>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 >>
->> The assumption that there is  "the" user space of a given platform is wrong.
->
-> I'm a bit surprised at the arguments being exchanged here regarding
-> why the kernel may or may not deal with the detail that a (say) BT
-> chip is behind a uart.
->
-> I would have expected that the main (and IMO sufficient) reason why
-> the kernel should do it is because the particular bus used to connect
-> a BT chip to the CPU is a hw detail that a kernel that does its job
-> should keep to itself. Same as userspace not needing to care if a BT
-> chip is behind SDIO or USB, why does it have to tell the kernel behind
-> which UART a BT chip is sitting?
+>> You are sending a change authored by yourself for review, but you add Dinh's
+>> SoB, what's his role here?
+>>
+>> See Documentation/SubmittingPatches "Sign your work".
+>>
+>> [snip]
+> 
+> While I was working in a different group at Altera last year, Dinh 
+> submitted the previous patch revision so I kept his signed off by for 
+> continuity. I'll just use myself in the future. Thank you for clarifying.
 
-Thanks for writing exactly what I had not gotten around to writing.
-You are exactly right. While historically UART devices where not
-probe-able like SDIO (in theory) and USB are and maybe that was a
-reason to handle in userspace, we do have the technology to describe
-the UART connections now.
+it sounds like the author of the original change is Dinh, but if you agreed
+about authorship transfer, then "From: Thor Thayer" statement should be
+correct, but in any case your SoB should follow Dinh's SoB, if you decide to
+keep the latter one.
 
-Adding Marcel who has also previously commented on the reasons why
-this belongs in the kernel [1].
+This consideration may apply to the other changes in the changeset as well.
 
-Rob
+>>
+>>> +/*
+>>> + * altr_edac_device_probe()
+>>> + *	This is a generic EDAC device driver that will support
+>>> + *	various Altera memory devices such as the L2 cache ECC and
+>>> + *	OCRAM ECC as well as the memories for other peripherals.
+>>> + *	Module specific initialization is done by passing the
+>>> + *	function index in the device tree.
+>>> + */
+>>> +static int altr_edac_device_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct edac_device_ctl_info *dci;
+>>> +	struct altr_edac_device_dev *drvdata;
+>>> +	struct resource *r;
+>>> +	int res = 0;
+>>> +	struct device_node *np = pdev->dev.of_node;
+>>> +	char *ecc_name = (char *)np->name;
+>>> +	static int dev_instance;
+>>> +	struct dentry *debugfs;
+>>> +
+>>> +	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
+>>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>>> +			    "Unable to open devm\n");
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +	if (!r) {
+>>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>>> +			    "Unable to get mem resource\n");
+>>
+>> Missing devres_release_group(&pdev->dev, NULL) on error path.
+>>
+> Yes. Thank you.
+> 
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
+>>> +				     dev_name(&pdev->dev))) {
+>>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>>> +			    "%s:Error requesting mem region\n", ecc_name);
+>>
+>> See above.
+>>
+>>> +		return -EBUSY;
+>>> +	}
+>>> +
+>>> +	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
+>>> +					 1, ecc_name, 1, 0, NULL, 0,
+>>> +					 dev_instance++);
+>>> +
+>>> +	if (!dci) {
+>>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>>> +			    "%s: Unable to allocate EDAC device\n", ecc_name);
+>>
+>> See above.
+>>
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	drvdata = dci->pvt_info;
+>>> +	dci->dev = &pdev->dev;
+>>> +	platform_set_drvdata(pdev, dci);
+>>> +	drvdata->edac_dev_name = ecc_name;
+>>> +
+>>> +	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+>>> +	if (!drvdata->base)
+>>> +		goto err;
+>>> +
+>>> +	/* Get driver specific data for this EDAC device */
+>>> +	drvdata->data = of_match_node(altr_edac_device_of_match, np)->data;
+>>> +
+>>> +	/* Check specific dependencies for the module */
+>>> +	if (drvdata->data->setup) {
+>>> +		res = drvdata->data->setup(pdev, drvdata->base);
+>>> +		if (res < 0)
+>>> +			goto err;
+>>> +	}
+>>> +
+>>> +	drvdata->sb_irq = platform_get_irq(pdev, 0);
+>>> +	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
+>>> +			       altr_edac_device_handler,
+>>> +			       0, dev_name(&pdev->dev), dci);
+>>> +	if (res < 0)
+>>> +		goto err;
+>>> +
+>>> +	drvdata->db_irq = platform_get_irq(pdev, 1);
+>>> +	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
+>>> +			       altr_edac_device_handler,
+>>> +			       0, dev_name(&pdev->dev), dci);
+>>> +	if (res < 0)
+>>> +		goto err;
+>>> +
+>>> +	dci->mod_name = "Altera ECC Manager";
+>>> +	dci->dev_name = drvdata->edac_dev_name;
+>>> +
+>>> +	debugfs = edac_debugfs_create_dir(ecc_name);
+>>> +	if (debugfs)
+>>> +		altr_create_edacdev_dbgfs(dci, drvdata->data, debugfs);
+>>> +
+>>> +	if (edac_device_add_device(dci))
+>>> +		goto err;
+>>> +
+>>> +	devres_close_group(&pdev->dev, NULL);
+>>> +
+>>> +	return 0;
+>>> +err:
+>>> +	edac_printk(KERN_ERR, EDAC_DEVICE,
+>>> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, res);
+>>> +	devres_release_group(&pdev->dev, NULL);
+>>> +	edac_device_free_ctl_info(dci);
+>>> +
+>>> +	return res;
+>>> +}
+>>> +
+>>> +static int altr_edac_device_remove(struct platform_device *pdev)
+>>> +{
+>>> +	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
+>>> +
+>>> +	edac_device_del_device(&pdev->dev);
+>>> +	edac_device_free_ctl_info(dci);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static struct platform_driver altr_edac_device_driver = {
+>>> +	.probe =  altr_edac_device_probe,
+>>> +	.remove = altr_edac_device_remove,
+>>> +	.driver = {
+>>> +		.name = "altr_edac_device",
+>>> +		.of_match_table = altr_edac_device_of_match,
+>>> +	},
+>>> +};
+>>> +module_platform_driver(altr_edac_device_driver);
+>>> +
+>>> +/*********************** OCRAM EDAC Device Functions *********************/
+>>> +
+>>> +#ifdef CONFIG_EDAC_ALTERA_OCRAM
+>>> +
+>>> +static void *ocram_alloc_mem(size_t size, void **other)
+>>> +{
+>>> +	struct device_node *np;
+>>> +	struct gen_pool *gp;
+>>> +	void *sram_addr;
+>>> +
+>>> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-ocram-ecc");
+>>> +	if (!np)
+>>> +		return NULL;
+>>> +
+>>> +	gp = of_gen_pool_get(np, "iram", 0);
+>>> +	if (!gp) {
+>>> +		of_node_put(np);
+>>> +		return NULL;
+>>> +	}
+>>> +	of_node_put(np);
+>>
+>> 	gp = of_gen_pool_get(np, "iram", 0);
+>> 	of_node_put(np);
+>> 	if (!gp)
+>> 		return NULL;
+>>
+>> version is better.
+>>
+> 
+> I'm sorry, can you elaborate? Are you saying I should return something 
+> other than NULL?
 
-[1] https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2015-August/002212.html
+Here I propose to do a tiny code optimization, 4 lines vs yours 6 lines of
+code without any functional difference.
+
+>>> +
+>>> +	sram_addr = (void *)gen_pool_alloc(gp, size / sizeof(size_t));
+>>> +	if (!sram_addr)
+>>> +		return NULL;
+>>> +
+>>> +	memset(sram_addr, 0, size);
+>>
+>> Potential memory corruption, you allocate (size / sizeof(size_t)) bytes and
+>> then write size bytes.
+>>
+> 
+> Yes, good catch. I thought I'd fixed this but missed it when I came back.
+> 
+>>> +	wmb();	/* Ensure data is written out */
+>>> +
+>>> +	*other = gp;	/* Remember this handle for freeing  later */
+>>> +
+>>> +	return sram_addr;
+>>> +}
+>>> +
+>>> +static void ocram_free_mem(void *p, size_t size, void *other)
+>>> +{
+>>> +	gen_pool_free((struct gen_pool *)other, (u32)p, size / sizeof(size_t));
+>>
+>> See a comment above.
+>>
+>>> +}
+>>> +
+>>
+>>
+> 
+> Thank you for reviewing.
+> 
+
+No problem :)
+
+--
+With best wishes,
+Vladimir
