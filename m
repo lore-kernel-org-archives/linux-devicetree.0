@@ -1,111 +1,141 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Fri, 22 Jan 2016 10:26:03 +0100
-Message-ID: <56A1F5AB.6090606@gmail.com>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <56997951.90304@gmail.com> <5699B211.5070602@gmail.com>
- <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <569C9CD2.10301@gmail.com>
- <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160118151500.GD923@lunn.ch>
- <VI1PR04MB1664DFBC53F08C5CE7EBF22AE8C10@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160121211250.GK9991@lunn.ch>
- <VI1PR04MB1664BAFB4EE494CB14830BCCE8C40@VI1PR04MB1664.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <VI1PR04MB1664BAFB4EE494CB14830BCCE8C40-mr6QIVyDiCHTAO9RNConP89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Fri, 22 Jan 2016 10:55:45 +0100
+Message-ID: <CAAObsKAdd_M_Kjmc=c=MbVB29hDFpxCaE6cjrsyWGOLXz7++1g@mail.gmail.com>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
+ <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
+ <20160112221211.GB22188@codeaurora.org> <5695BE65.3070409@huawei.com>
+ <20160113185707.1168.85601@quark.deferred.io> <56979F9F.5080201@huawei.com>
+ <5698A650.5010600@huawei.com> <CAL_JsqJPcPgS=cKNqv9j5Ch3ZHbUmci1LRedBWV1gV=5kCz68Q@mail.gmail.com>
+ <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com> <56A1ED53.60309@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <56A1ED53.60309@huawei.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: xuejiancheng <xuejiancheng@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yanhaifeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 22.01.2016 09:15, Shaohui Xie wrote:
-> _______________________________________
-> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Sent: Friday, January 22, 2016 5:12 AM
-> To: Shaohui Xie
-> Cc: Sebastian Hesselbarth; Florian Fainelli; shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; Shaohui Xie
-> Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
->
-> On Tue, Jan 19, 2016 at 05:00:35AM +0000, Shaohui Xie wrote:
->>> -----Original Message-----
->>> From: Andrew Lunn [mailto:andrew-g2DYL2Zd6BY@public.gmane.org]
->>> Sent: Monday, January 18, 2016 11:15 PM
->>> To: Shaohui Xie
->>> Cc: Sebastian Hesselbarth; Florian Fainelli; shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
->>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
->>> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; Shaohui Xie
->>> Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
->>>
->>>> [S.H] the fsl backplane, e.g. 10GBASE-KR, needs software to handle
->>>> link training, It's to train link partner, and trained by link partner
->>> parallel.
+On 22 January 2016 at 09:50, xuejiancheng <xuejiancheng@huawei.com> wro=
+te:
+> On 2016/1/20 14:38, Tomeu Vizoso wrote:
+>> On 19 January 2016 at 19:20, Rob Herring <robh+dt@kernel.org> wrote:
+>>> On Fri, Jan 15, 2016 at 1:57 AM, xuejiancheng <xuejiancheng@huawei.=
+com> wrote:
 >>>>
->>>> But if media type is not copper, e.g. optical module, we won't need this.
+>>>> On 2016/1/14 21:16, xuejiancheng wrote:
+>>>>> Hi Mike,
+>>>>>
+>>>>> On 2016/1/14 2:57, Michael Turquette wrote:
+>>>>>> Quoting xuejiancheng (2016-01-12 19:03:01)
+>>>>>>> Hi Stephen,
+>>>>>>>    Thank you very much for your reply.
+>>>>>>>
+>>>>>>> On 2016/1/13 6:12, Stephen Boyd wrote:
+>>>>>>>> On 01/08, Jiancheng Xue wrote:
+>>>>>>>>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisi=
+licon/Kconfig
+>>>>>>>>> index e434854..b6baebf 100644
+>>>>>>>>> --- a/drivers/clk/hisilicon/Kconfig
+>>>>>>>>> +++ b/drivers/clk/hisilicon/Kconfig
+>>>>>>>>> @@ -1,3 +1,10 @@
+>>>>>>>>> +config COMMON_CLK_HI3519
+>>>>>>>>> +    tristate "Clock Driver for Hi3519"
+>>>>>>>>
+>>>>>>>> It looks like this has to be bool. Otherwise it needs to be a
+>>>>>>>> platform driver and the hisilicon APIs need to be exported and
+>>>>>>>> lose their __init markings.
+>>>>>>>>
+>>>>>>> Yes,it's a problem. I will fix it in next version. Thank you.
+>>>>>>
+>>>>>> The best solution would be to make this clock driver a real plat=
+form
+>>>>>> driver.
+>>>>>>
+>>>>> Now the work clock of the clocksource timer-sp804 is provided by =
+this driver. So
+>>>>> it need to be registered early by CLK_OF_DECLARE. If the timer cl=
+ock is treated
+>>>>> as a fixed-clock provider, this driver can be implemented as a pl=
+atform driver.
+>>>>> Then the crg device must be registered before other clock consume=
+r devices.Accordingly
+>>>>> the crg device node must be written above all other clock consume=
+r devices node in dts files.
+>>>>> I think it is also a dependence.
+>>>>>
+>>>>> Can you help me understand why it is better to make this driver a=
+ platform driver?
+>>>>> Thank you very much!
+>>>>>
+>>>> arch_initcall(customize_machine)
+>>>> -->of_platform_populate
+>>>>    -->of_platform_bus_create
+>>>>      -->of_amba_device_create
+>>>>         -->amba_device_add
+>>>>            -->amba_get_enable_pclk
+>>>> The call sequence above shows that the clock of the amba device mu=
+st be registered before
+>>>> amba_device_add. The clock of "arm,pl011" uart is registered in th=
+e probe function of the
+>>>> platform driver "hi3519-crg". So the platform device "hi3519-crg" =
+must be created before
+>>>> the amba device "arm,pl011" uart.
 >>>
->>> So what we actually need to know is copper vs fibre?
+>>> It is a problem, but Tomeu had a fix to support deferred probes her=
+e.
+>>> That was part of the on-demand probing series, but maybe it needs t=
+o
+>>> be applied separately if we are moving clock drivers to platform
+>>> drivers.
+>>
+>> Hi,
+>>
+>> Marek Szyprowski has kindly taken those two patches as part of a ser=
+ies of him:
+>>
+>> http://lkml.kernel.org/g/1450868368-5650-1-git-send-email-m.szyprows=
+ki@samsung.com
+>>
+>> I think it would be great if you could test them and report.
+>>
+> Hi Tomeu,
 >
->> Copper is not enough to indicate backplane, since backplane is
->> always copper, but copper is not always backplane.
+> I have applied the patch "https://lkml.org/lkml/2015/12/23/105" and t=
+ested on my hi3519-demb board.
+> It works even if the apb_pclk is registered later than the amba-pl011=
+ device being registered.
 >
->> O.K, lets try again....
+> But I think it is a problem if amba_read_periphid() returns -ENOMEM o=
+r -ENODEV when apb_pclk is available.
+> In this condition=EF=BC=8Camba_match() returns a non zero value which=
+ means the driver and device matches
+> and the amba_probe() will be called, but amba_device->periphid remain=
+s as 0. Then amba_lookup() called in
+> amba_probe() will return a null id pointer.The null pointer will be p=
+assed to amba_driver->probe() and
+> this may cause a segment fault.
+
+But, have you applied the other patches in the series? There's one
+that should handle the other error codes.
+
+In any case, any feedback you have on that series should be given in
+the other thread.
+
+Regards,
+
+Tomeu
+
+> Regards,
 >
-> [S.H]Seems I did not get your point, Sorry for the inconvenient.
+> Jiancheng
 >
->> If it is copper backplane you need to perform training.
+>> Thanks,
+>>
+>> Tomeu
+>>
+>> .
+>>
 >
->> Looking at the driver probe function, it is either 1000BASE-KX, no
->> training needed, or else it is 10GBASE-RK and training is needed.
->
->> Looking at fsl_backplane_config_aneg() you expect phydev->speed to be
->> set, and from the speed you then kick of either KR autoneg or KX
->> autoneg. Could you also start the training at this point? Use the
->> speed to indicate if training is needed?
->
->   [S.H]The training cannot be started at this point, yet, because it's based on
-> autoneg result, only when both sides autoneg-ed to 10G-KR, then to start
-> the training.
-
-Shaohui,
-
-look, we want you to convince us why to have a generic backplane
-property in the phy binding. You had a bad start by adding new
-property values to a property that does not relate to your use
-case at all. Your job now really is to give strong reasons _why_
-and _what_ a phy driver needs to know about the backplane setup.
-
-Your first approach was to add "10gbase-rk" or "40gbase-foo" but
-now you tell us about ANEG. Of what use is the information given
-by the property when ANEG tells you something different? E.g.
-consider the property tells you "10g-something" but ANEG gives
-you "40g"; does the property add any value to your training
-decision now?
-
-> Besides the driver, generally speaking, "copper + speed" is not enough to indicate
-> it's backplane, for ex. "copper + 1000" does not mean it has to be 1000BASE-KX,
-> it could be SGMII, hence cannot use KX autoneg.
-
-So, is it copper + speed + backplane? or speed + backplane? And out of
-the set of required input, is there anything your _cannot_ determine
-from other things, e.g. ANEG?
-
-If it is backplane only, would a boolean property ("backplane-mode")
-be enough for the training decision?
-
-> If putting backplane property to phy.txt is not good, I can put it to fsl specific
-> binding, like the second patch 2/3 did.
-
-You seem to see vendor specific properties as a place to dump all your
-waste you don't want to think about. You fail to give good reasons what
-is so special about the backplane setup and now you are telling us that
-it is even fsl-specific?
-
-Sebastian
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
