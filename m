@@ -1,173 +1,582 @@
-From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Subject: [PATCH 5/5] cpufreq: mt8173: Add notifier to handle OPP voltage adjustment
-Date: Fri, 22 Jan 2016 16:40:29 +0800
-Message-ID: <1453452029-20843-6-git-send-email-pi-cheng.chen@linaro.org>
-References: <1453452029-20843-1-git-send-email-pi-cheng.chen@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1453452029-20843-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Kevin Hilman <khilman@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+From: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] dts/fsl/powerpc: add "jedec,spi-nor" flash compatible binding
+Date: Fri, 22 Jan 2016 16:33:00 +0800
+Message-ID: <1453451580-24293-1-git-send-email-Zhiqiang.Hou@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a notifier to receive OPP voltage adjustment event which is
-triggered by voltage change of OPP entries done by Mediatek SVS
-(Smart Voltage Scaling) engine.
+From: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-CC: Stephen Boyd <sboyd@codeaurora.org>
+Starting with commit <8947e396a829> ("Documentation: dt: mtd:
+replace "nor-jedec" binding with "jedec, spi-nor"") we have
+"jedec,spi-nor" binding indicating support for JEDEC identification.
 
-Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Use it for all flashes that are supposed to support READ ID op
+according to the datasheets.
+
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-This patch is modify from the patch which adds[1] a notifier in
-cpufreq-dt to handle OPP voltage adjust event. This patch relies on the
-on the runtime voltage adjustment mechanism of OPP introduced in the
-same patchset.
+Tested on T1042D4RDB
 
-[1] https://lkml.org/lkml/2015/9/18/833
----
- drivers/cpufreq/mt8173-cpufreq.c | 55 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ arch/powerpc/boot/dts/fsl/b4qds.dtsi       | 2 +-
+ arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi  | 2 +-
+ arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi  | 2 +-
+ arch/powerpc/boot/dts/fsl/c293pcie.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/kmcoge4.dts      | 4 ++--
+ arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi   | 8 ++++----
+ arch/powerpc/boot/dts/fsl/mvme2500.dts     | 4 ++--
+ arch/powerpc/boot/dts/fsl/p1010rdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts  | 2 +-
+ arch/powerpc/boot/dts/fsl/p1020rdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/p1021mds.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p1022ds.dtsi     | 2 +-
+ arch/powerpc/boot/dts/fsl/p1022rdk.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/p1024rdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/p1025rdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p2020rdb.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/p2041rdb.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/p3041ds.dts      | 2 +-
+ arch/powerpc/boot/dts/fsl/p4080ds.dts      | 2 +-
+ arch/powerpc/boot/dts/fsl/p5020ds.dts      | 2 +-
+ arch/powerpc/boot/dts/fsl/p5040ds.dts      | 2 +-
+ arch/powerpc/boot/dts/fsl/t1023rdb.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/t1024qds.dts     | 6 +++---
+ arch/powerpc/boot/dts/fsl/t1024rdb.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi  | 2 +-
+ arch/powerpc/boot/dts/fsl/t104xqds.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/t104xrdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/t208xqds.dtsi    | 6 +++---
+ arch/powerpc/boot/dts/fsl/t208xrdb.dtsi    | 2 +-
+ arch/powerpc/boot/dts/fsl/t4240qds.dts     | 2 +-
+ arch/powerpc/boot/dts/fsl/t4240rdb.dts     | 2 +-
+ 34 files changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
-index 1ede917..248f6e8 100644
---- a/drivers/cpufreq/mt8173-cpufreq.c
-+++ b/drivers/cpufreq/mt8173-cpufreq.c
-@@ -48,8 +48,11 @@ struct mtk_cpu_dvfs_info {
- 	struct clk *cpu_clk;
- 	struct clk *inter_clk;
- 	struct thermal_cooling_device *cdev;
-+	struct mutex lock;
-+	struct notifier_block opp_nb;
- 	struct list_head list_head;
- 	int intermediate_voltage;
-+	unsigned long opp_freq;
- 	bool need_voltage_tracking;
- };
+diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
+index 6455774..823824c 100644
+--- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
+@@ -135,7 +135,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "sst,sst25wf040";
++				compatible = "sst,sst25wf040", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi b/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
+index f4d96d2..53f8b95 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
+@@ -53,7 +53,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <50000000>;
  
-@@ -211,6 +214,33 @@ static int mtk_cpufreq_set_voltage(struct mtk_cpu_dvfs_info *info, int vproc)
- 					     vproc + VOLT_TOL);
- }
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
+index 7a13bf2..fead484 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
+@@ -55,7 +55,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <30000000>;
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/c293pcie.dts b/arch/powerpc/boot/dts/fsl/c293pcie.dts
+index 53ab4db..6670978 100644
+--- a/arch/powerpc/boot/dts/fsl/c293pcie.dts
++++ b/arch/powerpc/boot/dts/fsl/c293pcie.dts
+@@ -167,7 +167,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <50000000>;
  
-+static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
-+				    unsigned long event, void *data)
-+{
-+	struct dev_pm_opp *opp = data;
-+	struct mtk_cpu_dvfs_info *info = container_of(nb,
-+						      struct mtk_cpu_dvfs_info,
-+						      opp_nb);
-+	unsigned long freq, volt;
-+	int ret = 0;
-+
-+	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
-+		freq = dev_pm_opp_get_freq(opp);
-+
-+		if (info->opp_freq == freq) {
-+			volt = dev_pm_opp_get_voltage(opp);
-+			mutex_lock(&info->lock);
-+			ret = mtk_cpufreq_set_voltage(info, volt);
-+			mutex_unlock(&info->lock);
-+			if (ret)
-+				dev_err(info->cpu_dev,
-+					"failed to scale voltage: %d\n", ret);
-+		}
-+	}
-+
-+	return notifier_from_errno(ret);
-+}
-+
- static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 				  unsigned int index)
- {
-@@ -245,6 +275,8 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 	vproc = dev_pm_opp_get_voltage(opp);
- 	rcu_read_unlock();
+diff --git a/arch/powerpc/boot/dts/fsl/kmcoge4.dts b/arch/powerpc/boot/dts/fsl/kmcoge4.dts
+index 6858ec9..2d4b64f 100644
+--- a/arch/powerpc/boot/dts/fsl/kmcoge4.dts
++++ b/arch/powerpc/boot/dts/fsl/kmcoge4.dts
+@@ -63,7 +63,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25fl256s1";
++				compatible = "spansion,s25fl256s1", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <20000000>; /* input clock */
+ 			};
+@@ -77,7 +77,7 @@
+ 			flash@2 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,m25p32";
++				compatible = "micron,m25p32", "jedec,spi-nor";
+ 				reg = <2>;
+ 				spi-max-frequency = <15000000>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
+index 937ad7e..a925fe4 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
+@@ -142,7 +142,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>;
+ 			partition@u-boot {
+@@ -166,17 +166,17 @@
+ 			};
+ 		};
+ 		flash@1 {
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <1>;
+ 			spi-max-frequency = <40000000>;
+ 		};
+ 		flash@2 {
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <2>;
+ 			spi-max-frequency = <40000000>;
+ 		};
+ 		flash@3 {
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <3>;
+ 			spi-max-frequency = <40000000>;
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/mvme2500.dts b/arch/powerpc/boot/dts/fsl/mvme2500.dts
+index c7bc1a0..69559e9 100644
+--- a/arch/powerpc/boot/dts/fsl/mvme2500.dts
++++ b/arch/powerpc/boot/dts/fsl/mvme2500.dts
+@@ -70,12 +70,12 @@
+ 			fsl,espi-num-chipselects = <2>;
  
-+	mutex_lock(&info->lock);
-+
- 	/*
- 	 * If the new voltage or the intermediate voltage is higher than the
- 	 * current voltage, scale up voltage first.
-@@ -256,6 +288,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 			pr_err("cpu%d: failed to scale up voltage!\n",
- 			       policy->cpu);
- 			mtk_cpufreq_set_voltage(info, old_vproc);
-+			mutex_unlock(&info->lock);
- 			return ret;
- 		}
- 	}
-@@ -267,6 +300,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 		       policy->cpu);
- 		mtk_cpufreq_set_voltage(info, old_vproc);
- 		WARN_ON(1);
-+		mutex_unlock(&info->lock);
- 		return ret;
- 	}
+ 			flash@0 {
+-				compatible = "atmel,at25df641";
++				compatible = "atmel,at25df641", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>;
+ 			};
+ 			flash@1 {
+-				compatible = "atmel,at25df641";
++				compatible = "atmel,at25df641", "jedec,spi-nor";
+ 				reg = <1>;
+ 				spi-max-frequency = <10000000>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+index 14b6295..a8e4ba0 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+@@ -110,7 +110,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>;
  
-@@ -277,6 +311,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 		       policy->cpu);
- 		clk_set_parent(cpu_clk, armpll);
- 		mtk_cpufreq_set_voltage(info, old_vproc);
-+		mutex_unlock(&info->lock);
- 		return ret;
- 	}
+diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
+index c952cd3..25f81ee 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
+@@ -151,7 +151,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>; /* input clock */
  
-@@ -287,6 +322,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 		       policy->cpu);
- 		mtk_cpufreq_set_voltage(info, inter_vproc);
- 		WARN_ON(1);
-+		mutex_unlock(&info->lock);
- 		return ret;
- 	}
+diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts b/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
+index 740553c..f2dc6c0 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
++++ b/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
+@@ -155,7 +155,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				/* input clock */
+ 				spi-max-frequency = <40000000>;
+diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
+index 1fb7e0e..703142e 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
+@@ -148,7 +148,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>; /* input clock */
  
-@@ -302,10 +338,14 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
- 			clk_set_parent(cpu_clk, info->inter_clk);
- 			clk_set_rate(armpll, old_freq_hz);
- 			clk_set_parent(cpu_clk, armpll);
-+			mutex_unlock(&info->lock);
- 			return ret;
- 		}
- 	}
+diff --git a/arch/powerpc/boot/dts/fsl/p1021mds.dts b/arch/powerpc/boot/dts/fsl/p1021mds.dts
+index 27fdfd7..291454c 100644
+--- a/arch/powerpc/boot/dts/fsl/p1021mds.dts
++++ b/arch/powerpc/boot/dts/fsl/p1021mds.dts
+@@ -123,7 +123,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
  
-+	info->opp_freq = freq_hz;
-+	mutex_unlock(&info->lock);
-+
- 	return 0;
- }
+diff --git a/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
+index e8a0f95..18f9b31 100644
+--- a/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
+@@ -150,7 +150,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>; /* input clock */
  
-@@ -343,6 +383,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	struct dev_pm_opp *opp;
- 	unsigned long rate;
- 	int ret;
-+	struct srcu_notifier_head *opp_srcu_head;
+diff --git a/arch/powerpc/boot/dts/fsl/p1022ds.dtsi b/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
+index 149da0f..ddefbf6 100644
+--- a/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
+@@ -160,7 +160,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>; /* input clock */
  
- 	cpu_dev = get_cpu_device(cpu);
- 	if (!cpu_dev) {
-@@ -417,11 +458,25 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
- 	rcu_read_unlock();
+diff --git a/arch/powerpc/boot/dts/fsl/p1022rdk.dts b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
+index 04c1633..d505d7c 100644
+--- a/arch/powerpc/boot/dts/fsl/p1022rdk.dts
++++ b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
+@@ -86,7 +86,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,m25p80";
++				compatible = "spansion,m25p80", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <1000000>;
+ 				partition@0 {
+diff --git a/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
+index b05dcb4..b4d0586 100644
+--- a/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
+@@ -129,7 +129,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,m25p80";
++			compatible = "spansion,m25p80", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>;
  
-+	opp_srcu_head = dev_pm_opp_get_notifier(cpu_dev);
-+	if (IS_ERR(opp_srcu_head)) {
-+		ret = PTR_ERR(opp_srcu_head);
-+		goto out_free_opp_table;
-+	}
-+
-+	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
-+	ret = srcu_notifier_chain_register(opp_srcu_head, &info->opp_nb);
-+	if (ret)
-+		goto out_free_opp_table;
-+
- 	info->cpu_dev = cpu_dev;
- 	info->proc_reg = proc_reg;
- 	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
- 	info->cpu_clk = cpu_clk;
- 	info->inter_clk = inter_clk;
-+	info->opp_freq = clk_get_rate(cpu_clk);
-+
-+	mutex_init(&info->lock);
+diff --git a/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
+index f502564..d44bb12 100644
+--- a/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
+@@ -137,7 +137,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,s25sl12801";
++			compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>; /* input clock */
  
- 	/*
- 	 * If SRAM regulator is present, software "voltage tracking" is needed
+diff --git a/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
+index ad2e242..03c9afc 100644
+--- a/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
+@@ -151,7 +151,7 @@
+ 		flash@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "spansion,m25p80";
++			compatible = "spansion,m25p80", "jedec,spi-nor";
+ 			reg = <0>;
+ 			spi-max-frequency = <40000000>;
+ 
+diff --git a/arch/powerpc/boot/dts/fsl/p2020rdb.dts b/arch/powerpc/boot/dts/fsl/p2020rdb.dts
+index 70cf090..435a319 100644
+--- a/arch/powerpc/boot/dts/fsl/p2020rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/p2020rdb.dts
+@@ -155,7 +155,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>;
+ 
+diff --git a/arch/powerpc/boot/dts/fsl/p2041rdb.dts b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
+index e9bd894..10bdf5d 100644
+--- a/arch/powerpc/boot/dts/fsl/p2041rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
+@@ -83,7 +83,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 				partition@u-boot {
+diff --git a/arch/powerpc/boot/dts/fsl/p3041ds.dts b/arch/powerpc/boot/dts/fsl/p3041ds.dts
+index f2b1d40..09a8220 100644
+--- a/arch/powerpc/boot/dts/fsl/p3041ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p3041ds.dts
+@@ -83,7 +83,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <35000000>; /* input clock */
+ 				partition@u-boot {
+diff --git a/arch/powerpc/boot/dts/fsl/p4080ds.dts b/arch/powerpc/boot/dts/fsl/p4080ds.dts
+index 28a55c5..94bf5c5 100644
+--- a/arch/powerpc/boot/dts/fsl/p4080ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p4080ds.dts
+@@ -84,7 +84,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 				partition@u-boot {
+diff --git a/arch/powerpc/boot/dts/fsl/p5020ds.dts b/arch/powerpc/boot/dts/fsl/p5020ds.dts
+index 920dc77..23f1f71 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p5020ds.dts
+@@ -83,7 +83,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 				partition@u-boot {
+diff --git a/arch/powerpc/boot/dts/fsl/p5040ds.dts b/arch/powerpc/boot/dts/fsl/p5040ds.dts
+index e169cc2..e50952a 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p5040ds.dts
+@@ -83,7 +83,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25sl12801";
++				compatible = "spansion,s25sl12801", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 				partition@u-boot {
+diff --git a/arch/powerpc/boot/dts/fsl/t1023rdb.dts b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
+index 6bd842b..0fcce8b 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
+@@ -79,7 +79,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "spansion,s25fl512s";
++				compatible = "spansion,s25fl512s", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clk */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t1024qds.dts b/arch/powerpc/boot/dts/fsl/t1024qds.dts
+index 6a3581b..772143d 100644
+--- a/arch/powerpc/boot/dts/fsl/t1024qds.dts
++++ b/arch/powerpc/boot/dts/fsl/t1024qds.dts
+@@ -87,7 +87,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q128a11";  /* 16MB */
++				compatible = "micron,n25q128a11", "jedec,spi-nor";  /* 16MB */
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>;
+ 			};
+@@ -95,7 +95,7 @@
+ 			flash@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "sst,sst25wf040";  /* 512KB */
++				compatible = "sst,sst25wf040", "jedec,spi-nor";  /* 512KB */
+ 				reg = <1>;
+ 				spi-max-frequency = <10000000>;
+ 			};
+@@ -103,7 +103,7 @@
+ 			flash@2 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "eon,en25s64";   /* 8MB */
++				compatible = "eon,en25s64", "jedec,spi-nor";   /* 8MB */
+ 				reg = <2>;
+ 				spi-max-frequency = <10000000>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+index 0ccc7d0..4bf80b3 100644
+--- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+@@ -89,7 +89,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512ax3";
++				compatible = "micron,n25q512ax3", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clk */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
+index 3f6d7c6..8c7ea6c 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
+@@ -104,7 +104,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512ax3";
++				compatible = "micron,n25q512ax3", "jedec,spi-nor";
+ 				reg = <0>;
+ 				/* input clock */
+ 				spi-max-frequency = <10000000>;
+diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+index 1498d1e..636a73e 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+@@ -112,7 +112,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q128a11";
++				compatible = "micron,n25q128a11", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+index 830ea48..5b5978f 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+@@ -103,7 +103,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512a";
++				compatible = "micron,n25q512a", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
+index 869f915..7775268 100644
+--- a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
+@@ -112,7 +112,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q128a11"; /* 16MB */
++				compatible = "micron,n25q128a11", "jedec,spi-nor"; /* 16MB */
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 			};
+@@ -120,7 +120,7 @@
+ 			flash@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "sst,sst25wf040";
++				compatible = "sst,sst25wf040", "jedec,spi-nor";
+ 				reg = <1>;
+ 				spi-max-frequency = <35000000>;
+ 			};
+@@ -128,7 +128,7 @@
+ 			flash@2 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "eon,en25s64";
++				compatible = "eon,en25s64, "jedec,spi-nor"";
+ 				reg = <2>;
+ 				spi-max-frequency = <35000000>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+index 693d2a8..dc93268 100644
+--- a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+@@ -113,7 +113,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512a";
++				compatible = "micron,n25q512a", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t4240qds.dts b/arch/powerpc/boot/dts/fsl/t4240qds.dts
+index c067a65..80db7c7 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240qds.dts
++++ b/arch/powerpc/boot/dts/fsl/t4240qds.dts
+@@ -138,7 +138,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "sst,sst25wf040";
++				compatible = "sst,sst25wf040", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+index 6e820a8..cd1307a 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+@@ -107,7 +107,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "sst,sst25wf040";
++				compatible = "sst,sst25wf040", "jedec,spi-nor";
+ 				reg = <0>;
+ 				spi-max-frequency = <40000000>; /* input clock */
+ 			};
 -- 
-1.9.1
+2.1.0.27.g96db324
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
