@@ -1,80 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
-Date: Fri, 22 Jan 2016 16:26:10 +0000
-Message-ID: <20160122162610.GZ6588@sirena.org.uk>
-References: <1453292992-1788-1-git-send-email-LW@KARO-electronics.de>
- <1453292992-1788-2-git-send-email-LW@KARO-electronics.de>
- <20160120164258.GF6588@sirena.org.uk>
- <20160121080524.27af489f@ipc1.ka-ro>
- <20160121102015.GI6588@sirena.org.uk>
- <20160121112611.34e17cb2@ipc1.ka-ro>
- <20160121111115.GJ6588@sirena.org.uk>
- <20160121123311.5346e40d@ipc1.ka-ro>
- <20160121162646.GK6588@sirena.org.uk>
- <20160122064145.36b7f2b4@ipc1.ka-ro>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] devicetree: add binding for Sigma Designs SMP86xx interrupt controller
+Date: Fri, 22 Jan 2016 16:36:18 +0000
+Message-ID: <yw1xbn8dmv0d.fsf@unicorn.mansr.com>
+References: <1453313237-18570-1-git-send-email-mans@mansr.com>
+	<20160122160644.GA18668@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S0bejtPoMQWM2IlW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160122064145.36b7f2b4@ipc1.ka-ro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160122160644.GA18668@rob-hp-laptop> (Rob Herring's message of
+	"Fri, 22 Jan 2016 10:06:44 -0600")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
---S0bejtPoMQWM2IlW
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Jan 20, 2016 at 06:07:16PM +0000, Mans Rullgard wrote:
+>> This adds a binding for the secondary interrupt controller in
+>> Sigma Designs SMP86xx and SMP87xx chips.
+>>=20
+>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> Changes:
+>> - not included in v3
+>> ---
+>>  .../interrupt-controller/sigma,smp8642-intc.txt    | 49 +++++++++++=
++++++++++++
+>>  1 file changed, 49 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-cont=
+roller/sigma,smp8642-intc.txt
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/=
+sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-co=
+ntroller/sigma,smp8642-intc.txt
+>> new file mode 100644
+>> index 000000000000..2643f3466091
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,s=
+mp8642-intc.txt
+>> @@ -0,0 +1,49 @@
+>> +Sigma Designs SMP86xx/SMP87xx secondary interrupt controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "sigma,smp8642-intc"
+>> +- reg: physical address of MMIO region
+>> +- ranges: address space mapping of child nodes
+>> +- interrupt-parent: phandle of parent interrupt controller
+>> +- interrupt-controller: boolean
+>> +- #address-cells: should be <1>
+>> +- #size-cells: should be <1>
+>> +
+>> +One child node per control block with properties:
+>> +- reg: address of registers for this control block
+>> +- interrupt-controller: boolean
+>> +- #interrupt-cells: should be <2>, interrupt index and flags per in=
+terrupts.txt
+>> +- interrupts: interrupt spec of primary interrupt controller
+>> +
+>> +Example:
+>> +
+>> +interrupt-controller@6e000 {
+>> +	compatible =3D "sigma,smp8642-intc";
+>> +	reg =3D <0x6e000 0x400>;
+>> +	ranges =3D <0x0 0x6e000 0x400>;
+>> +	interrupt-parent =3D <&gic>;
+>> +	interrupt-controller;
+>> +	#address-cells =3D <1>;
+>> +	#size-cells =3D <1>;
+>> +
+>> +	irq0: irq0 {
+>
+> Keeping with generic names, this should be interrupt-controller@0 (an=
+d=20
+> 100, 300).
 
-On Fri, Jan 22, 2016 at 06:41:45AM +0100, Lothar Wa=DFmann wrote:
-> > On Thu, Jan 21, 2016 at 12:33:11PM +0100, Lothar Wa=DFmann wrote:
+I could've sworn I'd made that change.  Too many versions of this patch
+floating about...
 
-> > Your commit message (quoted above) claims that without this patch if no
-> > interrupt is supplied then the unsupplied interrupt will somehow be left
-> > screaming and make the system unusable.  This doesn't make sense, if
-> > there is no interrupt there is nothing to scream.
+> Otherwise,
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+>> +		reg =3D <0x000 0x100>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells =3D <2>;
+>> +		interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+>> +
+>> +	irq1: irq1 {
+>> +		reg =3D <0x100 0x100>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells =3D <2>;
+>> +		interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+>> +
+>> +	irq2: irq2 {
+>> +		reg =3D <0x300 0x100>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells =3D <2>;
+>> +		interrupts =3D <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+>> +};
+>> --=20
+>> 2.7.0
+>>=20
 
-> "Otherwise" meant the case where the IRQ is specified in DT as is
-> currently required to get the driver loaded at all.
-
-> > So, contrary to what you've been saying, the interrupt is actually
-> > connected (and worse, connected to a NMI) but apparently not described
-> > in DT.  Why is it sensible to make the driver poll (which will affect
-> > all systems using this device, even those that don't care) and not just
-> > describe the interrupt in DT so it can be handled promptly in the normal
-> > fashion?  Presumably this will run into serious problems if the
-> > interrupt actually fires at runtime since the NMI will scream, it's not
-> > clear to me how the poll will manage to run successfully in that case.
-
-> Currently the driver won't even load without an IRQ specified in DT.
-> My patch makes it possible to use the driver without requiring an IRQ!
-
-You're not just making the interrupt optional, you are also implementing
-polling support.  That's really unusual and there's no clear reason for
-it, your changelog seems to claim that it is needed to make the system
-work but that seems at best very surprising and would need a more
-detailed changelog.
-
-You at least need to provide an understandable changelog, though it
-seems it is more likely that there is a more sensible way of dealing
-with this.
-
---S0bejtPoMQWM2IlW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWolghAAoJECTWi3JdVIfQ+bQH/0YgPkrUJsUzKwNBtYiNRKJX
-V3ObffcF0e7/ppDLWuD4XzTPnsIEAaQIQi2mZ8RNtH4IhcQF2KK46ys2LBvbrAQi
-o33QRzc/GHpxe160VEYkiaou1pX9xuNlRpJt8hcL++yeyNuiyEbs6/eTBMlGHAox
-wq8Kb35kbHY7MkZ42D4k7TDWN1DRwZtc9gDCgJPefWdQhDikOrcnxzn2mL5qQ8vW
-UPNPSFcMiArmX3iikOTDJ9JOOF0U4pfM20bxyTm3HO7VjXdHwle/ZpcqugNhGjg5
-a7lodZ1Nvfgh/Hxukc2QSwq/WLGLRV1pUVTzwcWtUMHHN4WCFI9w5o99ZC96DQM=
-=sWYC
------END PGP SIGNATURE-----
-
---S0bejtPoMQWM2IlW--
+--=20
+M=E5ns Rullg=E5rd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
