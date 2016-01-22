@@ -1,208 +1,69 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Fri, 22 Jan 2016 14:59:01 +0800
-Message-ID: <20160122065901.GA31145@shlinux2>
-References: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org>
- <2930830.FLp5q7oBTi@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2930830.FLp5q7oBTi@wuerfel>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Subject: [RFC PATCH 0/5] Add support for Mediatek SVS engine
+Date: Fri, 22 Jan 2016 16:40:24 +0800
+Message-ID: <1453452029-20843-1-git-send-email-pi-cheng.chen@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Kevin Hilman <khilman@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 11:24:21PM +0100, Arnd Bergmann wrote:
-> On Thursday 21 January 2016 10:21:15 Alan Stern wrote:
-> > On Thu, 21 Jan 2016, Arnd Bergmann wrote:
-> > 
-> > > On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
-> > > > 
-> > > > > 
-> > > > > So two hubs at ports 1 and 2 of the USB controller that integrates
-> > > > > the root hub and shares a device node with it.
-> > > > > 
-> > > > Ok, so the "reg" is the address for certain root hub (HS or SS), not
-> > > > the unity address for the whole controller, if it is, do we really
-> > > > need to add two nodes for one physical port, HS and SS will not be used
-> > > > at the same time. And if the reg is the same, how can we know
-> > > > which node is from current recognized device.
-> > > 
-> > > The "reg" is the address that the parent device uses to talk to the child
-> > > device. If you know which of the two that child is attached to, then I
-> > > think you don't need both, but I think we have to use the entire addressing.
-> > > 
-> > > In Alan's example, there are six HS ports and three SS ports, but as I
-> > > understand it, there is no guarantee that the numbering between the two
-> > > is identical, and that the three SS ports always refer to the three HS
-> > > ports. In particular for devices soldered on-board (rather than connected
-> > > through a standard plug), I would guess that it is possible to connect
-> > > them to separate child devices though I have to admit that I do not
-> > > understand enough of the standard to know for sure.
-> > 
-> > The spec allows for a lot of flexibility.  It even allows for "tier 
-> > mismatches", in which (for example) the SS connection for a particular 
-> > port is routed directly to the root hub while the HS connection for the 
-> > same port is routed through an intermediate hub!
-> > 
-> > There is only one major constraint: With the exception of hubs, no USB
-> > device is allowed to use both the SS and the HS buses at the same time.  
-> > A device has to decide on one speed and use only the corresponding bus.
-> > USB-3 hubs, on the other hand, are required to connect to both buses.  
-> > They appear as two separate logical devices: a SS hub on the SS bus and
-> > a HS hub on the HS bus.
-> 
-> Ok, thanks for the explanation. This means there is no strict relation
-> between the SS and HS ports and we have to represent them separately.
-> 
-> I can also see what you explained now on my PC by plugging in a couple
-> of devices into a hub on a single SS port:
-> 
-> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
->     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 5000M
->         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 5000M
->         |__ Port 4: Dev 3, If 0, Class=Vendor Specific Class, Driver=ax88179_178a, 5000M
-> /:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 480M
->     |__ Port 1: Dev 3, If 0, Class=Hub, Driver=hub/4p, 480M
->         |__ Port 2: Dev 5, If 0, Class=Wireless, Driver=btusb, 12M
->         |__ Port 2: Dev 5, If 1, Class=Wireless, Driver=btusb, 12M
-> 
-> In this case, the DT representation would be
-> 
-> 
-> 	usb@... { /* host controller and root hub */
-> 		compatible = "xhci-generic";
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 
-> 		hub@1 { /* external hub, superspeed mode class 9/subclass 0/proto 3 */
-> 			compatible = "usb2109,0812.591",
-> 				     "usb2109,0812",
-> 				     "usb2109,class9.0.3",
-> 				     "usb2109,class9.0",
-> 				     "usb2109,class9";
-> 			compatible = "usb2109,0812";
+This patchset tries to add support for Mediatek SVS engine.
 
-Do we really need to write "compatible" so complicated?
+The SVS (Smart Voltage Scaling) engine is a piece of hardware which is
+used to caculate optimized voltage values of several power domains, e.g.
+CPU clusters, according to chip process corner, temperatures, and other
+factors. Then DVFS driver could apply those optimized voltage values to
+reduce power consumption. This engine takes calibration data stored in
+on-chip E-Fuse device as configuration input during initialization. Once
+the initialization is done, SVS engine issues interrupts according to
+temerature changes of power domains to notify DVFS driver to get
+calculated voltage values.
 
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <1>;
-> 
-> 			communications@4 { /* superspeed ethernet device */
-> 				compatible = "usb0b95,1790.100",
-> 					     "usb0b95,1790",
-> 					     "usb0b95,class255.255.0",
-> 					     "usb0b95,class255.255",
-> 					     "usb0b95,class255",
-> 					     "usbif0b95,1790.100",
-> 					     "usbif0b95,1790",
-> 					     "usbif0b95,class255.255.0",
-> 					     "usbif0b95,class255.255,
-> 					     "usbif0b95,class255";
-> 				reg = <4>;
-> 			};
-> 
-> 			storage@1 { /* superspeed flash drive */
-> 				compatible = "usb1234,5678.600",
-> 					     "usb1234,5678",
-> 					     "usbif1234,class8.6.80",
-> 					     "usbif1234,class8.6",
-> 					     "usbif1234,class8",
-> 					     "usbif,class8.6.80",
-> 					     "usbif,class8.6",
-> 					     "usbif,class8";
-> 				reg = <1>;
-> 			};
-> 		};
-> 	
-> 		hub@3 { /* same external  hub, highspeed mode */
-> 			compatible = "usb2109,0812.591",
-> 				     "usb2109,0812",
-> 				     "usb2109,class9.0.1",
-> 				     "usb2109,class9.0",
-> 				     "usb2109,class9";
-> 
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <3>;
-> 
+The configuration registers of SVS engine are shared with Mediatek
+thermal controller, and those registers are banked for different power
+domains. In addition, the SVS engine also needs some information from
+Mediatek thermal controller, e.g. the temperature of a specific power
+domain, part of the thermal calibration data. Therefore the support for
+SVS engine is integrated with Mediatek thermal controller driver.
 
-Why "reg" is 3 here?
+Also, for platform specific requirement, to make SVS engine work
+correctly, the initialization of SVS engine should be later then
+Mediatek thermal controller, and prior to mt8173-cpufreq driver. Hence,
+the platform device registration code of mt8173-cpufreq is removed here
+after SVS initialization is done or skipped to ensure the platform
+specific initialization flow.
 
-> 			wireless@2 { /* bluetooth device */
-> 				compatible = "usb0a12,0001.134",
-> 					     "usb0a12,0001",
-> 					     "usb0a12,class224.1.1",
-> 					     "usb0a12,class224.1",
-> 					     "usb0a12,class224",
-> 					     "usb0a12,class224.1.1",
-> 					     "usb0a12,class224.1",
-> 					     "usb0a12,class224";
-> 				#address-cells = <1>;
-> 				#size-cells = <0>;
-> 				reg = <2>;
-> 
-> 				wireless@0,0 { /* bluetooth config 0, if 0 */
-> 					compatible = "usbif0a12,0001.134.config0.0",
-> 							"usbif0a12,0001.config0.0",
-> 							"usbif0a12,class224.1.1",
-> 							"usbif0a12,class224.1",
-> 							"usbif0a12,class224",
-> 							"usbif,class224.1.1",
-> 							"usbif,class224.1",
-> 							"usbif,class224";
-> 					reg = <0 0>;
-> 				};
-> 
-> 				wireless@0,1 { /* bluetooth config 0, if 1 */
-> 					compatible = "usbif0a12,0001.134.config0.1",
-> 							"usbif0a12,0001.config0.1",
-> 							"usbif0a12,class224.1.1",
-> 							"usbif0a12,class224.1",
-> 							"usbif0a12,class224",
-> 							"usbif,class224.1.1",
-> 							"usbif,class224.1",
-> 							"usbif,class224";
-> 					reg = <0 0>;
-> 				};
-> 			};
-> 		};
-> 	};
-> 
-> In that description, I have included all four kinds of nodes from
-> the spec: host controller, device (wireless@2), interface (wireless@0.1,
-> wireless@0.2) and combined (hub@1, hub@3, storage@1, communications@4).
-> 
-> Peter's example only contained hubs in combined nodes, no device or
-> interface nodes. I wonder if the code is able to parse all four
-> kinds of nodes though, and if we actually need that.
-> 
+The functionality of SVS engine is optional for Mediatek thermal
+controller. If the required resources of SVS engine is absent or SVS
+failed during initialization stage, the SVS control flow will be
+skipped and the thermal controller will function normally.
 
-My proposal patch only handles the node under the USB device, not include
-the USB interfaces under such device, we can add it after finalize
-how to describe it at device tree.
+This patchset relies heavily on the runtime voltage adjustment
+mechanism of OPP introduced by Stephen Boyd's previous work[1]. And it
+also depends on other MT8173 device drivers that are still under
+reviewing and not yet merged, e.g. Mediatek thermal controller support
+[2], Mediatek EFUSE driver[3].
 
-> Do we have a 'struct device' for each interface?
-> 
+CC: Stephen Boyd <sboyd@codeaurora.org>
 
-Yes, we have, but there are different 'struct device' between USB device
-and USB interfaces under this USB device. See usb_set_configuration,
-drivers/usb/core/message.c
+[1] https://lkml.org/lkml/2015/9/18/833
+[2] https://lkml.org/lkml/2015/11/30/239
+[3] https://lkml.org/lkml/2015/11/19/169
 
-> Is it possible to have a hub in an interface of a multifunction device
-> or are they always single-configuration single-interface devices?
-> 
+Pi-Cheng Chen (5):
+  thermal: MT8173: Replace mutex with spinlock
+  cpufreq: mt8173: Remove platform device registration code
+  dt-bindings: thermal: Add optional properties of Mediatek thermal
+    controller
+  PM / AVS: thermal: MT8173: Introduce support for SVS engine
+  cpufreq: mt8173: Add notifier to handle OPP voltage adjustment
 
-I have not seen such kinds of devices, but it is possible in theory.
+ .../bindings/thermal/mediatek-thermal.txt          |  23 +-
+ drivers/cpufreq/mt8173-cpufreq.c                   |  68 +-
+ drivers/thermal/mtk_thermal.c                      | 727 ++++++++++++++++++++-
+ 3 files changed, 782 insertions(+), 36 deletions(-)
 
 -- 
+1.9.1
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
