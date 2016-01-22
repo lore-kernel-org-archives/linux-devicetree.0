@@ -1,51 +1,36 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 22 Jan 2016 13:38:59 -0500
-Message-ID: <56A27743.40008@codeaurora.org>
-References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
- <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
- <20160115145629.GI3262@leverpostej> <56990C40.4050407@codeaurora.org>
- <20160115152257.GK3262@leverpostej>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Fri, 22 Jan 2016 14:29:25 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1601221426310.1626-100000@iolanthe.rowland.org>
+References: <2649144.tYaWDcKkag@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20160115152257.GK3262@leverpostej>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, vinod.koul@intel.com, jcm@redhat.com, timur@codeaurora.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, agross@codeaurora.org, dmaengine@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-msm@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2649144.tYaWDcKkag@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/15/2016 10:22 AM, Mark Rutland wrote:
-> Typically VFIO-platform also comes with a corresponding reset driver.
-> You don't need one?
+On Fri, 22 Jan 2016, Arnd Bergmann wrote:
 
-Digging this further, I do need a HIDMA reset driver. The reset driver is useful if HIDMA 
-operation is aborted in the middle and guest machine is shutdown. 
+> We just have to decide what to do for non-hub devices that the OF
+> specification calls "combined nodes" (device class 0, one configuration,
+> one interface) and that, like hubs do not have one of_node per interface
+> plus one per device, but only one node.
+> 
+> Should we bind the of_node to the usb_device, the usb_interface or both
+> in this case? Doing both might be problematic and would need more
+> testing to be sure it works.
 
-I'm preparing a reset driver and I'll post it soon. 
+The purpose of the of_node would generally be to express requirements 
+necessary for operating the device, right?  Since the device has to be 
+operational before its interfaces can be known, the of_node should be 
+bound to the usb_device.
 
-In the meantime, I have observed a lack of ACPI HID support in the platform reset interface
-vfio_platform_lookup_reset and vfio_platform_probe_common specifically.
+Alan Stern
 
-The interface is querying objects with "compatible" string. Of course on a true ACPI system
-with proper named HIDs except PRP001, "compatible" attribute does not exist. I'm also preparing a
-patch for this too.
-
-Since VFIO patches go through another branch and the reset driver also needs to go through vfio along 
-with the ACPI object querying support, would you like this to be addressed independently with a different series 
-or have it reviewed altogether here then figure out the merge path later?
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
