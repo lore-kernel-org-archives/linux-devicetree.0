@@ -1,50 +1,75 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 3/3] arm64: Update the APM X-Gene EDAC node with the RB register resource
-Date: Fri, 22 Jan 2016 13:47:05 -0700
-Message-ID: <1453495625-28006-4-git-send-email-lho@apm.com>
-References: <1453495625-28006-1-git-send-email-lho@apm.com>
+From: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH 1/3] lm90: separate register accessors from sysfs
+Date: Fri, 22 Jan 2016 23:00:57 +0100
+Message-ID: <20160122220056.GA21534@Stephans-iMac.lan>
+References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
+ <1453404877-17897-2-git-send-email-stephan@kochen.nl>
+ <56A23FD2.9040009@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453495625-28006-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56A23FD2.9040009-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the RB register resource as requires with the updated driver.
+Guenter,
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+Thanks for the taking the time to review!
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index fe30f76..3e40bd4 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -493,6 +493,11 @@
- 			reg = <0x0 0x1054a000 0x0 0x20>;
- 		};
- 
-+		rb: rb@7e000000 {
-+			compatible = "apm,xgene-rb", "syscon";
-+			reg = <0x0 0x7e000000 0x0 0x10>;
-+		};
-+
- 		edac@78800000 {
- 			compatible = "apm,xgene-edac";
- 			#address-cells = <2>;
-@@ -502,6 +507,7 @@
- 			regmap-mcba = <&mcba>;
- 			regmap-mcbb = <&mcbb>;
- 			regmap-efuse = <&efuse>;
-+			regmap-rb = <&rb>;
- 			reg = <0x0 0x78800000 0x0 0x100>;
- 			interrupts = <0x0 0x20 0x4>,
- 				     <0x0 0x21 0x4>,
--- 
-1.7.1
+You are absolutely right. I will split this up, more carefully check
+coding style and simply do away with unnecessary changes.
 
+Regarding:
+
+On Fri, Jan 22, 2016 at 06:42:26AM -0800, Guenter Roeck wrote:
+> On 01/21/2016 11:34 AM, St=E9phan Kochen wrote:
+> >+#define SELECT_REGS(_reg, _channel) { \
+> >+	high =3D LM90_REG_W_##_reg##H; \
+> >+	low =3D LM90_REG_W_##_reg##L; \
+> >+	channel =3D _channel; \
+> >+}
+>=20
+> We have been trying to get rid of function defines such as this one.
+> Most of the time it increases code size, and reduces readability.
+> Plus, it increases the amount of time we have to spend reviewing
+> the code to ensure it is correct.
+>=20
+> >+	switch (index) {
+> >+	case REMOTE_LOW:    SELECT_REGS(REMOTE_LOW,  0); break;
+> >+	case REMOTE_HIGH:   SELECT_REGS(REMOTE_HIGH, 0); break;
+> >+	case REMOTE_OFFSET: SELECT_REGS(REMOTE_OFFS, 0); break;
+> >+	case REMOTE2_LOW:   SELECT_REGS(REMOTE_LOW,  1); break;
+> >+	case REMOTE2_HIGH:  SELECT_REGS(REMOTE_HIGH, 1); break;
+> >+	default: return;
+>=20
+> ... and, in this case, introduces checkpatch errors.
+
+Should I simply unfold the macro here? Another option would be an array
+of structs like in set_temp8, but it'd have some gaps here. Or is some
+other construct preferred?
+
+I guess this is where I snuck in another change (which I will separate)=
+,
+to replace SENSOR_DEVICE_ATTR_2 with regular ATTR. The setter args of
+_ATTR_2 were using literal numbers to point into an array defined in th=
+e
+setter function. (Maybe to avoid exactly the kind of thing I built
+here.)
+
+Would it be an idea to combine temp8 and temp11 variants, and let the
+getters and setters figure out what kind of register access to do based
+on register index?
+
+Thanks again,
+
+--=20
+St=E9phan Kochen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
