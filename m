@@ -1,99 +1,102 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] devicetree: add binding for Sigma Designs SMP86xx
- interrupt controller
-Date: Fri, 22 Jan 2016 10:06:44 -0600
-Message-ID: <20160122160644.GA18668@rob-hp-laptop>
-References: <1453313237-18570-1-git-send-email-mans@mansr.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Fri, 22 Jan 2016 17:23:33 +0100
+Message-ID: <2649144.tYaWDcKkag@wuerfel>
+References: <Pine.LNX.4.44L0.1601221023350.1626-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453313237-18570-1-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1601221023350.1626-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 06:07:16PM +0000, Mans Rullgard wrote:
-> This adds a binding for the secondary interrupt controller in
-> Sigma Designs SMP86xx and SMP87xx chips.
+On Friday 22 January 2016 10:55:01 Alan Stern wrote:
+> On Fri, 22 Jan 2016, Arnd Bergmann wrote:
 > 
-> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes:
-> - not included in v3
-> ---
->  .../interrupt-controller/sigma,smp8642-intc.txt    | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+> > > > 		hub@3 { /* same external  hub, highspeed mode */
+> > > > 			compatible = "usb2109,0812.591",
+> > > > 				     "usb2109,0812",
+> > > > 				     "usb2109,class9.0.1",
+> > > > 				     "usb2109,class9.0",
+> > > > 				     "usb2109,class9";
+> > > > 
+> > > > 			#address-cells = <1>;
+> > > > 			#size-cells = <0>;
+> > > > 			reg = <3>;
+> > > > 
+> > > 
+> > > Why "reg" is 3 here?
+> > 
+> > My mistake. It should be hub@1 and reg=<1>;
+> > 
+> > I accidentally confused the port number and the device number.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
-> new file mode 100644
-> index 000000000000..2643f3466091
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
-> @@ -0,0 +1,49 @@
-> +Sigma Designs SMP86xx/SMP87xx secondary interrupt controller
-> +
-> +Required properties:
-> +- compatible: should be "sigma,smp8642-intc"
-> +- reg: physical address of MMIO region
-> +- ranges: address space mapping of child nodes
-> +- interrupt-parent: phandle of parent interrupt controller
-> +- interrupt-controller: boolean
-> +- #address-cells: should be <1>
-> +- #size-cells: should be <1>
-> +
-> +One child node per control block with properties:
-> +- reg: address of registers for this control block
-> +- interrupt-controller: boolean
-> +- #interrupt-cells: should be <2>, interrupt index and flags per interrupts.txt
-> +- interrupts: interrupt spec of primary interrupt controller
-> +
-> +Example:
-> +
-> +interrupt-controller@6e000 {
-> +	compatible = "sigma,smp8642-intc";
-> +	reg = <0x6e000 0x400>;
-> +	ranges = <0x0 0x6e000 0x400>;
-> +	interrupt-parent = <&gic>;
-> +	interrupt-controller;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	irq0: irq0 {
+> I thought you did it this way because you were numbering the SS
+> root-hub ports 1-2 and the HS root-hub ports 3-4.
 
-Keeping with generic names, this should be interrupt-controller@0 (and 
-100, 300).
+Right, I was confusing myself after the question. It was intentional
+after all.
 
-Otherwise,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		reg = <0x000 0x100>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	irq1: irq1 {
-> +		reg = <0x100 0x100>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	irq2: irq2 {
-> +		reg = <0x300 0x100>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +};
-> -- 
-> 2.7.0
+> There's something I should have made clear earlier.  This scheme for
+> putting SS and HS USB-3 root-hub ports in the same number space is part
+> of the xHCI spec.  It's not AFAIK required (or even mentioned) by the
+> USB-3 spec, which means other types of USB-3 host controllers might do
+> it differently.
 > 
+> The scheme which numbers SS and HS ports separately, both starting from
+> 1, is mandated by the USB-3 spec for non-root hubs.  But since that
+> spec doesn't say much about root hubs, the OS is free to treat them
+> however it likes.  We have chosen to make root hubs appear as similar
+> as possible to non-root hubs; however I believe that Windows (for
+> example) may do things differently.
+> 
+> At any rate, since DT strives to reflect the actual hardware 
+> properties, you probably should use the xHCI numbering scheme when 
+> describing the ports of an xHCI root hub.
+
+Yes, indeed that is what I was trying to say here.
+
+> > > > Is it possible to have a hub in an interface of a multifunction device
+> > > > or are they always single-configuration single-interface devices?
+> > > > 
+> > > 
+> > > I have not seen such kinds of devices, but it is possible in theory.
+> > 
+> > Ok, so if the USB spec allows it, we should probably try to handle it too.
+> 
+> No, the spec does not allow it.  In fact, the spec divides all USB 
+> devices into two classes: hubs and functions.  A function is anything 
+> that isn't a hub.  And a hub is never allowed to contain more than one 
+> configuration and interface.
+
+Ok, that helps.
+
+> The spec does allow for multiple functions to be packaged in the same 
+> physical device.  In this case, the physical device contains a hub 
+> along with various functions permanently connected to it.
+> 
+> For example, the old Apple USB keyboards are compound devices.  They
+> contain an internal 3-port hub; one of the ports is permanently wired
+> to the keyboard controller and the other two are exposed to the user,
+> allowing a mouse and something else to be attached.
+
+Good, that is straightforward to represent in a way that matches both
+the DT binding and the Linux-internal representation.
+
+We just have to decide what to do for non-hub devices that the OF
+specification calls "combined nodes" (device class 0, one configuration,
+one interface) and that, like hubs do not have one of_node per interface
+plus one per device, but only one node.
+
+Should we bind the of_node to the usb_device, the usb_interface or both
+in this case? Doing both might be problematic and would need more
+testing to be sure it works.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
