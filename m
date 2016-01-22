@@ -1,129 +1,61 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Fri, 22 Jan 2016 16:50:27 +0800
-Message-ID: <56A1ED53.60309@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
- <20160112221211.GB22188@codeaurora.org> <5695BE65.3070409@huawei.com>
- <20160113185707.1168.85601@quark.deferred.io> <56979F9F.5080201@huawei.com>
- <5698A650.5010600@huawei.com>
- <CAL_JsqJPcPgS=cKNqv9j5Ch3ZHbUmci1LRedBWV1gV=5kCz68Q@mail.gmail.com>
- <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com>
+From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 1/3] arm64: dts: Add Hi6220 gpio configuration nodes
+Date: Fri, 22 Jan 2016 16:59:01 +0800
+Message-ID: <56A1EF55.5000909@huawei.com>
+References: <1453200681-26406-1-git-send-email-zhongkaihua@huawei.com> <569E3C0F.3040603@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <569E3C0F.3040603-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/1/20 14:38, Tomeu Vizoso wrote:
-> On 19 January 2016 at 19:20, Rob Herring <robh+dt@kernel.org> wrote:
->> On Fri, Jan 15, 2016 at 1:57 AM, xuejiancheng <xuejiancheng@huawei.c=
-om> wrote:
->>>
->>> On 2016/1/14 21:16, xuejiancheng wrote:
->>>> Hi Mike,
->>>>
->>>> On 2016/1/14 2:57, Michael Turquette wrote:
->>>>> Quoting xuejiancheng (2016-01-12 19:03:01)
->>>>>> Hi Stephen,
->>>>>>    Thank you very much for your reply.
->>>>>>
->>>>>> On 2016/1/13 6:12, Stephen Boyd wrote:
->>>>>>> On 01/08, Jiancheng Xue wrote:
->>>>>>>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisil=
-icon/Kconfig
->>>>>>>> index e434854..b6baebf 100644
->>>>>>>> --- a/drivers/clk/hisilicon/Kconfig
->>>>>>>> +++ b/drivers/clk/hisilicon/Kconfig
->>>>>>>> @@ -1,3 +1,10 @@
->>>>>>>> +config COMMON_CLK_HI3519
->>>>>>>> +    tristate "Clock Driver for Hi3519"
->>>>>>>
->>>>>>> It looks like this has to be bool. Otherwise it needs to be a
->>>>>>> platform driver and the hisilicon APIs need to be exported and
->>>>>>> lose their __init markings.
->>>>>>>
->>>>>> Yes,it's a problem. I will fix it in next version. Thank you.
->>>>>
->>>>> The best solution would be to make this clock driver a real platf=
-orm
->>>>> driver.
->>>>>
->>>> Now the work clock of the clocksource timer-sp804 is provided by t=
-his driver. So
->>>> it need to be registered early by CLK_OF_DECLARE. If the timer clo=
-ck is treated
->>>> as a fixed-clock provider, this driver can be implemented as a pla=
-tform driver.
->>>> Then the crg device must be registered before other clock consumer=
- devices.Accordingly
->>>> the crg device node must be written above all other clock consumer=
- devices node in dts files.
->>>> I think it is also a dependence.
->>>>
->>>> Can you help me understand why it is better to make this driver a =
-platform driver?
->>>> Thank you very much!
->>>>
->>> arch_initcall(customize_machine)
->>> -->of_platform_populate
->>>    -->of_platform_bus_create
->>>      -->of_amba_device_create
->>>         -->amba_device_add
->>>            -->amba_get_enable_pclk
->>> The call sequence above shows that the clock of the amba device mus=
-t be registered before
->>> amba_device_add. The clock of "arm,pl011" uart is registered in the=
- probe function of the
->>> platform driver "hi3519-crg". So the platform device "hi3519-crg" m=
-ust be created before
->>> the amba device "arm,pl011" uart.
+On 2016/1/19 21:37, Sudeep Holla wrote:
+> 
+> 
+> On 19/01/16 10:51, Zhong Kaihua wrote:
+>> arm64: dts: Add Hi6220 gpio configuration nodes
 >>
->> It is a problem, but Tomeu had a fix to support deferred probes here=
-=2E
->> That was part of the on-demand probing series, but maybe it needs to
->> be applied separately if we are moving clock drivers to platform
->> drivers.
->=20
-> Hi,
->=20
-> Marek Szyprowski has kindly taken those two patches as part of a seri=
-es of him:
->=20
-> http://lkml.kernel.org/g/1450868368-5650-1-git-send-email-m.szyprowsk=
-i@samsung.com
->=20
-> I think it would be great if you could test them and report.
->=20
-Hi Tomeu,
+>> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>                 Kong Xinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/gpio/gpio-hi6220.txt       |  23 +
+>>   arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   1 +
+>>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 259 +++++++++
+>>   arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi      | 607 +++++++++++++++++++++
+>>   4 files changed, 890 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>>   create mode 100644 arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>> new file mode 100644
+>> index 0000000..a9cbf21
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>> @@ -0,0 +1,23 @@
+>> +Hisilicon Hi6220 GPIO controller bindings
+>> +
+>> +Required properties:
+>> +    - compatible: "arm,pl061","arm,primecell"
+>> +    - gpio-controller: Marks the device node as a GPIO controller.
+>> +    - #gpio-cells: Should be 2. See gpio.txt in this directory for a
+>> +         description of    the cells format.
+>> +    - interrupt-controller: Mark the device node as an interrupt controller
+>> +
+> 
+> Why do you need extra binding document here as the compatible is same as
+> [1] ? You can extend that if required and add example there IMO.
+> 
 
-I have applied the patch "https://lkml.org/lkml/2015/12/23/105" and tes=
-ted on my hi3519-demb board.
-It works even if the apb_pclk is registered later than the amba-pl011 d=
-evice being registered.
+Ok, I will remove the binding document in the next version. Thanks.
 
-But I think it is a problem if amba_read_periphid() returns -ENOMEM or =
--ENODEV when apb_pclk is available.
-In this condition=EF=BC=8Camba_match() returns a non zero value which m=
-eans the driver and device matches
-and the amba_probe() will be called, but amba_device->periphid remains =
-as 0. Then amba_lookup() called in
-amba_probe() will return a null id pointer.The null pointer will be pas=
-sed to amba_driver->probe() and
-this may cause a segment fault.
 
-Regards,
-
-Jiancheng
-
-> Thanks,
->=20
-> Tomeu
->=20
-> .
->=20
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
