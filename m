@@ -1,90 +1,148 @@
-From: Shaohui Xie <shaohui.xie@nxp.com>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Fri, 22 Jan 2016 10:05:04 +0000
-Message-ID: <VI1PR04MB1664AD70D26C452F5A33595AE8C40@VI1PR04MB1664.eurprd04.prod.outlook.com>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <56997951.90304@gmail.com> <5699B211.5070602@gmail.com>
- <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <569C9CD2.10301@gmail.com>
- <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160118151500.GD923@lunn.ch>
- <VI1PR04MB1664DFBC53F08C5CE7EBF22AE8C10@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160121211250.GK9991@lunn.ch>
- <VI1PR04MB1664BAFB4EE494CB14830BCCE8C40@VI1PR04MB1664.eurprd04.prod.outlook.com>,<56A1F5AB.6090606@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Fri, 22 Jan 2016 11:18:07 +0100
+Message-ID: <2404899.20LhULZo7N@wuerfel>
+References: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org> <2930830.FLp5q7oBTi@wuerfel> <20160122065901.GA31145@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56A1F5AB.6090606@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "shh.xie@gmail.com" <shh.xie@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "davem@davemloft.net" <davem@davemloft.net>, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160122065901.GA31145@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->> Looking at fsl_backplane_config_aneg() you expect phydev->speed to be
->> set, and from the speed you then kick of either KR autoneg or KX
->> autoneg. Could you also start the training at this point? Use the
->> speed to indicate if training is needed?
->
->   [S.H]The training cannot be started at this point, yet, because it's based on
-> autoneg result, only when both sides autoneg-ed to 10G-KR, then to start
-> the training.
+On Friday 22 January 2016 14:59:01 Peter Chen wrote:
+> On Thu, Jan 21, 2016 at 11:24:21PM +0100, Arnd Bergmann wrote:
+> > On Thursday 21 January 2016 10:21:15 Alan Stern wrote:
+> > > On Thu, 21 Jan 2016, Arnd Bergmann wrote:
+> > > > On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
+> > 		hub@1 { /* external hub, superspeed mode class 9/subclass 0/proto 3 */
+> > 			compatible = "usb2109,0812.591",
+> > 				     "usb2109,0812",
+> > 				     "usb2109,class9.0.3",
+> > 				     "usb2109,class9.0",
+> > 				     "usb2109,class9";
+> > 			compatible = "usb2109,0812";
+> 
+> Do we really need to write "compatible" so complicated?
 
-Shaohui,
+The binding mandates it this way, but I guess we could decide to
+make it a Linux-specific extension that we allow some of them to
+be left out.
 
-look, we want you to convince us why to have a generic backplane
-property in the phy binding. You had a bad start by adding new
-property values to a property that does not relate to your use
-case at all. Your job now really is to give strong reasons _why_
-and _what_ a phy driver needs to know about the backplane setup.
+> > 			#address-cells = <1>;
+> > 			#size-cells = <0>;
+> > 			reg = <1>;
+> > 
+> > 			communications@4 { /* superspeed ethernet device */
+> > 				compatible = "usb0b95,1790.100",
+> > 					     "usb0b95,1790",
+> > 					     "usb0b95,class255.255.0",
+> > 					     "usb0b95,class255.255",
+> > 					     "usb0b95,class255",
+> > 					     "usbif0b95,1790.100",
+> > 					     "usbif0b95,1790",
+> > 					     "usbif0b95,class255.255.0",
+> > 					     "usbif0b95,class255.255,
+> > 					     "usbif0b95,class255";
+> > 				reg = <4>;
+> > 			};
+> > 
+> > 			storage@1 { /* superspeed flash drive */
+> > 				compatible = "usb1234,5678.600",
+> > 					     "usb1234,5678",
+> > 					     "usbif1234,class8.6.80",
+> > 					     "usbif1234,class8.6",
+> > 					     "usbif1234,class8",
+> > 					     "usbif,class8.6.80",
+> > 					     "usbif,class8.6",
+> > 					     "usbif,class8";
+> > 				reg = <1>;
+> > 			};
+> > 		};
+> > 	
+> > 		hub@3 { /* same external  hub, highspeed mode */
+> > 			compatible = "usb2109,0812.591",
+> > 				     "usb2109,0812",
+> > 				     "usb2109,class9.0.1",
+> > 				     "usb2109,class9.0",
+> > 				     "usb2109,class9";
+> > 
+> > 			#address-cells = <1>;
+> > 			#size-cells = <0>;
+> > 			reg = <3>;
+> > 
+> 
+> Why "reg" is 3 here?
 
-[S.H] The PHY driver needs to know what the backplane mode is, 
-1000BASE-KX or 10GBASE-KR, the driver parses the property for
-"1000base-kx" or "10gbase-kr", the driver does use the property,
-I don't understand why the property is not related to my use case?
+My mistake. It should be hub@1 and reg=<1>;
 
-Your first approach was to add "10gbase-rk" or "40gbase-foo" but
-now you tell us about ANEG. Of what use is the information given
-by the property when ANEG tells you something different? E.g.
-consider the property tells you "10g-something" but ANEG gives
-you "40g"; does the property add any value to your training
-decision now?
+I accidentally confused the port number and the device number.
 
-[S.H] The ANEG is not a gerneric AN, it's special to 10G-KR,  KR AN can only
-AN to KR if both sides support KR, it cannot give "40g" or anything different, 
-drive needs the property to do speicific init.
+> > 				wireless@0,1 { /* bluetooth config 0, if 1 */
+> > 					compatible = "usbif0a12,0001.134.config0.1",
+> > 							"usbif0a12,0001.config0.1",
+> > 							"usbif0a12,class224.1.1",
+> > 							"usbif0a12,class224.1",
+> > 							"usbif0a12,class224",
+> > 							"usbif,class224.1.1",
+> > 							"usbif,class224.1",
+> > 							"usbif,class224";
+> > 					reg = <0 0>;
+> > 				};
+> > 			};
+> > 		};
+> > 	};
+> > 
+> > In that description, I have included all four kinds of nodes from
+> > the spec: host controller, device (wireless@2), interface (wireless@0.1,
+> > wireless@0.2) and combined (hub@1, hub@3, storage@1, communications@4).
+> > 
+> > Peter's example only contained hubs in combined nodes, no device or
+> > interface nodes. I wonder if the code is able to parse all four
+> > kinds of nodes though, and if we actually need that.
+> > 
+> 
+> My proposal patch only handles the node under the USB device, not include
+> the USB interfaces under such device, we can add it after finalize
+> how to describe it at device tree.
 
-> Besides the driver, generally speaking, "copper + speed" is not enough to indicate
-> it's backplane, for ex. "copper + 1000" does not mean it has to be 1000BASE-KX,
-> it could be SGMII, hence cannot use KX autoneg.
+We should at least handle the case of multiple hubs connected to one
+another I think. No need to limit it to directly connected devices
+when it's easy enough to do hubs as well.
 
-So, is it copper + speed + backplane? or speed + backplane? And out of
-the set of required input, is there anything your _cannot_ determine
-from other things, e.g. ANEG?
+> > Do we have a 'struct device' for each interface?
+> > 
+> 
+> Yes, we have, but there are different 'struct device' between USB device
+> and USB interfaces under this USB device. See usb_set_configuration,
+> drivers/usb/core/message.c
 
-[S.H] Backplane is enough, 1000BASE-KX means : copper + 1000 + KX stuff.
-The KR AN is to check whether LP is also KR, if yes, do training, otherwise, do nothing.
+Ok, got it. So we can set the of_node pointer of a struct usb_interface
+to the child node of the usb->interface->usb_dev that matches the
+configuration/interface tuple.
 
-If it is backplane only, would a boolean property ("backplane-mode")
-be enough for the training decision?
+For combined device nodes (class 0 device, single configuration, single
+interface), I suppose we have both a 'struct usb_device' and a 'struct
+usb_interface' that we could attach the of_node to, but we can
+decide to always just use one of the two, to avoid having the
+same of_node pointer in multiple 'struct device' instances.
 
-[S.H] a boolean property is not enough, there are different backplane modes.
+Or we simplify it so we always put the of_node just in the usb_device
+or the usb_interface, even if both are listed.
 
-> If putting backplane property to phy.txt is not good, I can put it to fsl specific
-> binding, like the second patch 2/3 did.
+> > Is it possible to have a hub in an interface of a multifunction device
+> > or are they always single-configuration single-interface devices?
+> > 
+> 
+> I have not seen such kinds of devices, but it is possible in theory.
 
-You seem to see vendor specific properties as a place to dump all your
-waste you don't want to think about. You fail to give good reasons what
-is so special about the backplane setup and now you are telling us that
-it is even fsl-specific?
+Ok, so if the USB spec allows it, we should probably try to handle it too.
 
-[S.H] I don't think it's waste, I just thought it might be special to fsl.
-Agreed I failed to give good reasons, but I tried hard to. :(
-
-Thanks,
-Shaohui
-
-Sebastian
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
