@@ -1,58 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] gpio: sn65hvs885: Add DT binding documentation
-Date: Fri, 22 Jan 2016 10:01:35 -0600
-Message-ID: <20160122160135.GA12320@rob-hp-laptop>
-References: <1453358496-4902-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1453358496-4902-2-git-send-email-sean.nyekjaer@prevas.dk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] devicetree: add binding for Sigma Designs SMP86xx
+ interrupt controller
+Date: Fri, 22 Jan 2016 10:06:44 -0600
+Message-ID: <20160122160644.GA18668@rob-hp-laptop>
+References: <1453313237-18570-1-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453358496-4902-2-git-send-email-sean.nyekjaer@prevas.dk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1453313237-18570-1-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 07:41:36AM +0100, Sean Nyekjaer wrote:
-> Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+On Wed, Jan 20, 2016 at 06:07:16PM +0000, Mans Rullgard wrote:
+> This adds a binding for the secondary interrupt controller in
+> Sigma Designs SMP86xx and SMP87xx chips.
+> 
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
 > ---
-> Changes since v3:
-> - Added gpio-controller and gpio cells flags
+> Changes:
+> - not included in v3
+> ---
+>  .../interrupt-controller/sigma,smp8642-intc.txt    | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
 > 
->  Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
 > new file mode 100644
-> index 0000000..6d99c9e
+> index 000000000000..2643f3466091
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
-> @@ -0,0 +1,11 @@
-> +* TI SN65HVS885 digital-input serializer
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+> @@ -0,0 +1,49 @@
+> +Sigma Designs SMP86xx/SMP87xx secondary interrupt controller
+> +
+> +Required properties:
+> +- compatible: should be "sigma,smp8642-intc"
+> +- reg: physical address of MMIO region
+> +- ranges: address space mapping of child nodes
+> +- interrupt-parent: phandle of parent interrupt controller
+> +- interrupt-controller: boolean
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <1>
+> +
+> +One child node per control block with properties:
+> +- reg: address of registers for this control block
+> +- interrupt-controller: boolean
+> +- #interrupt-cells: should be <2>, interrupt index and flags per interrupts.txt
+> +- interrupts: interrupt spec of primary interrupt controller
 > +
 > +Example:
+> +
+> +interrupt-controller@6e000 {
+> +	compatible = "sigma,smp8642-intc";
+> +	reg = <0x6e000 0x400>;
+> +	ranges = <0x0 0x6e000 0x400>;
+> +	interrupt-parent = <&gic>;
+> +	interrupt-controller;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	irq0: irq0 {
 
-The example does not serve as documentation. You need to list the 
-properties and allowed values, required vs. optional, and point to 
-common bindings you are using as appropriate (i.e. gpio).
+Keeping with generic names, this should be interrupt-controller@0 (and 
+100, 300).
 
-> +	sn65hvs885@3 {
-> +		compatible = "sn65hvs885";
+Otherwise,
 
-Also, this needs a vendor prefix, so "ti,sn65hvs885".
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +		spi-max-frequency = <10000000>;
-> +		reg = <0>;
-> +		gpio-controller;
-> +		#gpio-cells = <1>;
+> +		reg = <0x000 0x100>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
 > +	};
 > +
+> +	irq1: irq1 {
+> +		reg = <0x100 0x100>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	irq2: irq2 {
+> +		reg = <0x300 0x100>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +};
 > -- 
 > 2.7.0
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
