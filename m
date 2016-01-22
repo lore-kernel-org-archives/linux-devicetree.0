@@ -1,116 +1,100 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] devicetree: add binding for Sigma Designs SMP86xx interrupt controller
-Date: Fri, 22 Jan 2016 16:36:18 +0000
-Message-ID: <yw1xbn8dmv0d.fsf@unicorn.mansr.com>
-References: <1453313237-18570-1-git-send-email-mans@mansr.com>
-	<20160122160644.GA18668@rob-hp-laptop>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control
+ for FPGA
+Date: Fri, 22 Jan 2016 10:37:26 -0600
+Message-ID: <alpine.DEB.2.02.1601221021130.1187@linuxheads99>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <1453317867-10422-6-git-send-email-atull@opensource.altera.com> <CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160122160644.GA18668@rob-hp-laptop> (Rob Herring's message of
-	"Fri, 22 Jan 2016 10:06:44 -0600")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+On Fri, 22 Jan 2016, Moritz Fischer wrote:
 
-> On Wed, Jan 20, 2016 at 06:07:16PM +0000, Mans Rullgard wrote:
->> This adds a binding for the secondary interrupt controller in
->> Sigma Designs SMP86xx and SMP87xx chips.
->>=20
->> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
->> ---
->> Changes:
->> - not included in v3
->> ---
->>  .../interrupt-controller/sigma,smp8642-intc.txt    | 49 +++++++++++=
-+++++++++++
->>  1 file changed, 49 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-cont=
-roller/sigma,smp8642-intc.txt
->>=20
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/=
-sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-co=
-ntroller/sigma,smp8642-intc.txt
->> new file mode 100644
->> index 000000000000..2643f3466091
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,s=
-mp8642-intc.txt
->> @@ -0,0 +1,49 @@
->> +Sigma Designs SMP86xx/SMP87xx secondary interrupt controller
->> +
->> +Required properties:
->> +- compatible: should be "sigma,smp8642-intc"
->> +- reg: physical address of MMIO region
->> +- ranges: address space mapping of child nodes
->> +- interrupt-parent: phandle of parent interrupt controller
->> +- interrupt-controller: boolean
->> +- #address-cells: should be <1>
->> +- #size-cells: should be <1>
->> +
->> +One child node per control block with properties:
->> +- reg: address of registers for this control block
->> +- interrupt-controller: boolean
->> +- #interrupt-cells: should be <2>, interrupt index and flags per in=
-terrupts.txt
->> +- interrupts: interrupt spec of primary interrupt controller
->> +
->> +Example:
->> +
->> +interrupt-controller@6e000 {
->> +	compatible =3D "sigma,smp8642-intc";
->> +	reg =3D <0x6e000 0x400>;
->> +	ranges =3D <0x0 0x6e000 0x400>;
->> +	interrupt-parent =3D <&gic>;
->> +	interrupt-controller;
->> +	#address-cells =3D <1>;
->> +	#size-cells =3D <1>;
->> +
->> +	irq0: irq0 {
->
-> Keeping with generic names, this should be interrupt-controller@0 (an=
-d=20
-> 100, 300).
+> Alan,
+> 
+> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
+> 
+> > +static int fpga_area_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       struct device_node *np = dev->of_node;
+> > +       struct fpga_area *area;
+> > +       int ret;
+> > +
+> > +       area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
+> > +       if (!area)
+> > +               return -ENOMEM;
+> > +
+> > +       INIT_LIST_HEAD(&area->bridge_list);
+> > +
+> > +       ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
+> > +       if (ret)
+> > +               return ret;
+> > +       area->br = dev_get_drvdata(dev);
+> > +
+> > +       if (of_property_read_string(np, "firmware-name",
+> > +                                   &area->firmware_name)) {
+> > +               of_platform_populate(np, of_default_bus_match_table, NULL, dev);
+> > +               return 0;
+> > +       }
+> 
+> This is the use case where the bootloader loaded the fpga, and you
+> just want to populate
+> the devices in the fabric, right?
 
-I could've sworn I'd made that change.  Too many versions of this patch
-floating about...
+Hi Moritz,
 
-> Otherwise,
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
->> +		reg =3D <0x000 0x100>;
->> +		interrupt-controller;
->> +		#interrupt-cells =3D <2>;
->> +		interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->> +	irq1: irq1 {
->> +		reg =3D <0x100 0x100>;
->> +		interrupt-controller;
->> +		#interrupt-cells =3D <2>;
->> +		interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->> +	irq2: irq2 {
->> +		reg =3D <0x300 0x100>;
->> +		interrupt-controller;
->> +		#interrupt-cells =3D <2>;
->> +		interrupts =3D <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +};
->> --=20
->> 2.7.0
->>=20
+Yes
 
---=20
-M=E5ns Rullg=E5rd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +       if (of_property_read_bool(np, "partial-reconfig"))
+> > +               area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
+> > +
+> > +       ret = fpga_area_get_bus(area);
+> > +       if (ret) {
+> > +               dev_dbg(dev, "Should be child of a FPGA Bus");
+> > +               goto err_unreg;
+> > +       }
+> 
+> Looking at socfpga.dtsi, would that mean that the fpgamgr0 node would
+> need to become a subnode of fpgabus@0 at the same place?
+> 
+> i.e. /soc/fpgamgr@ff706000 -> /soc/fpgabus@0/fpgamgr@ff706000
+> 
+> and the ranges property would be used to translate to the fpga memory
+> mapped space?
+> 
+> I know we're going back and forth on this. I think Rob brought up a
+> similar question:
+> "Does the bus really go thru the fpgamgr and then the bridge as this
+> implies? Or fpgamgr is a sideband controller?"
+> 
+> To which I think the answer is 'sideband' controller, yet with the new
+> bindings it looks like
+> the bus goes through the fpgamgr.
+
+Yeah, let's get this right.  First, let's be clear on the reason for FPGA Bus to
+exist.  There may be >1 FPGA in a system.  I want the FPGA Bus bring together
+the bridges and manager that are associated with a certain FPGA.  This allows
+the system designer to specify which FPGA is getting programmed with which
+image/hardware.  So at minimum, we need some way of associating a FPGA Bus with
+a FPGA Manager.
+
+As far as the target path is concerned, in the case of no bridges, we could have
+the overlay target the FPGA Bus instead of the FPGA Manager.  That may be more
+logical.  This would just be a documentation change; I think fpga-area.c will
+work OK if you specify the FPGA bus as your target (the manager still has to
+be a child of the bus so the bus knows what manager to use).
+
+Alan
+
+> 
+> Cheers,
+> 
+> Moritz
+> 
