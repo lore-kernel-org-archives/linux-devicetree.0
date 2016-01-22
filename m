@@ -1,33 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/4] Input: cyttsp - switch to using device properties
-Date: Fri, 22 Jan 2016 16:37:17 -0600
-Message-ID: <20160122223717.GA23569@rob-hp-laptop>
-References: <cover.1453414661.git.oreste.salerno@tomtom.com>
- <cbb77531529b8941a6a9a7a191e91c6629506a71.1453414661.git.oreste.salerno@tomtom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] lm90: register with thermal zones
+Date: Fri, 22 Jan 2016 16:45:42 -0600
+Message-ID: <20160122224542.GA26117@rob-hp-laptop>
+References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
+ <1453404877-17897-4-git-send-email-stephan@kochen.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cbb77531529b8941a6a9a7a191e91c6629506a71.1453414661.git.oreste.salerno@tomtom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Oreste Salerno <oreste.salerno@tomtom.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <1453404877-17897-4-git-send-email-stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
+Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 11:21:31PM +0100, Oreste Salerno wrote:
-> Drop support for platform data passed via a C-structure and switch to
-> device properties instead, which should make the driver compatible
-> with all platforms: OF, ACPI and static boards. Static boards should
-> use property sets to communicate device parameters to the driver.
-> 
-> Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
+On Thu, Jan 21, 2016 at 08:34:37PM +0100, St=E9phan Kochen wrote:
+> Any lm90-driven node in the device tree can now be referenced in ther=
+mal
+> zones. One thermal zone device is registered for each sensor present.
+>=20
+> Signed-off-by: St=E9phan Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
 > ---
->  .../bindings/input/touchscreen/cyttsp.txt          |  95 ++++++++++++++
+>  Documentation/devicetree/bindings/hwmon/lm90.txt |  8 ++++
+>  drivers/hwmon/lm90.c                             | 54 ++++++++++++++=
+++++++++++
+>  2 files changed, 62 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Docum=
+entation/devicetree/bindings/hwmon/lm90.txt
+> index 045e94b..da9aae7 100644
+> --- a/Documentation/devicetree/bindings/hwmon/lm90.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
+> @@ -28,6 +28,13 @@ Required node properties:
+> =20
+>  - vcc-supply: vcc regulator for the supply voltage.
+> =20
+> +- #thermal-sensor-cells: Should be 1. See ../../thermal/thermal.txt =
+for a
+> +                         description of this property. Use the follo=
+wing
+> +                         values to refer to a specific sensor:
+> +                         0: chip internal sensor
+> +                         1: external sensor
+> +                         2: second external sensor, if present
 
-Acked-by: Rob Herring <robh@kernel.org>
+=46rom my read of an LM90 datasheet, there is only an onchip sensor and=
+ a=20
+single external one.
 
->  drivers/input/touchscreen/cyttsp_core.c            | 136 ++++++++++++++-------
->  drivers/input/touchscreen/cyttsp_core.h            |   9 +-
->  include/linux/input/cyttsp.h                       |  15 ---
->  4 files changed, 197 insertions(+), 58 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
