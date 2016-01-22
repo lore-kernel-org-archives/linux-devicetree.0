@@ -1,78 +1,129 @@
-From: Shaohui Xie <shaohui.xie@nxp.com>
-Subject: Re: [PATCH 1/3][v2] net: phy: introduce 1000BASE-KX and 10GBASE-KR
-Date: Fri, 22 Jan 2016 08:15:53 +0000
-Message-ID: <VI1PR04MB1664BAFB4EE494CB14830BCCE8C40@VI1PR04MB1664.eurprd04.prod.outlook.com>
-References: <1452759839-9874-1-git-send-email-shh.xie@gmail.com>
- <20160114164418.GD19773@lunn.ch>
- <VI1PR04MB166491DEBB439EB72742201DE8CD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <56997951.90304@gmail.com> <5699B211.5070602@gmail.com>
- <VI1PR04MB16645A2F24DB515D86136BE2E8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <569C9CD2.10301@gmail.com>
- <VI1PR04MB1664AB0E483F01F1641059FFE8C00@VI1PR04MB1664.eurprd04.prod.outlook.com>
- <20160118151500.GD923@lunn.ch>
- <VI1PR04MB1664DFBC53F08C5CE7EBF22AE8C10@VI1PR04MB1664.eurprd04.prod.outlook.com>,
- <20160121211250.GK9991@lunn.ch>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Fri, 22 Jan 2016 16:50:27 +0800
+Message-ID: <56A1ED53.60309@huawei.com>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
+ <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
+ <20160112221211.GB22188@codeaurora.org> <5695BE65.3070409@huawei.com>
+ <20160113185707.1168.85601@quark.deferred.io> <56979F9F.5080201@huawei.com>
+ <5698A650.5010600@huawei.com>
+ <CAL_JsqJPcPgS=cKNqv9j5Ch3ZHbUmci1LRedBWV1gV=5kCz68Q@mail.gmail.com>
+ <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20160121211250.GK9991@lunn.ch>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "shh.xie@gmail.com" <shh.xie@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Shaohui Xie <Shaohui.Xie@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "davem@davemloft.net" <davem@davemloft.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKBbUaGi-ZWg+Y-OCq=xVOgBJroMTVsqP2JpVHPQWcM4=w@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyb206IEFuZHJldyBMdW5u
-IDxhbmRyZXdAbHVubi5jaD4KU2VudDogRnJpZGF5LCBKYW51YXJ5IDIyLCAyMDE2IDU6MTIgQU0K
-VG86IFNoYW9odWkgWGllCkNjOiBTZWJhc3RpYW4gSGVzc2VsYmFydGg7IEZsb3JpYW4gRmFpbmVs
-bGk7IHNoaC54aWVAZ21haWwuY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2
-QHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRhdmVtQGRh
-dmVtbG9mdC5uZXQ7IFNoYW9odWkgWGllClN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXVt2Ml0gbmV0
-OiBwaHk6IGludHJvZHVjZSAxMDAwQkFTRS1LWCBhbmQgMTBHQkFTRS1LUgoKT24gVHVlLCBKYW4g
-MTksIDIwMTYgYXQgMDU6MDA6MzVBTSArMDAwMCwgU2hhb2h1aSBYaWUgd3JvdGU6Cj4gPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTogQW5kcmV3IEx1bm4gW21haWx0bzphbmRy
-ZXdAbHVubi5jaF0KPiA+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAxOCwgMjAxNiAxMToxNSBQTQo+
-ID4gVG86IFNoYW9odWkgWGllCj4gPiBDYzogU2ViYXN0aWFuIEhlc3NlbGJhcnRoOyBGbG9yaWFu
-IEZhaW5lbGxpOyBzaGgueGllQGdtYWlsLmNvbTsKPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy0KPiA+IGRldkBsaXN0cy5vemxh
-YnMub3JnOyBkYXZlbUBkYXZlbWxvZnQubmV0OyBTaGFvaHVpIFhpZQo+ID4gU3ViamVjdDogUmU6
-IFtQQVRDSCAxLzNdW3YyXSBuZXQ6IHBoeTogaW50cm9kdWNlIDEwMDBCQVNFLUtYIGFuZCAxMEdC
-QVNFLUtSCj4gPgo+ID4gPiBbUy5IXSB0aGUgZnNsIGJhY2twbGFuZSwgZS5nLiAxMEdCQVNFLUtS
-LCBuZWVkcyBzb2Z0d2FyZSB0byBoYW5kbGUKPiA+ID4gbGluayB0cmFpbmluZywgSXQncyB0byB0
-cmFpbiBsaW5rIHBhcnRuZXIsIGFuZCB0cmFpbmVkIGJ5IGxpbmsgcGFydG5lcgo+ID4gcGFyYWxs
-ZWwuCj4gPiA+Cj4gPiA+IEJ1dCBpZiBtZWRpYSB0eXBlIGlzIG5vdCBjb3BwZXIsIGUuZy4gb3B0
-aWNhbCBtb2R1bGUsIHdlIHdvbid0IG5lZWQgdGhpcy4KPiA+Cj4gPiBTbyB3aGF0IHdlIGFjdHVh
-bGx5IG5lZWQgdG8ga25vdyBpcyBjb3BwZXIgdnMgZmlicmU/Cgo+IENvcHBlciBpcyBub3QgZW5v
-dWdoIHRvIGluZGljYXRlIGJhY2twbGFuZSwgc2luY2UgYmFja3BsYW5lIGlzCj4gYWx3YXlzIGNv
-cHBlciwgYnV0IGNvcHBlciBpcyBub3QgYWx3YXlzIGJhY2twbGFuZS4KCj5PLkssIGxldHMgdHJ5
-IGFnYWluLi4uLgoKW1MuSF1TZWVtcyBJIGRpZCBub3QgZ2V0IHlvdXIgcG9pbnQsIFNvcnJ5IGZv
-ciB0aGUgaW5jb252ZW5pZW50LgoKPklmIGl0IGlzIGNvcHBlciBiYWNrcGxhbmUgeW91IG5lZWQg
-dG8gcGVyZm9ybSB0cmFpbmluZy4KCj5Mb29raW5nIGF0IHRoZSBkcml2ZXIgcHJvYmUgZnVuY3Rp
-b24sIGl0IGlzIGVpdGhlciAxMDAwQkFTRS1LWCwgbm8KPnRyYWluaW5nIG5lZWRlZCwgb3IgZWxz
-ZSBpdCBpcyAxMEdCQVNFLVJLIGFuZCB0cmFpbmluZyBpcyBuZWVkZWQuCgo+TG9va2luZyBhdCBm
-c2xfYmFja3BsYW5lX2NvbmZpZ19hbmVnKCkgeW91IGV4cGVjdCBwaHlkZXYtPnNwZWVkIHRvIGJl
-Cj5zZXQsIGFuZCBmcm9tIHRoZSBzcGVlZCB5b3UgdGhlbiBraWNrIG9mIGVpdGhlciBLUiBhdXRv
-bmVnIG9yIEtYCj5hdXRvbmVnLiBDb3VsZCB5b3UgYWxzbyBzdGFydCB0aGUgdHJhaW5pbmcgYXQg
-dGhpcyBwb2ludD8gVXNlIHRoZQo+c3BlZWQgdG8gaW5kaWNhdGUgaWYgdHJhaW5pbmcgaXMgbmVl
-ZGVkPwoKIFtTLkhdVGhlIHRyYWluaW5nIGNhbm5vdCBiZSBzdGFydGVkIGF0IHRoaXMgcG9pbnQs
-IHlldCwgYmVjYXVzZSBpdCdzIGJhc2VkIG9uIAphdXRvbmVnIHJlc3VsdCwgb25seSB3aGVuIGJv
-dGggc2lkZXMgYXV0b25lZy1lZCB0byAxMEctS1IsIHRoZW4gdG8gc3RhcnQKdGhlIHRyYWluaW5n
-LgoKQmVzaWRlcyB0aGUgZHJpdmVyLCBnZW5lcmFsbHkgc3BlYWtpbmcsICJjb3BwZXIgKyBzcGVl
-ZCIgaXMgbm90IGVub3VnaCB0byBpbmRpY2F0ZSAKaXQncyBiYWNrcGxhbmUsIGZvciBleC4gImNv
-cHBlciArIDEwMDAiIGRvZXMgbm90IG1lYW4gaXQgaGFzIHRvIGJlIDEwMDBCQVNFLUtYLCAKaXQg
-Y291bGQgYmUgU0dNSUksIGhlbmNlIGNhbm5vdCB1c2UgS1ggYXV0b25lZy4KCklmIHB1dHRpbmcg
-YmFja3BsYW5lIHByb3BlcnR5IHRvIHBoeS50eHQgaXMgbm90IGdvb2QsIEkgY2FuIHB1dCBpdCB0
-byBmc2wgc3BlY2lmaWMKYmluZGluZywgbGlrZSB0aGUgc2Vjb25kIHBhdGNoIDIvMyBkaWQuCgpU
-aGFuayB5b3UhClNoYW9odWkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On 2016/1/20 14:38, Tomeu Vizoso wrote:
+> On 19 January 2016 at 19:20, Rob Herring <robh+dt@kernel.org> wrote:
+>> On Fri, Jan 15, 2016 at 1:57 AM, xuejiancheng <xuejiancheng@huawei.c=
+om> wrote:
+>>>
+>>> On 2016/1/14 21:16, xuejiancheng wrote:
+>>>> Hi Mike,
+>>>>
+>>>> On 2016/1/14 2:57, Michael Turquette wrote:
+>>>>> Quoting xuejiancheng (2016-01-12 19:03:01)
+>>>>>> Hi Stephen,
+>>>>>>    Thank you very much for your reply.
+>>>>>>
+>>>>>> On 2016/1/13 6:12, Stephen Boyd wrote:
+>>>>>>> On 01/08, Jiancheng Xue wrote:
+>>>>>>>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisil=
+icon/Kconfig
+>>>>>>>> index e434854..b6baebf 100644
+>>>>>>>> --- a/drivers/clk/hisilicon/Kconfig
+>>>>>>>> +++ b/drivers/clk/hisilicon/Kconfig
+>>>>>>>> @@ -1,3 +1,10 @@
+>>>>>>>> +config COMMON_CLK_HI3519
+>>>>>>>> +    tristate "Clock Driver for Hi3519"
+>>>>>>>
+>>>>>>> It looks like this has to be bool. Otherwise it needs to be a
+>>>>>>> platform driver and the hisilicon APIs need to be exported and
+>>>>>>> lose their __init markings.
+>>>>>>>
+>>>>>> Yes,it's a problem. I will fix it in next version. Thank you.
+>>>>>
+>>>>> The best solution would be to make this clock driver a real platf=
+orm
+>>>>> driver.
+>>>>>
+>>>> Now the work clock of the clocksource timer-sp804 is provided by t=
+his driver. So
+>>>> it need to be registered early by CLK_OF_DECLARE. If the timer clo=
+ck is treated
+>>>> as a fixed-clock provider, this driver can be implemented as a pla=
+tform driver.
+>>>> Then the crg device must be registered before other clock consumer=
+ devices.Accordingly
+>>>> the crg device node must be written above all other clock consumer=
+ devices node in dts files.
+>>>> I think it is also a dependence.
+>>>>
+>>>> Can you help me understand why it is better to make this driver a =
+platform driver?
+>>>> Thank you very much!
+>>>>
+>>> arch_initcall(customize_machine)
+>>> -->of_platform_populate
+>>>    -->of_platform_bus_create
+>>>      -->of_amba_device_create
+>>>         -->amba_device_add
+>>>            -->amba_get_enable_pclk
+>>> The call sequence above shows that the clock of the amba device mus=
+t be registered before
+>>> amba_device_add. The clock of "arm,pl011" uart is registered in the=
+ probe function of the
+>>> platform driver "hi3519-crg". So the platform device "hi3519-crg" m=
+ust be created before
+>>> the amba device "arm,pl011" uart.
+>>
+>> It is a problem, but Tomeu had a fix to support deferred probes here=
+=2E
+>> That was part of the on-demand probing series, but maybe it needs to
+>> be applied separately if we are moving clock drivers to platform
+>> drivers.
+>=20
+> Hi,
+>=20
+> Marek Szyprowski has kindly taken those two patches as part of a seri=
+es of him:
+>=20
+> http://lkml.kernel.org/g/1450868368-5650-1-git-send-email-m.szyprowsk=
+i@samsung.com
+>=20
+> I think it would be great if you could test them and report.
+>=20
+Hi Tomeu,
+
+I have applied the patch "https://lkml.org/lkml/2015/12/23/105" and tes=
+ted on my hi3519-demb board.
+It works even if the apb_pclk is registered later than the amba-pl011 d=
+evice being registered.
+
+But I think it is a problem if amba_read_periphid() returns -ENOMEM or =
+-ENODEV when apb_pclk is available.
+In this condition=EF=BC=8Camba_match() returns a non zero value which m=
+eans the driver and device matches
+and the amba_probe() will be called, but amba_device->periphid remains =
+as 0. Then amba_lookup() called in
+amba_probe() will return a null id pointer.The null pointer will be pas=
+sed to amba_driver->probe() and
+this may cause a segment fault.
+
+Regards,
+
+Jiancheng
+
+> Thanks,
+>=20
+> Tomeu
+>=20
+> .
+>=20
+
