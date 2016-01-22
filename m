@@ -1,102 +1,80 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Fri, 22 Jan 2016 17:23:33 +0100
-Message-ID: <2649144.tYaWDcKkag@wuerfel>
-References: <Pine.LNX.4.44L0.1601221023350.1626-100000@iolanthe.rowland.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
+Date: Fri, 22 Jan 2016 16:26:10 +0000
+Message-ID: <20160122162610.GZ6588@sirena.org.uk>
+References: <1453292992-1788-1-git-send-email-LW@KARO-electronics.de>
+ <1453292992-1788-2-git-send-email-LW@KARO-electronics.de>
+ <20160120164258.GF6588@sirena.org.uk>
+ <20160121080524.27af489f@ipc1.ka-ro>
+ <20160121102015.GI6588@sirena.org.uk>
+ <20160121112611.34e17cb2@ipc1.ka-ro>
+ <20160121111115.GJ6588@sirena.org.uk>
+ <20160121123311.5346e40d@ipc1.ka-ro>
+ <20160121162646.GK6588@sirena.org.uk>
+ <20160122064145.36b7f2b4@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1601221023350.1626-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S0bejtPoMQWM2IlW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160122064145.36b7f2b4@ipc1.ka-ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 January 2016 10:55:01 Alan Stern wrote:
-> On Fri, 22 Jan 2016, Arnd Bergmann wrote:
-> 
-> > > > 		hub@3 { /* same external  hub, highspeed mode */
-> > > > 			compatible = "usb2109,0812.591",
-> > > > 				     "usb2109,0812",
-> > > > 				     "usb2109,class9.0.1",
-> > > > 				     "usb2109,class9.0",
-> > > > 				     "usb2109,class9";
-> > > > 
-> > > > 			#address-cells = <1>;
-> > > > 			#size-cells = <0>;
-> > > > 			reg = <3>;
-> > > > 
-> > > 
-> > > Why "reg" is 3 here?
-> > 
-> > My mistake. It should be hub@1 and reg=<1>;
-> > 
-> > I accidentally confused the port number and the device number.
-> 
-> I thought you did it this way because you were numbering the SS
-> root-hub ports 1-2 and the HS root-hub ports 3-4.
 
-Right, I was confusing myself after the question. It was intentional
-after all.
+--S0bejtPoMQWM2IlW
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> There's something I should have made clear earlier.  This scheme for
-> putting SS and HS USB-3 root-hub ports in the same number space is part
-> of the xHCI spec.  It's not AFAIK required (or even mentioned) by the
-> USB-3 spec, which means other types of USB-3 host controllers might do
-> it differently.
-> 
-> The scheme which numbers SS and HS ports separately, both starting from
-> 1, is mandated by the USB-3 spec for non-root hubs.  But since that
-> spec doesn't say much about root hubs, the OS is free to treat them
-> however it likes.  We have chosen to make root hubs appear as similar
-> as possible to non-root hubs; however I believe that Windows (for
-> example) may do things differently.
-> 
-> At any rate, since DT strives to reflect the actual hardware 
-> properties, you probably should use the xHCI numbering scheme when 
-> describing the ports of an xHCI root hub.
+On Fri, Jan 22, 2016 at 06:41:45AM +0100, Lothar Wa=DFmann wrote:
+> > On Thu, Jan 21, 2016 at 12:33:11PM +0100, Lothar Wa=DFmann wrote:
 
-Yes, indeed that is what I was trying to say here.
+> > Your commit message (quoted above) claims that without this patch if no
+> > interrupt is supplied then the unsupplied interrupt will somehow be left
+> > screaming and make the system unusable.  This doesn't make sense, if
+> > there is no interrupt there is nothing to scream.
 
-> > > > Is it possible to have a hub in an interface of a multifunction device
-> > > > or are they always single-configuration single-interface devices?
-> > > > 
-> > > 
-> > > I have not seen such kinds of devices, but it is possible in theory.
-> > 
-> > Ok, so if the USB spec allows it, we should probably try to handle it too.
-> 
-> No, the spec does not allow it.  In fact, the spec divides all USB 
-> devices into two classes: hubs and functions.  A function is anything 
-> that isn't a hub.  And a hub is never allowed to contain more than one 
-> configuration and interface.
+> "Otherwise" meant the case where the IRQ is specified in DT as is
+> currently required to get the driver loaded at all.
 
-Ok, that helps.
+> > So, contrary to what you've been saying, the interrupt is actually
+> > connected (and worse, connected to a NMI) but apparently not described
+> > in DT.  Why is it sensible to make the driver poll (which will affect
+> > all systems using this device, even those that don't care) and not just
+> > describe the interrupt in DT so it can be handled promptly in the normal
+> > fashion?  Presumably this will run into serious problems if the
+> > interrupt actually fires at runtime since the NMI will scream, it's not
+> > clear to me how the poll will manage to run successfully in that case.
 
-> The spec does allow for multiple functions to be packaged in the same 
-> physical device.  In this case, the physical device contains a hub 
-> along with various functions permanently connected to it.
-> 
-> For example, the old Apple USB keyboards are compound devices.  They
-> contain an internal 3-port hub; one of the ports is permanently wired
-> to the keyboard controller and the other two are exposed to the user,
-> allowing a mouse and something else to be attached.
+> Currently the driver won't even load without an IRQ specified in DT.
+> My patch makes it possible to use the driver without requiring an IRQ!
 
-Good, that is straightforward to represent in a way that matches both
-the DT binding and the Linux-internal representation.
+You're not just making the interrupt optional, you are also implementing
+polling support.  That's really unusual and there's no clear reason for
+it, your changelog seems to claim that it is needed to make the system
+work but that seems at best very surprising and would need a more
+detailed changelog.
 
-We just have to decide what to do for non-hub devices that the OF
-specification calls "combined nodes" (device class 0, one configuration,
-one interface) and that, like hubs do not have one of_node per interface
-plus one per device, but only one node.
+You at least need to provide an understandable changelog, though it
+seems it is more likely that there is a more sensible way of dealing
+with this.
 
-Should we bind the of_node to the usb_device, the usb_interface or both
-in this case? Doing both might be problematic and would need more
-testing to be sure it works.
+--S0bejtPoMQWM2IlW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWolghAAoJECTWi3JdVIfQ+bQH/0YgPkrUJsUzKwNBtYiNRKJX
+V3ObffcF0e7/ppDLWuD4XzTPnsIEAaQIQi2mZ8RNtH4IhcQF2KK46ys2LBvbrAQi
+o33QRzc/GHpxe160VEYkiaou1pX9xuNlRpJt8hcL++yeyNuiyEbs6/eTBMlGHAox
+wq8Kb35kbHY7MkZ42D4k7TDWN1DRwZtc9gDCgJPefWdQhDikOrcnxzn2mL5qQ8vW
+UPNPSFcMiArmX3iikOTDJ9JOOF0U4pfM20bxyTm3HO7VjXdHwle/ZpcqugNhGjg5
+a7lodZ1Nvfgh/Hxukc2QSwq/WLGLRV1pUVTzwcWtUMHHN4WCFI9w5o99ZC96DQM=
+=sWYC
+-----END PGP SIGNATURE-----
+
+--S0bejtPoMQWM2IlW--
