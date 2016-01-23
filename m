@@ -1,80 +1,38 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH] ARM: DTS: kirkwood-openrd: provide template for RS-232/485 configuration
-Date: Sat, 23 Jan 2016 22:37:17 +0200
-Message-ID: <1453581437-14135-1-git-send-email-aaro.koskinen@iki.fi>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 1/5] mtd: atmel_nand: Do not warn on bitflips
+Date: Sat, 23 Jan 2016 12:44:22 -0800
+Message-ID: <20160123204422.GA35559@google.com>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452702857-2240-2-git-send-email-romain.izard.pro@gmail.com>
+ <20160113185421.22e1cb9c@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160113185421.22e1cb9c@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Cc: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some OpenRD boards have RS-232 and RS-486 connectors wired, but using them
-needs a custom DTB as the current DTB configures SD card slot instead.
+On Wed, Jan 13, 2016 at 06:54:21PM +0100, Boris Brezillon wrote:
+> On Wed, 13 Jan 2016 17:34:13 +0100
+> Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > When using multi-bit ECC, it is normal for the NAND Flash driver to
+> > correct bit errors during the life of the product. Those errors will
+> > only be cleared once a threshold has been reached, and corrections can
+> > occur regularly before this.
+> > 
+> > Use only dev_dbg and not dev_info to report the bitflips, to keep the
+> > system log clean when everything works correctly.
+> > 
+> > Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Acked-by:  Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> 
+> Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This patch adds documentation into the DTS on how to change
-the configuration.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood-openrd.dtsi | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/kirkwood-openrd.dtsi b/arch/arm/boot/dts/kirkwood-openrd.dtsi
-index f65b727..24f1d30 100644
---- a/arch/arm/boot/dts/kirkwood-openrd.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-openrd.dtsi
-@@ -40,7 +40,7 @@
- 			pinctrl-0 = <&pmx_select28 &pmx_sdio_cd &pmx_select34>;
- 			pinctrl-names = "default";
- 
--			pmx_select28: pmx-select-rs232-rs484 {
-+			pmx_select28: pmx-select-rs232-rs485 {
- 				marvell,pins = "mpp28";
- 				marvell,function = "gpio";
- 			};
-@@ -65,10 +65,39 @@
- 			status = "okay";
- 			cd-gpios = <&gpio0 29 9>;
- 		};
-+		gpio@10100 {
-+			p28 {
-+				gpio-hog;
-+				gpios = <28 GPIO_ACTIVE_HIGH>;
-+				/*
-+				 * SelRS232or485 selects between RS-232 or RS-485
-+				 * mode for the second UART.
-+				 *
-+				 * Low: RS-232
-+				 * High: RS-485
-+				 *
-+				 * To use the second UART, you need to change also
-+				 * the SelUARTorSD.
-+				 */
-+				output-low;
-+				line-name = "SelRS232or485";
-+			};
-+		};
- 		gpio@10140 {
- 			p2 {
- 				gpio-hog;
- 				gpios = <2 GPIO_ACTIVE_HIGH>;
-+				/*
-+				 * SelUARTorSD selects between the second UART
-+				 * (serial@12100) and SD (mvsdio@90000).
-+				 *
-+				 * Low: UART
-+				 * High: SD
-+				 *
-+				 * When changing this line make sure the newly
-+				 * selected device node is enabled and the
-+				 * previously selected device node is disabled.
-+				 */
- 				output-high; /* Select SD by default */
- 				line-name = "SelUARTorSD";
- 			};
--- 
-2.4.0
-
+Pushed patch 1 to l2-mtd.git/next
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
