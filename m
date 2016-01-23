@@ -1,147 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv8 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
- entries
-Date: Fri, 22 Jan 2016 20:35:13 -0600
-Message-ID: <20160123023513.GA2081@rob-hp-laptop>
-References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
- <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] lm90: initialize parameters from devicetree
+Date: Fri, 22 Jan 2016 18:53:50 -0800
+Message-ID: <56A2EB3E.4080002@roeck-us.net>
+References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
+ <1453404877-17897-3-git-send-email-stephan@kochen.nl>
+ <56A24278.8050909@roeck-us.net> <20160122223238.GB21534@Stephans-iMac.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160122223238.GB21534@Stephans-iMac.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?St=c3=a9phan_Kochen?= <stephan@kochen.nl>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 21, 2016 at 11:34:26AM -0600, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Adding the device tree entries and bindings needed to support
-> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
-> an earlier patch to declare and setup On-chip RAM properly.
-> http://www.spinics.net/lists/devicetree/msg51117.html
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> ---
-> v8: Fix node names to include chip family and use ecc manager
->     to better describe the driver. Rename socfpga-edac.txt to
->     socfpga-eccmgr.txt.
-> v7: No Change
-> v6: Change to nested EDAC device nodes based on community
->     feedback. Remove L2 syscon. Use consolidated binding.
-> v3-5: No Change
-> v2: Remove OCRAM declaration and reference prior patch.
-> ---
->  .../bindings/arm/altera/socfpga-eccmgr.txt         |   49 ++++++++++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   20 ++++++++
->  2 files changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+On 01/22/2016 02:32 PM, St=E9phan Kochen wrote:
+> On Fri, Jan 22, 2016 at 06:53:44AM -0800, Guenter Roeck wrote:
+>> On 01/21/2016 11:34 AM, St=E9phan Kochen wrote:
+>>> Allow a device tree to set initial temperature sensor parameters.
+>>
+>> This very much smells like configuration, not hardware description.
+>>
+>> Having said that, the thermal subsystem does something similar. This=
+ raises even more
+>> questions, though. Since patch 3 of the series introduces registrati=
+on with the thermal
+>> subsystem, it seems to me that the thermal subsystem should provide =
+any limits used
+>> to program the chips, and that there should be a mechanism for the t=
+hermal subsystem
+>> to interact with the driver to both set the limits and to be informe=
+d if a limit
+>> is exceeded.
+>>
+>> Also, _if_ such a set of properties is introduced and accepted by th=
+e devicetree
+>> reviewers, it should probably be a set of properties which applies t=
+o _all_ hardware
+>> monitoring drivers, not just to one. Even if support is not implemen=
+ted immediately
+>> in the hwmon core, the properties should be usable in a generic way,=
+ and not
+>> reflect sysfs attribute names used by the hwmon subsystem.
+>
+> The original kernel for Ouya is a 3.1 kernel from nVidia's old
+> Linux4Tegra branches. This kernel had its own Tegra-specific thermal
+> zone support which seems to do more or less that: the thermal zone
+> system actually uses the sensor alert interrupts to detect when it ne=
+eds
+> to act, and reconfigures alert bounds as the temperature slides to
+> another range it wants to monitor.
+>
+> Thermal zones in current master only have the ability to check sensor
+> values at an interval.
+>
+> I'd agree that update-interval and the low/high bounds could be
+> controlled by the thermal zone system. I'm less certain what to do wi=
+th
+> the critical/emergency bounds, and the remote-offset.
+>
+> Thing about Ouya is that, even with the thermal zone currently workin=
+g,
+> the alert bounds set when the system comes up seem to be crippling th=
+e
+> system with interrupts shortly after the sensor is activated. So they
+> have to be set to something sane. Hence why I added both.
+>
+> I'm not sure if you're expecting me to do the work of extending therm=
+al
+> zones. I guess I'd need to figure out how a sensor would notify a
+> thermal zone of an alert, and implement that functionality while stay=
+ing
+> backwards compatible.
+>
+The thermal subsystem supports setting trip points, which I would think
+is what you are looking for here. Question is if an how you can use the
+information from the thermal subsystem (and thus the thermal zone confi=
+guration)
+to set the various limits in the lm90 driver. This should hopefully be =
+sufficient
+to fix your immediate problem. For handling alerts, I guess we'll have =
+to wait for
+thermal subsystem improvements (unless of course you volunteer to do th=
+at work.
 
-A couple of nits, otherwise:
+Copying the the linux-pm mailing list and thermal maintainers for addit=
+ional advise.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks,
+Guenter
 
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-> new file mode 100644
-> index 0000000..4f45690
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-> @@ -0,0 +1,49 @@
-> +Altera SoCFPGA ECC Manager
-> +This driver uses the EDAC framework to implement the SOCFPGA ECC Manager.
-> +The ECC Manager counts and corrects single bit errors and counts/handles
-> +double bit errors which are uncorrectable.
-> +
-> +Required Properties:
-> +- compatible : Should be "altr,socfpga-ecc-manager"
-> +- #address-cells: must be 1
-> +- #size-cells: must be 1
-> +- ranges : standard definition, should translate from local addresses
-> +
-> +Subcomponents:
-> +
-> +L2 Cache ECC
-> +Required Properties:
-> +- compatible : Should be "altr,socfpga-l2-ecc"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-> +
-> +On Chip RAM ECC
-> +Required Properties:
-> +- compatible : Should be "altr,socfpga-ocram-ecc"
-> +- reg : Address and size for ECC error interrupt clear registers.
-> +- iram : phandle to On-Chip RAM definition.
-> +- interrupts : Should be single bit error interrupt, then double bit error
-> +	interrupt. Note the rising edge type.
-> +
-> +Example:
-> +
-> +	eccmgr: eccmgr@0xffd08140 {
-
-drop the '0x'
-
-> +		compatible = "altr,socfpga-ecc-manager";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		l2-ecc@ffd08140 {
-> +			compatible = "altr,socfpga-l2-ecc";
-> +			reg = <0xffd08140 0x4>;
-> +			interrupts = <0 36 1>, <0 37 1>;
-> +		};
-> +
-> +		ocram-ecc@ffd08144 {
-> +			compatible = "altr,socfpga-ocram-ecc";
-> +			reg = <0xffd08144 0x4>;
-> +			iram = <&ocram>;
-> +			interrupts = <0 178 1>, <0 179 1>;
-> +		};
-> +	};
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 39c470e..9bb383e 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -656,6 +656,26 @@
->  			status = "disabled";
->  		};
->  
-> +		eccmgr: eccmgr@0xffd08140 {
-
-and here.
-
-> +			compatible = "altr,socfpga-ecc-manager";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			l2-ecc@ffd08140 {
-> +				compatible = "altr,socfpga-l2-ecc";
-> +				reg = <0xffd08140 0x4>;
-> +				interrupts = <0 36 1>, <0 37 1>;
-> +			};
-> +
-> +			ocram-ecc@ffd08144 {
-> +				compatible = "altr,socfpga-ocram-ecc";
-> +				reg = <0xffd08144 0x4>;
-> +				iram = <&ocram>;
-> +				interrupts = <0 178 1>, <0 179 1>;
-> +			};
-> +		};
-> +
->  		L2: l2-cache@fffef000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0xfffef000 0x1000>;
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
