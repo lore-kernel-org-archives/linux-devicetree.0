@@ -1,94 +1,119 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] lm90: initialize parameters from devicetree
-Date: Fri, 22 Jan 2016 18:53:50 -0800
-Message-ID: <56A2EB3E.4080002@roeck-us.net>
-References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
- <1453404877-17897-3-git-send-email-stephan@kochen.nl>
- <56A24278.8050909@roeck-us.net> <20160122223238.GB21534@Stephans-iMac.lan>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 00/17] Add ACPI support for Xen Dom0 on ARM64
+Date: Sat, 23 Jan 2016 11:19:27 +0800
+Message-ID: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160122223238.GB21534@Stephans-iMac.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?St=c3=a9phan_Kochen?= <stephan@kochen.nl>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2016 02:32 PM, St=E9phan Kochen wrote:
-> On Fri, Jan 22, 2016 at 06:53:44AM -0800, Guenter Roeck wrote:
->> On 01/21/2016 11:34 AM, St=E9phan Kochen wrote:
->>> Allow a device tree to set initial temperature sensor parameters.
->>
->> This very much smells like configuration, not hardware description.
->>
->> Having said that, the thermal subsystem does something similar. This=
- raises even more
->> questions, though. Since patch 3 of the series introduces registrati=
-on with the thermal
->> subsystem, it seems to me that the thermal subsystem should provide =
-any limits used
->> to program the chips, and that there should be a mechanism for the t=
-hermal subsystem
->> to interact with the driver to both set the limits and to be informe=
-d if a limit
->> is exceeded.
->>
->> Also, _if_ such a set of properties is introduced and accepted by th=
-e devicetree
->> reviewers, it should probably be a set of properties which applies t=
-o _all_ hardware
->> monitoring drivers, not just to one. Even if support is not implemen=
-ted immediately
->> in the hwmon core, the properties should be usable in a generic way,=
- and not
->> reflect sysfs attribute names used by the hwmon subsystem.
->
-> The original kernel for Ouya is a 3.1 kernel from nVidia's old
-> Linux4Tegra branches. This kernel had its own Tegra-specific thermal
-> zone support which seems to do more or less that: the thermal zone
-> system actually uses the sensor alert interrupts to detect when it ne=
-eds
-> to act, and reconfigures alert bounds as the temperature slides to
-> another range it wants to monitor.
->
-> Thermal zones in current master only have the ability to check sensor
-> values at an interval.
->
-> I'd agree that update-interval and the low/high bounds could be
-> controlled by the thermal zone system. I'm less certain what to do wi=
-th
-> the critical/emergency bounds, and the remote-offset.
->
-> Thing about Ouya is that, even with the thermal zone currently workin=
-g,
-> the alert bounds set when the system comes up seem to be crippling th=
-e
-> system with interrupts shortly after the sensor is activated. So they
-> have to be set to something sane. Hence why I added both.
->
-> I'm not sure if you're expecting me to do the work of extending therm=
-al
-> zones. I guess I'd need to figure out how a sensor would notify a
-> thermal zone of an alert, and implement that functionality while stay=
-ing
-> backwards compatible.
->
-The thermal subsystem supports setting trip points, which I would think
-is what you are looking for here. Question is if an how you can use the
-information from the thermal subsystem (and thus the thermal zone confi=
-guration)
-to set the various limits in the lm90 driver. This should hopefully be =
-sufficient
-to fix your immediate problem. For handling alerts, I guess we'll have =
-to wait for
-thermal subsystem improvements (unless of course you volunteer to do th=
-at work.
+From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Copying the the linux-pm mailing list and thermal maintainers for addit=
-ional advise.
+This patch set adds ACPI support for Xen Dom0 on ARM64. The relevant Xen
+ACPI on ARM64 design document could be found from [1].
+
+This patch set adds a new FDT node "uefi" under /hypervisor to pass UEFI
+information. Introduce a bus notifier of AMBA and Platform bus to map
+the new added device's MMIO space. Make Xen domain use
+xlated_setup_gnttab_pages to setup grant table and a new hypercall to
+get event-channel irq.
+
+Regarding the initialization flow of Linux kernel, it needs to move
+xen_early_init() before efi_init(). Then xen_early_init() will check
+whether it runs on Xen through the /hypervisor node and efi_init() will
+call a new function fdt_find_xen_uefi_params(), to parse those
+xen,uefi-* parameters just like the existing efi_get_fdt_params().
+
+And in arm64_enable_runtime_services() it will check whether it runs on
+Xen and call another new function xen_efi_runtime_setup() to setup
+runtime service instead of efi_native_runtime_setup(). The
+xen_efi_runtime_setup() will assign the runtime function pointers with
+the functions of driver/xen/efi.c.
+
+And since we pass a /hypervisor node and a /chosen node to Dom0, it
+needs to check whether the DTS only contains a /hypervisor node and a
+/chosen node in acpi_boot_table_init().
+
+Patches are tested on FVP base model. The corresponding Xen patches can
+be fetched from [2].
 
 Thanks,
-Guenter
+Shannon
 
+[1] http://lists.xen.org/archives/html/xen-devel/2015-11/msg00488.html
+[2] http://git.linaro.org/people/shannon.zhao/xen.git  ACPI_XEN_ARM_V3
+
+Changes since v2:
+* Use 0 to check if it should ignore the UART
+* Fix the use of page_to_xen_pfn
+* Factor ACPI and DT parts in xen_guest_init
+* Check "uefi" node by full path
+* Fix the statement of Documentation/devicetree/bindings/arm/xen.txt
+
+Changes since v1:
+* Rebase on linux mainline and wallclock patch from Stefano
+* Refactor AMBA and platform device MMIO map to one file
+* Use EFI_PARAVIRT to check if it supports XEN EFI
+* Refactor Xen EFI codes
+* Address other comments
+
+Shannon Zhao (17):
+  Xen: ACPI: Hide UART used by Xen
+  xen/grant-table: Move xlated_setup_gnttab_pages to common place
+  Xen: xlate: Use page_to_xen_pfn instead of page_to_pfn
+  arm/xen: Use xen_xlate_map_ballooned_pages to setup grant table
+  xen: memory : Add new XENMAPSPACE type XENMAPSPACE_dev_mmio
+  Xen: ARM: Add support for mapping platform device mmio
+  Xen: ARM: Add support for mapping AMBA device mmio
+  Xen: public/hvm: sync changes of HVM_PARAM_CALLBACK_VIA ABI from Xen
+  xen/hvm/params: Add a new delivery type for event-channel in
+    HVM_PARAM_CALLBACK_IRQ
+  arm/xen: Get event-channel irq through HVM_PARAM when booting with
+    ACPI
+  ARM: XEN: Move xen_early_init() before efi_init()
+  ARM64: ACPI: Check if it runs on Xen to enable or disable ACPI
+  ARM: Xen: Document UEFI support on Xen ARM virtual platforms
+  XEN: EFI: Move x86 specific codes to architecture directory
+  ARM64: XEN: Add a function to initialize Xen specific UEFI runtime
+    services
+  FDT: Add a helper to get specified name subnode
+  Xen: EFI: Parse DT parameters for Xen specific UEFI
+
+ Documentation/devicetree/bindings/arm/xen.txt |  34 +++++
+ arch/arm/xen/enlighten.c                      | 109 +++++++++++----
+ arch/arm64/include/asm/xen/xen-ops.h          |   6 +
+ arch/arm64/kernel/acpi.c                      |  12 +-
+ arch/arm64/kernel/efi.c                       |  17 ++-
+ arch/arm64/kernel/setup.c                     |   2 +-
+ arch/arm64/xen/Makefile                       |   1 +
+ arch/arm64/xen/efi.c                          |  40 ++++++
+ arch/x86/xen/efi.c                            | 112 ++++++++++++++++
+ arch/x86/xen/grant-table.c                    |  57 +-------
+ drivers/acpi/bus.c                            |  36 ++++-
+ drivers/firmware/efi/efi.c                    |  45 ++++++-
+ drivers/of/fdt.c                              |  35 +++++
+ drivers/xen/Kconfig                           |   2 +-
+ drivers/xen/Makefile                          |   1 +
+ drivers/xen/arm-device.c                      | 184 ++++++++++++++++++++++++++
+ drivers/xen/efi.c                             | 174 +++++-------------------
+ drivers/xen/xlate_mmu.c                       |  67 ++++++++++
+ include/linux/of_fdt.h                        |   2 +
+ include/xen/interface/hvm/params.h            |  36 ++++-
+ include/xen/interface/memory.h                |   1 +
+ include/xen/xen-ops.h                         |  32 +++--
+ 22 files changed, 757 insertions(+), 248 deletions(-)
+ create mode 100644 arch/arm64/include/asm/xen/xen-ops.h
+ create mode 100644 arch/arm64/xen/efi.c
+ create mode 100644 drivers/xen/arm-device.c
+
+-- 
+2.0.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
