@@ -1,143 +1,147 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control
- for FPGA
-Date: Sat, 23 Jan 2016 01:07:45 +0100
-Message-ID: <CAAtXAHcvB9qxsUOrfRe4AAAbUSpCrykbsLn7DnZ7bKQeaCCf0g@mail.gmail.com>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
-	<1453317867-10422-6-git-send-email-atull@opensource.altera.com>
-	<CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com>
-	<alpine.DEB.2.02.1601221021130.1187@linuxheads99>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv8 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
+ entries
+Date: Fri, 22 Jan 2016 20:35:13 -0600
+Message-ID: <20160123023513.GA2081@rob-hp-laptop>
+References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+ <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1601221021130.1187@linuxheads99>
+Content-Disposition: inline
+In-Reply-To: <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+To: tthayer@opensource.altera.com
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 5:37 PM, atull <atull@opensource.altera.com> wrote:
-> On Fri, 22 Jan 2016, Moritz Fischer wrote:
->
->> Alan,
->>
->> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
->>
->> > +static int fpga_area_probe(struct platform_device *pdev)
->> > +{
->> > +       struct device *dev = &pdev->dev;
->> > +       struct device_node *np = dev->of_node;
->> > +       struct fpga_area *area;
->> > +       int ret;
->> > +
->> > +       area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
->> > +       if (!area)
->> > +               return -ENOMEM;
->> > +
->> > +       INIT_LIST_HEAD(&area->bridge_list);
->> > +
->> > +       ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
->> > +       if (ret)
->> > +               return ret;
->> > +       area->br = dev_get_drvdata(dev);
->> > +
->> > +       if (of_property_read_string(np, "firmware-name",
->> > +                                   &area->firmware_name)) {
->> > +               of_platform_populate(np, of_default_bus_match_table, NULL, dev);
->> > +               return 0;
->> > +       }
->>
->> This is the use case where the bootloader loaded the fpga, and you
->> just want to populate
->> the devices in the fabric, right?
->
-> Hi Moritz,
->
-> Yes
->
->>
->> > +       if (of_property_read_bool(np, "partial-reconfig"))
->> > +               area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
->> > +
->> > +       ret = fpga_area_get_bus(area);
->> > +       if (ret) {
->> > +               dev_dbg(dev, "Should be child of a FPGA Bus");
->> > +               goto err_unreg;
->> > +       }
->>
->> Looking at socfpga.dtsi, would that mean that the fpgamgr0 node would
->> need to become a subnode of fpgabus@0 at the same place?
->>
->> i.e. /soc/fpgamgr@ff706000 -> /soc/fpgabus@0/fpgamgr@ff706000
->>
->> and the ranges property would be used to translate to the fpga memory
->> mapped space?
->>
->> I know we're going back and forth on this. I think Rob brought up a
->> similar question:
->> "Does the bus really go thru the fpgamgr and then the bridge as this
->> implies? Or fpgamgr is a sideband controller?"
->>
->> To which I think the answer is 'sideband' controller, yet with the new
->> bindings it looks like
->> the bus goes through the fpgamgr.
->
-> Yeah, let's get this right.  First, let's be clear on the reason for FPGA Bus to
-> exist.  There may be >1 FPGA in a system.  I want the FPGA Bus bring together
-> the bridges and manager that are associated with a certain FPGA.  This allows
-> the system designer to specify which FPGA is getting programmed with which
-> image/hardware.  So at minimum, we need some way of associating a FPGA Bus with
-> a FPGA Manager.
+On Thu, Jan 21, 2016 at 11:34:26AM -0600, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> Adding the device tree entries and bindings needed to support
+> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+> an earlier patch to declare and setup On-chip RAM properly.
+> http://www.spinics.net/lists/devicetree/msg51117.html
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+> ---
+> v8: Fix node names to include chip family and use ecc manager
+>     to better describe the driver. Rename socfpga-edac.txt to
+>     socfpga-eccmgr.txt.
+> v7: No Change
+> v6: Change to nested EDAC device nodes based on community
+>     feedback. Remove L2 syscon. Use consolidated binding.
+> v3-5: No Change
+> v2: Remove OCRAM declaration and reference prior patch.
+> ---
+>  .../bindings/arm/altera/socfpga-eccmgr.txt         |   49 ++++++++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |   20 ++++++++
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
 
-I see your argument for the FPGA bus. I agree that we need to
-distinguish different FPGAs,
-and we need a way to associate an area with a manager (and potentially bridges).
+A couple of nits, otherwise:
 
-> As far as the target path is concerned, in the case of no bridges, we could have
-> the overlay target the FPGA Bus instead of the FPGA Manager.  That may be more
-> logical.  This would just be a documentation change; I think fpga-area.c will
-> work OK if you specify the FPGA bus as your target (the manager still has to
-> be a child of the bus so the bus knows what manager to use).
+Acked-by: Rob Herring <robh@kernel.org>
 
-Could the bus not just use a phandle to the manager? Or the area a
-phandle to the bus?
-Like that one could have potentially disjunct groups. Say I have a SPI
-device that is in an FPGA area.
-With our current system, I'd have a FPGA Manager that needs to be a
-child of the bus as child of the SPI controller
-with the memory addresses being addresses on the SOC's memory bus:
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+> new file mode 100644
+> index 0000000..4f45690
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+> @@ -0,0 +1,49 @@
+> +Altera SoCFPGA ECC Manager
+> +This driver uses the EDAC framework to implement the SOCFPGA ECC Manager.
+> +The ECC Manager counts and corrects single bit errors and counts/handles
+> +double bit errors which are uncorrectable.
+> +
+> +Required Properties:
+> +- compatible : Should be "altr,socfpga-ecc-manager"
+> +- #address-cells: must be 1
+> +- #size-cells: must be 1
+> +- ranges : standard definition, should translate from local addresses
+> +
+> +Subcomponents:
+> +
+> +L2 Cache ECC
+> +Required Properties:
+> +- compatible : Should be "altr,socfpga-l2-ecc"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +On Chip RAM ECC
+> +Required Properties:
+> +- compatible : Should be "altr,socfpga-ocram-ecc"
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- iram : phandle to On-Chip RAM definition.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +Example:
+> +
+> +	eccmgr: eccmgr@0xffd08140 {
 
-spi_ctrl@deadbeef {
-        fpga_bus@0 {
-                fpgamgr@f8007000 {
-                    mgr regs etc...
-                ... and now the SPI slaves ...
-                    slave@42 {
-                    };
-                };
-        };
-};
+drop the '0x'
 
-(or something like that, maybe I'm confused)
+> +		compatible = "altr,socfpga-ecc-manager";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		l2-ecc@ffd08140 {
+> +			compatible = "altr,socfpga-l2-ecc";
+> +			reg = <0xffd08140 0x4>;
+> +			interrupts = <0 36 1>, <0 37 1>;
+> +		};
+> +
+> +		ocram-ecc@ffd08144 {
+> +			compatible = "altr,socfpga-ocram-ecc";
+> +			reg = <0xffd08144 0x4>;
+> +			iram = <&ocram>;
+> +			interrupts = <0 178 1>, <0 179 1>;
+> +		};
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 39c470e..9bb383e 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -656,6 +656,26 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		eccmgr: eccmgr@0xffd08140 {
 
-with my proposed one it looks like it would work with any bus (maybe
-then areas would have to register with
-the manager or something like that...)
+and here.
 
-spi_ctrl@deadbeef {
-        fpga_area {
-                fpga-mgr = <&fpgamgr0>;
-                slave0@42 {
-                };
-        };
-};
-
-I keep bringing up SPI because it's another bus with addresses, not
-because I think we should particularly
-optimize for that use case ;-)
-
-Cheers,
-
-Moritz
-
-PS: Feel free to 'break' my suggestion above. It's just an idea
+> +			compatible = "altr,socfpga-ecc-manager";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			l2-ecc@ffd08140 {
+> +				compatible = "altr,socfpga-l2-ecc";
+> +				reg = <0xffd08140 0x4>;
+> +				interrupts = <0 36 1>, <0 37 1>;
+> +			};
+> +
+> +			ocram-ecc@ffd08144 {
+> +				compatible = "altr,socfpga-ocram-ecc";
+> +				reg = <0xffd08144 0x4>;
+> +				iram = <&ocram>;
+> +				interrupts = <0 178 1>, <0 179 1>;
+> +			};
+> +		};
+> +
+>  		L2: l2-cache@fffef000 {
+>  			compatible = "arm,pl310-cache";
+>  			reg = <0xfffef000 0x1000>;
+> -- 
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
