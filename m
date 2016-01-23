@@ -1,52 +1,67 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] edac: xgene: Add missing SoC register bus error
- handling and fix CE promotes to UE
-Date: Sat, 23 Jan 2016 15:34:15 +0100
-Message-ID: <20160123143415.GD16329@pd.tnic>
-References: <1453495625-28006-1-git-send-email-lho@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [linux-sunxi][PATCH v4 0/3] ARM: dt: sunxi: Add Itead Ibox support
+Date: Sat, 23 Jan 2016 16:18:16 +0100
+Message-ID: <1453562299-18495-1-git-send-email-codekipper@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453495625-28006-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 01:47:02PM -0700, Loc Ho wrote:
-> Add missing register bus error handling for SoC and fix an checking
-> condition for CE error promotes to UE. DT binding and documentation are
-> also updated.
-> 
-> v3:
-> * Move the regmap-rb property back to the required section.
-> * Fix typo in documentation and comment code
-> 
-> v2:
-> * Make the register bus resource optional
-> * Update DT binding accordinlgy
-> 
-> ---
-> Loc Ho (3):
->   Documentation: Update the APM X-Gene SoC EDAC DTS binding for missing
->     RB
->   edac: xgene: Add missing SoC register bus error handling and fix CE
->     promotes to UE
->   arm64: Update the APM X-Gene EDAC node with the RB register resource
-> 
->  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   10 +++
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |    6 ++
->  drivers/edac/xgene_edac.c                          |   70 +++++++++++++++++++-
->  3 files changed, 85 insertions(+), 1 deletions(-)
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied, thanks.
+Hi All,
+
+this patch series is an extension of the initial patch delivery for the
+Itead Ibox as found here
+https://groups.google.com/d/msg/linux-sunxi/GR_co3ObW8s/0BTPQljmAAAJ.
+
+There seems to be a few Itead variants out there based on their A10/A20
+core module and this patch series attempts to organise the device tree
+files with some consideration that these variants may be added later.
+
+I've also converted the A10 Itead Iteaduino dts to use this common file.
+As I don't have this board to verify the changes I simply compared the
+output of the fdtdump before and after applying these patches. The only
+difference was the reduction to the dcdc2 max voltage.
+
+BR,
+CK
+
+---
+Changes since v3:
+- Removed spi0 from Itead Ibox dts.
+- Removed unneccessary header references.
+- Removed Itead A10/A20 Core dtsi, moving what SoC specific parts to the
+  board dts and generic parts to the common dtsi.
+- fixed naming delimiters in compatibles.
+
+Changes since v2:
+- removed duplicate naming
+- moved enabling of some peripherals to board level.
+
+Changes since v1:
+- Added audio codec.
+- Seperated into individual patches
+- added Itead A10 core dtsi
+- modified sun4i-a10-itead-iteaduino-plus.dts to use itead common core dtsii
+
+Marcus Cooper (3):
+  ARM: dts: sunxi: Add sunxi-itead-core-common.dtsi
+  ARM: dts: sun7i: Add Itead Ibox support
+  ARM: dts: sun4i: Itead Iteaduino to use common code
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/sun4i-a10-itead-iteaduino-plus.dts    |  86 +------------
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts         | 125 +++++++++++++++++++
+ arch/arm/boot/dts/sunxi-itead-core-common.dtsi     | 136 +++++++++++++++++++++
+ 4 files changed, 264 insertions(+), 84 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+ create mode 100644 arch/arm/boot/dts/sunxi-itead-core-common.dtsi
 
 -- 
-Regards/Gruss,
-    Boris.
+2.7.0
 
-ECO tip #101: Trim your mails when you reply.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
