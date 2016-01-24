@@ -1,63 +1,53 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V7 0/6] i2c: qup: Add support for v2 tags and bam dma
-Date: Sun, 24 Jan 2016 12:33:18 +0100
-Message-ID: <20160124113318.GB1775@katana>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org>
- <000101d152a2$23bb1da0$6b3158e0$@codeaurora.org>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Sun, 24 Jan 2016 17:10:53 +0000
+Message-ID: <20160124171053.5f15b92c@lxorguk.ukuu.org.uk>
+References: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+	<20160116233157.GA7774@rob-hp-laptop>
+	<3D5F35D7-31B5-4E68-875F-7DD492EF0316@goldelico.com>
+	<20160117141912.4aa2e46c@lxorguk.ukuu.org.uk>
+	<1D5F146E-D347-453B-9158-8D269F8DA99C@goldelico.com>
+	<20160117193849.69d00c28@lxorguk.ukuu.org.uk>
+	<37DCE36D-0A5E-41C5-BDA4-857DCF9F2DD1@goldelico.com>
+	<20160118111926.0882b422@lxorguk.ukuu.org.uk>
+	<07F3B6C0-0C87-478C-B6DD-5C0EECB42D0D@goldelico.com>
+	<20160118220319.051c9cc0@lxorguk.ukuu.org.uk>
+	<C1E6AFE7-1EF2-4C70-8BE2-82F5CD7DDE22@goldelico.com>
+	<9E37C552-361C-4A54-980E-E3BFFF834302@goldelico.com>
+	<20160120174610.1c64239a@lxorguk.ukuu.org.uk>
+	<39B850CE-E381-4D3B-BD0A-84AFE7DAEEDF@goldelico.com>
+	<CAAObsKB4oFeM9Cjet5z+vz0S1M8RZ3jFt03b38KXq+sh6f5EwA@mail.gmail.com>
+	<20160122201229.5df0bb2d@lxorguk.ukuu.org.uk>
+	<DF404071-9FD0-4B33-B1B5-EC14192655E7@goldelico.com>
+	<20160123172830.51933d2d@lxorguk.ukuu.org.uk>
+	<68E21655-A8A1-431B-BBB9-3B43AFC0B03A@goldelico.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <000101d152a2$23bb1da0$6b3158e0$@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <68E21655-A8A1-431B-BBB9-3B43AFC0B03A@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>, Vostrikov Andrey <andrey.vostrikov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, Peter Hurley <peter@hurleysoftware.com>, Rob Herring <robherring2@gmail.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, NeilBrown <neil@brown.name>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
+> > but by having only the
+> > minimum necessary in the kernel. Unix  
+> 
+> I think you are confusing it with the goals of microkernels (e.g. Mach or Hurd).
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No and the quote below is from Doug McIlroy - who amongst other thing
+invented pipes.
 
-> > Sricharan R (6):
-> >   i2c: qup: Change qup_wait_writeready function to use for all timeouts
-> >   i2c: qup: Add V2 tags support
-> >   i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
-> >   i2c: qup: Add bam dma capabilities
-> >   dts: msm8974: Add blsp2_bam dma node
-> >   dts: msm8974: Add dma channels for blsp2_i2c1 node
-> >=20
->  Wolfram,  Does the first 4 patches looks good to be picked up  ?
+> > 
+> > "We used to sit around in the Unix Room saying, 'What can we throw out?
+> > Why is there this option?" - Doug McIlroy  
 
-Except for patch 3 (I replied seperately), the rest looks okay to me. I
-wondered a little if it would make sense to make a new driver for v2 +
-DMA, because the additions were quite massive. But I'll leave it up to
-you if there is enough shared code between the two versions, so that a
-single driver will be better.
+> Most GPS receivers I came across are modules which spit out NMEA
+> records with serial 9600 bit/s. Either through RS232 or Bluetooth SPP. There
+> may be others, but I don't want to have all problems of the world solved
+> at once.
 
+The kernel lives in the big world, not your personal fiefdom
 
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWpLZ9AAoJEBQN5MwUoCm20/IQAKSFLox/xoAz33+OYp5woz/a
-bjQlyYoIhC03MTtVy6v7wDZkgxkhfYLxLMgh5hz6Dl8w50jbsPrv7842v67ZarVD
-9mruQCq4hBH89ZyJjx2i5bOkEYexQMQp3LubKiVA3/YiW/Fih0sWzTWjkvPjMUCG
-wtMtWznWmg+6mImj4LRrPPQjlRQouDrX90IybBWG93egc82OmSxnFsWaxXQNCYvX
-FBIC5YienjipVGIbkGQVJcl8ac32q9on0xUmDIvnH/ElR64ks4z3FsdNy1KWjj81
-HrDrR2F1TkDN4Zm71DNn7+xPxN3dHv8d14Pu+Kv1BPUdg7I7KyrQcNaFaGo9sXVE
-JB7X+NSyq362k2A05CkBiH5yJAwUHb5rDXz7jSRnM4DNQol0nAVLWaBZAKpzCGEU
-933nS8u+XtMEBQnzq9uNQSKWSRM5TxP+nPWm5vCeoSX8hqZa7mbHZtfXxMmOHsdD
-y1bcCMN4/n2VrlLfZ4J+yRxbArlVbBYwDjhOX6SRpWfiFmOJkdouHyrEVEQSIxiz
-HppeD1dKDyAhlheKtYisVVtK6UIDbtqejfmbFgPdmBZBjbAa/a6zGW65QzzpHVys
-k0EKzUnjAZdPGtXjaopK2b8KPxck5OjhQO9y5O/vcOo9FDZMpHqVKoGXjsBC1GSm
-2yLZNQj6w8sjTlV4+3ZC
-=/aeP
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
+*PLONK*
