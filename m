@@ -1,36 +1,73 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
- topology
-Date: Mon, 25 Jan 2016 11:33:41 +0530
-Message-ID: <20160125060341.GD3183@vireshk>
-References: <1453663322-14474-1-git-send-email-mans@mansr.com>
- <1453663322-14474-4-git-send-email-mans@mansr.com>
- <20160124223629.GI6588@sirena.org.uk>
- <yw1xk2myli0u.fsf@unicorn.mansr.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
+ disable_unused_functions
+Date: Mon, 25 Jan 2016 00:19:27 +0200
+Message-ID: <1484612.l42nGNbAu5__29416.2630023949$1453702882$gmane$org@avalon>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
+ <2014724.QmjXVju9UW@avalon> <20160115101730.GH19130@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xk2myli0u.fsf-OEaqT8BN2ezZK2NkWkPsZwC/G2K4zDHf@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160115101730.GH19130@phenom.ffwll.local>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexander Kaplan <alex@nextthing.co>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24-01-16, 22:38, M=E5ns Rullg=E5rd wrote:
-> I give up.  Seriously, this is impossible.  If I don't include everyb=
-ody
-> in the slightest way related to any patch in the series, I get
-> complaints that patches are missing.  If I do, the lists reject it al=
-l
-> due to too many recipients.  What the hell am I supposed to do?
-
-Bcc everyone and mention that in cover-letter :)
-
---=20
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRGFuaWVsLAoKT24gRnJpZGF5IDE1IEphbnVhcnkgMjAxNiAxMToxNzozMCBEYW5pZWwgVmV0
+dGVyIHdyb3RlOgo+IE9uIEZyaSwgSmFuIDE1LCAyMDE2IGF0IDAxOjEzOjA1QU0gKzAyMDAsIExh
+dXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBPbiBUaHVyc2RheSAxNCBKYW51YXJ5IDIwMTYgMTY6
+MjQ6NTYgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiA+PiBUaGUgZHJtX2ZiZGV2X2NtYV9pbml0IGZ1
+bmN0aW9uIGFsd2F5cyBjYWxscyB0aGUKPiA+PiBkcm1faGVscGVyX2Rpc2FibGVfdW51c2VkX2Z1
+bmN0aW9ucy4gU2luY2UgaXQncyBwYXJ0IG9mIHRoZSB1c3VhbCBwcm9iZQo+ID4+IHByb2Nlc3Ms
+IGFsbCB0aGUgZHJpdmVycyB1c2luZyB0aGF0IGhlbHBlciB3aWxsIGVuZCB1cCBoYXZpbmcgdGhl
+aXIKPiA+PiBlbmNvZGVyIGFuZCBDUlRDIGRpc2FibGUgZnVuY3Rpb25zIGNhbGxlZCBhdCBwcm9i
+ZSBpZiB0aGVpciBkZXZpY2UgaGFzCj4gPj4gbm90IGJlZW4gcmVwb3J0ZWQgYXMgZW5hYmxlZC4K
+PiA+PiAKPiA+PiBUaGlzIGNvdWxkIGJlIGZpeGVkIGJ5IHJlYWRpbmcgb3V0IGZyb20gdGhlIHJl
+Z2lzdGVycyB0aGUgY3VycmVudCBzdGF0ZQo+ID4+IG9mIHRoZSBkZXZpY2UgaWYgaXQgaXMgZW5h
+YmxlZCwgYnV0IGV2ZW4gdGhhdCB3aWxsIG5vdCBoYW5kbGUgdGhlIGNhc2UKPiA+PiB3aGVyZSB0
+aGUgZGV2aWNlIGlzIGFjdHVhbGx5IGRpc2FibGVkLgo+ID4+IAo+ID4+IE1vcmVvdmVyLCB0aGUg
+ZHJpdmVycyB1c2luZyB0aGUgYXRvbWljIG1vZGVzZXR0aW5nIGV4cGVjdCB0aGF0IHRoZWlyCj4g
+Pj4gZW5hYmxlIGFuZCBkaXNhYmxlIGNhbGxiYWNrIHRvIGJlIGNhbGxlZCB3aGVuIHRoZSBkZXZp
+Y2UgaXMgYWxyZWFkeQo+ID4+IGVuYWJsZWQgb3IgZGlzYWJsZWQgKHJlc3BlY3RpdmVseSkuCj4g
+Pj4gCj4gPj4gV2UgY2FuIGhvd2V2ZXIgZml4IHRoaXMgaXNzdWUgYnkgbW92aW5nIHRoZSBjYWxs
+IHRvCj4gPj4gZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMgb3V0IG9mIGRybV9m
+YmRldl9jbWFfaW5pdCBhbmQgbWFrZQo+ID4+IHRoZSBkcml2ZXJzIG5lZWRpbmcgaXQgKGFsbCB0
+aGUgZHJpdmVycyBjYWxsaW5nIGRybV9mYmRldl9jbWFfaW5pdCBhbmQKPiA+PiBub3QgdXNpbmcg
+dGhlIGF0b21pYyBtb2Rlc2V0dGluZykgZXhwbGljaXRseSBjYWxsIGl0Lgo+ID4gCj4gPiBJJ2Qg
+cmF0aGVyIGFkZCBpdCB0byBhbGwgZHJpdmVycyB0aGF0IGNhbGwgZHJtX2ZiZGV2X2NtYV9pbml0
+KCkuIEFsbCB0aGUKPiA+IGF0b21pYyBvbmVzIG11c3QgaGF2ZSBzcGVjaWFsIGNvZGUgdG8gY29w
+ZSB3aXRoIGl0IHRoYXQgY291bGQgYmUgcmVuZGVyZWQKPiA+IHVzZWxlc3MgYnkgdGhlIHJlbW92
+YWwgb2YgdGhlIGRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKCkgY2FsbC4KPiA+
+IFRoYXQgY29kZSBzaG91bGQgYmUgcmVtb3ZlZCB0b28sIGFuZCBpdCB3b3VsZCBiZSBlYXNpZXIg
+dG8gY2hlY2sgZHJpdmVycwo+ID4gb25lIGJ5IG9uZSBhbmQgZml4aW5nIHRoZW0gaW5kaXZpZHVh
+bGx5IChvdXRzaWRlIG9mIHRoaXMgcGF0Y2ggc2VyaWVzLAo+ID4gdW5sZXNzIHlvdSBpbnNpc3Qg
+Oy0pKSB3aGVuIHJlbW92aW5nIHRoZSBleHBsaWNpdAo+ID4gZHJtX2hlbHBlcl9kaXNhYmxlX3Vu
+dXNlZF9mdW5jdGlvbnMoKSBjYWxsLgo+Cj4gSSBoYWQgdGhlIHNhbWUgdGhvdWdodCwgYnV0IGZp
+Z3VyZWQgdGhlcmUncyByZWFsbHkgbm8gZ29vZCByZWFzb24gZXZlciB0bwo+IGRvIHRoaXMuIEkg
+c3VzcGVjdCBtb3N0IG9mIHRoYXQgZGlzYWJsZV91bnVzZWRfZnVuY3Rpb24gc3R1ZmYgd2UgaGF2
+ZSBhbGwKPiBvdmVyIGlzIHN1cHJlbWUgY2FyZ28tY3VsdCBhbnl3YXkgOy0pCgpJJ20gbm90IHN1
+cmUgeW91IGdvdCBteSBwb2ludC4gWWVzLCB0aGUgZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9m
+dW5jdGlvbnMoKSAKY2FsbCBzaG91bGQgYmUgcmVtb3ZlZCBmcm9tIGF0b21pYyBkcml2ZXJzLCBi
+dXQgdGhhdCB3aWxsIGxlYXZlIHN1cHBvcnQgY29kZSAKYWRkZWQgZm9yIHRoZSBzb2xlIHJlYXNv
+biBvZiBhdm9pZGluZyB0aGUgY3Jhc2ggaW4gdGhlIGRyaXZlcnMuIFRoYXQgY29kZSB3aWxsIAps
+aWtlbHkgbm90IGJlIG5vdGljZWQgYW5kIHdpbGwgc3RheSB0aGVyZSByb3R0aW5nLiBJZiB3ZSBh
+ZGRlZCAKZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoKSBjYWxscyB0byBhbGwg
+YXRvbWljIGRyaXZlcnMgdGhlbiBkcml2ZXIgCmF1dGhvcnMgd2lsbCBob3BlZnVsbHkgY2hlY2sg
+Y2FyZWZ1bGx5IGlmIHRoZXJlJ3MgYW55IHN1cHBvcnQgY29kZSB0aGF0IGNhbiBiZSAKcmVtb3Zl
+ZCB3aGVuIHJlbW92aW5nIHRoZSBmdW5jdGlvbiBjYWxsLiBJdCB3b3VsZCBhY3QgYXMgYSBraW5k
+IG9mIEZJWE1FIApyZW1pbmRlci4KCj4gPiBPdGhlciB0aGFuIHRoYXQgdGhlIHBhdGNoIGxvb2tz
+IGZpbmUgdG8gbWUuCj4gCj4gU28gd2VudCBhaGVhZCBhbmQgYXBwbGllZCB0byBkcm0tbWlzYy4K
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
