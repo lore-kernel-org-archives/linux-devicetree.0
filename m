@@ -1,57 +1,96 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd: fix pin names for UART/SD
- selection
-Date: Sun, 24 Jan 2016 18:30:51 +0100
-Message-ID: <20160124173051.GT3880@lunn.ch>
-References: <1452629253-21748-1-git-send-email-aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
+Date: Sun, 24 Jan 2016 18:37:01 +0100
+Message-ID: <20160124173701.GU3880@lunn.ch>
+References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
+ <1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452629253-21748-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+In-Reply-To: <1453588600-14831-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 10:07:32PM +0200, Aaro Koskinen wrote:
-> The UART/SD pin names are swapped, fix that.
+On Sun, Jan 24, 2016 at 12:36:39AM +0200, Aaro Koskinen wrote:
+> Fix audio on kirkwood-openrd-client:
 > 
+> 1) The audio-controller was left disabled.
+> 
+> 2) The probe fails because cs42l51 is missing #sound-dai-cells.
+> 
+> 	/sound/simple-audio-card,codec: could not get #sound-dai-cells for /ocp@f1000000/i2c@11000/cs42l51@4a
+> 	asoc-simple-card sound: parse error -22
+> 	asoc-simple-card: probe of sound failed with error -22
+> 
+> 3) The mapping is incorrect:
+> 
+> 	asoc-simple-card sound: cs42l51-hifi <-> spdif mapping ok
+> 
+>    should be:
+> 
+> 	asoc-simple-card sound: cs42l51-hifi <-> i2s mapping ok
+> 
+> Reported-by: Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
 > Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 
-This, and 2/2:
+It would be good to have a Tested-by: from Rick.
 
 Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-Thanks
-	Andrew
+	     Andrew
 
 > ---
->  arch/arm/boot/dts/kirkwood-openrd.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/kirkwood-openrd-client.dts | 6 +++++-
+>  arch/arm/boot/dts/kirkwood.dtsi              | 2 +-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/kirkwood-openrd.dtsi b/arch/arm/boot/dts/kirkwood-openrd.dtsi
-> index d3330da..2a3dafd 100644
-> --- a/arch/arm/boot/dts/kirkwood-openrd.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood-openrd.dtsi
-> @@ -40,7 +40,7 @@
->  			pinctrl-0 = <&pmx_select28 &pmx_sdio_cd &pmx_select34>;
->  			pinctrl-names = "default";
+> diff --git a/arch/arm/boot/dts/kirkwood-openrd-client.dts b/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> index 887b9c1..96ff59d 100644
+> --- a/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> +++ b/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> @@ -20,6 +20,9 @@
+>  	compatible = "marvell,openrd-client", "marvell,openrd", "marvell,kirkwood-88f6281", "marvell,kirkwood";
 >  
-> -			pmx_select28: pmx-select-uart-sd {
-> +			pmx_select28: pmx-select-rs232-rs484 {
->  				marvell,pins = "mpp28";
->  				marvell,function = "gpio";
+>  	ocp@f1000000 {
+> +		audio-controller@a0000 {
+> +			status = "okay";
+> +		};
+>  		i2c@11000 {
+>  			status = "okay";
+>  			clock-frequency = <400000>;
+> @@ -27,6 +30,7 @@
+>  			cs42l51: cs42l51@4a {
+>  				compatible = "cirrus,cs42l51";
+>  				reg = <0x4a>;
+> +				#sound-dai-cells = <0>;
 >  			};
-> @@ -48,7 +48,7 @@
->  				marvell,pins = "mpp29";
->  				marvell,function = "gpio";
->  			};
-> -			pmx_select34: pmx-select-rs232-rs484 {
-> +			pmx_select34: pmx-select-uart-sd {
->  				marvell,pins = "mpp34";
->  				marvell,function = "gpio";
->  			};
+>  		};
+>  	};
+> @@ -37,7 +41,7 @@
+>  		simple-audio-card,mclk-fs = <256>;
+>  
+>  		simple-audio-card,cpu {
+> -			sound-dai = <&audio0>;
+> +			sound-dai = <&audio0 0>;
+>  		};
+>  
+>  		simple-audio-card,codec {
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 7b5a4a1..7445a15 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -381,7 +381,7 @@
+>  
+>  		audio0: audio-controller@a0000 {
+>  			compatible = "marvell,kirkwood-audio";
+> -			#sound-dai-cells = <0>;
+> +			#sound-dai-cells = <1>;
+>  			reg = <0xa0000 0x2210>;
+>  			interrupts = <24>;
+>  			clocks = <&gate_clk 9>;
 > -- 
 > 2.4.0
 > 
