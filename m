@@ -1,119 +1,61 @@
-From: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
- topology
-Date: Sun, 24 Jan 2016 21:37:21 +0100
-Message-ID: <20160124203720.GA29010@samfundet.no>
-References: <1453663322-14474-1-git-send-email-mans@mansr.com>
- <1453663322-14474-4-git-send-email-mans@mansr.com>
- <20160124200959.GA15633@samfundet.no>
- <yw1xsi1mlogt.fsf@unicorn.mansr.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xsi1mlogt.fsf@unicorn.mansr.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+From: Rick Thomas <rbthomas@pobox.com>
+Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
+Date: Sun, 24 Jan 2016 12:56:09 -0800
+Message-ID: <411C1DFA-3E76-42B0-866C-7C3C0D990039@pobox.com>
+References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
+ <1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi>
+ <20160124173701.GU3880@lunn.ch>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160124173701.GU3880@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, Aaro Koskinen <aaro.koskinen@iki.fi>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Mark Brown <broonie@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Martin Michlmayr <tbm@cyrius.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Around Sun 24 Jan 2016 20:19:46 +0000 or thereabout, M=E5ns Rullg=E5rd =
-wrote:
-> Hans-Christian Noren Egtvedt <egtvedt@samfundet.no> writes:
->> Around Sun 24 Jan 2016 19:21:50 +0000 or thereabout, Mans Rullgard w=
-rote:
->>> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>>=20
->>> The source and destination masters are reflecting buses or their la=
-yers to
->>> where the different devices can be connected. The patch changes the=
- master
->>> names to reflect which one is related to which independently on the=
- transfer
->>> direction.
->>>=20
->>> The outcome of the change is that the memory data width is now alwa=
-ys limited
->>> by a data width of the master which is dedicated to communicate to =
-memory.
->>>=20
->>> The patch will not break anything since all current users have the =
-same data
->>> width for all masters. Though it would be nice to revisit avr32 pla=
-forms to
->>> check what is the actual hardware topology is used there. It seems =
-that it has
->>> one bus and two masters on it as stated by Table 8-2, that's why ev=
-erything
->>> works independently on the master in use. The purpose of the sequen=
-tial patch
->>> is to fix the driver for configuration of more that one bus.
->>
->> Not entirely sure what you want to have confirmed here. There are mu=
-ltiple
->> masters and slaves on the HMATRIX internal bus on AVR32, and the DMA
->> controller supports up to three simultaneous configurations.
->>
->> Sounds good to support configuration of more than one bus. I thought=
- we
->> always did support that? Perhaps it was a non-standard avr32 impleme=
-ntation.
->=20
-> The DW DMA controller on the AT32AP7000 serves the MCI, AC97, and ABD=
-AC
-> peripherals.  It appears to work regardless of the values put in the
-> various master select fields.  Perhaps the topology is hardwired in t=
-he
-> DMA controller and those fields are ignored.  The AVR32 works both
-> before and after this patch series, the main purpose of which (at lea=
-st
-> my patches) is to fix the SATA driver on 460EX.
 
-DEST_PER and SRC_PER in the DMA controller selects this, numbers placed=
- here
-should match the table you most likely found, 9-3.
+On Jan 24, 2016, at 9:37 AM, Andrew Lunn <andrew@lunn.ch> wrote:
 
-Wiring the handshake connections is done with the struct dw_dma_slave s=
-rc_id
-or dst_id member, depending on data direction. Configured in the at32ap=
-700x.c
-machine code.
+> On Sun, Jan 24, 2016 at 12:36:39AM +0200, Aaro Koskinen wrote:
+>> Fix audio on kirkwood-openrd-client:
+>> 
+>> 1) The audio-controller was left disabled.
+>> 
+>> 2) The probe fails because cs42l51 is missing #sound-dai-cells.
+>> 
+>> 	/sound/simple-audio-card,codec: could not get #sound-dai-cells for /ocp@f1000000/i2c@11000/cs42l51@4a
+>> 	asoc-simple-card sound: parse error -22
+>> 	asoc-simple-card: probe of sound failed with error -22
+>> 
+>> 3) The mapping is incorrect:
+>> 
+>> 	asoc-simple-card sound: cs42l51-hifi <-> spdif mapping ok
+>> 
+>>   should be:
+>> 
+>> 	asoc-simple-card sound: cs42l51-hifi <-> i2s mapping ok
+>> 
+>> Reported-by: Rick Thomas <rbthomas@pobox.com>
+>> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> 
+> It would be good to have a Tested-by: from Rick.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> 
+> 	     Andrew
 
-It is not hard wired on avr32, as there are not one-to-one configuratio=
-ns and
-masters.
 
->>> The change is done in the assumption that src_master and dst_master=
- are
->>> reflecting a connection to the memory and peripheral correspondentl=
-y on all
->>> platforms except 460ex.
+If someone will make a .deb I can download, I'll be happy to install it and test it.  Please be explicit in describing what and how you want tested.
 
-OK, I have no knowledge about the 460ex.
 
->>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>> Signed-off-by: Mans Rullgard <mans@mansr.com>
->>
->> For the avr32 related stuff:
->>
->> Acked-by: Hans-Christian Egtvedt <egtvedt@samfundet.no>
->>
->>> ---
->>>  Documentation/devicetree/bindings/dma/snps-dma.txt |  4 ++--
->>>  arch/avr32/mach-at32ap/at32ap700x.c                | 16 ++++++++--=
-------
->>>  drivers/ata/sata_dwc_460ex.c                       |  4 ++--
->>>  drivers/dma/dw/core.c                              | 15 +++++++---=
------
->>>  drivers/dma/dw/platform.c                          | 12 ++++++----=
---
->>>  drivers/dma/dw/regs.h                              |  4 ++--
->>>  drivers/spi/spi-pxa2xx-pci.c                       |  8 ++++----
->>>  drivers/tty/serial/8250/8250_pci.c                 |  8 ++++----
->>>  include/linux/platform_data/dma-dw.h               |  8 ++++----
->>>  9 files changed, 39 insertions(+), 40 deletions(-)
->>
->> <snipp diff>
---=20
-Best regards, Hans-Christian Egtvedt
+Rick
