@@ -1,43 +1,129 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual topology
-Date: Sun, 24 Jan 2016 22:38:57 +0000
-Message-ID: <yw1xk2myli0u.fsf@unicorn.mansr.com>
-References: <1453663322-14474-1-git-send-email-mans@mansr.com>
-	<1453663322-14474-4-git-send-email-mans@mansr.com>
-	<20160124223629.GI6588@sirena.org.uk>
+From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/2] ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM/Ixora carrier board
+Date: Sun, 24 Jan 2016 23:48:21 +0100
+Message-ID: <1453675703-31594-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20160124223629.GI6588@sirena.org.uk> (Mark Brown's message of
-	"Sun, 24 Jan 2016 22:36:29 +0000")
-Sender: linux-ide-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> writes:
 
-> On Sun, Jan 24, 2016 at 07:21:50PM +0000, Mans Rullgard wrote:
->> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>=20
->> The source and destination masters are reflecting buses or their lay=
-ers to
->> where the different devices can be connected. The patch changes the =
-master
->> names to reflect which one is related to which independently on the =
-transfer
->> direction.
->
-> This is patch 3 of a series but I don't have anything else in the
-> series.  What is going on with the rest of the series - what are the
-> dependencies and so on?
+This patch series adds support for Toradex Apalis iMX6Q/D SoM module [1=
+] and
+Ixora carrier board [2].
 
-I give up.  Seriously, this is impossible.  If I don't include everybod=
-y
-in the slightest way related to any patch in the series, I get
-complaints that patches are missing.  If I do, the lists reject it all
-due to too many recipients.  What the hell am I supposed to do?
+Petr =C5=A0tetiar has simply taken content of DTSes from Toradex's Git =
+tree [3],
+removed not mainlined stuff and fixed all errors returned by checkpatch=
+ script.
+
+Please note that RESET_MOCI# used as mini-PCIe PERST# is not directly
+GPIO1_IO28 but rather inverted (e.g. active-high and ored with RESETBMC=
+U coming
+off the PMIC but that is not relevant in this context). As changing the
+reset-gpio polarity wasn't previously supported Petr =C5=A0tetiar's
+"PCI: imx6: Fix reset-gpio to work with active low GPIO" fix [4] is nee=
+ded.
+
+1. https://www.toradex.com/computer-on-modules/apalis-arm-family/freesc=
+ale-imx-6
+2. https://www.toradex.com/products/carrier-boards/ixora-carrier-board
+3. https://git.toradex.com/cgit/linux-toradex.git/log/?h=3Dtoradex_imx_=
+3.14.28_1.0.0_ga
+4. https://patchwork.ozlabs.org/patch/552886/
+
+Changes in v4:
+- integrated review feedback from Fabio
+
+Changes in v3:
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- move I2C DDC enablement and assignement handling into carrier board D=
+TS where it belongs
+- move CAN nodes up a little to keep the alphabetical order
+- added an explanatory comment about PWR_I2C usage
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- fix comment concerning Apalis GPIO usage as GPIO7 is only used for PC=
+Ie switch reset on Apalis Evaluation board
+- move I2C DDC handling into carrier board DTS where it belongs
+- simplify RTC alias
+
+Changes in v2:
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
+
+Petr =C5=A0tetiar (2):
+  ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM
+  ARM: dts: imx6: Add support for Toradex Ixora carrier board
+
+ arch/arm/boot/dts/Makefile               |    1 +
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts |  275 ++++++++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 1011 ++++++++++++++++++++++=
+++++++++
+ 3 files changed, 1287 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-apalis.dtsi
 
 --=20
-M=E5ns Rullg=E5rd
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
