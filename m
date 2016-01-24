@@ -1,26 +1,16 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to
- disable_unused_functions
+Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to disable_unused_functions
 Date: Mon, 25 Jan 2016 00:19:27 +0200
-Message-ID: <1484612.l42nGNbAu5__19571.4956651956$1453702923$gmane$org@avalon>
-References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <2014724.QmjXVju9UW@avalon> <20160115101730.GH19130@phenom.ffwll.local>
+Message-ID: <1484612.l42nGNbAu5__23286.5497739569$1453702950$gmane$org@avalon>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com> <2014724.QmjXVju9UW@avalon> <20160115101730.GH19130@phenom.ffwll.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160115101730.GH19130@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, David Airlie <airlied@linux.ie>, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexander Kaplan <alex@nextthing.co>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Thierry Reding <thierry.reding@gmail.com>, Rob Clark <robdclark@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wynter Woods <wynter@nextthing.co>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Daniel,
