@@ -1,60 +1,104 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: simple-card: don't fail if sysclk setting is
- not supported
-Date: Sun, 24 Jan 2016 18:39:12 +0100
-Message-ID: <20160124173912.GV3880@lunn.ch>
-References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
- <1453588600-14831-3-git-send-email-aaro.koskinen@iki.fi>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] Drivers: MUSB: Davinci MUSB: added DT support
+Date: Sun, 24 Jan 2016 22:00:31 +0300
+Message-ID: <56A51F4F.3030003@cogentembedded.com>
+References: <1453387999-4485-1-git-send-email-petr@barix.com>
+ <20160121230751.GA3991@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453588600-14831-3-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121230751.GA3991@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 24, 2016 at 12:36:40AM +0200, Aaro Koskinen wrote:
-> Commit e22579713ae1 ("ASoC: simple card: set cpu-dai sysclk
-> with mclk-fs") added sysclk / SND_SOC_CLOCK_OUT setting, that makes
-> asoc_simple_card_hw_params fail if the operation is not supported,
-> although the intention clearly was to ignore ENOTSUPP. Fix it.
-> 
-> The patch fixes audio playback on Kirkwood / OpenRD client,
-> where the following errors are seen:
-> 
-> 	asoc-simple-card sound: ASoC: machine hw_params failed: -524
-> 	alsa-lib: /alsa-lib-1.0.28/src/pcm/pcm_hw.c:327:(snd_pcm_hw_hw_params) SNDRV_PCM_IOCTL_HW_PARAMS failed (-524): Unknown error 524
-> 
-> Fixes: e22579713ae1 ("ASoC: simple card: set cpu-dai sysclk with mclk-fs")
-> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Hello.
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On 01/22/2016 02:07 AM, Rob Herring wrote:
 
-	     Andrew
+>> TI DaVinci MUSB driver equipped with DeviceTree support.
+>> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+>>
+>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/usb/da8xx-usb.txt          |  52 +++++++
+>>   drivers/usb/musb/da8xx.c                           | 166 +++++++++++++++++++++
+>>   include/linux/platform_data/usb-davinci.h          |   3 +-
+>>   3 files changed, 220 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>> new file mode 100644
+>> index 0000000..c81d665
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>
+> Follow the compatible string for the filename (with wildcards is fine).
+>
+>> @@ -0,0 +1,52 @@
+>> +TI DaVinci MUSB
+>> +
+>> +Required properties:
+>> +
+>> + - compatible : Should be "ti,da850-musb" or "ti,da830-musb"
+>> +
+>> + - mode : USB mode. "1" signifies HOST, "2" represents PERIPHERAL,
+>> +     "3" represents OTG.
+>
+> Surely we have a similar property defined already. Don't create
+> something new.
 
-> ---
->  sound/soc/generic/simple-card.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-> index 54c3320..ff6fcd9 100644
-> --- a/sound/soc/generic/simple-card.c
-> +++ b/sound/soc/generic/simple-card.c
-> @@ -100,7 +100,7 @@ static int asoc_simple_card_hw_params(struct snd_pcm_substream *substream,
->  		if (ret && ret != -ENOTSUPP)
->  			goto err;
->  	}
-> -
-> +	return 0;
->  err:
->  	return ret;
->  }
-> -- 
-> 2.4.0
-> 
+    Yes, there's "dr_mode" prop with string values.
+
+>> +
+>> + - power : This signifies the maximum current the controller can
+>> +     supply in host mode. The unit size is 2mA, the maximum value is 510mA.
+>
+> You should model this as a regulator.
+
+    This is not a regulator, it's just a value, that's all about it...
+
+>> + - num-eps : Specifies the number of endpoints. This is also a
+>> +     MUSB configuration-specific setting.
+>
+> Just spell out endpoints.
+
+    What do you mean?
+
+>> +
+>> + - multipoint : Should be "1" indicating the musb controller supports
+>> +     multipoint. This is a MUSB configuration-specific setting.
+>
+> What does multipoint mean?
+
+    Yeah, IU'd like to know that as well...
+
+>> + - ram-bits : Specifies the ram address size.
+>
+> Needs a better description. Then it probably needs a better name too,
+> but without a description I can't tell what that would be.
+
+    Anyway, all these props are standard for MUSB, so shoiuld certainly 
+handled (and documeted?) in a generic MUSB function. There's absolutely no 
+point handling them in da8xx.c.
+
+[...]
+
+>> + - da8xx,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
+>> +     frequency in Hz in case the clock is generated by the internal PLL.
+>> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+>
+> da8xx is not a vendor.
+
+    Yeah, "ti," should be used instead.
+
+> Rob
+
+MBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
