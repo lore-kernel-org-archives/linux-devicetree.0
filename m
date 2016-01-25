@@ -1,106 +1,142 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2] ARM64: tegra: Add chosen node for tegra132 norrin
-Date: Mon, 25 Jan 2016 18:10:21 +0100
-Message-ID: <20160125171021.GB10182@ulmo>
-References: <1453737310-11391-1-git-send-email-jonathanh@nvidia.com>
- <56A645CC.5070907@nvidia.com>
- <56A646BC.1010708@nvidia.com>
+From: j00310691 <john.garry@huawei.com>
+Subject: [PATCH v2 15/23] hisi_sas: add v2 SATA interrupt handler
+Date: Tue, 26 Jan 2016 01:22:04 +0800
+Message-ID: <1453742532-53092-16-git-send-email-john.garry@huawei.com>
+References: <1453742532-53092-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56A646BC.1010708-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1453742532-53092-1-git-send-email-john.garry@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+From: John Garry <john.garry@huawei.com>
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 100 +++++++++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-On Mon, Jan 25, 2016 at 04:01:00PM +0000, Jon Hunter wrote:
-> Correcting ARM-SOC email address ..
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 5af2069..c4a887c 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -861,6 +861,86 @@ static irqreturn_t int_chnl_int_v2_hw(int irq_no, void *p)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t sata_int_v2_hw(int irq_no, void *p)
++{
++	struct hisi_sas_phy *phy = p;
++	struct hisi_hba *hisi_hba = phy->hisi_hba;
++	struct asd_sas_phy *sas_phy = &phy->sas_phy;
++	struct device *dev = &hisi_hba->pdev->dev;
++	struct	hisi_sas_initial_fis *initial_fis;
++	struct dev_to_host_fis *fis;
++	u32 ent_tmp, ent_msk, ent_int, port_id, link_rate, hard_phy_linkrate;
++	irqreturn_t res = IRQ_HANDLED;
++	u8 attached_sas_addr[SAS_ADDR_SIZE] = {0};
++	int phy_no;
++
++	phy_no = sas_phy->id;
++	initial_fis = &hisi_hba->initial_fis[phy_no];
++	fis = &initial_fis->fis;
++
++	ent_msk = hisi_sas_read32(hisi_hba, ENT_INT_SRC_MSK1);
++	hisi_sas_write32(hisi_hba, ENT_INT_SRC_MSK1, ent_msk | 1 << phy_no);
++
++	ent_int = hisi_sas_read32(hisi_hba, ENT_INT_SRC1);
++	ent_tmp = ent_int;
++	ent_int >>= ENT_INT_SRC1_D2H_FIS_CH1_OFF * (phy_no % 4);
++	if ((ent_int & ENT_INT_SRC1_D2H_FIS_CH0_MSK) == 0) {
++		dev_warn(dev, "sata int: phy%d did not receive FIS\n", phy_no);
++		hisi_sas_write32(hisi_hba, ENT_INT_SRC1, ent_tmp);
++		hisi_sas_write32(hisi_hba, ENT_INT_SRC_MSK1, ent_msk);
++		res = IRQ_NONE;
++		goto end;
++	}
++
++	if (unlikely(phy_no == 8)) {
++		u32 port_state = hisi_sas_read32(hisi_hba, PORT_STATE);
++
++		port_id = (port_state & PORT_STATE_PHY8_PORT_NUM_MSK) >>
++			  PORT_STATE_PHY8_PORT_NUM_OFF;
++		link_rate = (port_state & PORT_STATE_PHY8_CONN_RATE_MSK) >>
++			    PORT_STATE_PHY8_CONN_RATE_OFF;
++	} else {
++		port_id = hisi_sas_read32(hisi_hba, PHY_PORT_NUM_MA);
++		port_id = (port_id >> (4 * phy_no)) & 0xf;
++		link_rate = hisi_sas_read32(hisi_hba, PHY_CONN_RATE);
++		link_rate = (link_rate >> (phy_no * 4)) & 0xf;
++	}
++
++	if (port_id == 0xf) {
++		dev_err(dev, "sata int: phy%d invalid portid\n", phy_no);
++		res = IRQ_NONE;
++		goto end;
++	}
++
++	sas_phy->linkrate = link_rate;
++	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
++						HARD_PHY_LINKRATE);
++	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
++	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
++
++	sas_phy->oob_mode = SATA_OOB_MODE;
++	/* Make up some unique SAS address */
++	attached_sas_addr[0] = 0x50;
++	attached_sas_addr[7] = phy_no;
++	memcpy(sas_phy->attached_sas_addr, attached_sas_addr, SAS_ADDR_SIZE);
++	memcpy(sas_phy->frame_rcvd, fis, sizeof(struct dev_to_host_fis));
++	dev_info(dev, "sata int phyup: phy%d link_rate=%d\n", phy_no, link_rate);
++	phy->phy_type &= ~(PORT_TYPE_SAS | PORT_TYPE_SATA);
++	phy->port_id = port_id;
++	phy->phy_type |= PORT_TYPE_SATA;
++	phy->phy_attached = 1;
++	phy->identify.device_type = SAS_SATA_DEV;
++	phy->frame_rcvd_size = sizeof(struct dev_to_host_fis);
++	phy->identify.target_port_protocols = SAS_PROTOCOL_SATA;
++	queue_work(hisi_hba->wq, &phy->phyup_ws);
++
++end:
++	hisi_sas_write32(hisi_hba, ENT_INT_SRC1, ent_tmp);
++	hisi_sas_write32(hisi_hba, ENT_INT_SRC_MSK1, ent_msk);
++
++	return res;
++}
++
+ static irq_handler_t phy_interrupts[HISI_SAS_PHY_INT_NR] = {
+ 	int_phy_updown_v2_hw,
+ 	int_chnl_int_v2_hw,
+@@ -900,6 +980,26 @@ static int interrupt_init_v2_hw(struct hisi_hba *hisi_hba)
+ 		}
+ 	}
+ 
++	for (i = 0; i < hisi_hba->n_phy; i++) {
++		struct hisi_sas_phy *phy = &hisi_hba->phy[i];
++		int idx = i + 72; /* First SATA interrupt is irq72 */
++
++		irq = irq_map[idx];
++		if (!irq) {
++			dev_err(dev, "irq init: fail map phy interrupt %d\n",
++				idx);
++			return -ENOENT;
++		}
++
++		rc = devm_request_irq(dev, irq, sata_int_v2_hw, 0,
++				      DRV_NAME " sata", phy);
++		if (rc) {
++			dev_err(dev, "irq init: could not request "
++				"sata interrupt %d, rc=%d\n",
++				irq, rc);
++			return -ENOENT;
++		}
++	}
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
 
-You might have to resend so that the original patch shows up in the
-ARM SoC maintainers' inbox.
-
-Thierry
-
-> On 25/01/16 15:57, Jon Hunter wrote:
-> >=20
-> > On 25/01/16 15:55, Jon Hunter wrote:
-> >> The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
-> >> in the device-tree blob and if it is not then it fails to boot the ker=
-nel.
-> >> Add the chosen node so we can boot the kernel on Tegra132 Norrin with =
-the
-> >> nvtboot bootloader.
-> >>
-> >> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> Ideally, we would like to get this into v4.5 as a fix for Tegra132 Nor=
-rin
-> >> so that we can enable booting this board as part of our automated test=
-ing
-> >> setup for Tegra [0][1]. Thierry suggested I send this directly as a fix
-> >> to ARM-SOC. Let me know if this is ok. I have not included a "fixes" a=
-s it
-> >> may not be needed for all bootloaders, but if you need this we could p=
-ut:
-> >>
-> >> Fixes: 0f279eb arm64: tegra: Add NVIDIA Tegra132 Norrin support
-> >>
-> >> [0] http://nvtb.github.io/linux/
-> >> [1] http://nvtb.github.io/linux-next/
-> >=20
-> > Forgot to mentioned that the differences for v1 -> v2 are just some
-> > minor corrections to the commit message.
-> >=20
-> > Jon
-> >=20
-> >>  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm=
-64/boot/dts/nvidia/tegra132-norrin.dts
-> >> index 7dfe1c085966..62f33fc84e3e 100644
-> >> --- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> >> +++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> >> @@ -12,6 +12,8 @@
-> >>  		rtc1 =3D "/rtc@0,7000e000";
-> >>  	};
-> >> =20
-> >> +	chosen { };
-> >> +
-> >>  	memory {
-> >>  		device_type =3D "memory";
-> >>  		reg =3D <0x0 0x80000000 0x0 0x80000000>;
-> >>
-
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWplb8AAoJEN0jrNd/PrOhxJkQAKEbbJo1IiRdFQS41G5nTSrN
-7FiXQk8fIl8x9C1BIgouqnwRh2t1JvE0NRMmdI1Lh/7xJ3DYXNhVXbN1mueL3rkc
-qg2Fogk450jH/ppptT8CJ8YTZUxiq0lDWWUDB0+qLozDbEasmiRUNvsz1/EOz5Nv
-umEk4CDe74aS5c9SQQKJ7NZsvbz6gVXYL+6FIbAj/eQCL1hYTobNCckTTxYpJUGE
-C/+wQLzdUHRjn3fCRsaOt3DabYjUkB1AemkdG4J4t+Dwr9BGce3BEhaTBkSQqOuP
-ggzk/GQduMQ2Yk2t5UX7yiLPLdFTCWmCT62R/dOcepUTw1VzCMf9vdcpjyNyl7Kd
-1OUM2yvh4+DVVg9k4nizitvGSq0mAUU24omdUiFd6kSc3IbSwrVracZ1RVdXSM+S
-FjG1qKAlLDoKyW0ZvGzKvHJDu8OaZKceuGmafiMB6VE1q81cORF3vAIAfxC0swxT
-qsEhzv0FuUO3IBHumJXAb0vU7A5YON8WvUbXiCsTTRu9fKpki5mqzFYHTVxav9pC
-Q9nZ308wxq95foTt2IjQy7DsqdWznTm18/5aBK3l8JcVDESJtYXSiHvbDTJ/oFh9
-jZzsZAhzorSzooiRw9wY34t4II2kyuDV4XTjg7dsyqX++Kwfi8sz2CU04cLWABg1
-o6MzWhgKQz9Q6N2+yNIG
-=6ibI
------END PGP SIGNATURE-----
-
---V0207lvV8h4k8FAm--
