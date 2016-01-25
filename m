@@ -1,46 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 01/23] devicetree: bindings: hisi_sas: add v2 HW
- bindings
-Date: Mon, 25 Jan 2016 13:31:14 -0600
-Message-ID: <20160125193114.GA16531@rob-hp-laptop>
-References: <1453742532-53092-1-git-send-email-john.garry@huawei.com>
- <1453742532-53092-2-git-send-email-john.garry@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: GPIO: Add generic serializer binding
+Date: Mon, 25 Jan 2016 13:37:29 -0600
+Message-ID: <20160125193729.GA7781@rob-hp-laptop>
+References: <1453739851-31839-1-git-send-email-afd@ti.com>
+ <1453739851-31839-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453742532-53092-2-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: j00310691 <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1453739851-31839-2-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 01:21:50AM +0800, j00310691 wrote:
-> From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Mon, Jan 25, 2016 at 10:37:30AM -0600, Andrew F. Davis wrote:
+> Add binding for generic parallel-in/serial-out shift register devices
+> used as GPIO.
 > 
-> Add the dt bindings for HiSi SAS controller v2 HW.
-> 
-> The main difference in the controller from dt perspective
-> is interrupts. The v2 controller does not have dedicated
-> fatal and broadcast interrupts - they are multiplexed on
-> the channel interrupt.
-> 
-> Each SAS v2 controller can issue upto 64 commands
-> (or connection requests) on the system bus without waiting
-> for a response - this is know as am-max-transmissions.
-> In hip06, sas controller #1 has a limitation that it has to
-> limit am-max-transmissions to 32 - this limitation is due
-> to chip system bus design. It is not anticipated that any
-> future chip incorporating v2 controller will have such a
-> limitation.
-> 
-> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 > ---
->  .../devicetree/bindings/scsi/hisilicon-sas.txt      | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/gpio/gpio-pisosr.txt       | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One nit, otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+> new file mode 100644
+> index 0000000..e69e8ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+> @@ -0,0 +1,34 @@
+> +Generic Parallel-in/Serial-out Shift Register GPIO Driver
+> +
+> +This binding describes generic parallel-in/serial-out shift register
+> +devices that can be used for GPI (General Purpose Input). This includes
+> +SN74165 serial-out shift registers and the SN65HVS88x series of
+> +industrial serializers.
+> +
+> +Required properties:
+> + - compatible		: Should be "pisosr-gpio".
+> + - gpio-controller	: Marks the device node as a GPIO controller.
+> + - #gpio-cells		: Should be two. For consumer use see gpio.txt.
+> +
+> +Optional properties:
+> + - ngpios		: Number of GPIO lines, default is 8.
+> + - load-gpios		: GPIO pin specifier attached to load enable, this
+> +			  pin is pulsed before reading from the device to
+> +			  load input pin values into the the device.
+> +
+> +For other required and optional properties of SPI slave
+> +nodes please refer to ../spi/spi-bus.txt.
+> +
+> +Example:
+> +
+> +	sn65hvs882@0 {
+
+should be gpio@0
+
+> +		compatible = "pisosr-gpio";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		load-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
+> +
+> +		reg = <0>;
+> +		spi-max-frequency = <1000000>;
+> +		spi-cpol;
+> +	};
+> -- 
+> 2.7.0
+> 
