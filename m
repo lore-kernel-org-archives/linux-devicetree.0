@@ -1,110 +1,62 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 13/17] ARM: Xen: Document UEFI support on
- Xen ARM virtual platforms
-Date: Mon, 25 Jan 2016 15:59:22 +0000
-Message-ID: <20160125155921.GF27372@leverpostej>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
-	<1453519184-11908-14-git-send-email-zhaoshenglong@huawei.com>
-	<alpine.DEB.2.02.1601251539430.9687@kaball.uk.xensource.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2] ARM64: tegra: Add chosen node for tegra132 norrin
+Date: Mon, 25 Jan 2016 16:01:00 +0000
+Message-ID: <56A646BC.1010708@nvidia.com>
+References: <1453737310-11391-1-git-send-email-jonathanh@nvidia.com>
+ <56A645CC.5070907@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <xen-devel-bounces@lists.xen.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1601251539430.9687@kaball.uk.xensource.com>
-List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
-	<mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
-	<mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Sender: xen-devel-bounces@lists.xen.org
-Errors-To: xen-devel-bounces@lists.xen.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, ian.campbell@citrix.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, julien.grall@citrix.com, stefano.stabellini@citrix.com, david.vrabel@citrix.com, Shannon Zhao <zhaoshenglong@huawei.com>, peter.huangpeng@huawei.com, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, shannon.zhao@linaro.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56A645CC.5070907-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 03:50:52PM +0000, Stefano Stabellini wrote:
-> On Sat, 23 Jan 2016, Shannon Zhao wrote:
-> > From: Shannon Zhao <shannon.zhao@linaro.org>
-> > 
-> > Add a "uefi" node under /hypervisor node in FDT, then Linux kernel could
-> > scan this to get the UEFI information.
-> > 
-> > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> > CC: Rob Herring <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/xen.txt | 34 +++++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-> > index 0f7b9c2..aa69405 100644
-> > --- a/Documentation/devicetree/bindings/arm/xen.txt
-> > +++ b/Documentation/devicetree/bindings/arm/xen.txt
-> > @@ -15,6 +15,26 @@ the following properties:
-> >  - interrupts: the interrupt used by Xen to inject event notifications.
-> >    A GIC node is also required.
-> >  
-> > +To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
-> > +under /hypervisor with following parameters:
-> > +
-> > +________________________________________________________________________________
-> > +Name                      | Size   | Description
-> > +================================================================================
-> > +xen,uefi-system-table     | 64-bit | Guest physical address of the UEFI System
-> > +			  |	   | Table.
-> > +--------------------------------------------------------------------------------
-> > +xen,uefi-mmap-start       | 64-bit | Guest physical address of the UEFI memory
-> > +			  |	   | map.
-> > +--------------------------------------------------------------------------------
-> > +xen,uefi-mmap-size        | 32-bit | Size in bytes of the UEFI memory map
-> > +                          |        | pointed to in previous entry.
-> > +--------------------------------------------------------------------------------
-> > +xen,uefi-mmap-desc-size   | 32-bit | Size in bytes of each entry in the UEFI
-> > +                          |        | memory map.
-> > +--------------------------------------------------------------------------------
-> > +xen,uefi-mmap-desc-ver    | 32-bit | Version of the mmap descriptor format.
-> > +--------------------------------------------------------------------------------
-> >  
-> >  Example (assuming #address-cells = <2> and #size-cells = <2>):
-> >  
-> > @@ -22,4 +42,18 @@ hypervisor {
-> >  	compatible = "xen,xen-4.3", "xen,xen";
-> >  	reg = <0 0xb0000000 0 0x20000>;
-> >  	interrupts = <1 15 0xf08>;
-> > +	uefi {
-> > +		xen,uefi-system-table = <0xXXXXXXXX>;
-> > +		xen,uefi-mmap-start = <0xXXXXXXXX>;
-> > +		xen,uefi-mmap-size = <0xXXXXXXXX>;
-> > +		xen,uefi-mmap-desc-size = <0xXXXXXXXX>;
-> > +		xen,uefi-mmap-desc-ver = <0xXXXXXXXX>;
-> > +        };
-> >  };
-> > +
-> > +The format and meaning of these "xen,uefi-*" parameters are similar to those in
-> > +Documentation/arm/uefi.txt which are used by normal UEFI. But to distinguish
-> > +from normal UEFI, for Xen ARM virtual platforms it needs to introduce a Xen
-> > +specific UEFI which requires Xen hypervisor to provide hypercalls for Dom0 to
-> > +make use of the runtime services. Therefore, it defines these parameters under
-> > +/hypervisor node.
+Correcting ARM-SOC email address ..
+
+On 25/01/16 15:57, Jon Hunter wrote:
 > 
-> Please replace the paragraph with the following which mentions
-> include/xen/interface/platform.h and improves the wording:
+> On 25/01/16 15:55, Jon Hunter wrote:
+>> The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
+>> in the device-tree blob and if it is not then it fails to boot the kernel.
+>> Add the chosen node so we can boot the kernel on Tegra132 Norrin with the
+>> nvtboot bootloader.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Ideally, we would like to get this into v4.5 as a fix for Tegra132 Norrin
+>> so that we can enable booting this board as part of our automated testing
+>> setup for Tegra [0][1]. Thierry suggested I send this directly as a fix
+>> to ARM-SOC. Let me know if this is ok. I have not included a "fixes" as it
+>> may not be needed for all bootloaders, but if you need this we could put:
+>>
+>> Fixes: 0f279eb arm64: tegra: Add NVIDIA Tegra132 Norrin support
+>>
+>> [0] http://nvtb.github.io/linux/
+>> [1] http://nvtb.github.io/linux-next/
 > 
-> "The format and meaning of the "xen,uefi-*" parameters are similar to
-> those in Documentation/arm/uefi.txt, which are provided by the regular
-> UEFI stub. However they differ because they are provided by the Xen
-> hypervisor, together with a set of UEFI runtime services implemented via
-> hypercalls, see include/xen/interface/platform.h."
-
-I would prefer if we didn't refer to Linux paths here, for the usual
-rationale of keeping bindings distinct from Linux implementation
-details.
-
-Could we either drop the "see include/xen/interface/platform.h" part, or
-refer to some Xen documentation?
-
-Thanks,
-Mark.
+> Forgot to mentioned that the differences for v1 -> v2 are just some
+> minor corrections to the commit message.
+> 
+> Jon
+> 
+>>  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+>> index 7dfe1c085966..62f33fc84e3e 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+>> @@ -12,6 +12,8 @@
+>>  		rtc1 = "/rtc@0,7000e000";
+>>  	};
+>>  
+>> +	chosen { };
+>> +
+>>  	memory {
+>>  		device_type = "memory";
+>>  		reg = <0x0 0x80000000 0x0 0x80000000>;
+>>
