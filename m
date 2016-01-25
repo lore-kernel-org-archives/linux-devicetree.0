@@ -1,77 +1,48 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
-Date: Mon, 25 Jan 2016 20:24:59 +0200
-Message-ID: <20160125182459.GE15550@darkstar.musicnaut.iki.fi>
-References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
- <1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi>
- <20160124173701.GU3880@lunn.ch>
- <411C1DFA-3E76-42B0-866C-7C3C0D990039@pobox.com>
- <20160124214020.GA28667@jirafa.cyrius.com>
- <8E11A1EE-D73B-462E-A493-39571A17F2C3@pobox.com>
+From: John Garry <john.garry@huawei.com>
+Subject: [RESEND PATCH v2 06/23] hisi_sas: rename some fields in hisi_sas_itct
+Date: Tue, 26 Jan 2016 02:47:06 +0800
+Message-ID: <1453747643-61875-7-git-send-email-john.garry@huawei.com>
+References: <1453747643-61875-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8E11A1EE-D73B-462E-A493-39571A17F2C3-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Cc: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453747643-61875-1-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Since hisi_sas_itct format is different between v1
+and v2 hw, give more general names for some fields.
 
-On Sun, Jan 24, 2016 at 07:26:43PM -0800, Rick Thomas wrote:
-> > root@base:~# cat /proc/asound/devices 
-> >   2: [ 0]   : control
-> >   3: [ 0- 0]: digital audio playback
-> >   4: [ 0- 0]: digital audio capture
-> >  33:        : timer
-> > root@base:~# cat /proc/asound/cards   
-> >  0 [i2scs42l51hifi ]: i2s-cs42l51-hif - i2s-cs42l51-hifi
-> >                       i2s-cs42l51-hifi
-> 
-> Full of hope, I did "aptitude install mp321" which went without any visible problems.
-> 
-> Then hooked up a pair of earphones to the "speaker" plug on the Client and ran
-> 
-> > root@base:~# mpg321 -v /tmp/Jersey.mp3 
-> > High Performance MPEG 1.0/2.0/2.5 Audio Player for Layer 1, 2, and 3.
-> > Version 0.3.2-1 (2012/03/25). Written and copyrights by Joe Drew,
-> > now maintained by Nanakos Chrysostomos and others.
-> > Uses code from various people. See 'README' for more!
-> > THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!
-> > Title	: The Jersey Bounce              Artist : Zazuzaz                       
-> > Album	: An Evening with ZaZuZaz        Year	 : 2000
-> > Comment : Amazon.com Song ID: 201809221  Genre : Jazz                          
-> > 
-> > Directory: /tmp
-> > Playing MPEG stream from Jersey.mp3 ...
-> > MPEG 1.0, Layer: III, Freq: 44100, mode: Joint-Stereo, modext: 0, BPF : 2560
-> > Channels: 2, copyright: No, original: Yes, CRC: No, emphasis: 0.
-> > Bitrate: 128 Kbits/s, Extension value: 0
-> > Audio: 1:1 conversion, rate: 44100, encoding: signed 16 bit, channels: 2
-> > ALSA lib pcm.c:2267:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.front
-> > ^C                                                                            
-> > [0:20] Decoding of Jersey.mp3 finished.
-> 
-> So it seemed to be running OK...  But there was no sound in the
-> earphones. I also tried adding option "-g 50" to set the gain explicitly.
-> Still no sound.
-> 
-> Is there a hardware jumper I need to set to activate sound on the
-> OpenRD Client board?
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas.h | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-On my board I need to say "amixer set PCM on". Can you post the full
-output from "amixer" without any parameters?
-
-Also check if you have this line in dmesg:
-
-	asoc-simple-card sound: cs42l51-hifi <-> i2s mapping ok
-
-If it says "spdif" the player runs but is silent.
-
-A.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index e5a58c5..b2e4b26 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -248,18 +248,7 @@ struct hisi_sas_itct {
+ 	__le64 sas_addr;
+ 	__le64 qw2;
+ 	__le64 qw3;
+-	__le64 qw4;
+-	__le64 qw_sata_ncq0_3;
+-	__le64 qw_sata_ncq7_4;
+-	__le64 qw_sata_ncq11_8;
+-	__le64 qw_sata_ncq15_12;
+-	__le64 qw_sata_ncq19_16;
+-	__le64 qw_sata_ncq23_20;
+-	__le64 qw_sata_ncq27_24;
+-	__le64 qw_sata_ncq31_28;
+-	__le64 qw_non_ncq_iptt;
+-	__le64 qw_rsvd0;
+-	__le64 qw_rsvd1;
++	__le64 qw4_15[12];
+ };
+ 
+ struct hisi_sas_iost {
+-- 
+1.9.1
