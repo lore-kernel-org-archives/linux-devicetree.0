@@ -1,120 +1,83 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/2] Documentation: dt: reset: Add syscon reset binding
-Date: Mon, 25 Jan 2016 13:02:43 -0600
-Message-ID: <1453748564-6429-2-git-send-email-afd@ti.com>
-References: <1453748564-6429-1-git-send-email-afd@ti.com>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [RFC 0/2] ASoC: img: Add Pistachio card support
+Date: Mon, 25 Jan 2016 19:12:10 +0000
+Message-ID: <1453749132-29640-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453748564-6429-1-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Add syscon reset controller binding. This will hook to the reset
-framework and use syscon/regmap to set reset bits. This allows
-reset control of individual SoC subsytems and devices with
-memory-mapped reset registers in a common register memory
-space.
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-[s-anna@ti.com: revise the binding format]
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- .../devicetree/bindings/reset/syscon-reset.txt     | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
+This patch set provides an initial implementation of a card driver suitable
+for all boards that use the Pistachio SoC
 
-diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
-new file mode 100644
-index 0000000..466378a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
-@@ -0,0 +1,84 @@
-+SysCon Reset Controller
-+=======================
-+
-+Almost all SoCs have hardware modules that require reset control in addition
-+to clock and power control for their functionality. The reset control is
-+typically provided by means of memory-mapped I/O registers. These registers are
-+sometimes a part of a larger register space region implementing various
-+functionalities. This register range is best represented as a syscon node to
-+allow multiple entities to access their relevant registers in the common
-+register space.
-+
-+A SysCon Reset Controller node defines a device that uses a syscon node
-+and provides reset management functionality for various hardware modules
-+present on the SoC.
-+
-+SysCon Reset Controller Node
-+============================
-+Each of the reset provider/controller nodes should have the following
-+properties.
-+
-+Required properties:
-+--------------------
-+ - compatible	: Should be "syscon-reset"
-+ - syscon	: phandle to the syscon node containing the reset registers
-+ - #reset-cells	: Should be 6. Please see the reset consumer node below for
-+                  usage details
-+
-+SysCon Reset Consumer Nodes
-+===========================
-+Each of the reset consumer nodes should have the following properties,
-+in addition to their own properties.
-+
-+Required properties:
-+--------------------
-+ - resets	: A phandle and reset specifier pair, one pair for each reset
-+		  signal that affects the device, or that the device manages.
-+		  The phandle should point to the syscon node containing the
-+		  reset registers, and the reset specifier should have 6
-+		  cell-values. The reset specifier contains two similar pairs
-+		  of 3 cell-values each, the first of the pair containing the
-+		  reset control register information, and the second of the pair
-+		  containing the reset status register information. The reset
-+		  control and status registers can be same on some devices/SoCs.
-+
-+		  Each of the pairs of 3 cell-values should have the following
-+		  values:
-+		     Cell #1 : register offset of the reset control/status
-+		               register from the syscon register base
-+		     Cell #2 : bit shift value for the reset in the respective
-+		               reset control/status register
-+		     Cell #3 : polarity of the reset bit. Should be 1 for resets
-+		               that are asserted when the bit is set, 0 for
-+		               resets that are asserted when the bit is cleared
-+
-+Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
-+common reset controller usage by consumers.
-+
-+
-+Example:
-+--------
-+The following example demonstrates a syscon node, the reset controller node
-+using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
-+Hawking SoC.
-+
-+/ {
-+	soc {
-+		psc: power-sleep-controller@02350000 {
-+			compatible = "syscon";
-+			reg = <0x02350000 0x1000>;
-+		};
-+
-+		pscrst: psc-reset {
-+			compatible = "syscon-reset";
-+			syscon = <&psc>;
-+			#reset-cells = <6>;
-+		};
-+
-+		dsp0: dsp0 {
-+			...
-+			resets = <&pscrst 0xa3c 8 0 0x83c 8 0>;
-+			...
-+		};
-+	};
-+};
+The Pistachio SoC contains the following audio components:
+Controllers - SPDIF out, SPDIF in, parallel out, I2S out, I2S in
+Codecs - Internal DAC (connected to parallel out)
+Clocks - Audio PLL, dividers, gates, codec system clocks
+
+There are a number of boards that use the Pistachio SoC. The following
+can vary from board to board:
+- Which audio interfaces are usable on the board
+- The I2S codecs used (including multicodec paths on some boards)
+- The use of the two system clocks by the I2S codecs
+- Other external audio components present on the board
+- I2S clock loopback
+- I2S formats
+- Sample rates
+
+For some boards, a single system clock is used by components on both the
+I2S out and I2S in paths. This creates two dependacy issues that require
+further review as follows:
+
+- The information required to control the system clock rate(s)
+in response to a sample rate change cannot be specified as a single
+frequency, or as a single fs-ratio. Instead, the Pistachio card driver must
+store sufficient information to derive acceptable system clock rate(s)
+for any usable combination of {I2S out sample rate, I2S in sample rate}
+
+In this revision, the information is specified as a per-codec list of fs-rates,
+accompanied by min/max frequencies. This specification is sufficient for the
+codecs used so far, but this likely needs to change to support a greater range
+of codecs.
+
+- In order for the Pistachio card driver to establish usable system clock
+rate(s) for a given combination of {I2S out sample rate, I2S in sample rate},
+the card driver must be made aware of both of the sample rate requirements in
+advance of either of the streams starting, as system clock rates cannot
+typically be changed when a codec is actively playing/recording.
+
+For this revision of the Pistachio card driver, a control has been used
+to specify these rates in advance. Calls to hw_params that require a system
+clock to change rate when another stream is already using the clock fail
+with -EBUSY.
+
+Damien.Horsley (2):
+  ASoC: img: Add binding document for Pistachio audio card
+  ASoC: img: Add driver for Pistachio audio card
+
+ .../bindings/sound/img,pistachio-audio.txt         |  308 +++
+ include/dt-bindings/sound/pistachio-audio.h        |    7 +
+ sound/soc/img/Kconfig                              |   10 +
+ sound/soc/img/Makefile                             |    1 +
+ sound/soc/img/pistachio.c                          | 2249 ++++++++++++++++++++
+ 5 files changed, 2575 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,pistachio-audio.txt
+ create mode 100644 include/dt-bindings/sound/pistachio-audio.h
+ create mode 100644 sound/soc/img/pistachio.c
+
 -- 
-2.7.0
+2.1.4
