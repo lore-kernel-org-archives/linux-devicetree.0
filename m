@@ -1,166 +1,58 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Mon, 25 Jan 2016 11:57:37 +0800
-Message-ID: <CAL411-qfzcynzc=YrepzcA6EmFuxy-Ri4xRQ+R-QVBDEPZXtZQ@mail.gmail.com>
-References: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org>
- <2930830.FLp5q7oBTi@wuerfel> <20160122065901.GA31145@shlinux2> <2404899.20LhULZo7N@wuerfel>
+From: "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
+Subject: RE: [PATCH 1/2] dt: power: Add support for TI BQ24261 charger
+Date: Mon, 25 Jan 2016 05:14:53 +0000
+Message-ID: <D854C92F57B1B347B57E531E78D05EAD57A27BE7@BGSMSX104.gar.corp.intel.com>
+References: <1446136625-20845-1-git-send-email-ramakrishna.pallala@intel.com>
+	<1446136625-20845-2-git-send-email-ramakrishna.pallala@intel.com>
+ <CAJKOXPcDea5vjX+-tDg=7Z2kPrtsEABybA0+nEPGJDVwaYvb1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2404899.20LhULZo7N@wuerfel>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPcDea5vjX+-tDg=7Z2kPrtsEABybA0+nEPGJDVwaYvb1Q@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 6:18 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 22 January 2016 14:59:01 Peter Chen wrote:
->> On Thu, Jan 21, 2016 at 11:24:21PM +0100, Arnd Bergmann wrote:
->> > On Thursday 21 January 2016 10:21:15 Alan Stern wrote:
->> > > On Thu, 21 Jan 2016, Arnd Bergmann wrote:
->> > > > On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
->> >             hub@1 { /* external hub, superspeed mode class 9/subclass 0/proto 3 */
->> >                     compatible = "usb2109,0812.591",
->> >                                  "usb2109,0812",
->> >                                  "usb2109,class9.0.3",
->> >                                  "usb2109,class9.0",
->> >                                  "usb2109,class9";
->> >                     compatible = "usb2109,0812";
->>
->> Do we really need to write "compatible" so complicated?
->
-> The binding mandates it this way, but I guess we could decide to
-> make it a Linux-specific extension that we allow some of them to
-> be left out.
->
-
-If no one objects, I would like to use "usbVid, Pid" pattern.
-
->> >                     #address-cells = <1>;
->> >                     #size-cells = <0>;
->> >                     reg = <1>;
->> >
->> >                     communications@4 { /* superspeed ethernet device */
->> >                             compatible = "usb0b95,1790.100",
->> >                                          "usb0b95,1790",
->> >                                          "usb0b95,class255.255.0",
->> >                                          "usb0b95,class255.255",
->> >                                          "usb0b95,class255",
->> >                                          "usbif0b95,1790.100",
->> >                                          "usbif0b95,1790",
->> >                                          "usbif0b95,class255.255.0",
->> >                                          "usbif0b95,class255.255,
->> >                                          "usbif0b95,class255";
->> >                             reg = <4>;
->> >                     };
->> >
->> >                     storage@1 { /* superspeed flash drive */
->> >                             compatible = "usb1234,5678.600",
->> >                                          "usb1234,5678",
->> >                                          "usbif1234,class8.6.80",
->> >                                          "usbif1234,class8.6",
->> >                                          "usbif1234,class8",
->> >                                          "usbif,class8.6.80",
->> >                                          "usbif,class8.6",
->> >                                          "usbif,class8";
->> >                             reg = <1>;
->> >                     };
->> >             };
->> >
->> >             hub@3 { /* same external  hub, highspeed mode */
->> >                     compatible = "usb2109,0812.591",
->> >                                  "usb2109,0812",
->> >                                  "usb2109,class9.0.1",
->> >                                  "usb2109,class9.0",
->> >                                  "usb2109,class9";
->> >
->> >                     #address-cells = <1>;
->> >                     #size-cells = <0>;
->> >                     reg = <3>;
->> >
->>
->> Why "reg" is 3 here?
->
-> My mistake. It should be hub@1 and reg=<1>;
->
-> I accidentally confused the port number and the device number.
-
-I think it should be hub@2 and reg=<0x2>.
-According to Alan, we should use xHCI numbering scheme when
-describing the ports of an xHCI root hub.
-
-Peter
-
-
->
->> >                             wireless@0,1 { /* bluetooth config 0, if 1 */
->> >                                     compatible = "usbif0a12,0001.134.config0.1",
->> >                                                     "usbif0a12,0001.config0.1",
->> >                                                     "usbif0a12,class224.1.1",
->> >                                                     "usbif0a12,class224.1",
->> >                                                     "usbif0a12,class224",
->> >                                                     "usbif,class224.1.1",
->> >                                                     "usbif,class224.1",
->> >                                                     "usbif,class224";
->> >                                     reg = <0 0>;
->> >                             };
->> >                     };
->> >             };
->> >     };
->> >
->> > In that description, I have included all four kinds of nodes from
->> > the spec: host controller, device (wireless@2), interface (wireless@0.1,
->> > wireless@0.2) and combined (hub@1, hub@3, storage@1, communications@4).
->> >
->> > Peter's example only contained hubs in combined nodes, no device or
->> > interface nodes. I wonder if the code is able to parse all four
->> > kinds of nodes though, and if we actually need that.
->> >
->>
->> My proposal patch only handles the node under the USB device, not include
->> the USB interfaces under such device, we can add it after finalize
->> how to describe it at device tree.
->
-> We should at least handle the case of multiple hubs connected to one
-> another I think. No need to limit it to directly connected devices
-> when it's easy enough to do hubs as well.
->
->> > Do we have a 'struct device' for each interface?
->> >
->>
->> Yes, we have, but there are different 'struct device' between USB device
->> and USB interfaces under this USB device. See usb_set_configuration,
->> drivers/usb/core/message.c
->
-> Ok, got it. So we can set the of_node pointer of a struct usb_interface
-> to the child node of the usb->interface->usb_dev that matches the
-> configuration/interface tuple.
->
-> For combined device nodes (class 0 device, single configuration, single
-> interface), I suppose we have both a 'struct usb_device' and a 'struct
-> usb_interface' that we could attach the of_node to, but we can
-> decide to always just use one of the two, to avoid having the
-> same of_node pointer in multiple 'struct device' instances.
->
-> Or we simplify it so we always put the of_node just in the usb_device
-> or the usb_interface, even if both are listed.
->
->> > Is it possible to have a hub in an interface of a multifunction device
->> > or are they always single-configuration single-interface devices?
->> >
->>
->> I have not seen such kinds of devices, but it is possible in theory.
->
-> Ok, so if the USB spec allows it, we should probably try to handle it too.
->
->         Arnd
-
-
-
--- 
-BR,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgS3J6eXN6dG9mLA0KDQo+IDIwMTUtMTAtMzAgMTozNyBHTVQrMDk6MDAgUmFtYWtyaXNobmEg
+UGFsbGFsYQ0KPiA8cmFtYWtyaXNobmEucGFsbGFsYUBpbnRlbC5jb20+Og0KPiA+IFRoaXMgcGF0
+Y2ggYWRkcyB0aGUgZGV2aWNlIHRyZWUgZG9jdW1lbnRhdGlvbiBmb3IgVEkgQlEyNDI2MSBjaGFy
+Z2VyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFtYWtyaXNobmEgUGFsbGFsYSA8cmFtYWty
+aXNobmEucGFsbGFsYUBpbnRlbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmVubnkgVEMgPGpl
+bm55LnRjQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cG93ZXIvYnEyNDI2MS50eHQgICAgICAgICAgfCAgIDM0DQo+ICsrKysrKysrKysrKysrKysrKysr
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9icTI0
+MjYxLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wb3dlci9icTI0MjYxLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Bvd2VyL2JxMjQyNjEudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+PiBpbmRleCAwMDAwMDAwLi5lMThmNmRjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9icTI0MjYxLnR4dA0KPiA+IEBA
+IC0wLDAgKzEsMzQgQEANCj4gPiArQmluZGluZyBmb3IgVEkgYnEyNDI2MSBMaS1Jb24gQ2hhcmdl
+cg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBT
+aG91bGQgY29udGFpbiBvbmUgb2YgdGhlIGZvbGxvd2luZzoNCj4gPiArICAgICogInRpLGJxMjQy
+NjEiDQo+IA0KPiBKdXN0OiAnc2hvdWxkIGJlICJ0aSxicTI0MjYxIicuDQpPay4NCg0KPiA+ICst
+IHJlZzogaW50ZWdlciwgaTJjIGFkZHJlc3Mgb2YgdGhlIGRldmljZS4NCj4gPiArLSB0aSxiYXR0
+ZXJ5LXJlZ3VsYXRpb24tdm9sdGFnZTogaW50ZWdlciwgbWF4aW11bSBjaGFyZ2luZyB2b2x0YWdl
+IGluIHVWLg0KPiA+ICstIHRpLGNoYXJnZS1jdXJyZW50OiBpbnRlZ2VyLCBtYXhpbXVtIGNoYXJn
+aW5nIGN1cnJlbnQgaW4gdUEuDQo+ID4gKy0gdGksdGVybWluYXRpb24tY3VycmVudDogaW50ZWdl
+ciwgY2hhcmdlIHdpbGwgYmUgdGVybWluYXRlZCB3aGVuIGN1cnJlbnQgaW4NCj4gPiArICAgIGNv
+bnN0YW50LXZvbHRhZ2UgcGhhc2UgZHJvcHMgYmVsb3cgdGhpcyB2YWx1ZSAoaW4gdUEpLg0KPiAN
+Cj4gU2FtZSBhcyBwcm9wb3NlZCBleHRlbnNpb24gb2YgYnEyNDI1Ny50eHQuIEkgbGlrZSBpdC4N
+Cj4gDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIHRpLG1heC1jaGFy
+Z2UtY3VycmVudDogaW50ZWdlciwgbWF4aW11bSBjaGFyZ2luZyBjdXJyZW50IChpbiB1QSk7DQo+
+IA0KPiBJIGRpZCBub3QgbG9vayBhdCB0aGUgY29kZSB5ZXQgYnV0IGRlc2NyaXB0aW9uIG9mIHBy
+b3BlcnR5IGlzIGV4YWN0bHkgdGhlIHNhbWUgYXMNCj4gInRpLGNoYXJnZS1jdXJyZW50Ii4uLiBU
+d28gZGlmZmVyZW50IHByb3BlcnRpZXMgd2l0aCBzYW1lIGRlc2NyaXB0aW9uPw0KPiANCj4gPiAr
+LSB0aSxtYXgtY2hhcmdlLXZvbHRhZ2U6IGludGVnZXIsIG1heGltdW0gY2hhcmdpbmcgdm9sdGFn
+ZSAoaW4gdVYpOw0KPiANCj4gRGl0dG8uDQpJIHdpbGwgZml4IGl0Lg0KDQo+ID4gKy0gdGksbWlu
+LWNoYXJnZS10ZW1wZXJhdHVyZTogaW50ZWdlciwgbWluaW11bSBjaGFyZ2luZyB0ZW1wZXJhdHVy
+ZQ0KPiA+ICsoaW4gRGVnQyk7DQo+ID4gKy0gdGksbWF4LWNoYXJnZS10ZW1wZXJhdHVyZTogaW50
+ZWdlciwgbWF4aW11bSBjaGFyZ2luZyB0ZW1wZXJhdHVyZSAoaW4NCj4gRGVnQykuDQo+ID4gKy0g
+dGksdGhlcm1hbC1zZW5zaW5nOiBpbnRlZ2VyLCBlbmFibGUoMSkgb3IgZGlzYWJsZSgwKSBKRUlU
+QSB0aGVybWFsIGNvbnRyb2wuDQo+IA0KPiBZb3UgbWFkZSBpdCBpbnRlZ2VyIGluc3RlYWQgb2Yg
+Ym9vbGVhbiwgc28ganVzdCB0byBiZSBzdXJlIC0geW91IGV4cGVjdCB0aGUNCj4gcG9zc2liaWxp
+dHkgb2Ygb3ZlcnJpZGluZyB0aGlzIHByb3BlcnR5IG9yIGV4dGVuZGluZyBpdCBpbiBmdXJ0aGVy
+IGRldmljZXM/DQpZZXMuIFRoYW5rcy4NCg0KVGhhbmtzLA0KUmFtDQo=
