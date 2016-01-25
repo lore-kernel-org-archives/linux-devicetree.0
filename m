@@ -1,101 +1,76 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
-Date: Mon, 25 Jan 2016 09:55:23 +0800
-Message-ID: <CAL411-otEfB6c0u1emtZCFJWtgzJ1Vttx53KbccbMRYFNRurFQ@mail.gmail.com>
-References: <2404899.20LhULZo7N@wuerfel> <Pine.LNX.4.44L0.1601221023350.1626-100000@iolanthe.rowland.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v9 0/4] Exynos SROMc configuration and Ethernet support for
+ SMDK5410
+Date: Mon, 25 Jan 2016 11:14:36 +0900
+Message-ID: <56A5850C.4020005@samsung.com>
+References: <cover.1447659546.git.p.fedin@samsung.com>
+ <56724519.80108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1601221023350.1626-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56724519.80108@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 11:55 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-> On Fri, 22 Jan 2016, Arnd Bergmann wrote:
->
->> > >           hub@3 { /* same external  hub, highspeed mode */
->> > >                   compatible = "usb2109,0812.591",
->> > >                                "usb2109,0812",
->> > >                                "usb2109,class9.0.1",
->> > >                                "usb2109,class9.0",
->> > >                                "usb2109,class9";
->> > >
->> > >                   #address-cells = <1>;
->> > >                   #size-cells = <0>;
->> > >                   reg = <3>;
->> > >
->> >
->> > Why "reg" is 3 here?
+On 17.12.2015 14:16, Krzysztof Kozlowski wrote:
+> On 16.11.2015 16:43, Pavel Fedin wrote:
+>> This patch extends Exynos SROM controller driver with ability to configure
+>> controller outputs and enables SMSC9115 Ethernet chip on SMDK5410 board,
+>> which is connected via SROMc bank #3.
 >>
->> My mistake. It should be hub@1 and reg=<1>;
+>> With this patchset, support for the whole existing SMDK range can be added.
+>> Actually, only bank number is different.
 >>
->> I accidentally confused the port number and the device number.
->
-> I thought you did it this way because you were numbering the SS
-> root-hub ports 1-2 and the HS root-hub ports 3-4.
->
-
-In Arnd's example, there is only one port under root hub.
-And there are more than one ports under non-root hubs.
-
-> There's something I should have made clear earlier.  This scheme for
-> putting SS and HS USB-3 root-hub ports in the same number space is part
-> of the xHCI spec.  It's not AFAIK required (or even mentioned) by the
-> USB-3 spec, which means other types of USB-3 host controllers might do
-> it differently.
->
-> The scheme which numbers SS and HS ports separately, both starting from
-> 1, is mandated by the USB-3 spec for non-root hubs.  But since that
-> spec doesn't say much about root hubs, the OS is free to treat them
-> however it likes.  We have chosen to make root hubs appear as similar
-> as possible to non-root hubs; however I believe that Windows (for
-> example) may do things differently.
->
-> At any rate, since DT strives to reflect the actual hardware
-> properties, you probably should use the xHCI numbering scheme when
-> describing the ports of an xHCI root hub.
->
->
-
-I will do these differently between root hub and non-root hub.
-
-Thanks.
-Peter
-
-
->> > > Is it possible to have a hub in an interface of a multifunction device
->> > > or are they always single-configuration single-interface devices?
->> > >
->> >
->> > I have not seen such kinds of devices, but it is possible in theory.
+>> This patchset also depends on Exynos 5410 pinctrl support, introduced by
+>> patches 0003 and 0004 from this set:
+>> [PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
 >>
->> Ok, so if the USB spec allows it, we should probably try to handle it too.
->
-> No, the spec does not allow it.  In fact, the spec divides all USB
-> devices into two classes: hubs and functions.  A function is anything
-> that isn't a hub.  And a hub is never allowed to contain more than one
-> configuration and interface.
->
-> The spec does allow for multiple functions to be packaged in the same
-> physical device.  In this case, the physical device contains a hub
-> along with various functions permanently connected to it.
->
-> For example, the old Apple USB keyboards are compound devices.  They
-> contain an internal 3-port hub; one of the ports is permanently wired
-> to the keyboard controller and the other two are exposed to the user,
-> allowing a mouse and something else to be attached.
->
-> Alan Stern
->
+>> Pinctrl support is necessary in order to correctly configure
+>> multifunctional pins of the Exynos chip.
+>>
+> 
+> Let me share the plan/status:
+> 1. Currently Kukjin Kim is out of office (he told me he will be back on
+> Christmas).
+> 2. I asked arm-soc people to pull my previous pull requests.
+> 
+> 3. I applied this patchset to my branch:
+> next/stuff-late-not-split-per-branch
+> https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/log/?h=next/stuff-late-not-split-per-branch
+> 
+> 4. This branch is not pushed to linux-next. I will sort it out if my
+> previous pull requests get in. I will be out of office for Christmas so
+> depending on the timing of {arm-soc,Christmas,Kukjin} this may or may
+> not go into v4.5 (yay...).
+> 
+> 5. If it does not get into v4.5, I will rebase it and proceed further
+> for v4.6.
+> 
+> If you have any questions, please let me know.
 
+Hi Kukjin, Pankaj, Pavel,
 
+I rebased these 3 patchsets (move SROM to drivers, add bank support,
+mnove PMU to drivers) on v4.5-rc1 and re-organized the work on usual
+arm-soc branches.
 
--- 
-BR,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hmmm, maybe not such "usual" because of the dependencies (DTS changes
+are needed before removal of code from mach-exynos) this looks a little
+bit different. Anyway I put it on a separate branch and tag:
+1. samsung-drivers-soc-srom-pmu-4.6
+2. samsung-dt-srom-4.6
+
+https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/
+
+Everything is also in for-next. The point is that you don't have to do
+anything as for now. I'll handle it for v4.6 (hopefully).
+
+Tests on Trats2 passed fine. Now each commit is being tested on mine
+Odroid XU3 (http://www.krzk.eu).
+
+Best regards,
+Krzysztof
