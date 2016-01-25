@@ -1,149 +1,60 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [RFC v3 06/14] MIPS: dts: qca: ar9132: use short references for
- uart and spi nodes
-Date: Mon, 25 Jan 2016 23:31:48 +0100
-Message-ID: <20160125233148.4951e311@tock>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [RFC v3 08/14] MIPS: dts: qca: introduce AR9331 devicetree
+Date: Mon, 25 Jan 2016 23:46:30 +0100
+Message-ID: <20160125234630.16098b7f@tock>
 References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
-        <1453580251-2341-7-git-send-email-antonynpavlov@gmail.com>
+	<1453580251-2341-9-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1453580251-2341-7-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Aban Bedel <albeu@free.fr>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453580251-2341-9-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jan 2016 23:17:23 +0300
-Antony Pavlov <antonynpavlov@gmail.com> wrote:
+On Sat, 23 Jan 2016 23:17:25 +0300
+Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-I personally prefer the version without aliases :) Is there any
-guidelines on this?
+> This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet).
+> The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
+> typically used in very cheap Access Points and Routers.
+> 
+> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/mips/boot/dts/qca/ar9331.dtsi | 123 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+> 
+> diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+> new file mode 100644
+> index 0000000..bf128a2
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+> @@ -0,0 +1,123 @@
+> +#include <dt-bindings/clock/ath79-clk.h>
+> +
+> +/ {
+> +	compatible = "qca,ar9331";
+> +
+
+[...]
+
+> +
+> +	extosc: oscillator {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +	};
+
+This oscillator is on the board and not in the SoC, so it should
+be in the board DTS.
 
 Alban
-
-> Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-> Cc: Alban Bedel <albeu@free.fr>
-> Cc: linux-mips@linux-mips.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  arch/mips/boot/dts/qca/ar9132.dtsi               |  4 +-
->  arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 70 +++++++++++-------------
->  2 files changed, 35 insertions(+), 39 deletions(-)
-> 
-> diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-> index cd1602f..a14f6f2 100644
-> --- a/arch/mips/boot/dts/qca/ar9132.dtsi
-> +++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-> @@ -61,7 +61,7 @@
->  				#qca,ddr-wb-channel-cells = <1>;
->  			};
->  
-> -			uart@18020000 {
-> +			uart: uart@18020000 {
->  				compatible = "ns8250";
->  				reg = <0x18020000 0x20>;
->  				interrupts = <3>;
-> @@ -134,7 +134,7 @@
->  			};
->  		};
->  
-> -		spi@1f000000 {
-> +		spi: spi@1f000000 {
->  			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
->  			reg = <0x1f000000 0x10>;
->  
-> diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> index 9618105..f22c22c 100644
-> --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> @@ -14,43 +14,6 @@
->  		reg = <0x0 0x2000000>;
->  	};
->  
-> -	ahb {
-> -		apb {
-> -			uart@18020000 {
-> -				status = "okay";
-> -			};
-> -		};
-> -
-> -		spi@1f000000 {
-> -			status = "okay";
-> -			num-cs = <1>;
-> -
-> -			flash@0 {
-> -				#address-cells = <1>;
-> -				#size-cells = <1>;
-> -				compatible = "s25sl064a";
-> -				reg = <0>;
-> -				spi-max-frequency = <25000000>;
-> -
-> -				partition@0 {
-> -					label = "u-boot";
-> -					reg = <0x000000 0x020000>;
-> -				};
-> -
-> -				partition@1 {
-> -					label = "firmware";
-> -					reg = <0x020000 0x7D0000>;
-> -				};
-> -
-> -				partition@2 {
-> -					label = "art";
-> -					reg = <0x7F0000 0x010000>;
-> -					read-only;
-> -				};
-> -			};
-> -		};
-> -	};
-> -
->  	gpio-keys {
->  		compatible = "gpio-keys-polled";
->  		#address-cells = <1>;
-> @@ -100,3 +63,36 @@
->  &extosc {
->  	clock-frequency = <40000000>;
->  };
-> +
-> +&uart {
-> +	status = "okay";
-> +};
-> +
-> +&spi {
-> +	status = "okay";
-> +	num-cs = <1>;
-> +
-> +	flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "s25sl064a";
-> +		reg = <0>;
-> +		spi-max-frequency = <25000000>;
-> +
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x000000 0x020000>;
-> +		};
-> +
-> +		partition@1 {
-> +			label = "firmware";
-> +			reg = <0x020000 0x7D0000>;
-> +		};
-> +
-> +		partition@2 {
-> +			label = "art";
-> +			reg = <0x7F0000 0x010000>;
-> +			read-only;
-> +		};
-> +	};
-> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
