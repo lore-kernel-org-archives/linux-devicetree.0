@@ -1,36 +1,23 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] SoC: rockchip: support power domain for RK3368
-Date: Sun, 24 Jan 2016 23:52:20 +0100
-Message-ID: <25506007.ZijpbXfFGZ@diego>
-References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] arm64: dts: r8a7795: Add USB3.0 host
+Date: Mon, 25 Jan 2016 09:08:45 +0900
+Message-ID: <20160125000845.GC774@verge.net.au>
+References: <1453457003-7720-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452508600-3512-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453457003-7720-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Elaine,
-
-Am Montag, 11. Januar 2016, 02:36:37 schrieb zhangqing:
-> add pd id in rk3368-power.h
-> modify pm_domains.c to support RK3368 SoC
-> add RK3368 document for Rockchip power domains
+On Fri, Jan 22, 2016 at 07:03:21PM +0900, Yoshihiro Shimoda wrote:
+> This patch set is based on the latest renesas.git / renesas-devel-20160121-v4.4
+> tag. (commit id = 3740ade0617955c76e1767b6d49347d5446eed74)
 > 
-> zhangqing (3):
->   dt-bindings: add power-domain header for RK3368 SoCs
->   soc: rockchip: power-domain: Modify power domain driver for rk3368
->   dt-bindings: modify document of Rockchip power domains
+> This patch needs r8a7795-cpg-mssr.c update for usb3.0 clocks.
 
-applied all 3 to appropriate branches for 4.6
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks. Please let me know if I should wait for that change before
+queuing up these patches.
