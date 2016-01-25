@@ -1,140 +1,189 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: Add support for Juno r2 board
-Date: Mon, 25 Jan 2016 15:14:09 +0000
-Message-ID: <1453734849-13790-2-git-send-email-sudeep.holla@arm.com>
-References: <1453734849-13790-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453734849-13790-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V4 1/5] DT: mfd: add device-tree binding doc fro PMIC
+ max77620/max20024
+Date: Mon, 25 Jan 2016 20:38:53 +0530
+Message-ID: <56A63A85.6060609@nvidia.com>
+References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com> <1453198783-28383-2-git-send-email-ldewangan@nvidia.com> <20160125115610.GC3368@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160125115610.GC3368@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Juno r2 is identical to Juno r1 with Cortex A57 cores replaced by
-Cortex A72 cores.
 
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/arm-boards   |  1 +
- arch/arm64/boot/dts/arm/Makefile                   |  2 +-
- .../boot/dts/arm/{juno-r1.dts => juno-r2.dts}      | 30 +++++++++++-----------
- 3 files changed, 17 insertions(+), 16 deletions(-)
- copy arch/arm64/boot/dts/arm/{juno-r1.dts => juno-r2.dts} (87%)
+Thanks Lee for your review. I will take care of most of comment on my=20
+next patch.
 
-diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-index 1a709970e7f7..70601a58c433 100644
---- a/Documentation/devicetree/bindings/arm/arm-boards
-+++ b/Documentation/devicetree/bindings/arm/arm-boards
-@@ -180,6 +180,7 @@ described under the RS1 memory mapping.
- Required properties (in root node):
- 	compatible = "arm,juno";	/* For Juno r0 board */
- 	compatible = "arm,juno-r1";	/* For Juno r1 board */
-+	compatible = "arm,juno-r2";	/* For Juno r2 board */
- 
- Required nodes:
- The description for the board must include:
-diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
-index bb3c07209676..c0bf56b9ce3d 100644
---- a/arch/arm64/boot/dts/arm/Makefile
-+++ b/arch/arm64/boot/dts/arm/Makefile
-@@ -1,5 +1,5 @@
- dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb
--dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb
-+dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb juno-r2.dtb
- dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
- dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2f-1xv7-ca53x2.dtb
- 
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-similarity index 87%
-copy from arch/arm64/boot/dts/arm/juno-r1.dts
-copy to arch/arm64/boot/dts/arm/juno-r2.dts
-index d95d9e7e2dc0..88ecd6182b67 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-@@ -11,8 +11,8 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
--	model = "ARM Juno development board (r1)";
--	compatible = "arm,juno-r1", "arm,juno", "arm,vexpress";
-+	model = "ARM Juno development board (r2)";
-+	compatible = "arm,juno-r2", "arm,juno", "arm,vexpress";
- 	interrupt-parent = <&gic>;
- 	#address-cells = <2>;
- 	#size-cells = <2>;
-@@ -37,10 +37,10 @@
- 		cpu-map {
- 			cluster0 {
- 				core0 {
--					cpu = <&A57_0>;
-+					cpu = <&A72_0>;
- 				};
- 				core1 {
--					cpu = <&A57_1>;
-+					cpu = <&A72_1>;
- 				};
- 			};
- 
-@@ -82,22 +82,22 @@
- 			};
- 		};
- 
--		A57_0: cpu@0 {
--			compatible = "arm,cortex-a57","arm,armv8";
-+		A72_0: cpu@0 {
-+			compatible = "arm,cortex-a72","arm,armv8";
- 			reg = <0x0 0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
--			next-level-cache = <&A57_L2>;
-+			next-level-cache = <&A72_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
- 		};
- 
--		A57_1: cpu@1 {
--			compatible = "arm,cortex-a57","arm,armv8";
-+		A72_1: cpu@1 {
-+			compatible = "arm,cortex-a72","arm,armv8";
- 			reg = <0x0 0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
--			next-level-cache = <&A57_L2>;
-+			next-level-cache = <&A72_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
- 		};
-@@ -142,7 +142,7 @@
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
- 		};
- 
--		A57_L2: l2-cache0 {
-+		A72_L2: l2-cache0 {
- 			compatible = "cache";
- 		};
- 
-@@ -151,12 +151,12 @@
- 		};
- 	};
- 
--	pmu_a57 {
--		compatible = "arm,cortex-a57-pmu";
-+	pmu_a72 {
-+		compatible = "arm,cortex-a72-pmu";
- 		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-affinity = <&A57_0>,
--				     <&A57_1>;
-+		interrupt-affinity = <&A72_0>,
-+				     <&A72_1>;
- 	};
- 
- 	pmu_a53 {
--- 
-1.9.1
+I have reply on some comment and seeking more details for few comments=20
+as follows.
+
+On Monday 25 January 2016 05:26 PM, Lee Jones wrote:
+> On Tue, 19 Jan 2016, Laxman Dewangan wrote:
+>
+>> +- interrupt-controller: MAX77620 has internal interrupt controller =
+which
+>> +  takes the interrupt request from internal sub-blocks like RTC,
+>> +  regulators, GPIOs as well as external input.
+> This is how interrupt-controllers usually work.  I don't think there
+> is any need to explain this.  I'd just link to
+> ../interrupt-controller/interrupts.txt instead.
+
+Something similar to (just to confirm)
+- interrupt-controller: describes the 88pm860x as an interrupt=20
+controller (has its own domain)
+
+>
+>> +- #interrupt-cells: Should be set to 2 for IRQ number and flags.
+>> +  The first cell is the IRQ number. IRQ numbers for different inter=
+rupt
+>> +  source of MAX77620 are defined at dt-bindings/mfd/max77620.h
+>> +  The second cell is the flags, encoded as the trigger masks from b=
+inding
+>> +  document interrupts.txt, using dt-bindings/irq.
+> This is a very lengthy read for such little information.  Please make
+> it more succinct.  Take a look at other files for examples.
+I started with as3722.txt and it seems I am carrying forward the=20
+complexity here. Originally, as3722 is posted by me only. Any good file=
+=20
+example which I can refer?
+
+
+>   Also,
+> tell use where interrupts.txt is
+> i.e. ../interrupt-controller/interrupts.txt.
+>
+> These are so much easier to read if you tab out from the property nam=
+e
+> to the description.
+>
+> - reg:				I2C device address.
+> - interrupt-controller: 	MAX77620 has internal interrupt controller w=
+hich
+>    				takes the interrupt request from internal
+> 				sub-blocks like RTC, regulators, GPIOs as well
+> 				as external input.
+> - #interrupt-cells:		Should be set to 2 for IRQ number and flags.
+> 				The first cell is the IRQ number. IRQ numbers
+> 				for different interrupt source of MAX77620 are
+> 				defined at dt-bindings/mfd/max77620.h
+>    				The second cell is the flags, encoded as the
+> 				trigger masks from binding document
+> 				interrupts.txt, using dt-bindings/irq.
+>
+> ... don't you think?
+
+Agree, I can make indenting. And will do whatever places it needs in=20
+this document.
+
+>
+>> +Optional properties:
+>> +-------------------
+>> +This device also supports the power OFF of system.
+> What is the "power OFF of system"?
+
+PMIC supplies the power. So once PMIC is in OFF state, it turns off all=
+=20
+its rail and hence no SW execution on system. Still external supply wil=
+l=20
+keep supply to PMIC.
+
+
+>
+>> +Following properties are used for this purpose:
+>> +- system-power-controller: Boolean, This device will be use as
+> You don't describe the type of each property, so why is this one
+> special?
+Hmm. I describe the boolean and tristate only. Do I need to define type=
+=20
+for integer,string also?
+
+>> +power OFF slot and slot period of the device. Device has 3 FPS as F=
+PS0,
+>> +FPS1 and FPS2. The details of FPS configuration is provided through
+>> +subnode "fps". The details of FPS0, FPS1, FPS2 are provided through=
+ the
+>> +child node under this subnodes. The FPS number is provided via reg =
+property.
+>> +
+>> +The property for fps child nodes as:
+>> +Required properties:
+>> +	-reg: FPS number like 0, 1, 2 for FPS0, FPS1 and FPS2 respectively=
+=2E
+> I'm surprised Rob Acked this.  We don't usually do device numbers in =
+DT.
+What is best way to make the child node for FPS and differentiate FPS0,=
+1, 2?
+What is your suggestion here?
+
+
+>> +	-maxim,active-fps-time-period-us: Active state FPS time period in
+>> +		microseconds.
+>> +	-maxim,suspend-fps-time-period-us: Suspend state FPS time period i=
+n
+>> +		microseconds.
+>> +	-maxim,fps-enable-input: FPS enable source like EN0, EN1 or SW. Th=
+e
+>> +			macros are defined on dt-bindings/mfd/max77620.h for
+>> +			different enable source.
+>> +				FPS_EN_SRC_EN0 for EN0 enable source.
+>> +				FPS_EN_SRC_EN1 for En1 enable source.
+>> +				FPS_EN_SRC_SW for SW based control.
+>> +	-maxim,fps-sw-enable: Boolean, applicable if enable input is SW.
+>> +			If this property present then enable the FPS else
+> "property is present"
+>
+> If this enables/disables FPS, why does it matter if it's SW or not?
+> Why can't you just cal it maxim,fps-enable?  Also, is there a case
+> where you would supply this sub-node, have FPS enabled and this
+> property not present?  If not, can't you just remove the entire node?
+> Or am I missing something?
+
+Here, my need is to connect different FPS source inputs EN0, EN1 or SW.=
+=20
+They can connected to any inputs. That's why fps-enable-input select th=
+e=20
+related digital input for given FPS.
+However, I can reduce the need of "fps-sw-enable" and make this always=20
+enable if fps-enable-input=3D <SW>.
+
+Here is excerpt from datasheet:
+B3:B1: SRCFPSx[1:0]
+     Enable Source. Specifies the enable source for the sequencer.
+         0b00=3DEN0 hardware input
+         0b01=3DEN1 hardware input
+         0b10=3DENFPSx software bit
+         0b11=3Dreserved
+B0 ENFPSx
+     Software Enable
+     0=3DDisable FPSx
+     1=3DEnable FPSx
+     X=3DENFPSx is a don=C2=92t care if SRCFPSx[1:0] !=3D 0b10
+
+
+>
+>> +	-maxim,enable-global-lpm: Boolean, enable global LPM when the exte=
+rnal
+> LPM?
+Low Power Mode (LPM). I will add details.
+
+> +Pinmux and GPIO:
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> I think this whole section needs moving to ../pinctrl and needs to be
+> reviewed by Linus W.
+
+Is this mean I need to create DT binding doc for the each subsystem=20
+differently?
+Actually during AS3722, I had different understanding to have single fi=
+le.
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
