@@ -1,181 +1,82 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rockchip: add support emac for RK3036
-Date: Mon, 25 Jan 2016 20:38:08 +0800
-Message-ID: <1453725488-5279-1-git-send-email-wxt@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V2 1/4] dt-bindings: mfd: Add bindings for the MediaTek
+ MT6323 PMIC
+Date: Mon, 25 Jan 2016 12:41:51 +0000
+Message-ID: <20160125124151.GH3368@x1>
+References: <1453716887-38442-1-git-send-email-blogic@openwrt.org>
+ <1453716887-38442-2-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhengxing <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453716887-38442-2-git-send-email-blogic@openwrt.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Crispin <blogic@openwrt.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Flora Fu <flora.fu@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, Steven Liu <steven.liu@mediatek.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: zhengxing <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Mon, 25 Jan 2016, John Crispin wrote:
 
-This patch describe the emac, and we need to let mac clock under
-the APLL which is able to provide the accurate 50MHz what mac_ref
-need.
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt |   10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 
-This patch makes the emac parent clock is DPLL instead of APLL.
-since that will cause some unstable things if the cpufreq is working.
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Docum=
+entation/devicetree/bindings/mfd/mt6397.txt
+> index 15043e6..949c85f 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -1,6 +1,6 @@
+> -MediaTek MT6397 Multifunction Device Driver
+> +MediaTek MT6397/MT6323 Multifunction Device Driver
+> =20
+> -MT6397 is a multifunction device with the following sub modules:
+> +MT6397/MT6323 is a multifunction device with the following sub modul=
+es:
+>  - Regulator
+>  - RTC
+>  - Audio codec
+> @@ -8,14 +8,14 @@ MT6397 is a multifunction device with the following=
+ sub modules:
+>  - Clock
+> =20
+>  It is interfaced to host controller using SPI interface by a proprie=
+tary hardware
+> -called PMIC wrapper or pwrap. MT6397 MFD is a child device of pwrap.
+> +called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of=
+ pwrap.
+>  See the following for pwarp node definitions:
+>  Documentation/devicetree/bindings/soc/pwrap.txt
+> =20
+>  This document describes the binding for MFD device and its sub modul=
+e.
+> =20
+>  Required properties:
+> -compatible: "mediatek,mt6397"
+> +compatible: "mediatek,mt6397" or "mediatek,mt6323"
+> =20
+>  Optional subnodes:
+> =20
+> @@ -26,6 +26,8 @@ Optional subnodes:
+>  	Required properties:
+>  		- compatible: "mediatek,mt6397-regulator"
+>  	see Documentation/devicetree/bindings/regulator/mt6397-regulator.tx=
+t
+> +		- compatible: "mediatek,mt6323-regulator"
+> +	see Documentation/devicetree/bindings/regulator/mt6323-regulator.tx=
+t
+>  - codec
+>  	Required properties:
+>  		- compatible: "mediatek,mt6397-codec"
 
----
-
-Changes in v2:
-- add the assigned clock parent for emac.
-  https://github.com/rockchip-linux/u-boot/commit/d64ef6b272d84c92bd02a7925f500880633c8599
-- change the emac to a better place.
-
- arch/arm/boot/dts/rk3036-evb.dts   | 23 ++++++++++++++++++++++
- arch/arm/boot/dts/rk3036-kylin.dts | 21 ++++++++++++++++++++
- arch/arm/boot/dts/rk3036.dtsi      | 39 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
-index 28a0336..d7d3719 100644
---- a/arch/arm/boot/dts/rk3036-evb.dts
-+++ b/arch/arm/boot/dts/rk3036-evb.dts
-@@ -47,6 +47,17 @@
- 	compatible = "rockchip,rk3036-evb", "rockchip,rk3036";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
-@@ -62,3 +73,15 @@
- &uart2 {
- 	status = "okay";
- };
-+
-+&pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 190f22c..0bc127b 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -101,6 +101,17 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &emmc {
- 	status = "okay";
- };
-@@ -359,6 +370,16 @@
- };
- 
- &pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int: pmic-int {
- 			rockchip,pins = <2 2 RK_FUNC_GPIO &pcfg_pull_default>;
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 7897449..436c77a 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -186,6 +186,27 @@
- 		status = "disabled";
- 	};
- 
-+	emac: ethernet@10200000 {
-+		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
-+		reg = <0x10200000 0x4000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
-+		clock-names = "hclk", "macref", "macclk";
-+		/*
-+		 * Fix the emac parent clock is DPLL instead of APLL.
-+		 * since that will cause some unstable things if the cpufreq
-+		 * is working. (e.g: the accurate 50MHz what mac_ref need)
-+		 */
-+		assigned-clocks = <&cru SCLK_MACPLL>;
-+		assigned-clock-parents = <&cru PLL_DPLL>;
-+		max-speed = <100>;
-+		phy-mode = "rmii";
-+		status = "disabled";
-+	};
-+
- 	sdmmc: dwmmc@10214000 {
- 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x10214000 0x4000>;
-@@ -556,6 +577,24 @@
- 			};
- 		};
- 
-+		emac {
-+			emac_xfer: emac-xfer {
-+				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
-+						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
-+						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
-+						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
-+						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
-+						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
-+						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
-+						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
-+			};
-+
-+			emac_mdio: emac-mdio {
-+				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
-+						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
--- 
-1.9.1
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
