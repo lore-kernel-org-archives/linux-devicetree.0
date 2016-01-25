@@ -1,53 +1,63 @@
 Return-Path: <>
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v4 0/4] iio: AFE4404 Heart Rate Monitor and Bio-Sensing
-Date: Mon, 25 Jan 2016 11:28:57 -0600
-Message-ID: <1453742941-12086-1-git-send-email-afd@ti.com>
+Subject: [PATCH v4 3/4] Documentation: afe4403: Add DT bindings for the AFE4403 heart monitor
+Date: Mon, 25 Jan 2016 11:29:00 -0600
+Message-ID: <1453742941-12086-4-git-send-email-afd@ti.com>
+In-Reply-To: <1453742941-12086-1-git-send-email-afd@ti.com>
+References: <1453742941-12086-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-iio@vger.kernel.org, linux-api@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds the TI AFE4404 "Ultra-small, Integrated AFE for
-Wearable, Optical Heart Rate Monitoring and Bio-Sensing".
+Add the TI AFE4403 heart monitor DT bindings documentation.
 
-Changes from v3:
- - Removed attempt to factor out common code
- - Rebased on v4.5-rc1
- - Small fixes
-
-Changes from v2:
- - Added afe4403 driver to this series
- - Added patch to export needed IIO function
- - Table lookup for magic numbers
- - Other small fixes
-
-Please see [0] for more background.
-
-[0] http://www.spinics.net/lists/linux-iio/msg21619.html
-
-Andrew F. Davis (4):
-  Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
-  iio: health: Add driver for the TI AFE4404 heart monitor
-  Documentation: afe4403: Add DT bindings for the AFE4403 heart monitor
-  iio: health: Add driver for the TI AFE4403 heart monitor
-
- .../ABI/testing/sysfs-bus-iio-health-afe440x       |  54 ++
- .../devicetree/bindings/iio/health/afe4403.txt     |  34 +
- .../devicetree/bindings/iio/health/afe4404.txt     |  30 +
- drivers/iio/health/Kconfig                         |  31 +-
- drivers/iio/health/Makefile                        |   2 +
- drivers/iio/health/afe4403.c                       | 698 +++++++++++++++++++++
- drivers/iio/health/afe4404.c                       | 665 ++++++++++++++++++++
- drivers/iio/health/afe440x.h                       | 193 ++++++
- 8 files changed, 1706 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-health-afe440x
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/iio/health/afe4403.txt     | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/health/afe4403.txt
- create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
- create mode 100644 drivers/iio/health/afe4403.c
- create mode 100644 drivers/iio/health/afe4404.c
- create mode 100644 drivers/iio/health/afe440x.h
 
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4403.txt b/Documentation/devicetree/bindings/iio/health/afe4403.txt
+new file mode 100644
+index 0000000..2fffd70
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/health/afe4403.txt
+@@ -0,0 +1,34 @@
++Texas Instruments AFE4403 Heart rate and Pulse Oximeter
++
++Required properties:
++ - compatible		: Should be "ti,afe4403".
++ - reg			: SPI chip select address of device.
++ - tx-supply		: Regulator supply to transmitting LEDs.
++ - interrupt-parent	: Phandle to he parent interrupt controller.
++ - interrupts		: The interrupt line the device ADC_RDY pin is
++			  connected to. For details refer to,
++			  ../../interrupt-controller/interrupts.txt.
++
++Optional properties:
++ - reset-gpios		: GPIO used to reset the device.
++			  For details refer to, ../../gpio/gpio.txt.
++
++For other required and optional properties of SPI slave nodes
++please refer to ../../spi/spi-bus.txt.
++
++Example:
++
++&spi0 {
++	heart_mon@0 {
++		compatible = "ti,afe4403";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++
++		tx-supply = <&vbat>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++
++		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++	};
++};
 -- 
 2.7.0
