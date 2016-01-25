@@ -1,71 +1,87 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sama5d4: add labels for watchdog and
- pinctrl nodes
-Date: Mon, 25 Jan 2016 12:19:36 +0100
-Message-ID: <20160125111936.GC4027@piout.net>
-References: <1453293337-16078-1-git-send-email-LW@KARO-electronics.de>
- <1453293337-16078-3-git-send-email-LW@KARO-electronics.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 2/5] mfd: max77620: add core driver for
+ MAX77620/MAX20024
+Date: Mon, 25 Jan 2016 11:29:36 +0000
+Message-ID: <20160125112936.GB3368@x1>
+References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com>
+ <1453198783-28383-3-git-send-email-ldewangan@nvidia.com>
+ <569F199D.9020207@samsung.com>
+ <56A214EB.30905@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453293337-16078-3-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+In-Reply-To: <56A214EB.30905-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Chaitanya Bandi <bandik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 22 Jan 2016, Laxman Dewangan wrote:
 
-On 20/01/2016 at 13:35:36 +0100, Lothar Wa=DFmann wrote :
-
-Ditto, this needs a commit message.
-
-> Signed-off-by: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-
-Else,
-
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-
-
-> ---
->  arch/arm/boot/dts/sama5d4.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Thanks Krzysztof for review.
 >=20
-> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5=
-d4.dtsi
-> index 6c0dc89..fb40014 100644
-> --- a/arch/arm/boot/dts/sama5d4.dtsi
-> +++ b/arch/arm/boot/dts/sama5d4.dtsi
-> @@ -1299,7 +1299,7 @@
->  				clocks =3D <&h32ck>;
->  			};
-> =20
-> -			watchdog@fc068640 {
-> +			watchdog: watchdog@fc068640 {
->  				compatible =3D "atmel,sama5d4-wdt";
->  				reg =3D <0xfc068640 0x10>;
->  				clocks =3D <&clk32k>;
-> @@ -1351,7 +1351,7 @@
->  			};
-> =20
-> =20
-> -			pinctrl@fc06a000 {
-> +			pinctrl: pinctrl@fc06a000 {
->  				#address-cells =3D <1>;
->  				#size-cells =3D <1>;
->  				compatible =3D "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pin=
-ctrl", "simple-bus";
-> --=20
-> 2.1.4
+> Hi Lee,
+> Are you taking the patches from your tree? Or will go in individual
+> subsystem?
+
+I can take the set if there are build dependencies.  If there aren't,
+then they should be routed via their respective subsystem trees.
+
+> On Wednesday 20 January 2016 10:52 AM, Krzysztof Kozlowski wrote:
+> >On 19.01.2016 19:19, Laxman Dewangan wrote:
+> >>MAX77620/MAX20024 are Power Management IC from the MAXIM.
+> >>It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
+> >>watchdog, clock etc.
+> >>
+> >>Add MFD drier to provides common support for accessing the
+> >>device; additional drivers is developed on respected subsystem
+> >>in order to use the functionality of the device.
+> >>
+> >>Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>Signed-off-by: Chaitanya Bandi <bandik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>Signed-off-by: Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>Changes from V1:
+> >>- Code cleanups per review from V1.
+> >>- Move register acccess APIs from header to c file.
+> >>- Remove some of non required variable, remove duplication in error=
+ message
+> >>  and simplify some of function implementation.
+> >>- Register RTC driver such that it can get the regmap handle form p=
+arent device
+> >>
+> >>Changes from V2:
+> >>- Run coccicheck and checkpatch in strict mode for the alignment.
+> >>- Drop RTC driver and its i2c client registration.
+> >>
+> >>Changes from V3:
+> >>- Change all sys initcall to module driver.
+> >>- change the max77620_read argument to unisgned int from u8.
+> >>
+> >>  drivers/mfd/Kconfig          |  15 +
+> >>  drivers/mfd/Makefile         |   1 +
+> >>  drivers/mfd/max77620.c       | 871 ++++++++++++++++++++++++++++++=
++++++++++++++
+> >>  include/linux/mfd/max77620.h | 404 ++++++++++++++++++++
+> >>  4 files changed, 1291 insertions(+)
+> >>  create mode 100644 drivers/mfd/max77620.c
+> >>  create mode 100644 include/linux/mfd/max77620.h
+> >>
+> >
+> >Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >
+> >Best regards,
+> >Krzysztof
+> >
 >=20
 
 --=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
