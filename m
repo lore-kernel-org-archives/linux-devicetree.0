@@ -1,44 +1,49 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
- topology
-Date: Mon, 25 Jan 2016 10:35:02 +0200
-Message-ID: <1453710902.2521.203.camel@linux.intel.com>
-References: <1453663322-14474-1-git-send-email-mans@mansr.com>
-	 <1453663322-14474-4-git-send-email-mans@mansr.com>
-	 <20160124223629.GI6588@sirena.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 0/2] arm64: dts: r8a7795: Add USB3.0 host
+Date: Mon, 25 Jan 2016 08:41:54 +0000
+Message-ID: <SG2PR06MB0919CD279BBA09E9F4831663D8C70@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1453457003-7720-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+	<20160125000845.GC774@verge.net.au>
+ <CAMuHMdUor3YxMAjL=YWgmG+7p-6+=h=C5vZAr4NkgroermgshA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20160124223629.GI6588@sirena.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Mans Rullgard <mans@mansr.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUor3YxMAjL=YWgmG+7p-6+=h=C5vZAr4NkgroermgshA@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2016-01-24 at 22:36 +0000, Mark Brown wrote:
-> On Sun, Jan 24, 2016 at 07:21:50PM +0000, Mans Rullgard wrote:
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >=20
-> > The source and destination masters are reflecting buses or their
-> > layers to
-> > where the different devices can be connected. The patch changes the
-> > master
-> > names to reflect which one is related to which independently on the
-> > transfer
-> > direction.
->=20
-> This is patch 3 of a series but I don't have anything else in the
-> series.=C2=A0=C2=A0What is going on with the rest of the series - wha=
-t are the
-> dependencies and so on?
-
-Mark, sorry about that, but in this particular case you may consider
-this patch is a standalone one. You are in the Cc list due to SPI
-driver small change. This change isn't modifying functionality of the
-driver.
-
---=20
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
-
+SGkgR2VlcnQtc2FuLCBTaW1vbi1zYW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gRnJvbTogZ2VlcnQudXl0dGVyaG9ldmVuQGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRl
+cmhvZXZlbkBnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2Vu
+dDogTW9uZGF5LCBKYW51YXJ5IDI1LCAyMDE2IDU6MjUgUE0NCj4gVG86IFNpbW9uIEhvcm1hbiA8
+aG9ybXNAdmVyZ2UubmV0LmF1Pg0KPiBDYzogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5z
+aGltb2RhLnVoQHJlbmVzYXMuY29tPjsgTWFnbnVzIERhbW0gPG1hZ251cy5kYW1tQGdtYWlsLmNv
+bT47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdl
+bC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFu
+IENhbXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEg
+PGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxp
+bnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAv
+Ml0gYXJtNjQ6IGR0czogcjhhNzc5NTogQWRkIFVTQjMuMCBob3N0DQo+IA0KPiBIaSBTaW1vbiwN
+Cj4gDQo+IE9uIE1vbiwgSmFuIDI1LCAyMDE2IGF0IDE6MDggQU0sIFNpbW9uIEhvcm1hbiA8aG9y
+bXNAdmVyZ2UubmV0LmF1PiB3cm90ZToNCj4gPiBPbiBGcmksIEphbiAyMiwgMjAxNiBhdCAwNzow
+MzoyMVBNICswOTAwLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gPj4gVGhpcyBwYXRjaCBz
+ZXQgaXMgYmFzZWQgb24gdGhlIGxhdGVzdCByZW5lc2FzLmdpdCAvIHJlbmVzYXMtZGV2ZWwtMjAx
+NjAxMjEtdjQuNA0KPiA+PiB0YWcuIChjb21taXQgaWQgPSAzNzQwYWRlMDYxNzk1NWM3NmUxNzY3
+YjZkNDkzNDdkNTQ0NmVlZDc0KQ0KPiA+Pg0KPiA+PiBUaGlzIHBhdGNoIG5lZWRzIHI4YTc3OTUt
+Y3BnLW1zc3IuYyB1cGRhdGUgZm9yIHVzYjMuMCBjbG9ja3MuDQo+ID4NCj4gPiBUaGFua3MuIFBs
+ZWFzZSBsZXQgbWUga25vdyBpZiBJIHNob3VsZCB3YWl0IGZvciB0aGF0IGNoYW5nZSBiZWZvcmUN
+Cj4gPiBxdWV1aW5nIHVwIHRoZXNlIHBhdGNoZXMuDQo+IA0KPiBJIHRoaW5rIHlvdSBjYW4gcXVl
+dWUgaXQgdXAgZmluZS4gSXQgc2hvdWxkIHN0YXJ0IHdvcmtpbmcgaW4gbmV4dA0KPiByZW5lc2Fz
+LWRyaXZlcnMNCj4gcmVsZWFzZS4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGNvbW1lbnQhDQpJIHRo
+aW5rIHNvLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGpl
+LGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0t
+DQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlh
+MzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlv
+bnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4g
+d2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBv
+ciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IC0tIExpbnVzIFRvcnZhbGRzDQo=
