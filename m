@@ -1,115 +1,60 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v3 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Mon, 25 Jan 2016 12:20:45 +0000
-Message-ID: <alpine.DEB.2.02.1601251213090.9687@kaball.uk.xensource.com>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
- <1453519184-11908-2-git-send-email-zhaoshenglong@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
+ topology
+Date: Mon, 25 Jan 2016 12:23:47 +0000
+Message-ID: <20160125122347.GM6588@sirena.org.uk>
+References: <1453663322-14474-1-git-send-email-mans@mansr.com>
+ <1453663322-14474-4-git-send-email-mans@mansr.com>
+ <20160124223629.GI6588@sirena.org.uk>
+ <yw1xk2myli0u.fsf@unicorn.mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1453519184-11908-2-git-send-email-zhaoshenglong@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Shannon Zhao <zhaoshenglong@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e9BJxh3jTFf/APYk"
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <yw1xk2myli0u.fsf@unicorn.mansr.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao@linaro.org>
-> 
-> ACPI 6.0 introduces a new table STAO to list the devices which are used
-> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
-> UART is used by Xen. So here it hides UART from Dom0.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> ---
-> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
-> CC: Len Brown <lenb@kernel.org> (supporter:ACPI)
-> CC: linux-acpi@vger.kernel.org (open list:ACPI)
-> ---
->  drivers/acpi/bus.c | 36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index a212cef..7f85b54 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -46,6 +46,7 @@ ACPI_MODULE_NAME("bus");
->  struct acpi_device *acpi_root;
->  struct proc_dir_entry *acpi_root_dir;
->  EXPORT_SYMBOL(acpi_root_dir);
-> +static u64 spcr_uart_addr;
->  
->  #ifdef CONFIG_X86
->  #ifdef CONFIG_ACPI_CUSTOM_DSDT
-> @@ -105,6 +106,22 @@ acpi_status acpi_bus_get_status_handle(acpi_handle handle,
->  	return status;
->  }
->  
-> +static bool acpi_check_device_is_ignored(acpi_handle handle)
-> +{
-> +	acpi_status status;
-> +	u64 addr;
-> +
-> +	/* Check if it should ignore the UART device */
-> +	if (spcr_uart_addr != 0) {
-> +		status = acpi_evaluate_integer(handle, METHOD_NAME__ADR, NULL,
-> +					       &addr);
-> +		if (ACPI_SUCCESS(status) && addr == spcr_uart_addr)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  int acpi_bus_get_status(struct acpi_device *device)
->  {
->  	acpi_status status;
-> @@ -114,7 +131,8 @@ int acpi_bus_get_status(struct acpi_device *device)
->  	if (ACPI_FAILURE(status))
->  		return -ENODEV;
->  
-> -	acpi_set_device_status(device, sta);
-> +	if (!acpi_check_device_is_ignored(device->handle))
-> +		acpi_set_device_status(device, sta);
->  
->  	if (device->status.functional && !device->status.present) {
->  		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Device [%s] status [%08x]: "
-> @@ -1069,6 +1087,8 @@ EXPORT_SYMBOL_GPL(acpi_kobj);
->  static int __init acpi_init(void)
->  {
->  	int result;
-> +	acpi_status status;
-> +	struct acpi_table_stao *stao_ptr;
->  
->  	if (acpi_disabled) {
->  		printk(KERN_INFO PREFIX "Interpreter disabled.\n");
-> @@ -1081,6 +1101,20 @@ static int __init acpi_init(void)
->  		acpi_kobj = NULL;
->  	}
->  
-> +	/* If there is STAO table, check whether it needs to ignore the UART
-> +	 * device in SPCR table.
-> +	 */
-> +	status = acpi_get_table(ACPI_SIG_STAO, 0,
-> +				(struct acpi_table_header **)&stao_ptr);
-> +	if (ACPI_SUCCESS(status) && stao_ptr->ignore_uart) {
-> +		struct acpi_table_spcr *spcr_ptr;
-> +
-> +		status = acpi_get_table(ACPI_SIG_SPCR, 0,
-> +					(struct acpi_table_header **)&spcr_ptr);
-> +		if (ACPI_SUCCESS(status))
-> +			spcr_uart_addr = spcr_ptr->serial_port.address;
 
-else
-    printk(KERN_WARNING "STAO table present, but SPCR is missing.\n");
+--e9BJxh3jTFf/APYk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In any case:
+On Sun, Jan 24, 2016 at 10:38:57PM +0000, M=E5ns Rullg=E5rd wrote:
+> Mark Brown <broonie@kernel.org> writes:
 
-Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> > This is patch 3 of a series but I don't have anything else in the
+> > series.  What is going on with the rest of the series - what are the
+> > dependencies and so on?
 
+> I give up.  Seriously, this is impossible.  If I don't include everybody
+> in the slightest way related to any patch in the series, I get
+> complaints that patches are missing.  If I do, the lists reject it all
+> due to too many recipients.  What the hell am I supposed to do?
 
-> +	}
-> +
->  	init_acpi_device_notify();
->  	result = acpi_bus_init();
->  	if (result) {
+You should normally include at least the subsystem maintainers in at
+least the cover letter and cover the dependencies there.  Think about
+how this is going to work: if you don't give us any information on
+what's going on with dependencies then we can't tell how to handle the
+patches - do we need to apply them, only review them or what?
+
+--e9BJxh3jTFf/APYk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWphPTAAoJECTWi3JdVIfQvIsH/18K67Vz/iG1dCd7ZJk1hjqq
+xKXkc56SvttMqO9uo72pUp+PN6u+mCP11g1FVm85HDe23wmJO8XAwfB8bzkwsDLv
+kxGWqrd+PLiiu9CE5YASx1I84mzjimE29A4nR6A0/tIgGa09RKQioXB9eUeen39B
+HZIa8IjeK7I7+CZNfWeqiwTQAdeGsfk/dCzSdBit2Yx+6tvHhOItwP+dlgKcIKIH
+ongI/E2X15SipfHED7PQ7nEcs2M+sGaVMmLMveKGV3lC2t3ajcqSZIt1vo1MrNvO
+TVnil39laB9fKmftvh0AeN1vwsF6ybEPmT14V2kX15rsVNpsumiiBC6cUGU5raw=
+=kyi6
+-----END PGP SIGNATURE-----
+
+--e9BJxh3jTFf/APYk--
