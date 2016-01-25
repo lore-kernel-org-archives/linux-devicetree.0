@@ -1,156 +1,108 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv8 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
- entries
-Date: Mon, 25 Jan 2016 09:42:33 -0600
-Message-ID: <56A64269.1030500@opensource.altera.com>
-References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
- <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
- <20160123023513.GA2081@rob-hp-laptop>
-Reply-To: <tthayer@opensource.altera.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: DTS: kirkwood-openrd: provide template for RS-232/485 configuration
+Date: Mon, 25 Jan 2016 16:41:01 +0100
+Message-ID: <878u3dekfm.fsf@free-electrons.com>
+References: <1453581437-14135-1-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160123023513.GA2081@rob-hp-laptop>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453581437-14135-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org> (Aaro
+	Koskinen's message of "Sat, 23 Jan 2016 22:37:17 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Aaro,
+ 
+ On sam., janv. 23 2016, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
 
+> Some OpenRD boards have RS-232 and RS-486 connectors wired, but using them
+> needs a custom DTB as the current DTB configures SD card slot instead.
+>
+> This patch adds documentation into the DTS on how to change
+> the configuration.
+>
+> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 
-On 01/22/2016 08:35 PM, Rob Herring wrote:
-> On Thu, Jan 21, 2016 at 11:34:26AM -0600, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Adding the device tree entries and bindings needed to support
->> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
->> an earlier patch to declare and setup On-chip RAM properly.
->> http://www.spinics.net/lists/devicetree/msg51117.html
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
->> ---
->> v8: Fix node names to include chip family and use ecc manager
->>      to better describe the driver. Rename socfpga-edac.txt to
->>      socfpga-eccmgr.txt.
->> v7: No Change
->> v6: Change to nested EDAC device nodes based on community
->>      feedback. Remove L2 syscon. Use consolidated binding.
->> v3-5: No Change
->> v2: Remove OCRAM declaration and reference prior patch.
->> ---
->>   .../bindings/arm/altera/socfpga-eccmgr.txt         |   49 ++++++++++++++++++++
->>   arch/arm/boot/dts/socfpga.dtsi                     |   20 ++++++++
->>   2 files changed, 69 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->
-> A couple of nits, otherwise:
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
+Applied on mvebu/dt with Andrew Reviewed-by tag
 
-Great! I will make these changes for my next version that fixes some 
-coding issue. Thank you for reviewing.
+Thanks,
 
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->> new file mode 100644
->> index 0000000..4f45690
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->> @@ -0,0 +1,49 @@
->> +Altera SoCFPGA ECC Manager
->> +This driver uses the EDAC framework to implement the SOCFPGA ECC Manager.
->> +The ECC Manager counts and corrects single bit errors and counts/handles
->> +double bit errors which are uncorrectable.
->> +
->> +Required Properties:
->> +- compatible : Should be "altr,socfpga-ecc-manager"
->> +- #address-cells: must be 1
->> +- #size-cells: must be 1
->> +- ranges : standard definition, should translate from local addresses
->> +
->> +Subcomponents:
->> +
->> +L2 Cache ECC
->> +Required Properties:
->> +- compatible : Should be "altr,socfpga-l2-ecc"
->> +- reg : Address and size for ECC error interrupt clear registers.
->> +- interrupts : Should be single bit error interrupt, then double bit error
->> +	interrupt. Note the rising edge type.
->> +
->> +On Chip RAM ECC
->> +Required Properties:
->> +- compatible : Should be "altr,socfpga-ocram-ecc"
->> +- reg : Address and size for ECC error interrupt clear registers.
->> +- iram : phandle to On-Chip RAM definition.
->> +- interrupts : Should be single bit error interrupt, then double bit error
->> +	interrupt. Note the rising edge type.
->> +
->> +Example:
->> +
->> +	eccmgr: eccmgr@0xffd08140 {
+Gregory
+
+> ---
+>  arch/arm/boot/dts/kirkwood-openrd.dtsi | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
 >
-> drop the '0x'
+> diff --git a/arch/arm/boot/dts/kirkwood-openrd.dtsi b/arch/arm/boot/dts/kirkwood-openrd.dtsi
+> index f65b727..24f1d30 100644
+> --- a/arch/arm/boot/dts/kirkwood-openrd.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood-openrd.dtsi
+> @@ -40,7 +40,7 @@
+>  			pinctrl-0 = <&pmx_select28 &pmx_sdio_cd &pmx_select34>;
+>  			pinctrl-names = "default";
+>  
+> -			pmx_select28: pmx-select-rs232-rs484 {
+> +			pmx_select28: pmx-select-rs232-rs485 {
+>  				marvell,pins = "mpp28";
+>  				marvell,function = "gpio";
+>  			};
+> @@ -65,10 +65,39 @@
+>  			status = "okay";
+>  			cd-gpios = <&gpio0 29 9>;
+>  		};
+> +		gpio@10100 {
+> +			p28 {
+> +				gpio-hog;
+> +				gpios = <28 GPIO_ACTIVE_HIGH>;
+> +				/*
+> +				 * SelRS232or485 selects between RS-232 or RS-485
+> +				 * mode for the second UART.
+> +				 *
+> +				 * Low: RS-232
+> +				 * High: RS-485
+> +				 *
+> +				 * To use the second UART, you need to change also
+> +				 * the SelUARTorSD.
+> +				 */
+> +				output-low;
+> +				line-name = "SelRS232or485";
+> +			};
+> +		};
+>  		gpio@10140 {
+>  			p2 {
+>  				gpio-hog;
+>  				gpios = <2 GPIO_ACTIVE_HIGH>;
+> +				/*
+> +				 * SelUARTorSD selects between the second UART
+> +				 * (serial@12100) and SD (mvsdio@90000).
+> +				 *
+> +				 * Low: UART
+> +				 * High: SD
+> +				 *
+> +				 * When changing this line make sure the newly
+> +				 * selected device node is enabled and the
+> +				 * previously selected device node is disabled.
+> +				 */
+>  				output-high; /* Select SD by default */
+>  				line-name = "SelUARTorSD";
+>  			};
+> -- 
+> 2.4.0
 >
->> +		compatible = "altr,socfpga-ecc-manager";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		l2-ecc@ffd08140 {
->> +			compatible = "altr,socfpga-l2-ecc";
->> +			reg = <0xffd08140 0x4>;
->> +			interrupts = <0 36 1>, <0 37 1>;
->> +		};
->> +
->> +		ocram-ecc@ffd08144 {
->> +			compatible = "altr,socfpga-ocram-ecc";
->> +			reg = <0xffd08144 0x4>;
->> +			iram = <&ocram>;
->> +			interrupts = <0 178 1>, <0 179 1>;
->> +		};
->> +	};
->> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> index 39c470e..9bb383e 100644
->> --- a/arch/arm/boot/dts/socfpga.dtsi
->> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> @@ -656,6 +656,26 @@
->>   			status = "disabled";
->>   		};
->>
->> +		eccmgr: eccmgr@0xffd08140 {
 >
-> and here.
->
->> +			compatible = "altr,socfpga-ecc-manager";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +
->> +			l2-ecc@ffd08140 {
->> +				compatible = "altr,socfpga-l2-ecc";
->> +				reg = <0xffd08140 0x4>;
->> +				interrupts = <0 36 1>, <0 37 1>;
->> +			};
->> +
->> +			ocram-ecc@ffd08144 {
->> +				compatible = "altr,socfpga-ocram-ecc";
->> +				reg = <0xffd08144 0x4>;
->> +				iram = <&ocram>;
->> +				interrupts = <0 178 1>, <0 179 1>;
->> +			};
->> +		};
->> +
->>   		L2: l2-cache@fffef000 {
->>   			compatible = "arm,pl310-cache";
->>   			reg = <0xfffef000 0x1000>;
->> --
->> 1.7.9.5
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
