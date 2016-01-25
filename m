@@ -1,99 +1,32 @@
-From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v4 1/2] ARM: dts: imx6: Add support for Toradex Apalis
-	iMX6Q/D SoM
-Date: Mon, 25 Jan 2016 10:46:28 +0100
-Message-ID: <20160125094628.GH27359@ibawizard.net>
-References: <1453675703-31594-1-git-send-email-marcel.ziswiler@toradex.com> <1453675703-31594-2-git-send-email-marcel.ziswiler@toradex.com>
-Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: John Crispin <blogic@openwrt.org>
+Subject: [PATCH V3 01/11] dt-bindings: ARM: Mediatek: add MT2701/7623 string to the PMIC wrapper doc
+Date: Mon, 25 Jan 2016 10:53:14 +0100
+Message-ID: <1453715604-36856-2-git-send-email-blogic@openwrt.org>
+References: <1453715604-36856-1-git-send-email-blogic@openwrt.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453675703-31594-2-git-send-email-marcel.ziswiler@toradex.com>
+In-Reply-To: <1453715604-36856-1-git-send-email-blogic@openwrt.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stefan Agner <stefan@agner.ch>, Joshua Clayton <stillcompiling@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Flora Fu <flora.fu@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, Steven Liu <steven.liu@mediatek.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Marcel Ziswiler <marcel.ziswiler@toradex.com> [2016-01-24 23:48:22]:
+Signed-off-by: John Crispin <blogic@openwrt.org>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Hi Marcel,
-
-sorry for not commenting on your v3, I've missed it :(
-
-> +	regulators {
-> +		compatible = "simple-bus";
-> +
-
-I've commented this on your v2 already. One of the Lucas's comments[1] about
-this node was following:
-
-    "Get rid of this simple bus. It's not there in hardware and regulators
-    care board level components just like the nodes above and below."
-
-It works for me(tm) with following Apalis dtsi[2] on 4.4.0-rc3+ from
-arm-soc/for-next[3] with my changes based on this commit:
-
-    commit ce504c3d47508fd5590bc9b644e4318a2b5b9aa5
-    Author: Olof Johansson <olof@lixom.net>
-    Date:   Tue Jan 12 10:29:35 2016 -0800
-
-        ARM: SoC: document merges
-
-    root@OpenWrt:/# uname -a
-    Linux OpenWrt 4.4.0-rc3+ #121 SMP Mon Jan 25 10:06:14 CET 2016 armv7l GNU/Linux
-
-    root@OpenWrt:/# cat /proc/device-tree/model
-    Toradex Apalis iMX6Q/D on Gaben Flexi SBC
-
-    root@OpenWrt:/# cat /sys/kernel/debug/regulator/regulator_summary
-     regulator                      use open bypass voltage current     min     max
-    -------------------------------------------------------------------------------
-     regulator-dummy                  0    2      0     0mV     0mA     0mV     0mV 
-        2188000.ethernet                                                0mV     0mV
-        2090000.flexcan                                                 0mV     0mV
-     vdd1p1                           0    0      0  1100mV     0mA   800mV  1375mV 
-     vdd3p0                           0    0      0  3000mV     0mA  2800mV  3150mV 
-     vdd2p5                           0    0      0  2400mV     0mA  2000mV  2750mV 
-     vddarm                           0    1      0  1250mV     0mA   725mV  1450mV 
-        cpu0                                                         1250mV  1250mV
-     vddpu                            1    2      0  1250mV     0mA   725mV  1450mV 
-        cpu0                                                         1250mV  1250mV
-        20dc000.gpc                                                     0mV     0mV
-     vddsoc                           0    1      0  1250mV     0mA   725mV  1450mV 
-        cpu0                                                         1250mV  1250mV
-     1P8V                             0    0      0  1800mV     0mA  1800mV  1800mV 
-     2P5V                             0    0      0  2500mV     0mA  2500mV  2500mV 
-     3P3V                             0    2      0  3300mV     0mA  3300mV  3300mV 
-        2198000.usdhc                                                3300mV  3400mV
-        2194000.usdhc                                                3300mV  3400mV
-     usb_host_vbus_hub                1    1      0  5000mV     0mA  5000mV  5000mV 
-        usb_host_vbus                 1    1      0  5000mV     0mA  5000mV  5000mV 
-           2184200.usb                                                  0mV     0mV
-     usb_otg_vbus                     0    1      0  5000mV     0mA  5000mV  5000mV 
-        2184000.usb                                                     0mV     0mV
-     SW1AB                            0    0      0  1375mV     0mA   300mV  1875mV 
-     SW1C                             0    0      0  1375mV     0mA   300mV  1875mV 
-     SW2                              0    0      0  1000mV     0mA     0mV     0mV 
-     SW3A                             0    0      0  1500mV     0mA   400mV  1975mV 
-     SW3B                             0    0      0  1500mV     0mA     0mV     0mV 
-     SW4                              0    0      0  1000mV     0mA     0mV     0mV 
-     SWBST                            0    0      0  5000mV     0mA  5000mV  5150mV 
-     VSNVS                            0    0      0  3000mV     0mA  1000mV  3000mV 
-     VREFDDR                          0    0      0   750mV     0mA   750mV   750mV 
-     VGEN1                            0    0      0  1500mV     0mA   800mV  1550mV 
-     VGEN2                            0    0      0  1500mV     0mA   800mV  1550mV 
-     VGEN3                            0    0      0  3000mV     0mA  1800mV  3300mV 
-     VGEN4                            0    0      0  1800mV     0mA  1800mV  3300mV 
-     VGEN5                            0    0      0  2500mV     0mA  1800mV  3300mV 
-     VGEN6                            0    0      0  2800mV     0mA  1800mV  3300mV 
-
-What problems are you having if you remove that parent regulators node?
-
-1. http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/386456.html
-2. https://raw.githubusercontent.com/ynezz/linux-2.6/5a211784544a3a460df7e7e45479010ae3feaf76/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-3. git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc
-
-Thanks for your work!
-
--- ynezz
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+index ddeb5b6..107700d 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+@@ -18,6 +18,7 @@ IP Pairing
+ 
+ Required properties in pwrap device node.
+ - compatible:
++	"mediatek,mt2701-pwrap" for MT2701/7623 SoCs
+ 	"mediatek,mt8135-pwrap" for MT8135 SoCs
+ 	"mediatek,mt8173-pwrap" for MT8173 SoCs
+ - interrupts: IRQ for pwrap in SOC
+-- 
+1.7.10.4
