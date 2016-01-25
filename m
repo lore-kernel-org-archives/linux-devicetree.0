@@ -1,46 +1,77 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2 00/10] [media] tvp5150: add MC and DT support
-Date: Mon, 25 Jan 2016 12:04:24 -0300
-Message-ID: <56A63978.5080204@osg.samsung.com>
-References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
- <56A63849.8040004@xs4all.nl>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH v3 08/17] Xen: public/hvm: sync changes of HVM_PARAM_CALLBACK_VIA
+ ABI from Xen
+Date: Mon, 25 Jan 2016 15:06:05 +0000
+Message-ID: <alpine.DEB.2.02.1601251505530.9687@kaball.uk.xensource.com>
+References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
+ <1453519184-11908-9-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <56A63849.8040004@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453519184-11908-9-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Hans,
+On Sat, 23 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
+> 
+> Sync the changes of HVM_PARAM_CALLBACK_VIA ABI introduced by
+> Xen commit <ca5c54b6ff05> (public/hvm: export the HVM_PARAM_CALLBACK_VIA
+> ABI in the API).
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
 
-On 01/25/2016 11:59 AM, Hans Verkuil wrote:
-> On 01/07/2016 01:46 PM, Javier Martinez Canillas wrote:
->
-> FYI: this patch series no longer applies after the merge of 4.5-rc1.
->
+Acked-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
 
-That's actually not true :)
 
-I based this series on top of Mauro's latest MC next gen work since I
-knew that it was quite unlikely that this set would be applied before
-those changes. Sorry for missing mentioning that in the cover letter.
-  
-> So besides fixing Mauro's comment for 3/10 you need to respin this series
-> anyway.
->
-
-In fact, these patches besides 3/10 are already applied in media/master.
-
-> Regards,
->
-> 	Hans
->
-  
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+>  include/xen/interface/hvm/params.h | 27 +++++++++++++++++++++------
+>  1 file changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
+> index a6c7991..70ad208 100644
+> --- a/include/xen/interface/hvm/params.h
+> +++ b/include/xen/interface/hvm/params.h
+> @@ -27,16 +27,31 @@
+>   * Parameter space for HVMOP_{set,get}_param.
+>   */
+>  
+> +#define HVM_PARAM_CALLBACK_IRQ 0
+>  /*
+>   * How should CPU0 event-channel notifications be delivered?
+> - * val[63:56] == 0: val[55:0] is a delivery GSI (Global System Interrupt).
+> - * val[63:56] == 1: val[55:0] is a delivery PCI INTx line, as follows:
+> - *                  Domain = val[47:32], Bus  = val[31:16],
+> - *                  DevFn  = val[15: 8], IntX = val[ 1: 0]
+> - * val[63:56] == 2: val[7:0] is a vector number.
+> + *
+>   * If val == 0 then CPU0 event-channel notifications are not delivered.
+> + * If val != 0, val[63:56] encodes the type, as follows:
+> + */
+> +
+> +#define HVM_PARAM_CALLBACK_TYPE_GSI      0
+> +/*
+> + * val[55:0] is a delivery GSI.  GSI 0 cannot be used, as it aliases val == 0,
+> + * and disables all notifications.
+> + */
+> +
+> +#define HVM_PARAM_CALLBACK_TYPE_PCI_INTX 1
+> +/*
+> + * val[55:0] is a delivery PCI INTx line:
+> + * Domain = val[47:32], Bus = val[31:16] DevFn = val[15:8], IntX = val[1:0]
+> + */
+> +
+> +#define HVM_PARAM_CALLBACK_TYPE_VECTOR   2
+> +/*
+> + * val[7:0] is a vector number.  Check for XENFEAT_hvm_callback_vector to know
+> + * if this delivery method is available.
+>   */
+> -#define HVM_PARAM_CALLBACK_IRQ 0
+>  
+>  #define HVM_PARAM_STORE_PFN    1
+>  #define HVM_PARAM_STORE_EVTCHN 2
+> -- 
+> 2.0.4
+> 
+> 
