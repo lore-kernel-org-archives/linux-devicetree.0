@@ -1,45 +1,44 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: dts: r8a7795: Add USB3.0 host
-Date: Mon, 25 Jan 2016 09:25:01 +0100
-Message-ID: <CAMuHMdUor3YxMAjL=YWgmG+7p-6+=h=C5vZAr4NkgroermgshA@mail.gmail.com>
-References: <1453457003-7720-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<20160125000845.GC774@verge.net.au>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
+ topology
+Date: Mon, 25 Jan 2016 10:35:02 +0200
+Message-ID: <1453710902.2521.203.camel@linux.intel.com>
+References: <1453663322-14474-1-git-send-email-mans@mansr.com>
+	 <1453663322-14474-4-git-send-email-mans@mansr.com>
+	 <20160124223629.GI6588@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160125000845.GC774-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20160124223629.GI6588@sirena.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Mans Rullgard <mans@mansr.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Sun, 2016-01-24 at 22:36 +0000, Mark Brown wrote:
+> On Sun, Jan 24, 2016 at 07:21:50PM +0000, Mans Rullgard wrote:
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >=20
+> > The source and destination masters are reflecting buses or their
+> > layers to
+> > where the different devices can be connected. The patch changes the
+> > master
+> > names to reflect which one is related to which independently on the
+> > transfer
+> > direction.
+>=20
+> This is patch 3 of a series but I don't have anything else in the
+> series.=C2=A0=C2=A0What is going on with the rest of the series - wha=
+t are the
+> dependencies and so on?
 
-On Mon, Jan 25, 2016 at 1:08 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Fri, Jan 22, 2016 at 07:03:21PM +0900, Yoshihiro Shimoda wrote:
->> This patch set is based on the latest renesas.git / renesas-devel-20160121-v4.4
->> tag. (commit id = 3740ade0617955c76e1767b6d49347d5446eed74)
->>
->> This patch needs r8a7795-cpg-mssr.c update for usb3.0 clocks.
->
-> Thanks. Please let me know if I should wait for that change before
-> queuing up these patches.
+Mark, sorry about that, but in this particular case you may consider
+this patch is a standalone one. You are in the Cc list due to SPI
+driver small change. This change isn't modifying functionality of the
+driver.
 
-I think you can queue it up fine. It should start working in next
-renesas-drivers
-release.
+--=20
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
