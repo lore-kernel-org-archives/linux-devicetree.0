@@ -1,61 +1,87 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ARM64: rk3368: add tuning clk for emmc and sdmmc
-Date: Mon, 25 Jan 2016 15:33:43 +0800
-Message-ID: <1453707223-28855-1-git-send-email-shawn.lin@rock-chips.com>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 13/13] dt/bindings: drm/msm/hdmi: Add hdmi phy bindings
+Date: Mon, 25 Jan 2016 13:10:56 +0530
+Message-ID: <56A5D188.7050004@codeaurora.org>
+References: <1453360181-31738-1-git-send-email-architt@codeaurora.org>
+ <1453360181-31738-14-git-send-email-architt@codeaurora.org>
+ <20160121232654.GA5138@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160121232654.GA5138@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add tuning clk for emmc and sdmmc, otherwise I get
-the following failure while enabling mmc-hs200-1_8v.
 
-dwmmc_rockchip ff0f0000.dwmmc: Tuning clock (sample_clk) not defined.
-mmc0: tuning execution failed
-mmc0: error -5 whilst initialising MMC card
 
-With it
-dwmmc_rockchip ff0f0000.dwmmc: Successfully tuned phase to 170
-mmc0: new HS200 MMC card at address 0001
-mmcblk0: mmc0:0001 M8G1GC 7.28 GiB
+On 1/22/2016 4:56 AM, Rob Herring wrote:
+> On Thu, Jan 21, 2016 at 12:39:41PM +0530, Archit Taneja wrote:
+>> Add hdmi phy bindings. Update the example to use hdmi phy.
+>>
+>> Add a missing power-domains property in the hdmi core bindings.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/display/msm/hdmi.txt       | 39 +++++++++++++++++++++-
+>>   1 file changed, 38 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>> index 379ee2e..21590ee 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>> +++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>   - reg: Physical base address and length of the controller's registers
+>>   - reg-names: "core_physical"
+>>   - interrupts: The interrupt signal from the hdmi block.
+>> +- power-domains: Should be <&mmcc MDSS_GDSC>.
+>>   - clocks: device clocks
+>>     See ../clocks/clock-bindings.txt for details.
+>>   - qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+>> @@ -18,6 +19,7 @@ Required properties:
+>>   - qcom,hdmi-tx-hpd-gpio: hpd pin
+>>   - core-vdda-supply: phandle to supply regulator
+>>   - hdmi-mux-supply: phandle to mux regulator
+>> +- qcom,dsi-phy: phandle to HDMI PHY device node
+>
+> dsi?
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Sorry, this is a typo. It should be qcom,hdmi-phy.
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> Why does this not use the phy binding?
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 122777b..1cf3cf7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -231,8 +231,9 @@
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0c0000 0x0 0x4000>;
- 		clock-freq-min-max = <400000 150000000>;
--		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
--		clock-names = "biu", "ciu";
-+		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
-+			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
-@@ -256,6 +257,9 @@
- 		clock-freq-min-max = <400000 150000000>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
- 		clock-names = "biu", "ciu";
-+		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
-+			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
+The PHY in the HDMI and DSI blocks can't be implemented using the
+common phy framework. The PHY blocks have a PLL sub-block within
+them which acts as a pixel clock source for the display processor
+block.
+
+This dependency causes the need to split the phy power on sequence
+into 2 parts (one to enable resources to enable the PLL, and the
+other to enable the phy itself), which the phy framework can't
+do. That's the main reason not to use it. There are some more
+complex use cases for DSI PHY (drive two PHYs with the same
+DSI PLL) which the phy framework can't support.
+
+Thanks,
+Archit
+
+>
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
 -- 
-2.3.7
-
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
