@@ -1,149 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Mon, 25 Jan 2016 12:50:12 +0000
-Message-ID: <20160125125012.GM3368@x1>
-References: <1453445087-2791-1-git-send-email-wenyou.yang@atmel.com>
- <1453445087-2791-3-git-send-email-wenyou.yang@atmel.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
+Date: Mon, 25 Jan 2016 13:51:09 +0100
+Message-ID: <20160125135109.760ba5f0@ipc1.ka-ro>
+References: <20160120164258.GF6588@sirena.org.uk>
+	<20160121080524.27af489f@ipc1.ka-ro>
+	<20160121102015.GI6588@sirena.org.uk>
+	<20160121112611.34e17cb2@ipc1.ka-ro>
+	<20160121111115.GJ6588@sirena.org.uk>
+	<20160121123311.5346e40d@ipc1.ka-ro>
+	<20160121162646.GK6588@sirena.org.uk>
+	<20160122064145.36b7f2b4@ipc1.ka-ro>
+	<20160122162610.GZ6588@sirena.org.uk>
+	<20160125133731.72669115@ipc1.ka-ro>
+	<20160125124123.GQ6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453445087-2791-3-git-send-email-wenyou.yang@atmel.com>
+In-Reply-To: <20160125124123.GQ6588@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Peter Korsgaard <jacmet@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Jan 2016, Wenyou Yang wrote:
+Hi,
 
-> The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-> two subdevices:
->  - Regulator
->  - Charger
+On Mon, 25 Jan 2016 12:41:23 +0000 Mark Brown wrote:
+> On Mon, Jan 25, 2016 at 01:37:31PM +0100, Lothar Wa=C3=9Fmann wrote:
+> > On Fri, 22 Jan 2016 16:26:10 +0000 Mark Brown wrote:
 >=20
-> This patch adds documentation for ACT8945A DT bindings.
+> > > You're not just making the interrupt optional, you are also imple=
+menting
+> > > polling support.  That's really unusual and there's no clear reas=
+on for
 >=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> > Any suggestions how to handle this case in a more sensible way?
+>=20
+> The above, for example - make the interrupt optional.
+>
+This will make it impossible to notify the system about
+overtemperature (and undervoltage).
+I implemented polling to be able to get at least overtemperature
+warnings.
+(Undervoltage cannot be handled sensibly without interrupt anyway)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> ---
->=20
-> Changes in v7: None
-> Changes in v6:
->  - change the regulator name.
->=20
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
->  - fix the tabbing errors in Example.
->  - use "pmic@5b" label, not "act8945a@5b" in Example.
->  - collect Acked-by from Rob.
->=20
-> Changes in v2:
->  - use more specific label in Example.
->  - add pmic and charger nodes in Example.
->=20
->  Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++=
-++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Doc=
-umentation/devicetree/bindings/mfd/act8945a.txt
-> new file mode 100644
-> index 0000000..f2a8387
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-> @@ -0,0 +1,82 @@
-> +Device-Tree bindings for Active-semi ACT8945A MFD driver
-> +
-> +Required properties:
-> + - compatible: "active-semi,act8945a".
-> + - reg: the I2C slave address for the ACT8945A chip
-> +
-> +The chip exposes two subdevices:
-> + - a regulators: see ../regulator/act8945a-regulator.txt
-> + - a charger: see ../power/act8945a-charger.txt
-> +
-> +Example:
-> +	pmic@5b {
-> +		compatible =3D "active-semi,act8945a";
-> +		reg =3D <0x5b>;
-> +		status =3D "okay";
-> +
-> +		pmic {
-> +			compatible =3D "active-semi,act8945a-regulator";
-> +			active-semi,vsel-high;
-> +
-> +			regulators {
-> +				vdd_1v35_reg: REG_DCDC1 {
-> +					regulator-name =3D "VDD_1V35";
-> +					regulator-min-microvolt =3D <1350000>;
-> +					regulator-max-microvolt =3D <1350000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_1v2_reg: REG_DCDC2 {
-> +					regulator-name =3D "VDD_1V2";
-> +					regulator-min-microvolt =3D <1100000>;
-> +					regulator-max-microvolt =3D <1300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_3v3_reg: REG_DCDC3 {
-> +					regulator-name =3D "VDD_3V3";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_fuse_reg: REG_LDO1 {
-> +					regulator-name =3D "VDD_FUSE";
-> +					regulator-min-microvolt =3D <2500000>;
-> +					regulator-max-microvolt =3D <2500000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_3v3_lp_reg: REG_LDO2 {
-> +					regulator-name =3D "VDD_3V3_LP";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_led_reg: REG_LDO3 {
-> +					regulator-name =3D "VDD_LED";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_sdhc_1v8_reg: REG_LDO4 {
-> +					regulator-name =3D "VDD_SDHC_1V8";
-> +					regulator-min-microvolt =3D <1800000>;
-> +					regulator-max-microvolt =3D <1800000>;
-> +					regulator-always-on;
-> +				};
-> +			};
-> +		};
-> +
-> +		charger {
-> +			compatible =3D "active-semi,act8945a-charger";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_charger_chglev>;
-> +			active-semi,chglev-gpio =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
-> +			active-semi,input_voltage_threshold =3D <6600>;
-> +			active-semi,precondition_timeout =3D <40>;
-> +			active-semi,total_timeout =3D <3>;
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Lothar Wa=C3=9Fmann
