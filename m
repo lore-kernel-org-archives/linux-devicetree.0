@@ -1,41 +1,33 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 1/4] hw_random: bcm63xx-rng: remove unused variables
-Date: Mon, 25 Jan 2016 22:49:03 +0800
-Message-ID: <20160125144903.GI8840@gondor.apana.org.au>
-References: <1453021437-12531-1-git-send-email-noltari@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] dtc: create tool to diff device trees
+Date: Mon, 25 Jan 2016 08:53:28 -0600
+Message-ID: <CAL_Jsq+rWikE3-QHMYvaBVpaxetmj6sahy8=qEWRgOugY5GTgw@mail.gmail.com>
+References: <568EB672.6060300@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453021437-12531-1-git-send-email-noltari@gmail.com>
+In-Reply-To: <568EB672.6060300@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 10:03:54AM +0100, =C1lvaro Fern=E1ndez Rojas wr=
-ote:
-> These variables where left as unused in commit 6229c16060fe
-> ("hwrng: bcm63xx - make use of devm_hwrng_register")
->=20
-> Fixes the following warning:
-> drivers/char/hw_random/bcm63xx-rng.c: In function 'bcm63xx_rng_probe'=
-:
-> drivers/char/hw_random/bcm63xx-rng.c:85:16: warning: unused variable =
-'rng'
-> [-Wunused-variable]
->   struct hwrng *rng;
->                 ^
-> drivers/char/hw_random/bcm63xx-rng.c:82:14: warning: unused variable =
-'clk'
-> [-Wunused-variable]
->   struct clk *clk;
->=20
-> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
+On Thu, Jan 7, 2016 at 1:03 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sonymobile.com>
+>
+> Create script to diff device trees.
+>
+> The device tree can be in any of the forms recognized by the dtc compiler:
+>   - source
+>   - binary blob
+>   - file system tree (from /proc/devicetree)
+>
+> If the device tree is a source file, then it is pre-processed in the
+> same way as it would be when built in the linux kernel source tree
+> before diffing.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
 
-All applied.
---=20
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Applied with setting permissions to 755. Thanks.
+
+Rob
