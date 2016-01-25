@@ -1,95 +1,79 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [RESEND PATCH v2 11/23] hisi_sas: add v2 phy init code
-Date: Tue, 26 Jan 2016 02:47:11 +0800
-Message-ID: <1453747643-61875-12-git-send-email-john.garry@huawei.com>
-References: <1453747643-61875-1-git-send-email-john.garry@huawei.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to disable_unused_functions
+Date: Mon, 25 Jan 2016 21:02:14 +0200
+Message-ID: <4816141.nXxRuEqaX5__39631.6583887257$1453748528$gmane$org@avalon>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com> <1484612.l42nGNbAu5@avalon> <20160125072938.GI11240@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453747643-61875-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160125072938.GI11240@phenom.ffwll.local>
+Sender: linux-clk-owner@vger.kernel.org
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wynter Woods <wynter@nextthing.co>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 49 ++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+Hi Daniel,
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 6f05333..1990d65 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -288,6 +288,15 @@ static u32 hisi_sas_phy_read32(struct hisi_hba *hisi_hba,
- 	return readl(regs);
- }
- 
-+static void config_phy_opt_mode_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
-+{
-+	u32 cfg = hisi_sas_phy_read32(hisi_hba, phy_no, PHY_CFG);
-+
-+	cfg &= ~PHY_CFG_DC_OPT_MSK;
-+	cfg |= 1 << PHY_CFG_DC_OPT_OFF;
-+	hisi_sas_phy_write32(hisi_hba, phy_no, PHY_CFG, cfg);
-+}
-+
- static void config_id_frame_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
- {
- 	struct sas_identify_frame identify_frame;
-@@ -563,6 +572,44 @@ static int hw_init_v2_hw(struct hisi_hba *hisi_hba)
- 	return 0;
- }
- 
-+static void enable_phy_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
-+{
-+	u32 cfg = hisi_sas_phy_read32(hisi_hba, phy_no, PHY_CFG);
-+
-+	cfg |= PHY_CFG_ENA_MSK;
-+	hisi_sas_phy_write32(hisi_hba, phy_no, PHY_CFG, cfg);
-+}
-+
-+static void start_phy_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
-+{
-+	config_id_frame_v2_hw(hisi_hba, phy_no);
-+	config_phy_opt_mode_v2_hw(hisi_hba, phy_no);
-+	enable_phy_v2_hw(hisi_hba, phy_no);
-+}
-+
-+static void start_phys_v2_hw(unsigned long data)
-+{
-+	struct hisi_hba *hisi_hba = (struct hisi_hba *)data;
-+	int i;
-+
-+	for (i = 0; i < hisi_hba->n_phy; i++)
-+		start_phy_v2_hw(hisi_hba, i);
-+}
-+
-+static void phys_init_v2_hw(struct hisi_hba *hisi_hba)
-+{
-+	int i;
-+	struct timer_list *timer = &hisi_hba->timer;
-+
-+	for (i = 0; i < hisi_hba->n_phy; i++) {
-+		hisi_sas_phy_write32(hisi_hba, i, CHL_INT2_MSK, 0x6a);
-+		hisi_sas_phy_read32(hisi_hba, i, CHL_INT2_MSK);
-+	}
-+
-+	setup_timer(timer, start_phys_v2_hw, (unsigned long)hisi_hba);
-+	mod_timer(timer, jiffies + HZ);
-+}
-+
- static int hisi_sas_v2_init(struct hisi_hba *hisi_hba)
- {
- 	int rc;
-@@ -571,6 +618,8 @@ static int hisi_sas_v2_init(struct hisi_hba *hisi_hba)
- 	if (rc)
- 		return rc;
- 
-+	phys_init_v2_hw(hisi_hba);
-+
- 	return 0;
- }
- 
+On Monday 25 January 2016 08:29:38 Daniel Vetter wrote:
+> On Mon, Jan 25, 2016 at 12:19:27AM +0200, Laurent Pinchart wrote:
+> > On Friday 15 January 2016 11:17:30 Daniel Vetter wrote:
+> >> On Fri, Jan 15, 2016 at 01:13:05AM +0200, Laurent Pinchart wrote:
+> >>> On Thursday 14 January 2016 16:24:56 Maxime Ripard wrote:
+> >>>> The drm_fbdev_cma_init function always calls the
+> >>>> drm_helper_disable_unused_functions. Since it's part of the usual
+> >>>> probe process, all the drivers using that helper will end up having
+> >>>> their encoder and CRTC disable functions called at probe if their
+> >>>> device has not been reported as enabled.
+> >>>> 
+> >>>> This could be fixed by reading out from the registers the current
+> >>>> state of the device if it is enabled, but even that will not handle
+> >>>> the case where the device is actually disabled.
+> >>>> 
+> >>>> Moreover, the drivers using the atomic modesetting expect that their
+> >>>> enable and disable callback to be called when the device is already
+> >>>> enabled or disabled (respectively).
+> >>>> 
+> >>>> We can however fix this issue by moving the call to
+> >>>> drm_helper_disable_unused_functions out of drm_fbdev_cma_init and
+> >>>> make the drivers needing it (all the drivers calling
+> >>>> drm_fbdev_cma_init and not using the atomic modesetting) explicitly
+> >>>> call it.
+> >>> 
+> >>> I'd rather add it to all drivers that call drm_fbdev_cma_init(). All
+> >>> the atomic ones must have special code to cope with it that could be
+> >>> rendered useless by the removal of the
+> >>> drm_helper_disable_unused_functions() call. That code should be
+> >>> removed too, and it would be easier to check drivers one by one and
+> >>> fixing them individually (outside of this patch series, unless you
+> >>> insist ;-)) when removing the explicit
+> >>> drm_helper_disable_unused_functions() call.
+> >> 
+> >> I had the same thought, but figured there's really no good reason ever
+> >> to do this. I suspect most of that disable_unused_function stuff we have
+> >> all over is supreme cargo-cult anyway ;-)
+> > 
+> > I'm not sure you got my point. Yes, the
+> > drm_helper_disable_unused_functions() call should be removed from atomic
+> > drivers, but that will leave support code added for the sole reason of
+> > avoiding the crash in the drivers. That code will likely not be noticed
+> > and will stay there rotting. If we added
+> > drm_helper_disable_unused_functions() calls to all atomic drivers then
+> > driver authors will hopefully check carefully if there's any support code
+> > that can be removed when removing the function call. It would act as a
+> > kind of FIXME reminder.
+> 
+> drm_helper_disable_unused_functions() already prefers the ->disable
+> callbacks over dpms, like atomic helpers. I don't think there's any dead
+> code due to this change. The problem was that driver/hw blew up since it
+> was disabled when the hw was off already.
+
+The rcar-du-drm driver keeps an internal CRTC enabled state for just this 
+purpose. I expect other drivers to implement something similar that can be 
+removed after dropping the drm_helper_disable_unused_functions() calls.
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
+
