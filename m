@@ -1,56 +1,50 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
- topology
-Date: Mon, 25 Jan 2016 17:35:41 +0530
-Message-ID: <20160125120541.GH11130@localhost>
-References: <1453663322-14474-1-git-send-email-mans@mansr.com>
- <1453663322-14474-4-git-send-email-mans@mansr.com>
- <20160124223629.GI6588@sirena.org.uk>
- <yw1xk2myli0u.fsf@unicorn.mansr.com>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: regulator: Add document for MT6323
+ regulator
+Date: Mon, 25 Jan 2016 13:05:52 +0100
+Message-ID: <56A60FA0.3060503@openwrt.org>
+References: <1453718405-40815-1-git-send-email-blogic@openwrt.org>
+ <20160125113710.GJ6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xk2myli0u.fsf@unicorn.mansr.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Mark Brown <broonie@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160125113710.GJ6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steven Liu <steven.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 24, 2016 at 10:38:57PM +0000, M=E5ns Rullg=E5rd wrote:
-> Mark Brown <broonie@kernel.org> writes:
->=20
-> > On Sun, Jan 24, 2016 at 07:21:50PM +0000, Mans Rullgard wrote:
-> >> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >>=20
-> >> The source and destination masters are reflecting buses or their l=
-ayers to
-> >> where the different devices can be connected. The patch changes th=
-e master
-> >> names to reflect which one is related to which independently on th=
-e transfer
-> >> direction.
-> >
-> > This is patch 3 of a series but I don't have anything else in the
-> > series.  What is going on with the rest of the series - what are th=
-e
-> > dependencies and so on?
->=20
-> I give up.  Seriously, this is impossible.  If I don't include everyb=
-ody
-> in the slightest way related to any patch in the series, I get
-> complaints that patches are missing.  If I do, the lists reject it al=
-l
-> due to too many recipients.  What the hell am I supposed to do?
 
-Right practice is to CC everyone in cover-letter and mention which subs=
-ystem
-this is intended to be merged thru and CC relevant folks on the patches=
-=2E
 
-That gives everyone context and right attention and lesser noise on pat=
-ches
+On 25/01/2016 12:37, Mark Brown wrote:
+> On Mon, Jan 25, 2016 at 11:40:04AM +0100, John Crispin wrote:
+>> Based on the MT6397 binding documentation.
+>>
+>> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> In reply to your previous submission I said:
+> 
+> | important.  Please also use subject lines matching the style for the
+> | subsystem (for patch 1).
+> 
+> Please don't ignore review comments, people are generally making them
+> for a reason and are likely to have the same concerns if issues remain
+> unaddressed.  Having to repeat the same comments can get repetitive and
+> make people question the value of time spent reviewing.  If you disagree
+> with the review comments that's fine but you need to reply and discuss
+> your concerns so that the reviewer can understand your decisions.
+> 
 
---=20
-~Vinod
+Hi,
+
+sorry about that. I've been juggling with a pile of patches the last
+couple of weeks and missed folding the fixup into the patch before
+sending it. I've just sent you a V3.
+
+	John
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
