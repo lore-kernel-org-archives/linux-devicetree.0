@@ -1,43 +1,65 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/2] gpio: Add driver for SPI serializers
-Date: Mon, 25 Jan 2016 10:37:29 -0600
-Message-ID: <1453739851-31839-1-git-send-email-afd@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2 1/2] dt-bindings: GPIO: Add generic serializer binding
+Date: Mon, 25 Jan 2016 10:37:30 -0600
+Message-ID: <1453739851-31839-2-git-send-email-afd@ti.com>
+References: <1453739851-31839-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453739851-31839-1-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds a GPI(General Purpose Input) driver for generic
-parallel-in/serial-out shift registers, such as the SN65HVS882
-that this driver was tested on. This should also work for the rest
-of the SN65HVS88x series as well as other 74x165 style devices.
+Add binding for generic parallel-in/serial-out shift register devices
+used as GPIO.
 
-Changes from v1[0]:
- - Use new gpiochip_add_data
- - Rebased on v4.5-rc1
- - Small fixes
-
-[0] http://www.spinics.net/lists/linux-gpio/msg10563.html
-
-Andrew F. Davis (2):
-  dt-bindings: GPIO: Add generic serializer binding
-  gpio: Add driver for SPI serializers
-
- .../devicetree/bindings/gpio/gpio-pisosr.txt       |  34 ++++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-pisosr.c                         | 188 +++++++++++++++++++++
- 4 files changed, 229 insertions(+)
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/gpio/gpio-pisosr.txt       | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
- create mode 100644 drivers/gpio/gpio-pisosr.c
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+new file mode 100644
+index 0000000..e69e8ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+@@ -0,0 +1,34 @@
++Generic Parallel-in/Serial-out Shift Register GPIO Driver
++
++This binding describes generic parallel-in/serial-out shift register
++devices that can be used for GPI (General Purpose Input). This includes
++SN74165 serial-out shift registers and the SN65HVS88x series of
++industrial serializers.
++
++Required properties:
++ - compatible		: Should be "pisosr-gpio".
++ - gpio-controller	: Marks the device node as a GPIO controller.
++ - #gpio-cells		: Should be two. For consumer use see gpio.txt.
++
++Optional properties:
++ - ngpios		: Number of GPIO lines, default is 8.
++ - load-gpios		: GPIO pin specifier attached to load enable, this
++			  pin is pulsed before reading from the device to
++			  load input pin values into the the device.
++
++For other required and optional properties of SPI slave
++nodes please refer to ../spi/spi-bus.txt.
++
++Example:
++
++	sn65hvs882@0 {
++		compatible = "pisosr-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		load-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
++
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++	};
 -- 
 2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
