@@ -1,98 +1,166 @@
-From: Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
-Date: Sun, 24 Jan 2016 19:26:43 -0800
-Message-ID: <8E11A1EE-D73B-462E-A493-39571A17F2C3@pobox.com>
-References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi> <1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi> <20160124173701.GU3880@lunn.ch> <411C1DFA-3E76-42B0-866C-7C3C0D990039@pobox.com> <20160124214020.GA28667@jirafa.cyrius.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160124214020.GA28667-IRMp5PtgtdoigzW5ZibpNwC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Mon, 25 Jan 2016 11:57:37 +0800
+Message-ID: <CAL411-qfzcynzc=YrepzcA6EmFuxy-Ri4xRQ+R-QVBDEPZXtZQ@mail.gmail.com>
+References: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org>
+ <2930830.FLp5q7oBTi@wuerfel> <20160122065901.GA31145@shlinux2> <2404899.20LhULZo7N@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2404899.20LhULZo7N@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 22, 2016 at 6:18 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 22 January 2016 14:59:01 Peter Chen wrote:
+>> On Thu, Jan 21, 2016 at 11:24:21PM +0100, Arnd Bergmann wrote:
+>> > On Thursday 21 January 2016 10:21:15 Alan Stern wrote:
+>> > > On Thu, 21 Jan 2016, Arnd Bergmann wrote:
+>> > > > On Thursday 21 January 2016 17:48:32 Peter Chen wrote:
+>> >             hub@1 { /* external hub, superspeed mode class 9/subclass 0/proto 3 */
+>> >                     compatible = "usb2109,0812.591",
+>> >                                  "usb2109,0812",
+>> >                                  "usb2109,class9.0.3",
+>> >                                  "usb2109,class9.0",
+>> >                                  "usb2109,class9";
+>> >                     compatible = "usb2109,0812";
+>>
+>> Do we really need to write "compatible" so complicated?
+>
+> The binding mandates it this way, but I guess we could decide to
+> make it a Linux-specific extension that we allow some of them to
+> be left out.
+>
 
-On Jan 24, 2016, at 1:40 PM, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org> wrote:
+If no one objects, I would like to use "usbVid, Pid" pattern.
 
-> * Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org> [2016-01-24 12:56]:
->>> It would be good to have a Tested-by: from Rick.
->>> 
->> If someone will make a .deb I can download, I'll be happy to install
->> it and test it.  Please be explicit in describing what and how you
->> want tested.
-> 
-> Check your email. :)
-> 
-> -- 
-> Martin Michlmayr
-> http://www.cyrius.com/
-> 
+>> >                     #address-cells = <1>;
+>> >                     #size-cells = <0>;
+>> >                     reg = <1>;
+>> >
+>> >                     communications@4 { /* superspeed ethernet device */
+>> >                             compatible = "usb0b95,1790.100",
+>> >                                          "usb0b95,1790",
+>> >                                          "usb0b95,class255.255.0",
+>> >                                          "usb0b95,class255.255",
+>> >                                          "usb0b95,class255",
+>> >                                          "usbif0b95,1790.100",
+>> >                                          "usbif0b95,1790",
+>> >                                          "usbif0b95,class255.255.0",
+>> >                                          "usbif0b95,class255.255,
+>> >                                          "usbif0b95,class255";
+>> >                             reg = <4>;
+>> >                     };
+>> >
+>> >                     storage@1 { /* superspeed flash drive */
+>> >                             compatible = "usb1234,5678.600",
+>> >                                          "usb1234,5678",
+>> >                                          "usbif1234,class8.6.80",
+>> >                                          "usbif1234,class8.6",
+>> >                                          "usbif1234,class8",
+>> >                                          "usbif,class8.6.80",
+>> >                                          "usbif,class8.6",
+>> >                                          "usbif,class8";
+>> >                             reg = <1>;
+>> >                     };
+>> >             };
+>> >
+>> >             hub@3 { /* same external  hub, highspeed mode */
+>> >                     compatible = "usb2109,0812.591",
+>> >                                  "usb2109,0812",
+>> >                                  "usb2109,class9.0.1",
+>> >                                  "usb2109,class9.0",
+>> >                                  "usb2109,class9";
+>> >
+>> >                     #address-cells = <1>;
+>> >                     #size-cells = <0>;
+>> >                     reg = <3>;
+>> >
+>>
+>> Why "reg" is 3 here?
+>
+> My mistake. It should be hub@1 and reg=<1>;
+>
+> I accidentally confused the port number and the device number.
 
+I think it should be hub@2 and reg=<0x2>.
+According to Alan, we should use xHCI numbering scheme when
+describing the ports of an xHCI root hub.
 
-Got it.
-
-Looks like mmc works with that kernel.  I was able to mount /dev/mmcblk0p1 and read files from it.
-
-Sound we have some progress:
-
-> root@base:~# ls -l /dev/snd
-> total 0
-> drwxr-xr-x 2 root root       60 Jan 24 18:23 by-path
-> crw-rw---- 1 root audio 116,  2 Jan 24 18:23 controlC0
-> crw-rw---- 1 root audio 116,  4 Jan 24 18:23 pcmC0D0c
-> crw-rw---- 1 root audio 116,  3 Jan 24 18:23 pcmC0D0p
-> crw-rw---- 1 root audio 116,  1 Jan 24 18:23 seq
-> crw-rw---- 1 root audio 116, 33 Jan 24 18:23 timer
-> root@base:~# cat /proc/asound/devices 
->   2: [ 0]   : control
->   3: [ 0- 0]: digital audio playback
->   4: [ 0- 0]: digital audio capture
->  33:        : timer
-> root@base:~# cat /proc/asound/cards   
->  0 [i2scs42l51hifi ]: i2s-cs42l51-hif - i2s-cs42l51-hifi
->                       i2s-cs42l51-hifi
-
-Full of hope, I did "aptitude install mp321" which went without any visible problems.
-
-Then hooked up a pair of earphones to the "speaker" plug on the Client and ran
-
-> root@base:~# mpg321 -v /tmp/Jersey.mp3 
-> High Performance MPEG 1.0/2.0/2.5 Audio Player for Layer 1, 2, and 3.
-> Version 0.3.2-1 (2012/03/25). Written and copyrights by Joe Drew,
-> now maintained by Nanakos Chrysostomos and others.
-> Uses code from various people. See 'README' for more!
-> THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!
-> Title	: The Jersey Bounce              Artist : Zazuzaz                       
-> Album	: An Evening with ZaZuZaz        Year	 : 2000
-> Comment : Amazon.com Song ID: 201809221  Genre : Jazz                          
-> 
-> Directory: /tmp
-> Playing MPEG stream from Jersey.mp3 ...
-> MPEG 1.0, Layer: III, Freq: 44100, mode: Joint-Stereo, modext: 0, BPF : 2560
-> Channels: 2, copyright: No, original: Yes, CRC: No, emphasis: 0.
-> Bitrate: 128 Kbits/s, Extension value: 0
-> Audio: 1:1 conversion, rate: 44100, encoding: signed 16 bit, channels: 2
-> ALSA lib pcm.c:2267:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.front
-> ^C                                                                            
-> [0:20] Decoding of Jersey.mp3 finished.
-
-So it seemed to be running OK...  But there was no sound in the earphones.  I also tried adding option "-g 50" to set the gain explicitly.  Still no sound.
-
-Is there a hardware jumper I need to set to activate sound on the OpenRD Client board?
-
-Do I need to install another package? For example, "aptitude search '~i alsa'" gives no output, indicating, I believe, that there are no installed packages with "alsa" in their name.
-
-The message:
-> ALSA lib pcm.c:2267:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.front
-seems suspicious.
-
-Any thoughts?
-Rick
+Peter
 
 
+>
+>> >                             wireless@0,1 { /* bluetooth config 0, if 1 */
+>> >                                     compatible = "usbif0a12,0001.134.config0.1",
+>> >                                                     "usbif0a12,0001.config0.1",
+>> >                                                     "usbif0a12,class224.1.1",
+>> >                                                     "usbif0a12,class224.1",
+>> >                                                     "usbif0a12,class224",
+>> >                                                     "usbif,class224.1.1",
+>> >                                                     "usbif,class224.1",
+>> >                                                     "usbif,class224";
+>> >                                     reg = <0 0>;
+>> >                             };
+>> >                     };
+>> >             };
+>> >     };
+>> >
+>> > In that description, I have included all four kinds of nodes from
+>> > the spec: host controller, device (wireless@2), interface (wireless@0.1,
+>> > wireless@0.2) and combined (hub@1, hub@3, storage@1, communications@4).
+>> >
+>> > Peter's example only contained hubs in combined nodes, no device or
+>> > interface nodes. I wonder if the code is able to parse all four
+>> > kinds of nodes though, and if we actually need that.
+>> >
+>>
+>> My proposal patch only handles the node under the USB device, not include
+>> the USB interfaces under such device, we can add it after finalize
+>> how to describe it at device tree.
+>
+> We should at least handle the case of multiple hubs connected to one
+> another I think. No need to limit it to directly connected devices
+> when it's easy enough to do hubs as well.
+>
+>> > Do we have a 'struct device' for each interface?
+>> >
+>>
+>> Yes, we have, but there are different 'struct device' between USB device
+>> and USB interfaces under this USB device. See usb_set_configuration,
+>> drivers/usb/core/message.c
+>
+> Ok, got it. So we can set the of_node pointer of a struct usb_interface
+> to the child node of the usb->interface->usb_dev that matches the
+> configuration/interface tuple.
+>
+> For combined device nodes (class 0 device, single configuration, single
+> interface), I suppose we have both a 'struct usb_device' and a 'struct
+> usb_interface' that we could attach the of_node to, but we can
+> decide to always just use one of the two, to avoid having the
+> same of_node pointer in multiple 'struct device' instances.
+>
+> Or we simplify it so we always put the of_node just in the usb_device
+> or the usb_interface, even if both are listed.
+>
+>> > Is it possible to have a hub in an interface of a multifunction device
+>> > or are they always single-configuration single-interface devices?
+>> >
+>>
+>> I have not seen such kinds of devices, but it is possible in theory.
+>
+> Ok, so if the USB spec allows it, we should probably try to handle it too.
+>
+>         Arnd
+
+
+
+-- 
+BR,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
