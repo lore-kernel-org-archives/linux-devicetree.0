@@ -1,120 +1,474 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v3 15/17] ARM64: XEN: Add a function to initialize Xen
- specific UEFI runtime services
-Date: Mon, 25 Jan 2016 16:47:07 +0000
-Message-ID: <alpine.DEB.2.02.1601251646370.9687@kaball.uk.xensource.com>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
- <1453519184-11908-16-git-send-email-zhaoshenglong@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v15 1/6] fpga: add bindings document for fpga area and
+ fpga bus
+Date: Mon, 25 Jan 2016 10:53:02 -0600
+Message-ID: <20160125165302.GA14212@rob-hp-laptop>
+References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com>
+ <1453317867-10422-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453519184-11908-16-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453317867-10422-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Jan 20, 2016 at 01:24:22PM -0600, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 > 
-> When running on Xen hypervisor, runtime services are supported through
-> hypercall. Add a Xen specific function to initialize runtime services.
+> New bindings document for FPGA Area for reprogramming
+> FPGA's under Device Tree control
 > 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > ---
->  arch/arm64/include/asm/xen/xen-ops.h |  6 ++++++
->  arch/arm64/xen/Makefile              |  1 +
->  arch/arm64/xen/efi.c                 | 40 ++++++++++++++++++++++++++++++++++++
->  drivers/xen/Kconfig                  |  2 +-
->  4 files changed, 48 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/include/asm/xen/xen-ops.h
->  create mode 100644 arch/arm64/xen/efi.c
+> v9:  initial version added to this patchset
+> v10: s/fpga/FPGA/g
+>      replace DT overlay example with slightly more complicated example
+>      move to staging/simple-fpga-bus
+> v11: No change in this patch for v11 of the patch set
+> v12: Moved out of staging.
+>      Changed to use FPGA bridges framework instead of resets
+>      for bridges.
+> v13: bridge@0xff20000 -> bridge@ff200000, etc
+>      Leave out directly talking about overlays
+>      Remove regs and clocks directly under simple-fpga-bus in example
+>      Use common "firmware-name" binding instead of "fpga-firmware"
+> v14: Use firmware-name in bindings description
+>      Call it FPGA Area
+>      Remove bindings that specify FPGA Manager and FPGA Bridges
+> v15: Cleanup as per Rob's comments
+>      Combine usage doc with bindings document
+>      Document as being Altera specific
+>      Additions and changes to add FPGA Bus
+> ---
+>  .../bindings/fpga/altera-fpga-bus-fpga-area.txt    |  452 ++++++++++++++++++++
+>  1 file changed, 452 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
 > 
-> diff --git a/arch/arm64/include/asm/xen/xen-ops.h b/arch/arm64/include/asm/xen/xen-ops.h
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt b/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
 > new file mode 100644
-> index 0000000..ec154e7
+> index 0000000..8ea38ca
 > --- /dev/null
-> +++ b/arch/arm64/include/asm/xen/xen-ops.h
-> @@ -0,0 +1,6 @@
-> +#ifndef _ASM_XEN_OPS_H
-> +#define _ASM_XEN_OPS_H
-> +
-> +void xen_efi_runtime_setup(void);
-> +
-> +#endif /* _ASM_XEN_OPS_H */
-> diff --git a/arch/arm64/xen/Makefile b/arch/arm64/xen/Makefile
-> index 74a8d87..62e6fe2 100644
-> --- a/arch/arm64/xen/Makefile
-> +++ b/arch/arm64/xen/Makefile
-> @@ -1,2 +1,3 @@
->  xen-arm-y	+= $(addprefix ../../arm/xen/, enlighten.o grant-table.o p2m.o mm.o)
->  obj-y		:= xen-arm.o hypercall.o
-> +obj-$(CONFIG_XEN_EFI) += efi.o
-> diff --git a/arch/arm64/xen/efi.c b/arch/arm64/xen/efi.c
-> new file mode 100644
-> index 0000000..b9cae65
-> --- /dev/null
-> +++ b/arch/arm64/xen/efi.c
-> @@ -0,0 +1,40 @@
-> +/*
-> + * Copyright (c) 2015, Linaro Limited, Shannon Zhao
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/efi.h>
-> +#include <xen/xen-ops.h>
-> +#include <asm/xen/xen-ops.h>
-> +
-> +/* Set XEN EFI runtime services function pointers. Other fileds of struct efi,
-                                                              ^ fields
+> +++ b/Documentation/devicetree/bindings/fpga/altera-fpga-bus-fpga-area.txt
+> @@ -0,0 +1,452 @@
+> +Altera FPGA Area and FPGA Bus Device Tree Binding
 
-Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Getting closer I think...
 
+> +
+> +Alan Tull 2016
+> +
+> + CONTENTS
+> + - Introduction
+> + - Terminology
+> + - Overview
+> + - Constraints
+> + - FPGA Bus
+> + - FPGA Area
+> + - Supported Use Models
+> + - Sequence
+> + - Device Tree Examples
+> +
+> +
+> +Introduction
+> +============
+> +
+> +FPGA Buses and FPGA Areas are introduced as a way to solve the problem of how to
+> +reprogram an Altera FPGA under an operating system and have the new hardware
+> +show up in the device tree.  By adding these bindings to the Device Tree, a
+> +system can have the information needed to do the FPGA programming to add the
+> +desired hardware, and also the information about the devices to be added to the
+> +Device Tree once the programming has succeeded.
+> +
+> +
+> +Terminology
+> +===========
+> +
+> +Full Reconfiguration
+> + * The entire FPGA is programmed.
+> +
+> +Partial Reconfiguration (PR)
+> + * The FPGA is broken up into regions.  One of these regions is reprogrammed
+> +   while the rest of the FPGA is not affected.  Not all FPGA's support this.
+> +
+> +FPGA Manager & FPGA Manager Framework
+> + * An FPGA Manager is a hardware block that programs an FPGA under the control
+> +   of a host processor.
+> + * The FPGA Manager Framework provides drivers and functions to program an
+> +   FPGA.
+> +
+> +FPGA Bridge & FPGA Bridge Framework
+> + * Provides drivers and functions to control bridges that enable/disable
+> +   data to the FPGA.
+> + * FPGA Bridges should be disabled while the FPGA is being programmed to
+> +   prevent spurious data on the bus.
+> + * FPGA Bridges may not be needed in implementations where the FPGA Manager
+> +   handles this.
+> +
+> +Freeze Blocks
+> + * Freeze Blocks function as FPGA Bridges within the FPGA fabric.  In the case
+> +   of PR, the buses from the processor are split within the FPGA.  Each PR
+> +   region gets its own split of the buses, protected by an independently
+> +   controlled Freeze Block.  Several busses may be connected to a single
+> +   PR region; a Freeze Block controls the traffic of all these busses
+> +   together.
+> +
+> +Controlling Bridge
+> + * The processor and FPGA may be connected by multiple FPGA Bridges.  In a text
+> +   based hierarchy, it is difficult to show this properly as a device would
+> +   have several parents.
+> + * The bridge that handles register access to the FPGA is designated the
+> +   "controlling" bridge.
+> + * The controlling bridge will be the target point under which the overlay is
+> +   inserted.
+> +
+> +
+> +Overview
+> +========
+> +
+> +This binding introduces the FPGA Bus and FPGA Area.
+> +
+> +An FPGA Bus is a virtualized bus that contains the devices needed to be able to
+> +program an FPGA device.  It contains a child FPGA Manager and may contain child
+> +FPGA Bridges, if needed.  The FPGA Manager is the hardware block that handles
+> +programming the FPGA.  FPGA Bridges function to prevent spurious data from the
+> +FPGA going on the processor busses during FPGA programming.  In the case of
+> +partial reconfiguration, additional bridges (Freeze Blocks) for each
+> +reconfiguration region are required.
+> +
+> +An FPGA Area contains information about a section of an FPGA (in the case of
+> +partial reconfiguration or the whole FPGA (for full reconfiguration).  The FPGA
+> +Area contains the name of the FPGA image file to be programmed and the child
+> +devices that will be contained in the FPGA after programming.
+> +
+> +The intended use is that device tree overlays can be used to add hardware to an
+> +FPGA while an operating system is running.  In that case, the FPGA Bus and its
+> +associated information will exist in the live device tree, while FPGA Areas are
+> +added to the device tree by applying device tree overlays while the operating
+> +system is running.  Loading such an overlay will cause the FPGA to be programmed
+> +and the child devices to be populated.  Removing an overlay will cause the
+> +devices to be removed from the device tree and free up those FPGA resources.
+> +
+> +
+> +Constraints
+> +===========
+> +
+> +It is beyond the scope of this document to fully describe all the FPGA design
+> +constraints required to make partial reconfiguration work[1] [2], but a few
+> +deserve quick mention.  A partial reconfiguration FPGA image must have
+> +boundary connections that line up with those the current programming of the
+> +FPGA.  Also, those during programming, those connections must be frozen.  This
+> +can be achieved by "Freeze Blocks" which are FPGA Bridges that exist on the FPGA
+> +fabric prior to the partial reconfiguration.
+> +
+> +
+> +FPGA Bus
+> +========
+> +
+> +An FPGA bus is a virtualized bus that specifies the devices needed to program an
+> +FPGA.
+> +
+> +Required properties:
+> +- compatible : should contain "altr,fpga-bus" and "simple-bus"
+> +	       "simple-bus" is required to allow populating the child nodes.
 
-> + * e.g. efi.systab, will be set like normal EFI.
-> + */
-> +void __init xen_efi_runtime_setup(void)
-> +{
-> +	efi.get_time                 = xen_efi_get_time;
-> +	efi.set_time                 = xen_efi_set_time;
-> +	efi.get_wakeup_time          = xen_efi_get_wakeup_time;
-> +	efi.set_wakeup_time          = xen_efi_set_wakeup_time;
-> +	efi.get_variable             = xen_efi_get_variable;
-> +	efi.get_next_variable        = xen_efi_get_next_variable;
-> +	efi.set_variable             = xen_efi_set_variable;
-> +	efi.query_variable_info      = xen_efi_query_variable_info;
-> +	efi.update_capsule           = xen_efi_update_capsule;
-> +	efi.query_capsule_caps       = xen_efi_query_capsule_caps;
-> +	efi.get_next_high_mono_count = xen_efi_get_next_high_mono_count;
-> +	efi.reset_system             = NULL; /* Functionality provided by Xen. */
-> +}
-> +EXPORT_SYMBOL_GPL(xen_efi_runtime_setup);
-> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-> index 73708ac..27d216a 100644
-> --- a/drivers/xen/Kconfig
-> +++ b/drivers/xen/Kconfig
-> @@ -268,7 +268,7 @@ config XEN_HAVE_PVMMU
->  
->  config XEN_EFI
->  	def_bool y
-> -	depends on X86_64 && EFI
-> +	depends on (ARM64 || X86_64) && EFI
->  
->  config XEN_AUTO_XLATE
->  	def_bool y
-> -- 
-> 2.0.4
-> 
-> 
+I think I said this before, but you should not need simple-bus. Having 
+it is wrong if the bus requires some configuration before enumerating 
+the child nodes. The way you have it, the bridge driver could probe 
+before the FPGA manager or vice-versa. I'm guessing one way will work 
+and the other will not, and you are getting lucky. You should also test 
+will the overlay applied before boot (i.e. single dtb with all areas 
+populated). The simple rule is does the node (containing simple-bus) 
+require configuration for child nodes to be accessed? If yes, you can't 
+use simple-bus.
+
+Part of your problem is you may need a custom match table. Using 
+of_default_bus_match_table will only match the immediate child nodes of 
+the starting node. Alternatively, you need to make the bridge node the 
+starting node.
+
+> +
+> +A FPGA Bus should contain an FPGA Manager as a child node.
+> +
+> +A FPGA Bus may require FPGA Bridges as child nodes if the FPGA Manager does not
+> +control the hardware bridges.
+> +
+> +The FPGA Bridge that allows memory mapped register access is designated the
+> +"controlling" bridge.  This bridge serves as the insertion point of DT overlays.
+> +Both the FPGA Area and the controlling bridge require the "simple-bus"
+> +compatibility string to allow populating the child nodes contained in the
+> +overlay.
+> +
+> +In the example below, fpgamgr@ff706000 would be used to do any programming
+> +operations on the FPGA and the two bridges specified would be disabled
+> +during the programming and re-enabled afterwards if the programming
+> +succeeds.
+> +
+> +Example:
+> +	fpgabus@0 {
+
+If you have a unit-address, then there should be a reg property or 
+ranges parent bus addr.
+
+> +		compatible = "altr,fpga-bus", "simple-bus";
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x1>;
+> +		ranges;
+> +
+> +		fpgamgr@ff706000 {
+
+As mentioned in the other thread, this may be better done as a phandle, 
+but I don't feel too strongly either way.
+
+> +			compatible = "altr,socfpga-fpga-mgr";
+> +			reg = <0xff706000 0x1000
+> +			       0xffb90000 0x1000>;
+> +			interrupts = <0 175 4>;
+> +		};
+> +
+> +		bridge@0 {
+
+Same here. Doesn't this bridge have some associated address range.
+
+Essentially, the hierarchy from child devices up to the root should 
+reflect the address decoding at each step.
+
+> +			compatible = "altr,socfpga-lwhps2fpga-bridge",
+> +				     "simple-bus";
+> +			resets = <&rst LWHPS2FPGA_RESET>;
+> +			reset-names = "lwhps2fpga";
+> +			clocks = <&l4_main_clk>;
+> +			#address-cells = <0x1>;
+> +			#size-cells = <0x1>;
+> +			ranges;
+> +		};
+> +
+> +		bridge@1 {
+> +			compatible = "altr,socfpga-hps2fpga-bridge";
+> +			resets = <&rst HPS2FPGA_RESET>;
+> +			reset-names = "hps2fpga";
+> +			clocks = <&l4_main_clk>;
+> +		};
+> +	};
+> +
+> +FPGA Area
+> +=========
+> +
+> +An FPGA Area details information about a section of an FPGA including the FPGA
+> +image needed to program it and the hardware contained once it is programmed.
+> +
+> +An FPGA Area corresponds to the whole FPGA in the case of full reconfiguration
+> +or a section of an FPGA in the case of partial reconfiguration.
+> +
+> +Required properties:
+> +- compatible : should contain "altr,fpga-area"
+> +- #address-cells, #size-cells, ranges: must be present to handle address space
+> +  mapping for children.
+> +
+> +Optional properties:
+> +- firmware-name : should contain the name of an FPGA image file located on the
+> +  firmware search path.
+> +- partial-reconfig : boolean property should be defined if partial
+> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> +  is done.
+> +
+> +In the example below, the target path is the controlling bridge of the FPGA Bus
+> +example.  The FPGA would be programmed with the image contained in the
+> +"soc_system.rbf" specified.  Assuming programming succeeds, the child devices
+> +would be populated afterwords.  In this particular example, ranges has two
+> +chip selects as one memory region is tied to the host processor and the
+> +other is a memory region on the FPGA.
+> +
+> +If there are no bridges in the FPGA Bus, the target path would point to
+> +the FPGA Manager.
+
+How do you not have a bridge? There has to be something preventing 
+access. Do you really mean the bridge and fpga-mgr blocks are combined 
+into 1?
+
+> +
+> +Example:
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +	fragment@0 {
+> +		target-path="/soc/fpgamgr@ff706000/bridge@0";
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +		        #size-cells = <1>;
+> +
+> +			bridge@ff200000 {
+
+Wouldn't this be area@...? area is a bit too generic. I'd use 
+"fpga-area" for the node name too.
+
+> +				compatible = "fpga-area";
+> +
+> +				#address-cells = <2>;
+> +				#size-cells = <1>;
+> +
+> +				ranges = <0 0x00000000 0xc0000000 0x00010000>,
+> +					 <1 0x00020000 0xff220000 0x00000008>,
+> +					 <1 0x00010040 0xff210040 0x00000020>;
+> +
+> +				firmware-name = "soc_system.rbf";
+> +
+> +				onchip_memory2_0: memory@0 {
+> +					device_type = "memory";
+> +					compatible = "altr,onchipmem-15.1";
+> +					reg = <0 0x00000000 0x00010000>;
+> +				};
+> +
+> +				jtag_uart: serial@100020000 {
+> +					compatible = "altr,juart-1.0";
+> +					reg = <1 0x00020000 0x00000008>;
+> +					interrupt-parent = <&intc>;
+> +					interrupts = <0 42 4>;
+> +				};
+> +
+> +				led_pio: gpio@100010040 {
+> +					compatible = "altr,pio-1.0";
+> +					reg = <1 0x00010040 0x00000020>;
+> +					altr,gpio-bank-width = <4>;
+> +					#gpio-cells = <2>;
+> +					gpio-controller;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +Supported Use Models
+> +====================
+> +
+> +Here's a list of supported use models.  We may need to add more.  Some uses are
+> +specific to one FPGA device or another.
+> +
+> + * No FPGA Bridges
+> +   In this case, the FPGA Manager which programs the FPGA also handles the
+> +   bridges.  No FPGA Bridge devices are needed for full reconfiguration.
+> +
+> +   The DT overlay will specify the FPGA Manager as the overlay target.
+> +
+> + * Full reconfiguration with bridges
+> +   In the case, there are several bridges between the processor and FPGA, that
+> +   need to be disabled during full reconfiguration.  The live DT before the
+> +   overlay is applied will have an FPGA Bus.
+> +
+> +   The DT overlay will specify the controlling bridge as the overlay target.
+> +
+> + * Partial reconfiguration with bridges in the FPGA
+> +   In this case, the FPGA will have more than one section that will be
+> +   programmed separately.  Other sections may be active on the bus while FPGA
+> +   is being programmed.  To manage this, Freeze blocks need to exist on the FPGA
+> +   that can freeze all the buses going to one FPGA area while the buses are
+> +   enabled for other sections.
+> +
+> +Sequence
+> +========
+> +
+> +When a DT overlay is loaded, the FPGA Area will be probed and will do the
+> +following:
+> + 1. Disable the FPGA Bridges.
+> + 2. Use the the FPGA manager core to program the FPGA.
+> + 3. Enable the FPGA Bridges.
+> + 4. Call of_platform_populate resulting in device drivers getting probed.
+> +
+> +When the overlay is removed, the FPGA Area in it is removed.  This causes the
+> +child nodes to be removed and then the bridges are disabled.
+> +
+> +Device Tree Examples
+> +====================
+> +
+> +The intention of this section is to give some simple examples, focusing on
+> +the placement of the elements detailed above, especially:
+> + * FPGA Bus and associated FPGA Manager and FPGA Bridges
+> + * FPGA Area and associated properties
+> + * simple-bus
+> + * ranges
+> + * target-path
+> +
+> +For the purposes of this section, I'm dividing the Device Tree into two parts,
+> +each with its own requirements.  The two parts are:
+> + * The live DT prior to the overlay being added
+> + * The DT overlay
+> +
+> +The live Device Tree must contain an FPGA Bus, which has a child FPGA Manager to
+> +handle programming the FPGA.  If FPGA Bridges need to be involved, they show up
+> +in the DT as direct children of the FPGA Bus.  During full reconfiguration, the
+> +FPGA Area will disable any bridges that are direct children of the FPGA Bus and
+> +will re-enable them after FPGA programming has succeeded.
+> +
+> +The Device Tree Overlay will contain:
+> + * "target-path"
+> +   The insertion point where the the contents of the overlay will go into the
+> +   live tree.
+> + * "ranges"
+> + * "firmware-name"
+> +   Specifies the name of the FPGA image file on the firmware search
+> +   path.  The search path is described in the firmware class documentation.
+> + * "partial-reconfig"
+> +   This binding is a boolean and should be present if partial reconfiguration
+> +   is to be done.
+> + * child nodes corresponding to hardware that will be loaded in this region of
+> +   the FPGA.
+> +
+> +
+> +Device Tree Example: Partial Reconfiguration with no Bridges
+> +============================================================
+> +
+> +Live Device Tree contains:
+> +	fpgamgr@ffd03000 {
+> +		compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
+> +		clocks = <&l4_mp_clk>;
+> +		resets = <&rst FPGAMGR_RESET>;
+> +		reset-names = "fpgamgr";
+> +		reg = <0xffd03000 0x1000
+> +		       0xffcfe400 0x1000>;
+> +
+> +		#address-cells = <0x1>;
+> +		#size-cells = <0x1>;
+> +		ranges;
+> +	};
+> +
+> +DT Overlay contains:
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +	fragment@0 {
+> +		target-path="/soc/fpgamgr@ffd03000";  /* targeted to the manager */
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +		        #size-cells = <1>;
+> +
+> +			area@0 {
+
+Are the number of areas software configurable? If not, then the areas 
+should be part of the base DT rather than the overlay.
+
+> +				compatible = "fpga-area";
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges = <0x10010 0xff210010 0x10>;
+> +
+> +				firmware-name = "fit_pr_v1.rbf";
+> +				partial-reconfig;
+> +
+> +				gpio@100010010 {
+
+gpio@10010
+
+> +					compatible = "altr,pio-1.0";
+> +					reg = <0x10010 0x10>;
+> +					altr,ngpio = <4>;
+> +					#gpio-cells = <0x2>;
+> +					gpio-controller;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
