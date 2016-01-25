@@ -1,189 +1,109 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V4 1/5] DT: mfd: add device-tree binding doc fro PMIC
- max77620/max20024
-Date: Mon, 25 Jan 2016 20:38:53 +0530
-Message-ID: <56A63A85.6060609@nvidia.com>
-References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com> <1453198783-28383-2-git-send-email-ldewangan@nvidia.com> <20160125115610.GC3368@x1>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3 10/17] arm/xen: Get event-channel irq through HVM_PARAM
+ when booting with ACPI
+Date: Mon, 25 Jan 2016 15:19:37 +0000
+Message-ID: <alpine.DEB.2.02.1601251512580.9687@kaball.uk.xensource.com>
+References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
+ <1453519184-11908-11-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160125115610.GC3368@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453519184-11908-11-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 23 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> When booting with ACPI, it could get the event-channel irq through
+> HVM_PARAM_CALLBACK_IRQ.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/xen/enlighten.c | 36 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 6d90a62..0e010bb 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/time64.h>
+>  #include <linux/timekeeping.h>
+>  #include <linux/timekeeper_internal.h>
+> +#include <linux/acpi.h>
+>  
+>  #include <linux/mm.h>
+>  
+> @@ -262,6 +263,35 @@ void __init xen_early_init(void)
+>  		add_preferred_console("hvc", 0, NULL);
+>  }
+>  
+> +static void __init xen_acpi_guest_init_events_irq(void)
 
-Thanks Lee for your review. I will take care of most of comment on my=20
-next patch.
-
-I have reply on some comment and seeking more details for few comments=20
-as follows.
-
-On Monday 25 January 2016 05:26 PM, Lee Jones wrote:
-> On Tue, 19 Jan 2016, Laxman Dewangan wrote:
->
->> +- interrupt-controller: MAX77620 has internal interrupt controller =
-which
->> +  takes the interrupt request from internal sub-blocks like RTC,
->> +  regulators, GPIOs as well as external input.
-> This is how interrupt-controllers usually work.  I don't think there
-> is any need to explain this.  I'd just link to
-> ../interrupt-controller/interrupts.txt instead.
-
-Something similar to (just to confirm)
-- interrupt-controller: describes the 88pm860x as an interrupt=20
-controller (has its own domain)
-
->
->> +- #interrupt-cells: Should be set to 2 for IRQ number and flags.
->> +  The first cell is the IRQ number. IRQ numbers for different inter=
-rupt
->> +  source of MAX77620 are defined at dt-bindings/mfd/max77620.h
->> +  The second cell is the flags, encoded as the trigger masks from b=
-inding
->> +  document interrupts.txt, using dt-bindings/irq.
-> This is a very lengthy read for such little information.  Please make
-> it more succinct.  Take a look at other files for examples.
-I started with as3722.txt and it seems I am carrying forward the=20
-complexity here. Originally, as3722 is posted by me only. Any good file=
-=20
-example which I can refer?
+please rename it to "xen_acpi_guest_init"
 
 
->   Also,
-> tell use where interrupts.txt is
-> i.e. ../interrupt-controller/interrupts.txt.
->
-> These are so much easier to read if you tab out from the property nam=
-e
-> to the description.
->
-> - reg:				I2C device address.
-> - interrupt-controller: 	MAX77620 has internal interrupt controller w=
-hich
->    				takes the interrupt request from internal
-> 				sub-blocks like RTC, regulators, GPIOs as well
-> 				as external input.
-> - #interrupt-cells:		Should be set to 2 for IRQ number and flags.
-> 				The first cell is the IRQ number. IRQ numbers
-> 				for different interrupt source of MAX77620 are
-> 				defined at dt-bindings/mfd/max77620.h
->    				The second cell is the flags, encoded as the
-> 				trigger masks from binding document
-> 				interrupts.txt, using dt-bindings/irq.
->
-> ... don't you think?
+> +{
+> +#ifdef CONFIG_ACPI
+> +	struct xen_hvm_param a;
+> +	int interrupt, trigger, polarity;
+> +
+> +	a.domid = DOMID_SELF;
+> +	a.index = HVM_PARAM_CALLBACK_IRQ;
+> +	xen_events_irq = 0;
+> +
+> +	if (!HYPERVISOR_hvm_op(HVMOP_get_param, &a)) {
+> +		if ((a.value >> 56) == HVM_PARAM_CALLBACK_TYPE_EVENT) {
+> +			interrupt = a.value & 0xff;
+> +			trigger = ((a.value >> 8) & 0x1) ? ACPI_EDGE_SENSITIVE
+> +							 : ACPI_LEVEL_SENSITIVE;
+> +			polarity = ((a.value >> 8) & 0x2) ? ACPI_ACTIVE_LOW
+> +							  : ACPI_ACTIVE_HIGH;
+> +			xen_events_irq = acpi_register_gsi(NULL, interrupt,
+> +							   trigger, polarity);
+> +		}
+> +	}
+> +#endif
+> +}
+> +
+> +static void __init xen_dt_guest_init_events_irq(void)
 
-Agree, I can make indenting. And will do whatever places it needs in=20
-this document.
+"xen_dt_guest_init"
 
->
->> +Optional properties:
->> +-------------------
->> +This device also supports the power OFF of system.
-> What is the "power OFF of system"?
+Provided that you make these two changes:
 
-PMIC supplies the power. So once PMIC is in OFF state, it turns off all=
-=20
-its rail and hence no SW execution on system. Still external supply wil=
-l=20
-keep supply to PMIC.
+Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
 
 
->
->> +Following properties are used for this purpose:
->> +- system-power-controller: Boolean, This device will be use as
-> You don't describe the type of each property, so why is this one
-> special?
-Hmm. I describe the boolean and tristate only. Do I need to define type=
-=20
-for integer,string also?
 
->> +power OFF slot and slot period of the device. Device has 3 FPS as F=
-PS0,
->> +FPS1 and FPS2. The details of FPS configuration is provided through
->> +subnode "fps". The details of FPS0, FPS1, FPS2 are provided through=
- the
->> +child node under this subnodes. The FPS number is provided via reg =
-property.
->> +
->> +The property for fps child nodes as:
->> +Required properties:
->> +	-reg: FPS number like 0, 1, 2 for FPS0, FPS1 and FPS2 respectively=
-=2E
-> I'm surprised Rob Acked this.  We don't usually do device numbers in =
-DT.
-What is best way to make the child node for FPS and differentiate FPS0,=
-1, 2?
-What is your suggestion here?
-
-
->> +	-maxim,active-fps-time-period-us: Active state FPS time period in
->> +		microseconds.
->> +	-maxim,suspend-fps-time-period-us: Suspend state FPS time period i=
-n
->> +		microseconds.
->> +	-maxim,fps-enable-input: FPS enable source like EN0, EN1 or SW. Th=
-e
->> +			macros are defined on dt-bindings/mfd/max77620.h for
->> +			different enable source.
->> +				FPS_EN_SRC_EN0 for EN0 enable source.
->> +				FPS_EN_SRC_EN1 for En1 enable source.
->> +				FPS_EN_SRC_SW for SW based control.
->> +	-maxim,fps-sw-enable: Boolean, applicable if enable input is SW.
->> +			If this property present then enable the FPS else
-> "property is present"
->
-> If this enables/disables FPS, why does it matter if it's SW or not?
-> Why can't you just cal it maxim,fps-enable?  Also, is there a case
-> where you would supply this sub-node, have FPS enabled and this
-> property not present?  If not, can't you just remove the entire node?
-> Or am I missing something?
-
-Here, my need is to connect different FPS source inputs EN0, EN1 or SW.=
-=20
-They can connected to any inputs. That's why fps-enable-input select th=
-e=20
-related digital input for given FPS.
-However, I can reduce the need of "fps-sw-enable" and make this always=20
-enable if fps-enable-input=3D <SW>.
-
-Here is excerpt from datasheet:
-B3:B1: SRCFPSx[1:0]
-     Enable Source. Specifies the enable source for the sequencer.
-         0b00=3DEN0 hardware input
-         0b01=3DEN1 hardware input
-         0b10=3DENFPSx software bit
-         0b11=3Dreserved
-B0 ENFPSx
-     Software Enable
-     0=3DDisable FPSx
-     1=3DEnable FPSx
-     X=3DENFPSx is a don=C2=92t care if SRCFPSx[1:0] !=3D 0b10
-
-
->
->> +	-maxim,enable-global-lpm: Boolean, enable global LPM when the exte=
-rnal
-> LPM?
-Low Power Mode (LPM). I will add details.
-
-> +Pinmux and GPIO:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> I think this whole section needs moving to ../pinctrl and needs to be
-> reviewed by Linus W.
-
-Is this mean I need to create DT binding doc for the each subsystem=20
-differently?
-Actually during AS3722, I had different understanding to have single fi=
-le.
-
-
+> +{
+> +	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+> +}
+> +
+>  static int __init xen_guest_init(void)
+>  {
+>  	struct xen_add_to_physmap xatp;
+> @@ -270,7 +300,11 @@ static int __init xen_guest_init(void)
+>  	if (!xen_domain())
+>  		return 0;
+>  
+> -	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+> +	if (!acpi_disabled)
+> +		xen_acpi_guest_init_events_irq();
+> +	else
+> +		xen_dt_guest_init_events_irq();
+> +
+>  	if (!xen_events_irq) {
+>  		pr_err("Xen event channel interrupt not found\n");
+>  		return -ENODEV;
+> -- 
+> 2.0.4
+> 
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
