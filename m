@@ -1,35 +1,71 @@
 From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: [PATCH v7 3/6] ARM: config: hisi: enable CONFIG_RESET_CONTROLLER
-Date: Mon, 25 Jan 2016 11:01:20 +0800
-Message-ID: <1453690883-31220-4-git-send-email-xuejiancheng@huawei.com>
+Subject: [PATCH v7 2/6] ARM: hisi: add compatible string for Hi3519 soc
+Date: Mon, 25 Jan 2016 11:01:19 +0800
+Message-ID: <1453690883-31220-3-git-send-email-xuejiancheng@huawei.com>
 References: <1453690883-31220-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1453690883-31220-1-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: suwenping@hisilicon.com, devicetree@vger.kernel.org, lidongpo@hisilicon.com, yanhaifeng@hisilicon.com, linux-kernel@vger.kernel.org, raojun@hisilicon.com, xuejiancheng@hisilicon.com, gaofei@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>, ml.yang@hisilicon.com, yanghongwei@hisilicon.com, zhangzhenxing@hisilicon.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-enable CONFIG_RESET_CONTROLLER in hisi_defconfig
+add compatible string for Hi3519 soc.
 
 Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 ---
- arch/arm/configs/hisi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-hisi/hisilicon.c | 23 ++++-------------------
+ 1 file changed, 4 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
-index b2e340b..ba62c07 100644
---- a/arch/arm/configs/hisi_defconfig
-+++ b/arch/arm/configs/hisi_defconfig
-@@ -75,6 +75,7 @@ CONFIG_DMADEVICES=y
- CONFIG_DW_DMAC=y
- CONFIG_PL330_DMA=y
- CONFIG_PWM=y
-+CONFIG_RESET_CONTROLLER=y
- CONFIG_PHY_HIX5HD2_SATA=y
- CONFIG_EXT4_FS=y
- CONFIG_TMPFS=y
+diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
+index 8cc6215..00dae89 100644
+--- a/arch/arm/mach-hisi/hisilicon.c
++++ b/arch/arm/mach-hisi/hisilicon.c
+@@ -54,30 +54,15 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
+ 	.dt_compat	= hi3xxx_compat,
+ MACHINE_END
+ 
+-static const char *const hix5hd2_compat[] __initconst = {
++static const char *const hisilicon_compat[] __initconst = {
+ 	"hisilicon,hix5hd2",
+-	NULL,
+-};
+-
+-DT_MACHINE_START(HIX5HD2_DT, "Hisilicon HIX5HD2 (Flattened Device Tree)")
+-	.dt_compat	= hix5hd2_compat,
+-MACHINE_END
+-
+-static const char *const hip04_compat[] __initconst = {
+ 	"hisilicon,hip04-d01",
+-	NULL,
+-};
+-
+-DT_MACHINE_START(HIP04, "Hisilicon HiP04 (Flattened Device Tree)")
+-	.dt_compat	= hip04_compat,
+-MACHINE_END
+-
+-static const char *const hip01_compat[] __initconst = {
+ 	"hisilicon,hip01",
+ 	"hisilicon,hip01-ca9x2",
++	"hisilicon,hi3519",
+ 	NULL,
+ };
+ 
+-DT_MACHINE_START(HIP01, "Hisilicon HIP01 (Flattened Device Tree)")
+-	.dt_compat      = hip01_compat,
++DT_MACHINE_START(HISILICON_DT, "HiSilicon Soc")
++	.dt_compat	= hisilicon_compat,
+ MACHINE_END
 -- 
 1.9.1
