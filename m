@@ -1,56 +1,105 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v3 09/17] xen/hvm/params: Add a new delivery type for
- event-channel in HVM_PARAM_CALLBACK_IRQ
-Date: Mon, 25 Jan 2016 15:08:33 +0000
-Message-ID: <alpine.DEB.2.02.1601251508130.9687@kaball.uk.xensource.com>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
- <1453519184-11908-10-git-send-email-zhaoshenglong@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453519184-11908-10-git-send-email-zhaoshenglong@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shannon Zhao <zhaoshenglong@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 1/2] arm64: dts: move juno pcie-controller to base file
+Date: Mon, 25 Jan 2016 15:14:08 +0000
+Message-ID: <1453734849-13790-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao@linaro.org>
-> 
-> Add a new delivery type:
-> val[63:56] == 3: val[15:8] is flag: val[7:0] is a PPI.
-> To the flag, bit 0 stands the interrupt mode is edge(1) or level(0) and
-> bit 1 stands the interrupt polarity is active low(1) or high(0).
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+The PCIe controller is found on all Juno SoC version. However it's not
+functional on R0 due to some hardware bug.
 
-Acked-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+In preparation to add Juno R2 support, this patch moves the
+pcie-controller defination to base DTS file. It's marked as disabled by
+default and is enabled for Juno R1 explicitly.
 
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 22 ++++++++++++++++++++++
+ arch/arm64/boot/dts/arm/juno-r1.dts    | 25 ++++---------------------
+ 2 files changed, 26 insertions(+), 21 deletions(-)
 
->  include/xen/interface/hvm/params.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
-> index 70ad208..5dd629f 100644
-> --- a/include/xen/interface/hvm/params.h
-> +++ b/include/xen/interface/hvm/params.h
-> @@ -53,6 +53,15 @@
->   * if this delivery method is available.
->   */
->  
-> +#define HVM_PARAM_CALLBACK_TYPE_EVENT    3
-> +/*
-> + * val[15:8] is flag of event-channel interrupt:
-> + *  bit 0: interrupt is edge(1) or level(0) triggered
-> + *  bit 1: interrupt is active low(1) or high(0)
-> + * val[7:0] is PPI number used by event-channel.
-> + * This is only used by ARM/ARM64.
-> + */
-> +
->  #define HVM_PARAM_STORE_PFN    1
->  #define HVM_PARAM_STORE_EVTCHN 2
->  
-> -- 
-> 2.0.4
-> 
-> 
+v1->v2:
+	- Moved pcie-controller to juno-base.dtsi
+
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index dd5158eb5872..b501721baf77 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -75,6 +75,28 @@
+ 		};
+ 	};
+ 
++	pcie_ctlr: pcie-controller@40000000 {
++		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
++		device_type = "pci";
++		reg = <0 0x40000000 0 0x10000000>;	/* ECAM config space */
++		bus-range = <0 255>;
++		linux,pci-domain = <0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		dma-coherent;
++		ranges = <0x01000000 0x00 0x5f800000 0x00 0x5f800000 0x0 0x00800000>,
++			 <0x02000000 0x00 0x50000000 0x00 0x50000000 0x0 0x08000000>,
++			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &gic 0 0 0 136 4>,
++				<0 0 0 2 &gic 0 0 0 137 4>,
++				<0 0 0 3 &gic 0 0 0 138 4>,
++				<0 0 0 4 &gic 0 0 0 139 4>;
++		msi-parent = <&v2m_0>;
++		status = "disabled";
++	};
++
+ 	scpi {
+ 		compatible = "arm,scpi";
+ 		mboxes = <&mailbox 1>;
+diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+index 8826f834f54f..d95d9e7e2dc0 100644
+--- a/arch/arm64/boot/dts/arm/juno-r1.dts
++++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+@@ -172,29 +172,12 @@
+ 	};
+ 
+ 	#include "juno-base.dtsi"
+-
+-	pcie-controller@40000000 {
+-		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
+-		device_type = "pci";
+-		reg = <0 0x40000000 0 0x10000000>;	/* ECAM config space */
+-		bus-range = <0 255>;
+-		linux,pci-domain = <0>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		dma-coherent;
+-		ranges = <0x01000000 0x00 0x5f800000 0x00 0x5f800000 0x0 0x00800000>,
+-			 <0x02000000 0x00 0x50000000 0x00 0x50000000 0x0 0x08000000>,
+-			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &gic 0 0 0 136 4>,
+-				<0 0 0 2 &gic 0 0 0 137 4>,
+-				<0 0 0 3 &gic 0 0 0 138 4>,
+-				<0 0 0 4 &gic 0 0 0 139 4>;
+-		msi-parent = <&v2m_0>;
+-	};
+ };
+ 
+ &memtimer {
+ 	status = "okay";
+ };
++
++&pcie_ctlr {
++	status = "okay";
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
