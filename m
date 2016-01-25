@@ -1,33 +1,41 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dtc: create tool to diff device trees
-Date: Mon, 25 Jan 2016 08:53:28 -0600
-Message-ID: <CAL_Jsq+rWikE3-QHMYvaBVpaxetmj6sahy8=qEWRgOugY5GTgw@mail.gmail.com>
-References: <568EB672.6060300@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] of: drop symbols declared by _OF_DECLARE() from modules
+Date: Mon, 25 Jan 2016 08:54:16 -0600
+Message-ID: <CAL_Jsq+gk81AYJsPoMtLdXqoXs_q6p=gsa476PObCB8kqYsm=Q@mail.gmail.com>
+References: <1453394031-16578-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <568EB672.6060300@gmail.com>
+In-Reply-To: <1453394031-16578-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 7, 2016 at 1:03 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sonymobile.com>
+On Thu, Jan 21, 2016 at 10:33 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> The users of this macro (OF_EARLYCON_DECLARE, CLK_OF_DECLARE,
+> IRQCHIP_DECLARE, etc.) are only parsed in the early boot stage.
+> Such symbols contained in modules are never used.
 >
-> Create script to diff device trees.
+> This commit fixes the link error introduced by commit b8d20e06eaad
+> ("serial: 8250_uniphier: add earlycon support"); the combination
+> of CONFIG_SERIAL_8250_UNIPHIER=m and CONFIG_SERIAL_8250_CONSOLE=y
+> fails to link:
 >
-> The device tree can be in any of the forms recognized by the dtc compiler:
->   - source
->   - binary blob
->   - file system tree (from /proc/devicetree)
+> ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
 >
-> If the device tree is a source file, then it is pre-processed in the
-> same way as it would be when built in the linux kernel source tree
-> before diffing.
+> Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 >
-> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
+> Changes in v2:
+>   - Describe the bug fixed by this commit
+>
+>  include/linux/of.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied with setting permissions to 755. Thanks.
+Applied, thanks.
 
 Rob
