@@ -1,57 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RESEND v2 1/2] clk: samsung: Don't build ARMv8 clock drivers on
- ARMv7
-Date: Mon, 25 Jan 2016 18:10:31 +0900
-Message-ID: <56A5E687.3060209@samsung.com>
-References: <1453683021-6998-1-git-send-email-k.kozlowski@samsung.com>
- <1453683021-6998-2-git-send-email-k.kozlowski@samsung.com>
- <4282078.QlIpNj3Oa6@wuerfel>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] USB: core: let USB device know device node
+Date: Mon, 25 Jan 2016 17:31:15 +0800
+Message-ID: <20160125093114.GA13749@shlinux2>
+References: <Pine.LNX.4.44L0.1601211015010.2275-100000@iolanthe.rowland.org>
+ <2404899.20LhULZo7N@wuerfel>
+ <CAL411-qfzcynzc=YrepzcA6EmFuxy-Ri4xRQ+R-QVBDEPZXtZQ@mail.gmail.com>
+ <1825868.A6VKDYvWaj@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <4282078.QlIpNj3Oa6@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1825868.A6VKDYvWaj@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.01.2016 17:59, Arnd Bergmann wrote:
-> On Monday 25 January 2016 09:50:20 Krzysztof Kozlowski wrote:
->>
->> +# ARM64 SoCs (e.g. Exynos5433, Exynos7):
->> +config EXYNOS_ARM64_COMMON_CLK
->> +       def_bool ARCH_EXYNOS
->> +       depends on ARM64 || COMPILE_TEST
->> +       select COMMON_CLK_SAMSUNG
->>
+On Mon, Jan 25, 2016 at 09:50:53AM +0100, Arnd Bergmann wrote:
+> On Monday 25 January 2016 11:57:37 Peter Chen wrote:
+> > >> >
+> > >> >             hub@3 { /* same external  hub, highspeed mode */
+> > >> >                     compatible = "usb2109,0812.591",
+> > >> >                                  "usb2109,0812",
+> > >> >                                  "usb2109,class9.0.1",
+> > >> >                                  "usb2109,class9.0",
+> > >> >                                  "usb2109,class9";
+> > >> >
+> > >> >                     #address-cells = <1>;
+> > >> >                     #size-cells = <0>;
+> > >> >                     reg = >;
+> > >> >
+> > >>
+> > >> Why "reg" is 3 here?
+> > >
+> > > My mistake. It should be hub@1 and reg=<1>;
+> > >
+> > > I accidentally confused the port number and the device number.
+> > 
+> > I think it should be hub@2 and reg=<0x2>.
+> > According to Alan, we should use xHCI numbering scheme when
+> > describing the ports of an xHCI root hub.
 > 
-> So you always enable it on ARM64 when ARCH_EXYNOS is enabled, but
-> enable it silently on ARM32 when COMPILE_TEST is set?
-
-Hmm... indeed it would better to make it toggle-able when COMPILE_TEST.
-
-> That sounds wrong. How about
+> For a single-port root hub, that would be right. My PC has
+> two ports, so the first port has reg=<0x1> for SS and
+> reg=<0x3> for HS.
 > 
-> config EXYNOS_ARM64_COMMON_CLK
-> 	bool "EXYNOS 64-bit clock support" if COMPILE_TEST
-> 	default ARM64 && ARCH_EXYNOS
-> 	depends on (ARM64 && ARCH_EXYNOS) || COMPILE_TEST
-> 	select COMMON_CLK_SAMSUNG
 
-Although this looks more complicated but it does the trick. Thanks for
-the hint. Only one (not related directly to this change) issue - with
-COMPILE_TEST the "EXYNOS 64-bit clock support" option goes above the
-common clock framework (up to drivers section) because it is not part of
-the Clocks menu. I'll fix it in v3.
+Yes, you are right.
 
-Best regards,
-Krzysztof
+Alan, do you know which physical number is larger for
+the same port, HS or SS port? Is it spec defined or vendor defined?
+I haven't found related information at xHCI spec.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
