@@ -1,68 +1,49 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: tegra: Add chosen node for tegra132 norrin
-Date: Mon, 25 Jan 2016 14:57:04 +0100
-Message-ID: <20160125135704.GA7014@ulmo.nvidia.com>
-References: <1450704171-8345-1-git-send-email-jonathanh@nvidia.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 03/15] dmaengine: dw: rename masters to reflect actual
+ topology
+Date: Mon, 25 Jan 2016 16:01:41 +0200
+Message-ID: <1453730501.2521.222.camel@linux.intel.com>
+References: <1453663322-14474-1-git-send-email-mans@mansr.com>
+	 <1453663322-14474-4-git-send-email-mans@mansr.com>
+	 <20160124223629.GI6588@sirena.org.uk>
+	 <1453710902.2521.203.camel@linux.intel.com>
+	 <20160125122429.GN6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450704171-8345-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20160125122429.GN6588@sirena.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mans Rullgard <mans@mansr.com>, Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Dec 21, 2015 at 01:22:51PM +0000, Jon Hunter wrote:
-> The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
-> in the device-tree blob and it is not then it fails to boot the kernel.
-
-"if it is not"
-
-> Add the chosen node so we can boot the kernel on tegra132 norrin with
-
-"Tegra132 Norrin"
-
-> the nvtboot bootloader.
+On Mon, 2016-01-25 at 12:24 +0000, Mark Brown wrote:
+> On Mon, Jan 25, 2016 at 10:35:02AM +0200, Andy Shevchenko wrote:
+> > On Sun, 2016-01-24 at 22:36 +0000, Mark Brown wrote:
 >=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 2 ++
->  1 file changed, 2 insertions(+)
+> > > This is patch 3 of a series but I don't have anything else in the
+> > > series.=C2=A0=C2=A0What is going on with the rest of the series -=
+ what are
+> > > the
+> > > dependencies and so on?
+>=20
+> > Mark, sorry about that, but in this particular case you may
+> > consider
+> > this patch is a standalone one. You are in the Cc list due to SPI
+> > driver small change. This change isn't modifying functionality of
+> > the
+> > driver.
+>=20
+> And there's no dependency relationship with the rest of the series?
 
-Otherwise looks good to me. Given that this is a fix for v4.5 material,
-you might want to send it directly to arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (and perhaps
-mention that you'd like to have this applied to v4.5). With the above
-two fixups:
+Yes, in this particular case. To confirm I even rebased locally the
+series to be 100% sure.
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+The complete series can be found in
+https://bitbucket.org/mansr/linux-dwc/branch/dwc-sata
 
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWpimrAAoJEN0jrNd/PrOhm9wP/RqlgJmhv/DEouaPXp7FXsDL
-pXzBXrOFSe00ueET75r6aL+eEKwgn45IhhyPL5XiwkjdMhTqc4Y5kpQLdh3X3e2u
-hXw+kbaKyHn95fSsV2vaz+mvt0cHCB2cafgsmw+6GfoslnSd4J1eJ+fuTa53IZki
-sxKywogy8UdFJpwE9BKckbQm3+9enVT5hcr2A7myFTZIuRJO0XRTmUvHAjypNI1R
-Vs1VGTK3czFlOlnXHDqBdlWayYR1tH6F38Bj1vnxTcWvecwlhZLn5b4s3kXNN8q5
-k3Scvg063WngR4rIbKL/l5YDb9yD2e4g1Y1tBhFjn8JGYfm11kR06hSwvR4NBvWq
-peQ+8HrsqzOEYIIriBbvKtMO7yMnfIj2MY84ngYhGuQsn74ah3bmgRr5fYTPHM0l
-dAG5UvzFmmbq+HOaenig6uCRrmkyIfjMqTziyDPjC0oFGioKUb5TEtU2J3xAeOvP
-09EoAfuhAY/SSLebWgdDWPKepa6vyKend8sx8U6rpyZ231fNFfKc5leJ9PMWy8nO
-1UNyLGI+grlN2gowbBQU6/7/oAHx1NUgH9dulHmjnXFTuUA/9T5GNEifcCU9kMwc
-6SuuPYpM+86ROob9csK2DHQ1Uf3G7Slp554iQ764Clf3C6ibT55AfYd3si47Qcbo
-nOhfxp4WKyWErGGA03gv
-=5VDZ
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
