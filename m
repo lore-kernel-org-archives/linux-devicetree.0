@@ -1,100 +1,61 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sama5d4: add support for Ka-Ro electronics
- TXA5 modules
-Date: Mon, 25 Jan 2016 12:34:24 +0100
-Message-ID: <20160125113424.GD4027@piout.net>
-References: <1453293337-16078-1-git-send-email-LW@KARO-electronics.de>
- <1453293337-16078-4-git-send-email-LW@KARO-electronics.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: regulator: Add document for MT6323
+ regulator
+Date: Mon, 25 Jan 2016 11:37:10 +0000
+Message-ID: <20160125113710.GJ6588@sirena.org.uk>
+References: <1453718405-40815-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GjzT7NpwwiYGuc/0"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453293337-16078-4-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+In-Reply-To: <1453718405-40815-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Steven Liu <steven.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 20/01/2016 at 13:35:37 +0100, Lothar Wa=DFmann wrote :
-> diff --git a/arch/arm/boot/dts/at91-sama5d4-txa5-5010.dts b/arch/arm/=
-boot/dts/at91-sama5d4-txa5-5010.dts
-> new file mode 100644
-> index 0000000..fb4a253
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-sama5d4-txa5-5010.dts
-> @@ -0,0 +1,217 @@
-> +/*
-> + * at91-sama5d4-txa5.dts - Device Tree file for Ka-Ro electronics TX=
-A5 module
-> + *
+--GjzT7NpwwiYGuc/0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This file can also be called at91-txa5-5010.dts if you prefer unless yo=
-u
-plan to have multiple variants of the board with different SoCs.
+On Mon, Jan 25, 2016 at 11:40:04AM +0100, John Crispin wrote:
+> Based on the MT6397 binding documentation.
+>=20
+> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-> +/dts-v1/;
-> +#include "sama5d4.dtsi"
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +
-> +/ {
-> +	model =3D "Ka-Ro SAMA5D4 TXA5";
-> +	compatible =3D "atmel,sama5d4-txa5", "atmel,sama5d4", "atmel,sama5"=
-;
-> +
+In reply to your previous submission I said:
 
-The vendor for sama5d4-txa5 is not atmel, this should be
-"karo,sama5d4-txa5".
+| important.  Please also use subject lines matching the style for the
+| subsystem (for patch 1).
 
-Don't forget to add that vendor prefix in
-Documentation/devicetree/bindings/vendor-prefixes.txt
+Please don't ignore review comments, people are generally making them
+for a reason and are likely to have the same concerns if issues remain
+unaddressed.  Having to repeat the same comments can get repetitive and
+make people question the value of time spent reviewing.  If you disagree
+with the review comments that's fine but you need to reply and discuss
+your concerns so that the reviewer can understand your decisions.
 
+--GjzT7NpwwiYGuc/0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	aliases {
-> +		display =3D &display;
-> +		ethernet0 =3D &macb0;
-> +		serial0 =3D &usart0;
-> +		serial1 =3D &usart1;
-> +		serial2 =3D &usart3;
-> +		spi0 =3D &spi0;
-> +	};
-> +
-> +	clocks {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Those properties should be removed. You probably based yourself on a dt=
-s
-for an old kernel.
+iQEcBAEBCAAGBQJWpgjlAAoJECTWi3JdVIfQv2UH/1JJPqEozYZRwRWQ0cyJQ54Y
+/XvtQHsnoYnL1P1OrsPfbLNrNF28NMmudaruEBSbgEV2GuRkK4q57PDhzdymSOVW
+5z5DWSqKUf62g63NM7PfG+75xckeRh2yJtJ8uTxihHI7dkW4dTOpUMAytSCC4jf/
+dqKfq9CkNF9a3M4q5e48IfaD9NFXCqUWdLVGKQpO33LHliB7AbBG6DzPJSCHAdvi
+3Oq3B94oxPvYguIVdRRaCr0BVLVvnlGuBQPJCkfIMf7YpJw8CCqByBOJjdj/pIlF
+ul4+tWZKxDITLKpOBKavdAp0IQKTGDQCFW5E3WHsTntP3pzI6b9pw0HYHMrSm6c=
+=vjXF
+-----END PGP SIGNATURE-----
 
-> +		main_clock: clock@0 {
-> +			compatible =3D "atmel,osc", "fixed-clock";
-> +			clock-frequency =3D <12000000>;
-> +		};
-
-This node is useless, I think you can remove the whole clocks groups as
-you define slow_xtal and main_xtal later.
-
-> +	display: display {
-> +		display-timings {
-> +		};
-> +	};
-> +
-
-Don't you need some timings?
-
-
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--GjzT7NpwwiYGuc/0--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
