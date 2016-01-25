@@ -1,14 +1,14 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH v2 13/26] drm/fb_cma_helper: Remove implicit call to disable_unused_functions
 Date: Mon, 25 Jan 2016 21:02:14 +0200
-Message-ID: <4816141.nXxRuEqaX5__39631.6583887257$1453748528$gmane$org@avalon>
+Message-ID: <4816141.nXxRuEqaX5__1258.5382596173$1453748541$gmane$org@avalon>
 References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com> <1484612.l42nGNbAu5@avalon> <20160125072938.GI11240@phenom.ffwll.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160125072938.GI11240@phenom.ffwll.local>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Vetter <daniel@ffwll.ch>
 Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wynter Woods <wynter@nextthing.co>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
@@ -76,4 +76,3 @@ removed after dropping the drm_helper_disable_unused_functions() calls.
 Regards,
 
 Laurent Pinchart
-
