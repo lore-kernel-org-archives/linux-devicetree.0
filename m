@@ -1,65 +1,54 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V4 07/11] of: Add bindings of hw-trip-points for soctherm
-Date: Mon, 25 Jan 2016 18:46:36 +0800
-Message-ID: <1453718796-4393-1-git-send-email-wni@nvidia.com>
+From: Yao Yuan <yao.yuan@nxp.com>
+Subject: RE: [PATCH v3 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
+ compatible string
+Date: Mon, 25 Jan 2016 10:55:04 +0000
+Message-ID: <AM2PR04MB0722D3252CA3058B3523731889C70@AM2PR04MB0722.eurprd04.prod.outlook.com>
+References: <1453360158-34236-1-git-send-email-yao.yuan@freescale.com>
+ <20160121231254.GA4356@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160121231254.GA4356@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Yuan Yao <yao.yuan@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add hw-trips sub-node for soctherm, which is
-used to describe the hardware trip points for
-each soctherm sensors.
+On Fri, Jan 22, 2016 at 07:13 AM, Rob Herring wrote:
+> On Thu, Jan 21, 2016 at 03:09:15PM +0800, Yuan Yao wrote:
+> > new compatible string: "fsl,ls2080a-qspi".
+> >
+> > Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+> > ---
+> > Changed in v3:
+> > Add the modifier for new compatible string like:
+> > "fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
+> >
+> > Changed in v2:
+> > Update my email to <yao.yuan@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/thermal/tegra-soctherm.txt | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Hi Rob,
 
-diff --git a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
-index 6b68cd150405..75dc9dbe7e1a 100644
---- a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
-+++ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
-@@ -26,6 +26,15 @@ Required properties :
-     of this property. See <dt-bindings/thermal/tegra124-soctherm.h> for a
-     list of valid values when referring to thermal sensors.
- 
-+Optional properties:
-+- hw-trip-points : A sub-node which is a container of hardware trip points
-+    for each sensors.
-+  * sensors: Sub-nodes which are used to describe the HW trip points info,
-+        must be named as "cpu", "gpu", "mem", "pll".
-+      Properties:
-+      - thermtrip-temperature : Shutdown or reset temperature in millicelsius,
-+        once the temperature of this sensor is higher than the
-+        thermtrip-temperature, the system will be shutdown or reset.
- 
- Example :
- 
-@@ -40,6 +49,21 @@ Example :
- 		reset-names = "soctherm";
- 
- 		#thermal-sensor-cells = <1>;
-+
-+		hw-trip-points {
-+			cpu {
-+				thermtrip-temperature = <103000>;
-+			};
-+			gpu {
-+				thermtrip-temperature = <103500>;
-+			};
-+			mem {
-+				thermtrip-temperature = <103500>;
-+			};
-+			pll {
-+				thermtrip-temperature = <105000>;
-+			};
-+		};
- 	};
- 
- Example: referring to thermal sensors :
--- 
-1.9.1
+Thanks for your review and help.
+
+How about this rest:
+[PATCH v3 3/4] dts/ls2080a: update the DTS for QSPI and DSPI support
+
+And I also want to send some patches for SPI driver soon.
+But those patches depend on this four dts binging patches.
+So I should also send this four patches to the SPI driver maintainers.
+And they can refer to review my patch for SPI driver.
+
+Can I also send this "dts/ls2080a: update the DTS for QSPI and DSPI support" patch with your Acked-by?
+Or can you give me a ACK for this patch?
+
+Thanks.
+
+Yuan Yao.
