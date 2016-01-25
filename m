@@ -1,71 +1,156 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v3 12/17] ARM64: ACPI: Check if it runs on Xen to enable
- or disable ACPI
-Date: Mon, 25 Jan 2016 15:32:00 +0000
-Message-ID: <alpine.DEB.2.02.1601251531280.9687@kaball.uk.xensource.com>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
- <1453519184-11908-13-git-send-email-zhaoshenglong@huawei.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv8 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
+ entries
+Date: Mon, 25 Jan 2016 09:42:33 -0600
+Message-ID: <56A64269.1030500@opensource.altera.com>
+References: <1453397668-32094-1-git-send-email-tthayer@opensource.altera.com>
+ <1453397668-32094-2-git-send-email-tthayer@opensource.altera.com>
+ <20160123023513.GA2081@rob-hp-laptop>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453519184-11908-13-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160123023513.GA2081@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jan 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
-> a /hypervisor node in DT. So check if it needs to enable ACPI.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
 
 
-> CC: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/kernel/acpi.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> index d1ce8e2..4e92be0 100644
-> --- a/arch/arm64/kernel/acpi.c
-> +++ b/arch/arm64/kernel/acpi.c
-> @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
->  {
->  	/*
->  	 * Return 1 as soon as we encounter a node at depth 1 that is
-> -	 * not the /chosen node.
-> +	 * not the /chosen node, or /hypervisor node when running on Xen.
->  	 */
-> -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
-> -		return 1;
-> +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
-> +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
-> +			return 1;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -184,7 +187,8 @@ void __init acpi_boot_table_init(void)
->  	/*
->  	 * Enable ACPI instead of device tree unless
->  	 * - ACPI has been disabled explicitly (acpi=off), or
-> -	 * - the device tree is not empty (it has more than just a /chosen node)
-> +	 * - the device tree is not empty (it has more than just a /chosen node,
-> +	 *   and a /hypervisor node when running on Xen)
->  	 *   and ACPI has not been force enabled (acpi=force)
->  	 */
->  	if (param_acpi_off ||
-> -- 
-> 2.0.4
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/22/2016 08:35 PM, Rob Herring wrote:
+> On Thu, Jan 21, 2016 at 11:34:26AM -0600, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Adding the device tree entries and bindings needed to support
+>> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+>> an earlier patch to declare and setup On-chip RAM properly.
+>> http://www.spinics.net/lists/devicetree/msg51117.html
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+>> ---
+>> v8: Fix node names to include chip family and use ecc manager
+>>      to better describe the driver. Rename socfpga-edac.txt to
+>>      socfpga-eccmgr.txt.
+>> v7: No Change
+>> v6: Change to nested EDAC device nodes based on community
+>>      feedback. Remove L2 syscon. Use consolidated binding.
+>> v3-5: No Change
+>> v2: Remove OCRAM declaration and reference prior patch.
+>> ---
+>>   .../bindings/arm/altera/socfpga-eccmgr.txt         |   49 ++++++++++++++++++++
+>>   arch/arm/boot/dts/socfpga.dtsi                     |   20 ++++++++
+>>   2 files changed, 69 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>
+> A couple of nits, otherwise:
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+
+Great! I will make these changes for my next version that fixes some 
+coding issue. Thank you for reviewing.
+
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>> new file mode 100644
+>> index 0000000..4f45690
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>> @@ -0,0 +1,49 @@
+>> +Altera SoCFPGA ECC Manager
+>> +This driver uses the EDAC framework to implement the SOCFPGA ECC Manager.
+>> +The ECC Manager counts and corrects single bit errors and counts/handles
+>> +double bit errors which are uncorrectable.
+>> +
+>> +Required Properties:
+>> +- compatible : Should be "altr,socfpga-ecc-manager"
+>> +- #address-cells: must be 1
+>> +- #size-cells: must be 1
+>> +- ranges : standard definition, should translate from local addresses
+>> +
+>> +Subcomponents:
+>> +
+>> +L2 Cache ECC
+>> +Required Properties:
+>> +- compatible : Should be "altr,socfpga-l2-ecc"
+>> +- reg : Address and size for ECC error interrupt clear registers.
+>> +- interrupts : Should be single bit error interrupt, then double bit error
+>> +	interrupt. Note the rising edge type.
+>> +
+>> +On Chip RAM ECC
+>> +Required Properties:
+>> +- compatible : Should be "altr,socfpga-ocram-ecc"
+>> +- reg : Address and size for ECC error interrupt clear registers.
+>> +- iram : phandle to On-Chip RAM definition.
+>> +- interrupts : Should be single bit error interrupt, then double bit error
+>> +	interrupt. Note the rising edge type.
+>> +
+>> +Example:
+>> +
+>> +	eccmgr: eccmgr@0xffd08140 {
+>
+> drop the '0x'
+>
+>> +		compatible = "altr,socfpga-ecc-manager";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		l2-ecc@ffd08140 {
+>> +			compatible = "altr,socfpga-l2-ecc";
+>> +			reg = <0xffd08140 0x4>;
+>> +			interrupts = <0 36 1>, <0 37 1>;
+>> +		};
+>> +
+>> +		ocram-ecc@ffd08144 {
+>> +			compatible = "altr,socfpga-ocram-ecc";
+>> +			reg = <0xffd08144 0x4>;
+>> +			iram = <&ocram>;
+>> +			interrupts = <0 178 1>, <0 179 1>;
+>> +		};
+>> +	};
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index 39c470e..9bb383e 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -656,6 +656,26 @@
+>>   			status = "disabled";
+>>   		};
+>>
+>> +		eccmgr: eccmgr@0xffd08140 {
+>
+> and here.
+>
+>> +			compatible = "altr,socfpga-ecc-manager";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +
+>> +			l2-ecc@ffd08140 {
+>> +				compatible = "altr,socfpga-l2-ecc";
+>> +				reg = <0xffd08140 0x4>;
+>> +				interrupts = <0 36 1>, <0 37 1>;
+>> +			};
+>> +
+>> +			ocram-ecc@ffd08144 {
+>> +				compatible = "altr,socfpga-ocram-ecc";
+>> +				reg = <0xffd08144 0x4>;
+>> +				iram = <&ocram>;
+>> +				interrupts = <0 178 1>, <0 179 1>;
+>> +			};
+>> +		};
+>> +
+>>   		L2: l2-cache@fffef000 {
+>>   			compatible = "arm,pl310-cache";
+>>   			reg = <0xfffef000 0x1000>;
+>> --
+>> 1.7.9.5
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
