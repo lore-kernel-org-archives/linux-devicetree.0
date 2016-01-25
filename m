@@ -1,82 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2 1/4] dt-bindings: mfd: Add bindings for the MediaTek
- MT6323 PMIC
-Date: Mon, 25 Jan 2016 12:41:51 +0000
-Message-ID: <20160125124151.GH3368@x1>
-References: <1453716887-38442-1-git-send-email-blogic@openwrt.org>
- <1453716887-38442-2-git-send-email-blogic@openwrt.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
+Date: Mon, 25 Jan 2016 12:41:23 +0000
+Message-ID: <20160125124123.GQ6588@sirena.org.uk>
+References: <20160120164258.GF6588@sirena.org.uk>
+ <20160121080524.27af489f@ipc1.ka-ro>
+ <20160121102015.GI6588@sirena.org.uk>
+ <20160121112611.34e17cb2@ipc1.ka-ro>
+ <20160121111115.GJ6588@sirena.org.uk>
+ <20160121123311.5346e40d@ipc1.ka-ro>
+ <20160121162646.GK6588@sirena.org.uk>
+ <20160122064145.36b7f2b4@ipc1.ka-ro>
+ <20160122162610.GZ6588@sirena.org.uk>
+ <20160125133731.72669115@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="YLKJzIir88lqKfby"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453716887-38442-2-git-send-email-blogic@openwrt.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <blogic@openwrt.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Flora Fu <flora.fu@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, Steven Liu <steven.liu@mediatek.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160125133731.72669115-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jan 2016, John Crispin wrote:
 
-> Signed-off-by: John Crispin <blogic@openwrt.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+--YLKJzIir88lqKfby
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+On Mon, Jan 25, 2016 at 01:37:31PM +0100, Lothar Wa=DFmann wrote:
+> On Fri, 22 Jan 2016 16:26:10 +0000 Mark Brown wrote:
 
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Docum=
-entation/devicetree/bindings/mfd/mt6397.txt
-> index 15043e6..949c85f 100644
-> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -1,6 +1,6 @@
-> -MediaTek MT6397 Multifunction Device Driver
-> +MediaTek MT6397/MT6323 Multifunction Device Driver
-> =20
-> -MT6397 is a multifunction device with the following sub modules:
-> +MT6397/MT6323 is a multifunction device with the following sub modul=
-es:
->  - Regulator
->  - RTC
->  - Audio codec
-> @@ -8,14 +8,14 @@ MT6397 is a multifunction device with the following=
- sub modules:
->  - Clock
-> =20
->  It is interfaced to host controller using SPI interface by a proprie=
-tary hardware
-> -called PMIC wrapper or pwrap. MT6397 MFD is a child device of pwrap.
-> +called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of=
- pwrap.
->  See the following for pwarp node definitions:
->  Documentation/devicetree/bindings/soc/pwrap.txt
-> =20
->  This document describes the binding for MFD device and its sub modul=
-e.
-> =20
->  Required properties:
-> -compatible: "mediatek,mt6397"
-> +compatible: "mediatek,mt6397" or "mediatek,mt6323"
-> =20
->  Optional subnodes:
-> =20
-> @@ -26,6 +26,8 @@ Optional subnodes:
->  	Required properties:
->  		- compatible: "mediatek,mt6397-regulator"
->  	see Documentation/devicetree/bindings/regulator/mt6397-regulator.tx=
-t
-> +		- compatible: "mediatek,mt6323-regulator"
-> +	see Documentation/devicetree/bindings/regulator/mt6323-regulator.tx=
-t
->  - codec
->  	Required properties:
->  		- compatible: "mediatek,mt6397-codec"
+> > You're not just making the interrupt optional, you are also implementing
+> > polling support.  That's really unusual and there's no clear reason for
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> Any suggestions how to handle this case in a more sensible way?
+
+The above, for example - make the interrupt optional.
+
+--YLKJzIir88lqKfby
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWphfyAAoJECTWi3JdVIfQCREH/09odrajuuSeKq+JoiSzA7Pn
+9jHudQAkI0XvA+dGL8TVGKtZjWLzqeg7itQQLHeYOzbHQrPTajjtSq5ZdE5m/6pH
+1KNllZmyIhZB+pSb2zszmLmCAfeugqpA+7tm+jihKFaP3zMR7a8sRTySvy8p4Gli
+ff9VyDiVXPSxE/qgI0lSBoO55o58rH+x4Xzxn3sv+TmsEH+p+DUFyenbC0xMIZ3h
+6bAojQ0q1o99dJ86RQgLWpX8XFfMVwMRdrkz4tYpR25bA8jRpv07Ps7xLHCMSmFT
+3lw6kBsN6DaEC0ZR8qCG2kG4x0sguSILpsgpTC+HDDvBNvRfS3Ys4AHdSPKx4G8=
+=zwc/
+-----END PGP SIGNATURE-----
+
+--YLKJzIir88lqKfby--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
