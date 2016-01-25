@@ -1,68 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: ltc3589: make IRQ optional
-Date: Mon, 25 Jan 2016 13:52:20 +0000
-Message-ID: <20160125135220.GR6588@sirena.org.uk>
-References: <20160121102015.GI6588@sirena.org.uk>
- <20160121112611.34e17cb2@ipc1.ka-ro>
- <20160121111115.GJ6588@sirena.org.uk>
- <20160121123311.5346e40d@ipc1.ka-ro>
- <20160121162646.GK6588@sirena.org.uk>
- <20160122064145.36b7f2b4@ipc1.ka-ro>
- <20160122162610.GZ6588@sirena.org.uk>
- <20160125133731.72669115@ipc1.ka-ro>
- <20160125124123.GQ6588@sirena.org.uk>
- <20160125135109.760ba5f0@ipc1.ka-ro>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3 03/17] Xen: xlate: Use page_to_xen_pfn instead of
+ page_to_pfn
+Date: Mon, 25 Jan 2016 13:55:01 +0000
+Message-ID: <alpine.DEB.2.02.1601251351440.9687@kaball.uk.xensource.com>
+References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
+ <1453519184-11908-4-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NC4+cM2ybgOHGbSg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160125135109.760ba5f0@ipc1.ka-ro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453519184-11908-4-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 23 Jan 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Use page_to_xen_pfn in case of 64KB page.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---NC4+cM2ybgOHGbSg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please update the commit message, something like:
 
-On Mon, Jan 25, 2016 at 01:51:09PM +0100, Lothar Wa=DFmann wrote:
-> On Mon, 25 Jan 2016 12:41:23 +0000 Mark Brown wrote:
+"Make xen_xlate_map_ballooned_pages work with 64K pages. In that case
+Kernel pages are 64K in size but Xen pages remain 4K in size. Xen pfns
+refer to 4K pages."
 
-> > The above, for example - make the interrupt optional.
+Provided that you change the commit message:
 
-> This will make it impossible to notify the system about
-> overtemperature (and undervoltage).
-> I implemented polling to be able to get at least overtemperature
-> warnings.
-> (Undervoltage cannot be handled sensibly without interrupt anyway)
+Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
 
-I'm not convinced that justifies constantly polling, if the system
-designers cared you'd hope they'd have wired it up to a working
-interrupt.  People commonly don't, realistically thermal warnings are
-usually set near the point where the silicon will be physically damaged
-and typically by the time they fire the system is already experiencing
-catastrophic problems at a system level.
 
-The polling is at the very least a separate change, and making the
-interrupt work would be a much better option.
-
---NC4+cM2ybgOHGbSg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWpiiTAAoJECTWi3JdVIfQLqUH/2UkzSxFLwMoV1HhdhQHBygn
-oXFFg8TZvVVLzMQw5heNPMuxfYU6mTNMLFiJ5oywaAwoOfz3/FzD2g6I+mwgmxDo
-DFZkdBFCbtj8OLs/eV/AuiatQCcvuRtwL+NUNVH3KJ0aTBZ5S941dVTN6SEhjFPV
-fiOd2j9Jikssr4E+RVY0eN5quG7YQiq9ppOsW+hPjhi2cp/Jxdh1SxUEoV5h3FNS
-H61lO9cveHAQfRqSe2LJKsq5qaEW7U7hdsfkKfOaYvRx24crXgalhb7FWH8ui7xI
-w0+ImKq6Lj53K97l++vLui3XlYJLtGGFjmRlH25Pge+s5vNhsxQIgmY7QFtwM+c=
-=nDvb
------END PGP SIGNATURE-----
-
---NC4+cM2ybgOHGbSg--
+>  drivers/xen/xlate_mmu.c | 26 ++++++++++++++++----------
+>  1 file changed, 16 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index 9692656..28f728b 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -207,9 +207,12 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>  	void *vaddr;
+>  	int rc;
+>  	unsigned int i;
+> +	unsigned long nr_pages;
+> +	xen_pfn_t xen_pfn = 0;
+>  
+>  	BUG_ON(nr_grant_frames == 0);
+> -	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+> +	nr_pages = DIV_ROUND_UP(nr_grant_frames, XEN_PFN_PER_PAGE);
+> +	pages = kcalloc(nr_pages, sizeof(pages[0]), GFP_KERNEL);
+>  	if (!pages)
+>  		return -ENOMEM;
+>  
+> @@ -218,22 +221,25 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>  		kfree(pages);
+>  		return -ENOMEM;
+>  	}
+> -	rc = alloc_xenballooned_pages(nr_grant_frames, pages);
+> +	rc = alloc_xenballooned_pages(nr_pages, pages);
+>  	if (rc) {
+> -		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
+> -			nr_grant_frames, rc);
+> +		pr_warn("%s Couldn't balloon alloc %ld pages rc:%d\n", __func__,
+> +			nr_pages, rc);
+>  		kfree(pages);
+>  		kfree(pfns);
+>  		return rc;
+>  	}
+> -	for (i = 0; i < nr_grant_frames; i++)
+> -		pfns[i] = page_to_pfn(pages[i]);
+> +	for (i = 0; i < nr_grant_frames; i++) {
+> +		if ((i % XEN_PFN_PER_PAGE) == 0)
+> +			xen_pfn = page_to_xen_pfn(pages[i / XEN_PFN_PER_PAGE]);
+> +		pfns[i] = pfn_to_gfn(xen_pfn++);
+> +	}
+>  
+> -	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+> +	vaddr = vmap(pages, nr_pages, 0, PAGE_KERNEL);
+>  	if (!vaddr) {
+> -		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+> -			nr_grant_frames, rc);
+> -		free_xenballooned_pages(nr_grant_frames, pages);
+> +		pr_warn("%s Couldn't map %ld pages rc:%d\n", __func__,
+> +			nr_pages, rc);
+> +		free_xenballooned_pages(nr_pages, pages);
+>  		kfree(pages);
+>  		kfree(pfns);
+>  		return -ENOMEM;
+> -- 
+> 2.0.4
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
