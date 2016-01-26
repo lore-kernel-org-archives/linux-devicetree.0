@@ -1,7 +1,7 @@
 From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
-Date: Tue, 26 Jan 2016 12:00:33 +0800
-Message-ID: <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
+Subject: [PATCH 3/4] drm/layerscape: Add sii9022a driver
+Date: Tue, 26 Jan 2016 12:00:32 +0800
+Message-ID: <1453780833-32289-3-git-send-email-meng.yi@nxp.com>
 References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,98 +12,52 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DCU is the shortcut of 'display controller unit', some HDMI transmitter
-attached to DCU, such as sii9022a, and this driver add the relavent
-functions to DRM framewrok.
+The SiI9022A is an ultra low-power HDMI transmitter. It supports
+resolutions from standard definition 480i/p and 576i/p all the way
+to high-definition 720p, 1080i, and 1080p, the highest resolution
+supported by HDTVs today. It also supports all PC resolutions up
+to UXGA for netbooks
 
 Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 ---
- .../bindings/display/bridge/sil,sii9022a.txt       |  40 +++
- drivers/gpu/drm/fsl-dcu/Makefile                   |   1 +
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h          |   1 +
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_hdmi.c         | 271 +++++++++++++++++++++
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c          |  10 +
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h       |  11 +
- 6 files changed, 334 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/sil,sii9022a.txt
- create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_hdmi.c
+ drivers/gpu/drm/i2c/Kconfig       |   6 +
+ drivers/gpu/drm/i2c/Makefile      |   3 +
+ drivers/gpu/drm/i2c/sii9022_drv.c | 449 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 458 insertions(+)
+ create mode 100644 drivers/gpu/drm/i2c/sii9022_drv.c
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/sil,sii9022a.txt b/Documentation/devicetree/bindings/display/bridge/sil,sii9022a.txt
+diff --git a/drivers/gpu/drm/i2c/Kconfig b/drivers/gpu/drm/i2c/Kconfig
+index 22c7ed6..8646729 100644
+--- a/drivers/gpu/drm/i2c/Kconfig
++++ b/drivers/gpu/drm/i2c/Kconfig
+@@ -31,4 +31,10 @@ config DRM_I2C_NXP_TDA998X
+ 	help
+ 	  Support for NXP Semiconductors TDA998X HDMI encoders.
+ 
++config DRM_I2C_SII9022
++	tristate "Silicon Image sii9022 TMDS transmitter"
++	help
++	  Support for sii9022 and similar single-link (or dual-link
++	  when used in pairs) TMDS transmitters.
++
+ endmenu
+diff --git a/drivers/gpu/drm/i2c/Makefile b/drivers/gpu/drm/i2c/Makefile
+index 2c72eb5..cf2e8b9 100644
+--- a/drivers/gpu/drm/i2c/Makefile
++++ b/drivers/gpu/drm/i2c/Makefile
+@@ -10,3 +10,6 @@ obj-$(CONFIG_DRM_I2C_SIL164) += sil164.o
+ 
+ tda998x-y := tda998x_drv.o
+ obj-$(CONFIG_DRM_I2C_NXP_TDA998X) += tda998x.o
++
++sii9022-y := sii9022_drv.o
++obj-$(CONFIG_DRM_I2C_SII9022) +=sii9022.o
+diff --git a/drivers/gpu/drm/i2c/sii9022_drv.c b/drivers/gpu/drm/i2c/sii9022_drv.c
 new file mode 100644
-index 0000000..32a726a
+index 0000000..bc49cad
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/sil,sii9022a.txt
-@@ -0,0 +1,40 @@
-+Device-Tree bindings for the SiI902x hdmi transmitter.
-+-----------------------------------------
-+
-+The SiI9022A is an ultra low-power HDMI transmitter. It supports resolutions from
-+standard definition 480i/p and 576i/p all the way to high-definition 720p, 1080i,
-+and 1080p, the highest resolution supported by HDTVs today. It also supports all
-+PC resolutions up to UXGA for netbooks
-+
-+Required properties:
-+- compatible: 	Should be "sil,sii9022a".
-+- reg: 		The I2C address of the device.
-+- interrupts:	Interrupt number to the cpu.
-+
-+Required nodes:
-+
-+The sii9022 has one video ports. Its connection is modelled using the OF
-+graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+- Video port 0 for the HDMI output
-+
-+Example:
-+-------
-+
-+    sii9022: hdmi@39 {
-+            compatible = "sil,sii9022a";
-+            reg = <0x39>;
-+            interrupts = <GIC_SPI 167 IRQ_TYPE_EDGE_RISING>;
-+
-+            ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                            reg = <1>;
-+                            sii9022_out: endpoint {
-+                                    remote-endpoint = <&hdmi_con>;
-+                            };
-+                    };
-+            };
-+    };
-diff --git a/drivers/gpu/drm/fsl-dcu/Makefile b/drivers/gpu/drm/fsl-dcu/Makefile
-index 6ea1523..98cacc2 100644
---- a/drivers/gpu/drm/fsl-dcu/Makefile
-+++ b/drivers/gpu/drm/fsl-dcu/Makefile
-@@ -1,6 +1,7 @@
- fsl-dcu-drm-y := fsl_dcu_drm_drv.o \
- 		 fsl_dcu_drm_kms.o \
- 		 fsl_dcu_drm_rgb.o \
-+		 fsl_dcu_drm_hdmi.o \
- 		 fsl_dcu_drm_plane.o \
- 		 fsl_dcu_drm_crtc.o \
- 		 fsl_dcu_drm_fbdev.o
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
-index 579b9e4..3c85072 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h
-@@ -187,6 +187,7 @@ struct fsl_dcu_drm_device {
- 	struct drm_fbdev_cma *fbdev;
- 	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
-+	struct drm_encoder_slave *slave;
- 	struct fsl_dcu_drm_connector connector;
- 	const struct fsl_dcu_soc_data *soc;
- };
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_hdmi.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_hdmi.c
-new file mode 100644
-index 0000000..0b06060
---- /dev/null
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_hdmi.c
-@@ -0,0 +1,271 @@
++++ b/drivers/gpu/drm/i2c/sii9022_drv.c
+@@ -0,0 +1,449 @@
 +/*
 + * Copyright 2015 Freescale Semiconductor, Inc.
 + *
@@ -136,306 +90,423 @@ index 0000000..0b06060
 +#include <drm/drm_crtc_helper.h>
 +#include <drm/drm_edid.h>
 +
-+#include "fsl_dcu_drm_drv.h"
-+#include "fsl_dcu_drm_output.h"
 +
-+#define to_drm_encoder_slave(e) \
-+	container_of(e, struct drm_encoder_slave, base)
-+#define to_slave_funcs(e)	(to_drm_encoder_slave(e)->slave_funcs)
-+static void fsl_dcu_drm_hdmienc_mode_set(struct drm_encoder *encoder,
-+					 struct drm_display_mode *mode,
-+					 struct drm_display_mode *adjusted_mode)
++#define SII902X_INPUT_BUS_FMT	0x08
++#define SII902X_TPI_AVI_INPUT_FMT	0x09
++#define SII902X_TPI_AVI_OUTPUT_FMT	0x0A
++#define SII902X_SYS_CONTROL	0x1A
++#define SII902X_SYS_CTR_DDC_REQ	BIT(2)
++#define SII902X_SYS_CTR_DDC_BUS_AVAI	(BIT(2) | BIT(1))
++#define SII902X_TPI_FAMILY_DEV_ID	0x1B
++#define SII902X_TPI_DEV_REV_ID	0x1C
++#define SII902X_TPI_REV_LEVEL_ID	0x1D
++#define SII902X_POWER_STATE	0x1E
++#define SII902X_TPI_AUDIO_CFG0	0x24
++#define SII902X_TPI_AUDIO_CFG1	0x25
++#define SII902X_TPI_AUDIO_CFG2	0x26
++#define SII902X_TPI_AUDIO_CFG3	0x27
++#define SII902X_TPI_HDCP_REV	0x30
++#define SII902X_TPI_INT_ENABLE	0x3C
++#define SII902X_TPI_INT_STATUS	0x3D
++#define SII902X_TPI_INT_PLUG_IN	BIT(2)
++#define SII902X_GENERAL_PURPOSE_IO0	0xBC
++#define SII902X_GENERAL_PURPOSE_IO1	0xBD
++#define SII902X_GENERAL_PURPOSE_IO2	0xBE
++#define SII902X_TRANS_MODE_DIFF	0xC7
++
++bool g_enable_hdmi;
++
++struct sii902x_data {
++	struct i2c_client *client;
++	struct delayed_work det_work;
++	struct fb_info *fbi;
++} *sii902x;
++
++#define to_sii902x_data(x) \
++	((struct sii902x_data *)to_encoder_slave(x)->slave_priv)
++
++static struct i2c_client *sii902x_to_i2c(struct sii902x_data *sii902x)
 +{
-+	const struct drm_encoder_slave_funcs *sfuncs = to_slave_funcs(encoder);
++	return sii902x->client;
++}
 +
-+	if (sfuncs->mode_set)
-+		sfuncs->mode_set(encoder, mode, adjusted_mode);
++/* HW access functions */
++static s32 sii902x_write(const struct i2c_client *client,
++			 u8 command, u8 value)
++{
++	return i2c_smbus_write_byte_data(client, command, value);
++}
 +
++static s32 sii902x_read(const struct i2c_client *client, u8 command)
++{
++	int val;
++
++	val = i2c_smbus_read_word_data(client, command);
++
++	return val & 0xff;
++}
++
++static void sii902x_poweron(void)
++{
++	/* Turn on DVI or HDMI */
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL, 0x00);
++}
++
++static void sii902x_poweroff(void)
++{
++	/* disable tmds before changing resolution */
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL, 0x10);
++}
++
++
++static void sii902x_chip_id(struct sii902x_data *sii902x)
++{
++	struct i2c_client *client = sii902x_to_i2c(sii902x);
++	int val;
++
++	/* read device ID */
++	val = sii902x_read(client, SII902X_TPI_FAMILY_DEV_ID);
++	pr_info("Sii902x: read id = 0x%02X", val);
++	val = sii902x_read(client, SII902X_TPI_DEV_REV_ID);
++	pr_info("-0x%02X", val);
++	val = sii902x_read(client, SII902X_TPI_REV_LEVEL_ID);
++	pr_info("-0x%02X", val);
++	val = sii902x_read(client, SII902X_TPI_HDCP_REV);
++	pr_info("-0x%02X\n", val);
++}
++
++static int sii902x_initialize(struct sii902x_data *sii902x)
++{
++	struct i2c_client *client = sii902x_to_i2c(sii902x);
++	int ret, cnt;
++
++	for (cnt = 0; cnt < 5; cnt++) {
++		/* Set 902x in hardware TPI mode on and jump out of D3 state */
++		ret = sii902x_write(client, SII902X_TRANS_MODE_DIFF, 0x00);
++		if (ret < 0)
++			break;
++	}
++	if (ret != 0)
++		dev_err(&client->dev, "cound not find device\n");
++
++	return ret;
++}
++
++static void sii902x_enable_source(struct sii902x_data *sii902x)
++{
++	struct i2c_client *client = sii902x_to_i2c(sii902x);
++	int val;
++
++	sii902x_write(client, SII902X_GENERAL_PURPOSE_IO0, 0x01);
++	sii902x_write(client, SII902X_GENERAL_PURPOSE_IO1, 0x82);
++	val = sii902x_read(client, SII902X_GENERAL_PURPOSE_IO2);
++	val |= 0x1;
++	sii902x_write(client, SII902X_GENERAL_PURPOSE_IO2, val);
++}
++
++static void sii902x_power_up_tx(struct sii902x_data *sii902x)
++{
++	struct i2c_client *client = sii902x_to_i2c(sii902x);
++	int val;
++
++	val = sii902x_read(client, SII902X_POWER_STATE);
++	val &= ~0x3;
++	sii902x_write(client, SII902X_POWER_STATE, val);
++}
++
++static int sii902x_get_edid_preconfig(void)
++{
++	int old, dat, ret = 0, cnt = 100;
++
++	old = sii902x_read(sii902x->client, SII902X_SYS_CONTROL);
++
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL,
++		      old | SII902X_SYS_CTR_DDC_REQ);
++	do {
++		cnt--;
++		msleep(20);
++		dat = sii902x_read(sii902x->client, SII902X_SYS_CONTROL);
++	} while ((!(dat & 0x2)) && cnt);
++
++	if (!cnt) {
++		ret = -1;
++		goto done;
++	}
++
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL,
++		      old | SII902X_SYS_CTR_DDC_BUS_AVAI);
++
++done:
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL, old);
++	return ret;
++}
++
++static int __init enable_hdmi_setup(char *str)
++{
++	g_enable_hdmi = true;
++
++	return 1;
++}
++
++__setup("hdmi", enable_hdmi_setup);
++
++static irqreturn_t sii902x_detect_handler(int irq, void *data)
++{
++	if (g_enable_hdmi)
++		g_enable_hdmi = false;
++
++	return IRQ_HANDLED;
++}
++
++static int sii902x_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
++	int ret, err;
++
++	if (!g_enable_hdmi)
++		return -EPERM;
++
++	if (!i2c_check_functionality(adap, I2C_FUNC_SMBUS_BYTE)) {
++		dev_err(&client->dev, "i2c_check_functionality error\n");
++		return -ENODEV;
++	}
++
++	sii902x = devm_kzalloc(&client->dev, sizeof(*sii902x), GFP_KERNEL);
++	if (!sii902x)
++		return -ENOMEM;
++
++	sii902x->client = client;
++	i2c_set_clientdata(client, sii902x);
++
++	err = sii902x_initialize(sii902x);
++	if (err)
++		return err;
++
++	sii902x_chip_id(sii902x);
++	sii902x_power_up_tx(sii902x);
++	sii902x_enable_source(sii902x);
++
++	if (sii902x_get_edid_preconfig() < 0)
++		dev_warn(&client->dev, "Read edid preconfig failed\n");
++
++	if (client->irq) {
++		ret = devm_request_irq(&client->dev, client->irq,
++				       sii902x_detect_handler, 0,
++				       "SII902x_det", sii902x);
++		if (ret < 0)
++			dev_warn(&client->dev,
++				 "cound not request det irq %d\n",
++				 client->irq);
++		else {
++			/*enable cable hot plug irq*/
++			sii902x_write(client, SII902X_TPI_INT_ENABLE, 0x01);
++		}
++	}
++
++	return 0;
++}
++
++static int sii902x_remove(struct i2c_client *client)
++{
++	sii902x_poweroff();
++	return 0;
++}
++
++/* DRM encoder functions */
++
++static void
++sii902x_encoder_dpms(struct drm_encoder *encoder, int mode)
++{
++	if (mode == DRM_MODE_DPMS_ON)
++		sii902x_poweron();
++	else
++		sii902x_poweroff();
++}
++
++
++static int
++sii902x_encoder_mode_valid(struct drm_encoder *encoder,
++			  struct drm_display_mode *mode)
++{
++	return 0;
++}
++
++static void
++sii902x_encoder_mode_set(struct drm_encoder *encoder,
++			struct drm_display_mode *mode,
++			struct drm_display_mode *adjusted_mode)
++{
++	struct videomode vm;
++	u16 data[4];
++	u32 refresh;
++	u8 *tmp;
++	int i;
++
++	/* Power up */
++	sii902x_power_up_tx(sii902x);
++
++	drm_display_mode_to_videomode(mode, &vm);
++	data[0] = PICOS2KHZ(vm.pixelclock) / 10;
++	data[2] = vm.hsync_len + vm.hback_porch +
++		  vm.hactive + vm.hfront_porch;
++	data[3] = vm.vsync_len + vm.vfront_porch +
++		  vm.vactive + vm.vback_porch;
++	refresh = data[2] * data[3];
++	refresh = (PICOS2KHZ(vm.pixelclock) * 1000) / refresh;
++	data[1] = refresh * 100;
++
++	tmp = (u8 *)data;
++	for (i = 0; i < 8; i++)
++		sii902x_write(sii902x->client, i, tmp[i]);
++
++	/* input bus/pixel: full pixel wide (24bit), rising edge */
++	sii902x_write(sii902x->client, SII902X_INPUT_BUS_FMT, 0x70);
++	/* Set input format to RGB */
++	sii902x_write(sii902x->client, SII902X_TPI_AVI_INPUT_FMT, 0x00);
++	/* set output format to RGB */
++	sii902x_write(sii902x->client, SII902X_TPI_AVI_OUTPUT_FMT, 0x00);
++	/* audio setup */
++	sii902x_write(sii902x->client, SII902X_TPI_AUDIO_CFG1, 0x00);
++	sii902x_write(sii902x->client, SII902X_TPI_AUDIO_CFG2, 0x40);
++	sii902x_write(sii902x->client, SII902X_TPI_AUDIO_CFG3, 0x00);
++}
++
++struct edid *sii902x_drm_get_edid(struct drm_connector *connector,
++				  struct i2c_adapter *adapter)
++{
++	int old, dat, cnt = 100;
++	struct edid *edid;
++
++	old = sii902x_read(sii902x->client, SII902X_SYS_CONTROL);
++
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL,
++		      old | SII902X_SYS_CTR_DDC_REQ);
++	do {
++		cnt--;
++		msleep(20);
++		dat = sii902x_read(sii902x->client, SII902X_SYS_CONTROL);
++	} while ((!(dat & 0x2)) && cnt);
++
++	if (!cnt) {
++		edid = NULL;
++		goto done;
++	}
++
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL,
++		      old | SII902X_SYS_CTR_DDC_BUS_AVAI);
++
++	/* edid reading */
++	edid = drm_get_edid(connector, adapter);
++
++	cnt = 100;
++	do {
++		cnt--;
++		sii902x_write(sii902x->client, SII902X_SYS_CONTROL,
++			      old & ~SII902X_SYS_CTR_DDC_BUS_AVAI);
++		msleep(20);
++		dat = sii902x_read(sii902x->client, SII902X_SYS_CONTROL);
++	} while ((dat & 0x6) && cnt);
++
++	if (!cnt)
++		edid = NULL;
++
++done:
++	sii902x_write(sii902x->client, SII902X_SYS_CONTROL, old);
++	return edid;
 +}
 +
 +static int
-+fsl_dcu_drm_hdmienc_atomic_check(struct drm_encoder *encoder,
-+				 struct drm_crtc_state *crtc_state,
-+				 struct drm_connector_state *conn_state)
-+{
-+	return 0;
-+}
-+
-+static void fsl_dcu_drm_hdmienc_disable(struct drm_encoder *encoder)
-+{
-+	const struct drm_encoder_slave_funcs *sfuncs = to_slave_funcs(encoder);
-+
-+	if (sfuncs->dpms)
-+		sfuncs->dpms(encoder, DRM_MODE_DPMS_OFF);
-+}
-+
-+static void fsl_dcu_drm_hdmienc_enable(struct drm_encoder *encoder)
-+{
-+	const struct drm_encoder_slave_funcs *sfuncs = to_slave_funcs(encoder);
-+
-+	if (sfuncs->dpms)
-+		sfuncs->dpms(encoder, DRM_MODE_DPMS_ON);
-+}
-+
-+static const struct drm_encoder_helper_funcs encoder_helper_funcs = {
-+	.atomic_check = fsl_dcu_drm_hdmienc_atomic_check,
-+	.disable = fsl_dcu_drm_hdmienc_disable,
-+	.enable = fsl_dcu_drm_hdmienc_enable,
-+	.mode_set = fsl_dcu_drm_hdmienc_mode_set,
-+};
-+
-+static void fsl_dcu_drm_hdmienc_destroy(struct drm_encoder *encoder)
-+{
-+	drm_encoder_cleanup(encoder);
-+}
-+
-+static const struct drm_encoder_funcs encoder_funcs = {
-+	.destroy = fsl_dcu_drm_hdmienc_destroy,
-+};
-+int fsl_dcu_drm_hdmienc_create(struct fsl_dcu_drm_device *fsl_dev,
-+			       struct drm_crtc *crtc)
-+{
-+	struct drm_i2c_encoder_driver *driver;
-+	struct drm_encoder_slave *enc_slave;
-+	struct drm_encoder *encoder;
-+	struct i2c_client *i2c_slave;
-+	int ret;
-+
-+
-+	struct device_node *np = of_find_compatible_node(NULL,
-+					NULL, "sil,sii9022a");
-+	if (np == NULL)
-+		return -1;
-+
-+	/* Locate the slave I2C device and driver. */
-+	i2c_slave = of_find_i2c_device_by_node(np);
-+	if (!i2c_slave || !i2c_get_clientdata(i2c_slave))
-+		return -EPROBE_DEFER;
-+
-+	enc_slave = devm_kzalloc(fsl_dev->dev, sizeof(*enc_slave), GFP_KERNEL);
-+	if (!enc_slave)
-+		return -1;
-+
-+	/* Initialize the slave encoder. */
-+	driver = to_drm_i2c_encoder_driver(
-+					to_i2c_driver(i2c_slave->dev.driver));
-+	ret = driver->encoder_init(i2c_slave, fsl_dev->drm, enc_slave);
-+	if (ret < 0)
-+		return -1;
-+
-+	fsl_dev->slave = enc_slave;
-+	encoder = &enc_slave->base;
-+
-+
-+	encoder->possible_crtcs = 1;
-+	ret = drm_encoder_init(fsl_dev->drm, encoder, &encoder_funcs,
-+			       DRM_MODE_ENCODER_TMDS, NULL);
-+	if (ret < 0)
-+		return ret;
-+
-+	drm_encoder_helper_add(encoder, &encoder_helper_funcs);
-+	encoder->crtc = crtc;
-+
-+	return 0;
-+}
-+
-+#define to_fsl_dcu_drm_hdmicon(connector) \
-+	container_of(connector, struct fsl_dcu_drm_hdmicon, connector)
-+
-+static struct drm_encoder *fsl_dcu_drm_hdmi_find_encoder(struct drm_device *dev)
-+{
-+	struct drm_encoder *encoder;
-+
-+	list_for_each_entry(encoder, &dev->mode_config.encoder_list, head) {
-+		if (encoder->encoder_type == DRM_MODE_ENCODER_TMDS)
-+			return encoder;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void fsl_dcu_drm_hdmicon_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_unregister(connector);
-+	drm_connector_cleanup(connector);
-+}
-+
-+static enum drm_connector_status
-+fsl_dcu_drm_hdmicon_detect(struct drm_connector *connector, bool force)
-+{
-+	struct fsl_dcu_drm_hdmicon *hdmicon = to_fsl_dcu_drm_hdmicon(connector);
-+
-+	if (hdmicon->status == connector_status_disconnected)
-+		return connector_status_disconnected;
-+	else
-+		return connector_status_connected;
-+}
-+
-+static const struct drm_connector_funcs fsl_dcu_drm_connector_funcs = {
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+	.destroy = fsl_dcu_drm_hdmicon_destroy,
-+	.detect = fsl_dcu_drm_hdmicon_detect,
-+	.dpms = drm_atomic_helper_connector_dpms,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.reset = drm_atomic_helper_connector_reset,
-+};
-+
-+static struct drm_encoder *
-+fsl_dcu_drm_hdmicon_best_encoder(struct drm_connector *connector)
++sii902x_encoder_get_modes(struct drm_encoder *encoder,
++			 struct drm_connector *connector)
 +{
 +	struct drm_device *dev = connector->dev;
-+
-+	return fsl_dcu_drm_hdmi_find_encoder(dev);
-+}
-+
-+
-+static int fsl_dcu_drm_hdmicon_get_modes(struct drm_connector *connector)
-+{
-+	struct fsl_dcu_drm_hdmicon *con = to_fsl_dcu_drm_hdmicon(connector);
-+	const struct drm_encoder_slave_funcs *sfuncs = con->slave->slave_funcs;
-+
-+	if (sfuncs->get_modes == NULL)
-+		return 0;
-+
-+	return sfuncs->get_modes(NULL, connector);
-+}
-+
-+static int fsl_dcu_drm_hdmicon_mode_valid(struct drm_connector *connector,
-+					  struct drm_display_mode *mode)
-+{
-+	if (mode->hdisplay > 1024)
-+		return MODE_VIRTUAL_X;
-+	else if	(mode->vdisplay > 768)
-+		return MODE_VIRTUAL_Y;
-+
-+	return MODE_OK;
-+}
-+
-+static const struct drm_connector_helper_funcs connector_helper_funcs = {
-+	.best_encoder = fsl_dcu_drm_hdmicon_best_encoder,
-+	.get_modes = fsl_dcu_drm_hdmicon_get_modes,
-+	.mode_valid = fsl_dcu_drm_hdmicon_mode_valid,
-+};
-+
-+int fsl_dcu_drm_hdmicon_create(struct fsl_dcu_drm_device *fsl_dev)
-+{
-+	struct drm_device *dev = fsl_dev->drm;
-+	struct fsl_dcu_drm_hdmicon *hdmicon;
-+	struct drm_connector *connector;
-+	struct drm_encoder *encoder;
++	struct i2c_adapter *adap = to_i2c_adapter(sii902x->client->dev.parent);
++	struct edid *edid;
++	struct drm_display_mode *mode;
 +	int ret;
 +
-+	hdmicon = devm_kzalloc(fsl_dev->dev,
-+			       sizeof(struct fsl_dcu_drm_hdmicon), GFP_KERNEL);
-+	if (!hdmicon)
-+		return -ENOMEM;
++	edid = sii902x_drm_get_edid(connector, adap);
++	if (edid) {
++		drm_mode_connector_update_edid_property(connector, edid);
++		ret = drm_add_edid_modes(connector, edid);
++		kfree(edid);
++	} else {
++		dev_dbg(dev->dev, "failed to get edid\n");
++	}
 +
-+	hdmicon->slave = fsl_dev->slave;
-+	connector = &hdmicon->connector;
++	list_for_each_entry(mode, &connector->probed_modes, head) {
++		if (mode->hdisplay == 1024 || mode->vdisplay == 768)
++			mode->type |= DRM_MODE_TYPE_PREFERRED;
++		else
++			mode->type &= ~DRM_MODE_TYPE_PREFERRED;
++	}
 +
-+	connector->display_info.width_mm = 0;
-+	connector->display_info.height_mm = 0;
-+	connector->polled = DRM_CONNECTOR_POLL_HPD;
-+
-+	ret = drm_connector_init(fsl_dev->drm, connector,
-+				 &fsl_dcu_drm_connector_funcs,
-+				 DRM_MODE_CONNECTOR_HDMIA);
-+	if (ret < 0)
-+		return ret;
-+
-+	connector->dpms = DRM_MODE_DPMS_OFF;
-+	drm_connector_helper_add(connector, &connector_helper_funcs);
-+	ret = drm_connector_register(connector);
-+	if (ret < 0)
-+		goto err_cleanup;
-+
-+	encoder = fsl_dcu_drm_hdmi_find_encoder(dev);
-+	if (!encoder)
-+		goto err_cleanup;
-+	ret = drm_mode_connector_attach_encoder(connector, encoder);
-+	if (ret < 0)
-+		goto err_sysfs;
-+
-+	connector->encoder = encoder;
-+
-+	drm_object_property_set_value
-+		(&connector->base, fsl_dev->drm->mode_config.dpms_property,
-+		DRM_MODE_DPMS_OFF);
-+
-+	return 0;
-+
-+err_sysfs:
-+	drm_connector_unregister(connector);
-+err_cleanup:
-+	drm_connector_cleanup(connector);
 +	return ret;
 +}
++
++static struct drm_encoder_slave_funcs sii902x_encoder_funcs = {
++	.dpms = sii902x_encoder_dpms,
++	.mode_valid = sii902x_encoder_mode_valid,
++	.mode_set = sii902x_encoder_mode_set,
++	.get_modes = sii902x_encoder_get_modes,
++};
++static int
++sii902x_encoder_init(struct i2c_client *client,
++		    struct drm_device *dev,
++		    struct drm_encoder_slave *encoder)
++{
++
++	encoder->slave_funcs = &sii902x_encoder_funcs;
++
++	return 0;
++}
++static const struct i2c_device_id sii902x_id[] = {
++	{ "sii902x", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, sii902x_id);
++
++static const struct of_device_id sii902x_dt_ids[] = {
++	{ .compatible = "sil,sii9022a", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, sii902x_dt_ids);
++
++static struct drm_i2c_encoder_driver sii902x_driver = {
++	.i2c_driver = {
++		.probe = sii902x_probe,
++		.remove = sii902x_remove,
++		.driver = {
++			.name = "sii902x",
++			.owner = THIS_MODULE,
++			.of_match_table = sii902x_dt_ids,
++		},
++		.id_table = sii902x_id,
++	},
++	.encoder_init = sii902x_encoder_init,
++};
++
++/* Module initialization */
++
++static int __init sii902x_init(void)
++{
++	return drm_i2c_encoder_register(THIS_MODULE, &sii902x_driver);
++}
++
++static void __exit sii902x_exit(void)
++{
++	drm_i2c_encoder_unregister(&sii902x_driver);
++}
++
 +
 +MODULE_AUTHOR("Freescale Semiconductor, Inc.");
 +MODULE_DESCRIPTION("SII902x DVI/HDMI driver");
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c
-index 0ef5959..f42ef5f 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_kms.c
-@@ -17,10 +17,18 @@
- #include "fsl_dcu_drm_crtc.h"
- #include "fsl_dcu_drm_drv.h"
- 
-+static void fsl_dcu_drm_output_poll_changed(struct drm_device *dev)
-+{
-+	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
 +
-+	drm_fbdev_cma_hotplug_event(fsl_dev->fbdev);
-+}
 +
- static const struct drm_mode_config_funcs fsl_dcu_drm_mode_config_funcs = {
- 	.atomic_check = drm_atomic_helper_check,
- 	.atomic_commit = drm_atomic_helper_commit,
- 	.fb_create = drm_fb_cma_create,
-+	.output_poll_changed = fsl_dcu_drm_output_poll_changed,
- };
- 
- int fsl_dcu_drm_modeset_init(struct fsl_dcu_drm_device *fsl_dev)
-@@ -36,7 +44,9 @@ int fsl_dcu_drm_modeset_init(struct fsl_dcu_drm_device *fsl_dev)
- 	drm_kms_helper_poll_init(fsl_dev->drm);
- 	fsl_dcu_drm_crtc_create(fsl_dev);
- 	fsl_dcu_drm_encoder_create(fsl_dev, &fsl_dev->crtc);
-+	fsl_dcu_drm_hdmienc_create(fsl_dev, &fsl_dev->crtc);
- 	fsl_dcu_drm_connector_create(fsl_dev, &fsl_dev->encoder);
-+	fsl_dcu_drm_hdmicon_create(fsl_dev);
- 	drm_mode_config_reset(fsl_dev->drm);
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h
-index 7093109..fa0d7ed 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_output.h
-@@ -18,6 +18,13 @@ struct fsl_dcu_drm_connector {
- 	struct drm_panel *panel;
- };
- 
-+struct fsl_dcu_drm_hdmicon {
-+	struct drm_connector connector;
-+	struct drm_encoder_slave *slave;
-+	struct i2c_client *client;
-+	enum drm_connector_status status;
-+};
-+
- static inline struct fsl_dcu_drm_connector *
- to_fsl_dcu_connector(struct drm_connector *con)
- {
-@@ -29,5 +36,9 @@ int fsl_dcu_drm_connector_create(struct fsl_dcu_drm_device *fsl_dev,
- 				 struct drm_encoder *encoder);
- int fsl_dcu_drm_encoder_create(struct fsl_dcu_drm_device *fsl_dev,
- 			       struct drm_crtc *crtc);
-+int fsl_dcu_drm_hdmicon_create(struct fsl_dcu_drm_device *fsl_dev);
-+int fsl_dcu_drm_hdmienc_create(struct fsl_dcu_drm_device *fsl_dev,
-+			       struct drm_crtc *crtc);
-+
- 
- #endif /* __FSL_DCU_DRM_CONNECTOR_H__ */
++module_init(sii902x_init);
++module_exit(sii902x_exit);
 -- 
 2.1.0.27.g96db324
 
