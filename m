@@ -1,61 +1,93 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/5 RFC] mmc: sdhci-iproc: add bcm2835 support
-Date: Mon, 25 Jan 2016 21:34:04 -0700
-Message-ID: <56A6F73C.3030209@wwwdotorg.org>
-References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
- <1453042744-16196-5-git-send-email-stefan.wahren@i2se.com>
+From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/4] drm/fsl-dcu: Cleanup vblank interrupt mask and status setting code
+Date: Tue, 26 Jan 2016 12:00:30 +0800
+Message-ID: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453042744-16196-5-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2016 07:59 AM, Stefan Wahren wrote:
-> Scott Branden from Broadcom said that the BCM2835 eMMC IP core is
-> very similar to IPROC and share most of the quirks. So use this driver
-> instead of separate one.
-> 
-> The sdhci-iproc contains a better workaround for the clock domain
-> crossing problem which doesn't need any delays. This results in a
-> better write performance.
-> 
-> Btw we get the rid of the SDHCI_CAPABILITIES hack in the sdhci_readl
-> function.
+From: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+Switch update interrupt mask bit with regmap_update_bits, and clear
+interrupt status by writing 1 to relevant bit before setting mask in
+fsl_dcu_drm_irq_init function.
 
-> +static const struct sdhci_pltfm_data sdhci_bcm2835_pltfm_data = {
-> +	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
-> +		| SDHCI_QUIRK_MISSING_CAPS,
-> +	.ops = &sdhci_iproc_ops,
-> +};
-> +
-> +static const struct sdhci_iproc_data bcm2835_data = {
-> +	.pdata = &sdhci_bcm2835_pltfm_data,
-> +	.caps = SDHCI_CAN_VDD_330,
-> +	.caps1 = 0x00000000,
-> +};
+Signed-off-by: JianWei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+---
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-> @@ -199,8 +213,10 @@ static int sdhci_iproc_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+index fca97d3..cbef47c 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+@@ -38,21 +38,17 @@ static const struct regmap_config fsl_dcu_regmap_config = {
+ static int fsl_dcu_drm_irq_init(struct drm_device *dev)
+ {
+ 	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
+-	unsigned int value;
+ 	int ret;
+ 
+ 	ret = drm_irq_install(dev, fsl_dev->irq);
+ 	if (ret < 0)
+ 		dev_err(dev->dev, "failed to install IRQ handler\n");
+ 
+-	ret = regmap_write(fsl_dev->regmap, DCU_INT_STATUS, 0);
++	ret = regmap_write(fsl_dev->regmap, DCU_INT_STATUS, 0xffffffff);
+ 	if (ret)
+ 		dev_err(dev->dev, "set DCU_INT_STATUS failed\n");
+-	ret = regmap_read(fsl_dev->regmap, DCU_INT_MASK, &value);
+-	if (ret)
+-		dev_err(dev->dev, "read DCU_INT_MASK failed\n");
+-	value &= DCU_INT_MASK_VBLANK;
+-	ret = regmap_write(fsl_dev->regmap, DCU_INT_MASK, value);
++	ret = regmap_update_bits(fsl_dev->regmap, DCU_INT_MASK,
++				 DCU_INT_MASK_VBLANK, ~DCU_INT_MASK_VBLANK);
+ 	if (ret)
+ 		dev_err(dev->dev, "set DCU_INT_MASK failed\n");
+ 	ret = regmap_write(fsl_dev->regmap, DCU_UPDATE_MODE,
+@@ -143,14 +139,10 @@ static irqreturn_t fsl_dcu_drm_irq(int irq, void *arg)
+ static int fsl_dcu_drm_enable_vblank(struct drm_device *dev, unsigned int pipe)
+ {
+ 	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
+-	unsigned int value;
+ 	int ret;
+ 
+-	ret = regmap_read(fsl_dev->regmap, DCU_INT_MASK, &value);
+-	if (ret)
+-		dev_err(dev->dev, "read DCU_INT_MASK failed\n");
+-	value &= ~DCU_INT_MASK_VBLANK;
+-	ret = regmap_write(fsl_dev->regmap, DCU_INT_MASK, value);
++	ret = regmap_update_bits(fsl_dev->regmap, DCU_INT_MASK,
++				 DCU_INT_MASK_VBLANK, ~DCU_INT_MASK_VBLANK);
+ 	if (ret)
+ 		dev_err(dev->dev, "set DCU_INT_MASK failed\n");
+ 	return 0;
+@@ -160,14 +152,10 @@ static void fsl_dcu_drm_disable_vblank(struct drm_device *dev,
+ 				       unsigned int pipe)
+ {
+ 	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
+-	unsigned int value;
+ 	int ret;
+ 
+-	ret = regmap_read(fsl_dev->regmap, DCU_INT_MASK, &value);
+-	if (ret)
+-		dev_err(dev->dev, "read DCU_INT_MASK failed\n");
+-	value |= DCU_INT_MASK_VBLANK;
+-	ret = regmap_write(fsl_dev->regmap, DCU_INT_MASK, value);
++	ret = regmap_update_bits(fsl_dev->regmap, DCU_INT_MASK,
++				 DCU_INT_MASK_VBLANK, DCU_INT_MASK_VBLANK);
+ 	if (ret)
+ 		dev_err(dev->dev, "set DCU_INT_MASK failed\n");
+ }
+-- 
+2.1.0.27.g96db324
 
-> -	/* Enable EMMC 1/8V DDR capable */
-> -	host->mmc->caps |= MMC_CAP_1_8V_DDR;
-> +	if (of_device_is_compatible(np, "brcm,sdhci-iproc-cygnus")) {
-> +		/* Enable EMMC 1/8V DDR capable */
-> +		host->mmc->caps |= MMC_CAP_1_8V_DDR;
-> +	}
-
-Rather that placing device-specific of_device_is_compatible() throughout
-the driver, I think it'd be better to key off a field in bcm2835_data or
-sdhci_bcm2835_pltfm_data. That way, if the driver starts supporting
-additional devices that want this MMC_CAP_1_8V_DDR, you can simply set
-that up in the relevant data structure, rather than adding a mess of
-of_device_is_compatible("a") || of_device_is_compatible("b") || ... to
-the code.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
