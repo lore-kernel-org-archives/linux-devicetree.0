@@ -1,78 +1,64 @@
-From: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 6/7] dts/ls2080a: update the DTS for QSPI and DSPI support
-Date: Tue, 26 Jan 2016 15:24:00 +0800
-Message-ID: <1453793041-35868-6-git-send-email-yao.yuan@freescale.com>
+From: Yuan Yao <yao.yuan@freescale.com>
+Subject: [PATCH v4 5/7] Documentation: fsl-quadspi: Add fsl,
+ ls2080a-qspi compatible string
+Date: Tue, 26 Jan 2016 15:23:59 +0800
+Message-ID: <1453793041-35868-5-git-send-email-yao.yuan@freescale.com>
 References: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453793041-35868-1-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com, han.xu@freescale.com
+Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yao.yuan@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+new compatible string: "fsl,ls2080a-qspi".
+
+Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 Changed in v4:
 No changes.
 
 Changed in v3:
-No changes.
+Add the modifier for new compatible string like:
+"fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi"
 
 Changed in v2:
-Update my email to <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Update my email to <yao.yuan@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 9 ++++++++-
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 4 ++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-index 4cb996d..e8801fa 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-@@ -178,7 +178,14 @@
- 
- &qspi {
- 	status = "okay";
--	qflash0: s25fl008k {
-+	flash0: s25fl256s1@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "st,m25p80";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+	flash2: s25fl256s1@2 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "st,m25p80";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 2b23d03..65e612a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -318,7 +318,7 @@
- 
- 		dspi: dspi@2100000 {
- 			status = "disabled";
--			compatible = "fsl,vf610-dspi";
-+			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x2100000 0x0 0x10000>;
-@@ -444,7 +444,7 @@
- 
- 		qspi: quadspi@20c0000 {
- 			status = "disabled";
--			compatible = "fsl,vf610-qspi";
-+			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x20c0000 0x0 0x10000>,
+diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+index 00c587b..0df2f3a 100644
+--- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+@@ -3,7 +3,9 @@
+ Required properties:
+   - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+ 		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+-		 "fsl,ls1021-qspi"
++		 "fsl,ls1021a-qspi"
++		 or
++		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi"
+   - reg : the first contains the register location and length,
+           the second contains the memory mapping address and length
+   - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
 -- 
 2.1.0.27.g96db324
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
