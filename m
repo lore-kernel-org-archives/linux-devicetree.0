@@ -1,333 +1,160 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RESEND][PATCH 2/2] devicetree: Add DTS file to support the Nexus7 2013 (flo) device.
-Date: Mon, 25 Jan 2016 17:37:51 -0800
-Message-ID: <1453772271-15339-2-git-send-email-john.stultz@linaro.org>
-References: <1453772271-15339-1-git-send-email-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453772271-15339-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v7 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Tue, 26 Jan 2016 01:46:57 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63F9777@penmbx01>
+References: <1453445087-2791-1-git-send-email-wenyou.yang@atmel.com>
+ <1453445087-2791-2-git-send-email-wenyou.yang@atmel.com>
+ <20160125124938.GL3368@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160125124938.GL3368@x1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a dts file to support the Nexus7 2013
-device. Its based off of the qcom-apq8064-ifc6410.dts
-which is similar hardware.
-
-Also includes some comments and context folded in
-from Vinay Simha BN <simhavcs@gmail.com>
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Vinay Simha BN <simhavcs@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 276 +++++++++++++++++++++
- 2 files changed, 277 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a4a6d70..5b16715 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -524,6 +524,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-cm-qs600.dtb \
- 	qcom-apq8064-ifc6410.dtb \
- 	qcom-apq8064-sony-xperia-yuga.dtb \
-+	qcom-apq8064-asus-nexus7-flo.dts \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-apq8084-ifc6540.dtb \
- 	qcom-apq8084-mtp.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-new file mode 100644
-index 0000000..c535b3f
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-@@ -0,0 +1,276 @@
-+#include "qcom-apq8064-v2.0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+/ {
-+	model = "Asus Nexus7(flo)";
-+	compatible = "asus,nexus7-flo", "qcom,apq8064";
-+
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+		serial1 = &gsbi6_serial;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	ext_3p3v: regulator-fixed@1 {
-+		compatible = "regulator-fixed";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-name = "ext_3p3v";
-+		regulator-type = "voltage";
-+		startup-delay-us = <0>;
-+		gpio = <&tlmm_pinmux 77 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		power {
-+			label = "Power";
-+			gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			gpio-key,wakeup;
-+		};
-+		volume_up {
-+			label = "Volume Up";
-+			gpios = <&pm8921_gpio 4 GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+		volume_down {
-+			label = "Volume Down";
-+			gpios = <&pm8921_gpio 38 GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+	};
-+
-+	soc {
-+		rpm@108000 {
-+			regulators {
-+				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+				vin_lvs1_3_6-supply = <&pm8921_s4>;
-+				vin_lvs4_5_7-supply = <&pm8921_s4>;
-+
-+
-+				vdd_l24-supply = <&pm8921_s1>;
-+				vdd_l25-supply = <&pm8921_s1>;
-+				vin_lvs2-supply = <&pm8921_s1>;
-+
-+				vdd_l26-supply = <&pm8921_s7>;
-+				vdd_l27-supply = <&pm8921_s7>;
-+				vdd_l28-supply = <&pm8921_s7>;
-+
-+				vdd_ncp-supply = <&pm8921_l6>;
-+
-+				/* Buck SMPS */
-+				s1 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1225000>;
-+					regulator-max-microvolt = <1225000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm otg HSUSB_VDDCX */
-+				s3 {
-+					regulator-min-microvolt = <500000>;
-+					regulator-max-microvolt = <1150000>;
-+					qcom,switch-mode-frequency = <4800000>;
-+				};
-+
-+				/*
-+				 * msm_sdcc.1-sdc-vdd_io
-+				 * tabla2x-slim-CDC_VDDA_RX
-+				 * tabla2x-slim-CDC_VDDA_TX
-+				 * tabla2x-slim-CDC_VDD_CP
-+				 * tabla2x-slim-VDDIO_CDC
-+				 */
-+				s4 {
-+					regulator-min-microvolt	= <1800000>;
-+					regulator-max-microvolt	= <1800000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					regulator-always-on;
-+				};
-+
-+				s7 {
-+					regulator-min-microvolt = <1300000>;
-+					regulator-max-microvolt = <1300000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+				};
-+
-+				/* mipi_dsi.1-dsi1_pll_vdda */
-+				l2 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				/* msm_otg-HSUSB_3p3 */
-+				l3 {
-+					regulator-min-microvolt = <3075000>;
-+					regulator-max-microvolt = <3075000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm_otg-HSUSB_1p8 */
-+				l4 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm_sdcc.1-sdc_vdd */
-+				l5 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+					regulator-always-on;
-+					bias-pull-down;
-+				};
-+
-+				l6 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+				};
-+
-+				/* mipi_dsi.1-dsi1_avdd */
-+				l11 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					bias-pull-down;
-+				};
-+
-+				/* pwm_power for backlight */
-+				l17 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3600000>;
-+					bias-pull-down;
-+				};
-+
-+				/* camera, qdsp6 */
-+				l23 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				/*
-+				 * tabla2x-slim-CDC_VDDA_A_1P2V
-+				 * tabla2x-slim-VDDD_CDC_D
-+				 */
-+				l25 {
-+					regulator-min-microvolt = <1250000>;
-+					regulator-max-microvolt = <1250000>;
-+					bias-pull-down;
-+				};
-+
-+				lvs1 {
-+					bias-pull-down;
-+				};
-+
-+				lvs4 {
-+					bias-pull-down;
-+				};
-+
-+				lvs5 {
-+					bias-pull-down;
-+				};
-+
-+				lvs6 {
-+					bias-pull-down;
-+				};
-+				/*
-+				 * mipi_dsi.1-dsi1_vddio
-+				 * pil_riva-pll_vdd
-+				 */
-+				lvs7 {
-+					bias-pull-down;
-+				};
-+			};
-+		};
-+
-+		gsbi@16200000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			i2c@16280000 {
-+				status = "okay";
-+				clock-frequency = <200000>;
-+				pinctrl-0 = <&i2c3_pins>;
-+				pinctrl-names = "default";
-+
-+				trackpad@10 {
-+					compatible = "elan,ekth3500";
-+					reg = <0x10>;
-+					interrupt-parent = <&tlmm_pinmux>;
-+					interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-+				};
-+			};
-+		};
-+
-+
-+		gsbi@12440000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+
-+			i2c@12460000 {
-+				status = "okay";
-+				clock-frequency = <200000>;
-+				pinctrl-0 = <&i2c1_pins>;
-+				pinctrl-names = "default";
-+
-+				eeprom@52 {
-+					compatible = "atmel,24c128";
-+					reg = <0x52>;
-+					pagesize = <32>;
-+				};
-+			};
-+		};
-+
-+		gsbi@16500000 {
-+			status = "ok";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+
-+			serial@16540000 {
-+				status = "ok";
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&gsbi6_uart_4pins>;
-+			};
-+		};
-+
-+		gsbi@16600000 {
-+			status = "ok";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+			serial@16640000 {
-+				status = "ok";
-+			};
-+		};
-+
-+		/* OTG */
-+		phy@12500000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l4>;
-+		};
-+
-+		gadget@12500000 {
-+			status = "okay";
-+		};
-+
-+		/* OTG */
-+		usb@12500000 {
-+			status = "okay";
-+		};
-+
-+		amba {
-+			/* eMMC */
-+			sdcc@12400000 {
-+				status = "okay";
-+				vmmc-supply = <&pm8921_l5>;
-+				vqmmc-supply = <&pm8921_s4>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+SGkgTGVlLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lg0KDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVlIEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFy
+by5vcmddDQo+IFNlbnQ6IDIwMTblubQx5pyIMjXml6UgMjA6NTANCj4gVG86IFlhbmcsIFdlbnlv
+dSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT47DQo+IE1hcmsgUnV0bGFu
+ZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwNCj4gPGlqYytkZXZpY2V0cmVl
+QGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBKYXZp
+ZXINCj4gTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBkb3doaWxlMC5vcmc+OyBLcnp5c3p0b2Yg
+S296bG93c2tpDQo+IDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47IFBldGVyIEtvcnNnYWFyZCA8
+amFjbWV0QGdtYWlsLmNvbT47IEZlcnJlLA0KPiBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVs
+LmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2NyAxLzJdIG1mZDogYWN0ODk0NWE6IGFkZCBBY3RpdmUtc2VtaSBBQ1Q4
+OTQ1QSBQTUlDDQo+IE1GRCBkcml2ZXINCj4gDQo+IE9uIEZyaSwgMjIgSmFuIDIwMTYsIFdlbnlv
+dSBZYW5nIHdyb3RlOg0KPiANCj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFj
+dGl2ZS1zZW1pIEFDVDg5NDVBIFBNSUMuDQo+ID4gSXQgaXMgYSBNdWx0aSBGdW5jdGlvbiBEZXZp
+Y2Ugd2l0aCB0aGUgZm9sbG93aW5nIHN1YmRldmljZXM6DQo+ID4gIC0gUmVndWxhdG9yDQo+ID4g
+IC0gQ2hhcmdlcg0KPiA+DQo+ID4gSXQgaXMgaW50ZXJmYWNlZCB0byB0aGUgaG9zdCBjb250cm9s
+bGVyIHVzaW5nIEkyQyBpbnRlcmZhY2UsIEFDVDg5NDVBDQo+ID4gaXMgYSBjaGlsZCBkZXZpY2Ug
+b2YgdGhlIEkyQy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3Uu
+eWFuZ0BhdG1lbC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGsu
+a296bG93c2tpQHNhbXN1bmcuY29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2NzoN
+Cj4gPiAgLSByZW1vdmUgc3RydWN0IGFjdDg5NDVhX2RldiB0byAuYyBmaWxlLg0KPiA+ICAtIHJl
+bW92ZSB1bnVzZWQgLmggZmlsZS4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjY6DQo+ID4gIC0gY2hh
+bmdlIE1GRF9BQ1Q4OTQ1QSB0eXBlIGZyb20gYm9vbCB0byB0cmlzdGF0ZS4NCj4gPiAgLSByZXZl
+cnQgZGVwZW5kcyBvbiB0byAnSTJDJy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjU6DQo+ID4gIC0g
+Y2hhbmdlIGRlcGVuZHMgb24gdG8gJ0kyQz15Jy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+
+ID4gIC0gYWRkIGEgc3BhY2UgYmVmb3JlIC5jb21wYXRpYmxlLg0KPiA+ICAtIGNvbGxlY3QgUmV2
+aWV3ZWQtYnkgZnJvbSBLcnp5c3p0b2YgS296bG93c2tpLg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2
+MzogTm9uZQ0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gIC0gYWRkIG1vcmUgaGVscCBpbmZvcm1h
+dGlvbiBpbiBLY29uZmlnLg0KPiA+ICAtIHVwZGF0ZSB0aGUgZmlsZSBoZWFkZXIgd2l0aCBzaG9y
+dCB2ZXJzaW9uIGxpY2Vuc2UgYW5kIGF1dGhvciBsaW5lLg0KPiA+ICAtIHJlbW92ZSB1bnVzZWQg
+c3RydWN0dXJlIG1lbWJlcnMgKGRldiwgaTJjX2NsaWVudCkgb2Ygc3R1Y3QgYWN0ODk0NWFfZGV2
+Lg0KPiA+ICAtIHVzZSBkZWZpbmUgIlBMQVRGT1JNX0RFVklEX05PTkUiIGZvciBtZmRfYWRkX2Rl
+dmljZXMoKSwgaW5zdGVhZCBvZiAnLTEnLg0KPiA+ICAtIHVzZSBtb3JlIGV4cGxpY2l0IGluZm8g
+dG8gaW5kaWNhdGUgdGhlIGZhaWx1cmUgdG8gYWRkIHN1YiBkZXZpY2VzLg0KPiA+ICAtIHJlbW92
+ZSB0aGUgdW5uZWNlc3NhcnkgcHJpbnQgb3V0Lg0KPiA+ICAtIHN1YnN0aXR1dGUgTU9EVUxFX0xJ
+Q0VOU0UoIkdQTCIpIGZvciBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIikuDQo+ID4NCj4gPiAgZHJp
+dmVycy9tZmQvS2NvbmZpZyAgICB8ICAgMTEgKysrKysNCj4gPiAgZHJpdmVycy9tZmQvTWFrZWZp
+bGUgICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL21mZC9hY3Q4OTQ1YS5jIHwgIDExMg0KPiA+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZp
+bGVzIGNoYW5nZWQsIDEyNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL21mZC9hY3Q4OTQ1YS5jDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQv
+S2NvbmZpZyBiL2RyaXZlcnMvbWZkL0tjb25maWcgaW5kZXgNCj4gPiA5Y2E2NmRlLi41MDM4ZTc4
+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJz
+L21mZC9LY29uZmlnDQo+ID4gQEAgLTE4LDYgKzE4LDE3IEBAIGNvbmZpZyBNRkRfQ1M1NTM1DQo+
+ID4gIAkgIFRoaXMgaXMgdGhlIGNvcmUgZHJpdmVyIGZvciBDUzU1MzUvQ1M1NTM2IE1GRCBmdW5j
+dGlvbnMuICBUaGlzIGlzDQo+ID4gICAgICAgICAgICBuZWNlc3NhcnkgZm9yIHVzaW5nIHRoZSBi
+b2FyZCdzIEdQSU8gYW5kIE1GR1BUIGZ1bmN0aW9uYWxpdHkuDQo+ID4NCj4gPiArY29uZmlnIE1G
+RF9BQ1Q4OTQ1QQ0KPiA+ICsJdHJpc3RhdGUgIkFjdGl2ZS1zZW1pIEFDVDg5NDVBIg0KPiA+ICsJ
+c2VsZWN0IE1GRF9DT1JFDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJZGVwZW5kcyBv
+biBJMkMgJiYgT0YNCj4gPiArCWhlbHANCj4gPiArCSAgU3VwcG9ydCBmb3IgdGhlIEFDVDg5NDVB
+IFBNSUMgZnJvbSBBY3RpdmUtc2VtaS4gVGhpcyBkZXZpY2UNCj4gPiArCSAgZmVhdHVyZXMgdGhy
+ZWUgc3RlcC1kb3duIERDL0RDIGNvbnZlcnRlcnMgYW5kIGZvdXIgbG93LWRyb3BvdXQNCj4gPiAr
+CSAgbGluZWFyIHJlZ3VsYXRvcnMsIGFsb25nIHdpdGggYSBjb21wbGV0ZSBBY3RpdmVQYXRoIGJh
+dHRlcnkNCj4gPiArCSAgY2hhcmdlci4NCj4gPiArDQo+ID4gIGNvbmZpZyBNRkRfQVMzNzExDQo+
+ID4gIAlib29sICJBTVMgQVMzNzExIg0KPiA+ICAJc2VsZWN0IE1GRF9DT1JFDQo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUgaW5kZXgN
+Cj4gPiAwZjIzMGE2Li4yZjFjYTgyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL01ha2Vm
+aWxlDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBAQCAtNiw2ICs2LDcgQEAN
+Cj4gPiAgb2JqLSQoQ09ORklHX01GRF84OFBNODYwWCkJKz0gODhwbTg2MHgubw0KPiA+ICBvYmot
+JChDT05GSUdfTUZEXzg4UE04MDApCSs9IDg4cG04MDAubyA4OHBtODB4Lm8NCj4gPiAgb2JqLSQo
+Q09ORklHX01GRF84OFBNODA1KQkrPSA4OHBtODA1Lm8gODhwbTgweC5vDQo+ID4gK29iai0kKENP
+TkZJR19NRkRfQUNUODk0NUEpCSs9IGFjdDg5NDVhLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9T
+TTUwMSkJCSs9IHNtNTAxLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9BU0lDMykJCSs9IGFzaWMz
+Lm8gdG1pb19jb3JlLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9CQ001OTBYWCkJKz0gYmNtNTkw
+eHgubw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9hY3Q4OTQ1YS5jIGIvZHJpdmVycy9t
+ZmQvYWN0ODk0NWEuYyBuZXcgZmlsZQ0KPiA+IG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmQy
+ZTAxOTQxDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWZkL2FjdDg5NDVh
+LmMNCj4gPiBAQCAtMCwwICsxLDExMiBAQA0KPiA+ICsvKg0KPiA+ICsgKiBNRkQgZHJpdmVyIGZv
+ciBBY3RpdmUtc2VtaSBBQ1Q4OTQ1YSBQTUlDDQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAo
+QykgMjAxNSBBdG1lbCBDb3Jwb3JhdGlvbi4NCj4gPiArICoNCj4gPiArICogQXV0aG9yOiBXZW55
+b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIHBy
+b2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yDQo+
+ID4gK21vZGlmeSBpdA0KPiA+ICsgKiB1bmRlciAgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
+bCAgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkDQo+ID4gK2J5IHRoZQ0KPiA+ICsgKiBGcmVl
+IFNvZnR3YXJlIEZvdW5kYXRpb247ICBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBv
+ciAoYXQNCj4gPiAreW91cg0KPiA+ICsgKiBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiA+
+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pMmMuaD4NCj4gPiArI2luY2x1ZGUg
+PGxpbnV4L21mZC9jb3JlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFw
+Lmg+DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYWN0ODk0NWFfZGV2IHsNCj4gPiArCXN0cnVjdCByZWdt
+YXAgKnJlZ21hcDsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZk
+X2NlbGwgYWN0ODk0NWFfZGV2c1tdID0gew0KPiA+ICsJew0KPiA+ICsJCS5uYW1lID0gImFjdDg5
+NDVhLXBtaWMiLA0KPiANCj4gSSB0aGluayB0aGlzIHNob3VsZCBiZSAtcmVndWxhdG9yLCByYXRo
+ZXIgdGhhbiAtcG1pYy4NCg0KWWVzLCAtcmVndWxhdG9yIGlzIGJldHRlci4NCg0KPiANCj4gSSBi
+ZWxpZXZlICp0aGlzKiBpcyB0aGUgUE1JQyBkcml2ZXIuDQo+IA0KPiA+ICsJCS5vZl9jb21wYXRp
+YmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLXJlZ3VsYXRvciIsDQo+ID4gKwl9LA0KPiA+ICsJ
+ew0KPiA+ICsJCS5uYW1lID0gImFjdDg5NDVhLWNoYXJnZXIiLA0KPiA+ICsJCS5vZl9jb21wYXRp
+YmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLWNoYXJnZXIiLA0KPiA+ICsJfSwNCj4gPiArfTsN
+Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBhY3Q4OTQ1YV9y
+ZWdtYXBfY29uZmlnID0gew0KPiA+ICsJLnJlZ19iaXRzID0gOCwNCj4gPiArCS52YWxfYml0cyA9
+IDgsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFjdDg5NDVhX2kyY19wcm9iZShz
+dHJ1Y3QgaTJjX2NsaWVudCAqaTJjLA0KPiA+ICsJCQkgICAgICBjb25zdCBzdHJ1Y3QgaTJjX2Rl
+dmljZV9pZCAqaWQpIHsNCj4gPiArCXN0cnVjdCBhY3Q4OTQ1YV9kZXYgKmFjdDg5NDVhOw0KPiA+
+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlhY3Q4OTQ1YSA9IGRldm1fa3phbGxvYygmaTJjLT5k
+ZXYsIHNpemVvZigqYWN0ODk0NWEpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghYWN0ODk0NWEp
+DQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJaTJjX3NldF9jbGllbnRkYXRh
+KGkyYywgYWN0ODk0NWEpOw0KPiA+ICsNCj4gPiArCWFjdDg5NDVhLT5yZWdtYXAgPSBkZXZtX3Jl
+Z21hcF9pbml0X2kyYyhpMmMsDQo+ICZhY3Q4OTQ1YV9yZWdtYXBfY29uZmlnKTsNCj4gPiArCWlm
+IChJU19FUlIoYWN0ODk0NWEtPnJlZ21hcCkpIHsNCj4gPiArCQlyZXQgPSBQVFJfRVJSKGFjdDg5
+NDVhLT5yZWdtYXApOw0KPiA+ICsJCWRldl9lcnIoJmkyYy0+ZGV2LCAicmVnbWFwIGluaXQgZmFp
+bGVkOiAlZFxuIiwgcmV0KTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiANCj4gSXMg
+dGhlIFJlZ21hcCB1c2VkIGluIGJvdGggdGhlIGNoYXJnZXIgQU5EIHJlZ3VsYXRvciBkcml2ZXJz
+Pw0KDQpZZXMsIHVzZWQgaW4gYm90aCBkcml2ZXJzLiANCg0KVGhlIHJlZ21hcCBpcyBnb3QgdGhy
+b3VnaCBkZXZfZ2V0X3JlZ21hcChwZGV2LT5kZXYucGFyZW50LCBOVUxMKS4NCg0KPiANCj4gPiAr
+CXJldCA9IG1mZF9hZGRfZGV2aWNlcygmaTJjLT5kZXYsIFBMQVRGT1JNX0RFVklEX05PTkUsDQo+
+IGFjdDg5NDVhX2RldnMsDQo+ID4gKwkJCSAgICAgIEFSUkFZX1NJWkUoYWN0ODk0NWFfZGV2cyks
+IE5VTEwsIDAsIE5VTEwpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCWRldl9lcnIoJmkyYy0+
+ZGV2LCAiRmFpbGVkIHRvIGFkZCBzdWIgZGV2aWNlc1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsN
+Cj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
+dGljIGludCBhY3Q4OTQ1YV9pMmNfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMpIHsNCj4g
+PiArCW1mZF9yZW1vdmVfZGV2aWNlcygmaTJjLT5kZXYpOw0KPiA+ICsNCj4gPiArCXJldHVybiAw
+Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQg
+YWN0ODk0NWFfaTJjX2lkW10gPSB7DQo+ID4gKwl7ICJhY3Q4OTQ1YSIsIDAgfSwNCj4gPiArCXt9
+DQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUoaTJjLCBhY3Q4OTQ1YV9pMmNfaWQp
+Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYWN0ODk0NWFf
+b2ZfbWF0Y2hbXSA9IHsNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0
+NWEiLCB9LA0KPiA+ICsJe30sDQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2Ys
+IGFjdDg5NDVhX29mX21hdGNoKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgaTJjX2RyaXZl
+ciBhY3Q4OTQ1YV9pMmNfZHJpdmVyID0gew0KPiA+ICsJLmRyaXZlciA9IHsNCj4gPiArCQkgICAu
+bmFtZSA9ICJhY3Q4OTQ1YSIsDQo+ID4gKwkJICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hf
+cHRyKGFjdDg5NDVhX29mX21hdGNoKSwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmUgPSBhY3Q4OTQ1
+YV9pMmNfcHJvYmUsDQo+ID4gKwkucmVtb3ZlID0gYWN0ODk0NWFfaTJjX3JlbW92ZSwNCj4gPiAr
+CS5pZF90YWJsZSA9IGFjdDg5NDVhX2kyY19pZCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRp
+YyBpbnQgX19pbml0IGFjdDg5NDVhX2kyY19pbml0KHZvaWQpIHsNCj4gPiArCXJldHVybiBpMmNf
+YWRkX2RyaXZlcigmYWN0ODk0NWFfaTJjX2RyaXZlcik7DQo+ID4gK30NCj4gPiArc3Vic3lzX2lu
+aXRjYWxsKGFjdDg5NDVhX2kyY19pbml0KTsNCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIF9fZXhp
+dCBhY3Q4OTQ1YV9pMmNfZXhpdCh2b2lkKSB7DQo+ID4gKwlpMmNfZGVsX2RyaXZlcigmYWN0ODk0
+NWFfaTJjX2RyaXZlcik7DQo+ID4gK30NCj4gPiArbW9kdWxlX2V4aXQoYWN0ODk0NWFfaTJjX2V4
+aXQpOw0KPiA+ICsNCj4gPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJBQ1Q4OTQ1QSBQTUlDIG11bHRp
+LWZ1bmN0aW9uIGRyaXZlciIpOw0KPiA+ICtNT0RVTEVfQVVUSE9SKCJXZW55b3UgWWFuZyA8d2Vu
+eW91LnlhbmdAYXRtZWwuY29tPiIpOw0KPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7DQo+IA0K
+PiAtLQ0KPiBMZWUgSm9uZXMNCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRl
+YW0gTGVhZCBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZQ0KPiBzb2Z0d2FyZSBmb3IgQVJNIFNv
+Q3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZw0KDQoNCkJlc3QgUmVn
+YXJkcywNCldlbnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
