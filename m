@@ -1,91 +1,89 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/4] drm/fsl-dcu: Cleanup vblank interrupt mask and status
- setting code
-Date: Mon, 25 Jan 2016 21:45:15 -0800
-Message-ID: <8f5d609d18ec4d97beaf73bfdedb25d6@agner.ch>
-References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 07/11] of: Add bindings of hw-trip-points for soctherm
+Date: Tue, 26 Jan 2016 14:11:01 +0800
+Message-ID: <56A70DF5.60600@nvidia.com>
+References: <1453718796-4393-1-git-send-email-wni@nvidia.com> <20160126024157.GA15270@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Meng Yi <meng.yi@nxp.com>
-Cc: robh+dt@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160126024157.GA15270@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWVuZyBZaSwKCkFzIEkgd3JvdGUgZWFybGllcgooaHR0cDovL3d3dy5zcGluaWNzLm5ldC9s
-aXN0cy9kcmktZGV2ZWwvbXNnOTU3MDMuaHRtbCksIG15IGZpeGVzCnBhdGNoc2V0IGNvbnRhaW5z
-IGEgc2ltaWxhciBwYXRjaCB3aGljaCBhbHNvIGV4cGxpY2l0bHkgZGlzYWJsZSB0aGUKVkJMQU5L
-IGludGVycnVwdC4gSSB0aGluayBpdCBpcyB0aGUgYmV0dGVyIHNvbHV0aW9uLi4uIFNlZToKaHR0
-cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUvMTEvMTgvOTUxCgpJIHdpbGwgc29vbiBwcmVwYXJlIGEg
-Z2l0IHRyZWUgYW5kIHBsYW4gdG8gc3VibWl0IHRoYXQgZm9yIDQuNiwKY3VycmVudGx5IEkgcGxh
-biB0byBpbmNsdWRlCi0gWW91ciAiRml4IG5vIGZiIGNoZWNrIGJ1ZyIgcGF0Y2gKLSBNeSAiZml4
-ZXMgYW5kIGVuaGFuY2VtZW50cyIgcGF0Y2hzZXQKLSBNeSAiZml4IHJlZ2lzdGVyIGluaXRpYWxp
-emF0aW9uIiBhbmQgInVzZSBmbGF0IHJlZ21hcCBjYWNoZSIgcGF0Y2gKCkxldCBtZSBrbm93IGlm
-IHlvdSBoYXZlIGFueSBvYmplY3Rpb25zLgoKLS0KU3RlZmFuCgoKT24gMjAxNi0wMS0yNSAyMDow
-MCwgTWVuZyBZaSB3cm90ZToKPiBGcm9tOiBKaWFud2VpIFdhbmcgPGppYW53ZWkud2FuZy5jaG5A
-Z21haWwuY29tPgo+IAo+IFN3aXRjaCB1cGRhdGUgaW50ZXJydXB0IG1hc2sgYml0IHdpdGggcmVn
-bWFwX3VwZGF0ZV9iaXRzLCBhbmQgY2xlYXIKPiBpbnRlcnJ1cHQgc3RhdHVzIGJ5IHdyaXRpbmcg
-MSB0byByZWxldmFudCBiaXQgYmVmb3JlIHNldHRpbmcgbWFzayBpbgo+IGZzbF9kY3VfZHJtX2ly
-cV9pbml0IGZ1bmN0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppYW5XZWkgV2FuZyA8amlhbndl
-aS53YW5nLmNobkBnbWFpbC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogTWVuZyBZaSA8bWVuZy55aUBu
-eHAuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYu
-YyB8IDI2ICsrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGlu
-c2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuYwo+IGIvZHJpdmVycy9ncHUvZHJtL2ZzbC1k
-Y3UvZnNsX2RjdV9kcm1fZHJ2LmMKPiBpbmRleCBmY2E5N2QzLi5jYmVmNDdjIDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jCj4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMKPiBAQCAtMzgsMjEgKzM4LDE3
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBmc2xfZGN1X3JlZ21hcF9jb25m
-aWcgPSB7Cj4gIHN0YXRpYyBpbnQgZnNsX2RjdV9kcm1faXJxX2luaXQoc3RydWN0IGRybV9kZXZp
-Y2UgKmRldikKPiAgewo+ICAJc3RydWN0IGZzbF9kY3VfZHJtX2RldmljZSAqZnNsX2RldiA9IGRl
-di0+ZGV2X3ByaXZhdGU7Cj4gLQl1bnNpZ25lZCBpbnQgdmFsdWU7Cj4gIAlpbnQgcmV0Owo+ICAK
-PiAgCXJldCA9IGRybV9pcnFfaW5zdGFsbChkZXYsIGZzbF9kZXYtPmlycSk7Cj4gIAlpZiAocmV0
-IDwgMCkKPiAgCQlkZXZfZXJyKGRldi0+ZGV2LCAiZmFpbGVkIHRvIGluc3RhbGwgSVJRIGhhbmRs
-ZXJcbiIpOwo+ICAKPiAtCXJldCA9IHJlZ21hcF93cml0ZShmc2xfZGV2LT5yZWdtYXAsIERDVV9J
-TlRfU1RBVFVTLCAwKTsKPiArCXJldCA9IHJlZ21hcF93cml0ZShmc2xfZGV2LT5yZWdtYXAsIERD
-VV9JTlRfU1RBVFVTLCAweGZmZmZmZmZmKTsKPiAgCWlmIChyZXQpCj4gIAkJZGV2X2VycihkZXYt
-PmRldiwgInNldCBEQ1VfSU5UX1NUQVRVUyBmYWlsZWRcbiIpOwo+IC0JcmV0ID0gcmVnbWFwX3Jl
-YWQoZnNsX2Rldi0+cmVnbWFwLCBEQ1VfSU5UX01BU0ssICZ2YWx1ZSk7Cj4gLQlpZiAocmV0KQo+
-IC0JCWRldl9lcnIoZGV2LT5kZXYsICJyZWFkIERDVV9JTlRfTUFTSyBmYWlsZWRcbiIpOwo+IC0J
-dmFsdWUgJj0gRENVX0lOVF9NQVNLX1ZCTEFOSzsKPiAtCXJldCA9IHJlZ21hcF93cml0ZShmc2xf
-ZGV2LT5yZWdtYXAsIERDVV9JTlRfTUFTSywgdmFsdWUpOwo+ICsJcmV0ID0gcmVnbWFwX3VwZGF0
-ZV9iaXRzKGZzbF9kZXYtPnJlZ21hcCwgRENVX0lOVF9NQVNLLAo+ICsJCQkJIERDVV9JTlRfTUFT
-S19WQkxBTkssIH5EQ1VfSU5UX01BU0tfVkJMQU5LKTsKPiAgCWlmIChyZXQpCj4gIAkJZGV2X2Vy
-cihkZXYtPmRldiwgInNldCBEQ1VfSU5UX01BU0sgZmFpbGVkXG4iKTsKPiAgCXJldCA9IHJlZ21h
-cF93cml0ZShmc2xfZGV2LT5yZWdtYXAsIERDVV9VUERBVEVfTU9ERSwKPiBAQCAtMTQzLDE0ICsx
-MzksMTAgQEAgc3RhdGljIGlycXJldHVybl90IGZzbF9kY3VfZHJtX2lycShpbnQgaXJxLCB2b2lk
-ICphcmcpCj4gIHN0YXRpYyBpbnQgZnNsX2RjdV9kcm1fZW5hYmxlX3ZibGFuayhzdHJ1Y3QgZHJt
-X2RldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgcGlwZSkKPiAgewo+ICAJc3RydWN0IGZzbF9kY3Vf
-ZHJtX2RldmljZSAqZnNsX2RldiA9IGRldi0+ZGV2X3ByaXZhdGU7Cj4gLQl1bnNpZ25lZCBpbnQg
-dmFsdWU7Cj4gIAlpbnQgcmV0Owo+ICAKPiAtCXJldCA9IHJlZ21hcF9yZWFkKGZzbF9kZXYtPnJl
-Z21hcCwgRENVX0lOVF9NQVNLLCAmdmFsdWUpOwo+IC0JaWYgKHJldCkKPiAtCQlkZXZfZXJyKGRl
-di0+ZGV2LCAicmVhZCBEQ1VfSU5UX01BU0sgZmFpbGVkXG4iKTsKPiAtCXZhbHVlICY9IH5EQ1Vf
-SU5UX01BU0tfVkJMQU5LOwo+IC0JcmV0ID0gcmVnbWFwX3dyaXRlKGZzbF9kZXYtPnJlZ21hcCwg
-RENVX0lOVF9NQVNLLCB2YWx1ZSk7Cj4gKwlyZXQgPSByZWdtYXBfdXBkYXRlX2JpdHMoZnNsX2Rl
-di0+cmVnbWFwLCBEQ1VfSU5UX01BU0ssCj4gKwkJCQkgRENVX0lOVF9NQVNLX1ZCTEFOSywgfkRD
-VV9JTlRfTUFTS19WQkxBTkspOwo+ICAJaWYgKHJldCkKPiAgCQlkZXZfZXJyKGRldi0+ZGV2LCAi
-c2V0IERDVV9JTlRfTUFTSyBmYWlsZWRcbiIpOwo+ICAJcmV0dXJuIDA7Cj4gQEAgLTE2MCwxNCAr
-MTUyLDEwIEBAIHN0YXRpYyB2b2lkIGZzbF9kY3VfZHJtX2Rpc2FibGVfdmJsYW5rKHN0cnVjdAo+
-IGRybV9kZXZpY2UgKmRldiwKPiAgCQkJCSAgICAgICB1bnNpZ25lZCBpbnQgcGlwZSkKPiAgewo+
-ICAJc3RydWN0IGZzbF9kY3VfZHJtX2RldmljZSAqZnNsX2RldiA9IGRldi0+ZGV2X3ByaXZhdGU7
-Cj4gLQl1bnNpZ25lZCBpbnQgdmFsdWU7Cj4gIAlpbnQgcmV0Owo+ICAKPiAtCXJldCA9IHJlZ21h
-cF9yZWFkKGZzbF9kZXYtPnJlZ21hcCwgRENVX0lOVF9NQVNLLCAmdmFsdWUpOwo+IC0JaWYgKHJl
-dCkKPiAtCQlkZXZfZXJyKGRldi0+ZGV2LCAicmVhZCBEQ1VfSU5UX01BU0sgZmFpbGVkXG4iKTsK
-PiAtCXZhbHVlIHw9IERDVV9JTlRfTUFTS19WQkxBTks7Cj4gLQlyZXQgPSByZWdtYXBfd3JpdGUo
-ZnNsX2Rldi0+cmVnbWFwLCBEQ1VfSU5UX01BU0ssIHZhbHVlKTsKPiArCXJldCA9IHJlZ21hcF91
-cGRhdGVfYml0cyhmc2xfZGV2LT5yZWdtYXAsIERDVV9JTlRfTUFTSywKPiArCQkJCSBEQ1VfSU5U
-X01BU0tfVkJMQU5LLCBEQ1VfSU5UX01BU0tfVkJMQU5LKTsKPiAgCWlmIChyZXQpCj4gIAkJZGV2
-X2VycihkZXYtPmRldiwgInNldCBEQ1VfSU5UX01BU0sgZmFpbGVkXG4iKTsKPiAgfQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 2016=E5=B9=B401=E6=9C=8826=E6=97=A5 10:41, Rob Herring wrote:
+> On Mon, Jan 25, 2016 at 06:46:36PM +0800, Wei Ni wrote:
+>> Add hw-trips sub-node for soctherm, which is
+>> used to describe the hardware trip points for
+>> each soctherm sensors.
+>=20
+> This seems like something that should be common. There was a hwmon=20
+> binding just the other day with temperature set points.
+
+I have checked the thermal_hwmon.c, but we can't use it. Because we use
+of-thermal to register thermal zone, but it doesn't support to register=
+ to
+hwmon. And it only support to show the critical temperature.
+I think this sub-node is used for Tegra's soctherm specifically. And it=
+'s not
+only for shutdown/reset, it also will be used to describe the hw-thrott=
+le
+function in next serial patches (I'm preparing it, didn't send out yet)=
+=2E
+
+BTW, I didn't find the hwmon binding to introduce the hw trips in TOT
+kernel-next, could you show me it?
+
+>=20
+>> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/thermal/tegra-soctherm.txt | 24 +++++++++++=
++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/tegra-socther=
+m.txt b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+>> index 6b68cd150405..75dc9dbe7e1a 100644
+>> --- a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+>> @@ -26,6 +26,15 @@ Required properties :
+>>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h>=
+ for a
+>>      list of valid values when referring to thermal sensors.
+>> =20
+>> +Optional properties:
+>> +- hw-trip-points : A sub-node which is a container of hardware trip=
+ points
+>> +    for each sensors.
+>> +  * sensors: Sub-nodes which are used to describe the HW trip point=
+s info,
+>> +        must be named as "cpu", "gpu", "mem", "pll".
+>> +      Properties:
+>> +      - thermtrip-temperature : Shutdown or reset temperature in mi=
+llicelsius,
+>> +        once the temperature of this sensor is higher than the
+>> +        thermtrip-temperature, the system will be shutdown or reset=
+=2E
+>=20
+> Append units and temperature is a bit redundant. Something like=20
+> thermtrip-mC or thermtrip-milliC
+
+Hmm, got it, will change it in next version.
+
+>=20
+> You could easily have multiple levels of trip points, so perhaps the=20
+> name needs to reflect the action (i.e. shutdown).
+
+This temperature can trigger shutdown or reset, it depends on the platf=
+orm
+design, and the Tegra's SPEC call it as thermtrip, so I use this name. =
+I prefer
+to use "thermtgrip-mC".
+
+>=20
+> Rob
+>=20
