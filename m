@@ -1,61 +1,190 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
-Date: Tue, 26 Jan 2016 11:50:28 +0000
-Message-ID: <20160126115028.GE6588@sirena.org.uk>
-References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
- <20160126022948.GA21187@rob-hp-laptop>
- <56A73FDE.2060607@felipetonello.com>
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: Re: [PATCH v3 17/17] Xen: EFI: Parse DT parameters for Xen specific
+ UEFI
+Date: Tue, 26 Jan 2016 12:05:59 +0000
+Message-ID: <20160126120559.GB7478@codeblueprint.co.uk>
+References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com>
+ <1453519184-11908-18-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="c5Px8AoJl69cpALM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56A73FDE.2060607-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Ferreri Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+In-Reply-To: <1453519184-11908-18-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, Mark Salter <msalter@redhat.com>, Leif Lindholm <leif.lindholm@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 23 Jan, at 11:19:44AM, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
+> 
+> Add a new function to parse DT parameters for Xen specific UEFI just
+> like the way for normal UEFI. Then it could reuse the existing codes.
+> 
+> If Xen supports EFI, initialize runtime services.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> ---
+> CC: Matt Fleming <matt@codeblueprint.co.uk>
+> ---
+>  arch/arm/xen/enlighten.c   |  6 ++++++
+>  arch/arm64/kernel/efi.c    | 17 ++++++++++++-----
+>  drivers/firmware/efi/efi.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+>  3 files changed, 56 insertions(+), 12 deletions(-)
+ 
+Looks OK to me, but I've added some people to Cc that have touched
+these files in the past, and it would be good to get their ACKs.
 
---c5Px8AoJl69cpALM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Matt Fleming <matt@codeblueprint.co.uk>
 
-On Tue, Jan 26, 2016 at 09:43:58AM +0000, Felipe Ferreri Tonello wrote:
-> On 26/01/16 02:29, Rob Herring wrote:
-
-> > Do all the i.MX audio bindings really vary more that the codec? Seems=
-=20
-> > like a lot of duplication.
-
-> I agree, but that how it is today. These platform drivers for imx are
-> similar but not identical. Looking at them I would guess that they have
-> 50 to 60% of duplicated code.
-
-> I believe we can add this driver and work on re-using the code on a
-> future series of patches.
-
-We have fsl-asoc-card which is supposed to allow reuse similar to
-simple-card for devices which have an audmux.
-
---c5Px8AoJl69cpALM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWp12EAAoJECTWi3JdVIfQhREH/RYtfjHqRFCyQ73KVM4lywVN
-SjvW8uVkOLQmQI/RS3QT2O8X5V/OCmGecZZtQUjvm2D1ZyZy4ZyLn6IinoUo7oEx
-Ow1HmCtY0ILefvzh0ES2JQjA7XLjw4kUcHIzUVDuELVKKVRVVz1a3ybH8p4wiLuq
-LBYHActaBQVmX7zRKfyxT+B0z0UKpqPHmGTAk6tkYRaPrpTDHb78uJ+O42s4KEKd
-tThHM1QRJm8E3oDZfBvvU6CwP0MjAQCdfUrwUm1Dngtmbd+u3ykZu4IoX7xUVrND
-YL9Oh+WB7tKkNOLmQWVzFrS0mPtg3ETgvQ0J8WdnW0ZWnlUHPuz/LEtaIwAGM3o=
-=DXbu
------END PGP SIGNATURE-----
-
---c5Px8AoJl69cpALM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index cdc0bd2..608d735 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -245,6 +245,12 @@ static int __init fdt_find_hyper_node(unsigned long node, const char *uname,
+>  	    !strncmp(hyper_node.prefix, s, strlen(hyper_node.prefix)))
+>  		hyper_node.version = s + strlen(hyper_node.prefix);
+>  
+> +	if (IS_ENABLED(CONFIG_XEN_EFI)) {
+> +		/* Check if Xen supports EFI */
+> +		if (of_get_flat_dt_subnode_by_name(node, "uefi") > 0)
+> +			set_bit(EFI_PARAVIRT, &efi.flags);
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> index 4eeb171..3c46129 100644
+> --- a/arch/arm64/kernel/efi.c
+> +++ b/arch/arm64/kernel/efi.c
+> @@ -33,6 +33,7 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/mmu.h>
+>  #include <asm/pgtable.h>
+> +#include <asm/xen/xen-ops.h>
+>  
+>  struct efi_memory_map memmap;
+>  
+> @@ -308,13 +309,19 @@ static int __init arm64_enable_runtime_services(void)
+>  	}
+>  	set_bit(EFI_SYSTEM_TABLES, &efi.flags);
+>  
+> -	if (!efi_virtmap_init()) {
+> -		pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
+> -		return -ENOMEM;
+> +	if (IS_ENABLED(CONFIG_XEN_EFI) && efi_enabled(EFI_PARAVIRT)) {
+> +		/* Set up runtime services function pointers for Xen Dom0 */
+> +		xen_efi_runtime_setup();
+> +	} else {
+> +		if (!efi_virtmap_init()) {
+> +			pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		/* Set up runtime services function pointers */
+> +		efi_native_runtime_setup();
+>  	}
+>  
+> -	/* Set up runtime services function pointers */
+> -	efi_native_runtime_setup();
+>  	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+>  
+>  	efi.runtime_version = efi.systab->hdr.revision;
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 027ca21..bdcf6d7 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -498,12 +498,14 @@ device_initcall(efi_load_efivars);
+>  		FIELD_SIZEOF(struct efi_fdt_params, field) \
+>  	}
+>  
+> -static __initdata struct {
+> +struct params {
+>  	const char name[32];
+>  	const char propname[32];
+>  	int offset;
+>  	int size;
+> -} dt_params[] = {
+> +};
+> +
+> +static struct params fdt_params[] __initdata = {
+>  	UEFI_PARAM("System Table", "linux,uefi-system-table", system_table),
+>  	UEFI_PARAM("MemMap Address", "linux,uefi-mmap-start", mmap),
+>  	UEFI_PARAM("MemMap Size", "linux,uefi-mmap-size", mmap_size),
+> @@ -511,24 +513,45 @@ static __initdata struct {
+>  	UEFI_PARAM("MemMap Desc. Version", "linux,uefi-mmap-desc-ver", desc_ver)
+>  };
+>  
+> +static struct params xen_fdt_params[] __initdata = {
+> +	UEFI_PARAM("System Table", "xen,uefi-system-table", system_table),
+> +	UEFI_PARAM("MemMap Address", "xen,uefi-mmap-start", mmap),
+> +	UEFI_PARAM("MemMap Size", "xen,uefi-mmap-size", mmap_size),
+> +	UEFI_PARAM("MemMap Desc. Size", "xen,uefi-mmap-desc-size", desc_size),
+> +	UEFI_PARAM("MemMap Desc. Version", "xen,uefi-mmap-desc-ver", desc_ver)
+> +};
+> +
+>  struct param_info {
+>  	int found;
+>  	void *params;
+> +	struct params *dt_params;
+> +	int size;
+>  };
+>  
+>  static int __init fdt_find_uefi_params(unsigned long node, const char *uname,
+>  				       int depth, void *data)
+>  {
+>  	struct param_info *info = data;
+> +	struct params *dt_params = info->dt_params;
+>  	const void *prop;
+>  	void *dest;
+>  	u64 val;
+> -	int i, len;
+> +	int i, len, offset;
+>  
+> -	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> -		return 0;
+> +	if (efi_enabled(EFI_PARAVIRT)) {
+> +		if (depth != 1 || strcmp(uname, "hypervisor") != 0)
+> +			return 0;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(dt_params); i++) {
+> +		offset = of_get_flat_dt_subnode_by_name(node, "uefi");
+> +		if (offset < 0)
+> +			return 0;
+> +		node = offset;
+> +	} else {
+> +		if (depth != 1 || strcmp(uname, "chosen") != 0)
+> +			return 0;
+> +	}
+> +
+> +	for (i = 0; i < info->size; i++) {
+>  		prop = of_get_flat_dt_prop(node, dt_params[i].propname, &len);
+>  		if (!prop)
+>  			return 0;
+> @@ -559,12 +582,20 @@ int __init efi_get_fdt_params(struct efi_fdt_params *params)
+>  	info.found = 0;
+>  	info.params = params;
+>  
+> +	if (efi_enabled(EFI_PARAVIRT)) {
+> +		info.dt_params = xen_fdt_params;
+> +		info.size = ARRAY_SIZE(xen_fdt_params);
+> +	} else {
+> +		info.dt_params = fdt_params;
+> +		info.size = ARRAY_SIZE(fdt_params);
+> +	}
+> +
+>  	ret = of_scan_flat_dt(fdt_find_uefi_params, &info);
+>  	if (!info.found)
+>  		pr_info("UEFI not found.\n");
+>  	else if (!ret)
+>  		pr_err("Can't find '%s' in device tree!\n",
+> -		       dt_params[info.found].name);
+> +		       info.dt_params[info.found].name);
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.0.4
+> 
+> 
