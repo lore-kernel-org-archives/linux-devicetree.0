@@ -1,87 +1,115 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
-Date: Tue, 26 Jan 2016 08:37:24 +0000
-Message-ID: <20160126083724.GY3368@x1>
-References: <1452655854-1528-1-git-send-email-wens@csie.org>
- <1452655854-1528-5-git-send-email-wens@csie.org>
- <20160125143957.GS3368@x1>
- <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw@mail.gmail.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
+Date: Tue, 26 Jan 2016 09:58:57 +0100
+Message-ID: <87egd4d8dq.fsf@free-electrons.com>
+References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
+	<1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBSHATS2QKGQEEE2EDWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453588600-14831-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org> (Aaro
+	Koskinen's message of "Sun, 24 Jan 2016 00:36:39 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Jan 2016, Chen-Yu Tsai wrote:
+Hi Aaro,
+ 
+ On sam., janv. 23 2016, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
 
-> On Mon, Jan 25, 2016 at 10:39 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
-> >
-> >> When the driver was merged, the original author did not include a prop=
-er
-> >> copyright notice. This patch adds the notice, backdated to when the
-> >> driver was merged.
-> >
-> > This is very wordy.
-> >
-> > "Supply a backdated copyright notice."
->=20
-> Fine with me. Would you like me to send another version?
+> Fix audio on kirkwood-openrd-client:
+>
+> 1) The audio-controller was left disabled.
+>
+> 2) The probe fails because cs42l51 is missing #sound-dai-cells.
+>
+> 	/sound/simple-audio-card,codec: could not get #sound-dai-cells for /ocp@f1000000/i2c@11000/cs42l51@4a
+> 	asoc-simple-card sound: parse error -22
+> 	asoc-simple-card: probe of sound failed with error -22
+>
+> 3) The mapping is incorrect:
+>
+> 	asoc-simple-card sound: cs42l51-hifi <-> spdif mapping ok
+>
+>    should be:
+>
+> 	asoc-simple-card sound: cs42l51-hifi <-> i2s mapping ok
+>
+> Reported-by: Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 
-No, I will fix this for you.
+Applied on mvebu/dt with Reviewed-by tag from Andrew Lunn and Tested-by
+tag from Rick Thomas.
 
-> >> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> ---
-> >>
-> >> New patch in v7.
-> >>
-> >> ---
-> >>  drivers/mfd/axp20x.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >
-> > Patch looks fine though:
-> >
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> >> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> >> index 3e186f2dcac3..cec51e689d1d 100644
-> >> --- a/drivers/mfd/axp20x.c
-> >> +++ b/drivers/mfd/axp20x.c
-> >> @@ -5,6 +5,8 @@
-> >>   * converters, LDOs, multiple 12-bit ADCs of voltage, current and tem=
-perature
-> >>   * as well as configurable GPIOs.
-> >>   *
-> >> + * Copyright (C) 2014 Carlo Caione
-> >> + *
-> >>   * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> >>   *
-> >>   * This program is free software; you can redistribute it and/or modi=
-fy
-> >
+Thanks,
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Gregory
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> ---
+>  arch/arm/boot/dts/kirkwood-openrd-client.dts | 6 +++++-
+>  arch/arm/boot/dts/kirkwood.dtsi              | 2 +-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/kirkwood-openrd-client.dts b/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> index 887b9c1..96ff59d 100644
+> --- a/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> +++ b/arch/arm/boot/dts/kirkwood-openrd-client.dts
+> @@ -20,6 +20,9 @@
+>  	compatible = "marvell,openrd-client", "marvell,openrd", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+>  
+>  	ocp@f1000000 {
+> +		audio-controller@a0000 {
+> +			status = "okay";
+> +		};
+>  		i2c@11000 {
+>  			status = "okay";
+>  			clock-frequency = <400000>;
+> @@ -27,6 +30,7 @@
+>  			cs42l51: cs42l51@4a {
+>  				compatible = "cirrus,cs42l51";
+>  				reg = <0x4a>;
+> +				#sound-dai-cells = <0>;
+>  			};
+>  		};
+>  	};
+> @@ -37,7 +41,7 @@
+>  		simple-audio-card,mclk-fs = <256>;
+>  
+>  		simple-audio-card,cpu {
+> -			sound-dai = <&audio0>;
+> +			sound-dai = <&audio0 0>;
+>  		};
+>  
+>  		simple-audio-card,codec {
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 7b5a4a1..7445a15 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -381,7 +381,7 @@
+>  
+>  		audio0: audio-controller@a0000 {
+>  			compatible = "marvell,kirkwood-audio";
+> -			#sound-dai-cells = <0>;
+> +			#sound-dai-cells = <1>;
+>  			reg = <0xa0000 0x2210>;
+>  			interrupts = <24>;
+>  			clocks = <&gate_clk 9>;
+> -- 
+> 2.4.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
