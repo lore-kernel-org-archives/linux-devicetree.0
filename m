@@ -1,32 +1,65 @@
-From: Kalle Valo <kvalo@qca.qualcomm.com>
-Subject: Re: [PATCH v3] dt: bindings: add bindings for ipq4019 wifi block
-Date: Tue, 26 Jan 2016 17:01:17 +0200
-Message-ID: <87y4bcpepu.fsf@kamboji.qca.qualcomm.com>
-References: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver
+ to work on both Zynq and Microblaze
+Date: Tue, 26 Jan 2016 16:21:35 +0100
+Message-ID: <56A78EFF.1010503@xilinx.com>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <4734542.KZZp0TeeeM@wuerfel> <56A74370.4090000@xilinx.com>
+ <2270955.TlqP7HlQk4@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com> (Raja
-	Mani's message of "Wed, 13 Jan 2016 11:26:44 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raja Mani <rmani@qti.qualcomm.com>
-Cc: agross@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2270955.TlqP7HlQk4@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>
+Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, bhelgaas@google.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Raja Mani <rmani@qti.qualcomm.com> writes:
+On 26.1.2016 13:11, Arnd Bergmann wrote:
+> On Tuesday 26 January 2016 10:59:12 Michal Simek wrote:
+>>>> diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+>>>> index 3e3757f..1981948 100644
+>>>> --- a/drivers/pci/host/pcie-xilinx.c
+>>>> +++ b/drivers/pci/host/pcie-xilinx.c
+>>>> @@ -92,7 +92,12 @@
+>>>>  #define ECAM_DEV_NUM_SHIFT          12
+>>>>  
+>>>>  /* Number of MSI IRQs */
+>>>> -#define XILINX_NUM_MSI_IRQS         128
+>>>> +#define XILINX_NUM_MSI_IRQS 128
+>>>> +#ifdef CONFIG_ARM
+>>>> +#define TOT_NR_IRQS         XILINX_NUM_MSI_IRQS
+>>>> +#else
+>>>> +#define TOT_NR_IRQS         (NR_IRQS + XILINX_NUM_MSI_IRQS)
+>>>> +#endif
+>>>
+>>> Something looks wrong here in the microblaze variant. What does NR_IRQS
+>>> have to do with it?
+>>
+>> Arnd: What was the story regarding NR_IRQS?
+>> I remember some discussion about it but just forget.
+>>
+>> Default value in include/asm-generic/irq.h is 64.
+>> Current value is 32 because microblaze primary interrupt controller is
+>> axi_intc core which has up to 32 input lines.
+> 
+> The value in asm-generic is completely arbitrary, it's just something
+> that happens to work for a number of the simpler architectures.
+> 
+> Traditionally, there is a a fixed NR_IRQS which defines the maximum
+> number of interrupts that can be used, and each irqchip has a fixed
+> start offset below that number.
+> 
+> On modern systems, you have CONFIG_SPARSE_IRQ, which lets an irqchip
+> allocate its own interrupts, without an upper limit. This is more
+> flexible and avoids preallocating space for all irq_desc instances,
+> so it saves memory.
 
-> Add device tree binding documentation details for wifi block present
-> in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
->
-> Right now, ath10k wireless driver has support for PCI based wlan devices.
-> There is a plan to extend ath10k driver to support wifi devices which are
-> connected over AHB as well (enumeration will happen via device tree node).
-> For AHB based devices (ie, ipq4019), all wifi properties are supplied via
-> device tree (including irq, reg addr, cal data,etc).
->
-> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
+ok. That was the story. I will look if there is any issue to enable
+SPARSE_IRQ for Microblaze.
 
-Applied, thanks.
+I also need to move intc driver out of arch.
 
--- 
-Kalle Valo
+Thanks,
+Michal
