@@ -1,86 +1,51 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH 1/5] ARM: OMAP2+: hwmod data: Add SSI data for omap36xx
-Date: Wed, 27 Jan 2016 00:07:38 +0200
-Message-ID: <20160126220738.GG15550@darkstar.musicnaut.iki.fi>
-References: <1453045749-22642-1-git-send-email-sre@kernel.org>
- <1453045749-22642-2-git-send-email-sre@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [BISECTED] v4.5-rc1 phylib regression
+Date: Tue, 26 Jan 2016 23:09:24 +0100
+Message-ID: <20160126220924.GK27473@lunn.ch>
+References: <20160126044624.GH3880@lunn.ch>
+ <20160126121435.GK22974@ak-desktop.emea.nsn-net.net>
+ <20160126133417.GI3880@lunn.ch>
+ <CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com>
+ <20160126175353.GG27473@lunn.ch>
+ <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
+ <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com>
+ <56A7DB27.6080203@gmail.com>
+ <20160126213600.GJ27473@lunn.ch>
+ <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453045749-22642-2-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Aaro Koskinen <aaro.koskinen@nokia.com>, "David S. Miller" <davem@davemloft.net>, Network Development <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 04:49:05PM +0100, Sebastian Reichel wrote:
-> This patch enables Synchronous Serial Interface (SSI)
-> hwmod support for OMAP36xx SoCs (used by Nokia N950/N9).
+> > Nope, not an option. Only a small number of DTB actually use c22 or
+> > c45. The majority of devices have no compatible at all. Why should
+> > they, the binding documentation says it is optional!
 > 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> So one thing that can be done is to just have a whitelist in the
+> driver that we add the known phy compatibles to, with a nice comment
+> above that this should only be for legacy device trees.
 
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+So you mean drivers/of/of_mdio.c:of_mdiobus_child_is_phy()
+has a white list like:
 
-> ---
->  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> index aff78d5198d2..ed972029dce1 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> @@ -3625,14 +3625,14 @@ static struct omap_hwmod_class_sysconfig omap34xx_ssi_sysc = {
->  	.sysc_fields	= &omap_hwmod_sysc_type1,
->  };
->  
-> -static struct omap_hwmod_class omap34xx_ssi_hwmod_class = {
-> +static struct omap_hwmod_class omap3xxx_ssi_hwmod_class = {
->  	.name	= "ssi",
->  	.sysc	= &omap34xx_ssi_sysc,
->  };
->  
-> -static struct omap_hwmod omap34xx_ssi_hwmod = {
-> +static struct omap_hwmod omap3xxx_ssi_hwmod = {
->  	.name		= "ssi",
-> -	.class		= &omap34xx_ssi_hwmod_class,
-> +	.class		= &omap3xxx_ssi_hwmod_class,
->  	.clkdm_name	= "core_l4_clkdm",
->  	.main_clk	= "ssi_ssr_fck",
->  	.prcm		= {
-> @@ -3647,9 +3647,9 @@ static struct omap_hwmod omap34xx_ssi_hwmod = {
->  };
->  
->  /* L4 CORE -> SSI */
-> -static struct omap_hwmod_ocp_if omap34xx_l4_core__ssi = {
-> +static struct omap_hwmod_ocp_if omap3xxx_l4_core__ssi = {
->  	.master		= &omap3xxx_l4_core_hwmod,
-> -	.slave		= &omap34xx_ssi_hwmod,
-> +	.slave		= &omap3xxx_ssi_hwmod,
->  	.clk		= "ssi_ick",
->  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->  };
-> @@ -3802,7 +3802,7 @@ static struct omap_hwmod_ocp_if *omap34xx_hwmod_ocp_ifs[] __initdata = {
->  	&omap3xxx_sad2d__l3,
->  	&omap3xxx_l4_core__mmu_isp,
->  	&omap3xxx_l3_main__mmu_iva,
-> -	&omap34xx_l4_core__ssi,
-> +	&omap3xxx_l4_core__ssi,
->  	NULL
->  };
->  
-> @@ -3826,6 +3826,7 @@ static struct omap_hwmod_ocp_if *omap36xx_hwmod_ocp_ifs[] __initdata = {
->  	&omap3xxx_sad2d__l3,
->  	&omap3xxx_l4_core__mmu_isp,
->  	&omap3xxx_l3_main__mmu_iva,
-> +	&omap3xxx_l4_core__ssi,
->  	NULL
->  };
->  
-> -- 
-> 2.7.0.rc3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"brcm,40nm-ephy"
+"marvell,88E1111", 
+"marvell,88e1116",
+"marvell,88e1118",
+"marvell,88e1149r",
+"marvell,88e1310",
+"marvell,88E1510",
+"marvell,88E1514",
+"moxa,moxart-rtl8201cp",
+
+Yes, that would work.
+
+We should also update the binding documentation to limit what is legal
+in the compatible string.
+
+   Andrew
