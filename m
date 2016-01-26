@@ -1,34 +1,57 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH 1/5] ARM: OMAP2+: hwmod data: Add SSI data for omap36xx
-Date: Wed, 27 Jan 2016 00:12:13 +0200
-Message-ID: <20160126221213.GH15550@darkstar.musicnaut.iki.fi>
-References: <1453045749-22642-1-git-send-email-sre@kernel.org>
- <1453045749-22642-2-git-send-email-sre@kernel.org>
- <20160126220738.GG15550@darkstar.musicnaut.iki.fi>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: dts: porter: add MAX3355 support
+Date: Wed, 27 Jan 2016 01:14:21 +0300
+Message-ID: <4506196.xOgpYRO52t@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160126220738.GG15550@darkstar.musicnaut.iki.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
+are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
+can add  MAX3355 device node to  the Porter device tree and properly refer
+to it from the USBHS node instead of using  "renesas,enable-gpio" property
+which only allowed checking the USB ID pin  at the driver probe time;  now
+this  pin's  state can be monitored dynamically!
 
-On Wed, Jan 27, 2016 at 12:07:38AM +0200, Aaro Koskinen wrote:
-> On Sun, Jan 17, 2016 at 04:49:05PM +0100, Sebastian Reichel wrote:
-> > This patch enables Synchronous Serial Interface (SSI)
-> > hwmod support for OMAP36xx SoCs (used by Nokia N950/N9).
-> > 
-> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> 
-> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-This applies to whole series (1/5). I was able to use gprs data connection
-to connect to internet with N950 + v4.5-rc1 + these patches.
+---
+This patch is against 'renesas-devel-20160126-v4.5-rc1' tag of Simon Horman's
+'renesas.git' repo.
 
-Thanks,
+ arch/arm/boot/dts/r8a7791-porter.dts |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-A.
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -90,6 +90,12 @@
+ 			  1800000 0>;
+ 	};
+ 
++	max3355: usb-otg {
++		compatible = "maxim,max3355";
++		maxim,shdn-gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
++		id-gpios = <&gpio5 31 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	hdmi-out {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -394,7 +400,7 @@
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
+-	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
++	extcon = <&max3355>;
+ };
+ 
+ &usbphy {
