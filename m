@@ -1,30 +1,69 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
-Date: Tue, 26 Jan 2016 07:47:28 -0200
-Message-ID: <CAOMZO5BjeDMqNgf-=tE7=pByJi+jJVA=G2bbtp+XJeYbpev6KA@mail.gmail.com>
-References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
-	<20160126022948.GA21187@rob-hp-laptop>
-	<56A73FDE.2060607@felipetonello.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver
+ to work on both Zynq and Microblaze
+Date: Tue, 26 Jan 2016 10:59:12 +0100
+Message-ID: <56A74370.4090000@xilinx.com>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <1452620173-4905-4-git-send-email-bharatku@xilinx.com>
+ <4734542.KZZp0TeeeM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56A73FDE.2060607-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Ferreri Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4734542.KZZp0TeeeM@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: bhelgaas@google.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+On 12.1.2016 23:27, Arnd Bergmann wrote:
+> On Tuesday 12 January 2016 23:06:11 Bharat Kumar Gogada wrote:
+>> Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
+>> Zynq and Microblaze Architectures.
+>> With these modifications drivers/pci/host/pcie-xilinx.c, will
+>> work on both Zynq and Microblaze Architectures.
+>>
+>> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+>> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> 
+> I think this patch should be split into three, as you are doing three
+> unrelated things here.
+> 
+>> ---
+>> Changes:
+>> Changed Total number of MSI IRQ count logic according to both architectures.
+>> Updated MSI assigning functions accordingly to new count.
+>> Modified irq_domain_add_linear with new MSI IRQ count.
+>> Added #ifdef to pci_fixup_irqs which is ARM specific API.
+>> ---
+>>  drivers/pci/host/pcie-xilinx.c | 22 +++++++++++++++++-----
+>>  1 file changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+>> index 3e3757f..1981948 100644
+>> --- a/drivers/pci/host/pcie-xilinx.c
+>> +++ b/drivers/pci/host/pcie-xilinx.c
+>> @@ -92,7 +92,12 @@
+>>  #define ECAM_DEV_NUM_SHIFT		12
+>>  
+>>  /* Number of MSI IRQs */
+>> -#define XILINX_NUM_MSI_IRQS		128
+>> +#define XILINX_NUM_MSI_IRQS	128
+>> +#ifdef CONFIG_ARM
+>> +#define TOT_NR_IRQS		XILINX_NUM_MSI_IRQS
+>> +#else
+>> +#define TOT_NR_IRQS		(NR_IRQS + XILINX_NUM_MSI_IRQS)
+>> +#endif
+> 
+> Something looks wrong here in the microblaze variant. What does NR_IRQS
+> have to do with it?
 
-On Tue, Jan 26, 2016 at 7:43 AM, Felipe Ferreri Tonello
-<eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org> wrote:
+Arnd: What was the story regarding NR_IRQS?
+I remember some discussion about it but just forget.
 
-> I agree, but that how it is today. These platform drivers for imx are
-> similar but not identical. Looking at them I would guess that they have
-> 50 to 60% of duplicated code.
+Default value in include/asm-generic/irq.h is 64.
+Current value is 32 because microblaze primary interrupt controller is
+axi_intc core which has up to 32 input lines.
 
-Would simple-audio-card or fsl-asoc-card help in this case?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Michal
