@@ -1,79 +1,46 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
-Date: Tue, 26 Jan 2016 09:34:23 +0800
-Message-ID: <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw@mail.gmail.com>
-References: <1452655854-1528-1-git-send-email-wens@csie.org>
- <1452655854-1528-5-git-send-email-wens@csie.org> <20160125143957.GS3368@x1>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOE2TO2QKGQESIW3SUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160125143957.GS3368@x1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: [RESEND][PATCH 1/2] devicetree: qcom-apq8064.dtsi: Add i2c3 address-cells and size-cells values
+Date: Mon, 25 Jan 2016 17:37:50 -0800
+Message-ID: <1453772271-15339-1-git-send-email-john.stultz@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 10:39 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
->
->> When the driver was merged, the original author did not include a proper
->> copyright notice. This patch adds the notice, backdated to when the
->> driver was merged.
->
-> This is very wordy.
->
-> "Supply a backdated copyright notice."
+This adds address-cell and size-cell values to the i2c3 bus
+in the qcom-apq8064.dtsi, which is needed to describe devices
+on that bus.
 
-Fine with me. Would you like me to send another version?
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Andy Gross <agross@codeaurora.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Vinay Simha BN <simhavcs@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: devicetree@vger.kernel.org
+Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-ChenYu
-
->> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>
->> New patch in v7.
->>
->> ---
->>  drivers/mfd/axp20x.c | 2 ++
->>  1 file changed, 2 insertions(+)
->
-> Patch looks fine though:
->
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
->> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
->> index 3e186f2dcac3..cec51e689d1d 100644
->> --- a/drivers/mfd/axp20x.c
->> +++ b/drivers/mfd/axp20x.c
->> @@ -5,6 +5,8 @@
->>   * converters, LDOs, multiple 12-bit ADCs of voltage, current and tempe=
-rature
->>   * as well as configurable GPIOs.
->>   *
->> + * Copyright (C) 2014 Carlo Caione
->> + *
->>   * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->>   *
->>   * This program is free software; you can redistribute it and/or modify
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index ed521e8..5093c35 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -337,6 +337,8 @@
+ 				clocks = <&gcc GSBI3_QUP_CLK>,
+ 					 <&gcc GSBI3_H_CLK>;
+ 				clock-names = "core", "iface";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 			};
+ 		};
+ 
+-- 
+1.9.1
