@@ -1,57 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: porter: add MAX3355 support
-Date: Wed, 27 Jan 2016 01:14:21 +0300
-Message-ID: <4506196.xOgpYRO52t@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [BISECTED] v4.5-rc1 phylib regression
+Date: Tue, 26 Jan 2016 15:54:13 -0800
+Message-ID: <56A80725.1070808@gmail.com>
+References: <20160126044624.GH3880@lunn.ch> <20160126121435.GK22974@ak-desktop.emea.nsn-net.net> <20160126133417.GI3880@lunn.ch> <CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com> <20160126175353.GG27473@lunn.ch> <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com> <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com> <56A7DB27.6080203@gmail.com> <20160126213600.GJ27473@lunn.ch> <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com> <20160126220924.GK27473@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160126220924.GK27473@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Olof Johansson <olof@lixom.net>
+Cc: Aaro Koskinen <aaro.koskinen@nokia.com>, "David S. Miller" <davem@davemloft.net>, Network Development <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
-are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
-can add  MAX3355 device node to  the Porter device tree and properly refer
-to it from the USBHS node instead of using  "renesas,enable-gpio" property
-which only allowed checking the USB ID pin  at the driver probe time;  now
-this  pin's  state can be monitored dynamically!
+On 26/01/16 14:09, Andrew Lunn wrote:
+>>> Nope, not an option. Only a small number of DTB actually use c22 or
+>>> c45. The majority of devices have no compatible at all. Why should
+>>> they, the binding documentation says it is optional!
+>>
+>> So one thing that can be done is to just have a whitelist in the
+>> driver that we add the known phy compatibles to, with a nice comment
+>> above that this should only be for legacy device trees.
+> 
+> So you mean drivers/of/of_mdio.c:of_mdiobus_child_is_phy()
+> has a white list like:
+> 
+> "brcm,40nm-ephy"
+> "marvell,88E1111", 
+> "marvell,88e1116",
+> "marvell,88e1118",
+> "marvell,88e1149r",
+> "marvell,88e1310",
+> "marvell,88E1510",
+> "marvell,88E1514",
+> "moxa,moxart-rtl8201cp",
+> 
+> Yes, that would work.
+> 
+> We should also update the binding documentation to limit what is legal
+> in the compatible string.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Agreed, and while at it, take the opportunity to make the compatible
+string clause 22/45 mandatory properties so we do not multiply the
+whitelist.
 
----
-This patch is against 'renesas-devel-20160126-v4.5-rc1' tag of Simon Horman's
-'renesas.git' repo.
-
- arch/arm/boot/dts/r8a7791-porter.dts |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -90,6 +90,12 @@
- 			  1800000 0>;
- 	};
- 
-+	max3355: usb-otg {
-+		compatible = "maxim,max3355";
-+		maxim,shdn-gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
-+		id-gpios = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	hdmi-out {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -394,7 +400,7 @@
- 	pinctrl-names = "default";
- 
- 	status = "okay";
--	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	extcon = <&max3355>;
- };
- 
- &usbphy {
+Thanks!
+-- 
+Florian
