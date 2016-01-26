@@ -1,51 +1,34 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [BISECTED] v4.5-rc1 phylib regression
-Date: Tue, 26 Jan 2016 23:09:24 +0100
-Message-ID: <20160126220924.GK27473@lunn.ch>
-References: <20160126044624.GH3880@lunn.ch>
- <20160126121435.GK22974@ak-desktop.emea.nsn-net.net>
- <20160126133417.GI3880@lunn.ch>
- <CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com>
- <20160126175353.GG27473@lunn.ch>
- <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
- <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com>
- <56A7DB27.6080203@gmail.com>
- <20160126213600.GJ27473@lunn.ch>
- <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 1/5] ARM: OMAP2+: hwmod data: Add SSI data for omap36xx
+Date: Wed, 27 Jan 2016 00:12:13 +0200
+Message-ID: <20160126221213.GH15550@darkstar.musicnaut.iki.fi>
+References: <1453045749-22642-1-git-send-email-sre@kernel.org>
+ <1453045749-22642-2-git-send-email-sre@kernel.org>
+ <20160126220738.GG15550@darkstar.musicnaut.iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Aaro Koskinen <aaro.koskinen@nokia.com>, "David S. Miller" <davem@davemloft.net>, Network Development <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20160126220738.GG15550@darkstar.musicnaut.iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Nope, not an option. Only a small number of DTB actually use c22 or
-> > c45. The majority of devices have no compatible at all. Why should
-> > they, the binding documentation says it is optional!
+Hi,
+
+On Wed, Jan 27, 2016 at 12:07:38AM +0200, Aaro Koskinen wrote:
+> On Sun, Jan 17, 2016 at 04:49:05PM +0100, Sebastian Reichel wrote:
+> > This patch enables Synchronous Serial Interface (SSI)
+> > hwmod support for OMAP36xx SoCs (used by Nokia N950/N9).
+> > 
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
 > 
-> So one thing that can be done is to just have a whitelist in the
-> driver that we add the known phy compatibles to, with a nice comment
-> above that this should only be for legacy device trees.
+> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-So you mean drivers/of/of_mdio.c:of_mdiobus_child_is_phy()
-has a white list like:
+This applies to whole series (1/5). I was able to use gprs data connection
+to connect to internet with N950 + v4.5-rc1 + these patches.
 
-"brcm,40nm-ephy"
-"marvell,88E1111", 
-"marvell,88e1116",
-"marvell,88e1118",
-"marvell,88e1149r",
-"marvell,88e1310",
-"marvell,88E1510",
-"marvell,88E1514",
-"moxa,moxart-rtl8201cp",
+Thanks,
 
-Yes, that would work.
-
-We should also update the binding documentation to limit what is legal
-in the compatible string.
-
-   Andrew
+A.
