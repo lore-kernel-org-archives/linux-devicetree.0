@@ -1,62 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 1/2] regulator: Add document for MT6323 regulator
-Date: Mon, 25 Jan 2016 20:31:52 -0600
-Message-ID: <20160126023152.GA9464@rob-hp-laptop>
-References: <1453722989-41622-1-git-send-email-blogic@openwrt.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v6 0/1] Introduce Innosilicon HDMI driver on Rockchip
+ platforms
+Date: Tue, 26 Jan 2016 10:34:40 +0800
+Message-ID: <56A6DB40.9030209@rock-chips.com>
+References: <1453686197-20975-1-git-send-email-ykk@rock-chips.com>
+ <30308769.0Ysu5UYYQv@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453722989-41622-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Steven Liu <steven.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <30308769.0Ysu5UYYQv@diego>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zheng Yang <zhengyang@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 12:56:28PM +0100, John Crispin wrote:
-> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../bindings/regulator/mt6323-regulator.txt        |  241 ++++++++++++++++++++
->  1 file changed, 241 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> new file mode 100644
-> index 0000000..4412102
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> @@ -0,0 +1,241 @@
-> +Mediatek MT6323 Regulator Driver
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt6323-regulator"
-> +- mt6323regulator: List of regulators provided by this controller. It is named
-> +  according to its regulator type, buck_<name> and ldo_<name>.
-> +  The definition for each of these nodes is defined using the standard binding
-> +  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
-
-This is a node, not property and it should be named "regulators".
-
-> +
-> +The valid names for regulators are::
-> +BUCK:
-> +  buck_vproc, buck_vsys, buck_vpa
-> +LDO:
-> +  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
-> +  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-> +  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
-> +  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
-> +
-> +Example:
-> +
-> +	pmic: mt6323 {
-> +		compatible = "mediatek,mt6323";
-> +
-> +		mt6323regulator: mt6323regulator{
-> +			compatible = "mediatek,mt6323-regulator";
-> +
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSGVpa28sCgpPbiAwMS8yNS8yMDE2IDA4OjQ3IFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToK
+PiBBbSBNb250YWcsIDI1LiBKYW51YXIgMjAxNiwgMDk6NDM6MTcgc2NocmllYiBZYWtpciBZYW5n
+Ogo+PiBIZXJlIGFyZSBhIGJyaWVmIGludHJvZHVjdGlvbiB0byBJbm5vc2lsaWNvbiBIRE1JIElQ
+Ogo+PiAgICAtIFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFy
+ZCBjb21wbGlhbnQgdHJhbnNtaXR0ZXIKPj4gICAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1
+bmN0aW9uIGRlZmluZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKPj4gICAgLSBEaWdpdGFsIHZpZGVv
+IGludGVyZmFjZSBzdXBwb3J0cyBhIHBpeGVsIHNpemUgb2YgMjQsIDMwLCAzNiwgNDhiaXRzCj4+
+IGNvbG9yIGRlcHRoIGluIFJHQiAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBE
+aWdpdGFsLCBEVFMgZGlnaXRhbAo+PiBhdWRpbyB0cmFuc21pc3Npb24gKDMyLTE5MmtIeiBGcykg
+dXNpbmcgSUVDNjA5NTggYW5kIElFQyA2MTkzNwo+PiAgICAtIFRoZSBFRElEIGFuZCBDRUMgZnVu
+Y3Rpb24gYXJlIGFsc28gc3VwcG9ydGVkIGJ5IElubm9zaWxpY29uIEhETUkKPj4gVHJhbnNtaXR0
+ZXIgQ29udHJvbGxlCj4gaGF2ZSB5b3UgbG9zdCBzZXBhcmF0ZSB0aGUgZGV2aWNldHJlZS1iaW5k
+aW5nIHBhdGNoIHNvbWV3aGVyZT8KPgo+IEkgZG9uJ3QgcmVtZW1iZXIgaXQgZ2V0dGluZyBhcHBs
+aWVkIGFuZCBNYXJrIG1heSBtaXNzIGl0IGlmIGl0J3Mgb25seQo+IGNvbnRhaW5lZCBpbiBzb21l
+IG9sZCBzZXJpZXMuCgpPcHMsIEkgbWF5IG1pc3VuZGVyc3RhbmQgdGhlIHJ1bGUsIEkgdGhvdWdo
+dCBpZiBwYXRjaCB3YXMgYWNrZWQgYnkgCm1haW50YWluZXIsIHRoZW4gSSBzaG91bGQga2VlcCBp
+dCBubyBjaGFuZ2VkLiBIbW1tLCBzbyBub3QgQWNrZWQgYnV0IApBcHBsaWVkLCB0aGFua3MsIEkg
+d291bGQgdXBkYXRlIG5vdy4KCllha2lyCj4KPiBIZWlrbwo+Cj4KPgoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
