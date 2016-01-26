@@ -1,48 +1,82 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 3/3] base: Export platform_msi_domain_{alloc,free}_irqs
-Date: Tue, 26 Jan 2016 13:52:27 +0000
-Message-ID: <1453816347-32720-4-git-send-email-marc.zyngier@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 1/3] irqdomain: Allow domain lookup with DOMAIN_BUS_WIRED token
+Date: Tue, 26 Jan 2016 13:52:25 +0000
+Message-ID: <1453816347-32720-2-git-send-email-marc.zyngier@arm.com>
 References: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453816347-32720-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Let's take the (outlandish) example of an interrupt controller
+capable of handling both wired interrupts and PCI MSIs.
 
-The new function platform_msi_domain_{alloc,free}_irqs are meant to be
-used in platform drivers, which can be built as modules. Therefore, it
-makes sense to export them to be used from kernel modules.
+With the current code, the PCI MSI domain is going to be tagged
+with DOMAIN_BUS_PCI_MSI, and the wired domain with DOMAIN_BUS_ANY.
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Things get hairy when we start looking up the domain for a wired
+interrupt (typically when creating it based on some firmware
+information - DT or ACPI).
+
+In irq_create_fwspec_mapping(), we perform the lookup using
+DOMAIN_BUS_ANY, which is actually used as a wildcard. This gives
+us one chance out of two to end up with the wrong domain, and
+we try to configure a wired interrupt with the MSI domain.
+Everything grinds to a halt pretty quickly.
+
+What we really need to do is to start looking for a domain that
+would uniquely identify a wired interrupt domain, and only use
+DOMAIN_BUS_ANY as a fallback.
+
+In order to solve this, let's introduce a new DOMAIN_BUS_WIRED
+token, which is going to be used exactly as described above.
+Of course, this depends on the irqchip to setup the domain
+bus_token, and nobody had to implement this so far.
+
+Only so far.
+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- drivers/base/platform-msi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/irqdomain.h |  1 +
+ kernel/irq/irqdomain.c    | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index 5df4575..82f4c89 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -246,6 +246,7 @@ out_free_data:
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index d5e5c5b..b236d82 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -70,6 +70,7 @@ struct irq_fwspec {
+  */
+ enum irq_domain_bus_token {
+ 	DOMAIN_BUS_ANY		= 0,
++	DOMAIN_BUS_WIRED,
+ 	DOMAIN_BUS_PCI_MSI,
+ 	DOMAIN_BUS_PLATFORM_MSI,
+ 	DOMAIN_BUS_NEXUS,
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 22aa961..def2664 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -573,10 +573,15 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 	unsigned int type = IRQ_TYPE_NONE;
+ 	int virq;
  
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(platform_msi_domain_alloc_irqs);
+-	if (fwspec->fwnode)
+-		domain = irq_find_matching_fwnode(fwspec->fwnode, DOMAIN_BUS_ANY);
+-	else
++	if (fwspec->fwnode) {
++		domain = irq_find_matching_fwnode(fwspec->fwnode,
++						  DOMAIN_BUS_WIRED);
++		if (!domain)
++			domain = irq_find_matching_fwnode(fwspec->fwnode,
++							  DOMAIN_BUS_ANY);
++	} else {
+ 		domain = irq_default_domain;
++	}
  
- /**
-  * platform_msi_domain_free_irqs - Free MSI interrupts for @dev
-@@ -268,3 +269,4 @@ void platform_msi_domain_free_irqs(struct device *dev)
- 	msi_domain_free_irqs(dev->msi_domain, dev);
- 	platform_msi_free_descs(dev);
- }
-+EXPORT_SYMBOL_GPL(platform_msi_domain_free_irqs);
+ 	if (!domain) {
+ 		pr_warn("no irq domain found for %s !\n",
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
