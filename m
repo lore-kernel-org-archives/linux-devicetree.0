@@ -1,67 +1,215 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v7 0/2] Add Rockchip Inno-HDMI driver
-Date: Tue, 26 Jan 2016 10:59:02 +0800
-Message-ID: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 1/3] input: touchscreen: ad7879: move header to input subdirectory
+Date: Mon, 25 Jan 2016 19:04:35 -0800
+Message-ID: <1453777477-29706-1-git-send-email-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, realmz6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6CiAg
-LSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAxLjAgc3RhbmRhcmQgY29tcGxp
-YW50IHRyYW5zbWl0dGVyCiAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRlZmlu
-ZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBv
-cnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IgZGVwdGggaW4gUkdC
-CiAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRzIFBDTSwgRG9sYnkgRGlnaXRhbCwgRFRTIGRpZ2l0
-YWwgYXVkaW8gdHJhbnNtaXNzaW9uCiAgICAoMzItMTkya0h6IEZzKSB1c2luZyBJRUM2MDk1OCBh
-bmQgSUVDIDYxOTM3CiAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1cHBv
-cnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyIENvbnRyb2xsZQoKQ2hhbmdlcyBp
-biB2NzoKLSBDb3JyZWN0IHRoZSBtb2R1bGUgbGljbmVzZSBzdGF0ZW1lbnQgKFBhdWwpCiAgICAg
-LSBNT0RVTEVfTElDRU5TRSgiR1BMIik7CiAgICAgKyBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7
-Ci0gU3RhcnQgaW5kZW50YXRpb24gd2l0aCB0YWJzIGFuZCBmaXggdGhlIG1pc3NwZWxsIGluIEtj
-b25maWcgKFBhdWwpCi0gQ2FycnkgdGhlIGxvc3QgZGV2aWNlLWJpbmRpbmcgZG9jdW1lbnQgKEhl
-aWtvKQoKQ2hhbmdlcyBpbiB2NjoKLSBSZWJhc2UgdGhlIE1ha2VmaWxlL0tjb25maWcgZmlsZXMg
-d2hpY2ggYWRkIGJ5IENocmlzJ3Mgcm9ja2NoaXAtbWlwaSBkcml2ZXIgKENhZXNlcikKCkNoYW5n
-ZXMgaW4gdjU6Ci0gVXNlIGhkbWlfaW5mb2ZyYW1lIGhlbHBlciBmdW5jdGlvbnMgdG8gcGFja2Vk
-IHRoZSBpbmZvZnJhbWUgKFJ1c3NlbGwpCi0gUmVtb3ZlIHRoZSB1bnVzZWQgZG91YmxlIHdhaXRf
-Zm9yX2NvbXBsZXRpb25fdGltZW91dCBmb3IgZGRjIHRyYW5zZmVyIChSdXNzZWxsKQotIFJlbW92
-ZSB0aGUgdW51c2VkIGxvY2FsIHZhcmlhYmxlIGluICJpbm5vX2hkbWlfaTJjX3dyaXRlKCkiIGZ1
-bmN0aW9uIChSdXNzZWxsKQoKQ2hhbmdlcyBpbiB2NDoKLSBNb2RpZnkgdGhlIGNvbW1pdCB0aXRs
-ZSAiZHJtL3JvY2tjaGlwOiBoZG1pOiAuLi4iIChNYXJrKQotIENvcnJlY3QgdGhlICJES01TIiB0
-byAiRFBNUyIgKE1hcmspCi0gRml4IG92ZXIgODAgY2hhcmFjdGVycyBwcm9ibGVtcyAoTWFyaykK
-LSBSZW1vdmUgZW5jb2RlciAucHJlcGFyZS8uY29tbWl0IGhlbHBlciBmdW5jdGlvbnMsIGFuZCBt
-b3ZlIHRoZSB2b3AgbW9kZQpjb25maWd1cmUgZnVuY3Rpb24gaW50byBlbmNvZGVyIC5lbmFibGUg
-aGVscGVyIGZ1bmN0aW9ucy4gKE1hcmspCgpDaGFuZ2VzIGluIHYzOgotIFVzZSBlbmNvZGVyIGVu
-YWJsZS9kaXNhYmxlIGZ1bmN0aW9uLCBhbmQgcmVtb3ZlIHRoZSBlbmNvZGVyIERQTVMgZnVuY3Rp
-b24KLSBLZWVwIEhETUkgUExMIHBvd2VyIG9uIGluIHN0YW5kYnkgbW9kZQoKQ2hhbmdlcyBpbiB2
-MjoKLSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNvbm5lY3RvciBpbml0
-IChNYXJrKQotIFJlbW92ZSAiaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNvZGVyOyIgKE1h
-cmspCi0gQWRkIHRoZSBBY2tlZC1ieSB0YWdzIGZyb20gUm9iCi0gQ29ycmVjdCB0aGUgbWlzc3Bl
-bGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgpZYWtpciBZYW5nICgyKToKICBkcm0vcm9ja2No
-aXA6IGhkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1cHBvcnQKICBkdC1iaW5kaW5nczogYWRk
-IGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1JIG9uIFJvY2tjaGlwIHBsYXRmb3JtCgogLi4u
-L2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dCAgICAgICAgfCAgNTAgKysK
-IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA4
-ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwg
-ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAg
-IHwgOTQxICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lu
-bm9faGRtaS5oICAgICAgICAgICAgICAgfCAzNjIgKysrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwg
-MTM2MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAoK
-LS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The header file is used by the SPI and I2C variant of the driver.
+Therefore, move it to a more generic place under input.
+
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ arch/blackfin/mach-bf527/boards/ezbrd.c    |  2 +-
+ arch/blackfin/mach-bf527/boards/ezkit.c    |  2 +-
+ arch/blackfin/mach-bf527/boards/tll6527m.c |  2 +-
+ arch/blackfin/mach-bf537/boards/stamp.c    |  2 +-
+ arch/blackfin/mach-bf538/boards/ezkit.c    |  2 +-
+ drivers/input/touchscreen/ad7879.c         |  4 +--
+ include/linux/input/ad7879.h               | 41 ++++++++++++++++++++++++++++++
+ include/linux/spi/ad7879.h                 | 41 ------------------------------
+ 8 files changed, 48 insertions(+), 48 deletions(-)
+ create mode 100644 include/linux/input/ad7879.h
+ delete mode 100644 include/linux/spi/ad7879.h
+
+diff --git a/arch/blackfin/mach-bf527/boards/ezbrd.c b/arch/blackfin/mach-bf527/boards/ezbrd.c
+index a3a5723..b5a74e5 100644
+--- a/arch/blackfin/mach-bf527/boards/ezbrd.c
++++ b/arch/blackfin/mach-bf527/boards/ezbrd.c
+@@ -279,7 +279,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf527/boards/ezkit.c b/arch/blackfin/mach-bf527/boards/ezkit.c
+index d4219e8..276270c 100644
+--- a/arch/blackfin/mach-bf527/boards/ezkit.c
++++ b/arch/blackfin/mach-bf527/boards/ezkit.c
+@@ -477,7 +477,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf527/boards/tll6527m.c b/arch/blackfin/mach-bf527/boards/tll6527m.c
+index a0f5856..ff67ddc 100644
+--- a/arch/blackfin/mach-bf527/boards/tll6527m.c
++++ b/arch/blackfin/mach-bf527/boards/tll6527m.c
+@@ -29,7 +29,7 @@
+ #include <asm/dpmc.h>
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ #define LCD_BACKLIGHT_GPIO 0x40
+ /* TLL6527M uses TLL7UIQ35 / ADI LCD EZ Extender. AD7879 AUX GPIO is used for
+  * LCD Backlight Enable
+diff --git a/arch/blackfin/mach-bf537/boards/stamp.c b/arch/blackfin/mach-bf537/boards/stamp.c
+index c181543..cf063be 100644
+--- a/arch/blackfin/mach-bf537/boards/stamp.c
++++ b/arch/blackfin/mach-bf537/boards/stamp.c
+@@ -776,7 +776,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf538/boards/ezkit.c b/arch/blackfin/mach-bf538/boards/ezkit.c
+index ae2fcbb..849587c 100644
+--- a/arch/blackfin/mach-bf538/boards/ezkit.c
++++ b/arch/blackfin/mach-bf538/boards/ezkit.c
+@@ -521,7 +521,7 @@ static struct bfin5xx_spi_chip spi_flash_chip_info = {
+ #endif	/* CONFIG_SPI_BFIN5XX */
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/drivers/input/touchscreen/ad7879.c b/drivers/input/touchscreen/ad7879.c
+index 16b5cc2..a73934b 100644
+--- a/drivers/input/touchscreen/ad7879.c
++++ b/drivers/input/touchscreen/ad7879.c
+@@ -31,7 +31,7 @@
+ #include <linux/i2c.h>
+ #include <linux/gpio.h>
+ 
+-#include <linux/spi/ad7879.h>
++#include <linux/input/ad7879.h>
+ #include <linux/module.h>
+ #include "ad7879.h"
+ 
+@@ -170,7 +170,7 @@ static int ad7879_report(struct ad7879 *ts)
+ 	 * filter.  The combination of these two techniques provides a robust
+ 	 * solution, discarding the spurious noise in the signal and keeping
+ 	 * only the data of interest.  The size of both filters is
+-	 * programmable. (dev.platform_data, see linux/spi/ad7879.h) Other
++	 * programmable. (dev.platform_data, see linux/input/ad7879.h) Other
+ 	 * user-programmable conversion controls include variable acquisition
+ 	 * time, and first conversion delay. Up to 16 averages can be taken
+ 	 * per conversion.
+diff --git a/include/linux/input/ad7879.h b/include/linux/input/ad7879.h
+new file mode 100644
+index 0000000..98fc270
+--- /dev/null
++++ b/include/linux/input/ad7879.h
+@@ -0,0 +1,41 @@
++/* linux/input/ad7879.h */
++
++/* Touchscreen characteristics vary between boards and models.  The
++ * platform_data for the device's "struct device" holds this information.
++ *
++ * It's OK if the min/max values are zero.
++ */
++struct ad7879_platform_data {
++	u16	model;			/* 7879 */
++	u16	x_plate_ohms;
++	u16	x_min, x_max;
++	u16	y_min, y_max;
++	u16	pressure_min, pressure_max;
++
++	bool	swap_xy;		/* swap x and y axes */
++
++	/* [0..255] 0=OFF Starts at 1=550us and goes
++	 * all the way to 9.440ms in steps of 35us.
++	 */
++	u8	pen_down_acc_interval;
++	/* [0..15] Starts at 0=128us and goes all the
++	 * way to 4.096ms in steps of 128us.
++	 */
++	u8	first_conversion_delay;
++	/* [0..3] 0 = 2us, 1 = 4us, 2 = 8us, 3 = 16us */
++	u8	acquisition_time;
++	/* [0..3] Average X middle samples 0 = 2, 1 = 4, 2 = 8, 3 = 16 */
++	u8	averaging;
++	/* [0..3] Perform X measurements 0 = OFF,
++	 * 1 = 4, 2 = 8, 3 = 16 (median > averaging)
++	 */
++	u8	median;
++	/* 1 = AUX/VBAT/GPIO export GPIO to gpiolib
++	 * requires CONFIG_GPIOLIB
++	 */
++	bool	gpio_export;
++	/* identifies the first GPIO number handled by this chip;
++	 * or, if negative, requests dynamic ID allocation.
++	 */
++	s32	gpio_base;
++};
+diff --git a/include/linux/spi/ad7879.h b/include/linux/spi/ad7879.h
+deleted file mode 100644
+index 58368be..0000000
+--- a/include/linux/spi/ad7879.h
++++ /dev/null
+@@ -1,41 +0,0 @@
+-/* linux/spi/ad7879.h */
+-
+-/* Touchscreen characteristics vary between boards and models.  The
+- * platform_data for the device's "struct device" holds this information.
+- *
+- * It's OK if the min/max values are zero.
+- */
+-struct ad7879_platform_data {
+-	u16	model;			/* 7879 */
+-	u16	x_plate_ohms;
+-	u16	x_min, x_max;
+-	u16	y_min, y_max;
+-	u16	pressure_min, pressure_max;
+-
+-	bool	swap_xy;		/* swap x and y axes */
+-
+-	/* [0..255] 0=OFF Starts at 1=550us and goes
+-	 * all the way to 9.440ms in steps of 35us.
+-	 */
+-	u8	pen_down_acc_interval;
+-	/* [0..15] Starts at 0=128us and goes all the
+-	 * way to 4.096ms in steps of 128us.
+-	 */
+-	u8	first_conversion_delay;
+-	/* [0..3] 0 = 2us, 1 = 4us, 2 = 8us, 3 = 16us */
+-	u8	acquisition_time;
+-	/* [0..3] Average X middle samples 0 = 2, 1 = 4, 2 = 8, 3 = 16 */
+-	u8	averaging;
+-	/* [0..3] Perform X measurements 0 = OFF,
+-	 * 1 = 4, 2 = 8, 3 = 16 (median > averaging)
+-	 */
+-	u8	median;
+-	/* 1 = AUX/VBAT/GPIO export GPIO to gpiolib
+-	 * requires CONFIG_GPIOLIB
+-	 */
+-	bool	gpio_export;
+-	/* identifies the first GPIO number handled by this chip;
+-	 * or, if negative, requests dynamic ID allocation.
+-	 */
+-	s32	gpio_base;
+-};
+-- 
+2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
