@@ -1,167 +1,50 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH] arm: dts: rockchip: remove broken-cd from emmc and sdio
-Date: Tue, 26 Jan 2016 10:23:27 +0800
-Message-ID: <56A6D89F.9020602@rock-chips.com>
-References: <1453774003-10184-1-git-send-email-shawn.lin@rock-chips.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v6] drm/rockchip: hdmi: add Innosilicon HDMI support
+Date: Tue, 26 Jan 2016 10:28:03 +0800
+Message-ID: <56A6D9B3.4070006@rock-chips.com>
+References: <1453686197-20975-1-git-send-email-ykk@rock-chips.com>
+ <1453686430-21470-1-git-send-email-ykk@rock-chips.com>
+ <1453769119.17181.37.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453774003-10184-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zhengxing@rock-chips.com, wxt@rock-chips.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1453769119.17181.37.camel@tiscali.nl>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Bolle <pebolle@tiscali.nl>, Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-+ Xing and Caesar
-
-Hi Xing and Caesar,
-
-For future dts, we should avoid to add these two properties
-together. :)
-
-On 2016/1/26 10:06, Shawn Lin wrote:
-> Only one of "broken-cd" and "non-removable" should be supplied
-> according to Documentation/devicetree/bindings/mmc/mmc.txt.
-> Obviously emmc and sdio-wifi are non-removable devices, while
-> broken-cd is for removable device whose card detect pin is broken.
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->
->   arch/arm/boot/dts/rk3036-kylin.dts     | 1 -
->   arch/arm/boot/dts/rk3036.dtsi          | 1 -
->   arch/arm/boot/dts/rk3066a-rayeager.dts | 2 --
->   arch/arm/boot/dts/rk3228-evb.dts       | 1 -
->   arch/arm/boot/dts/rk3288-evb.dtsi      | 1 -
->   arch/arm/boot/dts/rk3288-firefly.dtsi  | 2 --
->   arch/arm/boot/dts/rk3288-popmetal.dts  | 1 -
->   arch/arm/boot/dts/rk3288-veyron.dtsi   | 2 --
->   8 files changed, 11 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-> index 992f9ca..023153a 100644
-> --- a/arch/arm/boot/dts/rk3036-kylin.dts
-> +++ b/arch/arm/boot/dts/rk3036-kylin.dts
-> @@ -262,7 +262,6 @@
->   &sdio {
->   	status = "okay";
->
-> -	broken-cd;
->   	bus-width = <4>;
->   	cap-sdio-irq;
->   	default-sample-phase = <90>;
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index b9567c1..cf54066 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -214,7 +214,6 @@
->   		compatible = "rockchip,rk3288-dw-mshc";
->   		reg = <0x1021c000 0x4000>;
->   		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> -		broken-cd;
->   		bus-width = <8>;
->   		cap-mmc-highspeed;
->   		clock-frequency = <37500000>;
-> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
-> index 341c1f8..e9db017 100644
-> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
-> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
-> @@ -170,7 +170,6 @@
->   };
->
->   &emmc {
-> -	broken-cd;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	disable-wp;
-> @@ -336,7 +335,6 @@
->   };
->
->   &mmc1 {
-> -	broken-cd;
->   	bus-width = <4>;
->   	disable-wp;
->   	non-removable;
-> diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
-> index e3898b8..a6d6a7b 100644
-> --- a/arch/arm/boot/dts/rk3228-evb.dts
-> +++ b/arch/arm/boot/dts/rk3228-evb.dts
-> @@ -53,7 +53,6 @@
->   };
->
->   &emmc {
-> -	broken-cd;
->   	cap-mmc-highspeed;
->   	mmc-ddr-1_8v;
->   	disable-wp;
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-> index 4faabdb..f90e408 100644
-> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -172,7 +172,6 @@
->   };
->
->   &emmc {
-> -	broken-cd;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	disable-wp;
-> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-> index 4e3fd9a..3f36af7 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-> @@ -208,7 +208,6 @@
->   };
->
->   &emmc {
-> -	broken-cd;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	disable-wp;
-> @@ -485,7 +484,6 @@
->   };
->
->   &sdio0 {
-> -	broken-cd;
->   	bus-width = <4>;
->   	disable-wp;
->   	non-removable;
-> diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
-> index 65c4756..cc2be77 100644
-> --- a/arch/arm/boot/dts/rk3288-popmetal.dts
-> +++ b/arch/arm/boot/dts/rk3288-popmetal.dts
-> @@ -162,7 +162,6 @@
->   };
->
->   &emmc {
-> -	broken-cd;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	disable-wp;
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 9fce91f..725e08b 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -146,7 +146,6 @@
->   &emmc {
->   	status = "okay";
->
-> -	broken-cd;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	rockchip,default-sample-phase = <158>;
-> @@ -352,7 +351,6 @@
->   &sdio0 {
->   	status = "okay";
->
-> -	broken-cd;
->   	bus-width = <4>;
->   	cap-sd-highspeed;
->   	cap-sdio-irq;
->
-
-
--- 
-Best Regards
-Shawn Lin
+SGkgUGF1bCwKCk9uIDAxLzI2LzIwMTYgMDg6NDUgQU0sIFBhdWwgQm9sbGUgd3JvdGU6Cj4gT24g
+bWEsIDIwMTYtMDEtMjUgYXQgMDk6NDcgKzA4MDAsIFlha2lyIFlhbmcgd3JvdGU6Cj4+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9LY29uZmlnCj4+ICtjb25maWcgUk9DS0NISVBfSU5OT19IRE1JCj4+ICsJdHJp
+c3RhdGUgIlJvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMgZm9yIElubm9zaWxpY29uIEhETUki
+Cj4+ICsgICAgICAgIGRlcGVuZHMgb24gRFJNX1JPQ0tDSElQCj4+ICsgICAgICAgIGhlbHAKPj4g
+KwkgIFRoaXMgc2VsZWN0cyBzdXBwb3J0IGZvciBSb2NrY2hpcCBTb0Mgc3BlY2lmaWMgZXh0ZW5z
+aW9ucwo+PiArCSAgZm9yIHRoZSBJbm5vc2lsaWNvbiBIRE1JIGRyaXZlci4gSWYgeW91IHdhbnQg
+dG8gZW5hYmxlCj4+ICsJICBIRE1JIG9uIFJLMzAzNiBiYXNlZCBTb0MsIHlvdSBzaG91bGQgc2Vs
+ZXQgdGhpcyBvcHRpb24uCj4gKFJlYWxseSB0cml2aWFsOiBzdGFydCBpbmRlbnRhdGlvbiB3aXRo
+IHRhYnMgb25seSwgcGxlYXNlLiBBbmQKPiBzL3NlbGV0L3NlbGVjdC8uKQpHb3QgaXQKPj4gLS0t
+IC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMK
+Pj4gKyAqIFRoaXMgc29mdHdhcmUgaXMgbGljZW5zZWQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBH
+TlUgR2VuZXJhbAo+PiBQdWJsaWMKPj4gKyAqIExpY2Vuc2UgdmVyc2lvbiAyLCBhcyBwdWJsaXNo
+ZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiwKPj4gYW5kCj4+ICsgKiBtYXkgYmUg
+Y29waWVkLCBkaXN0cmlidXRlZCwgYW5kIG1vZGlmaWVkIHVuZGVyIHRob3NlIHRlcm1zLgo+IFRo
+aXMgc3RhdGVzIHRoaXMgZmlsZSBpcyBsaWNlbnNlZCBHUEwgdjIgb25seS4KPgo+PiArTU9EVUxF
+X0xJQ0VOU0UoIkdQTCIpOwo+IEFuZCwgYWNjb3JkaW5nIHRvIGluY2x1ZGUvbGludXgvbW9kdWxl
+LmgsIHRoaXMgbWVhbnMgIkdOVSBQdWJsaWMgTGljZW5zZQo+IHYyIG9yIGxhdGVyIi4KPgo+IFNv
+IEkgdGhpbmsgdGhlcmUncyBhIChzdWJ0bGUpIG1pc21hdGNoIGJldHdlZW4gdGhlIGxpY2Vuc2Ug
+aWRlbnQgdXNlZAo+IGZvciB0aGlzIGRyaXZlciBhbmQgdGhlIGNvbW1lbnQgYWJvdmUuCgpBaCwg
+dGhhbmtzLgoKLSBZYWtpcgoKPiBUaGFua3MsCj4KPgo+IFBhdWwgQm9sbGUKPgo+Cj4KCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
