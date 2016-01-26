@@ -1,90 +1,61 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 16/17] FDT: Add a helper to get specified name subnode
-Date: Tue, 26 Jan 2016 20:27:29 +0800
-Message-ID: <56A76631.2070802@huawei.com>
-References: <1453519184-11908-1-git-send-email-zhaoshenglong@huawei.com> <1453519184-11908-17-git-send-email-zhaoshenglong@huawei.com> <alpine.DEB.2.02.1601261156340.3619@kaball.uk.xensource.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/2] power: ucs1002: Add support for Programmable USB
+ Port Power Controller
+Date: Tue, 26 Jan 2016 21:10:38 +0800
+Message-ID: <201601262113.QMsv6ZED%fengguang.wu@intel.com>
+References: <1453799541-5445-3-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1601261156340.3619-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453799541-5445-3-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: kbuild-all@01.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Enric,
+
+[auto build test WARNING on battery/master]
+[also build test WARNING on v4.5-rc1 next-20160125]
+[if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
+
+url:    https://github.com/0day-ci/linux/commits/Enric-Balletbo-i-Serra/Add-UCS1002-USB-Port-Power-Controller/20160126-171717
+base:   git://git.infradead.org/battery-2.6.git master
 
 
-On 2016/1/26 20:11, Stefano Stabellini wrote:
-> On Sat, 23 Jan 2016, Shannon Zhao wrote:
->> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > 
->> > Sometimes it needs to check if there is a node in FDT by full path.
->> > Introduce this helper to get the specified name subnode if it exists.
->> > 
->> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > ---
->> > CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > ---
->> >  drivers/of/fdt.c       | 35 +++++++++++++++++++++++++++++++++++
->> >  include/linux/of_fdt.h |  2 ++
->> >  2 files changed, 37 insertions(+)
->> > 
->> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> > index 655f79d..112ec16 100644
->> > --- a/drivers/of/fdt.c
->> > +++ b/drivers/of/fdt.c
->> > @@ -645,6 +645,41 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->> >  }
->> >  
->> >  /**
->> > + * of_get_flat_dt_subnode_by_name - get subnode of specified node by name
->> > + *
->> > + * @node: the parent node
->> > + * @uname: the name of subnode
->> > + * @return offset of the subnode, or -FDT_ERR_NOTFOUND if there is none
->> > + */
->> > +
->> > +int of_get_flat_dt_subnode_by_name(unsigned long node, const char *uname)
->> > +{
->> > +	const void *blob = initial_boot_params;
->> > +	int offset;
->> > +	const char *pathp;
->> > +
->> > +	/* Find first subnode if it exists */
->> > +	offset = fdt_first_subnode(blob, node);
->> > +	if (offset < 0)
->> > +		return -FDT_ERR_NOTFOUND;
->> > +	pathp = fdt_get_name(blob, offset, NULL);
->> > +	if (strncmp(pathp, uname, strlen(uname)) == 0)
->> > +		return offset;
-> Wouldn't this check succeed even if uname is "uefi" and the node
-> name is actually "uefiiiii"?  You might have to use strcmp.
-> 
-Ah, yes. Will fix this.
+coccinelle warnings: (new ones prefixed by >>)
 
-> 
->> > +	/* Find other subnodes */
->> > +	do {
->> > +		offset = fdt_next_subnode(blob, offset);
->> > +		if (offset < 0)
->> > +			return -FDT_ERR_NOTFOUND;
->> > +		pathp = fdt_get_name(blob, offset, NULL);
->> > +		if (strncmp(pathp, uname, strlen(uname)) == 0)
->> > +			return offset;
->> > +	} while (offset >= 0);
-> Rather than writing the name check twice, I think it would be best to
-> code this loop as:
-> 
->     for (offset = fdt_first_subnode(blob, offset);
->          offset >= 0;
->          offset = fdt_next_subnode(blob, offset)) {
-> 
->          /* do name check */
-> 
-> 
-> 
-Thanks for your suggestion. Will change this.
+>> drivers/power/ucs1002_power.c:203:40-49: ERROR: info -> pdata is NULL but dereferenced.
 
--- 
-Shannon
+vim +203 drivers/power/ucs1002_power.c
+
+   187		/* Read the polarity setting determined by the SEL pin */
+   188		ret = regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
+   189		if (ret < 0)
+   190			return ret;
+   191	
+   192		if (regval & F_SEL_PIN)
+   193			val = enable ? F_PWR_EN_SET : 0;
+   194		else
+   195			val = enable ? 0 : F_PWR_EN_SET;
+   196	
+   197		if (info->pdata) {
+   198			ret = regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
+   199						 F_PWR_EN_SET, val);
+   200			if (ret < 0)
+   201				return ret;
+   202		} else {
+ > 203			gpiod_set_value_cansleep(info->pdata->gpiod_pwr, val ? 0 : 1);
+   204		}
+   205	
+   206		info->enabled = enable;
+   207	
+   208		return 0;
+   209	}
+   210	
+   211	static int ucs1002_get_online(struct ucs1002_info *info,
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
