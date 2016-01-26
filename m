@@ -1,38 +1,98 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [BISECTED] v4.5-rc1 phylib regression
-Date: Tue, 26 Jan 2016 10:14:00 -0800
-Message-ID: <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com>
-References: <20160125154520.GI22974@ak-desktop.emea.nsn-net.net>
-	<20160126044624.GH3880@lunn.ch>
-	<20160126121435.GK22974@ak-desktop.emea.nsn-net.net>
-	<20160126133417.GI3880@lunn.ch>
-	<CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com>
-	<20160126175353.GG27473@lunn.ch>
-	<CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v9 1/6] arm64, numa: adding numa support for arm64
+ platforms.
+Date: Tue, 26 Jan 2016 12:52:38 -0600
+Message-ID: <20160126185238.GB17600@localhost>
+References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1453134965-6125-2-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Aaro Koskinen <aaro.koskinen@nokia.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Network Development <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453134965-6125-2-git-send-email-gkulkarni@caviumnetworks.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hogan@imgtec.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@r
 List-Id: devicetree@vger.kernel.org
 
-+devicetree@vger.kernel.org instead.
+On Mon, Jan 18, 2016 at 10:06:00PM +0530, Ganapatrao Kulkarni wrote:
+> Adding numa support for arm64 based platforms.
+> This patch adds by default the dummy numa node and
+> maps all memory and cpus to node 0.
+> using this patch, numa can be simulated on single node arm64 platforms.
 
-On Tue, Jan 26, 2016 at 10:08 AM, Olof Johansson <olof@lixom.net> wrote:
-> On Tue, Jan 26, 2016 at 9:53 AM, Andrew Lunn <andrew@lunn.ch> wrote:
->>> I hate to bikeshed, but I'm not sure if "generic-mdio" is too...
->>> generic? Will someone writing a DT be thinking "well, this is a
->>> generic mdio PHY, I should set it"?  "mdio-device"?
->>> "generic-nonphy-mdio"? Neither of those seem much better.
->>
->> How about 'not-a-phy'?
->
-> "mdio,not-a-phy" or "mdio,non-phy" will scope it a bit, especially if
-> you expect other generic mdio properties that can do with a namespace.
->
-> Probably time to add devicetree-discuss. Doing so.
->
->
-> -Olof
+> diff --git a/arch/arm64/include/asm/mmzone.h b/arch/arm64/include/asm/mmzone.h
+> new file mode 100644
+> index 0000000..2cd804d
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/mmzone.h
+> @@ -0,0 +1,18 @@
+> +#ifndef __ASM_MMZONE_H
+> +#define __ASM_MMZONE_H
+> +
+> +#ifdef CONFIG_NUMA
+> +
+> +#include <linux/mmdebug.h>
+> +#include <linux/types.h>
+> +
+> +#include <asm/smp.h>
+> +#include <asm/numa.h>
+
+Are all these #includes really necessary?  s390 looks very similar and
+doesn't need the #includes.
+
+> +extern struct pglist_data *node_data[];
+> +
+> +#define NODE_DATA(nid)		(node_data[(nid)])
+> +
+> +#endif /* CONFIG_NUMA */
+> +
+> +#endif /* __ASM_MMZONE_H */
+
+> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+> new file mode 100644
+> index 0000000..f28f15b0
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/numa.h
+> @@ -0,0 +1,40 @@
+> +#ifndef __ASM_NUMA_H
+> +#define __ASM_NUMA_H
+> +
+> +#include <linux/nodemask.h>
+> +#include <asm/topology.h>
+> +
+> +#ifdef CONFIG_NUMA
+> +
+> +/* currently, arm64 implements flat NUMA topology */
+> +#define parent_node(node)	(node)
+> +
+> +extern int __node_distance(int from, int to);
+
+Below you add some extern function declarations without the "extern"
+keyword.  I don't know what the convention is for arm64 (I omit the
+"extern" for PCI), but it seems like you should at least be
+consistent.
+
+> +#define node_distance(a, b) __node_distance(a, b)
+> +
+> +extern int cpu_to_node_map[NR_CPUS];
+> +extern nodemask_t numa_nodes_parsed __initdata;
+> +
+> +/* Mappings between node number and cpus on that node. */
+> +extern cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
+> +extern void numa_clear_node(unsigned int cpu);
+> +#ifdef CONFIG_DEBUG_PER_CPU_MAPS
+> +extern const struct cpumask *cpumask_of_node(int node);
+> +#else
+> +/* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+> +static inline const struct cpumask *cpumask_of_node(int node)
+> +{
+> +	return node_to_cpumask_map[node];
+> +}
+> +#endif
+> +
+> +void __init arm64_numa_init(void);
+> +int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +void __init numa_set_distance(int from, int to, int distance);
+> +void __init numa_reset_distance(void);
+> +void numa_store_cpu_info(unsigned int cpu);
