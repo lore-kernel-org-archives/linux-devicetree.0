@@ -1,74 +1,122 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V4 1/5] DT: mfd: add device-tree binding doc fro PMIC
- max77620/max20024
-Date: Tue, 26 Jan 2016 21:54:20 +0530
-Message-ID: <56A79DB4.6090000@nvidia.com>
-References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com> <1453198783-28383-2-git-send-email-ldewangan@nvidia.com> <20160125115610.GC3368@x1> <56A63A85.6060609@nvidia.com> <20160126145854.GC3368@x1>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
+Date: Tue, 26 Jan 2016 17:01:22 +0000
+Message-ID: <56A7A662.4090203@nvidia.com>
+References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+ <8579242.omBpg1aLr2@wuerfel>
+ <CAPDyKFrewx5CbS9QKZAxqq0Gu+TywQ3nkDGZFURR=PJLtkDuyQ@mail.gmail.com>
+ <11122786.kKumQ3Dhls@wuerfel> <5697D7E2.3030209@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160126145854.GC3368@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5697D7E2.3030209@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd, Ulf,
 
-On Tuesday 26 January 2016 08:28 PM, Lee Jones wrote:
-> On Mon, 25 Jan 2016, Laxman Dewangan wrote:
->
->> Hmm. I describe the boolean and tristate only. Do I need to define
->> type for integer,string also?
-> I wouldn't describe any of them.  It's normally pretty obvious which
-> properties are boolean by the lack of required cell description.
->
+On 14/01/16 17:16, Jon Hunter wrote:
+> 
+> On 14/01/16 09:21, Arnd Bergmann wrote:
+>> On Thursday 14 January 2016 09:57:14 Ulf Hansson wrote:
+>>> On 13 January 2016 at 21:43, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>> On Wednesday 13 January 2016 18:03:24 Thierry Reding wrote:
+>>>>> On Fri, Dec 04, 2015 at 02:57:17PM +0000, Jon Hunter wrote:
+>>>>>> Enable PM_GENERIC_DOMAINS for tegra 64-bit devices. To ensure that devices
+>>>>>> dependent upon a particular power-domain are only probed when that power
+>>>>>> domain has been powered up, requires that PM is made mandatory for tegra
+>>>>>> 64-bit devices and so select this option for tegra as well.
+>>>>>>
+>>>>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>>>>> ---
+>>>>>>  arch/arm64/Kconfig.platforms | 2 ++
+>>>>>>  1 file changed, 2 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>>>>>> index 9806324fa215..e0b5bd0aff0f 100644
+>>>>>> --- a/arch/arm64/Kconfig.platforms
+>>>>>> +++ b/arch/arm64/Kconfig.platforms
+>>>>>> @@ -93,6 +93,8 @@ config ARCH_TEGRA
+>>>>>>       select GENERIC_CLOCKEVENTS
+>>>>>>       select HAVE_CLK
+>>>>>>       select PINCTRL
+>>>>>> +     select PM
+>>>>>> +     select PM_GENERIC_DOMAINS
+>>>>>>       select RESET_CONTROLLER
+>>>>>>       help
+>>>>>>         This enables support for the NVIDIA Tegra SoC family.
+>>>>>
+>>>>> This has potential consequences for multi-platform builds, doesn't it?
+>>>>> All of a sudden any combination of builds that includes Tegra won't be
+>>>>> possible to build without PM support.
+>>>>>
+>>>>> Adding linux-arm-kernel@lists.infradead.org for visibility.
+>>>>>
+>>>>>
+>>>>
+>>>> Agreed, it would be better to add 'depends on PM_GENERIC_DOMAINS'
+>>>> dependencies in the drivers that require it.
+>>>>
+>>>
+>>> The problem with that approach is that if those drivers are cross SoC
+>>> drivers. In some cases PM isn't needed and it is.
+>>>
+>>> Of course I don't have the in depth knowledge about the drivers being
+>>> used in Tegra which may need PM, perhaps it's not that many?
+>>>
+>>> Anyway, to me it seems like ARCH_TEGRA should depend on PM instead.
+>>> Would that work?
+>>
+>> That seems a little over-restrictive, as it prevents you from
+>> building a tegra kernel even if none of the drivers that rely
+>> on the pm domains are used, but it would work.
+>>
+>> I've looked again at how other platforms (on arm32) do it, and
+>> a lot of them use "select PM_GENERIC_DOMAINS if PM", so they don't
+>> automatically enable PM, but they enable the pmdomain code if
+>> PM is already set. No driver really "depends on PM_GENERIC_DOMAINS",
+>> so we shouldn't really start that now or we end up with circular
+>> dependencies in the long run.
+> 
+> What I am not a fan of in the current gen-pd implementation, is if we
+> have !PM but the platform has power-domains, then there is no way to
+> determine if a device within a power-domain can be probed safely. Some
+> arm platforms force all the power-domains on during early init in the
+> case of !PM. IMO this is still not ideal, because if a power-domain
+> failed to turn on during early init, then you should probably call
+> BUG(). Ideally the kernel should be able to boot and only probe the
+> devices you know that can be probed safely.
+> 
+> So for platforms have use PM_GENERIC_DOMAINS, I think really they should
+> select PM and not "select PM_GENERIC_DOMAINS if PM". IMO, "select
+> PM_GENERIC_DOMAINS if PM" seems fragile.
 
-Rob suggested to use the type also for Boolean and tristate. I think it 
-is good to have for all places that what type of values are valid.
+Any more thoughts on this?
+
+I have been discussing with Thierry and we think that selecting PM for
+tegra still makes the most sense. The question is, is this ok for
+multi-configs?
+
+The only other suggestion/thought I have is to allow
+PM_GENERIC_DOMAINS_OF to be selected independently of PM so that we can
+have minimal support for PM domains that allows you to register PM
+domains with the kernel and their current state, but does not allow you
+to control them, etc. This way tegra could always select
+PM_GENERIC_DOMAINS_OF regardless of PM, and we would be able to
+determine if we can probe a device safely.
+
+I am not sure that Rafael is too keen on this approach but that is the
+only alternative I have come up with.
+
+I have a rough outline of a patch for this here [0] FWIW.
+
+Cheers
+Jon
+
+[0] https://github.com/jonhunter/linux/commits/gpd
 
 
->>>> +The property for fps child nodes as:
->>>> +Required properties:
->>>> +	-reg: FPS number like 0, 1, 2 for FPS0, FPS1 and FPS2 respectively.
->>> I'm surprised Rob Acked this.  We don't usually do device numbers in DT.
->> What is best way to make the child node for FPS and differentiate FPS0,1, 2?
->> What is your suggestion here?
-> There are lots of ways you can solve this and so many examples of
-> others doing so.  I suggest you have a look at some DTS files and
-> figure it out.  One possible solution is to use different compatible
-> strings.
-Here, I think I can go similar to regulators where child node name 
-identifies the regulators.
-
-     fps-config {
-         fps0 {
-             maxim,fps-time-period-us = <1280>;
-             maxim,fps-enable-input = <FPS_EN_SRC_EN0>;
-         };
-
-         fps1 {
-             maxim,fps-time-period-us = <2560>;
-             maxim,fps-enable-input = <FPS_EN_SRC_EN1>;
-         };
-
-         fps2 {
-             maxim,fps-time-period-us = <640>;
-             maxim,fps-enable-input = <FPS_EN_SRC_SW>;
-         };
-     };
-
-So node name gives the FPS name.
-
->>> +Pinmux and GPIO:
->>> +===============
->>> I think this whole section needs moving to ../pinctrl and needs to be
->>> reviewed by Linus W.
->> Is this mean I need to create DT binding doc for the each subsystem
->> differently?
->> Actually during AS3722, I had different understanding to have single file.
-> Yes, that way you have each of the the subsystem experts review your
-> documentation.  You can then link to them from this document.
-OK, I will add different dt binding doc in respective driver and squash 
-that with respected submodule drivers.
 
