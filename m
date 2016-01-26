@@ -1,39 +1,53 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] Documentation: rockchip-dw-mshc: add RK3036 dw-mshc description
-Date: Tue, 26 Jan 2016 10:34:14 +0800
-Message-ID: <1453775654-16105-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 07/11] of: Add bindings of hw-trip-points for soctherm
+Date: Mon, 25 Jan 2016 20:41:57 -0600
+Message-ID: <20160126024157.GA15270@rob-hp-laptop>
+References: <1453718796-4393-1-git-send-email-wni@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1453718796-4393-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-rk3036 dtsi file add dw-mshc compatible "rockchip,rk3036-dw-mshc"
-but didn't add it into rockchip-dw-mshc.txt.
+On Mon, Jan 25, 2016 at 06:46:36PM +0800, Wei Ni wrote:
+> Add hw-trips sub-node for soctherm, which is
+> used to describe the hardware trip points for
+> each soctherm sensors.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+This seems like something that should be common. There was a hwmon 
+binding just the other day with temperature set points.
 
- Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
- 1 file changed, 1 insertion(+)
+> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/thermal/tegra-soctherm.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> index 6b68cd150405..75dc9dbe7e1a 100644
+> --- a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> +++ b/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
+> @@ -26,6 +26,15 @@ Required properties :
+>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h> for a
+>      list of valid values when referring to thermal sensors.
+>  
+> +Optional properties:
+> +- hw-trip-points : A sub-node which is a container of hardware trip points
+> +    for each sensors.
+> +  * sensors: Sub-nodes which are used to describe the HW trip points info,
+> +        must be named as "cpu", "gpu", "mem", "pll".
+> +      Properties:
+> +      - thermtrip-temperature : Shutdown or reset temperature in millicelsius,
+> +        once the temperature of this sensor is higher than the
+> +        thermtrip-temperature, the system will be shutdown or reset.
 
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index 634e249..ea5614b 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -13,6 +13,7 @@ Required Properties:
- 	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
- 							before RK3288
- 	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
-+	- "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
- 	- "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
- 
- Optional Properties:
--- 
-2.3.7
+Append units and temperature is a bit redundant. Something like 
+thermtrip-mC or thermtrip-milliC
 
+You could easily have multiple levels of trip points, so perhaps the 
+name needs to reflect the action (i.e. shutdown).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
