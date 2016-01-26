@@ -1,73 +1,51 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v9 5/6] PCI: generic: Make pci-host-generic driver numa
- aware
-Date: Tue, 26 Jan 2016 14:52:56 -0600
-Message-ID: <20160126205256.GA26268@localhost>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1453134965-6125-6-git-send-email-gkulkarni@caviumnetworks.com>
- <20160126205005.GD17600@localhost>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/15] dmaengine: dw: revisit data_width property
+Date: Tue, 26 Jan 2016 15:07:26 -0600
+Message-ID: <20160126210726.GA4096@rob-hp-laptop>
+References: <1453663322-14474-1-git-send-email-mans@mansr.com>
+ <1453663322-14474-8-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160126205005.GD17600@localhost>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hogan@imgtec.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@r
+In-Reply-To: <1453663322-14474-8-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 02:50:05PM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 18, 2016 at 10:06:04PM +0530, Ganapatrao Kulkarni wrote:
-> > update numa_node of device associated with pci bus.
-> > moved down devm_kzalloc to allocate from node memory.
-> > 
-> > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-> > ---
-> >  drivers/pci/host/pci-host-generic.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-> > index 5434c90..0e1ce06 100644
-> > --- a/drivers/pci/host/pci-host-generic.c
-> > +++ b/drivers/pci/host/pci-host-generic.c
-> > @@ -215,11 +215,9 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >  	const struct of_device_id *of_id;
-> >  	struct device *dev = &pdev->dev;
-> >  	struct device_node *np = dev->of_node;
-> > -	struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> > +	struct gen_pci *pci;
-> >  	struct pci_bus *bus, *child;
-> >  
-> > -	if (!pci)
-> > -		return -ENOMEM;
-> >  
-> >  	type = of_get_property(np, "device_type", NULL);
-> >  	if (!type || strcmp(type, "pci")) {
-> > @@ -230,6 +228,11 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >  	of_pci_check_probe_only();
-> >  
-> >  	of_id = of_match_node(gen_pci_of_match, np);
-> > +	set_dev_node(dev, of_node_to_nid(np));
+On Sun, Jan 24, 2016 at 07:21:54PM +0000, Mans Rullgard wrote:
+> From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > 
-> I like the idea of this patch, but why do we need to call
-> set_dev_node() here in driver code?  Shouldn't that be done by the
-> OF/platform device infrastructure so that all drivers for platform devices
-> get this benefit?
+> There are several changes are done here:
+> 
+>  - Convert the property to be in bytes
+> 
+>    Much more convenient than keeping encoded value.
+> 
+>  - Use one value for all AHB masters for now
+> 
+>    It seems in practice we have no controllers where masters have different
+>    data bus width, we still might return to distinct values when there is a use
+>    case.
+> 
+>  - Rename data_width to data-width in the device tree bindings.
+> 
+>  - While here, replace dwc_fast_ffs() by __ffs().
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+> ---
+> This patch changes the DT binding, so it should probably be amended for
+> compatibility with old device trees.  I've included it as is since I think
+> the change as such is good.
 
-Sorry, I'm just a day late and a dollar short.  I see David and Lorenzo
-have already responded about this.
+Just because you update the dts files, it doesn't make the change okay. 
+I'm fine with the DT change, but the driver would have to support both 
+old and new property names. Doesn't really seem worth doing to me.
 
-> > +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> > +	if (!pci)
-> > +		return -ENOMEM;
-> > +
-> >  	pci->cfg.ops = (struct gen_pci_cfg_bus_ops *)of_id->data;
-> >  	pci->host.dev.parent = dev;
-> >  	INIT_LIST_HEAD(&pci->host.windows);
-> > -- 
-> > 1.8.1.4
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-arch" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
