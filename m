@@ -1,129 +1,42 @@
-From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 1/3] ti-st: use device handles and add device tree
- binding
-Date: Tue, 26 Jan 2016 14:38:54 +0000
-Message-ID: <8665E2433BC68541A24DFFCA87B70F5B237793A1@DFRE01.ent.ti.com>
-References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
- <8665E2433BC68541A24DFFCA87B70F5B23759A5B@DFRE01.ent.ti.com>
- <20151229183534.GM12450@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: MSI: Simplify irqdomain lookup
+Date: Tue, 26 Jan 2016 08:49:31 -0600
+Message-ID: <CAL_JsqJpcU4j2BibE8=vV2AM4peEqoFyTF4OXWRNs9xHL+XYHA@mail.gmail.com>
+References: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com> <1453816347-32720-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1453816347-32720-3-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpQaW5nIG9uIHRoaXMuIEhhdmUgeW91IHNlZW4gbXkgY29tbWVudHMgYmVsb3c/
-DQpJIGFtIHRyeWluZyB0byB1bmRlcnN0YW5kIGlmIGZpeGluZyB0aGUgc21hbGxlciBjb21tZW50
-cyBkaXNjdXNzZWQgYmVsb3cgd291bGQgYWxsb3cgdGhpcyANCnBhdGNoLXNldCB0byBiZSBhY2Nl
-cHRlZCBzbyB3ZSBhdCBsZWFzdCBoYXZlIGEgd29ya2luZyBzdXBwb3J0IGFzIHdpdGggcHJldmlv
-dXMga2VybmVscz8NCk9yIGRvIHdlIGJhc2ljYWxseSBkcm9wIHN1cHBvcnQgZm9yIHRpX3N0IHVu
-dGlsIGl0IGlzIGltcGxlbWVudGVkIGFzIGEgc2xhdmUgZGV2aWNlPw0KDQpDYW4geW91IHBsZWFz
-ZSBsZXQgbWUga25vdyB5b3VyIHRob3VnaHRzPw0KDQpCZXN0IFJlZ2FyZHMsDQpFeWFsDQoNCj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmVpemVyLCBFeWFsDQo+IFNlbnQ6
-IFN1bmRheSwgSmFudWFyeSAxNywgMjAxNiA5OjU3IEFNDQo+IFRvOiAnUm9iIEhlcnJpbmcnDQo+
-IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtb21hcEB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IHBhd2VsLm1vbGxA
-YXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24u
-b3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgdG9ueUBhdG9taWRlLmNvbTsNCj4gbGludXhA
-YXJtLmxpbnV4Lm9yZy51azsgQmFsYmksIEZlbGlwZQ0KPiBTdWJqZWN0OiBSRTogW1BBVENIIDEv
-M10gdGktc3Q6IHVzZSBkZXZpY2UgaGFuZGxlcyBhbmQgYWRkIGRldmljZSB0cmVlIGJpbmRpbmcN
-Cj4gDQo+IFNvcnJ5IGZvciB0aGUgZGVsYXllZCByZXNwb25zZS4NCj4gDQo+ID4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2Vy
-bmVsLm9yZ10NCj4gPiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAyOSwgMjAxNSA4OjM2IFBNDQo+
-ID4gVG86IFJlaXplciwgRXlhbA0KPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiBrZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5vcmc7
-IHRvbnlAYXRvbWlkZS5jb207DQo+ID4gbGludXhAYXJtLmxpbnV4Lm9yZy51aw0KPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggMS8zXSB0aS1zdDogdXNlIGRldmljZSBoYW5kbGVzIGFuZCBhZGQgZGV2
-aWNlIHRyZWUNCj4gPiBiaW5kaW5nDQo+ID4NCj4gPiBPbiBXZWQsIERlYyAyMywgMjAxNSBhdCAx
-MTozODoyOUFNICswMDAwLCBSZWl6ZXIsIEV5YWwgd3JvdGU6DQo+ID4gPiAtIEFkZCBzdXBwb3J0
-IGZvciBnZXR0aW5nIHRoZSBwbGF0Zm9ybSBkYXRhIHdoaWNoIGluY2x1ZGVzIHRoZSB1YXJ0DQo+
-ID4gPiAgIHVzZWQgYW5kIGdwaW8gcGluIHVzZWQgZm9yIGVuYWJsZSBmcm9tIGRldmljZSB0cmVl
-Lg0KPiA+ID4NCj4gPiA+IC0gRml4IHRoZSBpbXBsZW1lbnRhdGlvbiBmb3IgdXNpbmcgZGV2aWNl
-IGhhbmRsZSBmb3IgdGhlIHVhcnQgYW5kDQo+ID4gPiAgIGdwaW9kIGZvciB0aGUgZW5hYmxlIHBp
-biwgaW5zdGVhZCBvZiBkZXZpY2UgbmFtZSAoYXMgc3RyaW5nKSB1c2VkDQo+ID4gPiAgIGZvciB0
-aGUgdWFydCBhbmQgcGlvIG51bWJlciB3aGljaCBhcmUgYm90aCBiYWQgcHJhY3RpY2UuDQo+ID4g
-Pg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogRXlhbCBSZWl6ZXIgPGV5YWxyQHRpLmNvbT4NCj4gPiA+
-IC0tLQ0KPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0
-LnR4dCB8ICAgNDIgKysrKysrDQo+ID4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9wZGF0YS1xdWly
-a3MuYyAgICAgICAgICAgICAgIHwgICAxNiArKy0NCj4gPiA+ICBkcml2ZXJzL21pc2MvdGktc3Qv
-c3Rfa2ltLmMgICAgICAgICAgICAgICAgICAgICAgfCAgMTU5ICsrKysrKysrKysrKysrKystLS0t
-LS0NCj4gPiA+ICBkcml2ZXJzL21pc2MvdGktc3Qvc3RfbGwuYyAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDE2ICsrLQ0KPiA+ID4gIGluY2x1ZGUvbGludXgvdGlfd2lsaW5rX3N0LmggICAgICAg
-ICAgICAgICAgICAgICB8ICAgMTMgKy0NCj4gPg0KPiA+IEknZCBzdWdnZXN0IHlvdSBsb29rIGF0
-IGNvbW1pdCBjMGJkMWI5ZTU4OTU5YzUgKFJldmVydCAidGktc3Q6IGFkZA0KPiA+IGRldmljZSB0
-cmVlIHN1cHBvcnQiKSBmaXJzdC4NCj4gPg0KPiA+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMTkwIGlu
-c2VydGlvbnMoKyksIDU2IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUNCj4gPiA+IDEwMDY0NCBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWlzYy90aS1zdC50eHQNCj4gPiA+DQo+
-ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mv
-dGktc3QudHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNj
-L3RpLXN0LnR4dA0KPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAw
-MDAuLjQ0OTBkYTYNCj4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3RpLXN0LnR4dA0KPiA+ID4gQEAgLTAsMCArMSw0
-MiBAQA0KPiA+ID4gK1RJIFdpbGluayA2LzcvOCAod2wxMnh4L3dsMTh4eCkgU2hhcmVkIHRyYW5z
-cG9ydCBkcml2ZXINCj4gPg0KPiA+IEJpbmRpbmdzIHNob3VsZG4ndCBiZSBkZXNjcmliaW5nIGRy
-aXZlcnMuLi4NCj4gPg0KPiANCj4gT0ssIHVuZGVyc3Rvb2QNCj4gDQo+ID4gPiArDQo+ID4gPiAr
-VEnigJlzIFdpcmVsZXNzIENvbm5lY3Rpdml0eSBjaGlwcyBzdXBwb3J0IEJsdWV0b290aCAoQlQp
-LCBXaUZpLCBhbmQNCj4gPiA+ICtHUFMgdGVjaG5vbG9neSBjb3JlcyBpbiBhIHNpbmdsZSBkaWUu
-DQo+ID4gPiArDQo+ID4gPiArU3VjaCBhIG11bHRpLWNvcmUgY29tYm8gY2hpcCB3aWxsIGJlIGlu
-dGVyZmFjZWQgdG8gdGhlIGFwcGxpY2F0aW9uDQo+ID4gPiArcHJvY2Vzc29yIHVzaW5nIGEgc2lu
-Z2xlIHBoeXNpY2FsIHBvcnQgKGxpa2UgVUFSVCkuDQo+ID4gPiArDQo+ID4gPiArU2hhcmVkIFRy
-YW5zcG9ydCAoU1QpIHNvZnR3YXJlIGVuYWJsZXMgQlQgYW5kIEdQUyBwcm90b2NvbHMgb3INCj4g
-PiA+ICtzb2Z0d2FyZSBjb21wb25lbnRzIHRvIGludGVyYWN0IHdpdGggdGhlaXIgcmVzcGVjdGl2
-ZSBjb3JlcyBvdmVyDQo+ID4gPiArc2luZ2xlDQo+ID4gcGh5c2ljYWwgcG9ydC4NCj4gPiA+ICtT
-VCB1c2VzIGxvZ2ljYWwgY2hhbm5lbHMsIG92ZXIgcGh5c2ljYWwgdHJhbnNwb3J0LCB0byBjb21t
-dW5pY2F0ZQ0KPiA+ID4gK3dpdGggaW5kaXZpZHVhbCBjb3Jlcy4NCj4gPiA+ICsNCj4gPiA+ICtM
-b2dpY2FsIGNoYW5uZWxzIDEsIDIsIDMsIGFuZCA0IGFyZSB1c2VkIGZvciBCVCBwYWNrZXRzLCBj
-aGFubmVsIDgNCj4gPiA+ICtmb3IgRk0sIGNoYW5uZWwgOSBmb3IgR1BTIGFuZCBjaGFubmVscyAz
-MCwgMzEsIDMyLCBhbmQgMzMgYXJlIHVzZWQNCj4gPiA+ICtmb3IgQ2hpcCBQb3dlciBNYW5hZ2Vt
-ZW50IChQTSkuDQo+ID4NCj4gPiBBbGwgdGhpcyBpcyBpcnJlbGV2YW50IGZvciBhIGJpbmRpbmcu
-DQo+ID4NCj4gDQo+IE9LLCB1bmRlcnN0b29kDQo+IA0KPiA+ID4gKw0KPiA+ID4gK1RoaXMgbm9k
-ZSBwcm92aWRlcyBwcm9wZXJ0aWVzIGZvciBwYXNzaW5nIHBhcmFtZXRlcnMgdG8gdGhlIHRpDQo+
-ID4gPiArc2hhcmVkIHRyYW5zcG9ydCBkcml2ZXIuDQo+ID4gPiArDQo+ID4gPiArUmVxdWlyZWQg
-cHJvcGVydGllczoNCj4gPiA+ICsgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgdGhlIGZvbGxvd2lu
-ZzoNCj4gPiA+ICsgICAgKiAia2ltIiAtIHRpLXN0IHBhcmFtZXRlcnMNCj4gPg0KPiA+IFdobyBp
-cyBraW0/IENlcnRhaW5seSBub3QgYSBkZXNjcmlwdGlvbiBvZiBhIGgvdyBibG9jay4NCj4gDQo+
-IE5vdCBzdXJlIGFib3V0IHRoZSBvcmlnaW4gb2YgdGhpcyBuYW1lIGJ1dCBhY2NvcmRpbmcgdG8g
-dGhlIGZvbGxvd2luZyBsaW5rOg0KPiBodHRwOi8vcHJvY2Vzc29ycy53aWtpLnRpLmNvbS9pbmRl
-eC5waHAvU2hhcmVkX1RyYW5zcG9ydF9Ecml2ZXINCj4gS0lNIGlzICJLZXJuZWwgSW5pdGlhbGl6
-YXRpb24gTWFuYWdlciIgdGhhdCBlbmFibGVzIGNvbW11bmljYXRpb24gd2l0aCBCVCBhbmQNCj4g
-R1BTIGNvcmVzLg0KPiANCj4gPg0KPiA+ID4gKw0KPiA+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6
-DQo+ID4gPiArIC0gbnNodXRkb3duLWdwaW9zIDogc3BlY2lmaWVzIGF0dHJpYnV0ZXMgZm9yIGdw
-aW8gcGluZyB1c2VkIGZvciBlbmFibGluZw0KPiA+ID4gKwl0aGUgYmx1ZXRvb3RoLGdwcyBhbmQg
-Rk0gc3ViIHN5c3RlbXMNCj4gPiA+ICsgLSBzZXJpYWwtZGV2aWNlIDogdGhlIHBoYW5kbGUgZm9y
-IHRoZSBwaGlzaWNhbCB1YXJ0IHVzZWQgZm9yIGludGVyYWN0aW5nDQo+ID4gPiArIAl3aXRoIHRo
-ZSB3aWxpbmsgZGV2aWNlDQo+ID4NCj4gPiBUaGVyZSBoYXZlIGJlZW4gbXVsdGlwbGUgZGlzY3Vz
-c2lvbnMgb24gc2VyaWFsIHNsYXZlIGRldmljZXMgcmVjZW50bHkuDQo+ID4gSSdtIG5vdCBnb2lu
-ZyB0byBhY2NlcHQgYW55IGRldmljZSBiaW5kaW5nIHdpdGhvdXQgYSBjb21tb24gdWFydCBzbGF2
-ZQ0KPiA+IGRldmljZSBiaW5kaW5nIGZpcnN0Lg0KPiA+DQo+IA0KPiBQZXJoYXBzIEkgYW0gcmVh
-ZGluZyBpdCB3cm9uZyBidXQgSSB0aGluayB0aGlzIGlzIGEgZGlmZmVyZW50IGRpc2N1c3Npb24u
-DQo+IFRoZSBzaGFyZWQgdHJhbnNwb3J0IGRyaXZlciBpcyBhbHJlYWR5IGluIHRoZSBrZXJuZWwg
-Zm9yIHByZXR0eSBsb25nIHRpbWUuDQo+IEFGQUlLIHRoZSBvcmlnaW5hbCBhdXRob3IgaXMgbm90
-IGFyb3VuZCB0byBtYWludGFpbiBpdC4NCj4gQ3VycmVudGx5IGl0IGlzIHVzZWxlc3MgIGFzIG5v
-IGJpbmRpbmdzIGV4aXN0IGZvciBpdCBhbmQgYWxsIGN1c3RvbWVycyBJIGhhdmUgc2Vlbg0KPiB1
-c2luZyB0aV9zdCB0aGF0IHVwZ3JhZGUgdG8gbmV3ZXIga2VybmVscyBoYXZlIGJyb2tlbiBzdXBw
-b3J0IGFuZCBoYXZlIHRvDQo+IG1hbnVhbGx5IHBhdGNoIHRoZSBrZXJuZWwgZm9yIGFkZGluZyBi
-aW5kaW5ncyBmb3IgaXQuDQo+IA0KPiBIYXZpbmcgYSBuZXcgdWFydCBzbGF2ZSBkZXZpY2UgdGhh
-dCBtYXkgcHJvdmlkZSBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgaXMgYQ0KPiBkaWZmZXJlbnQgZGlz
-Y3Vzc2lvbiBhcyBpdCB3b3VsZCByZXF1aXJlIGEgdG90YWwgZGlmZmVyZW50IGltcGxlbWVudGF0
-aW9uLg0KPiBCdXQgd2hhdCBkbyB3ZSBkbyBub3cgd2l0aCB0aGUgaW1wbGVtZW50YXRpb24gdGhh
-dCBpcyBhbHJlYWR5IHRoZXJlLg0KPiBEb24ndCB3ZSB3YW50IGl0IHRvIHdvcmsgYW5kIGF0IGxl
-YXN0IGhhdmUgd29ya2luZyBiaW5kaW5ncyBmb3IgaXQ/DQo+IA0KPiA+ID4gKyAtIGZsb3dfY250
-cmwgOiBJbmRpY2F0ZXMgaWYgdWFydCBmbG93IGNvbnRyb2wgaXMgdXNlZA0KPiA+ID4gKyAtIGZs
-b3dfY250cmwgOiB1YXJ0IGJhdWQgcmF0ZSBpbiBCUFMNCj4gPg0KPiA+IFR5cG8gaGVyZSwgYnV0
-IHRoZXNlIHNob3VsZCBiZSBwYXJ0IG9mIGEgY29tbW9uIHNlcmlhbCBzbGF2ZSBiaW5kaW5nLg0K
-PiA+DQo+ID4gRG9uJ3QgdXNlICdfJyBpbiBwcm9wZXJ0eSBuYW1lcy4NCj4gPg0KPiANCj4gV2ls
-bCBmaXggdGhpcw0KPiANCj4gPiA+ICsNCj4gPiA+ICtFeGFtcGxlOg0KPiA+ID4gKw0KPiA+ID4g
-K2tpbSB7DQo+ID4gPiArCWNvbXBhdGlibGUgPSAia2ltIjsNCj4gPiA+ICsJbnNodXRkb3duLWdw
-aW9zID0gPCZncGlvMyAyMSBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiA+ICsJc2VyaWFsLWRldmlj
-ZSA9IDwmdWFydDE+Ow0KPiA+ID4gKwlmbG93X2NudHJsID0gPDE+Ow0KPiA+ID4gKwlmbG93X2Nu
-dHJsID0gPDMwMDAwMDA+Ow0KPiA+ID4gK307DQo+ID4gPiArDQo+IA0KPiBCZXN0IFJlZ2FyZHMs
-DQo+IEV5YWwNCg==
+On Tue, Jan 26, 2016 at 7:52 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> So far, when trying to associate a device with its MSI domain,
+> we first lookup the domain using a MSI token, and if this
+> doesn't return anything useful, we pick up any domain matching
+> the same node.
+>
+> This logic is broken for two reasons:
+> 1) Only the generic MSI code (PCI or platform) sets this token
+>    to PCI/MSI or platform MSI. So we're guaranteed that if there
+>    is something to be found, we will find it with the first call.
+> 2) If we have a convoluted situation where:
+>    - a single node implements both wired and MSI interrupts
+>    - MSI support for that HW hasn't been compiled in
+>    we'll end up using the wired domain for MSIs anyway, and things
+>    break badly.
+>
+> So let's just remove __of_get_msi_domain, and replace it by a direct
+> call to irq_find_matching_host, because that's what we really want.
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/irq.c | 18 +++---------------
+>  1 file changed, 3 insertions(+), 15 deletions(-)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
