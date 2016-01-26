@@ -1,88 +1,66 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v7 2/2] dt-bindings: add document for Innosilicon HDMI on Rockchip platform
-Date: Tue, 26 Jan 2016 11:08:57 +0800
-Message-ID: <1453777737-1386-1-git-send-email-ykk@rock-chips.com>
-References: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: David Airlie <airlied@linux.ie>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Ken Mixte <kmixter@google.com>, Ben Chan <benchan@google.com>, Zheng Yang <zhengyang@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v7 4/6] ARM: debug: add hi3519 debug uart
+Date: Tue, 26 Jan 2016 11:07:01 +0800
+Message-ID: <56A6E2D5.7040104@huawei.com>
+References: <1453690883-31220-1-git-send-email-xuejiancheng@huawei.com>
+ <1453690883-31220-5-git-send-email-xuejiancheng@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1453690883-31220-5-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- Add the Acked-by tags from Rob
-- Correct the misspell "rk3036-dw-hdmi" (Heiko)
 
- .../display/rockchip/inno_hdmi-rockchip.txt        | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/inno_hdmi-rockchip.txt
+On 2016/1/25 11:01, Jiancheng Xue wrote:
+> add hi3519 debug uart
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> ---
+>  arch/arm/Kconfig.debug | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index c6b6175..b02a7c1 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -260,6 +260,14 @@ choice
+>  		  Say Y here if you want kernel low-level debugging support
+>  		  on Cortina Gemini based platforms.
+>  
+> +	config DEBUG_HI3519_UART
+> +		bool "Hisilicon HI3519 Debug UART"
+> +		depends on ARCH_HISI
+> +		select DEBUG_UART_PL01X
+> +		help
+> +		  Say Y here if you want kernel low-level debugging support
+> +		  on HI3519 UART.
+> +
+>  	config DEBUG_HI3620_UART
+>  		bool "Hisilicon HI3620 Debug UART"
+>  		depends on ARCH_HI3xxx
+> @@ -1451,6 +1459,7 @@ config DEBUG_UART_PHYS
+>  	default 0x11002000 if DEBUG_MT8127_UART0
+>  	default 0x11006000 if DEBUG_MT6589_UART0
+>  	default 0x11009000 if DEBUG_MT8135_UART3
+> +	default 0x12100000 if DEBUG_HI3519_UART
+>  	default 0x16000000 if DEBUG_INTEGRATOR
+>  	default 0x18000300 if DEBUG_BCM_5301X
+>  	default 0x18010000 if DEBUG_SIRFATLAS7_UART0
+> @@ -1514,6 +1523,7 @@ config DEBUG_UART_PHYS
+>  	default 0xfcb00000 if DEBUG_HI3620_UART
+>  	default 0xfd883000 if DEBUG_ALPINE_UART0
+>  	default 0xfe800000 if ARCH_IOP32X
+> +	default 0xfef00000 if DEBUG_HI3519_UART
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/inno_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/inno_hdmi-rockchip.txt
-new file mode 100644
-index 0000000..8096a29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/inno_hdmi-rockchip.txt
-@@ -0,0 +1,50 @@
-+Rockchip specific extensions to the Innosilicon HDMI
-+================================
-+
-+Required properties:
-+- compatible:
-+	"rockchip,rk3036-inno-hdmi";
-+- reg:
-+	Physical base address and length of the controller's registers.
-+- clocks, clock-names:
-+	Phandle to hdmi controller clock, name should be "pclk"
-+- interrupts:
-+	HDMI interrupt number
-+- ports:
-+	Contain one port node with endpoint definitions as defined in
-+	Documentation/devicetree/bindings/graph.txt.
-+- pinctrl-0, pinctrl-name:
-+	Switch the iomux of HPD/CEC pins to HDMI function.
-+
-+Example:
-+hdmi: hdmi@20034000 {
-+	compatible = "rockchip,rk3036-inno-hdmi";
-+	reg = <0x20034000 0x4000>;
-+	interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&cru  PCLK_HDMI>;
-+	clock-names = "pclk";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ctl>;
-+	status = "disabled";
-+
-+	hdmi_in: port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		hdmi_in_lcdc: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&lcdc_out_hdmi>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	hdmi {
-+		hdmi_ctl: hdmi-ctl {
-+			rockchip,pins = <1 8  RK_FUNC_1 &pcfg_pull_none>,
-+					<1 9  RK_FUNC_1 &pcfg_pull_none>,
-+					<1 10 RK_FUNC_1 &pcfg_pull_none>,
-+					<1 11 RK_FUNC_1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+};
--- 
-1.9.1
+Sorry. This line is put in a wrong place by my mistake. I'll correct it in next version.
+
+>  	default 0xff690000 if DEBUG_RK32_UART2
+>  	default 0xffc02000 if DEBUG_SOCFPGA_UART0
+>  	default 0xffc02100 if DEBUG_SOCFPGA_UART1
+> 
+
