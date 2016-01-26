@@ -1,46 +1,39 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v6 0/1] Introduce Innosilicon HDMI driver on Rockchip
- platforms
-Date: Tue, 26 Jan 2016 10:34:40 +0800
-Message-ID: <56A6DB40.9030209@rock-chips.com>
-References: <1453686197-20975-1-git-send-email-ykk@rock-chips.com>
- <30308769.0Ysu5UYYQv@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <30308769.0Ysu5UYYQv@diego>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zheng Yang <zhengyang@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] Documentation: rockchip-dw-mshc: add RK3036 dw-mshc description
+Date: Tue, 26 Jan 2016 10:34:14 +0800
+Message-ID: <1453775654-16105-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAwMS8yNS8yMDE2IDA4OjQ3IFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToK
-PiBBbSBNb250YWcsIDI1LiBKYW51YXIgMjAxNiwgMDk6NDM6MTcgc2NocmllYiBZYWtpciBZYW5n
-Ogo+PiBIZXJlIGFyZSBhIGJyaWVmIGludHJvZHVjdGlvbiB0byBJbm5vc2lsaWNvbiBIRE1JIElQ
-Ogo+PiAgICAtIFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFy
-ZCBjb21wbGlhbnQgdHJhbnNtaXR0ZXIKPj4gICAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1
-bmN0aW9uIGRlZmluZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKPj4gICAgLSBEaWdpdGFsIHZpZGVv
-IGludGVyZmFjZSBzdXBwb3J0cyBhIHBpeGVsIHNpemUgb2YgMjQsIDMwLCAzNiwgNDhiaXRzCj4+
-IGNvbG9yIGRlcHRoIGluIFJHQiAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBE
-aWdpdGFsLCBEVFMgZGlnaXRhbAo+PiBhdWRpbyB0cmFuc21pc3Npb24gKDMyLTE5MmtIeiBGcykg
-dXNpbmcgSUVDNjA5NTggYW5kIElFQyA2MTkzNwo+PiAgICAtIFRoZSBFRElEIGFuZCBDRUMgZnVu
-Y3Rpb24gYXJlIGFsc28gc3VwcG9ydGVkIGJ5IElubm9zaWxpY29uIEhETUkKPj4gVHJhbnNtaXR0
-ZXIgQ29udHJvbGxlCj4gaGF2ZSB5b3UgbG9zdCBzZXBhcmF0ZSB0aGUgZGV2aWNldHJlZS1iaW5k
-aW5nIHBhdGNoIHNvbWV3aGVyZT8KPgo+IEkgZG9uJ3QgcmVtZW1iZXIgaXQgZ2V0dGluZyBhcHBs
-aWVkIGFuZCBNYXJrIG1heSBtaXNzIGl0IGlmIGl0J3Mgb25seQo+IGNvbnRhaW5lZCBpbiBzb21l
-IG9sZCBzZXJpZXMuCgpPcHMsIEkgbWF5IG1pc3VuZGVyc3RhbmQgdGhlIHJ1bGUsIEkgdGhvdWdo
-dCBpZiBwYXRjaCB3YXMgYWNrZWQgYnkgCm1haW50YWluZXIsIHRoZW4gSSBzaG91bGQga2VlcCBp
-dCBubyBjaGFuZ2VkLiBIbW1tLCBzbyBub3QgQWNrZWQgYnV0IApBcHBsaWVkLCB0aGFua3MsIEkg
-d291bGQgdXBkYXRlIG5vdy4KCllha2lyCj4KPiBIZWlrbwo+Cj4KPgoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+rk3036 dtsi file add dw-mshc compatible "rockchip,rk3036-dw-mshc"
+but didn't add it into rockchip-dw-mshc.txt.
+
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+
+ Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+index 634e249..ea5614b 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+@@ -13,6 +13,7 @@ Required Properties:
+ 	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
+ 							before RK3288
+ 	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
++	- "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
+ 	- "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
+ 
+ Optional Properties:
+-- 
+2.3.7
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
