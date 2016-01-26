@@ -1,50 +1,92 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v6] drm/rockchip: hdmi: add Innosilicon HDMI support
-Date: Tue, 26 Jan 2016 10:28:03 +0800
-Message-ID: <56A6D9B3.4070006@rock-chips.com>
-References: <1453686197-20975-1-git-send-email-ykk@rock-chips.com>
- <1453686430-21470-1-git-send-email-ykk@rock-chips.com>
- <1453769119.17181.37.camel@tiscali.nl>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
+Date: Mon, 25 Jan 2016 20:29:48 -0600
+Message-ID: <20160126022948.GA21187@rob-hp-laptop>
+References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1453769119.17181.37.camel@tiscali.nl>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Bolle <pebolle@tiscali.nl>, Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1453744403-12268-1-git-send-email-eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Felipe F. Tonello" <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF1bCwKCk9uIDAxLzI2LzIwMTYgMDg6NDUgQU0sIFBhdWwgQm9sbGUgd3JvdGU6Cj4gT24g
-bWEsIDIwMTYtMDEtMjUgYXQgMDk6NDcgKzA4MDAsIFlha2lyIFlhbmcgd3JvdGU6Cj4+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9LY29uZmlnCj4+ICtjb25maWcgUk9DS0NISVBfSU5OT19IRE1JCj4+ICsJdHJp
-c3RhdGUgIlJvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMgZm9yIElubm9zaWxpY29uIEhETUki
-Cj4+ICsgICAgICAgIGRlcGVuZHMgb24gRFJNX1JPQ0tDSElQCj4+ICsgICAgICAgIGhlbHAKPj4g
-KwkgIFRoaXMgc2VsZWN0cyBzdXBwb3J0IGZvciBSb2NrY2hpcCBTb0Mgc3BlY2lmaWMgZXh0ZW5z
-aW9ucwo+PiArCSAgZm9yIHRoZSBJbm5vc2lsaWNvbiBIRE1JIGRyaXZlci4gSWYgeW91IHdhbnQg
-dG8gZW5hYmxlCj4+ICsJICBIRE1JIG9uIFJLMzAzNiBiYXNlZCBTb0MsIHlvdSBzaG91bGQgc2Vs
-ZXQgdGhpcyBvcHRpb24uCj4gKFJlYWxseSB0cml2aWFsOiBzdGFydCBpbmRlbnRhdGlvbiB3aXRo
-IHRhYnMgb25seSwgcGxlYXNlLiBBbmQKPiBzL3NlbGV0L3NlbGVjdC8uKQpHb3QgaXQKPj4gLS0t
-IC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMK
-Pj4gKyAqIFRoaXMgc29mdHdhcmUgaXMgbGljZW5zZWQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBH
-TlUgR2VuZXJhbAo+PiBQdWJsaWMKPj4gKyAqIExpY2Vuc2UgdmVyc2lvbiAyLCBhcyBwdWJsaXNo
-ZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiwKPj4gYW5kCj4+ICsgKiBtYXkgYmUg
-Y29waWVkLCBkaXN0cmlidXRlZCwgYW5kIG1vZGlmaWVkIHVuZGVyIHRob3NlIHRlcm1zLgo+IFRo
-aXMgc3RhdGVzIHRoaXMgZmlsZSBpcyBsaWNlbnNlZCBHUEwgdjIgb25seS4KPgo+PiArTU9EVUxF
-X0xJQ0VOU0UoIkdQTCIpOwo+IEFuZCwgYWNjb3JkaW5nIHRvIGluY2x1ZGUvbGludXgvbW9kdWxl
-LmgsIHRoaXMgbWVhbnMgIkdOVSBQdWJsaWMgTGljZW5zZQo+IHYyIG9yIGxhdGVyIi4KPgo+IFNv
-IEkgdGhpbmsgdGhlcmUncyBhIChzdWJ0bGUpIG1pc21hdGNoIGJldHdlZW4gdGhlIGxpY2Vuc2Ug
-aWRlbnQgdXNlZAo+IGZvciB0aGlzIGRyaXZlciBhbmQgdGhlIGNvbW1lbnQgYWJvdmUuCgpBaCwg
-dGhhbmtzLgoKLSBZYWtpcgoKPiBUaGFua3MsCj4KPgo+IFBhdWwgQm9sbGUKPgo+Cj4KCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jan 25, 2016 at 05:53:23PM +0000, Felipe F. Tonello wrote:
+> This is the initial imx-cs427x device-tree-only machine driver working with
+> fsl_ssi driver. More features can be added on top of it later.
+> 
+> Signed-off-by: Felipe F. Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/imx-audio-cs427x.txt |  47 +++++
+>  sound/soc/fsl/Kconfig                              |  12 ++
+>  sound/soc/fsl/Makefile                             |   2 +
+>  sound/soc/fsl/imx-cs427x.c                         | 218 +++++++++++++++++++++
+>  4 files changed, 279 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+>  create mode 100644 sound/soc/fsl/imx-cs427x.c
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+> new file mode 100644
+> index 000000000000..295f60b19418
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+> @@ -0,0 +1,47 @@
+> +Freescale i.MX audio complex with CS4271 or CS4272 codec
+
+Do all the i.MX audio bindings really vary more that the codec? Seems 
+like a lot of duplication.
+
+> +
+> +Required properties:
+> +
+> +  - compatible		: "fsl,imx-audio-cs427x"
+> +
+> +  - model		: The user-visible name of this sound complex
+> +
+> +  - ssi-controller	: The phandle of the i.MX SSI controller
+> +
+> +  - audio-codec	: The phandle of the CS4271 audio codec
+> +
+> +  - audio-routing	: A list of the connections between audio components.
+> +			  Each entry is a pair of strings, the first being the
+> +			  connection's sink, the second being the connection's
+> +			  source. Valid names could be power supplies, CS427x
+> +			  pins, and the jacks on the board:
+> +
+> +			  Board connectors:
+> +			   * Mic Jack
+> +			   * Headphone Jack
+
+This should be an exact list of possible strings and valid combinations.
+
+> +  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX)
+> +
+> +  - mux-ext-port	: The external port of the i.MX audio muxer
+> +
+> +Note: The AUDMUX port numbering should start at 1, which is consistent with
+> +hardware manual.
+> +
+> +Example:
+> +
+> +sound {
+> +	compatible = "fsl,imx6-rex-cs427x",
+> +		"fsl,imx-audio-cs427x";
+> +	model = "audio-cs427x";
+> +	ssi-controller = <&ssi1>;
+> +	audio-codec = <&cs4271>;
+> +	audio-routing =
+> +		"Mic Jack", "AINA",
+> +		"Mic Jack", "AINB",
+> +		"Headphone Jack", "AOUTA+",
+> +		"Headphone Jack", "AOUTA-",
+> +		"Headphone Jack", "AOUTB+",
+> +		"Headphone Jack", "AOUTB-";
+> +	mux-int-port = <1>;
+> +	mux-ext-port = <3>;
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
