@@ -1,122 +1,56 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
-Date: Tue, 26 Jan 2016 17:01:22 +0000
-Message-ID: <56A7A662.4090203@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
- <8579242.omBpg1aLr2@wuerfel>
- <CAPDyKFrewx5CbS9QKZAxqq0Gu+TywQ3nkDGZFURR=PJLtkDuyQ@mail.gmail.com>
- <11122786.kKumQ3Dhls@wuerfel> <5697D7E2.3030209@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5697D7E2.3030209@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] scripts/dtc: Update to upstream commit b06e55c88b9b
+Date: Tue, 26 Jan 2016 11:05:59 -0600
+Message-ID: <1453827959-11571-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Ulf,
+Sync to upstream dtc commit b06e55c88b9b ("Prevent crash on modulo by
+zero"). This adds the following commits from upstream:
 
-On 14/01/16 17:16, Jon Hunter wrote:
-> 
-> On 14/01/16 09:21, Arnd Bergmann wrote:
->> On Thursday 14 January 2016 09:57:14 Ulf Hansson wrote:
->>> On 13 January 2016 at 21:43, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wednesday 13 January 2016 18:03:24 Thierry Reding wrote:
->>>>> On Fri, Dec 04, 2015 at 02:57:17PM +0000, Jon Hunter wrote:
->>>>>> Enable PM_GENERIC_DOMAINS for tegra 64-bit devices. To ensure that devices
->>>>>> dependent upon a particular power-domain are only probed when that power
->>>>>> domain has been powered up, requires that PM is made mandatory for tegra
->>>>>> 64-bit devices and so select this option for tegra as well.
->>>>>>
->>>>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->>>>>> ---
->>>>>>  arch/arm64/Kconfig.platforms | 2 ++
->>>>>>  1 file changed, 2 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>>>>> index 9806324fa215..e0b5bd0aff0f 100644
->>>>>> --- a/arch/arm64/Kconfig.platforms
->>>>>> +++ b/arch/arm64/Kconfig.platforms
->>>>>> @@ -93,6 +93,8 @@ config ARCH_TEGRA
->>>>>>       select GENERIC_CLOCKEVENTS
->>>>>>       select HAVE_CLK
->>>>>>       select PINCTRL
->>>>>> +     select PM
->>>>>> +     select PM_GENERIC_DOMAINS
->>>>>>       select RESET_CONTROLLER
->>>>>>       help
->>>>>>         This enables support for the NVIDIA Tegra SoC family.
->>>>>
->>>>> This has potential consequences for multi-platform builds, doesn't it?
->>>>> All of a sudden any combination of builds that includes Tegra won't be
->>>>> possible to build without PM support.
->>>>>
->>>>> Adding linux-arm-kernel@lists.infradead.org for visibility.
->>>>>
->>>>>
->>>>
->>>> Agreed, it would be better to add 'depends on PM_GENERIC_DOMAINS'
->>>> dependencies in the drivers that require it.
->>>>
->>>
->>> The problem with that approach is that if those drivers are cross SoC
->>> drivers. In some cases PM isn't needed and it is.
->>>
->>> Of course I don't have the in depth knowledge about the drivers being
->>> used in Tegra which may need PM, perhaps it's not that many?
->>>
->>> Anyway, to me it seems like ARCH_TEGRA should depend on PM instead.
->>> Would that work?
->>
->> That seems a little over-restrictive, as it prevents you from
->> building a tegra kernel even if none of the drivers that rely
->> on the pm domains are used, but it would work.
->>
->> I've looked again at how other platforms (on arm32) do it, and
->> a lot of them use "select PM_GENERIC_DOMAINS if PM", so they don't
->> automatically enable PM, but they enable the pmdomain code if
->> PM is already set. No driver really "depends on PM_GENERIC_DOMAINS",
->> so we shouldn't really start that now or we end up with circular
->> dependencies in the long run.
-> 
-> What I am not a fan of in the current gen-pd implementation, is if we
-> have !PM but the platform has power-domains, then there is no way to
-> determine if a device within a power-domain can be probed safely. Some
-> arm platforms force all the power-domains on during early init in the
-> case of !PM. IMO this is still not ideal, because if a power-domain
-> failed to turn on during early init, then you should probably call
-> BUG(). Ideally the kernel should be able to boot and only probe the
-> devices you know that can be probed safely.
-> 
-> So for platforms have use PM_GENERIC_DOMAINS, I think really they should
-> select PM and not "select PM_GENERIC_DOMAINS if PM". IMO, "select
-> PM_GENERIC_DOMAINS if PM" seems fragile.
+b06e55c Prevent crash on modulo by zero
+b433450 Fix some bugs in processing of line directives
+d728ad5 Fix crash on nul character in string escape sequence
+1ab2205 Gracefully handle bad octal literals
+1937095 Prevent crash on division by zero
+d0b3ab0 libfdt: Fix undefined behaviour in fdt_offset_ptr()
+d4c7c25 libfdt: check for potential overrun in _fdt_splice()
+f58799b libfdt: Add some missing symbols to version.lds
+af9f26d Remove duplicated -Werror in dtc Makefile
+604e61e fdt: Add functions to retrieve strings
+8702bd1 fdt: Add a function to get the index of a string
+2218387 fdt: Add a function to count strings
+554fde2 libfdt: fix comment block of fdt_get_property_namelen()
+e5e6df7 fdtdump: Fix bug printing bytestrings with negative values
+067829e Remove redundant fdtdump test code
+897a429 Move fdt_path_offset alias tests to right tests section
+2d1417c Add simple .travis.yml
+f6dbc6c guess output file format
+5e78dff guess input file format based on file content or file name
+8b927bf tests: convert `echo -n` to `printf`
+64c46b0 Fix crash with poorly defined #size-cells
 
-Any more thoughts on this?
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ scripts/dtc/checks.c                 |   2 +-
+ scripts/dtc/dtc-lexer.l              |  39 +++++++++-----
+ scripts/dtc/dtc-lexer.lex.c_shipped  | 101 +++++++++++++++++++----------------
+ scripts/dtc/dtc-parser.tab.c_shipped |  84 +++++++++++++++++------------
+ scripts/dtc/dtc-parser.y             |  20 ++++++-
+ scripts/dtc/dtc.c                    |  62 ++++++++++++++++++++-
+ scripts/dtc/libfdt/fdt.c             |  13 ++---
+ scripts/dtc/libfdt/fdt_ro.c          | 100 ++++++++++++++++++++++++++++++++++
+ scripts/dtc/libfdt/fdt_rw.c          |   2 +
+ scripts/dtc/libfdt/libfdt.h          |  73 +++++++++++++++++++++++--
+ scripts/dtc/util.c                   |   3 +-
+ scripts/dtc/version_gen.h            |   2 +-
+ 12 files changed, 390 insertions(+), 111 deletions(-)
 
-I have been discussing with Thierry and we think that selecting PM for
-tegra still makes the most sense. The question is, is this ok for
-multi-configs?
+Generated from script, so just sending the diffstat and log for review.
 
-The only other suggestion/thought I have is to allow
-PM_GENERIC_DOMAINS_OF to be selected independently of PM so that we can
-have minimal support for PM domains that allows you to register PM
-domains with the kernel and their current state, but does not allow you
-to control them, etc. This way tegra could always select
-PM_GENERIC_DOMAINS_OF regardless of PM, and we would be able to
-determine if we can probe a device safely.
-
-I am not sure that Rafael is too keen on this approach but that is the
-only alternative I have come up with.
-
-I have a rough outline of a patch for this here [0] FWIW.
-
-Cheers
-Jon
-
-[0] https://github.com/jonhunter/linux/commits/gpd
-
-
-
+Rob
