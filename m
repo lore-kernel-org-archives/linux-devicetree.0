@@ -1,47 +1,57 @@
-From: Yuan Yao <yao.yuan@freescale.com>
-Subject: [PATCH v4 7/7] Documentation: fsl-quadspi: Add optional properties
-Date: Tue, 26 Jan 2016 15:24:01 +0800
-Message-ID: <1453793041-35868-7-git-send-email-yao.yuan@freescale.com>
-References: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
+From: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+Subject: [PATCH v5 2/2] gpio: sn65hvs885: Add DT binding documentation
+Date: Tue, 26 Jan 2016 08:32:46 +0100
+Message-ID: <1453793566-31363-2-git-send-email-sean.nyekjaer@prevas.dk>
+References: <1453793566-31363-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com, han.xu@freescale.com
-Cc: robh@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yao.yuan@nxp.com
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1453793566-31363-1-git-send-email-sean.nyekjaer@prevas.dk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add optional properties for QSPI:
-big-endian
-if the register is big endian on this platform.
-
-Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
 ---
-Changed in v4:
-No changes.
+Changes since v4:
+- Added description, required properties
+- Tested and added support for gpio polarity
+- Added vendor prefix to compatible flags
 
-Changed in v3:
-No changes.
+Changes since v3:
+- Added gpio-controller and gpio cells flags
 
-Changed in v2:
-Update my email to <yao.yuan@nxp.com>
----
- Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/gpio/gpio-sn65hvs885.txt     | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-index 0df2f3a..0333ec8 100644
---- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-@@ -21,6 +21,7 @@ Optional properties:
- 			      But if there are two NOR flashes connected to the
- 			      bus, you should enable this property.
- 			      (Please check the board's schematic.)
-+  - big-endian : That means the IP register is big endian
- 
- Example:
- 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+new file mode 100644
+index 0000000..c9b3592
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-sn65hvs885.txt
+@@ -0,0 +1,20 @@
++* TI SN65HVS885 digital-input serializer
++
++Required properties:
++- compatible : Should be "ti,sn65hvs885"
++- reg : chip select number
++- gpio-controller : Marks the device node as a gpio controller.
++- #gpio-cells : Should be two.  The first cell is the pin number and
++  the second cell is used to specify the gpio polarity:
++      0 = active high
++      1 = active low
++
++Example:
++sn65hvs885@3 {
++	compatible = "ti,sn65hvs885";
++	spi-max-frequency = <10000000>;
++	latch-gpio = <&gpio4 1 GPIO_ACTIVE_HIGH>;
++	reg = <0>;
++	gpio-controller;
++	#gpio-cells = <2>;
++};
 -- 
-2.1.0.27.g96db324
+2.7.0
+
