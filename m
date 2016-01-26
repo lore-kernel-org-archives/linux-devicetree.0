@@ -1,115 +1,80 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DTS: kirkwood-openrd-client: fix audio
-Date: Tue, 26 Jan 2016 09:58:57 +0100
-Message-ID: <87egd4d8dq.fsf@free-electrons.com>
-References: <1453588600-14831-1-git-send-email-aaro.koskinen@iki.fi>
-	<1453588600-14831-2-git-send-email-aaro.koskinen@iki.fi>
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] Add Rockchip Inno-HDMI driver
+Date: Tue, 26 Jan 2016 17:09:44 +0800
+Message-ID: <56A737D8.7090508@gmail.com>
+References: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453588600-14831-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org> (Aaro
-	Koskinen's message of "Sun, 24 Jan 2016 00:36:39 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1453777142-30119-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Aaro,
- 
- On sam., janv. 23 2016, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
-
-> Fix audio on kirkwood-openrd-client:
->
-> 1) The audio-controller was left disabled.
->
-> 2) The probe fails because cs42l51 is missing #sound-dai-cells.
->
-> 	/sound/simple-audio-card,codec: could not get #sound-dai-cells for /ocp@f1000000/i2c@11000/cs42l51@4a
-> 	asoc-simple-card sound: parse error -22
-> 	asoc-simple-card: probe of sound failed with error -22
->
-> 3) The mapping is incorrect:
->
-> 	asoc-simple-card sound: cs42l51-hifi <-> spdif mapping ok
->
->    should be:
->
-> 	asoc-simple-card sound: cs42l51-hifi <-> i2s mapping ok
->
-> Reported-by: Rick Thomas <rbthomas-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-
-Applied on mvebu/dt with Reviewed-by tag from Andrew Lunn and Tested-by
-tag from Rick Thomas.
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm/boot/dts/kirkwood-openrd-client.dts | 6 +++++-
->  arch/arm/boot/dts/kirkwood.dtsi              | 2 +-
->  2 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-openrd-client.dts b/arch/arm/boot/dts/kirkwood-openrd-client.dts
-> index 887b9c1..96ff59d 100644
-> --- a/arch/arm/boot/dts/kirkwood-openrd-client.dts
-> +++ b/arch/arm/boot/dts/kirkwood-openrd-client.dts
-> @@ -20,6 +20,9 @@
->  	compatible = "marvell,openrd-client", "marvell,openrd", "marvell,kirkwood-88f6281", "marvell,kirkwood";
->  
->  	ocp@f1000000 {
-> +		audio-controller@a0000 {
-> +			status = "okay";
-> +		};
->  		i2c@11000 {
->  			status = "okay";
->  			clock-frequency = <400000>;
-> @@ -27,6 +30,7 @@
->  			cs42l51: cs42l51@4a {
->  				compatible = "cirrus,cs42l51";
->  				reg = <0x4a>;
-> +				#sound-dai-cells = <0>;
->  			};
->  		};
->  	};
-> @@ -37,7 +41,7 @@
->  		simple-audio-card,mclk-fs = <256>;
->  
->  		simple-audio-card,cpu {
-> -			sound-dai = <&audio0>;
-> +			sound-dai = <&audio0 0>;
->  		};
->  
->  		simple-audio-card,codec {
-> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-> index 7b5a4a1..7445a15 100644
-> --- a/arch/arm/boot/dts/kirkwood.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood.dtsi
-> @@ -381,7 +381,7 @@
->  
->  		audio0: audio-controller@a0000 {
->  			compatible = "marvell,kirkwood-audio";
-> -			#sound-dai-cells = <0>;
-> +			#sound-dai-cells = <1>;
->  			reg = <0xa0000 0x2210>;
->  			interrupts = <24>;
->  			clocks = <&gate_clk 9>;
-> -- 
-> 2.4.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgrlnKggMjAxNuW5tDAx5pyIMjbml6UgMTA6NTksIFlha2lyIFlhbmcg5YaZ6YGTOgo+IEhl
+cmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6Cj4gICAg
+LSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAxLjAgc3RhbmRhcmQgY29tcGxp
+YW50IHRyYW5zbWl0dGVyCj4gICAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRl
+ZmluZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKPiAgICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNl
+IHN1cHBvcnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IgZGVwdGgg
+aW4gUkdCCj4gICAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRzIFBDTSwgRG9sYnkgRGlnaXRhbCwg
+RFRTIGRpZ2l0YWwgYXVkaW8gdHJhbnNtaXNzaW9uCj4gICAgICAoMzItMTkya0h6IEZzKSB1c2lu
+ZyBJRUM2MDk1OCBhbmQgSUVDIDYxOTM3Cj4gICAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9u
+IGFyZSBhbHNvIHN1cHBvcnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyIENvbnRy
+b2xsZQo+Cj4gQ2hhbmdlcyBpbiB2NzoKPiAtIENvcnJlY3QgdGhlIG1vZHVsZSBsaWNuZXNlIHN0
+YXRlbWVudCAoUGF1bCkKPiAgICAgICAtIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPiAgICAgICAr
+IE1PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsKPiAtIFN0YXJ0IGluZGVudGF0aW9uIHdpdGggdGFi
+cyBhbmQgZml4IHRoZSBtaXNzcGVsbCBpbiBLY29uZmlnIChQYXVsKQo+IC0gQ2FycnkgdGhlIGxv
+c3QgZGV2aWNlLWJpbmRpbmcgZG9jdW1lbnQgKEhlaWtvKQo+Cj4gQ2hhbmdlcyBpbiB2NjoKPiAt
+IFJlYmFzZSB0aGUgTWFrZWZpbGUvS2NvbmZpZyBmaWxlcyB3aGljaCBhZGQgYnkgQ2hyaXMncyBy
+b2NrY2hpcC1taXBpIGRyaXZlciAoQ2Flc2VyKQo+Cj4gQ2hhbmdlcyBpbiB2NToKPiAtIFVzZSBo
+ZG1pX2luZm9mcmFtZSBoZWxwZXIgZnVuY3Rpb25zIHRvIHBhY2tlZCB0aGUgaW5mb2ZyYW1lIChS
+dXNzZWxsKQo+IC0gUmVtb3ZlIHRoZSB1bnVzZWQgZG91YmxlIHdhaXRfZm9yX2NvbXBsZXRpb25f
+dGltZW91dCBmb3IgZGRjIHRyYW5zZmVyIChSdXNzZWxsKQo+IC0gUmVtb3ZlIHRoZSB1bnVzZWQg
+bG9jYWwgdmFyaWFibGUgaW4gImlubm9faGRtaV9pMmNfd3JpdGUoKSIgZnVuY3Rpb24gKFJ1c3Nl
+bGwpCj4KPiBDaGFuZ2VzIGluIHY0Ogo+IC0gTW9kaWZ5IHRoZSBjb21taXQgdGl0bGUgImRybS9y
+b2NrY2hpcDogaGRtaTogLi4uIiAoTWFyaykKPiAtIENvcnJlY3QgdGhlICJES01TIiB0byAiRFBN
+UyIgKE1hcmspCj4gLSBGaXggb3ZlciA4MCBjaGFyYWN0ZXJzIHByb2JsZW1zIChNYXJrKQo+IC0g
+UmVtb3ZlIGVuY29kZXIgLnByZXBhcmUvLmNvbW1pdCBoZWxwZXIgZnVuY3Rpb25zLCBhbmQgbW92
+ZSB0aGUgdm9wIG1vZGUKPiBjb25maWd1cmUgZnVuY3Rpb24gaW50byBlbmNvZGVyIC5lbmFibGUg
+aGVscGVyIGZ1bmN0aW9ucy4gKE1hcmspCj4KPiBDaGFuZ2VzIGluIHYzOgo+IC0gVXNlIGVuY29k
+ZXIgZW5hYmxlL2Rpc2FibGUgZnVuY3Rpb24sIGFuZCByZW1vdmUgdGhlIGVuY29kZXIgRFBNUyBm
+dW5jdGlvbgo+IC0gS2VlcCBIRE1JIFBMTCBwb3dlciBvbiBpbiBzdGFuZGJ5IG1vZGUKPgo+IENo
+YW5nZXMgaW4gdjI6Cj4gLSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNv
+bm5lY3RvciBpbml0IChNYXJrKQo+IC0gUmVtb3ZlICJoZG1pLT5jb25uZWN0b3IuZW5jb2RlciA9
+IGVuY29kZXI7IiAoTWFyaykKPiAtIEFkZCB0aGUgQWNrZWQtYnkgdGFncyBmcm9tIFJvYgo+IC0g
+Q29ycmVjdCB0aGUgbWlzc3BlbGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCj4KPiBZYWtpciBZ
+YW5nICgyKToKPiAgICBkcm0vcm9ja2NoaXA6IGhkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1
+cHBvcnQKPiAgICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1J
+IG9uIFJvY2tjaGlwIHBsYXRmb3JtCj4KPiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRt
+aS1yb2NrY2hpcC50eHQgICAgICAgIHwgIDUwICsrCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOCArCj4gICBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gICBkcml2ZXJzL2dw
+dS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAgICB8IDk0MSArKysrKysrKysr
+KysrKysrKysrKysKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaCAgICAg
+ICAgICAgICAgIHwgMzYyICsrKysrKysrCj4gICA1IGZpbGVzIGNoYW5nZWQsIDEzNjIgaW5zZXJ0
+aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQKPiAgIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMKPiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmgKVGhl
+IGlubm8gaGRtaSBkcml2ZXIgaXMgdmVyaWZpZWQgYnkgb24gbXkgd29yayBicmFuY2guCihodHRw
+czovL2dpdGh1Yi5jb20vQ2Flc2FyLWdpdGh1Yi9yb2NrY2hpcC9jb21taXRzL2t5bGluL25leHQp
+Cgo5Mjk2MDVlIGFybTogY29uZmlnOiBzdXBwb3J0IHRoZSBpbm5vIGhkbWkgZm9yIHJrMzAzNiBT
+b0NzCmFhYzQyNmUgRlJPTUxJU1Q6IEFSTTogZHRzOiByb2NrY2hpcDogYWRkIGhkbWkvdm9wIGRl
+dmljZSBub2RlIGZvciByazMwMzYKN2Q5Njk0MyBGUk9NTElTVDogZHQtYmluZGluZ3M6IGFkZCBk
+b2N1bWVudCBmb3IgSW5ub3NpbGljb24gSERNSSBvbiAKUm9ja2NoaXAgcGxhdGZvcm0KZjc3NTFm
+MiBGUk9NTElTVDogZHJtL3JvY2tjaGlwOiBoZG1pOiBhZGQgSW5ub3NpbGljb24gSERNSSBzdXBw
+b3J0Ci4uLi4KCgo+CgoKLS0gClRoYW5rcywKQ2Flc2FyCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Ckxp
+bnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
