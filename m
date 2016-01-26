@@ -1,15 +1,14 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/3] irqdomain: Allow domain lookup with
- DOMAIN_BUS_WIRED token
-Date: Tue, 26 Jan 2016 16:33:14 +0100
-Message-ID: <20160126163314.3a3e5b67@free-electrons.com>
+Subject: Re: [PATCH 2/3] of: MSI: Simplify irqdomain lookup
+Date: Tue, 26 Jan 2016 16:33:38 +0100
+Message-ID: <20160126163338.1652dbe4@free-electrons.com>
 References: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
-	<1453816347-32720-2-git-send-email-marc.zyngier@arm.com>
+	<1453816347-32720-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453816347-32720-2-git-send-email-marc.zyngier@arm.com>
+In-Reply-To: <1453816347-32720-3-git-send-email-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
@@ -17,49 +16,32 @@ List-Id: devicetree@vger.kernel.org
 
 Dear Marc Zyngier,
 
-On Tue, 26 Jan 2016 13:52:25 +0000, Marc Zyngier wrote:
-> Let's take the (outlandish) example of an interrupt controller
-> capable of handling both wired interrupts and PCI MSIs.
+On Tue, 26 Jan 2016 13:52:26 +0000, Marc Zyngier wrote:
+> So far, when trying to associate a device with its MSI domain,
+> we first lookup the domain using a MSI token, and if this
+> doesn't return anything useful, we pick up any domain matching
+> the same node.
 > 
-> With the current code, the PCI MSI domain is going to be tagged
-> with DOMAIN_BUS_PCI_MSI, and the wired domain with DOMAIN_BUS_ANY.
+> This logic is broken for two reasons:
+> 1) Only the generic MSI code (PCI or platform) sets this token
+>    to PCI/MSI or platform MSI. So we're guaranteed that if there
+>    is something to be found, we will find it with the first call.
+> 2) If we have a convoluted situation where:
+>    - a single node implements both wired and MSI interrupts
+>    - MSI support for that HW hasn't been compiled in
+>    we'll end up using the wired domain for MSIs anyway, and things
+>    break badly.
 > 
-> Things get hairy when we start looking up the domain for a wired
-> interrupt (typically when creating it based on some firmware
-> information - DT or ACPI).
-> 
-> In irq_create_fwspec_mapping(), we perform the lookup using
-> DOMAIN_BUS_ANY, which is actually used as a wildcard. This gives
-> us one chance out of two to end up with the wrong domain, and
-> we try to configure a wired interrupt with the MSI domain.
-> Everything grinds to a halt pretty quickly.
-> 
-> What we really need to do is to start looking for a domain that
-> would uniquely identify a wired interrupt domain, and only use
-> DOMAIN_BUS_ANY as a fallback.
-> 
-> In order to solve this, let's introduce a new DOMAIN_BUS_WIRED
-> token, which is going to be used exactly as described above.
-> Of course, this depends on the irqchip to setup the domain
-> bus_token, and nobody had to implement this so far.
-> 
-> Only so far.
+> So let's just remove __of_get_msi_domain, and replace it by a direct
+> call to irq_find_matching_host, because that's what we really want.
 > 
 > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
 Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
- - On Marvell Armada XP, which uses the Marvell MPIC for both wired
-   interrupts and MSI interrupts
+(same testing as for PATCH 1/3)
 
- - On Marvell Armada 38x, which uses the ARM GIC for most wired
-   interrupts and the Marvell MPIC for MSI interrupts
-
-With an Intel e1000e PCIe NIC, with both PCI_MSI=y and PCI_MSI disabled
-cases have been tested. When MSI support is disabled it gracefully
-falls back to a wired interrupt, as expected.
-
-Thanks!
+Thanks a lot!
 
 Thomas
 -- 
