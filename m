@@ -1,46 +1,38 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v4 1/2] acpi: Fix proper return code for function acpi_gsi_to_irq
-Date: Tue, 26 Jan 2016 09:54:27 -0800
-Message-ID: <CAPw-ZTkyGZgHD9ba+LGVn3V5u6T=-qKn0-MPLN-FDbA4E6cyQw@mail.gmail.com>
-References: <1453335459-3617-1-git-send-email-lho@apm.com>
-	<1453335459-3617-2-git-send-email-lho@apm.com>
-	<CAPw-ZTnm5F3Kt+_J6HoNCYbx8R7JVkME5yA9V-hAwRtr8ge9ZA@mail.gmail.com>
-	<56A72EEB.5040205@arm.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [BISECTED] v4.5-rc1 phylib regression
+Date: Tue, 26 Jan 2016 10:14:00 -0800
+Message-ID: <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com>
+References: <20160125154520.GI22974@ak-desktop.emea.nsn-net.net>
+	<20160126044624.GH3880@lunn.ch>
+	<20160126121435.GK22974@ak-desktop.emea.nsn-net.net>
+	<20160126133417.GI3880@lunn.ch>
+	<CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com>
+	<20160126175353.GG27473@lunn.ch>
+	<CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <56A72EEB.5040205@arm.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Borislav Petkov <bp@alien8.de>, Doug Thompson <dougthompson@xmission.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Fu Wei <fu.wei@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-edac <linux-edac@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-acpi@vger.kernel.org, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Aaro Koskinen <aaro.koskinen@nokia.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Network Development <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
++devicetree@vger.kernel.org instead.
 
-On Tue, Jan 26, 2016 at 12:31 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> Loc,
+On Tue, Jan 26, 2016 at 10:08 AM, Olof Johansson <olof@lixom.net> wrote:
+> On Tue, Jan 26, 2016 at 9:53 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+>>> I hate to bikeshed, but I'm not sure if "generic-mdio" is too...
+>>> generic? Will someone writing a DT be thinking "well, this is a
+>>> generic mdio PHY, I should set it"?  "mdio-device"?
+>>> "generic-nonphy-mdio"? Neither of those seem much better.
+>>
+>> How about 'not-a-phy'?
 >
-> On 25/01/16 21:23, Loc Ho wrote:
->> Hi,
->>
->> On Wed, Jan 20, 2016 at 4:17 PM, Loc Ho <lho@apm.com> wrote:
->>>
->>> The function acpi_gsi_to_irq must return 0 on success as the caller
->>> ghes_probe expects an 0 for success. This change also matches x86
->>> implementation.
->>>
->>> Signed-off-by: Tuan Phan <tphan@apm.com>
->>> Signed-off-by: Loc Ho <lho@apm.com>
->>
->>
->> Any issue with this version? If not, can this be pulled into 4.5?
+> "mdio,not-a-phy" or "mdio,non-phy" will scope it a bit, especially if
+> you expect other generic mdio properties that can do with a namespace.
 >
-> How is that 4.5 material? Does it fix an observable bug or a regression
-> from a previous? If not, then this is probably to be postponed until
-> 4.6, together with the code that makes use of it.
-
-Given that this and the other patch are needed for APEI to work with
-X-Gene, fine with 4.6. Are we just waiting for Rafael to make the
-final call then?
-
--Loc
+> Probably time to add devicetree-discuss. Doing so.
+>
+>
+> -Olof
