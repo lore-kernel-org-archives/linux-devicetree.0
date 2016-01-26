@@ -1,159 +1,97 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v7 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Tue, 26 Jan 2016 01:46:57 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63F9777@penmbx01>
-References: <1453445087-2791-1-git-send-email-wenyou.yang@atmel.com>
- <1453445087-2791-2-git-send-email-wenyou.yang@atmel.com>
- <20160125124938.GL3368@x1>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] 8250: uniphier: allow modular build with 8250 console
+Date: Tue, 26 Jan 2016 10:48:53 +0900
+Message-ID: <CAK7LNAQoqS0mwkyR9pTJVEDjWYDuhWQYqrMJxWSRQ-bwk51FXw@mail.gmail.com>
+References: <3965359.aMgb8o9MaG@wuerfel>
+	<CAK7LNATVtLk6UTh+r9JTZrKq-veEXetDdRutZ_=zQOd-WyAO0g@mail.gmail.com>
+	<4548262.MV5j98YUVi@wuerfel>
+	<CAL_JsqKCnxenDN-5OP1yqAyyW1-cuhs47CeosAj12hr89e6CrA@mail.gmail.com>
+	<CAK7LNARo+rpKVDAY_h9vPKh_1vteYgjNS=nf0ukz2ThzPNxvmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160125124938.GL3368@x1>
-Content-Language: en-US
+In-Reply-To: <CAK7LNARo+rpKVDAY_h9vPKh_1vteYgjNS=nf0ukz2ThzPNxvmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVlLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lg0KDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVlIEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFy
-by5vcmddDQo+IFNlbnQ6IDIwMTblubQx5pyIMjXml6UgMjA6NTANCj4gVG86IFlhbmcsIFdlbnlv
-dSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
-bmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT47DQo+IE1hcmsgUnV0bGFu
-ZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwNCj4gPGlqYytkZXZpY2V0cmVl
-QGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBKYXZp
-ZXINCj4gTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBkb3doaWxlMC5vcmc+OyBLcnp5c3p0b2Yg
-S296bG93c2tpDQo+IDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT47IFBldGVyIEtvcnNnYWFyZCA8
-amFjbWV0QGdtYWlsLmNvbT47IEZlcnJlLA0KPiBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVs
-LmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2NyAxLzJdIG1mZDogYWN0ODk0NWE6IGFkZCBBY3RpdmUtc2VtaSBBQ1Q4
-OTQ1QSBQTUlDDQo+IE1GRCBkcml2ZXINCj4gDQo+IE9uIEZyaSwgMjIgSmFuIDIwMTYsIFdlbnlv
-dSBZYW5nIHdyb3RlOg0KPiANCj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFj
-dGl2ZS1zZW1pIEFDVDg5NDVBIFBNSUMuDQo+ID4gSXQgaXMgYSBNdWx0aSBGdW5jdGlvbiBEZXZp
-Y2Ugd2l0aCB0aGUgZm9sbG93aW5nIHN1YmRldmljZXM6DQo+ID4gIC0gUmVndWxhdG9yDQo+ID4g
-IC0gQ2hhcmdlcg0KPiA+DQo+ID4gSXQgaXMgaW50ZXJmYWNlZCB0byB0aGUgaG9zdCBjb250cm9s
-bGVyIHVzaW5nIEkyQyBpbnRlcmZhY2UsIEFDVDg5NDVBDQo+ID4gaXMgYSBjaGlsZCBkZXZpY2Ug
-b2YgdGhlIEkyQy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3Uu
-eWFuZ0BhdG1lbC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGsu
-a296bG93c2tpQHNhbXN1bmcuY29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2NzoN
-Cj4gPiAgLSByZW1vdmUgc3RydWN0IGFjdDg5NDVhX2RldiB0byAuYyBmaWxlLg0KPiA+ICAtIHJl
-bW92ZSB1bnVzZWQgLmggZmlsZS4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjY6DQo+ID4gIC0gY2hh
-bmdlIE1GRF9BQ1Q4OTQ1QSB0eXBlIGZyb20gYm9vbCB0byB0cmlzdGF0ZS4NCj4gPiAgLSByZXZl
-cnQgZGVwZW5kcyBvbiB0byAnSTJDJy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjU6DQo+ID4gIC0g
-Y2hhbmdlIGRlcGVuZHMgb24gdG8gJ0kyQz15Jy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+
-ID4gIC0gYWRkIGEgc3BhY2UgYmVmb3JlIC5jb21wYXRpYmxlLg0KPiA+ICAtIGNvbGxlY3QgUmV2
-aWV3ZWQtYnkgZnJvbSBLcnp5c3p0b2YgS296bG93c2tpLg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2
-MzogTm9uZQ0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gIC0gYWRkIG1vcmUgaGVscCBpbmZvcm1h
-dGlvbiBpbiBLY29uZmlnLg0KPiA+ICAtIHVwZGF0ZSB0aGUgZmlsZSBoZWFkZXIgd2l0aCBzaG9y
-dCB2ZXJzaW9uIGxpY2Vuc2UgYW5kIGF1dGhvciBsaW5lLg0KPiA+ICAtIHJlbW92ZSB1bnVzZWQg
-c3RydWN0dXJlIG1lbWJlcnMgKGRldiwgaTJjX2NsaWVudCkgb2Ygc3R1Y3QgYWN0ODk0NWFfZGV2
-Lg0KPiA+ICAtIHVzZSBkZWZpbmUgIlBMQVRGT1JNX0RFVklEX05PTkUiIGZvciBtZmRfYWRkX2Rl
-dmljZXMoKSwgaW5zdGVhZCBvZiAnLTEnLg0KPiA+ICAtIHVzZSBtb3JlIGV4cGxpY2l0IGluZm8g
-dG8gaW5kaWNhdGUgdGhlIGZhaWx1cmUgdG8gYWRkIHN1YiBkZXZpY2VzLg0KPiA+ICAtIHJlbW92
-ZSB0aGUgdW5uZWNlc3NhcnkgcHJpbnQgb3V0Lg0KPiA+ICAtIHN1YnN0aXR1dGUgTU9EVUxFX0xJ
-Q0VOU0UoIkdQTCIpIGZvciBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIikuDQo+ID4NCj4gPiAgZHJp
-dmVycy9tZmQvS2NvbmZpZyAgICB8ICAgMTEgKysrKysNCj4gPiAgZHJpdmVycy9tZmQvTWFrZWZp
-bGUgICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL21mZC9hY3Q4OTQ1YS5jIHwgIDExMg0KPiA+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZp
-bGVzIGNoYW5nZWQsIDEyNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL21mZC9hY3Q4OTQ1YS5jDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQv
-S2NvbmZpZyBiL2RyaXZlcnMvbWZkL0tjb25maWcgaW5kZXgNCj4gPiA5Y2E2NmRlLi41MDM4ZTc4
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJz
-L21mZC9LY29uZmlnDQo+ID4gQEAgLTE4LDYgKzE4LDE3IEBAIGNvbmZpZyBNRkRfQ1M1NTM1DQo+
-ID4gIAkgIFRoaXMgaXMgdGhlIGNvcmUgZHJpdmVyIGZvciBDUzU1MzUvQ1M1NTM2IE1GRCBmdW5j
-dGlvbnMuICBUaGlzIGlzDQo+ID4gICAgICAgICAgICBuZWNlc3NhcnkgZm9yIHVzaW5nIHRoZSBi
-b2FyZCdzIEdQSU8gYW5kIE1GR1BUIGZ1bmN0aW9uYWxpdHkuDQo+ID4NCj4gPiArY29uZmlnIE1G
-RF9BQ1Q4OTQ1QQ0KPiA+ICsJdHJpc3RhdGUgIkFjdGl2ZS1zZW1pIEFDVDg5NDVBIg0KPiA+ICsJ
-c2VsZWN0IE1GRF9DT1JFDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJZGVwZW5kcyBv
-biBJMkMgJiYgT0YNCj4gPiArCWhlbHANCj4gPiArCSAgU3VwcG9ydCBmb3IgdGhlIEFDVDg5NDVB
-IFBNSUMgZnJvbSBBY3RpdmUtc2VtaS4gVGhpcyBkZXZpY2UNCj4gPiArCSAgZmVhdHVyZXMgdGhy
-ZWUgc3RlcC1kb3duIERDL0RDIGNvbnZlcnRlcnMgYW5kIGZvdXIgbG93LWRyb3BvdXQNCj4gPiAr
-CSAgbGluZWFyIHJlZ3VsYXRvcnMsIGFsb25nIHdpdGggYSBjb21wbGV0ZSBBY3RpdmVQYXRoIGJh
-dHRlcnkNCj4gPiArCSAgY2hhcmdlci4NCj4gPiArDQo+ID4gIGNvbmZpZyBNRkRfQVMzNzExDQo+
-ID4gIAlib29sICJBTVMgQVMzNzExIg0KPiA+ICAJc2VsZWN0IE1GRF9DT1JFDQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUgaW5kZXgN
-Cj4gPiAwZjIzMGE2Li4yZjFjYTgyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL01ha2Vm
-aWxlDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBAQCAtNiw2ICs2LDcgQEAN
-Cj4gPiAgb2JqLSQoQ09ORklHX01GRF84OFBNODYwWCkJKz0gODhwbTg2MHgubw0KPiA+ICBvYmot
-JChDT05GSUdfTUZEXzg4UE04MDApCSs9IDg4cG04MDAubyA4OHBtODB4Lm8NCj4gPiAgb2JqLSQo
-Q09ORklHX01GRF84OFBNODA1KQkrPSA4OHBtODA1Lm8gODhwbTgweC5vDQo+ID4gK29iai0kKENP
-TkZJR19NRkRfQUNUODk0NUEpCSs9IGFjdDg5NDVhLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9T
-TTUwMSkJCSs9IHNtNTAxLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9BU0lDMykJCSs9IGFzaWMz
-Lm8gdG1pb19jb3JlLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9CQ001OTBYWCkJKz0gYmNtNTkw
-eHgubw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9hY3Q4OTQ1YS5jIGIvZHJpdmVycy9t
-ZmQvYWN0ODk0NWEuYyBuZXcgZmlsZQ0KPiA+IG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmQy
-ZTAxOTQxDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWZkL2FjdDg5NDVh
-LmMNCj4gPiBAQCAtMCwwICsxLDExMiBAQA0KPiA+ICsvKg0KPiA+ICsgKiBNRkQgZHJpdmVyIGZv
-ciBBY3RpdmUtc2VtaSBBQ1Q4OTQ1YSBQTUlDDQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAo
-QykgMjAxNSBBdG1lbCBDb3Jwb3JhdGlvbi4NCj4gPiArICoNCj4gPiArICogQXV0aG9yOiBXZW55
-b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIHBy
-b2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yDQo+
-ID4gK21vZGlmeSBpdA0KPiA+ICsgKiB1bmRlciAgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
-bCAgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkDQo+ID4gK2J5IHRoZQ0KPiA+ICsgKiBGcmVl
-IFNvZnR3YXJlIEZvdW5kYXRpb247ICBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBv
-ciAoYXQNCj4gPiAreW91cg0KPiA+ICsgKiBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiA+
-ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pMmMuaD4NCj4gPiArI2luY2x1ZGUg
-PGxpbnV4L21mZC9jb3JlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFw
-Lmg+DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYWN0ODk0NWFfZGV2IHsNCj4gPiArCXN0cnVjdCByZWdt
-YXAgKnJlZ21hcDsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZk
-X2NlbGwgYWN0ODk0NWFfZGV2c1tdID0gew0KPiA+ICsJew0KPiA+ICsJCS5uYW1lID0gImFjdDg5
-NDVhLXBtaWMiLA0KPiANCj4gSSB0aGluayB0aGlzIHNob3VsZCBiZSAtcmVndWxhdG9yLCByYXRo
-ZXIgdGhhbiAtcG1pYy4NCg0KWWVzLCAtcmVndWxhdG9yIGlzIGJldHRlci4NCg0KPiANCj4gSSBi
-ZWxpZXZlICp0aGlzKiBpcyB0aGUgUE1JQyBkcml2ZXIuDQo+IA0KPiA+ICsJCS5vZl9jb21wYXRp
-YmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLXJlZ3VsYXRvciIsDQo+ID4gKwl9LA0KPiA+ICsJ
-ew0KPiA+ICsJCS5uYW1lID0gImFjdDg5NDVhLWNoYXJnZXIiLA0KPiA+ICsJCS5vZl9jb21wYXRp
-YmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLWNoYXJnZXIiLA0KPiA+ICsJfSwNCj4gPiArfTsN
-Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBhY3Q4OTQ1YV9y
-ZWdtYXBfY29uZmlnID0gew0KPiA+ICsJLnJlZ19iaXRzID0gOCwNCj4gPiArCS52YWxfYml0cyA9
-IDgsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFjdDg5NDVhX2kyY19wcm9iZShz
-dHJ1Y3QgaTJjX2NsaWVudCAqaTJjLA0KPiA+ICsJCQkgICAgICBjb25zdCBzdHJ1Y3QgaTJjX2Rl
-dmljZV9pZCAqaWQpIHsNCj4gPiArCXN0cnVjdCBhY3Q4OTQ1YV9kZXYgKmFjdDg5NDVhOw0KPiA+
-ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlhY3Q4OTQ1YSA9IGRldm1fa3phbGxvYygmaTJjLT5k
-ZXYsIHNpemVvZigqYWN0ODk0NWEpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghYWN0ODk0NWEp
-DQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJaTJjX3NldF9jbGllbnRkYXRh
-KGkyYywgYWN0ODk0NWEpOw0KPiA+ICsNCj4gPiArCWFjdDg5NDVhLT5yZWdtYXAgPSBkZXZtX3Jl
-Z21hcF9pbml0X2kyYyhpMmMsDQo+ICZhY3Q4OTQ1YV9yZWdtYXBfY29uZmlnKTsNCj4gPiArCWlm
-IChJU19FUlIoYWN0ODk0NWEtPnJlZ21hcCkpIHsNCj4gPiArCQlyZXQgPSBQVFJfRVJSKGFjdDg5
-NDVhLT5yZWdtYXApOw0KPiA+ICsJCWRldl9lcnIoJmkyYy0+ZGV2LCAicmVnbWFwIGluaXQgZmFp
-bGVkOiAlZFxuIiwgcmV0KTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiANCj4gSXMg
-dGhlIFJlZ21hcCB1c2VkIGluIGJvdGggdGhlIGNoYXJnZXIgQU5EIHJlZ3VsYXRvciBkcml2ZXJz
-Pw0KDQpZZXMsIHVzZWQgaW4gYm90aCBkcml2ZXJzLiANCg0KVGhlIHJlZ21hcCBpcyBnb3QgdGhy
-b3VnaCBkZXZfZ2V0X3JlZ21hcChwZGV2LT5kZXYucGFyZW50LCBOVUxMKS4NCg0KPiANCj4gPiAr
-CXJldCA9IG1mZF9hZGRfZGV2aWNlcygmaTJjLT5kZXYsIFBMQVRGT1JNX0RFVklEX05PTkUsDQo+
-IGFjdDg5NDVhX2RldnMsDQo+ID4gKwkJCSAgICAgIEFSUkFZX1NJWkUoYWN0ODk0NWFfZGV2cyks
-IE5VTEwsIDAsIE5VTEwpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCWRldl9lcnIoJmkyYy0+
-ZGV2LCAiRmFpbGVkIHRvIGFkZCBzdWIgZGV2aWNlc1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsN
-Cj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
-dGljIGludCBhY3Q4OTQ1YV9pMmNfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMpIHsNCj4g
-PiArCW1mZF9yZW1vdmVfZGV2aWNlcygmaTJjLT5kZXYpOw0KPiA+ICsNCj4gPiArCXJldHVybiAw
-Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQg
-YWN0ODk0NWFfaTJjX2lkW10gPSB7DQo+ID4gKwl7ICJhY3Q4OTQ1YSIsIDAgfSwNCj4gPiArCXt9
-DQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUoaTJjLCBhY3Q4OTQ1YV9pMmNfaWQp
-Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYWN0ODk0NWFf
-b2ZfbWF0Y2hbXSA9IHsNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0
-NWEiLCB9LA0KPiA+ICsJe30sDQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2Ys
-IGFjdDg5NDVhX29mX21hdGNoKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgaTJjX2RyaXZl
-ciBhY3Q4OTQ1YV9pMmNfZHJpdmVyID0gew0KPiA+ICsJLmRyaXZlciA9IHsNCj4gPiArCQkgICAu
-bmFtZSA9ICJhY3Q4OTQ1YSIsDQo+ID4gKwkJICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hf
-cHRyKGFjdDg5NDVhX29mX21hdGNoKSwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmUgPSBhY3Q4OTQ1
-YV9pMmNfcHJvYmUsDQo+ID4gKwkucmVtb3ZlID0gYWN0ODk0NWFfaTJjX3JlbW92ZSwNCj4gPiAr
-CS5pZF90YWJsZSA9IGFjdDg5NDVhX2kyY19pZCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRp
-YyBpbnQgX19pbml0IGFjdDg5NDVhX2kyY19pbml0KHZvaWQpIHsNCj4gPiArCXJldHVybiBpMmNf
-YWRkX2RyaXZlcigmYWN0ODk0NWFfaTJjX2RyaXZlcik7DQo+ID4gK30NCj4gPiArc3Vic3lzX2lu
-aXRjYWxsKGFjdDg5NDVhX2kyY19pbml0KTsNCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIF9fZXhp
-dCBhY3Q4OTQ1YV9pMmNfZXhpdCh2b2lkKSB7DQo+ID4gKwlpMmNfZGVsX2RyaXZlcigmYWN0ODk0
-NWFfaTJjX2RyaXZlcik7DQo+ID4gK30NCj4gPiArbW9kdWxlX2V4aXQoYWN0ODk0NWFfaTJjX2V4
-aXQpOw0KPiA+ICsNCj4gPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJBQ1Q4OTQ1QSBQTUlDIG11bHRp
-LWZ1bmN0aW9uIGRyaXZlciIpOw0KPiA+ICtNT0RVTEVfQVVUSE9SKCJXZW55b3UgWWFuZyA8d2Vu
-eW91LnlhbmdAYXRtZWwuY29tPiIpOw0KPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7DQo+IA0K
-PiAtLQ0KPiBMZWUgSm9uZXMNCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRl
-YW0gTGVhZCBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZQ0KPiBzb2Z0d2FyZSBmb3IgQVJNIFNv
-Q3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZw0KDQoNCkJlc3QgUmVn
-YXJkcywNCldlbnlvdSBZYW5nDQo=
+Just for clarification:
+
+The build error was fixed by another patch
+(https://patchwork.kernel.org/patch/8082931/)
+
+So, this one is unneeded.
+
+
+
+2016-01-22 1:50 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> Hi Rob.
+>
+>
+> 2016-01-21 23:09 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Thu, Jan 21, 2016 at 6:21 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Thursday 21 January 2016 20:39:03 Masahiro Yamada wrote:
+>>>> 2016-01-14 7:33 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>>>> > The recently added uniphier 8250 port driver supports early console
+>>>> > probing, and it supports being built as a module, but the combination
+>>>> > of the two fails to link:
+>>>> >
+>>>> > ERROR: "early_serial8250_setup" [drivers/tty/serial/8250/8250_uniphier.ko] undefined!
+>>>> >
+>>>> > Given that earlycon support in a loadable module makes no sense,
+>>>> > making that code conditional on 'MODULE' is a correct solution.
+>>>> >
+>>>> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>>> > Fixes: b8d20e06eaad ("serial: 8250_uniphier: add earlycon support")
+>>>> >
+>>>> > diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+>>>> > index bab6b3ae2540..1b7bd26555b7 100644
+>>>> > --- a/drivers/tty/serial/8250/8250_uniphier.c
+>>>> > +++ b/drivers/tty/serial/8250/8250_uniphier.c
+>>>> > @@ -35,7 +35,7 @@ struct uniphier8250_priv {
+>>>> >         spinlock_t atomic_write_lock;
+>>>> >  };
+>>>> >
+>>>> > -#ifdef CONFIG_SERIAL_8250_CONSOLE
+>>>> > +#if defined(CONFIG_SERIAL_8250_CONSOLE) && !defined(MODULE)
+>>>> >  static int __init uniphier_early_console_setup(struct earlycon_device *device,
+>>>> >                                                const char *options)
+>>>> >  {
+>>>> >
+>>>> >
+>>>>
+>>>>
+>>>> If my patch (https://patchwork.kernel.org/patch/8029331/) is accepted,
+>>>> this build error will be fixed as well.  But I doubt it is accepted soon...
+>>>>
+>>>> So, I am OK with this workaround to fix "make allmodconfig".
+>>>>
+>>>> Acked-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>>>>
+>>>
+>>> Good point. Adding the DT maintainers to Cc. Guys, any chance of you
+>>> picking up Masahiro's patch for 4.5?
+>>
+>> I will if you can update the commit log with the details here about it
+>> fixing an actual problem.
+>
+> I did so in v2.
+>
+> Thanks!
+>
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
