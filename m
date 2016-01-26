@@ -1,80 +1,87 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 0/2] Add Rockchip Inno-HDMI driver
-Date: Tue, 26 Jan 2016 17:09:44 +0800
-Message-ID: <56A737D8.7090508@gmail.com>
-References: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1453777142-30119-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 1/2] devicetree: Add UCS1002 USB Port Power Controller binding
+Date: Tue, 26 Jan 2016 10:12:20 +0100
+Message-ID: <1453799541-5445-2-git-send-email-enric.balletbo@collabora.com>
+References: <1453799541-5445-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1453799541-5445-1-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgrlnKggMjAxNuW5tDAx5pyIMjbml6UgMTA6NTksIFlha2lyIFlhbmcg5YaZ6YGTOgo+IEhl
-cmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6Cj4gICAg
-LSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAxLjAgc3RhbmRhcmQgY29tcGxp
-YW50IHRyYW5zbWl0dGVyCj4gICAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRl
-ZmluZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKPiAgICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNl
-IHN1cHBvcnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IgZGVwdGgg
-aW4gUkdCCj4gICAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRzIFBDTSwgRG9sYnkgRGlnaXRhbCwg
-RFRTIGRpZ2l0YWwgYXVkaW8gdHJhbnNtaXNzaW9uCj4gICAgICAoMzItMTkya0h6IEZzKSB1c2lu
-ZyBJRUM2MDk1OCBhbmQgSUVDIDYxOTM3Cj4gICAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9u
-IGFyZSBhbHNvIHN1cHBvcnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyIENvbnRy
-b2xsZQo+Cj4gQ2hhbmdlcyBpbiB2NzoKPiAtIENvcnJlY3QgdGhlIG1vZHVsZSBsaWNuZXNlIHN0
-YXRlbWVudCAoUGF1bCkKPiAgICAgICAtIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPiAgICAgICAr
-IE1PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsKPiAtIFN0YXJ0IGluZGVudGF0aW9uIHdpdGggdGFi
-cyBhbmQgZml4IHRoZSBtaXNzcGVsbCBpbiBLY29uZmlnIChQYXVsKQo+IC0gQ2FycnkgdGhlIGxv
-c3QgZGV2aWNlLWJpbmRpbmcgZG9jdW1lbnQgKEhlaWtvKQo+Cj4gQ2hhbmdlcyBpbiB2NjoKPiAt
-IFJlYmFzZSB0aGUgTWFrZWZpbGUvS2NvbmZpZyBmaWxlcyB3aGljaCBhZGQgYnkgQ2hyaXMncyBy
-b2NrY2hpcC1taXBpIGRyaXZlciAoQ2Flc2VyKQo+Cj4gQ2hhbmdlcyBpbiB2NToKPiAtIFVzZSBo
-ZG1pX2luZm9mcmFtZSBoZWxwZXIgZnVuY3Rpb25zIHRvIHBhY2tlZCB0aGUgaW5mb2ZyYW1lIChS
-dXNzZWxsKQo+IC0gUmVtb3ZlIHRoZSB1bnVzZWQgZG91YmxlIHdhaXRfZm9yX2NvbXBsZXRpb25f
-dGltZW91dCBmb3IgZGRjIHRyYW5zZmVyIChSdXNzZWxsKQo+IC0gUmVtb3ZlIHRoZSB1bnVzZWQg
-bG9jYWwgdmFyaWFibGUgaW4gImlubm9faGRtaV9pMmNfd3JpdGUoKSIgZnVuY3Rpb24gKFJ1c3Nl
-bGwpCj4KPiBDaGFuZ2VzIGluIHY0Ogo+IC0gTW9kaWZ5IHRoZSBjb21taXQgdGl0bGUgImRybS9y
-b2NrY2hpcDogaGRtaTogLi4uIiAoTWFyaykKPiAtIENvcnJlY3QgdGhlICJES01TIiB0byAiRFBN
-UyIgKE1hcmspCj4gLSBGaXggb3ZlciA4MCBjaGFyYWN0ZXJzIHByb2JsZW1zIChNYXJrKQo+IC0g
-UmVtb3ZlIGVuY29kZXIgLnByZXBhcmUvLmNvbW1pdCBoZWxwZXIgZnVuY3Rpb25zLCBhbmQgbW92
-ZSB0aGUgdm9wIG1vZGUKPiBjb25maWd1cmUgZnVuY3Rpb24gaW50byBlbmNvZGVyIC5lbmFibGUg
-aGVscGVyIGZ1bmN0aW9ucy4gKE1hcmspCj4KPiBDaGFuZ2VzIGluIHYzOgo+IC0gVXNlIGVuY29k
-ZXIgZW5hYmxlL2Rpc2FibGUgZnVuY3Rpb24sIGFuZCByZW1vdmUgdGhlIGVuY29kZXIgRFBNUyBm
-dW5jdGlvbgo+IC0gS2VlcCBIRE1JIFBMTCBwb3dlciBvbiBpbiBzdGFuZGJ5IG1vZGUKPgo+IENo
-YW5nZXMgaW4gdjI6Cj4gLSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNv
-bm5lY3RvciBpbml0IChNYXJrKQo+IC0gUmVtb3ZlICJoZG1pLT5jb25uZWN0b3IuZW5jb2RlciA9
-IGVuY29kZXI7IiAoTWFyaykKPiAtIEFkZCB0aGUgQWNrZWQtYnkgdGFncyBmcm9tIFJvYgo+IC0g
-Q29ycmVjdCB0aGUgbWlzc3BlbGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCj4KPiBZYWtpciBZ
-YW5nICgyKToKPiAgICBkcm0vcm9ja2NoaXA6IGhkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1
-cHBvcnQKPiAgICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1J
-IG9uIFJvY2tjaGlwIHBsYXRmb3JtCj4KPiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRt
-aS1yb2NrY2hpcC50eHQgICAgICAgIHwgIDUwICsrCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
-aXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOCArCj4gICBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gICBkcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAgICB8IDk0MSArKysrKysrKysr
-KysrKysrKysrKysKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaCAgICAg
-ICAgICAgICAgIHwgMzYyICsrKysrKysrCj4gICA1IGZpbGVzIGNoYW5nZWQsIDEzNjIgaW5zZXJ0
-aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQKPiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMKPiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmgKVGhl
-IGlubm8gaGRtaSBkcml2ZXIgaXMgdmVyaWZpZWQgYnkgb24gbXkgd29yayBicmFuY2guCihodHRw
-czovL2dpdGh1Yi5jb20vQ2Flc2FyLWdpdGh1Yi9yb2NrY2hpcC9jb21taXRzL2t5bGluL25leHQp
-Cgo5Mjk2MDVlIGFybTogY29uZmlnOiBzdXBwb3J0IHRoZSBpbm5vIGhkbWkgZm9yIHJrMzAzNiBT
-b0NzCmFhYzQyNmUgRlJPTUxJU1Q6IEFSTTogZHRzOiByb2NrY2hpcDogYWRkIGhkbWkvdm9wIGRl
-dmljZSBub2RlIGZvciByazMwMzYKN2Q5Njk0MyBGUk9NTElTVDogZHQtYmluZGluZ3M6IGFkZCBk
-b2N1bWVudCBmb3IgSW5ub3NpbGljb24gSERNSSBvbiAKUm9ja2NoaXAgcGxhdGZvcm0KZjc3NTFm
-MiBGUk9NTElTVDogZHJtL3JvY2tjaGlwOiBoZG1pOiBhZGQgSW5ub3NpbGljb24gSERNSSBzdXBw
-b3J0Ci4uLi4KCgo+CgoKLS0gClRoYW5rcywKQ2Flc2FyCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Ckxp
-bnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+The UCS1002-2 provides a USB port power switch for precise control of up
+to 2.5 amperes continuous current.
+
+You can add support to your board with current binding.
+
+Example:
+
+    ucs1002: ucs1002@57 {
+             compatible = "microchip,ucs1002";
+             reg = <0x57>;
+             microchip,pin-ignore;
+    };
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+ .../devicetree/bindings/power/ucs1002.txt          | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+
+diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
+new file mode 100644
+index 0000000..1b89f0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/ucs1002.txt
+@@ -0,0 +1,47 @@
++UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
++
++Required properties:
++- compatible: "microchip,ucs1002"
++- reg: integer, the I2C address of the device.
++
++Required properties (if pin-ignore functionality is not set):
++- em-gpios: which GPIO to use for EM_EN pin.
++- pwr-gpios: which GPIO to use for PWR_EN pin.
++- m1-gpios: which GPIO to use for M1 pin.
++- m2-gpios: which GPIO to use for M2 pin.
++
++Optional properties:
++- interrupt-parent: the phandle of the interrupt controller that services
++    interrupts for this device.
++- interrupts: interrupt specifiers for two interrupt sources.
++    - First interrupt specifier is for A_DET interrupt.
++    - Second interrupt specifier is for ALERT interrupt.
++- microchip,current-limit: integer, maximum current in mA. Note that the default
++    value is based on the resistor on the COMM_SEL/ILIM pin and this value cannot
++    be changed to be higher than hardware set value. Accepted values are: 500000,
++    900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000 (uA)
++- microchip,pin-ignore: boolean, if present uses I2C for configuration, otherwise,
++    we must provide EM_EN, M1 and M2 gpio mapping.
++
++Example (poll):
++
++	ucs1002: ucs1002@57 {
++		compatible = "microchip,ucs1002";
++		reg = <0x57>;
++		microchip,current-limit = <2000000>;
++		microchip,pin-ignore;
++	};
++
++Example (interrupts + pin control):
++
++	ucs1002: ucs1002@57 {
++		compatible = "microchip,ucs1002";
++		reg = <0x57>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <30 0>, <31 0>;
++		microchip,current-limit = <2000000>;
++		em-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
++		m1-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
++		m2-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
++		pwr-gpios = <&gpio1 19 0>;
++	};
+-- 
+2.1.0
+
