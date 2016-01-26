@@ -1,42 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Mon, 25 Jan 2016 20:46:48 -0600
-Message-ID: <20160126024648.GA26779@rob-hp-laptop>
-References: <1453704460-8956-1-git-send-email-xuejiancheng@huawei.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v7 0/2] Add Rockchip Inno-HDMI driver
+Date: Tue, 26 Jan 2016 10:59:02 +0800
+Message-ID: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453704460-8956-1-git-send-email-xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 02:47:40PM +0800, Jiancheng Xue wrote:
-> add hisilicon spi-nor flash controller driver
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
-> change log
-> v4:
-> Rebased to v4.5-rc1
-> v3:
-> Added a compatible string "hisilicon,hi3519-sfc".
-> v2:
-> Fixed some compiling warings.
->  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  25 ++
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/mtd/spi-nor/Kconfig                        |   6 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/hisi-sfc.c                     | 499 +++++++++++++++++++++
->  4 files changed, 531 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6CiAg
+LSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAxLjAgc3RhbmRhcmQgY29tcGxp
+YW50IHRyYW5zbWl0dGVyCiAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRlZmlu
+ZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBv
+cnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IgZGVwdGggaW4gUkdC
+CiAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRzIFBDTSwgRG9sYnkgRGlnaXRhbCwgRFRTIGRpZ2l0
+YWwgYXVkaW8gdHJhbnNtaXNzaW9uCiAgICAoMzItMTkya0h6IEZzKSB1c2luZyBJRUM2MDk1OCBh
+bmQgSUVDIDYxOTM3CiAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1cHBv
+cnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyIENvbnRyb2xsZQoKQ2hhbmdlcyBp
+biB2NzoKLSBDb3JyZWN0IHRoZSBtb2R1bGUgbGljbmVzZSBzdGF0ZW1lbnQgKFBhdWwpCiAgICAg
+LSBNT0RVTEVfTElDRU5TRSgiR1BMIik7CiAgICAgKyBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7
+Ci0gU3RhcnQgaW5kZW50YXRpb24gd2l0aCB0YWJzIGFuZCBmaXggdGhlIG1pc3NwZWxsIGluIEtj
+b25maWcgKFBhdWwpCi0gQ2FycnkgdGhlIGxvc3QgZGV2aWNlLWJpbmRpbmcgZG9jdW1lbnQgKEhl
+aWtvKQoKQ2hhbmdlcyBpbiB2NjoKLSBSZWJhc2UgdGhlIE1ha2VmaWxlL0tjb25maWcgZmlsZXMg
+d2hpY2ggYWRkIGJ5IENocmlzJ3Mgcm9ja2NoaXAtbWlwaSBkcml2ZXIgKENhZXNlcikKCkNoYW5n
+ZXMgaW4gdjU6Ci0gVXNlIGhkbWlfaW5mb2ZyYW1lIGhlbHBlciBmdW5jdGlvbnMgdG8gcGFja2Vk
+IHRoZSBpbmZvZnJhbWUgKFJ1c3NlbGwpCi0gUmVtb3ZlIHRoZSB1bnVzZWQgZG91YmxlIHdhaXRf
+Zm9yX2NvbXBsZXRpb25fdGltZW91dCBmb3IgZGRjIHRyYW5zZmVyIChSdXNzZWxsKQotIFJlbW92
+ZSB0aGUgdW51c2VkIGxvY2FsIHZhcmlhYmxlIGluICJpbm5vX2hkbWlfaTJjX3dyaXRlKCkiIGZ1
+bmN0aW9uIChSdXNzZWxsKQoKQ2hhbmdlcyBpbiB2NDoKLSBNb2RpZnkgdGhlIGNvbW1pdCB0aXRs
+ZSAiZHJtL3JvY2tjaGlwOiBoZG1pOiAuLi4iIChNYXJrKQotIENvcnJlY3QgdGhlICJES01TIiB0
+byAiRFBNUyIgKE1hcmspCi0gRml4IG92ZXIgODAgY2hhcmFjdGVycyBwcm9ibGVtcyAoTWFyaykK
+LSBSZW1vdmUgZW5jb2RlciAucHJlcGFyZS8uY29tbWl0IGhlbHBlciBmdW5jdGlvbnMsIGFuZCBt
+b3ZlIHRoZSB2b3AgbW9kZQpjb25maWd1cmUgZnVuY3Rpb24gaW50byBlbmNvZGVyIC5lbmFibGUg
+aGVscGVyIGZ1bmN0aW9ucy4gKE1hcmspCgpDaGFuZ2VzIGluIHYzOgotIFVzZSBlbmNvZGVyIGVu
+YWJsZS9kaXNhYmxlIGZ1bmN0aW9uLCBhbmQgcmVtb3ZlIHRoZSBlbmNvZGVyIERQTVMgZnVuY3Rp
+b24KLSBLZWVwIEhETUkgUExMIHBvd2VyIG9uIGluIHN0YW5kYnkgbW9kZQoKQ2hhbmdlcyBpbiB2
+MjoKLSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNvbm5lY3RvciBpbml0
+IChNYXJrKQotIFJlbW92ZSAiaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNvZGVyOyIgKE1h
+cmspCi0gQWRkIHRoZSBBY2tlZC1ieSB0YWdzIGZyb20gUm9iCi0gQ29ycmVjdCB0aGUgbWlzc3Bl
+bGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgpZYWtpciBZYW5nICgyKToKICBkcm0vcm9ja2No
+aXA6IGhkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1cHBvcnQKICBkdC1iaW5kaW5nczogYWRk
+IGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1JIG9uIFJvY2tjaGlwIHBsYXRmb3JtCgogLi4u
+L2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dCAgICAgICAgfCAgNTAgKysK
+IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA4
+ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwg
+ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAg
+IHwgOTQxICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lu
+bm9faGRtaS5oICAgICAgICAgICAgICAgfCAzNjIgKysrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwg
+MTM2MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAoK
+LS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
