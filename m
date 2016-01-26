@@ -1,145 +1,79 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v7 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Tue, 26 Jan 2016 02:17:43 +0100
-Message-ID: <1453771063.17181.56.camel@tiscali.nl>
-References: <1453690883-31220-1-git-send-email-xuejiancheng@huawei.com>
-	 <1453690883-31220-2-git-send-email-xuejiancheng@huawei.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
+Date: Tue, 26 Jan 2016 09:34:23 +0800
+Message-ID: <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw@mail.gmail.com>
+References: <1452655854-1528-1-git-send-email-wens@csie.org>
+ <1452655854-1528-5-git-send-email-wens@csie.org> <20160125143957.GS3368@x1>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453690883-31220-2-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOE2TO2QKGQESIW3SUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160125143957.GS3368@x1>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On ma, 2016-01-25 at 11:01 +0800, Jiancheng Xue wrote:
-> --- a/drivers/clk/hisilicon/Kconfig
-> +++ b/drivers/clk/hisilicon/Kconfig
+On Mon, Jan 25, 2016 at 10:39 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
+>
+>> When the driver was merged, the original author did not include a proper
+>> copyright notice. This patch adds the notice, backdated to when the
+>> driver was merged.
+>
+> This is very wordy.
+>
+> "Supply a backdated copyright notice."
 
-> +config COMMON_CLK_HI3519
-> +	bool "Hi3519 Clock Driver"
-> +	depends on ARCH_HISI
-> +	default y
-> +	help
-> +	  Build the clock driver for hi3519.
+Fine with me. Would you like me to send another version?
 
-> --- a/drivers/clk/hisilicon/Makefile
-> +++ b/drivers/clk/hisilicon/Makefile
+ChenYu
 
-> +obj-$(CONFIG_COMMON_CLK_HI3519)	+= clk-hi3519.o
+>> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>
+>> New patch in v7.
+>>
+>> ---
+>>  drivers/mfd/axp20x.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>
+> Patch looks fine though:
+>
+> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index 3e186f2dcac3..cec51e689d1d 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -5,6 +5,8 @@
+>>   * converters, LDOs, multiple 12-bit ADCs of voltage, current and tempe=
+rature
+>>   * as well as configurable GPIOs.
+>>   *
+>> + * Copyright (C) 2014 Carlo Caione
+>> + *
+>>   * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>>   *
+>>   * This program is free software; you can redistribute it and/or modify
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
-If I parsed the above correctly clk-hi3519.o can only be built-in,
-right?
-
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/clk-hi3519.c
-
-> +#include <linux/module.h>
-
-So is this include actually needed?
-
-> +static int hi3519_clk_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct hisi_clock_data *clk_data;
-> +
-> +       clk_data = hisi_clk_init(np, HI3519_NR_CLKS);
-> +       if (!clk_data)
-> +               return -ENODEV;
-> +
-> +       hisi_clk_register_fixed_rate(hi3519_fixed_rate_clks,
-> +                                   
-> ARRAY_SIZE(hi3519_fixed_rate_clks),
-> +                                    clk_data);
-> +       hisi_clk_register_mux(hi3519_mux_clks,
-> ARRAY_SIZE(hi3519_mux_clks),
-> +                                       clk_data);
-> +       hisi_clk_register_gate(hi3519_gate_clks,
-> +                       ARRAY_SIZE(hi3519_gate_clks), clk_data);
-> +
-> +       return hisi_reset_init(np);
-> +}
-
-(evolution 3.16.5 makes replying to code quite a challenge.)
-
-> +static const struct of_device_id hi3519_clk_match_table[] = {
-> +	{ .compatible = "hisilicon,hi3519-crg" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, hi3519_clk_match_table);
-
-Last time I checked MODULE_DEVICE_TABLE is preprocessed away for built
--in code.
-
-> +static void __exit hi3519_clk_exit(void)
-> +{
-> +	platform_driver_unregister(&hi3519_clk_driver);
-> +}
-> +module_exit(hi3519_clk_exit);
-
-Not needed for built-in only code.
-
-> +MODULE_DESCRIPTION("HiSilicon Hi3519 Clock Driver");
-
-Ditto.
-
-> --- a/drivers/clk/hisilicon/clk.c
-> +++ b/drivers/clk/hisilicon/clk.c
-
-> +EXPORT_SYMBOL(hisi_clk_init);
-
-What module uses this export?
- 
-> +EXPORT_SYMBOL(hisi_clk_register_fixed_rate);
-
-Ditto.
-
-> +EXPORT_SYMBOL(hisi_clk_register_fixed_factor);
-
-Ditto.
- 
-> +EXPORT_SYMBOL(hisi_clk_register_mux);
-
-Ditto.
-
-> +EXPORT_SYMBOL(hisi_clk_register_divider);
-
-Ditto.
-
-> +EXPORT_SYMBOL(hisi_clk_register_gate);
-
-Ditto.
-
-> +EXPORT_SYMBOL(hisi_clk_register_gate_sep);
-
-Ditto.
-
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/reset.c
-
-> +int hisi_reset_init(struct device_node *np)
-> +{
-> +	[...]
-> +}
-> +EXPORT_SYMBOL(hisi_reset_init);
-
-Ditto.
-
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/reset.h
-
-> +#ifdef CONFIG_RESET_CONTROLLER
-> +int hisi_reset_init(struct device_node *np);
-> +#else
-> +static inline int hisi_reset_init(struct device_node *np)
-> +{
-> +	return 0;
-> +}
-> +#endif
-
-Thanks,
-
-
-Paul Bolle
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
