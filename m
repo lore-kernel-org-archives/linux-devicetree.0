@@ -1,90 +1,85 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ti-st: use device handles and add device tree binding
-Date: Tue, 26 Jan 2016 09:47:04 -0600
-Message-ID: <CAL_JsqLpU_5EKQyALMvfBFQL52ncFx+LvdTibLb2AUtVuTn=vw@mail.gmail.com>
-References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
- <8665E2433BC68541A24DFFCA87B70F5B23759A5B@DFRE01.ent.ti.com>
- <20151229183534.GM12450@rob-hp-laptop> <8665E2433BC68541A24DFFCA87B70F5B2376B680@DFRE01.ent.ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
+Date: Tue, 26 Jan 2016 09:50:46 -0600
+Message-ID: <CAL_JsqJxQjw5yWmnUAev4e+pa601stcH-W-srbDCeRYOabJrOg@mail.gmail.com>
+References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
+ <20160126022948.GA21187@rob-hp-laptop> <56A73FDE.2060607@felipetonello.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B2376B680-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56A73FDE.2060607@felipetonello.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Ferreri Tonello <eu@felipetonello.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 17, 2016 at 1:57 AM, Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> wrote:
-> Sorry for the delayed response.
+On Tue, Jan 26, 2016 at 3:43 AM, Felipe Ferreri Tonello
+<eu@felipetonello.com> wrote:
+> Hi Rob,
 >
->> -----Original Message-----
->> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
->> Sent: Tuesday, December 29, 2015 8:36 PM
->> To: Reizer, Eyal
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
->> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
->> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org;
->> linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
->> Subject: Re: [PATCH 1/3] ti-st: use device handles and add device tree binding
+> On 26/01/16 02:29, Rob Herring wrote:
+>> On Mon, Jan 25, 2016 at 05:53:23PM +0000, Felipe F. Tonello wrote:
+>>> This is the initial imx-cs427x device-tree-only machine driver working with
+>>> fsl_ssi driver. More features can be added on top of it later.
+>>>
+>>> Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
+>>> ---
+>>>  .../devicetree/bindings/sound/imx-audio-cs427x.txt |  47 +++++
+>>>  sound/soc/fsl/Kconfig                              |  12 ++
+>>>  sound/soc/fsl/Makefile                             |   2 +
+>>>  sound/soc/fsl/imx-cs427x.c                         | 218 +++++++++++++++++++++
+>>>  4 files changed, 279 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+>>>  create mode 100644 sound/soc/fsl/imx-cs427x.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+>>> new file mode 100644
+>>> index 000000000000..295f60b19418
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+>>> @@ -0,0 +1,47 @@
+>>> +Freescale i.MX audio complex with CS4271 or CS4272 codec
 >>
->> On Wed, Dec 23, 2015 at 11:38:29AM +0000, Reizer, Eyal wrote:
->> > - Add support for getting the platform data which includes the uart
->> >   used and gpio pin used for enable from device tree.
->> >
->> > - Fix the implementation for using device handle for the uart and
->> >   gpiod for the enable pin, instead of device name (as string) used
->> >   for the uart and pio number which are both bad practice.
->> >
->> > Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
-
-[...]
-
->> > +Optional properties:
->> > + - nshutdown-gpios : specifies attributes for gpio ping used for enabling
->> > +   the bluetooth,gps and FM sub systems
->> > + - serial-device : the phandle for the phisical uart used for interacting
->> > +   with the wilink device
->>
->> There have been multiple discussions on serial slave devices recently.
->> I'm not going to accept any device binding without a common uart slave
->> device binding first.
->>
+>> Do all the i.MX audio bindings really vary more that the codec? Seems
+>> like a lot of duplication.
 >
-> Perhaps I am reading it wrong but I think this is a different discussion.
-> The shared transport driver is already in the kernel for pretty long time.
-> AFAIK the original author is not around to maintain it.
-> Currently it is useless  as no bindings exist for it and all customers I have seen using ti_st that upgrade
-> to newer kernels have broken support and have to manually patch the kernel for adding bindings for it.
+> I agree, but that how it is today. These platform drivers for imx are
+> similar but not identical. Looking at them I would guess that they have
+> 50 to 60% of duplicated code.
+>
+> I believe we can add this driver and work on re-using the code on a
+> future series of patches.
+>
+>>
+>>> +
+>>> +Required properties:
+>>> +
+>>> +  - compatible              : "fsl,imx-audio-cs427x"
+>>> +
+>>> +  - model           : The user-visible name of this sound complex
+>>> +
+>>> +  - ssi-controller  : The phandle of the i.MX SSI controller
+>>> +
+>>> +  - audio-codec     : The phandle of the CS4271 audio codec
+>>> +
+>>> +  - audio-routing   : A list of the connections between audio components.
+>>> +                      Each entry is a pair of strings, the first being the
+>>> +                      connection's sink, the second being the connection's
+>>> +                      source. Valid names could be power supplies, CS427x
+>>> +                      pins, and the jacks on the board:
+>>> +
+>>> +                      Board connectors:
+>>> +                       * Mic Jack
+>>> +                       * Headphone Jack
+>>
+>> This should be an exact list of possible strings and valid combinations.
+>
+> This is the exact list for this version of this driver. At least that is
+> what I can verify on my hardware (custom build).
 
-If should not be required to have a binding. You could still enumerate
-it the old way even for DT platforms. It should not have been broken
-if an upstream platform supported it.
+What are AINA, AINB, etc. then?
 
-> Having a new uart slave device that may provide similar functionality is a different discussion as it would
-> require a total different implementation.
-> But what do we do now with the implementation that is already there.
-> Don't we want it to work and at least have working bindings for it?
-
-For the kernel yes, the implementation would certainly be different,
-but that is not what I'm saying. The bindings should be unaffected by
-kernel implementation. You can't do it one way for what you need now
-and then change the DT binding when the kernel changes. It is an API.
-We should be able to reach conclusion on binding side. The kernel side
-can move to a uart device subsystem if/when that exists.
-
-Essentially, we need a common binding doc that defines:
-
-- location of uart slave nodes
-- common properties (baudrate, flow-control, etc.
-
-That's not very much. We (DT maintainers) have been clear that we want
-to see devices as child nodes of the UART they are attached to.
-There's mainly been debate about using a phandle instead. I'll be fine
-with using a phandle instead of a child node, but only after we have
-some clear need for it.
+Also, model should have its string documented. I should be able to
+write the example from the documentation.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
