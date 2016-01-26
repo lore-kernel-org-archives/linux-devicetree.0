@@ -1,53 +1,87 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 0/3] irqdomain fixes for 4.5-rc1
-Date: Tue, 26 Jan 2016 13:52:24 +0000
-Message-ID: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 2/3] of: MSI: Simplify irqdomain lookup
+Date: Tue, 26 Jan 2016 13:52:26 +0000
+Message-ID: <1453816347-32720-3-git-send-email-marc.zyngier@arm.com>
+References: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453816347-32720-1-git-send-email-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This short series addresses a couple of shortcomings of the irqdomain
-subsystem:
+So far, when trying to associate a device with its MSI domain,
+we first lookup the domain using a MSI token, and if this
+doesn't return anything useful, we pick up any domain matching
+the same node.
 
-(1) The use of DOMAIN_BUS_ANY for looking up wired interrupts can
-    result in interesting situations if a given interrupt controller
-    implements both wired and message interrupts...
+This logic is broken for two reasons:
+1) Only the generic MSI code (PCI or platform) sets this token
+   to PCI/MSI or platform MSI. So we're guaranteed that if there
+   is something to be found, we will find it with the first call.
+2) If we have a convoluted situation where:
+   - a single node implements both wired and MSI interrupts
+   - MSI support for that HW hasn't been compiled in
+   we'll end up using the wired domain for MSIs anyway, and things
+   break badly.
 
-(2) Using DOMAIN_BUS_ANY for MSI lookup is completely redundant (it
-    can never match with any of the existing drivers), and is likely
-    to fail when we introduce HW similar to what is described in (1).
+So let's just remove __of_get_msi_domain, and replace it by a direct
+call to irq_find_matching_host, because that's what we really want.
 
-(3) platform_msi_domain_{alloc,free}_irqs need to be exported so that
-    drivers using MSIs can be built as modules.
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+---
+ drivers/of/irq.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-These patches are a pre-requisite for Thomas Petazzoni's work on the
-MVEBU interrupt controller, which outlined the above issues:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/395429.html
-
-Thanks,
-
-	M.
-
-Marc Zyngier (2):
-  irqdomain: Allow domain lookup with DOMAIN_BUS_WIRED token
-  of: MSI: Simplify irqdomain lookup
-
-Thomas Petazzoni (1):
-  base: Export platform_msi_domain_{alloc,free}_irqs
-
- drivers/base/platform-msi.c |  2 ++
- drivers/of/irq.c            | 18 +++---------------
- include/linux/irqdomain.h   |  1 +
- kernel/irq/irqdomain.c      | 11 ++++++++---
- 4 files changed, 14 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 4fa916d..a9ea552 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -680,18 +680,6 @@ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
+ 	return __of_msi_map_rid(dev, &msi_np, rid_in);
+ }
+ 
+-static struct irq_domain *__of_get_msi_domain(struct device_node *np,
+-					      enum irq_domain_bus_token token)
+-{
+-	struct irq_domain *d;
+-
+-	d = irq_find_matching_host(np, token);
+-	if (!d)
+-		d = irq_find_host(np);
+-
+-	return d;
+-}
+-
+ /**
+  * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
+  * @dev: device for which the mapping is to be done.
+@@ -707,7 +695,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 rid)
+ 	struct device_node *np = NULL;
+ 
+ 	__of_msi_map_rid(dev, &np, rid);
+-	return __of_get_msi_domain(np, DOMAIN_BUS_PCI_MSI);
++	return irq_find_matching_host(np, DOMAIN_BUS_PCI_MSI);
+ }
+ 
+ /**
+@@ -731,7 +719,7 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
+ 	/* Check for a single msi-parent property */
+ 	msi_np = of_parse_phandle(np, "msi-parent", 0);
+ 	if (msi_np && !of_property_read_bool(msi_np, "#msi-cells")) {
+-		d = __of_get_msi_domain(msi_np, token);
++		d = irq_find_matching_host(msi_np, token);
+ 		if (!d)
+ 			of_node_put(msi_np);
+ 		return d;
+@@ -745,7 +733,7 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
+ 		while (!of_parse_phandle_with_args(np, "msi-parent",
+ 						   "#msi-cells",
+ 						   index, &args)) {
+-			d = __of_get_msi_domain(args.np, token);
++			d = irq_find_matching_host(args.np, token);
+ 			if (d)
+ 				return d;
+ 
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
