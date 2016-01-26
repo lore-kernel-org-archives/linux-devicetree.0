@@ -1,48 +1,87 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] acpi: Fix proper return code for function
- acpi_gsi_to_irq
-Date: Tue, 26 Jan 2016 08:31:39 +0000
-Message-ID: <56A72EEB.5040205@arm.com>
-References: <1453335459-3617-1-git-send-email-lho@apm.com>
- <1453335459-3617-2-git-send-email-lho@apm.com>
- <CAPw-ZTnm5F3Kt+_J6HoNCYbx8R7JVkME5yA9V-hAwRtr8ge9ZA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
+Date: Tue, 26 Jan 2016 08:37:24 +0000
+Message-ID: <20160126083724.GY3368@x1>
+References: <1452655854-1528-1-git-send-email-wens@csie.org>
+ <1452655854-1528-5-git-send-email-wens@csie.org>
+ <20160125143957.GS3368@x1>
+ <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw@mail.gmail.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPw-ZTnm5F3Kt+_J6HoNCYbx8R7JVkME5yA9V-hAwRtr8ge9ZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Tomasz Nowicki <tomasz.nowicki-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Tuan Phan <tphan-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBSHATS2QKGQEEE2EDWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v674rg+-VwNPakqdYPvwH1p0tP+yAhr=Uas2RUr2rO+uEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Loc,
+On Tue, 26 Jan 2016, Chen-Yu Tsai wrote:
 
-On 25/01/16 21:23, Loc Ho wrote:
-> Hi,
-> 
-> On Wed, Jan 20, 2016 at 4:17 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
->>
->> The function acpi_gsi_to_irq must return 0 on success as the caller
->> ghes_probe expects an 0 for success. This change also matches x86
->> implementation.
->>
->> Signed-off-by: Tuan Phan <tphan-qTEPVZfXA3Y@public.gmane.org>
->> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-> 
-> 
-> Any issue with this version? If not, can this be pulled into 4.5?
+> On Mon, Jan 25, 2016 at 10:39 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
+> >
+> >> When the driver was merged, the original author did not include a prop=
+er
+> >> copyright notice. This patch adds the notice, backdated to when the
+> >> driver was merged.
+> >
+> > This is very wordy.
+> >
+> > "Supply a backdated copyright notice."
+>=20
+> Fine with me. Would you like me to send another version?
 
-How is that 4.5 material? Does it fix an observable bug or a regression
-from a previous? If not, then this is probably to be postponed until
-4.6, together with the code that makes use of it.
+No, I will fix this for you.
 
-Thanks,
+> >> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>
+> >> New patch in v7.
+> >>
+> >> ---
+> >>  drivers/mfd/axp20x.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >
+> > Patch looks fine though:
+> >
+> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> >> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> >> index 3e186f2dcac3..cec51e689d1d 100644
+> >> --- a/drivers/mfd/axp20x.c
+> >> +++ b/drivers/mfd/axp20x.c
+> >> @@ -5,6 +5,8 @@
+> >>   * converters, LDOs, multiple 12-bit ADCs of voltage, current and tem=
+perature
+> >>   * as well as configurable GPIOs.
+> >>   *
+> >> + * Copyright (C) 2014 Carlo Caione
+> >> + *
+> >>   * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> >>   *
+> >>   * This program is free software; you can redistribute it and/or modi=
+fy
+> >
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
