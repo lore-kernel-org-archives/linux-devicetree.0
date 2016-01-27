@@ -1,113 +1,87 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] spi: atmel: add support for the internal chip-select of the spi controller
-Date: Wed, 27 Jan 2016 15:53:22 +0000
-Message-ID: <yw1xk2mvj9xp.fsf@unicorn.mansr.com>
-References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
-	<c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen@atmel.com>
-	<yw1xvb771yrl.fsf@unicorn.mansr.com> <56A8E66B.208@atmel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for
+ Pistachio audio card
+Date: Wed, 27 Jan 2016 16:00:57 +0000
+Message-ID: <20160127160057.GA25316@sirena.org.uk>
+References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
+ <20160127145756.GR6042@sirena.org.uk> <56A8DFBC.6070007@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56A8E66B.208-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> (Nicolas Ferre's message of "Wed, 27 Jan
-	2016 16:46:51 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Browk <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============7237846175109445878=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <56A8DFBC.6070007@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
 
-> Le 05/01/2016 22:50, M=E5ns Rullg=E5rd a =E9crit :
->> Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
->>=20
->>> This patch relies on the CSAAT (Chip Select Active After Transfer) =
-feature
->>> introduced by the version 2 of the spi controller. This new mode al=
-lows to
->>> use properly the internal chip-select output pin of the spi control=
-ler
->>> instead of using external gpios. Consequently, the "cs-gpios" devic=
-e-tree
->>> property becomes optional.
->>>
->>> When the new CSAAT bit is set into the Chip Select Register, the in=
-ternal
->>> chip-select output pin remains asserted till both the following con=
-ditions
->>> become true:
->>> - the LASTXFER bit is set into the Control Register (or the Transmi=
-t Data
->>>   Register)
->>> - the Transmit Data Register and its shift register are empty.
->>>
->>> WARNING: if the LASTXFER bit is set into the Control Register then =
-new
->>> data are written into the Transmit Data Register fast enough to kee=
-p its
->>> shifter not empty, the chip-select output pin remains asserted. Onl=
-y when
->>> the shifter becomes empty, the chip-select output pin is unasserted=
-=2E
->>>
->>> When the CSAAT bit is clear in the Chip Select Register, the LASTXF=
-ER bit
->>> is ignored in both the Control Register and the Transmit Data Regis=
-ter.
->>> The internal chip-select output pin remains active as long as the T=
-ransmit
->>> Data Register or its shift register are not empty.
->>>
->>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  drivers/spi/spi-atmel.c | 37 ++++++++++++++++++++++++++++---------
->>>  1 file changed, 28 insertions(+), 9 deletions(-)
->>=20
->> [...]
->>=20
->>> @@ -1338,6 +1350,13 @@ static int atmel_spi_probe(struct platform_d=
-evice *pdev)
->>>
->>>  	atmel_get_caps(as);
->>>
->>> +	as->use_cs_gpios =3D true;
->>> +	if (atmel_spi_is_v2(as) &&
->>> +	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
->>> +		as->use_cs_gpios =3D false;
->>> +		master->num_chipselect =3D 4;
->>> +	}
->>=20
->> This part breaks the AVR32 boards and probably anything else that
->> doesn't use devicetree but does use GPIOs for chip select.
->
-> Hi Mans,
->
-> I have difficulties finding why you may enter this test. So, maybe yo=
-u
-> can give me a clue by reading for me the value that resides in the SP=
-I
-> version register: you can have it by reading at 0xFFE000FC for instan=
-ce
-> (actually the atmel_get_caps() dev_info() call gives it as well in th=
-e
-> boot log which is somewhat easier: I tried to find one on the Interne=
-t
-> without success...).
->
-> So I think that just fixing the logic in atmel_get_caps() introduced =
-by
-> d4820b7496219edd9a7055022681364d304525f7 can make it come back to a
-> situation where the ARV32 was more tested than nowadays.
+--===============7237846175109445878==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Content-Disposition: inline
 
-atmel_spi atmel_spi.0: version: 0x171
-atmel_spi atmel_spi.0: Atmel SPI Controller at 0xffe00000 (irq 3)
 
-atmel_spi_is_v2() returns true for version > 0x121.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---=20
-M=E5ns Rullg=E5rd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Jan 27, 2016 at 03:18:20PM +0000, Damien Horsley wrote:
+> On 27/01/16 14:57, Mark Brown wrote:
+> > On Tue, Jan 26, 2016 at 02:34:26PM +0000, Damien Horsley wrote:
+
+> >> +  - clock-names : Includes the following entries:
+> >> +        "audio_pll"  The audio PLL
+> >> +        "i2s_mclk"   The i2s reference clock
+> >> +                     Also connected to i2s_out_0_mclk output
+> >> +        "dac_mclk"   Dac reference clock. Connected to i2s_dac_clk output
+
+> > Why are these (especially the dac_mclk and i2s_mclk) properties of the
+> > card and not of the drivers for the respective devices?
+
+> Due to the shared nature of these clocks. Individual components cannot
+> be responsible for controlling these as this could break configurations
+> for other components that are sharing the clocks. Only the card driver
+> has visibility of all of the components and their requirements.
+
+You're talking about the code that decides what rates to set the clock
+at, not where the properties are placed in the DT.
+
+> i2s_mclk and dac_mclk can be used by both the i2s in and i2s out paths
+> on some boards
+
+Multiple devices can reference the same clock.
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWqOm4AAoJECTWi3JdVIfQStMH/1pQMFbNBmmRLdKIIexwGw74
+FPdWYQYtQ/BYN/DtzE+0ifV80/bjBMmqmbHNxLgKr7RFLIStbBqdoc+5o2b0RAZT
++CcXfojVZBGVMKardW3S131cMnKZ99fo9rP/bu7P0DlUK8vY6+1NUVJWxTI/r0Vr
+eR4BS5EJO+/zLnmaVmrtUqNteXOgxWevAEwToJzFJ2iax6g+Q5Xcrz54TPUVehN8
+O6vnIw8mCOr60sZd9S4Z9idJUI0QV3kBRuJtJRaCoIYItgA2vEbUUxVVgX7gtGdF
+douvjqYddw9pnZ0J27/nPSH1LcRERwNMPea52nV9Pwwn+esFQRXQGfU9tJGJZ/4=
+=XaOU
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
+
+--===============7237846175109445878==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7237846175109445878==--
