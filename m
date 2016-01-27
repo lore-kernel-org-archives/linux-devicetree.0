@@ -1,50 +1,43 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
-Date: Wed, 27 Jan 2016 10:43:10 +0100
-Message-ID: <CAPDyKFqmWRY4vb=JAqwBmGqRhpq0MrdiAt4jCt5tdhYsxz0ziw@mail.gmail.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
-	<8579242.omBpg1aLr2@wuerfel>
-	<CAPDyKFrewx5CbS9QKZAxqq0Gu+TywQ3nkDGZFURR=PJLtkDuyQ@mail.gmail.com>
-	<11122786.kKumQ3Dhls@wuerfel>
-	<5697D7E2.3030209@nvidia.com>
-	<56A7A662.4090203@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <56A7A662.4090203@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v2 0/3] ata: Fixes related to edge trigger latch for ahci_xgene driver.
+Date: Wed, 27 Jan 2016 15:19:54 +0530
+Message-ID: <1453888197-11368-1-git-send-email-stripathi@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: htejun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, svtripathi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+This patch set implements a workaround for an errate in the APM
+X-Gene SATA host controller with edge interrupt. The HOST_IRQ_STAT
+misses the edge interrupt from the PORT_IRQ_STAT when clearing the
+HOST_IRQ_STAT and reporting the PORT_IRQ_STAT happens in same clock
+cycle. It also implements the capability to override generic interrupt
+handler.
 
->
-> Any more thoughts on this?
->
-> I have been discussing with Thierry and we think that selecting PM for
-> tegra still makes the most sense. The question is, is this ok for
-> multi-configs?
+v1 change:
+* Implement the capability for LDD to override interrupt handler.
 
-Yes, this is too me the best option.
+* ahci_xgene driver implements the edge trigger interrupt handler.
 
-Additionally, for those tegra SoCs/platforms that needs
-PM_GENERIC_DOMAINS, it can safely select that as well.
+v2 change:
+* Remove the AHCI_HFLAG_EDGE_IRQ frim libahci.
 
->
-> The only other suggestion/thought I have is to allow
-> PM_GENERIC_DOMAINS_OF to be selected independently of PM so that we can
-> have minimal support for PM domains that allows you to register PM
-> domains with the kernel and their current state, but does not allow you
-> to control them, etc. This way tegra could always select
-> PM_GENERIC_DOMAINS_OF regardless of PM, and we would be able to
-> determine if we can probe a device safely.
->
-> I am not sure that Rafael is too keen on this approach but that is the
-> only alternative I have come up with.
+Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
 
-I think Rafael already made his point around this approach, which is a
-clear no. And I fully agree with it.
+Suman Tripathi (3):
+  ata: Remove the AHCI_HFLAG_EDGE_IRQ support from libahci.
+  libahci: Implement the capability to override the generic ahci
+    interrupt     handler.
+  ahci_xgene: Implement the workaround to fix the missing of edge
+    interrupt for HOST_IRQ_STAT.
 
-Kind regards
-Uffe
+ drivers/ata/ahci.h       |    5 ++-
+ drivers/ata/ahci_xgene.c |   86 +++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/ata/libahci.c    |   53 +++++-----------------------
+ 3 files changed, 98 insertions(+), 46 deletions(-)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
