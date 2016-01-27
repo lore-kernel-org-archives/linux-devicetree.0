@@ -1,48 +1,62 @@
 From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH 09/13] dtb: amd: Add KCS device tree node
-Date: Wed, 27 Jan 2016 15:11:57 -0600
-Message-ID: <1453929121-12171-10-git-send-email-Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH 03/13] dtb: amd: Fix DMA ranges in device tree
+Date: Wed, 27 Jan 2016 15:11:51 -0600
+Message-ID: <1453929121-12171-4-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: devicetree@vger.kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org, arm@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Add KCS device node to support IPMI solution on Overdrive
-system.
+Fix DMA ranges of smb0 and pcie0 nodes in AMD Seattle SOC.
 
-Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index c5461b2..a7fc059 100644
+index fdd0c96..5c73117 100644
 --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
 +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -236,5 +236,16 @@
- 			reg = <0x0 0xe8000000 0 0x1000000>;
- 			interrupts = <0 380 4>;
- 		};
-+
-+		ipmi_kcs: kcs@e0010000 {
-+			status = "disabled";
-+			compatible = "ipmi-kcs";
-+			device_type = "ipmi";
-+			reg = <0x0 0xe0010000 0 0x8>;
-+			interrupts = <0 389 4>;
-+			interrupt-names = "ipmi_kcs";
-+			reg-size = <1>;
-+			reg-spacing = <4>;
-+		};
- 	};
- };
+@@ -55,8 +55,12 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		/* DDR range is 40-bit addressing */
+-		dma-ranges = <0x80 0x0 0x80 0x0 0x7f 0xffffffff>;
++		/*
++		 * dma-ranges is 40-bit address space containing:
++		 * - GICv2m MSI register is at 0xe0080000
++		 * - DRAM range [0x8000000000 to 0xffffffffff]
++		 */
++		dma-ranges = <0x0 0x0 0x0 0x0 0x100 0x0>;
+ 
+ 		/include/ "amd-seattle-clks.dtsi"
+ 
+@@ -159,7 +163,7 @@
+ 				<0x1000 0x0 0x0 0x4 &gic0 0x0 0x0 0x0 0x123 0x1>;
+ 
+ 			dma-coherent;
+-			dma-ranges = <0x43000000 0x80 0x0 0x80 0x0 0x7f 0xffffffff>;
++			dma-ranges = <0x43000000 0x0 0x0 0x0 0x0 0x100 0x0>;
+ 			ranges =
+ 				/* I/O Memory (size=64K) */
+ 				<0x01000000 0x00 0x00000000 0x00 0xefff0000 0x00 0x00010000>,
 -- 
 2.5.0
