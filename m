@@ -1,120 +1,56 @@
-From: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan-j6uo2F6POYhmR6Xm/wNWPw@public.gmane.org>
-Subject: Interrupt driven thermal OF sensors (was: [PATCH 2/3] lm90:
- initialize parameters from devicetree)
-Date: Wed, 27 Jan 2016 22:18:53 +0100
-Message-ID: <20160127211853.GA28555@Stephans-iMac.lan>
-References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
- <1453404877-17897-3-git-send-email-stephan@kochen.nl>
- <56A24278.8050909@roeck-us.net>
- <20160122223238.GB21534@Stephans-iMac.lan>
- <56A2EB3E.4080002@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56A2EB3E.4080002-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 1/3] mmc: sdhci-iproc: define MMC caps in platform data
+Date: Wed, 27 Jan 2016 22:25:40 +0000
+Message-ID: <1453933542-30287-2-git-send-email-stefan.wahren@i2se.com>
+References: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, jszhang@marvell.com, shawn.lin@rock-chips.com, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 06:53:50PM -0800, Guenter Roeck wrote:
-> The thermal subsystem supports setting trip points, which I would thi=
-nk
-> is what you are looking for here. Question is if an how you can use t=
-he
-> information from the thermal subsystem (and thus the thermal zone con=
-figuration)
-> to set the various limits in the lm90 driver. This should hopefully b=
-e sufficient
-> to fix your immediate problem. For handling alerts, I guess we'll hav=
-e to wait for
-> thermal subsystem improvements (unless of course you volunteer to do =
-that work.
+This patch moves the definition of the MMC capabilities
+from the probe function into iproc platform data. After
+that we are able to add support for another platform more
+easily.
 
-I may take a shot at this. So in short, the goal is to have a device
-tree thermal zone communicate trip points to the sensor driver, and use
-interrupts to act on trips.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Suggested-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+ drivers/mmc/host/sdhci-iproc.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-(This indirectly solves my problem of my sensor having weird initial
-values. Perhaps we also want a solution for this case if the thermal
-subsystem is disabled, but for me there'd be no need.)
+diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+index 55bc348..cdc6c4a 100644
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -26,6 +26,7 @@ struct sdhci_iproc_data {
+ 	const struct sdhci_pltfm_data *pdata;
+ 	u32 caps;
+ 	u32 caps1;
++	u32 mmc_caps;
+ };
+ 
+ struct sdhci_iproc_host {
+@@ -165,6 +166,7 @@ static const struct sdhci_iproc_data iproc_data = {
+ 	.pdata = &sdhci_iproc_pltfm_data,
+ 	.caps = 0x05E90000,
+ 	.caps1 = 0x00000064,
++	.mmc_caps = MMC_CAP_1_8V_DDR,
+ };
+ 
+ static const struct of_device_id sdhci_iproc_of_match[] = {
+@@ -199,8 +201,7 @@ static int sdhci_iproc_probe(struct platform_device *pdev)
+ 	mmc_of_parse(host->mmc);
+ 	sdhci_get_of_property(pdev);
+ 
+-	/* Enable EMMC 1/8V DDR capable */
+-	host->mmc->caps |= MMC_CAP_1_8V_DDR;
++	host->mmc->caps |= iproc_host->data->mmc_caps;
+ 
+ 	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(pltfm_host->clk)) {
+-- 
+1.7.9.5
 
-Here's what I see:
-
- - The thermal core layer already supports interrupt driven systems.
-   Support is missing from thermal OF, the layer between thermal core
-   and the sensor driver implementing device tree support.
-
- - Thermal OF registers a device in thermal core for each zone defined
-   in the device tree.
-
- - In theory, a thermal zone in the device tree can have multiple
-   sensors, and multiple zones can refer to the same sensor, but the
-   current implementation only supports 1-on-1 relations.
-
- - There are already exports thermal_zone_device_update and
-   thermal_notify_framework in thermal core, which allow external code
-   to trigger an update.
-
- - Updates happen by explicit calls to such exports, or by an optional
-   and configurable interval in thermal core.
-
-What I think we want:
-
- - Any additions should be optional extensions implemented by sensor
-   drivers. Polling should keep on working for all sensor drivers
-   already supporting thermal OF, with no interface changes.
-
- - For interrupt-capable sensor drivers, the thermal OF device should
-   keep the sensor driver updated with the current nearest trip
-   temperature and hysteresis. (Don't burden drivers with a full list o=
-f
-   trip points.)
-
- - In the case of LM90, this would set the low and high alert
-   temperatures. LM90 can have additional alerts (critical, emergency),
-   but a sensor driver registered with thermal OF should disable any
-   additional alerts.
-
- - Similarly, a sensor driver should disable alerts when there is no
-   current trip temperature or hysteresis. (E.g., we're below the lowes=
-t
-   trip point.)
-
-Implementation-wise:
-
- - The struct thermal_zone_of_device_ops needs an additional function t=
-o
-   set the current sensor trip temperature and hysteresis. Presence of
-   this function indicates the sensor driver has interrupt support.
-
- - The thermal OF device will call this function every time the
-   temperature slides across trip points. (Or when trip points are
-   altered.)
-
- - The thermal OF device should ignore the polling delay (set it to 0)
-   if its sensor has interrupt support. (In this case, we can also make
-   polling-delay optional. It's currently required in the device tree.)
-
- - On interrupt, the sensor driver should call
-   thermal_zone_device_update with its thermal_zone_device, as returned
-   by thermal_zone_of_sensor_register.
-
-My only concern is that I don't understand kernel contexts and interrup=
-t
-handling well enough. It looks like at least its up to the sensor drive=
-r
-to ensure calls into the thermal subsystem have long left the hardware
-interrupt context, which I think should be sufficient.
-
-Hoping all of this sounds about right!
-
---=20
-St=E9phan Kochen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
