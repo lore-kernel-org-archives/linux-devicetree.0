@@ -1,56 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for Pistachio audio
- card
-Date: Wed, 27 Jan 2016 14:57:56 +0000
-Message-ID: <20160127145756.GR6042@sirena.org.uk>
-References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
- <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver to  work on both  Zynq and Microblaze
+Date: Wed, 27 Jan 2016 16:14:32 +0100
+Message-ID: <5255218.OREPu5Af3W@wuerfel>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com> <4734542.KZZp0TeeeM@wuerfel> <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Hw0FrjWlp+qkNlJP"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
+In-Reply-To: <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Damien Horsley <Damien.Horsley@imgtec.com>
-Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Hartley <james.hartley@imgtec.com>
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-p
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 27 January 2016 14:33:45 Bharat Kumar Gogada wrote:
+> > > @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct
+> > > platform_device *pdev)  #endif
+> > >     pci_scan_child_bus(bus);
+> > >     pci_assign_unassigned_bus_resources(bus);
+> > > +#ifdef CONFIG_ARM
+> > >     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> > > +#endif
+> > >     pci_bus_add_devices(bus);
+> > >     platform_set_drvdata(pdev, port);
+> > 
+> > Here it looks like microblaze gets it right. I'm not sure why we still need the
+> > pci_fixup_irqs() on ARM, but my feeling is that this should be fixed in
+> > common code.
+> In arm pci_fixup_irqs is called by pci_common_init_dev (arch/arm/kernel/bios32.c), since this API is removed now, I was calling it separately.
 
---Hw0FrjWlp+qkNlJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+But who calls it in microblaze? If it works without the extra call there,
+can we make it work the same way for ARM?
 
-On Tue, Jan 26, 2016 at 02:34:26PM +0000, Damien Horsley wrote:
-
-> +  - clock-names : Includes the following entries:
-> +        "audio_pll"  The audio PLL
-> +        "i2s_mclk"   The i2s reference clock
-> +                     Also connected to i2s_out_0_mclk output
-> +        "dac_mclk"   Dac reference clock. Connected to i2s_dac_clk output
-
-Why are these (especially the dac_mclk and i2s_mclk) properties of the
-card and not of the drivers for the respective devices?
-
-> +  - img,mute-gpio : phandle of the mute gpio
-> +
-> +  - img,hp-det-gpio : phandle of the headphone detect gpio
-
-The DT maintainers would prefer those to be named -gpios.
-
---Hw0FrjWlp+qkNlJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWqNrzAAoJECTWi3JdVIfQbpsH/jKw/QtwOliNYr5NQtlJrxBu
-KQVF8I5aNFcap50g9woaci12BZJ+AW2OjvLinCL2Q0eMnUhjotflNrMa1RHVD1Rp
-jMZHHYgbm0GT9z/HANpcmoMYeBTT522H4+FxJPCFIHIG8NNQW49Aq7/k0HP98Ipu
-0RHIQScb9v+VtB1NE4sEXyNf/5t/7BB8wH2giDV5JZeGQZdCq/ipydZ2qpNphz27
-S7rwTR4q/L7AGJMczPkWAU09OYKVXoumF79vie+K4dQKr7F6Iqk8x1YSZYoOEhIS
-ci3ThTQhQxtN359Sp298FwFKgXP/H8rAVDexdQf9ienSD7Ab8KPxEODwvTO8L+Q=
-=b8A5
------END PGP SIGNATURE-----
-
---Hw0FrjWlp+qkNlJP--
+	Arnd
