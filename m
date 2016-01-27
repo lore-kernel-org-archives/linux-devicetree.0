@@ -1,116 +1,171 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v4 2/2] regulator: add documentation for ACT8945A's regulator DT bindings
-Date: Wed, 27 Jan 2016 10:57:43 +0800
-Message-ID: <1453863463-30515-3-git-send-email-wenyou.yang@atmel.com>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 1/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Wed, 27 Jan 2016 11:28:14 +0800
+Message-ID: <56A8394E.2040207@huawei.com>
+References: <1453690883-31220-1-git-send-email-xuejiancheng@huawei.com>
+ <1453690883-31220-2-git-send-email-xuejiancheng@huawei.com>
+ <1453771063.17181.56.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, Peter Korsgaard <jacmet@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453771063.17181.56.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the DT bindings of the regulator
-subdevice of ACT8945A MFD.
+Hi Paul Bolle=EF=BC=8C
+   Thank you for your reply.
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+On 2016/1/26 9:17, Paul Bolle wrote:
+> On ma, 2016-01-25 at 11:01 +0800, Jiancheng Xue wrote:
+>> --- a/drivers/clk/hisilicon/Kconfig
+>> +++ b/drivers/clk/hisilicon/Kconfig
+>=20
+>> +config COMMON_CLK_HI3519
+>> +	bool "Hi3519 Clock Driver"
+>> +	depends on ARCH_HISI
+>> +	default y
+>> +	help
+>> +	  Build the clock driver for hi3519.
+>=20
+>> --- a/drivers/clk/hisilicon/Makefile
+>> +++ b/drivers/clk/hisilicon/Makefile
+>=20
+>> +obj-$(CONFIG_COMMON_CLK_HI3519)	+=3D clk-hi3519.o
+>=20
+> If I parsed the above correctly clk-hi3519.o can only be built-in,
+> right?
+>=20
+Yes. You are right.
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
- - add Acked-by Rob Herring.
+But this clock driver should be able to be compiled as a module.
+Even though it is preferred to be built-in.
 
- .../bindings/regulator/act8945a-regulator.txt      |   78 ++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+I'll fix it in next version. Thank you.
 
-diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-new file mode 100644
-index 0000000..0e08a3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-@@ -0,0 +1,78 @@
-+Device-Tree bindings for regulators of Active-semi ACT8945A Multi-Function Device
-+
-+Required properties:
-+ - compatible: "active-semi,act8945a-regulator"
-+
-+Optional properties:
-+- active-semi,vsel-high: Indicates if the VSEL pin is set to logic-high.
-+  If this property is missing, assume the VSEL pin is set to logic-low.
-+
-+Optional input supply properties:
-+  - vp1-supply: The input supply for REG_DCDC1
-+  - vp2-supply: The input supply for REG_DCDC2
-+  - vp3-supply: The input supply for REG_DCDC3
-+  - inl45-supply: The input supply for REG_LDO1 and REG_LDO2
-+  - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
-+
-+Any standard regulator properties can be used to configure the single regulator.
-+
-+The valid names for regulators are:
-+	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
-+
-+Example:
-+
-+	pmic {
-+		compatible = "active-semi,act8945a-regulator";
-+		active-semi,vsel-high;
-+
-+		regulators {
-+			vdd_1v35_reg: REG_DCDC1 {
-+				regulator-name = "VDD_1V35";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_1v2_reg: REG_DCDC2 {
-+				regulator-name = "VDD_1V2";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_reg: REG_DCDC3 {
-+				regulator-name = "VDD_3V3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_fuse_reg: REG_LDO1 {
-+				regulator-name = "VDD_FUSE";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_lp_reg: REG_LDO2 {
-+				regulator-name = "VDD_3V3_LP";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_led_reg: REG_LDO3 {
-+				regulator-name = "VDD_LED";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_sdhc_1v8_reg: REG_LDO4 {
-+				regulator-name = "VDD_SDHC_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+Regards,
+
+Jiancheng
+
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/clk-hi3519.c
+>=20
+>> +#include <linux/module.h>
+>=20
+> So is this include actually needed?
+>=20
+>> +static int hi3519_clk_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *np =3D pdev->dev.of_node;
+>> +       struct hisi_clock_data *clk_data;
+>> +
+>> +       clk_data =3D hisi_clk_init(np, HI3519_NR_CLKS);
+>> +       if (!clk_data)
+>> +               return -ENODEV;
+>> +
+>> +       hisi_clk_register_fixed_rate(hi3519_fixed_rate_clks,
+>> +                                  =20
+>> ARRAY_SIZE(hi3519_fixed_rate_clks),
+>> +                                    clk_data);
+>> +       hisi_clk_register_mux(hi3519_mux_clks,
+>> ARRAY_SIZE(hi3519_mux_clks),
+>> +                                       clk_data);
+>> +       hisi_clk_register_gate(hi3519_gate_clks,
+>> +                       ARRAY_SIZE(hi3519_gate_clks), clk_data);
+>> +
+>> +       return hisi_reset_init(np);
+>> +}
+>=20
+> (evolution 3.16.5 makes replying to code quite a challenge.)
+>=20
+>> +static const struct of_device_id hi3519_clk_match_table[] =3D {
+>> +	{ .compatible =3D "hisilicon,hi3519-crg" },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, hi3519_clk_match_table);
+>=20
+> Last time I checked MODULE_DEVICE_TABLE is preprocessed away for buil=
+t
+> -in code.
+>=20
+>> +static void __exit hi3519_clk_exit(void)
+>> +{
+>> +	platform_driver_unregister(&hi3519_clk_driver);
+>> +}
+>> +module_exit(hi3519_clk_exit);
+>=20
+> Not needed for built-in only code.
+>=20
+>> +MODULE_DESCRIPTION("HiSilicon Hi3519 Clock Driver");
+>=20
+> Ditto.
+>=20
+>> --- a/drivers/clk/hisilicon/clk.c
+>> +++ b/drivers/clk/hisilicon/clk.c
+>=20
+>> +EXPORT_SYMBOL(hisi_clk_init);
+>=20
+> What module uses this export?
+> =20
+>> +EXPORT_SYMBOL(hisi_clk_register_fixed_rate);
+>=20
+> Ditto.
+>=20
+>> +EXPORT_SYMBOL(hisi_clk_register_fixed_factor);
+>=20
+> Ditto.
+> =20
+>> +EXPORT_SYMBOL(hisi_clk_register_mux);
+>=20
+> Ditto.
+>=20
+>> +EXPORT_SYMBOL(hisi_clk_register_divider);
+>=20
+> Ditto.
+>=20
+>> +EXPORT_SYMBOL(hisi_clk_register_gate);
+>=20
+> Ditto.
+>=20
+>> +EXPORT_SYMBOL(hisi_clk_register_gate_sep);
+>=20
+> Ditto.
+>=20
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.c
+>=20
+>> +int hisi_reset_init(struct device_node *np)
+>> +{
+>> +	[...]
+>> +}
+>> +EXPORT_SYMBOL(hisi_reset_init);
+>=20
+> Ditto.
+>=20
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.h
+>=20
+>> +#ifdef CONFIG_RESET_CONTROLLER
+>> +int hisi_reset_init(struct device_node *np);
+>> +#else
+>> +static inline int hisi_reset_init(struct device_node *np)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+>=20
+> Thanks,
+>=20
+>=20
+> Paul Bolle
+>=20
+> .
+>=20
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
