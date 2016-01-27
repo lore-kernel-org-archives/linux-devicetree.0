@@ -1,108 +1,76 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [RFC][PATCH 1/3] dt-bindings: power: reset: Add document for
- sram-reboot-mode driver
-Date: Wed, 27 Jan 2016 09:11:18 +0800
-Message-ID: <56A81936.5020101@rock-chips.com>
-References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
- <1453855080-17760-2-git-send-email-john.stultz@linaro.org>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Wed, 27 Jan 2016 10:28:03 +0800
+Message-ID: <1453861685-30924-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453855080-17760-2-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John:
-   Welcome.
-   One nit.
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
 
-On 2016=E5=B9=B401=E6=9C=8827=E6=97=A5 08:37, John Stultz wrote:
-> Add device tree binding document for reboot-mode driver
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
 
-  Maybe you want to use "sram-reboot-mode" instead of "reboot-mode" her=
-e.
->
-> Cc: Andy Yan <andy.yan@rock-chips.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Heiko St=C3=BCbner <heiko@sntech.de>
-> Cc: Caesar Wang <wxt@rock-chips.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-> Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Android Kernel Team <kernel-team@android.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->   .../bindings/power/reset/sram-reboot-mode.txt      | 47 +++++++++++=
-+++++++++++
->   1 file changed, 47 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/power/reset/sr=
-am-reboot-mode.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboo=
-t-mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-=
-mode.txt
-> new file mode 100644
-> index 0000000..33bb132
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.=
-txt
-> @@ -0,0 +1,47 @@
-> +SRAM reboot mode driver
-> +
-> +This driver get reboot mode magic value form reboot-mode driver
-> +and stores it in a SRAM address. Then the bootloader
-> +can read it and take different action according to the magic
-> +value stored.
-> +
-> +This DT node should be represented as a sub-node of a "mmio-sram", "=
-simple-bus"
-> +node.
-> +
-> +Required properties:
-> +- compatible: should be "sram-reboot-mode"
-> +- reg: offset from the sram range where to store the magic value(in =
-bytes)
-> +
-> +The rest of the properties should follow the generic reboot-mode dis=
-cription
-> +found in reboot-mode.txt
-> +
-> +Example:
-> +
-> +	sram@5f01000 {
-> +		compatible =3D "mmio-sram", "simple-bus";
-> +		reg =3D <0x0 0x05f01000 0x0 0x00001000>;
-> +		ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
-> +
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +
-> +		reboot-mode@0 {
-> +			compatible =3D "sram-reboot-mode";
-> +			reg =3D <0x0 0x4>;
-> +
-> +			none {
-> +				linux,mode =3D "none";
-> +				loader,magic =3D <0x77665501>;
-> +			};
-> +
-> +			bootloader {
-> +				linux,mode =3D "bootloader";
-> +				loader,magic =3D <0x77665500>;
-> +			};
-> +
-> +			recovery {
-> +				linux,mode =3D "recovery";
-> +				loader,magic =3D <0x77665502>;
-> +			};
-> +		};
-> +	};
+Changes in v8:
+ - change the subdevice's name "act8945a-pmic" to "act8945a-regulator".
+
+Changes in v7:
+ - remove struct act8945a_dev to .c file.
+ - remove unused .h file.
+ - collect Acked-by from Lee Jones
+
+Changes in v6:
+ - change MFD_ACT8945A type from bool to tristate.
+ - revert depends on to 'I2C'.
+ - change the regulator name.
+
+Changes in v5:
+ - change depends on to 'I2C=y'.
+
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
+
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
+
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
+
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
+
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++++++
+ drivers/mfd/Kconfig                                |   11 ++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  112 ++++++++++++++++++++
+ 4 files changed, 206 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
