@@ -1,87 +1,111 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 1/6] clk: mediatek: Refine the makefile to support multiple clock drivers
-Date: Wed, 27 Jan 2016 15:20:59 +0800
-Message-ID: <1453879264-37915-2-git-send-email-jamesjj.liao@mediatek.com>
-References: <1453879264-37915-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH V4 1/2] powerpc/fsl: Add PCI node in device tree of
+ bsc9132qds
+Date: Wed, 27 Jan 2016 06:47:13 +0000
+Message-ID: <HE1PR04MB09060D4FCE88CD7B3F1CBF9084D90@HE1PR04MB0906.eurprd04.prod.outlook.com>
+References: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
+ <HE1PR04MB0906A35F4F48C8DACF5CD16D84E50@HE1PR04MB0906.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453879264-37915-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <HE1PR04MB0906A35F4F48C8DACF5CD16D84E50@HE1PR04MB0906.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Zhiqiang Hou <zhiqiang.hou@nxp.com>, Zhiqiang Hou <Zhiqiang.Hou@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Scott Wood <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Harninder
+ Rai <harninder.rai@freescale.com>, "robh@kernel.org" <robh@kernel.org>
+Cc: "Lian M.H." <Minghuan.Lian@freescale.com>, Hu Vincent <Mingkai.Hu@freescale.com>, Hou Zhiqiang <B48286@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a Kconfig to define clock configuration for each SoC, and
-modify the Makefile to build drivers that only selected in config.
-
-Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- drivers/clk/Kconfig           |  1 +
- drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
- drivers/clk/mediatek/Makefile |  6 +++---
- 3 files changed, 27 insertions(+), 3 deletions(-)
- create mode 100644 drivers/clk/mediatek/Kconfig
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index eca8e01..57cfcae7 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -202,6 +202,7 @@ config COMMON_CLK_CDCE706
- 
- source "drivers/clk/bcm/Kconfig"
- source "drivers/clk/hisilicon/Kconfig"
-+source "drivers/clk/mediatek/Kconfig"
- source "drivers/clk/qcom/Kconfig"
- 
- endmenu
-diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-new file mode 100644
-index 0000000..dc224e6
---- /dev/null
-+++ b/drivers/clk/mediatek/Kconfig
-@@ -0,0 +1,23 @@
-+#
-+# MediaTek SoC drivers
-+#
-+config COMMON_CLK_MEDIATEK
-+	bool
-+	---help---
-+	  Mediatek SoCs' clock support.
-+
-+config COMMON_CLK_MT8135
-+	bool "Clock driver for Mediatek MT8135"
-+	depends on COMMON_CLK
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK
-+	---help---
-+	  This driver supports Mediatek MT8135 clocks.
-+
-+config COMMON_CLK_MT8173
-+	bool "Clock driver for Mediatek MT8173"
-+	depends on COMMON_CLK
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK
-+	---help---
-+	  This driver supports Mediatek MT8173 clocks.
-diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-index 95fdfac..32e7222 100644
---- a/drivers/clk/mediatek/Makefile
-+++ b/drivers/clk/mediatek/Makefile
-@@ -1,4 +1,4 @@
--obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
-+obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
- obj-$(CONFIG_RESET_CONTROLLER) += reset.o
--obj-y += clk-mt8135.o
--obj-y += clk-mt8173.o
-+obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
-+obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSGVycmluZyBhbmQgS3VtYXIgYW5kIElhbiwNCg0KQ2FuIHlvdSBoZWxwIHRvIGFwcGx5IHRo
+aXMgcGF0Y2g/DQoNClRoYW5rcywNClpoaXFpYW5nIA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+IEZyb206IFpoaXFpYW5nIEhvdSBbbWFpbHRvOnpoaXFpYW5nLmhvdUBueHAuY29t
+XQ0KPiBTZW50OiAyMDE15bm0MTLmnIgyMuaXpSAxNzoyOA0KPiBUbzogWmhpcWlhbmcgSG91IDxa
+aGlxaWFuZy5Ib3VAZnJlZXNjYWxlLmNvbT47IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
+Ow0KPiBTY290dCBXb29kIDxzY290dHdvb2RAZnJlZXNjYWxlLmNvbT47IGdhbGFrQGtlcm5lbC5j
+cmFzaGluZy5vcmc7DQo+IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZzsgcGF1bHVzQHNhbWJhLm9y
+ZzsgbXBlQGVsbGVybWFuLmlkLmF1Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgcm9i
+aCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207DQo+IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgSGFybmluZGVyIFJhaQ0KPiA8aGFy
+bmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPg0KPiBDYzogTGlhbiBNLkguIDxNaW5naHVhbi5MaWFu
+QGZyZWVzY2FsZS5jb20+OyBIdSBWaW5jZW50DQo+IDxNaW5na2FpLkh1QGZyZWVzY2FsZS5jb20+
+OyBIb3UgWmhpcWlhbmcgPEI0ODI4NkBmcmVlc2NhbGUuY29tPg0KPiBTdWJqZWN0OiBSRTogW1BB
+VENIIFY0IDEvMl0gcG93ZXJwYy9mc2w6IEFkZCBQQ0kgbm9kZSBpbiBkZXZpY2UgdHJlZSBvZg0K
+PiBic2M5MTMycWRzDQo+IA0KPiBIaSBSb2IsDQo+IA0KPiBDb3VsZCB5b3UgcGxlYXNlIHRha2Ug
+dGhpcyBwYXRjaCBpbnRvIGFjY291bnQ/DQo+IA0KPiBUaGFua3MsDQo+IFpoaXFpYW5nDQo+IA0K
+PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogWmhpcWlhbmcgSG91IFtt
+YWlsdG86WmhpcWlhbmcuSG91QGZyZWVzY2FsZS5jb21dDQo+ID4gU2VudDogMjAxNeW5tDEx5pyI
+NeaXpSAxMToxNg0KPiA+IFRvOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgU2NvdHQg
+V29vZDsNCj4gPiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBiZW5oQGtlcm5lbC5jcmFzaGlu
+Zy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7DQo+ID4gbXBlQGVsbGVybWFuLmlkLmF1OyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+IHBhd2VsLm1vbGxA
+YXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gaWpjK2RldmljZXRyZWVAaGVsbGlv
+bi5vcmcudWs7IEhhcm5pbmRlciBSYWkNCj4gPiBDYzogTWluZ2h1YW4gTGlhbjsgTWluZ2thaSBI
+dTsgWmhpcWlhbmcgSG91DQo+ID4gU3ViamVjdDogW1BBVENIIFY0IDEvMl0gcG93ZXJwYy9mc2w6
+IEFkZCBQQ0kgbm9kZSBpbiBkZXZpY2UgdHJlZSBvZg0KPiA+IGJzYzkxMzJxZHMNCj4gPg0KPiA+
+IEZyb206IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4NCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxl
+LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQGZy
+ZWVzY2FsZS5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxCNDgyODZAZnJl
+ZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4gPiBWNDogVjM6DQo+ID4gIC0gUmVtb3ZlIGdlcnJpdCBz
+dHVmZi4NCj4gPiBWMjoNCj4gPiAgLSBSZW1vdmUgcHJvcGVydHkgY2xvY2stZnJlcXVlbmN5Lg0K
+PiA+DQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9ic2M5MTMycWRzLmR0cyAgICAgICAgICB8
+IDE1ICsrKysrKysrKysrKysrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEz
+MnNpLXBvc3QuZHRzaSB8IDI4DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4g
+KysrKysrKysrKysrKysrKysrKysrKysrKysrIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNj
+OTEzMnNpLXByZS5kdA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKyBzaQ0KPiA+IHwg
+IDEgKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNjOTEzMnFkcy5kdHMNCj4gPiBiL2Fy
+Y2gvcG93ZXJwYy9ib290L2R0cy9ic2M5MTMycWRzLmR0cw0KPiA+IGluZGV4IDZjYWIxMDYuLjk0
+MGQ3MTkgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2JzYzkxMzJxZHMu
+ZHRzDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2JzYzkxMzJxZHMuZHRzDQo+ID4g
+QEAgLTI5LDYgKzI5LDIxIEBADQo+ID4gIHNvYzogc29jQGZmNzAwMDAwIHsNCj4gPiAgcmFuZ2Vz
+ID0gPDB4MCAweDAgMHhmZjcwMDAwMCAweDEwMDAwMD47ICB9Ow0KPiA+ICsNCj4gPiArcGNpMDog
+cGNpZUBmZjcwYTAwMCB7DQo+ID4gK3JlZyA9IDwwIDB4ZmY3MGEwMDAgMCAweDEwMDA+Ow0KPiA+
+ICtyYW5nZXMgPSA8MHgyMDAwMDAwIDB4MCAweDkwMDAwMDAwIDAgMHg5MDAwMDAwMCAweDANCj4g
+PiAweDIwMDAwMDAwDQo+ID4gKyAgMHgxMDAwMDAwIDB4MCAweDAwMDAwMDAwIDAgMHhjMDAxMDAw
+MCAweDAgMHgxMDAwMD47DQo+ID4gK3BjaWVAMCB7DQo+ID4gK3JhbmdlcyA9IDwweDIwMDAwMDAg
+MHgwIDB4OTAwMDAwMDANCj4gPiArICAweDIwMDAwMDAgMHgwIDB4OTAwMDAwMDANCj4gPiArICAw
+eDAgMHgyMDAwMDAwMA0KPiA+ICsNCj4gPiArICAweDEwMDAwMDAgMHgwIDB4MA0KPiA+ICsgIDB4
+MTAwMDAwMCAweDAgMHgwDQo+ID4gKyAgMHgwIDB4MTAwMDAwPjsNCj4gPiArfTsNCj4gPiArfTsN
+Cj4gPiAgfTsNCj4gPg0KPiA+ICAvaW5jbHVkZS8gImJzYzkxMzJxZHMuZHRzaSINCj4gPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpDQo+
+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wb3N0LmR0c2kNCj4gPiBp
+bmRleCBjNzIzMDcxLi5iNWYwNzE1IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvYnNjOTEzMnNpLXBvc3QuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvYnNjOTEzMnNpLXBvc3QuZHRzaQ0KPiA+IEBAIC00MCw2ICs0MCwzNCBAQA0KPiA+
+ICBpbnRlcnJ1cHRzID0gPDE2IDIgMCAwIDIwIDIgMCAwPjsNCj4gPiAgfTsNCj4gPg0KPiA+ICsv
+KiBjb250cm9sbGVyIGF0IDB4YTAwMCAqLw0KPiA+ICsmcGNpMCB7DQo+ID4gK2NvbXBhdGlibGUg
+PSAiZnNsLGJzYzkxMzItcGNpZSIsICJmc2wscW9yaXEtcGNpZS12Mi4yIjsgZGV2aWNlX3R5cGUg
+PQ0KPiA+ICsicGNpIjsgI3NpemUtY2VsbHMgPSA8Mj47ICNhZGRyZXNzLWNlbGxzID0gPDM+OyBi
+dXMtcmFuZ2UgPSA8MCAyNTU+Ow0KPiA+ICtpbnRlcnJ1cHRzID0gPDE2IDIgMCAwPjsNCj4gPiAr
+DQo+ID4gK3BjaWVAMCB7DQo+ID4gK3JlZyA9IDwwIDAgMCAwIDA+Ow0KPiA+ICsjaW50ZXJydXB0
+LWNlbGxzID0gPDE+Ow0KPiA+ICsjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArI2FkZHJlc3MtY2Vs
+bHMgPSA8Mz47DQo+ID4gK2RldmljZV90eXBlID0gInBjaSI7DQo+ID4gK2ludGVycnVwdHMgPSA8
+MTYgMiAwIDA+Ow0KPiA+ICtpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MHhmODAwIDAgMCA3PjsNCj4g
+PiArDQo+ID4gK2ludGVycnVwdC1tYXAgPSA8DQo+ID4gKy8qIElEU0VMIDB4MCAqLw0KPiA+ICsw
+MDAwIDB4MCAweDAgMHgxICZtcGljIDB4MCAweDIgMHgwIDB4MA0KPiA+ICswMDAwIDB4MCAweDAg
+MHgyICZtcGljIDB4MSAweDIgMHgwIDB4MA0KPiA+ICswMDAwIDB4MCAweDAgMHgzICZtcGljIDB4
+MiAweDIgMHgwIDB4MA0KPiA+ICswMDAwIDB4MCAweDAgMHg0ICZtcGljIDB4MyAweDIgMHgwIDB4
+MA0KPiA+ICs+Ow0KPiA+ICt9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgJnNvYyB7DQo+ID4gICNh
+ZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICAjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcHJlLmR0c2kNCj4gPiBi
+L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEzMnNpLXByZS5kdHNpDQo+ID4gaW5kZXgg
+MzAxYTlkYi4uOTBmNzk0OSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvYnNjOTEzMnNpLXByZS5kdHNpDQo+ID4gQEAgLTQ1LDYgKzQ1LDcgQEANCj4gPiAgc2VyaWFs
+MCA9ICZzZXJpYWwwOw0KPiA+ICBldGhlcm5ldDAgPSAmZW5ldDA7DQo+ID4gIGV0aGVybmV0MSA9
+ICZlbmV0MTsNCj4gPiArcGNpMCA9ICZwY2kwOw0KPiA+ICB9Ow0KPiA+DQo+ID4gIGNwdXMgew0K
+PiA+IC0tDQo+ID4gMi4xLjAuMjcuZzk2ZGIzMjQNCg0KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBw
+Yy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
+bGludXhwcGMtZGV2
