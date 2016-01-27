@@ -1,86 +1,60 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/3] input: touchscreen: ad7879: fix default x/y axis
- assignment
-Date: Wed, 27 Jan 2016 15:40:22 -0800
-Message-ID: <20160127234022.GE28687@dtor-ws>
-References: <1453777477-29706-1-git-send-email-stefan@agner.ch>
- <1453777477-29706-2-git-send-email-stefan@agner.ch>
- <56A72734.9000303@analog.com>
- <53cf5cb2a96a236925bb2901e3c417f8@agner.ch>
+From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: omap3-n900: Allow gpio keys to be disabled
+Date: Thu, 28 Jan 2016 00:47:47 +0100
+Message-ID: <20160127234746.GA3227@earth>
+References: <1452447990-22775-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53cf5cb2a96a236925bb2901e3c417f8@agner.ch>
-Sender: linux-input-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: michael.hennerich@analog.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1452447990-22775-1-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 09:04:20AM -0800, Stefan Agner wrote:
-> On 2016-01-25 23:58, Michael Hennerich wrote:
-> > On 01/26/2016 04:04 AM, Stefan Agner wrote:
-> >> The measurements read from the controller which are temporary stored
-> >> in conversion_data, are interpreted wrong. The first measurement X+
-> >> contains the Y position, and the second measurement Y+ the X position
-> >> (see also Table 11 Register Table in the data sheet).
-> >>
-> >> The problem is already known and a swap option has been introduced:
-> >> commit 6680884a4420 ("Input: ad7879 - add option to correct xy axis")
-> >>
-> >> However, with that the meaning of the new boolean is inverted since
-> >> the underlying values are already swapped. With this change, a true
-> >> in swap_xy actually swaps the two axis.
-> >>
-> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> >> ---
-> >> Hi Michael,
-> >>
-> >> It seems that swap_xy is not used in any board which is in mainline,
-> >> hence swap_xy is always false. Therefore, up until now all boards
-> >> actually used swapped axis. However, I doubt that the blackfin boards
-> >> really have those axis swapped, it is probably more likely that the
-> >> userspace calibration took care of it.
-> >>
-> >> However, if they are really swapped, we should set the swap_xy flag
-> >> to 1 for those board...
-> >>
-> >> Do you happen to now what is the case with those boards?
-> >>
-> > 
-> > 
-> > Hi Stefan,
-> > 
-> > I would be hesitant to invert the default behaviour of the driver.
-> > Too many people in the field already using it as it is.
-> 
-> Afaik, we should be able to change in-kernel API's (especially if they
-> are wrong) since we do not guarantee any API...
-> 
-> > 
-> > A XY swap can have multiple reasons.
-> > 
-> > Lot's of small VGA/QVGA TFTs have the option to switch the scan
-> > direction from Landscape to Portrait. In addition you can also rotate
-> > and flip or mirror using VDMA options. So it really depends on the use
-> > case, how the touch panel is mounted to the screen or how it is wired.
-> 
-> Ok, I see the reason for that functionality.
-> 
-> I am mainly concerned about the new DT bindings. The touchscreen binding
-> documents specify touchscreen-swapped-x-y, see:
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> 
-> I would like to make sure that this property is really swapping axis
-> (and not necessary if the hardware is implemented according to the
-> datasheet...)
-> 
-> We could also implement a workaround to keep the platform data behavior
-> as is (invert the swap_xy flag)...
 
-That is probably the best option.
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+Hi,
 
--- 
-Dmitry
+On Sun, Jan 10, 2016 at 07:46:30PM +0200, Ivaylo Dimitrov wrote:
+> Add linux,can-disable; to all gpios exported from gpio-keys driver, so
+> userspace can disable them
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+-- Sebastian
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWqVcfAAoJENju1/PIO/qaq7QP/1lOwaikOGHBLccVJd7EApmE
+qr/YQJM9fI0nikPCW3p65Q5UV6zv3WU0gzlKWDYNqYJmYFbqPT1fRpWCjU6FYdzo
+bPBiUz48DvkQaDCbJvKU5gPnIVwQim/5iBs0DBzNNhIVpEXJEuE1DOP8335J16l7
+dUIpBKhMVAuSydHKJOBvSxNuaNn8jozT2r3FpbQTl1rBWg/e/bclJ8gd6xuLort8
+sHCaNqM1ct0aTSX/kC2yPsxe5JaY8/wGDmUqbeqLWoA1WXlN1ZkxgfJMw8ZafnsE
+HGNVYYK3VroE8OQJhwS1sWrE4kzcyGDmQqaH8p9GZaS2YWWAdOs288Ej3vZtKlRn
+JHQmj/J3f6mwLiy5gEq8qKgVGh6tgf5KceVbxwFNO+sh7Zmqbt5FcAntmpbtuuDa
+RUvD6SsNHX0ejIy8PdnbldaRRJCZ/djmT/DRDL0LlPDDmVk3CgfoAcBT6L7fEMqa
+LpULXgOM+gm8YYGjV/4R4AUs7yH5F53ad2d5SLDG4MnIMbbW40X/yCAQVN/sH+SV
+DhHhT5hflq87Xm/L/YJ8WauRcznoa7MXFSPsERLlDCzPWztnaaXEkUkTzigzuGfq
+JAWWtKrdk4UgypUCS8WfnQr0fzfV/F+em23bb2sKQew6JtgaqAKkgihuRNSrwdyC
+A40tXD1JaqbaxP6TjM+g
+=a1az
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
