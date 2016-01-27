@@ -1,102 +1,61 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: resolver: Add missing of_node_put
-Date: Wed, 27 Jan 2016 16:21:53 +0000
-Message-ID: <20160127162153.GC17123@leverpostej>
-References: <20160127152017.GA16048@amitoj-Inspiron-3542>
- <20160127160531.GB17123@leverpostej>
- <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
+Date: Wed, 27 Jan 2016 08:24:53 -0800
+Message-ID: <20160127162452.GJ19432@atomide.com>
+References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+ <20160121091241.GS7192@pali>
+ <20160121092909.GH5783@n2100.arm.linux.org.uk>
+ <20160121101828.GA7411@amd>
+ <20160121163857.GH19432@atomide.com>
+ <20160121165408.GJ5783@n2100.arm.linux.org.uk>
+ <20160127100237.GH25796@pali>
+ <20160127111828.GK5783@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <FE79FA58-A084-47BE-B872-7D57AC2B4D75-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20160127111828.GK5783-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, julia.lawall-L2FTfq7BK8M@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
-> Hi Mark,
-> 
-> > On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > 
-> > On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
-> >> for_each_child_of_node performs an of_node_get on each iteration, so
-> >> to break out of the loop an of_node_put is required.
-> >> 
-> >> Found using Coccinelle. The semantic patch used for this is as follows:
-> >> 
-> >> // <smpl>
-> >> @@
-> >> expression e;
-> >> local idexpression n;
-> >> @@
-> >> 
-> >> for_each_child_of_node(..., n) {
-> >>   ... when != of_node_put(n)
-> >>       when != e = n
-> >> (
-> >>   return n;
-> >> |
-> >> +  of_node_put(n);
-> >> ?  return ...;
-> >> )
-> >>   ...
-> >> }
-> >> // </smpl
-> >> 
-> >> Signed-off-by: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >> drivers/of/resolver.c | 4 +++-
-> >> 1 file changed, 3 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> >> index 640eb4c..e2a0143 100644
-> >> --- a/drivers/of/resolver.c
-> >> +++ b/drivers/of/resolver.c
-> >> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> >> 
-> >> 	for_each_child_of_node(node, child) {
-> >> 		found = __of_find_node_by_full_name(child, full_name);
-> >> -		if (found != NULL)
-> >> +		if (found != NULL) {
-> >> +			of_node_put(child);
-> >> 			return found;
-> >> +		}
-> >> 	}
-> >> 
-> >> 	return NULL;
-> > 
-> > I don't think this is quite right. When child == found, this change will
-> > leave it decremented.
-> > 
-> 
-> 
-> This patch is bogus. 
-> 
-> __of_find_node_by_full_name() is not taking a reference on the node if found. 
-> This method relies on keeping the reference taken by the loop.
+* Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [160127 03:19]:
+> On Wed, Jan 27, 2016 at 11:02:37AM +0100, Pali Roh=C3=A1r wrote:
+> > In my opinion this patch is not support for new hardware. It just a=
+dd
+> > missing DT definition for one specific board for HW which was added=
+ to
+> > linux kernel in v4.2-rc1 version. For me it looks like that needed =
+DT
+> > definition was forgotten...
+>=20
+> Opinions differ, but ultimately it's up to whoever is responsible for
+> accepting the patch, and in the case of ARM SoC based patches, the
+> arm-soc maintainers.
 
-Sure. For the found node, that makes sense.
+Yeah. Sorry for long delay as discussed. I'm applying the $subject
+patch finally into omap-for-v4.6/dt today.
 
-However, it also increments the refcount of all the parents, which does
-not seem correct to me, given they're not put on the return path, and a
-put of the found node won't decrement its parents refcounts, unless I
-have missed something.
+We still have at least two fixes left to go that both affect also
+n900. But at least I can now sanely test adding new stuff with a WIP
+fix for the PM runtime regression.
 
-So I believe we are missing some of_node_put logic here.
+> The arm-soc maintainers close their trees for development changes a
+> few weeks before hand (a patch of mine which was acked etc by 7th
+> December never made the 4.5 merge window either, and the alleged
+> reason I've been told is because arm-soc was already closed by then).
 
-> Taking this into account all of these conccinelle tests are bogus.
-> 
-> The DT internal method are not using the object model in an obvious manner
-> and applying these patches without vetting each and everyone is bound to
-> break things.
+Heh I too have some pending clock framework patches from December
+that I did not repost yet as the maintainers notified that they
+rather not take new stuff any longer for v4.5 before the holidays.
 
-Agreed.
+Regards,
 
-Thanks,
-Mark.
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
