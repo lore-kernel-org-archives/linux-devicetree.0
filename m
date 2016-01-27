@@ -1,59 +1,65 @@
-From: Damien Horsley <Damien.Horsley@imgtec.com>
-Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for
- Pistachio audio card
-Date: Wed, 27 Jan 2016 15:18:20 +0000
-Message-ID: <56A8DFBC.6070007@imgtec.com>
-References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
- <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
- <20160127145756.GR6042@sirena.org.uk>
+From: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: resolver: Add missing of_node_put
+Date: Wed, 27 Jan 2016 20:50:17 +0530
+Message-ID: <20160127152017.GA16048@amitoj-Inspiron-3542>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160127145756.GR6042@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <james.hartley@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/16 14:57, Mark Brown wrote:
-> On Tue, Jan 26, 2016 at 02:34:26PM +0000, Damien Horsley wrote:
-> 
->> +  - clock-names : Includes the following entries:
->> +        "audio_pll"  The audio PLL
->> +        "i2s_mclk"   The i2s reference clock
->> +                     Also connected to i2s_out_0_mclk output
->> +        "dac_mclk"   Dac reference clock. Connected to i2s_dac_clk output
-> 
-> Why are these (especially the dac_mclk and i2s_mclk) properties of the
-> card and not of the drivers for the respective devices?
-> 
+for_each_child_of_node performs an of_node_get on each iteration, so
+to break out of the loop an of_node_put is required.
 
-Due to the shared nature of these clocks. Individual components cannot
-be responsible for controlling these as this could break configurations
-for other components that are sharing the clocks. Only the card driver
-has visibility of all of the components and their requirements.
+Found using Coccinelle. The semantic patch used for this is as follows:
 
-audio_pll is used by spdif out, parallel out, i2s out, and i2s in if
-there are codecs on the i2s in path that make use of i2s_mclk and
-dac_mclk (derived from audio_pll)
+// <smpl>
+@@
+expression e;
+local idexpression n;
+@@
 
-i2s_mclk and dac_mclk can be used by both the i2s in and i2s out paths
-on some boards
+ for_each_child_of_node(..., n) {
+   ... when != of_node_put(n)
+       when != e = n
+(
+   return n;
+|
++  of_node_put(n);
+?  return ...;
+)
+   ...
+ }
+// </smpl
 
->> +  - img,mute-gpio : phandle of the mute gpio
->> +
->> +  - img,hp-det-gpio : phandle of the headphone detect gpio
-> 
-> The DT maintainers would prefer those to be named -gpios.
-> 
+Signed-off-by: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/resolver.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Ok
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 640eb4c..e2a0143 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+ 
+ 	for_each_child_of_node(node, child) {
+ 		found = __of_find_node_by_full_name(child, full_name);
+-		if (found != NULL)
++		if (found != NULL) {
++			of_node_put(child);
+ 			return found;
++		}
+ 	}
+ 
+ 	return NULL;
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
