@@ -1,7 +1,7 @@
 From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH 01/13] MAINTAINERS: Adding Maintainers for AMD Seattle Device Tree
-Date: Wed, 27 Jan 2016 15:11:49 -0600
-Message-ID: <1453929121-12171-2-git-send-email-Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH 02/13] dtb: amd: Fix GICv2 hypervisor and virtual interface sizes
+Date: Wed, 27 Jan 2016 15:11:50 -0600
+Message-ID: <1453929121-12171-3-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,35 +12,31 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Brijesh Singh <brijeshkumar.singh@amd.com>
 
-Adding maintainers for AMD Seattle device tree.
+This patch fixes incorrect sizes of the GICv2 device tree node.
+This has triggered error message when booting Xen hypervisor.
 
 Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a2956eb..8179121 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -669,6 +669,14 @@ F:	drivers/gpu/drm/radeon/radeon_kfd.c
- F:	drivers/gpu/drm/radeon/radeon_kfd.h
- F:	include/uapi/linux/kfd_ioctl.h
- 
-+AMD SEATTLE DEVICE TREE SUPPORT
-+M:	Brijesh Singh <brijeshkumar.singh@amd.com>
-+M:	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-+S:	Supported
-+M:	Tom Lendacky <thomas.lendacky@amd.com>
-+S:	Supported
-+F:	arch/arm64/boot/dts/amd/
-+
- AMD XGBE DRIVER
- M:	Tom Lendacky <thomas.lendacky@amd.com>
- L:	netdev@vger.kernel.org
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index 2874d92..fdd0c96 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -18,8 +18,8 @@
+ 		#size-cells = <2>;
+ 		reg = <0x0 0xe1110000 0 0x1000>,
+ 		      <0x0 0xe112f000 0 0x2000>,
+-		      <0x0 0xe1140000 0 0x10000>,
+-		      <0x0 0xe1160000 0 0x10000>;
++		      <0x0 0xe1140000 0 0x2000>,
++		      <0x0 0xe1160000 0 0x2000>;
+ 		interrupts = <1 9 0xf04>;
+ 		ranges = <0 0 0 0xe1100000 0 0x100000>;
+ 		v2m0: v2m@e0080000 {
 -- 
 2.5.0
