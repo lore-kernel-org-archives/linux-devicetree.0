@@ -1,119 +1,96 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv9 3/4] ARM: socfpga: enable L2 cache ECC on startup
-Date: Wed, 27 Jan 2016 10:13:22 -0600
-Message-ID: <1453911203-30202-3-git-send-email-tthayer@opensource.altera.com>
-References: <1453911203-30202-1-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1453911203-30202-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] of: resolver: Add missing of_node_put
+Date: Wed, 27 Jan 2016 18:14:00 +0200
+Message-ID: <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
+References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160127160531.GB17123@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+Hi Mark,
 
-This patch enables the ECC for L2 cache on machine startup. The ECC has to
-be enabled before data is stored in memory otherwise the ECC will fail on
-reads.
+> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wrote=
+:
+>=20
+> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
+>> for_each_child_of_node performs an of_node_get on each iteration, so
+>> to break out of the loop an of_node_put is required.
+>>=20
+>> Found using Coccinelle. The semantic patch used for this is as follo=
+ws:
+>>=20
+>> // <smpl>
+>> @@
+>> expression e;
+>> local idexpression n;
+>> @@
+>>=20
+>> for_each_child_of_node(..., n) {
+>>   ... when !=3D of_node_put(n)
+>>       when !=3D e =3D n
+>> (
+>>   return n;
+>> |
+>> +  of_node_put(n);
+>> ?  return ...;
+>> )
+>>   ...
+>> }
+>> // </smpl
+>>=20
+>> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+>> ---
+>> drivers/of/resolver.c | 4 +++-
+>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>> index 640eb4c..e2a0143 100644
+>> --- a/drivers/of/resolver.c
+>> +++ b/drivers/of/resolver.c
+>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full=
+_name(struct device_node *node,
+>>=20
+>> 	for_each_child_of_node(node, child) {
+>> 		found =3D __of_find_node_by_full_name(child, full_name);
+>> -		if (found !=3D NULL)
+>> +		if (found !=3D NULL) {
+>> +			of_node_put(child);
+>> 			return found;
+>> +		}
+>> 	}
+>>=20
+>> 	return NULL;
+>=20
+> I don't think this is quite right. When child =3D=3D found, this chan=
+ge will
+> leave it decremented.
+>=20
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v9: Improve node put handling.
-v8: Address community suggestions for strings. Fix string based on
-    maintainer feedback. Update year in header.
-v7: unmap locally scoped mapped_l2_edac_addr and add of_node_put(np)
-v6: Remove pr_debug() & update year in header.
----
- arch/arm/mach-socfpga/Makefile   |    1 +
- arch/arm/mach-socfpga/core.h     |    1 +
- arch/arm/mach-socfpga/l2_cache.c |   41 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c  |    2 ++
- 4 files changed, 45 insertions(+)
- create mode 100644 arch/arm/mach-socfpga/l2_cache.c
 
-diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-index b8f9e23..e9ab7c9 100644
---- a/arch/arm/mach-socfpga/Makefile
-+++ b/arch/arm/mach-socfpga/Makefile
-@@ -5,3 +5,4 @@
- obj-y					:= socfpga.o
- obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
- obj-$(CONFIG_SOCFPGA_SUSPEND)	+= pm.o self-refresh.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C)	+= l2_cache.o
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index 5bc6ea8..eb55d66 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -36,6 +36,7 @@
- 
- extern void socfpga_init_clocks(void);
- extern void socfpga_sysmgr_init(void);
-+void socfpga_init_l2_ecc(void);
- 
- extern void __iomem *sys_manager_base_addr;
- extern void __iomem *rst_manager_base_addr;
-diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
-new file mode 100644
-index 0000000..e3907ab
---- /dev/null
-+++ b/arch/arm/mach-socfpga/l2_cache.c
-@@ -0,0 +1,41 @@
-+/*
-+ * Copyright Altera Corporation (C) 2016. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+
-+void socfpga_init_l2_ecc(void)
-+{
-+	struct device_node *np;
-+	void __iomem *mapped_l2_edac_addr;
-+
-+	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-l2-ecc");
-+	if (!np) {
-+		pr_err("Unable to find socfpga-l2-ecc in dtb\n");
-+		return;
-+	}
-+
-+	mapped_l2_edac_addr = of_iomap(np, 0);
-+	of_node_put(np);
-+	if (!mapped_l2_edac_addr) {
-+		pr_err("Unable to find L2 ECC mapping in dtb\n");
-+		return;
-+	}
-+
-+	/* Enable ECC */
-+	writel(0x01, mapped_l2_edac_addr);
-+	iounmap(mapped_l2_edac_addr);
-+}
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index a1c0efa..dd1ff07 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -59,6 +59,8 @@ static void __init socfpga_init_irq(void)
- {
- 	irqchip_init();
- 	socfpga_sysmgr_init();
-+	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
-+		socfpga_init_l2_ecc();
- }
- 
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
--- 
-1.7.9.5
+This patch is bogus.=20
 
+__of_find_node_by_full_name() is not taking a reference on the node if =
+found.=20
+This method relies on keeping the reference taken by the loop.
+
+Taking this into account all of these conccinelle tests are bogus.
+
+The DT internal method are not using the object model in an obvious man=
+ner
+and applying these patches without vetting each and everyone is bound t=
+o
+break things.
+
+Regards
+
+=E2=80=94 Pantelis
+
+
+> Thanks,
+> Mark.
