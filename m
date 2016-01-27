@@ -1,19 +1,40 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH 1/3] dt-bindings: power: reset: Add document for sram-reboot-mode driver
-Date: Tue, 26 Jan 2016 16:37:58 -0800
-Message-ID: <1453855080-17760-2-git-send-email-john.stultz@linaro.org>
-References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
+Subject: [RFC][PATCH 0/3] SRAM reboot mode driver
+Date: Tue, 26 Jan 2016 16:37:57 -0800
+Message-ID: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lkml <linux-kernel@vger.kernel.org>
 Cc: John Stultz <john.stultz@linaro.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding document for reboot-mode driver
+This patchset extends on Andy Yan's reboot mode driver
+work from here: https://lkml.org/lkml/2016/1/12/315
+
+It adds reboot mode/reason support for devices that use
+an SRAM location to communicate with the bootloader.
+
+Doing this via an SRAM subnode was a suggestion from
+Arnd, but I worry this implementation isn't yet ideal,
+since I spent quite a bit of time futzing with getting
+the sram dts entry to work properly. So I suspect there
+will be a number of suggestions for improvements.
+
+Again, this series dependson Andy's patch set above,
+but also was developed & tested against the 4.1 based
+hikey tree, so at least the hikey dts patch won't apply.
+I'm mostly sending this out for just a rough initial
+review of the dts and conceptual usage of sram subnodes.
+
+Also, it was pointed out that the hikey dts entry for
+this really should be added by the UEFI firmware, since
+alternative bootloaders may be used which do not support
+this feature. So the hikey dts patch isn't likely to ever
+go upstream, but its a useful illustration for how other
+devices might use this driver.
 
 Cc: Andy Yan <andy.yan@rock-chips.com>
 Cc: Rob Herring <robh@kernel.org>
@@ -28,72 +49,24 @@ Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: devicetree@vger.kernel.org
 Cc: Android Kernel Team <kernel-team@android.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
+
+John Stultz (3):
+  dt-bindings: power: reset: Add document for sram-reboot-mode driver
+  power: reset: Add sram-reboot-mode driver
+  dts: hikey: Add hikey support for sram-reboot-mode
+
  .../bindings/power/reset/sram-reboot-mode.txt      | 47 ++++++++++++++=
++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     | 36 ++++++++++++
+ arch/arm64/configs/hikey_defconfig                 |  3 +
+ drivers/power/reset/Kconfig                        |  9 +++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/sram-reboot-mode.c             | 66 ++++++++++++++=
 ++++++++
- 1 file changed, 47 insertions(+)
+ 6 files changed, 162 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/reset/sram-=
 reboot-mode.txt
+ create mode 100644 drivers/power/reset/sram-reboot-mode.c
 
-diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboot-=
-mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-mo=
-de.txt
-new file mode 100644
-index 0000000..33bb132
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.tx=
-t
-@@ -0,0 +1,47 @@
-+SRAM reboot mode driver
-+
-+This driver get reboot mode magic value form reboot-mode driver
-+and stores it in a SRAM address. Then the bootloader
-+can read it and take different action according to the magic
-+value stored.
-+
-+This DT node should be represented as a sub-node of a "mmio-sram", "si=
-mple-bus"
-+node.
-+
-+Required properties:
-+- compatible: should be "sram-reboot-mode"
-+- reg: offset from the sram range where to store the magic value(in by=
-tes)
-+
-+The rest of the properties should follow the generic reboot-mode discr=
-iption
-+found in reboot-mode.txt
-+
-+Example:
-+
-+	sram@5f01000 {
-+		compatible =3D "mmio-sram", "simple-bus";
-+		reg =3D <0x0 0x05f01000 0x0 0x00001000>;
-+		ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
-+
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+
-+		reboot-mode@0 {
-+			compatible =3D "sram-reboot-mode";
-+			reg =3D <0x0 0x4>;
-+
-+			none {
-+				linux,mode =3D "none";
-+				loader,magic =3D <0x77665501>;
-+			};
-+
-+			bootloader {
-+				linux,mode =3D "bootloader";
-+				loader,magic =3D <0x77665500>;
-+			};
-+
-+			recovery {
-+				linux,mode =3D "recovery";
-+				loader,magic =3D <0x77665502>;
-+			};
-+		};
-+	};
 --=20
 1.9.1
