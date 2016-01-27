@@ -1,30 +1,91 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6*-hummingboard: fix pcie reset GPIO specification
-Date: Wed, 27 Jan 2016 19:07:38 -0200
-Message-ID: <CAOMZO5Ciq-kq4xQm4TH+dF3cdYxFfWUmvuykvorZ-oaEoyBWFQ@mail.gmail.com>
-References: <E1aOWdF-00058a-0X@rmk-PC.arm.linux.org.uk>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/5 RFC] mmc: sdhci-iproc: Actually enable the clock
+Date: Wed, 27 Jan 2016 22:11:40 +0100
+Message-ID: <CAPDyKFq_=8nKiEse5KAW3FVZBut6mL6Qk6jvFYim9ihxZt5GEA@mail.gmail.com>
+References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
+	<1453042744-16196-3-git-send-email-stefan.wahren@i2se.com>
+	<CAPDyKFrCV_GCqCjymsKuOov9GT8gbmb9rBQoJfzmMbMtBnoqWQ@mail.gmail.com>
+	<885101040.21976.ad433530-d9a2-4a98-b048-302cf8550d48.open-xchange@email.1und1.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1aOWdF-00058a-0X-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <885101040.21976.ad433530-d9a2-4a98-b048-302cf8550d48.open-xchange@email.1und1.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Lee Jones <lee@kernel.org>, Ray Jui <rjui@broadcom.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-mmc <linux-mmc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 6:24 PM, Russell King
-<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> PCIe reset signals are active low, and our GPIO for this is directly
-> connected to the PCIe reset.  However, as the PCIe driver does not use
-> the flag, the specification of '0' flags (which means active high) has
-> not been noticed.  Correct this oversight, and switch to using the
+On 27 January 2016 at 20:11, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> Hi,
+>
+>> Ulf Hansson <ulf.hansson@linaro.org> hat am 27. Januar 2016 um 15:16
+>> geschrieben:
+>>
+>>
+>> On 17 January 2016 at 15:59, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>> > The RPi firmware-based clocks driver can actually disable
+>> > unused clocks, so when switching to use it we ended up losing
+>> > our MMC clock once all devices were probed.
+>> >
+>> > This patch adopts the changes from 1e5a0a9a58e2 ("mmc: sdhci-bcm2835:
+>> > Actually enable the clock") to sdhci-iproc.
+>> >
+>> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> > ---
+>> > drivers/mmc/host/sdhci-iproc.c | 9 ++++++++-
+>> > 1 file changed, 8 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+>> > index e22060a..55bc348 100644
+>> > --- a/drivers/mmc/host/sdhci-iproc.c
+>> > +++ b/drivers/mmc/host/sdhci-iproc.c
+>> > @@ -207,6 +207,11 @@ static int sdhci_iproc_probe(struct platform_device
+>> > *pdev)
+>> > ret = PTR_ERR(pltfm_host->clk);
+>> > goto err;
+>> > }
+>> > + ret = clk_prepare_enable(pltfm_host->clk);
+>> > + if (ret) {
+>> > + dev_err(&pdev->dev, "failed to enable host clk\n");
+>> > + goto err;
+>> > + }
+>> >
+>> > if (iproc_host->data->pdata->quirks & SDHCI_QUIRK_MISSING_CAPS) {
+>> > host->caps = iproc_host->data->caps;
+>> > @@ -215,10 +220,12 @@ static int sdhci_iproc_probe(struct platform_device
+>> > *pdev)
+>> >
+>> > ret = sdhci_add_host(host);
+>> > if (ret)
+>> > - goto err;
+>> > + goto err_clk;
+>> >
+>> > return 0;
+>> >
+>> > +err_clk:
+>> > + clk_disable_unprepare(pltfm_host->clk);
+>> > err:
+>> > sdhci_pltfm_free(pdev);
+>> > return ret;
+>> > --
+>> > 1.7.9.5
+>> >
+>>
+>> There's a missing clk_disable_unprepare() from the ->remove()
+>> callback. Otherwise this looks good.
+>
+> this shouldn't be necessary, because clk_disable_unprepare() is already called
+> by sdhci_pltfm_unregister().
 
-Yes, the mx6 pci driver did not use the flag, but it does now since 5c5fb40de8f1
-("PCI: imx6: Add support for active-low reset GPIO"), so it would be
-better to adjust the commit log.
+Huh. That's yet another strange behaviour of the sdhci core.
 
-Apart from that, patch looks good.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So there's no clk enabling done via the registering API, but disabling
+is done at unregistering. It's fragile.
+
+That also means there is a clk disable unbalance issue at ->remove()
+for sdhci-iproc, right!?
+
+Anyway, the patch is of course correct. Applied for next!
+
+Thanks and kind regards
+Uffe
