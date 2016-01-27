@@ -1,51 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap3: Include missing bandgap data for
- ti-soc-thermal driver
-Date: Wed, 27 Jan 2016 10:24:48 -0800
-Message-ID: <20160127182447.GR19432@atomide.com>
-References: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
- <20160121094718.GV7192@pali> <20160121171500.GI19432@atomide.com>
- <20160127100447.GI25796@pali> <20160127160945.GI19432@atomide.com>
- <20160127181950.GB17794@earth>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20160127181950.GB17794@earth>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH resend 4/4] touchscreen: pixcir_ts: Add support for axis inversion / swapping
+Date: Wed, 27 Jan 2016 19:25:24 +0100
+Message-ID: <1453919124-3840-5-git-send-email-hdegoede@redhat.com>
+References: <1453919124-3840-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453919124-3840-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBTZWJhc3RpYW4gUmVpY2hlbCA8c3JlQGtlcm5lbC5vcmc+IFsxNjAxMjcgMTA6MjBdOgo+IEhp
-LAo+IAo+IE9uIFdlZCwgSmFuIDI3LCAyMDE2IGF0IDA4OjA5OjQ2QU0gLTA4MDAsIFRvbnkgTGlu
-ZGdyZW4gd3JvdGU6Cj4gPiAqIFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4gWzE2
-MDEyNyAwMjowNV06Cj4gPiA+IE9uIFRodXJzZGF5IDIxIEphbnVhcnkgMjAxNiAwOToxNTowMSBU
-b255IExpbmRncmVuIHdyb3RlOgo+ID4gPiA+ICogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21h
-aWwuY29tPiBbMTYwMTIxIDAxOjQ4XToKPiA+ID4gPiA+IE9uIFNhdHVyZGF5IDI2IERlY2VtYmVy
-IDIwMTUgMDA6MzI6MjUgUGFsaSBSb2jDoXIgd3JvdGU6Cj4gPiA+ID4gPiA+IERyaXZlciBmb3Ig
-b21hcDMgd2l0aCBkb2N1bWVudGF0aW9uIGlzIHRoZXJlIHNpbmNlIHY0LjQtcmMxLgo+ID4gPiA+
-IC4uLgo+ID4gPiA+IAo+ID4gPiA+ID4gUElORyEgV2hvIGNhbiB0YWtlIHRoaXMgcGF0Y2g/Cj4g
-PiA+ID4gCj4gPiA+ID4gU291bmRzIGxpa2UgL21lLCBidXQgYWZ0ZXIgLXJjMSB3aGVuIGFueSBw
-b3NzaWJsZSByZWdyZXNzaW9ucwo+ID4gPiA+IGFyZSBvdXQgb2YgdGhlIHdheSA6KQo+ID4gPiAK
-PiA+ID4gR3JlYXQhIEp1c3QgdG8gbm90ZSB0aGF0IDQuNS1yYzEgaXMgb3V0Lgo+ID4gPiAKPiA+
-ID4gSSBqdXN0IGRvIG5vdCB3YW50IHRvIHNlZSB0aGlzIHBhdGNoIGxvc3QuLi4KPiA+IAo+ID4g
-U28gaXMgdGhpcyBjcml0aWNhbCB0byBoYXZlIGFzIGEgZml4IHNpbmNlIGl0J3MgdGhlcm1hbCBy
-ZWxhdGVkPwo+IAo+IEFjY29yZGluZyB0byBzb21lYm9keSBmcm9tIFRJLCB3aG8gcHJldmlvdXNs
-eSB0b29rIHBhcnQgaW4gdGhlIHBhdGNoCj4gZGlzY3Vzc2lvbiwgdGhlIHRoZXJtYWwgc2Vuc29y
-cyBvZiBvbWFwMyBhcmUgdG8gaW1wcmVjaXNlIHRvIGJlIHVzZWQKPiBmb3IgdGhlcm1hbCBkZWNp
-c2lvbnMuIFRoZSBkcml2ZXIgImp1c3QiIGluZm9ybXMgdXNlcnNwYWNlIGFib3V0IHRoZQo+IHRl
-bXBlcmF0dXJlcy4KCk9LIGFwcGx5aW5nIGludG8gb21hcC1mb3ItdjQuNi9kdCB0aGVuIHRoYW5r
-cy4KClRvbnkKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+Add support for axis inversion / swapping using the new
+touchscreen_parse_properties and touchscreen_apply_prop_to_x_y
+functionality.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Add a fix which actually makes this patch compile, which accidentally ended
+ up in a later commit in my tree
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index f58784d..0321be3 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -41,13 +41,14 @@ struct pixcir_i2c_ts_data {
+ 	struct gpio_desc *gpio_enable;
+ 	struct gpio_desc *gpio_wake;
+ 	const struct pixcir_i2c_chip_data *chip;
++	struct touchscreen_properties prop;
+ 	int max_fingers;	/* Max fingers supported in this instance */
+ 	bool running;
+ };
+ 
+ struct pixcir_touch {
+-	int x;
+-	int y;
++	s16 x;
++	s16 y;
+ 	int id;
+ };
+ 
+@@ -100,6 +101,9 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 	for (i = 0; i < touch; i++) {
+ 		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
+ 		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
++		touchscreen_apply_prop_to_x_y(&tsdata->prop,
++					      &report->touches[i].x,
++					      &report->touches[i].y);
+ 
+ 		if (chip->has_hw_ids) {
+ 			report->touches[i].id = bufptr[4];
+@@ -515,7 +519,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	} else {
+ 		input_set_capability(input, EV_ABS, ABS_MT_POSITION_X);
+ 		input_set_capability(input, EV_ABS, ABS_MT_POSITION_Y);
+-		touchscreen_parse_properties(input, true, NULL);
++		touchscreen_parse_properties(input, true, &tsdata->prop);
+ 		if (!input_abs_get_max(input, ABS_MT_POSITION_X) ||
+ 		    !input_abs_get_max(input, ABS_MT_POSITION_Y)) {
+ 			dev_err(dev, "Touchscreen size is not specified\n");
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
