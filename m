@@ -1,137 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC][PATCH 3/3] dts: hikey: Add hikey support for sram-reboot-mode
-Date: Wed, 27 Jan 2016 11:38:28 -0600
-Message-ID: <CAL_JsqLkgcHY3iJGRCsH7zkVoLEwJqbMTthVmJqamM8Vh=D62Q@mail.gmail.com>
-References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org> <1453855080-17760-4-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] of: resolver: Add missing of_node_put
+Date: Wed, 27 Jan 2016 20:02:45 +0200
+Message-ID: <FF19B941-89E4-4954-9818-E352FE9A0E97@konsulko.com>
+References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej> <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com> <20160127162153.GC17123@leverpostej>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453855080-17760-4-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <20160127162153.GC17123@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 6:38 PM, John Stultz <john.stultz@linaro.org> w=
-rote:
-> Add support to hikey dts and defconfig for the
-> sram-reboot-mode driver.
->
-> The dts entries added here should really be generated
-> by the UEFI firmware, and not be static in the dts,
-> since one may be using different firmware on HiKey.
-> But this patch provides an example of how the
-> sram-reboot-mode entry would otherwise look.
->
-> Cc: Andy Yan <andy.yan@rock-chips.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Heiko St=C3=BCbner <heiko@sntech.de>
-> Cc: Caesar Wang <wxt@rock-chips.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-> Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Android Kernel Team <kernel-team@android.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 36 ++++++++++++++++=
-++++++++++
->  arch/arm64/configs/hikey_defconfig             |  3 +++
->  2 files changed, 39 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/ar=
-m64/boot/dts/hisilicon/hi6220-hikey.dts
-> index 92f1704..67d12d0 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -52,6 +52,11 @@
->                               <0x0 0x0740f000 0x0 0x00001000>;  /* MC=
-U firmware section */
->                 };
->
-> +               reboot-reason@05f01000 {
-> +                       no-map;
-> +                       reg =3D <0x0 0x05f01000 0x0 0x00001000>;
-> +               };
-> +
+Hi Mark,
 
-This hunk should be dropped. These regions are for main memory.
+> On Jan 27, 2016, at 18:21 , Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
+>> Hi Mark,
+>> 
+>>> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wrote:
+>>> 
+>>> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
+>>>> for_each_child_of_node performs an of_node_get on each iteration, so
+>>>> to break out of the loop an of_node_put is required.
+>>>> 
+>>>> Found using Coccinelle. The semantic patch used for this is as follows:
+>>>> 
+>>>> // <smpl>
+>>>> @@
+>>>> expression e;
+>>>> local idexpression n;
+>>>> @@
+>>>> 
+>>>> for_each_child_of_node(..., n) {
+>>>>  ... when != of_node_put(n)
+>>>>      when != e = n
+>>>> (
+>>>>  return n;
+>>>> |
+>>>> +  of_node_put(n);
+>>>> ?  return ...;
+>>>> )
+>>>>  ...
+>>>> }
+>>>> // </smpl
+>>>> 
+>>>> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+>>>> ---
+>>>> drivers/of/resolver.c | 4 +++-
+>>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>>> 
+>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>>>> index 640eb4c..e2a0143 100644
+>>>> --- a/drivers/of/resolver.c
+>>>> +++ b/drivers/of/resolver.c
+>>>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+>>>> 
+>>>> 	for_each_child_of_node(node, child) {
+>>>> 		found = __of_find_node_by_full_name(child, full_name);
+>>>> -		if (found != NULL)
+>>>> +		if (found != NULL) {
+>>>> +			of_node_put(child);
+>>>> 			return found;
+>>>> +		}
+>>>> 	}
+>>>> 
+>>>> 	return NULL;
+>>> 
+>>> I don't think this is quite right. When child == found, this change will
+>>> leave it decremented.
+>>> 
+>> 
+>> 
+>> This patch is bogus. 
+>> 
+>> __of_find_node_by_full_name() is not taking a reference on the node if found. 
+>> This method relies on keeping the reference taken by the loop.
+> 
+> Sure. For the found node, that makes sense.
+> 
+> However, it also increments the refcount of all the parents, which does
+> not seem correct to me, given they're not put on the return path, and a
+> put of the found node won't decrement its parents refcounts, unless I
+> have missed something.
+> 
 
->                 mbox-buf@06dff000 {
->                         no-map;
->                         reg =3D <0x0 0x06dff000 0x0 0x00001000>;  /* =
-Mailbox message buf */
-> @@ -71,6 +76,37 @@
->                 ftrace-size     =3D <0x0 0x00020000>;
->         };
->
-> +
-> +       /* This entry should really be provided by the UEFI firmware =
-*/
-> +       sram@5f01000 {
-> +               compatible =3D "mmio-sram", "simple-bus";
+Hmm, yes. The parent refcounts must be decremented. 
 
-The suggestion to put "simple-bus" here was really just for debugging.
-Really, the mmio-sram driver should call of_platform_default_populate
-to probe it's children.
-
-> +               reg =3D <0x0 0x05f01000 0x0 0x00001000>;
-> +               ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
-> +
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +
-> +               reboot-mode@0 {
-> +                       compatible =3D "sram-reboot-mode";
-> +                       reg =3D <0x0 0x4>;
-> +
-> +                       none {
-> +                               linux,mode =3D "none";
-> +                               loader,magic =3D <0x77665501>;
-> +                       };
-> +
-> +                       bootloader {
-> +                               linux,mode =3D "bootloader";
-> +                               loader,magic =3D <0x77665500>;
-> +                       };
-> +
-> +                       recovery {
-> +                               linux,mode =3D "recovery";
-> +                               loader,magic =3D <0x77665502>;
-> +                       };
-> +               };
-> +       };
-> +
->         smb {
->                 uart0: uart@f8015000 {  /* console */
->                         status =3D "ok";
-> diff --git a/arch/arm64/configs/hikey_defconfig b/arch/arm64/configs/=
-hikey_defconfig
-> index a8375aa..e9db588 100644
-> --- a/arch/arm64/configs/hikey_defconfig
-> +++ b/arch/arm64/configs/hikey_defconfig
-> @@ -201,6 +201,7 @@ CONFIG_BLK_DEV_LOOP=3Dy
->  CONFIG_BLK_DEV_RAM=3Dy
->  CONFIG_BLK_DEV_RAM_SIZE=3D16384
->  CONFIG_VIRTIO_BLK=3Dy
-> +CONFIG_SRAM=3Dy
->  CONFIG_TI_ST=3Dy
->  CONFIG_ST_HCI=3Dy
->  # CONFIG_SCSI_PROC_FS is not set
-> @@ -266,6 +267,8 @@ CONFIG_SPI_PL022=3Dy
->  CONFIG_GPIO_SYSFS=3Dy
->  CONFIG_GPIO_XGENE=3Dy
->  CONFIG_POWER_RESET_SYSCON=3Dy
-> +CONFIG_SYSCON_REBOOT_MODE=3Dy
-> +CONFIG_SRAM_REBOOT_MODE=3Dy
->  CONFIG_THERMAL=3Dy
->  CONFIG_THERMAL_WRITABLE_TRIPS=3Dy
->  CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR=3Dy
+> So I believe we are missing some of_node_put logic here.
+> 
+>> Taking this into account all of these conccinelle tests are bogus.
+>> 
+>> The DT internal method are not using the object model in an obvious manner
+>> and applying these patches without vetting each and everyone is bound to
+>> break things.
+> 
+> Agreed.
+> 
+> Thanks,
+> Mark.
 > --
-> 1.9.1
->
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
