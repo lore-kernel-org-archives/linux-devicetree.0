@@ -1,79 +1,35 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 1/3] gpio: xgene: Enable X-Gene standby GPIO as
- interrupt controller
-Date: Wed, 27 Jan 2016 13:10:51 +0000
-Message-ID: <56A8C1DB.5040606@arm.com>
-References: <1453792935-19916-1-git-send-email-qnguyen@apm.com>
- <1453792935-19916-2-git-send-email-qnguyen@apm.com> <56A74BD3.40801@arm.com>
- <CAFopSPTz=sdZs_WZrU8ryTRXNtb4GPOMA_sj8HMPMxWBxV2w4A@mail.gmail.com>
- <56A7AF48.8020605@arm.com>
- <CAFopSPR1ZKinH=N29gaAu3M8oc-vfKUnPsFpAu3EUNb3Doi68w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/9] pinctrl: Add STM32 MCUs support
+Date: Wed, 27 Jan 2016 14:16:32 +0100
+Message-ID: <CACRpkdaBcP6fC5Oxn+d1WPdHq1FtwMkf8Ap5VDLQFg-5UwEBAw@mail.gmail.com>
+References: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1452773795-24216-5-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAFopSPR1ZKinH=N29gaAu3M8oc-vfKUnPsFpAu3EUNb3Doi68w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452773795-24216-5-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quan,
+On Thu, Jan 14, 2016 at 1:16 PM, Maxime Coquelin
+<mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On 27/01/16 12:48, Quan Nguyen wrote:
-> On Wed, Jan 27, 2016 at 12:39 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->> On 26/01/16 16:27, Quan Nguyen wrote:
->>> On Tue, Jan 26, 2016 at 5:34 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>>>
->>>> On 26/01/16 07:22, Quan Nguyen wrote:
->>>>> Enable X-Gene standby GPIO controller as interrupt controller to provide
->>>>> its own resources. This avoids ambiguity where GIC interrupt resource is
->>>>> use as X-Gene standby GPIO interrupt resource in user driver.
->>>>>
->>>>> Signed-off-by: Y Vo <yvo@apm.com>
->>>>> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
->>>>> ---
->>>>>  drivers/gpio/gpio-xgene-sb.c | 331 ++++++++++++++++++++++++++++++++++++-------
->>>>>  1 file changed, 276 insertions(+), 55 deletions(-)
->>
->> [...]
->>>>> @@ -90,6 +301,32 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
->>>>>       if (IS_ERR(regs))
->>>>>               return PTR_ERR(regs);
->>>>>
->>>>> +     priv->regs = regs;
->>>>> +
->>>>> +     of_id = of_match_device(xgene_gpio_sb_of_match, &pdev->dev);
->>>>> +     if (of_id)
->>>>> +             priv->flags = (uintptr_t)of_id->data;
->>>>
->>>> Wait. Everything is hardcoded? So why do we have to deal with looking
->>>> into that structure if nothing is actually parametrized?
->>>
->>> There will be other instances with difference number of irq pins /gpio
->>> /start_irq_base etc.
->>
->> Then it has to be described in DT right now.
->>
-> 
-> What I was thinking is to have other id to match with difference
-> instances and these code can be use for ACPI also. Let say
-> "apm,xgene2-gpio-sb"
-> Please help correcting me if it is not right.
+> This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
+> family of MCUs.
+>
+> While it only supports STM32F429 for now, it has been designed to enable
+> support of other MCUs of the family (e.g. STM32F746).
+>
+> Acked-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I still think this is the wrong thing to do. You are hiding magic values
-in the driver, for no good reason. If ACPI has such a broken model that
-it cannot give you the various parameters you need, then this is an ACPI
-problem you can solve in the ACPI-specific code. Alternatively, you
-could also fix your ACPI tables to be less braindead.
+This patch applied for kernel v4.6.
 
-But please do not turn the DT code into the same mess for the sake of
-using the lowest common denominator. Have a set of properties describing
-the HW, a compatibility string to nicely identify the revision, and use
-that. You can still hardcode things for ACPI if you desperately need it.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
