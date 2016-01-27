@@ -1,44 +1,30 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v4 0/9] Add STM32 pinctrl/GPIO driver
-Date: Wed, 27 Jan 2016 21:59:28 +0100
-Message-ID: <56A92FB0.7080907@gmail.com>
-References: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
- <CACRpkdYGQ1xObWfka2CN9au6YMGhpu4qcTZpu72bzuJjO38tog@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx6*-hummingboard: fix pcie reset GPIO specification
+Date: Wed, 27 Jan 2016 19:07:38 -0200
+Message-ID: <CAOMZO5Ciq-kq4xQm4TH+dF3cdYxFfWUmvuykvorZ-oaEoyBWFQ@mail.gmail.com>
+References: <E1aOWdF-00058a-0X@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYGQ1xObWfka2CN9au6YMGhpu4qcTZpu72bzuJjO38tog@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Patrice CHOTARD <patrice.chotard@st.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1aOWdF-00058a-0X-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/2016 02:20 PM, Linus Walleij wrote:
-> On Thu, Jan 14, 2016 at 1:16 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com>  wrote:
->
->> >This is the fourth round of STM32 pinctrl series, which takes into
->> >account comments made by Patrice on patch 4.
-> I have applied patch 2 and 4 to the pinctrl tree.
+On Wed, Jan 27, 2016 at 6:24 PM, Russell King
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> PCIe reset signals are active low, and our GPIO for this is directly
+> connected to the PCIe reset.  However, as the PCIe driver does not use
+> the flag, the specification of '0' flags (which means active high) has
+> not been noticed.  Correct this oversight, and switch to using the
 
-Just tried to compile your devel branch, and it breaks:
+Yes, the mx6 pci driver did not use the flag, but it does now since 5c5fb40de8f1
+("PCI: imx6: Add support for active-low reset GPIO"), so it would be
+better to adjust the commit log.
 
-   CC      drivers/pinctrl/stm32/pinctrl-stm32f429.o
-drivers/pinctrl/stm32/pinctrl-stm32.c: In function 
-'stm32_gpiolib_register_bank':
-drivers/pinctrl/stm32/pinctrl-stm32.c:692:17: error: 'struct gpio_chip' 
-has no member named 'dev'
-   bank->gpio_chip.dev = dev;
-                  ^
-make[3]: *** [drivers/pinctrl/stm32/pinctrl-stm32.o] Error 1
-
-This is due to the field renaming you did in gpio_chip struct:
-58383c7 gpio: change member .dev to .parent
-
-How do you prefer to proceed?
-Should I send a fix on top of your devel branch, or you will fix it 
-directly?
-
-Thanks,
-Maxime
+Apart from that, patch looks good.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
