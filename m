@@ -1,68 +1,99 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [BISECTED] v4.5-rc1 phylib regression
-Date: Wed, 27 Jan 2016 01:15:02 +0100
-Message-ID: <20160127001502.GA11317@lunn.ch>
-References: <20160126133417.GI3880@lunn.ch>
- <CAOesGMgaB8R+7jGyLNgQ-M+2nVRhOsEp7LUbiApEEw+dscfL0w@mail.gmail.com>
- <20160126175353.GG27473@lunn.ch>
- <CAOesGMhYU4NOeGRJoF4bcELCFfSsvBVp2du7ZgVjC3QuCv637w@mail.gmail.com>
- <CAOesGMi+ymn_FdDfgTjwgyO-MsEJNGBDU9ayRJvGkjJ7T_ExfA@mail.gmail.com>
- <56A7DB27.6080203@gmail.com>
- <20160126213600.GJ27473@lunn.ch>
- <CAOesGMiEzhN9sGBTq57xnti_Fy1J4rO=djehNHwj47ZhetymXw@mail.gmail.com>
- <20160126220924.GK27473@lunn.ch>
- <56A80725.1070808@gmail.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: [RFC][PATCH 1/3] dt-bindings: power: reset: Add document for sram-reboot-mode driver
+Date: Tue, 26 Jan 2016 16:37:58 -0800
+Message-ID: <1453855080-17760-2-git-send-email-john.stultz@linaro.org>
+References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56A80725.1070808-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 03:54:13PM -0800, Florian Fainelli wrote:
-> On 26/01/16 14:09, Andrew Lunn wrote:
-> >>> Nope, not an option. Only a small number of DTB actually use c22 or
-> >>> c45. The majority of devices have no compatible at all. Why should
-> >>> they, the binding documentation says it is optional!
-> >>
-> >> So one thing that can be done is to just have a whitelist in the
-> >> driver that we add the known phy compatibles to, with a nice comment
-> >> above that this should only be for legacy device trees.
-> > 
-> > So you mean drivers/of/of_mdio.c:of_mdiobus_child_is_phy()
-> > has a white list like:
-> > 
-> > "brcm,40nm-ephy"
-> > "marvell,88E1111", 
-> > "marvell,88e1116",
-> > "marvell,88e1118",
-> > "marvell,88e1149r",
-> > "marvell,88e1310",
-> > "marvell,88E1510",
-> > "marvell,88E1514",
-> > "moxa,moxart-rtl8201cp",
-> > 
-> > Yes, that would work.
-> > 
-> > We should also update the binding documentation to limit what is legal
-> > in the compatible string.
-> 
-> Agreed, and while at it, take the opportunity to make the compatible
-> string clause 22/45 mandatory properties so we do not multiply the
-> whitelist.
+Add device tree binding document for reboot-mode driver
 
-Hi Florian
+Cc: Andy Yan <andy.yan@rock-chips.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Heiko St=C3=BCbner <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: Android Kernel Team <kernel-team@android.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ .../bindings/power/reset/sram-reboot-mode.txt      | 47 ++++++++++++++=
+++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/sram-=
+reboot-mode.txt
 
-I just posted the whitelist code.
-
-Making clause 22/45 mandatory is going further than a fix. So i've
-left this out for the moment. We can add it to net-next later.
-
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboot-=
+mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-mo=
+de.txt
+new file mode 100644
+index 0000000..33bb132
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.tx=
+t
+@@ -0,0 +1,47 @@
++SRAM reboot mode driver
++
++This driver get reboot mode magic value form reboot-mode driver
++and stores it in a SRAM address. Then the bootloader
++can read it and take different action according to the magic
++value stored.
++
++This DT node should be represented as a sub-node of a "mmio-sram", "si=
+mple-bus"
++node.
++
++Required properties:
++- compatible: should be "sram-reboot-mode"
++- reg: offset from the sram range where to store the magic value(in by=
+tes)
++
++The rest of the properties should follow the generic reboot-mode discr=
+iption
++found in reboot-mode.txt
++
++Example:
++
++	sram@5f01000 {
++		compatible =3D "mmio-sram", "simple-bus";
++		reg =3D <0x0 0x05f01000 0x0 0x00001000>;
++		ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
++
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++
++		reboot-mode@0 {
++			compatible =3D "sram-reboot-mode";
++			reg =3D <0x0 0x4>;
++
++			none {
++				linux,mode =3D "none";
++				loader,magic =3D <0x77665501>;
++			};
++
++			bootloader {
++				linux,mode =3D "bootloader";
++				loader,magic =3D <0x77665500>;
++			};
++
++			recovery {
++				linux,mode =3D "recovery";
++				loader,magic =3D <0x77665502>;
++			};
++		};
++	};
+--=20
+1.9.1
