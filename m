@@ -1,95 +1,117 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH resend] ARM: dts: sun7i: Add dts file for the lamobo-r1
- board
-Date: Wed, 27 Jan 2016 20:47:35 +0100
-Message-ID: <20160127194735.GT4317@lukather>
-References: <1453920105-7093-1-git-send-email-hdegoede@redhat.com>
- <1453920105-7093-2-git-send-email-hdegoede@redhat.com>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH] of: resolver: Add missing of_node_put
+Date: Wed, 27 Jan 2016 20:48:00 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1601272042030.2051@localhost6.localdomain6>
+References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej> <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com> <20160127162153.GC17123@leverpostej> <FF19B941-89E4-4954-9818-E352FE9A0E97@konsulko.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U7F658e60E1K4csu"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453920105-7093-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <FF19B941-89E4-4954-9818-E352FE9A0E97@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Amitoj Kaur Chawla <amitoj1606@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
 
---U7F658e60E1K4csu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+On Wed, 27 Jan 2016, Pantelis Antoniou wrote:
 
-On Wed, Jan 27, 2016 at 07:41:45PM +0100, Hans de Goede wrote:
-> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->=20
-> The lamobo-r1 board, sometimes called the BPI-R1 but not labelled as such
-> on the PCB, is meant as a A20 based router board. As such the board comes
-> with a built-in switch chip giving it 5 gigabit ethernet boards, and it
-> has a large empty area on the pcb with mounting holes which will fit a
-> 2.5 inch harddisk. To complete its networking features it has a
-> Realtek RTL8192CU for WiFi 802.11 b/g/n.
->=20
-> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Hi Mark,
+> 
+> > On Jan 27, 2016, at 18:21 , Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
+> >> Hi Mark,
+> >> 
+> >>> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wrote:
+> >>> 
+> >>> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
+> >>>> for_each_child_of_node performs an of_node_get on each iteration, so
+> >>>> to break out of the loop an of_node_put is required.
+> >>>> 
+> >>>> Found using Coccinelle. The semantic patch used for this is as follows:
+> >>>> 
+> >>>> // <smpl>
+> >>>> @@
+> >>>> expression e;
+> >>>> local idexpression n;
+> >>>> @@
+> >>>> 
+> >>>> for_each_child_of_node(..., n) {
+> >>>>  ... when != of_node_put(n)
+> >>>>      when != e = n
+> >>>> (
+> >>>>  return n;
+> >>>> |
+> >>>> +  of_node_put(n);
+> >>>> ?  return ...;
+> >>>> )
+> >>>>  ...
+> >>>> }
+> >>>> // </smpl
+> >>>> 
+> >>>> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+> >>>> ---
+> >>>> drivers/of/resolver.c | 4 +++-
+> >>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+> >>>> 
+> >>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> >>>> index 640eb4c..e2a0143 100644
+> >>>> --- a/drivers/of/resolver.c
+> >>>> +++ b/drivers/of/resolver.c
+> >>>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> >>>> 
+> >>>> 	for_each_child_of_node(node, child) {
+> >>>> 		found = __of_find_node_by_full_name(child, full_name);
+> >>>> -		if (found != NULL)
+> >>>> +		if (found != NULL) {
+> >>>> +			of_node_put(child);
+> >>>> 			return found;
+> >>>> +		}
+> >>>> 	}
+> >>>> 
+> >>>> 	return NULL;
+> >>> 
+> >>> I don't think this is quite right. When child == found, this change will
+> >>> leave it decremented.
+> >>> 
+> >> 
+> >> 
+> >> This patch is bogus. 
+> >> 
+> >> __of_find_node_by_full_name() is not taking a reference on the node if found. 
+> >> This method relies on keeping the reference taken by the loop.
+> > 
+> > Sure. For the found node, that makes sense.
+> > 
+> > However, it also increments the refcount of all the parents, which does
+> > not seem correct to me, given they're not put on the return path, and a
+> > put of the found node won't decrement its parents refcounts, unless I
+> > have missed something.
+> > 
+> 
+> Hmm, yes. The parent refcounts must be decremented. 
 
-Sorry that I missed it :/
+So there should be if (found != child) of_node_put(child); ?  Another 
+option would be to duplicate the test and avoid the recursive call.
 
-It looks mostly fine, I just have a minor question / comment below.
+julia
 
-> +&cpu0 {
-> +	cpu-supply =3D <&reg_dcdc2>;
-> +	operating-points =3D <
-> +		/* kHz	  uV */
-> +		960000	1400000
-> +		912000	1400000
-> +		864000	1350000
-> +		720000	1250000
-> +		528000	1150000
-> +		312000	1100000
-> +		144000	1050000
-> +		>;
-> +};
-
-Have you used the default OPPs and it turned out to be unstable, or is
-it just some copy / paste from the FEX file?
-
-Thanks!
-Maxime=20
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---U7F658e60E1K4csu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWqR7XAAoJEBx+YmzsjxAgRRYQAJgo2//AVSS+ubJapk0Z+Taf
-huz8h6VGPvy8nbsJ/y2WwiPB1ffLh7jfmonCeZqFyp0BVWBW+alvuwqrSZzhoHVo
-1Cz3kL8anNOlhRHC51ZgNAGLlgYfTWZcJ7FOarxHTLOhuw6Qjke+iEEj94VNopgN
-p4zOq1pxuMlhM77WpHmZcDPifdO+n3nvHo47TI8dSb5//PVNH6z7b8ZhbHYnRnp0
-nA4hK6x8aKSGfIM/twR3QDQGAG9Ezg2Owj5sAyQAErbRz12ywRXa1VlCXGb/T+Q4
-l+7Ls5ID8IppxOIfyiWEqt28qZzMThju3VClt0MCsOicUXoHqtRqlbqi3dNRGDAB
-tq33sffxjZTs410tA6AmXVo0lA59bQx/oocn03QxowZYeS0AVATG9L8AGLn2MlDg
-Hru5Rtf5Agq0ImJhNd41cp7Z9fN0KfUmisUF2Ls96V3pOJQZIw5TFbR6MOObz3DB
-uYk3MmcApWGEdkQo9dTo+7K51kBmx+HqFFXKRDyArb6yPDKxArnRG9irNHBPbnOl
-raCQp0VQOaEQLAwlCKaN2fr/WiQ43KJSy923uiZc1FtdfhnafvNs82HKwmKXcQLg
-NLLekVIHo1S4TYRWpZJZf+r4RBhOa211HtwrQjKXaJ0yMo9ZEQyKcAN9PmYa9oKG
-PJEMqQ5O4sDEvRup8uBr
-=kuQE
------END PGP SIGNATURE-----
-
---U7F658e60E1K4csu--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > So I believe we are missing some of_node_put logic here.
+> > 
+> >> Taking this into account all of these conccinelle tests are bogus.
+> >> 
+> >> The DT internal method are not using the object model in an obvious manner
+> >> and applying these patches without vetting each and everyone is bound to
+> >> break things.
+> > 
+> > Agreed.
+> > 
+> > Thanks,
+> > Mark.
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
