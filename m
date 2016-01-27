@@ -1,155 +1,138 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v8 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Wed, 27 Jan 2016 07:30:01 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63FA896@penmbx01>
+From: Peter Korsgaard <peter@korsgaard.com>
+Subject: Re: [PATCH v8 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Wed, 27 Jan 2016 09:05:26 +0100
+Message-ID: <87pownphvd.fsf@dell.be.48ers.dk>
 References: <1453861685-30924-1-git-send-email-wenyou.yang@atmel.com>
- <1453861685-30924-2-git-send-email-wenyou.yang@atmel.com>
- <20160127072732.GE3368@x1>
+	<1453861685-30924-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160127072732.GE3368@x1>
-Content-Language: en-US
+In-Reply-To: <1453861685-30924-2-git-send-email-wenyou.yang@atmel.com> (Wenyou
+	Yang's message of "Wed, 27 Jan 2016 10:28:04 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Peter Korsgaard <jacmet@gmail.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Peter Korsgaard <jacmet@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExlZSBKb25l
-cyBbbWFpbHRvOmxlZS5qb25lc0BsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE25bm0MeaciDI35pel
-IDE1OjI4DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xs
-QGFybS5jb20+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENh
-bXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEgPGdh
-bGFrQGNvZGVhdXJvcmEub3JnPjsgSmF2aWVyDQo+IE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJA
-ZG93aGlsZTAub3JnPjsgS3J6eXN6dG9mIEtvemxvd3NraQ0KPiA8ay5rb3psb3dza2lAc2Ftc3Vu
-Zy5jb20+OyBQZXRlciBLb3JzZ2FhcmQgPGphY21ldEBnbWFpbC5jb20+OyBGZXJyZSwNCj4gTmlj
-b2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjggMS8yXSBtZmQ6IGFjdDg5
-NDVhOiBhZGQgQWN0aXZlLXNlbWkgQUNUODk0NUEgUE1JQw0KPiBNRkQgZHJpdmVyDQo+IA0KPiBP
-biBXZWQsIDI3IEphbiAyMDE2LCBXZW55b3UgWWFuZyB3cm90ZToNCj4gDQo+ID4gVGhpcyBwYXRj
-aCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBY3RpdmUtc2VtaSBBQ1Q4OTQ1QSBQTUlDLg0KPiA+IEl0
-IGlzIGEgTXVsdGkgRnVuY3Rpb24gRGV2aWNlIHdpdGggdGhlIGZvbGxvd2luZyBzdWJkZXZpY2Vz
-Og0KPiA+ICAtIFJlZ3VsYXRvcg0KPiA+ICAtIENoYXJnZXINCj4gPg0KPiA+IEl0IGlzIGludGVy
-ZmFjZWQgdG8gdGhlIGhvc3QgY29udHJvbGxlciB1c2luZyBJMkMgaW50ZXJmYWNlLCBBQ1Q4OTQ1
-QQ0KPiA+IGlzIGEgY2hpbGQgZGV2aWNlIG9mIHRoZSBJMkMuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+IFJldmlld2VkLWJ5
-OiBLcnp5c3p0b2YgS296bG93c2tpIDxrLmtvemxvd3NraUBzYW1zdW5nLmNvbT4NCj4gDQo+IENh
-biBJIHRha2UgdGhlIE1GRCBwYXRjaGVzIGluIHNlcGFyYXRlbHk/DQoNClllcywgeW91IGNhbiwg
-SSB0aGluay4NCg0KPiANCj4gRm9yIG15IG93biByZWZlcmVuY2U6DQo+ICAgQWNrZWQtYnk6IExl
-ZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQoNClRoYW5rIHlvdSBmb3IgeW91ciBBY2tl
-ZC4NCg0KPiANCj4gPiAtLS0NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjg6DQo+ID4gIC0gY2hhbmdl
-IHRoZSBzdWJkZXZpY2UncyBuYW1lICJhY3Q4OTQ1YS1wbWljIiB0byAiYWN0ODk0NWEtcmVndWxh
-dG9yIi4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjc6DQo+ID4gIC0gcmVtb3ZlIHN0cnVjdCBhY3Q4
-OTQ1YV9kZXYgdG8gLmMgZmlsZS4NCj4gPiAgLSByZW1vdmUgdW51c2VkIC5oIGZpbGUuDQo+ID4N
-Cj4gPiBDaGFuZ2VzIGluIHY2Og0KPiA+ICAtIGNoYW5nZSBNRkRfQUNUODk0NUEgdHlwZSBmcm9t
-IGJvb2wgdG8gdHJpc3RhdGUuDQo+ID4gIC0gcmV2ZXJ0IGRlcGVuZHMgb24gdG8gJ0kyQycuDQo+
-ID4NCj4gPiBDaGFuZ2VzIGluIHY1Og0KPiA+ICAtIGNoYW5nZSBkZXBlbmRzIG9uIHRvICdJMkM9
-eScuDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHY0Og0KPiA+ICAtIGFkZCBhIHNwYWNlIGJlZm9yZSAu
-Y29tcGF0aWJsZS4NCj4gPiAgLSBjb2xsZWN0IFJldmlld2VkLWJ5IGZyb20gS3J6eXN6dG9mIEtv
-emxvd3NraS4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gPiBDaGFuZ2VzIGluIHYy
-Og0KPiA+ICAtIGFkZCBtb3JlIGhlbHAgaW5mb3JtYXRpb24gaW4gS2NvbmZpZy4NCj4gPiAgLSB1
-cGRhdGUgdGhlIGZpbGUgaGVhZGVyIHdpdGggc2hvcnQgdmVyc2lvbiBsaWNlbnNlIGFuZCBhdXRo
-b3IgbGluZS4NCj4gPiAgLSByZW1vdmUgdW51c2VkIHN0cnVjdHVyZSBtZW1iZXJzIChkZXYsIGky
-Y19jbGllbnQpIG9mIHN0dWN0IGFjdDg5NDVhX2Rldi4NCj4gPiAgLSB1c2UgZGVmaW5lICJQTEFU
-Rk9STV9ERVZJRF9OT05FIiBmb3IgbWZkX2FkZF9kZXZpY2VzKCksIGluc3RlYWQgb2YgJy0xJy4N
-Cj4gPiAgLSB1c2UgbW9yZSBleHBsaWNpdCBpbmZvIHRvIGluZGljYXRlIHRoZSBmYWlsdXJlIHRv
-IGFkZCBzdWIgZGV2aWNlcy4NCj4gPiAgLSByZW1vdmUgdGhlIHVubmVjZXNzYXJ5IHByaW50IG91
-dC4NCj4gPiAgLSBzdWJzdGl0dXRlIE1PRFVMRV9MSUNFTlNFKCJHUEwiKSBmb3IgTU9EVUxFX0xJ
-Q0VOU0UoIkdQTCB2MiIpLg0KPiA+DQo+ID4gIGRyaXZlcnMvbWZkL0tjb25maWcgICAgfCAgIDEx
-ICsrKysrDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAgfCAgICAxICsNCj4gPiAgZHJpdmVy
-cy9tZmQvYWN0ODk0NWEuYyB8ICAxMTINCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9u
-cygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZmQvYWN0ODk0NWEuYw0KPiA+
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL0tjb25maWcgYi9kcml2ZXJzL21mZC9LY29u
-ZmlnIGluZGV4DQo+ID4gNmM0ZWJkOS4uMzg5OTRiYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L21mZC9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvS2NvbmZpZw0KPiA+IEBAIC0xOCw2
-ICsxOCwxNyBAQCBjb25maWcgTUZEX0NTNTUzNQ0KPiA+ICAJICBUaGlzIGlzIHRoZSBjb3JlIGRy
-aXZlciBmb3IgQ1M1NTM1L0NTNTUzNiBNRkQgZnVuY3Rpb25zLiAgVGhpcyBpcw0KPiA+ICAgICAg
-ICAgICAgbmVjZXNzYXJ5IGZvciB1c2luZyB0aGUgYm9hcmQncyBHUElPIGFuZCBNRkdQVCBmdW5j
-dGlvbmFsaXR5Lg0KPiA+DQo+ID4gK2NvbmZpZyBNRkRfQUNUODk0NUENCj4gPiArCXRyaXN0YXRl
-ICJBY3RpdmUtc2VtaSBBQ1Q4OTQ1QSINCj4gPiArCXNlbGVjdCBNRkRfQ09SRQ0KPiA+ICsJc2Vs
-ZWN0IFJFR01BUF9JMkMNCj4gPiArCWRlcGVuZHMgb24gSTJDICYmIE9GDQo+ID4gKwloZWxwDQo+
-ID4gKwkgIFN1cHBvcnQgZm9yIHRoZSBBQ1Q4OTQ1QSBQTUlDIGZyb20gQWN0aXZlLXNlbWkuIFRo
-aXMgZGV2aWNlDQo+ID4gKwkgIGZlYXR1cmVzIHRocmVlIHN0ZXAtZG93biBEQy9EQyBjb252ZXJ0
-ZXJzIGFuZCBmb3VyIGxvdy1kcm9wb3V0DQo+ID4gKwkgIGxpbmVhciByZWd1bGF0b3JzLCBhbG9u
-ZyB3aXRoIGEgY29tcGxldGUgQWN0aXZlUGF0aCBiYXR0ZXJ5DQo+ID4gKwkgIGNoYXJnZXIuDQo+
-ID4gKw0KPiA+ICBjb25maWcgTUZEX0FTMzcxMQ0KPiA+ICAJYm9vbCAiQU1TIEFTMzcxMSINCj4g
-PiAgCXNlbGVjdCBNRkRfQ09SRQ0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9NYWtlZmls
-ZSBiL2RyaXZlcnMvbWZkL01ha2VmaWxlIGluZGV4DQo+ID4gMGYyMzBhNi4uMmYxY2E4MiAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvbWZk
-L01ha2VmaWxlDQo+ID4gQEAgLTYsNiArNiw3IEBADQo+ID4gIG9iai0kKENPTkZJR19NRkRfODhQ
-TTg2MFgpCSs9IDg4cG04NjB4Lm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF84OFBNODAwKQkrPSA4
-OHBtODAwLm8gODhwbTgweC5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfODhQTTgwNSkJKz0gODhw
-bTgwNS5vIDg4cG04MHgubw0KPiA+ICtvYmotJChDT05GSUdfTUZEX0FDVDg5NDVBKQkrPSBhY3Q4
-OTQ1YS5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfU001MDEpCQkrPSBzbTUwMS5vDQo+ID4gIG9i
-ai0kKENPTkZJR19NRkRfQVNJQzMpCQkrPSBhc2ljMy5vIHRtaW9fY29yZS5vDQo+ID4gIG9iai0k
-KENPTkZJR19NRkRfQkNNNTkwWFgpCSs9IGJjbTU5MHh4Lm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9tZmQvYWN0ODk0NWEuYyBiL2RyaXZlcnMvbWZkL2FjdDg5NDVhLmMgbmV3IGZpbGUNCj4g
-PiBtb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi4zYTM3NjExDQo+ID4gLS0tIC9kZXYvbnVsbA0K
-PiA+ICsrKyBiL2RyaXZlcnMvbWZkL2FjdDg5NDVhLmMNCj4gPiBAQCAtMCwwICsxLDExMiBAQA0K
-PiA+ICsvKg0KPiA+ICsgKiBNRkQgZHJpdmVyIGZvciBBY3RpdmUtc2VtaSBBQ1Q4OTQ1YSBQTUlD
-DQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxNSBBdG1lbCBDb3Jwb3JhdGlvbi4N
-Cj4gPiArICoNCj4gPiArICogQXV0aG9yOiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwu
-Y29tPg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91
-IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yDQo+ID4gK21vZGlmeSBpdA0KPiA+ICsgKiB1bmRl
-ciAgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCAgUHVibGljIExpY2Vuc2UgYXMgcHVibGlz
-aGVkDQo+ID4gK2J5IHRoZQ0KPiA+ICsgKiBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247ICBlaXRo
-ZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvciAoYXQNCj4gPiAreW91cg0KPiA+ICsgKiBv
-cHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRl
-IDxsaW51eC9pMmMuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+DQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYWN0
-ODk0NWFfZGV2IHsNCj4gPiArCXN0cnVjdCByZWdtYXAgKnJlZ21hcDsNCj4gPiArfTsNCj4gPiAr
-DQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgYWN0ODk0NWFfZGV2c1tdID0gew0K
-PiA+ICsJew0KPiA+ICsJCS5uYW1lID0gImFjdDg5NDVhLXJlZ3VsYXRvciIsDQo+ID4gKwkJLm9m
-X2NvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0NWEtcmVndWxhdG9yIiwNCj4gPiArCX0s
-DQo+ID4gKwl7DQo+ID4gKwkJLm5hbWUgPSAiYWN0ODk0NWEtY2hhcmdlciIsDQo+ID4gKwkJLm9m
-X2NvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0NWEtY2hhcmdlciIsDQo+ID4gKwl9LA0K
-PiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfY29uZmlnIGFj
-dDg5NDVhX3JlZ21hcF9jb25maWcgPSB7DQo+ID4gKwkucmVnX2JpdHMgPSA4LA0KPiA+ICsJLnZh
-bF9iaXRzID0gOCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYWN0ODk0NWFfaTJj
-X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMsDQo+ID4gKwkJCSAgICAgIGNvbnN0IHN0cnVj
-dCBpMmNfZGV2aWNlX2lkICppZCkgew0KPiA+ICsJc3RydWN0IGFjdDg5NDVhX2RldiAqYWN0ODk0
-NWE7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCWFjdDg5NDVhID0gZGV2bV9remFsbG9j
-KCZpMmMtPmRldiwgc2l6ZW9mKCphY3Q4OTQ1YSksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFh
-Y3Q4OTQ1YSkNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKwlpMmNfc2V0X2Ns
-aWVudGRhdGEoaTJjLCBhY3Q4OTQ1YSk7DQo+ID4gKw0KPiA+ICsJYWN0ODk0NWEtPnJlZ21hcCA9
-IGRldm1fcmVnbWFwX2luaXRfaTJjKGkyYywNCj4gJmFjdDg5NDVhX3JlZ21hcF9jb25maWcpOw0K
-PiA+ICsJaWYgKElTX0VSUihhY3Q4OTQ1YS0+cmVnbWFwKSkgew0KPiA+ICsJCXJldCA9IFBUUl9F
-UlIoYWN0ODk0NWEtPnJlZ21hcCk7DQo+ID4gKwkJZGV2X2VycigmaTJjLT5kZXYsICJyZWdtYXAg
-aW5pdCBmYWlsZWQ6ICVkXG4iLCByZXQpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+
-ID4gKw0KPiA+ICsJcmV0ID0gbWZkX2FkZF9kZXZpY2VzKCZpMmMtPmRldiwgUExBVEZPUk1fREVW
-SURfTk9ORSwNCj4gYWN0ODk0NWFfZGV2cywNCj4gPiArCQkJICAgICAgQVJSQVlfU0laRShhY3Q4
-OTQ1YV9kZXZzKSwgTlVMTCwgMCwgTlVMTCk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2
-X2VycigmaTJjLT5kZXYsICJGYWlsZWQgdG8gYWRkIHN1YiBkZXZpY2VzXG4iKTsNCj4gPiArCQly
-ZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgaW50IGFjdDg5NDVhX2kyY19yZW1vdmUoc3RydWN0IGkyY19jbGllbnQg
-KmkyYykgew0KPiA+ICsJbWZkX3JlbW92ZV9kZXZpY2VzKCZpMmMtPmRldik7DQo+ID4gKw0KPiA+
-ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaTJj
-X2RldmljZV9pZCBhY3Q4OTQ1YV9pMmNfaWRbXSA9IHsNCj4gPiArCXsgImFjdDg5NDVhIiwgMCB9
-LA0KPiA+ICsJe30NCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklDRV9UQUJMRShpMmMsIGFjdDg5
-NDVhX2kyY19pZCk7DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBhY3Q4OTQ1YV9vZl9tYXRjaFtdID0gew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJhY3RpdmUt
-c2VtaSxhY3Q4OTQ1YSIsIH0sDQo+ID4gKwl7fSwNCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklD
-RV9UQUJMRShvZiwgYWN0ODk0NWFfb2ZfbWF0Y2gpOw0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVj
-dCBpMmNfZHJpdmVyIGFjdDg5NDVhX2kyY19kcml2ZXIgPSB7DQo+ID4gKwkuZHJpdmVyID0gew0K
-PiA+ICsJCSAgIC5uYW1lID0gImFjdDg5NDVhIiwNCj4gPiArCQkgICAub2ZfbWF0Y2hfdGFibGUg
-PSBvZl9tYXRjaF9wdHIoYWN0ODk0NWFfb2ZfbWF0Y2gpLA0KPiA+ICsJfSwNCj4gPiArCS5wcm9i
-ZSA9IGFjdDg5NDVhX2kyY19wcm9iZSwNCj4gPiArCS5yZW1vdmUgPSBhY3Q4OTQ1YV9pMmNfcmVt
-b3ZlLA0KPiA+ICsJLmlkX3RhYmxlID0gYWN0ODk0NWFfaTJjX2lkLA0KPiA+ICt9Ow0KPiA+ICsN
-Cj4gPiArc3RhdGljIGludCBfX2luaXQgYWN0ODk0NWFfaTJjX2luaXQodm9pZCkgew0KPiA+ICsJ
-cmV0dXJuIGkyY19hZGRfZHJpdmVyKCZhY3Q4OTQ1YV9pMmNfZHJpdmVyKTsNCj4gPiArfQ0KPiA+
-ICtzdWJzeXNfaW5pdGNhbGwoYWN0ODk0NWFfaTJjX2luaXQpOw0KPiA+ICsNCj4gPiArc3RhdGlj
-IHZvaWQgX19leGl0IGFjdDg5NDVhX2kyY19leGl0KHZvaWQpIHsNCj4gPiArCWkyY19kZWxfZHJp
-dmVyKCZhY3Q4OTQ1YV9pMmNfZHJpdmVyKTsNCj4gPiArfQ0KPiA+ICttb2R1bGVfZXhpdChhY3Q4
-OTQ1YV9pMmNfZXhpdCk7DQo+ID4gKw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkFDVDg5NDVB
-IFBNSUMgbXVsdGktZnVuY3Rpb24gZHJpdmVyIik7DQo+ID4gK01PRFVMRV9BVVRIT1IoIldlbnlv
-dSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+Iik7DQo+ID4gK01PRFVMRV9MSUNFTlNFKCJH
-UEwiKTsNCj4gDQo+IC0tDQo+IExlZSBKb25lcw0KPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNz
-IExhbmRpbmcgVGVhbSBMZWFkIExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlDQo+IHNvZnR3YXJl
-IGZvciBBUk0gU29DcyBGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nDQoN
-CkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+>>>>> "Wenyou" == Wenyou Yang <wenyou.yang@atmel.com> writes:
+
+ > This patch adds support for the Active-semi ACT8945A PMIC.
+ > It is a Multi Function Device with the following subdevices:
+ >  - Regulator
+ >  - Charger
+
+ > It is interfaced to the host controller using I2C interface,
+ > ACT8945A is a child device of the I2C.
+
+ > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+ > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Thanks, looks good - One more thing though:
+
+ > +
+ > +struct act8945a_dev {
+ > +	struct regmap *regmap;
+ > +};
+
+You don't need this structure as you used devm. With that removed (and
+the logic to devm_kzalloc it) you can add my:
+
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
+
+
+ > +static const struct mfd_cell act8945a_devs[] = {
+ > +	{
+ > +		.name = "act8945a-regulator",
+ > +		.of_compatible = "active-semi,act8945a-regulator",
+ > +	},
+ > +	{
+ > +		.name = "act8945a-charger",
+ > +		.of_compatible = "active-semi,act8945a-charger",
+ > +	},
+ > +};
+ > +
+ > +static const struct regmap_config act8945a_regmap_config = {
+ > +	.reg_bits = 8,
+ > +	.val_bits = 8,
+ > +};
+ > +
+ > +static int act8945a_i2c_probe(struct i2c_client *i2c,
+ > +			      const struct i2c_device_id *id)
+ > +{
+ > +	struct act8945a_dev *act8945a;
+ > +	int ret;
+ > +
+ > +	act8945a = devm_kzalloc(&i2c->dev, sizeof(*act8945a), GFP_KERNEL);
+ > +	if (!act8945a)
+ > +		return -ENOMEM;
+ > +
+ > +	i2c_set_clientdata(i2c, act8945a);
+ > +
+ > +	act8945a->regmap = devm_regmap_init_i2c(i2c, &act8945a_regmap_config);
+ > +	if (IS_ERR(act8945a->regmap)) {
+ > +		ret = PTR_ERR(act8945a->regmap);
+ > +		dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
+ > +		return ret;
+ > +	}
+ > +
+ > +	ret = mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE, act8945a_devs,
+ > +			      ARRAY_SIZE(act8945a_devs), NULL, 0, NULL);
+ > +	if (ret) {
+ > +		dev_err(&i2c->dev, "Failed to add sub devices\n");
+ > +		return ret;
+ > +	}
+ > +
+ > +	return 0;
+ > +}
+ > +
+ > +static int act8945a_i2c_remove(struct i2c_client *i2c)
+ > +{
+ > +	mfd_remove_devices(&i2c->dev);
+ > +
+ > +	return 0;
+ > +}
+ > +
+ > +static const struct i2c_device_id act8945a_i2c_id[] = {
+ > +	{ "act8945a", 0 },
+ > +	{}
+ > +};
+ > +MODULE_DEVICE_TABLE(i2c, act8945a_i2c_id);
+ > +
+ > +static const struct of_device_id act8945a_of_match[] = {
+ > +	{ .compatible = "active-semi,act8945a", },
+ > +	{},
+ > +};
+ > +MODULE_DEVICE_TABLE(of, act8945a_of_match);
+ > +
+ > +static struct i2c_driver act8945a_i2c_driver = {
+ > +	.driver = {
+ > +		   .name = "act8945a",
+ > +		   .of_match_table = of_match_ptr(act8945a_of_match),
+ > +	},
+ > +	.probe = act8945a_i2c_probe,
+ > +	.remove = act8945a_i2c_remove,
+ > +	.id_table = act8945a_i2c_id,
+ > +};
+ > +
+ > +static int __init act8945a_i2c_init(void)
+ > +{
+ > +	return i2c_add_driver(&act8945a_i2c_driver);
+ > +}
+ > +subsys_initcall(act8945a_i2c_init);
+ > +
+ > +static void __exit act8945a_i2c_exit(void)
+ > +{
+ > +	i2c_del_driver(&act8945a_i2c_driver);
+ > +}
+ > +module_exit(act8945a_i2c_exit);
+ > +
+ > +MODULE_DESCRIPTION("ACT8945A PMIC multi-function driver");
+ > +MODULE_AUTHOR("Wenyou Yang <wenyou.yang@atmel.com>");
+ > +MODULE_LICENSE("GPL");
+ > -- 
+ > 1.7.9.5
+
+
+
+-- 
+Bye, Peter Korsgaard
