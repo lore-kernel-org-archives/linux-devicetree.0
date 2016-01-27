@@ -1,65 +1,55 @@
-From: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: resolver: Add missing of_node_put
-Date: Wed, 27 Jan 2016 20:50:17 +0530
-Message-ID: <20160127152017.GA16048@amitoj-Inspiron-3542>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] ARM: dt: sunxi: Add Itead Ibox support
+Date: Wed, 27 Jan 2016 16:46:49 +0100
+Message-ID: <20160127154649.GE4317@lukather>
+References: <1453562299-18495-1-git-send-email-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5GMUO2QKGQEXA2X6TI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org
+In-Reply-To: <1453562299-18495-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-for_each_child_of_node performs an of_node_get on each iteration, so
-to break out of the loop an of_node_put is required.
+--//IivP0gvsAy3Can
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Found using Coccinelle. The semantic patch used for this is as follows:
+On Sat, Jan 23, 2016 at 04:18:16PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Hi All,
+> 
+> this patch series is an extension of the initial patch delivery for the
+> Itead Ibox as found here
+> https://groups.google.com/d/msg/linux-sunxi/GR_co3ObW8s/0BTPQljmAAAJ.
+> 
+> There seems to be a few Itead variants out there based on their A10/A20
+> core module and this patch series attempts to organise the device tree
+> files with some consideration that these variants may be added later.
+> 
+> I've also converted the A10 Itead Iteaduino dts to use this common file.
+> As I don't have this board to verify the changes I simply compared the
+> output of the fdtdump before and after applying these patches. The only
+> difference was the reduction to the dcdc2 max voltage.
+> 
 
-// <smpl>
-@@
-expression e;
-local idexpression n;
-@@
+Applied all three, thanks!
 
- for_each_child_of_node(..., n) {
-   ... when != of_node_put(n)
-       when != e = n
-(
-   return n;
-|
-+  of_node_put(n);
-?  return ...;
-)
-   ...
- }
-// </smpl
+Maxime
 
-Signed-off-by: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/resolver.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 640eb4c..e2a0143 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
- 
- 	for_each_child_of_node(node, child) {
- 		found = __of_find_node_by_full_name(child, full_name);
--		if (found != NULL)
-+		if (found != NULL) {
-+			of_node_put(child);
- 			return found;
-+		}
- 	}
- 
- 	return NULL;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--//IivP0gvsAy3Can--
