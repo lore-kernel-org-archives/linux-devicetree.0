@@ -1,409 +1,72 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V5 4/5] gpio: max77620: add gpio driver for MAX77620/MAX20024
-Date: Wed, 27 Jan 2016 19:40:07 +0530
-Message-ID: <1453903808-29788-5-git-send-email-ldewangan@nvidia.com>
-References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: RE: [RFC PATCH 6/6] iommu/arm-smmu: Update bindings document for
+ smmu-inst-as-data DT option
+Date: Wed, 27 Jan 2016 14:22:23 +0000
+Message-ID: <39063E8F96E11742B35A201CC5D095B7BAEAEE@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1453872079-27140-1-git-send-email-anup.patel@broadcom.com>
+ <1453872079-27140-7-git-send-email-anup.patel@broadcom.com>
+ <20160127122842.GA21064@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <20160127122842.GA21064@leverpostej>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, Sricharan R <sricharan@codeaurora.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Device Tree <devicetree@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
-pins. It also supports interrupts from these pins.
 
-Add GPIO driver for these pins to control via GPIO APIs.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
----
-Changes from V1:
-- Use the gpiochip_add_data and get the chip data from core APIs.
-- Cleanups based on comment received on mfd/rtc.
-- Avoid duplication on error message.
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: 27 January 2016 17:59
+> To: Anup Patel
+> Cc: Catalin Marinas; Joerg Roedel; Will Deacon; Robin Murphy; Sricharan R;
+> Linux IOMMU; Linux ARM Kernel; Rob Herring; Pawel Moll; Ian Campbell; Kumar
+> Gala; Device Tree; Ray Jui; Scott Branden; Vikram Prakash; Linux Kernel; bcm-
+> kernel-feedback-list
+> Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu: Update bindings document for
+> smmu-inst-as-data DT option
+> 
+> On Wed, Jan 27, 2016 at 10:51:19AM +0530, Anup Patel wrote:
+> > This patch adds info about 'smmu-inst-as-data' DT option in ARM
+> > SMMUv1/SMMUv2 driver bindings document.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> > Reviewed-by: Ray Jui <rjui@broadcom.com>
+> > Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
+> > Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> > ---
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > index 7180745..4c4d03e 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > @@ -49,6 +49,14 @@ conditions.
+> >                    NOTE: this only applies to the SMMU itself, not
+> >                    masters connected upstream of the SMMU.
+> >
+> > +- smmu-inst-as-data : Treat privilege/unprivilege instruction fetch as
+> > +                  data read for SMMUv2. The SMMU driver by default provides
+> > +                  unprivilege read-write permission in page table entries.
+> > +                  For SMMUv2, privilege instruction fetch from MMU masters
+> > +                  will cause a context fault for unprivilege read-write
+> > +                  pages. To allow both privilege and unprivilege instruction
+> > +                  fetch, we have to forcefully treat it as data read.
+> 
+> What is this needed for? Which masters do instruction fetches through the
+> SMMU, and when?
+> 
+> Surely this should only need to aplly to a subset of transactions?
 
-Changes form V2:
-- Run coccicheck and checkpatch in strict mode for the alignment.
-- update based on api changes from core.
+The boot_manager of PL330 does privileged instruction fetches which
+cause privilege-level context fault in SMMU because current SMMU
+driver provides unprivileged read-write permissions.
 
-Changes from V3: 
-- Change all sys initcall to module driver.
-- change the max77620_read argument to unisgned int from u8.
-
-Changes from V4: 
-- Added DT binding document as devicetree/bindings/gpio/gpio-max77620.txt
-
- .../devicetree/bindings/gpio/gpio-max77620.txt     |  25 ++
- drivers/gpio/Kconfig                               |   9 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-max77620.c                       | 292 +++++++++++++++++++++
- 4 files changed, 327 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
- create mode 100644 drivers/gpio/gpio-max77620.c
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-max77620.txt b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
-new file mode 100644
-index 0000000..410e716
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
-@@ -0,0 +1,25 @@
-+GPIO driver for MAX77620 Power management IC from Maxim Semiconductor.
-+
-+Device has 8 GPIO pins which can be configured as GPIO as well as the
-+special IO functions.
-+
-+Required properties:
-+-------------------
-+- gpio-controller : 	Marks the device node as a gpio controller.
-+- #gpio-cells : 	Should be two.  The first cell is the pin number and
-+			the second cell is used to specify the gpio polarity:
-+				0 = active high
-+				1 = active low
-+For more details, please refer generic GPIO DT binding document
-+<devicetree/bindings/gpio/gpio.txt>.
-+
-+Example:
-+--------
-+#include <dt-bindings/mfd/max77620.h>
-+...
-+max77620@3c {
-+	compatible = "maxim,max77620";
-+
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c88dd24..48c614e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -797,6 +797,15 @@ config GPIO_LP3943
- 	  LP3943 can be used as a GPIO expander which provides up to 16 GPIOs.
- 	  Open drain outputs are required for this usage.
- 
-+config GPIO_MAX77620
-+	bool "GPIO support for PMIC MAX77620 and MAX20024"
-+	depends on MFD_MAX77620
-+	help
-+	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
-+	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
-+	  driver also provides interrupt support for each of the gpios.
-+	  Say yes here to enable the max77620 to be used as gpio controller.
-+
- config GPIO_MSIC
- 	bool "Intel MSIC mixed signal gpio support"
- 	depends on MFD_INTEL_MSIC
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index ece7d7c..f676a2d 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
- obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
- obj-$(CONFIG_GPIO_MAX7301)	+= gpio-max7301.o
- obj-$(CONFIG_GPIO_MAX732X)	+= gpio-max732x.o
-+obj-$(CONFIG_GPIO_MAX77620)	+= gpio-max77620.o
- obj-$(CONFIG_GPIO_MB86S7X)	+= gpio-mb86s7x.o
- obj-$(CONFIG_GPIO_MC33880)	+= gpio-mc33880.o
- obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-new file mode 100644
-index 0000000..4900dd5
---- /dev/null
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -0,0 +1,292 @@
-+/*
-+ * MAXIM MAX77620 GPIO driver
-+ *
-+ * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/max77620.h>
-+
-+#define GPIO_REG_ADDR(offset) (MAX77620_REG_GPIO0 + offset)
-+
-+struct max77620_gpio {
-+	struct gpio_chip	gpio_chip;
-+	struct device		*parent;
-+	struct device		*dev;
-+	int			gpio_irq;
-+	int			irq_base;
-+	int			gpio_base;
-+};
-+
-+static const struct regmap_irq max77620_gpio_irqs[] = {
-+	[MAX77620_IRQ_GPIO0 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE0,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO1 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE1,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO2 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE2,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO3 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE3,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO4 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE4,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO5 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE5,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO6 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE6,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO7 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE7,
-+		.reg_offset = 0,
-+	},
-+};
-+
-+static struct regmap_irq_chip max77620_gpio_irq_chip = {
-+	.name = "max77620-gpio",
-+	.irqs = max77620_gpio_irqs,
-+	.num_irqs = ARRAY_SIZE(max77620_gpio_irqs),
-+	.num_regs = 1,
-+	.irq_reg_stride = 1,
-+	.status_base = MAX77620_REG_IRQ_LVL2_GPIO,
-+};
-+
-+static int max77620_gpio_dir_input(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	int ret;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DIR_MASK,
-+				  MAX77620_CNFG_GPIO_DIR_INPUT);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int max77620_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = max77620_reg_read(mgpio->parent, GPIO_REG_ADDR(offset), &val);
-+	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx read failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return !!(val & MAX77620_CNFG_GPIO_INPUT_VAL_MASK);
-+}
-+
-+static int max77620_gpio_dir_output(struct gpio_chip *gc, unsigned offset,
-+				    int value)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
-+
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
-+	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx val update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DIR_MASK,
-+				  MAX77620_CNFG_GPIO_DIR_OUTPUT);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int max77620_gpio_set_debounce(struct gpio_chip *gc,
-+				      unsigned offset, unsigned debounce)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
-+
-+	switch (debounce) {
-+	case 0:
-+		val = MAX77620_CNFG_GPIO_DBNC_None;
-+		break;
-+	case 1 ... 8:
-+		val = MAX77620_CNFG_GPIO_DBNC_8ms;
-+		break;
-+	case 9 ... 16:
-+		val = MAX77620_CNFG_GPIO_DBNC_16ms;
-+		break;
-+	case 17 ... 32:
-+		val = MAX77620_CNFG_GPIO_DBNC_32ms;
-+		break;
-+	default:
-+		dev_err(mgpio->dev, "Illegal value %u\n", debounce);
-+		return -EINVAL;
-+	}
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_DBNC_MASK, val);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx_DBNC update failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static void max77620_gpio_set(struct gpio_chip *gc, unsigned offset,
-+			      int value)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
-+
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, GPIO_REG_ADDR(offset),
-+				  MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIO_OUT update failed: %d\n", ret);
-+}
-+
-+static int max77620_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	return regmap_irq_get_virq(chip->gpio_irq_data, offset);
-+}
-+
-+static void max77620_gpio_irq_remove(struct max77620_gpio *mgpio)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	regmap_del_irq_chip(mgpio->gpio_irq, chip->gpio_irq_data);
-+	chip->gpio_irq_data = NULL;
-+}
-+
-+static int max77620_gpio_probe(struct platform_device *pdev)
-+{
-+	struct max77620_gpio *mgpio;
-+	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
-+	int ret;
-+	int gpio_irq;
-+
-+	gpio_irq = platform_get_irq(pdev, 0);
-+	if (gpio_irq <= 0) {
-+		dev_err(&pdev->dev, "GPIO irq not available %d\n", gpio_irq);
-+		return -ENODEV;
-+	}
-+
-+	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
-+	if (!mgpio)
-+		return -ENOMEM;
-+
-+	mgpio->parent = pdev->dev.parent;
-+	mgpio->dev = &pdev->dev;
-+	mgpio->gpio_irq = gpio_irq;
-+
-+	mgpio->gpio_chip.label = pdev->name;
-+	mgpio->gpio_chip.parent = &pdev->dev;
-+	mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
-+	mgpio->gpio_chip.get = max77620_gpio_get;
-+	mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
-+	mgpio->gpio_chip.set_debounce = max77620_gpio_set_debounce;
-+	mgpio->gpio_chip.set = max77620_gpio_set;
-+	mgpio->gpio_chip.to_irq = max77620_gpio_to_irq;
-+	mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
-+	mgpio->gpio_chip.can_sleep = 1;
-+	mgpio->gpio_chip.base = -1;
-+	mgpio->irq_base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
-+#endif
-+
-+	platform_set_drvdata(pdev, mgpio);
-+
-+	ret = gpiochip_add_data(&mgpio->gpio_chip, mgpio);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "gpio_init: Failed to add max77620_gpio\n");
-+		return ret;
-+	}
-+	mgpio->gpio_base = mgpio->gpio_chip.base;
-+
-+	ret = regmap_add_irq_chip(chip->rmap, mgpio->gpio_irq, IRQF_ONESHOT,
-+				  mgpio->irq_base,
-+				  &max77620_gpio_irq_chip,
-+				  &chip->gpio_irq_data);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to add gpio irq_chip %d\n", ret);
-+		goto fail;
-+	}
-+
-+	return 0;
-+
-+fail:
-+	gpiochip_remove(&mgpio->gpio_chip);
-+
-+	return ret;
-+}
-+
-+static int max77620_gpio_remove(struct platform_device *pdev)
-+{
-+	struct max77620_gpio *mgpio = platform_get_drvdata(pdev);
-+
-+	max77620_gpio_irq_remove(mgpio);
-+	gpiochip_remove(&mgpio->gpio_chip);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id max77620_gpio_devtype[] = {
-+	{ .name = "max77620-gpio", },
-+	{ .name = "max20024-gpio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, max77620_gpio_devtype);
-+
-+static struct platform_driver max77620_gpio_driver = {
-+	.driver.name	= "max77620-gpio",
-+	.driver.owner	= THIS_MODULE,
-+	.probe		= max77620_gpio_probe,
-+	.remove		= max77620_gpio_remove,
-+	.id_table	= max77620_gpio_devtype,
-+};
-+
-+module_platform_driver(max77620_gpio_driver);
-+
-+MODULE_DESCRIPTION("GPIO interface for MAX77620 and MAX20024 PMIC");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
-+MODULE_ALIAS("platform:max77620-gpio");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+Regards,
+Anup
