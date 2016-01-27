@@ -1,55 +1,100 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] ARM: dt: sunxi: Add Itead Ibox support
-Date: Wed, 27 Jan 2016 16:46:49 +0100
-Message-ID: <20160127154649.GE4317@lukather>
-References: <1453562299-18495-1-git-send-email-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] spi: atmel: add support for the internal
+ chip-select of the spi controller
+Date: Wed, 27 Jan 2016 16:46:51 +0100
+Message-ID: <56A8E66B.208@atmel.com>
+References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
+ <c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen@atmel.com>
+ <yw1xvb771yrl.fsf@unicorn.mansr.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5GMUO2QKGQEXA2X6TI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453562299-18495-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <yw1xvb771yrl.fsf-OEaqT8BN2ezZK2NkWkPsZwC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Browk <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---//IivP0gvsAy3Can
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Le 05/01/2016 22:50, M=E5ns Rullg=E5rd a =E9crit :
+> Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+>=20
+>> This patch relies on the CSAAT (Chip Select Active After Transfer) f=
+eature
+>> introduced by the version 2 of the spi controller. This new mode all=
+ows to
+>> use properly the internal chip-select output pin of the spi controll=
+er
+>> instead of using external gpios. Consequently, the "cs-gpios" device=
+-tree
+>> property becomes optional.
+>>
+>> When the new CSAAT bit is set into the Chip Select Register, the int=
+ernal
+>> chip-select output pin remains asserted till both the following cond=
+itions
+>> become true:
+>> - the LASTXFER bit is set into the Control Register (or the Transmit=
+ Data
+>>   Register)
+>> - the Transmit Data Register and its shift register are empty.
+>>
+>> WARNING: if the LASTXFER bit is set into the Control Register then n=
+ew
+>> data are written into the Transmit Data Register fast enough to keep=
+ its
+>> shifter not empty, the chip-select output pin remains asserted. Only=
+ when
+>> the shifter becomes empty, the chip-select output pin is unasserted.
+>>
+>> When the CSAAT bit is clear in the Chip Select Register, the LASTXFE=
+R bit
+>> is ignored in both the Control Register and the Transmit Data Regist=
+er.
+>> The internal chip-select output pin remains active as long as the Tr=
+ansmit
+>> Data Register or its shift register are not empty.
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/spi/spi-atmel.c | 37 ++++++++++++++++++++++++++++---------
+>>  1 file changed, 28 insertions(+), 9 deletions(-)
+>=20
+> [...]
+>=20
+>> @@ -1338,6 +1350,13 @@ static int atmel_spi_probe(struct platform_de=
+vice *pdev)
+>>
+>>  	atmel_get_caps(as);
+>>
+>> +	as->use_cs_gpios =3D true;
+>> +	if (atmel_spi_is_v2(as) &&
+>> +	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
+>> +		as->use_cs_gpios =3D false;
+>> +		master->num_chipselect =3D 4;
+>> +	}
+>=20
+> This part breaks the AVR32 boards and probably anything else that
+> doesn't use devicetree but does use GPIOs for chip select.
 
-On Sat, Jan 23, 2016 at 04:18:16PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Hi All,
-> 
-> this patch series is an extension of the initial patch delivery for the
-> Itead Ibox as found here
-> https://groups.google.com/d/msg/linux-sunxi/GR_co3ObW8s/0BTPQljmAAAJ.
-> 
-> There seems to be a few Itead variants out there based on their A10/A20
-> core module and this patch series attempts to organise the device tree
-> files with some consideration that these variants may be added later.
-> 
-> I've also converted the A10 Itead Iteaduino dts to use this common file.
-> As I don't have this board to verify the changes I simply compared the
-> output of the fdtdump before and after applying these patches. The only
-> difference was the reduction to the dcdc2 max voltage.
-> 
+Hi Mans,
 
-Applied all three, thanks!
+I have difficulties finding why you may enter this test. So, maybe you
+can give me a clue by reading for me the value that resides in the SPI
+version register: you can have it by reading at 0xFFE000FC for instance
+(actually the atmel_get_caps() dev_info() call gives it as well in the
+boot log which is somewhat easier: I tried to find one on the Internet
+without success...).
 
-Maxime
+So I think that just fixing the logic in atmel_get_caps() introduced by
+d4820b7496219edd9a7055022681364d304525f7 can make it come back to a
+situation where the ARV32 was more tested than nowadays.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---//IivP0gvsAy3Can--
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
