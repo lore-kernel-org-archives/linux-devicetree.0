@@ -1,44 +1,81 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4 0/2] pci: Add host controller driver for Cavium
- ThunderX PCIe
-Date: Wed, 27 Jan 2016 09:36:10 +0000
-Message-ID: <20160127093609.GA2390@arm.com>
-References: <1453844781-24380-1-git-send-email-ddaney.cavm@gmail.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v9 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Wed, 27 Jan 2016 17:38:48 +0800
+Message-ID: <1453887530-22490-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453844781-24380-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 01:46:19PM -0800, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> Some Cavium ThunderX processors require quirky access methods for the
-> config space of the PCIe bridge.
-> 
-> There are two patches:
-> 
-> 1) Refactor code in pci-host-generic so that it can more easily be
->    used by other drivers.  This splits the driver for CAM and ECAM
->    access methods to a separate file from the common host driver code.
-> 
-> 2) Add the ThunderX PCIe driver, which leverages the code in
->    pci-host-generic
-> 
-> Changes from v3: Add some Acked-by, rebased to v4.5.0-rc1
-> 
-> Changes from v2: Improve device tree binding example as noted by Rob
-> Herring.  Rename pcie-thunder-pem.* to pci-thunder-pem.* for better
-> consistency.  Update MAINTAINERS to reflect the changes.
-> 
-> Changes from v1: Split CAM and ECAM code from common driver code as
-> suggested by Arnd Bergmann.  Fix spelling errors in
-> pcie-thunder-pem.txt
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
 
-Bjorn -- I guess you'll pick these up directly?
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
 
-Will
+Changes in v9:
+ - remove unneeded struct act8945a_dev structure.
+ - collect Acked from Lee.
+ - collect Acked from Peter.
+
+Changes in v8:
+ - change the subdevice's name "act8945a-pmic" to "act8945a-regulator".
+
+Changes in v7:
+ - remove struct act8945a_dev to .c file.
+ - remove unused .h file.
+ - collect Acked-by from Lee Jones
+
+Changes in v6:
+ - change MFD_ACT8945A type from bool to tristate.
+ - revert depends on to 'I2C'.
+ - change the regulator name.
+
+Changes in v5:
+ - change depends on to 'I2C=y'.
+
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
+
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
+
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
+
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
+
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   82 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  104 ++++++++++++++++++++
+ 4 files changed, 198 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
