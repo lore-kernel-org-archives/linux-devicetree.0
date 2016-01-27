@@ -1,171 +1,84 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v15 5/6] fpga: fpga-area and fpga-bus: device tree control
- for FPGA
-Date: Wed, 27 Jan 2016 12:59:17 -0600
-Message-ID: <alpine.DEB.2.02.1601271242330.15809@linuxheads99>
-References: <1453317867-10422-1-git-send-email-atull@opensource.altera.com> <1453317867-10422-6-git-send-email-atull@opensource.altera.com> <CAAtXAHd9zC3+25Hb0mRvSX4E3O3kts4K-g8qzUuA7AaDPXH1gA@mail.gmail.com> <alpine.DEB.2.02.1601221021130.1187@linuxheads99>
- <CAAtXAHcvB9qxsUOrfRe4AAAbUSpCrykbsLn7DnZ7bKQeaCCf0g@mail.gmail.com> <CAL_Jsq+tB4O=Ja3F045yT5DTcAt8C=NkQn6KeCCz8xmdYFQ2oA@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/5 RFC] mmc: sdhci-iproc: Actually enable the clock
+Date: Wed, 27 Jan 2016 20:11:13 +0100 (CET)
+Message-ID: <885101040.21976.ad433530-d9a2-4a98-b048-302cf8550d48.open-xchange@email.1und1.de>
+References: <1453042744-16196-1-git-send-email-stefan.wahren@i2se.com>
+ <1453042744-16196-3-git-send-email-stefan.wahren@i2se.com>
+ <CAPDyKFrCV_GCqCjymsKuOov9GT8gbmb9rBQoJfzmMbMtBnoqWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+tB4O=Ja3F045yT5DTcAt8C=NkQn6KeCCz8xmdYFQ2oA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrCV_GCqCjymsKuOov9GT8gbmb9rBQoJfzmMbMtBnoqWQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Ray Jui <rjui@broadcom.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-mmc <linux-mmc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jan 2016, Rob Herring wrote:
+Hi,
 
-> On Fri, Jan 22, 2016 at 6:07 PM, Moritz Fischer
-> <moritz.fischer@ettus.com> wrote:
-> > On Fri, Jan 22, 2016 at 5:37 PM, atull <atull@opensource.altera.com> wrote:
-> >> On Fri, 22 Jan 2016, Moritz Fischer wrote:
-> >>
-> >>> Alan,
-> >>>
-> >>> On Wed, Jan 20, 2016 at 8:24 PM,  <atull@opensource.altera.com> wrote:
-> >>>
-> >>> > +static int fpga_area_probe(struct platform_device *pdev)
-> >>> > +{
-> >>> > +       struct device *dev = &pdev->dev;
-> >>> > +       struct device_node *np = dev->of_node;
-> >>> > +       struct fpga_area *area;
-> >>> > +       int ret;
-> >>> > +
-> >>> > +       area = devm_kzalloc(dev, sizeof(*area), GFP_KERNEL);
-> >>> > +       if (!area)
-> >>> > +               return -ENOMEM;
-> >>> > +
-> >>> > +       INIT_LIST_HEAD(&area->bridge_list);
-> >>> > +
-> >>> > +       ret = fpga_bridge_register(dev, "FPGA Area", NULL, area);
-> >>> > +       if (ret)
-> >>> > +               return ret;
-> >>> > +       area->br = dev_get_drvdata(dev);
-> >>> > +
-> >>> > +       if (of_property_read_string(np, "firmware-name",
-> >>> > +                                   &area->firmware_name)) {
-> >>> > +               of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-> >>> > +               return 0;
-> >>> > +       }
-> >>>
-> >>> This is the use case where the bootloader loaded the fpga, and you
-> >>> just want to populate
-> >>> the devices in the fabric, right?
-> >>
-> >> Hi Moritz,
-> >>
-> >> Yes
-> 
-> That is very strange logic. It should be fine to just call
-> of_platform_populate unconditionally. If there are no children of np,
-> then it will be a nop.
-
-That's what it is doing.  It's coded this way to reduce indentation.  If there
-is no FPGA image to load, call of_platform_populate() and return.  Otherwise do
-a bunch of steps to load the FPGA image and handle the bridges, then call
-of_platform_populate() and return.  If there's no children, no problem.
-
-> 
-> >>> > +       if (of_property_read_bool(np, "partial-reconfig"))
-> >>> > +               area->flags |= FPGA_MGR_PARTIAL_RECONFIG;
-> >>> > +
-> >>> > +       ret = fpga_area_get_bus(area);
-> >>> > +       if (ret) {
-> >>> > +               dev_dbg(dev, "Should be child of a FPGA Bus");
-> >>> > +               goto err_unreg;
-> >>> > +       }
-> >>>
-> >>> Looking at socfpga.dtsi, would that mean that the fpgamgr0 node would
-> >>> need to become a subnode of fpgabus@0 at the same place?
-> >>>
-> >>> i.e. /soc/fpgamgr@ff706000 -> /soc/fpgabus@0/fpgamgr@ff706000
-> >>>
-> >>> and the ranges property would be used to translate to the fpga memory
-> >>> mapped space?
-> >>>
-> >>> I know we're going back and forth on this. I think Rob brought up a
-> >>> similar question:
-> >>> "Does the bus really go thru the fpgamgr and then the bridge as this
-> >>> implies? Or fpgamgr is a sideband controller?"
-> >>>
-> >>> To which I think the answer is 'sideband' controller, yet with the new
-> >>> bindings it looks like
-> >>> the bus goes through the fpgamgr.
-> >>
-> >> Yeah, let's get this right.  First, let's be clear on the reason for FPGA Bus to
-> >> exist.  There may be >1 FPGA in a system.  I want the FPGA Bus bring together
-> >> the bridges and manager that are associated with a certain FPGA.  This allows
-> >> the system designer to specify which FPGA is getting programmed with which
-> >> image/hardware.  So at minimum, we need some way of associating a FPGA Bus with
-> >> a FPGA Manager.
+> Ulf Hansson <ulf.hansson@linaro.org> hat am 27. Januar 2016 um 15:16
+> geschrieben:
+>
+>
+> On 17 January 2016 at 15:59, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> > The RPi firmware-based clocks driver can actually disable
+> > unused clocks, so when switching to use it we ended up losing
+> > our MMC clock once all devices were probed.
 > >
-> > I see your argument for the FPGA bus. I agree that we need to
-> > distinguish different FPGAs,
-> > and we need a way to associate an area with a manager (and potentially bridges).
+> > This patch adopts the changes from 1e5a0a9a58e2 ("mmc: sdhci-bcm2835:
+> > Actually enable the clock") to sdhci-iproc.
 > >
-> >> As far as the target path is concerned, in the case of no bridges, we could have
-> >> the overlay target the FPGA Bus instead of the FPGA Manager.  That may be more
-> >> logical.  This would just be a documentation change; I think fpga-area.c will
-> >> work OK if you specify the FPGA bus as your target (the manager still has to
-> >> be a child of the bus so the bus knows what manager to use).
+> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > ---
+> > drivers/mmc/host/sdhci-iproc.c | 9 ++++++++-
+> > 1 file changed, 8 insertions(+), 1 deletion(-)
 > >
-> > Could the bus not just use a phandle to the manager? Or the area a
-> > phandle to the bus?
-> 
-> That may be better as it would avoid the virtual fpga-bus which is a
-> bit questionable. I'm okay with allowing it, but will happily take any
-> examples where it doesn't work. However, I'm not sure this case is
-> one.
-
-I have no problem with specifying FPGA manager with a phandle, seems
-like it will be better in some cases.
-
-I'm proposing FPGA Bus to specify all the things (manager and bridges) that are
-needed to do a reprogramming cycle on a specific FPGA. The FPGA Bus may seem
-less necessary in Moritz' case where there are no FPGA Bridges in the DT.
-
-I'll discuss this more on the other thread.
-
-> 
-> > Like that one could have potentially disjunct groups. Say I have a SPI
-> > device that is in an FPGA area.
-> > With our current system, I'd have a FPGA Manager that needs to be a
-> > child of the bus as child of the SPI controller
-> > with the memory addresses being addresses on the SOC's memory bus:
+> > diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+> > index e22060a..55bc348 100644
+> > --- a/drivers/mmc/host/sdhci-iproc.c
+> > +++ b/drivers/mmc/host/sdhci-iproc.c
+> > @@ -207,6 +207,11 @@ static int sdhci_iproc_probe(struct platform_device
+> > *pdev)
+> > ret = PTR_ERR(pltfm_host->clk);
+> > goto err;
+> > }
+> > + ret = clk_prepare_enable(pltfm_host->clk);
+> > + if (ret) {
+> > + dev_err(&pdev->dev, "failed to enable host clk\n");
+> > + goto err;
+> > + }
 > >
-> > spi_ctrl@deadbeef {
-> >         fpga_bus@0 {
-> >                 fpgamgr@f8007000 {
-> >                     mgr regs etc...
-> >                 ... and now the SPI slaves ...
-> >                     slave@42 {
-> >                     };
-> >                 };
-> >         };
-> > };
-> 
-> I think Alan's assumption is there's always a memory mapped control
-> interface and the DT hierarchy follows that. While I see you could
-> have other interfaces like SPI, that would not be the control
-> interface related to FPGA programming AIUI. You could also have GPIOs,
-> I2C, or any other bus/interface we describe in DT in theory.
-> 
-> How to deal with additional connections like this is similar to
-> overlays for daughterboards (e.g. capes, hats, shields) where the need
-> for mapping slave devices on a connector to host controllers/buses
-> which can vary. In that case, you don't want to have to create a
-> different overlay for every host board just to change the parent
-> devices of each child. If there is a SPI connection to FPGA (or area),
-> then we need a way to map the host SPI bus to the FPGA. In this
-> example, the overlay should only say "slave@42" is connected to the
-> spi bus of the FPGA area and it would not have direct reference to
-> "spi_ctrl@deadbeef." There's some ideas around how to support these
-> usecases probably involving a connector node with mappings of
-> connector i/o's to host i/o's (paging Pantelis, where's your
-> proposal?). I think the same would work here, so I would suggest we
-> not try to address it immediately other than decide the requirements
-> here are similar enough to what is needed for connectors.
-> 
-> Rob
-> 
+> > if (iproc_host->data->pdata->quirks & SDHCI_QUIRK_MISSING_CAPS) {
+> > host->caps = iproc_host->data->caps;
+> > @@ -215,10 +220,12 @@ static int sdhci_iproc_probe(struct platform_device
+> > *pdev)
+> >
+> > ret = sdhci_add_host(host);
+> > if (ret)
+> > - goto err;
+> > + goto err_clk;
+> >
+> > return 0;
+> >
+> > +err_clk:
+> > + clk_disable_unprepare(pltfm_host->clk);
+> > err:
+> > sdhci_pltfm_free(pdev);
+> > return ret;
+> > --
+> > 1.7.9.5
+> >
+>
+> There's a missing clk_disable_unprepare() from the ->remove()
+> callback. Otherwise this looks good.
+
+this shouldn't be necessary, because clk_disable_unprepare() is already called
+by sdhci_pltfm_unregister().
+
+Regards
+Stefan
+
+>
+> Kind regards
+> Uffe
