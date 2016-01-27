@@ -1,32 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/9] Add STM32 pinctrl/GPIO driver
-Date: Wed, 27 Jan 2016 14:20:38 +0100
-Message-ID: <CACRpkdYGQ1xObWfka2CN9au6YMGhpu4qcTZpu72bzuJjO38tog@mail.gmail.com>
-References: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
+Date: Wed, 27 Jan 2016 14:57:32 +0100
+Message-ID: <CACRpkdaCp1xSXK+ibRZzQCsFLTnGySDCHVFjVuKNSOgWadZ4gg@mail.gmail.com>
+References: <1449863184-29668-1-git-send-email-afd@ti.com>
+	<1449863184-29668-2-git-send-email-afd@ti.com>
+	<CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
+	<566EF12C.4060509@ti.com>
+	<CAL_Jsq+kYSJQd003RhYTeVFv6xLaSCxzZK7wnF2LVs502sWu4g@mail.gmail.com>
+	<566F4E9B.8090202@ti.com>
+	<CACRpkdYapF8br=c3utUmMbmPxyHwxZuT5pC8N-pySPY7dtEwng@mail.gmail.com>
+	<56840ED0.6070205@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Patrice CHOTARD <patrice.chotard@st.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56840ED0.6070205-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 14, 2016 at 1:16 PM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
+On Wed, Dec 30, 2015 at 6:05 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> [Me]
+>> Compatible ranges from the specific to the more generic
+>> so compatible = "ti,74165", "pisosr"; is just fine. Something
+>> will match if there is a suitable driver. The OS may choose to
+>> provide something part-specific or something more generic.
+>>
+>
+> And so we won't need to have "ti,74165" in the driver itself,
+> if we just have "pisosr", then dts files can use what ever they
+> like to correctly identify the part then fall back to pisosr.
+>
+> compatible = "company,random_numbers_of_exact_part_actually_on_board",
+> "pisosr";
 
-> This is the fourth round of STM32 pinctrl series, which takes into
-> account comments made by Patrice on patch 4.
-
-I have applied patch 2 and 4 to the pinctrl tree.
-
-Please put the rest of the patches in through ARM SoC, you can
-add my
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-to them.
-
-AFAICT there is no compile-time dependency between these two
-patches and the rest, so it should merge just fine.
+Exactly. Sorry for slow replies.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
