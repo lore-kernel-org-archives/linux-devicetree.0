@@ -1,14 +1,18 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Subject: Re: [PATCH] ARM: dts: vf-colibri-eval-v3: Use enable-gpios for BL_ON
-Date: Wed, 27 Jan 2016 23:53:41 +0530
-Message-ID: <56A90B2D.70006@toradex.com>
-References: <1452322793-26020-1-git-send-email-bhuvanchandra.dv@toradex.com>
-Reply-To: bhuvanchandra.dv@toradex.com
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap3: Include missing bandgap data for
+ ti-soc-thermal driver
+Date: Wed, 27 Jan 2016 10:24:48 -0800
+Message-ID: <20160127182447.GR19432@atomide.com>
+References: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
+ <20160121094718.GV7192@pali> <20160121171500.GI19432@atomide.com>
+ <20160127100447.GI25796@pali> <20160127160945.GI19432@atomide.com>
+ <20160127181950.GB17794@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1452322793-26020-1-git-send-email-bhuvanchandra.dv@toradex.com>
+Content-Disposition: inline
+In-Reply-To: <20160127181950.GB17794@earth>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,51 +22,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@pengutronix.de, stefan@agner.ch, linux-kernel@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ping!
-
-On 01/09/2016 12:29 PM, Bhuvanchandra DV wrote:
-> Use pwm-backlight driver 'enable-gpios' property for backlight on/off
-> control.
->
-> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> ---
->   arch/arm/boot/dts/vf-colibri.dtsi | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-> index e5949b9..1c0da05 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -10,7 +10,10 @@
->   / {
->   	bl: backlight {
->   		compatible = "pwm-backlight";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_bl_on>;
->   		pwms = <&pwm0 0 5000000 0>;
-> +		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
->   		status = "disabled";
->   	};
->   };
-> @@ -169,6 +172,12 @@
->   			>;
->   		};
->
-> +		pinctrl_gpio_bl_on: gpio_bl_on {
-> +			fsl,pins = <
-> +				VF610_PAD_PTC0__GPIO_45		0x22ef
-> +			>;
-> +		};
-> +
->   		pinctrl_i2c0: i2c0grp {
->   			fsl,pins = <
->   				VF610_PAD_PTB14__I2C0_SCL		0x37ff
->
-
--- 
-Best regards,
-Bhuvan
+KiBTZWJhc3RpYW4gUmVpY2hlbCA8c3JlQGtlcm5lbC5vcmc+IFsxNjAxMjcgMTA6MjBdOgo+IEhp
+LAo+IAo+IE9uIFdlZCwgSmFuIDI3LCAyMDE2IGF0IDA4OjA5OjQ2QU0gLTA4MDAsIFRvbnkgTGlu
+ZGdyZW4gd3JvdGU6Cj4gPiAqIFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4gWzE2
+MDEyNyAwMjowNV06Cj4gPiA+IE9uIFRodXJzZGF5IDIxIEphbnVhcnkgMjAxNiAwOToxNTowMSBU
+b255IExpbmRncmVuIHdyb3RlOgo+ID4gPiA+ICogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21h
+aWwuY29tPiBbMTYwMTIxIDAxOjQ4XToKPiA+ID4gPiA+IE9uIFNhdHVyZGF5IDI2IERlY2VtYmVy
+IDIwMTUgMDA6MzI6MjUgUGFsaSBSb2jDoXIgd3JvdGU6Cj4gPiA+ID4gPiA+IERyaXZlciBmb3Ig
+b21hcDMgd2l0aCBkb2N1bWVudGF0aW9uIGlzIHRoZXJlIHNpbmNlIHY0LjQtcmMxLgo+ID4gPiA+
+IC4uLgo+ID4gPiA+IAo+ID4gPiA+ID4gUElORyEgV2hvIGNhbiB0YWtlIHRoaXMgcGF0Y2g/Cj4g
+PiA+ID4gCj4gPiA+ID4gU291bmRzIGxpa2UgL21lLCBidXQgYWZ0ZXIgLXJjMSB3aGVuIGFueSBw
+b3NzaWJsZSByZWdyZXNzaW9ucwo+ID4gPiA+IGFyZSBvdXQgb2YgdGhlIHdheSA6KQo+ID4gPiAK
+PiA+ID4gR3JlYXQhIEp1c3QgdG8gbm90ZSB0aGF0IDQuNS1yYzEgaXMgb3V0Lgo+ID4gPiAKPiA+
+ID4gSSBqdXN0IGRvIG5vdCB3YW50IHRvIHNlZSB0aGlzIHBhdGNoIGxvc3QuLi4KPiA+IAo+ID4g
+U28gaXMgdGhpcyBjcml0aWNhbCB0byBoYXZlIGFzIGEgZml4IHNpbmNlIGl0J3MgdGhlcm1hbCBy
+ZWxhdGVkPwo+IAo+IEFjY29yZGluZyB0byBzb21lYm9keSBmcm9tIFRJLCB3aG8gcHJldmlvdXNs
+eSB0b29rIHBhcnQgaW4gdGhlIHBhdGNoCj4gZGlzY3Vzc2lvbiwgdGhlIHRoZXJtYWwgc2Vuc29y
+cyBvZiBvbWFwMyBhcmUgdG8gaW1wcmVjaXNlIHRvIGJlIHVzZWQKPiBmb3IgdGhlcm1hbCBkZWNp
+c2lvbnMuIFRoZSBkcml2ZXIgImp1c3QiIGluZm9ybXMgdXNlcnNwYWNlIGFib3V0IHRoZQo+IHRl
+bXBlcmF0dXJlcy4KCk9LIGFwcGx5aW5nIGludG8gb21hcC1mb3ItdjQuNi9kdCB0aGVuIHRoYW5r
+cy4KClRvbnkKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
