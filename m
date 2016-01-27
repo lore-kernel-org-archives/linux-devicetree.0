@@ -1,7 +1,7 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH 2/3] power: reset: Add sram-reboot-mode driver
-Date: Tue, 26 Jan 2016 16:37:59 -0800
-Message-ID: <1453855080-17760-3-git-send-email-john.stultz@linaro.org>
+Subject: [RFC][PATCH 3/3] dts: hikey: Add hikey support for sram-reboot-mode
+Date: Tue, 26 Jan 2016 16:38:00 -0800
+Message-ID: <1453855080-17760-4-git-send-email-john.stultz@linaro.org>
 References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,8 +13,14 @@ To: lkml <linux-kernel@vger.kernel.org>
 Cc: John Stultz <john.stultz@linaro.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-Add sram-reboot-mode driver, which enables
-reboot modes to be specified from sram subnodes.
+Add support to hikey dts and defconfig for the
+sram-reboot-mode driver.
+
+The dts entries added here should really be generated
+by the UEFI firmware, and not be static in the dts,
+since one may be using different firmware on HiKey.
+But this patch provides an example of how the
+sram-reboot-mode entry would otherwise look.
 
 Cc: Andy Yan <andy.yan@rock-chips.com>
 Cc: Rob Herring <robh@kernel.org>
@@ -31,119 +37,87 @@ Cc: devicetree@vger.kernel.org
 Cc: Android Kernel Team <kernel-team@android.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/power/reset/Kconfig            |  9 +++++
- drivers/power/reset/Makefile           |  1 +
- drivers/power/reset/sram-reboot-mode.c | 66 ++++++++++++++++++++++++++=
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 36 ++++++++++++++++++=
 ++++++++
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/power/reset/sram-reboot-mode.c
+ arch/arm64/configs/hikey_defconfig             |  3 +++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 76a6251..b033922 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -182,5 +182,14 @@ config SYSCON_REBOOT_MODE
- 	 register, then the bootloader can read it to take different
- 	 action according to the mode.
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm6=
+4/boot/dts/hisilicon/hi6220-hikey.dts
+index 92f1704..67d12d0 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -52,6 +52,11 @@
+ 			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+ 		};
 =20
-+config SRAM_REBOOT_MODE
-+	bool "Generic SRAM reboot mode driver"
-+	select REBOOT_MODE
-+	help
-+	 Say y here will enable reboot mode driver. This will
-+	 get reboot mode arguments and store it in an SRAM
-+	 address, then the bootloader can read it to take different
-+	 action according to the mode.
++		reboot-reason@05f01000 {
++			no-map;
++			reg =3D <0x0 0x05f01000 0x0 0x00001000>;
++		};
 +
- endif
+ 		mbox-buf@06dff000 {
+ 			no-map;
+ 			reg =3D <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
+@@ -71,6 +76,37 @@
+ 		ftrace-size	=3D <0x0 0x00020000>;
+ 	};
 =20
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefil=
-e
-index afd05e9..4780f20 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -21,4 +21,5 @@ obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) +=3D syscon=
--poweroff.o
- obj-$(CONFIG_POWER_RESET_RMOBILE) +=3D rmobile-reset.o
- obj-$(CONFIG_REBOOT_MODE) +=3D reboot-mode.o
- obj-$(CONFIG_SYSCON_REBOOT_MODE) +=3D syscon-reboot-mode.o
-+obj-$(CONFIG_SRAM_REBOOT_MODE) +=3D sram-reboot-mode.o
-=20
-diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/res=
-et/sram-reboot-mode.c
-new file mode 100644
-index 0000000..065c3a8
---- /dev/null
-+++ b/drivers/power/reset/sram-reboot-mode.c
-@@ -0,0 +1,66 @@
-+/*
-+ * Copyright (c) 2016, Linaro Limited
-+ * Based on syscon-reboot-mode.c
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License as published b=
-y
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include "reboot-mode.h"
 +
-+static void __iomem *reboot_reason_val_addr;
++	/* This entry should really be provided by the UEFI firmware */
++	sram@5f01000 {
++		compatible =3D "mmio-sram", "simple-bus";
++		reg =3D <0x0 0x05f01000 0x0 0x00001000>;
++		ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
 +
-+static int sram_reboot_mode_write(int magic)
-+{
-+	writel(magic, reboot_reason_val_addr);
-+	return 0;
-+}
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
 +
-+static int sram_reboot_mode_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	int ret;
++		reboot-mode@0 {
++			compatible =3D "sram-reboot-mode";
++			reg =3D <0x0 0x4>;
 +
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return PTR_ERR(res);
++			none {
++				linux,mode =3D "none";
++				loader,magic =3D <0x77665501>;
++			};
 +
-+	reboot_reason_val_addr =3D devm_ioremap(&pdev->dev, res->start, resou=
-rce_size(res));
-+	if (IS_ERR(reboot_reason_val_addr))
-+		return PTR_ERR(reboot_reason_val_addr);
++			bootloader {
++				linux,mode =3D "bootloader";
++				loader,magic =3D <0x77665500>;
++			};
 +
-+	ret =3D reboot_mode_register(&pdev->dev, sram_reboot_mode_write);
-+	if (ret)
-+		dev_err(&pdev->dev, "can't register reboot mode\n");
++			recovery {
++				linux,mode =3D "recovery";
++				loader,magic =3D <0x77665502>;
++			};
++		};
++	};
 +
-+	return ret;
-+}
-+
-+static const struct of_device_id sram_reboot_mode_of_match[] =3D {
-+	{ .compatible =3D "sram-reboot-mode" },
-+	{}
-+};
-+
-+static struct platform_driver sram_reboot_mode_driver =3D {
-+	.probe =3D sram_reboot_mode_probe,
-+	.driver =3D {
-+		.name =3D "sram-reboot-mode",
-+		.of_match_table =3D sram_reboot_mode_of_match,
-+	},
-+};
-+module_platform_driver(sram_reboot_mode_driver);
-+
-+MODULE_AUTHOR("John Stultz <john.stultz@linaro.org>");
-+MODULE_DESCRIPTION("SRAM reboot mode driver");
-+MODULE_LICENSE("GPL v2");
+ 	smb {
+ 		uart0: uart@f8015000 {	/* console */
+ 			status =3D "ok";
+diff --git a/arch/arm64/configs/hikey_defconfig b/arch/arm64/configs/hi=
+key_defconfig
+index a8375aa..e9db588 100644
+--- a/arch/arm64/configs/hikey_defconfig
++++ b/arch/arm64/configs/hikey_defconfig
+@@ -201,6 +201,7 @@ CONFIG_BLK_DEV_LOOP=3Dy
+ CONFIG_BLK_DEV_RAM=3Dy
+ CONFIG_BLK_DEV_RAM_SIZE=3D16384
+ CONFIG_VIRTIO_BLK=3Dy
++CONFIG_SRAM=3Dy
+ CONFIG_TI_ST=3Dy
+ CONFIG_ST_HCI=3Dy
+ # CONFIG_SCSI_PROC_FS is not set
+@@ -266,6 +267,8 @@ CONFIG_SPI_PL022=3Dy
+ CONFIG_GPIO_SYSFS=3Dy
+ CONFIG_GPIO_XGENE=3Dy
+ CONFIG_POWER_RESET_SYSCON=3Dy
++CONFIG_SYSCON_REBOOT_MODE=3Dy
++CONFIG_SRAM_REBOOT_MODE=3Dy
+ CONFIG_THERMAL=3Dy
+ CONFIG_THERMAL_WRITABLE_TRIPS=3Dy
+ CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR=3Dy
 --=20
 1.9.1
