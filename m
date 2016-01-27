@@ -1,101 +1,151 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v8 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Wed, 27 Jan 2016 08:40:16 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63FA932@penmbx01>
-References: <1453861685-30924-1-git-send-email-wenyou.yang@atmel.com>
-	<1453861685-30924-2-git-send-email-wenyou.yang@atmel.com>
- <87pownphvd.fsf@dell.be.48ers.dk>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [RFC][PATCH 0/3] SRAM reboot mode driver
+Date: Wed, 27 Jan 2016 10:50:01 +0200
+Message-ID: <56A884B9.5020201@mentor.com>
+References: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87pownphvd.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453855080-17760-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
-S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
-cnNnYWFyZA0KPiBTZW50OiAyMDE2xOox1MIyN8jVIDE2OjA1DQo+IFRvOiBZYW5nLCBXZW55b3Ug
-PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFy
-by5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gUGF3ZWwgTW9sbCA8
-cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
-IElhbg0KPiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBH
-YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47DQo+IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8
-amF2aWVyQGRvd2hpbGUwLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296bG93c2tp
-QHNhbXN1bmcuY29tPjsgUGV0ZXIgS29yc2dhYXJkIDxqYWNtZXRAZ21haWwuY29tPjsgRmVycmUs
-DQo+IE5pY29sYXMgPE5pY29sYXMuRkVSUkVAYXRtZWwuY29tPjsgbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY4IDEvMl0gbWZk
-OiBhY3Q4OTQ1YTogYWRkIEFjdGl2ZS1zZW1pIEFDVDg5NDVBIFBNSUMNCj4gTUZEIGRyaXZlcg0K
-PiANCj4gPj4+Pj4gIldlbnlvdSIgPT0gV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVsLmNv
-bT4gd3JpdGVzOg0KPiANCj4gID4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBY3Rp
-dmUtc2VtaSBBQ1Q4OTQ1QSBQTUlDLg0KPiAgPiBJdCBpcyBhIE11bHRpIEZ1bmN0aW9uIERldmlj
-ZSB3aXRoIHRoZSBmb2xsb3dpbmcgc3ViZGV2aWNlczoNCj4gID4gIC0gUmVndWxhdG9yDQo+ICA+
-ICAtIENoYXJnZXINCj4gDQo+ICA+IEl0IGlzIGludGVyZmFjZWQgdG8gdGhlIGhvc3QgY29udHJv
-bGxlciB1c2luZyBJMkMgaW50ZXJmYWNlLCAgPiBBQ1Q4OTQ1QSBpcyBhIGNoaWxkDQo+IGRldmlj
-ZSBvZiB0aGUgSTJDLg0KPiANCj4gID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlv
-dS55YW5nQGF0bWVsLmNvbT4gID4gUmV2aWV3ZWQtYnk6DQo+IEtyenlzenRvZiBLb3psb3dza2kg
-PGsua296bG93c2tpQHNhbXN1bmcuY29tPg0KPiANCj4gVGhhbmtzLCBsb29rcyBnb29kIC0gT25l
-IG1vcmUgdGhpbmcgdGhvdWdoOg0KPiANCj4gID4gKw0KPiAgPiArc3RydWN0IGFjdDg5NDVhX2Rl
-diB7DQo+ICA+ICsJc3RydWN0IHJlZ21hcCAqcmVnbWFwOw0KPiAgPiArfTsNCj4gDQo+IFlvdSBk
-b24ndCBuZWVkIHRoaXMgc3RydWN0dXJlIGFzIHlvdSB1c2VkIGRldm0uIFdpdGggdGhhdCByZW1v
-dmVkIChhbmQgdGhlIGxvZ2ljDQo+IHRvIGRldm1fa3phbGxvYyBpdCkgeW91IGNhbiBhZGQgbXk6
-DQoNClllcywgaXQgY2FuIGJlIHJlbW92ZWQuDQoNCj4gDQo+IEFja2VkLWJ5OiBQZXRlciBLb3Jz
-Z2FhcmQgPHBldGVyQGtvcnNnYWFyZC5jb20+DQo+IA0KDQpUaGFuayB5b3UgZm9yIHlvdSBBY2tl
-ZC4NCg0KPiANCj4gID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgYWN0ODk0NWFfZGV2
-c1tdID0gew0KPiAgPiArCXsNCj4gID4gKwkJLm5hbWUgPSAiYWN0ODk0NWEtcmVndWxhdG9yIiwN
-Cj4gID4gKwkJLm9mX2NvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0NWEtcmVndWxhdG9y
-IiwNCj4gID4gKwl9LA0KPiAgPiArCXsNCj4gID4gKwkJLm5hbWUgPSAiYWN0ODk0NWEtY2hhcmdl
-ciIsDQo+ICA+ICsJCS5vZl9jb21wYXRpYmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhLWNoYXJn
-ZXIiLA0KPiAgPiArCX0sDQo+ICA+ICt9Ow0KPiAgPiArDQo+ICA+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHJlZ21hcF9jb25maWcgYWN0ODk0NWFfcmVnbWFwX2NvbmZpZyA9IHsNCj4gID4gKwkucmVn
-X2JpdHMgPSA4LA0KPiAgPiArCS52YWxfYml0cyA9IDgsDQo+ICA+ICt9Ow0KPiAgPiArDQo+ICA+
-ICtzdGF0aWMgaW50IGFjdDg5NDVhX2kyY19wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLA0K
-PiAgPiArCQkJICAgICAgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQ0KPiAgPiArew0K
-PiAgPiArCXN0cnVjdCBhY3Q4OTQ1YV9kZXYgKmFjdDg5NDVhOw0KPiAgPiArCWludCByZXQ7DQo+
-ICA+ICsNCj4gID4gKwlhY3Q4OTQ1YSA9IGRldm1fa3phbGxvYygmaTJjLT5kZXYsIHNpemVvZigq
-YWN0ODk0NWEpLCBHRlBfS0VSTkVMKTsNCj4gID4gKwlpZiAoIWFjdDg5NDVhKQ0KPiAgPiArCQly
-ZXR1cm4gLUVOT01FTTsNCj4gID4gKw0KPiAgPiArCWkyY19zZXRfY2xpZW50ZGF0YShpMmMsIGFj
-dDg5NDVhKTsNCj4gID4gKw0KPiAgPiArCWFjdDg5NDVhLT5yZWdtYXAgPSBkZXZtX3JlZ21hcF9p
-bml0X2kyYyhpMmMsDQo+ICZhY3Q4OTQ1YV9yZWdtYXBfY29uZmlnKTsNCj4gID4gKwlpZiAoSVNf
-RVJSKGFjdDg5NDVhLT5yZWdtYXApKSB7DQo+ICA+ICsJCXJldCA9IFBUUl9FUlIoYWN0ODk0NWEt
-PnJlZ21hcCk7DQo+ICA+ICsJCWRldl9lcnIoJmkyYy0+ZGV2LCAicmVnbWFwIGluaXQgZmFpbGVk
-OiAlZFxuIiwgcmV0KTsNCj4gID4gKwkJcmV0dXJuIHJldDsNCj4gID4gKwl9DQo+ICA+ICsNCj4g
-ID4gKwlyZXQgPSBtZmRfYWRkX2RldmljZXMoJmkyYy0+ZGV2LCBQTEFURk9STV9ERVZJRF9OT05F
-LA0KPiBhY3Q4OTQ1YV9kZXZzLA0KPiAgPiArCQkJICAgICAgQVJSQVlfU0laRShhY3Q4OTQ1YV9k
-ZXZzKSwgTlVMTCwgMCwgTlVMTCk7DQo+ICA+ICsJaWYgKHJldCkgew0KPiAgPiArCQlkZXZfZXJy
-KCZpMmMtPmRldiwgIkZhaWxlZCB0byBhZGQgc3ViIGRldmljZXNcbiIpOw0KPiAgPiArCQlyZXR1
-cm4gcmV0Ow0KPiAgPiArCX0NCj4gID4gKw0KPiAgPiArCXJldHVybiAwOw0KPiAgPiArfQ0KPiAg
-PiArDQo+ICA+ICtzdGF0aWMgaW50IGFjdDg5NDVhX2kyY19yZW1vdmUoc3RydWN0IGkyY19jbGll
-bnQgKmkyYykgID4gK3sNCj4gID4gKwltZmRfcmVtb3ZlX2RldmljZXMoJmkyYy0+ZGV2KTsNCj4g
-ID4gKw0KPiAgPiArCXJldHVybiAwOw0KPiAgPiArfQ0KPiAgPiArDQo+ICA+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgYWN0ODk0NWFfaTJjX2lkW10gPSB7DQo+ICA+ICsJeyAi
-YWN0ODk0NWEiLCAwIH0sDQo+ICA+ICsJe30NCj4gID4gK307DQo+ICA+ICtNT0RVTEVfREVWSUNF
-X1RBQkxFKGkyYywgYWN0ODk0NWFfaTJjX2lkKTsgID4gKyAgPiArc3RhdGljIGNvbnN0IHN0cnVj
-dA0KPiBvZl9kZXZpY2VfaWQgYWN0ODk0NWFfb2ZfbWF0Y2hbXSA9IHsNCj4gID4gKwl7IC5jb21w
-YXRpYmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhIiwgfSwNCj4gID4gKwl7fSwNCj4gID4gK307
-DQo+ICA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhY3Q4OTQ1YV9vZl9tYXRjaCk7ICA+ICsg
-ID4gK3N0YXRpYyBzdHJ1Y3QNCj4gaTJjX2RyaXZlciBhY3Q4OTQ1YV9pMmNfZHJpdmVyID0gew0K
-PiAgPiArCS5kcml2ZXIgPSB7DQo+ICA+ICsJCSAgIC5uYW1lID0gImFjdDg5NDVhIiwNCj4gID4g
-KwkJICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKGFjdDg5NDVhX29mX21hdGNoKSwN
-Cj4gID4gKwl9LA0KPiAgPiArCS5wcm9iZSA9IGFjdDg5NDVhX2kyY19wcm9iZSwNCj4gID4gKwku
-cmVtb3ZlID0gYWN0ODk0NWFfaTJjX3JlbW92ZSwNCj4gID4gKwkuaWRfdGFibGUgPSBhY3Q4OTQ1
-YV9pMmNfaWQsDQo+ICA+ICt9Ow0KPiAgPiArDQo+ICA+ICtzdGF0aWMgaW50IF9faW5pdCBhY3Q4
-OTQ1YV9pMmNfaW5pdCh2b2lkKSAgPiArew0KPiAgPiArCXJldHVybiBpMmNfYWRkX2RyaXZlcigm
-YWN0ODk0NWFfaTJjX2RyaXZlcik7DQo+ICA+ICt9DQo+ICA+ICtzdWJzeXNfaW5pdGNhbGwoYWN0
-ODk0NWFfaTJjX2luaXQpOw0KPiAgPiArDQo+ICA+ICtzdGF0aWMgdm9pZCBfX2V4aXQgYWN0ODk0
-NWFfaTJjX2V4aXQodm9pZCkgID4gK3sNCj4gID4gKwlpMmNfZGVsX2RyaXZlcigmYWN0ODk0NWFf
-aTJjX2RyaXZlcik7DQo+ICA+ICt9DQo+ICA+ICttb2R1bGVfZXhpdChhY3Q4OTQ1YV9pMmNfZXhp
-dCk7DQo+ICA+ICsNCj4gID4gK01PRFVMRV9ERVNDUklQVElPTigiQUNUODk0NUEgUE1JQyBtdWx0
-aS1mdW5jdGlvbiBkcml2ZXIiKTsgID4NCj4gK01PRFVMRV9BVVRIT1IoIldlbnlvdSBZYW5nIDx3
-ZW55b3UueWFuZ0BhdG1lbC5jb20+Iik7ICA+DQo+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7ICA+
-IC0tICA+IDEuNy45LjUNCj4gDQo+IA0KPiANCj4gLS0NCj4gQnllLCBQZXRlciBLb3JzZ2FhcmQN
-Cg0KDQpCZXN0IHJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi John,
+
+On 27.01.2016 02:37, John Stultz wrote:
+> This patchset extends on Andy Yan's reboot mode driver
+> work from here: https://lkml.org/lkml/2016/1/12/315
+>=20
+> It adds reboot mode/reason support for devices that use
+> an SRAM location to communicate with the bootloader.
+>=20
+> Doing this via an SRAM subnode was a suggestion from
+> Arnd, but I worry this implementation isn't yet ideal,
+> since I spent quite a bit of time futzing with getting
+> the sram dts entry to work properly. So I suspect there
+> will be a number of suggestions for improvements.
+
+sorry, I missed that discussion, what are the problems you've
+encountered?
+Probably SRAM driver is ready to serve your purposes?
+
+I believe I'm screwing up some HiSilicon specifics, but here
+is a rough draft, which you may find helpful:
+
+1. Add SRAM node with defined reboot-reason area:
+
+---8<---
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 8185251..c35f5ed 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -31,6 +31,20 @@
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x40000000>;
+ 	};
++
++	sram@5f01000 {
++		compatible =3D "mmio-sram";
++		reg =3D <0x0 0x05f01000 0x0 0x00001000>;
++		ranges =3D <0x0 0x0 0x05f01000 0x00001000>;
++
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++
++		reboot-reason: reboot-reason {
++			reg =3D <0x0 0x4>;
++			pool;
++		};
++	};
+ };
+
+ &uart2 {
+---8<---
+
+2. Reference reboot-reason node from reboot mode driver's node,
+probably you need to add an optional property (here "reason-storage") t=
+o its
+binding:
+
+---8<---
+		reboot-mode {
+			compatible =3D "syscon-reboot-mode";
+[snip]
+			reason-storage =3D <&reboot-reason>;
+		}
+---8<---
+
+3. In reboot-mode driver read or write to that SRAM partition:
+
+---8<---
+	storage =3D of_gen_pool_get(reboot_mode_np, "reason-storage", 0);
+	if (!storage)
+		goto no_storage;
+
+	size =3D gen_pool_size(storage);
+        base =3D gen_pool_alloc(storage, pool_size);
+	if (!base)
+		return -EINVAL;
+
+	writel(0x77665501, base);
+	gen_pool_free(storage, base, size);
+
+no_storage:
+	return 0;
+---8<---
+
+There is one noticeable benefit of this approach - you don't need
+to write another driver and you don't need to add another DT binding.
+
+With best wishes,
+Vladimir
+
+> Again, this series dependson Andy's patch set above,
+> but also was developed & tested against the 4.1 based
+> hikey tree, so at least the hikey dts patch won't apply.
+> I'm mostly sending this out for just a rough initial
+> review of the dts and conceptual usage of sram subnodes.
+>=20
+> Also, it was pointed out that the hikey dts entry for
+> this really should be added by the UEFI firmware, since
+> alternative bootloaders may be used which do not support
+> this feature. So the hikey dts patch isn't likely to ever
+> go upstream, but its a useful illustration for how other
+> devices might use this driver.
+>=20
+> Cc: Andy Yan <andy.yan@rock-chips.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Heiko St=C3=BCbner <heiko@sntech.de>
+> Cc: Caesar Wang <wxt@rock-chips.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Guodong Xu <guodong.xu@linaro.org>
+> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+> Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Android Kernel Team <kernel-team@android.com>
+>=20
+> John Stultz (3):
+>   dt-bindings: power: reset: Add document for sram-reboot-mode driver
+>   power: reset: Add sram-reboot-mode driver
+>   dts: hikey: Add hikey support for sram-reboot-mode
+>=20
+>  .../bindings/power/reset/sram-reboot-mode.txt      | 47 ++++++++++++=
++++
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     | 36 ++++++++++++
+>  arch/arm64/configs/hikey_defconfig                 |  3 +
+>  drivers/power/reset/Kconfig                        |  9 +++
+>  drivers/power/reset/Makefile                       |  1 +
+>  drivers/power/reset/sram-reboot-mode.c             | 66 ++++++++++++=
+++++++++++
+>  6 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/sra=
+m-reboot-mode.txt
+>  create mode 100644 drivers/power/reset/sram-reboot-mode.c
+>=20
