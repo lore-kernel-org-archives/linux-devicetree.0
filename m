@@ -1,101 +1,44 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts
- under GPLv2/X11
-Date: Wed, 27 Jan 2016 16:36:58 -0800
-Message-ID: <ee1d1f87155171130707caea41de549d@agner.ch>
-References: <1449525076-23569-1-git-send-email-stefan@agner.ch>
- <1449525076-23569-4-git-send-email-stefan@agner.ch>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v4 0/9] Add STM32 pinctrl/GPIO driver
+Date: Wed, 27 Jan 2016 21:59:28 +0100
+Message-ID: <56A92FB0.7080907@gmail.com>
+References: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <CACRpkdYGQ1xObWfka2CN9au6YMGhpu4qcTZpu72bzuJjO38tog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449525076-23569-4-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYGQ1xObWfka2CN9au6YMGhpu4qcTZpu72bzuJjO38tog@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+On 01/27/2016 02:20 PM, Linus Walleij wrote:
+> On Thu, Jan 14, 2016 at 1:16 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com>  wrote:
+>
+>> >This is the fourth round of STM32 pinctrl series, which takes into
+>> >account comments made by Patrice on patch 4.
+> I have applied patch 2 and 4 to the pinctrl tree.
 
-On 2015-12-07 13:51, Stefan Agner wrote:
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license.
-> 
-> The consensus is that a GPL/X11 dual-license should allow all necessary
-> uses, so relicense the vf610-twr.dts file to this combination.
-> 
-> CCs were acquired using (updated some email addresses):
-> git shortlog -sne --no-merges arch/arm/boot/dts/vf610-cosmic.dts
-> 
-> CC: Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Just tried to compile your devel branch, and it breaks:
 
-Your Ack is the only one missing here, any chance to get an Ack from
-you?
+   CC      drivers/pinctrl/stm32/pinctrl-stm32f429.o
+drivers/pinctrl/stm32/pinctrl-stm32.c: In function 
+'stm32_gpiolib_register_bank':
+drivers/pinctrl/stm32/pinctrl-stm32.c:692:17: error: 'struct gpio_chip' 
+has no member named 'dev'
+   bank->gpio_chip.dev = dev;
+                  ^
+make[3]: *** [drivers/pinctrl/stm32/pinctrl-stm32.o] Error 1
 
---
-Stefan
+This is due to the field renaming you did in gpio_chip struct:
+58383c7 gpio: change member .dev to .parent
 
-> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf610-cosmic.dts | 40 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 36 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf610-cosmic.dts
-> b/arch/arm/boot/dts/vf610-cosmic.dts
-> index 5447f25..d0559c1 100644
-> --- a/arch/arm/boot/dts/vf610-cosmic.dts
-> +++ b/arch/arm/boot/dts/vf610-cosmic.dts
-> @@ -2,10 +2,42 @@
->   * Copyright 2013 Freescale Semiconductor, Inc.
->   * Copyright 2013 Linaro Limited
->   *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  /dts-v1/;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How do you prefer to proceed?
+Should I send a fix on top of your devel branch, or you will fix it 
+directly?
+
+Thanks,
+Maxime
