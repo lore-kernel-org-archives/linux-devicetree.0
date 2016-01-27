@@ -1,116 +1,89 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 1/3] ata: Remove the AHCI_HFLAG_EDGE_IRQ support from libahci.
-Date: Wed, 27 Jan 2016 15:19:55 +0530
-Message-ID: <1453888197-11368-2-git-send-email-stripathi@apm.com>
-References: <1453888197-11368-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453888197-11368-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: htejun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, svtripathi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH] clk: Move vendor's Kconfig into CCF menu section
+Date: Wed, 27 Jan 2016 17:56:18 +0800
+Message-ID: <1453888578.28646.7.camel@mtksdaap41>
+References: <201601271708.gQUxXACW%fengguang.wu@intel.com>
+	 <4711589.Ig064LES4c@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4711589.Ig064LES4c@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, kbuild test robot <lkp@intel.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the AHCI_HFLAG_EDGE_IRQ support from libahci.
-The upcoming patches will have the flexibility to override
-irq handlers in the LLD's. Controller's implementing a EDGE trigger
-latch can implement their own interrupt handler inside the driver.
+Hi Arnd,
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/ata/ahci.h       |    3 +--
- drivers/ata/ahci_xgene.c |    2 +-
- drivers/ata/libahci.c    |   40 ----------------------------------------
- 3 files changed, 2 insertions(+), 43 deletions(-)
+On Wed, 2016-01-27 at 10:27 +0100, Arnd Bergmann wrote:
+> On Wednesday 27 January 2016 17:18:03 kbuild test robot wrote:
+> > Hi James,
+> > 
+> > [auto build test ERROR on clk/clk-next]
+> > [also build test ERROR on v4.5-rc1 next-20160127]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/James-Liao/clk-Move-vendor-s-Kconfig-into-CCF-menu-section/20160127-152850
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+> > config: arm-samsung (attached as .config)
+> > reproduce:
+> >         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         make.cross ARCH=arm 
+> > 
+> > All error/warnings (new ones prefixed by >>):
+> > 
+> > warning: (ARCH_BAST && MACH_VR1000 && MACH_ANUBIS && MACH_OSIRIS && MACH_RX1950) selects S3C2410_COMMON_DCLK which has unmet direct dependencies (COMMON_CLK)
+> > warning: (CPU_S3C2410 && CPU_S3C2440 && CPU_S3C2442) selects S3C2410_COMMON_CLK which has unmet direct dependencies (COMMON_CLK)
+> > warning: (CPU_S3C2412) selects S3C2412_COMMON_CLK which has unmet direct dependencies (COMMON_CLK)
+> > warning: (CPU_S3C2416 && CPU_S3C2443) selects S3C2443_COMMON_CLK which has unmet direct dependencies (COMMON_CLK)
+> >    drivers/built-in.o: In function `pwm_samsung_remove':
+> > >> :(.text+0xba68): undefined reference to `clk_disable'
+> >    drivers/built-in.o: In function `pwm_samsung_config':
+> > >> :(.text+0xbc18): undefined reference to `clk_get_rate'
+> >    :(.text+0xbc30): undefined reference to `clk_get_rate'
+> 
+> I think you should include this change in your patch, or as a preparation.
+> All other samsung platforms already select COMMON_CLK through ARCH_MULTIPLATFORM,
+> and all SoCs that are part of ARCH_S3C24XX individually select a symbol that
+> selects COMMON_CLK.
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index a4faa43..e9b57e8 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -240,8 +240,7 @@ enum {
- 						        error-handling stage) */
- 	AHCI_HFLAG_NO_DEVSLP		= (1 << 17), /* no device sleep */
- 	AHCI_HFLAG_NO_FBS		= (1 << 18), /* no FBS */
--	AHCI_HFLAG_EDGE_IRQ		= (1 << 19), /* HOST_IRQ_STAT behaves as
--							Edge Triggered */
-+
- #ifdef CONFIG_PCI_MSI
- 	AHCI_HFLAG_MULTI_MSI		= (1 << 20), /* multiple PCI MSIs */
- 	AHCI_HFLAG_MULTI_MSIX		= (1 << 21), /* per-port MSI-X */
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index e2c6d9e..892ec74 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -779,7 +779,7 @@ skip_clk_phy:
- 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
- 		break;
- 	case XGENE_AHCI_V2:
--		hpriv->flags |= AHCI_HFLAG_YES_FBS | AHCI_HFLAG_EDGE_IRQ;
-+		hpriv->flags |= AHCI_HFLAG_YES_FBS;
- 		break;
- 	default:
- 		break;
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index eda3cf2..08be136 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1843,43 +1843,6 @@ static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
- 	return handled;
- }
+Oops, I didn't notice there are warnings after moving these Kconfigs
+into menu section.
 
--static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance)
--{
--	struct ata_host *host = dev_instance;
--	struct ahci_host_priv *hpriv;
--	unsigned int rc = 0;
--	void __iomem *mmio;
--	u32 irq_stat, irq_masked;
--
--	VPRINTK("ENTER\n");
--
--	hpriv = host->private_data;
--	mmio = hpriv->mmio;
--
--	/* sigh.  0xffffffff is a valid return from h/w */
--	irq_stat = readl(mmio + HOST_IRQ_STAT);
--	if (!irq_stat)
--		return IRQ_NONE;
--
--	irq_masked = irq_stat & hpriv->port_map;
--
--	spin_lock(&host->lock);
--
--	/*
--	 * HOST_IRQ_STAT behaves as edge triggered latch meaning that
--	 * it should be cleared before all the port events are cleared.
--	 */
--	writel(irq_stat, mmio + HOST_IRQ_STAT);
--
--	rc = ahci_handle_port_intr(host, irq_masked);
--
--	spin_unlock(&host->lock);
--
--	VPRINTK("EXIT\n");
--
--	return IRQ_RETVAL(rc);
--}
--
- static irqreturn_t ahci_single_level_irq_intr(int irq, void *dev_instance)
- {
- 	struct ata_host *host = dev_instance;
-@@ -2507,9 +2470,6 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
+The original motivation of this patch is preventing new clk drivers
+include their Kconfig in a wrong place, so it's not critical. Do you
+think we should apply this patch (with your changes below) or drop this
+patch directly?
 
- 	if (hpriv->flags & (AHCI_HFLAG_MULTI_MSI | AHCI_HFLAG_MULTI_MSIX))
- 		rc = ahci_host_activate_multi_irqs(host, sht);
--	else if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ)
--		rc = ata_host_activate(host, irq, ahci_single_edge_irq_intr,
--				       IRQF_SHARED, sht);
- 	else
- 		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
- 				       IRQF_SHARED, sht);
---
-1.7.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+
+James
+
+> diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
+> index bf66c8334822..85e051d1c2d6 100644
+> --- a/arch/arm/mach-s3c24xx/Kconfig
+> +++ b/arch/arm/mach-s3c24xx/Kconfig
+> @@ -15,6 +15,7 @@ config PLAT_S3C24XX
+>  	select NO_IOPORT_MAP
+>  	select S3C_DEV_NAND
+>  	select IRQ_DOMAIN
+> +	select COMMON_CLK
+>  	help
+>  	  Base platform code for any Samsung S3C24XX device
+>  
+> diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+> index 84196ecdaa12..b3fe5cb01afe 100644
+> --- a/drivers/clk/samsung/Kconfig
+> +++ b/drivers/clk/samsung/Kconfig
+> @@ -1,6 +1,5 @@
+>  config COMMON_CLK_SAMSUNG
+>  	bool
+> -	select COMMON_CLK
+>  
+>  config S3C2410_COMMON_CLK
+>  	bool
+> 
