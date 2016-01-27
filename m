@@ -1,56 +1,93 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] gpio: tps65086: Add GPO driver for the TPS65086
- PMIC
-Date: Wed, 27 Jan 2016 07:29:55 +0000
-Message-ID: <20160127072955.GH3368@x1>
-References: <1453737012-3130-1-git-send-email-afd@ti.com>
- <1453737012-3130-4-git-send-email-afd@ti.com>
- <20160126140312.GB3368@x1>
- <56A784CC.4090902@ti.com>
+Subject: Re: [PATCH v5 0/7] remoteproc: Add driver for STMicroelectronics
+ platforms
+Date: Wed, 27 Jan 2016 07:31:24 +0000
+Message-ID: <20160127073124.GI3368@x1>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56A784CC.4090902-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1452602781-22424-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Jan 2016, Andrew F. Davis wrote:
+Apologies for ping (I hate doing that), but I haven't heard anything
+from you.  Do you want me to re-submit this set, or are you willing to
+take this and apply the relevant Acks?
 
-> On 01/26/2016 08:03 AM, Lee Jones wrote:
-> >On Mon, 25 Jan 2016, Andrew F. Davis wrote:
-> >
-> >>Add support for the TPS65086 PMIC GPOs.
-> >>
-> >>TPS65086 has four configurable GPOs that can be used for several
-> >>purposes. These are output only.
-> >>
-> >>Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> >>---
-> >>  drivers/gpio/Kconfig         |   6 ++
-> >>  drivers/gpio/Makefile        |   1 +
-> >>  drivers/gpio/gpio-tps65086.c | 144 ++++++++++++++++++++++++++++++=
-+++++++++++++
-> >>  3 files changed, 151 insertions(+)
-> >>  create mode 100644 drivers/gpio/gpio-tps65086.c
-> >
-> >Is this patch orthogonal to the other two in the set, or do they all
-> >need to go in together?
+> ST's platforms often have multiple co-processors (usually ST40s or ST=
+231s)
+> on-board.  This provides the Linux-side infrastructure to flash and b=
+oot
+> them successfully.
+>  =20
+> This set has been tested on an STiH410-B2120.
 >=20
-> These can all go in separately, in fact Mark has already taken the re=
-gulator
-> component from a previous push of this series. It is only the TPS6591=
-2
-> driver I'm pushing that will need to go all at once due to conflicts =
-with
-> the driver it is replacing.
-
-Very well.  MFD patches taken.
-
-Linus should take this through his tree.
+> v4 =3D> v5:
+>  - Check for invalid 'count' (command read length) in write fn()s
+>  =20
+> v3 =3D> v4:
+>  Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>  - Move to using 'reserved-memory' API
+>    - New 'reserved-memory' nodes
+>    - Remove memory locations from RemoteProc's DT node's reg properti=
+es
+>    - Remove C code obtaining/allocating DMA memory
+>  - Re-order .start() and .stop() ops
+>  - Add protection around Reset API in error path
+>  - Explicitly set .has_iommu to false
+>  =20
+> v2 =3D> v3:
+>  - Generify syscon property (st,syscfg-boot =3D> st,syscfg)
+>  - Rename IP in DT bindings doc (Remote Processor =3D> Co-Processor)
+>  - Remove superfluous 'clock-names' property
+>  - Remove superfluous 'reg-names' property
+>  - Populate MAINTAINERS
+>  - Clean-up DTS formatting
+>  - Use strings in debugfs to control procs ('1|0' =3D> 'start|stop')
+>  - Align copyright statement with MODULE() macros
+>  - Rename driver data structure ('st_rproc' =3D> 'ddata')
+>  - Addition of a full error path in .start()
+>=20
+> v1 =3D> v2:
+>  - Remove Linux implementation specific comment from binding document
+>  - Force debugfs '0' to shutdown co-processor - rather than !1
+>  - Supply more detailed commit message
+>  - Propagate errors back from .stop()
+>  - Review GPL wording
+>  - Supply original author's SoBs
+>=20
+> Lee Jones (7):
+>   remoteproc: debugfs: Check of invalid 'count' value
+>   remoteproc: dt: Provide bindings for ST's Remote Processor Controll=
+er
+>     driver
+>   remoteproc: debugfs: Add ability to boot remote processor using
+>     debugfs
+>   remoteproc: Supply controller driver for ST's Remote Processors
+>   MAINTAINERS: Add ST's Remote Processor Driver to ARM/STI ARCHITECTU=
+RE
+>   ARM: STiH407: Add nodes for RemoteProc
+>   ARM: STiH407: Move over to using the 'reserved-memory' API for
+>     obtaining DMA memory
+>=20
+>  .../devicetree/bindings/remoteproc/st-rproc.txt    |  41 +++
+>  MAINTAINERS                                        |   1 +
+>  arch/arm/boot/dts/stih407-family.dtsi              |  70 +++++
+>  drivers/remoteproc/Kconfig                         |   9 +
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/remoteproc_debugfs.c            |  38 ++-
+>  drivers/remoteproc/st_remoteproc.c                 | 297 +++++++++++=
+++++++++++
+>  7 files changed, 455 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/st-r=
+proc.txt
+>  create mode 100644 drivers/remoteproc/st_remoteproc.c
+>=20
 
 --=20
 Lee Jones
