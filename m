@@ -1,35 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver to  work on both  Zynq and Microblaze
-Date: Wed, 27 Jan 2016 16:14:32 +0100
-Message-ID: <5255218.OREPu5Af3W@wuerfel>
-References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com> <4734542.KZZp0TeeeM@wuerfel> <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for
+ Pistachio audio card
+Date: Wed, 27 Jan 2016 15:18:20 +0000
+Message-ID: <56A8DFBC.6070007@imgtec.com>
+References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
+ <20160127145756.GR6042@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-p
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160127145756.GR6042@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 January 2016 14:33:45 Bharat Kumar Gogada wrote:
-> > > @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct
-> > > platform_device *pdev)  #endif
-> > >     pci_scan_child_bus(bus);
-> > >     pci_assign_unassigned_bus_resources(bus);
-> > > +#ifdef CONFIG_ARM
-> > >     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> > > +#endif
-> > >     pci_bus_add_devices(bus);
-> > >     platform_set_drvdata(pdev, port);
-> > 
-> > Here it looks like microblaze gets it right. I'm not sure why we still need the
-> > pci_fixup_irqs() on ARM, but my feeling is that this should be fixed in
-> > common code.
-> In arm pci_fixup_irqs is called by pci_common_init_dev (arch/arm/kernel/bios32.c), since this API is removed now, I was calling it separately.
+On 27/01/16 14:57, Mark Brown wrote:
+> On Tue, Jan 26, 2016 at 02:34:26PM +0000, Damien Horsley wrote:
+> 
+>> +  - clock-names : Includes the following entries:
+>> +        "audio_pll"  The audio PLL
+>> +        "i2s_mclk"   The i2s reference clock
+>> +                     Also connected to i2s_out_0_mclk output
+>> +        "dac_mclk"   Dac reference clock. Connected to i2s_dac_clk output
+> 
+> Why are these (especially the dac_mclk and i2s_mclk) properties of the
+> card and not of the drivers for the respective devices?
+> 
 
-But who calls it in microblaze? If it works without the extra call there,
-can we make it work the same way for ARM?
+Due to the shared nature of these clocks. Individual components cannot
+be responsible for controlling these as this could break configurations
+for other components that are sharing the clocks. Only the card driver
+has visibility of all of the components and their requirements.
 
-	Arnd
+audio_pll is used by spdif out, parallel out, i2s out, and i2s in if
+there are codecs on the i2s in path that make use of i2s_mclk and
+dac_mclk (derived from audio_pll)
+
+i2s_mclk and dac_mclk can be used by both the i2s in and i2s out paths
+on some boards
+
+>> +  - img,mute-gpio : phandle of the mute gpio
+>> +
+>> +  - img,hp-det-gpio : phandle of the headphone detect gpio
+> 
+> The DT maintainers would prefer those to be named -gpios.
+> 
+
+Ok
