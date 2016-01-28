@@ -1,106 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Thu, 28 Jan 2016 06:41:49 +0000
-Message-ID: <20160128064149.GM3368@x1>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH V5 5/5] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Thu, 28 Jan 2016 15:42:36 +0900
+Message-ID: <56A9B85C.2050206@samsung.com>
+References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
+ <1453903808-29788-6-git-send-email-ldewangan@nvidia.com>
+ <56A99130.1070904@samsung.com> <56A9B41C.4070607@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453736627-2634-1-git-send-email-afd@ti.com>
+In-reply-to: <56A9B41C.4070607@nvidia.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On 28.01.2016 15:24, Laxman Dewangan wrote:
+> 
+> On Thursday 28 January 2016 09:25 AM, Krzysztof Kozlowski wrote:
+>> On 27.01.2016 23:10, Laxman Dewangan wrote:
+>>> MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
+>>> multiple DCDC and LDOs. This supplies the power to different
+>>> components of the system.
+>>> Also these rails has configuration for ramp time, flexible
+>>> power sequence, slew rate etc.
+>>>
+>>> Add regulator driver to access these rails via regulator APIs.
+>>>
+>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+>>> ---
+>>> Changes from V1:
+>>> - Cleanup code based on comment received on mfd/rtc.
+>>> - Avoid duplication on error message.
+>>>
+>>> Changes form V2:
+>>> - Run coccicheck and checkpatch in strict mode for the alignment.
+>>> - Refactor Regulator driver to use core API for DT parsing.
+>>> - Update based on API changes.
+>>>
+>>> Changes from V3:
+>>> - Change all sys initcall to module driver.
+>>> - change the max77620_read argument to unisgned int from u8.
+>>>
+>>> Changes from V4:
+>>> - Added DT binding document as
+>>> devicetree/bindings/regulator/regulator-max77620.txt
+>>> - Detail out properties.
+>> What does it mean "Detail out properties"? What have changed>
+> 
+> Based on review comment from Linus W, I added more description on the
+> properties.
 
-Just need your stamp for this to go in.
+Ah, ok.
 
-> In an effort to cleanup this driver and add Device Tree support
-> the driver has been rewritten based on new driver styles and
-> modern kernel driver helpers. This has nearly halved the lines
-> of code while keeping all previous functionality.
->=20
-> Platform file based initialization has been dropped as there is
-> no examples of this use in the kernel.
->=20
-> v1 can be found here: [1] v2: [2] v3: [3] v4: [4] v5: [5] v6: [6] v7:=
- [7]
->=20
-> Changes from v7:
->  - Now complies with gpiolib changes
->=20
-> Changes from v6:
->  - Removed compatible strings from DT sub-nodes
->  - Rearranged DT bindings
->  - Small fixes
->=20
-> Changes from v5:
->  - Small formatting changes to DT Docs
->  - Converted to_tps65912_gpio from macro to inline function
->=20
-> Changes from v4:
->  - Use mfd core to add sub-devices
->=20
-> Changes from v3:
->  - Reorganized regulator driver and related DT node
->  - Other small fixes as discussed in v3 thread
->=20
-> Changes from v2:
->  - Split the series further into subsystems
->=20
-> Changes from v1:
->  - Split the rewrite into delete/create patches
->  - Several small fixes as discussed in v1 thread
->=20
-> [1] http://www.spinics.net/lists/devicetree/msg93863.html
-> [2] http://www.spinics.net/lists/devicetree/msg95003.html
-> [3] http://www.spinics.net/lists/devicetree/msg95133.html
-> [4] http://www.spinics.net/lists/devicetree/msg96109.html
-> [5] http://www.spinics.net/lists/devicetree/msg100601.html
-> [6] https://lkml.org/lkml/2015/10/30/690
-> [7] https://www.spinics.net/lists/linux-gpio/msg09710.html
->=20
-> Andrew F. Davis (5):
->   Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
->   mfd: tps65912: Remove old driver in preparation for new driver
->   mfd: tps65912: Add driver for the TPS65912 PMIC
->   regulator: tps65912: Add regulator driver for the TPS65912 PMIC
->   gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
->=20
->  Documentation/devicetree/bindings/mfd/tps65912.txt |  50 ++
->  drivers/gpio/Kconfig                               |   2 +-
->  drivers/gpio/gpio-tps65912.c                       | 309 ++++-----
->  drivers/mfd/Kconfig                                |  20 +-
->  drivers/mfd/Makefile                               |   3 +-
->  drivers/mfd/tps65912-core.c                        | 286 ++++-----
->  drivers/mfd/tps65912-i2c.c                         | 218 +++----
->  drivers/mfd/tps65912-irq.c                         | 217 -------
->  drivers/mfd/tps65912-spi.c                         | 218 +++----
->  drivers/regulator/Kconfig                          |   2 +-
->  drivers/regulator/tps65912-regulator.c             | 709 +++++------=
-----------
->  include/linux/mfd/tps65912.h                       | 209 +++---
->  12 files changed, 767 insertions(+), 1476 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.tx=
-t
->  rewrite drivers/gpio/gpio-tps65912.c (74%)
->  rewrite drivers/mfd/tps65912-core.c (96%)
->  rewrite drivers/mfd/tps65912-i2c.c (93%)
->  delete mode 100644 drivers/mfd/tps65912-irq.c
->  rewrite drivers/mfd/tps65912-spi.c (92%)
->  rewrite drivers/regulator/tps65912-regulator.c (94%)
->=20
+>> I already reviewed the patchset but because of adding bindings here, you
+>> could not add my reviewed-by tag (which makes my effort not tracked...).
+> Yaah, This patch include the dt binding and so wanted your review again.
+> This si only reason to not add reviewed-by.
+> 
+> Now I am going to separate out DT binding and driver,  I will add
+> reviewed-by tag for you in driver file.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yeah, but the driver nor the bindings do not change so it really does
+not need my additional review.
+
+Best regards,
+Krzysztof
