@@ -1,84 +1,47 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v4 3/9] clk: rockchip: rk3036: fix and add node id for emac clock
-Date: Thu, 28 Jan 2016 16:43:32 +0800
-Message-ID: <1453970618-4383-4-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v4 6/9] ASoC: rt5616: add mclk property for rt5616 document
+Date: Thu, 28 Jan 2016 16:43:35 +0800
+Message-ID: <1453970618-4383-7-git-send-email-wxt@rock-chips.com>
 References: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-Cc: hl@rock-chips.com, jay.xu@rock-chips.com, jeffy.chen@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, cf@rock-chips.com, sonnyrao@chromium.org, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: hl@rock-chips.com, jay.xu@rock-chips.com, jeffy.chen@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, cf@rock-chips.com, sonnyrao@chromium.org, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: zhengxing <zhengxing@rock-chips.com>
+This patch add the mclk property for the CODEC driver,
+since sometime the CODEC driver needs the clock enabled.
 
-In the emac driver, we need to refer HCLK_MAC since there are
-only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clock are under the
-GPLL, and it is unable to provide the accurate rate for mac_ref which
-need to 50MHz probability, we should let it under the DPLL and are
-able to set the freq which integer multiples of 50MHz, so we add these
-emac node for reference.
+The system clock of ALC5616 can be selected from MCLK,
+That's also make as the codec master clock provider,
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 ---
 
 Changes in v4:
-- fix the commit, pick up from the
-  https://patchwork.kernel.org/patch/7976631/.
-- The emac parent shouldn't depend on the APLL. instead of DPLL.
+- Add this patch included in kylin series patches.
 
- drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
- include/dt-bindings/clock/rk3036-cru.h | 2 ++
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/sound/rt5616.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
-index be71a41..701f702 100644
---- a/drivers/clk/rockchip/clk-rk3036.c
-+++ b/drivers/clk/rockchip/clk-rk3036.c
-@@ -343,8 +343,11 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
- 			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
+index efc48c6..e410858 100644
+--- a/Documentation/devicetree/bindings/sound/rt5616.txt
++++ b/Documentation/devicetree/bindings/sound/rt5616.txt
+@@ -8,6 +8,12 @@ Required properties:
  
--	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
--			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
-+	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
-+			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
-+	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
-+			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
+ - reg : The I2C address of the device.
+ 
++Optional properties:
 +
- 	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
++- clocks: The phandle of the master clock to the CODEC.
++
++- clock-names: Should be "mclk".
++
+ Pins on the device (for linking into audio routes) for RT5616:
  
-@@ -404,7 +407,7 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 	GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(7), 3, GFLAGS),
- 	GATE(HCLK_I2S, "hclk_i2s", "hclk_peri", 0, RK2928_CLKGATE_CON(7), 2, GFLAGS),
- 	GATE(0, "hclk_sfc", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS),
--	GATE(0, "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15, GFLAGS),
-+	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0, RK2928_CLKGATE_CON(3), 5, GFLAGS),
- 
- 	/* pclk_peri gates */
- 	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 1, GFLAGS),
-diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
-index ebc7a7b..de44109 100644
---- a/include/dt-bindings/clock/rk3036-cru.h
-+++ b/include/dt-bindings/clock/rk3036-cru.h
-@@ -54,6 +54,7 @@
- #define SCLK_PVTM_VIDEO		125
- #define SCLK_MAC		151
- #define SCLK_MACREF		152
-+#define SCLK_MACPLL		153
- #define SCLK_SFC		160
- 
- /* aclk gates */
-@@ -92,6 +93,7 @@
- #define HCLK_SDMMC		456
- #define HCLK_SDIO		457
- #define HCLK_EMMC		459
-+#define HCLK_MAC		460
- #define HCLK_I2S		462
- #define HCLK_LCDC		465
- #define HCLK_ROM		467
+   * IN1P
 -- 
 1.9.1
