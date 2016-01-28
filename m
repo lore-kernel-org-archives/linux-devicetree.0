@@ -1,49 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Thu, 28 Jan 2016 11:40:26 +0000
-Message-ID: <20160128114026.GB6078@sirena.org.uk>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
- <20160128064149.GM3368@x1>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
+Date: Thu, 28 Jan 2016 12:49:37 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1601281238110.3886@nanos>
+References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com> <alpine.DEB.2.11.1601262142450.3886@nanos> <20160128095955.GA12884@e106950-lin.cambridge.arm.com> <alpine.DEB.2.11.1601281116310.3886@nanos>
+ <20160128111041.GB12884@e106950-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160128064149.GM3368@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160128111041.GB12884@e106950-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Starkey <brian.starkey@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 28 Jan 2016, Brian Starkey wrote:
+> I've got a few devices on the same interrupt line. One driver does
 
---i0/AhcQY5QxfSsSZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just for the record: When will hardware folks finally understand that shared
+interrupt lines are a nightmare?
 
-On Thu, Jan 28, 2016 at 06:41:49AM +0000, Lee Jones wrote:
+> something along these lines:
+> 
+> 	res = platform_get_resource(dev, IORESOURCE_IRQ, 0);
+> 	flags = (res->flags & IRQF_TRIGGER_MASK) | IRQF_SHARED;
+> 	request_irq(res->start, handler, flags, "name", dev);
+> 
+> This seems pretty reasonable. The problem is since 4a43d686fe33:
+>    of/irq: Pass trigger type in IRQ resource flags[1]
+> the trigger type information from device-tree is in res->flags.
+> 
+> So when the other drivers don't pass in any flags, they fail the check
+> in __setup_irq().
+> 
+> Changing the former driver to remove the flags doesn't seem right, and
+> adding flags to the latter would imply adding flags to _every_ driver,
+> which is an awful lot to change - and I'm not sure it would be possible
+> and/or effective in all cases.
 
-> Just need your stamp for this to go in.
+So that commit does:
 
-Please be more specific?  What is it that you are looking for beyond the
-review I already did for the regulator driver?
+   r->flags = IORESOURCE_IRQ | irqd_get_trigger_type(irq_get_irq_data(irq));
 
---i0/AhcQY5QxfSsSZ
-Content-Type: application/pgp-signature; name="signature.asc"
+which reads the current setting of the interrupt line.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Now we pass exactly that to request_irq(). So first irq_of_parse_and_map()
+configures the interrupt type when mapping it and then hands in the same type
+information when requesting the irq.
 
-iQEcBAEBCAAGBQJWqf4pAAoJECTWi3JdVIfQwDcH/AmSPSBza+y0sZ7m6Dz+2wUG
-6MNGV0uBGeWeZLVGrHJAEhQEdZqTxlPdrsSoS4eTJEuTqbn9Bgb+4hxunigsT7hS
-+wPlMpY3X1YTU4u51ysmAZyfshdwRnZKjUHZgg2cKhRNaTeq4yBomKKN/56Q8I85
-A28HKCpaeSC3dNm1DJ5ClpjwjlPG8RZldC7vD/lkxiloFEcV3sauhydkqpHLlZTW
-2zOHZEU7JbcLB3FhiJ/faCEQAii6ef0a+SzYmnVPBy9rCMa78lXly2lA/KCIQ/Ct
-R0DFeF/mTvWyTW3CVz5vx74+owNs+nru4qsTFRlIaZcETei4kxtd7/XeJGq2CAQ=
-=Y7uz
------END PGP SIGNATURE-----
+I have no idea what the purpose of this is and the changelog of that commit is
+completely useless, sigh!
 
---i0/AhcQY5QxfSsSZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've cc'ed the author and the device tree folks. Perhaps are they able to
+explain what this commit tries to 'fix'.
+
+Thanks,
+
+	tglx
