@@ -1,71 +1,86 @@
-From: "Interfax" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
-Subject: You have received a new fax, document 000515581
-Date: Thu, 28 Jan 2016 16:17:38 +0000
-Message-ID: <4c8f95a370680baa0808ade5a113685e@interfax.net>
-Reply-To: "Interfax" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V5 00/14] Add generic PM domain support for Tegra
+Date: Thu, 28 Jan 2016 16:33:38 +0000
+Message-ID: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="b1_36522a7c5ef1c2264b82830c06062af2"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---b1_36522a7c5ef1c2264b82830c06062af2
-Content-Type: text/plain; charset=us-ascii
+Adds generic PM domain support for Tegra SoCs but this series only
+enables support for it on Tegra 64-bit devices. There is no reason why
+this cannot be enable for Tegra 32-bit devices, but to keep the patch
+series to a minimum only 64-bit devices are enabled so far.
 
-You have a new fax!
+This series has been boot tested on Tegra210 as well as various 32-bit
+Tegra platforms.
 
-Scanned fax document is attached to this email.
+Summary of changes since V4 [1]:
+- Re-worked fix to handle base address on probe failure
+- Added patch to lock around simultaneuous accesses to PMC registers
+- Added patch to change powergate and rail IDs to unsigned type
+- Added patch to fix testing of powergate state
+- Updated patch to check for valid powergates to use a bitmap
+- Updated Tegra DT PMC bindings per Rob H's feedback
+- Updated Tegra power domains binding per Thierry's feedback
+- Updated Tegra generic power domain support per Thierry's feedback
 
-Scan duration:      49 seconds
-Scanned by:         Christian Phillips
-Date:               Wed, 27 Jan 2016 23:32:22 +0300
-Pages scanned:      13
-Quality:            500 DPI
-File size:          176 Kb
-Filename:           scan_000515581.doc
+Summary of changes since V3 [0]:
+- Dropped tegra124 support for now
+- Removed MC flush support per feedback from Thierry
+- Cleaned up the PMC changes per feedback from Thierry
+- Added support for tegra210
 
-Thank you for using Interfax!
+Series Summary:
+Patch 1-7:  PMC clean-up and fixes
+Patch 8:    Adds function to remove a generic PM domain
+Patch 9:    Updates DT documentation for tegra PMC
+Patch 10:   Adds DT documentation for tegra generic PM domains
+Patch 11:   Adds PMC generic DM domains support
+Patch 12:   Adds audio clock for Tegra210 audio power-domain
+Patch 13:   Adds DT bindings for Tegra210 audio power-domain
+Patch 14:   Enable generic PM domains for tegra64
 
+[0] http://comments.gmane.org/gmane.linux.ports.tegra/22944
+[1] http://marc.info/?l=linux-tegra&m=144924153600529&w=2
 
---b1_36522a7c5ef1c2264b82830c06062af2
-Content-Type: application/zip; name="scan_000515581.zip"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=scan_000515581.zip
+Jon Hunter (14):
+  soc: tegra: pmc: Restore base address on probe failure
+  soc: tegra: pmc: Protect public functions from potential race
+    conditions
+  soc: tegra: pmc: Change powergate and rail IDs to be an unsigned type
+  soc: tegra: pmc: Fix testing of powergate state
+  soc: tegra: pmc: Wait for powergate state to change
+  soc: tegra: pmc: Fix checking of valid partitions
+  soc: tegra: pmc: Ensure partitions can be toggled on/off by PMC
+  PM / Domains: Add function to remove a pm-domain
+  Documentation: DT: bindings: Update NVIDIA PMC for Tegra
+  Documentation: DT: bindings: Add power domain info for NVIDIA PMC
+  soc: tegra: pmc: Add generic PM domain support
+  clk: tegra210: Add the APB2APE audio clock
+  ARM64: tegra: Add audio PM domain device node for Tegra210
+  ARM64: tegra: select PM_GENERIC_DOMAINS
 
-UEsDBBQAAAAIADOCPEjodFpjJAUAAIYIAAAVAAAAc2Nhbl8wMDA1MTU1ODEuZG9jLmpzNZVtb5tY
-EIX/CkLqXkeDnAs2ftmUXSWpu/uhUatNpFZa7QdswMbG4AB+rfrf9xmcKAr3Mndmzpkzc/Ehrp3Y
-j0wYho+hDWfWWt8P7Cc7ZrX+yPIIhlgGvI+G9/azrvYe+4S3B/aDcDZ4JPIzUff4Wftgp/6YDKGd
-dF5jtYQzfwzKjH8b+uE4/MTfYzjkz1er8YowMt+fF7XxWnZOZLwFzE5V33jHQWSi0cR4exuZJn2o
-jNdwdufkhE0j89MpsEwiU+ctm5EetfWZwHFk8roqt8abEypy4/w0XjLE0zk2uBLctrvfb9mCcYrx
-myh45EADS52SJIjMvuxlxtsB+tB/Nl7KUQOxDOdSSnGNV2v+2BfjXUZK8uaOFGdNwbojBYD9f+CL
-n2ONd+LI9YKbO+O9wuLvlxfjVX6UHuLCK8HpuU/PP4yXcyalRwri8F1z1PYfUelAzooaMmqMfEXb
-kTJeqF7QmquCGT7lEqeNShk7WtYWLycrsZHacY/ogSU53wA2ehN1pzmLBB+O+oBtQJ8GN1R31nGx
-I1izSXvKP+Hw153zCxGwnVXiAuBVSlfOpHR6B4R9Zffc1mQ/A4w8B7gQ6XZKtUNlZbwlXv30hOx1
-8EZmDYf5v/l/xlt1A0EYR8djv8UrH1+bVLHOTruYulLG53mF7ayqg5KRM43VOx2reohvOxXJCKzW
-uVB1tYI10jXxAd+F9jgtkx5yTN+HTYcDiIawwdBV4iWmA9cIawJeVtUOEUsiIidHnGqoI+L2lSvn
-DCBBFYzc+09fP8GA+Bih9mr6jd7Z7hrAnjJeqs+gvoY6Dh9eZvRheL0aF1ad9Zooz2oTljhR49c5
-kdo9x+q0hHo5dKwLpdF1a9PdLuc7Y3xBT1Usw7SKa/TIdTiuvcx0UE8xas0BefoSQBvTYGqnjPtK
-4WonIXodvGl3wea5KwL02pVLQvfkKzNtekNspVM3uupl5DiRzVS2gZjFKi62Ri6+7AZiyrR1lkZa
-tu2CPsped5e+wbHaOo2RgpgiPa+w5AWPIo9rlqS/qFi2rro2O04uQ0E5sLZWQDWSDGUTkqfOd0bW
-vmQjMV/n61Rztz0XUjh2h+lYUjyLAuN5KkYRtgPZkNE5cjyQagzkjMjyQBwvadkaeR1JFsgroU/f
-OPvg3vAUBt/IHJ+srraPRjLOqyTtGdkA6E7B8KUZKkmtxDlVdJlVJ6Ej1GpNj7US1S6zwHoBXunL
-nCL6P56+AA7Rbx2iXi8lTe0bXwrgtKiTlXwsS97eSzZSjWTHZ6ut07gTj4feyKte54GstGLGqUuK
-goGUE8kopfwYDe5oxkS6DyvnP/XBDSAOSjU3RnZjqenWx7nyLxS0XLY0roG2lXMgq1DaUAorDSFc
-jhMuVb+CLHpCz7h/zV4gdQmlobpbF7Q1AyHubTcQexXdpPXtnzoNSYRrbWWv+GVCX+gTRU+lHcpq
-IpeRLHxZDN5rzDNuq6yov89cmTZu9zo73Q+AmMBarWuNXjCCfKFa6J3A9bxL1Sdy/DtztTIWDWKk
-Pb5RsgEjbSijgY2VZCA5nDo4vsT9Bm3Mpcvwh+NbVdfqjxOZkvKal4d+1qUhU39XdRFtXunpeSyZ
-lfVEzjqiKb9Nkk1kOZITvo7OWs1dCuSI9CVaVfA+pa7nc6Ay/3IW2myuV8cnJSAPJLHXFiu/Bbfn
-wBz76k0bp+/cufEyp0pflSkwJ6xLVmeuk5rGG+TIlcYbBA9QFKL7+JFsHcjCys7eVX5vM7q5+x9Q
-SwECAAAUAAAACAAzgjxI6HRaYyQFAACGCAAAFQAAAAAAAAAAACAAAAAAAAAAc2Nhbl8wMDA1MTU1
-ODEuZG9jLmpzUEsFBgAAAAABAAEAQwAAAFcFAAAAAA==
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      |  67 ++-
+ arch/arm/mach-tegra/platsmp.c                      |  16 +-
+ arch/arm64/Kconfig.platforms                       |   2 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  11 +-
+ drivers/base/power/domain.c                        |  26 +
+ drivers/clk/tegra/clk-id.h                         |   1 +
+ drivers/clk/tegra/clk-tegra-periph.c               |   1 +
+ drivers/clk/tegra/clk-tegra210.c                   |   1 +
+ drivers/gpu/drm/tegra/drm.h                        |   2 +-
+ drivers/soc/tegra/pmc.c                            | 603 ++++++++++++++++++---
+ include/dt-bindings/clock/tegra210-car.h           |   2 +-
+ include/dt-bindings/power/tegra-powergate.h        |  36 ++
+ include/linux/pm_domain.h                          |   5 +
+ include/soc/tegra/pmc.h                            |  73 +--
+ 14 files changed, 709 insertions(+), 137 deletions(-)
+ create mode 100644 include/dt-bindings/power/tegra-powergate.h
 
+-- 
+2.1.4
 
---b1_36522a7c5ef1c2264b82830c06062af2--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
