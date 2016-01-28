@@ -1,83 +1,39 @@
-From: Quan Nguyen <qnguyen@apm.com>
-Subject: Re: [PATCH v4 1/3] gpio: xgene: Enable X-Gene standby GPIO as
- interrupt controller
-Date: Thu, 28 Jan 2016 16:30:47 +0700
-Message-ID: <CAFopSPRW0yOdbyU_MYuXus+hS-DYWAukPRfn8WsQSv4yqrTjpA@mail.gmail.com>
-References: <1453792935-19916-1-git-send-email-qnguyen@apm.com>
-	<1453792935-19916-2-git-send-email-qnguyen@apm.com>
-	<56A74BD3.40801@arm.com>
-	<CAFopSPTz=sdZs_WZrU8ryTRXNtb4GPOMA_sj8HMPMxWBxV2w4A@mail.gmail.com>
-	<56A7AF48.8020605@arm.com>
-	<CAFopSPR1ZKinH=N29gaAu3M8oc-vfKUnPsFpAu3EUNb3Doi68w@mail.gmail.com>
-	<56A8C1DB.5040606@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V4 3/5] pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+Date: Thu, 28 Jan 2016 11:04:10 +0100
+Message-ID: <CACRpkdZEYw2aADQDNSi0kKns17nKZQZKY+harLhc0j3pA-5FuA@mail.gmail.com>
+References: <1453198783-28383-1-git-send-email-ldewangan@nvidia.com>
+	<1453198783-28383-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56A8C1DB.5040606@arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453198783-28383-4-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, vreddytalla@nvidia.com, Chaitanya
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 8:10 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> Quan,
->
-> On 27/01/16 12:48, Quan Nguyen wrote:
->> On Wed, Jan 27, 2016 at 12:39 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>> On 26/01/16 16:27, Quan Nguyen wrote:
->>>> On Tue, Jan 26, 2016 at 5:34 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>>>>
->>>>> On 26/01/16 07:22, Quan Nguyen wrote:
->>>>>> Enable X-Gene standby GPIO controller as interrupt controller to provide
->>>>>> its own resources. This avoids ambiguity where GIC interrupt resource is
->>>>>> use as X-Gene standby GPIO interrupt resource in user driver.
->>>>>>
->>>>>> Signed-off-by: Y Vo <yvo@apm.com>
->>>>>> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
->>>>>> ---
->>>>>>  drivers/gpio/gpio-xgene-sb.c | 331 ++++++++++++++++++++++++++++++++++++-------
->>>>>>  1 file changed, 276 insertions(+), 55 deletions(-)
->>>
->>> [...]
->>>>>> @@ -90,6 +301,32 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
->>>>>>       if (IS_ERR(regs))
->>>>>>               return PTR_ERR(regs);
->>>>>>
->>>>>> +     priv->regs = regs;
->>>>>> +
->>>>>> +     of_id = of_match_device(xgene_gpio_sb_of_match, &pdev->dev);
->>>>>> +     if (of_id)
->>>>>> +             priv->flags = (uintptr_t)of_id->data;
->>>>>
->>>>> Wait. Everything is hardcoded? So why do we have to deal with looking
->>>>> into that structure if nothing is actually parametrized?
->>>>
->>>> There will be other instances with difference number of irq pins /gpio
->>>> /start_irq_base etc.
->>>
->>> Then it has to be described in DT right now.
->>>
->>
->> What I was thinking is to have other id to match with difference
->> instances and these code can be use for ACPI also. Let say
->> "apm,xgene2-gpio-sb"
->> Please help correcting me if it is not right.
->
-> I still think this is the wrong thing to do. You are hiding magic values
-> in the driver, for no good reason. If ACPI has such a broken model that
-> it cannot give you the various parameters you need, then this is an ACPI
-> problem you can solve in the ACPI-specific code. Alternatively, you
-> could also fix your ACPI tables to be less braindead.
->
-> But please do not turn the DT code into the same mess for the sake of
-> using the lowest common denominator. Have a set of properties describing
-> the HW, a compatibility string to nicely identify the revision, and use
-> that. You can still hardcode things for ACPI if you desperately need it.
->
->
+On Tue, Jan 19, 2016 at 11:19 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-Thanks, Marc.
-I'll try with set of properties describing HW and may utilize _DSD
-method for ACPI.
+> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO pins
+> which also act as the special function in alternate mode. Also
+> there is configuration like push-pull, open drain, FPS timing
+> etc for these pins.
+>
+> Add pincontrol driver to configure these parameters through
+> pincontrol APIs.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
 
--- Quan Nguyen
+Nice. This driver looks like a lot of hard work, but I think
+it's worth it.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+I guess Lee will be merging this into the MTD tree.
+
+(I still had those comments on the DT bindings but this driver
+part looks fine.)
+
+Yours,
+Linus Walleij
