@@ -1,127 +1,31 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 12/19] ARM: dts: exynos: replace legacy *,wakeup property
- with wakeup-source
-Date: Thu, 28 Jan 2016 17:11:06 +0900
-Message-ID: <56A9CD1A.8010800@samsung.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-13-git-send-email-sudeep.holla@arm.com>
- <5671F88F.7050802@samsung.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: imx7d: add arch timer
+Date: Thu, 28 Jan 2016 16:34:08 +0800
+Message-ID: <20160128083408.GP9070@tiger>
+References: <1452014237-12848-1-git-send-email-Frank.Li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5671F88F.7050802@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452014237-12848-1-git-send-email-Frank.Li-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org>
+Cc: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.12.2015 08:49, Krzysztof Kozlowski wrote:
-> On 21.10.2015 19:10, Sudeep Holla wrote:
->> Though the keyboard and other driver will continue to support the legacy
->> "gpio-key,wakeup", "linux-keypad,wakeup" boolean property to enable the
->> wakeup source, "wakeup-source" is the new standard binding.
->>
->> This patch replaces all the legacy wakeup properties with the unified
->> "wakeup-source" property in order to avoid any futher copy-paste
->> duplication.
->>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Cc: linux-samsung-soc@vger.kernel.org
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  arch/arm/boot/dts/exynos3250-monk.dts           |  6 +++---
->>  arch/arm/boot/dts/exynos3250-rinato.dts         |  6 +++---
->>  arch/arm/boot/dts/exynos4210-origen.dts         | 10 +++++-----
->>  arch/arm/boot/dts/exynos4210-smdkv310.dts       |  2 +-
->>  arch/arm/boot/dts/exynos4210-trats.dts          |  2 +-
->>  arch/arm/boot/dts/exynos4210-universal_c210.dts |  4 ++--
->>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  2 +-
->>  arch/arm/boot/dts/exynos4412-odroidx.dts        |  2 +-
->>  arch/arm/boot/dts/exynos4412-origen.dts         |  2 +-
->>  arch/arm/boot/dts/exynos4412-smdk4412.dts       |  2 +-
->>  arch/arm/boot/dts/exynos4412-trats2.dts         |  4 ++--
->>  arch/arm/boot/dts/exynos5250-arndale.dts        | 12 ++++++------
->>  arch/arm/boot/dts/exynos5250-snow.dts           |  4 ++--
->>  arch/arm/boot/dts/exynos5250-spring.dts         |  4 ++--
->>  arch/arm/boot/dts/exynos5420-arndale-octa.dts   |  2 +-
->>  arch/arm/boot/dts/exynos5420-peach-pit.dts      |  4 ++--
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts       |  4 ++--
->>  17 files changed, 36 insertions(+), 36 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
->> index 540a0adf2be6..b77ea2163a0a 100644
->> --- a/arch/arm/boot/dts/exynos3250-monk.dts
->> +++ b/arch/arm/boot/dts/exynos3250-monk.dts
->> @@ -43,7 +43,7 @@
->>  			linux,code = <KEY_POWER>;
->>  			label = "power key";
->>  			debounce-interval = <10>;
->> -			gpio-key,wakeup;
->> +			wakeup-source;
->>  		};
->>  	};
->>  
->> @@ -67,7 +67,7 @@
->>  			interrupt-parent = <&gpx1>;
->>  			interrupts = <5 0>;
->>  			reg = <0x25>;
->> -			wakeup;
->> +			wakeup-source;
->>  
->>  			muic: max77836-muic {
->>  				compatible = "maxim,max77836-muic";
->> @@ -184,7 +184,7 @@
->>  		interrupt-parent = <&gpx0>;
->>  		interrupts = <7 0>;
->>  		reg = <0x66>;
->> -		wakeup;
->> +		wakeup-source;
->>  
->>  		s2mps14_osc: clocks {
->>  			compatible = "samsung,s2mps14-clk";
->> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
->> index 41a5fafb9aa9..7acd11d2d957 100644
->> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
->> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
->> @@ -43,7 +43,7 @@
->>  			linux,code = <KEY_POWER>;
->>  			label = "power key";
->>  			debounce-interval = <10>;
->> -			gpio-key,wakeup;
->> +			wakeup-source;
->>  		};
->>  	};
->>  
->> @@ -58,7 +58,7 @@
->>  			interrupt-parent = <&gpx1>;
->>  			interrupts = <5 0>;
->>  			reg = <0x25>;
->> -			wakeup;
->> +			wakeup-source;
->>  
->>  			muic: max77836-muic {
->>  				compatible = "maxim,max77836-muic";
->> @@ -245,7 +245,7 @@
->>  		interrupt-parent = <&gpx0>;
->>  		interrupts = <7 0>;
->>  		reg = <0x66>;
->> -		wakeup;
->> +		wakeup-source;
+On Tue, Jan 05, 2016 at 11:17:14AM -0600, Frank Li wrote:
+> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> I think here and in Monk board these four "wakeup" properties are bogus,
-> not parsed by driver. Instead wakeup is always initialized to true.
+> Since uboot v2016.01-rc2, which supported basic psci for i.mx7d.
+> So imx7d's second core can be enabled by psci.
 > 
-> Anyway fixing this is not part of this patch but instead this should be
-> fixed in separate commit. Here everything looks good:
+> Without arch timer, every timer event will be boardcasted to each core.
+> arch timer has local timer irq for each core.
 > 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-This patch does not apply. Can you rebase it on linux-next or my next/dt
-branch (git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git)?
-
-I applied the 16/19 (s5pv210).
-
-Best regards,
-Krzysztof
+Applied all, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
