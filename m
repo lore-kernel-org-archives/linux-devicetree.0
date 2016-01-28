@@ -1,52 +1,298 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH] ASoC: fsl-asoc-card: add cs4271 and cs4272 support
-Date: Thu, 28 Jan 2016 10:24:08 -0800
-Message-ID: <20160128182407.GA23971@Asurada-Nvidia>
-References: <1453978355-23620-1-git-send-email-eu@felipetonello.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 4/7] ARM: dts: imx: Add support for Advantech/GE Bx50v3
+Date: Thu, 28 Jan 2016 13:26:28 -0500
+Message-ID: <56AA5D54.7090709@timesys.com>
+References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
+ <1450908016-17384-5-git-send-email-akshay.bhat@timesys.com>
+ <20160128061202.GE9070@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453978355-23620-1-git-send-email-eu@felipetonello.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Felipe F. Tonello" <eu@felipetonello.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160128061202.GE9070@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 10:52:35AM +0000, Felipe F. Tonello wrote:
-> add cs4271 and cs42727 support for fsl-asoc-card
-> 
-> Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
-> ---
->  .../devicetree/bindings/sound/imx-audio-cs427x.txt | 47 ++++++++++++++++++++++
->  sound/soc/fsl/Kconfig                              |  4 +-
->  sound/soc/fsl/fsl-asoc-card.c                      |  7 ++++
->  3 files changed, 56 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
-> new file mode 100644
-> index 000000000000..295f60b19418
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
-> @@ -0,0 +1,47 @@
-> +Freescale i.MX audio complex with CS4271 or CS4272 codec
 
-I think it could be better to insert these into the fsl-asoc-card.txt
-without those redundant property descriptions. At least it should be
-added to the compatible list. And you may add a comment in (...) to
-describe that it supports both 4271 and 4272.
 
-> +  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX)
-> +
-> +  - mux-ext-port	: The external port of the i.MX audio muxer
-> +
-> +Note: The AUDMUX port numbering should start at 1, which is consistent with
-> +hardware manual.
+On 01/28/2016 01:12 AM, Shawn Guo wrote:
+> On Wed, Dec 23, 2015 at 05:00:13PM -0500, Akshay Bhat wrote:
+>> From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
+>> the Advantech BA-16 module (based on iMX6D). This file has the
+>> devicetree entries that are common to all 3 boards.
+>>
+>> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/imx6q-bx50v3.dtsi | 237 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 237 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>> new file mode 100644
+>> index 0000000..1eaf0ce
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>> @@ -0,0 +1,237 @@
+>> +/*
+>> + * Copyright 2015 Timesys Corporation.
+>> + * Copyright 2015 General Electric Company
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License
+>> + *     version 2 as published by the Free Software Foundation.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include "imx6q-ba16.dtsi"
+>> +
+>> +/ {
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>
+> Have a new line between properties and sub-node.
 
-These two properties are missing in the fsl-asoc-card binding docs.
-So it could be nice to have them as well. But they should be optional
-unless SSI is selected as a CPU DAI.
+Will fix this.
 
-Thanks
-Nicolin
+>
+>> +		mclk: clock@0 {
+>> +			compatible = "fixed-clock";
+>> +			reg = <0>;
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <22000000>;
+>> +		};
+>
+> So it's using a different clock naming schema from clk24m in
+> imx6q-ba16.dtsi.  In any case, they should be consistent.
+>
+>> +	};
+>> +
+>> +	reg_wl18xx_vmmc: regulator-wl18xx_vmmc {
+>
+> As a convention, hyphen instead of underscore should be used in node
+> name.  Actually less hyphen form like regulator-wl18xxvmmc or
+> regulator-wl18xx looks better to me.
+>
+Will fix this.
+
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vwl1807";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		gpio = <&pca9539 3 GPIO_ACTIVE_HIGH>;
+>> +		startup-delay-us = <70000>;
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	reg_wlan: regulator-wlan {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "3P3V_wlan";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		gpio = <&gpio6 14 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	sound {
+>> +		compatible = "fsl,imx6q-ba16-sgtl5000",
+>> +			     "fsl,imx-audio-sgtl5000";
+>> +		model = "imx6q-ba16-sgtl5000";
+>> +		ssi-controller = <&ssi1>;
+>> +		audio-codec = <&codec>;
+>> +		audio-routing =
+>> +			"MIC_IN", "Mic Jack",
+>> +			"Mic Jack", "Mic Bias",
+>> +			"LINE_IN", "Line In Jack",
+>> +			"Headphone Jack", "HP_OUT";
+>> +		mux-int-port = <1>;
+>> +		mux-ext-port = <4>;
+>> +	};
+>> +};
+>> +
+>> +&ecspi5 {
+>> +	fsl,spi-num-chipselects = <1>;
+>> +	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_ecspi5>;
+>> +	status = "okay";
+>> +
+>> +	m25_eeprom: m25p80@0 {
+>> +		compatible = "atmel,at25";
+>> +		spi-max-frequency = <20000000>;
+>> +		size = <0x8000>;
+>> +		pagesize = <64>;
+>> +		reg = <0>;
+>> +		address-width = <16>;
+>> +	};
+>> +};
+>> +
+>> +&i2c1 {
+>> +	pca9547: mux@70 {
+>> +		compatible = "nxp,pca9547";
+>> +		reg = <0x70>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		mux_i2c3: i2c@0 {
+>
+> How are these mux_i2c labels named?  Where are mux_i2c1 and mux_i2c2?
+>
+Agree that the naming is confusing. Since i2c0/i2c1/i2c2 maps to the 
+processor, idea was to continue the naming convention starting at 
+mux_i2c3. I will change it in the next version of patch: mux1_i2c1 to 
+mux1_i2c8 in imx6q-bx50v3.dtsi and mux2_i2c1 to mux2_i2c8 in 
+imx6q-b850v3.dts.
+
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x0>;
+>> +
+>> +			ads7830: ads7830@48 {
+>> +				compatible = "ti,ads7830";
+>> +				reg = <0x48>;
+>> +			};
+>> +
+>> +			mma8453: mma8453@1c {
+>> +				compatible = "fsl,mma8453";
+>> +				reg = <0x1c>;
+>> +			};
+>> +		};
+>> +
+>> +		mux_i2c4: i2c@1 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x1>;
+>> +
+>> +			eeprom: eeprom@50 {
+>> +				compatible = "atmel,24c08";
+>> +				reg = <0x50>;
+>> +			};
+>> +
+>> +			mpl3115: mpl3115@60 {
+>> +				compatible = "fsl,mpl3115";
+>> +				reg = <0x60>;
+>> +			};
+>> +		};
+>> +
+>> +		mux_i2c5: i2c@2 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x2>;
+>> +		};
+>> +
+>> +		mux_i2c6: i2c@3 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x3>;
+>> +
+>> +			codec: sgtl5000@0a {
+>> +				compatible = "fsl,sgtl5000";
+>> +				reg = <0x0a>;
+>> +				clocks = <&mclk>;
+>> +				VDDA-supply = <&reg_1p8v>;
+>> +				VDDIO-supply = <&reg_3p3v>;
+>> +			};
+>> +		};
+>> +
+>> +		mux_i2c7: i2c@4 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x4>;
+>> +
+>> +			pca9539: pca9539@74 {
+>> +				compatible = "nxp,pca9539";
+>> +				reg = <0x74>;
+>> +				gpio-controller;
+>> +				#gpio-cells = <2>;
+>> +				interrupt-controller;
+>> +				interrupt-parent = <&gpio2>;
+>> +				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+>> +			};
+>> +		};
+>> +
+>> +		mux_i2c8: i2c@5 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x5>;
+>> +
+>> +			igb@49 {
+>> +				compatible = "intel,igb";
+>> +				reg = <0x49>;
+>> +			};
+>> +
+>> +			igb@61 {
+>> +				compatible = "intel,igb";
+>> +				reg = <0x61>;
+>> +			};
+>> +		};
+>> +
+>> +		mux_i2c9: i2c@6 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x6>;
+>> +		};
+>> +
+>> +		mux_i2c10: i2c@7 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x7>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&usdhc4 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usdhc4>;
+>> +	bus-width = <4>;
+>> +	vmmc-supply = <&reg_wl18xx_vmmc>;
+>> +	no-1-8-v;
+>> +	non-removable;
+>> +	enable-sdio-wakeup;
+>
+> wakeup-source
+>
+> Shawn
+>
+Will fix this
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
