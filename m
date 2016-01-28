@@ -1,42 +1,42 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 7/9] arm64: dts: apq8016-sbc: make 1.8v available on LS expansion
-Date: Thu, 28 Jan 2016 17:44:09 +0000
-Message-ID: <1454003049-3414-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 8/9] arm64: dts: apq8016-sbc: move sdhci node under soc node
+Date: Thu, 28 Jan 2016 17:44:16 +0000
+Message-ID: <1454003056-3456-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-96boards mezzanine boards on LS expansion require 1.8v as per 96boards
-specifications, so enable the corresponding regulators and make them
-always-on.
+To be consistent with other nodes move sdhci node under the soc node,
+rather than using lable references.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 601c0ff..279af22 100644
+index 279af22..8102929 100644
 --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -230,9 +230,14 @@
- 		regulator-max-microvolt = <3337000>;
- 	};
+@@ -129,11 +129,11 @@
+ 				default-state = "off";
+ 			};
+ 		};
+-	};
+-};
  
-+	/**
-+	 * 1.8v required on LS expansion
-+	 * for mezzanine boards
-+	 */
- 	l15 {
- 		regulator-min-microvolt = <1750000>;
- 		regulator-max-microvolt = <3337000>;
-+		regulator-always-on;
- 	};
+-&sdhc_1 {
+-	status = "okay";
++		sdhci@07824000 {
++			status = "okay";
++		};
++	};
+ };
  
- 	l16 {
+ &smd_rpm_regulators {
 -- 
 1.9.1
