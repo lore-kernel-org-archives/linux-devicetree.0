@@ -1,33 +1,66 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] ARM: dts: Add Advantech board support
-Date: Thu, 28 Jan 2016 14:29:02 +0800
-Message-ID: <20160128062902.GI9070@tiger>
-References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
- <CACrMeVC+-D3a4pUccQMb0BXwcTts9EAagC4EDcvb=HYMhuD03w@mail.gmail.com>
- <56A8F0FF.7020308@timesys.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V5 5/5] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Thu, 28 Jan 2016 11:54:28 +0530
+Message-ID: <56A9B41C.4070607@nvidia.com>
+References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com> <1453903808-29788-6-git-send-email-ldewangan@nvidia.com> <56A99130.1070904@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56A8F0FF.7020308-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56A99130.1070904@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 11:31:59AM -0500, Akshay Bhat wrote:
-> I haven't seen any response from Shawn and seems like there has been
-> no activity in his git tree for the last 5 weeks.
 
-This is expected.  In the past a few weeks, the tree was frozen to sort
-out the materials we sent for merge window.
+On Thursday 28 January 2016 09:25 AM, Krzysztof Kozlowski wrote:
+> On 27.01.2016 23:10, Laxman Dewangan wrote:
+>> MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
+>> multiple DCDC and LDOs. This supplies the power to different
+>> components of the system.
+>> Also these rails has configuration for ramp time, flexible
+>> power sequence, slew rate etc.
+>>
+>> Add regulator driver to access these rails via regulator APIs.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+>> ---
+>> Changes from V1:
+>> - Cleanup code based on comment received on mfd/rtc.
+>> - Avoid duplication on error message.
+>>
+>> Changes form V2:
+>> - Run coccicheck and checkpatch in strict mode for the alignment.
+>> - Refactor Regulator driver to use core API for DT parsing.
+>> - Update based on API changes.
+>>
+>> Changes from V3:
+>> - Change all sys initcall to module driver.
+>> - change the max77620_read argument to unisgned int from u8.
+>>
+>> Changes from V4:
+>> - Added DT binding document as devicetree/bindings/regulator/regulator-max77620.txt
+>> - Detail out properties.
+> What does it mean "Detail out properties"? What have changed>
 
-Shawn
+Based on review comment from Linus W, I added more description on the 
+properties.
 
-> Was wondering if
-> you would be able to provide further feedback (if any) and/or apply
-> the patches. Appreciate your help.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>>   .../bindings/regulator/regulator-max77620.txt      | 163 ++++
+> Please put the bindings in separate patch. It might be easier for DT
+> guys to review them (they are acking the bindings, not the driver). Also
+OK, will push it.
+
+
+> I already reviewed the patchset but because of adding bindings here, you
+> could not add my reviewed-by tag (which makes my effort not tracked...).
+Yaah, This patch include the dt binding and so wanted your review again. 
+This si only reason to not add reviewed-by.
+
+Now I am going to separate out DT binding and driver,  I will add 
+reviewed-by tag for you in driver file.
+
