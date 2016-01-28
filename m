@@ -1,70 +1,269 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH V5 5/5] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Thu, 28 Jan 2016 15:42:36 +0900
-Message-ID: <56A9B85C.2050206@samsung.com>
-References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
- <1453903808-29788-6-git-send-email-ldewangan@nvidia.com>
- <56A99130.1070904@samsung.com> <56A9B41C.4070607@nvidia.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/5] ARM: dts: imx: Add basic dts support for imx6qp
+ SOC
+Date: Thu, 28 Jan 2016 15:42:56 +0800
+Message-ID: <20160128074256.GL9070@tiger>
+References: <1450159673-27314-1-git-send-email-b51503@freescale.com>
+ <1450159673-27314-2-git-send-email-b51503@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <56A9B41C.4070607@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1450159673-27314-2-git-send-email-b51503@freescale.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Bai Ping <b51503@freescale.com>
+Cc: kernel@pengutronix.de, pawel.moll@arm.com, robh+dt@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.01.2016 15:24, Laxman Dewangan wrote:
+On Tue, Dec 15, 2015 at 02:07:49PM +0800, Bai Ping wrote:
+> The i.MX6Quad Plus processor is an high performance SOC of i.MX6 family.
+> It has enhanced graphics performance and increased overall memory bandwidth
+> compared to i.MX6Q. Most of the design are same as i.MX6Quad/Dual, so code
+> for i.MX6Quad can be resued by this chip. The revision number is identied as
+> i.MX6Q Rev2.0, but actually it is a new chip, as we did many change to the
+> overall architecture.
 > 
-> On Thursday 28 January 2016 09:25 AM, Krzysztof Kozlowski wrote:
->> On 27.01.2016 23:10, Laxman Dewangan wrote:
->>> MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
->>> multiple DCDC and LDOs. This supplies the power to different
->>> components of the system.
->>> Also these rails has configuration for ramp time, flexible
->>> power sequence, slew rate etc.
->>>
->>> Add regulator driver to access these rails via regulator APIs.
->>>
->>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
->>> ---
->>> Changes from V1:
->>> - Cleanup code based on comment received on mfd/rtc.
->>> - Avoid duplication on error message.
->>>
->>> Changes form V2:
->>> - Run coccicheck and checkpatch in strict mode for the alignment.
->>> - Refactor Regulator driver to use core API for DT parsing.
->>> - Update based on API changes.
->>>
->>> Changes from V3:
->>> - Change all sys initcall to module driver.
->>> - change the max77620_read argument to unisgned int from u8.
->>>
->>> Changes from V4:
->>> - Added DT binding document as
->>> devicetree/bindings/regulator/regulator-max77620.txt
->>> - Detail out properties.
->> What does it mean "Detail out properties"? What have changed>
+> This patch adds basic dtsi file support for the new i.MX6Quad Plus processor.
 > 
-> Based on review comment from Linus W, I added more description on the
-> properties.
-
-Ah, ok.
-
->> I already reviewed the patchset but because of adding bindings here, you
->> could not add my reviewed-by tag (which makes my effort not tracked...).
-> Yaah, This patch include the dt binding and so wanted your review again.
-> This si only reason to not add reviewed-by.
+> Signed-off-by: Bai Ping <b51503@freescale.com>
+> ---
+>  arch/arm/boot/dts/imx6q.dtsi              |   2 +-
+>  arch/arm/boot/dts/imx6qp.dtsi             | 157 ++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/imx6qdl-clock.h |  16 ++-
+>  3 files changed, 173 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6qp.dtsi
 > 
-> Now I am going to separate out DT binding and driver,  I will add
-> reviewed-by tag for you in driver file.
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index a266a56..e26d0fd 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -22,7 +22,7 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> -		cpu@0 {
+> +		cpu0: cpu@0 {
+>  			compatible = "arm,cortex-a9";
+>  			device_type = "cpu";
+>  			reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6qp.dtsi b/arch/arm/boot/dts/imx6qp.dtsi
+> new file mode 100644
+> index 0000000..e43751f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qp.dtsi
+> @@ -0,0 +1,157 @@
+> +/*
+> + * Copyright 2015 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 
-Yeah, but the driver nor the bindings do not change so it really does
-not need my additional review.
+For new dts files, we suggest to use GPL/X11 dual license to consider
+non-Linux users.  You can grep "dual-licensed" in arch/arm/boot/dts to
+find a plenty of examples.
 
-Best regards,
-Krzysztof
+> + *
+> + */
+> +
+
+Do you not need to include "imx6qdl.dtsi" here?
+
+> +/ {
+> +	aliases {
+> +		pre0 = &pre1;
+> +		pre1 = &pre2;
+> +		pre2 = &pre3;
+> +		pre3 = &pre4;
+> +		prg0 = &prg1;
+> +		prg1 = &prg2;
+> +	};
+> +
+> +	soc {
+> +		ocram_2: sram@00940000 {
+
+The label can just be ocram2.
+
+> +			compatible = "mmio-sram";
+> +			reg = <0x00940000 0x20000>;
+> +			clocks = <&clks IMX6QDL_CLK_OCRAM>;
+> +		};
+> +
+> +		ocram_3: sram@00960000 {
+
+ocram3
+
+> +			compatible = "mmio-sram";
+> +			reg = <0x00960000 0x20000>;
+> +			clocks = <&clks IMX6QDL_CLK_OCRAM>;
+> +		};
+> +
+> +		pcie: pcie@0x01000000 {
+> +			compatible = "fsl,imx6qp-pcie", "snps,dw-pcie";
+> +			reg = <0x01ffc000 0x4000>, <0x01f00000 0x80000>;
+> +			reg-names = "dbi", "config";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			ranges = <0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
+> +				  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+> +			num-lanes = <1>;
+> +			interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 123 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 2 &intc 0 122 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 3 &intc 0 121 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0 0 0 4 &intc 0 120 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clks IMX6QDL_CLK_PCIE_REF_125M>,
+> +				 <&clks IMX6QDL_CLK_SATA_REF_100M>,
+> +				 <&clks IMX6QDL_CLK_LVDS1_GATE>, <&clks IMX6QDL_CLK_PCIE_AXI>;
+> +			clock-names = "pcie_phy", "ref_100m", "pcie_bus", "pcie";
+> +			status = "disabled";
+> +		};
+> +
+> +		aips-bus@02100000 { /* AIPS2 */
+> +			pre1: pre@021c8000 {
+> +				compatible = "fsl,imx6q-pre";
+
+Is there already a device tree binding and driver for this block in
+upstream kernel?  I do not accepted any unestablished device.
+
+> +				reg = <0x021c8000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRE0>;
+> +				interrupts = <0 90 IRQ_TYPE_EDGE_RISING>;
+> +				ocram = <&ocram_2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			pre2: pre@021c9000 {
+> +				compatible = "fsl,imx6q-pre";
+> +				reg = <0x021c9000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRE1>;
+> +				interrupts = <0 97 IRQ_TYPE_EDGE_RISING>;
+> +				ocram = <&ocram_2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			pre3: pre@021ca000 {
+> +				compatible = "fsl,imx6q-pre";
+> +				reg = <0x021ca000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRE2>;
+> +				interrupts = <0 98 IRQ_TYPE_EDGE_RISING>;
+> +				ocram = <&ocram_3>;
+> +				status = "disabled";
+> +			};
+> +
+> +			pre4: pre@021cb000 {
+> +				compatible = "fsl,imx6q-pre";
+> +				reg = <0x021cb000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRE3>;
+> +				interrupts = <0 99 IRQ_TYPE_EDGE_RISING>;
+> +				ocram = <&ocram_3>;
+> +				status = "disabled";
+> +			};
+> +
+> +			prg1: prg@021cc000 {
+> +				compatible = "fsl,imx6q-prg";
+
+Ditto
+
+> +				reg = <0x021cc000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRG0_AXI>,
+> +					 <&clks IMX6QDL_CLK_PRG0_APB>;
+> +				clock-names = "axi", "apb";
+> +				gpr = <&gpr>;
+> +				status = "disabled";
+> +			};
+> +
+> +			prg2: prg@021cd000 {
+> +				compatible = "fsl,imx6q-prg";
+> +				reg = <0x021cd000 0x1000>;
+> +				clocks = <&clks IMX6QDL_CLK_PRG1_AXI>,
+> +					 <&clks IMX6QDL_CLK_PRG1_APB>;
+> +				clock-names = "axi", "apb";
+> +				gpr = <&gpr>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		ipu1: ipu@02400000 {
+> +			compatible = "fsl,imx6qp-ipu", "fsl,imx6q-ipu";
+> +			clocks = <&clks IMX6QDL_CLK_IPU1>,
+> +				 <&clks IMX6QDL_CLK_IPU1_DI0>, <&clks IMX6QDL_CLK_IPU1_DI1>,
+> +				 <&clks IMX6QDL_CLK_IPU1_DI0_SEL>, <&clks IMX6QDL_CLK_IPU1_DI1_SEL>,
+> +				 <&clks IMX6QDL_CLK_LDB_DI0_PODF>, <&clks IMX6QDL_CLK_LDB_DI1_PODF>,
+> +				 <&clks IMX6QDL_CLK_PRG0_APB>;
+> +			clock-names = "bus",
+> +				      "di0", "di1",
+> +				      "di0_sel", "di1_sel",
+> +				      "ldb_di0", "ldb_di1", "prg";
+> +		};
+> +
+> +		ipu2: ipu@02800000 {
+> +			compatible = "fsl,imx6qp-ipu", "fsl,imx6q-ipu";
+> +			clocks = <&clks IMX6QDL_CLK_IPU2>,
+> +				 <&clks IMX6QDL_CLK_IPU2_DI0>, <&clks IMX6QDL_CLK_IPU2_DI1>,
+> +				 <&clks IMX6QDL_CLK_IPU2_DI0_SEL>, <&clks IMX6QDL_CLK_IPU2_DI1_SEL>,
+> +				 <&clks IMX6QDL_CLK_LDB_DI0_PODF>, <&clks IMX6QDL_CLK_LDB_DI1_PODF>,
+> +				 <&clks IMX6QDL_CLK_PRG1_APB>;
+> +			clock-names = "bus",
+> +				      "di0", "di1",
+> +				      "di0_sel", "di1_sel",
+> +				      "ldb_di0", "ldb_di1", "prg";
+> +		};
+> +
+> +		sata: sata@02200000 {
+> +			compatible = "fsl,imx6qp-ahci";
+> +			reg = <0x02200000 0x4000>;
+> +			interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clks IMX6QDL_CLK_SATA>,
+> +				 <&clks IMX6QDL_CLK_SATA_REF_100M>,
+> +				 <&clks IMX6QDL_CLK_AHB>;
+> +			clock-names = "sata", "sata_ref", "ahb";
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> +
+> +&ldb {
+> +	compatible = "fsl,imx6qp-ldb", "fsl,imx6q-ldb", "fsl,imx53-ldb";
+> +};
+> diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+> index 77985cc..2905033 100644
+> --- a/include/dt-bindings/clock/imx6qdl-clock.h
+> +++ b/include/dt-bindings/clock/imx6qdl-clock.h
+
+This file should be updated in the patch that updates clock driver.
+Only after these new clocks get supported by clock driver, you can use
+them in device tree.
+
+Shawn
+
+> @@ -255,6 +255,20 @@
+>  #define IMX6QDL_CLK_CAAM_ACLK			242
+>  #define IMX6QDL_CLK_CAAM_IPG			243
+>  #define IMX6QDL_CLK_SPDIF_GCLK			244
+> -#define IMX6QDL_CLK_END				245
+> +#define IMX6QDL_CLK_UART_SEL			245
+> +#define IMX6QDL_CLK_IPG_PER_SEL			246
+> +#define IMX6QDL_CLK_ECSPI_SEL			247
+> +#define IMX6QDL_CLK_CAN_SEL			248
+> +#define IMX6QDL_CLK_MMDC_CH1_AXI_CG		249
+> +#define IMX6QDL_CLK_PRE0			250
+> +#define IMX6QDL_CLK_PRE1			251
+> +#define IMX6QDL_CLK_PRE2			252
+> +#define IMX6QDL_CLK_PRE3			253
+> +#define IMX6QDL_CLK_PRG0_AXI			254
+> +#define IMX6QDL_CLK_PRG1_AXI			255
+> +#define IMX6QDL_CLK_PRG0_APB			256
+> +#define IMX6QDL_CLK_PRG1_APB			257
+> +#define IMX6QDL_CLK_PRE_AXI			258
+> +#define IMX6QDL_CLK_END				259
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+> -- 
+> 1.9.1
+> 
+> 
