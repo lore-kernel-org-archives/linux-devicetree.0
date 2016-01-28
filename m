@@ -1,48 +1,45 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
- driver to  work on both  Zynq and Microblaze
-Date: Thu, 28 Jan 2016 13:20:56 +0000
-Message-ID: <8520D5D51A55D047800579B09414719825874148@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
- <4734542.KZZp0TeeeM@wuerfel>
- <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
- <5255218.OREPu5Af3W@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Thu, 28 Jan 2016 13:30:49 +0000
+Message-ID: <20160128133049.GQ3368@x1>
+References: <1453736627-2634-1-git-send-email-afd@ti.com>
+ <20160128064149.GM3368@x1>
+ <20160128114026.GB6078@sirena.org.uk>
+ <20160128120423.GP3368@x1>
+ <20160128124525.GF6078@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5255218.OREPu5Af3W@wuerfel>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-p
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160128124525.GF6078@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver
-> to work on both Zynq and Microblaze
-> 
-> On Wednesday 27 January 2016 14:33:45 Bharat Kumar Gogada wrote:
-> > > > @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct
-> > > > platform_device *pdev)  #endif
-> > > >     pci_scan_child_bus(bus);
-> > > >     pci_assign_unassigned_bus_resources(bus);
-> > > > +#ifdef CONFIG_ARM
-> > > >     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> > > > +#endif
-> > > >     pci_bus_add_devices(bus);
-> > > >     platform_set_drvdata(pdev, port);
-> > >
-> > > Here it looks like microblaze gets it right. I'm not sure why we
-> > > still need the
-> > > pci_fixup_irqs() on ARM, but my feeling is that this should be fixed
-> > > in common code.
-> > In arm pci_fixup_irqs is called by pci_common_init_dev
-> (arch/arm/kernel/bios32.c), since this API is removed now, I was calling it
-> separately.
-> 
-> But who calls it in microblaze? If it works without the extra call there, can we
-> make it work the same way for ARM?
-> 
-In microblaze I have added pcibios_add_device call (similar to call in arch/arm64/kernel/pci.c ) in pci-common.c, which is being invoked by kernel core itself. May be we can add similar on arm and test out, but we might need some cleanup in arch/arm/kernel/bios32.c
+On Thu, 28 Jan 2016, Mark Brown wrote:
 
-Bharat
+> On Thu, Jan 28, 2016 at 12:04:23PM +0000, Lee Jones wrote:
+> > On Thu, 28 Jan 2016, Mark Brown wrote:
+>=20
+> > > Please be more specific?  What is it that you are looking for bey=
+ond the
+> > > review I already did for the regulator driver?
+>=20
+> > Patch 2.
+>=20
+> I reviewed that *ages* ago.
+
+Link or it didn't happen. ;)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
