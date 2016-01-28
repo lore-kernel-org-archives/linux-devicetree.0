@@ -1,207 +1,96 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH resend 1/4] of_touchscreen-helpers: Add support for
- inverted / swapped axis
-Date: Wed, 27 Jan 2016 14:45:59 -0800
-Message-ID: <20160127224559.GB3482@dtor-ws>
-References: <1453919124-3840-1-git-send-email-hdegoede@redhat.com>
- <1453919124-3840-2-git-send-email-hdegoede@redhat.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 2/3] clk: samsung: Don't build ARMv8 clock drivers on
+ ARMv7
+Date: Thu, 28 Jan 2016 10:23:07 +0900
+Message-ID: <56A96D7B.7080505@samsung.com>
+References: <1453941324-15742-1-git-send-email-k.kozlowski@samsung.com>
+ <1453941324-15742-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453919124-3840-2-git-send-email-hdegoede@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <1453941324-15742-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Wed, Jan 27, 2016 at 07:25:21PM +0100, Hans de Goede wrote:
-> Extend touchscreen_parse_properties() with support for the
-> touchscreen-inverted-x/y and touchscreen-swapped-x-y properties and
-> add a touchscreen_apply_prop_to_x_y() helper function for adjusting
-> x and y coordinates to take these properties into account.
-> 
-> This commit also modifies the existing callers of
-> touchscreen_parse_properties() to pass in NULL for the new third
-> argument, keeping the existing behavior.
-
-Thank you for re-sending the patches. I was wondering if we should add
-the transformation flags directly to the input devices and perform
-transformation in input core... Probably won't going to work well unless
-we start defining order in which we send events to the core.
-
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 2016=EB=85=84 01=EC=9B=94 28=EC=9D=BC 09:35, Krzysztof Kozlowski wro=
+te:
+> Currently the Exynos5433 (ARMv8 SoC) clock driver depends on ARCH_EXY=
+NOS
+> so it is built also on ARMv7. This does not bring any kind of benefit=
+=2E
+> There won't be a single kernel image for ARMv7 and ARMv8 SoCs (like
+> multi_v7 for ARMv7).
+>=20
+> Instead build clock drivers only for respective SoC's architecture.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>=20
 > ---
->  drivers/input/touchscreen/edt-ft5x06.c     |  2 +-
->  drivers/input/touchscreen/of_touchscreen.c | 56 +++++++++++++++++++++++++++++-
->  drivers/input/touchscreen/pixcir_i2c_ts.c  |  2 +-
->  drivers/input/touchscreen/tsc200x-core.c   |  2 +-
->  include/linux/input/touchscreen.h          | 16 ++++++++-
->  5 files changed, 73 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index 0b0f8c1..a97b54a 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -966,7 +966,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
->  	input_set_abs_params(input, ABS_MT_POSITION_Y,
->  			     0, tsdata->num_y * 64 - 1, 0, 0);
->  
-> -	touchscreen_parse_properties(input, true);
-> +	touchscreen_parse_properties(input, true, NULL);
->  
->  	error = input_mt_init_slots(input, tsdata->max_support_points,
->  				INPUT_MT_DIRECT);
-> diff --git a/drivers/input/touchscreen/of_touchscreen.c b/drivers/input/touchscreen/of_touchscreen.c
-> index bb6f2fe..6fd9872 100644
-> --- a/drivers/input/touchscreen/of_touchscreen.c
-> +++ b/drivers/input/touchscreen/of_touchscreen.c
-> @@ -55,12 +55,16 @@ static void touchscreen_set_params(struct input_dev *dev,
->   * @input: input device that should be parsed
->   * @multitouch: specifies whether parsed properties should be applied to
->   *	single-touch or multi-touch axes
-> + * @prop: pointer to a struct touchscreen_properties into which to store
-> + *	axis swap and invert info for use with touchscreen_report_x_y();
-> + *	or NULL
->   *
->   * This function parses common DT properties for touchscreens and setups the
->   * input device accordingly. The function keeps previously set up default
->   * values if no value is specified via DT.
->   */
-> -void touchscreen_parse_properties(struct input_dev *input, bool multitouch)
-> +void touchscreen_parse_properties(struct input_dev *input, bool multitouch,
-> +				  struct touchscreen_properties *prop)
->  {
->  	struct device *dev = input->dev.parent;
->  	unsigned int axis;
-> @@ -104,5 +108,55 @@ void touchscreen_parse_properties(struct input_dev *input, bool multitouch)
->  						&fuzz);
->  	if (data_present)
->  		touchscreen_set_params(input, axis, maximum, fuzz);
-> +
-> +	if (!prop)
-> +		return;
-> +
-> +	axis = multitouch ? ABS_MT_POSITION_X : ABS_X;
-> +
-> +	prop->max_x = input_abs_get_max(input, axis);
-> +	prop->max_y = input_abs_get_max(input, axis + 1);
-> +	prop->invert_x =
-> +		device_property_read_bool(dev, "touchscreen-inverted-x");
-> +	prop->invert_y =
-> +		device_property_read_bool(dev, "touchscreen-inverted-y");
-> +	prop->swap_x_y =
-> +		device_property_read_bool(dev, "touchscreen-swapped-x-y");
-> +
-> +	if (prop->swap_x_y) {
-> +		struct input_absinfo tmp_absinfo;
-> +
-> +		tmp_absinfo = input->absinfo[axis];
-> +		input->absinfo[axis] = input->absinfo[axis + 1];
-> +		input->absinfo[axis + 1] = tmp_absinfo;
-> +	}
->  }
->  EXPORT_SYMBOL(touchscreen_parse_properties);
-> +
-> +/**
-> + * touchscreen_apply_prop_to_x_y - Adjust abs x and y coordinates
-> + * @prop: pointer to a struct touchscreen_properties
-> + * @x: X coordinate to apply inversion and swapping to
-> + * @y: Y coordinate to apply inversion and swapping to
-> + *
-> + * Adjust the passed in x and y values applying any axis inversion and
-> + * swapping requested in the passed in touchscreen_properties.
-> + */
-> +void touchscreen_apply_prop_to_x_y(struct touchscreen_properties *prop,
-> +				   s16 *x, s16 *y)
+>=20
+> Changes since v3:
+> 1. Rebase on next-20160127.
+>=20
+> Changes since v2:
+> 1. Follow Arnd's advice making EXYNOS_ARM64_COMMON_CLK user-visible w=
+hen
+>    COMPILE_TEST is enabled.
+> 2. Dropped accumulated tags because the logic is now different.
+>=20
+> Changes since v1:
+> 1. Use one Kconfig symbol for clocks of all ARM64 SoCs (after
+>    discussion): EXYNOS_ARM64_COMMON_CLK.
+> 2. Minor cleanups after Tomasz's comments.
+> 3. Added tags: Chanwoo's, Sylwester's, Alim's and Tomasz's (the tags
+>    were given for v1 but assuming that change from 1. is not major
+>    enough to require re-tagging).
+> ---
+>  drivers/clk/samsung/Kconfig  | 5 +++++
+>  drivers/clk/samsung/Makefile | 4 ++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfi=
+g
+> index dd6093a33f84..5fd982d9f4d9 100644
+> --- a/drivers/clk/samsung/Kconfig
+> +++ b/drivers/clk/samsung/Kconfig
+> @@ -23,3 +23,8 @@ config S3C2443_COMMON_CLK
+>  	bool "Samsung S3C2443 clock controller support" if COMPILE_TEST
+>  	select COMMON_CLK_SAMSUNG
+> =20
+> +# ARM64 SoCs (e.g. Exynos5433, Exynos7):
+> +config EXYNOS_ARM64_COMMON_CLK
+> +	bool "Samsung Exynos ARMv8-family clock controller support" if COMP=
+ILE_TEST
+> +	default ARM64 && COMMON_CLK_SAMSUNG
+> +	depends on (ARM64 && COMMON_CLK_SAMSUNG) || COMPILE_TEST
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makef=
+ile
+> index 5f6833ea355d..fc367d4b2902 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -10,11 +10,11 @@ obj-$(CONFIG_SOC_EXYNOS5250)	+=3D clk-exynos5250.=
+o
+>  obj-$(CONFIG_SOC_EXYNOS5260)	+=3D clk-exynos5260.o
+>  obj-$(CONFIG_SOC_EXYNOS5410)	+=3D clk-exynos5410.o
+>  obj-$(CONFIG_SOC_EXYNOS5420)	+=3D clk-exynos5420.o
+> -obj-$(CONFIG_ARCH_EXYNOS)	+=3D clk-exynos5433.o
+> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos5433.o
+>  obj-$(CONFIG_SOC_EXYNOS5440)	+=3D clk-exynos5440.o
+>  obj-$(CONFIG_ARCH_EXYNOS)	+=3D clk-exynos-audss.o
+>  obj-$(CONFIG_ARCH_EXYNOS)	+=3D clk-exynos-clkout.o
+> -obj-$(CONFIG_ARCH_EXYNOS7)	+=3D clk-exynos7.o
+> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos7.o
+>  obj-$(CONFIG_S3C2410_COMMON_CLK)+=3D clk-s3c2410.o
+>  obj-$(CONFIG_S3C2410_COMMON_DCLK)+=3D clk-s3c2410-dclk.o
+>  obj-$(CONFIG_S3C2412_COMMON_CLK)+=3D clk-s3c2412.o
+>=20
 
-why s16?
+Looks good to me.=20
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-> +{
-> +	if (prop->invert_x)
-> +		*x = prop->max_x - *x;
-> +
-> +	if (prop->invert_y)
-> +		*y = prop->max_y - *y;
-> +
-> +	if (prop->swap_x_y) {
-> +		s16 tmp;
-> +
-> +		tmp = *x;
-> +		*x = *y;
-> +		*y = tmp;
+Best Regards,
+Chanwoo Choi
 
-		swap(*x, *y);
-
-> +	}
-> +}
-> +EXPORT_SYMBOL(touchscreen_apply_prop_to_x_y);
-> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> index 09523a3..f58784d 100644
-> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> @@ -515,7 +515,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
->  	} else {
->  		input_set_capability(input, EV_ABS, ABS_MT_POSITION_X);
->  		input_set_capability(input, EV_ABS, ABS_MT_POSITION_Y);
-> -		touchscreen_parse_properties(input, true);
-> +		touchscreen_parse_properties(input, true, NULL);
->  		if (!input_abs_get_max(input, ABS_MT_POSITION_X) ||
->  		    !input_abs_get_max(input, ABS_MT_POSITION_Y)) {
->  			dev_err(dev, "Touchscreen size is not specified\n");
-> diff --git a/drivers/input/touchscreen/tsc200x-core.c b/drivers/input/touchscreen/tsc200x-core.c
-> index 15240c1..26e81d1 100644
-> --- a/drivers/input/touchscreen/tsc200x-core.c
-> +++ b/drivers/input/touchscreen/tsc200x-core.c
-> @@ -559,7 +559,7 @@ int tsc200x_probe(struct device *dev, int irq, __u16 bustype,
->  	input_set_abs_params(input_dev, ABS_PRESSURE, 0, max_p, fudge_p, 0);
->  
->  	if (np)
-> -		touchscreen_parse_properties(input_dev, false);
-> +		touchscreen_parse_properties(input_dev, false, NULL);
->  
->  	input_dev->open = tsc200x_open;
->  	input_dev->close = tsc200x_close;
-> diff --git a/include/linux/input/touchscreen.h b/include/linux/input/touchscreen.h
-> index c91e137..9e6ba20 100644
-> --- a/include/linux/input/touchscreen.h
-> +++ b/include/linux/input/touchscreen.h
-> @@ -9,8 +9,22 @@
->  #ifndef _TOUCHSCREEN_H
->  #define _TOUCHSCREEN_H
->  
-> +#include <asm/types.h>
-
-If you are trying to add this to have s32 typedefs then I think it is
-wrong one.
-
-> +
->  struct input_dev;
->  
-> -void touchscreen_parse_properties(struct input_dev *dev, bool multitouch);
-> +struct touchscreen_properties {
-> +	s32 max_x;
-> +	s32 max_y;
-> +	bool invert_x;
-> +	bool invert_y;
-> +	bool swap_x_y;
-> +};
-> +
-> +void touchscreen_parse_properties(struct input_dev *input, bool multitouch,
-> +				  struct touchscreen_properties *prop);
-> +
-> +void touchscreen_apply_prop_to_x_y(struct touchscreen_properties *prop,
-> +				   s16 *x, s16 *y);
->  
->  #endif
-> -- 
-> 2.5.0
-> 
-
-Thanks.
-
--- 
-Dmitry
