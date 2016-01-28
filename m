@@ -1,78 +1,84 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
- driver to  work on both  Zynq and Microblaze
-Date: Thu, 28 Jan 2016 14:18:15 +0000
-Message-ID: <8520D5D51A55D047800579B094147198258741F5@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
- <5255218.OREPu5Af3W@wuerfel>
- <8520D5D51A55D047800579B09414719825874148@XAP-PVEXMBX01.xlnx.xilinx.com>
- <1917083.LB4Ng3Y2yP@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1917083.LB4Ng3Y2yP@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Ravikiran Gummaluri <rgummal@xilinx.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, linux-arm-kernel@lists.infr
+From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Subject: [PATCH v8 4/4] devicetree: update documentation for fw_cfg ARM bindings
+Date: Thu, 28 Jan 2016 09:23:14 -0500
+Message-ID: <1453990994-17801-5-git-send-email-somlo@cmu.edu>
+References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453990994-17801-1-git-send-email-somlo-D+Gtc/HYRWM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver
-> to work on both Zynq and Microblaze
-> 
-> On Thursday 28 January 2016 13:20:56 Bharat Kumar Gogada wrote:
-> > > Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host
-> > > Bridge driver to work on both Zynq and Microblaze
-> > >
-> > > On Wednesday 27 January 2016 14:33:45 Bharat Kumar Gogada wrote:
-> > > > > > @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct
-> > > > > > platform_device *pdev)  #endif
-> > > > > >     pci_scan_child_bus(bus);
-> > > > > >     pci_assign_unassigned_bus_resources(bus);
-> > > > > > +#ifdef CONFIG_ARM
-> > > > > >     pci_fixup_irqs(pci_common_swizzle,
-> > > > > > of_irq_parse_and_map_pci);
-> > > > > > +#endif
-> > > > > >     pci_bus_add_devices(bus);
-> > > > > >     platform_set_drvdata(pdev, port);
-> > > > >
-> > > > > Here it looks like microblaze gets it right. I'm not sure why we
-> > > > > still need the
-> > > > > pci_fixup_irqs() on ARM, but my feeling is that this should be
-> > > > > fixed in common code.
-> > > > In arm pci_fixup_irqs is called by pci_common_init_dev
-> > > (arch/arm/kernel/bios32.c), since this API is removed now, I was
-> > > calling it separately.
-> > >
-> > > But who calls it in microblaze? If it works without the extra call
-> > > there, can we make it work the same way for ARM?
-> > >
-> > In microblaze I have added pcibios_add_device call (similar to call in
-> > arch/arm64/kernel/pci.c ) in pci-common.c, which is being invoked by
-> > kernel core itself.
-> 
-> I see. In the upstream code you seem to do it in
-> pcibios_setup_bus_devices(), while arm64 and powerpc do it in
-> pcibios_add_device().
-> 
-No that function is not getting called with generic API's, its getting called with pcibios_init flow which is tightly bound with struct pci_controller microblaze specific structure. So I added pcibios_add_device in pci-common.c.
+From: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
 
-> > May be we can add similar on arm and test out, but we might need some
-> > cleanup in arch/arm/kernel/bios32.c
-> 
-> I think that would still just be a half-baked solution. This should really be fully
-> automatic. We could do it in the __weak
-> pcibios_add_device() for all architectures that don't override it when the bus
-> was probed from DT, or we could do it in pci_read_irq().
-When will pci_read_irq() call get invoked ?
+Remove fw_cfg hardware interface details from
+Documentation/devicetree/bindings/arm/fw-cfg.txt,
+and replace them with a pointer to the authoritative
+documentation in the QEMU source tree.
 
-Bharat
+Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/fw-cfg.txt | 38 ++----------------------
+ 1 file changed, 2 insertions(+), 36 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+index 953fb64..fd54e1d 100644
+--- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
++++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+@@ -11,43 +11,9 @@ QEMU exposes the control and data register to ARM guests as memory mapped
+ registers; their location is communicated to the guest's UEFI firmware in the
+ DTB that QEMU places at the bottom of the guest's DRAM.
+ 
+-The guest writes a selector value (a key) to the selector register, and then
+-can read the corresponding data (produced by QEMU) via the data register. If
+-the selected entry is writable, the guest can rewrite it through the data
+-register.
++The authoritative guest-side hardware interface documentation to the fw_cfg
++device can be found in "docs/specs/fw_cfg.txt" in the QEMU source tree.
+ 
+-The selector register takes keys in big endian byte order.
+-
+-The data register allows accesses with 8, 16, 32 and 64-bit width (only at
+-offset 0 of the register). Accesses larger than a byte are interpreted as
+-arrays, bundled together only for better performance. The bytes constituting
+-such a word, in increasing address order, correspond to the bytes that would
+-have been transferred by byte-wide accesses in chronological order.
+-
+-The interface allows guest firmware to download various parameters and blobs
+-that affect how the firmware works and what tables it installs for the guest
+-OS. For example, boot order of devices, ACPI tables, SMBIOS tables, kernel and
+-initrd images for direct kernel booting, virtual machine UUID, SMP information,
+-virtual NUMA topology, and so on.
+-
+-The authoritative registry of the valid selector values and their meanings is
+-the QEMU source code; the structure of the data blobs corresponding to the
+-individual key values is also defined in the QEMU source code.
+-
+-The presence of the registers can be verified by selecting the "signature" blob
+-with key 0x0000, and reading four bytes from the data register. The returned
+-signature is "QEMU".
+-
+-The outermost protocol (involving the write / read sequences of the control and
+-data registers) is expected to be versioned, and/or described by feature bits.
+-The interface revision / feature bitmap can be retrieved with key 0x0001. The
+-blob to be read from the data register has size 4, and it is to be interpreted
+-as a uint32_t value in little endian byte order. The current value
+-(corresponding to the above outer protocol) is zero.
+-
+-The guest kernel is not expected to use these registers (although it is
+-certainly allowed to); the device tree bindings are documented here because
+-this is where device tree bindings reside in general.
+ 
+ Required properties:
+ 
+-- 
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
