@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 3/9] arm64: dts: apq8016-sbc: Add aliases to spi device.
-Date: Thu, 28 Jan 2016 17:43:39 +0000
-Message-ID: <1454003019-3246-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 4/9] arm64: dts: remove s2 regulator from smd regulators.
+Date: Thu, 28 Jan 2016 17:43:47 +0000
+Message-ID: <1454003027-3288-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,26 +10,25 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds aliases to spi device so that it can get proper bus
-number rather than a random number.
+s2 is spmi controller regulator on msm8916 according to downstream 3.10
+kernel, so remove it from the dt to avoid confusion an use of it.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index db17c5d..6eb096e 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -24,6 +24,8 @@
- 		i2c0	= &blsp_i2c2;
- 		i2c1	= &blsp_i2c6;
- 		i2c3	= &blsp_i2c4;
-+		spi0	= &blsp_spi5;
-+		spi1	= &blsp_spi3;
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 9153214..405ea67 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -519,7 +519,6 @@
+ 					compatible = "qcom,rpm-pm8916-regulators";
  
- 	chosen {
+ 					pm8916_s1: s1 {};
+-					pm8916_s2: s2 {};
+ 					pm8916_s3: s3 {};
+ 					pm8916_s4: s4 {};
+ 
 -- 
 1.9.1
