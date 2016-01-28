@@ -1,35 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/5] pinctrl: mediatek: add pinctrl/GPIO/EINT driver
- for mt2701
-Date: Thu, 28 Jan 2016 11:20:34 +0100
-Message-ID: <CACRpkdbxpc19bdzGDUDoqseTA-TW3V8dAA4Oe+G860qTsHd-dQ@mail.gmail.com>
-References: <1453857883-28436-1-git-send-email-biao.huang@mediatek.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH 0/4] ARM: at91: pm: add ULP1 mode support
+Date: Thu, 28 Jan 2016 18:19:12 +0800
+Message-ID: <1453976356-24391-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1453857883-28436-1-git-send-email-biao.huang@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>, John Crispin <blogic@openwrt.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "arm@kernel.org" <arm@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 2:24 AM, Biao Huang <biao.huang@mediatek.com> wrote:
+The ULP1 (Ultra Low-power mode 1) is introduced by SAMA5D2.
 
-> Change in v4:
-> 1. create a sperate patch for direction setting of input-enable/disalbe and input-schmitt-enable/disable.
+In order to achieve the lowest power consumption, in the ULP1 mode,
+all the clocks are shut off, inclusive the embedded 12MHz RC oscillator.
 
-So I've merged the patches affecting drivers/pinctrl on the special
-devel-mt2701 branch, so the ARM SoC people can pull this into
-their tree to resolve dependencies on the pinctrl include
-in include/dt-bindings.
-https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel-mt2701
+The fast startup signal is used as a wake up source for ULP1 mode.
+As soon as the wake up event is asserted, the embedded 12MHz RC
+oscillator restarts automatically, which fast startup signal
+to trigger the PMC to wake up the system from the ULP1 mode can be
+configured via DT.
 
-The rest of the patches should go into ARM SoC, so they can
-just pull this branch in and apply that stuff on top.
+It is based on the following patch set:
+	http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390954.html
 
-Allow this a few days, I am also waiting for the add-on patches
-from John Crispin to come in, please include John in the
-feedback loop.
 
-Yours,
-Linus Walleij
+Wenyou Yang (4):
+  ARM: at91: pm: create a separate procedure for the ULP0 mode
+  ARM: at91: pm: add ULP1 mode support
+  ARM: at91: pm: configure PMC fast startup signals
+  Documentation: atmel-at91: add DT bindings for fast startup
+
+ .../devicetree/bindings/arm/atmel-pmc.txt          |   74 +++++++++
+ arch/arm/mach-at91/pm.c                            |  112 +++++++++++++-
+ arch/arm/mach-at91/pm.h                            |    7 +
+ arch/arm/mach-at91/pm_suspend.S                    |  158 +++++++++++++++++---
+ include/linux/clk/at91_pmc.h                       |   36 +++++
+ 5 files changed, 362 insertions(+), 25 deletions(-)
+
+-- 
+1.7.9.5
+
