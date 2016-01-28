@@ -1,117 +1,70 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] Doc: Micrel-ksz90x1.txt: Update the Micrel phy documentation for ksz9031
-Date: Thu, 28 Jan 2016 10:49:27 -0600
-Message-ID: <1453999767-26298-1-git-send-email-dinguyen@opensource.altera.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 0/5] Nokia N950 modem support
+Date: Thu, 28 Jan 2016 18:04:31 +0100
+Message-ID: <20160128170431.GD17038@earth>
+References: <1453045749-22642-1-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rz+pwK2yUstbofK6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453045749-22642-1-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Update the Micrel phy documentation for the KSZ9031 PHY to represent how
-the actual values are calculated from the code.
+--rz+pwK2yUstbofK6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- .../devicetree/bindings/net/micrel-ksz90x1.txt     | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index f9c32ad..9535b2b 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -36,6 +36,71 @@ KSZ9031:
-   value is 0, and the maximum is property-dependent. The increment
-   step is 60ps.
- 
-+  The KSZ9031 hardware supports a range of skew values from negative to
-+  positive, where the specific range is property dependent. All values
-+  specified in the devicetree are offset by the minimum value so they
-+  can be represented as positive integers in the devicetree since it's
-+  difficult to represent a negative number in the devictree.
-+
-+  The following 5-bit values table apply to rxc-skew-ps and txc-skew-ps.
-+
-+  Pad Skew Value	Delay (ps)	Devicetree Value
-+  ------------------------------------------------------
-+  0_0000		-900ps		0
-+  0_0001		-840ps		60
-+  0_0010		-780ps		120
-+  0_0011		-720ps		180
-+  0_0100		-660ps		240
-+  0_0101		-600ps		300
-+  0_0110		-540ps		360
-+  0_0111		-480ps		420
-+  0_1000		-420ps		480
-+  0_1001		-360ps		540
-+  0_1010		-300ps		600
-+  0_1011		-240ps		660
-+  0_1100		-180ps		720
-+  0_1101		-120ps		780
-+  0_1110		-60ps		840
-+  0_1111		0ps		900
-+  1_0000		60ps		960
-+  1_0001		120ps		1020
-+  1_0010		180ps		1080
-+  1_0011		240ps		1140
-+  1_0100		300ps		1200
-+  1_0101		360ps		1260
-+  1_0110		420ps		1320
-+  1_0111		480ps		1380
-+  1_1000		540ps		1440
-+  1_1001		600ps		1500
-+  1_1010		660ps		1560
-+  1_1011		720ps		1620
-+  1_1100		780ps		1680
-+  1_1101		840ps		1740
-+  1_1110		900ps		1800
-+  1_1111		960ps		1860
-+
-+  The following 4-bit values table apply to the txdX-skew-ps, rxdX-skew-ps
-+  data pads, and the rxdv-skew-ps, txen-skew-ps control pads.
-+
-+  Pad Skew Value	Delay (ps)	Devicetree Value
-+  ------------------------------------------------------
-+  0000			-420ps		0
-+  0001			-360ps		60
-+  0010			-300ps		120
-+  0011			-240ps		180
-+  0100			-180ps		240
-+  0101			-120ps		300
-+  0110			-60ps		360
-+  0111			0ps		420
-+  1000			60ps		480
-+  1001			120ps		540
-+  1010			180ps		600
-+  1011			240ps		660
-+  1100			300ps		720
-+  1101			360ps		780
-+  1110			420ps		840
-+  1111			480ps		900
-+
-   Optional properties:
- 
-     Maximum value of 1860:
-@@ -72,3 +137,11 @@ Examples:
- 		phy = <&phy0>;
- 		phy-mode = "rgmii-id";
- 	};
-+
-+References
-+
-+  Micrel ksz9021rl/rn Data Sheet, Revision 1.2. Dated 2/13/2014.
-+  http://www.micrel.com/_PDF/Ethernet/datasheets/ksz9021rl-rn_ds.pdf
-+
-+  Micrel ksz9031rnx Data Sheet, Revision 2.1. Dated 11/20/2014.
-+  http://www.micrel.com/_PDF/Ethernet/datasheets/KSZ9031RNX.pdf
--- 
-2.6.2
+On Sun, Jan 17, 2016 at 04:49:04PM +0100, Sebastian Reichel wrote:
+> This patchset adds support for the N950 modem.
+>
+> [...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All of the patches are more or less mergable independent
+of each other, so I suggest the following merging scheme:
+
+> Sebastian Reichel (5):
+>   ARM: OMAP2+: hwmod data: Add SSI data for omap36xx
+
+This one should go in via Paul Walmsley.
+
+>   HSI: nokia-modem: add n950 and n9 support
+>   HSI: ssi-protocol: Use handshake logic from n950
+
+I already took those via the HSI tree.
+
+>   ARM: dts: OMAP3-N950-N9: Enable SSI module
+>   ARM: dts: OMAP3-N950-N9: Enable modem
+
+The DTS changes can go in via Tony's tree.
+
+-- Sebastian
+
+--rz+pwK2yUstbofK6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWqkocAAoJENju1/PIO/qaQpwP/0JozBxrrskmxO1Mk0M6Lz6O
+QUXAog0LL/r+SVXWvRtc+A1CcEGtU//2mjcoeML4i1bIfyEp9s9VsYKl+ov9Rbk+
+MxmROD9gAdIXthA7kk7wQtTnAdsqFoaR/+uhcdlRJUIHvOPS8ypelt6iJcIvOBoj
+x85Nt0TbK2L6gYBeKaXIlSDqGq3mHNiw6AyaksVt6zXLTI5zgCscH6go9nDvk9by
+n/8lAPW4v+ggyd1MulNq+spJ1s7Uyt+qAsFsye9t6Y98/+Aj10ZuHOq8Su/5+19H
+MWLN4K+ub6mb/X8xtdAV4wl+BgV2Cd3zijqwUV0FFvIAI9d41Ha7awK7GAqxZFPm
+jlcipe4mn1VnaF6l4+ERfaEcHv/Ye/B8m1uUA9/fcdpS4i2hDMseVQ5d4QC2MQs/
+Nlutueqg2z3LPVtH3iMdTkrTcbJ/+lmekoaHdF7vOjoVsp2VZDEVrkbEJukHFlcV
++490V1BFcshnP2ubmcub5D6Y00xdzp+caF1Bz/qaksdDrLtaA4RbtnJnD812LbrA
+x5BoNn/mhv/3Mzl2VpPBSiHqGVdBFiZL1RyX8a1CIhK2NhhEY6T/69BOhNOmmsyZ
+R+NZp2wH37ROLh4IRw4T/wMSAUOY9nC6BNz2xxtIiCfoR9s8X/oSQf+6IXGrQxMy
+OKNPsfx8q6EhdN/wV2gT
+=hsBs
+-----END PGP SIGNATURE-----
+
+--rz+pwK2yUstbofK6--
