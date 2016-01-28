@@ -1,67 +1,101 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 0/3] mmc: sdhci-iproc: add bcm2835 support
-Date: Wed, 27 Jan 2016 16:36:51 -0800
-Message-ID: <56A962A3.2090205@broadcom.com>
-References: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts
+ under GPLv2/X11
+Date: Wed, 27 Jan 2016 16:36:58 -0800
+Message-ID: <ee1d1f87155171130707caea41de549d@agner.ch>
+References: <1449525076-23569-1-git-send-email-stefan@agner.ch>
+ <1449525076-23569-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, kernel@martin.sperl.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, jszhang@marvell.com, shawn.lin@rock-chips.com, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449525076-23569-4-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Looks clean Stefan.  I'll try and revisit the caps setting in the future 
-and may be able to provide additional settings in a later patch.
+Hi Matt,
 
-This patch series:
-Acked-by: Scott Branden <sbranden@broadcom.com>
+On 2015-12-07 13:51, Stefan Agner wrote:
+> GPLv2-only devicetrees make reuse difficult for software components
+> licensed under a different license.
+> 
+> The consensus is that a GPL/X11 dual-license should allow all necessary
+> uses, so relicense the vf610-twr.dts file to this combination.
+> 
+> CCs were acquired using (updated some email addresses):
+> git shortlog -sne --no-merges arch/arm/boot/dts/vf610-cosmic.dts
+> 
+> CC: Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
+Your Ack is the only one missing here, any chance to get an Ack from
+you?
 
-On 16-01-27 02:25 PM, Stefan Wahren wrote:
-> This patch series based on the suggestion of Scott Branden to implement
-> bcm2835 support into sdhci-iproc [1].
->
-> These changes provide the following advantages:
->    * no need to maintain a separate driver for bcm2835
->    * improve support and test coverage of bcm2835 mmc support
->    * get the rid of SDHCI_CAPABILITIES hack in bcm2835_sdhci_readl
->    * increase write performance by avoiding delays in write ops
->
-> Patch 1 prepare sdhci-iproc for another platform. Patch 2 and 3
-> are the actually changes for bcm2835 support.
->
-> These series has been tested on Raspberry Pi B with dd (direct I/O):
->
-> sdhci-bcm2835
->
-> 378 kB/s WRITE
-> 10,6 MB/s READ
->
-> sdhci-iproc (after applying patch series)
->
-> 881 kB/s WRITE
-> 10,8 MB/s READ
->
-> Changes since RFC:
->    * drop patch which tries to add quirks for bcm2835 in DT and define all
->      quirks in driver instead to keep old DTs working with sdhci-iproc
->      (suggestion by Stephen Warren)
->    * define MMC caps in shdci-iproc platform data to make adding new
->      platforms more easily (suggestion by Stephen Warren)
->
-> [1] - https://lkml.org/lkml/2015/12/22/525
->
-> Stefan Wahren (3):
->    mmc: sdhci-iproc: define MMC caps in platform data
->    mmc: sdhci-iproc: add bcm2835 support
->    DT: sdhci-iproc: add bcm2835 compatible
->
->   .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |    5 ++++-
->   drivers/mmc/host/Kconfig                           |    6 +++---
->   drivers/mmc/host/sdhci-iproc.c                     |   20 ++++++++++++++++++--
->   3 files changed, 25 insertions(+), 6 deletions(-)
->
+--
+Stefan
 
+> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vf610-cosmic.dts | 40 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 36 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/vf610-cosmic.dts
+> b/arch/arm/boot/dts/vf610-cosmic.dts
+> index 5447f25..d0559c1 100644
+> --- a/arch/arm/boot/dts/vf610-cosmic.dts
+> +++ b/arch/arm/boot/dts/vf610-cosmic.dts
+> @@ -2,10 +2,42 @@
+>   * Copyright 2013 Freescale Semiconductor, Inc.
+>   * Copyright 2013 Linaro Limited
+>   *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by
+> - * the Free Software Foundation; either version 2 of the License, or
+> - * (at your option) any later version.
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+>  /dts-v1/;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
