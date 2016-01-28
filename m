@@ -1,52 +1,50 @@
-From: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Subject: Re: [PATCH v9 3/6] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms.
-Date: Fri, 29 Jan 2016 00:18:34 +0530
-Message-ID: <CAFpQJXWm4n3S70C9rU2Xip-n4xGEsEE=K3ptdDyzxjQMz9kX8A@mail.gmail.com>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1453134965-6125-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<20160126203603.GC17600@localhost>
-	<20160128143925.GC775@arm.com>
-	<CAFpQJXVhEVw7vSq233wfkOGkTanf-msO+PEcWJ2OVAFUhn7n+w@mail.gmail.com>
-	<20160128180824.GP775@arm.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 6/7] ARM: dts: imx: Add support for Advantech/GE B650v3
+Date: Thu, 28 Jan 2016 13:54:26 -0500
+Message-ID: <56AA63E2.5090103@timesys.com>
+References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
+ <1450908016-17384-7-git-send-email-akshay.bhat@timesys.com>
+ <20160128061919.GG9070@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20160128180824.GP775@arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, rfranz@cavium.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "msalter@redhat.com" <msalter@redhat.com>, Steve Capper <steve.capper@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160128061919.GG9070@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 11:38 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Thu, Jan 28, 2016 at 10:42:17PM +0530, Ganapatrao Kulkarni wrote:
->> On Thu, Jan 28, 2016 at 8:09 PM, Will Deacon <will.deacon@arm.com> wrote:
->> > On Tue, Jan 26, 2016 at 02:36:04PM -0600, Bjorn Helgaas wrote:
->> >> Subject is "arm64/arm, numa, dt: adding ..."  What is the significance
->> >> of the "arm" part?  The other patches only mention "arm64".
->> >>
->> >> General comment: the code below has little, if anything, that is
->> >> actually arm64-specific.  Maybe this is the first DT-based NUMA
->> >> platform?  I don't see other similar code for other arches, so maybe
->> >> it's too early to try to generalize it, but we should try to avoid
->> >> adding duplicates of this code if/when other arches do show up.
->> >
->> > Having it in the core code would allow us to share it with arch/arm/
->> > fairly straightforwardly.
->> This binding can be used for arm too.
->> however at this moment it is the need of arm64 platforms.
->> can we please keep this to arm64 as it's too early to try to
->> generalize it(as Bjorn suggested)
->> I prefer to keep it as it is, otherwise ok.
->> Please suggest.
->
-> My suggestions time and time again on the NUMA patches from you have
-> consistently been around consolidation of existing code, or moving things
-> that aren't architecture-specific out of the architecture code.
 
-thanks, i shall move this out to drivers/of
->
-> Will
 
-thanks
-Ganapat
+On 01/28/2016 01:19 AM, Shawn Guo wrote:
+> On Wed, Dec 23, 2015 at 05:00:15PM -0500, Akshay Bhat wrote:
+>> Add support for Advantech/GE B650v3 board.
+>>
+>> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/Makefile         |   1 +
+>>   arch/arm/boot/dts/imx6q-b650v3.dts | 114 +++++++++++++++++++++++++++++++++++++
+>
+> I compare it with imx6q-b450v3.dts.  They are basically identical except
+> model name and compatible string.  What are the differences between
+> these two boards from hardware POV?  Can we support them with one
+> dts/dtb, so that we can save one duplicated dts?
+>
+> Shawn
+
+The boards are different form factors. Since the hardware layout is 
+different there are some board specific imx6 register settings needed 
+(eg: usb phy settings, pcie gpr8 settings etc.).  We are in the process 
+of submitting imx driver patches for the same and expect the 
+imx6q-b450v3.dts and imx6q-b650v3.dts to be different in the near 
+future. Hence would like to keep them separate.
+
+https://patchwork.ozlabs.org/patch/568166/
+
+Thanks,
+Akshay
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
