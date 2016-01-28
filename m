@@ -1,46 +1,209 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v9 3/6] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms.
-Date: Thu, 28 Jan 2016 18:08:24 +0000
-Message-ID: <20160128180824.GP775@arm.com>
-References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1453134965-6125-4-git-send-email-gkulkarni@caviumnetworks.com>
- <20160126203603.GC17600@localhost>
- <20160128143925.GC775@arm.com>
- <CAFpQJXVhEVw7vSq233wfkOGkTanf-msO+PEcWJ2OVAFUhn7n+w@mail.gmail.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 3/7] ARM: dts: imx: Add Advantech BA-16 Qseven module
+Date: Thu, 28 Jan 2016 13:18:17 -0500
+Message-ID: <56AA5B69.8090906@timesys.com>
+References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
+ <1450908016-17384-4-git-send-email-akshay.bhat@timesys.com>
+ <20160128054124.GD9070@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFpQJXVhEVw7vSq233wfkOGkTanf-msO+PEcWJ2OVAFUhn7n+w@mail.gmail.com>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, rfranz@cavium.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "msalter@redhat.com" <msalter@redhat.com>, Rob Herring <robh+dt@kernel.org>, Steve Capper <steve.capper@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Al Stone <al.stone@linaro.org>Ar
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160128054124.GD9070@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 10:42:17PM +0530, Ganapatrao Kulkarni wrote:
-> On Thu, Jan 28, 2016 at 8:09 PM, Will Deacon <will.deacon@arm.com> wrote:
-> > On Tue, Jan 26, 2016 at 02:36:04PM -0600, Bjorn Helgaas wrote:
-> >> Subject is "arm64/arm, numa, dt: adding ..."  What is the significance
-> >> of the "arm" part?  The other patches only mention "arm64".
-> >>
-> >> General comment: the code below has little, if anything, that is
-> >> actually arm64-specific.  Maybe this is the first DT-based NUMA
-> >> platform?  I don't see other similar code for other arches, so maybe
-> >> it's too early to try to generalize it, but we should try to avoid
-> >> adding duplicates of this code if/when other arches do show up.
-> >
-> > Having it in the core code would allow us to share it with arch/arm/
-> > fairly straightforwardly.
-> This binding can be used for arm too.
-> however at this moment it is the need of arm64 platforms.
-> can we please keep this to arm64 as it's too early to try to
-> generalize it(as Bjorn suggested)
-> I prefer to keep it as it is, otherwise ok.
-> Please suggest.
 
-My suggestions time and time again on the NUMA patches from you have
-consistently been around consolidation of existing code, or moving things
-that aren't architecture-specific out of the architecture code.
 
-Will
+On 01/28/2016 12:41 AM, Shawn Guo wrote:
+> On Wed, Dec 23, 2015 at 05:00:12PM -0500, Akshay Bhat wrote:
+>> From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Add support for Advantech BA-16 module based on iMX6D processor
+>>
+>> http://www2.advantech.com/products/medical_computing_system/dms-ba16/mod_64aa1566-169c-483d-97c8-c2c22c163fc3.aspx
+>> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/imx6q-ba16.dtsi | 641 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 641 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/imx6q-ba16.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/imx6q-ba16.dtsi b/arch/arm/boot/dts/imx6q-ba16.dtsi
+>> new file mode 100644
+>> index 0000000..f130037
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6q-ba16.dtsi
+>> @@ -0,0 +1,641 @@
+>> +/*
+>> + * Support for imx6 based Advantech DMS-BA16 Qseven module
+>> + *
+>> + * Copyright 2015 Timesys Corporation.
+>> + * Copyright 2015 General Electric Company
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License
+>> + *     version 2 as published by the Free Software Foundation.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include "imx6q.dtsi"
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +
+>> +/ {
+>> +	memory {
+>> +		reg = <0x10000000 0x40000000>;
+>> +	};
+>> +
+>> +	clocks {
+>> +		clk24m: clk24m {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <24000000>;
+>> +		};
+>
+> How is this clock used on the board?
+>
+Was a leftover, will remove it in the next rev.
+
+>> +	};
+>> +
+>> +	backlight_lvds: backlight {
+>> +		compatible = "pwm-backlight";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pinctrl_display>;
+>> +		pwms = <&pwm1 0 5000000>;
+>> +		brightness-levels = <  0   1   2   3   4   5   6   7   8   9
+>> +				      10  11  12  13  14  15  16  17  18  19
+>> +				      20  21  22  23  24  25  26  27  28  29
+>> +				      30  31  32  33  34  35  36  37  38  39
+>> +				      40  41  42  43  44  45  46  47  48  49
+>> +				      50  51  52  53  54  55  56  57  58  59
+>> +				      60  61  62  63  64  65  66  67  68  69
+>> +				      70  71  72  73  74  75  76  77  78  79
+>> +				      80  81  82  83  84  85  86  87  88  89
+>> +				      90  91  92  93  94  95  96  97  98  99
+>> +				     100 101 102 103 104 105 106 107 108 109
+>> +				     110 111 112 113 114 115 116 117 118 119
+>> +				     120 121 122 123 124 125 126 127 128 129
+>> +				     130 131 132 133 134 135 136 137 138 139
+>> +				     140 141 142 143 144 145 146 147 148 149
+>> +				     150 151 152 153 154 155 156 157 158 159
+>> +				     160 161 162 163 164 165 166 167 168 169
+>> +				     170 171 172 173 174 175 176 177 178 179
+>> +				     180 181 182 183 184 185 186 187 188 189
+>> +				     190 191 192 193 194 195 196 197 198 199
+>> +				     200 201 202 203 204 205 206 207 208 209
+>> +				     210 211 212 213 214 215 216 217 218 219
+>> +				     220 221 222 223 224 225 226 227 228 229
+>> +				     230 231 232 233 234 235 236 237 238 239
+>> +				     240 241 242 243 244 245 246 247 248 249
+>> +				     250 251 252 253 254 255>;
+>> +		default-brightness-level = <255>;
+>> +		enable-gpios = <&gpio4 15 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	reg_1p8v: regulator-1p8v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "1P8V";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_3p3v: regulator-3p3v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "3P3V";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_lvds: regulator-lvds {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "lvds_ppen";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	reg_usb_h1_vbus: regulator-usb_h1_vbus {
+>
+> As a convention, hyphen instead of underscore should be used in node
+> name.  I would suggest to simply name it like regulator-usbh1vbus to
+> save additional hyphens.
+>
+Thanks, was not aware of the convention. Will fix this for all 
+nodes/patches.
+
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "usb_h1_vbus";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +	};
+>> +
+>> +	reg_usb_otg_vbus: regulator-usb_otg_vbus {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "usb_otg_vbus";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +	};
+>> +};
+>
+> <snip>
+>
+>> +&usdhc2 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usdhc2>;
+>> +	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+>> +	no-1-8-v;
+>> +	keep-power-in-suspend;
+>> +	enable-sdio-wakeup;
+>
+> Since commit 0dbcdc0622ea (mmc: core: enable support for the standard
+> "wakeup-source" property), enable-sdio-wakeup becomes a legacy property.
+> Please use the new standard one.
+>
+> Shawn
+>
+
+Will fix this.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
