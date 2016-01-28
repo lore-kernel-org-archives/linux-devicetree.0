@@ -1,41 +1,42 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 5/9] arm64: dts: qcom: add lable for smd rpm regulators
-Date: Thu, 28 Jan 2016 17:43:54 +0000
-Message-ID: <1454003034-3330-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 7/9] arm64: dts: apq8016-sbc: make 1.8v available on LS expansion
+Date: Thu, 28 Jan 2016 17:44:09 +0000
+Message-ID: <1454003049-3414-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454002960-3106-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454002960-3106-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds label to smd rpm regulators so that the board level file
-can use the label directly to populate the regulators, rather than
-having deep nesting.
+96boards mezzanine boards on LS expansion require 1.8v as per 96boards
+specifications, so enable the corresponding regulators and make them
+always-on.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 405ea67..ff7ca44 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -515,7 +515,7 @@
- 				compatible = "qcom,rpm-msm8916";
- 				qcom,smd-channels = "rpm_requests";
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 601c0ff..279af22 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -230,9 +230,14 @@
+ 		regulator-max-microvolt = <3337000>;
+ 	};
  
--				pm8916-regulators {
-+				smd_rpm_regulators: pm8916-regulators {
- 					compatible = "qcom,rpm-pm8916-regulators";
++	/**
++	 * 1.8v required on LS expansion
++	 * for mezzanine boards
++	 */
+ 	l15 {
+ 		regulator-min-microvolt = <1750000>;
+ 		regulator-max-microvolt = <3337000>;
++		regulator-always-on;
+ 	};
  
- 					pm8916_s1: s1 {};
+ 	l16 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
