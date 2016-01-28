@@ -1,78 +1,134 @@
-From: Ping Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 5/5] ARM: imx: Add msl code support for imx6qp
-Date: Thu, 28 Jan 2016 10:45:09 +0000
-Message-ID: <DB4PR04MB538330DB5505E84CA55A91187DA0@DB4PR04MB538.eurprd04.prod.outlook.com>
-References: <1450159673-27314-1-git-send-email-b51503@freescale.com>
- <1450159673-27314-6-git-send-email-b51503@freescale.com>
- <20160128081040.GO9070@tiger>
+From: "Felipe F. Tonello" <eu@felipetonello.com>
+Subject: [PATCH] ASoC: fsl-asoc-card: add cs4271 and cs4272
+	support
+Date: Thu, 28 Jan 2016 10:52:35 +0000
+Message-ID: <1453978355-23620-1-git-send-email-eu@felipetonello.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160128081040.GO9070@tiger>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWls
-dG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxNsTqMdTCMjjI1SAxNjoxMQ0KPiBU
-bzogYjUxNTAzQGZyZWVzY2FsZS5jb20NCj4gQ2M6IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgcGF3
-ZWwubW9sbEBhcm0uY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG10dXJxdWV0dGVAYmF5bGli
-cmUuY29tOyBzYm95ZEBjb2RlYXVyb3JhLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiA1LzVdIEFSTTogaW14OiBB
-ZGQgbXNsIGNvZGUgc3VwcG9ydCBmb3IgaW14NnFwDQo+IA0KPiBPbiBUdWUsIERlYyAxNSwgMjAx
-NSBhdCAwMjowNzo1M1BNICswODAwLCBCYWkgUGluZyB3cm90ZToNCj4gPiBUaGUgaS5NWDZRUCBp
-cyBhIGRpZmZlcmVudCBTT0MsIGJ1dCBpbnRlcm5hbGx5IHdlIHRyZWF0ZSBpdCBhcyBpLk1YNlEN
-Cj4gPiBSZXZfMi4wIHRvIG1heGltdW0gdGhlIGNvZGUgcmV1c2FiaWxpdHkuIFRoZSBjaGlwIHNp
-bGljb24gbnVtYmVyIHdlDQo+ID4gcmVhZCBmcm9tIHRoZSBBTkFESUdfRElHUFJPRyBpcyAweDYz
-MDEwMC4gVGhpcyBwYXRjaCBhZGQgY29kZSB0bw0KPiA+IGlkZW50aWZ5IGl0IGFzIGkuTVg2UVAg
-UmV2XzEuMCB3aGVuIHByaW50IG91dCB0aGUgc2lsaWNvbiB2ZXJzaW9uLg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogQmFpIFBpbmcgPGI1MTUwM0BmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0KPiA+
-ICBhcmNoL2FybS9tYWNoLWlteC9hbmF0b3AuYyAgICAgfCA1ICsrKystDQo+ID4gIGFyY2gvYXJt
-L21hY2gtaW14L21hY2gtaW14NnEuYyB8IDggKysrKysrLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCAxMCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL21hY2gtaW14L2FuYXRvcC5jIGIvYXJjaC9hcm0vbWFjaC1pbXgvYW5hdG9wLmMN
-Cj4gPiBpbmRleCAyMzFiYjI1Li45NjIyNzYzIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL21h
-Y2gtaW14L2FuYXRvcC5jDQo+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvYW5hdG9wLmMNCj4g
-PiBAQCAtMTI5LDcgKzEyOSwxMCBAQCB2b2lkIF9faW5pdCBpbXhfaW5pdF9yZXZpc2lvbl9mcm9t
-X2FuYXRvcCh2b2lkKQ0KPiA+DQo+ID4gIAlzd2l0Y2ggKGRpZ3Byb2cgJiAweGZmKSB7DQo+ID4g
-IAljYXNlIDA6DQo+ID4gLQkJcmV2aXNpb24gPSBJTVhfQ0hJUF9SRVZJU0lPTl8xXzA7DQo+ID4g
-KwkJaWYgKGRpZ3Byb2cgPj4gOCAmIDB4MDEpDQo+ID4gKwkJCXJldmlzaW9uID0gSU1YX0NISVBf
-UkVWSVNJT05fMl8wOw0KPiA+ICsJCWVsc2UNCj4gPiArCQkJcmV2aXNpb24gPSBJTVhfQ0hJUF9S
-RVZJU0lPTl8xXzA7DQo+IA0KPiBQbGVhc2UgYXQgbGVhc3QgYWRkIHNvbWUgY29tbWVudCBoZXJl
-IHRvIGhlbHAgdXMgcmVtZW1iZXIgdGhhdCB0aGlzIGlzIGEgdHJpY2sNCj4gd2UgcGxheSBmb3Ig
-aS5NWDZRUC4NCj4gDQogDQpXaWxsIGFkZHJlc3MgdGhpcyBpbiBwYXRjaCBWMy4gVGhhbmtzIGZv
-ciB5b3VyIHJldmlldy4NCg0KPiBTaGF3bg0KPiANCj4gPiAgCQlicmVhazsNCj4gPiAgCWNhc2Ug
-MToNCj4gPiAgCQlyZXZpc2lvbiA9IElNWF9DSElQX1JFVklTSU9OXzFfMTsNCj4gPiBkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jDQo+ID4gYi9hcmNoL2FybS9tYWNo
-LWlteC9tYWNoLWlteDZxLmMgaW5kZXggMzg3ODQ5NGIuLmNiMjdkNTYgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jDQo+ID4gKysrIGIvYXJjaC9hcm0vbWFj
-aC1pbXgvbWFjaC1pbXg2cS5jDQo+ID4gQEAgLTI2Niw4ICsyNjYsMTEgQEAgc3RhdGljIHZvaWQg
-X19pbml0IGlteDZxX2luaXRfbWFjaGluZSh2b2lkKSAgew0KPiA+ICAJc3RydWN0IGRldmljZSAq
-cGFyZW50Ow0KPiA+DQo+ID4gLQlpbXhfcHJpbnRfc2lsaWNvbl9yZXYoY3B1X2lzX2lteDZkbCgp
-ID8gImkuTVg2REwiIDogImkuTVg2USIsDQo+ID4gLQkJCSAgICAgIGlteF9nZXRfc29jX3Jldmlz
-aW9uKCkpOw0KPiA+ICsJaWYgKGNwdV9pc19pbXg2cSgpICYmIGlteF9nZXRfc29jX3JldmlzaW9u
-KCkgPT0NCj4gSU1YX0NISVBfUkVWSVNJT05fMl8wKQ0KPiA+ICsJCWlteF9wcmludF9zaWxpY29u
-X3JldigiaS5NWDZRUCIsIElNWF9DSElQX1JFVklTSU9OXzFfMCk7DQo+ID4gKwllbHNlDQo+ID4g
-KwkJaW14X3ByaW50X3NpbGljb25fcmV2KGNwdV9pc19pbXg2ZGwoKSA/ICJpLk1YNkRMIiA6ICJp
-Lk1YNlEiLA0KPiA+ICsJCQkJaW14X2dldF9zb2NfcmV2aXNpb24oKSk7DQo+ID4NCj4gPiAgCXBh
-cmVudCA9IGlteF9zb2NfZGV2aWNlX2luaXQoKTsNCj4gPiAgCWlmIChwYXJlbnQgPT0gTlVMTCkN
-Cj4gPiBAQCAtMzk5LDYgKzQwMiw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBpbXg2cV9pbml0X2ly
-cSh2b2lkKSAgc3RhdGljDQo+ID4gY29uc3QgY2hhciAqIGNvbnN0IGlteDZxX2R0X2NvbXBhdFtd
-IF9faW5pdGNvbnN0ID0gew0KPiA+ICAJImZzbCxpbXg2ZGwiLA0KPiA+ICAJImZzbCxpbXg2cSIs
-DQo+ID4gKwkiZnNsLGlteDZxcCIsDQo+ID4gIAlOVUxMLA0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0N
-Cj4gPiAxLjkuMQ0KPiA+DQo+ID4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+add cs4271 and cs42727 support for fsl-asoc-card
+
+Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
+---
+ .../devicetree/bindings/sound/imx-audio-cs427x.txt | 47 ++++++++++++++++++++++
+ sound/soc/fsl/Kconfig                              |  4 +-
+ sound/soc/fsl/fsl-asoc-card.c                      |  7 ++++
+ 3 files changed, 56 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+new file mode 100644
+index 000000000000..295f60b19418
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/imx-audio-cs427x.txt
+@@ -0,0 +1,47 @@
++Freescale i.MX audio complex with CS4271 or CS4272 codec
++
++Required properties:
++
++  - compatible		: "fsl,imx-audio-cs427x"
++
++  - model		: The user-visible name of this sound complex
++
++  - ssi-controller	: The phandle of the i.MX SSI controller
++
++  - audio-codec	: The phandle of the CS4271 audio codec
++
++  - audio-routing	: A list of the connections between audio components.
++			  Each entry is a pair of strings, the first being the
++			  connection's sink, the second being the connection's
++			  source. Valid names could be power supplies, CS427x
++			  pins, and the jacks on the board:
++
++			  Board connectors:
++			   * Mic Jack
++			   * Headphone Jack
++
++  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX)
++
++  - mux-ext-port	: The external port of the i.MX audio muxer
++
++Note: The AUDMUX port numbering should start at 1, which is consistent with
++hardware manual.
++
++Example:
++
++sound {
++	compatible = "fsl,imx6-rex-cs427x",
++		"fsl,imx-audio-cs427x";
++	model = "audio-cs427x";
++	ssi-controller = <&ssi1>;
++	audio-codec = <&cs4271>;
++	audio-routing =
++		"Mic Jack", "AINA",
++		"Mic Jack", "AINB",
++		"Headphone Jack", "AOUTA+",
++		"Headphone Jack", "AOUTA-",
++		"Headphone Jack", "AOUTB+",
++		"Headphone Jack", "AOUTB-";
++	mux-int-port = <1>;
++	mux-ext-port = <3>;
++};
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 14dfdee05fd5..35aabf9dc503 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -292,8 +292,8 @@ config SND_SOC_FSL_ASOC_CARD
+ 	select SND_SOC_FSL_SSI
+ 	help
+ 	 ALSA SoC Audio support with ASRC feature for Freescale SoCs that have
+-	 ESAI/SAI/SSI and connect with external CODECs such as WM8962, CS42888
+-	 and SGTL5000.
++	 ESAI/SAI/SSI and connect with external CODECs such as WM8962, CS42888,
++	 CS4271, CS4272 and SGTL5000.
+ 	 Say Y if you want to add support for Freescale Generic ASoC Sound Card.
+ 
+ endif # SND_IMX_SOC
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 562b3bd22d9a..56b6b07d1922 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -28,6 +28,8 @@
+ #include "../codecs/wm8962.h"
+ #include "../codecs/wm8960.h"
+ 
++#define CS427x_SYSCLK_MCLK 0
++
+ #define RX 0
+ #define TX 1
+ 
+@@ -528,6 +530,10 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 		priv->cpu_priv.sysclk_dir[RX] = SND_SOC_CLOCK_OUT;
+ 		priv->cpu_priv.slot_width = 32;
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
++	} else if (of_device_is_compatible(np, "fsl,imx-audio-cs427x")) {
++		codec_dai_name = "cs4271-hifi";
++		priv->codec_priv.mclk_id = CS427x_SYSCLK_MCLK;
++		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-sgtl5000")) {
+ 		codec_dai_name = "sgtl5000";
+ 		priv->codec_priv.mclk_id = SGTL5000_SYSCLK;
+@@ -681,6 +687,7 @@ fail:
+ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
+ 	{ .compatible = "fsl,imx-audio-ac97", },
+ 	{ .compatible = "fsl,imx-audio-cs42888", },
++	{ .compatible = "fsl,imx-audio-cs427x", },
+ 	{ .compatible = "fsl,imx-audio-sgtl5000", },
+ 	{ .compatible = "fsl,imx-audio-wm8962", },
+ 	{ .compatible = "fsl,imx-audio-wm8960", },
+-- 
+2.7.0
