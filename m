@@ -1,82 +1,48 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH] of: resolver: Add missing of_node_put
-Date: Thu, 28 Jan 2016 12:36:31 +0100 (CET)
-Message-ID: <alpine.DEB.2.10.1601281235390.2516@hadrien>
-References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej> <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com> <20160127162153.GC17123@leverpostej> <FF19B941-89E4-4954-9818-E352FE9A0E97@konsulko.com>
- <alpine.DEB.2.02.1601272042030.2051@localhost6.localdomain6> <20160128112810.GK17123@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Thu, 28 Jan 2016 11:40:26 +0000
+Message-ID: <20160128114026.GB6078@sirena.org.uk>
+References: <1453736627-2634-1-git-send-email-afd@ti.com>
+ <20160128064149.GM3368@x1>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160128112810.GK17123@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <20160128064149.GM3368@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 28 Jan 2016, Mark Rutland wrote:
+On Thu, Jan 28, 2016 at 06:41:49AM +0000, Lee Jones wrote:
 
-> On Wed, Jan 27, 2016 at 08:48:00PM +0100, Julia Lawall wrote:
-> >
-> >
-> > On Wed, 27 Jan 2016, Pantelis Antoniou wrote:
-> >
-> > > Hi Mark,
-> > >
-> > > > On Jan 27, 2016, at 18:21 , Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > >
-> > > > On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
-> > > >> Hi Mark,
-> > > >>
-> > > >>> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > >>>
-> > > >>> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
-> > > >>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> > > >>>> index 640eb4c..e2a0143 100644
-> > > >>>> --- a/drivers/of/resolver.c
-> > > >>>> +++ b/drivers/of/resolver.c
-> > > >>>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> > > >>>>
-> > > >>>> 	for_each_child_of_node(node, child) {
-> > > >>>> 		found = __of_find_node_by_full_name(child, full_name);
-> > > >>>> -		if (found != NULL)
-> > > >>>> +		if (found != NULL) {
-> > > >>>> +			of_node_put(child);
-> > > >>>> 			return found;
-> > > >>>> +		}
-> > > >>>> 	}
-> > > >>>>
-> > > >>>> 	return NULL;
-> > > >>>
-> > > >>> I don't think this is quite right. When child == found, this change will
-> > > >>> leave it decremented.
-> > > >>>
-> > > >>
-> > > >>
-> > > >> This patch is bogus.
-> > > >>
-> > > >> __of_find_node_by_full_name() is not taking a reference on the node if found.
-> > > >> This method relies on keeping the reference taken by the loop.
-> > > >
-> > > > Sure. For the found node, that makes sense.
-> > > >
-> > > > However, it also increments the refcount of all the parents, which does
-> > > > not seem correct to me, given they're not put on the return path, and a
-> > > > put of the found node won't decrement its parents refcounts, unless I
-> > > > have missed something.
-> > > >
-> > >
-> > > Hmm, yes. The parent refcounts must be decremented.
-> >
-> > So there should be if (found != child) of_node_put(child); ?
->
-> That would match the intended semantics, yes.
+> Just need your stamp for this to go in.
 
-I don't think so.  I sent another mail with what seems like a better
-solution (upping the reference count of the child that is selected).
+Please be more specific?  What is it that you are looking for beyond the
+review I already did for the regulator driver?
 
-julia
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWqf4pAAoJECTWi3JdVIfQwDcH/AmSPSBza+y0sZ7m6Dz+2wUG
+6MNGV0uBGeWeZLVGrHJAEhQEdZqTxlPdrsSoS4eTJEuTqbn9Bgb+4hxunigsT7hS
++wPlMpY3X1YTU4u51ysmAZyfshdwRnZKjUHZgg2cKhRNaTeq4yBomKKN/56Q8I85
+A28HKCpaeSC3dNm1DJ5ClpjwjlPG8RZldC7vD/lkxiloFEcV3sauhydkqpHLlZTW
+2zOHZEU7JbcLB3FhiJ/faCEQAii6ef0a+SzYmnVPBy9rCMa78lXly2lA/KCIQ/Ct
+R0DFeF/mTvWyTW3CVz5vx74+owNs+nru4qsTFRlIaZcETei4kxtd7/XeJGq2CAQ=
+=Y7uz
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
