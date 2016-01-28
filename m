@@ -1,46 +1,37 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 3/3] arm64: EXYNOS: Consolidate ARCH_EXYNOS7 symbol
- into ARCH_EXYNOS
-Date: Thu, 28 Jan 2016 16:16:21 -0300
-Message-ID: <56AA6905.10807@osg.samsung.com>
-References: <1453941324-15742-1-git-send-email-k.kozlowski@samsung.com>
- <1453941324-15742-4-git-send-email-k.kozlowski@samsung.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
+Date: Thu, 28 Jan 2016 21:06:20 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1601282105150.3886@nanos>
+References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com> <alpine.DEB.2.11.1601262142450.3886@nanos> <20160128095955.GA12884@e106950-lin.cambridge.arm.com> <alpine.DEB.2.11.1601281116310.3886@nanos>
+ <20160128111041.GB12884@e106950-lin.cambridge.arm.com> <alpine.DEB.2.11.1601281238110.3886@nanos> <CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1453941324-15742-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Brian Starkey <brian.starkey@arm.com>, LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Thu, 28 Jan 2016, Rob Herring wrote:
+> On Thu, Jan 28, 2016 at 5:49 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > I've cc'ed the author and the device tree folks. Perhaps are they able to
+> > explain what this commit tries to 'fix'.
+> 
+> It's certainly not clear what driver was being fixed. I think the
+> intention was to provide the trigger flags from the DT to drivers in a
+> standard, non-DT specific way. The implementation of it certainly
+> seems convoluted. The usecase I can think of is drivers may need the
+> trigger information for cases where the device can support different
+> trigger modes/polarity. The DT says which trigger mode to use and the
+> device and irqchip need to be programmed to match. IIRC, SMSC ethernet
+> chips frequently used on ARM boards do this.
 
-On 01/27/2016 09:35 PM, Krzysztof Kozlowski wrote:
-> The ARMv8 Exynos family SoCs in Linux kernel are currently:
->   - Exynos5433 (controlled by ARCH_EXYNOS),
->   - Exynos7 (controlled by ARCH_EXYNOS7).
->
-> It duplicates Kconfig symbols unnecessarily, so consolidate them into
-> one ARCH_EXYNOS. Future SoCs could fall also under the ARCH_EXYNOS
-> symbol.
->
-> The commit should not bring any visible functional change.
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
->
+I can see that the driver wants this information, but why would one feed that
+back into request_irq() when the interrupt was already configured by DT.
 
-Patch looks good to me.
+Still confused.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Thanks,
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+	tglx
