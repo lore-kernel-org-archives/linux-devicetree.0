@@ -1,34 +1,72 @@
-From: Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 01/13] MAINTAINERS: Adding Maintainers for AMD Seattle
- Device Tree
-Date: Thu, 28 Jan 2016 04:49:56 +0000
-Message-ID: <20160128044956.GA22801@jirafa.cyrius.com>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <1453929121-12171-2-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: "Sricharan" <sricharan@codeaurora.org>
+Subject: RE: [PATCH V7 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
+Date: Thu, 28 Jan 2016 10:27:05 +0530
+Message-ID: <001401d15988$59f6dcf0$0de496d0$@codeaurora.org>
+References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org> <1453197766-18976-4-git-send-email-sricharan@codeaurora.org> <20160124112915.GA1775@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453929121-12171-2-git-send-email-Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160124112915.GA1775@katana>
+Content-Language: en-us
+Sender: linux-i2c-owner@vger.kernel.org
+To: 'Wolfram Sang' <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, architt@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-* Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org> [2016-01-27 15:11]:
-> +AMD SEATTLE DEVICE TREE SUPPORT
-> +M:	Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-> +M:	Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> +S:	Supported
-> +M:	Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
-> +S:	Supported
+Hi Wolfram,
 
-Just a minor comment, but you have a duplicate "S: Supported" line.
+> -----Original Message-----
+> From: Wolfram Sang [mailto:wsa@the-dreams.de]
+> Sent: Sunday, January 24, 2016 4:59 PM
+> To: Sricharan R
+> Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org;
+> agross@codeaurora.org; linux-kernel@vger.kernel.org; linux-
+> i2c@vger.kernel.org; iivanov@mm-sol.com; galak@codeaurora.org;
+> dmaengine@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> andy.gross@linaro.org; ntelkar@codeaurora.org; architt@codeaurora.org
+> Subject: Re: [PATCH V7 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs
+> without a stop bit
+> 
+> Hi,
+> 
+> > "If this is the last message in a group, it is followed by a STOP.
+> > Otherwise it is followed by the next @i2c_msg transaction segment,
+> > beginning with a (repeated) START"
+> 
+> This is correct.
+> 
+> > So the expectation is that there is no 'STOP' bit inbetween individual
+> > i2c_msg segments with repeated 'START'. The QUP i2c hardware has no
+> > way to inform that there should not be a 'STOP' at the end of
+transaction.
+> > The only way to implement this is to coalesce all the i2c_msg in
+> > i2c_msgs in to one transaction and transfer them. Adding the support for
+> the same.
+> 
+> So, there will not be a REP_START condition on the bus? I am sorry to say
+that
+> I can't accept this. A REP_START is a REP_START and nothing else. There
+are
+> devices which will get confused if there is no real REP_START condition.
+> 
+> Without knowing the HW in detail, can't you implement I2C_M_NOSTART
+> and let the touchscreen driver use it via regmap? That would be the proper
+> way (from what I understand).
 
--- 
-Martin Michlmayr
-http://www.cyrius.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Ah, so what I meant above is there is no 'STOP' bit between each msg in
+i2c_msgs, 
+but 'REAPEATED_START' still holds true.  We are sending 'START' bit for each
+msg.
+So these is how each msg in i2c_msg is sent,
+
+|------MSG1--------|-----MSG2---------|------MSG3------------|
+
+  |START|DATA|------|START|DATA|---|START|DATA|STOP|      
+
+If my commit text does not make this clear, I  can reword that ?
+
+Regards,
+  Sricharan
