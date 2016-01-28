@@ -1,100 +1,75 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v4 9/9] ARM: dts: rockchip: support the spi for rk3036
-Date: Thu, 28 Jan 2016 16:43:38 +0800
-Message-ID: <1453970618-4383-10-git-send-email-wxt@rock-chips.com>
-References: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-Cc: hl@rock-chips.com, jay.xu@rock-chips.com, jeffy.chen@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, cf@rock-chips.com, sonnyrao@chromium.org, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v2] clk: Move vendor's Kconfig into CCF menu section
+Date: Thu, 28 Jan 2016 16:58:57 +0800
+Message-ID: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-You have to use the 4 bus to work if someone wants to support
-the spi devices, since the the pin is re-used by data[5-8] and spi.
-If support the spi making the happy work, that will waste the
-emmc performance.
+Move all vendor's Kconfig into CCF menu section to prevent
+new drivers putting their Kconfig files in a wrong place.
 
-Moment, the kylin hasn't the spi devices to work, so maybe we need wait
-the new required to enable in kylin board.
+Some Kconigs need to modify at the same time to avoid build
+warnings.
 
-Anyway, the spi should be needed land in rk3036 dts.
-
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
 ---
+This patch is based on v4.5-rc1.
 
-Changes in v4:
-- Add this patch included in kylin series patches.
+changes since v1:
+- Modify s3c24xx and samsung's Kconfig to avoid build warngings.
 
- arch/arm/boot/dts/rk3036.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm/mach-s3c24xx/Kconfig | 1 +
+ drivers/clk/Kconfig           | 8 +++-----
+ drivers/clk/samsung/Kconfig   | 1 -
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 532f232..40a5017 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -60,6 +60,7 @@
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-+		spi = &spi;
- 	};
+diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
+index ef68ecb..f02495f 100644
+--- a/arch/arm/mach-s3c24xx/Kconfig
++++ b/arch/arm/mach-s3c24xx/Kconfig
+@@ -15,6 +15,7 @@ config PLAT_S3C24XX
+ 	select NO_IOPORT_MAP
+ 	select S3C_DEV_NAND
+ 	select IRQ_DOMAIN
++	select COMMON_CLK
+ 	help
+ 	  Base platform code for any Samsung S3C24XX device
  
- 	memory {
-@@ -485,6 +486,23 @@
- 		status = "disabled";
- 	};
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index eca8e01..de707b2 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -202,11 +202,9 @@ config COMMON_CLK_CDCE706
  
-+	spi: spi@20074000 {
-+		compatible = "rockchip,rockchip-spi";
-+		reg = <0x20074000 0x1000>;
-+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi_txd &spi_rxd &spi_clk &spi_cs0 &spi_cs1>;
-+		num-cs = <2>;
-+		clocks =<&cru PCLK_SPI>, <&cru SCLK_SPI>;
-+		clock-names = "apb-pclk","spi_pclk";
-+		dmas = <&pdma 8>, <&pdma 9>;
-+		#dma-cells = <2>;
-+		dma-names = "tx", "rx";
-+		status = "disabled";
-+	};
+ source "drivers/clk/bcm/Kconfig"
+ source "drivers/clk/hisilicon/Kconfig"
+-source "drivers/clk/qcom/Kconfig"
+-
+-endmenu
+-
+ source "drivers/clk/mvebu/Kconfig"
+-
++source "drivers/clk/qcom/Kconfig"
+ source "drivers/clk/samsung/Kconfig"
+ source "drivers/clk/tegra/Kconfig"
 +
- 	pinctrl: pinctrl {
- 		compatible = "rockchip,rk3036-pinctrl";
- 		rockchip,grf = <&grf>;
-@@ -723,5 +741,29 @@
- 			};
- 			/* no rts / cts for uart2 */
- 		};
-+
-+		spi {
-+			spi_txd:spi-txd {
-+				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
-+			};
-+
-+			spi_rxd:spi-rxd {
-+				rockchip,pins = <1 28 RK_FUNC_3 &pcfg_pull_default>;
-+			};
-+
-+			spi_clk:spi-clk {
-+				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_default>;
-+			};
-+
-+			spi_cs0:spi0-cs0 {
-+				rockchip,pins = <1 30 RK_FUNC_3 &pcfg_pull_default>;
-+
-+			};
-+
-+			spi_cs1:spi-cs1 {
-+				rockchip,pins = <1 31 RK_FUNC_3 &pcfg_pull_default>;
-+
-+			};
-+		};
- 	};
- };
++endmenu
+diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+index 84196ec..b3fe5cb 100644
+--- a/drivers/clk/samsung/Kconfig
++++ b/drivers/clk/samsung/Kconfig
+@@ -1,6 +1,5 @@
+ config COMMON_CLK_SAMSUNG
+ 	bool
+-	select COMMON_CLK
+ 
+ config S3C2410_COMMON_CLK
+ 	bool
 -- 
 1.9.1
+
