@@ -1,71 +1,441 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
-Date: Thu, 28 Jan 2016 09:58:08 -0600
-Message-ID: <CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
-References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com>
- <alpine.DEB.2.11.1601262142450.3886@nanos> <20160128095955.GA12884@e106950-lin.cambridge.arm.com>
- <alpine.DEB.2.11.1601281116310.3886@nanos> <20160128111041.GB12884@e106950-lin.cambridge.arm.com>
- <alpine.DEB.2.11.1601281238110.3886@nanos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [UPDATE] [PATCH 12/19] ARM: dts: exynos: replace legacy *,wakeup property with wakeup-source
+Date: Thu, 28 Jan 2016 15:59:58 +0000
+Message-ID: <1453996798-10711-1-git-send-email-sudeep.holla@arm.com>
+References: <56A9CD1A.8010800@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.11.1601281238110.3886@nanos>
+In-Reply-To: <56A9CD1A.8010800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 5:49 AM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
-> On Thu, 28 Jan 2016, Brian Starkey wrote:
->> I've got a few devices on the same interrupt line. One driver does
->
-> Just for the record: When will hardware folks finally understand that shared
-> interrupt lines are a nightmare?
->
->> something along these lines:
->>
->>       res = platform_get_resource(dev, IORESOURCE_IRQ, 0);
->>       flags = (res->flags & IRQF_TRIGGER_MASK) | IRQF_SHARED;
->>       request_irq(res->start, handler, flags, "name", dev);
->>
->> This seems pretty reasonable. The problem is since 4a43d686fe33:
->>    of/irq: Pass trigger type in IRQ resource flags[1]
->> the trigger type information from device-tree is in res->flags.
->>
->> So when the other drivers don't pass in any flags, they fail the check
->> in __setup_irq().
->>
->> Changing the former driver to remove the flags doesn't seem right, and
->> adding flags to the latter would imply adding flags to _every_ driver,
->> which is an awful lot to change - and I'm not sure it would be possible
->> and/or effective in all cases.
->
-> So that commit does:
->
->    r->flags = IORESOURCE_IRQ | irqd_get_trigger_type(irq_get_irq_data(irq));
->
-> which reads the current setting of the interrupt line.
->
-> Now we pass exactly that to request_irq(). So first irq_of_parse_and_map()
-> configures the interrupt type when mapping it and then hands in the same type
-> information when requesting the irq.
->
-> I have no idea what the purpose of this is and the changelog of that commit is
-> completely useless, sigh!
->
-> I've cc'ed the author and the device tree folks. Perhaps are they able to
-> explain what this commit tries to 'fix'.
+Though the keyboard and other driver will continue to support the legacy
+"gpio-key,wakeup", "linux-keypad,wakeup" boolean property to enable the
+wakeup source, "wakeup-source" is the new standard binding.
 
-It's certainly not clear what driver was being fixed. I think the
-intention was to provide the trigger flags from the DT to drivers in a
-standard, non-DT specific way. The implementation of it certainly
-seems convoluted. The usecase I can think of is drivers may need the
-trigger information for cases where the device can support different
-trigger modes/polarity. The DT says which trigger mode to use and the
-device and irqchip need to be programmed to match. IIRC, SMSC ethernet
-chips frequently used on ARM boards do this.
+This patch replaces all the legacy wakeup properties with the unified
+"wakeup-source" property in order to avoid any further copy-paste
+duplication.
 
-Rob
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos3250-monk.dts           |  6 +++---
+ arch/arm/boot/dts/exynos3250-rinato.dts         |  6 +++---
+ arch/arm/boot/dts/exynos4210-origen.dts         | 10 +++++-----
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       |  2 +-
+ arch/arm/boot/dts/exynos4210-trats.dts          |  2 +-
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |  4 ++--
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  2 +-
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |  2 +-
+ arch/arm/boot/dts/exynos4412-origen.dts         |  2 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       |  2 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts         |  4 ++--
+ arch/arm/boot/dts/exynos5250-arndale.dts        | 12 ++++++------
+ arch/arm/boot/dts/exynos5250-snow-common.dtsi   |  4 ++--
+ arch/arm/boot/dts/exynos5250-spring.dts         |  4 ++--
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts   |  2 +-
+ arch/arm/boot/dts/exynos5420-peach-pit.dts      |  4 ++--
+ arch/arm/boot/dts/exynos5800-peach-pi.dts       |  4 ++--
+ 17 files changed, 36 insertions(+), 36 deletions(-)
+
+Hi Krzysztof,
+
+Thanks for picking up on this. I have rebased on:
+git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git next/dt
+
+Regards,
+Sudeep
+
+diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
+index 443a35085846..9e2840b59ae8 100644
+--- a/arch/arm/boot/dts/exynos3250-monk.dts
++++ b/arch/arm/boot/dts/exynos3250-monk.dts
+@@ -43,7 +43,7 @@
+ 			linux,code = <KEY_POWER>;
+ 			label = "power key";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+@@ -67,7 +67,7 @@
+ 			interrupt-parent = <&gpx1>;
+ 			interrupts = <5 0>;
+ 			reg = <0x25>;
+-			wakeup;
++			wakeup-source;
+ 
+ 			muic: max77836-muic {
+ 				compatible = "maxim,max77836-muic";
+@@ -185,7 +185,7 @@
+ 		interrupt-parent = <&gpx0>;
+ 		interrupts = <7 0>;
+ 		reg = <0x66>;
+-		wakeup;
++		wakeup-source;
+ 
+ 		s2mps14_osc: clocks {
+ 			compatible = "samsung,s2mps14-clk";
+diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+index 3e64d5dcdd60..1f102f3a1ab1 100644
+--- a/arch/arm/boot/dts/exynos3250-rinato.dts
++++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+@@ -43,7 +43,7 @@
+ 			linux,code = <KEY_POWER>;
+ 			label = "power key";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+@@ -58,7 +58,7 @@
+ 			interrupt-parent = <&gpx1>;
+ 			interrupts = <5 0>;
+ 			reg = <0x25>;
+-			wakeup;
++			wakeup-source;
+ 
+ 			muic: max77836-muic {
+ 				compatible = "maxim,max77836-muic";
+@@ -246,7 +246,7 @@
+ 		interrupt-parent = <&gpx0>;
+ 		interrupts = <7 0>;
+ 		reg = <0x66>;
+-		wakeup;
++		wakeup-source;
+ 
+ 		s2mps14_osc: clocks {
+ 			compatible = "samsung,s2mps14-clk";
+diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+index 5821ad87e32c..ad7394c1d67a 100644
+--- a/arch/arm/boot/dts/exynos4210-origen.dts
++++ b/arch/arm/boot/dts/exynos4210-origen.dts
+@@ -60,35 +60,35 @@
+ 			label = "Up";
+ 			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_UP>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		down {
+ 			label = "Down";
+ 			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_DOWN>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		back {
+ 			label = "Back";
+ 			gpios = <&gpx1 7 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_BACK>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		home {
+ 			label = "Home";
+ 			gpios = <&gpx1 6 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_HOME>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		menu {
+ 			label = "Menu";
+ 			gpios = <&gpx1 5 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_MENU>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+index 104cbb33d2bb..94ca7d36ab37 100644
+--- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
++++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+@@ -66,7 +66,7 @@
+ 	samsung,keypad-num-rows = <2>;
+ 	samsung,keypad-num-columns = <8>;
+ 	linux,keypad-no-autorepeat;
+-	linux,keypad-wakeup;
++	wakeup-source;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&keypad_rows &keypad_cols>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index a50be640f1b0..1df2f0bc1d76 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -112,7 +112,7 @@
+ 			linux,code = <116>;
+ 			label = "power";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		ok-key {
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 4f5d37920c8d..9a75e3effbc9 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -92,7 +92,7 @@
+ 			linux,code = <171>;
+ 			label = "config";
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		camera-key {
+@@ -107,7 +107,7 @@
+ 			linux,code = <116>;
+ 			label = "power";
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		ok-key {
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index 395c3ca9601e..5e5d3fecb04c 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -35,7 +35,7 @@
+ 			linux,code = <KEY_POWER>;
+ 			label = "power key";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+index b44bb682e976..bf7b21b817e4 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidx.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+@@ -48,7 +48,7 @@
+ 			linux,code = <KEY_HOME>;
+ 			label = "home key";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index 9e2e24c6177a..8bca699b7f20 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -423,7 +423,7 @@
+ 	samsung,keypad-num-rows = <3>;
+ 	samsung,keypad-num-columns = <2>;
+ 	linux,keypad-no-autorepeat;
+-	linux,keypad-wakeup;
++	wakeup-source;
+ 	pinctrl-0 = <&keypad_rows &keypad_cols>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+index a130ab39fa77..a51069f3c03b 100644
+--- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
++++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+@@ -45,7 +45,7 @@
+ 	samsung,keypad-num-rows = <3>;
+ 	samsung,keypad-num-columns = <8>;
+ 	linux,keypad-no-autorepeat;
+-	linux,keypad-wakeup;
++	wakeup-source;
+ 	pinctrl-0 = <&keypad_rows &keypad_cols>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index a6f78c3da935..ed017cc7b14f 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -119,7 +119,7 @@
+ 			linux,code = <116>;
+ 			label = "power";
+ 			debounce-interval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		key-ok {
+@@ -127,7 +127,7 @@
+ 			linux,code = <139>;
+ 			label = "ok";
+ 			debounce-inteval = <10>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index c000532c1444..8b2acc74aa76 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -34,42 +34,42 @@
+ 			label = "SW-TACT2";
+ 			gpios = <&gpx1 4 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_MENU>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		home {
+ 			label = "SW-TACT3";
+ 			gpios = <&gpx1 5 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_HOME>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		up {
+ 			label = "SW-TACT4";
+ 			gpios = <&gpx1 6 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_UP>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		down {
+ 			label = "SW-TACT5";
+ 			gpios = <&gpx1 7 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_DOWN>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		back {
+ 			label = "SW-TACT6";
+ 			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_BACK>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		wakeup {
+ 			label = "SW-TACT7";
+ 			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_WAKEUP>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5250-snow-common.dtsi b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
+index 5cb33ba5e296..95210ef6a6b5 100644
+--- a/arch/arm/boot/dts/exynos5250-snow-common.dtsi
++++ b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
+@@ -37,7 +37,7 @@
+ 			label = "Power";
+ 			gpios = <&gpx1 3 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		lid-switch {
+@@ -46,7 +46,7 @@
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <0>; /* SW_LID */
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/dts/exynos5250-spring.dts
+index c1edd6d038a9..0f500cb1eb2d 100644
+--- a/arch/arm/boot/dts/exynos5250-spring.dts
++++ b/arch/arm/boot/dts/exynos5250-spring.dts
+@@ -37,7 +37,7 @@
+ 			label = "Power";
+ 			gpios = <&gpx1 3 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		lid-switch {
+@@ -46,7 +46,7 @@
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <0>; /* SW_LID */
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index 762f6ffece0c..a103ce8c3985 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -48,7 +48,7 @@
+ 			label = "SW-TACT1";
+ 			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_WAKEUP>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index f7b31e16d07f..3981ddb25036 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -65,7 +65,7 @@
+ 			label = "Power";
+ 			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		lid-switch {
+@@ -74,7 +74,7 @@
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <0>; /* SW_LID */
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 4731dbb5b450..6e9edc1610c4 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -64,7 +64,7 @@
+ 			label = "Power";
+ 			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 		lid-switch {
+@@ -73,7 +73,7 @@
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <0>; /* SW_LID */
+ 			debounce-interval = <1>;
+-			gpio-key,wakeup;
++			wakeup-source;
+ 		};
+ 
+ 	};
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
