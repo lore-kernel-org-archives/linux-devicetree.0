@@ -1,64 +1,44 @@
-From: Damien Horsley <Damien.Horsley@imgtec.com>
-Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for
- Pistachio audio card
-Date: Thu, 28 Jan 2016 14:17:37 +0000
-Message-ID: <56AA2301.9070604@imgtec.com>
-References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
- <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
- <20160127145756.GR6042@sirena.org.uk> <56A8DFBC.6070007@imgtec.com>
- <20160127160057.GA25316@sirena.org.uk> <56A8FAA5.1000907@imgtec.com>
- <20160127201457.GC25316@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
+Date: Thu, 28 Jan 2016 15:17:33 +0100
+Message-ID: <6645680.g0j8d12m6d@wuerfel>
+References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <20160128111453.GG17123@leverpostej> <56AA07AA.7050701@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160127201457.GC25316@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <james.hartley@imgtec.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56AA07AA.7050701@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, galak@codeaurora.org, thomas.lendacky@amd.com, linux-arm-kernel@lists.infradead.org, brijeshkumar.singh@amd.com
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/16 20:14, Mark Brown wrote:
-> On Wed, Jan 27, 2016 at 05:13:09PM +0000, Damien Horsley wrote:
+On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
+> >
+> > Will, Robin, thoughts?
 > 
->> audio_pll is referenced exclusively by the card device
-> 
-> That one *may* be plausible.
-> 
->> i2s_mclk and dac_mclk can also be referenced by other devices. The i2s
->> out controller references i2s_mclk, and codec devices can reference
->> i2s_mclk/dac_mclk dependent on their system clock requirements
-> 
-> The clock API copes perfectly happily with this.
-> 
->> without a reference to i2s_mclk and dac_mclk in the card driver, it
->> would not be possible to control the divisors and gates for these clocks
->> in the following cases:
-> 
->> Simplistic codecs that do not have drivers
-> 
->> Codec drivers that do not call clk_set_rate and clk_enable/clk_disable
-> 
-> Nonsense, if there is no driver or the driver doesn't do what you want
-> then fix that.  Don't bodge things at the wrong abstraction layer, that
-> just creates problems later on when someone comes along and does things
-> properly or tries to use the device tree outside of your particular
-> implementation (eg, when working with a differnet OS).
-> 
+> Any IDs specified here would only apply to DMA by the "platform device" 
+> side of the host controller itself (as would an equivalent "iommus" 
+> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
+> working on). In terms of PCI devices, the "mmu-masters" property is 
+> overloaded such that only its existence matters, to identify that there 
+> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
+> host controller.
 
-Okay. If it can be expected that the codec driver will call these then
-the references will not be required in the card driver for the codecs.
+I wasn't aware that this was actually still specified. I had hoped
+we were getting rid of mmu-masters before anyone actually started
+using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
 
-The i2s out controller also uses i2s_mclk, and calls clk_set_rate in
-hw_params at present. Would creating a set_sysclk callback for the i2s
-out controller, then calling snd_soc_dai_set_sysclk on the cpu dai in
-addition to the codec dais in the card driver be the correct way to
-manage this?
+Does anyone know what happened to the plan to use the iommu DT binding
+for the ARM SMMU instead? Do we now have to support both ways indefinitely?
+
+	Arnd
