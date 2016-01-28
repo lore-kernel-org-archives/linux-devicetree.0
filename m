@@ -1,37 +1,158 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
-Date: Thu, 28 Jan 2016 21:06:20 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1601282105150.3886@nanos>
-References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com> <alpine.DEB.2.11.1601262142450.3886@nanos> <20160128095955.GA12884@e106950-lin.cambridge.arm.com> <alpine.DEB.2.11.1601281116310.3886@nanos>
- <20160128111041.GB12884@e106950-lin.cambridge.arm.com> <alpine.DEB.2.11.1601281238110.3886@nanos> <CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
+ 'ext-reset-output' dt prop
+Date: Thu, 28 Jan 2016 15:28:10 -0500
+Message-ID: <56AA79DA.2010305@timesys.com>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+ <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
+ <20151105222325.GA26159@roeck-us.net>
+ <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
+ <20151106220249.GA19791@roeck-us.net> <565F4244.7090502@timesys.com>
+ <CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
+ <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
+ <20151228162923.GA31680@spo001.leaseweb.nl>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Brian Starkey <brian.starkey@arm.com>, LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151228162923.GA31680-1F/o1hAF34+bEvaWgpTR7vP6llvjuJOh@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Jan 2016, Rob Herring wrote:
-> On Thu, Jan 28, 2016 at 5:49 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > I've cc'ed the author and the device tree folks. Perhaps are they able to
-> > explain what this commit tries to 'fix'.
-> 
-> It's certainly not clear what driver was being fixed. I think the
-> intention was to provide the trigger flags from the DT to drivers in a
-> standard, non-DT specific way. The implementation of it certainly
-> seems convoluted. The usecase I can think of is drivers may need the
-> trigger information for cases where the device can support different
-> trigger modes/polarity. The DT says which trigger mode to use and the
-> device and irqchip need to be programmed to match. IIRC, SMSC ethernet
-> chips frequently used on ARM boards do this.
+Rob,
 
-I can see that the driver wants this information, but why would one feed that
-back into request_irq() when the interrupt was already configured by DT.
+On 12/28/2015 11:29 AM, Wim Van Sebroeck wrote:
+> Hi Tim,
+>
+>> On Wed, Dec 2, 2015 at 12:54 PM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+>>>
+>>> On Wed, Dec 2, 2015 at 11:11 AM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>
+>>>>
+>>>> On 11/06/2015 05:02 PM, Guenter Roeck wrote:
+>>>>>
+>>>>> On Fri, Nov 06, 2015 at 11:53:42AM -0800, Tim Harvey wrote:
+>>>>>>
+>>>>>> On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>>>>>>
+>>>>>>> On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+>>>>>>>>
+>>>>>>>> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>>>>>>>>
+>>>>>>>> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+>>>>>>>> can be pinmux'd to an external pin. This is typically used for boards
+>>>>>>>> that
+>>>>>>>> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+>>>>>>>> such an external reset on boards with external PMIC's can result in
+>>>>>>>> various
+>>>>>>>> hangs due to the IMX6 not being fully reset [1] as well as the board
+>>>>>>>> failing
+>>>>>>>> to reset because its PMIC has not been reset to provide adequate
+>>>>>>>> voltage for
+>>>>>>>> the CPU when coming out of reset at 800Mhz.
+>>>>>>>>
+>>>>>>>> This uses a new device-tree property 'ext-reset-output' to indicate the
+>>>>>>>> board has such a reset and to cause the watchdog to be configured to
+>>>>>>>> assert
+>>>>>>>> WDOG_B instead of an internal reset both on a watchdog timeout and in
+>>>>>>>> system_restart.
+>>>>>>>>
+>>>>>>>> [1]
+>>>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+>>>>>>>>
+>>>>>>>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>>>>>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>>>>>>>> ---
+>>>>>>>>    .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+>>>>>>>>    drivers/watchdog/imx2_wdt.c                          | 20
+>>>>>>>> ++++++++++++++++++--
+>>>>>>>>    2 files changed, 20 insertions(+), 2 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>>>>>> b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>>>>>> index 8dab6fd..9b89b3a 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>>>>>> @@ -9,6 +9,8 @@ Optional property:
+>>>>>>>
+>>>>>>>
+>>>>>>> properties ?
+>>>>>>>
+>>>>>>>>    - big-endian: If present the watchdog device's registers are
+>>>>>>>> implemented
+>>>>>>>>      in big endian mode, otherwise in native mode(same with CPU), for
+>>>>>>>> more
+>>>>>>>>      detail please see:
+>>>>>>>> Documentation/devicetree/bindings/regmap/regmap.txt.
+>>>>>>>> +- ext-reset-output: If present the watchdog device is configured to
+>>>>>>>> assert its
+>>>>>>>
+>>>>>>>
+>>>>>>> Should that have a vendor prefix ? Also, not sure if "-output"
+>>>>>>> has any real value in the property name. "fsl,external-reset", maybe ?
+>>>>>>
+>>>>>>
+>>>>>> Hi Guenter,
+>>>>>>
+>>>>>> I don't see why a vendor prefix is necessary - its a feature of the
+>>>>>> IMX6 watchdog supported by this driver to be able to trigger an
+>>>>>> internal chip-level reset and/or an external signal that can be hooked
+>>>>>> to additional hardware.
+>>>>>>
+>>>>> Sounded like vendor specific to me, but then I am not a devicetree
+>>>>> maintainer,
+>>>>> so I am not an authority on the subject.
+>>>>
+>>>>
+>>>> Devicetree maintainers,
+>>>>
+>>>> Any thoughts?
+>>>>
+>>>> Tim,
+>>>>
+>>>> After looking at all the other watchdog drivers, it does not appear that
+>>>> there is any other processor which uses a similar feature. Since imx is the
+>>>> only processor that appears to support this feature, it might make sense in
+>>>> making this vendor specific. If in the future it is found more processors
+>>>> support a similar functionality, it can be revisited and moved out from
+>>>> being vendor specific?
+>>>>
+>>>
+>>> I'm certainly no expert on device-tree policy. I understand your
+>>> point, but realize that the driver in question is imx2_wdt.c
+>>> (compatible = "fsl,imx21-wdt"). This is an IP block inside the silicon
+>>> of only Freescale chips, so its not like a future omap chip would be
+>>> using this driver - only fsl devices. So why would it need a 'vendor'
+>>> property any more than its other properties?
+>>>
+>>> Regards,
+>>>
+>>> Tim
+>>
+>> Wim,
+>>
+>> Does the lack of response mean overwhelming approval?
+>>
+>> I haven't heard any valid complaints - what does it take to get this approved?
+>>
+>> Regards,
+>>
+>> Tim
+>
+> I have no objections against the idea and the code itself.
+> But as Guenter pointed out: it would be handy to get feedback from the devicetree maintainers on the above discussion.
+>
+> Kind regards,
+> Wim.
+>
 
-Still confused.
+Any suggestions on whether a vendor specific prefix is necessary?
 
 Thanks,
-
-	tglx
+Akshay
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
