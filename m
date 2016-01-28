@@ -1,94 +1,106 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
-Date: Thu, 28 Jan 2016 11:19:49 +0000
-Message-ID: <20160128111949.GG30928@arm.com>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <1453929121-12171-12-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160128111453.GG17123@leverpostej>
- <20160128111738.GF30928@arm.com>
- <20160128111818.GH17123@leverpostej>
+From: Zhong Kaihua <zhongkaihua@huawei.com>
+Subject: [PATCH V4 3/3] arm64: dts: add Hi6220 spi configuration nodes
+Date: Thu, 28 Jan 2016 19:27:43 +0800
+Message-ID: <1453980463-97434-3-git-send-email-zhongkaihua@huawei.com>
+References: <1453980463-97434-1-git-send-email-zhongkaihua@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160128111818.GH17123@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, robin.murphy-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453980463-97434-1-git-send-email-zhongkaihua@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, xuyiping@hisilicon.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: w.f@huawei.com, dan.zhao@hisilicon.com, zhongkaihua@huawei.com, kong.kongxinwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 11:18:19AM +0000, Mark Rutland wrote:
-> On Thu, Jan 28, 2016 at 11:17:39AM +0000, Will Deacon wrote:
-> > On Thu, Jan 28, 2016 at 11:14:53AM +0000, Mark Rutland wrote:
-> > > On Wed, Jan 27, 2016 at 03:11:59PM -0600, Suravee Suthikulpanit wrote:
-> > > > From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> > > > 
-> > > > Add PCIe SMMU device tree node for AMD Seattle SOC.
-> > > > 
-> > > > Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 23 +++++++++++++++++++++++
-> > > >  1 file changed, 23 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> > > > index a7fc059..bfccfea 100644
-> > > > --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> > > > +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> > > > @@ -210,6 +210,7 @@
-> > > >  			device_type = "pci";
-> > > >  			bus-range = <0 0x7f>;
-> > > >  			msi-parent = <&v2m0>;
-> > > > +			#stream-id-cells = <16>;
-> > > >  			reg = <0 0xf0000000 0 0x10000000>;
-> > > >  
-> > > >  			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-> > > > @@ -230,6 +231,28 @@
-> > > >  				<0x03000000 0x01 0x00000000 0x01 0x00000000 0x7f 0x00000000>;
-> > > >  		};
-> > > >  
-> > > > +		pcie0_smmu: smmu@e0a00000 {
-> > > > +			 compatible = "arm,mmu-401";
-> > > > +			 reg = <0 0xe0a00000 0 0x10000>;
-> > > > +			 #global-interrupts = <1>;
-> > > > +			 interrupts = /* Uses combined intr for both
-> > > > +				       * global and context
-> > > > +				       */
-> > > > +				      <0 333 4>,
-> > > > +				      <0 333 4>;
-> > > > +			/* Note:
-> > > > +			 * SID[2:0]  = PCIe function number
-> > > > +			 * SID[7:3]  = PCIe device number
-> > > > +			 * SID[14:8] = PCIe bus number
-> > > > +			 */
-> > > > +			 mmu-masters = <&pcie0
-> > > > +				/* 1:00:[0,3] */ 256 257 258 259
-> > > > +				/* 2:00:[0,3] */ 512 513 514 515
-> > > > +				/* 3:00:[0,3] */ 768 769 770 771
-> > > > +				/* 4:00:[0,3] */ 1024 1025 1026 1027
-> > > > +			 >;
-> > > > +		 };
-> > > 
-> > > This doesn't look right to me.
-> > > 
-> > > I didn't think that RID->SID mapping was actually defined by any
-> > > binding, so (how) are these numbers used?
-> > > 
-> > > I'm uncomfortable with this, given we should be moving towards the
-> > > generic IOMMU binding (and then we'd use the iommu-map binding [1] for
-> > > this).
-> > > 
-> > > Will, Robin, thoughts?
-> > 
-> > The driver currently assumes a 1:1 RID:SID mapping when it sees a PCI
-> > device, so those numbers should be ignored.
-> 
-> Given that, they shouldn't be in the DT, then?
+arm64: dts: add Hi6220 spi configuration nodes
 
-Not unless there's a patch extending the driver/binding so that they do
-something useful, no.
+Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  1 +
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 20 ++++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 4fb0bdc..2313ae0 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -23,6 +23,7 @@
+ 		serial1 = &uart1; /* BT UART */
+ 		serial2 = &uart2; /* LS Expansion UART0 */
+ 		serial3 = &uart3; /* LS Expansion UART1 */
++		spi0 = &spi_0;
+ 	};
+ 
+ 	chosen {
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index c1ae42b..facc0f0 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -489,5 +489,25 @@
+ 			clock-names = "apb_pclk";
+ 			status = "ok";
+ 		};
++
++		spi_0: spi@f7106000 {
++			compatible = "arm,pl022", "arm,primecell";
++			reg = <0x0 0xf7106000 0x0 0x1000>;
++			interrupts = <0 50 4>;
++			bus-id = <0>;
++			enable-dma = <0>;
++			/*dmas = <&dma0 12 &dma0 13>;*/
++			/*dma-names = "rx", "tx";*/
++
++			clocks = <&sys_ctrl HI6220_SPI_CLK>;
++			clock-names = "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
++			num-cs = <1>;
++			cs-gpios = <&gpio6 2 0>;
++
++			status = "ok";
++		};
++
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
+index 28806df..0916e84 100644
+--- a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
+@@ -221,6 +221,15 @@
+ 					0xfc   MUX_M0	/* I2C2_SDA     (IOMG063) */
+ 				>;
+ 			};
++
++			spi0_pmx_func: spi0_pmx_func {
++				pinctrl-single,pins = <
++					0x1a0  MUX_M1   /* SPI0_DI      (IOMG104) */
++					0x1a4  MUX_M1	/* SPI0_DO	(IOMG105) */
++					0x1a8  MUX_M1	/* SPI0_CS_N	(IOMG106) */
++					0x1ac  MUX_M1	/* SPI0_CLK	(IOMG107) */
++				>;
++			};
+ 		};
+ 
+ 		pmx1: pinmux@f7010800 {
+@@ -625,6 +634,18 @@
+ 				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
+ 				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
+ 			};
++
++			spi0_cfg_func: spi0_cfg_func {
++				pinctrl-single,pins = <
++					0x1b0  0x0	/* SPI0_DI	(IOCFG108) */
++					0x1b4  0x0	/* SPI0_DO	(IOCFG109) */
++					0x1b8  0x0	/* SPI0_CS_N	(IOCFG110) */
++					0x1bc  0x0	/* SPI0_CLK	(IOCFG111) */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS  PULL_DOWN PULL_DIS PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
++			};
+ 		};
+ 
+ 		pmx2: pinmux@f8001800 {
+-- 
+1.9.1
