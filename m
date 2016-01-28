@@ -1,65 +1,55 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V3 3/4] serial: bcm2835: add driver for bcm2835-aux-uart
-Date: Thu, 28 Jan 2016 14:34:14 -0800
-Message-ID: <87h9hxfi55.fsf@eliezer.anholt.net>
-References: <1453032932-2512-1-git-send-email-kernel@martin.sperl.org> <1453032932-2512-4-git-send-email-kernel@martin.sperl.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for Pistachio audio
+ card
+Date: Fri, 29 Jan 2016 00:25:33 +0100
+Message-ID: <20160128232533.GG4130@sirena.org.uk>
+References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
+ <20160127145756.GR6042@sirena.org.uk>
+ <56A8DFBC.6070007@imgtec.com>
+ <20160127160057.GA25316@sirena.org.uk>
+ <56A8FAA5.1000907@imgtec.com>
+ <20160127201457.GC25316@sirena.org.uk>
+ <56AA2301.9070604@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453032932-2512-4-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0qt3EE9wi45a2ZFX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56AA2301.9070604@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
+--0qt3EE9wi45a2ZFX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->
-> The bcm2835 SOC contains an auxiliary uart, which is very close
-> to the ns16550 with some differences.
->
-> The big difference is that the uart HW is not using an internal divider
-> of 16 but 8, which results in an effictive baud-rate being twice
-> the requested baud-rate.
->
-> This driver handles this device correctly and handles the difference in
-> the HW divider by scaling up the clock by a factor of 2.
->
-> The approach to write a separate (wrapper) driver instead of using a
-> multiplying clock and "ns16550" as compatibility in the device-tree
-> has been recommended by Stephen Warren.
->
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Thu, Jan 28, 2016 at 02:17:37PM +0000, Damien Horsley wrote:
 
-Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> The i2s out controller also uses i2s_mclk, and calls clk_set_rate in
+> hw_params at present. Would creating a set_sysclk callback for the i2s
+> out controller, then calling snd_soc_dai_set_sysclk on the cpu dai in
+> addition to the codec dais in the card driver be the correct way to
+> manage this?
 
---=-=-=
+That'd be more normal, yes.
+
+--0qt3EE9wi45a2ZFX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJWqpdnAAoJELXWKTbR/J7oQ0QQAII0o1h+Xu2zmmxHiLYLcyOu
-R7o++ZUO7h94Hx0b0wgXblL6STooRt5Oiap2/Hd3ekjdcUrF/gfxgz/hWHJX8KC9
-gMmHv+El9VpWZEbknFurp5re8mFd9lNCzdw8725JbzEJXVaZTnEoHOm0bpFLX44z
-4aRlYHlfwqBBAMZJMOKLoKmuoXEWuJDXtY1/f0/fe/+LoLUTwLU8Z19PjYE6nthJ
-I0QlHQN8PHZM8o7OAkJqthw72jpqH8D24g0UWz7gupxGyu3IgpqQSN7vfRasGiua
-ri3yEtS6G13PIOGwQKJi1UPPXPOs2xNZiIEiUKAQaCj7b9JPYGUzUjaUnWVFa2Kt
-0xy/DfrNwbOK+XDzGUlG04uf4AfgKPJZjdQKqCGVFKFtg/Dcr2YkcKk4WDKK+mCR
-JC+Zfnrv/E6sDPKj8cAPxruj6pwgfY/8UxVlKA4vSLX8VIYQAKa98C3QMghMjZe3
-g62E8KrDQZtwdlculDO53fJyfU1K/my84xs+ZmgIaTt4Kb0Ow7MZ1tZjjgA3237q
-JntPhxWzN975Ulkr8TTmZCX0cyiBadc90piA3Sighj4NbDGPB1E7m6Cpl0mL29Vn
-Ip/iwrJhIBBtREcMRPOohLL4kjg3ElIunamFn7UlQCr8pX+sZVDDbpvL+ODSAy+m
-ACAH2xv665cvKOOEFjVV
-=AVDY
+iQEcBAEBCAAGBQJWqqNsAAoJECTWi3JdVIfQkr8H/2IxwBlhIPyiHZjH2MIucPbk
+nqzHQlIrNYzrw6boLSpLFlLZAkpmZ/U/s+qpcwVloVxZgVY9D/dQICK3CVl23cZS
+p3GLC4nr4Cyb68w4NtyYXAFdqt7vGDqbkeU6CBkyS3GdiqIVQihQ2GvPP7EtuiSh
+DfoQ4W7Tj/es9tpP2tEHJmc5nUxpu7pG05k/mkQ570yv9gGLcqICsroHNauqB50p
+wL/myKOqPRR3YLUx+FE+JMsyDFnN8iOuT63XlZXCBfeGWXMK8fEHQ/1ZWWuk/93x
+1m8sCQRzuiA3TLFi6i7ahm4OZpLCvjMP82upRTW+XUnPxsSS+w86/MHgIfUOyeA=
+=ua04
 -----END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--0qt3EE9wi45a2ZFX--
