@@ -1,44 +1,48 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2] clk: Move vendor's Kconfig into CCF menu section
-Date: Thu, 28 Jan 2016 13:57:22 +0100
-Message-ID: <56AA1032.70001@samsung.com>
-References: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
+ driver to  work on both  Zynq and Microblaze
+Date: Thu, 28 Jan 2016 13:20:56 +0000
+Message-ID: <8520D5D51A55D047800579B09414719825874148@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <4734542.KZZp0TeeeM@wuerfel>
+ <8520D5D51A55D047800579B09414719825873DA8@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <5255218.OREPu5Af3W@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5255218.OREPu5Af3W@wuerfel>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-p
 List-Id: devicetree@vger.kernel.org
 
-On 28/01/16 09:58, James Liao wrote:
-> Move all vendor's Kconfig into CCF menu section to prevent
-> new drivers putting their Kconfig files in a wrong place.
+> Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver
+> to work on both Zynq and Microblaze
 > 
-> Some Kconigs need to modify at the same time to avoid build
-
-"Some Kconfigs need to be modified..." ?
-
-> warnings.
+> On Wednesday 27 January 2016 14:33:45 Bharat Kumar Gogada wrote:
+> > > > @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct
+> > > > platform_device *pdev)  #endif
+> > > >     pci_scan_child_bus(bus);
+> > > >     pci_assign_unassigned_bus_resources(bus);
+> > > > +#ifdef CONFIG_ARM
+> > > >     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> > > > +#endif
+> > > >     pci_bus_add_devices(bus);
+> > > >     platform_set_drvdata(pdev, port);
+> > >
+> > > Here it looks like microblaze gets it right. I'm not sure why we
+> > > still need the
+> > > pci_fixup_irqs() on ARM, but my feeling is that this should be fixed
+> > > in common code.
+> > In arm pci_fixup_irqs is called by pci_common_init_dev
+> (arch/arm/kernel/bios32.c), since this API is removed now, I was calling it
+> separately.
 > 
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> ---
-> This patch is based on v4.5-rc1.
+> But who calls it in microblaze? If it works without the extra call there, can we
+> make it work the same way for ARM?
 > 
-> changes since v1:
-> - Modify s3c24xx and samsung's Kconfig to avoid build warngings.
-> 
->  arch/arm/mach-s3c24xx/Kconfig | 1 +
->  drivers/clk/Kconfig           | 8 +++-----
->  drivers/clk/samsung/Kconfig   | 1 -
->  3 files changed, 4 insertions(+), 6 deletions(-)
+In microblaze I have added pcibios_add_device call (similar to call in arch/arm64/kernel/pci.c ) in pci-common.c, which is being invoked by kernel core itself. May be we can add similar on arm and test out, but we might need some cleanup in arch/arm/kernel/bios32.c
 
-For the samsung code changes:
-
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
--- 
-Thanks,
-Sylwester
+Bharat
