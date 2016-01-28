@@ -1,75 +1,106 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt/bindings: serial: bcm2835: add binding documentation for bcm2835-aux-uart
-Date: Wed, 27 Jan 2016 22:39:54 -0800
-Message-ID: <87y4bacimd.fsf@eliezer.anholt.net>
-References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org> <4288762.bCLxQBDvy4@wuerfel> <6035A0DD-AD61-48F7-B641-272BB23F3CD8@martin.sperl.org> <4799423.86Gz9JKjiK@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Thu, 28 Jan 2016 06:41:49 +0000
+Message-ID: <20160128064149.GM3368@x1>
+References: <1453736627-2634-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4799423.86Gz9JKjiK@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453736627-2634-1-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Mark,
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+Just need your stamp for this to go in.
 
-> On Monday 11 January 2016 14:57:46 Martin Sperl wrote:
->> > On 11.01.2016, at 13:21, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> >=20
->> > Please just add another patch to rename the existing uarts appropriate=
-ly
->> > first, then add this one on top with the correct name.
->>=20
->> I can do that with the next incarnation of the patch.
->>=20
->> But would that not break dt-source files, that refer to uart0?
->> Is this not considered an API change as well or does this only apply
->> to the binary files?
->
-> To clarify: I meant you should change the node name, not the label.
->
-> The label is not part of the dtb data that gets passed to the kernel
-> and can have any value, including "uart0".
->
-> The node name is part of the dtb and should follow common naming
-> conventions (per ePAPR), but the kernel doesn't actually care, so
-> it won't break anything.
->
-> There are cases where a bootloader relies on a particular node name
-> in order to find a device node and patch its properties, but I don't
-> think this is the case here.
+> In an effort to cleanup this driver and add Device Tree support
+> the driver has been rewritten based on new driver styles and
+> modern kernel driver helpers. This has nearly halved the lines
+> of code while keeping all previous functionality.
+>=20
+> Platform file based initialization has been dropped as there is
+> no examples of this use in the kernel.
+>=20
+> v1 can be found here: [1] v2: [2] v3: [3] v4: [4] v5: [5] v6: [6] v7:=
+ [7]
+>=20
+> Changes from v7:
+>  - Now complies with gpiolib changes
+>=20
+> Changes from v6:
+>  - Removed compatible strings from DT sub-nodes
+>  - Rearranged DT bindings
+>  - Small fixes
+>=20
+> Changes from v5:
+>  - Small formatting changes to DT Docs
+>  - Converted to_tps65912_gpio from macro to inline function
+>=20
+> Changes from v4:
+>  - Use mfd core to add sub-devices
+>=20
+> Changes from v3:
+>  - Reorganized regulator driver and related DT node
+>  - Other small fixes as discussed in v3 thread
+>=20
+> Changes from v2:
+>  - Split the series further into subsystems
+>=20
+> Changes from v1:
+>  - Split the rewrite into delete/create patches
+>  - Several small fixes as discussed in v1 thread
+>=20
+> [1] http://www.spinics.net/lists/devicetree/msg93863.html
+> [2] http://www.spinics.net/lists/devicetree/msg95003.html
+> [3] http://www.spinics.net/lists/devicetree/msg95133.html
+> [4] http://www.spinics.net/lists/devicetree/msg96109.html
+> [5] http://www.spinics.net/lists/devicetree/msg100601.html
+> [6] https://lkml.org/lkml/2015/10/30/690
+> [7] https://www.spinics.net/lists/linux-gpio/msg09710.html
+>=20
+> Andrew F. Davis (5):
+>   Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
+>   mfd: tps65912: Remove old driver in preparation for new driver
+>   mfd: tps65912: Add driver for the TPS65912 PMIC
+>   regulator: tps65912: Add regulator driver for the TPS65912 PMIC
+>   gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
+>=20
+>  Documentation/devicetree/bindings/mfd/tps65912.txt |  50 ++
+>  drivers/gpio/Kconfig                               |   2 +-
+>  drivers/gpio/gpio-tps65912.c                       | 309 ++++-----
+>  drivers/mfd/Kconfig                                |  20 +-
+>  drivers/mfd/Makefile                               |   3 +-
+>  drivers/mfd/tps65912-core.c                        | 286 ++++-----
+>  drivers/mfd/tps65912-i2c.c                         | 218 +++----
+>  drivers/mfd/tps65912-irq.c                         | 217 -------
+>  drivers/mfd/tps65912-spi.c                         | 218 +++----
+>  drivers/regulator/Kconfig                          |   2 +-
+>  drivers/regulator/tps65912-regulator.c             | 709 +++++------=
+----------
+>  include/linux/mfd/tps65912.h                       | 209 +++---
+>  12 files changed, 767 insertions(+), 1476 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.tx=
+t
+>  rewrite drivers/gpio/gpio-tps65912.c (74%)
+>  rewrite drivers/mfd/tps65912-core.c (96%)
+>  rewrite drivers/mfd/tps65912-i2c.c (93%)
+>  delete mode 100644 drivers/mfd/tps65912-irq.c
+>  rewrite drivers/mfd/tps65912-spi.c (92%)
+>  rewrite drivers/regulator/tps65912-regulator.c (94%)
+>=20
 
-Confirmed, the booloader source I have doesn't do anything with uart
-nodes.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWqbe6AAoJELXWKTbR/J7o0jEP/3Z3edblFHKMYdQhW7IzjwFz
-rxLumUCmB7/DAH7BY8p+z24+z621TAujvlm4hNE4IyDQawUIBHRng5c3aO0cgV0z
-Zqbyww8IGzk6FzlJEWsmgmH2d+q9Q8JPGs/me3hlgGtgOfdu83VcXewsQ0hCyZl+
-kxEbAr8qOQ1bquVAhE/X+Nh9KM/elwb5w6r9GQ8lfRIhXN0hUWagwV0F81rb336k
-M05vnypnOm2mmtcU9Tg/rP7OiRnpSs/kGhyXiFcSn9DuRPr0mntBinSgbpldEpcc
-LAIsyEdxdEWPZurdWbRGbjHG+udfWCdqQfuaVCldwsOnzMQQqG8WY8IZoyoP2Jr3
-lCHssEt6sLg/5sFEKAG2A02V15QCrHkApJ3RnH79TzmUfbmanmwoFrRbOt/5HcO+
-gftldn3ByAW4qrTEPVdW7gk0WwZMkU/VT/1p+5bE5j7ulh3GAfu5OWlzBV5ZJl6V
-0yi+fec8D4aLxnQ0uWYyjsVALUYDsKU9maj49lJwwDE0tdrL5Gn4EJYRrM2N3HSo
-iDmltkGjiSCSm7iHm32mLPdiPTxbS9T/kG7g5YdOAlC0v8zxzqCK+MhBJ9uxHRlL
-tSPH0J7+0QhZac4lq/8iNVElifv2wTbTksUqBtExARJ1If+tgihtLkoHSrlfTogi
-dS/yv4OTalgnUWCnWdR2
-=FcJx
------END PGP SIGNATURE-----
---=-=-=--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
