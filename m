@@ -1,54 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Thu, 28 Jan 2016 12:45:25 +0000
-Message-ID: <20160128124525.GF6078@sirena.org.uk>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
- <20160128064149.GM3368@x1>
- <20160128114026.GB6078@sirena.org.uk>
- <20160128120423.GP3368@x1>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2] clk: Move vendor's Kconfig into CCF menu section
+Date: Thu, 28 Jan 2016 13:57:22 +0100
+Message-ID: <56AA1032.70001@samsung.com>
+References: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s5/bjXLgkIwAv6Hi"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160128120423.GP3368@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 28/01/16 09:58, James Liao wrote:
+> Move all vendor's Kconfig into CCF menu section to prevent
+> new drivers putting their Kconfig files in a wrong place.
+> 
+> Some Kconigs need to modify at the same time to avoid build
 
---s5/bjXLgkIwAv6Hi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+"Some Kconfigs need to be modified..." ?
 
-On Thu, Jan 28, 2016 at 12:04:23PM +0000, Lee Jones wrote:
-> On Thu, 28 Jan 2016, Mark Brown wrote:
+> warnings.
+> 
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> ---
+> This patch is based on v4.5-rc1.
+> 
+> changes since v1:
+> - Modify s3c24xx and samsung's Kconfig to avoid build warngings.
+> 
+>  arch/arm/mach-s3c24xx/Kconfig | 1 +
+>  drivers/clk/Kconfig           | 8 +++-----
+>  drivers/clk/samsung/Kconfig   | 1 -
+>  3 files changed, 4 insertions(+), 6 deletions(-)
 
-> > Please be more specific?  What is it that you are looking for beyond the
-> > review I already did for the regulator driver?
+For the samsung code changes:
 
-> Patch 2.
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-I reviewed that *ages* ago.
-
---s5/bjXLgkIwAv6Hi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWqg1kAAoJECTWi3JdVIfQoMIH/AsmpH8oc7Vl/0GImqsOMRyP
-vR9XAbqsOl74cP/ZWCGxgF26jMnUi1n5Fs5T2ofP/uiY8ttbgInOBQm3iYoxljpS
-ct69ysFJo93xQuCq3T4262c0Cs4IW5tgBThJms0sMlaYRBrsfvi7XdFz5/mJFbNU
-vLFnzPBRJNGBhDUajwJCQMlgZvHWjpPez3JseomywD1EmIFtp704hdEqoNJjE+fJ
-FUNWVW6EJMoqUTI527Bs4amDV1mGNqjI+pzbxjx0FzK9I34enRH2sh1ayD8+RKSz
-tqjtZ1mQm9MgxYviYGGu+526Hi86/xV4Wt0p0vczY3DPVHHZcYyO52CreHCVTnQ=
-=z3+8
------END PGP SIGNATURE-----
-
---s5/bjXLgkIwAv6Hi--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks,
+Sylwester
