@@ -1,55 +1,61 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC V2 1/2] ASoC: img: Add binding document for Pistachio audio
- card
-Date: Fri, 29 Jan 2016 00:25:33 +0100
-Message-ID: <20160128232533.GG4130@sirena.org.uk>
-References: <1453818867-16322-1-git-send-email-Damien.Horsley@imgtec.com>
- <1453818867-16322-2-git-send-email-Damien.Horsley@imgtec.com>
- <20160127145756.GR6042@sirena.org.uk>
- <56A8DFBC.6070007@imgtec.com>
- <20160127160057.GA25316@sirena.org.uk>
- <56A8FAA5.1000907@imgtec.com>
- <20160127201457.GC25316@sirena.org.uk>
- <56AA2301.9070604@imgtec.com>
+Subject: Re: [PATCH V6 7/8] DT: regulator: add DT binding doc for regulator
+ of PMIC max77620/max20024
+Date: Fri, 29 Jan 2016 00:28:17 +0100
+Message-ID: <20160128232817.GH4130@sirena.org.uk>
+References: <1453988274-28052-1-git-send-email-ldewangan@nvidia.com>
+ <1453988274-28052-8-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0qt3EE9wi45a2ZFX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="2oox5VnwalALFvA7"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56AA2301.9070604@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Damien Horsley <Damien.Horsley@imgtec.com>
-Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Hartley <james.hartley@imgtec.com>
+In-Reply-To: <1453988274-28052-8-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
---0qt3EE9wi45a2ZFX
+--2oox5VnwalALFvA7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 28, 2016 at 02:17:37PM +0000, Damien Horsley wrote:
+On Thu, Jan 28, 2016 at 07:07:53PM +0530, Laxman Dewangan wrote:
+> Maxim Semiconductor's PMIC MAX77620/MAX20024 has multiple
+> DCDCs and LDOs.
 
-> The i2s out controller also uses i2s_mclk, and calls clk_set_rate in
-> hw_params at present. Would creating a set_sysclk callback for the i2s
-> out controller, then calling snd_soc_dai_set_sysclk on the cpu dai in
-> addition to the codec dais in the card driver be the correct way to
-> manage this?
+Please use subject lines matching the style for the subsystem.  I'm
+fairly sure I've mentioned this before and really if your subject lines
+don't visually resemble anything else in the directory that ought to be
+a warning sign.
 
-That'd be more normal, yes.
+> +- maxim,disable-active-discharge:    boolean, Disable active discharge.
 
---0qt3EE9wi45a2ZFX
+That's something I've seen other regulators do, can we make it a
+standard property with an op?
+
+> +max77620@3c {
+> +	regulators {
+> +		in-ldo0-1-supply = <&max77620_sd2>;
+> +		in-ldo7-8-supply = <&max77620_sd2>;
+
+I'd expect any supplies for the device to be at the device level,
+including supplies used by regulators.
+
+--2oox5VnwalALFvA7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWqqNsAAoJECTWi3JdVIfQkr8H/2IxwBlhIPyiHZjH2MIucPbk
-nqzHQlIrNYzrw6boLSpLFlLZAkpmZ/U/s+qpcwVloVxZgVY9D/dQICK3CVl23cZS
-p3GLC4nr4Cyb68w4NtyYXAFdqt7vGDqbkeU6CBkyS3GdiqIVQihQ2GvPP7EtuiSh
-DfoQ4W7Tj/es9tpP2tEHJmc5nUxpu7pG05k/mkQ570yv9gGLcqICsroHNauqB50p
-wL/myKOqPRR3YLUx+FE+JMsyDFnN8iOuT63XlZXCBfeGWXMK8fEHQ/1ZWWuk/93x
-1m8sCQRzuiA3TLFi6i7ahm4OZpLCvjMP82upRTW+XUnPxsSS+w86/MHgIfUOyeA=
-=ua04
+iQEcBAEBCAAGBQJWqqQQAAoJECTWi3JdVIfQ7wQIAIYk6ZkTOPNOCsbPz8ruY17f
+hTnw2UWK1JXkW8rcR0d//LER/ATrYfF6bv+CjwUf8DYUVx2UD/o6WQKH67cItf/p
+rDJEpFOXedtBBO2sLVm+nzbjJwSuya1aM4lAJ0hmv8Nq0s0DwYDd95pp2vai807j
+XEUg9M4+uX4aTzN15bDPyPDKfu36zs5NF+MZ3bTwIuwwpDihpfYPt/F1P54J2m31
+OuxyRi3992+hMj9I2F3JMB7nG1fXO3vX02xcX4cUwYXffaJgJ8aAwk5OX25WDnBM
+u2KIo09vfKyRKWD6GyuIbWiAVbtNqQSy9xK3J9gM6YqWb4eDK+kmuziJtH+QToA=
+=S+ho
 -----END PGP SIGNATURE-----
 
---0qt3EE9wi45a2ZFX--
+--2oox5VnwalALFvA7--
