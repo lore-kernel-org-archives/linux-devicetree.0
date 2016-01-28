@@ -1,72 +1,62 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf-colibri-eval-v3: Use enable-gpios for BL_ON
-Date: Thu, 28 Jan 2016 16:39:14 +0800
-Message-ID: <20160128083914.GQ9070@tiger>
-References: <1452322793-26020-1-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] dts/ls1021a: add the DTS for QSPI support
+Date: Thu, 28 Jan 2016 16:33:26 +0800
+Message-ID: <1453970006-46509-1-git-send-email-yao.yuan@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452322793-26020-1-git-send-email-bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 09, 2016 at 12:29:53PM +0530, Bhuvanchandra DV wrote:
-> Use pwm-backlight driver 'enable-gpios' property for backlight on/off
-> control.
-> 
-> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf-colibri.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-> index e5949b9..1c0da05 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -10,7 +10,10 @@
->  / {
->  	bl: backlight {
->  		compatible = "pwm-backlight";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_bl_on>;
->  		pwms = <&pwm0 0 5000000 0>;
-> +		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
->  		status = "disabled";
->  	};
->  };
-> @@ -169,6 +172,12 @@
->  			>;
->  		};
->  
-> +		pinctrl_gpio_bl_on: gpio_bl_on {
-> +			fsl,pins = <
-> +				VF610_PAD_PTC0__GPIO_45		0x22ef
-> +			>;
-> +		};
-> +
+From: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
 
-@Stefan,
+Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+---
+Add in v1:
+Can merge, but the function depend on the patch:
+https://patchwork.kernel.org/patch/8118251/
 
-Do we need this?  My understanding is that on Vybrid, when gpio is
-requested, the pinctrl will set it up automatically.
+mtd: spi-nor: fsl-quadspi: add support for ls1021a
 
-Shawn
+LS1021a also support Freescale Quad SPI controller.
+Add fsl-quadspi support for ls1021a chip and make SPI_FSL_QUADSPI
+selectable for LS1021A SOC hardwares.
 
->  		pinctrl_i2c0: i2c0grp {
->  			fsl,pins = <
->  				VF610_PAD_PTB14__I2C0_SCL		0x37ff
-> -- 
-> 2.7.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 9430a99..c764fa5 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -252,6 +252,21 @@
+ 			status = "disabled";
+ 		};
+ 
++		qspi: quadspi@1550000 {
++			compatible = "fsl,ls1021a-qspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x1550000 0x0 0x10000>,
++				<0x0 0x40000000 0x0 0x4000000>;
++			reg-names = "QuadSPI", "QuadSPI-memory";
++			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "qspi_en", "qspi";
++			clocks = <&platform_clk 1>, <&platform_clk 1>;
++			big-endian;
++			amba-base = <0x40000000>;
++			status = "disabled";
++		};
++
+ 		i2c0: i2c@2180000 {
+ 			compatible = "fsl,vf610-i2c";
+ 			#address-cells = <1>;
+-- 
+2.1.0.27.g96db324
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
