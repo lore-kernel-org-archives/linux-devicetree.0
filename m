@@ -1,32 +1,34 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC 0/3] leds: add SN3218 LED driver
-Date: Thu, 28 Jan 2016 20:41:04 +0000
-Message-ID: <1454013667-25889-1-git-send-email-stefan.wahren@i2se.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 00/13] dtb: amd: Miscelleneous Updates for AMD Seattle DTS
+Date: Thu, 28 Jan 2016 13:39:23 -0800
+Message-ID: <CAOesGMgRC2vTVdmY6kKYonM1JkWD=-3k_EQ4hGvyrm-vNZczrQ@mail.gmail.com>
+References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, brijeshkumar.singh@amd.com, Thomas Lendacky <thomas.lendacky@amd.com>, leo.duran@amd.com
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements support for the Si-En SN3218
-18 Channel LED Driver through I2C. This implemention only write
-data over I2C und get the platform data via DT.
+Hi Suravee,
 
-The driver has been tested on a Raspberry Pi B.
+On Wed, Jan 27, 2016 at 1:11 PM, Suravee Suthikulpanit
+<Suravee.Suthikulpanit@amd.com> wrote:
+> From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>
+> This patch series contains several updates for the AMD Seattle SOC DTS files.
+> It also adds new board files for newer Overdrive and Linaro 96boards (Husky)
+> platforms.
 
-Stefan Wahren (3):
-  of: Add vendor prefix for Si-En Technology
-  DT: add binding for SN3218 LED driver
-  leds: add SN3218 LED driver
+My Overdrive comes with DT provided by firmware, so there's no need to
+have a in-kernel-tree DT source.
 
- .../devicetree/bindings/leds/leds-sn3218.txt       |   41 ++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/leds/Kconfig                               |    8 +
- drivers/leds/Makefile                              |    1 +
- drivers/leds/leds-sn3218.c                         |  254 ++++++++++++++++++++
- 5 files changed, 305 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
- create mode 100644 drivers/leds/leds-sn3218.c
+Are you aware of other reasons to have it here? I just foresee
+divergence and conflicts between the two. It was quite obvious before
+this update when the FW-provided DT was a lot more complete than what
+we had in the kernel tree.
 
--- 
-1.7.9.5
+
+-Olof
