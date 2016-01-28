@@ -1,48 +1,32 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
-Date: Thu, 28 Jan 2016 14:27:52 +0000
-Message-ID: <20160128142751.GA775@arm.com>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160128111453.GG17123@leverpostej>
- <56AA07AA.7050701@arm.com>
- <6645680.g0j8d12m6d@wuerfel>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v9 3/6] arm64/arm, numa, dt: adding numa dt binding
+ implementation for arm64 platforms.
+Date: Thu, 28 Jan 2016 14:39:26 +0000
+Message-ID: <20160128143925.GC775@arm.com>
+References: <1453134965-6125-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1453134965-6125-4-git-send-email-gkulkarni@caviumnetworks.com>
+ <20160126203603.GC17600@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ia64-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6645680.g0j8d12m6d@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org
+In-Reply-To: <20160126203603.GC17600@localhost>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hogan@imgtec.com, benh@kernel.crashing.o
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
-> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
-> > >
-> > > Will, Robin, thoughts?
-> > 
-> > Any IDs specified here would only apply to DMA by the "platform device" 
-> > side of the host controller itself (as would an equivalent "iommus" 
-> > property on pcie0 once I finish the SMMUv2 generic binding support I'm 
-> > working on). In terms of PCI devices, the "mmu-masters" property is 
-> > overloaded such that only its existence matters, to identify that there 
-> > _is_ a relationship between the SMMU and the PCI bus(es) behind that 
-> > host controller.
+On Tue, Jan 26, 2016 at 02:36:04PM -0600, Bjorn Helgaas wrote:
+> Subject is "arm64/arm, numa, dt: adding ..."  What is the significance
+> of the "arm" part?  The other patches only mention "arm64".
 > 
-> I wasn't aware that this was actually still specified. I had hoped
-> we were getting rid of mmu-masters before anyone actually started
-> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
-> 
-> Does anyone know what happened to the plan to use the iommu DT binding
-> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
+> General comment: the code below has little, if anything, that is
+> actually arm64-specific.  Maybe this is the first DT-based NUMA
+> platform?  I don't see other similar code for other arches, so maybe
+> it's too early to try to generalize it, but we should try to avoid
+> adding duplicates of this code if/when other arches do show up.
 
-We always did -- Seattle used the mmu-masters binding before the generic
-binding even existed. Robin has been working on patches to get of_xlate
-up and running, but it got held up by Laurent's series which didn't end
-up going anywhere.
+Having it in the core code would allow us to share it with arch/arm/
+fairly straightforwardly.
 
 Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
