@@ -1,47 +1,73 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] clk: Move vendor's Kconfig into CCF menu section
-Date: Thu, 28 Jan 2016 00:36:56 -0800
-Message-ID: <20160128083656.GM12841@codeaurora.org>
-References: <201601271708.gQUxXACW%fengguang.wu@intel.com>
- <4711589.Ig064LES4c@wuerfel>
- <1453888578.28646.7.camel@mtksdaap41>
- <6167008.u8jfFpmfhy@wuerfel>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf-colibri-eval-v3: Use enable-gpios for BL_ON
+Date: Thu, 28 Jan 2016 16:39:14 +0800
+Message-ID: <20160128083914.GQ9070@tiger>
+References: <1452322793-26020-1-git-send-email-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6167008.u8jfFpmfhy@wuerfel>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: James Liao <jamesjj.liao@mediatek.com>, linux-arm-kernel@lists.infradead.org, kbuild test robot <lkp@intel.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org
+In-Reply-To: <1452322793-26020-1-git-send-email-bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27, Arnd Bergmann wrote:
-> On Wednesday 27 January 2016 17:56:18 James Liao wrote:
-> > > 
-> > > I think you should include this change in your patch, or as a preparation.
-> > > All other samsung platforms already select COMMON_CLK through ARCH_MULTIPLATFORM,
-> > > and all SoCs that are part of ARCH_S3C24XX individually select a symbol that
-> > > selects COMMON_CLK.
-> > 
-> > Oops, I didn't notice there are warnings after moving these Kconfigs
-> > into menu section.
-> > 
-> > The original motivation of this patch is preventing new clk drivers
-> > include their Kconfig in a wrong place, so it's not critical. Do you
-> > think we should apply this patch (with your changes below) or drop this
-> > patch directly?
+On Sat, Jan 09, 2016 at 12:29:53PM +0530, Bhuvanchandra DV wrote:
+> Use pwm-backlight driver 'enable-gpios' property for backlight on/off
+> control.
+> 
+> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vf-colibri.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+> index e5949b9..1c0da05 100644
+> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+> @@ -10,7 +10,10 @@
+>  / {
+>  	bl: backlight {
+>  		compatible = "pwm-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_bl_on>;
+>  		pwms = <&pwm0 0 5000000 0>;
+> +		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+>  		status = "disabled";
+>  	};
+>  };
+> @@ -169,6 +172,12 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_gpio_bl_on: gpio_bl_on {
+> +			fsl,pins = <
+> +				VF610_PAD_PTC0__GPIO_45		0x22ef
+> +			>;
+> +		};
+> +
+
+@Stefan,
+
+Do we need this?  My understanding is that on Vybrid, when gpio is
+requested, the pinctrl will set it up automatically.
+
+Shawn
+
+>  		pinctrl_i2c0: i2c0grp {
+>  			fsl,pins = <
+>  				VF610_PAD_PTB14__I2C0_SCL		0x37ff
+> -- 
+> 2.7.0
 > 
 > 
-> I think your patch is good, we just need to fix S3C24xx, which is doing
-> things in a strange way for historic reasons.
-
-So far we've taken the approach of not caring if they include
-their Kconfig outside the common clk menu when all the configs
-inside the Kconfig file are hidden. Of course, when they aren't
-hidden this becomes a problem, but that isn't the case unless
-something changed recently.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
