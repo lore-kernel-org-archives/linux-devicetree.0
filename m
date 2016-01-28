@@ -1,23 +1,23 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v4 4/9] ARM: dts: rockchip: add support emac for RK3036
-Date: Thu, 28 Jan 2016 16:43:33 +0800
-Message-ID: <1453970618-4383-5-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v4 3/9] clk: rockchip: rk3036: fix and add node id for emac clock
+Date: Thu, 28 Jan 2016 16:43:32 +0800
+Message-ID: <1453970618-4383-4-git-send-email-wxt@rock-chips.com>
 References: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-Cc: hl@rock-chips.com, jay.xu@rock-chips.com, jeffy.chen@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, cf@rock-chips.com, sonnyrao@chromium.org, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: hl@rock-chips.com, jay.xu@rock-chips.com, jeffy.chen@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, cf@rock-chips.com, sonnyrao@chromium.org, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: zhengxing <zhengxing@rock-chips.com>
 
-This patch describe the emac, and we need to let mac clock under
-the APLL which is able to provide the accurate 50MHz what mac_ref
-need.
-
-This patch makes the emac parent clock is DPLL instead of APLL.
-since that will cause some unstable things if the cpufreq is working.
+In the emac driver, we need to refer HCLK_MAC since there are
+only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clock are under the
+GPLL, and it is unable to provide the accurate rate for mac_ref which
+need to 50MHz probability, we should let it under the DPLL and are
+able to set the freq which integer multiples of 50MHz, so we add these
+emac node for reference.
 
 Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
@@ -25,149 +25,60 @@ Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
 Changes in v4:
-- included in the kylin series patches.
-- This patch picked up from https://patchwork.kernel.org/patch/7924971/
-- Change to solve the conflict based on the Heiko's branch.
-- Make the emac parent as the DPLL.
+- fix the commit, pick up from the
+  https://patchwork.kernel.org/patch/7976631/.
+- The emac parent shouldn't depend on the APLL. instead of DPLL.
 
- arch/arm/boot/dts/rk3036-evb.dts   | 23 ++++++++++++++++++++++
- arch/arm/boot/dts/rk3036-kylin.dts | 21 ++++++++++++++++++++
- arch/arm/boot/dts/rk3036.dtsi      | 39 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
+ drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
+ include/dt-bindings/clock/rk3036-cru.h | 2 ++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
-index 28a0336..d7d3719 100644
---- a/arch/arm/boot/dts/rk3036-evb.dts
-+++ b/arch/arm/boot/dts/rk3036-evb.dts
-@@ -47,6 +47,17 @@
- 	compatible = "rockchip,rk3036-evb", "rockchip,rk3036";
- };
+diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
+index be71a41..701f702 100644
+--- a/drivers/clk/rockchip/clk-rk3036.c
++++ b/drivers/clk/rockchip/clk-rk3036.c
+@@ -343,8 +343,11 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
+ 			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
+ 			RK2928_CLKGATE_CON(10), 5, GFLAGS),
  
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
+-	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+-			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
++	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
++			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
++	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
++			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
 +
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
+ 	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+ 			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
  
-@@ -62,3 +73,15 @@
- &uart2 {
- 	status = "okay";
- };
-+
-+&pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 1037ad6..cd45434 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -112,6 +112,17 @@
- 	status = "okay";
- };
+@@ -404,7 +407,7 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
+ 	GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(7), 3, GFLAGS),
+ 	GATE(HCLK_I2S, "hclk_i2s", "hclk_peri", 0, RK2928_CLKGATE_CON(7), 2, GFLAGS),
+ 	GATE(0, "hclk_sfc", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS),
+-	GATE(0, "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15, GFLAGS),
++	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0, RK2928_CLKGATE_CON(3), 5, GFLAGS),
  
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &emmc {
- 	status = "okay";
- };
-@@ -382,6 +393,16 @@
- };
+ 	/* pclk_peri gates */
+ 	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 1, GFLAGS),
+diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
+index ebc7a7b..de44109 100644
+--- a/include/dt-bindings/clock/rk3036-cru.h
++++ b/include/dt-bindings/clock/rk3036-cru.h
+@@ -54,6 +54,7 @@
+ #define SCLK_PVTM_VIDEO		125
+ #define SCLK_MAC		151
+ #define SCLK_MACREF		152
++#define SCLK_MACPLL		153
+ #define SCLK_SFC		160
  
- &pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+
- 	leds {
- 		led_ctl: led-ctl {
- 			rockchip,pins = <2 30 RK_FUNC_GPIO &pcfg_pull_none>;
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 7abe3e2..532f232 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -222,6 +222,27 @@
- 		status = "disabled";
- 	};
- 
-+	emac: ethernet@10200000 {
-+		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
-+		reg = <0x10200000 0x4000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
-+		clock-names = "hclk", "macref", "macclk";
-+		/*
-+		 * Fix the emac parent clock is DPLL instead of APLL.
-+		 * since that will cause some unstable things if the cpufreq
-+		 * is working. (e.g: the accurate 50MHz what mac_ref need)
-+		 */
-+		assigned-clocks = <&cru SCLK_MACPLL>;
-+		assigned-clock-parents = <&cru PLL_DPLL>;
-+		max-speed = <100>;
-+		phy-mode = "rmii";
-+		status = "disabled";
-+	};
-+
- 	sdmmc: dwmmc@10214000 {
- 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x10214000 0x4000>;
-@@ -613,6 +634,24 @@
- 			};
- 		};
- 
-+		emac {
-+			emac_xfer: emac-xfer {
-+				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
-+						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
-+						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
-+						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
-+						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
-+						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
-+						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
-+						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
-+			};
-+
-+			emac_mdio: emac-mdio {
-+				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
-+						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
+ /* aclk gates */
+@@ -92,6 +93,7 @@
+ #define HCLK_SDMMC		456
+ #define HCLK_SDIO		457
+ #define HCLK_EMMC		459
++#define HCLK_MAC		460
+ #define HCLK_I2S		462
+ #define HCLK_LCDC		465
+ #define HCLK_ROM		467
 -- 
 1.9.1
