@@ -1,31 +1,47 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: imx7d: add arch timer
-Date: Thu, 28 Jan 2016 16:34:08 +0800
-Message-ID: <20160128083408.GP9070@tiger>
-References: <1452014237-12848-1-git-send-email-Frank.Li@nxp.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] clk: Move vendor's Kconfig into CCF menu section
+Date: Thu, 28 Jan 2016 00:36:56 -0800
+Message-ID: <20160128083656.GM12841@codeaurora.org>
+References: <201601271708.gQUxXACW%fengguang.wu@intel.com>
+ <4711589.Ig064LES4c@wuerfel>
+ <1453888578.28646.7.camel@mtksdaap41>
+ <6167008.u8jfFpmfhy@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452014237-12848-1-git-send-email-Frank.Li-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org>
-Cc: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <6167008.u8jfFpmfhy@wuerfel>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: James Liao <jamesjj.liao@mediatek.com>, linux-arm-kernel@lists.infradead.org, kbuild test robot <lkp@intel.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 05, 2016 at 11:17:14AM -0600, Frank Li wrote:
-> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 01/27, Arnd Bergmann wrote:
+> On Wednesday 27 January 2016 17:56:18 James Liao wrote:
+> > > 
+> > > I think you should include this change in your patch, or as a preparation.
+> > > All other samsung platforms already select COMMON_CLK through ARCH_MULTIPLATFORM,
+> > > and all SoCs that are part of ARCH_S3C24XX individually select a symbol that
+> > > selects COMMON_CLK.
+> > 
+> > Oops, I didn't notice there are warnings after moving these Kconfigs
+> > into menu section.
+> > 
+> > The original motivation of this patch is preventing new clk drivers
+> > include their Kconfig in a wrong place, so it's not critical. Do you
+> > think we should apply this patch (with your changes below) or drop this
+> > patch directly?
 > 
-> Since uboot v2016.01-rc2, which supported basic psci for i.mx7d.
-> So imx7d's second core can be enabled by psci.
 > 
-> Without arch timer, every timer event will be boardcasted to each core.
-> arch timer has local timer irq for each core.
-> 
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> I think your patch is good, we just need to fix S3C24xx, which is doing
+> things in a strange way for historic reasons.
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So far we've taken the approach of not caring if they include
+their Kconfig outside the common clk menu when all the configs
+inside the Kconfig file are hidden. Of course, when they aren't
+hidden this becomes a problem, but that isn't the case unless
+something changed recently.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
