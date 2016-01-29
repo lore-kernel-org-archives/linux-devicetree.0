@@ -1,7 +1,7 @@
 From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/6] arm64: dts: hip05: Use Cortex specific device node for pmu
-Date: Fri, 29 Jan 2016 16:39:02 +0800
-Message-ID: <1454056746-5048-3-git-send-email-wangkefeng.wang@huawei.com>
+Subject: [PATCH 6/6] arm64: defconfig: Enable DesignWare APB GPIO controller
+Date: Fri, 29 Jan 2016 16:39:06 +0800
+Message-ID: <1454056746-5048-7-git-send-email-wangkefeng.wang@huawei.com>
 References: <1454056746-5048-1-git-send-email-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,26 @@ To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.
 Cc: dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of using the generic armv8-pmuv3 compatibility, use
-the more specific Cortex A57 compatibility.
+The Synopsys DesignWare APB GPIO controller is used by several vender's socs,
+like apm/marvell/altera/hisilicon, enable it by default.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hip05.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-index db2039d..ed31f19 100644
---- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-@@ -262,7 +262,7 @@
- 	};
- 
- 	pmu {
--		compatible = "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a57-pmu";
- 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 86581f7..3380a04 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -145,6 +145,7 @@ CONFIG_SPI=y
+ CONFIG_SPI_PL022=y
+ CONFIG_SPI_QUP=y
+ CONFIG_PINCTRL_MSM8916=y
++CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_PL061=y
+ CONFIG_GPIO_RCAR=y
+ CONFIG_GPIO_XGENE=y
 -- 
 2.6.0.GIT
 
