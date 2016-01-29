@@ -1,50 +1,130 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
-Date: Fri, 29 Jan 2016 23:49:42 +0300
-Message-ID: <56ABD066.7020804@cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <4506196.xOgpYRO52t@wasted.cogentembedded.com>
- <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56ABCB69.1070800@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56ABCB69.1070800@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "horms@verge.net.au" <horms@verge.net.au>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V13 00/10] dma: add Qualcomm Technologies HIDMA driver
+Date: Fri, 29 Jan 2016 17:35:03 -0500
+Message-ID: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2016 11:28 PM, Sergei Shtylyov wrote:
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
->>> From: linux-renesas-soc-owner@vger.kernel.org
->>> [mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Sergei
->>> Shtylyov
->>> Sent: Wednesday, January 27, 2016 7:14 AM
->>>
->>> Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
->>> are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
->>> can add  MAX3355 device node to  the Porter device tree and properly refer
->>> to it from the USBHS node instead of using  "renesas,enable-gpio" property
->>> which only allowed checking the USB ID pin  at the driver probe time;  now
->>> this  pin's  state can be monitored dynamically!
->>>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
->> even if I connected/disconnected a usb convert cable (usb micro-ab to A).
->> Remarks: I confirmed that the usb convert cable worked correctly on other
->> board.
->
->     I guess I have the same cable
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-    No, I have mini-AB connector here and hence my cable is mini-AB to A.
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-> and IRQs do happen for me when I connect and
-> disconnect it (as it should be).
+The management driver is executed in host context and
+is the main management entity for all channels provided by
+the device.
 
->> Best regards,
->> Yoshihiro Shimoda
+------------------------
+What's new
+------------------------
+- VFIO Reset driver
+- More documentation in device-tree binding.
+- Removed event-channel parameter
 
-MBR, Sergei
+------------------------
+Git repos
+------------------------
+QEMU Support
+https://www.codeaurora.org/cgit/quic/qemu/qemu/log/?h=v2.5.0-sriov
+
+------------------------
+History of Changes
+------------------------
+Creating a QCOM directory for all QCOM DMA source files.
+Changes from V12: (https://lkml.org/lkml/2016/1/11/525)
+* none
+
+dma: hidma: Add Device Tree Binding
+Changes from V12: (https://lkml.org/lkml/2016/1/11/522)
+* s/driver/binding/
+* s/hypervisor/host/
+* add iommu node required.
+* removed the flexibility to choose event channel. Will use HW defaults
+* instead.
+  channel-index parameter is removed.
+
+dma: add Qualcomm Technologies HIDMA management driver
+Changes from V12: (https://lkml.org/lkml/2016/1/11/518)
+* s/hypervisor/host/
+
+dma: add Qualcomm Technologies HIDMA channel driver
+Changes from V12: (https://lkml.org/lkml/2016/1/11/523)
+* none
+
+dma: qcom_hidma: implement lower level hardware interface
+Changes from V12: (https://lkml.org/lkml/2016/1/11/519)
+* none
+
+dma: qcom_hidma: add debugfs hooks
+Changes from V12: (https://lkml.org/lkml/2016/1/11/521)
+* none
+
+dma: qcom_hidma: add support for object hierarchy
+Changes from V12: (https://lkml.org/lkml/2016/1/11/520)
+* none
+
+Sinan Kaya (10):
+  dma: qcom_bam_dma: move to qcom directory
+  dma: hidma: Add Device Tree binding
+  dma: add Qualcomm Technologies HIDMA management driver
+  dma: add Qualcomm Technologies HIDMA channel driver
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+  dma: qcom_hidma: read the channel id from HW
+  vfio, platform: add support for ACPI while detecting the reset driver
+  vfio, platform: add QTI HIDMA reset driver
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  89 ++
+ drivers/dma/Kconfig                                |  11 +-
+ drivers/dma/Makefile                               |   2 +-
+ drivers/dma/qcom/Kconfig                           |  29 +
+ drivers/dma/qcom/Makefile                          |   5 +
+ drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c}     |   4 +-
+ drivers/dma/qcom/hidma.c                           | 747 +++++++++++++++++
+ drivers/dma/qcom/hidma.h                           | 162 ++++
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 927 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 400 +++++++++
+ drivers/dma/qcom/hidma_mgmt.h                      |  39 +
+ drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 +++++++
+ drivers/vfio/platform/reset/Kconfig                |   9 +
+ drivers/vfio/platform/reset/Makefile               |   2 +
+ .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   3 +-
+ .../platform/reset/vfio_platform_calxedaxgmac.c    |   3 +-
+ .../vfio/platform/reset/vfio_platform_qcomhidma.c  |  99 +++
+ drivers/vfio/platform/vfio_platform_common.c       |  80 +-
+ drivers/vfio/platform/vfio_platform_private.h      |  41 +-
+ 22 files changed, 3229 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ create mode 100644 drivers/dma/qcom/Kconfig
+ create mode 100644 drivers/dma/qcom/Makefile
+ rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ create mode 100644 drivers/dma/qcom/hidma.c
+ create mode 100644 drivers/dma/qcom/hidma.h
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.h
+ create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+ create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+
+-- 
+1.8.2.1
