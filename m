@@ -1,193 +1,124 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v2 1/2] drm: rockchip/hdmi: add Innosilicon HDMI support
-Date: Fri, 29 Jan 2016 14:31:57 +0800
-Message-ID: <56AB075D.2060402@rock-chips.com>
-References: <1452160896-27096-1-git-send-email-ykk@rock-chips.com>
- <1452161024-27198-1-git-send-email-ykk@rock-chips.com>
- <56AB03E6.6020107@rock-chips.com>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add UCS1002 USB Port Power Controller binding
+Date: Fri, 29 Jan 2016 07:33:52 +0100
+Message-ID: <CAFqH_52ZsWNfxwrfTMreG1u19Eu=0oMA09S2TStm4zjGJNi9Lw@mail.gmail.com>
+References: <1453799541-5445-1-git-send-email-enric.balletbo@collabora.com>
+	<1453799541-5445-2-git-send-email-enric.balletbo@collabora.com>
+	<20160129023539.GA3092@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0018379784=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56AB03E6.6020107@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yang.zheng@rock-chips.com, Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160129023539.GA3092@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============0018379784==
-Content-Type: multipart/alternative;
- boundary="------------040608030408070601020304"
+Hi Rob,
 
-This is a multi-part message in MIME format.
---------------040608030408070601020304
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review.
 
-Hi ZhengYang,
-
-Thanks for your comments ;)
-
-On 01/29/2016 02:17 PM, =E9=83=91=E9=98=B3 wrote:
-> =E5=9C=A8 2016=E5=B9=B401=E6=9C=8807=E6=97=A5 18:03, Yakir Yang =E5=86=99=
-=E9=81=93:
->> diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/ro=
-ckchip/inno_hdmi.c
+2016-01-29 3:35 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Tue, Jan 26, 2016 at 10:12:20AM +0100, Enric Balletbo i Serra wrote:
+>> The UCS1002-2 provides a USB port power switch for precise control of up
+>> to 2.5 amperes continuous current.
+>>
+>> You can add support to your board with current binding.
+>>
+>> Example:
+>>
+>>     ucs1002: ucs1002@57 {
+>>              compatible = "microchip,ucs1002";
+>>              reg = <0x57>;
+>>              microchip,pin-ignore;
+>>     };
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/power/ucs1002.txt          | 47 ++++++++++++++++++++++
+>>  1 file changed, 47 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
 >> new file mode 100644
->> index 0000000..9327617
+>> index 0000000..1b89f0a
 >> --- /dev/null
->> +++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
->>
->> +static int inno_hdmi_config_video_avi(struct inno_hdmi *hdmi)
->> +{
+>> +++ b/Documentation/devicetree/bindings/power/ucs1002.txt
+>> @@ -0,0 +1,47 @@
+>> +UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
 >> +
->> +	if (hdmi->hdmi_data.enc_out_format =3D=3D HDMI_COLORSPACE_RGB) +=20
->> avi_color_mode =3D AVI_COLOR_MODE_RGB;
->> +	else if (hdmi->hdmi_data.enc_out_format =3D=3D HDMI_COLORSPACE_YUV44=
-4)
->> +		avi_color_mode =3D AVI_COLOR_MODE_YCBCR444;
->> +	else if (hdmi->hdmi_data.enc_out_format =3D=3D HDMI_COLORSPACE_YUV42=
-2)
->> +		avi_color_mode =3D AVI_COLOR_MODE_YCBCR422;
->> +	else
->> +		avi_color_mode =3D AVI_COLOR_MODE_RGB;
+>> +Required properties:
+>> +- compatible: "microchip,ucs1002"
+>> +- reg: integer, the I2C address of the device.
 >> +
-> Fist if is no need, its result is same to "else".
-Got it
->> +static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
->> +{
->>
->> +	if (data->enc_out_format =3D=3D data->enc_out_format)  {
->> +		if ((data->enc_in_format =3D=3D HDMI_COLORSPACE_RGB) ||
->> +		    (data->enc_in_format >=3D HDMI_COLORSPACE_YUV444)) {
->> +			value =3D v_SOF_DISABLE | v_COLOR_DEPTH_NOT_INDICATED(1);
->> +			hdmi_writeb(hdmi, HDMI_VIDEO_CONTRL3, value);
+>> +Required properties (if pin-ignore functionality is not set):
+>> +- em-gpios: which GPIO to use for EM_EN pin.
+>> +- pwr-gpios: which GPIO to use for PWR_EN pin.
+>> +- m1-gpios: which GPIO to use for M1 pin.
+>> +- m2-gpios: which GPIO to use for M2 pin.
 >> +
->> +			hdmi_modb(hdmi, HDMI_VIDEO_CONTRL,
->> +				  m_VIDEO_AUTO_CSC | m_VIDEO_C0_C2_SWAP,
->> +				  v_VIDEO_AUTO_CSC(AUTO_CSC_DISABLE) |
->> +				  v_VIDEO_C0_C2_SWAP(C0_C2_CHANGE_DISABLE));
->> +			return 0;
->> +		}
->> +	}
->>
-> It seems should be if (data->enc_in_format =3D=3D data->enc_out_format)=
-.
+>> +Optional properties:
+>> +- interrupt-parent: the phandle of the interrupt controller that services
+>> +    interrupts for this device.
+>> +- interrupts: interrupt specifiers for two interrupt sources.
+>> +    - First interrupt specifier is for A_DET interrupt.
+>> +    - Second interrupt specifier is for ALERT interrupt.
+>> +- microchip,current-limit: integer, maximum current in mA. Note that the default
 >
-Ah, good catch, thanks
+> mA or ...
+>
+>> +    value is based on the resistor on the COMM_SEL/ILIM pin and this value cannot
+>> +    be changed to be higher than hardware set value. Accepted values are: 500000,
+>> +    900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000 (uA)
+>
+> uA?
+>
+> Either way append units (-microamps)
+>
 
-- Yakir
+Right, should be  microamps, will change in next version
 
---------------040608030408070601020304
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+>> +- microchip,pin-ignore: boolean, if present uses I2C for configuration, otherwise,
+>> +    we must provide EM_EN, M1 and M2 gpio mapping.
+>
+> Wouldn't this be implied by absence of gpio properties?
+>
 
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Ty=
-pe">
-  </head>
-  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
-    Hi ZhengYang,<br>
-    <br>
-    Thanks for your comments ;)<br>
-    <br>
-    <div class=3D"moz-cite-prefix">On 01/29/2016 02:17 PM, =E9=83=91=E9=98=
-=B3 wrote:<br>
-    </div>
-    <blockquote cite=3D"mid:56AB03E6.6020107@rock-chips.com" type=3D"cite=
-">
-      <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-=
-Type">
-      =E5=9C=A8 2016=E5=B9=B401=E6=9C=8807=E6=97=A5 18:03, Yakir Yang =E5=
-=86=99=E9=81=93:<br>
-      <blockquote
-        cite=3D"mid:1452161024-27198-1-git-send-email-ykk@rock-chips.com"
-        type=3D"cite">
-        <pre wrap=3D"">diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c =
-b/drivers/gpu/drm/rockchip/inno_hdmi.c
-new file mode 100644
-index 0000000..9327617
---- /dev/null
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
+Yes, would you prefer I get rid of this propriety and simply check if
+gpio properties are absence or not in the driver ?
 
-+static int inno_hdmi_config_video_avi(struct inno_hdmi *hdmi)
-+{
-+
-+	<font color=3D"#ff0000">if (hdmi-&gt;hdmi_data.enc_out_format =3D=3D HD=
-MI_COLORSPACE_RGB)
-+		avi_color_mode =3D AVI_COLOR_MODE_RGB</font>;
-+	else if (hdmi-&gt;hdmi_data.enc_out_format =3D=3D HDMI_COLORSPACE_YUV44=
-4)
-+		avi_color_mode =3D AVI_COLOR_MODE_YCBCR444;
-+	else if (hdmi-&gt;hdmi_data.enc_out_format =3D=3D HDMI_COLORSPACE_YUV42=
-2)
-+		avi_color_mode =3D AVI_COLOR_MODE_YCBCR422;
-+	else
-+		avi_color_mode =3D AVI_COLOR_MODE_RGB;
-+</pre>
-      </blockquote>
-      =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 <font color=3D"#000099"=
->Fist if is no need, its result is
-        same to "else".</font><br>
-    </blockquote>
-    Got it<br>
-    <blockquote cite=3D"mid:56AB03E6.6020107@rock-chips.com" type=3D"cite=
-">
-      <blockquote
-        cite=3D"mid:1452161024-27198-1-git-send-email-ykk@rock-chips.com"
-        type=3D"cite">
-        <pre wrap=3D"">+static int inno_hdmi_config_video_csc(struct inno=
-_hdmi *hdmi)
-+{
+In such case I'll do in next version.
 
-+	<font color=3D"#ff0000">if (data-&gt;enc_out_format =3D=3D data-&gt;enc=
-_out_format)</font> {
-+		if ((data-&gt;enc_in_format =3D=3D HDMI_COLORSPACE_RGB) ||
-+		    (data-&gt;enc_in_format &gt;=3D HDMI_COLORSPACE_YUV444)) {
-+			value =3D v_SOF_DISABLE | v_COLOR_DEPTH_NOT_INDICATED(1);
-+			hdmi_writeb(hdmi, HDMI_VIDEO_CONTRL3, value);
-+
-+			hdmi_modb(hdmi, HDMI_VIDEO_CONTRL,
-+				  m_VIDEO_AUTO_CSC | m_VIDEO_C0_C2_SWAP,
-+				  v_VIDEO_AUTO_CSC(AUTO_CSC_DISABLE) |
-+				  v_VIDEO_C0_C2_SWAP(C0_C2_CHANGE_DISABLE));
-+			return 0;
-+		}
-+	}
+>> +
+>> +Example (poll):
+>> +
+>> +     ucs1002: ucs1002@57 {
+>> +             compatible = "microchip,ucs1002";
+>> +             reg = <0x57>;
+>> +             microchip,current-limit = <2000000>;
+>> +             microchip,pin-ignore;
+>> +     };
+>> +
+>> +Example (interrupts + pin control):
+>> +
+>> +     ucs1002: ucs1002@57 {
+>> +             compatible = "microchip,ucs1002";
+>> +             reg = <0x57>;
+>> +             interrupt-parent = <&gpio0>;
+>> +             interrupts = <30 0>, <31 0>;
+>> +             microchip,current-limit = <2000000>;
+>> +             em-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+>> +             m1-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+>> +             m2-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+>> +             pwr-gpios = <&gpio1 19 0>;
+>> +     };
+>> --
+>> 2.1.0
+>>
 
-</pre>
-      </blockquote>
-      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 <font color=3D"#000099">It se=
-ems should be if
-        (data-&gt;enc_in_format =3D=3D data-&gt;enc_out_format).<br>
-      </font><br>
-    </blockquote>
-    Ah, good catch, thanks<br>
-    <br>
-    - Yakir<br>
-  </body>
-</html>
-
---------------040608030408070601020304--
-
-
---===============0018379784==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0018379784==--
+Best regards,
+Enric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
