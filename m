@@ -1,203 +1,146 @@
-From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v7 7/7] ARM: dts: imx: Add support for Advantech/GE B850v3
-Date: Fri, 29 Jan 2016 18:19:18 -0500
-Message-ID: <1454109558-22800-8-git-send-email-akshay.bhat@timesys.com>
-References: <1454109558-22800-1-git-send-email-akshay.bhat@timesys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454109558-22800-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: resolver: Add missing of_node_put
+Date: Fri, 29 Jan 2016 15:46:48 -0800
+Message-ID: <56ABF9E8.2080609@gmail.com>
+References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej> <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com> <20160129164531.GB15053@rob-hp-laptop> <C95DDB58-2BFB-42FA-BB00-0CE130CE90BC@konsulko.com>
+Reply-To: frowand.list@gmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C95DDB58-2BFB-42FA-BB00-0CE130CE90BC@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Amitoj Kaur Chawla <amitoj1606@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-Add support for Advantech/GE B850v3 board.
+On 1/29/2016 9:33 AM, Pantelis Antoniou wrote:
+> Hi Rob,
+>=20
+>> On Jan 29, 2016, at 18:45 , Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
+>>> Hi Mark,
+>>>
+>>>> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wr=
+ote:
+>>>>
+>>>> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote=
+:
+>>>>> for_each_child_of_node performs an of_node_get on each iteration,=
+ so
+>>>>> to break out of the loop an of_node_put is required.
+>>>>>
+>>>>> Found using Coccinelle. The semantic patch used for this is as fo=
+llows:
+>>>>>
+>>>>> // <smpl>
+>>>>> @@
+>>>>> expression e;
+>>>>> local idexpression n;
+>>>>> @@
+>>>>>
+>>>>> for_each_child_of_node(..., n) {
+>>>>>  ... when !=3D of_node_put(n)
+>>>>>      when !=3D e =3D n
+>>>>> (
+>>>>>  return n;
+>>>>> |
+>>>>> +  of_node_put(n);
+>>>>> ?  return ...;
+>>>>> )
+>>>>>  ...
+>>>>> }
+>>>>> // </smpl
+>>>>>
+>>>>> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+>>>>> ---
+>>>>> drivers/of/resolver.c | 4 +++-
+>>>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>>>>> index 640eb4c..e2a0143 100644
+>>>>> --- a/drivers/of/resolver.c
+>>>>> +++ b/drivers/of/resolver.c
+>>>>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_f=
+ull_name(struct device_node *node,
+>>>>>
+>>>>> 	for_each_child_of_node(node, child) {
+>>>>> 		found =3D __of_find_node_by_full_name(child, full_name);
+>>>>> -		if (found !=3D NULL)
+>>>>> +		if (found !=3D NULL) {
+>>>>> +			of_node_put(child);
+>>>>> 			return found;
+>>>>> +		}
+>>>>> 	}
+>>>>>
+>>>>> 	return NULL;
+>>>>
+>>>> I don't think this is quite right. When child =3D=3D found, this c=
+hange will
+>>>> leave it decremented.
+>>>>
+>>>
+>>>
+>>> This patch is bogus.=20
+>>>
+>>> __of_find_node_by_full_name() is not taking a reference on the node=
+ if found.=20
+>>> This method relies on keeping the reference taken by the loop.
+>>>
+>>> Taking this into account all of these conccinelle tests are bogus.
+>>>
+>>> The DT internal method are not using the object model in an obvious=
+ manner
+>>> and applying these patches without vetting each and everyone is bou=
+nd to
+>>> break things.
+>>
+>> Things are already broken. But does it matter?
+>>
+>> Our time would be better spent re-designing any refcounting around w=
+here=20
+>> we actually need it rather than trying to fix up the many locations=20
+>> which are wrong and don't matter. As long as it is callers'=20
+>> responsibility to get this right, it will never be right. Even the c=
+ore=20
+>> code has a hard time getting it right.
+>>
+>=20
+> Let me pile up. Refcounting for DT is broken. There=E2=80=99s no poin=
+t trying to fix
+> it as it is. I have a big pile of TODO, one of these is fixing (as in=
+ severely
+> cutting down) the areas where refcounting is needed.
 
-Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx6q-b850v3.dts | 157 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 158 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
+May as well violently agree.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a3db1a7..fc5d5ea 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -324,6 +324,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-arm2.dtb \
- 	imx6q-b450v3.dtb \
- 	imx6q-b650v3.dtb \
-+	imx6q-b850v3.dtb \
- 	imx6q-cm-fx6.dtb \
- 	imx6q-cubox-i.dtb \
- 	imx6q-dfi-fs700-m60.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-new file mode 100644
-index 0000000..984d000
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -0,0 +1,157 @@
-+/*
-+ * Copyright 2015 Timesys Corporation.
-+ * Copyright 2015 General Electric Company
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q-bx50v3.dtsi"
-+
-+/ {
-+	model = "General Electric B850v3";
-+	compatible = "ge,imx6q-b850v3", "advantech,imx6q-ba16", "fsl,imx6q";
-+
-+	chosen {
-+		stdout-path = &uart3;
-+	};
-+
-+	panel-lvds0 {
-+		compatible = "auo,b133htn01";
-+		backlight = <&backlight_lvds>;
-+		ddc-i2c-bus = <&mux2_i2c2>;
-+
-+		port {
-+			panel_in_lvds0: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&ldb {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-+				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+	fsl,dual-channel;
-+	status = "okay";
-+
-+	lvds0: lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds0>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pca9547_ddc: mux@70 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mux2_i2c1: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0>;
-+		};
-+
-+		mux2_i2c2: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x1>;
-+		};
-+
-+		mux2_i2c3: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+		};
-+
-+		mux2_i2c4: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+		};
-+
-+		mux2_i2c5: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x4>;
-+		};
-+
-+		mux2_i2c6: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x5>;
-+		};
-+
-+		mux2_i2c7: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x6>;
-+		};
-+
-+		mux2_i2c8: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x7>;
-+		};
-+	};
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&mux2_i2c1>;
-+};
-+
-+&mux1_i2c1 {
-+	ads7830@4a {
-+		compatible = "ti,ads7830";
-+		reg = <0x4a>;
-+	};
-+};
--- 
-2.7.0
+An additional way that DT refcounting is architecturally broken is the =
+concept
+of using a held refcount as a lock substitute while traversing a linked=
+ list.
+=46ixing this is on my todo list, hopefully late this winter or early s=
+pring.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> The idea would be to keep refcounting only in core and provide interf=
+aces that
+> use different semantics for drivers and subsystems.
+>=20
+> We can discuss things in ELC this April, perhaps on a BoF session aga=
+in.
+
+Yes, all interested people please come discuss things with us.  I have
+submitted a BoF proposal.
+
+-Frank
+
+>=20
+>=20
+>> Rob
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+>=20
