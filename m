@@ -1,75 +1,104 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v7 0/2] Add Rockchip Inno-HDMI driver
-Date: Fri, 29 Jan 2016 09:49:55 +0800
-Message-ID: <56AAC543.8080108@rock-chips.com>
-References: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] devicetree: Add UCS1002 USB Port Power Controller
+ binding
+Date: Thu, 28 Jan 2016 20:35:39 -0600
+Message-ID: <20160129023539.GA3092@rob-hp-laptop>
+References: <1453799541-5445-1-git-send-email-enric.balletbo@collabora.com>
+ <1453799541-5445-2-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1453777142-30119-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453799541-5445-2-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNuW5tDAx5pyIMjbml6UgMTA6NTksIFlha2lyIFlhbmcgd3JvdGU6Cj4gSGVyZSBhcmUg
-YSBicmllZiBpbnRyb2R1Y3Rpb24gdG8gSW5ub3NpbGljb24gSERNSSBJUDoKPiAgICAtIFN1cHBv
-cnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFyZCBjb21wbGlhbnQgdHJh
-bnNtaXR0ZXIKPiAgICAtIFN1cHBvcnQgSERNSTEuNCBhL2IgM0QgZnVuY3Rpb24gZGVmaW5lZCBp
-biBIRE1JIDEuNCBhL2Igc3BlYwo+ICAgIC0gRGlnaXRhbCB2aWRlbyBpbnRlcmZhY2Ugc3VwcG9y
-dHMgYSBwaXhlbCBzaXplIG9mIDI0LCAzMCwgMzYsIDQ4Yml0cyBjb2xvciBkZXB0aCBpbiBSR0IK
-PiAgICAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBEaWdpdGFsLCBEVFMgZGln
-aXRhbCBhdWRpbyB0cmFuc21pc3Npb24KPiAgICAgICgzMi0xOTJrSHogRnMpIHVzaW5nIElFQzYw
-OTU4IGFuZCBJRUMgNjE5MzcKPiAgICAtIFRoZSBFRElEIGFuZCBDRUMgZnVuY3Rpb24gYXJlIGFs
-c28gc3VwcG9ydGVkIGJ5IElubm9zaWxpY29uIEhETUkgVHJhbnNtaXR0ZXIgQ29udHJvbGxlCj4K
-PiBDaGFuZ2VzIGluIHY3Ogo+IC0gQ29ycmVjdCB0aGUgbW9kdWxlIGxpY25lc2Ugc3RhdGVtZW50
-IChQYXVsKQo+ICAgICAgIC0gTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwo+ICAgICAgICsgTU9EVUxF
-X0xJQ0VOU0UoIkdQTCB2MiIpOwo+IC0gU3RhcnQgaW5kZW50YXRpb24gd2l0aCB0YWJzIGFuZCBm
-aXggdGhlIG1pc3NwZWxsIGluIEtjb25maWcgKFBhdWwpCj4gLSBDYXJyeSB0aGUgbG9zdCBkZXZp
-Y2UtYmluZGluZyBkb2N1bWVudCAoSGVpa28pCj4KPiBDaGFuZ2VzIGluIHY2Ogo+IC0gUmViYXNl
-IHRoZSBNYWtlZmlsZS9LY29uZmlnIGZpbGVzIHdoaWNoIGFkZCBieSBDaHJpcydzIHJvY2tjaGlw
-LW1pcGkgZHJpdmVyIChDYWVzZXIpCj4KPiBDaGFuZ2VzIGluIHY1Ogo+IC0gVXNlIGhkbWlfaW5m
-b2ZyYW1lIGhlbHBlciBmdW5jdGlvbnMgdG8gcGFja2VkIHRoZSBpbmZvZnJhbWUgKFJ1c3NlbGwp
-Cj4gLSBSZW1vdmUgdGhlIHVudXNlZCBkb3VibGUgd2FpdF9mb3JfY29tcGxldGlvbl90aW1lb3V0
-IGZvciBkZGMgdHJhbnNmZXIgKFJ1c3NlbGwpCj4gLSBSZW1vdmUgdGhlIHVudXNlZCBsb2NhbCB2
-YXJpYWJsZSBpbiAiaW5ub19oZG1pX2kyY193cml0ZSgpIiBmdW5jdGlvbiAoUnVzc2VsbCkKPgo+
-IENoYW5nZXMgaW4gdjQ6Cj4gLSBNb2RpZnkgdGhlIGNvbW1pdCB0aXRsZSAiZHJtL3JvY2tjaGlw
-OiBoZG1pOiAuLi4iIChNYXJrKQo+IC0gQ29ycmVjdCB0aGUgIkRLTVMiIHRvICJEUE1TIiAoTWFy
-aykKPiAtIEZpeCBvdmVyIDgwIGNoYXJhY3RlcnMgcHJvYmxlbXMgKE1hcmspCj4gLSBSZW1vdmUg
-ZW5jb2RlciAucHJlcGFyZS8uY29tbWl0IGhlbHBlciBmdW5jdGlvbnMsIGFuZCBtb3ZlIHRoZSB2
-b3AgbW9kZQo+IGNvbmZpZ3VyZSBmdW5jdGlvbiBpbnRvIGVuY29kZXIgLmVuYWJsZSBoZWxwZXIg
-ZnVuY3Rpb25zLiAoTWFyaykKPgo+IENoYW5nZXMgaW4gdjM6Cj4gLSBVc2UgZW5jb2RlciBlbmFi
-bGUvZGlzYWJsZSBmdW5jdGlvbiwgYW5kIHJlbW92ZSB0aGUgZW5jb2RlciBEUE1TIGZ1bmN0aW9u
-Cj4gLSBLZWVwIEhETUkgUExMIHBvd2VyIG9uIGluIHN0YW5kYnkgbW9kZQo+Cj4gQ2hhbmdlcyBp
-biB2MjoKPiAtIFVzaW5nIERSTSBhdG9taWMgaGVscGVyIGZ1bmN0aW9ucyBmb3IgY29ubmVjdG9y
-IGluaXQgKE1hcmspCj4gLSBSZW1vdmUgImhkbWktPmNvbm5lY3Rvci5lbmNvZGVyID0gZW5jb2Rl
-cjsiIChNYXJrKQo+IC0gQWRkIHRoZSBBY2tlZC1ieSB0YWdzIGZyb20gUm9iCj4gLSBDb3JyZWN0
-IHRoZSBtaXNzcGVsbCAicmszMDM2LWR3LWhkbWkiIChIZWlrbykKPgo+IFlha2lyIFlhbmcgKDIp
-Ogo+ICAgIGRybS9yb2NrY2hpcDogaGRtaTogYWRkIElubm9zaWxpY29uIEhETUkgc3VwcG9ydAo+
-ICAgIGR0LWJpbmRpbmdzOiBhZGQgZG9jdW1lbnQgZm9yIElubm9zaWxpY29uIEhETUkgb24gUm9j
-a2NoaXAgcGxhdGZvcm0KPgo+ICAgLi4uL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tj
-aGlwLnR4dCAgICAgICAgfCAgNTAgKysKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29u
-ZmlnICAgICAgICAgICAgICAgICAgIHwgICA4ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9y
-b2NrY2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAgIHwgOTQxICsrKysrKysrKysrKysrKysr
-KysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5oICAgICAgICAgICAg
-ICAgfCAzNjIgKysrKysrKysKPiAgIDUgZmlsZXMgY2hhbmdlZCwgMTM2MiBpbnNlcnRpb25zKCsp
-Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+ICAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwo+ICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAo+CgpQaW5nLCBp
-bm5vIEhETUkgZHJpdmVyIGxvb2tzIGdvb2QgZm9yIG1lLCBhbmQgaXQgd29ya3MsIFNvIEknZCBs
-aWtlIHRvIAptZXJnZSBpdCBpbnRvIGRybS9yb2NrY2hpcCBpZiB0aGVyZSBpcyBubyBkb3VidCB0
-aGVzZSBkYXlzLgoKVGhhbmtzLgoKLS0gCu+8rWFyayBZYW8KCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Jan 26, 2016 at 10:12:20AM +0100, Enric Balletbo i Serra wrote:
+> The UCS1002-2 provides a USB port power switch for precise control of up
+> to 2.5 amperes continuous current.
+> 
+> You can add support to your board with current binding.
+> 
+> Example:
+> 
+>     ucs1002: ucs1002@57 {
+>              compatible = "microchip,ucs1002";
+>              reg = <0x57>;
+>              microchip,pin-ignore;
+>     };
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>  .../devicetree/bindings/power/ucs1002.txt          | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
+> new file mode 100644
+> index 0000000..1b89f0a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/ucs1002.txt
+> @@ -0,0 +1,47 @@
+> +UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
+> +
+> +Required properties:
+> +- compatible: "microchip,ucs1002"
+> +- reg: integer, the I2C address of the device.
+> +
+> +Required properties (if pin-ignore functionality is not set):
+> +- em-gpios: which GPIO to use for EM_EN pin.
+> +- pwr-gpios: which GPIO to use for PWR_EN pin.
+> +- m1-gpios: which GPIO to use for M1 pin.
+> +- m2-gpios: which GPIO to use for M2 pin.
+> +
+> +Optional properties:
+> +- interrupt-parent: the phandle of the interrupt controller that services
+> +    interrupts for this device.
+> +- interrupts: interrupt specifiers for two interrupt sources.
+> +    - First interrupt specifier is for A_DET interrupt.
+> +    - Second interrupt specifier is for ALERT interrupt.
+> +- microchip,current-limit: integer, maximum current in mA. Note that the default
+
+mA or ...
+
+> +    value is based on the resistor on the COMM_SEL/ILIM pin and this value cannot
+> +    be changed to be higher than hardware set value. Accepted values are: 500000,
+> +    900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000 (uA)
+
+uA?
+
+Either way append units (-microamps)
+
+> +- microchip,pin-ignore: boolean, if present uses I2C for configuration, otherwise,
+> +    we must provide EM_EN, M1 and M2 gpio mapping.
+
+Wouldn't this be implied by absence of gpio properties?
+
+> +
+> +Example (poll):
+> +
+> +	ucs1002: ucs1002@57 {
+> +		compatible = "microchip,ucs1002";
+> +		reg = <0x57>;
+> +		microchip,current-limit = <2000000>;
+> +		microchip,pin-ignore;
+> +	};
+> +
+> +Example (interrupts + pin control):
+> +
+> +	ucs1002: ucs1002@57 {
+> +		compatible = "microchip,ucs1002";
+> +		reg = <0x57>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <30 0>, <31 0>;
+> +		microchip,current-limit = <2000000>;
+> +		em-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+> +		m1-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> +		m2-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+> +		pwr-gpios = <&gpio1 19 0>;
+> +	};
+> -- 
+> 2.1.0
+> 
