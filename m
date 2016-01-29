@@ -1,7 +1,7 @@
 From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v7 6/7] ARM: dts: imx: Add support for Advantech/GE B650v3
-Date: Fri, 29 Jan 2016 18:19:17 -0500
-Message-ID: <1454109558-22800-7-git-send-email-akshay.bhat@timesys.com>
+Subject: [PATCH v7 5/7] ARM: dts: imx: Add support for Advantech/GE B450v3
+Date: Fri, 29 Jan 2016 18:19:16 -0500
+Message-ID: <1454109558-22800-6-git-send-email-akshay.bhat@timesys.com>
 References: <1454109558-22800-1-git-send-email-akshay.bhat@timesys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1454109558-22800-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
@@ -10,32 +10,32 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+
 Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Advantech/GE B650v3 board.
+Add support for Advantech/GE B450v3 board.
 
 Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 ---
  arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx6q-b650v3.dts | 88 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-b450v3.dts | 88 ++++++++++++++++++++++++++++++++++++++
  2 files changed, 89 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-b650v3.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0c15c0f..a3db1a7 100644
+index c4f42a78..0c15c0f 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -323,6 +323,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+@@ -322,6 +322,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-wandboard-revb1.dtb \
  	imx6q-apf6dev.dtb \
  	imx6q-arm2.dtb \
- 	imx6q-b450v3.dtb \
-+	imx6q-b650v3.dtb \
++	imx6q-b450v3.dtb \
  	imx6q-cm-fx6.dtb \
  	imx6q-cubox-i.dtb \
  	imx6q-dfi-fs700-m60.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
 new file mode 100644
-index 0000000..823f55c
+index 0000000..3101be5
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
 @@ -0,0 +1,88 @@
 +/*
 + * Copyright 2015 Timesys Corporation.
@@ -84,8 +84,8 @@ index 0000000..823f55c
 +#include "imx6q-bx50v3.dtsi"
 +
 +/ {
-+	model = "General Electric B650v3";
-+	compatible = "ge,imx6q-b650v3", "advantech,imx6q-ba16", "fsl,imx6q";
++	model = "General Electric B450v3";
++	compatible = "ge,imx6q-b450v3", "advantech,imx6q-ba16", "fsl,imx6q";
 +
 +	chosen {
 +		stdout-path = &uart3;
