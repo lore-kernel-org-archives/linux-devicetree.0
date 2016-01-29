@@ -1,61 +1,102 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [UPDATE] [PATCH 12/19] ARM: dts: exynos: replace legacy *,wakeup
- property with wakeup-source
-Date: Fri, 29 Jan 2016 09:11:32 +0900
-Message-ID: <56AAAE34.30007@samsung.com>
-References: <56A9CD1A.8010800@samsung.com>
- <1453996798-10711-1-git-send-email-sudeep.holla@arm.com>
+From: =?iso-8859-1?Q?St=E9phan?= Kochen <stephan@kochen.nl>
+Subject: Re: Interrupt driven thermal OF sensors
+Date: Fri, 29 Jan 2016 01:16:24 +0100
+Message-ID: <20160129001624.GA29675@Stephans-iMac.lan>
+References: <1453404877-17897-1-git-send-email-stephan@kochen.nl>
+ <1453404877-17897-3-git-send-email-stephan@kochen.nl>
+ <56A24278.8050909@roeck-us.net>
+ <20160122223238.GB21534@Stephans-iMac.lan>
+ <56A2EB3E.4080002@roeck-us.net>
+ <20160127211853.GA28555@Stephans-iMac.lan>
+ <56A9A184.90001@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1453996798-10711-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56A9A184.90001@roeck-us.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29.01.2016 00:59, Sudeep Holla wrote:
-> Though the keyboard and other driver will continue to support the legacy
-> "gpio-key,wakeup", "linux-keypad,wakeup" boolean property to enable the
-> wakeup source, "wakeup-source" is the new standard binding.
-> 
-> This patch replaces all the legacy wakeup properties with the unified
-> "wakeup-source" property in order to avoid any further copy-paste
-> duplication.
-> 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: linux-samsung-soc@vger.kernel.org
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/arm/boot/dts/exynos3250-monk.dts           |  6 +++---
->  arch/arm/boot/dts/exynos3250-rinato.dts         |  6 +++---
->  arch/arm/boot/dts/exynos4210-origen.dts         | 10 +++++-----
->  arch/arm/boot/dts/exynos4210-smdkv310.dts       |  2 +-
->  arch/arm/boot/dts/exynos4210-trats.dts          |  2 +-
->  arch/arm/boot/dts/exynos4210-universal_c210.dts |  4 ++--
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  2 +-
->  arch/arm/boot/dts/exynos4412-odroidx.dts        |  2 +-
->  arch/arm/boot/dts/exynos4412-origen.dts         |  2 +-
->  arch/arm/boot/dts/exynos4412-smdk4412.dts       |  2 +-
->  arch/arm/boot/dts/exynos4412-trats2.dts         |  4 ++--
->  arch/arm/boot/dts/exynos5250-arndale.dts        | 12 ++++++------
->  arch/arm/boot/dts/exynos5250-snow-common.dtsi   |  4 ++--
->  arch/arm/boot/dts/exynos5250-spring.dts         |  4 ++--
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts   |  2 +-
->  arch/arm/boot/dts/exynos5420-peach-pit.dts      |  4 ++--
->  arch/arm/boot/dts/exynos5800-peach-pi.dts       |  4 ++--
->  17 files changed, 36 insertions(+), 36 deletions(-)
-> 
-> Hi Krzysztof,
-> 
-> Thanks for picking up on this. I have rebased on:
-> git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git next/dt
+On Wed, Jan 27, 2016 at 09:05:08PM -0800, Guenter Roeck wrote:
+> ... and thus disable any external chip signals associated with those =
+limits.
+>=20
+> The idea with most if not all temperature sensors is that multiple tr=
+ip points
+> would be configured as multiple limits in the chip. Often those limit=
+s,
+> when reached, are tied to pins to cause a specific action (eg to caus=
+e
+> an interrupt, turn on a fan, or shut down the hardware). In effect, y=
+ou
+> suggest to re-define this mechanism and, for all practical purposes,
+> use just one of the limits provided by the chip(s).
+>=20
+> Personally I don't think that would be a good idea, because it would =
+have
+> impact on hardware design. It would effectively limit the use of the =
+thermal
+> subsystem with temperature sensor chips to hardware designs which tak=
+e
+> the thermal subsystem's expectations and assumptions into account.
+> At the same time, it would for all practical purposes mandate the use
+> of the thermal subsystem on such systems, because the hardware would =
+depend
+> on the thermal subsystem's implementation to control the temperature
+> in the system.
 
-Thanks!
+Ah, whoops. That makes a lot of sense. And I think I even saw the
+poweroff in action once, when I misconfigured the temperature offset
+register.
 
-Applied for v4.6.
+> While it may be feasible in some situations to have the thermal subsy=
+stem
+> dynamically set free-moving limits, there are many other situations w=
+here
+> those limits are tied to hardware responses, and the limits need to b=
+e static.
+>=20
+> Maybe this is just a different world view. The thermal subsystem may =
+see the
+> world assuming that it always has an unlimited number of trip points =
+available,
+> and the chip it supports only support lower and upper boundaries (or =
+trip points),
+> which can be set and changed as needed. This is somewhat different to=
+ the
+> traditional world view, implemented not only in many temperature sens=
+ors,
+> but also in fan controller or Super-IO chips, where a set of temperat=
+ures
+> is programmed into the chip only once. I hope that it is possible to =
+support
+> both mechanisms.
 
-Best regards,
-Krzysztof
+That would be nice.
+
+=46or starters, I think it should be possible for a driver to enable
+thermal subsystem stuff only if an of_node is present. (Though I haven'=
+t
+checked what that's set to with `status =3D "disabled"` in the device
+tree. Hopefully NULL.)
+
+So, one option is to, instead of thermal OF telling the driver what the
+limits are, we simply have thermal OF only notify the driver of trip
+changes, and the driver does all the work of inspecting defined trips.
+
+In the LM90 case, it can set low/high and critical alerts nicely based
+on trip types (critical or not). But, for example, MAX6696 has an
+additional 'emergency' alert. Should that just be left untouched?
+
+Either way, this means hardcoding thermal trip to sensor alert mapping
+in the driver. A more elaborate solution would be to define that mappin=
+g
+in the device tree, and have thermal OF handle it, instructing the
+driver to set specific alerts. (And then the device tree author may
+choose to leave certain sensor alerts alone.)
+
+--=20
+St=E9phan Kochen
