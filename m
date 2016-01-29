@@ -1,36 +1,144 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Status variable
-Date: Fri, 29 Jan 2016 10:30:29 +0100
-Message-ID: <3311135.1LkUsk5lnJ@wuerfel>
-References: <CANMsd02jhaouPBuySWXQ2edE+gyMZ3dncobipKa-dg1vLJCE2Q@mail.gmail.com> <3706345.JqhHqFGYfF@wuerfel> <CANMsd01ty4H3mP0-6kyc0ZxMBAd7p2Y6o7dHy4sFSGhog22R2w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANMsd01ty4H3mP0-6kyc0ZxMBAd7p2Y6o7dHy4sFSGhog22R2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan <ryanphilips19-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 7/7] arm64: dts: r8a7795: Add SCIF fallback compatibility strings
+Date: Fri, 29 Jan 2016 10:32:08 +0100
+Message-ID: <1454059928-975-8-git-send-email-geert+renesas@glider.be>
+References: <1454059928-975-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1454059928-975-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 January 2016 14:53:02 Ryan wrote:
-> Hello Bergman,
-> 
-> Sorry to bother you again: I was going through this:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/of/base.c#n524
-> 
-> Status should be absent or okay and "ok". Otherwise the entry is
-> treated as disabled.
-> 
-> Is this understanding correct?
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
+  - Change one-line summary prefix to match current arm-soc practices,
 
-Ah, you are right, sorry about my mistake. Please only use "disabled"
-and "okay" though if you have a status property.
+v3:
+  - New.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 38 +++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 119549e6502d0578..e5c38d1a551df78a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -474,7 +474,9 @@
+ 		};
+ 
+ 		hscif0: serial@e6540000 {
+-			compatible = "renesas,hscif-r8a7795", "renesas,hscif";
++			compatible = "renesas,hscif-r8a7795",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe6540000 0 96>;
+ 			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 520>;
+@@ -486,7 +488,9 @@
+ 		};
+ 
+ 		hscif1: serial@e6550000 {
+-			compatible = "renesas,hscif-r8a7795", "renesas,hscif";
++			compatible = "renesas,hscif-r8a7795",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe6550000 0 96>;
+ 			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 519>;
+@@ -498,7 +502,9 @@
+ 		};
+ 
+ 		hscif2: serial@e6560000 {
+-			compatible = "renesas,hscif-r8a7795", "renesas,hscif";
++			compatible = "renesas,hscif-r8a7795",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe6560000 0 96>;
+ 			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 518>;
+@@ -510,7 +516,9 @@
+ 		};
+ 
+ 		hscif3: serial@e66a0000 {
+-			compatible = "renesas,hscif-r8a7795", "renesas,hscif";
++			compatible = "renesas,hscif-r8a7795",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe66a0000 0 96>;
+ 			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 517>;
+@@ -522,7 +530,9 @@
+ 		};
+ 
+ 		hscif4: serial@e66b0000 {
+-			compatible = "renesas,hscif-r8a7795", "renesas,hscif";
++			compatible = "renesas,hscif-r8a7795",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe66b0000 0 96>;
+ 			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 516>;
+@@ -534,7 +544,8 @@
+ 		};
+ 
+ 		scif0: serial@e6e60000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6e60000 0 64>;
+ 			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 207>;
+@@ -546,7 +557,8 @@
+ 		};
+ 
+ 		scif1: serial@e6e68000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6e68000 0 64>;
+ 			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 206>;
+@@ -558,7 +570,8 @@
+ 		};
+ 
+ 		scif2: serial@e6e88000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6e88000 0 64>;
+ 			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 310>;
+@@ -570,7 +583,8 @@
+ 		};
+ 
+ 		scif3: serial@e6c50000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6c50000 0 64>;
+ 			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 204>;
+@@ -582,7 +596,8 @@
+ 		};
+ 
+ 		scif4: serial@e6c40000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6c40000 0 64>;
+ 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 203>;
+@@ -594,7 +609,8 @@
+ 		};
+ 
+ 		scif5: serial@e6f30000 {
+-			compatible = "renesas,scif-r8a7795", "renesas,scif";
++			compatible = "renesas,scif-r8a7795",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
+ 			reg = <0 0xe6f30000 0 64>;
+ 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 202>;
+-- 
+1.9.1
