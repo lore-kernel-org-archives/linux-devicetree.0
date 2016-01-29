@@ -1,66 +1,33 @@
-From: Ryan <ryanphilips19-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: Status variable
-Date: Fri, 29 Jan 2016 14:40:33 +0530
-Message-ID: <CANMsd01PnqUe+NVp-OGE3aMN=k1b4KX_D5YBnQAbPuHcT1+SWQ@mail.gmail.com>
-References: <CANMsd02jhaouPBuySWXQ2edE+gyMZ3dncobipKa-dg1vLJCE2Q@mail.gmail.com>
-	<3706345.JqhHqFGYfF@wuerfel>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [v4,1/3] wlcore/wl12xx: spi: add power operation function
+Date: Fri, 29 Jan 2016 09:11:05 +0000 (UTC)
+Message-ID: <20160129091105.668A2604A2@smtp.codeaurora.org>
+References: <1451482533-8624-2-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3706345.JqhHqFGYfF@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451482533-8624-2-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bergman,
 
-Thanks for your help and time. Also I have seen that sometimes we use
+> The power function uses a consumer regulator access to update the WiFi
+> enable GPIO value.
+> 
+> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Tested-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 
-i2c0: i2c@44e0b000 {
+Thanks, 2 patches applied to wireless-drivers-next.git:
 
+4c1ce07bcf62 wlcore/wl12xx: spi: add power operation function
+04654c386145 wlcore/wl12xx: spi: add device tree support
 
-}
-
-and Sometimes
-
-i2c@44e0b000
-
-Why is that? What is the purpose of adding a i2c0: infront of the i2c
-entry. that too in the same file.
-
-Regards,
-ryan
-
-On Fri, Jan 29, 2016 at 2:19 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 29 January 2016 14:13:20 Ryan wrote:
->> Hello,
->>
->> I am confused about the "status" variables on a device tree. What is
->> the meaning of
->> status="okay", status="enabled", status="disabled".
->>
->> the function: __of_device_is_available returns 1 if the entry itself
->> is not there.
->>
->> Why is this?
->>
->> Thanks for your time.
->
-> On status="disabled" is defined to have an effect and will prevent
-> the device from being used. Any other value or an absent status
-> property is interpreted as a working device.
->
-> The common way this is used is that a soc-specific .dtsi file lists
-> all devices that are present within the soc, but marks the ones as
-> disabled that are not always usable because they depend on a external
-> connection (e.g. a uart only makes sense if it talks to something,
-> while a timer device is always usable). A board specific file then
-> does not need to define the entire device but just override the
-> status as "okay".
->
->         Arnd
+Kalle Valo
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
