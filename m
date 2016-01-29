@@ -1,69 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
- ACT8945A
-Date: Fri, 29 Jan 2016 12:35:18 +0100
-Message-ID: <20160129113518.GQ4130@sirena.org.uk>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
- <1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
- <20160129001603.GM4130@sirena.org.uk>
- <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/3] mmc: sdhci-iproc: add bcm2835 support
+Date: Fri, 29 Jan 2016 12:41:13 +0100
+Message-ID: <CAPDyKFqzu86xJvm5h_7_qFXuDQTV=nAU8wmhZCXPqj_8=XvxYA@mail.gmail.com>
+References: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+S4DbcR7QPeSsP0V"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, Peter Korsgaard <jacmet@gmail.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1453933542-30287-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, kernel@martin.sperl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-mmc <linux-mmc@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Shawn Lin <shawn.lin@rock-chips.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+On 27 January 2016 at 23:25, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> This patch series based on the suggestion of Scott Branden to implement
+> bcm2835 support into sdhci-iproc [1].
+>
+> These changes provide the following advantages:
+>   * no need to maintain a separate driver for bcm2835
+>   * improve support and test coverage of bcm2835 mmc support
+>   * get the rid of SDHCI_CAPABILITIES hack in bcm2835_sdhci_readl
+>   * increase write performance by avoiding delays in write ops
+>
+> Patch 1 prepare sdhci-iproc for another platform. Patch 2 and 3
+> are the actually changes for bcm2835 support.
+>
+> These series has been tested on Raspberry Pi B with dd (direct I/O):
+>
+> sdhci-bcm2835
+>
+> 378 kB/s WRITE
+> 10,6 MB/s READ
+>
+> sdhci-iproc (after applying patch series)
+>
+> 881 kB/s WRITE
+> 10,8 MB/s READ
+>
+> Changes since RFC:
+>   * drop patch which tries to add quirks for bcm2835 in DT and define all
+>     quirks in driver instead to keep old DTs working with sdhci-iproc
+>     (suggestion by Stephen Warren)
+>   * define MMC caps in shdci-iproc platform data to make adding new
+>     platforms more easily (suggestion by Stephen Warren)
+>
+> [1] - https://lkml.org/lkml/2015/12/22/525
+>
+> Stefan Wahren (3):
+>   mmc: sdhci-iproc: define MMC caps in platform data
+>   mmc: sdhci-iproc: add bcm2835 support
+>   DT: sdhci-iproc: add bcm2835 compatible
+>
+>  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |    5 ++++-
+>  drivers/mmc/host/Kconfig                           |    6 +++---
+>  drivers/mmc/host/sdhci-iproc.c                     |   20 ++++++++++++++++++--
+>  3 files changed, 25 insertions(+), 6 deletions(-)
+>
+> --
+> 1.7.9.5
+>
 
---+S4DbcR7QPeSsP0V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 29, 2016 at 01:20:08AM +0000, Yang, Wenyou wrote:
+Thanks, applied for next!
 
-> > > +static const struct of_device_id act8945a_pmic_of_match[] =3D {
-> > > +	{ .compatible =3D "active-semi,act8945a-regulator" },
-> > > +	{ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
-
-> > This seems mostly OK but why do we have a compatible string here - shou=
-ldn't
-> > the MFD be able to instantiate the regulator function without needing t=
-his?
-
-> Because I got feedback from Javier for the act8945a-charger patches of th=
-is MFD series,
-> He said missing the OF match table will cause the module autoloading brok=
-en.=20
-
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398113=
-=2Ehtml
-
-> What do you think about it?
-
-If then device is not being loaded from the DT (and it shouldn't be, the
-device looks like it should be instantiated directly by the MFD as it
-can't exist separately to that MFD) an OF table will do nothing. =20
-
---+S4DbcR7QPeSsP0V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWq051AAoJECTWi3JdVIfQn/EH/2mlAeT+19Ec1pHtINkqy1h9
-/a4uQqluTycrV9ampDZ8qFDl2cIMXq/lGPi0PRZ79g0kJu3K1TTfjii1p1ywVWN+
-RBA7f9xfQ1fAZivaHIDkbv6v2hlWyDqnrLXr6DrdmQol+lN0/69N+3oSnObz36Ny
-VKd8mlknuoAt0aRGRH0P2Jcubj0emi26qHP37BrsJDNe1+jIknaR7AV9N2s4d2xm
-+zYr6amcjIzrmEUq3NsaKnk8OuNRPNbdFgw1Bm+sIwEcl8njeaB3TooHUT4TrA8M
-KWrLH9JnvyfQRzEvAOLxoE5EMRPdW2TuhpDFJIOSKamud6J9ZXJ7QxNcE4jpxe8=
-=3DVN
------END PGP SIGNATURE-----
-
---+S4DbcR7QPeSsP0V--
+Kind regards
+Uffe
