@@ -1,120 +1,75 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 04/11] ARM: dts: r8a7740: Rename the serial port clock to fck
-Date: Fri, 29 Jan 2016 10:47:34 +0100
-Message-ID: <1454060861-2375-5-git-send-email-geert+renesas@glider.be>
-References: <1454060861-2375-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 0/7] ARM: dts: r-car: Add BRG support for (H)SCIF
+Date: Fri, 29 Jan 2016 11:04:36 +0100
+Message-ID: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1454060861-2375-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+	Hi Simon, Magnus,
 
-The clock is really the device functional clock, not the interface
-clock. Rename it.
+This patch series adds support for the Baud Rate Generator for External
+Clock (BRG), as found on SCIF and HSCIF, to the DTS files for all R-Car
+Gen1, Gen2, and Gen3 SoCs. This increases the range and accuracy of
+supported baud rates on (H)SCIF.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v4:
+Support for the extra clocks in the DT bindings and in the driver has
+been accepted in v4.5-rc1.  
+
+Changes compared to v3:
   - Change one-line summary prefix to match current arm-soc practices,
+  - Rebased,
 
-v3:
-  - No changes,
+Changes compared to v2:
+  - Rename "int_clk" to "brg_int",
+  - Add support for R-Car M1A (r8a7778) and R-Car H1 (r8a7779),
+  - Add support for R-Car H2 (r8a7790), R-Car M2-N (r8a7793), and R-Car
+    E2 (r8a7794),
+  - Correct internal clock source ZS_CLK to S3D1 in patch description
+    for r8a7795, 
 
-v2:
-  - Add Acked-by.
----
- arch/arm/boot/dts/r8a7740.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+This has been tested on r8a7778/bockw, r8a7779/marzen, r8a7791/koelsch,
+r8a7794/alt, and r8a7795/salvator-x.
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 36bcb39cca03b8df..995fbda74b7a057e 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -214,7 +214,7 @@
- 		reg = <0xe6c40000 0x100>;
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -224,7 +224,7 @@
- 		reg = <0xe6c50000 0x100>;
- 		interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA1>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -234,7 +234,7 @@
- 		reg = <0xe6c60000 0x100>;
- 		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA2>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -244,7 +244,7 @@
- 		reg = <0xe6c70000 0x100>;
- 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA3>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -254,7 +254,7 @@
- 		reg = <0xe6c80000 0x100>;
- 		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA4>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -264,7 +264,7 @@
- 		reg = <0xe6cb0000 0x100>;
- 		interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA5>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -274,7 +274,7 @@
- 		reg = <0xe6cc0000 0x100>;
- 		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA6>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -284,7 +284,7 @@
- 		reg = <0xe6cd0000 0x100>;
- 		interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA7>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
-@@ -294,7 +294,7 @@
- 		reg = <0xe6c30000 0x100>;
- 		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp2_clks R8A7740_CLK_SCIFB>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&pd_a3sp>;
- 		status = "disabled";
- 	};
+Dependencies:
+  - renesas-devel-20160129-v4.5-rc1,
+  - series "[PATCH v4 0/7] ARM: dts: R-Car: Add SCIF fallback
+    compatibility strings",
+  - series "[PATCH v4 00/11] ARM: dts: shmobile: Rename the serial port
+    clock to fck",
+
+Thanks for applying!
+
+Geert Uytterhoeven (7):
+  ARM: dts: r8a7778: Add BRG support for SCIF
+  ARM: dts: r8a7779: Add BRG support for SCIF
+  ARM: dts: r8a7790: Add BRG support for (H)SCIF
+  ARM: dts: r8a7791: Add BRG support for (H)SCIF
+  ARM: dts: r8a7793: Add BRG support for SCIF
+  ARM: dts: r8a7794: Add BRG support for (H)SCIF
+  arm64: dts: r8a7795: Add BRG support for (H)SCIF
+
+ arch/arm/boot/dts/r8a7778.dtsi           | 39 +++++++++++------
+ arch/arm/boot/dts/r8a7779.dtsi           | 39 +++++++++++------
+ arch/arm/boot/dts/r8a7790.dtsi           | 29 +++++++++----
+ arch/arm/boot/dts/r8a7791.dtsi           | 54 +++++++++++++++--------
+ arch/arm/boot/dts/r8a7793.dtsi           | 54 +++++++++++++++--------
+ arch/arm/boot/dts/r8a7794.dtsi           | 54 +++++++++++++++--------
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 74 ++++++++++++++++++++++----------
+ 7 files changed, 235 insertions(+), 108 deletions(-)
+
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
