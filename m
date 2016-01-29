@@ -1,69 +1,74 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
-Date: Fri, 29 Jan 2016 23:28:25 +0300
-Message-ID: <56ABCB69.1070800@cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <4506196.xOgpYRO52t@wasted.cogentembedded.com>
- <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 29 Jan 2016 14:38:15 -0600
+Message-ID: <56ABCDB7.5080203@codeaurora.org>
+References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+ <20151231231039.GA8886@rob-hp-laptop> <56ABADEA.40801@codeaurora.org>
+ <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "horms@verge.net.au" <horms@verge.net.au>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 01/28/2016 08:49 AM, Yoshihiro Shimoda wrote:
-
->> From: linux-renesas-soc-owner@vger.kernel.org [mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Sergei
->> Shtylyov
->> Sent: Wednesday, January 27, 2016 7:14 AM
->>
->> Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
->> are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
->> can add  MAX3355 device node to  the Porter device tree and properly refer
->> to it from the USBHS node instead of using  "renesas,enable-gpio" property
->> which only allowed checking the USB ID pin  at the driver probe time;  now
->> this  pin's  state can be monitored dynamically!
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Rob Herring wrote:
+>> The emac is present on a lot of Qualcomm SOCs, and there are only a few
+>> variations of it.  It's not really SOC-specific, and the hardware version
+>> can be queried by the driver.
 >
-> I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
-> even if I connected/disconnected a usb convert cable (usb micro-ab to A).
-> Remarks: I confirmed that the usb convert cable worked correctly on other board.
+> Can the integration bugs be queried, too?
+>
+> Come on, you know how compatible strings work.
 
-    I guess I have the same cable and IRQs do happen for me when I connect and 
-disconnect it (as it should be).
+Fine.  I'll figure something out.
 
-> Do I need other settings for this?
+>> What did you have in mind?  I don't know even have a list of which SOCs has
+>> an emac, especially since it's mostly on MSM parts, and I work on the server
+>> SOC.
+>
+> You only need the one you care about. Figure out the part number
+> already. Or find the closest MSM part.
 
-    No evident answer to that, your logs show that MAX3355 driver was enabled...
+Ironically, the only SOC I actually care about is not supported by this 
+driver yet.
 
-> root@192:~# cat /proc/interrupts | grep usb
-> 108:          0     GIC-0 139 Level     e6590000.usb
-> 118:          1     GIC-0 140 Level     ehci_hcd:usb1, ohci_hcd:usb3
-> 119:          0     GIC-0 145 Level     ehci_hcd:usb2, ohci_hcd:usb4
-> 308:          0  e6055000.gpio  31 Edge      usb-otg
-> root@192:~#
-> root@192:~# cat /proc/interrupts | grep usb
-> 108:          0     GIC-0 139 Level     e6590000.usb
-> 118:          1     GIC-0 140 Level     ehci_hcd:usb1, ohci_hcd:usb3
-> 119:          0     GIC-0 145 Level     ehci_hcd:usb2, ohci_hcd:usb4
-> 308:          0  e6055000.gpio  31 Edge      usb-otg
-> root@192:~#
-> root@192:~# cd /sys/class/extcon/extcon0
-> root@192:/sys/class/extcon/extcon0# cat state
-> USB=1
-> USB-HOST=0
+>>>> +- qcom,emac-gpio-mdc  : GPIO pin number of the MDC line of MDIO bus.
+>>>> +- qcom,emac-gpio-mdio : GPIO pin number of the MDIO line of MDIO bus.
+>>>
+>>>
+>>> Use the standard binding for GPIO controlled MDIO bus.
+>>
+>> I'm not familiar with that one.  Are you talking about
+>> bindings/net/mdio-gpio.txt?
+>
+> Yes.
 
-    I guess these states doesn't change even if you insert your cable?
-They also do change for me.
+Thanks.
 
-> Best regards,
-> Yoshihiro Shimoda
+>> That, I can't answer.  Aren't all MDIO devices basically the same?  It's
+>> been a while since I've worked on them.
+>
+> No. There was some discussion just this week about needing to require
+> phy devices to have compatible strings.
 
-MBR, Sergei
+Ok, I'll check it out.
+
+>>> Isn't this a user enabled feature if the h/w supports it?
+>>
+>>
+>> Is there a sysfs entry for that?  We were planning on having a similar ACPI
+>> property.
+>
+> It would be in ethtool I think.
+
+Ah, this driver does not support ethtool yet.
+
+However, based on a cursory look of ethtool, it appears that there's 
+only an option to query the current timestamp, but not actually 
+enable/disable the feature.  The e1000e driver, for example, just forces 
+the feature by default for various chips.  Is there any reason why we 
+shouldn't enable it if the hardware supports it?
