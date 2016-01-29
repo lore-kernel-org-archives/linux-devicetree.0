@@ -1,74 +1,94 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 4/5] gpio: max77620: add gpio driver for
- MAX77620/MAX20024
-Date: Fri, 29 Jan 2016 10:30:35 -0600
-Message-ID: <20160129163035.GA15053@rob-hp-laptop>
-References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
- <1453903808-29788-5-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH] of: resolver: Add missing of_node_put
+Date: Fri, 29 Jan 2016 10:45:31 -0600
+Message-ID: <20160129164531.GB15053@rob-hp-laptop>
+References: <20160127152017.GA16048@amitoj-Inspiron-3542>
+ <20160127160531.GB17123@leverpostej>
+ <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453903808-29788-5-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Chaitanya Bandi <bandik@nvidia.com>
+In-Reply-To: <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Amitoj Kaur Chawla <amitoj1606@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 07:40:07PM +0530, Laxman Dewangan wrote:
-> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
-> pins. It also supports interrupts from these pins.
+On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
+> Hi Mark,
 > 
-> Add GPIO driver for these pins to control via GPIO APIs.
+> > On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
+> >> for_each_child_of_node performs an of_node_get on each iteration, so
+> >> to break out of the loop an of_node_put is required.
+> >> 
+> >> Found using Coccinelle. The semantic patch used for this is as follows:
+> >> 
+> >> // <smpl>
+> >> @@
+> >> expression e;
+> >> local idexpression n;
+> >> @@
+> >> 
+> >> for_each_child_of_node(..., n) {
+> >>   ... when != of_node_put(n)
+> >>       when != e = n
+> >> (
+> >>   return n;
+> >> |
+> >> +  of_node_put(n);
+> >> ?  return ...;
+> >> )
+> >>   ...
+> >> }
+> >> // </smpl
+> >> 
+> >> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+> >> ---
+> >> drivers/of/resolver.c | 4 +++-
+> >> 1 file changed, 3 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> >> index 640eb4c..e2a0143 100644
+> >> --- a/drivers/of/resolver.c
+> >> +++ b/drivers/of/resolver.c
+> >> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> >> 
+> >> 	for_each_child_of_node(node, child) {
+> >> 		found = __of_find_node_by_full_name(child, full_name);
+> >> -		if (found != NULL)
+> >> +		if (found != NULL) {
+> >> +			of_node_put(child);
+> >> 			return found;
+> >> +		}
+> >> 	}
+> >> 
+> >> 	return NULL;
+> > 
+> > I don't think this is quite right. When child == found, this change will
+> > leave it decremented.
+> > 
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
-> ---
-> Changes from V1:
-> - Use the gpiochip_add_data and get the chip data from core APIs.
-> - Cleanups based on comment received on mfd/rtc.
-> - Avoid duplication on error message.
 > 
-> Changes form V2:
-> - Run coccicheck and checkpatch in strict mode for the alignment.
-> - update based on api changes from core.
+> This patch is bogus. 
 > 
-> Changes from V3: 
-> - Change all sys initcall to module driver.
-> - change the max77620_read argument to unisgned int from u8.
+> __of_find_node_by_full_name() is not taking a reference on the node if found. 
+> This method relies on keeping the reference taken by the loop.
 > 
-> Changes from V4: 
-> - Added DT binding document as devicetree/bindings/gpio/gpio-max77620.txt
+> Taking this into account all of these conccinelle tests are bogus.
 > 
->  .../devicetree/bindings/gpio/gpio-max77620.txt     |  25 ++
->  drivers/gpio/Kconfig                               |   9 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-max77620.c                       | 292 +++++++++++++++++++++
->  4 files changed, 327 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
->  create mode 100644 drivers/gpio/gpio-max77620.c
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-max77620.txt b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
-> new file mode 100644
-> index 0000000..410e716
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
-> @@ -0,0 +1,25 @@
-> +GPIO driver for MAX77620 Power management IC from Maxim Semiconductor.
-> +
-> +Device has 8 GPIO pins which can be configured as GPIO as well as the
-> +special IO functions.
-> +
-> +Required properties:
-> +-------------------
-> +- gpio-controller : 	Marks the device node as a gpio controller.
-> +- #gpio-cells : 	Should be two.  The first cell is the pin number and
-> +			the second cell is used to specify the gpio polarity:
-> +				0 = active high
-> +				1 = active low
-> +For more details, please refer generic GPIO DT binding document
-> +<devicetree/bindings/gpio/gpio.txt>.
+> The DT internal method are not using the object model in an obvious manner
+> and applying these patches without vetting each and everyone is bound to
+> break things.
 
-I would just fold these 2 properties into the main max77620 document.
+Things are already broken. But does it matter?
+
+Our time would be better spent re-designing any refcounting around where 
+we actually need it rather than trying to fix up the many locations 
+which are wrong and don't matter. As long as it is callers' 
+responsibility to get this right, it will never be right. Even the core 
+code has a hard time getting it right.
 
 Rob
