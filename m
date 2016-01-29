@@ -1,94 +1,69 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V6 2/8] mfd: max77620: add core driver for MAX77620/MAX20024
-Date: Fri, 29 Jan 2016 16:29:54 +0530
-Message-ID: <56AB462A.8090307@nvidia.com>
-References: <1453988274-28052-1-git-send-email-ldewangan@nvidia.com> <1453988274-28052-3-git-send-email-ldewangan@nvidia.com> <20160129090632.GS3368@x1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Fri, 29 Jan 2016 12:35:18 +0100
+Message-ID: <20160129113518.GQ4130@sirena.org.uk>
+References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+ <1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+ <20160129001603.GM4130@sirena.org.uk>
+ <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160129090632.GS3368@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Chaitanya Bandi <bandik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+S4DbcR7QPeSsP0V"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, Peter Korsgaard <jacmet@gmail.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Lee for review.
-I will take care of most of stuff on next version of patch.
 
-However, I have some query form your comment.
-On Friday 29 January 2016 02:36 PM, Lee Jones wrote:
-> On Thu, 28 Jan 2016, Laxman Dewangan wrote:
->
->
->> +	}
->> +
->> +#define MAX20024_SUB_MODULE_NO_RES(_name, _id)			\
->> +	[_id] = {						\
->> +		.name = "max20024-"#_name,			\
->> +		.id = _id,					\
->> +	}
-> I don't want people hand-rolling this stuff.  If it's useful to you,
-> it's useful to others, so great a generic implementation that lives in
-> the kernel headers directory.
+--+S4DbcR7QPeSsP0V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-yaah, generic implementation possible. I can put the new defines in the 
-mfd/core.h.
+On Fri, Jan 29, 2016 at 01:20:08AM +0000, Yang, Wenyou wrote:
 
-This will be similar to
-+/* Define mfd cells with name and resource */
-+#define DEFINE_MFD_CELL_NAME_RESOURCE(_name, _res)             \
-+       {                                                       \
-+               .name = (_name),                                \
-+               .num_resources = ARRAY_SIZE((res)),             \
-+               .resources = (_res),                            \
-+       }
-+
-+/* Define mfd cells with name */
-+#define DEFINE_MFD_CELL_NAME(_name)                            \
-+       {                                                       \
-+               .name = (_name),                                \
-+       }
-+
+> > > +static const struct of_device_id act8945a_pmic_of_match[] =3D {
+> > > +	{ .compatible =3D "active-semi,act8945a-regulator" },
+> > > +	{ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
 
-This will be separate patch and should be applied before this series.
-Does it look fine?
+> > This seems mostly OK but why do we have a compatible string here - shou=
+ldn't
+> > the MFD be able to instantiate the regulator function without needing t=
+his?
 
+> Because I got feedback from Javier for the act8945a-charger patches of th=
+is MFD series,
+> He said missing the OF match table will cause the module autoloading brok=
+en.=20
 
->
->> +static const struct i2c_device_id max77620_id[] = {
->> +	{"max77620", MAX77620},
->> +	{"max20024", MAX20024},
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(i2c, max77620_id);
->> +
->> +static const struct of_device_id max77620_of_match[] = {
->> +	{
->> +		.compatible = "maxim,max77620",
->> +		.data = &max77620_cells,
->> +	}, {
->> +		.compatible = "maxim,max20024",
->> +		.data = &max20024_cells,
->> +	}, {
->> +	},
->> +};
->> +MODULE_DEVICE_TABLE(of, max77620_of_match);
-> This is not acceptable.  EITHER use DT OR MFD methods of registering
-> devices, do not mix the two.
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398113=
+=2Ehtml
 
-You mean I need to either provide the i2c_device_id table or the 
-of_device_id table, not both?
-Do I need to protect it by CONFIG_OF?
+> What do you think about it?
 
-This only support the DT method of registration. So do I need to remove 
-i2c_device_id?
+If then device is not being loaded from the DT (and it shouldn't be, the
+device looks like it should be instantiated directly by the MFD as it
+can't exist separately to that MFD) an OF table will do nothing. =20
 
+--+S4DbcR7QPeSsP0V
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJWq051AAoJECTWi3JdVIfQn/EH/2mlAeT+19Ec1pHtINkqy1h9
+/a4uQqluTycrV9ampDZ8qFDl2cIMXq/lGPi0PRZ79g0kJu3K1TTfjii1p1ywVWN+
+RBA7f9xfQ1fAZivaHIDkbv6v2hlWyDqnrLXr6DrdmQol+lN0/69N+3oSnObz36Ny
+VKd8mlknuoAt0aRGRH0P2Jcubj0emi26qHP37BrsJDNe1+jIknaR7AV9N2s4d2xm
++zYr6amcjIzrmEUq3NsaKnk8OuNRPNbdFgw1Bm+sIwEcl8njeaB3TooHUT4TrA8M
+KWrLH9JnvyfQRzEvAOLxoE5EMRPdW2TuhpDFJIOSKamud6J9ZXJ7QxNcE4jpxe8=
+=3DVN
+-----END PGP SIGNATURE-----
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--+S4DbcR7QPeSsP0V--
