@@ -1,147 +1,57 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [RFC PATCH 4/6] iommu/arm-smmu: Add support for
- IOMMU_DOMAIN_DMA in SMMUv1/SMMUv2 driver
-Date: Fri, 29 Jan 2016 03:58:46 +0000
-Message-ID: <39063E8F96E11742B35A201CC5D095B7BB2297@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1453872079-27140-1-git-send-email-anup.patel@broadcom.com>
- <1453872079-27140-5-git-send-email-anup.patel@broadcom.com>
- <56AA4FBE.6090702@arm.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
+Date: Fri, 29 Jan 2016 13:17:10 +0900
+Message-ID: <CA+Ln22HCH5u=m+2KD3G1Pk-8dKfmSB8yUkdXoHXt8o3jvbSgGQ@mail.gmail.com>
+References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com>
+	<alpine.DEB.2.11.1601262142450.3886@nanos>
+	<20160128095955.GA12884@e106950-lin.cambridge.arm.com>
+	<alpine.DEB.2.11.1601281116310.3886@nanos>
+	<20160128111041.GB12884@e106950-lin.cambridge.arm.com>
+	<alpine.DEB.2.11.1601281238110.3886@nanos>
+	<CAL_JsqLTFu18a-Mj_XPZBpcFkD+R-uiK70yLnCT27np2YK6_ag@mail.gmail.com>
+	<alpine.DEB.2.11.1601282105150.3886@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56AA4FBE.6090702-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <alpine.DEB.2.11.1601282105150.3886@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
 
+2016-01-29 5:06 GMT+09:00 Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>:
+> On Thu, 28 Jan 2016, Rob Herring wrote:
+>> On Thu, Jan 28, 2016 at 5:49 AM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+>> > I've cc'ed the author and the device tree folks. Perhaps are they able to
+>> > explain what this commit tries to 'fix'.
+>>
+>> It's certainly not clear what driver was being fixed. I think the
+>> intention was to provide the trigger flags from the DT to drivers in a
+>> standard, non-DT specific way. The implementation of it certainly
+>> seems convoluted. The usecase I can think of is drivers may need the
+>> trigger information for cases where the device can support different
+>> trigger modes/polarity. The DT says which trigger mode to use and the
+>> device and irqchip need to be programmed to match. IIRC, SMSC ethernet
+>> chips frequently used on ARM boards do this.
+>
+> I can see that the driver wants this information, but why would one feed that
+> back into request_irq() when the interrupt was already configured by DT.
+>
 
-> -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org]
-> Sent: 28 January 2016 22:59
-> To: Anup Patel; Catalin Marinas; Joerg Roedel; Will Deacon; Sricharan R; Linux
-> IOMMU; Linux ARM Kernel
-> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Device
-> Tree; Ray Jui; Scott Branden; Vikram Prakash; Linux Kernel; bcm-kernel-
-> feedback-list
-> Subject: Re: [RFC PATCH 4/6] iommu/arm-smmu: Add support for
-> IOMMU_DOMAIN_DMA in SMMUv1/SMMUv2 driver
-> 
-> On 27/01/16 05:21, Anup Patel wrote:
-> > To allow use of large memory (> 4Gb) with 32bit devices we need to use
-> > some kind of iommu for such 32bit devices.
-> >
-> > This patch extends SMMUv1/SMMUv2 driver to support DMA domains which
-> > in-turn will allows us to use iommu based DMA mappings for 32bit devices.
-> >
-> > Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   drivers/iommu/arm-smmu.c | 21 ++++++++++++++++++++-
-> >   1 file changed, 20 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
-> > 9bdf6b2..43424fe 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -29,6 +29,7 @@
-> >   #define pr_fmt(fmt) "arm-smmu: " fmt
-> >
-> >   #include <linux/delay.h>
-> > +#include <linux/dma-iommu.h>
-> >   #include <linux/dma-mapping.h>
-> >   #include <linux/err.h>
-> >   #include <linux/interrupt.h>
-> > @@ -967,7 +968,7 @@ static struct iommu_domain
-> *arm_smmu_domain_alloc(unsigned type)
-> >   {
-> >   	struct arm_smmu_domain *smmu_domain;
-> >
-> > -	if (type != IOMMU_DOMAIN_UNMANAGED)
-> > +	if (type != IOMMU_DOMAIN_UNMANAGED && type !=
-> IOMMU_DOMAIN_DMA)
-> >   		return NULL;
-> >   	/*
-> >   	 * Allocate the domain and initialise some of its data structures.
-> > @@ -978,6 +979,12 @@ static struct iommu_domain
-> *arm_smmu_domain_alloc(unsigned type)
-> >   	if (!smmu_domain)
-> >   		return NULL;
-> >
-> > +	if (type == IOMMU_DOMAIN_DMA &&
-> > +	    iommu_get_dma_cookie(&smmu_domain->domain)) {
-> > +		kfree(smmu_domain);
-> > +		return NULL;
-> > +	}
-> > +
-> >   	mutex_init(&smmu_domain->init_mutex);
-> >   	spin_lock_init(&smmu_domain->pgtbl_lock);
-> >
-> > @@ -992,6 +999,7 @@ static void arm_smmu_domain_free(struct
-> iommu_domain *domain)
-> >   	 * Free the domain resources. We assume that all devices have
-> >   	 * already been detached.
-> >   	 */
-> > +	iommu_put_dma_cookie(domain);
-> >   	arm_smmu_destroy_domain_context(domain);
-> >   	kfree(smmu_domain);
-> >   }
-> > @@ -1361,6 +1369,16 @@ static int arm_smmu_init_platform_device(struct
-> device *dev,
-> >   	return 0;
-> >   }
-> >
-> > +int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args
-> > +*args) {
-> > +	/*
-> > +	 * Nothing to do here because SMMU is already aware of all
-> > +	 * MMU masters and their stream IDs using mmu-master attibute
-> > +	 * SMMU DT node.
-> > +	 */
-> 
-> ...but on the same hand this will also never get called if there's no "iommus"
-> property on the master. Maintaining support for existing users of the "mmu-
-> masters" binding is one thing (namely the thing that's been slowing down my
-> efforts to clean up the really hacky generic binding support I did all the DMA
-> stuff with), but having _both_ bindings in a single DT is something I don't think
-> anybody wants to see - is that how you've tested this?
+I think Rob already explained the original intention of the patch in
+question I sent quite long time ago.
 
-We want to use iommu aware DMA mapping APIs for certain 32bit devices
-in our SoC without changing device driver of these 32bit devices
-(such as PL330). Currently, to this we have to specifiy "iommus" attribute in
-32bit device DT node. If we specify  "iommus" attribute in device DT node then
-of_iommu_configure() expects "of_xlate" callback and it will fail if this
-callback is not available.
+To clarify, I have to add that passing interrupt trigger in resource
+flags is not something specific for DT, but it is the general way used
+for platform devices and dating times even before DT adoption on ARM
+(=== wide spread DT adoption). The key point here is that on pre-DT
+systems, the interrupt would not be already configured by DT code and
+that's why you have to pass the trigger flags to request_irq().
 
-If there is a way use DMA mappings APIs for 32bit devices without having
-"of_xlate" in SMMU driver then I would prefer that approach. Suggestions??
-
-> 
-> Robin.
-> 
-> > +	return 0;
-> > +}
-> > +
-> >   static int arm_smmu_add_device(struct device *dev)
-> >   {
-> >   	struct iommu_group *group;
-> > @@ -1458,6 +1476,7 @@ static struct iommu_ops arm_smmu_ops = {
-> >   	.unmap			= arm_smmu_unmap,
-> >   	.map_sg			= default_iommu_map_sg,
-> >   	.iova_to_phys		= arm_smmu_iova_to_phys,
-> > +	.of_xlate		= arm_smmu_of_xlate,
-> >   	.add_device		= arm_smmu_add_device,
-> >   	.remove_device		= arm_smmu_remove_device,
-> >   	.device_group		= arm_smmu_device_group,
-> >
-> 
-
-Regards,
-Anup
+Best regards,
+Tomasz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
