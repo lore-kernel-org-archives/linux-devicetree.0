@@ -1,94 +1,115 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: resolver: Add missing of_node_put
-Date: Fri, 29 Jan 2016 10:45:31 -0600
-Message-ID: <20160129164531.GB15053@rob-hp-laptop>
-References: <20160127152017.GA16048@amitoj-Inspiron-3542>
- <20160127160531.GB17123@leverpostej>
- <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH V5 05/14] soc: tegra: pmc: Wait for powergate state to change
+Date: Fri, 29 Jan 2016 09:58:03 -0700
+Message-ID: <CANLsYkycbEo+wyMX8RJ9H-S5kDTjQR4nnDZc5gvf2kShOZAv9w@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+	<1453998832-27383-6-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Amitoj Kaur Chawla <amitoj1606@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1453998832-27383-6-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
-> Hi Mark,
-> 
-> > On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote:
-> >> for_each_child_of_node performs an of_node_get on each iteration, so
-> >> to break out of the loop an of_node_put is required.
-> >> 
-> >> Found using Coccinelle. The semantic patch used for this is as follows:
-> >> 
-> >> // <smpl>
-> >> @@
-> >> expression e;
-> >> local idexpression n;
-> >> @@
-> >> 
-> >> for_each_child_of_node(..., n) {
-> >>   ... when != of_node_put(n)
-> >>       when != e = n
-> >> (
-> >>   return n;
-> >> |
-> >> +  of_node_put(n);
-> >> ?  return ...;
-> >> )
-> >>   ...
-> >> }
-> >> // </smpl
-> >> 
-> >> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-> >> ---
-> >> drivers/of/resolver.c | 4 +++-
-> >> 1 file changed, 3 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> >> index 640eb4c..e2a0143 100644
-> >> --- a/drivers/of/resolver.c
-> >> +++ b/drivers/of/resolver.c
-> >> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> >> 
-> >> 	for_each_child_of_node(node, child) {
-> >> 		found = __of_find_node_by_full_name(child, full_name);
-> >> -		if (found != NULL)
-> >> +		if (found != NULL) {
-> >> +			of_node_put(child);
-> >> 			return found;
-> >> +		}
-> >> 	}
-> >> 
-> >> 	return NULL;
-> > 
-> > I don't think this is quite right. When child == found, this change will
-> > leave it decremented.
-> > 
-> 
-> 
-> This patch is bogus. 
-> 
-> __of_find_node_by_full_name() is not taking a reference on the node if found. 
-> This method relies on keeping the reference taken by the loop.
-> 
-> Taking this into account all of these conccinelle tests are bogus.
-> 
-> The DT internal method are not using the object model in an obvious manner
-> and applying these patches without vetting each and everyone is bound to
-> break things.
+On 28 January 2016 at 09:33, Jon Hunter <jonathanh@nvidia.com> wrote:
+> Currently, the function tegra_powergate_set() simply sets the desired
+> powergate state but does not wait for the state to change. In most cases
+> we should wait for the state to change before proceeding. Currently, there
+> is a case for tegra114 and tegra124 devices where we do not wait when
+> starting the secondary CPU as this is not necessary. However, this is only
+> done at boot time and so waiting here will only have a small impact on
+> boot time. Therefore, update tegra_powergate_set() to wait when setting
+> the powergate.
+>
+> By adding this feature, we can also eliminate the polling loop from
+> tegra30_boot_secondary().
+>
+> A function has been added for checking the status of the powergate and
+> so update the tegra_powergate_is_powered() to use this macro as well.
+>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  arch/arm/mach-tegra/platsmp.c | 16 +++-------------
+>  drivers/soc/tegra/pmc.c       |  9 ++++++++-
+>  2 files changed, 11 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+> index f3f61dbbda97..75620ae73913 100644
+> --- a/arch/arm/mach-tegra/platsmp.c
+> +++ b/arch/arm/mach-tegra/platsmp.c
+> @@ -108,19 +108,9 @@ static int tegra30_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>          * be un-gated by un-toggling the power gate register
+>          * manually.
+>          */
+> -       if (!tegra_pmc_cpu_is_powered(cpu)) {
+> -               ret = tegra_pmc_cpu_power_on(cpu);
+> -               if (ret)
+> -                       return ret;
+> -
+> -               /* Wait for the power to come up. */
+> -               timeout = jiffies + msecs_to_jiffies(100);
+> -               while (!tegra_pmc_cpu_is_powered(cpu)) {
+> -                       if (time_after(jiffies, timeout))
+> -                               return -ETIMEDOUT;
+> -                       udelay(10);
+> -               }
+> -       }
+> +       ret = tegra_pmc_cpu_power_on(cpu);
+> +       if (ret)
+> +               return ret;
+>
+>  remove_clamps:
+>         /* CPU partition is powered. Enable the CPU clock. */
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 99cb2fdd29e1..35ee60fd17be 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/export.h>
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/platform_device.h>
+> @@ -186,6 +187,9 @@ static inline bool tegra_powergate_state(int id)
+>   */
+>  static int tegra_powergate_set(unsigned int id, bool new_state)
+>  {
+> +       bool status;
+> +       int err;
+> +
+>         mutex_lock(&pmc->powergates_lock);
+>
+>         if (tegra_powergate_state(id) == new_state) {
+> @@ -195,9 +199,12 @@ static int tegra_powergate_set(unsigned int id, bool new_state)
+>
+>         tegra_pmc_writel(PWRGATE_TOGGLE_START | id, PWRGATE_TOGGLE);
+>
+> +       err = readx_poll_timeout(tegra_powergate_state, id, status,
+> +                                status == new_state, 10, 100000);
+> +
 
-Things are already broken. But does it matter?
+I understand (and agree) with the goal of this patch but I wonder (and
+I don't know much about the system/context) if holding a mutex while
+sleeping won't incur adverse effect on other parts of the system that
+weren't use to see this wait.  One way to fix this might be to use
+"mutex_trylock()" and let callers retry as they see fit if an
+operation is already in progress.
 
-Our time would be better spent re-designing any refcounting around where 
-we actually need it rather than trying to fix up the many locations 
-which are wrong and don't matter. As long as it is callers' 
-responsibility to get this right, it will never be right. Even the core 
-code has a hard time getting it right.
-
-Rob
+>         mutex_unlock(&pmc->powergates_lock);
+>
+> -       return 0;
+> +       return err;
+>  }
+>
+>  /**
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
