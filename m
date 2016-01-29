@@ -1,64 +1,61 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 9/9] arm64: dts: salvator-x: Enable SCIF_CLK frequency and pins
-Date: Fri, 29 Jan 2016 11:17:26 +0100
-Message-ID: <1454062646-4826-10-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 3/9] ARM: dts: gose: Enable SCIF_CLK frequency and pins
+Date: Fri, 29 Jan 2016 11:17:20 +0100
+Message-ID: <1454062646-4826-4-git-send-email-geert+renesas@glider.be>
 References: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454062646-4826-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
 Add and enable the external crystal for the SCIF_CLK and its pinctrl, to
 be used by the Baud Rate Generator for External Clock (BRG) on (H)SCIF.
 
-This increases the range and accuracy of supported baud rates:
-  - SCIF:
-      - Supports now 50, 230400, 460800, 500000, and 921600 bps,
-      - Perfect match for standard 50-460800, and 9216000 bps.
-  - HSCIF:
-      - Supports now 50, 75, and 110 bps,
-      - Perfect match for standard 50-460800, and 9216000 bps.
+This increases the range and accuracy of supported baud rates.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
+Untested, based on (non)differences in U-Boot sources between koelsch
+and gose.
+
 v4:
   - Change one-line summary prefix to match current arm-soc practices,
 
 v3:
-  - Add Reviewed-by.
+  - New.
 ---
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/r8a7793-gose.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index 9af1e3fdc468c76f..31ace9c1f79dc70c 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -93,6 +93,9 @@
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 2fa052036dbc0040..cfe142c2ba389031 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -236,6 +236,9 @@
  };
  
  &pfc {
 +	pinctrl-0 = <&scif_clk_pins>;
 +	pinctrl-names = "default";
 +
- 	scif1_pins: scif1 {
- 		renesas,groups = "scif1_data_a", "scif1_ctrl";
+ 	i2c2_pins: i2c2 {
+ 		renesas,groups = "i2c2";
+ 		renesas,function = "i2c2";
+@@ -256,6 +259,11 @@
  		renesas,function = "scif1";
-@@ -101,6 +104,10 @@
- 		renesas,groups = "scif2_data_a";
- 		renesas,function = "scif2";
  	};
+ 
 +	scif_clk_pins: scif_clk {
-+		renesas,groups = "scif_clk_a";
++		renesas,groups = "scif_clk";
 +		renesas,function = "scif_clk";
 +	};
- 
- 	i2c2_pins: i2c2 {
- 		renesas,groups = "i2c2_a";
-@@ -138,6 +145,11 @@
++
+ 	ether_pins: ether {
+ 		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
+ 		renesas,function = "eth";
+@@ -316,6 +324,11 @@
  	status = "okay";
  };
  
@@ -67,13 +64,8 @@ index 9af1e3fdc468c76f..31ace9c1f79dc70c 100644
 +	status = "okay";
 +};
 +
- &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
+ &qspi {
+ 	pinctrl-0 = <&qspi_pins>;
  	pinctrl-names = "default";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
