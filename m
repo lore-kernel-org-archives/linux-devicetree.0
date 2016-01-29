@@ -1,124 +1,73 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: Add UCS1002 USB Port Power Controller binding
-Date: Fri, 29 Jan 2016 07:33:52 +0100
-Message-ID: <CAFqH_52ZsWNfxwrfTMreG1u19Eu=0oMA09S2TStm4zjGJNi9Lw@mail.gmail.com>
-References: <1453799541-5445-1-git-send-email-enric.balletbo@collabora.com>
-	<1453799541-5445-2-git-send-email-enric.balletbo@collabora.com>
-	<20160129023539.GA3092@rob-hp-laptop>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v8 0/2] Add Rockchip Inno-HDMI driver
+Date: Fri, 29 Jan 2016 14:42:48 +0800
+Message-ID: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160129023539.GA3092@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-2016-01-29 3:35 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Tue, Jan 26, 2016 at 10:12:20AM +0100, Enric Balletbo i Serra wrote:
->> The UCS1002-2 provides a USB port power switch for precise control of up
->> to 2.5 amperes continuous current.
->>
->> You can add support to your board with current binding.
->>
->> Example:
->>
->>     ucs1002: ucs1002@57 {
->>              compatible = "microchip,ucs1002";
->>              reg = <0x57>;
->>              microchip,pin-ignore;
->>     };
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/power/ucs1002.txt          | 47 ++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
->> new file mode 100644
->> index 0000000..1b89f0a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/ucs1002.txt
->> @@ -0,0 +1,47 @@
->> +UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
->> +
->> +Required properties:
->> +- compatible: "microchip,ucs1002"
->> +- reg: integer, the I2C address of the device.
->> +
->> +Required properties (if pin-ignore functionality is not set):
->> +- em-gpios: which GPIO to use for EM_EN pin.
->> +- pwr-gpios: which GPIO to use for PWR_EN pin.
->> +- m1-gpios: which GPIO to use for M1 pin.
->> +- m2-gpios: which GPIO to use for M2 pin.
->> +
->> +Optional properties:
->> +- interrupt-parent: the phandle of the interrupt controller that services
->> +    interrupts for this device.
->> +- interrupts: interrupt specifiers for two interrupt sources.
->> +    - First interrupt specifier is for A_DET interrupt.
->> +    - Second interrupt specifier is for ALERT interrupt.
->> +- microchip,current-limit: integer, maximum current in mA. Note that the default
->
-> mA or ...
->
->> +    value is based on the resistor on the COMM_SEL/ILIM pin and this value cannot
->> +    be changed to be higher than hardware set value. Accepted values are: 500000,
->> +    900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000 (uA)
->
-> uA?
->
-> Either way append units (-microamps)
->
-
-Right, should be  microamps, will change in next version
-
->> +- microchip,pin-ignore: boolean, if present uses I2C for configuration, otherwise,
->> +    we must provide EM_EN, M1 and M2 gpio mapping.
->
-> Wouldn't this be implied by absence of gpio properties?
->
-
-Yes, would you prefer I get rid of this propriety and simply check if
-gpio properties are absence or not in the driver ?
-
-In such case I'll do in next version.
-
->> +
->> +Example (poll):
->> +
->> +     ucs1002: ucs1002@57 {
->> +             compatible = "microchip,ucs1002";
->> +             reg = <0x57>;
->> +             microchip,current-limit = <2000000>;
->> +             microchip,pin-ignore;
->> +     };
->> +
->> +Example (interrupts + pin control):
->> +
->> +     ucs1002: ucs1002@57 {
->> +             compatible = "microchip,ucs1002";
->> +             reg = <0x57>;
->> +             interrupt-parent = <&gpio0>;
->> +             interrupts = <30 0>, <31 0>;
->> +             microchip,current-limit = <2000000>;
->> +             em-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
->> +             m1-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
->> +             m2-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
->> +             pwr-gpios = <&gpio1 19 0>;
->> +     };
->> --
->> 2.1.0
->>
-
-Best regards,
-Enric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6CiAg
+LSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAxLjAgc3RhbmRhcmQgY29tcGxp
+YW50IHRyYW5zbWl0dGVyCiAgLSBTdXBwb3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRlZmlu
+ZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMKICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBv
+cnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IgZGVwdGggaW4gUkdC
+CiAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRzIFBDTSwgRG9sYnkgRGlnaXRhbCwgRFRTIGRpZ2l0
+YWwgYXVkaW8gdHJhbnNtaXNzaW9uCiAgICAoMzItMTkya0h6IEZzKSB1c2luZyBJRUM2MDk1OCBh
+bmQgSUVDIDYxOTM3CiAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1cHBv
+cnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyIENvbnRyb2xsZQoKQ2hhbmdlcyBp
+biB2ODoKLSBEb24ndCBjaGVjayB3aGV0aGVyIGVuY29kZXIgb3V0cHV0IGZvcm1hdCBpcyBSR0Ig
+Y29sb3JzcGFjZSwgY2F1c2UgZHJpdmVyCiAgZGVmYXVsdCBjb25maWd1cmUgdGhlIG91dHB1dCBj
+b2xvcnNwYWNlIHRvIFJHQi4gKFpoZW5nWWFuZykKLSBDb3JyZWN0IHRoZSBjaGVjayBjb25kaXRp
+b24gaW4gaW5ub19oZG1pX2NvbmZpZ192aWRlb19jc2MoKSAoWmhlbmdZYW5nKQogICAgLSBpZiAo
+ZGF0YS0+ZW5jX291dF9mb3JtYXQgPT0gZGF0YS0+ZW5jX291dF9mb3JtYXQpIHsKICAgICsgaWYg
+KGRhdGEtPmVuY19pbl9mb3JtYXQgPT0gZGF0YS0+ZW5jX291dF9mb3JtYXQpIHsKCkNoYW5nZXMg
+aW4gdjc6Ci0gQ29ycmVjdCB0aGUgbW9kdWxlIGxpY25lc2Ugc3RhdGVtZW50IChQYXVsKQogICAg
+IC0gTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwogICAgICsgTU9EVUxFX0xJQ0VOU0UoIkdQTHYyIik7
+Ci0gU3RhcnQgaW5kZW50YXRpb24gd2l0aCB0YWJzIGFuZCBmaXggdGhlIG1pc3NwZWxsIGluIEtj
+b25maWcgKFBhdWwpCi0gQ2FycnkgdGhlIGxvc3QgZGV2aWNlLWJpbmRpbmcgZG9jdW1lbnQgKEhl
+aWtvKQoKQ2hhbmdlcyBpbiB2NjoKLSBSZWJhc2UgdGhlIE1ha2VmaWxlL0tjb25maWcgZmlsZXMg
+d2hpY2ggYWRkIGJ5IENocmlzJ3Mgcm9ja2NoaXAtbWlwaSBkcml2ZXIgKENhZXNlcikKCkNoYW5n
+ZXMgaW4gdjU6Ci0gVXNlIGhkbWlfaW5mb2ZyYW1lIGhlbHBlciBmdW5jdGlvbnMgdG8gcGFja2Vk
+IHRoZSBpbmZvZnJhbWUgKFJ1c3NlbGwpCi0gUmVtb3ZlIHRoZSB1bnVzZWQgZG91YmxlIHdhaXRf
+Zm9yX2NvbXBsZXRpb25fdGltZW91dCBmb3IgZGRjIHRyYW5zZmVyIChSdXNzZWxsKQotIFJlbW92
+ZSB0aGUgdW51c2VkIGxvY2FsIHZhcmlhYmxlIGluICJpbm5vX2hkbWlfaTJjX3dyaXRlKCkiIGZ1
+bmN0aW9uIChSdXNzZWxsKQoKQ2hhbmdlcyBpbiB2NDoKLSBNb2RpZnkgdGhlIGNvbW1pdCB0aXRs
+ZSAiZHJtL3JvY2tjaGlwOiBoZG1pOiAuLi4iIChNYXJrKQotIENvcnJlY3QgdGhlICJES01TIiB0
+byAiRFBNUyIgKE1hcmspCi0gRml4IG92ZXIgODAgY2hhcmFjdGVycyBwcm9ibGVtcyAoTWFyaykK
+LSBSZW1vdmUgZW5jb2RlciAucHJlcGFyZS8uY29tbWl0IGhlbHBlciBmdW5jdGlvbnMsIGFuZCBt
+b3ZlIHRoZSB2b3AgbW9kZQpjb25maWd1cmUgZnVuY3Rpb24gaW50byBlbmNvZGVyIC5lbmFibGUg
+aGVscGVyIGZ1bmN0aW9ucy4gKE1hcmspCgpDaGFuZ2VzIGluIHYzOgotIFVzZSBlbmNvZGVyIGVu
+YWJsZS9kaXNhYmxlIGZ1bmN0aW9uLCBhbmQgcmVtb3ZlIHRoZSBlbmNvZGVyIERQTVMgZnVuY3Rp
+b24KLSBLZWVwIEhETUkgUExMIHBvd2VyIG9uIGluIHN0YW5kYnkgbW9kZQoKQ2hhbmdlcyBpbiB2
+MjoKLSBVc2luZyBEUk0gYXRvbWljIGhlbHBlciBmdW5jdGlvbnMgZm9yIGNvbm5lY3RvciBpbml0
+IChNYXJrKQotIFJlbW92ZSAiaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNvZGVyOyIgKE1h
+cmspCi0gQWRkIHRoZSBBY2tlZC1ieSB0YWdzIGZyb20gUm9iCi0gQ29ycmVjdCB0aGUgbWlzc3Bl
+bGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgpZYWtpciBZYW5nICgyKToKICBkcm0vcm9ja2No
+aXA6IGhkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1cHBvcnQKICBkdC1iaW5kaW5nczogYWRk
+IGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1JIG9uIFJvY2tjaGlwIHBsYXRmb3JtCgogLi4u
+L2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dCAgICAgICAgfCAgNTAgKysK
+IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA4
+ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwg
+ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAg
+IHwgOTM5ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lu
+bm9faGRtaS5oICAgICAgICAgICAgICAgfCAzNjIgKysrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwg
+MTM2MCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAoK
+LS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
