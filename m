@@ -1,61 +1,77 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Fri, 29 Jan 2016 08:50:19 -0300
-Message-ID: <CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Fri, 29 Jan 2016 13:03:37 +0100
+Message-ID: <20160129120337.GS4130@sirena.org.uk>
 References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
-	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
-	<20160129001603.GM4130@sirena.org.uk>
-	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
-	<20160129113518.GQ4130@sirena.org.uk>
+ <1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+ <20160129001603.GM4130@sirena.org.uk>
+ <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+ <20160129113518.GQ4130@sirena.org.uk>
+ <CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160129113518.GQ4130-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1462382587272111873=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ferre,
+ Nicolas" <Nicolas.FERRE@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, "Yang,
+ Wenyou" <Wenyou.Yang@atmel.com>, Peter Korsgaard <jacmet@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-On Fri, Jan 29, 2016 at 8:35 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Jan 29, 2016 at 01:20:08AM +0000, Yang, Wenyou wrote:
->
->> > > +static const struct of_device_id act8945a_pmic_of_match[] = {
->> > > + { .compatible = "active-semi,act8945a-regulator" },
->> > > + { },
->> > > +};
->> > > +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
->
->> > This seems mostly OK but why do we have a compatible string here - shouldn't
->> > the MFD be able to instantiate the regulator function without needing this?
->
->> Because I got feedback from Javier for the act8945a-charger patches of this MFD series,
->> He said missing the OF match table will cause the module autoloading broken.
->
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398113.html
->
->> What do you think about it?
->
-> If then device is not being loaded from the DT (and it shouldn't be, the
-> device looks like it should be instantiated directly by the MFD as it
-> can't exist separately to that MFD) an OF table will do nothing.
+--===============1462382587272111873==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="flpRHSNNLnUanxKW"
+Content-Disposition: inline
 
-Then he should remove the .of_compatible from the MFD cell definition.
 
-Otherwise the MFD core will assign an of_node to this device in
-mfd_add_device(), making the platform core to believe the device was
-instantiated by OF. So an OF modalias uevent will be reported to load
-the module and the OF table should be used for matching the device
-with the driver.
+--flpRHSNNLnUanxKW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-IOW, the MFD and regulator driver have to agree on this. Either
-everything should have OF or platform information, both work but
-mixing these as it was on a previous version doesn't.
+On Fri, Jan 29, 2016 at 08:50:19AM -0300, Javier Martinez Canillas wrote:
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Then he should remove the .of_compatible from the MFD cell definition.
+
+Yes, obviously.
+
+--flpRHSNNLnUanxKW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWq1UEAAoJECTWi3JdVIfQa+wH/j/EQ8hiDsporV11PMJS5xNl
+bKsSr6uxSVTBJr7DzGzov4rkb/L8E6j9XVSO8Rs9mJSS4s8gdh5edMpAdAWkwR2r
+35bcAEvwryZBRGo73sw3lKvIc/wasJa90xMbdnFbHq6RZ5vSAwMPMKbNuJphV+LH
+SrETGozU4/5MYRzF2F4X6E9/BahM3Eww8A/9ROkjesrYRkWdE6F2PvScodMYHl/M
+7gb2LfkqxvW7AKlEkPuQQXcVkz3C+7BqzvrULNjEkt4b4HxdLXNxEmIE+ZAXXfTX
+9ynC/xBj6XdVp96Qwymo39odD2ka9TM/m2oGO3BkvG5YmuURMKxH7r6ZXOmJvEc=
+=B7Ii
+-----END PGP SIGNATURE-----
+
+--flpRHSNNLnUanxKW--
+
+
+--===============1462382587272111873==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1462382587272111873==--
