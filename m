@@ -1,7 +1,7 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V13 08/10] dma: qcom_hidma: read the channel id from HW
-Date: Fri, 29 Jan 2016 17:35:11 -0500
-Message-ID: <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V13 10/10] vfio, platform: add QTI HIDMA reset driver
+Date: Fri, 29 Jan 2016 17:35:13 -0500
+Message-ID: <1454106914-15857-11-git-send-email-okaya@codeaurora.org>
 References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
@@ -10,113 +10,157 @@ To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur
 Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Removing the flexibility to choose the event channel as there is no real
-use case right now. We have been using the values in ACPI that match the HW
-defaults. OS is reading the event-channel from the HW register now.
+In situations where the userspace driver is stopped abnormally and the
+VFIO platform device is released, the assigned HW device currently is
+left running. As a consequence the HW device might continue issuing IRQs
+and performing DMA accesses.
+
+This patch is implementing a reset driver for HIDMA platform driver.
+This gets called by the VFIO platform reset interface.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  3 --
- drivers/dma/qcom/hidma.c                           | 39 +---------------------
- 2 files changed, 1 insertion(+), 41 deletions(-)
+ drivers/vfio/platform/reset/Kconfig                |  9 ++
+ drivers/vfio/platform/reset/Makefile               |  2 +
+ .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
+ 3 files changed, 110 insertions(+)
+ create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index e3677a5..fd5618b 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -51,7 +51,6 @@ Required properties:
- - reg: Addresses for the transfer and event channel
- - interrupts: Should contain the event interrupt
- - desc-count: Number of asynchronous requests this channel can handle
--- channel-index: The HW event channel completions will be delivered.
- - iommus: required a iommu node
+diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
+index 70cccc5..d02b3b5 100644
+--- a/drivers/vfio/platform/reset/Kconfig
++++ b/drivers/vfio/platform/reset/Kconfig
+@@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
+ 	  Enables the VFIO platform driver to handle reset for AMD XGBE
  
- Example:
-@@ -75,7 +74,6 @@ Hypervisor OS configuration:
- 			interrupts = <0 389 0>;
- 			desc-count = <10>;
- 			iommus = <&system_mmu>;
--			channel-index = <4>;
- 		};
- 	};
+ 	  If you don't know what to do here, say N.
++
++config VFIO_PLATFORM_QCOMHIDMA_RESET
++	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
++	depends on VFIO_PLATFORM
++	help
++	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
++	  HIDMA Channel.
++
++	  If you don't know what to do here, say N.
+diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
+index 93f4e23..ec7748a 100644
+--- a/drivers/vfio/platform/reset/Makefile
++++ b/drivers/vfio/platform/reset/Makefile
+@@ -1,7 +1,9 @@
+ vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
+ vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
++vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
  
-@@ -87,6 +85,5 @@ Guest OS configuration:
- 		      <0 0x5c0b0000 0x0 0x1000>;
- 		interrupts = <0 389 0>;
- 		desc-count = <10>;
--		channel-index = <4>;
- 		iommus = <&system_mmu>;
- 	};
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index ac20bdb..7180367 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -101,26 +101,6 @@ static unsigned int nr_desc_prm;
- module_param(nr_desc_prm, uint, 0644);
- MODULE_PARM_DESC(nr_desc_prm, "number of descriptors (default: 0)");
+ ccflags-y += -Idrivers/vfio/platform
  
--#define HIDMA_MAX_CHANNELS	64
--static int channel_idx[HIDMA_MAX_CHANNELS] = {
--	[0 ... (HIDMA_MAX_CHANNELS - 1)] = -1
--};
--
--/*
-- * Each DMA channel is associated with an event channel for interrupt
-- * delivery. The event channel index usually comes from the firmware through
-- * ACPI/DT. When a HIDMA channel is executed in the guest machine context (QEMU)
-- * the device tree gets auto-generated based on the memory and IRQ resources
-- * this driver uses on the host machine. Any device specific paraemeter such as
-- * channel-index gets ignored by the QEMU.
-- * We are using this command line parameter to pass the event channel index to
-- * the guest machine.
-- */
--static unsigned int num_channel_idx;
--module_param_array_named(channel_idx, channel_idx, int, &num_channel_idx,
--			 0644);
--MODULE_PARM_DESC(channel_idx, "channel index array for the notifications");
--static atomic_t channel_ref_count;
- 
- /* process completed descriptors */
- static void hidma_process_completed(struct hidma_chan *mchan)
-@@ -592,7 +572,6 @@ static int hidma_probe(struct platform_device *pdev)
- 	struct resource *trca_resource;
- 	struct resource *evca_resource;
- 	int chirq;
--	int current_channel_index = atomic_read(&channel_ref_count);
- 	void __iomem *evca;
- 	void __iomem *trca;
- 	int rc;
-@@ -668,22 +647,7 @@ static int hidma_probe(struct platform_device *pdev)
- 		goto dmafree;
- 	}
- 
--	if (current_channel_index > HIDMA_MAX_CHANNELS) {
--		rc = -EINVAL;
--		goto dmafree;
--	}
--
--	dmadev->chidx = -1;
--	device_property_read_u32(&pdev->dev, "channel-index", &dmadev->chidx);
--
--	/* kernel command line override for the guest machine */
--	if (channel_idx[current_channel_index] != -1)
--		dmadev->chidx = channel_idx[current_channel_index];
--
--	if (dmadev->chidx == -1) {
--		rc = -EINVAL;
--		goto dmafree;
--	}
-+	dmadev->chidx = readl(dmadev->dev_trca + 0x28);
- 
- 	/* Set DMA mask to 64 bits. */
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-@@ -724,7 +688,6 @@ static int hidma_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, dmadev);
- 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
- 	pm_runtime_put_autosuspend(dmadev->ddev.dev);
--	atomic_inc(&channel_ref_count);
- 	return 0;
- 
- uninit:
+ obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
++obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
+ obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
+diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+new file mode 100644
+index 0000000..4e7a59c
+--- /dev/null
++++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+@@ -0,0 +1,99 @@
++/*
++ * Qualcomm Technologies HIDMA VFIO Reset Driver
++ *
++ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/device.h>
++#include <linux/iopoll.h>
++
++#include "vfio_platform_private.h"
++
++#define TRCA_CTRLSTS_OFFSET		0x000
++#define EVCA_CTRLSTS_OFFSET		0x000
++
++#define CH_CONTROL_MASK		GENMASK(7, 0)
++#define CH_STATE_MASK			GENMASK(7, 0)
++#define CH_STATE_BIT_POS		0x8
++
++#define HIDMA_CH_STATE(val)	\
++	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
++
++#define EVCA_IRQ_EN_OFFSET		0x110
++
++#define CH_RESET			9
++#define CH_DISABLED			0
++
++int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
++{
++	struct vfio_platform_region trreg;
++	struct vfio_platform_region evreg;
++	u32 val;
++	int ret;
++
++	if (vdev->num_regions != 2)
++		return -ENODEV;
++
++	trreg = vdev->regions[0];
++	if (!trreg.ioaddr) {
++		trreg.ioaddr =
++			ioremap_nocache(trreg.addr, trreg.size);
++		if (!trreg.ioaddr)
++			return -ENOMEM;
++	}
++
++	evreg = vdev->regions[1];
++	if (!evreg.ioaddr) {
++		evreg.ioaddr =
++			ioremap_nocache(evreg.addr, evreg.size);
++		if (!evreg.ioaddr)
++			return -ENOMEM;
++	}
++
++	/* disable IRQ */
++	writel(0, evreg.ioaddr + EVCA_IRQ_EN_OFFSET);
++
++	/* reset both transfer and event channels */
++	val = readl(trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(trreg.ioaddr + TRCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	val = readl(evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(evreg.ioaddr + EVCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	pr_info("HIDMA channel reset\n");
++	return 0;
++}
++module_vfio_reset_handler("qcom,hidma", NULL,
++			  vfio_platform_qcomhidma_reset);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
 -- 
 1.8.2.1
