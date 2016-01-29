@@ -1,142 +1,43 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 06/14] soc: tegra: pmc: Fix checking of valid partitions
-Date: Fri, 29 Jan 2016 10:08:30 -0700
-Message-ID: <CANLsYkxY5P2wQxGev0veN39nD-1cTVkZCVpX9jca7da39JJpWg@mail.gmail.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
-	<1453998832-27383-7-git-send-email-jonathanh@nvidia.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add support for Sigma Designs
+ SMP86xx/SMP87xx interrupt controller
+Date: Fri, 29 Jan 2016 17:10:22 +0000
+Message-ID: <56AB9CFE.6080305@arm.com>
+References: <1453313237-18570-1-git-send-email-mans@mansr.com>
+ <1453313237-18570-2-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453998832-27383-7-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453313237-18570-2-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28 January 2016 at 09:33, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> The tegra power partitions are referenced by a numerical ID which are
-> the same values programmed into the PMC registers for controlling the
-> partition. For a given device, the valid partition IDs may not be
-> contiguous and so simply checking that an ID is not greater than the
-> maximum ID supported may not mean it is valid. Fix this by adding a
-> bitmap for representing the valid partitions of a device and add a
-> helper function will test if the partition is valid.
->
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 20/01/16 18:07, Mans Rullgard wrote:
+> This adds support for the secondary interrupt controller used in Sigma
+> Designs SMP86xx and SMP87xx chips.
+> 
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/soc/tegra/pmc.c | 21 +++++++++++++++++----
->  include/soc/tegra/pmc.h |  1 +
->  2 files changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 35ee60fd17be..032dd5c17130 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -132,6 +132,7 @@ struct tegra_pmc_soc {
->   * @cpu_pwr_good_en: CPU power good signal is enabled
->   * @lp0_vec_phys: physical base address of the LP0 warm boot code
->   * @lp0_vec_size: size of the LP0 warm boot code
-> + * @powergates_valid: Bitmap of valid power gates
->   * @powergates_lock: mutex for power gate register access
->   */
->  struct tegra_pmc {
-> @@ -156,6 +157,7 @@ struct tegra_pmc {
->         bool cpu_pwr_good_en;
->         u32 lp0_vec_phys;
->         u32 lp0_vec_size;
-> +       DECLARE_BITMAP(powergates_valid, TEGRA_POWERGATE_MAX);
->
->         struct mutex powergates_lock;
->  };
-> @@ -180,6 +182,11 @@ static inline bool tegra_powergate_state(int id)
->         return (tegra_pmc_readl(PWRGATE_STATUS) & BIT(id)) != 0;
->  }
->
-> +static inline bool tegra_powergate_is_valid(int id)
-> +{
-> +       return test_bit(id, pmc->powergates_valid);
-> +}
-> +
->  /**
->   * tegra_powergate_set() - set the state of a partition
->   * @id: partition ID
-> @@ -213,7 +220,7 @@ static int tegra_powergate_set(unsigned int id, bool new_state)
->   */
->  int tegra_powergate_power_on(unsigned int id)
->  {
-> -       if (!pmc->soc || id >= pmc->soc->num_powergates)
-> +       if (!tegra_powergate_is_valid(id))
->                 return -EINVAL;
+> Changes from v3:
+> - use of_address_to_resource() rather accessing "reg" property directly
+> 
+> Boot tested on SMP8643 (tango3) and SMP8759 (tango4)
+> ---
+>  drivers/irqchip/Kconfig     |   5 +
+>  drivers/irqchip/Makefile    |   1 +
+>  drivers/irqchip/irq-tango.c | 232 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 238 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-tango.c
 
-The "!pmc-soc" condition is no longer needed?  If so the changelog
-should reflect that or a new patch that deals with just that should be
-etched.  The same comment applies for the rest of the patch.
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
->
->         return tegra_powergate_set(id, true);
-> @@ -225,7 +232,7 @@ int tegra_powergate_power_on(unsigned int id)
->   */
->  int tegra_powergate_power_off(unsigned int id)
->  {
-> -       if (!pmc->soc || id >= pmc->soc->num_powergates)
-> +       if (!tegra_powergate_is_valid(id))
->                 return -EINVAL;
->
->         return tegra_powergate_set(id, false);
-> @@ -240,7 +247,7 @@ int tegra_powergate_is_powered(unsigned int id)
->  {
->         int status;
->
-> -       if (!pmc->soc || id >= pmc->soc->num_powergates)
-> +       if (!tegra_powergate_is_valid(id))
->                 return -EINVAL;
->
->         mutex_lock(&pmc->powergates_lock);
-> @@ -258,7 +265,7 @@ int tegra_powergate_remove_clamping(unsigned int id)
->  {
->         u32 mask;
->
-> -       if (!pmc->soc || id >= pmc->soc->num_powergates)
-> +       if (!tegra_powergate_is_valid(id))
->                 return -EINVAL;
->
->         mutex_lock(&pmc->powergates_lock);
-> @@ -1118,6 +1125,7 @@ static int __init tegra_pmc_early_init(void)
->         const struct of_device_id *match;
->         struct device_node *np;
->         struct resource regs;
-> +       unsigned int i;
->         bool invert;
->         u32 value;
->
-> @@ -1167,6 +1175,11 @@ static int __init tegra_pmc_early_init(void)
->                 return -ENXIO;
->         }
->
-> +       /* Create a bit-mask of the valid partitions */
-> +       for (i = 0; i < pmc->soc->num_powergates; i++)
-> +               if (pmc->soc->powergates[i])
-> +                       set_bit(i, pmc->powergates_valid);
-> +
->         mutex_init(&pmc->powergates_lock);
->
->         /*
-> diff --git a/include/soc/tegra/pmc.h b/include/soc/tegra/pmc.h
-> index 07e332dd44fb..e9e53473a63e 100644
-> --- a/include/soc/tegra/pmc.h
-> +++ b/include/soc/tegra/pmc.h
-> @@ -72,6 +72,7 @@ int tegra_pmc_cpu_remove_clamping(unsigned int cpuid);
->  #define TEGRA_POWERGATE_AUD    27
->  #define TEGRA_POWERGATE_DFD    28
->  #define TEGRA_POWERGATE_VE2    29
-> +#define TEGRA_POWERGATE_MAX    TEGRA_POWERGATE_VE2
->
->  #define TEGRA_POWERGATE_3D0    TEGRA_POWERGATE_3D
->
-> --
-> 2.1.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
