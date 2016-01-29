@@ -1,166 +1,132 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V13 10/10] vfio, platform: add QTI HIDMA reset driver
-Date: Fri, 29 Jan 2016 17:35:13 -0500
-Message-ID: <1454106914-15857-11-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V13 02/10] dma: hidma: Add Device Tree binding
+Date: Fri, 29 Jan 2016 17:35:05 -0500
+Message-ID: <1454106914-15857-3-git-send-email-okaya@codeaurora.org>
 References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
+Cc: vikrams@codeaurora.org, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, linux-arm-kernel@lists.infradead.org, agross@codeaurora.org, shankerd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-In situations where the userspace driver is stopped abnormally and the
-VFIO platform device is released, the assigned HW device currently is
-left running. As a consequence the HW device might continue issuing IRQs
-and performing DMA accesses.
-
-This patch is implementing a reset driver for HIDMA platform driver.
-This gets called by the VFIO platform reset interface.
+Add documentation for the Qualcomm Technologies HIDMA binding.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/vfio/platform/reset/Kconfig                |  9 ++
- drivers/vfio/platform/reset/Makefile               |  2 +
- .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 
-diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
-index 70cccc5..d02b3b5 100644
---- a/drivers/vfio/platform/reset/Kconfig
-+++ b/drivers/vfio/platform/reset/Kconfig
-@@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
- 	  Enables the VFIO platform driver to handle reset for AMD XGBE
- 
- 	  If you don't know what to do here, say N.
-+
-+config VFIO_PLATFORM_QCOMHIDMA_RESET
-+	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
-+	depends on VFIO_PLATFORM
-+	help
-+	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
-+	  HIDMA Channel.
-+
-+	  If you don't know what to do here, say N.
-diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
-index 93f4e23..ec7748a 100644
---- a/drivers/vfio/platform/reset/Makefile
-+++ b/drivers/vfio/platform/reset/Makefile
-@@ -1,7 +1,9 @@
- vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
- vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
-+vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
- 
- ccflags-y += -Idrivers/vfio/platform
- 
- obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
-+obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
- obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
-diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 new file mode 100644
-index 0000000..4e7a59c
+index 0000000..e3677a5
 --- /dev/null
-+++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
-@@ -0,0 +1,99 @@
-+/*
-+ * Qualcomm Technologies HIDMA VFIO Reset Driver
-+ *
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -0,0 +1,92 @@
++Qualcomm Technologies HIDMA Management interface
 +
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/device.h>
-+#include <linux/iopoll.h>
++Qualcomm Technologies HIDMA is a high speed DMA device. It only supports
++memcpy and memset capabilities. It has been designed for virtualized
++environments.
 +
-+#include "vfio_platform_private.h"
++Each HIDMA HW instance consists of multiple DMA channels. These channels
++share the same bandwidth. The bandwidth utilization can be parititioned
++among channels based on the priority and weight assignments.
 +
-+#define TRCA_CTRLSTS_OFFSET		0x000
-+#define EVCA_CTRLSTS_OFFSET		0x000
++There are only two priority levels and 15 weigh assignments possible.
 +
-+#define CH_CONTROL_MASK		GENMASK(7, 0)
-+#define CH_STATE_MASK			GENMASK(7, 0)
-+#define CH_STATE_BIT_POS		0x8
++Other parameters here determine how much of the system bus this HIDMA
++instance can use like maximum read/write request and and number of bytes to
++read/write in a single burst.
 +
-+#define HIDMA_CH_STATE(val)	\
-+	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
++Main node required properties:
++- compatible: "qcom,hidma-mgmt-1.0";
++- reg: Address range for DMA device
++- dma-channels: Number of channels supported by this DMA controller.
++- max-write-burst-bytes: Maximum write burst in bytes that HIDMA can
++  occupy the bus for in a single transaction. A memcpy requested is
++  fragmented to multiples of this amount. This parameter is used while
++  writing into destination memory. Setting this value incorrectly can
++  starve other peripherals in the system.
++- max-read-burst-bytes: Maximum read burst in bytes that HIDMA can
++  occupy the bus for in a single transaction. A memcpy request is
++  fragmented to multiples of this amount. This parameter is used while
++  reading the source memory. Setting this value incorrectly can starve
++  other peripherals in the system.
++- max-write-transactions: This value is how many times a write burst is
++  applied back to back while writing to the destination before yielding
++  the bus.
++- max-read-transactions: This value is how many times a read burst is
++  applied back to back while reading the source before yielding the bus.
++- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
++  Once a reset is applied to the HW, HW starts a timer for reset operation
++  to confirm. If reset is not completed within this time, HW reports reset
++  failure.
 +
-+#define EVCA_IRQ_EN_OFFSET		0x110
++Sub-nodes:
 +
-+#define CH_RESET			9
-+#define CH_DISABLED			0
++HIDMA has one or more DMA channels that are used to move data from one
++memory location to another.
 +
-+int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
-+{
-+	struct vfio_platform_region trreg;
-+	struct vfio_platform_region evreg;
-+	u32 val;
-+	int ret;
++When the OS is not in control of the management interface (i.e. it's a guest),
++the channel nodes appear on their own, not under a management node.
 +
-+	if (vdev->num_regions != 2)
-+		return -ENODEV;
++Required properties:
++- compatible: must contain "qcom,hidma-1.0"
++- reg: Addresses for the transfer and event channel
++- interrupts: Should contain the event interrupt
++- desc-count: Number of asynchronous requests this channel can handle
++- channel-index: The HW event channel completions will be delivered.
++- iommus: required a iommu node
 +
-+	trreg = vdev->regions[0];
-+	if (!trreg.ioaddr) {
-+		trreg.ioaddr =
-+			ioremap_nocache(trreg.addr, trreg.size);
-+		if (!trreg.ioaddr)
-+			return -ENOMEM;
-+	}
++Example:
 +
-+	evreg = vdev->regions[1];
-+	if (!evreg.ioaddr) {
-+		evreg.ioaddr =
-+			ioremap_nocache(evreg.addr, evreg.size);
-+		if (!evreg.ioaddr)
-+			return -ENOMEM;
-+	}
++Hypervisor OS configuration:
 +
-+	/* disable IRQ */
-+	writel(0, evreg.ioaddr + EVCA_IRQ_EN_OFFSET);
++	hidma-mgmt@f9984000 = {
++		compatible = "qcom,hidma-mgmt-1.0";
++		reg = <0xf9984000 0x15000>;
++		dma-channels = <6>;
++		max-write-burst-bytes = <1024>;
++		max-read-burst-bytes = <1024>;
++		max-write-transactions = <31>;
++		max-read-transactions = <31>;
++		channel-reset-timeout-cycles = <0x500>;
 +
-+	/* reset both transfer and event channels */
-+	val = readl(trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
-+	val &= ~(CH_CONTROL_MASK << 16);
-+	val |= CH_RESET << 16;
-+	writel(val, trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
++		hidma_24: dma-controller@0x5c050000 {
++			compatible = "qcom,hidma-1.0";
++			reg = <0 0x5c050000 0x0 0x1000>,
++			      <0 0x5c0b0000 0x0 0x1000>;
++			interrupts = <0 389 0>;
++			desc-count = <10>;
++			iommus = <&system_mmu>;
++			channel-index = <4>;
++		};
++	};
 +
-+	ret = readl_poll_timeout(trreg.ioaddr + TRCA_CTRLSTS_OFFSET, val,
-+				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-+				 10000);
-+	if (ret)
-+		return ret;
++Guest OS configuration:
 +
-+	val = readl(evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
-+	val &= ~(CH_CONTROL_MASK << 16);
-+	val |= CH_RESET << 16;
-+	writel(val, evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
-+
-+	ret = readl_poll_timeout(evreg.ioaddr + EVCA_CTRLSTS_OFFSET, val,
-+				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-+				 10000);
-+	if (ret)
-+		return ret;
-+
-+	pr_info("HIDMA channel reset\n");
-+	return 0;
-+}
-+module_vfio_reset_handler("qcom,hidma", NULL,
-+			  vfio_platform_qcomhidma_reset);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
++	hidma_24: dma-controller@0x5c050000 {
++		compatible = "qcom,hidma-1.0";
++		reg = <0 0x5c050000 0x0 0x1000>,
++		      <0 0x5c0b0000 0x0 0x1000>;
++		interrupts = <0 389 0>;
++		desc-count = <10>;
++		channel-index = <4>;
++		iommus = <&system_mmu>;
++	};
 -- 
 1.8.2.1
