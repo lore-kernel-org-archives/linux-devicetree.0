@@ -1,54 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
- ACT8945A
-Date: Fri, 29 Jan 2016 01:16:03 +0100
-Message-ID: <20160129001603.GM4130@sirena.org.uk>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
- <1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+From: Laison Computech Inc <drogaosuper18-Iyw5HrWPTaRrAbSHxf+XXV/I71DsQ//L@public.gmane.org>
+Subject: NEW ARRIVALS, CISCO,CPU's,Memory, LAPTOP AND AVAYA
+Date: Thu, 28 Jan 2016 22:07:30 -0200 (BRST)
+Message-ID: <1048295648.15443341.1454026050992.JavaMail.root__43716.4872455925$1454028410$gmane$org@drogacenter.com.br>
+Reply-To: Laison Computech Inc <sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GeONROBiaq1zPAtT"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453863463-30515-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+ Dear Sir/Madam,
 
---GeONROBiaq1zPAtT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ Clean tested working pulls CPUs and QTYs in stock.
 
-On Wed, Jan 27, 2016 at 10:57:42AM +0800, Wenyou Yang wrote:
+ 115 X X5650
+ 65 X E5410
+ 75 X X5660
+ 145 X E5530
+ 100 X E5645
+ 40 X X5680
+ 75 X X5690
 
-> +static const struct of_device_id act8945a_pmic_of_match[] = {
-> +	{ .compatible = "active-semi,act8945a-regulator" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
+ Brand new sealed IP phones and QTYs in stock.
 
-This seems mostly OK but why do we have a compatible string here -
-shouldn't the MFD be able to instantiate the regulator function without
-needing this?
+ 55 x CP-7937G
+ 77 x CP-7942G
+ 54 x CP-7945G
+ 75 x CP-7962G
+ ......
+ 45 x Avaya 9630
+ 65 x Avaya 9641
+ 55 x Avaya 9640
 
---GeONROBiaq1zPAtT
-Content-Type: application/pgp-signature; name="signature.asc"
+ All NIB.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ Here is our current stock list.
 
-iQEcBAEBCAAGBQJWqq9BAAoJECTWi3JdVIfQ4vYH/3qOtD2p46jimDLXWmrFSVDV
-73raJO0RD5tQrG4WBPXzcEyuuIltS7ntlmcQVzU+3cQSL2FbEUwFKfciG843nFWY
-bR0p7jcLuTc49r2HpDgytkC8K81pckjgSDq1HqGGy00u7UKj/v+52ULMOpfqr2Wr
-Wd1nJNKL0Qw6HDnjWzyRHKE5HbEQ/UObRhHGOawTy6POhJIOnhOSyDGPP8dCsdCI
-lnr3/VSlw+7KXQfziZ/dKuWUz9upcsi9xDw2UFROCUMDMtH1GHSzdPMxTMHh7qGz
-D+vqMfOVJzR1UTgPVwvmpftHz7A4i4HT3BPq7VCQda8FtiX/UAzXx4EoUI7MFDQ=
-=P57e
------END PGP SIGNATURE-----
+ SSD drives and 750 gig 2.5" sata drives
 
---GeONROBiaq1zPAtT--
+ We also have
+ 250 x i5 dell
+ 133 x HP
+ 360 x Lenevo
+ all grade A
+
+ Here is the qty in stock for laptops
+
+ 150 x E6500 Dell Latitude E6500 Core 2 Duo 2.80GHz T9600 4GB 160GB DVD+/-RW Win 7
+ 60 x E6510 Dell Ltitude E6510. 15.6" Intel Core i5- M520 @ 2.40GHz. 4GB.  320GB DVD+/-RW Win 7
+ 30 X 8530P HP EliteBook 8530p 15.4" Laptop 2.53GHz Core 2 Duo T9400, 4GB RAM, 160GB HDD, Win
+ 100 x 8740W HP EliteBook 8740w 17" 2.4Ghz Core i5 6GB 250GB Win 7 Pr
+ 45 x 8760W HP EliteBook 8760W 17.3" 2nd Gen Intel Core i7 2.70GHz 8GB 320GB Windows 7 Pro
+ 50 x DELL 6520Dell latitude e6520 15.6" i5-2520M 2.5Ghz, 8GB Ram, 500GB HD  Win 7 @ $115
+ 120 x DELL 6420 Laptop Dell Latitude E6420 14" Intel Core i5 2.4Ghz 4GB RAM 250GB HDD DVD Win 7
+ 150 x T410 Lenovo ThinkPad Laptop T410s 14.1" 2.40GHz Core i5 4GB RAM 160GB Win 7
+ 180 x 8440P HP EliteBook 8440p 14" M520 Core i5 2.4GHz 4GB 250GB Win 7
+
+
+ Let me know if you're interested. We are very open to offers and willing to work with you to make sure that we have a deal.
+
+ Thank You
+ Barbara Johnson
+ Laison Computech Inc
+ 210 N Scoring Ave,
+ Rialto California, 92376
+ Tel: +1-657-232-7047
+ Fax: +1-347-214-047
+sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
