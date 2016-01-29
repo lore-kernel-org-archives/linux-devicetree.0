@@ -1,75 +1,56 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/6] arm64: dts: hip05: Append gpio nodes
-Date: Fri, 29 Jan 2016 16:39:04 +0800
-Message-ID: <1454056746-5048-5-git-send-email-wangkefeng.wang@huawei.com>
-References: <1454056746-5048-1-git-send-email-wangkefeng.wang@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: [PATCH 2/2] doc: dt: add documentation for alphascale,asm9260-rtc
+Date: Fri, 29 Jan 2016 09:40:02 +0100
+Message-ID: <1454056802-23386-3-git-send-email-linux@rempel-privat.de>
+References: <1454056802-23386-1-git-send-email-linux@rempel-privat.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454056746-5048-1-git-send-email-wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1454056802-23386-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two dw GPIO controllers in hip05 peri sub, this patch
-adds the corresponding device tree nodes.
+Document Alphascale asm9260 RTC bindings
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hip05.dtsi | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../bindings/rtc/alphascale,asm9260-rtc.txt        | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-index c1b1a32..6319ff3 100644
---- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-@@ -322,5 +322,43 @@
- 			reg-io-width = <4>;
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+new file mode 100644
+index 0000000..2c0ff3c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+@@ -0,0 +1,25 @@
++* Alphascale asm9260 SoC Real Time Clock
 +
-+		peri_gpio0: gpio@802e0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x802e0000 0x0 0x10000>;
-+			status = "disabled";
++Required properties:
++- compatible: Should be "alphascale,asm9260-rtc"
++- reg: Physical base address of the controller and length
++       of memory mapped region.
++- interrupts: IRQ line for the RTC.
++- clocks: Reference to the clock entry.
++- clock-names: should contain:
++  * "ahb" for the SoC RTC clock
 +
-+			porta: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
++Optional:
++- calibration: calibration value for 1 sec period.
++		Max value for forward calibration is 0x1ffff (131071),
++		Min value for backward calibration is 0xfffe0001 (-131071).
 +
-+		peri_gpio1: gpio@802f0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x802f0000 0x0 0x10000>;
-+			status = "disabled";
-+
-+			portb: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
- 	};
- };
++Example:
++rtc0: rtc@800a0000 {
++	compatible = "alphascale,asm9260-rtc";
++	reg = <0x800a0000 0x100>;
++	clocks = <&acc CLKID_AHB_RTC>;
++	clock-names = "ahb";
++	interrupts = <2>;
++	calibration = <0x129c>;
++};
 -- 
-2.6.0.GIT
+2.5.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
