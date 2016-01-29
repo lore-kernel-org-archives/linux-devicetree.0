@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 1/9] ARM: dts: alt: Enable SCIF_CLK frequency and pins
-Date: Fri, 29 Jan 2016 11:17:18 +0100
-Message-ID: <1454062646-4826-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 2/9] ARM: dts: bockw: Enable SCIF_CLK frequency and pins
+Date: Fri, 29 Jan 2016 11:17:19 +0100
+Message-ID: <1454062646-4826-3-git-send-email-geert+renesas@glider.be>
 References: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
@@ -17,34 +17,32 @@ This increases the range and accuracy of supported baud rates.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Based on schematics, tested with remote access
+Based on schematics, tested with remote access.
 
 v4:
   - Change one-line summary prefix to match current arm-soc practices,
-  - Rebased,
+  - Move scif_clk next to scif0, for consistency with other boards,
 
 v3:
   - New.
 ---
- arch/arm/boot/dts/r8a7794-alt.dts | 13 +++++++++++++
+ arch/arm/boot/dts/r8a7778-bockw.dts | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-index 773f304d1142b585..ca9bc4fff28751ea 100644
---- a/arch/arm/boot/dts/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-@@ -103,6 +103,9 @@
+diff --git a/arch/arm/boot/dts/r8a7778-bockw.dts b/arch/arm/boot/dts/r8a7778-bockw.dts
+index a52b359e2ae24a30..21e3b9dda2dabf5e 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw.dts
+@@ -126,11 +126,19 @@
  };
  
  &pfc {
 +	pinctrl-0 = <&scif_clk_pins>;
 +	pinctrl-names = "default";
 +
- 	du_pins: du {
- 		renesas,groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_dotclkout0";
- 		renesas,function = "du";
-@@ -113,6 +116,11 @@
- 		renesas,function = "scif2";
+ 	scif0_pins: serial0 {
+ 		renesas,groups = "scif0_data_a", "scif0_ctrl";
+ 		renesas,function = "scif0";
  	};
  
 +	scif_clk_pins: scif_clk {
@@ -52,20 +50,17 @@ index 773f304d1142b585..ca9bc4fff28751ea 100644
 +		renesas,function = "scif_clk";
 +	};
 +
- 	ether_pins: ether {
- 		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
- 		renesas,function = "eth";
-@@ -205,6 +213,11 @@
+ 	mmc_pins: mmc {
+ 		renesas,groups = "mmc_data8", "mmc_ctrl";
+ 		renesas,function = "mmc";
+@@ -217,3 +225,8 @@
+ 
  	status = "okay";
  };
- 
++
 +&scif_clk {
 +	clock-frequency = <14745600>;
 +	status = "okay";
 +};
-+
- &qspi {
- 	pinctrl-0 = <&qspi_pins>;
- 	pinctrl-names = "default";
 -- 
 1.9.1
