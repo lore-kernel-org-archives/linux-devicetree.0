@@ -1,14 +1,14 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v8 2/2] dt-bindings: add document for Innosilicon HDMI
- on Rockchip platform
-Date: Fri, 29 Jan 2016 14:56:47 +0800
-Message-ID: <56AB0D2F.2070302@rock-chips.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v8.1 2/2] dt-bindings: add document for Innosilicon HDMI on
+ Rockchip platform
+Date: Fri, 29 Jan 2016 15:10:33 +0800
+Message-ID: <1454051433-32335-1-git-send-email-ykk@rock-chips.com>
 References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
- <1454050184-31245-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1540841322=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454050184-31245-1-git-send-email-ykk@rock-chips.com>
+In-Reply-To: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -18,64 +18,48 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1540841322==
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Ty=
-pe">
-  </head>
-  <body bgcolor=3D"#FFFFFF" text=3D"#000000">
-    <div class=3D"moz-cite-prefix">On 2016=E5=B9=B401=E6=9C=8829=E6=97=A5=
- 14:49, Yakir Yang wrote:<br>
-    </div>
-    <blockquote
-      cite=3D"mid:1454050184-31245-1-git-send-email-ykk@rock-chips.com"
-      type=3D"cite">
-      <pre wrap=3D"">Signed-off-by: Yakir Yang <a class=3D"moz-txt-link-r=
-fc2396E" href=3D"mailto:ykk@rock-chips.com">&lt;ykk@rock-chips.com&gt;</a=
->
-
-Signed-off-by: Yakir Yang <a class=3D"moz-txt-link-rfc2396E" href=3D"mail=
-to:ykk@rock-chips.com">&lt;ykk@rock-chips.com&gt;</a></pre>
-    </blockquote>
-    <br>
-    =C2=A0
-    <meta http-equiv=3D"content-type" content=3D"text/html; charset=3Dutf=
--8">
-    Duplicate SOB<br>
-    <br>
-    <blockquote
-      cite=3D"mid:1454050184-31245-1-git-send-email-ykk@rock-chips.com"
-      type=3D"cite">
-      <pre wrap=3D"">
-Acked-by: Rob Herring <a class=3D"moz-txt-link-rfc2396E" href=3D"mailto:r=
-obh@kernel.org">&lt;robh@kernel.org&gt;</a>
----
-
-</pre>
-    </blockquote>
-    <br>
-    <pre class=3D"moz-signature" cols=3D"72">--=20
-=EF=BC=ADark Yao</pre>
-  </body>
-</html>
-
-
---===============1540841322==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1540841322==--
+U2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgpBY2tlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjguMToKLSBSZW1v
+dmUgZHVtcGxpY2F0ZSBTaWduZWQtb2ZmIHdoaWNoIGFkZCBhdCB0aGUgdjggKE1hcmspCkNoYW5n
+ZXMgaW4gdjg6IE5vbmUKQ2hhbmdlcyBpbiB2NzogTm9uZQpDaGFuZ2VzIGluIHY2OiBOb25lCkNo
+YW5nZXMgaW4gdjU6IE5vbmUKQ2hhbmdlcyBpbiB2NDogTm9uZQpDaGFuZ2VzIGluIHYzOiBOb25l
+CkNoYW5nZXMgaW4gdjI6Ci0gQWRkIHRoZSBBY2tlZC1ieSB0YWdzIGZyb20gUm9iCi0gQ29ycmVj
+dCB0aGUgbWlzc3BlbGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgogLi4uL2Rpc3BsYXkvcm9j
+a2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dCAgICAgICAgfCA1MCArKysrKysrKysrKysrKysr
+KysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lu
+bm9faGRtaS1yb2NrY2hpcC50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1p
+LXJvY2tjaGlwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi44MDk2YTI5
+Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dApAQCAtMCwwICsxLDUwIEBACitS
+b2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBJbm5vc2lsaWNvbiBIRE1JCis9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBj
+b21wYXRpYmxlOgorCSJyb2NrY2hpcCxyazMwMzYtaW5uby1oZG1pIjsKKy0gcmVnOgorCVBoeXNp
+Y2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJz
+LgorLSBjbG9ja3MsIGNsb2NrLW5hbWVzOgorCVBoYW5kbGUgdG8gaGRtaSBjb250cm9sbGVyIGNs
+b2NrLCBuYW1lIHNob3VsZCBiZSAicGNsayIKKy0gaW50ZXJydXB0czoKKwlIRE1JIGludGVycnVw
+dCBudW1iZXIKKy0gcG9ydHM6CisJQ29udGFpbiBvbmUgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQg
+ZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9ncmFwaC50eHQuCistIHBpbmN0cmwtMCwgcGluY3RybC1uYW1lOgorCVN3aXRjaCB0aGUg
+aW9tdXggb2YgSFBEL0NFQyBwaW5zIHRvIEhETUkgZnVuY3Rpb24uCisKK0V4YW1wbGU6CitoZG1p
+OiBoZG1pQDIwMDM0MDAwIHsKKwljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzAzNi1pbm5vLWhk
+bWkiOworCXJlZyA9IDwweDIwMDM0MDAwIDB4NDAwMD47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
+IDQ1IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCWNsb2NrcyA9IDwmY3J1ICBQQ0xLX0hETUk+Owor
+CWNsb2NrLW5hbWVzID0gInBjbGsiOworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGlu
+Y3RybC0wID0gPCZoZG1pX2N0bD47CisJc3RhdHVzID0gImRpc2FibGVkIjsKKworCWhkbWlfaW46
+IHBvcnQgeworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisJ
+CWhkbWlfaW5fbGNkYzogZW5kcG9pbnRAMCB7CisJCQlyZWcgPSA8MD47CisJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmxjZGNfb3V0X2hkbWk+OworCQl9OworCX07Cit9OworCismcGluY3RybCB7CisJ
+aGRtaSB7CisJCWhkbWlfY3RsOiBoZG1pLWN0bCB7CisJCQlyb2NrY2hpcCxwaW5zID0gPDEgOCAg
+UktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT4sCisJCQkJCTwxIDkgIFJLX0ZVTkNfMSAmcGNmZ19w
+dWxsX25vbmU+LAorCQkJCQk8MSAxMCBSS19GVU5DXzEgJnBjZmdfcHVsbF9ub25lPiwKKwkJCQkJ
+PDEgMTEgUktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT47CisJCX07CisJfTsKKworfTsKLS0gCjEu
+OS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
