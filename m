@@ -1,75 +1,127 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 0/7] ARM: dts: r-car: Add BRG support for (H)SCIF
-Date: Fri, 29 Jan 2016 11:04:36 +0100
-Message-ID: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 2/7] ARM: dts: r8a7779: Add BRG support for SCIF
+Date: Fri, 29 Jan 2016 11:04:38 +0100
+Message-ID: <1454061883-4043-3-git-send-email-geert+renesas@glider.be>
+References: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Add the device node for the external SCIF_CLK.
+The presence of the SCIF_CLK crystal and its clock frequency depends on
+the actual board.
 
-This patch series adds support for the Baud Rate Generator for External
-Clock (BRG), as found on SCIF and HSCIF, to the DTS files for all R-Car
-Gen1, Gen2, and Gen3 SoCs. This increases the range and accuracy of
-supported baud rates on (H)SCIF.
+Add the two optional clock sources (S1 and SCIF_CLK for the internal
+resp. external clock) for the Baud Rate Generator for External Clock
+(BRG) to all SCIF device nodes.
 
-Support for the extra clocks in the DT bindings and in the driver has
-been accepted in v4.5-rc1.  
+This increases the range and accuracy of supported baud rates on SCIF.
 
-Changes compared to v3:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
   - Change one-line summary prefix to match current arm-soc practices,
-  - Rebased,
 
-Changes compared to v2:
-  - Rename "int_clk" to "brg_int",
-  - Add support for R-Car M1A (r8a7778) and R-Car H1 (r8a7779),
-  - Add support for R-Car H2 (r8a7790), R-Car M2-N (r8a7793), and R-Car
-    E2 (r8a7794),
-  - Correct internal clock source ZS_CLK to S3D1 in patch description
-    for r8a7795, 
+v3:
+  - New.
+---
+ arch/arm/boot/dts/r8a7779.dtsi | 39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-This has been tested on r8a7778/bockw, r8a7779/marzen, r8a7791/koelsch,
-r8a7794/alt, and r8a7795/salvator-x.
-
-Dependencies:
-  - renesas-devel-20160129-v4.5-rc1,
-  - series "[PATCH v4 0/7] ARM: dts: R-Car: Add SCIF fallback
-    compatibility strings",
-  - series "[PATCH v4 00/11] ARM: dts: shmobile: Rename the serial port
-    clock to fck",
-
-Thanks for applying!
-
-Geert Uytterhoeven (7):
-  ARM: dts: r8a7778: Add BRG support for SCIF
-  ARM: dts: r8a7779: Add BRG support for SCIF
-  ARM: dts: r8a7790: Add BRG support for (H)SCIF
-  ARM: dts: r8a7791: Add BRG support for (H)SCIF
-  ARM: dts: r8a7793: Add BRG support for SCIF
-  ARM: dts: r8a7794: Add BRG support for (H)SCIF
-  arm64: dts: r8a7795: Add BRG support for (H)SCIF
-
- arch/arm/boot/dts/r8a7778.dtsi           | 39 +++++++++++------
- arch/arm/boot/dts/r8a7779.dtsi           | 39 +++++++++++------
- arch/arm/boot/dts/r8a7790.dtsi           | 29 +++++++++----
- arch/arm/boot/dts/r8a7791.dtsi           | 54 +++++++++++++++--------
- arch/arm/boot/dts/r8a7793.dtsi           | 54 +++++++++++++++--------
- arch/arm/boot/dts/r8a7794.dtsi           | 54 +++++++++++++++--------
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 74 ++++++++++++++++++++++----------
- 7 files changed, 235 insertions(+), 108 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 8fddfae13865f536..a0cc08e6295b0396 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -215,8 +215,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe40000 0x100>;
+ 		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF0>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF0>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -226,8 +227,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe41000 0x100>;
+ 		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF1>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF1>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -237,8 +239,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe42000 0x100>;
+ 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF2>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF2>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -248,8 +251,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe43000 0x100>;
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF3>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF3>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -259,8 +263,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe44000 0x100>;
+ 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF4>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF4>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -270,8 +275,9 @@
+ 			     "renesas,scif";
+ 		reg = <0xffe45000 0x100>;
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp0_clks R8A7779_CLK_SCIF5>;
+-		clock-names = "fck";
++		clocks = <&mstp0_clks R8A7779_CLK_SCIF5>,
++			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
++		clock-names = "fck", "brg_int", "scif_clk";
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
+@@ -447,6 +453,15 @@
+ 			clock-output-names = "extal";
+ 		};
+ 
++		/* External SCIF clock */
++		scif_clk: scif {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
++			status = "disabled";
++		};
++
+ 		/* Special CPG clocks */
+ 		cpg_clocks: clocks@ffc80000 {
+ 			compatible = "renesas,r8a7779-cpg-clocks";
 -- 
 1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
