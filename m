@@ -1,62 +1,103 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 0/7] ARM: dts: R-Car: Add SCIF fallback compatibility strings
-Date: Fri, 29 Jan 2016 10:32:01 +0100
-Message-ID: <1454059928-975-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4] h8300: dts: Rename the serial port clock to fck
+Date: Fri, 29 Jan 2016 10:36:25 +0100
+Message-ID: <1454060185-1352-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: uclinux-h8-devel@lists.sourceforge.jp, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+The clock is really the device functional clock, not the interface
+clock. Rename it.
 
-This patch series adds fallback compatibility strings for SCIF, HSCIF,
-SCIFA, and SCIFB to the dtsi files for R-Car Gen1, Gen2, and Gen3 SoCs.
-These fallback compatibility strings have been accepted in the DT
-bindings in v4.5-rc1.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+The new clock name has been accepted in the DT bindings in v4.5-rc1.
 
-This will allow the sh-sci driver to match on family-specific compatible
-values, to enable support for the Baud Rate Generator for External Clock
-(BRG) on (H)SCIF later.
+v4:
+  - No changes,
 
-Changes compared to v3:
-  - Changed one-line summary prefix to match current arm-soc practices,
-  - Rebased on top of renesas-devel-20160129-v4.5-rc1.
+v3:
+  - Add Acked-by,
 
-Thanks for applying!
+v2:
+  - New.
+---
+ arch/h8300/boot/dts/edosk2674.dts  | 6 +++---
+ arch/h8300/boot/dts/h8300h_sim.dts | 4 ++--
+ arch/h8300/boot/dts/h8s_sim.dts    | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-Geert Uytterhoeven (7):
-  ARM: dts: r8a7778: Add SCIF fallback compatibility strings
-  ARM: dts: r8a7779: Add SCIF fallback compatibility strings
-  ARM: dts: r8a7790: Add SCIF fallback compatibility strings
-  ARM: dts: r8a7791: Add SCIF fallback compatibility strings
-  ARM: dts: r8a7793: Add SCIF fallback compatibility strings
-  ARM: dts: r8a7794: Add SCIF fallback compatibility strings
-  arm64: dts: r8a7795: Add SCIF fallback compatibility strings
-
- arch/arm/boot/dts/r8a7778.dtsi           | 18 +++++++----
- arch/arm/boot/dts/r8a7779.dtsi           | 18 +++++++----
- arch/arm/boot/dts/r8a7790.dtsi           | 30 ++++++++++++------
- arch/arm/boot/dts/r8a7791.dtsi           | 54 +++++++++++++++++++++-----------
- arch/arm/boot/dts/r8a7793.dtsi           | 54 +++++++++++++++++++++-----------
- arch/arm/boot/dts/r8a7794.dtsi           | 54 +++++++++++++++++++++-----------
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 38 +++++++++++++++-------
- 7 files changed, 179 insertions(+), 87 deletions(-)
-
+diff --git a/arch/h8300/boot/dts/edosk2674.dts b/arch/h8300/boot/dts/edosk2674.dts
+index 4ce9fa874a577e55..6ae884bf66a5268c 100644
+--- a/arch/h8300/boot/dts/edosk2674.dts
++++ b/arch/h8300/boot/dts/edosk2674.dts
+@@ -88,20 +88,20 @@
+ 		reg = <0xffff78 8>;
+ 		interrupts = <88 0>, <89 0>, <90 0>, <91 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ 	sci1: serial@ffff80 {
+ 		compatible = "renesas,sci";
+ 		reg = <0xffff80 8>;
+ 		interrupts = <92 0>, <93 0>, <94 0>, <95 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ 	sci2: serial@ffff88 {
+ 		compatible = "renesas,sci";
+ 		reg = <0xffff88 8>;
+ 		interrupts = <96 0>, <97 0>, <98 0>, <99 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ };
+diff --git a/arch/h8300/boot/dts/h8300h_sim.dts b/arch/h8300/boot/dts/h8300h_sim.dts
+index 545bfb57af9a9f2e..9c733d920f1f0dc3 100644
+--- a/arch/h8300/boot/dts/h8300h_sim.dts
++++ b/arch/h8300/boot/dts/h8300h_sim.dts
+@@ -83,7 +83,7 @@
+ 		reg = <0xffffb0 8>;
+ 		interrupts = <52 0>, <53 0>, <54 0>, <55 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ 
+ 	sci1: serial@ffffb8 {
+@@ -91,6 +91,6 @@
+ 		reg = <0xffffb8 8>;
+ 		interrupts = <56 0>, <57 0>, <58 0>, <59 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ };
+diff --git a/arch/h8300/boot/dts/h8s_sim.dts b/arch/h8300/boot/dts/h8s_sim.dts
+index bcedba5a3ce7e8ae..97e1f4b17ef067d5 100644
+--- a/arch/h8300/boot/dts/h8s_sim.dts
++++ b/arch/h8300/boot/dts/h8s_sim.dts
+@@ -87,13 +87,13 @@
+ 		reg = <0xffff78 8>;
+ 		interrupts = <88 0>, <89 0>, <90 0>, <91 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ 	sci1: serial@ffff80 {
+ 		compatible = "renesas,sci";
+ 		reg = <0xffff80 8>;
+ 		interrupts = <92 0>, <93 0>, <94 0>, <95 0>;
+ 		clocks = <&fclk>;
+-		clock-names = "sci_ick";
++		clock-names = "fck";
+ 	};
+ };
 -- 
 1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
