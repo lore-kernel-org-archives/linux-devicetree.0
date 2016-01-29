@@ -1,591 +1,605 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH V6] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial
- support
-Date: Fri, 29 Jan 2016 09:01:39 +0100
-Message-ID: <20160129080135.GA18578@panicking>
-References: <20151116115421.GC10464@panicking>
- <20151116172318.GA513@panicking>
- <1447752697.3144.47.camel@pengutronix.de>
- <20151118151030.GA11558@panicking>
- <20151211083512.GB11252@tiger>
- <20151214084456.GA4305@panicking>
- <20151216181159.GC20121@panicking>
- <20151223022707.GG26290@tiger>
- <20151224092439.GA9078@panicking>
- <20160128020405.GC9070@tiger>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5] mtd: spi-nor: add hisilicon spi-nor flash controller driver
+Date: Fri, 29 Jan 2016 16:03:17 +0800
+Message-ID: <1454054597-8473-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160128020405.GC9070@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
+add hisilicon spi-nor flash controller driver
 
-Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-
+Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
+change log
+v5:
+Fixed a compile error.
+v4:
+Rebased to v4.5-rc1
+v3:
+Added a compatible string "hisilicon,hi3519-sfc".
+v2:
+Fixed some compiling warings.
 
-Test on top of ARM: dts: imx6q: clean up unused ipu2grp
+ .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  25 ++
+This file is already acked by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>.
+ drivers/mtd/spi-nor/Kconfig                        |   6 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/hisi-sfc.c                     | 499 +++++++++++++++++++++
+ 4 files changed, 531 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+ create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+new file mode 100644
+index 0000000..7407147
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+@@ -0,0 +1,25 @@
++HiSilicon SPI-NOR Flash Controller
++
++Required properties:
++- compatible : Should be "hisilicon,hisi-sfc" and one of the following strings:
++		"hisilicon,hi3519-sfc"
++- address-cells : number of cells required to define a chip select
++        address on the SPI bus. Should be set to 1. See spi-bus.txt.
++- size-cells : Should be 0.
++- reg : Offset and length of the register set for the controller device.
++- reg-names : Must include the following two entries: "control", "memory".
++- clocks : handle to spi-nor flash controller clock.
++
++Example:
++spi-nor-controller@10000000 {
++	compatible = "hisilicon,hi3519-sfc", "hisilicon,hisi-sfc";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
++	reg-names = "control", "memory";
++	clocks = <&clock HI3519_FMC_CLK>;
++	spi-nor@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++	};
++};
+diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+index 0dc9275..763e48a 100644
+--- a/drivers/mtd/spi-nor/Kconfig
++++ b/drivers/mtd/spi-nor/Kconfig
+@@ -37,6 +37,12 @@ config SPI_FSL_QUADSPI
+ 	  This controller does not support generic SPI. It only supports
+ 	  SPI NOR.
  
-Changes in v6:
-	- fix all the regulator name using regulator- as prefix
-	- cleanup pinmux group name
-
-Changes in v5:
-	- None
-
-Changes in v4:
-	- update regulator name
-	- using flat pins,fsl
-	- move iomuxc
-	- add X11 license
-	- better alphabetic order
-
-Changes in v3:
-	- add sgtl audio support
-	- add ethernet gigabit tuning
-	- use hub reset only in usbhub and not
-	  in otg vbus
-
-Changes in v2:
-	- add the board in alphabetic order
-	- remove cpu operating point
-	- remove simple-bus and adjust regulaotor
-	- add gpios to correct pinctrl
-	- remove no mainline binding of gpc
-
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/imx6q-icore-rqs.dts    |  78 ++++++
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 411 +++++++++++++++++++++++++++++++
- 3 files changed, 490 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-rqs.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..5caf0a6 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -323,6 +323,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw551x.dtb \
- 	imx6q-gw552x.dtb \
- 	imx6q-hummingboard.dtb \
-+	imx6q-icore-rqs.dtb \
- 	imx6q-nitrogen6x.dtb \
- 	imx6q-nitrogen6_max.dtb \
- 	imx6q-phytec-pbab01.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
++config SPI_HISI_SFC
++	tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
++	depends on ARCH_HISI
++	help
++	  This enables support for hisilicon SPI-NOR flash controller.
++
+ config SPI_NXP_SPIFI
+ 	tristate "NXP SPI Flash Interface (SPIFI)"
+ 	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
+diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+index 0bf3a7f8..8a6fa69 100644
+--- a/drivers/mtd/spi-nor/Makefile
++++ b/drivers/mtd/spi-nor/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
+ obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
++obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
+ obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
+ obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
+diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
 new file mode 100644
-index 0000000..0053188
+index 0000000..d2d1012
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -0,0 +1,78 @@
-+/*
-+ * Copyright (C) 2015 Amarula Solutions B.V.
++++ b/drivers/mtd/spi-nor/hisi-sfc.c
+@@ -0,0 +1,499 @@
++/* HiSilicon SPI Nor Flash Controller Driver
 + *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
++ * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
 + *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
++ * You should have received a copy of the GNU General Public License
++ * along with this program. If not, see <http://www.gnu.org/licenses/>.
 + */
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/module.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/spi-nor.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
 +
-+/dts-v1/;
++/* Hardware register offsets and field definitions */
++#define FMC_CFG				0x00
++#define SPI_NOR_ADDR_MODE		BIT(10)
++#define FMC_GLOBAL_CFG			0x04
++#define FMC_GLOBAL_CFG_WP_ENABLE	BIT(6)
++#define FMC_SPI_TIMING_CFG		0x08
++#define TIMING_CFG_TCSH(nr)		(((nr) & 0xf) << 8)
++#define TIMING_CFG_TCSS(nr)		(((nr) & 0xf) << 4)
++#define TIMING_CFG_TSHSL(nr)		((nr) & 0xf)
++#define CS_HOLD_TIME			0x6
++#define CS_SETUP_TIME			0x6
++#define CS_DESELECT_TIME		0xf
++#define FMC_INT				0x18
++#define FMC_INT_OP_DONE			BIT(0)
++#define FMC_INT_CLR			0x20
++#define FMC_CMD				0x24
++#define FMC_CMD_CMD1(_cmd)		((_cmd) & 0xff)
++#define FMC_ADDRL			0x2c
++#define FMC_OP_CFG			0x30
++#define OP_CFG_FM_CS(_cs)		((_cs) << 11)
++#define OP_CFG_MEM_IF_TYPE(_type)	(((_type) & 0x7) << 7)
++#define OP_CFG_ADDR_NUM(_addr)		(((_addr) & 0x7) << 4)
++#define OP_CFG_DUMMY_NUM(_dummy)	((_dummy) & 0xf)
++#define FMC_DATA_NUM			0x38
++#define FMC_DATA_NUM_CNT(_n)		((_n) & 0x3fff)
++#define FMC_OP				0x3c
++#define FMC_OP_DUMMY_EN			BIT(8)
++#define FMC_OP_CMD1_EN			BIT(7)
++#define FMC_OP_ADDR_EN			BIT(6)
++#define FMC_OP_WRITE_DATA_EN		BIT(5)
++#define FMC_OP_READ_DATA_EN		BIT(2)
++#define FMC_OP_READ_STATUS_EN		BIT(1)
++#define FMC_OP_REG_OP_START		BIT(0)
++#define FMC_DMA_LEN			0x40
++#define FMC_DMA_LEN_SET(_len)		((_len) & 0x0fffffff)
++#define FMC_DMA_SADDR_D0		0x4c
++#define HIFMC_DMA_MAX_LEN		(4096)
++#define HIFMC_DMA_MASK			(HIFMC_DMA_MAX_LEN - 1)
++#define FMC_OP_DMA			0x68
++#define OP_CTRL_RD_OPCODE(_code)	(((_code) & 0xff) << 16)
++#define OP_CTRL_WR_OPCODE(_code)	(((_code) & 0xff) << 8)
++#define OP_CTRL_RW_OP(_op)		((_op) << 1)
++#define OP_CTRL_DMA_OP_READY		BIT(0)
++#define FMC_OP_READ			0x0
++#define FMC_OP_WRITE			0x1
++#define FMC_WAIT_TIMEOUT		10000000
 +
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore-rqs.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 Quad SOM";
-+	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
-+
-+	sound {
-+		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx-audio-sgtl5000";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
-+	};
++enum hifmc_iftype {
++	IF_TYPE_STD,
++	IF_TYPE_DUAL,
++	IF_TYPE_DIO,
++	IF_TYPE_QUAD,
++	IF_TYPE_QIO,
 +};
 +
-+&i2c3 {
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
++struct hifmc_priv {
++	int chipselect;
++	u32 clkrate;
++	struct hifmc_host *host;
 +};
 +
-+&sata {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-new file mode 100644
-index 0000000..f8d945a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -0,0 +1,411 @@
-+/*
-+ * Copyright (C) 2015 Amarula Solutions B.V.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
++#define HIFMC_MAX_CHIP_NUM		2
++struct hifmc_host {
++	struct device *dev;
++	struct mutex lock;
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/imx6qdl-clock.h>
++	void __iomem *regbase;
++	void __iomem *iobase;
++	struct clk *clk;
++	void *buffer;
++	dma_addr_t dma_buffer;
 +
-+/ {
-+	memory {
-+		reg = <0x10000000 0x80000000>;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_2p5v: regulator-2p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_sd3_vmmc: regulator-sd3-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "P3V3_SD3_SWITCHED";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+		enable-active-high;
-+	};
-+
-+	reg_sd4_vmmc: regulator-sd4-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "P3V3_SD4_SWITCHED";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-usb-h1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	usb_hub: usb-hub {
-+		compatible = "smsc,usb3503a";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbhub>;
-+		reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
-+		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
-+		clock-names = "refclk";
-+	};
++	struct spi_nor	nor[HIFMC_MAX_CHIP_NUM];
++	struct hifmc_priv priv[HIFMC_MAX_CHIP_NUM];
++	int num_chip;
 +};
 +
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
++static inline int wait_op_finish(struct hifmc_host *host)
++{
++	unsigned int reg, timeout = FMC_WAIT_TIMEOUT;
++
++	do {
++		reg = readl(host->regbase + FMC_INT);
++	} while (!(reg & FMC_INT_OP_DONE) && --timeout);
++
++	if (!timeout) {
++		dev_dbg(host->dev, "wait for operation finish timeout\n");
++		return -EAGAIN;
++	}
++
++	return 0;
++}
++
++static int get_if_type(enum read_mode flash_read)
++{
++	enum hifmc_iftype if_type;
++
++	switch (flash_read) {
++	case SPI_NOR_DUAL:
++		if_type = IF_TYPE_DUAL;
++		break;
++	case SPI_NOR_QUAD:
++		if_type = IF_TYPE_QUAD;
++		break;
++	case SPI_NOR_NORMAL:
++	case SPI_NOR_FAST:
++	default:
++		if_type = IF_TYPE_STD;
++		break;
++	}
++
++	return if_type;
++}
++
++void hisi_spi_nor_init(struct hifmc_host *host)
++{
++	unsigned int reg;
++
++	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
++		| TIMING_CFG_TCSS(CS_SETUP_TIME)
++		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
++	writel(reg, host->regbase + FMC_SPI_TIMING_CFG);
++}
++
++static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	int ret;
++
++	mutex_lock(&host->lock);
++
++	ret = clk_set_rate(host->clk, priv->clkrate);
++	if (ret)
++		goto out;
++
++	ret = clk_prepare_enable(host->clk);
++	if (ret)
++		goto out;
++
++	return 0;
++
++out:
++	mutex_unlock(&host->lock);
++	return ret;
++}
++
++static void hisi_spi_nor_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	clk_disable_unprepare(host->clk);
++	mutex_unlock(&host->lock);
++}
++
++static void hisi_spi_nor_cmd_prepare(struct hifmc_host *host, u8 cmd,
++		u32 *opcfg)
++{
++	u32 reg;
++
++	*opcfg |= FMC_OP_CMD1_EN;
++	switch (cmd) {
++	case SPINOR_OP_RDID:
++	case SPINOR_OP_RDSR:
++	case SPINOR_OP_RDCR:
++		*opcfg |= FMC_OP_READ_DATA_EN;
++		break;
++	case SPINOR_OP_WREN:
++		reg = readl(host->regbase + FMC_GLOBAL_CFG);
++		if (reg & FMC_GLOBAL_CFG_WP_ENABLE) {
++			reg &= ~FMC_GLOBAL_CFG_WP_ENABLE;
++			writel(reg, host->regbase + FMC_GLOBAL_CFG);
++		}
++		break;
++	case SPINOR_OP_WRSR:
++		*opcfg |= FMC_OP_WRITE_DATA_EN;
++		break;
++	case SPINOR_OP_BE_4K:
++	case SPINOR_OP_BE_4K_PMC:
++	case SPINOR_OP_SE_4B:
++	case SPINOR_OP_SE:
++		*opcfg |= FMC_OP_ADDR_EN;
++		break;
++	case SPINOR_OP_EN4B:
++		reg = readl(host->regbase + FMC_CFG);
++		reg |= SPI_NOR_ADDR_MODE;
++		writel(reg, host->regbase + FMC_CFG);
++		break;
++	case SPINOR_OP_EX4B:
++		reg = readl(host->regbase + FMC_CFG);
++		reg &= ~SPI_NOR_ADDR_MODE;
++		writel(reg, host->regbase + FMC_CFG);
++		break;
++	case SPINOR_OP_CHIP_ERASE:
++	default:
++		break;
++	}
++}
++
++static int hisi_spi_nor_send_cmd(struct spi_nor *nor, u8 cmd, int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	u32 reg, op_cfg = 0;
++
++	hisi_spi_nor_cmd_prepare(host, cmd, &op_cfg);
++
++	reg = FMC_CMD_CMD1(cmd);
++	writel(reg, host->regbase + FMC_CMD);
++
++	reg = OP_CFG_FM_CS(priv->chipselect);
++	if (op_cfg & FMC_OP_ADDR_EN)
++		reg |= OP_CFG_ADDR_NUM(nor->addr_width);
++	writel(reg, host->regbase + FMC_OP_CFG);
++
++	reg = FMC_DATA_NUM_CNT(len);
++	writel(reg, host->regbase + FMC_DATA_NUM);
++
++	writel(0xff, host->regbase + FMC_INT_CLR);
++	reg = op_cfg | FMC_OP_REG_OP_START;
++	writel(reg, host->regbase + FMC_OP);
++
++	return wait_op_finish(host);
++}
++
++static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
++		int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	int ret;
++
++	ret = hisi_spi_nor_send_cmd(nor, opcode, len);
++	if (ret)
++		return ret;
++
++	memcpy(buf, host->iobase, len);
++
++	return ret;
++}
++
++static int hisi_spi_nor_write_reg(struct spi_nor *nor, u8 opcode,
++				u8 *buf, int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	if (len)
++		memcpy(host->iobase, buf, len);
++
++	return hisi_spi_nor_send_cmd(nor, opcode, len);
++}
++
++static void hisi_spi_nor_dma_transfer(struct spi_nor *nor, u32 start_off,
++		u32 dma_buf, u32 len, u8 op_type)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	u8 if_type = 0, dummy = 0;
++	u8 w_cmd = 0, r_cmd = 0;
++	u32 reg;
++
++	writel(start_off, host->regbase + FMC_ADDRL);
++
++	if (op_type == FMC_OP_READ) {
++		if_type = get_if_type(nor->flash_read);
++		dummy = nor->read_dummy >> 3;
++		r_cmd = nor->read_opcode;
++	} else
++		w_cmd = nor->program_opcode;
++
++	reg = OP_CFG_FM_CS(priv->chipselect)
++		| OP_CFG_MEM_IF_TYPE(if_type)
++		| OP_CFG_ADDR_NUM(nor->addr_width)
++		| OP_CFG_DUMMY_NUM(dummy);
++	writel(reg, host->regbase + FMC_OP_CFG);
++
++	reg = FMC_DMA_LEN_SET(len);
++	writel(reg, host->regbase + FMC_DMA_LEN);
++	writel(dma_buf, host->regbase + FMC_DMA_SADDR_D0);
++
++	reg = OP_CTRL_RD_OPCODE(r_cmd)
++		| OP_CTRL_WR_OPCODE(w_cmd)
++		| OP_CTRL_RW_OP(op_type)
++		| OP_CTRL_DMA_OP_READY;
++	writel(0xff, host->regbase + FMC_INT_CLR);
++	writel(reg, host->regbase + FMC_OP_DMA);
++	wait_op_finish(host);
++}
++
++static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
++		size_t *retlen, u_char *read_buf)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	unsigned char *ptr = read_buf;
++	int num;
++
++	while (len > 0) {
++		num = (len >= HIFMC_DMA_MAX_LEN)
++			? HIFMC_DMA_MAX_LEN : len;
++		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
++				num, FMC_OP_READ);
++		memcpy(ptr, host->buffer, num);
++		ptr += num;
++		from += num;
++		len -= num;
++	}
++	*retlen += (size_t)(ptr - read_buf);
++
++	return 0;
++}
++
++static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
++			size_t len, size_t *retlen, const u_char *write_buf)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	const unsigned char *ptr = write_buf;
++	int num;
++
++	while (len > 0) {
++		if (to & HIFMC_DMA_MASK)
++			num = (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK))
++				>= len	? len
++				: (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK));
++		else
++			num = (len >= HIFMC_DMA_MAX_LEN)
++				? HIFMC_DMA_MAX_LEN : len;
++		memcpy(host->buffer, ptr, num);
++		hisi_spi_nor_dma_transfer(nor, to, host->dma_buffer, num,
++				FMC_OP_WRITE);
++		to += num;
++		ptr += num;
++		len -= num;
++	}
++	*retlen += (size_t)(ptr - write_buf);
++}
++
++static int hisi_spi_nor_erase(struct spi_nor *nor, loff_t offs)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	writel(offs, host->regbase + FMC_ADDRL);
++
++	return hisi_spi_nor_send_cmd(nor, nor->erase_opcode, 0);
++}
++
++static int hisi_spi_nor_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct hifmc_host *host;
++	struct device_node *np;
++	int ret, i = 0;
++
++	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
++	if (!host)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, host);
++	host->dev = dev;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
++	host->regbase = devm_ioremap_resource(dev, res);
++	if (IS_ERR(host->regbase))
++		return PTR_ERR(host->regbase);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "memory");
++	host->iobase = devm_ioremap_resource(dev, res);
++	if (IS_ERR(host->iobase))
++		return PTR_ERR(host->iobase);
++
++	host->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(host->clk))
++		return PTR_ERR(host->clk);
++
++	host->buffer = dmam_alloc_coherent(dev, HIFMC_DMA_MAX_LEN,
++			&host->dma_buffer, GFP_KERNEL);
++	if (!host->buffer)
++		return -ENOMEM;
++
++	mutex_init(&host->lock);
++	clk_prepare_enable(host->clk);
++	hisi_spi_nor_init(host);
++
++	for_each_available_child_of_node(dev->of_node, np) {
++		struct spi_nor *nor = &host->nor[i];
++		struct hifmc_priv *priv = &host->priv[i];
++		struct mtd_info *mtd = &nor->mtd;
++		struct mtd_partition *parts = NULL;
++		int nr_parts = 0;
++
++		mtd->name = np->name;
++		nor->dev = dev;
++		spi_nor_set_flash_node(nor, np);
++		ret = of_property_read_u32(np, "reg", &priv->chipselect);
++		if (ret)
++			goto fail;
++		ret = of_property_read_u32(np, "spi-max-frequency",
++				&priv->clkrate);
++		if (ret)
++			goto fail;
++		priv->host = host;
++		nor->priv = priv;
++
++		nor->prepare = hisi_spi_nor_prep;
++		nor->unprepare = hisi_spi_nor_unprep;
++		nor->read_reg = hisi_spi_nor_read_reg;
++		nor->write_reg = hisi_spi_nor_write_reg;
++		nor->read = hisi_spi_nor_read;
++		nor->write = hisi_spi_nor_write;
++		nor->erase = hisi_spi_nor_erase;
++		ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
++		if (ret)
++			goto fail;
++
++		ret = mtd_device_register(mtd, parts, nr_parts);
++		if (ret)
++			goto fail;
++
++		i++;
++		host->num_chip++;
++		if (i == HIFMC_MAX_CHIP_NUM)
++			break;
++	}
++
++	return 0;
++
++fail:
++	for (i = 0; i < host->num_chip; i++)
++		mtd_device_unregister(&host->nor[i].mtd);
++
++	clk_disable_unprepare(host->clk);
++	mutex_destroy(&host->lock);
++
++	return ret;
++}
++
++static int hisi_spi_nor_remove(struct platform_device *pdev)
++{
++	struct hifmc_host *host = platform_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->num_chip; i++)
++		mtd_device_unregister(&host->nor[i].mtd);
++
++	clk_disable_unprepare(host->clk);
++	mutex_destroy(&host->lock);
++
++	return 0;
++}
++
++static const struct of_device_id hisi_spi_nor_dt_ids[] = {
++	{ .compatible = "hisilicon,hisi-sfc"},
++	{ .compatible = "hisilicon,hi3519-sfc"},
++	{ /* sentinel */ }
 +};
++MODULE_DEVICE_TABLE(of, hisi_spi_nor_dt_ids);
 +
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
++static struct platform_driver hisi_spi_nor_driver = {
++	.driver = {
++		.name	= "hisi-sfc",
++		.of_match_table = hisi_spi_nor_dt_ids,
++	},
++	.probe	= hisi_spi_nor_probe,
++	.remove	= hisi_spi_nor_remove,
 +};
++module_platform_driver(hisi_spi_nor_driver);
 +
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-handle = <&eth_phy>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	mdio {
-+		eth_phy: ethernet-phy {
-+			rxc-skew-ps = <1140>;
-+			txc-skew-ps = <1140>;
-+			txen-skew-ps = <600>;
-+			rxdv-skew-ps = <240>;
-+			rxd0-skew-ps = <420>;
-+			rxd1-skew-ps = <600>;
-+			rxd2-skew-ps = <420>;
-+			rxd3-skew-ps = <240>;
-+			txd0-skew-ps = <60>;
-+			txd1-skew-ps = <60>;
-+			txd2-skew-ps = <60>;
-+			txd3-skew-ps = <240>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio3 29 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	disable-over-current;
-+	clocks = <&clks IMX6QDL_CLK_USBOH3>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	vmcc-supply = <&reg_sd3_vmmc>;
-+	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
-+	bus-witdh=<4>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
-+	vmcc-supply = <&reg_sd4_vmmc>;
-+	bus-witdh=<8>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_audmux: audmux {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
-+			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD  0x110b0
-+			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS 0x130b0
-+			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD  0x130b0
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
-+			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN     0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
-+			MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
-+			MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
-+			MX6QDL_PAD_GPIO_0__CCM_CLKO1    0x130b0
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1f059	/* PCIe Reset */
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbhub: usbhubgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_6__GPIO1_IO06  0x1f059	/* HUB USB Reset */
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17071
-+			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10071
-+			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17071
-+			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17071
-+			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17071
-+			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17071
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17070
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10070
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17070
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17070
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17070
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1f059	/* CD */
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04  0x1f059	/* PWR */
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170B1
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100B1
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170B1
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170B1
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170B1
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170B1
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170F9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100F9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170F9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170F9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170F9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170F9
-+		>;
-+	};
-+
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x17070
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x10070
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x17070
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x17070
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x17070
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x17070
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x17070
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x17070
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x17070
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17070
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_100mhz: usdhc4grp_100mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170B1
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100B1
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170B1
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170B1
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170B1
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170B1
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170B1
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170B1
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170B1
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170B1
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_200mhz: usdhc4grp_200mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170F9
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100F9
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170F9
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170F9
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170F9
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170F9
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170F9
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170F9
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170F9
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170F9
-+		>;
-+	};
-+};
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("HiSilicon SPI Nor Flash Controller Driver");
 -- 
-2.7.0
+1.9.1
 
--- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
