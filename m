@@ -1,45 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Status variable
-Date: Fri, 29 Jan 2016 09:49:37 +0100
-Message-ID: <3706345.JqhHqFGYfF@wuerfel>
-References: <CANMsd02jhaouPBuySWXQ2edE+gyMZ3dncobipKa-dg1vLJCE2Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RFC PATCH] ARM: dts: rockchip: increase the mclk_fs to 512 for kylin board
+Date: Fri, 29 Jan 2016 16:49:21 +0800
+Message-ID: <1454057361-22923-1-git-send-email-zhengxing@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANMsd02jhaouPBuySWXQ2edE+gyMZ3dncobipKa-dg1vLJCE2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan <ryanphilips19-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 January 2016 14:13:20 Ryan wrote:
-> Hello,
-> 
-> I am confused about the "status" variables on a device tree. What is
-> the meaning of
-> status="okay", status="enabled", status="disabled".
-> 
-> the function: __of_device_is_available returns 1 if the entry itself
-> is not there.
-> 
-> Why is this?
-> 
-> Thanks for your time.
+If we playback the 8KHz FS audio with the 256 mclk_fs, we need the
+mclk = 256 * 8000 = 2.048MHz, the frac div is 594 / 2.048 = 290,
+the frac div value 0x00809015 set to the CRU_CLKSEL7_CON will cause
+to hang.
 
-On status="disabled" is defined to have an effect and will prevent
-the device from being used. Any other value or an absent status
-property is interpreted as a working device.
+We increase the mclk_fs to 512, will get the mclk = 512 * 8000 =
+4.096MHz, use 0x01009015 instead of 0x00809015 to work around this
+issue. We will keep tracking it.
 
-The common way this is used is that a soc-specific .dtsi file lists
-all devices that are present within the soc, but marks the ones as
-disabled that are not always usable because they depend on a external
-connection (e.g. a uart only makes sense if it talks to something,
-while a timer device is always usable). A board specific file then
-does not need to define the entire device but just override the
-status as "okay".
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-	Arnd
+ arch/arm/boot/dts/rk3036-kylin.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 190f22c..be468f9 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -67,7 +67,7 @@
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,format = "i2s";
+ 		simple-audio-card,name = "rockchip,rt5616-codec";
+-		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,mclk-fs = <512>;
+ 		simple-audio-card,widgets =
+ 			"Microphone", "Microphone Jack",
+ 			"Headphone", "Headphone Jack";
+-- 
+1.7.9.5
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
