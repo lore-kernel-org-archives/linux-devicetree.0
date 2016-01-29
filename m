@@ -1,146 +1,220 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: resolver: Add missing of_node_put
-Date: Fri, 29 Jan 2016 15:46:48 -0800
-Message-ID: <56ABF9E8.2080609@gmail.com>
-References: <20160127152017.GA16048@amitoj-Inspiron-3542> <20160127160531.GB17123@leverpostej> <FE79FA58-A084-47BE-B872-7D57AC2B4D75@konsulko.com> <20160129164531.GB15053@rob-hp-laptop> <C95DDB58-2BFB-42FA-BB00-0CE130CE90BC@konsulko.com>
-Reply-To: frowand.list@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C95DDB58-2BFB-42FA-BB00-0CE130CE90BC@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Amitoj Kaur Chawla <amitoj1606@gmail.com>, Grant Likely <grant.likely@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, julia.lawall@lip6.fr
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 1/3] input: touchscreen: ad7879: move header to platform_data directory
+Date: Fri, 29 Jan 2016 15:48:13 -0800
+Message-ID: <1454111295-5615-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, michael.hennerich@analog.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 1/29/2016 9:33 AM, Pantelis Antoniou wrote:
-> Hi Rob,
->=20
->> On Jan 29, 2016, at 18:45 , Rob Herring <robh@kernel.org> wrote:
->>
->> On Wed, Jan 27, 2016 at 06:14:00PM +0200, Pantelis Antoniou wrote:
->>> Hi Mark,
->>>
->>>> On Jan 27, 2016, at 18:05 , Mark Rutland <mark.rutland@arm.com> wr=
-ote:
->>>>
->>>> On Wed, Jan 27, 2016 at 08:50:17PM +0530, Amitoj Kaur Chawla wrote=
-:
->>>>> for_each_child_of_node performs an of_node_get on each iteration,=
- so
->>>>> to break out of the loop an of_node_put is required.
->>>>>
->>>>> Found using Coccinelle. The semantic patch used for this is as fo=
-llows:
->>>>>
->>>>> // <smpl>
->>>>> @@
->>>>> expression e;
->>>>> local idexpression n;
->>>>> @@
->>>>>
->>>>> for_each_child_of_node(..., n) {
->>>>>  ... when !=3D of_node_put(n)
->>>>>      when !=3D e =3D n
->>>>> (
->>>>>  return n;
->>>>> |
->>>>> +  of_node_put(n);
->>>>> ?  return ...;
->>>>> )
->>>>>  ...
->>>>> }
->>>>> // </smpl
->>>>>
->>>>> Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
->>>>> ---
->>>>> drivers/of/resolver.c | 4 +++-
->>>>> 1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
->>>>> index 640eb4c..e2a0143 100644
->>>>> --- a/drivers/of/resolver.c
->>>>> +++ b/drivers/of/resolver.c
->>>>> @@ -40,8 +40,10 @@ static struct device_node *__of_find_node_by_f=
-ull_name(struct device_node *node,
->>>>>
->>>>> 	for_each_child_of_node(node, child) {
->>>>> 		found =3D __of_find_node_by_full_name(child, full_name);
->>>>> -		if (found !=3D NULL)
->>>>> +		if (found !=3D NULL) {
->>>>> +			of_node_put(child);
->>>>> 			return found;
->>>>> +		}
->>>>> 	}
->>>>>
->>>>> 	return NULL;
->>>>
->>>> I don't think this is quite right. When child =3D=3D found, this c=
-hange will
->>>> leave it decremented.
->>>>
->>>
->>>
->>> This patch is bogus.=20
->>>
->>> __of_find_node_by_full_name() is not taking a reference on the node=
- if found.=20
->>> This method relies on keeping the reference taken by the loop.
->>>
->>> Taking this into account all of these conccinelle tests are bogus.
->>>
->>> The DT internal method are not using the object model in an obvious=
- manner
->>> and applying these patches without vetting each and everyone is bou=
-nd to
->>> break things.
->>
->> Things are already broken. But does it matter?
->>
->> Our time would be better spent re-designing any refcounting around w=
-here=20
->> we actually need it rather than trying to fix up the many locations=20
->> which are wrong and don't matter. As long as it is callers'=20
->> responsibility to get this right, it will never be right. Even the c=
-ore=20
->> code has a hard time getting it right.
->>
->=20
-> Let me pile up. Refcounting for DT is broken. There=E2=80=99s no poin=
-t trying to fix
-> it as it is. I have a big pile of TODO, one of these is fixing (as in=
- severely
-> cutting down) the areas where refcounting is needed.
+The header file is used by the SPI and I2C variant of the driver.
+Therefore, move it to a more generic place under platform_data.
 
-May as well violently agree.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Changes since v1:
+- Move to include/linux/platform_data/
 
-An additional way that DT refcounting is architecturally broken is the =
-concept
-of using a held refcount as a lock substitute while traversing a linked=
- list.
-=46ixing this is on my todo list, hopefully late this winter or early s=
-pring.
+ arch/blackfin/mach-bf527/boards/ezbrd.c    |  2 +-
+ arch/blackfin/mach-bf527/boards/ezkit.c    |  2 +-
+ arch/blackfin/mach-bf527/boards/tll6527m.c |  2 +-
+ arch/blackfin/mach-bf537/boards/stamp.c    |  2 +-
+ arch/blackfin/mach-bf538/boards/ezkit.c    |  2 +-
+ drivers/input/touchscreen/ad7879.c         | 10 ++++----
+ include/linux/platform_data/ad7879.h       | 41 ++++++++++++++++++++++++++++++
+ include/linux/spi/ad7879.h                 | 41 ------------------------------
+ 8 files changed, 51 insertions(+), 51 deletions(-)
+ create mode 100644 include/linux/platform_data/ad7879.h
+ delete mode 100644 include/linux/spi/ad7879.h
 
->=20
-> The idea would be to keep refcounting only in core and provide interf=
-aces that
-> use different semantics for drivers and subsystems.
->=20
-> We can discuss things in ELC this April, perhaps on a BoF session aga=
-in.
+diff --git a/arch/blackfin/mach-bf527/boards/ezbrd.c b/arch/blackfin/mach-bf527/boards/ezbrd.c
+index a3a5723..80bcfd1 100644
+--- a/arch/blackfin/mach-bf527/boards/ezbrd.c
++++ b/arch/blackfin/mach-bf527/boards/ezbrd.c
+@@ -279,7 +279,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf527/boards/ezkit.c b/arch/blackfin/mach-bf527/boards/ezkit.c
+index d4219e8..571edfd 100644
+--- a/arch/blackfin/mach-bf527/boards/ezkit.c
++++ b/arch/blackfin/mach-bf527/boards/ezkit.c
+@@ -477,7 +477,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf527/boards/tll6527m.c b/arch/blackfin/mach-bf527/boards/tll6527m.c
+index a0f5856..c1acce4 100644
+--- a/arch/blackfin/mach-bf527/boards/tll6527m.c
++++ b/arch/blackfin/mach-bf527/boards/tll6527m.c
+@@ -29,7 +29,7 @@
+ #include <asm/dpmc.h>
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ #define LCD_BACKLIGHT_GPIO 0x40
+ /* TLL6527M uses TLL7UIQ35 / ADI LCD EZ Extender. AD7879 AUX GPIO is used for
+  * LCD Backlight Enable
+diff --git a/arch/blackfin/mach-bf537/boards/stamp.c b/arch/blackfin/mach-bf537/boards/stamp.c
+index c181543..eaec7b4 100644
+--- a/arch/blackfin/mach-bf537/boards/stamp.c
++++ b/arch/blackfin/mach-bf537/boards/stamp.c
+@@ -776,7 +776,7 @@ static const struct ad7877_platform_data bfin_ad7877_ts_info = {
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/arch/blackfin/mach-bf538/boards/ezkit.c b/arch/blackfin/mach-bf538/boards/ezkit.c
+index ae2fcbb..4a03c44 100644
+--- a/arch/blackfin/mach-bf538/boards/ezkit.c
++++ b/arch/blackfin/mach-bf538/boards/ezkit.c
+@@ -521,7 +521,7 @@ static struct bfin5xx_spi_chip spi_flash_chip_info = {
+ #endif	/* CONFIG_SPI_BFIN5XX */
+ 
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_AD7879)
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ static const struct ad7879_platform_data bfin_ad7879_ts_info = {
+ 	.model			= 7879,	/* Model = AD7879 */
+ 	.x_plate_ohms		= 620,	/* 620 Ohm from the touch datasheet */
+diff --git a/drivers/input/touchscreen/ad7879.c b/drivers/input/touchscreen/ad7879.c
+index 16b5cc2..93b8ea2 100644
+--- a/drivers/input/touchscreen/ad7879.c
++++ b/drivers/input/touchscreen/ad7879.c
+@@ -31,7 +31,7 @@
+ #include <linux/i2c.h>
+ #include <linux/gpio.h>
+ 
+-#include <linux/spi/ad7879.h>
++#include <linux/platform_data/ad7879.h>
+ #include <linux/module.h>
+ #include "ad7879.h"
+ 
+@@ -170,10 +170,10 @@ static int ad7879_report(struct ad7879 *ts)
+ 	 * filter.  The combination of these two techniques provides a robust
+ 	 * solution, discarding the spurious noise in the signal and keeping
+ 	 * only the data of interest.  The size of both filters is
+-	 * programmable. (dev.platform_data, see linux/spi/ad7879.h) Other
+-	 * user-programmable conversion controls include variable acquisition
+-	 * time, and first conversion delay. Up to 16 averages can be taken
+-	 * per conversion.
++	 * programmable. (dev.platform_data, see linux/platform_data/ad7879.h)
++	 * Other user-programmable conversion controls include variable
++	 * acquisition time, and first conversion delay. Up to 16 averages can
++	 * be taken per conversion.
+ 	 */
+ 
+ 	if (likely(x && z1)) {
+diff --git a/include/linux/platform_data/ad7879.h b/include/linux/platform_data/ad7879.h
+new file mode 100644
+index 0000000..69e2e1fd
+--- /dev/null
++++ b/include/linux/platform_data/ad7879.h
+@@ -0,0 +1,41 @@
++/* linux/platform_data/ad7879.h */
++
++/* Touchscreen characteristics vary between boards and models.  The
++ * platform_data for the device's "struct device" holds this information.
++ *
++ * It's OK if the min/max values are zero.
++ */
++struct ad7879_platform_data {
++	u16	model;			/* 7879 */
++	u16	x_plate_ohms;
++	u16	x_min, x_max;
++	u16	y_min, y_max;
++	u16	pressure_min, pressure_max;
++
++	bool	swap_xy;		/* swap x and y axes */
++
++	/* [0..255] 0=OFF Starts at 1=550us and goes
++	 * all the way to 9.440ms in steps of 35us.
++	 */
++	u8	pen_down_acc_interval;
++	/* [0..15] Starts at 0=128us and goes all the
++	 * way to 4.096ms in steps of 128us.
++	 */
++	u8	first_conversion_delay;
++	/* [0..3] 0 = 2us, 1 = 4us, 2 = 8us, 3 = 16us */
++	u8	acquisition_time;
++	/* [0..3] Average X middle samples 0 = 2, 1 = 4, 2 = 8, 3 = 16 */
++	u8	averaging;
++	/* [0..3] Perform X measurements 0 = OFF,
++	 * 1 = 4, 2 = 8, 3 = 16 (median > averaging)
++	 */
++	u8	median;
++	/* 1 = AUX/VBAT/GPIO export GPIO to gpiolib
++	 * requires CONFIG_GPIOLIB
++	 */
++	bool	gpio_export;
++	/* identifies the first GPIO number handled by this chip;
++	 * or, if negative, requests dynamic ID allocation.
++	 */
++	s32	gpio_base;
++};
+diff --git a/include/linux/spi/ad7879.h b/include/linux/spi/ad7879.h
+deleted file mode 100644
+index 58368be..0000000
+--- a/include/linux/spi/ad7879.h
++++ /dev/null
+@@ -1,41 +0,0 @@
+-/* linux/spi/ad7879.h */
+-
+-/* Touchscreen characteristics vary between boards and models.  The
+- * platform_data for the device's "struct device" holds this information.
+- *
+- * It's OK if the min/max values are zero.
+- */
+-struct ad7879_platform_data {
+-	u16	model;			/* 7879 */
+-	u16	x_plate_ohms;
+-	u16	x_min, x_max;
+-	u16	y_min, y_max;
+-	u16	pressure_min, pressure_max;
+-
+-	bool	swap_xy;		/* swap x and y axes */
+-
+-	/* [0..255] 0=OFF Starts at 1=550us and goes
+-	 * all the way to 9.440ms in steps of 35us.
+-	 */
+-	u8	pen_down_acc_interval;
+-	/* [0..15] Starts at 0=128us and goes all the
+-	 * way to 4.096ms in steps of 128us.
+-	 */
+-	u8	first_conversion_delay;
+-	/* [0..3] 0 = 2us, 1 = 4us, 2 = 8us, 3 = 16us */
+-	u8	acquisition_time;
+-	/* [0..3] Average X middle samples 0 = 2, 1 = 4, 2 = 8, 3 = 16 */
+-	u8	averaging;
+-	/* [0..3] Perform X measurements 0 = OFF,
+-	 * 1 = 4, 2 = 8, 3 = 16 (median > averaging)
+-	 */
+-	u8	median;
+-	/* 1 = AUX/VBAT/GPIO export GPIO to gpiolib
+-	 * requires CONFIG_GPIOLIB
+-	 */
+-	bool	gpio_export;
+-	/* identifies the first GPIO number handled by this chip;
+-	 * or, if negative, requests dynamic ID allocation.
+-	 */
+-	s32	gpio_base;
+-};
+-- 
+2.7.0
 
-Yes, all interested people please come discuss things with us.  I have
-submitted a BoF proposal.
-
--Frank
-
->=20
->=20
->> Rob
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
->=20
->=20
