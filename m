@@ -1,281 +1,592 @@
-From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: [PATCH v8 6/6] ARM: dts: add dts files for Hi3519
-Date: Fri, 29 Jan 2016 15:42:12 +0800
-Message-ID: <1454053332-3218-7-git-send-email-xuejiancheng@huawei.com>
-References: <1454053332-3218-1-git-send-email-xuejiancheng@huawei.com>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH V6] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial
+ support
+Date: Fri, 29 Jan 2016 09:01:39 +0100
+Message-ID: <20160129080135.GA18578@panicking>
+References: <20151116115421.GC10464@panicking>
+ <20151116172318.GA513@panicking>
+ <1447752697.3144.47.camel@pengutronix.de>
+ <20151118151030.GA11558@panicking>
+ <20151211083512.GB11252@tiger>
+ <20151214084456.GA4305@panicking>
+ <20151216181159.GC20121@panicking>
+ <20151223022707.GG26290@tiger>
+ <20151224092439.GA9078@panicking>
+ <20160128020405.GC9070@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454053332-3218-1-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160128020405.GC9070@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add dts files for Hi3519
+www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+
 ---
- arch/arm/boot/dts/Makefile        |   2 +
- arch/arm/boot/dts/hi3519-demb.dts |  42 +++++++++
- arch/arm/boot/dts/hi3519.dtsi     | 187 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 231 insertions(+)
- create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+
+Test on top of ARM: dts: imx6q: clean up unused ipu2grp
+ 
+Changes in v6:
+	- fix all the regulator name using regulator- as prefix
+	- cleanup pinmux group name
+
+Changes in v5:
+	- None
+
+Changes in v4:
+	- update regulator name
+	- using flat pins,fsl
+	- move iomuxc
+	- add X11 license
+	- better alphabetic order
+
+Changes in v3:
+	- add sgtl audio support
+	- add ethernet gigabit tuning
+	- use hub reset only in usbhub and not
+	  in otg vbus
+
+Changes in v2:
+	- add the board in alphabetic order
+	- remove cpu operating point
+	- remove simple-bus and adjust regulaotor
+	- add gpios to correct pinctrl
+	- remove no mainline binding of gpc
+
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/imx6q-icore-rqs.dts    |  78 ++++++
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 411 +++++++++++++++++++++++++++++++
+ 3 files changed, 490 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-rqs.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a4a6d70..3ce36ff 100644
+index 30bbc37..5caf0a6 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -141,6 +141,8 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
- 	exynos5800-peach-pi.dtb
- dtb-$(CONFIG_ARCH_HI3xxx) += \
- 	hi3620-hi4511.dtb
-+dtb-$(CONFIG_ARCH_HISI) += \
-+	hi3519-demb.dtb
- dtb-$(CONFIG_ARCH_HIX5HD2) += \
- 	hisi-x5hd2-dkb.dtb
- dtb-$(CONFIG_ARCH_HIGHBANK) += \
-diff --git a/arch/arm/boot/dts/hi3519-demb.dts b/arch/arm/boot/dts/hi3519-demb.dts
+@@ -323,6 +323,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw551x.dtb \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-hummingboard.dtb \
++	imx6q-icore-rqs.dtb \
+ 	imx6q-nitrogen6x.dtb \
+ 	imx6q-nitrogen6_max.dtb \
+ 	imx6q-phytec-pbab01.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
 new file mode 100644
-index 0000000..6991ab6
+index 0000000..0053188
 --- /dev/null
-+++ b/arch/arm/boot/dts/hi3519-demb.dts
-@@ -0,0 +1,42 @@
++++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+@@ -0,0 +1,78 @@
 +/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
++ * Copyright (C) 2015 Amarula Solutions B.V.
 + *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
 + *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
 + *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
 +/dts-v1/;
-+#include "hi3519.dtsi"
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore-rqs.dtsi"
 +
 +/ {
-+	model = "HiSilicon HI3519 DEMO Board";
-+	compatible = "hisilicon,hi3519";
++	model = "Engicam i.CoreM6 Quad SOM";
++	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
++	sound {
++		compatible = "fsl,imx-audio-sgtl5000";
++		model = "imx-audio-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&codec>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
 +	};
 +};
 +
-+&uart0 {
++&i2c3 {
++	codec: sgtl5000@0a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
++};
++
++&sata {
 +	status = "okay";
 +};
-+
-+&dual_timer0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
 new file mode 100644
-index 0000000..5729ecf
+index 0000000..f8d945a
 --- /dev/null
-+++ b/arch/arm/boot/dts/hi3519.dtsi
-@@ -0,0 +1,187 @@
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -0,0 +1,411 @@
 +/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
++ * Copyright (C) 2015 Amarula Solutions B.V.
 + *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
 + *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
 + *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include <dt-bindings/clock/hi3519-clock.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/imx6qdl-clock.h>
++
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+		};
++	memory {
++		reg = <0x10000000 0x80000000>;
 +	};
 +
-+	gic: interrupt-controller@10300000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
-+	clk_3m: clk_3m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <3000000>;
++	reg_2p5v: regulator-2p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
-+	crg: clock-reset-controller@12010000 {
-+		compatible = "hisilicon,hi3519-crg";
-+		#clock-cells = <1>;
-+		#reset-cells = <2>;
-+		reg = <0x12010000 0x10000>;
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
++	reg_sd3_vmmc: regulator-sd3-vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "P3V3_SD3_SWITCHED";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
++		enable-active-high;
++	};
 +
-+		uart0: serial@12100000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12100000 0x1000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART0_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++	reg_sd4_vmmc: regulator-sd4-vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "P3V3_SD4_SWITCHED";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 +
-+		uart1: serial@12101000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12101000 0x1000>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART1_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++	reg_usb_h1_vbus: regulator-usb-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 +
-+		uart2: serial@12102000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12102000 0x1000>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART2_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 +
-+		uart3: serial@12103000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12103000 0x1000>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART3_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++	usb_hub: usb-hub {
++		compatible = "smsc,usb3503a";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbhub>;
++		reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
++		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
++		clock-names = "refclk";
++	};
++};
 +
-+		uart4: serial@12104000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12104000 0x1000>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART4_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
++};
 +
-+		dual_timer0: timer@12000000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12000000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++};
 +
-+		dual_timer1: timer@12001000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12001000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-handle = <&eth_phy>;
++	phy-mode = "rgmii";
++	status = "okay";
 +
-+		dual_timer2: timer@12002000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12002000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
++	mdio {
++		eth_phy: ethernet-phy {
++			rxc-skew-ps = <1140>;
++			txc-skew-ps = <1140>;
++			txen-skew-ps = <600>;
++			rxdv-skew-ps = <240>;
++			rxd0-skew-ps = <420>;
++			rxd1-skew-ps = <600>;
++			rxd2-skew-ps = <420>;
++			rxd3-skew-ps = <240>;
++			txd0-skew-ps = <60>;
++			txd1-skew-ps = <60>;
++			txd2-skew-ps = <60>;
++			txd3-skew-ps = <240>;
 +		};
++	};
++};
 +
-+		spi_bus0: spi@12120000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12120000 0x1000>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI0_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
 +
-+		spi_bus1: spi@12121000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12121000 0x1000>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI1_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
 +
-+		spi_bus2: spi@12122000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12122000 0x1000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI2_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
 +
-+		sysctrl: system-controller@12020000 {
-+			compatible = "hisilicon,hi3519-sysctrl", "syscon";
-+			reg = <0x12020000 0x1000>;
-+		};
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio3 29 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
 +
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&sysctrl>;
-+			offset = <0x4>;
-+			mask = <0xdeadbeef>;
-+		};
++&ssi1 {
++	fsl,mode = "i2s-slave";
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	disable-over-current;
++	clocks = <&clks IMX6QDL_CLK_USBOH3>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	vmcc-supply = <&reg_sd3_vmmc>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	bus-witdh=<4>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&usdhc4 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc4>;
++	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
++	vmcc-supply = <&reg_sd4_vmmc>;
++	bus-witdh=<8>;
++	no-1-8-v;
++	non-removable;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_audmux: audmux {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
++			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD  0x110b0
++			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS 0x130b0
++			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD  0x130b0
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
++			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN     0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
++			MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1    0x130b0
++		>;
++	};
++
++	pinctrl_pcie: pciegrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1f059	/* PCIe Reset */
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
++		>;
++	};
++
++	pinctrl_usbhub: usbhubgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06  0x1f059	/* HUB USB Reset */
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17071
++			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10071
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17071
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17071
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17071
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17071
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17070
++			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10070
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17070
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17070
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17070
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17070
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1f059	/* CD */
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04  0x1f059	/* PWR */
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170B1
++			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100B1
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170B1
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170B1
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170B1
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170B1
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170F9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100F9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170F9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170F9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170F9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170F9
++		>;
++	};
++
++	pinctrl_usdhc4: usdhc4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x17070
++			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x10070
++			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x17070
++			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x17070
++			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x17070
++			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x17070
++			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x17070
++			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x17070
++			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x17070
++			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17070
++		>;
++	};
++
++	pinctrl_usdhc4_100mhz: usdhc4grp_100mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170B1
++			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100B1
++			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170B1
++			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170B1
++			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170B1
++			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170B1
++			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170B1
++			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170B1
++			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170B1
++			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170B1
++		>;
++	};
++
++	pinctrl_usdhc4_200mhz: usdhc4grp_200mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170F9
++			MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100F9
++			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170F9
++			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170F9
++			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170F9
++			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170F9
++			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170F9
++			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170F9
++			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170F9
++			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170F9
++		>;
 +	};
 +};
 -- 
-1.9.1
+2.7.0
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
