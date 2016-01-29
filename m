@@ -1,143 +1,61 @@
-From: Zhiqiang Hou <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH V4 1/2] powerpc/fsl: Add PCI node in device tree of
- bsc9132qds
-Date: Fri, 29 Jan 2016 11:26:44 +0000
-Message-ID: <HE1PR04MB0906CFB70BD71643D990378D84DB0@HE1PR04MB0906.eurprd04.prod.outlook.com>
-References: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
- <HE1PR04MB0906A35F4F48C8DACF5CD16D84E50@HE1PR04MB0906.eurprd04.prod.outlook.com>
- <HE1PR04MB09060D4FCE88CD7B3F1CBF9084D90@HE1PR04MB0906.eurprd04.prod.outlook.com>
- <1453904619.27129.41.camel@buserror.net>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for ACT8945A
+Date: Fri, 29 Jan 2016 08:50:19 -0300
+Message-ID: <CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
+References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+	<20160129001603.GM4130@sirena.org.uk>
+	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+	<20160129113518.GQ4130@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1453904619.27129.41.camel@buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <oss@buserror.net>, Zhiqiang Hou <Zhiqiang.Hou@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Harninder
- Rai <harninder.rai@freescale.com>, "robh@kernel.org" <robh@kernel.org>
-Cc: "Lian M.H." <Minghuan.Lian@freescale.com>, Hu Vincent <Mingkai.Hu@freescale.com>, Hou Zhiqiang <B48286@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160129113518.GQ4130-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IDIwMTblubQx5pyIMjfml6UgMjI6MjQNCj4g
-VG86IFpoaXFpYW5nIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBaaGlxaWFuZyBIb3UNCj4g
-PFpoaXFpYW5nLkhvdUBmcmVlc2NhbGUuY29tPjsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmc7DQo+IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9y
-ZzsgcGF1bHVzQHNhbWJhLm9yZzsNCj4gbXBlQGVsbGVybWFuLmlkLmF1OyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBwYXdlbC5tb2xsQGFybS5jb207
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsNCj4g
-SGFybmluZGVyIFJhaSA8aGFybmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPjsgcm9iaEBrZXJuZWwu
-b3JnDQo+IENjOiBMaWFuIE0uSC4gPE1pbmdodWFuLkxpYW5AZnJlZXNjYWxlLmNvbT47IEh1IFZp
-bmNlbnQNCj4gPE1pbmdrYWkuSHVAZnJlZXNjYWxlLmNvbT47IEhvdSBaaGlxaWFuZyA8QjQ4Mjg2
-QGZyZWVzY2FsZS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjQgMS8yXSBwb3dlcnBjL2Zz
-bDogQWRkIFBDSSBub2RlIGluIGRldmljZSB0cmVlIG9mDQo+IGJzYzkxMzJxZHMNCj4gDQo+IE9u
-IFdlZCwgMjAxNi0wMS0yNyBhdCAwNjo0NyArMDAwMCwgWmhpcWlhbmcgSG91IHdyb3RlOg0KPiA+
-IEhpIEhlcnJpbmcgYW5kIEt1bWFyIGFuZCBJYW4sDQo+ID4NCj4gPiBDYW4geW91IGhlbHAgdG8g
-YXBwbHkgdGhpcyBwYXRjaD8NCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBaaGlxaWFuZw0KPiANCj4g
-Q2FuIHlvdSBjaGVjayB3aGV0aGVyIGEgcGF0Y2ggaGFzIGFscmVhZHkgYmVlbiBhcHBsaWVkIGJl
-Zm9yZSBwaW5naW5nIHBlb3BsZQ0KPiBhYm91dCBpdD8NCj4gDQoNClNvcnJ5LCBJIG9ubHkgY2hl
-Y2tlZCB0aGUgc3RhdGUgb2YgdGhpcyBwYXRjaHNldCBvbiB3ZWIuDQoNClRoYW5rcywNClpoaXFp
-YW5nDQoNCj4gDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBG
-cm9tOiBaaGlxaWFuZyBIb3UgW21haWx0bzp6aGlxaWFuZy5ob3VAbnhwLmNvbV0NCj4gPiA+IFNl
-bnQ6IDIwMTXlubQxMuaciDIy5pelIDE3OjI4DQo+ID4gPiBUbzogWmhpcWlhbmcgSG91IDxaaGlx
-aWFuZy5Ib3VAZnJlZXNjYWxlLmNvbT47DQo+ID4gPiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZzsgU2NvdHQgV29vZCA8c2NvdHR3b29kQGZyZWVzY2FsZS5jb20+Ow0KPiA+ID4gZ2FsYWtA
-a2VybmVsLmNyYXNoaW5nLm9yZzsgYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOw0KPiA+ID4gcGF1
-bHVzQHNhbWJhLm9yZzsgbXBlQGVsbGVybWFuLmlkLmF1OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPiA+IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBI
-YXJuaW5kZXIgUmFpDQo+ID4gPiA8aGFybmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPg0KPiA+ID4g
-Q2M6IExpYW4gTS5ILiA8TWluZ2h1YW4uTGlhbkBmcmVlc2NhbGUuY29tPjsgSHUgVmluY2VudA0K
-PiA+ID4gPE1pbmdrYWkuSHVAZnJlZXNjYWxlLmNvbT47IEhvdSBaaGlxaWFuZyA8QjQ4Mjg2QGZy
-ZWVzY2FsZS5jb20+DQo+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIIFY0IDEvMl0gcG93ZXJwYy9m
-c2w6IEFkZCBQQ0kgbm9kZSBpbiBkZXZpY2UgdHJlZQ0KPiA+ID4gb2YgYnNjOTEzMnFkcw0KPiA+
-ID4NCj4gPiA+IEhpIFJvYiwNCj4gPiA+DQo+ID4gPiBDb3VsZCB5b3UgcGxlYXNlIHRha2UgdGhp
-cyBwYXRjaCBpbnRvIGFjY291bnQ/DQo+ID4gPg0KPiA+ID4gVGhhbmtzLA0KPiA+ID4gWmhpcWlh
-bmcNCj4gPiA+DQo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+IEZy
-b206IFpoaXFpYW5nIEhvdSBbbWFpbHRvOlpoaXFpYW5nLkhvdUBmcmVlc2NhbGUuY29tXQ0KPiA+
-ID4gPiBTZW50OiAyMDE15bm0MTHmnIg15pelIDExOjE2DQo+ID4gPiA+IFRvOiBsaW51eHBwYy1k
-ZXZAbGlzdHMub3psYWJzLm9yZzsgU2NvdHQgV29vZDsNCj4gPiA+ID4gZ2FsYWtAa2VybmVsLmNy
-YXNoaW5nLm9yZzsgYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOw0KPiA+ID4gPiBwYXVsdXNAc2Ft
-YmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0K
-PiA+ID4gPiByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRs
-YW5kQGFybS5jb207DQo+ID4gPiA+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBIYXJu
-aW5kZXIgUmFpDQo+ID4gPiA+IENjOiBNaW5naHVhbiBMaWFuOyBNaW5na2FpIEh1OyBaaGlxaWFu
-ZyBIb3UNCj4gPiA+ID4gU3ViamVjdDogW1BBVENIIFY0IDEvMl0gcG93ZXJwYy9mc2w6IEFkZCBQ
-Q0kgbm9kZSBpbiBkZXZpY2UgdHJlZQ0KPiA+ID4gPiBvZiBic2M5MTMycWRzDQo+ID4gPiA+DQo+
-ID4gPiA+IEZyb206IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4N
-Cj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSGFybmluZGVyIFJhaSA8aGFybmluZGVy
-LnJhaUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNaW5naHVhbiBMaWFu
-IDxNaW5naHVhbi5MaWFuQGZyZWVzY2FsZS5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEhv
-dSBaaGlxaWFuZyA8QjQ4Mjg2QGZyZWVzY2FsZS5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiBW
-NDogVjM6DQo+ID4gPiA+ICAtIFJlbW92ZSBnZXJyaXQgc3R1ZmYuDQo+ID4gPiA+IFYyOg0KPiA+
-ID4gPiAgLSBSZW1vdmUgcHJvcGVydHkgY2xvY2stZnJlcXVlbmN5Lg0KPiA+ID4gPg0KPiA+ID4g
-PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2JzYzkxMzJxZHMuZHRzICAgICAgICAgIHwgMTUgKysr
-KysrKysrKysrKysNCj4gPiA+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEzMnNp
-LXBvc3QuZHRzaSB8IDI4DQo+ID4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+
-ID4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC9ic2M5MTMyc2ktcHINCj4gPiA+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrIGUuZHQN
-Cj4gPiA+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrIHNpDQo+ID4gPiA+ID4gIDEgKw0K
-PiA+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspDQo+ID4gPiA+DQo+ID4g
-PiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNjOTEzMnFkcy5kdHMNCj4g
-PiA+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNjOTEzMnFkcy5kdHMNCj4gPiA+ID4gaW5k
-ZXggNmNhYjEwNi4uOTQwZDcxOSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2JzYzkxMzJxZHMuZHRzDQo+ID4gPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9ic2M5MTMycWRzLmR0cw0KPiA+ID4gPiBAQCAtMjksNiArMjksMjEgQEANCj4gPiA+ID4gIHNv
-Yzogc29jQGZmNzAwMDAwIHsNCj4gPiA+ID4gIHJhbmdlcyA9IDwweDAgMHgwIDB4ZmY3MDAwMDAg
-MHgxMDAwMDA+OyAgfTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArcGNpMDogcGNpZUBmZjcwYTAwMCB7
-DQo+ID4gPiA+ICtyZWcgPSA8MCAweGZmNzBhMDAwIDAgMHgxMDAwPjsNCj4gPiA+ID4gK3Jhbmdl
-cyA9IDwweDIwMDAwMDAgMHgwIDB4OTAwMDAwMDAgMCAweDkwMDAwMDAwIDB4MA0KPiA+ID4gPiAw
-eDIwMDAwMDAwDQo+ID4gPiA+ICsgIDB4MTAwMDAwMCAweDAgMHgwMDAwMDAwMCAwIDB4YzAwMTAw
-MDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiArcGNpZUAwIHsNCj4gPiA+ID4gK3JhbmdlcyA9IDww
-eDIwMDAwMDAgMHgwIDB4OTAwMDAwMDANCj4gPiA+ID4gKyAgMHgyMDAwMDAwIDB4MCAweDkwMDAw
-MDAwDQo+ID4gPiA+ICsgIDB4MCAweDIwMDAwMDAwDQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgMHgx
-MDAwMDAwIDB4MCAweDANCj4gPiA+ID4gKyAgMHgxMDAwMDAwIDB4MCAweDANCj4gPiA+ID4gKyAg
-MHgwIDB4MTAwMDAwPjsNCj4gPiA+ID4gK307DQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiAgfTsNCj4g
-PiA+ID4NCj4gPiA+ID4gIC9pbmNsdWRlLyAiYnNjOTEzMnFkcy5kdHNpIg0KPiA+ID4gPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpDQo+
-ID4gPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpDQo+
-ID4gPiA+IGluZGV4IGM3MjMwNzEuLmI1ZjA3MTUgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2FyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEzMnNpLXBvc3QuZHRzaQ0KPiA+ID4gPiArKysgYi9h
-cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wb3N0LmR0c2kNCj4gPiA+ID4gQEAg
-LTQwLDYgKzQwLDM0IEBADQo+ID4gPiA+ICBpbnRlcnJ1cHRzID0gPDE2IDIgMCAwIDIwIDIgMCAw
-PjsgIH07DQo+ID4gPiA+DQo+ID4gPiA+ICsvKiBjb250cm9sbGVyIGF0IDB4YTAwMCAqLw0KPiA+
-ID4gPiArJnBjaTAgew0KPiA+ID4gPiArY29tcGF0aWJsZSA9ICJmc2wsYnNjOTEzMi1wY2llIiwg
-ImZzbCxxb3JpcS1wY2llLXYyLjIiOw0KPiA+ID4gPiArZGV2aWNlX3R5cGUgPSAicGNpIjsgI3Np
-emUtY2VsbHMgPSA8Mj47ICNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+ID4gPiArYnVzLXJhbmdl
-ID0gPDAgMjU1PjsgaW50ZXJydXB0cyA9IDwxNiAyIDAgMD47DQo+ID4gPiA+ICsNCj4gPiA+ID4g
-K3BjaWVAMCB7DQo+ID4gPiA+ICtyZWcgPSA8MCAwIDAgMCAwPjsNCj4gPiA+ID4gKyNpbnRlcnJ1
-cHQtY2VsbHMgPSA8MT47DQo+ID4gPiA+ICsjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiA+ID4gKyNh
-ZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+ID4gPiArZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiA+
-ID4gK2ludGVycnVwdHMgPSA8MTYgMiAwIDA+Ow0KPiA+ID4gPiAraW50ZXJydXB0LW1hcC1tYXNr
-ID0gPDB4ZjgwMCAwIDAgNz47DQo+ID4gPiA+ICsNCj4gPiA+ID4gK2ludGVycnVwdC1tYXAgPSA8
-DQo+ID4gPiA+ICsvKiBJRFNFTCAweDAgKi8NCj4gPiA+ID4gKzAwMDAgMHgwIDB4MCAweDEgJm1w
-aWMgMHgwIDB4MiAweDAgMHgwDQo+ID4gPiA+ICswMDAwIDB4MCAweDAgMHgyICZtcGljIDB4MSAw
-eDIgMHgwIDB4MA0KPiA+ID4gPiArMDAwMCAweDAgMHgwIDB4MyAmbXBpYyAweDIgMHgyIDB4MCAw
-eDANCj4gPiA+ID4gKzAwMDAgMHgwIDB4MCAweDQgJm1waWMgMHgzIDB4MiAweDAgMHgwDQo+ID4g
-PiA+ICs+Ow0KPiA+ID4gPiArfTsNCj4gPiA+ID4gK307DQo+ID4gPiA+ICsNCj4gPiA+ID4gICZz
-b2Mgew0KPiA+ID4gPiAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gPiA+ICAjc2l6ZS1jZWxs
-cyA9IDwxPjsNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
-YnNjOTEzMnNpLXByZS5kdHNpDQo+ID4gPiA+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9i
-c2M5MTMyc2ktcHJlLmR0c2kNCj4gPiA+ID4gaW5kZXggMzAxYTlkYi4uOTBmNzk0OSAxMDA2NDQN
-Cj4gPiA+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcHJlLmR0
-c2kNCj4gPiA+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcHJl
-LmR0c2kNCj4gPiA+ID4gQEAgLTQ1LDYgKzQ1LDcgQEANCj4gPiA+ID4gIHNlcmlhbDAgPSAmc2Vy
-aWFsMDsNCj4gPiA+ID4gIGV0aGVybmV0MCA9ICZlbmV0MDsNCj4gPiA+ID4gIGV0aGVybmV0MSA9
-ICZlbmV0MTsNCj4gPiA+ID4gK3BjaTAgPSAmcGNpMDsNCj4gPiA+ID4gIH07DQo+ID4gPiA+DQo+
-ID4gPiA+ICBjcHVzIHsNCj4gPiA+ID4gLS0NCj4gPiA+ID4gMi4xLjAuMjcuZzk2ZGIzMjQNCj4g
-Pg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+
-ID4gTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdA0KPiA+IExpbnV4cHBjLWRldkBsaXN0cy5vemxh
-YnMub3JnDQo+ID4gaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRl
-dg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhw
-cGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczov
-L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+Hello Mark,
+
+On Fri, Jan 29, 2016 at 8:35 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Jan 29, 2016 at 01:20:08AM +0000, Yang, Wenyou wrote:
+>
+>> > > +static const struct of_device_id act8945a_pmic_of_match[] = {
+>> > > + { .compatible = "active-semi,act8945a-regulator" },
+>> > > + { },
+>> > > +};
+>> > > +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
+>
+>> > This seems mostly OK but why do we have a compatible string here - shouldn't
+>> > the MFD be able to instantiate the regulator function without needing this?
+>
+>> Because I got feedback from Javier for the act8945a-charger patches of this MFD series,
+>> He said missing the OF match table will cause the module autoloading broken.
+>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398113.html
+>
+>> What do you think about it?
+>
+> If then device is not being loaded from the DT (and it shouldn't be, the
+> device looks like it should be instantiated directly by the MFD as it
+> can't exist separately to that MFD) an OF table will do nothing.
+
+Then he should remove the .of_compatible from the MFD cell definition.
+
+Otherwise the MFD core will assign an of_node to this device in
+mfd_add_device(), making the platform core to believe the device was
+instantiated by OF. So an OF modalias uevent will be reported to load
+the module and the OF table should be used for matching the device
+with the driver.
+
+IOW, the MFD and regulator driver have to agree on this. Either
+everything should have OF or platform information, both work but
+mixing these as it was on a previous version doesn't.
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
