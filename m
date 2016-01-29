@@ -1,103 +1,73 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4] h8300: dts: Rename the serial port clock to fck
-Date: Fri, 29 Jan 2016 10:36:25 +0100
-Message-ID: <1454060185-1352-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 00/11] ARM: dts: shmobile: Rename the serial port clock to fck
+Date: Fri, 29 Jan 2016 10:47:30 +0100
+Message-ID: <1454060861-2375-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: uclinux-h8-devel@lists.sourceforge.jp, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The clock is really the device functional clock, not the interface
-clock. Rename it.
+	Hi Simon, Magnus,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-The new clock name has been accepted in the DT bindings in v4.5-rc1.
+This patch series renames the serial port clock to fck, as accepted in
+the DT bindings in v4.5-rc1.
 
-v4:
-  - No changes,
+Changes compared to v4:
+  - Changed one-line summary prefix to match current arm-soc practices,
+  - Split off h8/300 patch,
+  - Rebased,
 
-v3:
+Changes compared to v3:
   - Add Acked-by,
+  - Update for "[PATCH 0/2] ARM: shmobile: r8a7793: Increase scif
+    support".
 
-v2:
-  - New.
----
- arch/h8300/boot/dts/edosk2674.dts  | 6 +++---
- arch/h8300/boot/dts/h8300h_sim.dts | 4 ++--
- arch/h8300/boot/dts/h8s_sim.dts    | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+Dependencies:
+  - This series was created on top of "[PATCH v4 0/7] ARM: dts: R-Car:
+    Add SCIF fallback compatibility strings", but I think it applies to
+    plain renesas-devel-20160129-v4.5-rc1, too.
 
-diff --git a/arch/h8300/boot/dts/edosk2674.dts b/arch/h8300/boot/dts/edosk2674.dts
-index 4ce9fa874a577e55..6ae884bf66a5268c 100644
---- a/arch/h8300/boot/dts/edosk2674.dts
-+++ b/arch/h8300/boot/dts/edosk2674.dts
-@@ -88,20 +88,20 @@
- 		reg = <0xffff78 8>;
- 		interrupts = <88 0>, <89 0>, <90 0>, <91 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- 	sci1: serial@ffff80 {
- 		compatible = "renesas,sci";
- 		reg = <0xffff80 8>;
- 		interrupts = <92 0>, <93 0>, <94 0>, <95 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- 	sci2: serial@ffff88 {
- 		compatible = "renesas,sci";
- 		reg = <0xffff88 8>;
- 		interrupts = <96 0>, <97 0>, <98 0>, <99 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- };
-diff --git a/arch/h8300/boot/dts/h8300h_sim.dts b/arch/h8300/boot/dts/h8300h_sim.dts
-index 545bfb57af9a9f2e..9c733d920f1f0dc3 100644
---- a/arch/h8300/boot/dts/h8300h_sim.dts
-+++ b/arch/h8300/boot/dts/h8300h_sim.dts
-@@ -83,7 +83,7 @@
- 		reg = <0xffffb0 8>;
- 		interrupts = <52 0>, <53 0>, <54 0>, <55 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- 
- 	sci1: serial@ffffb8 {
-@@ -91,6 +91,6 @@
- 		reg = <0xffffb8 8>;
- 		interrupts = <56 0>, <57 0>, <58 0>, <59 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- };
-diff --git a/arch/h8300/boot/dts/h8s_sim.dts b/arch/h8300/boot/dts/h8s_sim.dts
-index bcedba5a3ce7e8ae..97e1f4b17ef067d5 100644
---- a/arch/h8300/boot/dts/h8s_sim.dts
-+++ b/arch/h8300/boot/dts/h8s_sim.dts
-@@ -87,13 +87,13 @@
- 		reg = <0xffff78 8>;
- 		interrupts = <88 0>, <89 0>, <90 0>, <91 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- 	sci1: serial@ffff80 {
- 		compatible = "renesas,sci";
- 		reg = <0xffff80 8>;
- 		interrupts = <92 0>, <93 0>, <94 0>, <95 0>;
- 		clocks = <&fclk>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 	};
- };
+Thanks for applying!
+
+Geert Uytterhoeven (1):
+  arm64: dts: r8a7795: Rename the serial port clock to fck
+
+Laurent Pinchart (10):
+  ARM: dts: sh73a0: Rename the serial port clock to fck
+  ARM: dts: r7s72100: Rename the serial port clock to fck
+  ARM: dts: r8a73a4: Rename the serial port clock to fck
+  ARM: dts: r8a7740: Rename the serial port clock to fck
+  ARM: dts: r8a7778: Rename the serial port clock to fck
+  ARM: dts: r8a7779: Rename the serial port clock to fck
+  ARM: dts: r8a7790: Rename the serial port clock to fck
+  ARM: dts: r8a7791: Rename the serial port clock to fck
+  ARM: dts: r8a7793: Rename the serial port clock to fck
+  ARM: dts: r8a7794: Rename the serial port clock to fck
+
+ arch/arm/boot/dts/r7s72100.dtsi          | 16 +++++++-------
+ arch/arm/boot/dts/r8a73a4.dtsi           | 12 +++++------
+ arch/arm/boot/dts/r8a7740.dtsi           | 18 ++++++++--------
+ arch/arm/boot/dts/r8a7778.dtsi           | 12 +++++------
+ arch/arm/boot/dts/r8a7779.dtsi           | 12 +++++------
+ arch/arm/boot/dts/r8a7790.dtsi           | 20 +++++++++---------
+ arch/arm/boot/dts/r8a7791.dtsi           | 36 ++++++++++++++++----------------
+ arch/arm/boot/dts/r8a7793.dtsi           | 36 ++++++++++++++++----------------
+ arch/arm/boot/dts/r8a7794.dtsi           | 36 ++++++++++++++++----------------
+ arch/arm/boot/dts/sh73a0.dtsi            | 18 ++++++++--------
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 22 +++++++++----------
+ 11 files changed, 119 insertions(+), 119 deletions(-)
+
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
