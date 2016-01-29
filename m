@@ -1,76 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
-Date: Thu, 28 Jan 2016 20:51:56 -0600
-Message-ID: <20160129025156.GA26113@rob-hp-laptop>
-References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
- <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
+Subject: Re: [PATCH 3/3] input: touchscreen: ad7879: add device tree support
+Date: Thu, 28 Jan 2016 21:00:32 -0600
+Message-ID: <20160129030032.GA24144@rob-hp-laptop>
+References: <1453777477-29706-1-git-send-email-stefan@agner.ch>
+ <1453777477-29706-3-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Meng Yi <meng.yi@nxp.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+In-Reply-To: <1453777477-29706-3-git-send-email-stefan@agner.ch>
+Sender: linux-input-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dmitry.torokhov@gmail.com, michael.hennerich@analog.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMjYsIDIwMTYgYXQgMTI6MDA6MzNQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToK
-PiBEQ1UgaXMgdGhlIHNob3J0Y3V0IG9mICdkaXNwbGF5IGNvbnRyb2xsZXIgdW5pdCcsIHNvbWUg
-SERNSSB0cmFuc21pdHRlcgo+IGF0dGFjaGVkIHRvIERDVSwgc3VjaCBhcyBzaWk5MDIyYSwgYW5k
-IHRoaXMgZHJpdmVyIGFkZCB0aGUgcmVsYXZlbnQKPiBmdW5jdGlvbnMgdG8gRFJNIGZyYW1ld3Jv
-ay4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNZW5nIFlpIDxtZW5nLnlpQG54cC5jb20+Cj4gLS0tCj4g
-IC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWwsc2lpOTAyMmEudHh0ICAgICAgIHwgIDQw
-ICsrKwo+ICBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oICAg
-ICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1faGRt
-aS5jICAgICAgICAgfCAyNzEgKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2ttcy5jICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVycy9n
-cHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fb3V0cHV0LmggICAgICAgfCAgMTEgKwo+ICA2IGZp
-bGVzIGNoYW5nZWQsIDMzNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsLHNpaTkwMjJh
-LnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2Rj
-dV9kcm1faGRtaS5jCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWwsc2lpOTAyMmEudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbCxzaWk5MDIyYS50eHQKPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjMyYTcyNmEKPiAtLS0gL2Rldi9udWxs
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3NpbCxzaWk5MDIyYS50eHQKPiBAQCAtMCwwICsxLDQwIEBACj4gK0RldmljZS1UcmVlIGJpbmRp
-bmdzIGZvciB0aGUgU2lJOTAyeCBoZG1pIHRyYW5zbWl0dGVyLgo+ICstLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFNpSTkwMjJBIGlzIGFuIHVsdHJh
-IGxvdy1wb3dlciBIRE1JIHRyYW5zbWl0dGVyLiBJdCBzdXBwb3J0cyByZXNvbHV0aW9ucyBmcm9t
-Cj4gK3N0YW5kYXJkIGRlZmluaXRpb24gNDgwaS9wIGFuZCA1NzZpL3AgYWxsIHRoZSB3YXkgdG8g
-aGlnaC1kZWZpbml0aW9uIDcyMHAsIDEwODBpLAo+ICthbmQgMTA4MHAsIHRoZSBoaWdoZXN0IHJl
-c29sdXRpb24gc3VwcG9ydGVkIGJ5IEhEVFZzIHRvZGF5LiBJdCBhbHNvIHN1cHBvcnRzIGFsbAoK
-V2VsbCwgd2UncmUgdXAgdG8gNEsgbm93Li4uCgo+ICtQQyByZXNvbHV0aW9ucyB1cCB0byBVWEdB
-IGZvciBuZXRib29rcwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxl
-OiAJU2hvdWxkIGJlICJzaWwsc2lpOTAyMmEiLgo+ICstIHJlZzogCQlUaGUgSTJDIGFkZHJlc3Mg
-b2YgdGhlIGRldmljZS4KPiArLSBpbnRlcnJ1cHRzOglJbnRlcnJ1cHQgbnVtYmVyIHRvIHRoZSBj
-cHUuCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoZSBzaWk5MDIyIGhhcyBvbmUgdmlk
-ZW8gcG9ydHMuIEl0cyBjb25uZWN0aW9uIGlzIG1vZGVsbGVkIHVzaW5nIHRoZSBPRgo+ICtncmFw
-aCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2dyYXBoLnR4dC4KPiArCj4gKy0gVmlkZW8gcG9ydCAwIGZvciB0aGUgSERNSSBvdXRwdXQKPiAr
-Cj4gK0V4YW1wbGU6Cj4gKy0tLS0tLS0KPiArCj4gKyAgICBzaWk5MDIyOiBoZG1pQDM5IHsKPiAr
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaWwsc2lpOTAyMmEiOwo+ICsgICAgICAgICAgICBy
-ZWcgPSA8MHgzOT47Cj4gKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxNjcgSVJR
-X1RZUEVfRURHRV9SSVNJTkc+Owo+ICsKPiArICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAg
-ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAg
-ICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+OwoKWW91ciB1bml0IGFkZHJl
-c3MgKDApIGFuZCByZWcgZG9uJ3QgbWF0Y2guCgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc2lpOTAyMl9vdXQ6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbj47Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB9OwoKVGhpcyBuZWVkcyB0byBoYXZlIGEgcG9ydCBmb3IgdGhlIGlucHV0
-IGZvciB0aGUgY29ubmVjdGlvbiB0byB5b3VyIApkaXNwbGF5IGNvbnRyb2xsZXIuCgo+ICsgICAg
-ICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgIH07Cj4gKyAgICB9OwpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jan 25, 2016 at 07:04:37PM -0800, Stefan Agner wrote:
+> Add device tree support for the I2C variant of AD7879 (AD7879-1). This
+> allows to specify the touchscreen controller as a I2C client node.
+> Most of the options available as platform data are also available as
+> device tree properties. Exporting the GPIO is currently not possible
+> through device tree.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  .../bindings/input/touchscreen/ad7879-i2c.txt      | 47 ++++++++++++++++
+>  drivers/input/touchscreen/ad7879-i2c.c             | 63 +++++++++++++++++++++-
+>  drivers/input/touchscreen/ad7879-spi.c             |  3 +-
+>  drivers/input/touchscreen/ad7879.c                 |  2 +-
+>  drivers/input/touchscreen/ad7879.h                 |  1 +
+>  5 files changed, 113 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ad7879-i2c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ad7879-i2c.txt b/Documentation/devicetree/bindings/input/touchscreen/ad7879-i2c.txt
+> new file mode 100644
+> index 0000000..bf169a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/ad7879-i2c.txt
+> @@ -0,0 +1,47 @@
+> +* Analog Devices AD7879-1/AD7889-1 touchscreen interface (I2C)
+> +
+> +Required properties:
+> +- compatible: must be "adi,ad7879-1"
+> +- reg: i2c slave address
+> +- interrupt-parent: the phandle for the interrupt controller
+> +- interrupts: touch controller interrupt
+> +- resistance-plate-x		: total resistance of X-plate (for pressure
+> +				  calculation)
+> +- touchscreen-max-pressure	: maximum reported pressure
+> +- touchscreen-swapped-x-y	: X and Y axis are swapped (boolean)
+> +				  Swapping is done after inverting the axis
+> +Optional properties:
+> +- first-conversion-delay	: 0-12 in 128us steps (starting with 128us)
+> +				  13: 2.560ms
+> +				  14: 3.584ms
+> +				  15: 4.096ms
+> +- acquisition-time		: 0: 2us
+> +				  1: 4us
+> +				  2: 8us
+> +				  3: 16us
+> +- median-filter-size		: 0: disabled
+> +				  1: 4 measurements
+> +				  2: 8 measurements
+> +				  3: 16 measurements
+> +- averaging			: 0: 2 middle values (1 if median disabled)
+> +				  1: 4 middle values
+> +				  2: 8 middle values
+> +				  3: 16 values
+> +- conversion-interval:		: 0: convert one time only
+> +				  1-255: 515us + val * 35us (up to 9.440ms)
+
+These all should be prefixed with "adi,". Also, please state the sizes 
+are 8-bit.
+
+> +
+> +Example:
+> +
+> +	ad7879@2c {
+> +		compatible = "adi,ad7879-1";
+> +		reg = <0x2c>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
+> +		resistance-plate-x = <120>;
+> +		touchscreen-max-pressure = <4096>;
+> +		first-conversion-delay = /bits/ 8 <3>;
+> +		acquisition-time = /bits/ 8 <1>;
+> +		median-filter-size = /bits/ 8 <2>;
+> +		averaging = /bits/ 8 <1>;
+> +		conversion-interval = /bits/ 8 <255>;
+> +	};
