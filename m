@@ -1,74 +1,29 @@
-From: Laison Computech Inc <drogaosuper18-Iyw5HrWPTaRrAbSHxf+XXV/I71DsQ//L@public.gmane.org>
-Subject: NEW ARRIVALS, CISCO,CPU's,Memory, LAPTOP AND AVAYA
-Date: Thu, 28 Jan 2016 22:07:30 -0200 (BRST)
-Message-ID: <1048295648.15443341.1454026050992.JavaMail.root__43716.4872455925$1454028410$gmane$org@drogacenter.com.br>
-Reply-To: Laison Computech Inc <sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v4 0/3] arm64/clk: EXYNOS: Consolidate Exynos7 symbol
+Date: Fri, 29 Jan 2016 10:13:03 +0900
+Message-ID: <20160129011303.GC23584@samsunx.samsung>
+References: <1453941324-15742-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <1453941324-15742-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
- Dear Sir/Madam,
+Hi Krzysztof,
 
- Clean tested working pulls CPUs and QTYs in stock.
+> Patchset attempts to remove the ARCH_EXYNOS7 symbol.
+> 
+> All patches depend on previous ones so no cherry-picked.
+> I was thinking about merging this through arm-soc tree after getting
+> needed acks (clk, arm-soc?).
 
- 115 X X5650
- 65 X E5410
- 75 X X5660
- 145 X E5530
- 100 X E5645
- 40 X X5680
- 75 X X5690
+I like this patchset and reviewed it. Now it even applies on my
+branch :)
 
- Brand new sealed IP phones and QTYs in stock.
+Feel free to add Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
 
- 55 x CP-7937G
- 77 x CP-7942G
- 54 x CP-7945G
- 75 x CP-7962G
- ......
- 45 x Avaya 9630
- 65 x Avaya 9641
- 55 x Avaya 9640
-
- All NIB.
-
- Here is our current stock list.
-
- SSD drives and 750 gig 2.5" sata drives
-
- We also have
- 250 x i5 dell
- 133 x HP
- 360 x Lenevo
- all grade A
-
- Here is the qty in stock for laptops
-
- 150 x E6500 Dell Latitude E6500 Core 2 Duo 2.80GHz T9600 4GB 160GB DVD+/-RW Win 7
- 60 x E6510 Dell Ltitude E6510. 15.6" Intel Core i5- M520 @ 2.40GHz. 4GB.  320GB DVD+/-RW Win 7
- 30 X 8530P HP EliteBook 8530p 15.4" Laptop 2.53GHz Core 2 Duo T9400, 4GB RAM, 160GB HDD, Win
- 100 x 8740W HP EliteBook 8740w 17" 2.4Ghz Core i5 6GB 250GB Win 7 Pr
- 45 x 8760W HP EliteBook 8760W 17.3" 2nd Gen Intel Core i7 2.70GHz 8GB 320GB Windows 7 Pro
- 50 x DELL 6520Dell latitude e6520 15.6" i5-2520M 2.5Ghz, 8GB Ram, 500GB HD  Win 7 @ $115
- 120 x DELL 6420 Laptop Dell Latitude E6420 14" Intel Core i5 2.4Ghz 4GB RAM 250GB HDD DVD Win 7
- 150 x T410 Lenovo ThinkPad Laptop T410s 14.1" 2.40GHz Core i5 4GB RAM 160GB Win 7
- 180 x 8440P HP EliteBook 8440p 14" M520 Core i5 2.4GHz 4GB 250GB Win 7
-
-
- Let me know if you're interested. We are very open to offers and willing to work with you to make sure that we have a deal.
-
- Thank You
- Barbara Johnson
- Laison Computech Inc
- 210 N Scoring Ave,
- Rialto California, 92376
- Tel: +1-657-232-7047
- Fax: +1-347-214-047
-sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andi
