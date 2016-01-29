@@ -1,31 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] Documentation: gpio: Update description for
- X-Gene standby GPIO controller DTS binding
-Date: Thu, 28 Jan 2016 20:46:06 -0600
-Message-ID: <20160129024606.GA18663@rob-hp-laptop>
-References: <1453792935-19916-1-git-send-email-qnguyen@apm.com>
- <1453792935-19916-3-git-send-email-qnguyen@apm.com>
+Subject: Re: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
+Date: Thu, 28 Jan 2016 20:51:56 -0600
+Message-ID: <20160129025156.GA26113@rob-hp-laptop>
+References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
+ <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1453792935-19916-3-git-send-email-qnguyen@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
+In-Reply-To: <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Meng Yi <meng.yi@nxp.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 02:22:14PM +0700, Quan Nguyen wrote:
-> Update description for X-Gene standby GPIO controller DTS binding to
-> support GPIO line configuration as input, output or external IRQ pin.
-> 
-> Signed-off-by: Y Vo <yvo@apm.com>
-> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 39 ++++++++++++++++++----
->  1 file changed, 33 insertions(+), 6 deletions(-)
-
-Did you change something here? I've already acked this. Please add acks 
-when posting new versions.
-
-Rob
+T24gVHVlLCBKYW4gMjYsIDIwMTYgYXQgMTI6MDA6MzNQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToK
+PiBEQ1UgaXMgdGhlIHNob3J0Y3V0IG9mICdkaXNwbGF5IGNvbnRyb2xsZXIgdW5pdCcsIHNvbWUg
+SERNSSB0cmFuc21pdHRlcgo+IGF0dGFjaGVkIHRvIERDVSwgc3VjaCBhcyBzaWk5MDIyYSwgYW5k
+IHRoaXMgZHJpdmVyIGFkZCB0aGUgcmVsYXZlbnQKPiBmdW5jdGlvbnMgdG8gRFJNIGZyYW1ld3Jv
+ay4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNZW5nIFlpIDxtZW5nLnlpQG54cC5jb20+Cj4gLS0tCj4g
+IC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWwsc2lpOTAyMmEudHh0ICAgICAgIHwgIDQw
+ICsrKwo+ICBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
+ICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oICAg
+ICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1faGRt
+aS5jICAgICAgICAgfCAyNzEgKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2ttcy5jICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVycy9n
+cHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fb3V0cHV0LmggICAgICAgfCAgMTEgKwo+ICA2IGZp
+bGVzIGNoYW5nZWQsIDMzNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsLHNpaTkwMjJh
+LnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2Rj
+dV9kcm1faGRtaS5jCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWwsc2lpOTAyMmEudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbCxzaWk5MDIyYS50eHQKPiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjMyYTcyNmEKPiAtLS0gL2Rldi9udWxs
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3NpbCxzaWk5MDIyYS50eHQKPiBAQCAtMCwwICsxLDQwIEBACj4gK0RldmljZS1UcmVlIGJpbmRp
+bmdzIGZvciB0aGUgU2lJOTAyeCBoZG1pIHRyYW5zbWl0dGVyLgo+ICstLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFNpSTkwMjJBIGlzIGFuIHVsdHJh
+IGxvdy1wb3dlciBIRE1JIHRyYW5zbWl0dGVyLiBJdCBzdXBwb3J0cyByZXNvbHV0aW9ucyBmcm9t
+Cj4gK3N0YW5kYXJkIGRlZmluaXRpb24gNDgwaS9wIGFuZCA1NzZpL3AgYWxsIHRoZSB3YXkgdG8g
+aGlnaC1kZWZpbml0aW9uIDcyMHAsIDEwODBpLAo+ICthbmQgMTA4MHAsIHRoZSBoaWdoZXN0IHJl
+c29sdXRpb24gc3VwcG9ydGVkIGJ5IEhEVFZzIHRvZGF5LiBJdCBhbHNvIHN1cHBvcnRzIGFsbAoK
+V2VsbCwgd2UncmUgdXAgdG8gNEsgbm93Li4uCgo+ICtQQyByZXNvbHV0aW9ucyB1cCB0byBVWEdB
+IGZvciBuZXRib29rcwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxl
+OiAJU2hvdWxkIGJlICJzaWwsc2lpOTAyMmEiLgo+ICstIHJlZzogCQlUaGUgSTJDIGFkZHJlc3Mg
+b2YgdGhlIGRldmljZS4KPiArLSBpbnRlcnJ1cHRzOglJbnRlcnJ1cHQgbnVtYmVyIHRvIHRoZSBj
+cHUuCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoZSBzaWk5MDIyIGhhcyBvbmUgdmlk
+ZW8gcG9ydHMuIEl0cyBjb25uZWN0aW9uIGlzIG1vZGVsbGVkIHVzaW5nIHRoZSBPRgo+ICtncmFw
+aCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dyYXBoLnR4dC4KPiArCj4gKy0gVmlkZW8gcG9ydCAwIGZvciB0aGUgSERNSSBvdXRwdXQKPiAr
+Cj4gK0V4YW1wbGU6Cj4gKy0tLS0tLS0KPiArCj4gKyAgICBzaWk5MDIyOiBoZG1pQDM5IHsKPiAr
+ICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaWwsc2lpOTAyMmEiOwo+ICsgICAgICAgICAgICBy
+ZWcgPSA8MHgzOT47Cj4gKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxNjcgSVJR
+X1RZUEVfRURHRV9SSVNJTkc+Owo+ICsKPiArICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAg
+ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAg
+ICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+OwoKWW91ciB1bml0IGFkZHJl
+c3MgKDApIGFuZCByZWcgZG9uJ3QgbWF0Y2guCgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc2lpOTAyMl9vdXQ6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbj47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB9OwoKVGhpcyBuZWVkcyB0byBoYXZlIGEgcG9ydCBmb3IgdGhlIGlucHV0
+IGZvciB0aGUgY29ubmVjdGlvbiB0byB5b3VyIApkaXNwbGF5IGNvbnRyb2xsZXIuCgo+ICsgICAg
+ICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgIH07Cj4gKyAgICB9OwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
