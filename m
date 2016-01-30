@@ -1,45 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Sat, 30 Jan 2016 15:58:29 -0600
-Message-ID: <CAL_JsqKWXnULfWkkvukWEzBBTG8JP+HKVg6WWejWcOA=p24tvQ@mail.gmail.com>
-References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
- <20151231231039.GA8886@rob-hp-laptop> <56ABADEA.40801@codeaurora.org>
- <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com> <56ABCDB7.5080203@codeaurora.org>
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6qdl-udoo: add sound support
+Date: Sun, 31 Jan 2016 00:42:35 +0100
+Message-ID: <56AD4A6B.80409@maciej.szmigiero.name>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56ABCDB7.5080203@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 29, 2016 at 2:38 PM, Timur Tabi <timur@codeaurora.org> wrote:
-> Rob Herring wrote:
+Add sound support in UDOO board DT file.
 
-[...]
+Signed-off-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 57 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
->>>> Isn't this a user enabled feature if the h/w supports it?
->>>
->>>
->>>
->>> Is there a sysfs entry for that?  We were planning on having a similar
->>> ACPI
->>> property.
->>
->>
->> It would be in ethtool I think.
->
->
-> Ah, this driver does not support ethtool yet.
->
-> However, based on a cursory look of ethtool, it appears that there's only an
-> option to query the current timestamp, but not actually enable/disable the
-> feature.  The e1000e driver, for example, just forces the feature by default
-> for various chips.  Is there any reason why we shouldn't enable it if the
-> hardware supports it?
-
-Probably not. You simply ignore the timestamp if you don't care. So
-then why do you want a DT property?
-
-Rob
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index 1211da894ee9..d3e54e40a017 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -34,6 +34,18 @@
+ 			gpio = <&gpio7 12 0>;
+ 		};
+ 	};
++
++	sound {
++		compatible = "fsl,imx6q-udoo-ac97",
++			     "fsl,imx-audio-ac97";
++		model = "fsl,imx6q-udoo-ac97";
++		audio-cpu = <&ssi1>;
++		audio-routing =
++			"RX", "Mic Jack",
++			"Headphone Jack", "TX";
++		mux-int-port = <1>;
++		mux-ext-port = <6>;
++	};
+ };
+ 
+ &fec {
+@@ -109,6 +121,36 @@
+ 				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+ 			>;
+ 		};
++
++		pinctrl_ac97_running: ac97running {
++			fsl,pins = <
++				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
++				MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
++			>;
++		};
++
++		pinctrl_ac97_warm_reset: ac97warmreset {
++			fsl,pins = <
++				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
++				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
++			>;
++		};
++
++		pinctrl_ac97_reset: ac97reset {
++			fsl,pins = <
++				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x1b0b0
++				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
++			>;
++		};
+ 	};
+ };
+ 
+@@ -132,3 +174,18 @@
+ 	non-removable;
+ 	status = "okay";
+ };
++
++&audmux {
++	status = "okay";
++};
++
++&ssi1 {
++	cell-index = <0>;
++	fsl,mode = "ac97-slave";
++	pinctrl-names = "ac97-running", "ac97-reset", "ac97-warm-reset";
++	pinctrl-0 = <&pinctrl_ac97_running>;
++	pinctrl-1 = <&pinctrl_ac97_reset>;
++	pinctrl-2 = <&pinctrl_ac97_warm_reset>;
++	ac97-gpios = <&gpio4 19 0 &gpio4 18 0 &gpio2 30 0>;
++	status = "okay";
++};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
