@@ -1,64 +1,125 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: light: opt3001: Add device tree binding
- documentation
-Date: Sat, 30 Jan 2016 16:30:23 +0000
-Message-ID: <56ACE51F.6000906@kernel.org>
-References: <1454094180-2688-1-git-send-email-dannenberg@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V7 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Sat, 30 Jan 2016 22:08:43 +0530
+Message-ID: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454094180-2688-1-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org >> Peter Meerwald" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, mhornung.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/16 19:03, Andreas Dannenberg wrote:
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Looks straight forward enough I'm happy to take this in a few
-weeks with out a devicetree ack.  (though one is as ever welcome!)
+Add SW support for MAXIM Semiconductor's Power Management
+IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+RTC, watchdog, clocks etc.
 
-In case anyone was wondering, this is retro-documentation - all that has
-changed recently is the addition of support for running without an interrupt
-line.
+This series add respective driver for each of sub-modules.
 
-Jonathan
-> ---
->  .../devicetree/bindings/iio/light/opt3001.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/opt3001.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> new file mode 100644
-> index 0000000..55b9cb3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> @@ -0,0 +1,26 @@
-> +* Texas Instruments OPT3001 Ambient Light Sensor
-> +
-> +The driver supports interrupt-driven and interrupt-less operation, depending
-> +on whether an interrupt property has been populated into the DT. Note that
-> +the optional generation of IIO events on rising/falling light threshold changes
-> +requires the use of interrupts. Without interrupts, only the simple reading
-> +of the current light value is supported through the IIO API.
-> +
-> +http://www.ti.com/product/opt3001
-> +
-> +Required properties:
-> +  - compatible: should be "ti,opt3001"
-> +  - reg: the I2C address of the sensor
-> +  
-> +Optional properties:
-> +  - interrupt-parent: should be the phandle for the interrupt controller
-> +  - interrupts: interrupt mapping for GPIO IRQ (configure for falling edge)
-> +
-> +Example:
-> +
-> +opt3001@44 {
-> +	compatible = "ti,opt3001";
-> +	reg = <0x44>;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> 
+Changes from V1: 
+DT DOC:
+- Added units in some of properties.
+- Change the boolean property to tristate type and detail some of
+  properties.
+
+RTC:
+- Rename the file to rtc-max77xxx.c and make the generic implementation.
+- Direct regmap apis are used for the register access.
+- Decouped from max77620 driver.
+- Taken care of cleanup comments form V1 version.
+
+MFD:
+- Code cleanups per review from V1. 
+- Move register access APIs from header to c file.
+- Remove some of non required variable, remove duplication in error message
+ and simplify some of function implementation.
+
+GPIO:
+- Use the gpiochip_add_data and get the chip data from core APIs.
+- Cleanups based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+
+Pinctrl:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+
+Regulators:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+- Taken care of review comment from Mark.
+
+Changes from V2: 
+- Run coccicheck and checkpatch in strict mode for the alignment.
+- Drop RTC driver and its i2c client registartion.
+- Refactor Regulator  driver to use core API for DT parsing.
+
+Changes from V3: 
+- Change all sys initcall to module driver.
+- change the max77620_read argument to unisgned int from u8.
+
+
+Changes from V4:
+- Provide more details in the dt binding doc.
+- Take care of fps nodes.
+- Split the submodule's DT binding doc on respective folder.
+- Drop the battery charger and low battery binding and related code as
+  it need to go on power driver.
+
+Changes from V5:
+- None
+
+Changes from V6:
+- Taken care of Lee's comment like used defines for irqs, remove max77620
+  register accesss abstractions, remove DTof module and use ID table only,
+  reduce the copyright lines.
+- Drop configuration for hard power off time chnage as it will be in
+  power driver.
+- Taken care of Mark's comment about the active discharge. Currently
+  drop this configuration and follow up patches to move this to core
+  and add callback apis are planned.
+- Use direct regmap from all drivers instead of using abstractions.
+- move regulator supply to device node instead of regulators sub node.
+
+Laxman Dewangan (8):
+  mfd: add device-tree binding doc for PMIC max77620/max20024
+  mfd: max77620: add core driver for MAX77620/MAX20024
+  pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
+  pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+  gpio: add DT binding doc for gpio of PMIC max77620/max20024
+  gpio: max77620: add gpio driver for MAX77620/MAX20024
+  regulator: add DT binding doc for regulator of PMIC max77620/max20024
+  regulator: max77620: add regulator driver for max77620/max20024
+
+ .../devicetree/bindings/gpio/gpio-max77620.txt     |  25 +
+ Documentation/devicetree/bindings/mfd/max77620.txt | 118 +++
+ .../bindings/pinctrl/pinctrl-max77620.txt          |  87 +++
+ .../bindings/regulator/regulator-max77620.txt      | 163 ++++
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max77620.c                       | 263 +++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max77620.c                             | 540 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max77620.c                 | 687 +++++++++++++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/max77620-regulator.c             | 825 +++++++++++++++++++++
+ include/dt-bindings/mfd/max77620.h                 |  35 +
+ include/linux/mfd/max77620.h                       | 338 +++++++++
+ 18 files changed, 3128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+ create mode 100644 drivers/gpio/gpio-max77620.c
+ create mode 100644 drivers/mfd/max77620.c
+ create mode 100644 drivers/pinctrl/pinctrl-max77620.c
+ create mode 100644 drivers/regulator/max77620-regulator.c
+ create mode 100644 include/dt-bindings/mfd/max77620.h
+ create mode 100644 include/linux/mfd/max77620.h
+
+-- 
+2.1.4
+
