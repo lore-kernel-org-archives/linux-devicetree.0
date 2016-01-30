@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V7 3/8] pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
-Date: Sat, 30 Jan 2016 22:08:46 +0530
-Message-ID: <1454171931-27752-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V7 5/8] gpio: add DT binding doc for gpio of PMIC max77620/max20024
+Date: Sat, 30 Jan 2016 22:08:48 +0530
+Message-ID: <1454171931-27752-6-git-send-email-ldewangan@nvidia.com>
 References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -15,114 +15,46 @@ List-Id: devicetree@vger.kernel.org
 Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
 which act as GPIO as well as special function mode.
 
-Add DT binding document to configure pins in function mode as
-well as pin configuration parameters.
+Add DT binding document to support these pins in GPIO
+mode via GPIO framework.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
-Changes from V4:
-- Separate out from pincontrol driver 
+ .../devicetree/bindings/gpio/gpio-max77620.txt     | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
 
-Changes from V5:
-- Starting patch title with pinctrl instead of DT:pinctrl
-
- .../bindings/pinctrl/pinctrl-max77620.txt          | 87 ++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max77620.txt b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
 new file mode 100644
-index 0000000..6536786
+index 0000000..410e716
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
-@@ -0,0 +1,87 @@
-+Pincontrol driver for MAX77620 Power management IC from Maxim Semiconductor.
++++ b/Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+@@ -0,0 +1,25 @@
++GPIO driver for MAX77620 Power management IC from Maxim Semiconductor.
 +
 +Device has 8 GPIO pins which can be configured as GPIO as well as the
 +special IO functions.
 +
-+Please refer file <devicetree/bindings/pinctrl/pinctrl-bindings.txt>
-+for details of the common pinctrl bindings used by client devices,
-+including the meaning of the phrase "pin configuration node".
-+
-+Optional Pinmux properties:
-+--------------------------
-+Following properties are require if pin control setting is required at boot.
-+- pinctrl-names: A pinctrl state named per <pinctrl-binding.txt>.
-+- pinctrl[0...n]: Properties to contain the phandle for pinctrl states per
-+		<pinctrl-binding.txt>.
-+
-+The pin configurations are defined as child of the pinctrl states node. Each
-+sub-node have following properties:
-+
 +Required properties:
-+- pins: List of pins. Valid values of pins properties are:
-+		      gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7.
-+
-+Optional properties:
-+Following are optional properties defined as pinmux DT binding document
-+<pinctrl-bindings.txt>. Absence of properties will leave the configuration
-+on default.
-+	function,
-+	drive-push-pull,
-+	drive-open-drain,
-+	bias-pull-up,
-+	bias-pull-down.
-+
-+Valid values for function properties are:
-+	gpio, lpm-control-in, fps-out, 32k-out, sd0-dvs-in, sd1-dvs-in,
-+	reference-out
-+
-+Theres is also customised properties for the GPIO1, GPIO2 and GPIO3.
-+The properties are required to configure these resource FPS parameters
-+when system is in "active" state or in "suspend" state.
-+Here "active" state means system is UP and working normally.
-+"suspend" state means system enters into the suspend state.
-+
-+- maxim,active-fps-source:	     FPS source for the gpios in active state
-+				     of the GPIO. Valid values are FPS_SRC_0,
-+				     FPS_SRC_1, FPS_SRC_2 and FPS_SRC_NONE.
-+				     Absence of this property will leave the pin
-+				     on default.
-+- maxim,active-fps-power-up-slot:    Power up slot on given FPS for active state.
-+				     Valid values are 0 to 7.
-+- maxim,active-fps-power-down-slot:  Power down slot on given FPS for active
-+				     state. Valid values are 0 to 7.
-+- maxim,suspend-fps-source:	     Suspend state FPS source. Valid values are
-+				     same as maxim,active-fps-source.
-+- maxim,suspend-fps-power-down-slot: Suspend state power down slot. Valid
-+				     values are 0 to 7.
-+- maxim,suspend-fps-power-up-slot: Suspend state power up slot. Valid values
-+				     are 0 to 7.
++-------------------
++- gpio-controller : 	Marks the device node as a gpio controller.
++- #gpio-cells : 	Should be two.  The first cell is the pin number and
++			the second cell is used to specify the gpio polarity:
++				0 = active high
++				1 = active low
++For more details, please refer generic GPIO DT binding document
++<devicetree/bindings/gpio/gpio.txt>.
 +
 +Example:
 +--------
 +#include <dt-bindings/mfd/max77620.h>
 +...
 +max77620@3c {
++	compatible = "maxim,max77620";
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spmic_default>;
-+
-+	spmic_default: pinmux@0 {
-+		pin_gpio0 {
-+			pins = "gpio0";
-+			function = "gpio";
-+		};
-+
-+		pin_gpio1 {
-+			pins = "gpio1";
-+			function = "fps-out";
-+			maxim,fps-source = <FPS_SRC_0>;
-+		};
-+
-+		pin_gpio2 {
-+			pins = "gpio2";
-+			function = "fps-out";
-+			maxim,fps-source = <FPS_SRC_1>;
-+		};
-+	};
++	gpio-controller;
++	#gpio-cells = <2>;
 +};
 -- 
 2.1.4
