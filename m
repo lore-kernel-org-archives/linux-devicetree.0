@@ -1,11 +1,10 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v3 09/10] drm/hisilicon: Add support for external bridge
-Date: Sat, 30 Jan 2016 16:54:34 +0800
-Message-ID: <1454144075-74361-10-git-send-email-xinliang.liu@linaro.org>
+Subject: [PATCH v3 10/10] MAINTAINERS: Add maintainer for hisilicon DRM driver
+Date: Sat, 30 Jan 2016 16:54:35 +0800
+Message-ID: <1454144075-74361-11-git-send-email-xinliang.liu@linaro.org>
 References: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1804792554=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
@@ -21,54 +20,49 @@ To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch
 Cc: andy.green@linaro.org, xuyiping@hisilicon.com, guodong.xu@linaro.org, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIGV4dGVybmFsIEhETUkgYnJpZGdlLgoKU2lnbmVkLW9mZi1ieTogWGlu
-bGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4KCnYzOgotIEZpeCBhIHR5cG86IHMv
-ZXh0ZXJhbmwvZXh0ZXJuYWwuCnYyOgotIFJlbW92ZSBhYnRyYWN0aW9uIGxheWVyLgoKLS0tCiBk
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2R3X2RybV9kc2kuYyB8IDUyICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2R3X2RybV9kc2kuYwppbmRleCAyODM3
-YWYwMWU5MzUuLjEzNDJkODRkN2M2OCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2hpc2ls
-aWNvbi9raXJpbi9kd19kcm1fZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9r
-aXJpbi9kd19kcm1fZHNpLmMKQEAgLTc5LDYgKzc5LDcgQEAgc3RydWN0IGRzaV9od19jdHggewog
-CiBzdHJ1Y3QgZHdfZHNpIHsKIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKKwlzdHJ1Y3Qg
-ZHJtX2JyaWRnZSAqYnJpZGdlOwogCXN0cnVjdCBtaXBpX2RzaV9ob3N0IGhvc3Q7CiAJc3RydWN0
-IGRybV9kaXNwbGF5X21vZGUgY3VyX21vZGU7CiAJc3RydWN0IGRzaV9od19jdHggKmN0eDsKQEAg
-LTY4OCw2ICs2ODksMjUgQEAgc3RhdGljIGludCBkc2lfaG9zdF9pbml0KHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IGR3X2RzaSAqZHNpKQogCXJldHVybiAwOwogfQogCitzdGF0aWMgaW50IGRz
-aV9icmlkZ2VfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBzdHJ1Y3QgZHdfZHNpICpkc2kp
-Cit7CisJc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyID0gJmRzaS0+ZW5jb2RlcjsKKwlzdHJ1
-Y3QgZHJtX2JyaWRnZSAqYnJpZGdlID0gZHNpLT5icmlkZ2U7CisJaW50IHJldDsKKworCS8qIGFz
-c29jaWF0ZSB0aGUgYnJpZGdlIHRvIGRzaSBlbmNvZGVyICovCisJZW5jb2Rlci0+YnJpZGdlID0g
-YnJpZGdlOworCWJyaWRnZS0+ZW5jb2RlciA9IGVuY29kZXI7CisKKwlyZXQgPSBkcm1fYnJpZGdl
-X2F0dGFjaChkZXYsIGJyaWRnZSk7CisJaWYgKHJldCkgeworCQlEUk1fRVJST1IoImZhaWxlZCB0
-byBhdHRhY2ggZXh0ZXJuYWwgYnJpZGdlXG4iKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlyZXR1
-cm4gMDsKK30KKwogc3RhdGljIGludCBkc2lfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVj
-dCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKIHsKIAlzdHJ1Y3QgZHNpX2RhdGEgKmRkYXRh
-ID0gZGV2X2dldF9kcnZkYXRhKGRldik7CkBAIC03MDMsNiArNzIzLDEwIEBAIHN0YXRpYyBpbnQg
-ZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQg
-KmRhdGEpCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJldDsKIAorCXJldCA9IGRzaV9icmlkZ2VfaW5p
-dChkcm1fZGV2LCBkc2kpOworCWlmIChyZXQpCisJCXJldHVybiByZXQ7CisKIAlyZXR1cm4gMDsK
-IH0KIApAQCAtNzE5LDggKzc0MywzNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9v
-cHMgZHNpX29wcyA9IHsKIHN0YXRpYyBpbnQgZHNpX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYsIHN0cnVjdCBkd19kc2kgKmRzaSkKIHsKIAlzdHJ1Y3QgZHNpX2h3X2N0eCAq
-Y3R4ID0gZHNpLT5jdHg7CisJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9u
-b2RlOworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqZW5kcG9pbnQsICpicmlkZ2Vfbm9kZTsKKwlzdHJ1
-Y3QgZHJtX2JyaWRnZSAqYnJpZGdlOwogCXN0cnVjdCByZXNvdXJjZSAqcmVzOwogCisJLyoKKwkg
-KiBHZXQgdGhlIGVuZHBvaW50IG5vZGUuIEluIG91ciBjYXNlLCBkc2kgaGFzIG9uZSBvdXRwdXQg
-cG9ydDEKKwkgKiB0byB3aGljaCB0aGUgZXh0ZXJuYWwgSERNSSBicmlkZ2UgaXMgY29ubmVjdGVk
-LgorCSAqLworCWVuZHBvaW50ID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MobnAsIDEs
-IC0xKTsKKwlpZiAoIWVuZHBvaW50KSB7CisJCURSTV9FUlJPUigibm8gdmFsaWQgZW5kcG9pbnQg
-bm9kZVxuIik7CisJCXJldHVybiAtRU5PREVWOworCX0KKwlvZl9ub2RlX3B1dChlbmRwb2ludCk7
-CisKKwlicmlkZ2Vfbm9kZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZW5kcG9p
-bnQpOworCWlmICghYnJpZGdlX25vZGUpIHsKKwkJRFJNX0VSUk9SKCJubyB2YWxpZCBicmlkZ2Ug
-bm9kZVxuIik7CisJCXJldHVybiAtRU5PREVWOworCX0KKwlvZl9ub2RlX3B1dChicmlkZ2Vfbm9k
-ZSk7CisKKwlicmlkZ2UgPSBvZl9kcm1fZmluZF9icmlkZ2UoYnJpZGdlX25vZGUpOworCWlmICgh
-YnJpZGdlKSB7CisJCURSTV9JTkZPKCJ3YWl0IGZvciBleHRlcm5hbCBIRE1JIGJyaWRnZSBkcml2
-ZXIuXG4iKTsKKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7CisJfQorCWRzaS0+YnJpZGdlID0gYnJp
-ZGdlOworCiAJY3R4LT5kc2lfY2ZnX2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAicGNs
-a19kc2kiKTsKIAlpZiAoSVNfRVJSKGN0eC0+ZHNpX2NmZ19jbGspKSB7CiAJCURSTV9FUlJPUigi
-ZmFpbGVkIHRvIGdldCBkc2kgcGxjayBjbG9ja1xuIik7Ci0tIAoxLjkuMQoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+--===============1804792554==
+Content-Type: text/plain; charset=n
+Content-Transfer-Encoding: quoted-printable
+
+Add maintainer and reviewer for hisilicon DRM driver.
+
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 30aca4aa5467..92353c6afc66 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3777,6 +3777,15 @@ S:	Maintained
+ F:	drivers/gpu/drm/gma500
+ F:	include/drm/gma500*
+=20
++DRM DRIVERS FOR HISILICON
++M:	Xinliang Liu <z.liuxinliang@hisilicon.com>
++R:	Xinwei Kong <kong.kongxinwei@hisilicon.com>
++L:	dri-devel@lists.freedesktop.org
++T:	git git://github.com/xin3liang/linux.git
++S:	Maintained
++F:	drivers/gpu/drm/hisilicon
++F:	Documentation/devicetree/bindings/display/hisilicon
++
+ DRM DRIVERS FOR NVIDIA TEGRA
+ M:	Thierry Reding <thierry.reding@gmail.com>
+ M:	Terje Bergstr=C3=B6m <tbergstrom@nvidia.com>
+--=20
+1.9.1
+
+
+--===============1804792554==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1804792554==--
