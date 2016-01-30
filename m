@@ -1,77 +1,100 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2 3/3] input: touchscreen: ad7879: add device tree
- support
-Date: Sat, 30 Jan 2016 08:06:16 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1601300804310.2052@localhost6.localdomain6>
-References: <201601301057.HOqi7vdd%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <201601301057.HOqi7vdd%fengguang.wu@intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dmitry.torokhov@gmail.com, michael.hennerich@analog.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kbuild-all@01.org
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v3 00/10] Add DRM Driver for HiSilicon Kirin hi6220 SoC
+Date: Sat, 30 Jan 2016 16:54:25 +0800
+Message-ID: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-I haven't checked the entire context, but it look suspicious to have the 
-kfree in the remove function and not in the probe function.
+  This patch set adds a new drm driver for HiSilicon Kirin hi6220 SoC.
+Current testing and support board is Hikey board which is one of Linaro
+96boards. It is an arm64 open source board. For more information about
+this board, please access https://www.96boards.org.
 
-Unrlatedly, do the probe and remove functions really needed to be 
-exported?
+Hardware Detail
+---------------
+  The display subsystem of Hi6220 SoC is shown as bellow:
+ +-----+       +----------+     +-----+     +---------+
+ |     |       |          |     |     |     |         |             	
+ | FB  |------>|   ADE    |---->| DSI |---->| External|
+ |     |       |          |     |     |     |  HDMI   |
+ +-----+       +----------+     +-----+     +---------+
 
-julia
+- ADE(Advanced Display Engine) is the display controller. It contains 7
+channels, 3 overlay compositors and a LDI.
+  - A channel looks like: DMA-->clip-->scale-->ctrans(or called csc).
+  - Overlay compositor is response to compose planes which come from 7
+  channels and pass composed image to LDI.
+  - LDI is response to generate timings and RGB data stream.
+- DSI converts the RGB data stream from ADE to DSI packets.
+- External HDMI module is connected with DSI bus. Now Hikey use a ADI's
+  ADV7533 external HDMI chip.
 
-On Sat, 30 Jan 2016, kbuild test robot wrote:
-> 
-> Hi Stefan,
-> 
-> [auto build test WARNING on input/next]
-> [also build test WARNING on v4.5-rc1 next-20160129]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Stefan-Agner/input-touchscreen-ad7879-move-header-to-platform_data-directory/20160130-075110
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-> :::::: branch date: 2 hours ago
-> :::::: commit date: 2 hours ago
-> 
-> >> drivers/input/touchscreen/ad7879.c:676:1-6: WARNING: invalid free of devm_ allocated data
-> 
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 0e522b6d5ce3104accf736302f6de5386b9af789
-> vim +676 drivers/input/touchscreen/ad7879.c
-> 
-> b4be468c Michael Hennerich 2009-03-09  660  
-> ec51b7f5 Michael Hennerich 2010-01-19  661  err_remove_gpio:
-> 4397c98a Mike Frysinger    2010-06-30  662  	ad7879_gpio_remove(ts);
-> b4be468c Michael Hennerich 2009-03-09  663  err_remove_attr:
-> 4397c98a Mike Frysinger    2010-06-30  664  	sysfs_remove_group(&dev->kobj, &ad7879_attr_group);
-> 4397c98a Mike Frysinger    2010-06-30  665  err_out:
-> 4397c98a Mike Frysinger    2010-06-30  666  	return ERR_PTR(err);
-> b4be468c Michael Hennerich 2009-03-09  667  }
-> 4397c98a Mike Frysinger    2010-06-30  668  EXPORT_SYMBOL(ad7879_probe);
-> b4be468c Michael Hennerich 2009-03-09  669  
-> 4397c98a Mike Frysinger    2010-06-30  670  void ad7879_remove(struct ad7879 *ts)
-> b4be468c Michael Hennerich 2009-03-09  671  {
-> 4397c98a Mike Frysinger    2010-06-30  672  	ad7879_gpio_remove(ts);
-> 4397c98a Mike Frysinger    2010-06-30  673  	sysfs_remove_group(&ts->dev->kobj, &ad7879_attr_group);
-> 4397c98a Mike Frysinger    2010-06-30  674  	free_irq(ts->irq, ts);
-> b4be468c Michael Hennerich 2009-03-09  675  	input_unregister_device(ts->input);
-> b4be468c Michael Hennerich 2009-03-09 @676  	kfree(ts);
-> b4be468c Michael Hennerich 2009-03-09  677  }
-> 4397c98a Mike Frysinger    2010-06-30  678  EXPORT_SYMBOL(ad7879_remove);
-> b4be468c Michael Hennerich 2009-03-09  679  
-> b4be468c Michael Hennerich 2009-03-09  680  MODULE_AUTHOR("Michael Hennerich <hennerich@blackfin.uclinux.org>");
-> b4be468c Michael Hennerich 2009-03-09  681  MODULE_DESCRIPTION("AD7879(-1) touchscreen Driver");
-> b4be468c Michael Hennerich 2009-03-09  682  MODULE_LICENSE("GPL");
-> 
-> :::::: The code at line 676 was first introduced by commit
-> :::::: b4be468cc1e65110d9144751bf7079dad6f142b7 Input: add AD7879 Touchscreen driver
-> 
-> :::::: TO: Michael Hennerich <michael.hennerich@analog.com>
-> :::::: CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+Change History
+-------------
+Changes in v3:
+- Move and rename all the files to kirin sub-directory.
+  So that we could separate different seires SoCs' driver.
+- Make ade as the drm master node.
+- Replace drm_platform_init, load, unload implementation.
+- Use assigned-clocks to set clock rate.
+- Use ports to connect display relavant nodes.
+- Rename hisi_drm_dsi.c to dw_drm_dsi.c
+- Make encoder type as DRM_MODE_ENCODER_DSI.
+- A few cleanup on regs and code.
+
+Changes in v2:
+- Remove abtraction layer of plane/crtc/encoder/connector.
+- Refactor atomic implementation according to Daniel Vetter's guides:
+http://blog.ffwll.ch/2014/11/atomic-modeset-support-for-kms-drivers.html
+http://blog.ffwll.ch/2015/09/xdc-2015-atomic-modesetting-for-drivers.html
+http://blog.ffwll.ch/2015/08/atomic-modesetting-design-overview.html
+- Use bridge instead of slave encoder to connect external HDMI.
+- Move dt binding docs to bindings/display/hisilicon directory. 
+
+Xinliang Liu (10):
+  drm/hisilicon: Add device tree binding for hi6220 display subsystem
+  drm/hisilicon: Add hisilicon kirin drm master driver
+  drm/hisilicon: Add crtc driver for ADE
+  drm/hisilicon: Add plane driver for ADE
+  drm/hisilicon: Add vblank driver for ADE
+  drm/hisilicon: Add cma fbdev and hotplug
+  drm/hisilicon: Add designware dsi encoder driver
+  drm/hisilicon: Add designware dsi host driver
+  drm/hisilicon: Add support for external bridge
+  MAINTAINERS: Add maintainer for hisilicon DRM driver
+
+ .../bindings/display/hisilicon/dw-dsi.txt          |   60 ++
+ .../bindings/display/hisilicon/hisi-ade.txt        |   56 ++
+ MAINTAINERS                                        |    9 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/hisilicon/Kconfig                  |    5 +
+ drivers/gpu/drm/hisilicon/Makefile                 |    5 +
+ drivers/gpu/drm/hisilicon/kirin/Kconfig            |   10 +
+ drivers/gpu/drm/hisilicon/kirin/Makefile           |    5 +
+ drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c       |  845 ++++++++++++++++
+ drivers/gpu/drm/hisilicon/kirin/dw_dsi_reg.h       |   83 ++
+ drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h    |  280 ++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c    | 1053 ++++++++++++++++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c    |  382 +++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h    |   31 +
+ 15 files changed, 2827 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+ create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
+ create mode 100644 drivers/gpu/drm/hisilicon/Makefile
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/Kconfig
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/Makefile
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/dw_dsi_reg.h
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+
+-- 
+1.9.1
+
