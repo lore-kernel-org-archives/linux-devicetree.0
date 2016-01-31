@@ -1,48 +1,302 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
-Date: Sun, 31 Jan 2016 11:28:00 -0200
-Message-ID: <CAOMZO5CipBACeJz6OVpqGOh37n7V+6khV=wExedoCSf1-n4sJA@mail.gmail.com>
-References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
-	<20160126022948.GA21187@rob-hp-laptop>
-	<56A73FDE.2060607@felipetonello.com>
-	<CAOMZO5BjeDMqNgf-=tE7=pByJi+jJVA=G2bbtp+XJeYbpev6KA@mail.gmail.com>
-	<56A75205.8060000@felipetonello.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V13 09/10] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Sun, 31 Jan 2016 08:53:54 -0500
+Message-ID: <56AE11F2.3080105@codeaurora.org>
+References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
+ <1454106914-15857-10-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56A75205.8060000-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Ferreri Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454106914-15857-10-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, a.motakis@virtualopensystems.com, alex.williamson@redhat.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 9:01 AM, Felipe Ferreri Tonello
-<eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org> wrote:
+Hi Eric, Alex, Antonios;
 
-> Actually yes, thanks! I didn't know about the existence of fsl-asoc-card.
->
-> I get some errors but I don't think they actually matter:
-> [   19.734494] fsl-asrc 2034000.asrc: driver registered
-> [   19.738707] fsl-asoc-card sound: ASoC: CPU DAI (null) not registered
-> [   19.738717] fsl-asoc-card sound: snd_soc_register_card failed (-517)
-> [   19.741556] fsl-asoc-card sound: ASoC: CPU DAI (null) not registered
-> [   19.741564] fsl-asoc-card sound: snd_soc_register_card failed (-517)
-> [   19.774591] fsl-asoc-card sound: cs4271-hifi <-> 2028000.ssi mapping ok
-> [   19.781507] fsl-asoc-card sound: ASoC: no source widget found for
-> ASRC-Playback
-> [   19.790065] fsl-asoc-card sound: ASoC: Failed to add route
-> ASRC-Playback -> direct -> CPU-Playback
-> [   19.805349] fsl-asoc-card sound: ASoC: no sink widget found for
-> ASRC-Capture
-> [   19.817222] fsl-asoc-card sound: ASoC: Failed to add route
-> CPU-Capture -> direct -> ASRC-Capture
->
-> The codec is producing sound, which is good. Any idea on why these
-> errors are been triggered?
+On 1/29/2016 5:35 PM, Sinan Kaya wrote:
+> The code is using the compatible DT string to associate a reset driver with
+> the actual device itself. The compatible string does not exist on ACPI
+> based systems. HID is the unique identifier for a device driver instead.
+> The change allows a driver to register with DT compatible string or ACPI
+> HID and then match the object with one of these conditions.
+> 
+> For ACPI systems, ACPI HID needs to match and compat in the registered
+> reset
+> driver needs to match for ACPI reset driver loading to work.
+> 
+> For OF based systems, DT compatible string needs to match and compat in the
+> registered reset driver needs to match for DT reset driver loading to work.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |  3 +-
+>  .../platform/reset/vfio_platform_calxedaxgmac.c    |  3 +-
+>  drivers/vfio/platform/vfio_platform_common.c       | 80 +++++++++++++++++++---
+>  drivers/vfio/platform/vfio_platform_private.h      | 41 ++++++-----
+>  4 files changed, 96 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> index d4030d0..cc5b4fa 100644
+> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> @@ -119,7 +119,8 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+>  	return 0;
+>  }
+>  
+> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
+> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
+> +			  vfio_platform_amdxgbe_reset);
+>  
+>  MODULE_VERSION("0.1");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> index e3d3d94..0e57529 100644
+> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> @@ -77,7 +77,8 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
+>  	return 0;
+>  }
+>  
+> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
+> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
+> +			  vfio_platform_calxedaxgmac_reset);
+>  
+>  MODULE_VERSION(DRIVER_VERSION);
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index 418cdd9..6927e05 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -13,6 +13,7 @@
+>   */
+>  
+>  #include <linux/device.h>
+> +#include <linux/acpi.h>
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
+>  static DEFINE_MUTEX(driver_lock);
+>  
+>  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+> -					struct module **module)
+> +				  const char *acpihid, struct module **module)
+>  {
+>  	struct vfio_platform_reset_node *iter;
+>  	vfio_platform_reset_fn_t reset_fn = NULL;
+>  
+>  	mutex_lock(&driver_lock);
+>  	list_for_each_entry(iter, &reset_list, link) {
+> -		if (!strcmp(iter->compat, compat) &&
+> +		if (acpihid && iter->acpihid &&
+> +		    !strcmp(iter->acpihid, acpihid) &&
+> +			try_module_get(iter->owner)) {
+> +			*module = iter->owner;
+> +			reset_fn = iter->reset;
+> +			break;
+> +		}
+> +		if (compat && iter->compat &&
+> +		    !strcmp(iter->compat, compat) &&
+>  			try_module_get(iter->owner)) {
+>  			*module = iter->owner;
+>  			reset_fn = iter->reset;
+> @@ -51,11 +60,12 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+>  
+>  static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  {
+> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+> -						&vdev->reset_module);
+> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
+> +						 &vdev->reset_module);
+>  	if (!vdev->reset) {
+>  		request_module("vfio-reset:%s", vdev->compat);
+>  		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+> +							 vdev->acpihid,
+>  							 &vdev->reset_module);
+>  	}
+>  }
+> @@ -541,6 +551,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
+>  	.mmap		= vfio_platform_mmap,
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
+> +			     struct device *dev)
+> +{
+> +	struct acpi_device adev = ACPI_COMPANION(dev);
+> +
+> +	if (!adev)
+> +		return -EINVAL;
+> +
+> +	vdev->acpihid = acpi_device_hid(adev);
+> +	if (!vdev->acpihid) {
+> +		pr_err("VFIO: cannot find ACPI HID for %s\n",
+> +		       vdev->name);
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +#else
+> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
+> +			     struct device *dev)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif
+> +
+> +int vfio_platform_probe_of(struct vfio_platform_device *vdev,
+> +			   struct device *dev)
+> +{
+> +	int ret;
+> +
+> +	ret = device_property_read_string(dev, "compatible",
+> +					  &vdev->compat);
+> +	if (ret) {
+> +		pr_err("VFIO: cannot retrieve compat for %s\n",
+> +			vdev->name);
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+>  int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  			       struct device *dev)
+>  {
+> @@ -550,14 +600,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  	if (!vdev)
+>  		return -EINVAL;
+>  
+> -	ret = device_property_read_string(dev, "compatible", &vdev->compat);
+> -	if (ret) {
+> -		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
+> -		return -EINVAL;
+> -	}
+> +	ret = vfio_platform_probe_acpi(vdev, dev);
+> +	if (ret)
+> +		ret = vfio_platform_probe_of(vdev, dev);
+>  
+> -	vdev->device = dev;
+> +	if (ret)
+> +		return ret;
+>  
+> +	vdev->device = dev;
+>  	group = iommu_group_get(dev);
+>  	if (!group) {
+>  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+> @@ -602,13 +652,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
+>  EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
+>  
+>  void vfio_platform_unregister_reset(const char *compat,
+> +				    const char *acpihid,
+>  				    vfio_platform_reset_fn_t fn)
+>  {
+>  	struct vfio_platform_reset_node *iter, *temp;
+>  
+>  	mutex_lock(&driver_lock);
+>  	list_for_each_entry_safe(iter, temp, &reset_list, link) {
+> -		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
+> +		if (acpihid && iter->acpihid &&
+> +		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
+> +			list_del(&iter->link);
+> +			break;
+> +		}
+> +
+> +		if (compat && iter->compat &&
+> +		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
+>  			list_del(&iter->link);
+>  			break;
+>  		}
+> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+> index 42816dd..32feba3 100644
+> --- a/drivers/vfio/platform/vfio_platform_private.h
+> +++ b/drivers/vfio/platform/vfio_platform_private.h
+> @@ -58,6 +58,7 @@ struct vfio_platform_device {
+>  	struct mutex			igate;
+>  	struct module			*parent_module;
+>  	const char			*compat;
+> +	const char			*acpihid;
+>  	struct module			*reset_module;
+>  	struct device			*device;
+>  
+> @@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
+>  struct vfio_platform_reset_node {
+>  	struct list_head link;
+>  	char *compat;
+> +	char *acpihid;
+>  	struct module *owner;
+>  	vfio_platform_reset_fn_t reset;
+>  };
+> @@ -98,27 +100,30 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
+>  
+>  extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
+>  extern void vfio_platform_unregister_reset(const char *compat,
+> +					   const char *acpihid,
+>  					   vfio_platform_reset_fn_t fn);
+> -#define vfio_platform_register_reset(__compat, __reset)		\
+> -static struct vfio_platform_reset_node __reset ## _node = {	\
+> -	.owner = THIS_MODULE,					\
+> -	.compat = __compat,					\
+> -	.reset = __reset,					\
+> -};								\
+> +
+> +#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
+> +static struct vfio_platform_reset_node __reset ## _node = {		\
+> +	.owner = THIS_MODULE,						\
+> +	.compat = __compat,						\
+> +	.acpihid = __acpihid,						\
+> +	.reset = __reset,						\
+> +};									\
+>  __vfio_platform_register_reset(&__reset ## _node)
+>  
+> -#define module_vfio_reset_handler(compat, reset)		\
+> -MODULE_ALIAS("vfio-reset:" compat);				\
+> -static int __init reset ## _module_init(void)			\
+> -{								\
+> -	vfio_platform_register_reset(compat, reset);		\
+> -	return 0;						\
+> -};								\
+> -static void __exit reset ## _module_exit(void)			\
+> -{								\
+> -	vfio_platform_unregister_reset(compat, reset);		\
+> -};								\
+> -module_init(reset ## _module_init);				\
+> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
+> +MODULE_ALIAS("vfio-reset:" compat);					\
+> +static int __init reset ## _module_init(void)				\
+> +{									\
+> +	vfio_platform_register_reset(compat, acpihid, reset);		\
+> +	return 0;							\
+> +};									\
+> +static void __exit reset ## _module_exit(void)				\
+> +{									\
+> +	vfio_platform_unregister_reset(compat, acpihid, reset);		\
+> +};									\
+> +module_init(reset ## _module_init);					\
+>  module_exit(reset ## _module_exit)
+>  
+>  #endif /* VFIO_PLATFORM_PRIVATE_H */
+> 
 
-Nicolin's patch should fix these warnings:
-https://lkml.org/lkml/2016/1/31/8
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we put aside the forgotten pointer in acpi_device assignment, (I had a merge conflict
+and I screwed it up at the last moment),
+
+Can you review the following two patches?
+
+https://lkml.org/lkml/2016/1/29/679
+https://lkml.org/lkml/2016/1/29/677
+
+These patches seem to be in your area. I was relying on the maintainer list to pull you into
+the review but for some reason your emails didn't show up.
+
+Sinan
+
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
