@@ -1,130 +1,42 @@
-From: Jean-Michel Hautbois <jhautbois@gmail.com>
-Subject: [PATCH v2] i2c: Add generic support passing secondary devices addresses
-Date: Sun, 31 Jan 2016 16:33:00 +0100
-Message-ID: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, laurent.pinchart@ideasonboard.com, lars@metafoo.de, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+From: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
+Date: Sun, 31 Jan 2016 16:40:12 +0100
+Message-ID: <20160131154012.GA3628@pengutronix.de>
+References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
+ <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
+ <56ADE959.2050309@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56ADE959.2050309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some I2C devices have multiple addresses assigned, for example each address
-corresponding to a different internal register map page of the device.
-So far drivers which need support for this have handled this with a driver
-specific and non-generic implementation, e.g. passing the additional address
-via platform data.
+On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
+> 
+> 
+> On 26/01/16 05:12, Yong Wu wrote:
+> >This patch add SMI(Smart Multimedia Interface) driver. This driver
+> >is responsible to enable/disable iommu and control the power domain
+> >and clocks of each local arbiter.
+> >
+> >Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >---
+> 
+> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Joerg would you mind to take this through your branch?
 
-This patch provides a new helper function called i2c_new_secondary_device()
-which is intended to provide a generic way to get the secondary address
-as well as instantiate a struct i2c_client for the secondary address.
+Could you put it on a separate branch that I may also merge into the DRM
+driver pull request?
 
-The function expects a pointer to the primary i2c_client, a name
-for the secondary address and an optional default address. The name is used
-as a handle to specify which secondary address to get.
-
-The default address is used as a fallback in case no secondary address
-was explicitly specified. In case no secondary address and no default
-address were specified the function returns NULL.
-
-For now the function only supports look-up of the secondary address
-from devicetree, but it can be extended in the future
-to for example support board files and/or ACPI.
-
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
----
-v2: adding some DT bindings documentation (more than one year later...)
-
- Documentation/devicetree/bindings/i2c/i2c.txt |  7 +++++
- drivers/i2c/i2c-core.c                        | 42 +++++++++++++++++++++++++++
- include/linux/i2c.h                           |  5 ++++
- 3 files changed, 54 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index c8d977e..f31b2ad 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -62,6 +62,13 @@ wants to support one of the below features, it should adapt the bindings below.
- - wakeup-source
- 	device can be used as a wakeup source.
- 
-+- reg
-+	I2C slave addresses
-+
-+- reg-names
-+	Names of map programmable addresses.
-+	It can contain any map needing another address than default one.
-+
- Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index ffe715d..da49fab 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -1158,6 +1158,48 @@ struct i2c_client *i2c_new_dummy(struct i2c_adapter *adapter, u16 address)
- }
- EXPORT_SYMBOL_GPL(i2c_new_dummy);
- 
-+/**
-+ * i2c_new_secondary_device - Helper to get the instantiated secondary address
-+ * and create the associated device
-+ * @client: Handle to the primary client
-+ * @name: Handle to specify which secondary address to get
-+ * @default_addr: Used as a fallback if no secondary address was specified
-+ * Context: can sleep
-+ *
-+ * I2C clients can be composed of multiple I2C slaves bound together in a single
-+ * component. The I2C client driver then binds to the master I2C slave and needs
-+ * to create I2C dummy clients to communicate with all the other slaves.
-+ *
-+ * This function creates and returns an I2C dummy client whose I2C address is
-+ * retrieved from the platform firmware based on the given slave name. If no
-+ * address is specified by the firmware default_addr is used.
-+ *
-+ * On DT-based platforms the address is retrieved from the "reg" property entry
-+ * cell whose "reg-names" value matches the slave name.
-+ *
-+ * This returns the new i2c client, which should be saved for later use with
-+ * i2c_unregister_device(); or NULL to indicate an error.
-+ */
-+struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-+						const char *name,
-+						u16 default_addr)
-+{
-+	struct device_node *np = client->dev.of_node;
-+	u32 addr = default_addr;
-+	int i;
-+
-+	if (np) {
-+		i = of_property_match_string(np, "reg-names", name);
-+		if (i >= 0)
-+			of_property_read_u32_index(np, "reg", i, &addr);
-+	}
-+
-+	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-+	return i2c_new_dummy(client->adapter, addr);
-+}
-+EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
-+
-+
- /* ------------------------------------------------------------------------- */
- 
- /* I2C bus adapters -- one roots each I2C or SMBUS segment */
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 200cf13b..9c90735 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -349,6 +349,11 @@ extern int i2c_probe_func_quick_read(struct i2c_adapter *, unsigned short addr);
- extern struct i2c_client *
- i2c_new_dummy(struct i2c_adapter *adap, u16 address);
- 
-+extern struct i2c_client *
-+i2c_new_secondary_device(struct i2c_client *client,
-+				const char *name,
-+				u16 default_addr);
-+
- extern void i2c_unregister_device(struct i2c_client *);
- #endif /* I2C */
- 
--- 
-2.7.0
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
