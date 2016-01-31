@@ -1,73 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 11/14] ARM: dts: sun8i-a83t: Add R_PIO
- controller node to the dtsi
-Date: Sun, 31 Jan 2016 11:46:25 +0800
-Message-ID: <CAGb2v65=2VvyiUUHQ_yM_99tEF4pHuvQWWM0q7wTZ0nhVY7+xg@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com> <1454203266-4450-12-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 12/14] ARM: dts: sun8i-a83t: Add RSB nodes to dtsi
+Date: Sun, 31 Jan 2016 11:50:49 +0800
+Message-ID: <CAGb2v65JPwpmbFhOyoBXbO_Eg4=MmPZkiMr5kY=cit_ySMaEYA@mail.gmail.com>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com> <1454203266-4450-13-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKEHW22QKGQEMJECCJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1454203266-4450-12-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-cl
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1454203266-4450-13-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-cl
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
 On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
-<vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Now that we have a driver for the R_PIO controller,
-> add the corresponding device node to the dtsi.
+<vishnupatekar0510@gmail.com> wrote:
+> This adds support for RSB
+> A83T RSB is compatible with A23 rsb.
 >
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
 > ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 >
 > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index 5ea20ff..11be9e1 100644
+> index 11be9e1..8c67c85 100644
 > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
 > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -478,5 +478,26 @@
->                         compatible = "allwinner,sun6i-a31-clock-reset";
->                         #reset-cells = <1>;
+> @@ -499,5 +499,19 @@
+>                                 allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>                         };
 >                 };
 > +
-> +               r_pio: pinctrl@01f02c00 {
-> +                       compatible = "allwinner,sun8i-a83t-r-pinctrl";
-> +                       reg = <0x01f02c00 0x400>;
-> +                       interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&apb0_gates 0>;
-> +                       resets = <&apb0_reset 0>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
+> +               r_rsb: i2c@01f03400 {
+> +                       compatible = "allwinner,sun8i-a23-rsb";
+> +                       reg = <0x01f03400 0x400>;
+> +                       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&apb0_gates 3>;
+> +                       clock-frequency = <3000000>;
+> +                       resets = <&apb0_reset 3>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&r_rsb_pins>;
 
-#address-cells and #size-cells aren't needed. They were incorrectly included
-in the first place. They were removed from &pio but not &r_pio.
+As mentioned in the previous patch, r_rsb_pins should be included in this patch,
+since it is used here. In general, we mostly have them as individual patches, as
+they are referenced from board dts files. Here since it's used in the dtsi, you
+can just include them.
 
-> +                       #gpio-cells = <3>;
-> +
-> +                       r_rsb_pins: r_rsb {
-> +                               allwinner,pins = "PL0", "PL1";
-> +                               allwinner,function = "s_rsb";
-> +                               allwinner,drive = <SUN4I_PINCTRL_20_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +                       };
-
-This setting should be part of the next patch, the RSB node patch.
-The rest looks fine.
+See commit ed473ebd9c15 ("ARM: dts: sun9i: Add Reduced Serial Bus controller
+device node to A80 dtsi") on how I described it.
 
 ChenYu
 
+> +                       status = "disabled";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
 > +               };
 >         };
 >  };
