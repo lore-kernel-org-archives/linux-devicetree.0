@@ -1,78 +1,56 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 08/14] ARM: dts: sun8i-a83t: add mmc clock nodes
-Date: Sun, 31 Jan 2016 14:10:29 +0800
-Message-ID: <CAGb2v67a8sZhBGuqn1LqvNrdsusKV6Jar7LMxpAcR6r2VkoTyg@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com> <1454203266-4450-9-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 6/9] ASoC: rt5616: add mclk property for rt5616 document
+Date: Sun, 31 Jan 2016 17:09:51 +0800
+Message-ID: <56ADCF5F.1010203@gmail.com>
+References: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
+ <1453970618-4383-7-git-send-email-wxt@rock-chips.com>
+ <20160129162800.GA10835@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB26KW22QKGQEUWDH7TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1454203266-4450-9-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-cl
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160129162800.GA10835@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
-<vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> mmc clocks are compatible with that of earlier sun8i socs.
-> This adds mmc0, mmc1, and mmc2 clock nodes for A83T.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index 568d6fb..b8c8b60 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -238,6 +238,36 @@
->                                              "bus_uart2", "bus_uart3",
->                                              "bus_uart4";
->                 };
-> +
-> +               mmc0_clk: clk@01c20088 {
-> +                       #clock-cells = <1>;
-> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
-> +                       reg = <0x01c20088 0x4>;
-> +                       clocks = <&osc24M>, <&pll6>;
-> +                       clock-output-names = "mmc0",
-> +                                            "mmc0_output",
-> +                                            "mmc0_sample";
-> +               };
-> +
-> +               mmc1_clk: clk@01c2008c {
-> +                       #clock-cells = <1>;
-> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
-> +                       reg = <0x01c2008c 0x4>;
-> +                       clocks = <&osc24M>, <&pll6>;
-> +                       clock-output-names = "mmc1",
-> +                                            "mmc1_output",
-> +                                            "mmc1_sample";
-> +               };
-> +
-> +               mmc2_clk: clk@01c20090 {
-> +                       #clock-cells = <1>;
-> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
-> +                       reg = <0x01c20090 0x4>;
-> +                       clocks = <&osc24M>, <&pll6>;
-> +                       clock-output-names = "mmc2",
-> +                                            "mmc2_output",
-> +                                            "mmc2_sample";
-> +               };
->         };
->
->         soc {
-> --
-> 1.9.1
->
+CuWcqCAyMDE25bm0MDHmnIgzMOaXpSAwMDoyOCwgUm9iIEhlcnJpbmcg5YaZ6YGTOgo+IE9uIFRo
+dSwgSmFuIDI4LCAyMDE2IGF0IDA0OjQzOjM1UE0gKzA4MDAsIENhZXNhciBXYW5nIHdyb3RlOgo+
+PiBUaGlzIHBhdGNoIGFkZCB0aGUgbWNsayBwcm9wZXJ0eSBmb3IgdGhlIENPREVDIGRyaXZlciwK
+Pj4gc2luY2Ugc29tZXRpbWUgdGhlIENPREVDIGRyaXZlciBuZWVkcyB0aGUgY2xvY2sgZW5hYmxl
+ZC4KPiBzL2FkZC9hZGRzLwo+Cj4gcy9zb21ldGltZS9zb21ldGltZXMvCgpEb25lLCB0aGFua3Mg
+Zm9yIHBvaW50aW5nIG91dCB0aGF0LgoKCj4+IFRoZSBzeXN0ZW0gY2xvY2sgb2YgQUxDNTYxNiBj
+YW4gYmUgc2VsZWN0ZWQgZnJvbSBNQ0xLLAo+PiBUaGF0J3MgYWxzbyBtYWtlIGFzIHRoZSBjb2Rl
+YyBtYXN0ZXIgY2xvY2sgcHJvdmlkZXIsCj4gVGhhdCBhbHNvIG1ha2VzIHRoZSBjb2RlYyB0aGUg
+bWFzdGVyIGNsb2NrIHByb3ZpZGVyLgo+CgpEaXR0by4KCj4+IFNpZ25lZC1vZmYtYnk6IENhZXNh
+ciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHY0
+Ogo+PiAtIEFkZCB0aGlzIHBhdGNoIGluY2x1ZGVkIGluIGt5bGluIHNlcmllcyBwYXRjaGVzLgo+
+Pgo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2MTYudHh0
+IHwgNiArKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4+Cj4+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvcnQ1NjE2
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2MTYudHh0
+Cj4+IGluZGV4IGVmYzQ4YzYuLmU0MTA4NTggMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2MTYudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2MTYudHh0Cj4+IEBAIC04LDYgKzgsMTIg
+QEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gICAKPj4gICAtIHJlZyA6IFRoZSBJMkMgYWRkcmVz
+cyBvZiB0aGUgZGV2aWNlLgo+PiAgIAo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKwo+PiAr
+LSBjbG9ja3M6IFRoZSBwaGFuZGxlIG9mIHRoZSBtYXN0ZXIgY2xvY2sgdG8gdGhlIENPREVDLgo+
+PiArCj4+ICstIGNsb2NrLW5hbWVzOiBTaG91bGQgYmUgIm1jbGsiLgo+PiArCj4+ICAgUGlucyBv
+biB0aGUgZGV2aWNlIChmb3IgbGlua2luZyBpbnRvIGF1ZGlvIHJvdXRlcykgZm9yIFJUNTYxNjoK
+Pj4gICAKPj4gICAgICogSU4xUAo+PiAtLSAKPj4gMS45LjEKPj4KPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcg
+bGlzdAo+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCgoKLS0gClRoYW5r
+cywKQ2Flc2FyCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1yb2NrY2hpcAo=
