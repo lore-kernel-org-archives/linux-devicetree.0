@@ -1,178 +1,212 @@
-From: Felipe Ferreri Tonello <eu@felipetonello.com>
-Subject: Re: [PATCH v2 2/2] devicetree: sound: Fix fsl-asoc-card identation
-Date: Sun, 31 Jan 2016 17:49:55 +0000
-Message-ID: <56AE4943.3040408@felipetonello.com>
-References: <1454065261-9522-1-git-send-email-eu@felipetonello.com>
- <1454065261-9522-2-git-send-email-eu@felipetonello.com>
- <20160129180239.GB7283@Asurada-Nvidia>
+From: Antony Pavlov <antonynpavlov@gmail.com>
+Subject: Re: [RFC v3 01/14] WIP: clk: add Atheros AR724X/AR913X/AR933X SoCs
+ clock driver
+Date: Sun, 31 Jan 2016 23:41:55 +0300
+Message-ID: <20160131234155.eee918745880878963c044aa@gmail.com>
+References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
+	<1453580251-2341-2-git-send-email-antonynpavlov@gmail.com>
+	<20160125232156.35c0ce3f@tock>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------020401050901050905070200"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160129180239.GB7283@Asurada-Nvidia>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160125232156.35c0ce3f@tock>
+Sender: linux-clk-owner@vger.kernel.org
+To: Alban <albeu@free.fr>
+Cc: linux-mips@linux-mips.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------020401050901050905070200
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+On Mon, 25 Jan 2016 23:21:56 +0100
+Alban <albeu@free.fr> wrote:
 
-Hi Nicolin,
+> On Sat, 23 Jan 2016 23:17:18 +0300
+> Antony Pavlov <antonynpavlov@gmail.com> wrote:
+>=20
+> > TODO: get pll registers base address from devicetree node
+> >=20
+> > Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+> > Cc: Alban Bedel <albeu@free.fr>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Stephen Boyd <sboyd@codeaurora.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-clk@vger.kernel.org
+> > Cc: linux-mips@linux-mips.org
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  drivers/clk/Makefile                  |   1 +
+> >  drivers/clk/clk-ath79.c               | 193 ++++++++++++++++++++++=
+++++++++++++
+> >  include/dt-bindings/clock/ath79-clk.h |  22 ++++
+> >  3 files changed, 216 insertions(+)
+> >=20
+> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> > index 820714c..5101763 100644
+> > --- a/drivers/clk/Makefile
+> > +++ b/drivers/clk/Makefile
+> > @@ -18,6 +18,7 @@ endif
+> >  # hardware specific clock types
+> >  # please keep this section sorted lexicographically by file/direct=
+ory path name
+> >  obj-$(CONFIG_MACH_ASM9260)		+=3D clk-asm9260.o
+> > +obj-$(CONFIG_ATH79)			+=3D clk-ath79.o
+> >  obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+=3D clk-axi-clkgen.o
+> >  obj-$(CONFIG_ARCH_AXXIA)		+=3D clk-axm5516.o
+> >  obj-$(CONFIG_COMMON_CLK_CDCE706)	+=3D clk-cdce706.o
+> > diff --git a/drivers/clk/clk-ath79.c b/drivers/clk/clk-ath79.c
+> > new file mode 100644
+> > index 0000000..75338a7
+> > --- /dev/null
+> > +++ b/drivers/clk/clk-ath79.c
+> > @@ -0,0 +1,193 @@
+> > +/*
+> > + * Clock driver for Atheros AR724X/AR913X/AR933X SoCs
+> > + *
+> > + * Copyright (C) 2010-2011 Jaiganesh Narayanan <jnarayanan@atheros=
+=2Ecom>
+> > + * Copyright (C) 2011 Gabor Juhos <juhosg@openwrt.org>
+> > + * Copyright (C) 2015 Alban Bedel <albeu@free.fr>
+> > + * Copyright (C) 2016 Antony Pavlov <antonynpavlov@gmail.com>
+> > + *
+> > + * Parts of this file are based on Atheros' 2.6.15/2.6.31 BSP
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation; either version 2 of
+> > + * the License, or (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/clkdev.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include "clk.h"
+> > +
+> > +#include <dt-bindings/clock/ath79-clk.h>
+> > +
+> > +#include "asm/mach-ath79/ar71xx_regs.h"
+> > +#include "asm/mach-ath79/ath79.h"
+> > +
+> > +#define MHZ (1000 * 1000)
+> > +
+> > +#define AR724X_BASE_FREQ	(40 * MHZ)
+> > +
+> > +static struct clk *ath79_clks[ATH79_CLK_END];
+> > +
+> > +static struct clk_onecell_data clk_data =3D {
+> > +	.clks =3D ath79_clks,
+> > +	.clk_num =3D ARRAY_SIZE(ath79_clks),
+> > +};
+> > +
+> > +static struct clk *__init ath79_add_sys_clkdev(
+> > +	const char *id, unsigned long rate)
+> > +{
+> > +	struct clk *clk;
+> > +	int err;
+> > +
+> > +	clk =3D clk_register_fixed_rate(NULL, id, NULL, CLK_IS_ROOT, rate=
+);
+> > +	if (!clk)
+> > +		panic("failed to allocate %s clock structure", id);
+> > +
+> > +	err =3D clk_register_clkdev(clk, id, NULL);
+> > +	if (err)
+> > +		panic("unable to register %s clock device", id);
+> > +
+> > +	return clk;
+> > +}
+> >
+> > +static void __init ar724x_clk_init(struct device_node *np)
+> > +{
+> > +	struct clk *ref_clk;
+> > +	unsigned long of_ref_rate;
+> > +	unsigned long ref_rate;
+> > +	unsigned long cpu_rate;
+> > +	unsigned long ddr_rate;
+> > +	unsigned long ahb_rate;
+> > +	u32 pll;
+> > +	u32 freq;
+> > +	u32 div;
+> > +
+> > +	ref_clk =3D of_clk_get(np, 0);
+> > +	if (IS_ERR(ref_clk)) {
+> > +		pr_err("%s: of_clk_get failed\n", np->full_name);
+> > +		return;
+> > +	}
+>=20
+> It would be better to have this function take the ref clock as
+> argument, to allow using it for both OF and legacy platforms.
 
-On 29/01/16 18:02, Nicolin Chen wrote:
-> On Fri, Jan 29, 2016 at 11:01:01AM +0000, Felipe F. Tonello wrote:
->> Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
->> ---
->>  Documentation/devicetree/bindings/sound/fsl-asoc-card.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
->> index ceaef5126989..16b254b04f8c 100644
->> --- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
->> +++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
->> @@ -43,7 +43,7 @@ Required properties:
->>  
->>    - audio-cpu		: The phandle of an CPU DAI controller
->>  
->> -  - audio-codec		: The phandle of an audio codec
->> +  - audio-codec	: The phandle of an audio codec
-> 
-> The indentation was fine actually.....how did you see it misaligned?
+I'll try to use this idea in v5 patch version.
 
-It doesn't look right on tab width as 8 spaces. I use `less -x8' for
-core.pager git config for example.
+> > +	of_ref_rate =3D clk_get_rate(ref_clk);
+> > +
+> > +	ref_rate =3D AR724X_BASE_FREQ;
+> > +
+> > +	if (of_ref_rate !=3D ref_rate) {
+> > +		pr_err("ref_rate !=3D of_ref_rate\n");
+> > +		ref_rate =3D of_ref_rate;
+> > +	}
+>=20
+> I don't think that this test is really useful.
 
-But if it is correct, just ignore this patch then.
+Yes, I can make this check optional.
 
-Thanks
+> > +	pll =3D ath79_pll_rr(AR724X_PLL_REG_CPU_CONFIG);
+> > +
+> > +	div =3D ((pll >> AR724X_PLL_FB_SHIFT) & AR724X_PLL_FB_MASK);
+> > +	freq =3D div * ref_rate;
+> > +
+> > +	div =3D ((pll >> AR724X_PLL_REF_DIV_SHIFT) & AR724X_PLL_REF_DIV_M=
+ASK) * 2;
+> > +	freq /=3D div;
+> > +
+> > +	cpu_rate =3D freq;
+> > +
+> > +	div =3D ((pll >> AR724X_DDR_DIV_SHIFT) & AR724X_DDR_DIV_MASK) + 1=
+;
+> > +	ddr_rate =3D freq / div;
+> > +
+> > +	div =3D (((pll >> AR724X_AHB_DIV_SHIFT) & AR724X_AHB_DIV_MASK) + =
+1) * 2;
+> > +	ahb_rate =3D cpu_rate / div;
+>=20
+> For a new driver it would make sense to use clk_register_divider() an=
+d
+> similar generic building blocks.
+>=20
+> > +	ath79_clks[ATH79_CLK_REF] =3D ath79_add_sys_clkdev("ref", ref_rat=
+e);
+> > +	ath79_clks[ATH79_CLK_CPU] =3D ath79_add_sys_clkdev("cpu", cpu_rat=
+e);
+> > +	ath79_clks[ATH79_CLK_DDR] =3D ath79_add_sys_clkdev("ddr", ddr_rat=
+e);
+> > +	ath79_clks[ATH79_CLK_AHB] =3D ath79_add_sys_clkdev("ahb", ahb_rat=
+e);
+> > +	ath79_clks[ATH79_CLK_WDT] =3D ath79_add_sys_clkdev("wdt", ahb_rat=
+e);
+> > +	ath79_clks[ATH79_CLK_UART] =3D ath79_add_sys_clkdev("uart", ahb_r=
+ate);
+>=20
+> You shouldn't add ref, wdt and uart, they are not needed and make the
+> driver incompatible with the current DT bindings.
 
--- 
-Felipe
+Please describe the situation then this incompatibility does matter.
 
---------------020401050901050905070200
-Content-Type: application/pgp-keys;
- name="0x92698E6A.asc"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0x92698E6A.asc"
+Current ath79 dt support is very preliminary and the only dt user
+is 5-years old TP-Link WR1043ND so it's near impossible to break someth=
+ink.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v2
+Anyway current ath79 dt binding is somewhat broken (see __your__ messag=
+e 'Re: [RFC 1/4] WIP: MIPS: ath79: make ar933x clks more devicetree-fri=
+endly' from 'Thu, 21 Jan 2016 12:03:20 +0100').
 
-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
-SkAyCfQaSw==
-=JwBB
------END PGP PUBLIC KEY BLOCK-----
 
---------------020401050901050905070200--
+--=A0
+Best regards,
+=A0 Antony Pavlov
