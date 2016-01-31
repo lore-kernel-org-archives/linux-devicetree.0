@@ -1,12 +1,13 @@
 From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 05/14] clk: sunxi: Add APB1 clock for A83T
-Date: Sun, 31 Jan 2016 09:20:57 +0800
-Message-ID: <1454203266-4450-6-git-send-email-vishnupatekar0510@gmail.com>
+Subject: [PATCH 06/14] ARM: dts: sun8i-a83t: Correct low speed
+ oscillator clocks
+Date: Sun, 31 Jan 2016 09:20:58 +0800
+Message-ID: <1454203266-4450-7-git-send-email-vishnupatekar0510@gmail.com>
 References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBKODWW2QKGQEPY26AOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBL6DWW2QKGQEV5ZS4SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1454203266-4450-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,62 +20,58 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.g
 Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-APB1 is similar to sun4i-a10-apb0-clk, except different dividers.
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-This adds support for apb1 on A83T.
+The A83T does not have a 32.768 kHz low speed oscillator, either as
+an external crystal or input. It has a 16 MHz RC-based (inaccurate)
+internal oscillator, which is then divided by 512 for a clock close
+to 32 kHz.
 
-Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- drivers/clk/sunxi/clk-sunxi.c                     | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index bfd82f1..10637e7 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -49,6 +49,7 @@ Required properties:
- 	"allwinner,sun8i-a23-apb0-gates-clk" - for the APB0 gates on A23
- 	"allwinner,sun9i-a80-apb0-gates-clk" - for the APB0 gates on A80
- 	"allwinner,sun4i-a10-apb1-clk" - for the APB1 clock
-+	"allwinner,sun8i-a83t-apb1-clk" - for the APB1 clock on A83T
- 	"allwinner,sun9i-a80-apb1-clk" - for the APB1 bus clock on A80
- 	"allwinner,sun4i-a10-apb1-gates-clk" - for the APB1 gates on A10
- 	"allwinner,sun5i-a13-apb1-gates-clk" - for the APB1 gates on A13
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 02bbdf6..6510b0e 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -772,6 +772,22 @@ static const struct div_data sun4i_apb0_data __initconst = {
- 	.table	= sun4i_apb0_table,
- };
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 8d27b63..45b725c 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -118,6 +118,7 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
++		/* TODO: PRCM block has a mux for this. */
+ 		osc24M: osc24M_clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+@@ -125,11 +126,25 @@
+ 			clock-output-names = "osc24M";
+ 		};
+ 
+-		osc32k: osc32k_clk {
++		/*
++		 * This is called "internal OSC" in some places.
++		 * It is an internal RC-based oscillator.
++		 * TODO: Its controls are in the PRCM block.
++		 */
++		osc16M: osc16M_clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <32768>;
+-			clock-output-names = "osc32k";
++			clock-frequency = <16000000>;
++			clock-output-names = "osc16M";
++		};
 +
-+static const struct clk_div_table sun8i_a83t_apb1_table[] __initconst = {
-+	{ .val = 0, .div = 1 },
-+	{ .val = 1, .div = 2 },
-+	{ .val = 2, .div = 3 },
-+	{ .val = 3, .div = 4 },
-+	{ } /* sentinel */
-+};
-+
-+static const struct div_data sun8i_a83t_apb1_data __initconst = {
-+	.shift	= 8,
-+	.pow	= 0,
-+	.width	= 2,
-+	.table	= sun8i_a83t_apb1_table,
-+};
-+
- static void __init sunxi_divider_clk_setup(struct device_node *node,
- 					   struct div_data *data)
- {
-@@ -1027,6 +1043,7 @@ static const struct of_device_id clk_div_match[] __initconst = {
- 	{.compatible = "allwinner,sun8i-a23-axi-clk", .data = &sun8i_a23_axi_data,},
- 	{.compatible = "allwinner,sun4i-a10-ahb-clk", .data = &sun4i_ahb_data,},
- 	{.compatible = "allwinner,sun4i-a10-apb0-clk", .data = &sun4i_apb0_data,},
-+	{.compatible = "allwinner,sun8i-a83t-apb1-clk", .data = &sun8i_a83t_apb1_data,},
- 	{}
- };
++		osc16Md512: osc16Md512_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <512>;
++			clock-mult = <1>;
++			clocks = <&osc16M>;
++			clock-output-names = "osc16Md512";
+ 		};
+ 	};
  
 -- 
 1.9.1
