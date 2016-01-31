@@ -1,103 +1,100 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qdl-udoo: add sound support
-Date: Sun, 31 Jan 2016 00:42:35 +0100
-Message-ID: <56AD4A6B.80409@maciej.szmigiero.name>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/14] Add A83T clk, r_pio, mmc rsb support
+Date: Sun, 31 Jan 2016 09:20:52 +0800
+Message-ID: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBD6DWW2QKGQE4NP3MZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org
+Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add sound support in UDOO board DT file.
+Hello,
+This series adds further support for A83T, mainly adds clock support.
+Also adds R_PIO, PRCM related clocks, mmc, rsb support.
 
-Signed-off-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 57 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+A83T difference in short:
+R_PIO is slightly different from A23 r_pio. AHB1 has different parents as
+compared to a31-ahb1, APB1 has different dividers.Bus gates are similar to H3,
+apb0 gates are different.mmc and rsb are compatible with earlier sunxi socs.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 1211da894ee9..d3e54e40a017 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -34,6 +34,18 @@
- 			gpio = <&gpio7 12 0>;
- 		};
- 	};
-+
-+	sound {
-+		compatible = "fsl,imx6q-udoo-ac97",
-+			     "fsl,imx-audio-ac97";
-+		model = "fsl,imx6q-udoo-ac97";
-+		audio-cpu = <&ssi1>;
-+		audio-routing =
-+			"RX", "Mic Jack",
-+			"Headphone Jack", "TX";
-+		mux-int-port = <1>;
-+		mux-ext-port = <6>;
-+	};
- };
- 
- &fec {
-@@ -109,6 +121,36 @@
- 				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
- 			>;
- 		};
-+
-+		pinctrl_ac97_running: ac97running {
-+			fsl,pins = <
-+				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_ac97_warm_reset: ac97warmreset {
-+			fsl,pins = <
-+				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_ac97_reset: ac97reset {
-+			fsl,pins = <
-+				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
-+			>;
-+		};
- 	};
- };
- 
-@@ -132,3 +174,18 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&audmux {
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	cell-index = <0>;
-+	fsl,mode = "ac97-slave";
-+	pinctrl-names = "ac97-running", "ac97-reset", "ac97-warm-reset";
-+	pinctrl-0 = <&pinctrl_ac97_running>;
-+	pinctrl-1 = <&pinctrl_ac97_reset>;
-+	pinctrl-2 = <&pinctrl_ac97_warm_reset>;
-+	ac97-gpios = <&gpio4 19 0 &gpio4 18 0 &gpio2 30 0>;
-+	status = "okay";
-+};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 1: adds support for r_pio pin controller.
+
+patch 2: adds PRCM apb0 clock gates, it controls prcm related clocks.
+
+patch 3: adds bus gates which are similar to h3, it's not clearly known which
+clocks belongs to which parent.
+
+patch 4: adds ahb1 clock support, 0b1x is pll6 parent otherwise it's same as a31
+ahb1.
+
+patch 5: adds apb1 clock support, apb1 has different dividers compared to a10 
+apb0 clock.
+
+patch 6: this patch is form wens, a83t has 16M internal oscillator, to get 
+aproximately 32k clock, it's divided by 512.
+
+patch 7: adds basics clocks nodes to dtsi, pll6, ahb1, ahb2, apb1, apb2,
+bus gates, and resets.
+
+patch 8-9: adds mmc and it's clock nodes.
+
+patch 10: adds A83T PRCM related clocks, clock resets.
+
+patch 11: adds r_pio pin controller nodes to dtsi
+
+patch 12: adds RSB nodes to dtsi
+
+patch 13: enables mmc0 support for h8homlet board, tested by LABBE Corentin.
+
+patch 14: This patch adds support for Sinovoip BPI-M3 A83T based board, it has 
+2GB LPDDR3, u-boot support is added recently for this board.
+
+
+Regards,
+Vishnu
+
+Chen-Yu Tsai (1):
+  ARM: dts: sun8i-a83t: Correct low speed oscillator clocks
+
+Vishnu Patekar (13):
+  pinctrl: sunxi: Add A83T R_PIO controller support
+  clk: sunxi: Add apb0 gates for A83T
+  clk: sunxi: add bus gates for A83T
+  clk: sunxi: add ahb1 clock for A83T
+  clk: sunxi: Add APB1 clock for A83T
+  ARM: dts: sun8i-a83t: Add basic clocks and resets
+  ARM: dts: sun8i-a83t: add mmc clock nodes
+  ARM: dts: sun8i-a83t: Add mmc controller nodes
+  ARM: dts: sun8i-a83t: Add PRCM related clocks and resets
+  ARM: dts: sun8i-a83t: Add R_PIO controller node to the dtsi
+  ARM: dts: sun8i-a83t: Add RSB nodes to dtsi
+  ARM: dts: sun8i: enable mmc for H8Homlet Board.
+  ARM: dts: sun8i: Add A83T based Sinovoip Bpi-M3 Board
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   4 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  |  20 ++
+ ...omlet-v2.dts => sun8i-a83t-sinovoip-bpi-m3.dts} |  28 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  | 314 ++++++++++++++++++++-
+ drivers/clk/sunxi/clk-simple-gates.c               |   2 +
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c            |   2 +
+ drivers/clk/sunxi/clk-sunxi.c                      |  92 ++++++
+ drivers/pinctrl/sunxi/Kconfig                      |   5 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a83t-r.c       | 119 ++++++++
+ 12 files changed, 582 insertions(+), 7 deletions(-)
+ copy arch/arm/boot/dts/{sun8i-a83t-allwinner-h8homlet-v2.dts => sun8i-a83t-sinovoip-bpi-m3.dts} (79%)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-a83t-r.c
+
+-- 
+1.9.1
