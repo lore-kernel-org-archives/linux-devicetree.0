@@ -1,48 +1,48 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 0/3] leds: add SN3218 LED driver
-Date: Sun, 31 Jan 2016 12:59:13 +0000
-Message-ID: <1454245156-15747-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: fsl: add imx-cs427x machine driver
+Date: Sun, 31 Jan 2016 11:28:00 -0200
+Message-ID: <CAOMZO5CipBACeJz6OVpqGOh37n7V+6khV=wExedoCSf1-n4sJA@mail.gmail.com>
+References: <1453744403-12268-1-git-send-email-eu@felipetonello.com>
+	<20160126022948.GA21187@rob-hp-laptop>
+	<56A73FDE.2060607@felipetonello.com>
+	<CAOMZO5BjeDMqNgf-=tE7=pByJi+jJVA=G2bbtp+XJeYbpev6KA@mail.gmail.com>
+	<56A75205.8060000@felipetonello.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56A75205.8060000-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Ferreri Tonello <eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements support for the Si-En SN3218
-18 Channel LED Driver connected through I2C. The SN3218
-doesn't support reading so the LED states are cached in a
-regmap.
+On Tue, Jan 26, 2016 at 9:01 AM, Felipe Ferreri Tonello
+<eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org> wrote:
 
-The driver has been tested on a Raspberry Pi B.
+> Actually yes, thanks! I didn't know about the existence of fsl-asoc-card.
+>
+> I get some errors but I don't think they actually matter:
+> [   19.734494] fsl-asrc 2034000.asrc: driver registered
+> [   19.738707] fsl-asoc-card sound: ASoC: CPU DAI (null) not registered
+> [   19.738717] fsl-asoc-card sound: snd_soc_register_card failed (-517)
+> [   19.741556] fsl-asoc-card sound: ASoC: CPU DAI (null) not registered
+> [   19.741564] fsl-asoc-card sound: snd_soc_register_card failed (-517)
+> [   19.774591] fsl-asoc-card sound: cs4271-hifi <-> 2028000.ssi mapping ok
+> [   19.781507] fsl-asoc-card sound: ASoC: no source widget found for
+> ASRC-Playback
+> [   19.790065] fsl-asoc-card sound: ASoC: Failed to add route
+> ASRC-Playback -> direct -> CPU-Playback
+> [   19.805349] fsl-asoc-card sound: ASoC: no sink widget found for
+> ASRC-Capture
+> [   19.817222] fsl-asoc-card sound: ASoC: Failed to add route
+> CPU-Capture -> direct -> ASRC-Capture
+>
+> The codec is producing sound, which is good. Any idea on why these
+> errors are been triggered?
 
-Changes since RFC:
-  * using regmap instead of direct I2C
-  * add new function to init single LED
-  * add module name to Kconfig help
-  * replace of_get_property() with of_property_read_string()
-  * remove lock, leds_state and name from priv structure
-  * drop sn3218 LED name prefix
-  * don't use led_info and led_platform_data
-  * abort probing if no SN3218 is connected or DT invalid
-  * fix some style and text issues
-  * fix license
-  * move i2c_device_id and of_device_id at the end of file
-  * use devm_* calls
-  * use device function as node name in DT binding
-
-Stefan Wahren (3):
-  of: Add vendor prefix for Si-En Technology
-  DT: add binding for SN3218 LED driver
-  leds: add SN3218 LED driver
-
- .../devicetree/bindings/leds/leds-sn3218.txt       |   42 +++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/leds/Kconfig                               |   12 +
- drivers/leds/Makefile                              |    1 +
- drivers/leds/leds-sn3218.c                         |  297 ++++++++++++++++++++
- 5 files changed, 353 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
- create mode 100644 drivers/leds/leds-sn3218.c
-
--- 
-1.7.9.5
+Nicolin's patch should fix these warnings:
+https://lkml.org/lkml/2016/1/31/8
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
