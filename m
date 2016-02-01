@@ -1,96 +1,58 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
-Date: Mon, 1 Feb 2016 11:23:34 +0100
-Message-ID: <56AF3226.2070304@gmail.com>
-References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
- <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
- <566E94CA.1050700@linaro.org> <56A0A5E1.5050105@gmail.com>
- <56A0EBF0.2020703@linaro.org> <56A0EF61.5080500@gmail.com>
- <56A0EFEA.506@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56A0EFEA.506@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
+Date: Mon,  1 Feb 2016 11:25:55 +0100
+Message-ID: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The NAND Flash controller for SAMA5D2 has small differences that make it
+impossible to use the existing driver for SAMA5D3. This patchset uses the
+device tree's compatible string to get those differences, and the code is
+slightly modified to handle them.
 
+Base on linux-mtd-next, commit 15c0be7bec002f9a529dd0966d0db96dde176fd0
 
-On 21/01/16 15:49, Srinivas Kandagatla wrote:
->
->
-> On 21/01/16 14:46, Matthias Brugger wrote:
->>
->>
->> On 21/01/16 15:32, Srinivas Kandagatla wrote:
->>>
->>>
->>> On 21/01/16 09:33, Matthias Brugger wrote:
->>>>
->>>>
->>>> On 14/12/15 11:07, Srinivas Kandagatla wrote:
->>>>> Hi Andrew,
->>>>>
->>>>> On 14/12/15 04:27, Daniel Kurtz wrote:
->>>>>> Hi Srinivas,
->>>>>>
->>>>>> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
->>>>>> <andrew-ct.chen@mediatek.com> wrote:
->>>>>>> This patch adds EFUSE support driver which is used by other drivers
->>>>>>> like thermal sensor and HDMI impedance.
->>>>>>>
->>>>>>> There are some efuses these fuses store things like calibration
->>>>>>> data,
->>>>>>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
->>>>>>> read out this data for configuring the driver.
->>>>>>>
->>>>>>> Change in v2:
->>>>>>> 1. Rebase to 4.4-rc1
->>>>>>> 2. Modify the driver Makefile for more consistent with other drivers
->>>>>>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and
->>>>>>> "mediatek,efuse"
->>>>>>
->>>>>> Do you still plan to queue this for v4.5?
->>>>>>
->>>>> Sorry guys, for the long delay in replying your pings, got busy with
->>>>> regular office stuff :-)
->>>>>
->>>>> Yes, It should go in v4.5, I did send request with my sign-off to
->>>>> Greg,
->>>>> he should take it via char-misc tree.
->>>>>
->>>>
->>>> I can't see this patches in the char-misc tree [1].
->>>> Can you please double check?
->>>
->>> Hi Matthias,
->>> Thanks for the patience. You should expect them to see after v4.5-rc1,
->>> that's when Greg said he would push the patches.
->>>
->>
->> I'm a bit puzzled. Wouldn't that mean that they will get into mainline
->> for v4.6.
->
-> The delay was due to Christmas holidays, this driver is 4.5 material, so
-> it would endup in v4.5-rc2 instead of v4.5-rc1.
+See previous revisions to apply on the Atmel Linux 4.1 branch.
 
-Sorry for bothering you on this again, but I just checked v4.5-rc2 and 
-it is not present. I don't see it in char-misc-[next,testing] neither.
+Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
+existing SAMA5D2 board with NAND Flash memory (yet).
 
-Looks like as if this patch got forgotten. Can you please check.
+V3 -> V2:
+- Rebase on linux-mtd-next
+- Skip patches already in the tree
 
-Regards,
-Matthias
+V2 -> V1:
+- Rebase on v4.4
+- Use of_device_get_match_data
+- Split message cleanup
+- Reword a small part of the atmel_nand device tree binding
+- Use 'caps' for all private data structures
 
->
-> thanks
-> srini
->> I just want to know if I can take patch 3/3 through my v4.5-next branch
->> (which eventually will be merged into v4.6-rc1) or if I have to wait.
->
->>
->> Thanks,
->> Matthias
+RFC -> V1:
+- Split the support of 32-bit ECC on SAMA5D2 in two commits
+- Fix the missing ECC strength configuration code
+
+Romain Izard (5):
+  mtd: atmel_nand: Support variable RB_EDGE interrupts
+  dt-bindings: atmel_nand: Reword the documenation
+  mtd: atmel_nand: Support PMECC on SAMA5D2
+  mtd: atmel_nand: Support 32-bit ECC strength
+  ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
+
+ .../devicetree/bindings/mtd/atmel-nand.txt         | 31 +++++----
+ arch/arm/boot/dts/sama5d2.dtsi                     | 38 +++++++++++
+ drivers/mtd/nand/atmel_nand.c                      | 77 ++++++++++++++++++----
+ drivers/mtd/nand/atmel_nand_ecc.h                  |  9 ++-
+ drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
+ 5 files changed, 131 insertions(+), 27 deletions(-)
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
