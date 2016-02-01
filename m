@@ -1,50 +1,50 @@
-From: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH] of: alloc anywhere from memblock if range not specified
-Date: Mon,  1 Feb 2016 20:14:27 +0530
-Message-ID: <1454337867-5111-1-git-send-email-vinmenon@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Mon, 1 Feb 2016 08:46:08 -0600
+Message-ID: <20160201144608.GA26606@rob-hp-laptop>
+References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jhautbois@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, wsa@the-dreams.de, laurent.pinchart@ideasonboard.com, lars@metafoo.de, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-early_init_dt_alloc_reserved_memory_arch passes end as 0 to
-__memblock_alloc_base, when limits are not specified. But
-__memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
-and limits the end to memblock.current_limit. This results in regions
-never being placed in HIGHMEM area, for e.g. CMA.
-Let __memblock_alloc_base allocate from anywhere in memory if limits are
-not specified.
+On Sun, Jan 31, 2016 at 04:33:00PM +0100, Jean-Michel Hautbois wrote:
+> Some I2C devices have multiple addresses assigned, for example each address
+> corresponding to a different internal register map page of the device.
+> So far drivers which need support for this have handled this with a driver
+> specific and non-generic implementation, e.g. passing the additional address
+> via platform data.
+> 
+> This patch provides a new helper function called i2c_new_secondary_device()
+> which is intended to provide a generic way to get the secondary address
+> as well as instantiate a struct i2c_client for the secondary address.
+> 
+> The function expects a pointer to the primary i2c_client, a name
+> for the secondary address and an optional default address. The name is used
+> as a handle to specify which secondary address to get.
+> 
+> The default address is used as a fallback in case no secondary address
+> was explicitly specified. In case no secondary address and no default
+> address were specified the function returns NULL.
+> 
+> For now the function only supports look-up of the secondary address
+> from devicetree, but it can be extended in the future
+> to for example support board files and/or ACPI.
+> 
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+> ---
+> v2: adding some DT bindings documentation (more than one year later...)
+> 
+>  Documentation/devicetree/bindings/i2c/i2c.txt |  7 +++++
 
-Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/of/of_reserved_mem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1a3556a..ed01c01 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -32,11 +32,13 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
- 	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
- 	phys_addr_t *res_base)
- {
-+	phys_addr_t base;
- 	/*
- 	 * We use __memblock_alloc_base() because memblock_alloc_base()
- 	 * panic()s on allocation failure.
- 	 */
--	phys_addr_t base = __memblock_alloc_base(size, align, end);
-+	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
-+	base = __memblock_alloc_base(size, align, end);
- 	if (!base)
- 		return -ENOMEM;
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/i2c/i2c-core.c                        | 42 +++++++++++++++++++++++++++
+>  include/linux/i2c.h                           |  5 ++++
+>  3 files changed, 54 insertions(+)
