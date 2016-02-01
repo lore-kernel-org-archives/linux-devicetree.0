@@ -1,63 +1,74 @@
-Return-Path: <>
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v5 3/4] Documentation: afe4403: Add DT bindings for the AFE4403 heart monitor
-Date: Tue, 2 Feb 2016 11:50:45 -0600
-Message-ID: <1454435446-20586-4-git-send-email-afd@ti.com>
-In-Reply-To: <1454435446-20586-1-git-send-email-afd@ti.com>
-References: <1454435446-20586-1-git-send-email-afd@ti.com>
+Return-Path: <karsten@excalibur.cnev.de>
+Date: Mon, 1 Feb 2016 19:45:05 +0100
+From: Karsten Merker <merker@debian.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 05/11] drivers: pinctrl: add driver for
+ Allwinner A64 SoC
+Message-ID: <20160201184505.GB14737@excalibur.cnev.de>
+References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
+ <20160201182754.GA14737@excalibur.cnev.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20160201182754.GA14737@excalibur.cnev.de>
+To: Andre Przywara <andre.przywara@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the TI AFE4403 heart monitor DT bindings documentation.
+Hello,
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- .../devicetree/bindings/iio/health/afe4403.txt     | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/health/afe4403.txt
+I by mistake pressed "send" on my previous mail when I intended
+to further edit it, so here comes a followup.
+I definitely need more coffee ;-).
 
-diff --git a/Documentation/devicetree/bindings/iio/health/afe4403.txt b/Documentation/devicetree/bindings/iio/health/afe4403.txt
-new file mode 100644
-index 0000000..2fffd70
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/health/afe4403.txt
-@@ -0,0 +1,34 @@
-+Texas Instruments AFE4403 Heart rate and Pulse Oximeter
-+
-+Required properties:
-+ - compatible		: Should be "ti,afe4403".
-+ - reg			: SPI chip select address of device.
-+ - tx-supply		: Regulator supply to transmitting LEDs.
-+ - interrupt-parent	: Phandle to he parent interrupt controller.
-+ - interrupts		: The interrupt line the device ADC_RDY pin is
-+			  connected to. For details refer to,
-+			  ../../interrupt-controller/interrupts.txt.
-+
-+Optional properties:
-+ - reset-gpios		: GPIO used to reset the device.
-+			  For details refer to, ../../gpio/gpio.txt.
-+
-+For other required and optional properties of SPI slave nodes
-+please refer to ../../spi/spi-bus.txt.
-+
-+Example:
-+
-+&spi0 {
-+	heart_mon@0 {
-+		compatible = "ti,afe4403";
-+		reg = <0>;
-+		spi-max-frequency = <10000000>;
-+
-+		tx-supply = <&vbat>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
-+
-+		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-+	};
-+};
+On Mon, Feb 01, 2016 at 07:27:54PM +0100, Karsten Merker wrote:
+> On Mon, Feb 01, 2016 at 05:39:24PM +0000, Andre Przywara wrote:
+
+> > +static const struct sunxi_pinctrl_desc a64_pinctrl_data = {
+> > +	.pins = a64_pins,
+> > +	.npins = ARRAY_SIZE(a64_pins),
+> > +	.irq_banks = 3,
+> > +};
+> > +
+> > +static int a64_pinctrl_probe(struct platform_device *pdev)
+> > +{
+> > +	return sunxi_pinctrl_init(pdev,
+> > +				  &a64_pinctrl_data);
+> > +}
+> > +
+> > +static const struct of_device_id a64_pinctrl_match[] = {
+> > +	{ .compatible = "allwinner,a64-pinctrl", },
+
+s/allwinner,a64-pinctrl/allwinner,sun50i-a64-pinctrl/ ?
+
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, a64_pinctrl_match);
+> > +
+> > +static struct platform_driver a64_pinctrl_driver = {
+> > +	.probe	= a64_pinctrl_probe,
+> > +	.driver	= {
+> > +		.name		= "a64-pinctrl",
+> > +		.of_match_table	= a64_pinctrl_match,
+> > +	},
+> > +};
+> > +module_platform_driver(a64_pinctrl_driver);
+> > +
+> > +MODULE_AUTHOR("Andre Przywara <andre.przywara@arm.com>");
+> > +MODULE_DESCRIPTION("Allwinner A64 pinctrl driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> For the above function names one could also think about using the
+
+s/function names/variable definitions/
+
+> existing naming scheme including the SoC family as we do in the
+> other sunxi pinctrl drivers, but as they are only internal to the
+> driver, that would really just be a matter of cosmetics :-).
+
+Regards,
+Karsten
 -- 
-2.7.0
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
