@@ -1,31 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v4 11/15] devicetree: add Dragino vendor id
-Date: Mon, 1 Feb 2016 08:43:48 -0600
-Message-ID: <20160201144348.GA25678@rob-hp-laptop>
-References: <1454285440-18916-1-git-send-email-antonynpavlov@gmail.com>
- <1454285440-18916-12-git-send-email-antonynpavlov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <1454285440-18916-12-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org
+From: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH] of: alloc anywhere from memblock if range not specified
+Date: Mon,  1 Feb 2016 20:14:27 +0530
+Message-ID: <1454337867-5111-1-git-send-email-vinmenon@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 03:10:36AM +0300, Antony Pavlov wrote:
-> Please see http://www.dragino.com/about/about.html for details.
-> 
-> Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-> Cc: devicetree@vger.kernel.org
+early_init_dt_alloc_reserved_memory_arch passes end as 0 to
+__memblock_alloc_base, when limits are not specified. But
+__memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
+and limits the end to memblock.current_limit. This results in regions
+never being placed in HIGHMEM area, for e.g. CMA.
+Let __memblock_alloc_base allocate from anywhere in memory if limits are
+not specified.
 
-Please add acks when posting new versions.
+Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 1a3556a..ed01c01 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -32,11 +32,13 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ 	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
+ 	phys_addr_t *res_base)
+ {
++	phys_addr_t base;
+ 	/*
+ 	 * We use __memblock_alloc_base() because memblock_alloc_base()
+ 	 * panic()s on allocation failure.
+ 	 */
+-	phys_addr_t base = __memblock_alloc_base(size, align, end);
++	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
++	base = __memblock_alloc_base(size, align, end);
+ 	if (!base)
+ 		return -ENOMEM;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
