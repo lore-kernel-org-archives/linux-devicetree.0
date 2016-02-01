@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 4/4] arm64: dts: add Hi6220's stub clock node
-Date: Mon,  1 Feb 2016 21:34:47 +0800
-Message-ID: <1454333687-20421-5-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v5 1/4] dt-bindings: mailbox: Document Hi6220 mailbox driver
+Date: Mon,  1 Feb 2016 21:34:44 +0800
+Message-ID: <1454333687-20421-2-git-send-email-leo.yan@linaro.org>
 References: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
@@ -9,150 +9,109 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Wei Xu <xuwei5@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Chen Feng <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable SRAM node and stub clock node for Hi6220, which will use mailbox
-channel 0 for CPU's frequency change.
-
-Furthermore, add the CPU clock phandle in CPU's node and using
-operating-points-v2 to register operating points. So can be used by
-cpufreq-dt driver.
+Document DT binding for Hisilicon Hi6220 mailbox driver.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 55 +++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 90 ++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index be3d962..d46820a 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -81,6 +81,11 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&stub_clock 0>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cooling-min-level = <4>;
-+			cooling-max-level = <0>;
-+			#cooling-cells = <2>; /* min followed by max */
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -89,6 +94,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -97,6 +103,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -105,6 +112,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -113,6 +121,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -121,6 +130,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -129,6 +139,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -137,10 +148,42 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
+diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+new file mode 100644
+index 0000000..96e6acc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+@@ -0,0 +1,90 @@
++Hisilicon Hi6220 Mailbox Driver
++===============================
 +
-+		opp00 {
-+			opp-hz = /bits/ 64 <208000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <432000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <729000000>;
-+			opp-microvolt = <1090000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			opp-microvolt = <1180000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1330000>;
-+			clock-latency-ns = <500000>;
++Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
++is unidirectional with a maximum message size of 8 words. I/O is
++performed using register access (there is no DMA) and the cell
++raises an interrupt when messages are received.
++
++Mailbox Device Node:
++====================
++
++Required properties:
++--------------------
++- compatible:		Shall be "hisilicon,hi6220-mbox"
++- reg:			Contains the mailbox register address range (base
++			address and length); the first item is for IPC
++			registers, the second item is shared buffer for
++			slots.
++- #mbox-cells		Common mailbox binding property to identify the number
++			of cells required for the mailbox specifier. Should be 1.
++- interrupts:		Contains the interrupt information for the mailbox
++			device. The format is dependent on which interrupt
++			controller the SoCs use.
++
++Optional Properties:
++--------------------
++- hi6220,mbox-tx-noirq: Flag to allow the client user of this mailbox driver
++			to send messages without triggering a TX completion
++			interrupt.
++
++Child Nodes:
++============
++A child node is used for representing the actual sub-mailbox device that is
++used for the communication between the host processor and a remote processor.
++Each child node should have a unique node name across all the different
++mailbox device nodes.
++
++Required properties:
++--------------------
++- hi6220,mbox-tx:	sub-mailbox descriptor property defining Tx channel
++- hi6220,mbox-rx:	sub-mailbox descriptor property defining Rx channel
++
++Sub-mailbox Descriptor Data
++---------------------------
++Each of the above hi6220,mbox-tx and hi6220,mbox-rx properties should have 3
++cells of data that represent the following:
++    Cell #1 (slot_id) - mailbox slot id used either for transmitting
++                        (hi6220,mbox-tx) or for receiving (hi6220,mbox-rx)
++    Cell #2 (dst_irq) - irq identifier index number which used by MCU.
++    Cell #3 (ack_irq) - irq identifier index number with generating a tx/rx
++                        interrupt to application processor, mailbox driver
++                        used this id to acknowledge interrupt.
++
++Example:
++--------
++
++	mailbox: mailbox@F7510000 {
++		#mbox-cells = <1>;
++		compatible = "hisilicon,hi6220-mbox";
++		reg = <0x0 0xF7510000 0x0 0x1000>, /* IPC_S */
++		      <0x0 0x06DFF800 0x0 0x0800>; /* Mailbox */
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++		mbox_stub_clock: mbox_stub_clock {
++			hi6220,mbox-rx = <0 1 10>;
++			hi6220,mbox-tx = <1 0 11>;
 +		};
 +	};
 +
- 	gic: interrupt-controller@f6801000 {
- 		compatible = "arm,gic-400";
- 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
-@@ -168,6 +211,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@fff80000 {
-+			compatible = "hisilicon,hi6220-sramctrl", "syscon";
-+			reg = <0x0 0xfff80000 0x0 0x12000>;
-+		};
 +
- 		ao_ctrl: ao_ctrl@f7800000 {
- 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
- 			reg = <0x0 0xf7800000 0x0 0x2000>;
-@@ -193,6 +241,13 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		stub_clock: stub_clock {
-+			compatible = "hisilicon,hi6220-stub-clk";
-+			hisilicon,hi6220-clk-sram = <&sram>;
-+			#clock-cells = <1>;
-+			mboxes = <&mailbox 1>;
-+		};
++Mailbox client
++===============
 +
- 		uart0: uart@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
++"mboxes" and the optional "mbox-names" (please see
++Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
++of the mboxes property should contain a phandle to the mailbox controller
++device node and second argument is the channel index. It must be 0 (hardware
++support only one channel). The equivalent "mbox-names" property value can be
++used to give a name to the communication channel to be used by the client user.
++
++Example:
++--------
++
++	stub_clock: stub_clock {
++		compatible = "hisilicon,hi6220-stub-clk";
++		hisilicon,hi6220-clk-sram = <&sram>;
++		#clock-cells = <1>;
++		mbox-names = "mbox-tx";
++		mboxes = <&mailbox 1>;
++	};
 -- 
 1.9.1
