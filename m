@@ -1,85 +1,324 @@
-Return-Path: <sergio.prado@e-labworks.com>
+Return-Path: <karsten@excalibur.cnev.de>
+Date: Mon, 1 Feb 2016 20:22:57 +0100
+From: Karsten Merker <merker@debian.org>
+Subject: Re: [linux-sunxi] [PATCH 11/11] arm64: dts: add Pine64 support
+Message-ID: <20160201192257.GD14737@excalibur.cnev.de>
+References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20160212151620.GA25399@rob-hp-laptop>
-References: <1455026836-12908-1-git-send-email-sergio.prado@e-labworks.com> <20160212151620.GA25399@rob-hp-laptop>
-From: Sergio Prado <sergio.prado@e-labworks.com>
-Date: Sun, 14 Feb 2016 13:24:15 -0200
-Message-ID: <CANu7NGvGsDmxb8SoH0FXCYQL9mTL2bN_DQaeD2veKXmMwxzmpA@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: macb: add wake-on-lan support via magic packet
-Content-Type: multipart/alternative; boundary=001a11428d3e662e0f052bbc7fe3
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, nicolas.ferre@atmel.com, davem@davemloft.net, gregory.clement@free-electrons.com, narmstrong@baylibre.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a11428d3e662e0f052bbc7fe3
-Content-Type: text/plain; charset=UTF-8
+On Mon, Feb 01, 2016 at 05:39:30PM +0000, Andre Przywara wrote:
+> The Pine64 is a cost-efficient development board based on the
+> Allwinner A64 SoC.
+> There are three models: the basic version with Fast Ethernet and
+> 512 MB of DRAM (Pine64) and two Pine64+ versions, which both
+> feature Gigabit Ethernet and additional connectors for touchscreens
+> and a camera. Or as my son put it: "Those are smaller and these are
+> missing." ;-)
+> The two Pine64+ models just differ in the amount of DRAM
+> (1GB vs. 2GB). Since U-Boot will figure out the right size for us and
+> patches the DT accordingly we just need to provide one DT for the
+> Pine64+.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm64/boot/dts/Makefile                       |  1 +
+>  arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
+>  arch/arm64/boot/dts/allwinner/pine64.dts           | 58 +++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/pine64_common.dtsi   | 76 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/pine64_plus.dts      | 59 +++++++++++++++++
+>  6 files changed, 200 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_plus.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 72e2c5a..0c22fa9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -175,6 +175,7 @@ parade	Parade Technologies Inc.
+>  pericom	Pericom Technology Inc.
+>  phytec	PHYTEC Messtechnik GmbH
+>  picochip	Picochip Ltd
+> +pine64	Pine64
+>  plathome	Plat'Home Co., Ltd.
+>  plda	PLDA
+>  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index f832b8a..3b7428a 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dts-dirs += allwinner
+>  dts-dirs += altera
+>  dts-dirs += amd
+>  dts-dirs += apm
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> new file mode 100644
+> index 0000000..65f4e24
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -0,0 +1,5 @@
+> +dtb-$(CONFIG_ARCH_SUNXI) += pine64_plus.dtb pine64.dtb
+> +
+> +always		:= $(dtb-y)
+> +subdir-y	:= $(dts-dirs)
+> +clean-files	:= *.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64.dts b/arch/arm64/boot/dts/allwinner/pine64.dts
 
-2016-02-12 13:16 GMT-02:00 Rob Herring <robh@kernel.org>:
->
-> On Tue, Feb 09, 2016 at 12:07:16PM -0200, Sergio Prado wrote:
-> > Tested on Acqua A5 SoM (http://www.acmesystems.it/acqua).
-> >
-> > Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
-> > ---
-> >  Documentation/devicetree/bindings/net/macb.txt |  2 +
-> >  drivers/net/ethernet/cadence/macb.c            | 67
-+++++++++++++++++++++++---
-> >  drivers/net/ethernet/cadence/macb.h            |  4 ++
-> >  3 files changed, 67 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/macb.txt
-b/Documentation/devicetree/bindings/net/macb.txt
-> > index d2e243b1ec0e..c6b1cb5ffa87 100644
-> > --- a/Documentation/devicetree/bindings/net/macb.txt
-> > +++ b/Documentation/devicetree/bindings/net/macb.txt
-> > @@ -25,6 +25,8 @@ Required properties:
-> >
-> >  Optional properties for PHY child node:
-> >  - reset-gpios : Should specify the gpio for phy reset
-> > +- cdns,magic-packet : If present, indicates that the hardware supports
-waking
-> > +  up via magic packet.
->
-> Already have one vendor property like this (fsl). Make this a generic
-> property.
+Please see my followups to patch No. 5 and patch No. 10 in this series.
+s/pine64.dts/sun50i-pine64.dts/ ?
 
-Looks like David Miller already accepted the patch, so I will prepare
-another one on top of it.
+> new file mode 100644
+> index 0000000..ebea5dd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64.dts
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "pine64_common.dtsi"
 
-Thanks,
+see above
 
->
->
-> Rob
+Also a minor spelling nitpick: the other *common* dts/dtsi files
+use dashes instead of underscores, so with regard to naming
+consistency I would like to propose doing it the same way here.
 
---001a11428d3e662e0f052bbc7fe3
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> +
+> +/ {
+> +	model = "Pine64";
+> +	compatible = "pine64,pine64", "allwinner,a64", "allwinner,sunxi";
 
-<div dir=3D"ltr">2016-02-12 13:16 GMT-02:00 Rob Herring &lt;<a href=3D"mail=
-to:robh@kernel.org">robh@kernel.org</a>&gt;:<br>&gt;<br>&gt; On Tue, Feb 09=
-, 2016 at 12:07:16PM -0200, Sergio Prado wrote:<br>&gt; &gt; Tested on Acqu=
-a A5 SoM (<a href=3D"http://www.acmesystems.it/acqua">http://www.acmesystem=
-s.it/acqua</a>).<br>&gt; &gt;<br>&gt; &gt; Signed-off-by: Sergio Prado &lt;=
-<a href=3D"mailto:sergio.prado@e-labworks.com">sergio.prado@e-labworks.com<=
-/a>&gt;<br>&gt; &gt; ---<br>&gt; &gt; =C2=A0Documentation/devicetree/bindin=
-gs/net/macb.txt | =C2=A02 +<br>&gt; &gt; =C2=A0drivers/net/ethernet/cadence=
-/macb.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 67 +++++++++++++++++++++=
-++---<br>&gt; &gt; =C2=A0drivers/net/ethernet/cadence/macb.h =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0| =C2=A04 ++<br>&gt; &gt; =C2=A03 files changed,=
- 67 insertions(+), 6 deletions(-)<br>&gt; &gt;<br>&gt; &gt; diff --git a/Do=
-cumentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bin=
-dings/net/macb.txt<br>&gt; &gt; index d2e243b1ec0e..c6b1cb5ffa87 100644<br>=
-&gt; &gt; --- a/Documentation/devicetree/bindings/net/macb.txt<br>&gt; &gt;=
- +++ b/Documentation/devicetree/bindings/net/macb.txt<br>&gt; &gt; @@ -25,6=
- +25,8 @@ Required properties:<br>&gt; &gt;<br>&gt; &gt; =C2=A0Optional pro=
-perties for PHY child node:<br>&gt; &gt; =C2=A0- reset-gpios : Should speci=
-fy the gpio for phy reset<br>&gt; &gt; +- cdns,magic-packet : If present, i=
-ndicates that the hardware supports waking<br>&gt; &gt; + =C2=A0up via magi=
-c packet.<br>&gt;<br>&gt; Already have one vendor property like this (fsl).=
- Make this a generic<br>&gt; property.<div><br></div><div>Looks like David =
-Miller already accepted the patch, so I will prepare another one on top of =
-it.</div><div><br></div><div>Thanks,</div><div>=C2=A0</div><div>&gt;<br>&gt=
-;<br>&gt; Rob</div></div>
+see above
 
---001a11428d3e662e0f052bbc7fe3--
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x40000000 0x20000000>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64_common.dtsi b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+
+see above
+
+> new file mode 100644
+> index 0000000..d968d76
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+> @@ -0,0 +1,76 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "a64.dtsi"
+
+see above
+
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	cd-gpios = <&pio 5 6 0>;
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart3_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart4_pins>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64_plus.dts b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
+> new file mode 100644
+> index 0000000..344752e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
+
+see above
+
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "pine64_common.dtsi"
+
+see above
+
+> +
+> +/ {
+> +	model = "Pine64+";
+> +	compatible = "pine64,pine64_plus", "allwinner,a64", "allwinner,sunxi";
+
+see above
+
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	/* There is a model with 2GB of DRAM, but U-Boot fixes this for us. */
+> +	memory {
+> +		reg = <0x40000000 0x40000000>;
+> +	};
+> +};
+> -- 
+> 2.6.4
+
+Regards,
+Karsten
+-- 
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
