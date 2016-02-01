@@ -1,190 +1,119 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v4 09/15] MIPS: dts: qca: introduce AR9331 devicetree
-Date: Mon,  1 Feb 2016 03:10:34 +0300
-Message-ID: <1454285440-18916-10-git-send-email-antonynpavlov@gmail.com>
+Subject: [RFC v4 14/15] MIPS: ath79: add initial support for Onion Omega
+Date: Mon,  1 Feb 2016 03:10:39 +0300
+Message-ID: <1454285440-18916-15-git-send-email-antonynpavlov@gmail.com>
 References: <1454285440-18916-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1454285440-18916-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, "L . D . Pinney" <ldpinney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boken Lin <bl-Jj7zZGp/71Y@public.gmane.org>, Jacky Huang <huangfangcheng-9Onoh4P/yGk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet).
-The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
-typically used in very cheap Access Points and Routers.
+Currently only the UART, SPI-flash and LEDs are supported.
+
+Please see https://onion.io/omega for details.
 
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: L. D. Pinney <ldpinney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boken Lin <bl-Jj7zZGp/71Y@public.gmane.org>
+Cc: Jacky Huang <huangfangcheng-9Onoh4P/yGk@public.gmane.org>
 Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/boot/dts/qca/ar9331.dtsi | 158 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 158 insertions(+)
+ arch/mips/ath79/Kconfig          |  5 ++++
+ arch/mips/boot/dts/qca/Makefile  |  1 +
+ arch/mips/boot/dts/qca/omega.dts | 54 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+)
 
-diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
+index 2797581..5273039 100644
+--- a/arch/mips/ath79/Kconfig
++++ b/arch/mips/ath79/Kconfig
+@@ -82,6 +82,11 @@ choice
+ 		select BUILTIN_DTB
+ 		select SOC_AR933X
+ 
++	config DTB_ONION_OMEGA
++		bool "Onion Omega"
++		select BUILTIN_DTB
++		select SOC_AR933X
++
+ 	config DTB_TL_MR3020
+ 		bool "TL-MR3020"
+ 		select BUILTIN_DTB
+diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
+index 428ebac5..efecdac 100644
+--- a/arch/mips/boot/dts/qca/Makefile
++++ b/arch/mips/boot/dts/qca/Makefile
+@@ -1,6 +1,7 @@
+ # All DTBs
+ dtb-$(CONFIG_DTB_TL_WR1043ND_V1)	+= ar9132_tl_wr1043nd_v1.dtb
+ dtb-$(CONFIG_DTB_DRAGINO_MS14)		+= dragino_ms14.dtb
++dtb-$(CONFIG_DTB_ONION_OMEGA)		+= omega.dtb
+ dtb-$(CONFIG_DTB_TL_MR3020)		+= tl_mr3020.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/qca/omega.dts b/arch/mips/boot/dts/qca/omega.dts
 new file mode 100644
-index 0000000..854778b
+index 0000000..9cd9f91
 --- /dev/null
-+++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-@@ -0,0 +1,158 @@
-+#include <dt-bindings/clock/ath79-clk.h>
++++ b/arch/mips/boot/dts/qca/omega.dts
+@@ -0,0 +1,54 @@
++/dts-v1/;
++
++#include "ar9331.dtsi"
++#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
-+	compatible = "qca,ar9331";
++	model = "Onion Omega";
++	compatible = "onion,omega";
 +
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++	aliases {
++		serial0 = &uart;
++	};
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x4000000>;
++	};
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mips,mips24Kc";
-+			reg = <0>;
++	leds {
++		compatible = "gpio-leds";
++
++		system {
++			label = "onion:amber:system";
++			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
++			default-state = "off";
 +		};
 +	};
++};
 +
-+	cpuintc: interrupt-controller {
-+		compatible = "qca,ar7100-cpu-intc";
++&extosc {
++	clock-frequency = <25000000>;
++};
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
++&uart {
++	status = "okay";
++};
 +
-+		qca,ddr-wb-channel-interrupts = <2>, <3>;
-+		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>;
-+	};
++&gpio {
++	status = "okay";
++};
 +
-+	extosc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
++&spi {
++	num-chipselects = <1>;
++	status = "okay";
 +
-+	ahb {
-+		compatible = "simple-bus";
-+		ranges;
-+
++	/* Winbond 25Q128FVSG SPI flash */
++	spiflash: w25q128@0 {
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+
-+		apb {
-+			compatible = "simple-bus";
-+			ranges;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			interrupt-parent = <&miscintc>;
-+
-+			ddr_ctrl: memory-controller@18000000 {
-+				compatible = "qca,ar7240-ddr-controller";
-+				reg = <0x18000000 0x100>;
-+
-+				#qca,ddr-wb-channel-cells = <1>;
-+			};
-+
-+			uart: uart@18020000 {
-+				compatible = "qca,ar9330-uart";
-+				reg = <0x18020000 0x14>;
-+
-+				interrupts = <3>;
-+
-+				clocks = <&pll ATH79_CLK_UART>;
-+				clock-names = "uart";
-+
-+				status = "disabled";
-+			};
-+
-+			gpio: gpio@18040000 {
-+				compatible = "qca,ar7100-gpio";
-+				reg = <0x18040000 0x34>;
-+				interrupts = <2>;
-+
-+				ngpios = <30>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+
-+				status = "disabled";
-+			};
-+
-+			pll: pll-controller@18050000 {
-+				compatible = "qca,ar9330-pll";
-+				reg = <0x18050000 0x100
-+					0x18060000 0x100>;
-+
-+				clocks = <&extosc>;
-+				clock-names = "ref";
-+
-+				#clock-cells = <1>;
-+			};
-+
-+			miscintc: interrupt-controller@18060010 {
-+				compatible = "qca,ar7240-misc-intc";
-+				reg = <0x18060010 0x4>;
-+
-+				interrupt-parent = <&cpuintc>;
-+				interrupts = <6>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+
-+			rst: reset-controller@1806001c {
-+				compatible = "qca,ar7100-reset";
-+				reg = <0x1806001c 0x4>;
-+
-+				#reset-cells = <1>;
-+			};
-+
-+			usb: usb@1b000100 {
-+				compatible = "qca,ar7100-ehci", "generic-ehci";
-+				reg = <0x1b000100 0x100>;
-+
-+				interrupt-parent = <&cpuintc>;
-+				interrupts = <3>;
-+				resets = <&rst 5>;
-+
-+				has-transaction-translator;
-+
-+				phy-names = "usb";
-+				phys = <&usb_phy>;
-+
-+				status = "disabled";
-+			};
-+
-+			spi: spi@1f000000 {
-+				compatible = "qca,ar7100-spi";
-+				reg = <0x1f000000 0x10>;
-+
-+				clocks = <&pll ATH79_CLK_AHB>;
-+				clock-names = "ahb";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	usb_phy: usb-phy {
-+		compatible = "qca,ar7100-usb-phy";
-+
-+		reset-names = "usb-phy", "usb-suspend-override";
-+		resets = <&rst 4>, <&rst 3>;
-+
-+		#phy-cells = <0>;
-+
-+		status = "disabled";
++		compatible = "winbond,w25q128", "jedec,spi-nor";
++		spi-max-frequency = <104000000>;
++		reg = <0>;
 +	};
 +};
 -- 
