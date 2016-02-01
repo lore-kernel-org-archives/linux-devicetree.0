@@ -1,87 +1,160 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: [RFC v4 05/15] MIPS: dts: qca: ar9132: make extosc-related description shorter
-Date: Mon,  1 Feb 2016 03:10:30 +0300
-Message-ID: <1454285440-18916-6-git-send-email-antonynpavlov@gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC v4 07/15] MIPS: dts: qca: ar9132: use short references for uart, usb and spi nodes
+Date: Mon,  1 Feb 2016 03:10:32 +0300
+Message-ID: <1454285440-18916-8-git-send-email-antonynpavlov@gmail.com>
 References: <1454285440-18916-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1454285440-18916-1-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Antony Pavlov <antonynpavlov@gmail.com>, Alban Bedel <albeu@free.fr>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454285440-18916-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Alban Bedel <albeu@free.fr>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/boot/dts/qca/ar9132.dtsi               |  9 ++++++++-
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 14 ++++----------
- 2 files changed, 12 insertions(+), 11 deletions(-)
+ arch/mips/boot/dts/qca/ar9132.dtsi               |  6 +-
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 86 +++++++++++-------------
+ 2 files changed, 44 insertions(+), 48 deletions(-)
 
 diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index a1b4fa1..e6baa1e 100644
+index e6baa1e..f4023fd 100644
 --- a/arch/mips/boot/dts/qca/ar9132.dtsi
 +++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -28,6 +28,13 @@
- 					<&ddr_ctrl 0>, <&ddr_ctrl 1>;
- 	};
+@@ -61,7 +61,7 @@
+ 				#qca,ddr-wb-channel-cells = <1>;
+ 			};
  
-+	extosc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+
-+		/* The board must provide the extosc clock frequency */
-+	};
-+
- 	ahb {
- 		compatible = "simple-bus";
- 		ranges;
-@@ -89,8 +96,8 @@
- 						"qca,ar9130-pll";
- 				reg = <0x18050000 0x20>;
+-			uart@18020000 {
++			uart: uart@18020000 {
+ 				compatible = "ns8250";
+ 				reg = <0x18020000 0x20>;
+ 				interrupts = <3>;
+@@ -134,7 +134,7 @@
+ 			};
+ 		};
  
-+				clocks = <&extosc>;
- 				clock-names = "ref";
--				/* The board must provides the ref clock */
+-		usb@1b000100 {
++		usb: usb@1b000100 {
+ 			compatible = "qca,ar7100-ehci", "generic-ehci";
+ 			reg = <0x1b000100 0x100>;
  
- 				#clock-cells = <1>;
- 				clock-output-names = "cpu", "ddr", "ahb";
+@@ -149,7 +149,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		spi@1f000000 {
++		spi: spi@1f000000 {
+ 			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
+ 			reg = <0x1f000000 0x10>;
+ 
 diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index e535ee3..9b4132f 100644
+index 89703cf..9f04a3c 100644
 --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
 +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -18,21 +18,11 @@
+@@ -14,51 +14,6 @@
  		reg = <0x0 0x2000000>;
  	};
  
--	extosc: oscillator {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <40000000>;
+-	ahb {
+-		apb {
+-			uart@18020000 {
+-				status = "okay";
+-			};
+-		};
+-
+-		usb@1b000100 {
+-			status = "okay";
+-		};
+-
+-		spi@1f000000 {
+-			status = "okay";
+-			num-cs = <1>;
+-
+-			flash@0 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				compatible = "s25sl064a";
+-				reg = <0>;
+-				spi-max-frequency = <25000000>;
+-
+-				partition@0 {
+-					label = "u-boot";
+-					reg = <0x000000 0x020000>;
+-				};
+-
+-				partition@1 {
+-					label = "firmware";
+-					reg = <0x020000 0x7D0000>;
+-				};
+-
+-				partition@2 {
+-					label = "art";
+-					reg = <0x7F0000 0x010000>;
+-					read-only;
+-				};
+-			};
+-		};
 -	};
 -
- 	ahb {
- 		apb {
- 			uart@18020000 {
- 				status = "okay";
- 			};
+-	usb-phy {
+-		status = "okay";
+-	};
 -
--			pll-controller@18050000 {
--				clocks = <&extosc>;
--			};
- 		};
- 
- 		usb@1b000100 {
-@@ -118,3 +108,7 @@
- 		};
- 	};
+ 	gpio-keys {
+ 		compatible = "gpio-keys-polled";
+ 		#address-cells = <1>;
+@@ -108,3 +63,44 @@
+ &extosc {
+ 	clock-frequency = <40000000>;
  };
 +
-+&extosc {
-+	clock-frequency = <40000000>;
++&uart {
++	status = "okay";
++};
++
++&usb {
++	status = "okay";
++};
++
++&usb_phy {
++	status = "okay";
++};
++
++&spi {
++	status = "okay";
++	num-cs = <1>;
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "s25sl064a";
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x000000 0x020000>;
++		};
++
++		partition@1 {
++			label = "firmware";
++			reg = <0x020000 0x7D0000>;
++		};
++
++		partition@2 {
++			label = "art";
++			reg = <0x7F0000 0x010000>;
++			read-only;
++		};
++	};
 +};
 -- 
 2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
