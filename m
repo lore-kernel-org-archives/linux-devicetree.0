@@ -1,30 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add vendor TPO
-Date: Mon, 1 Feb 2016 08:12:40 -0600
-Message-ID: <20160201141240.GA9289@rob-hp-laptop>
-References: <1454316537-3840-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Input: tps6507x-ts - add binding for tps6507x-ts
+Date: Mon, 1 Feb 2016 08:39:15 -0600
+Message-ID: <20160201143915.GA9909@rob-hp-laptop>
+References: <1454308130-12452-1-git-send-email-sushaanth.s@ti.com>
+ <1454308130-12452-2-git-send-email-sushaanth.s@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1454316537-3840-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1454308130-12452-2-git-send-email-sushaanth.s@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sushaanth Srirangapathi <sushaanth.s@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Joe Perches <joe@perches.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 09:48:57AM +0100, Linus Walleij wrote:
-> TPO was a merger on June 5 2006 of Toppoly Optoelectronics and
-> Philips Mobile Display Systems. They manufactured small and medium
-> mobile displays.
+On Mon, Feb 01, 2016 at 11:58:47AM +0530, Sushaanth Srirangapathi wrote:
+> add binding information for tps6507x touchscreen input.
 > 
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> "ti,min-pressure" was added as TI specific binding because it
+> was specific to tps6507x IP and not applicable or relevant for
+> other touchscreen drivers.
+> 
+> Signed-off-by: Sushaanth Srirangapathi <sushaanth.s@ti.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/mfd/tps6507x.txt |   10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Seems like you would need other properties from the common touchscreen 
+binding.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
