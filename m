@@ -1,346 +1,56 @@
-From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 11/11] arm64: dts: add Pine64 support
-Date: Mon, 1 Feb 2016 23:04:50 +0000
-Message-ID: <56AFE492.5010703@arm.com>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
- <20160201192257.GD14737@excalibur.cnev.de>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH V4 1/7] clk: bcm2835: the minimum clock divider is 2
+Date: Mon, 01 Feb 2016 15:15:32 -0800
+Message-ID: <87oac03tuz.fsf@eliezer.anholt.net>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org> <1452867667-2447-2-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBJ6JX62QKGQECLLX33Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160201192257.GD14737-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1452867667-2447-2-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/02/16 19:22, Karsten Merker wrote:
+--=-=-=
+Content-Type: text/plain
 
-Hi,
+kernel@martin.sperl.org writes:
 
-> On Mon, Feb 01, 2016 at 05:39:30PM +0000, Andre Przywara wrote:
->> The Pine64 is a cost-efficient development board based on the
->> Allwinner A64 SoC.
->> There are three models: the basic version with Fast Ethernet and
->> 512 MB of DRAM (Pine64) and two Pine64+ versions, which both
->> feature Gigabit Ethernet and additional connectors for touchscreens
->> and a camera. Or as my son put it: "Those are smaller and these are
->> missing." ;-)
->> The two Pine64+ models just differ in the amount of DRAM
->> (1GB vs. 2GB). Since U-Boot will figure out the right size for us and
->> patches the DT accordingly we just need to provide one DT for the
->> Pine64+.
->>
->> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>  arch/arm64/boot/dts/Makefile                       |  1 +
->>  arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
->>  arch/arm64/boot/dts/allwinner/pine64.dts           | 58 +++++++++++++++++
->>  arch/arm64/boot/dts/allwinner/pine64_common.dtsi   | 76 ++++++++++++++++++++++
->>  arch/arm64/boot/dts/allwinner/pine64_plus.dts      | 59 +++++++++++++++++
->>  6 files changed, 200 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
->>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64.dts
->>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_common.dtsi
->>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_plus.dts
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 72e2c5a..0c22fa9 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -175,6 +175,7 @@ parade	Parade Technologies Inc.
->>  pericom	Pericom Technology Inc.
->>  phytec	PHYTEC Messtechnik GmbH
->>  picochip	Picochip Ltd
->> +pine64	Pine64
->>  plathome	Plat'Home Co., Ltd.
->>  plda	PLDA
->>  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
->> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
->> index f832b8a..3b7428a 100644
->> --- a/arch/arm64/boot/dts/Makefile
->> +++ b/arch/arm64/boot/dts/Makefile
->> @@ -1,3 +1,4 @@
->> +dts-dirs += allwinner
->>  dts-dirs += altera
->>  dts-dirs += amd
->>  dts-dirs += apm
->> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
->> new file mode 100644
->> index 0000000..65f4e24
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/Makefile
->> @@ -0,0 +1,5 @@
->> +dtb-$(CONFIG_ARCH_SUNXI) += pine64_plus.dtb pine64.dtb
->> +
->> +always		:= $(dtb-y)
->> +subdir-y	:= $(dts-dirs)
->> +clean-files	:= *.dtb
->> diff --git a/arch/arm64/boot/dts/allwinner/pine64.dts b/arch/arm64/boot/dts/allwinner/pine64.dts
-> 
-> Please see my followups to patch No. 5 and patch No. 10 in this series.
-> s/pine64.dts/sun50i-pine64.dts/ ?
+> From: Martin Sperl <kernel@martin.sperl.org>
+>
+> Testing with different clock divider values has shown
+> that (at least for the PCM clock) the clock divider
+> has to be at least 2, otherwise the clock will not
+> output a signal.
 
-Really? Actually this should be more like pine64-pine64.dts, but since
-the company name is identical to their (first?) product, I found it
-rather weird to have this double naming.
-The ARM DTs for instance are also just "juno.dts" and "juno-r1.dts".
+For a MASH clock (PWM, PCM, SLIMBUS, but not the others), the minimum
+integer component of the divider is:
 
-> 
->> new file mode 100644
->> index 0000000..ebea5dd
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/pine64.dts
->> @@ -0,0 +1,58 @@
->> +/*
->> + * Copyright (c) 2016 ARM Ltd.
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This library is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This library is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "pine64_common.dtsi"
-> 
-> see above
-> 
-> Also a minor spelling nitpick: the other *common* dts/dtsi files
-> use dashes instead of underscores, so with regard to naming
-> consistency I would like to propose doing it the same way here.
+mash 0: 1
+mash 1: 2
+mash 2: 3
+mash 3: 5
 
-Good point, will fix it!
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Repeated rationale for the below comments.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Cheers,
-Andre.
-
-> 
->> +
->> +/ {
->> +	model = "Pine64";
->> +	compatible = "pine64,pine64", "allwinner,a64", "allwinner,sunxi";
-> 
-> see above
-> 
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +
->> +	memory {
->> +		reg = <0x40000000 0x20000000>;
->> +	};
->> +};
->> diff --git a/arch/arm64/boot/dts/allwinner/pine64_common.dtsi b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
-> 
-> see above
-> 
->> new file mode 100644
->> index 0000000..d968d76
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
->> @@ -0,0 +1,76 @@
->> +/*
->> + * Copyright (c) 2016 ARM Ltd.
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This library is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This library is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +#include "a64.dtsi"
-> 
-> see above
-> 
->> +
->> +&mmc0 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
->> +	vmmc-supply = <&reg_vcc3v3>;
->> +	cd-gpios = <&pio 5 6 0>;
->> +	cd-inverted;
->> +	status = "okay";
->> +};
->> +
->> +&uart0 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart0_pins_a>;
->> +	status = "okay";
->> +};
->> +
->> +&uart2 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart2_pins>;
->> +	status = "okay";
->> +};
->> +
->> +&uart3 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart3_pins_a>;
->> +	status = "okay";
->> +};
->> +
->> +&uart4 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart4_pins>;
->> +	status = "okay";
->> +};
->> diff --git a/arch/arm64/boot/dts/allwinner/pine64_plus.dts b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
->> new file mode 100644
->> index 0000000..344752e
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
-> 
-> see above
-> 
->> @@ -0,0 +1,59 @@
->> +/*
->> + * Copyright (c) 2016 ARM Ltd.
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This library is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This library is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "pine64_common.dtsi"
-> 
-> see above
-> 
->> +
->> +/ {
->> +	model = "Pine64+";
->> +	compatible = "pine64,pine64_plus", "allwinner,a64", "allwinner,sunxi";
-> 
-> see above
-> 
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +
->> +	/* There is a model with 2GB of DRAM, but U-Boot fixes this for us. */
->> +	memory {
->> +		reg = <0x40000000 0x40000000>;
->> +	};
->> +};
->> -- 
->> 2.6.4
-> 
-> Regards,
-> Karsten
-> 
+iQIcBAEBCgAGBQJWr+cVAAoJELXWKTbR/J7oIawQAK9eKqkQYfEKTG3yPk9zrQtw
+x5j03RzUvUyksbS5e3TKOMadtPun4WGfRzmc7gokuyhMgX1I11e1ZWcD6FOCqEJp
+pX0Fo5IaKS9sX/TS2Wk7LKTsg+SPmnatSIYPIx06zCmBtOa9mH8Ybua4+cNH95yj
+O8yVgq/2ONwvvAXssbJLogKwIe+p9ze7ZId9Dxj0UaaxEDue+H9T4pn9z3hTXi20
+b2M61jrd3o9HP8D0zyi/ajkt7+QlBzuRJfuxfK8rZXe9SU4fNuTqHZWXzRLrYFHD
+c06IrxRZAQvOtubf7MIkYTlJNF9SqHOKNM8JTuHK/YG2o7wsZr2OizHbdagVXM4p
+T0OKx2WU/75Ji7hZKcMIsPxrKBqb6lVoXxO8ao8DUNsZGWZaX2jVAGGMaa/4udl6
+GFIQU5+F6K+EPorfg+HrfcJ+cz8Xob+Rc5V8j21zOSYb+DGiPKiUQ5kjzGJ87All
+dL7uMl1OWXxqFjoAXX5WqQpZW/Nj639GEdhFZyeS+iWRP7OS4Wdciqoq8JhwjGlp
+ST577zIq0Fhv6uQkSW8LMKVuXglgiIaJ7AimxNDUX7JnrRpFLWXSciMh0Cwb7Z2w
+3dU++d5ubhlr9yMJoyxJomXhBsQgesBdMgP5EXr8MaesuMyWQEaEfpc2t4nFrmM5
+pT5h4Xd2OPBx9rT1hwe2
+=0Vf9
+-----END PGP SIGNATURE-----
+--=-=-=--
