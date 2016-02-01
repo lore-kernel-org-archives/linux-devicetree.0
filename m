@@ -1,76 +1,353 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
-Date: Mon, 1 Feb 2016 22:00:55 +0300
-Message-ID: <56AFAB67.20404@cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <4506196.xOgpYRO52t@wasted.cogentembedded.com>
- <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56ABCB69.1070800@cogentembedded.com> <56ABD066.7020804@cogentembedded.com>
- <SG2PR06MB0919361DC5805AE3F5B74041D8DE0@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56AF9BE8.4020002@cogentembedded.com>
+From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] mailbox: Add support for APM X-Gene platform
+ mailbox driver
+Date: Mon, 1 Feb 2016 11:38:08 -0800
+Message-ID: <CADaLNDmSiK27wYBSo8-DsafmG5jUumUR5WYgConeSFXGNjH6+w@mail.gmail.com>
+References: <CABb+yY2zHycEmsVvp8OFwpJ1PZgrEPpV-oOe56wgFJ=EE0nTcg@mail.gmail.com>
+ <cover.1452912126.git.dhdang@apm.com> <abff73c051fd06a9dd3b04a1e7957ad5a9b69a18.1452912126.git.dhdang@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56AF9BE8.4020002@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "horms@verge.net.au" <horms@verge.net.au>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <abff73c051fd06a9dd3b04a1e7957ad5a9b69a18.1452912126.git.dhdang-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2016 08:54 PM, Sergei Shtylyov wrote:
+Hi Jassi,
 
->>>>>> From: linux-renesas-soc-owner@vger.kernel.org
->>>>>> [mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Sergei
->>>>>> Shtylyov
->>>>>> Sent: Wednesday, January 27, 2016 7:14 AM
->>>>>>
->>>>>> Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
->>>>>> are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
->>>>>> can add  MAX3355 device node to  the Porter device tree and properly refer
->>>>>> to it from the USBHS node instead of using  "renesas,enable-gpio" property
->>>>>> which only allowed checking the USB ID pin  at the driver probe time;  now
->>>>>> this  pin's  state can be monitored dynamically!
->>>>>>
->>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>
->>>>> I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
->>>>> even if I connected/disconnected a usb convert cable (usb micro-ab to A).
->>>>> Remarks: I confirmed that the usb convert cable worked correctly on other
->>>>> board.
->>>>
->>>>      I guess I have the same cable
->>>
->>>      No, I have mini-AB connector here and hence my cable is mini-AB to A.
->>
->> I checked Porter specification and then I found 2 specifications exist...
->
->     I've looked thru my schematics files and found 3: Rev. 1.1 Update Version
-> 2, "PORTER_2" Rev. 3.0 Preliminary, and "PORTER_C" Rev. 3.0 Release version!
-> I'm not sure which of the last 2 should be considered final...
+On Fri, Jan 15, 2016 at 6:57 PM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
+> X-Gene mailbox controller provides 8 mailbox channels, with
+> each channel has a dedicated interrupt line.
 
-    Now I've found 5 versions of the Porter schematics... :-)
+Did you have a chance to look into this version 4 of my mail-box patch?
 
->>   Porter "B" : mini AB connecter and Max3355 is on the board.
->>   Porter "C" : micro AB connect and Max3355 is not on the board. (Select
->> host/peripheral by a jumper.)
+Regards,
+Duc Dang.
 >
->     Yeah, seeing JP13 in the PORTER_C schematics.
+> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+> ---
+> Changes since v3:
+>         - Rebase over v4.4
+>         - Remove 'id' in slimpro_mbox_chan structure
+>         - Remove small functions that are only called once
+>         and fold them into the other callers
+>         - Remove void* pointer type cast
+>         - Relax the number of mailbox IRQs condition
+>         - Use subsys_initcall to guarantee mailbox driver
+>         will be registered before any other dependent driver
+>         is loaded.
 >
->> I guess that your current target is "B".
+>  drivers/mailbox/Kconfig                 |   9 ++
+>  drivers/mailbox/Makefile                |   2 +
+>  drivers/mailbox/mailbox-xgene-slimpro.c | 265 ++++++++++++++++++++++++++++++++
+>  3 files changed, 276 insertions(+)
+>  create mode 100644 drivers/mailbox/mailbox-xgene-slimpro.c
 >
->     If not earlier. It actually has "Henninger B REV2" printed on it and
-> "Porter PCB 1 R3" on a pasted sticker.
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 546d05f..678e434 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -85,4 +85,13 @@ config MAILBOX_TEST
+>           Test client to help with testing new Controller driver
+>           implementations.
 >
->> If so, I think this patch is acceptable.
+> +config XGENE_SLIMPRO_MBOX
+> +       tristate "APM SoC X-Gene SLIMpro Mailbox Controller"
+> +       depends on ARCH_XGENE
+> +       help
+> +         An implementation of the APM X-Gene Interprocessor Communication
+> +         Mailbox (IPCM) between the ARM 64-bit cores and SLIMpro controller.
+> +         It is used to send short messages between ARM64-bit cores and
+> +         the SLIMpro Management Engine, primarily for PM. Say Y here if you
+> +         want to use the APM X-Gene SLIMpro IPCM support.
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index 92435ef..b602ef8 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -17,3 +17,5 @@ obj-$(CONFIG_ALTERA_MBOX)     += mailbox-altera.o
+>  obj-$(CONFIG_BCM2835_MBOX)     += bcm2835-mailbox.o
 >
->     I'm not so sure now...
-
-    My boss told me PORTER_C is a final version, so this patch isn't needed. 
-But then another patch is needed instead: to remove "renesas,enable-gpio" prop 
-from the HS-USB device node...
-
->> Best regards,
->> Yoshihiro Shimoda
-
-MBR, Sergei
+>  obj-$(CONFIG_STI_MBOX)         += mailbox-sti.o
+> +
+> +obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
+> diff --git a/drivers/mailbox/mailbox-xgene-slimpro.c b/drivers/mailbox/mailbox-xgene-slimpro.c
+> new file mode 100644
+> index 0000000..a7b0c9e
+> --- /dev/null
+> +++ b/drivers/mailbox/mailbox-xgene-slimpro.c
+> @@ -0,0 +1,265 @@
+> +/*
+> + * APM X-Gene SLIMpro MailBox Driver
+> + *
+> + * Copyright (c) 2015, Applied Micro Circuits Corporation
+> + * Author: Feng Kan fkan-qTEPVZfXA3Y@public.gmane.org
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +#include <linux/acpi.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define MBOX_CON_NAME                  "slimpro-mbox"
+> +#define MBOX_REG_SET_OFFSET            0x1000
+> +#define MBOX_CNT                       8
+> +#define MBOX_STATUS_AVAIL_MASK         BIT(16)
+> +#define MBOX_STATUS_ACK_MASK           BIT(0)
+> +
+> +/* Configuration and Status Registers */
+> +#define REG_DB_IN              0x00
+> +#define REG_DB_DIN0            0x04
+> +#define REG_DB_DIN1            0x08
+> +#define REG_DB_OUT             0x10
+> +#define REG_DB_DOUT0           0x14
+> +#define REG_DB_DOUT1           0x18
+> +#define REG_DB_STAT            0x20
+> +#define REG_DB_STATMASK                0x24
+> +
+> +struct slimpro_mbox_chan {
+> +       struct device *dev;
+> +       struct mbox_chan *chan;
+> +       void __iomem *reg;
+> +       int irq;
+> +       u32 rx_msg[3];
+> +};
+> +
+> +struct slimpro_mbox {
+> +       struct mbox_controller mb_ctrl;
+> +       struct slimpro_mbox_chan mc[MBOX_CNT];
+> +       struct mbox_chan chans[MBOX_CNT];
+> +};
+> +
+> +static void mb_chan_send_msg(struct slimpro_mbox_chan *mb_chan, u32 *msg)
+> +{
+> +       writel(msg[1], mb_chan->reg + REG_DB_DOUT0);
+> +       writel(msg[2], mb_chan->reg + REG_DB_DOUT1);
+> +       writel(msg[0], mb_chan->reg + REG_DB_OUT);
+> +}
+> +
+> +static void mb_chan_recv_msg(struct slimpro_mbox_chan *mb_chan)
+> +{
+> +       mb_chan->rx_msg[1] = readl(mb_chan->reg + REG_DB_DIN0);
+> +       mb_chan->rx_msg[2] = readl(mb_chan->reg + REG_DB_DIN1);
+> +       mb_chan->rx_msg[0] = readl(mb_chan->reg + REG_DB_IN);
+> +}
+> +
+> +static int mb_chan_status_ack(struct slimpro_mbox_chan *mb_chan)
+> +{
+> +       u32 val = readl(mb_chan->reg + REG_DB_STAT);
+> +
+> +       if (val & MBOX_STATUS_ACK_MASK) {
+> +               writel(MBOX_STATUS_ACK_MASK, mb_chan->reg + REG_DB_STAT);
+> +               return 1;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static int mb_chan_status_avail(struct slimpro_mbox_chan *mb_chan)
+> +{
+> +       u32 val = readl(mb_chan->reg + REG_DB_STAT);
+> +
+> +       if (val & MBOX_STATUS_AVAIL_MASK) {
+> +               mb_chan_recv_msg(mb_chan);
+> +               writel(MBOX_STATUS_AVAIL_MASK, mb_chan->reg + REG_DB_STAT);
+> +               return 1;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static irqreturn_t slimpro_mbox_irq(int irq, void *id)
+> +{
+> +       struct slimpro_mbox_chan *mb_chan = id;
+> +
+> +       if (mb_chan_status_ack(mb_chan))
+> +               mbox_chan_txdone(mb_chan->chan, 0);
+> +
+> +       if (mb_chan_status_avail(mb_chan))
+> +               mbox_chan_received_data(mb_chan->chan, mb_chan->rx_msg);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int slimpro_mbox_send_data(struct mbox_chan *chan, void *msg)
+> +{
+> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
+> +
+> +       mb_chan_send_msg(mb_chan, msg);
+> +       return 0;
+> +}
+> +
+> +static int slimpro_mbox_startup(struct mbox_chan *chan)
+> +{
+> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
+> +       int rc;
+> +       u32 val;
+> +
+> +       rc = devm_request_irq(mb_chan->dev, mb_chan->irq, slimpro_mbox_irq, 0,
+> +                             MBOX_CON_NAME, mb_chan);
+> +       if (unlikely(rc)) {
+> +               dev_err(mb_chan->dev, "failed to register mailbox interrupt %d\n",
+> +                       mb_chan->irq);
+> +               return rc;
+> +       }
+> +
+> +       /* Enable HW interrupt */
+> +       writel(MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK,
+> +              mb_chan->reg + REG_DB_STAT);
+> +       /* Unmask doorbell status interrupt */
+> +       val = readl(mb_chan->reg + REG_DB_STATMASK);
+> +       val &= ~(MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK);
+> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
+> +
+> +       return 0;
+> +}
+> +
+> +static void slimpro_mbox_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
+> +       u32 val;
+> +
+> +       /* Mask doorbell status interrupt */
+> +       val = readl(mb_chan->reg + REG_DB_STATMASK);
+> +       val |= (MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK);
+> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
+> +
+> +       devm_free_irq(mb_chan->dev, mb_chan->irq, mb_chan);
+> +}
+> +
+> +static struct mbox_chan_ops slimpro_mbox_ops = {
+> +       .send_data = slimpro_mbox_send_data,
+> +       .startup = slimpro_mbox_startup,
+> +       .shutdown = slimpro_mbox_shutdown,
+> +};
+> +
+> +static int __init slimpro_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct slimpro_mbox *ctx;
+> +       struct resource *regs;
+> +       void __iomem *mb_base;
+> +       int rc;
+> +       int i;
+> +
+> +       ctx = devm_kzalloc(&pdev->dev, sizeof(struct slimpro_mbox), GFP_KERNEL);
+> +       if (IS_ERR(ctx))
+> +               return PTR_ERR(ctx);
+> +
+> +       platform_set_drvdata(pdev, ctx);
+> +
+> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       mb_base = devm_ioremap(&pdev->dev, regs->start, resource_size(regs));
+> +       if (IS_ERR(mb_base))
+> +               return PTR_ERR(mb_base);
+> +
+> +       /* Setup mailbox links */
+> +       for (i = 0; i < MBOX_CNT; i++) {
+> +               ctx->mc[i].irq = platform_get_irq(pdev, i);
+> +               if (ctx->mc[i].irq < 0) {
+> +                       if (i == 0) {
+> +                               dev_err(&pdev->dev, "no available IRQ\n");
+> +                               return -EINVAL;
+> +                       }
+> +                       dev_info(&pdev->dev, "no IRQ at index %d\n",
+> +                               ctx->mc[i].irq);
+> +                       break;
+> +               }
+> +
+> +               ctx->mc[i].dev = &pdev->dev;
+> +               ctx->mc[i].reg = mb_base + i * MBOX_REG_SET_OFFSET;
+> +               ctx->mc[i].chan = &ctx->chans[i];
+> +               ctx->chans[i].con_priv = &ctx->mc[i];
+> +       }
+> +
+> +       /* Setup mailbox controller */
+> +       ctx->mb_ctrl.dev = &pdev->dev;
+> +       ctx->mb_ctrl.chans = ctx->chans;
+> +       ctx->mb_ctrl.txdone_irq = true;
+> +       ctx->mb_ctrl.ops = &slimpro_mbox_ops;
+> +       ctx->mb_ctrl.num_chans = i;
+> +
+> +       rc = mbox_controller_register(&ctx->mb_ctrl);
+> +       if (rc) {
+> +               dev_err(&pdev->dev,
+> +                       "APM X-Gene SLIMpro MailBox register failed:%d\n", rc);
+> +               return rc;
+> +       }
+> +
+> +       dev_info(&pdev->dev, "APM X-Gene SLIMpro MailBox registered\n");
+> +       return 0;
+> +}
+> +
+> +static int slimpro_mbox_remove(struct platform_device *pdev)
+> +{
+> +       struct slimpro_mbox *smb = platform_get_drvdata(pdev);
+> +
+> +       mbox_controller_unregister(&smb->mb_ctrl);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id slimpro_of_match[] = {
+> +       {.compatible = "apm,xgene-slimpro-mbox" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, slimpro_of_match);
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id slimpro_acpi_ids[] = {
+> +       {"APMC0D01", 0},
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, slimpro_acpi_ids);
+> +#endif
+> +
+> +static struct platform_driver slimpro_mbox_driver = {
+> +       .probe  = slimpro_mbox_probe,
+> +       .remove = slimpro_mbox_remove,
+> +       .driver = {
+> +               .name = "xgene-slimpro-mbox",
+> +               .of_match_table = of_match_ptr(slimpro_of_match),
+> +               .acpi_match_table = ACPI_PTR(slimpro_acpi_ids)
+> +       },
+> +};
+> +
+> +static int __init slimpro_mbox_init(void)
+> +{
+> +       return platform_driver_register(&slimpro_mbox_driver);
+> +}
+> +
+> +static void __exit slimpro_mbox_exit(void)
+> +{
+> +       platform_driver_unregister(&slimpro_mbox_driver);
+> +}
+> +
+> +subsys_initcall(slimpro_mbox_init);
+> +module_exit(slimpro_mbox_exit);
+> +
+> +MODULE_DESCRIPTION("APM X-Gene SLIMpro Mailbox Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
