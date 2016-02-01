@@ -1,66 +1,102 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] doc: dt: add documentation for alphascale,asm9260-rtc
-Date: Mon, 1 Feb 2016 16:55:27 +0100
-Message-ID: <20160201155527.GR20165@piout.net>
-References: <1454056802-23386-1-git-send-email-linux@rempel-privat.de>
- <1454056802-23386-3-git-send-email-linux@rempel-privat.de>
- <20160201152750.GA17595@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: ARM: Mediatek: Document bindings for MT2701
+Date: Mon, 1 Feb 2016 09:55:53 -0600
+Message-ID: <CAL_JsqLJVLDbPqynmD9-Yc=JVGH4iLPfb2keA5G7c2fjitAsSQ@mail.gmail.com>
+References: <1453271747-57397-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1453271747-57397-3-git-send-email-jamesjj.liao@mediatek.com>
+ <20160120163236.GA21035@rob-hp-laptop> <1453353537.5384.33.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160201152750.GA17595@rob-hp-laptop>
+In-Reply-To: <1453353537.5384.33.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/02/2016 at 09:27:50 -0600, Rob Herring wrote :
-> On Fri, Jan 29, 2016 at 09:40:02AM +0100, Oleksij Rempel wrote:
-> > Document Alphascale asm9260 RTC bindings
-> > 
-> > Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-> > ---
-> >  .../bindings/rtc/alphascale,asm9260-rtc.txt        | 25 ++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
-> > new file mode 100644
-> > index 0000000..2c0ff3c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
-> > @@ -0,0 +1,25 @@
-> > +* Alphascale asm9260 SoC Real Time Clock
-> > +
-> > +Required properties:
-> > +- compatible: Should be "alphascale,asm9260-rtc"
-> > +- reg: Physical base address of the controller and length
-> > +       of memory mapped region.
-> > +- interrupts: IRQ line for the RTC.
-> > +- clocks: Reference to the clock entry.
-> > +- clock-names: should contain:
-> > +  * "ahb" for the SoC RTC clock
-> > +
-> > +Optional:
-> > +- calibration: calibration value for 1 sec period.
-> > +		Max value for forward calibration is 0x1ffff (131071),
-> > +		Min value for backward calibration is 0xfffe0001 (-131071).
-> 
-> This should be prefixed with 'alphascale,'
-> 
-> How is this value determined?
-> 
+On Wed, Jan 20, 2016 at 11:18 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Wed, 2016-01-20 at 10:32 -0600, Rob Herring wrote:
+>> On Wed, Jan 20, 2016 at 02:35:43PM +0800, James Liao wrote:
+>> > This patch adds the binding documentation for apmixedsys, bdpsys,
+>> > ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
+>> > vdecsys for Mediatek MT2701.
+>> >
+>> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> > Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+>> > ---
+>> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++++
+>> >  .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++++
+>> >  .../bindings/arm/mediatek/mediatek,hifsys.txt      | 22 ++++++++++++++++++++++
+>> >  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,pericfg.txt     |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
+>> >  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  1 +
+>> >  10 files changed, 73 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+>> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+>> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+>> > index 936166f..a701e19 100644
+>> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+>> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+>> > @@ -6,6 +6,7 @@ The Mediatek apmixedsys controller provides the PLLs to the system.
+>> >  Required Properties:
+>> >
+>> >  - compatible: Should be:
+>> > +   - "mediatek,mt2701-apmixedsys"
+>> >     - "mediatek,mt8135-apmixedsys"
+>> >     - "mediatek,mt8173-apmixedsys"
+>> >  - #clock-cells: Must be 1
+>> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+>> > new file mode 100644
+>> > index 0000000..4137196
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+>> > @@ -0,0 +1,22 @@
+>> > +Mediatek bdpsys controller
+>> > +============================
+>> > +
+>> > +The Mediatek bdpsys controller provides various clocks to the system.
+>>
+>> As you clarified these blocks provide more that just clocks. Please list
+>> all the functions here and on the others.
+>
+> Some blocks may provide clock and reset controller at the same time. But
 
-I think this should stay in userspace, see that series:
-https://groups.google.com/forum/#!topic/rtc-linux/HGQqiHnMiuw
+Then say the block provides clocks and resets is all I'm asking for.
 
-It quite often depends on environmental things like temperature so it may be updated at runtime.
+> most of them will not provide functions directly. Instead, some DT
+> blocks which provide specific functions may refer to these controller
+> nodes due to it need to access the same register space.
+>
+> For example, scpsys (the power domain provider) refers to infracfg
+> because it need to control infracfg registers when power on/off domains:
+>
+>         scpsys: scpsys@10006000 {
+>                 compatible = "mediatek,mt2701-scpsys";
+>                 #power-domain-cells = <1>;
+>                 reg = <0 0x10006000 0 0x1000>;
+>                 infracfg = <&infracfg>;
+>         };
+>
+> So I think it should not need to list all functions for each blocks
+> here.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Sorry, but you do need to describe what functions the blocks provide.
+
+Also, if you are accessing the infracfg regs directly to modify clock
+registers outside of the clock driver, that is very bad design. The
+clock driver could assume that register values are not changing behind
+its back and it bypasses any locks around register accesses. I can see
+why it is needed though, but we really need a proper interface.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
