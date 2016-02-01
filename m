@@ -1,70 +1,60 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Mon, 1 Feb 2016 10:15:25 -0300
-Message-ID: <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ@mail.gmail.com>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
-	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
-	<20160129001603.GM4130@sirena.org.uk>
-	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
-	<20160129113518.GQ4130@sirena.org.uk>
-	<CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
-	<B256D81BAE5131468A838E5D7A243641D63FE2C7@penmbx01>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/3] leds: add SN3218 LED driver
+Date: Mon, 1 Feb 2016 14:20:17 +0100
+Message-ID: <56AF5B91.1000209@i2se.com>
+References: <1454245156-15747-1-git-send-email-stefan.wahren@i2se.com>
+ <1454245156-15747-4-git-send-email-stefan.wahren@i2se.com>
+ <56AF2C63.6000404@samsung.com> <56AF5567.4090102@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63FE2C7@penmbx01>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Peter Korsgaard <jacmet@gmail.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <56AF5567.4090102@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Wenyou,
-
-[snip]
-
->> >
->> > If then device is not being loaded from the DT (and it shouldn't be,
->> > the device looks like it should be instantiated directly by the MFD as
->> > it can't exist separately to that MFD) an OF table will do nothing.
+Am 01.02.2016 um 13:53 schrieb Jacek Anaszewski:
+> On 02/01/2016 10:58 AM, Jacek Anaszewski wrote:
+>> Hi Stefan,
 >>
->> Then he should remove the .of_compatible from the MFD cell definition.
+>> Thanks for the update. A few more comments below.
+>>
+>> On 01/31/2016 01:59 PM, Stefan Wahren wrote:
+>>> +
+>>> +/**
+>>> + * struct sn3218 -
+>>> + * @client - Pointer to the I2C client
+>>> + * @leds - Pointer to the individual LEDs
+>>> + * @num_leds - Actual number of LEDs
+>>> +**/
+>>> +struct sn3218 {
+>>> +    struct i2c_client *client;
+>>> +    struct regmap *regmap;
+>>> +    struct sn3218_led *leds;
+>>> +    int num_leds;
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct sn3218_led -
+>>> + * @chip - Pointer to the container
+>>> + * @led_cdev - led class device pointer
+>>> + * @led_num - LED index ( 0 .. 17 )
+>>> +**/
+>>> +struct sn3218_led {
+>>> +    struct sn3218 *chip;
+>>
+>> You don't need this if you have led id here. Please refer to
+>> drivers/leds/leds-max77693.c, sub_led_to_led() to check how to get
+>> a pointer to the parent structure in similar case.
 >
-> I tried it,
->
-> But if removed this .of_compatible, and reserved the OF table.
+> Hmm, it would work only if leds was a static array in struct sn3218.
+> So, let's better leave this "chip" pointer intact.
 
-What we said is that you should remove both the mfd cell
-.of_compatible field and the OF table. Of course removing one but
-leaving the other is not correct.
+Okay
 
-> the &pdev->dev->of_node is NULL, the driver fails to get the configuration value from DT,
->
+I will wait until the end of the week before sending a new version.
 
-I see, you mean that you are not able to lookup the
-"active-semi,vsel-high" property.
-
-> It seems the OF table still doesn't work. Where is wrong?
->
-
-I think the problem is with your DT binding. You have a PMIC dev node
-with compatible "active-semi,act8945a" that has a child node with
-compatible "active-semi,act8945a-regulator" which in turn has the
-"regulators" node.
-
-I believe what Mark says is that there shouldn't be a compatible and
-node for the regulators IC since is part of the PMIC. IOW, you can't
-have it as a standalone node in the DTS.
-
-> Could you help give some suggestion?
->
-
-I would just remove the "active-semi,act8945a-regulator" node and make
-"active-semi,vsel-high" a property of the "active-semi,act8945a" node.
-That way you can remove the mfd cell .of_compatible and OF table in
-the regulator driver and read the "active-semi,vsel-high" using the
-platform device's parent of_node.
-
-But it's better if you wait for Mark's opinions before re-spining your patches.
-
-Best regards,
-Javier
+Thanks
+Stefan
