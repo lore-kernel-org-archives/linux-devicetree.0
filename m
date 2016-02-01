@@ -1,134 +1,78 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V13 08/10] dma: qcom_hidma: read the channel id from HW
-Date: Mon, 1 Feb 2016 15:35:54 +0000
-Message-ID: <20160201153542.GA20396@leverpostej>
-References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
- <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V4 1/2] regulator: Add document for MT6323 regulator
+Date: Mon, 1 Feb 2016 09:40:43 -0600
+Message-ID: <20160201154043.GA24185@rob-hp-laptop>
+References: <1453896059-44589-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1453896059-44589-1-git-send-email-blogic@openwrt.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Crispin <blogic@openwrt.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Chen Zhong <chen.zhong@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 29, 2016 at 05:35:11PM -0500, Sinan Kaya wrote:
-> Removing the flexibility to choose the event channel as there is no real
-> use case right now. We have been using the values in ACPI that match the HW
-> defaults. OS is reading the event-channel from the HW register now.
-
-Fold this in to the patches adding the binding and the driver.
-
-There is no reason to add this then remove it within the same series.
-
-Mark.
-
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+On Wed, Jan 27, 2016 at 01:00:58PM +0100, John Crispin wrote:
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Cc: devicetree@vger.kernel.org
+> 
 > ---
->  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  3 --
->  drivers/dma/qcom/hidma.c                           | 39 +---------------------
->  2 files changed, 1 insertion(+), 41 deletions(-)
+> Changes in V4
+> * regulator is a subnode and not a property
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> index e3677a5..fd5618b 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> @@ -51,7 +51,6 @@ Required properties:
->  - reg: Addresses for the transfer and event channel
->  - interrupts: Should contain the event interrupt
->  - desc-count: Number of asynchronous requests this channel can handle
-> -- channel-index: The HW event channel completions will be delivered.
->  - iommus: required a iommu node
->  
->  Example:
-> @@ -75,7 +74,6 @@ Hypervisor OS configuration:
->  			interrupts = <0 389 0>;
->  			desc-count = <10>;
->  			iommus = <&system_mmu>;
-> -			channel-index = <4>;
->  		};
->  	};
->  
-> @@ -87,6 +85,5 @@ Guest OS configuration:
->  		      <0 0x5c0b0000 0x0 0x1000>;
->  		interrupts = <0 389 0>;
->  		desc-count = <10>;
-> -		channel-index = <4>;
->  		iommus = <&system_mmu>;
->  	};
-> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-> index ac20bdb..7180367 100644
-> --- a/drivers/dma/qcom/hidma.c
-> +++ b/drivers/dma/qcom/hidma.c
-> @@ -101,26 +101,6 @@ static unsigned int nr_desc_prm;
->  module_param(nr_desc_prm, uint, 0644);
->  MODULE_PARM_DESC(nr_desc_prm, "number of descriptors (default: 0)");
->  
-> -#define HIDMA_MAX_CHANNELS	64
-> -static int channel_idx[HIDMA_MAX_CHANNELS] = {
-> -	[0 ... (HIDMA_MAX_CHANNELS - 1)] = -1
-> -};
-> -
-> -/*
-> - * Each DMA channel is associated with an event channel for interrupt
-> - * delivery. The event channel index usually comes from the firmware through
-> - * ACPI/DT. When a HIDMA channel is executed in the guest machine context (QEMU)
-> - * the device tree gets auto-generated based on the memory and IRQ resources
-> - * this driver uses on the host machine. Any device specific paraemeter such as
-> - * channel-index gets ignored by the QEMU.
-> - * We are using this command line parameter to pass the event channel index to
-> - * the guest machine.
-> - */
-> -static unsigned int num_channel_idx;
-> -module_param_array_named(channel_idx, channel_idx, int, &num_channel_idx,
-> -			 0644);
-> -MODULE_PARM_DESC(channel_idx, "channel index array for the notifications");
-> -static atomic_t channel_ref_count;
->  
->  /* process completed descriptors */
->  static void hidma_process_completed(struct hidma_chan *mchan)
-> @@ -592,7 +572,6 @@ static int hidma_probe(struct platform_device *pdev)
->  	struct resource *trca_resource;
->  	struct resource *evca_resource;
->  	int chirq;
-> -	int current_channel_index = atomic_read(&channel_ref_count);
->  	void __iomem *evca;
->  	void __iomem *trca;
->  	int rc;
-> @@ -668,22 +647,7 @@ static int hidma_probe(struct platform_device *pdev)
->  		goto dmafree;
->  	}
->  
-> -	if (current_channel_index > HIDMA_MAX_CHANNELS) {
-> -		rc = -EINVAL;
-> -		goto dmafree;
-> -	}
-> -
-> -	dmadev->chidx = -1;
-> -	device_property_read_u32(&pdev->dev, "channel-index", &dmadev->chidx);
-> -
-> -	/* kernel command line override for the guest machine */
-> -	if (channel_idx[current_channel_index] != -1)
-> -		dmadev->chidx = channel_idx[current_channel_index];
-> -
-> -	if (dmadev->chidx == -1) {
-> -		rc = -EINVAL;
-> -		goto dmafree;
-> -	}
-> +	dmadev->chidx = readl(dmadev->dev_trca + 0x28);
->  
->  	/* Set DMA mask to 64 bits. */
->  	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> @@ -724,7 +688,6 @@ static int hidma_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, dmadev);
->  	pm_runtime_mark_last_busy(dmadev->ddev.dev);
->  	pm_runtime_put_autosuspend(dmadev->ddev.dev);
-> -	atomic_inc(&channel_ref_count);
->  	return 0;
->  
->  uninit:
-> -- 
-> 1.8.2.1
+> Changes in V3
+> * fix the subject prefix
 > 
+>  .../bindings/regulator/mt6323-regulator.txt        |  244 ++++++++++++++++++++
+>  1 file changed, 244 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+
+A few nits, otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+> new file mode 100644
+> index 0000000..1ee3dd4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+> @@ -0,0 +1,244 @@
+> +Mediatek MT6323 Regulator Driver
+> +
+> +Required properties:
+> +- compatible: "mediatek,mt6323-regulator"
+> +
+> +All voltage regulators are defined as subnodes of the regulator drivers node.
+
+s/drivers//
+
+I believe the standard node name here is "regulators".
+
+> +A list of regulators provided by this controller are defined as subnodes of
+> +the drivers node. Each regulator is named according to its regulator type,
+> +buck_<name> and ldo_<name>. The definition for each of these nodes is defined
+> +using the standard binding for regulators at
+> +Documentation/devicetree/bindings/regulator/regulator.txt.
+> +
+> +The valid names for regulators are::
+> +BUCK:
+> +  buck_vproc, buck_vsys, buck_vpa
+> +LDO:
+> +  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
+> +  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
+> +  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
+> +  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
+> +
+> +Example:
+> +
+> +	pmic: mt6323 {
+> +		compatible = "mediatek,mt6323";
+> +
+> +		mt6323regulator: regulator{
+
+regulators and a space (i.e. "regulators {")
+
+> +			compatible = "mediatek,mt6323-regulator";
+> +
