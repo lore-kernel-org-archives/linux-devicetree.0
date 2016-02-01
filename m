@@ -1,33 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Input: tps6507x-ts - add binding for tps6507x-ts
-Date: Mon, 1 Feb 2016 08:39:15 -0600
-Message-ID: <20160201143915.GA9909@rob-hp-laptop>
-References: <1454308130-12452-1-git-send-email-sushaanth.s@ti.com>
- <1454308130-12452-2-git-send-email-sushaanth.s@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v4 13/15] devicetree: add Onion Corporation vendor id
+Date: Mon, 1 Feb 2016 08:42:01 -0600
+Message-ID: <20160201144201.GA24047@rob-hp-laptop>
+References: <1454285440-18916-1-git-send-email-antonynpavlov@gmail.com>
+ <1454285440-18916-14-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454308130-12452-2-git-send-email-sushaanth.s@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sushaanth Srirangapathi <sushaanth.s@ti.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Joe Perches <joe@perches.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+In-Reply-To: <1454285440-18916-14-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 11:58:47AM +0530, Sushaanth Srirangapathi wrote:
-> add binding information for tps6507x touchscreen input.
+On Mon, Feb 01, 2016 at 03:10:38AM +0300, Antony Pavlov wrote:
+> Please see https://onion.io/contact for details.
 > 
-> "ti,min-pressure" was added as TI specific binding because it
-> was specific to tps6507x IP and not applicable or relevant for
-> other touchscreen drivers.
-> 
-> Signed-off-by: Sushaanth Srirangapathi <sushaanth.s@ti.com>
-> ---
->  Documentation/devicetree/bindings/mfd/tps6507x.txt |   10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-Seems like you would need other properties from the common touchscreen 
-binding.
+I already acked this. Please add acks when posting new versions.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
