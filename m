@@ -1,412 +1,56 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ARM: dts: imx6: Add support for Toradex Ixora
- carrier board
-Date: Mon, 1 Feb 2016 21:46:07 +0800
-Message-ID: <20160201134606.GG10671@tiger>
-References: <1453675703-31594-1-git-send-email-marcel.ziswiler@toradex.com>
- <1453675703-31594-3-git-send-email-marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V5 5/5] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Mon, 1 Feb 2016 07:54:26 -0600
+Message-ID: <20160201135426.GA24362@rob-hp-laptop>
+References: <1453903808-29788-1-git-send-email-ldewangan@nvidia.com>
+ <1453903808-29788-6-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453675703-31594-3-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1453903808-29788-6-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 24, 2016 at 11:48:23PM +0100, Marcel Ziswiler wrote:
-> From: Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org>
->=20
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org>
-> Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-
-Copy my Linaro mailbox is unnecessary.  The kernel.org one is good
-enough for me to receive your patch.
-
+On Wed, Jan 27, 2016 at 07:40:08PM +0530, Laxman Dewangan wrote:
+> MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
+> multiple DCDC and LDOs. This supplies the power to different
+> components of the system.
+> Also these rails has configuration for ramp time, flexible
+> power sequence, slew rate etc.
+> 
+> Add regulator driver to access these rails via regulator APIs.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
 > ---
->=20
-> Changes in v4: None
-> Changes in v3:
-> - integrated review feedback from Petr
-> - integrated review feedback from Stefan
-> - fix comment concerning Apalis GPIO usage as GPIO7 is only used for =
-PCIe switch reset on Apalis Evaluation board
-> - move I2C DDC handling into carrier board DTS where it belongs
-> - simplify RTC alias
->=20
-> Changes in v2:
-> - clarify exact Apalis iMX6Q/D SoM type in cover letter
-> - clarify exact Apalis iMX6Q/D module type and Ixora carrier board in=
- model
->   node
-> - got rid of obsolete mmc aliases
-> - working SGTL5000 audio/sound integration
-> - working STMPE811 touch screen controller integration
-> - integrated review feedback from Lucas
-> - left and even added some more comments as I don't see why putting a=
-ny
->   explanatory comments in dts' should be such a bad thing to do
-> - completely got rid of the memory node as that is something typicall=
-y filled
->   in by the boot loader e.g. U-Boot
-> - without the regulators simple-bus it no longer boots
-> - even though we supposedly shipped a few hundred V1.0a modules drop =
-DCE UART
->   support for now and simplify file layout
-> - replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D=
- <3300 3300>
->   usdhc property and yes card detects are indeed active low (;-p)
-> - integrated review feedback from Stefan
-> - fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to=
- be
->   enabled)
-> - fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
-> - fixed SPDIF
->=20
->  arch/arm/boot/dts/Makefile               |   1 +
->  arch/arm/boot/dts/imx6q-apalis-ixora.dts | 275 +++++++++++++++++++++=
-++++++++++
->  2 files changed, 276 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a4a6d70..0d5e11b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -317,6 +317,7 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
->  	imx6dl-udoo.dtb \
->  	imx6dl-wandboard.dtb \
->  	imx6dl-wandboard-revb1.dtb \
-> +	imx6q-apalis-ixora.dtb \
->  	imx6q-apf6dev.dtb \
->  	imx6q-arm2.dtb \
->  	imx6q-cm-fx6.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot=
-/dts/imx6q-apalis-ixora.dts
-> new file mode 100644
-> index 0000000..28f3b34
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> @@ -0,0 +1,275 @@
-> +/*
-> + * Copyright 2014-2016 Toradex AG
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2011 Linaro Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dua=
-l
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
-f
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentatio=
-n
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom th=
-e
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall b=
-e
-> + *     included in all copies or substantial portions of the Softwar=
-e.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
-ES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include "imx6q.dtsi"
-> +#include "imx6qdl-apalis.dtsi"
-> +
-> +/ {
-> +	model =3D "Toradex Apalis iMX6Q/D Module on Ixora Carrier Board";
-> +	compatible =3D "toradex,apalis_imx6q-ixora", "toradex,apalis_imx6q"=
-,
-> +		     "fsl,imx6q";
-> +
-> +	aliases {
-> +		i2c0 =3D &i2cddc;
-> +		i2c1 =3D &i2c1;
-> +		i2c2 =3D &i2c2;
-> +		i2c3 =3D &i2c3;
-> +	};
-> +
-> +	aliases {
-> +		rtc0 =3D &rtc_i2c;
-> +		rtc1 =3D &snvs_rtc;
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_gpio_keys>;
-> +
-> +		wakeup {
-> +			label =3D "Wake-Up";
-> +			gpios =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_WAKEUP>;
-> +			debounce-interval =3D <10>;
-> +			gpio-key,wakeup;
+> Changes from V1:
+> - Cleanup code based on comment received on mfd/rtc.
+> - Avoid duplication on error message.
+> 
+> Changes form V2:
+> - Run coccicheck and checkpatch in strict mode for the alignment.
+> - Refactor Regulator driver to use core API for DT parsing.
+> - Update based on API changes.
+> 
+> Changes from V3: 
+> - Change all sys initcall to module driver.
+> - change the max77620_read argument to unisgned int from u8.
+> 
+> Changes from V4: 
+> - Added DT binding document as devicetree/bindings/regulator/regulator-max77620.txt
+> - Detail out properties.
+> 
+>  .../bindings/regulator/regulator-max77620.txt      | 163 ++++
 
-Please take a look at the following commit, which converts the legacy
-wakeup properties to the new generic one.
+Acked-by: Rob Herring <robh@kernel.org>
 
-https://git.kernel.org/cgit/linux/kernel/git/shawnguo/linux.git/commit/=
-?h=3Dimx/dt&id=3D1c49ad21c2cae607193da4495489c751d7147df2
-
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_leds_ixora>;
-> +
-> +		led4-green {
-> +			label =3D "LED_4_GREEN";
-> +			gpios =3D <&gpio1 17 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		led4-red {
-> +			label =3D "LED_4_RED";
-> +			gpios =3D <&gpio1 21 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		led5-green {
-> +			label =3D "LED_5_GREEN";
-> +			gpios =3D <&gpio2 1 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		led5-red {
-> +			label =3D "LED_5_RED";
-> +			gpios =3D <&gpio2 2 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	pwmleds {
-> +		compatible =3D "pwm-leds";
-
-Have a new line between properties and sub-node.
-
-> +		ledpwm1 {
-> +			label =3D "PWM1";
-> +			pwms =3D <&pwm1 0 50000>;
-> +			max-brightness =3D <255>;
-> +		};
-> +
-> +		ledpwm2 {
-> +			label =3D "PWM2";
-> +			pwms =3D <&pwm2 0 50000>;
-> +			max-brightness =3D <255>;
-> +		};
-> +
-> +		ledpwm3 {
-> +			label =3D "PWM3";
-> +			pwms =3D <&pwm3 0 50000>;
-> +			max-brightness =3D <255>;
-> +		};
-> +	};
-> +
-> +	regulators {
-> +		reg_usb_otg_vbus: usb_otg_vbus {
-> +			status =3D "okay";
-> +		};
-
-It can be as simple as the following.
-
-&reg_usb_otg_vbus {
-	status =3D "okay";
-};
-
-> +
-> +		reg_usb_host_vbus: usb_host_vbus {
-> +			status =3D "okay";
-> +		};
-> +	};
-> +};
-> +
-> +&backlight {
-> +	brightness-levels =3D <0 127 191 223 239 247 251 255>;
-> +	default-brightness-level =3D <1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&can1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&can2 {
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-bus =3D <&i2cddc>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2cddc {
-> +	status =3D "okay";
-> +};
-> +
-> +/* GEN1_I2C: I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board=
-) */
-> +&i2c1 {
-> +	status =3D "okay";
-> +
-> +	eeprom@50 {
-> +		compatible =3D "atmel,24c02";
-> +		reg =3D <0x50>;
-> +	};
-> +
-> +	/* M41T0M6 real time clock on carrier board */
-> +	rtc_i2c: rtc@68 {
-> +		compatible =3D "st,m41t00";
-> +		reg =3D <0x68>;
-> +	};
-> +};
-> +
-> +&ldb {
-> +	status =3D "okay";
-> +};
-> +
-> +&pcie {
-> +	/* active-low meaning opposite of regular PERST# active-low polarit=
-y */
-> +	reset-gpio =3D <&gpio1 28 GPIO_ACTIVE_LOW>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm2 {
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm3 {
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm4 {
-> +	status =3D "okay";
-> +};
-> +
-> +&sata {
-> +	status =3D "okay";
-> +};
-> +
-> +&sound_spdif {
-> +	status =3D "okay";
-> +};
-> +
-> +&spdif {
-> +	status =3D "okay";
-> +};
-> +
-> +&uart1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&uart2 {
-> +	status =3D "okay";
-> +};
-> +
-> +&uart4 {
-> +	status =3D "okay";
-> +};
-> +
-> +&uart5 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usbh1 {
-> +	vbus-supply =3D <&reg_usb_host_vbus>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usbotg {
-> +	vbus-supply =3D <&reg_usb_otg_vbus>;
-> +	status =3D "okay";
-> +};
-> +
-> +/* SD1 */
-> +&usdhc2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_sd_cd>;
-> +	cd-gpios =3D <&gpio6 14 GPIO_ACTIVE_LOW>;
-> +	status =3D "okay";
-> +};
-> +
-> +&iomuxc {
-> +	/*
-> +	 * Mux the Apalis GPIOs
-> +	 * GPIO5, 6 used by optional fusion_F0710A kernel module
-> +	 */
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_apalis_gpio1 &pinctrl_apalis_gpio2
-> +		     &pinctrl_apalis_gpio3 &pinctrl_apalis_gpio4
-> +		     &pinctrl_apalis_gpio5 &pinctrl_apalis_gpio6
-> +		     &pinctrl_apalis_gpio7 &pinctrl_apalis_gpio8
-
-We can have a single hog group to contain all these pins, I guess.
-
-> +		    >;
-> +
-> +	leds_ixora {
-
-Drop this container node.
-
-Shawn
-
-> +		pinctrl_leds_ixora: leds-ixora {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 0x1b0b0
-> +				MX6QDL_PAD_SD1_DAT3__GPIO1_IO21 0x1b0b0
-> +				MX6QDL_PAD_NANDF_D1__GPIO2_IO01 0x1b0b0
-> +				MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0x1b0b0
-> +			>;
-> +		};
-> +	};
-> +};
-> --=20
-> 2.5.0
->=20
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/regulator/Kconfig                          |   9 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/max77620-regulator.c             | 844 +++++++++++++++++++++
+>  4 files changed, 1017 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+>  create mode 100644 drivers/regulator/max77620-regulator.c
