@@ -1,47 +1,35 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/2] clk: sunxi: Fix APBS clock for Allwinner A80
-Date: Mon,  1 Feb 2016 22:42:47 +0800
-Message-ID: <1454337769-4130-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 2/2] ARM: dts: sun9i: Fix apbs clock compatible
+Date: Mon,  1 Feb 2016 22:42:49 +0800
+Message-ID: <1454337769-4130-3-git-send-email-wens@csie.org>
+References: <1454337769-4130-1-git-send-email-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454337769-4130-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The APBS clock on A80 is not compatible with A23's APB0 clock. The only
+reason it works is becase the lowest and default divider is the same.
 
-When I did the A80 PRCM support, I failed to notice the A80's APBS clock
-was not the same as the A23's APB0 clock. The former is a zero-based
-divider, while the latter is a power-of-two divider. But the lowest 2
-dividers are the same.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun9i-a80.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The hardware defaults to the lowest setting, or a /1 divider. Since the
-child gates do not propagate clk_set_rate up, and no consumers here do
-clk_set_rate, this actually works.
-
-I realized my mistake while reviewing the A83T's PRCM patches. The A83T
-shares the same PRCM clocks as the A80.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (2):
-  clk: sunxi: Add support for A80 APBS clock
-  ARM: dts: sun9i: Fix apbs clock compatible
-
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- arch/arm/boot/dts/sun9i-a80.dtsi                  |  2 +-
- drivers/clk/sunxi/Makefile                        |  2 +-
- drivers/clk/sunxi/clk-sun9i-apbs.c                | 64 +++++++++++++++++++++++
- 4 files changed, 67 insertions(+), 2 deletions(-)
- create mode 100644 drivers/clk/sunxi/clk-sun9i-apbs.c
-
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index f68b3242b33a..2b4ce813b0ad 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -395,7 +395,7 @@
+ 		};
+ 
+ 		apbs: clk@0800141c {
+-			compatible = "allwinner,sun8i-a23-apb0-clk";
++			compatible = "allwinner,sun9i-a80-apbs-clk";
+ 			reg = <0x0800141c 0x4>;
+ 			#clock-cells = <0>;
+ 			clocks = <&ahbs>;
 -- 
 2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
