@@ -1,228 +1,142 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 3/3] CMDQ: Mediatek CMDQ driver
-Date: Mon, 1 Feb 2016 14:20:24 +0800
-Message-ID: <1454307624.22441.18.camel@mtksdaap41>
-References: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
-	 <1453266881-16849-4-git-send-email-hs.liao@mediatek.com>
-	 <CAGS+omBjD1pXKY_6bFbiGxa5bttvqg5zEvKevzSfoiMOy7ys6Q@mail.gmail.com>
-	 <1454053150.32413.52.camel@mtksdaap41>
-	 <CAGS+omBrEE21Xxh8hjcf32qfHJE0jJYvxGP6L1ihS6jcNbLvLQ@mail.gmail.com>
-	 <1454070262.7401.21.camel@mtksdaap41>
-	 <CAGS+omBhs7Ks7MVDsxHBBUdgF+0fmAa465HwvNiCzEe97Knt3Q@mail.gmail.com>
-	 <1454292257.22270.3.camel@mtksdaap41>
-	 <CAGS+omCzDisk2TfbDnWiXufWgUsCbhF_JFafaUazhSymX-MT_Q@mail.gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 4/4] Documentation: atmel-at91: add DT bindings for fast
+ startup
+Date: Mon, 1 Feb 2016 06:22:26 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63FE2DE@penmbx01>
+References: <1453976356-24391-1-git-send-email-wenyou.yang@atmel.com>
+ <1453976356-24391-5-git-send-email-wenyou.yang@atmel.com>
+ <20160129162009.GA5335@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCzDisk2TfbDnWiXufWgUsCbhF_JFafaUazhSymX-MT_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160129162009.GA5335@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-02-01 at 12:15 +0800, Daniel Kurtz wrote:
-> On Mon, Feb 1, 2016 at 10:04 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >
-> > On Fri, 2016-01-29 at 21:15 +0800, Daniel Kurtz wrote:
-> > > On Fri, Jan 29, 2016 at 8:24 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > > On Fri, 2016-01-29 at 16:42 +0800, Daniel Kurtz wrote:
-> > > >> On Fri, Jan 29, 2016 at 3:39 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > >> > Hi Dan,
-> > > >> >
-> > > >> > Many thanks for your comments and time.
-> > > >> > I reply my plan inline.
-> > > >> >
-> > > >> >
-> > > >> > On Thu, 2016-01-28 at 12:49 +0800, Daniel Kurtz wrote:
-> > > >> >> Hi HS,
-> > > >> >>
-> > > >> >> Sorry for the delay.  It is hard to find time to review a >3700 line
-> > > >> >> driver :-o in detail....
-> > > >> >>
-> > > >> >> Some review comments inline, although I still do not completely
-> > > >> >> understand how all that this driver does and how it works.
-> > > >> >> I'll try to find time to go through this driver in detail again next
-> > > >> >> time you post it for review.
-> > > >> >>
-> > > >> >> On Tue, Jan 19, 2016 at 9:14 PM,  <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > > >> >> > From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > >> >> >
-> > > >> >> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > > >> >> > CMDQ is used to help read/write registers with critical time limitation,
-> > > >> >> > such as updating display configuration during the vblank. It controls
-> > > >> >> > Global Command Engine (GCE) hardware to achieve this requirement.
-> > > >> >> > Currently, CMDQ only supports display related hardwares, but we expect
-> > > >> >> > it can be extended to other hardwares for future requirements.
-> > > >> >> >
-> > > >> >> > Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > >> >>
-> > > >> >> [snip]
-> > > >> >>
-> > > >> >> > diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
-> > > >> >> > new file mode 100644
-> > > >> >> > index 0000000..7570f00
-> > > >> >> > --- /dev/null
-> > > >> >> > +++ b/drivers/soc/mediatek/mtk-cmdq.c
-> > > >
-> > > > [snip]
-> > > >
-> > > >> >> > +static const struct cmdq_subsys g_subsys[] = {
-> > > >> >> > +       {0x1400, 1, "MMSYS"},
-> > > >> >> > +       {0x1401, 2, "DISP"},
-> > > >> >> > +       {0x1402, 3, "DISP"},
-> > > >> >>
-> > > >> >> This isn't going to scale.  These addresses could be different on
-> > > >> >> different chips.
-> > > >> >> Instead of a static table like this, we probably need specify to the
-> > > >> >> connection between gce and other devices via devicetree phandles, and
-> > > >> >> then use the phandles to lookup the corresponding device address
-> > > >> >> range.
-> > > >> >
-> > > >> > I will define them in device tree.
-> > > >> > E.g.
-> > > >> > cmdq {
-> > > >> >   reg_domain = 0x14000000, 0x14010000, 0x14020000
-> > > >> > }
-> > > >>
-> > > >> The devicetree should only model hardware relationships, not software
-> > > >> considerations.
-> > > >>
-> > > >> Is the hardware constraint here for using gce with various other
-> > > >> hardware blocks?  I think we already model this by only providing a
-> > > >> gce phandle in the device tree nodes for those devices that can use
-> > > >> gce.
-> > > >>
-> > > >> Looking at the driver closer, as far as I can tell, the whole subsys
-> > > >> concept is a purely software abstraction, and only used to debug the
-> > > >> CMDQ_CODE_WRITE command.  In fact, AFAICT, everything would work fine
-> > > >> if we just completely removed the 'subsys' concept, and just passed
-> > > >> through the raw address provided by the driver.
-> > > >>
-> > > >> So, I recommend just removing 'subsys' completely from the driver -
-> > > >> from this array, and in the masks.
-> > > >>
-> > > >> Instead, if there is an error on the write command, just print the
-> > > >> address that fails.  There are other ways to deduce the subsystem from
-> > > >> a physical address.
-> > > >>
-> > > >> Thanks,
-> > > >>
-> > > >> -Dan
-> > > >
-> > > > Hi Dan,
-> > > >
-> > > > Subsys is not just for debug.
-> > > > Its main purpose is to transfer CPU address to GCE address.
-> > > > Let me explain it by "write" op,
-> > > > I list a code segment from cmdq_rec_append_command().
-> > > >
-> > > >         case CMDQ_CODE_WRITE:
-> > > >                 subsys = cmdq_subsys_from_phys_addr(cqctx, arg_a);
-> > > >                 if (subsys < 0) {
-> > > >                         dev_err(dev,
-> > > >                                 "unsupported memory base address 0x%08x\n",
-> > > >                                 arg_a);
-> > > >                         return -EFAULT;
-> > > >                 }
-> > > >
-> > > >                 *cmd_ptr++ = arg_b;
-> > > >                 *cmd_ptr++ = (CMDQ_CODE_WRITE << CMDQ_OP_CODE_SHIFT) |
-> > > >                              (arg_a & CMDQ_ARG_A_WRITE_MASK) |
-> > > >                              ((subsys & CMDQ_SUBSYS_MASK) << CMDQ_SUBSYS_SHIFT);
-> > > >                 break;
-> > > >
-> > > > Subsys is mapped from physical address via cmdq_subsys_from_phys_addr(),
-> > > > and then it becomes part of GCE command via ((subsys & CMDQ_SUBSYS_MASK)
-> > > > << CMDQ_SUBSYS_SHIFT) .
-> > > > Only low bits of physical address are the same as GCE address.
-> > > > We can get it by (arg_a & CMDQ_ARG_A_WRITE_MASK).
-> > > > MASK is used to define how many bits are valid for this op.
-> > > > So, GCE address = subsys + valid low bits.
-> > >
-> > > How are these upper bits of the "GCE address" defined?
-> > > In other words, for a given SoC, how is the mapping between physical
-> > > io addresses to GCE addresses defined?
-> > > Is this mapping fixed by hardware?
-> 
-> Please answer the detailed technical questions:
-> 
-> How are these upper bits of the "GCE address" defined?
-
-A GCE command is arg_a + arg_b. Both of them have 32 bits length.
-arg_a is op + subsys + addr, and arg_b is value.
-subsys + addr is less than 32bits, so we need to map address range to
-subsys.
-The mapping rule is defined by hardware.
-
-> In other words, for a given SoC, how is the mapping between physical
-> io addresses to GCE addresses defined?
-
-It is (b).
-
-> 
-> (a) Does the GCE remap a continuous device IO address range?
-> 
-> AFAICT, the  defines an MT8173 specific mapping of:
-> 
-> For example, the g_subsys table above seems to imply that the MT8173
-> gce maps all of:
->   0x1400ffff:0x141fffff => 0x010000:0x1fffff
-> 
-> (b) Or, are the upper 5 bits of the "gce address" significant, and via
-> hardware it can map a disjoint groups of device addresses into the
-> continuous GCE address space, and really there are 0x1f distinct 64k
-> mappings:
-> 
-> mmsys (1) : 0x14000000:0x1400ffff => 0x010000:0x01ffff
-> disp  (2) : 0x14010000:0x1401ffff => 0x020000:0x02ffff
-> disp  (3) : 0x14020000:0x1402ffff => 0x030000:0x03ffff
-> ...
-> ???? (1f) : 0x141fffff:0x141fffff => 0x1f0000:0x1fffff
-> 
-> If the mapping is fixed and continuous (a), then I think all we need
-> is a single dts entry for the gce node that describes how it performs
-> this mapping.  And then, the gce consumers can just pass in their
-> regular physical addresses, and the gce driver can remap them directly
-> to gce addresses.
-> 
-> WDYT?
-
-How about this?
-hardware_module = <address_base subsys_id mask>;
-So, the result is
-mmsys_config_base = <0x14000000 1 0xffff0000>;
-disp_rdma_config_base = <0x14010000 2 0xffff0000>;
-disp_mutex_config_base = <0x14020000 3 0xffff0000>;
-
-> -Dan
-> 
-> >
-> > Yes, this mapping is fixed by hardware.
-> >
-> > > Does it vary for different SoCs?
-> >
-> > Yes, it varies for different SoCs.
-> >
-> > >
-> > > -Dan
-> > >
-> > > > That's why we need to know the mapping between the range of physical
-> > > > address and subsys.
-> > > > Please guide us a better way to code such requirement.
-> > > > Thanks for your help.
-> > > >
-> > > > Thanks,
-> > > > HS Liao
-> > > >
-> >
-> > Thanks,
-> > HS Liao
-> >
-
-Thanks,
-HS Liao
-
+SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
+XQ0KPiBTZW50OiAyMDE2xOox1MIzMMjVIDA6MjANCj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91
+LllhbmdAYXRtZWwuY29tPg0KPiBDYzogRmVycmUsIE5pY29sYXMgPE5pY29sYXMuRkVSUkVAYXRt
+ZWwuY29tPjsgQWxleGFuZHJlIEJlbGxvbmkNCj4gPGFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxl
+Y3Ryb25zLmNvbT47IEplYW4tQ2hyaXN0b3BoZSBQbGFnbmlvbC1WaWxsYXJkDQo+IDxwbGFnbmlv
+akBqY3Jvc29mdC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcudWs+OyBs
+aW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9yZzsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0u
+Y29tPjsgTWFyayBCcm93bg0KPiA8YnJvb25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsIDxp
+amMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVh
+dXJvcmEub3JnPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0N
+Cj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCA0LzRdIERvY3VtZW50YXRpb246IGF0bWVsLWF0OTE6IGFkZCBE
+VCBiaW5kaW5ncyBmb3IgZmFzdA0KPiBzdGFydHVwDQo+IA0KPiBPbiBUaHUsIEphbiAyOCwgMjAx
+NiBhdCAwNjoxOToxNlBNICswODAwLCBXZW55b3UgWWFuZyB3cm90ZToNCj4gPiBBZGQgRFQgYmlu
+ZGluZ3MgdG8gY29uZmlndXJhdGUgdGhlIFBNQ19GU01SIGFuZCBQTUNfRlNQUiByZWdpc3RlcnMg
+dG8NCj4gPiB0cmlnZ2VyIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byBQTUMuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+IC0t
+LQ0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1wbWMudHh0ICAg
+ICAgICAgIHwgICA3NA0KPiArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgNzQgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtcG1jLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1wbWMudHh0DQo+ID4gaW5kZXggNzk1Y2M3
+OC4uOGQ0NWZmOWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9hdG1lbC1wbWMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1wbWMudHh0DQo+ID4gQEAgLTEyLDMgKzEyLDc3IEBAIEV4
+YW1wbGVzOg0KPiA+ICAJCWNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXJtOTIwMC1wbWMiOw0KPiA+
+ICAJCXJlZyA9IDwweGZmZmZmYzAwIDB4MTAwPjsNCj4gPiAgCX07DQo+ID4gKw0KPiA+ICtQTUMg
+RmFzdCBTdGFydHVwIFNpZ25hbHMNCj4gPiArDQo+ID4gK1RoZSBQTUMgRmFzdCBTdGFydCBTaWdu
+YWxzIGFyZSB1c2VkIGFzIHRoZSB3YWtlIHVwIHNvdXJjZSB0byB0cmlnZ2VyDQo+ID4gK3RoZSBQ
+TUMgdG8gd2FrZSB1cCB0aGUgc3lzdGVtIGZyb20gdGhlIFVMUDEgbW9kZS4NCj4gPiArDQo+ID4g
+K3JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJhdG1l
+bCxzYW1hNWQyLXBtYy1mYXN0LXN0YXJ0dXAiLg0KPiANCj4gV2h5IHRoZSBjb21wYXRpYmxlPyBE
+b2VzIHRoaXMgY29ycmVzcG9uZCB0byBzb21lIGgvdyBibG9jayByYXRoZXIgdGhhbiBmZWF0dXJl
+cw0KPiBvZiB0aGUgUE1DPyBJZiBpdCBpcyBzaW1wbHkgYmVjYXVzZSB5b3Ugd2FudCB0byBoYXZl
+IGEgc2VwYXJhdGUgZHJpdmVyLCB0aGF0IGlzIG5vdA0KPiBhIGdvb2QgcmVhc29uLg0KDQpUaGUg
+UE1DIGlzIHJlZ2FyZGVkIGFzIGFuIE1GRCBkZXZpY2UuDQoNClRoZSBGYXN0IFN0YXJ0dXAgZnVu
+Y3Rpb24gaXMgYSBzdWItZGV2aWNlLCB0aGUgZHJpdmVyIGFjY2VzcyB0aGUgcmVnaXN0ZXINCnRo
+cm91Z2ggcmVnbWFwIHJldHVybmVkIGZyb20gdGhlIHN5c2NvbiBoZWxwZXIgQVBJIHN5c2Nvbl9u
+b2RlX3RvX3JlZ21hcCgpLg0KDQo+IA0KPiA+ICsNCj4gPiArb3B0aW9uYWwgcHJvcGVydGllczoN
+Cj4gPiArLSBhdG1lbCxmYXN0LXN0YXJ0dXAtd2FrZS11cDogYm9vbGVhbiB0byBlbmFibGUgdGhl
+IFdLVVAgcGluIHRvDQo+ID4gK3RyaWdnZXINCj4gPiArICBhIGZhc3QgcmVzdGFydCBzaWduYWwg
+dG8gdGhlIFBNQy4NCj4gPiArLSBhdG1lbCxmYXN0LXN0YXJ0dXAtc2VjdW1vZDogYm9vbGVhbiB0
+byBlbmFibGUgdGhlIFNlY3VyaXR5IE1vZGUgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFz
+dCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1w
+aW9idTA6IGJvb2xlYW4gdG8gZW5hYmxlIHRoZSBQSU9CVTAgSW5wdXQgdG8NCj4gPiArdHJpZ2dl
+cg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVs
+LGZhc3Qtc3RhcnR1cC1waW9idTE6IGJvb2xlYW4gdG8gZW5hYmxlIHRoZSBQSU9CVTEgSW5wdXQg
+dG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1D
+Lg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9idTI6IGJvb2xlYW4gdG8gZW5hYmxlIHRo
+ZSBQSU9CVTIgSW5wdXQgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNp
+Z25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9idTM6IGJvb2xl
+YW4gdG8gZW5hYmxlIHRoZSBQSU9CVTMgSW5wdXQgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEg
+ZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1
+cC1waW9idTQ6IGJvb2xlYW4gdG8gZW5hYmxlIHRoZSBQSU9CVTQgSW5wdXQgdG8NCj4gPiArdHJp
+Z2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0
+bWVsLGZhc3Qtc3RhcnR1cC1waW9idTU6IGJvb2xlYW4gdG8gZW5hYmxlIHRoZSBQSU9CVTUgSW5w
+dXQgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUg
+UE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9idTY6IGJvb2xlYW4gdG8gZW5hYmxl
+IHRoZSBQSU9CVTYgSW5wdXQgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0
+IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9idTc6IGJv
+b2xlYW4gdG8gZW5hYmxlIHRoZSBQSU9CVTcgSW5wdXQgdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsg
+IGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3Rh
+cnR1cC1nbWFjLXdvbDogYm9vbGVhbiB0byBlbmFibGUgdGhlIEdNQUMgV2FrZS11cCBPbg0KPiA+
+ICtMQU4NCj4gPiArICB0byB0cmlnZ2VyIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1D
+Lg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1ydGMtYWxhcm06IGJvb2xlYW4gdG8gZW5hYmxl
+IHRoZSBSVEMgQWxhcm0gdG8NCj4gPiArdHJpZ2dlcg0KPiA+ICsgIGEgZmFzdCByZXN0YXJ0IHNp
+Z25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC11c2ItcmVzdW1lOiBi
+b29sZWFuIHRvIGVuYWJsZSB0aGUgVVNCIFJlc3VtZSB0bw0KPiA+ICt0cmlnZ2VyDQo+ID4gKyAg
+YSBmYXN0IHJlc3RhcnQgc2lnbmFsIHRvIHRoZSBQTUMuDQo+ID4gKy0gYXRtZWwsZmFzdC1zdGFy
+dHVwLXNkbW1jLWNkOiBib29sZWFuIHRvIGVuYWJsZSB0aGUgU0RNTUMgQ2FyZA0KPiA+ICtEZXRl
+Y3QNCj4gPiArICB0byB0cmlnZ2VyIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0K
+PiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1yeGxwLW1hdGNoOiBib29sZWFuIHRvIGVuYWJsZSB0
+aGUgQmFja3VvIFVBUlQNCj4gPiArUmVjZWl2ZQ0KPiA+ICsgIE1hdGNoIENvbmRpdGlvbiB0byB0
+cmlnZ2VyIGEgZmFzdCByZXN0YXJ0IHNpZ25hbCB0byB0aGUgUE1DLg0KPiA+ICstIGF0bWVsLGZh
+c3Qtc3RhcnR1cC1hY2MtY29tcGFyaXNvbjogYm9vbGVhbiB0byBlbmFibGUgdGhlIEFuYWxvZw0K
+PiA+ICtDb21wYXJhdG9yDQo+ID4gKyAgQ29udHJvbGxlciAoQUNDKSBDb21wYXJpc29uIHRvIHRv
+IHRyaWdnZXIgYSBmYXN0IHJlc3RhcnQgc2lnbmFsIHRvIHRoZSBQTUMuDQo+ID4gKw0KPiA+ICst
+IGF0bWVsLGZhc3Qtc3RhcnR1cC13a3VwLXBpbi1oaWdoOiBib29sZWFuIHRvIGluZGljYXRlIGlm
+IHRoZSBXS1VQDQo+ID4gK1BpbiBpcw0KPiA+ICsgIGluIHRoZSBoaWdoIGxldmVsIHRvIHRyaWdn
+ZXIgZmFzdCByZXN0YXJ0IHNpZ25hbCwgb3RoZXJ3aXNlIGxvdyBsZXZlbC4NCj4gDQo+IFBlcmhh
+cHMganVzdCBtYWtlIHRoZSBhYm92ZSBib29sIHByb3BlcnRpZXMgdGFrZSBhIHZhbHVlIHRvIGlu
+ZGljYXRlIGhpZ2ggb3IgbG93DQo+IHRyaWdnZXJlZC4NCg0KQWdyZWVkLiANCg0KSG93IGFib3V0
+IHRoZSBmb2xsb3dpbmcgY2hhbmdlcz8gQW5kIGEgbW9yZSBjb21wYWN0IGZvcm0uDQoNCmF0bWVs
+LGZzLXdrdXAtcGluLWxldmVsID0gPDE+OyB0byBpbmRpY2F0ZWQgdGhlIFdLVVAgUGluIGlzIGlu
+IHRoZSBoaWdoIGxldmVsIHRyaWdnZWQuDQphdG1lbCxmcy13a3VwLXBpbi1sZXZlbCA9IDwwPjsg
+dG8gaW5kaWNhdGVkIHRoZSBXS1VQIFBpbiBpcyBpbiB0aGUgbG93IGxldmVsIHRyaWdnZWQuDQoN
+Cj4gDQo+ID4gKy0gYXRtZWwsZmFzdC1zdGFydHVwLXBpb2J1MC1oaWdoOiBib29sZWFuIHRvIGlu
+ZGljYXRlIGlmIHRoZSBQSU9CVTANCj4gPiArUGluIGlzDQo+ID4gKyAgaW4gdGhlIGhpZ2ggbGV2
+ZWwgdG8gdHJpZ2dlciBmYXN0IHJlc3RhcnQgc2lnbmFsLCBvdGhlcndpc2UgbG93IGxldmVsLg0K
+PiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9idTEtaGlnaDogYm9vbGVhbiB0byBpbmRpY2F0
+ZSBpZiB0aGUgUElPQlUxDQo+ID4gK1BpbiBpcw0KPiA+ICsgIGluIHRoZSBoaWdoIGxldmVsIHRv
+IHRyaWdnZXIgZmFzdCByZXN0YXJ0IHNpZ25hbCwgb3RoZXJ3aXNlIGxvdyBsZXZlbC4NCj4gPiAr
+LSBhdG1lbCxmYXN0LXN0YXJ0dXAtcGlvYnUyLWhpZ2g6IGJvb2xlYW4gdG8gaW5kaWNhdGUgaWYg
+dGhlIFBJT0JVMg0KPiA+ICtQaW4gaXMNCj4gPiArICBpbiB0aGUgaGlnaCBsZXZlbCB0byB0cmln
+Z2VyIGZhc3QgcmVzdGFydCBzaWduYWwsIG90aGVyd2lzZSBsb3cgbGV2ZWwuDQo+ID4gKy0gYXRt
+ZWwsZmFzdC1zdGFydHVwLXBpb2J1My1oaWdoOiBib29sZWFuIHRvIGluZGljYXRlIGlmIHRoZSBQ
+SU9CVTMNCj4gPiArUGluIGlzDQo+ID4gKyAgaW4gdGhlIGhpZ2ggbGV2ZWwgdG8gdHJpZ2dlciBm
+YXN0IHJlc3RhcnQgc2lnbmFsLCBvdGhlcndpc2UgbG93IGxldmVsLg0KPiA+ICstIGF0bWVsLGZh
+c3Qtc3RhcnR1cC1waW9idTQtaGlnaDogYm9vbGVhbiB0byBpbmRpY2F0ZSBpZiB0aGUgUElPQlU0
+DQo+ID4gK1BpbiBpcw0KPiA+ICsgIGluIHRoZSBoaWdoIGxldmVsIHRvIHRyaWdnZXIgZmFzdCBy
+ZXN0YXJ0IHNpZ25hbCwgb3RoZXJ3aXNlIGxvdyBsZXZlbC4NCj4gPiArLSBhdG1lbCxmYXN0LXN0
+YXJ0dXAtcGlvYnU1LWhpZ2g6IGJvb2xlYW4gdG8gaW5kaWNhdGUgaWYgdGhlIFBJT0JVNQ0KPiA+
+ICtQaW4gaXMNCj4gPiArICBpbiB0aGUgaGlnaCBsZXZlbCB0byB0cmlnZ2VyIGZhc3QgcmVzdGFy
+dCBzaWduYWwsIG90aGVyd2lzZSBsb3cgbGV2ZWwuDQo+ID4gKy0gYXRtZWwsZmFzdC1zdGFydHVw
+LXBpb2J1Ni1oaWdoOiBib29sZWFuIHRvIGluZGljYXRlIGlmIHRoZSBQSU9CVTYNCj4gPiArUGlu
+IGlzDQo+ID4gKyAgaW4gdGhlIGhpZ2ggbGV2ZWwgdG8gdHJpZ2dlciBmYXN0IHJlc3RhcnQgc2ln
+bmFsLCBvdGhlcndpc2UgbG93IGxldmVsLg0KPiA+ICstIGF0bWVsLGZhc3Qtc3RhcnR1cC1waW9i
+dTctaGlnaDogYm9vbGVhbiB0byBpbmRpY2F0ZSBpZiB0aGUgUElPQlU3DQo+ID4gK1BpbiBpcw0K
+PiA+ICsgIGluIHRoZSBoaWdoIGxldmVsIHRvIHRyaWdnZXIgZmFzdCByZXN0YXJ0IHNpZ25hbCwg
+b3RoZXJ3aXNlIGxvdyBsZXZlbC4NCj4gDQo+IFRoaXMgd291bGQgYmUgYSBsb25nIGxpc3QgaW4g
+dGhlIERUIGlmIHlvdSBzZXQgYWxsIHRoZXNlIHByb3BlcnRpZXMuDQo+IFBlcmhhcHMgdGhpcyBz
+aG91bGQgYWxsIGJlIGV4cHJlc3NlZCBpbiBhIG1vcmUgY29tcGFjdCBmb3JtLg0KPiANCg0KWWVz
+LCBjaGFuZ2UgYXMgYWJvdmUuDQoNCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsJ
+cG1jOiBwbWNAZjAwMTQwMDAgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMi1w
+bWMiOw0KPiA+ICsJCXJlZyA9IDwweGYwMDE0MDAwIDB4MTYwPjsNCj4gPiArDQo+ID4gKwkJcG1j
+X2Zhc3RfcmVzdGFydCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMi1wbWMt
+ZmFzdC1zdGFydHVwIjsNCj4gPiArCQkJYXRtZWwsZmFzdC1zdGFydHVwLXdha2UtdXA7DQo+ID4g
+KwkJCWF0bWVsLGZhc3Qtc3RhcnR1cC1ydGMtYWxhcm07DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+
+ID4gLS0NCj4gPiAxLjcuOS41DQo+ID4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
