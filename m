@@ -1,104 +1,67 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V13 10/10] vfio, platform: add QTI HIDMA reset driver
-Date: Mon, 1 Feb 2016 10:51:23 -0500
-Message-ID: <56AF7EFB.9040108@codeaurora.org>
-References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
- <1454106914-15857-11-git-send-email-okaya@codeaurora.org>
- <56AF7C9D.4070600@linaro.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] doc: dt: add documentation for alphascale,asm9260-rtc
+Date: Mon, 1 Feb 2016 16:55:27 +0100
+Message-ID: <20160201155527.GR20165@piout.net>
+References: <1454056802-23386-1-git-send-email-linux@rempel-privat.de>
+ <1454056802-23386-3-git-send-email-linux@rempel-privat.de>
+ <20160201152750.GA17595@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56AF7C9D.4070600@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160201152750.GA17595@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/1/2016 10:41 AM, Eric Auger wrote:
-> Hi Sinan,
-
->> +
->> +	trreg = vdev->regions[0];
->> +	if (!trreg.ioaddr) {
->> +		trreg.ioaddr =
->> +			ioremap_nocache(trreg.addr, trreg.size);
-> this is going to leak. See "vfio: platform: reset: calxedaxgmac: fix
-> ioaddr leak".
-
-Thanks, I was following what other drivers were doing and got hit by the same problem :)
-
->> +		if (!trreg.ioaddr)
->> +			return -ENOMEM;
->> +	}
->> +
->> +	evreg = vdev->regions[1];
->> +	if (!evreg.ioaddr) {
->> +		evreg.ioaddr =
->> +			ioremap_nocache(evreg.addr, evreg.size);
-> same here
-I'll take care of it.
-
->> +		if (!evreg.ioaddr)
->> +			return -ENOMEM;
->> +	}
->> +
-> I understood the device is a kind of SR-IOV platform device. When the VF
-> gets reset are there any interactions with the management driver? Is it
-> handled by HW?
-
-There is no communication between the management interface and the DMA channels. 
-Management interface is just a runtime platform resource allocator. 
-
-"if you pay more, you get more DMA bandwidth. Otherwise, you get to share the channel 
-with other users"
-
-The DMA channels can be reset independent of other DMA channels or the management HW. 
-This is a HW feature.
-
+On 01/02/2016 at 09:27:50 -0600, Rob Herring wrote :
+> On Fri, Jan 29, 2016 at 09:40:02AM +0100, Oleksij Rempel wrote:
+> > Document Alphascale asm9260 RTC bindings
+> > 
+> > Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> > ---
+> >  .../bindings/rtc/alphascale,asm9260-rtc.txt        | 25 ++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> > new file mode 100644
+> > index 0000000..2c0ff3c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> > @@ -0,0 +1,25 @@
+> > +* Alphascale asm9260 SoC Real Time Clock
+> > +
+> > +Required properties:
+> > +- compatible: Should be "alphascale,asm9260-rtc"
+> > +- reg: Physical base address of the controller and length
+> > +       of memory mapped region.
+> > +- interrupts: IRQ line for the RTC.
+> > +- clocks: Reference to the clock entry.
+> > +- clock-names: should contain:
+> > +  * "ahb" for the SoC RTC clock
+> > +
+> > +Optional:
+> > +- calibration: calibration value for 1 sec period.
+> > +		Max value for forward calibration is 0x1ffff (131071),
+> > +		Min value for backward calibration is 0xfffe0001 (-131071).
 > 
-> Best Regards
+> This should be prefixed with 'alphascale,'
 > 
-> Eric
->> +	/* disable IRQ */
->> +	writel(0, evreg.ioaddr + EVCA_IRQ_EN_OFFSET);
->> +
->> +	/* reset both transfer and event channels */
->> +	val = readl(trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
->> +	val &= ~(CH_CONTROL_MASK << 16);
->> +	val |= CH_RESET << 16;
->> +	writel(val, trreg.ioaddr + TRCA_CTRLSTS_OFFSET);
->> +
->> +	ret = readl_poll_timeout(trreg.ioaddr + TRCA_CTRLSTS_OFFSET, val,
->> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
->> +				 10000);
->> +	if (ret)
->> +		return ret;
->> +
->> +	val = readl(evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
->> +	val &= ~(CH_CONTROL_MASK << 16);
->> +	val |= CH_RESET << 16;
->> +	writel(val, evreg.ioaddr + EVCA_CTRLSTS_OFFSET);
->> +
->> +	ret = readl_poll_timeout(evreg.ioaddr + EVCA_CTRLSTS_OFFSET, val,
->> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
->> +				 10000);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pr_info("HIDMA channel reset\n");
->> +	return 0;
->> +}
->> +module_vfio_reset_handler("qcom,hidma", NULL,
->> +			  vfio_platform_qcomhidma_reset);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
->>
+> How is this value determined?
 > 
 
+I think this should stay in userspace, see that series:
+https://groups.google.com/forum/#!topic/rtc-linux/HGQqiHnMiuw
+
+It quite often depends on environmental things like temperature so it may be updated at runtime.
 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
