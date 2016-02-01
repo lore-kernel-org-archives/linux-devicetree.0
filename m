@@ -1,478 +1,173 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 2/4] mailbox: Hi6220: add mailbox driver
-Date: Mon,  1 Feb 2016 21:34:45 +0800
-Message-ID: <1454333687-20421-3-git-send-email-leo.yan@linaro.org>
-References: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454333687-20421-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V5 02/14] soc: tegra: pmc: Protect public functions from
+ potential race conditions
+Date: Mon, 1 Feb 2016 13:42:55 +0000
+Message-ID: <56AF60DF.6050409@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-3-git-send-email-jonathanh@nvidia.com>
+ <CANLsYkwpkDsdZ+6B-N8RWWWLJcJuoMLYmvw-VaCJdma4O6SPhg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkwpkDsdZ+6B-N8RWWWLJcJuoMLYmvw-VaCJdma4O6SPhg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add driver for Hi6220 mailbox, the mailbox communicates with MCU; for
-sending data, it can support two methods for low level implementation:
-one is to use interrupt as acknowledge, another is automatic mode which
-without any acknowledge. These two methods have been supported in the
-driver. For receiving data, it will depend on the interrupt to notify
-the channel has incoming message.
 
-Now mailbox driver is used to send message to MCU to control dynamic
-voltage and frequency scaling for CPU, GPU and DDR.
+On 29/01/16 16:20, Mathieu Poirier wrote:
+> On 28 January 2016 at 09:33, Jon Hunter <jonathanh@nvidia.com> wrote:
+>> The PMC base address pointer is initialised during early boot so that
+>> early platform code may used the PMC public functions. During the probe
+>> of the PMC driver the base address pointer is mapped again and the initial
+>> mapping is freed. This exposes a window where a device accessing the PMC
+>> registers via one of the public functions, could race with the updating
+>> of the pointer and lead to a invalid access. Furthermore, the only
+>> protection between multiple devices attempting to access the PMC registers
+>> is when setting the powergate state to on or off. None of the other public
+>> functions that access the PMC registers are protected.
+>>
+>> Use the existing mutex to protect paths that may race with regard to
+>> accessing the PMC registers.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>> ---
+>>  drivers/soc/tegra/pmc.c | 44 +++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 35 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>> index 85b4e166273a..f8cdb7ce9755 100644
+>> --- a/drivers/soc/tegra/pmc.c
+>> +++ b/drivers/soc/tegra/pmc.c
+>> @@ -235,7 +235,10 @@ int tegra_powergate_is_powered(int id)
+>>         if (!pmc->soc || id < 0 || id >= pmc->soc->num_powergates)
+>>                 return -EINVAL;
+>>
+>> +       mutex_lock(&pmc->powergates_lock);
+>>         status = tegra_pmc_readl(PWRGATE_STATUS) & (1 << id);
+>> +       mutex_unlock(&pmc->powergates_lock);
+>> +
+>>         return !!status;
+>>  }
+>>
+>> @@ -250,6 +253,8 @@ int tegra_powergate_remove_clamping(int id)
+>>         if (!pmc->soc || id < 0 || id >= pmc->soc->num_powergates)
+>>                 return -EINVAL;
+>>
+>> +       mutex_lock(&pmc->powergates_lock);
+>> +
+>>         /*
+>>          * On Tegra124 and later, the clamps for the GPU are controlled by a
+>>          * separate register (with different semantics).
+>> @@ -257,7 +262,7 @@ int tegra_powergate_remove_clamping(int id)
+>>         if (id == TEGRA_POWERGATE_3D) {
+>>                 if (pmc->soc->has_gpu_clamps) {
+>>                         tegra_pmc_writel(0, GPU_RG_CNTRL);
+>> -                       return 0;
+>> +                       goto out;
+>>                 }
+>>         }
+>>
+>> @@ -274,6 +279,9 @@ int tegra_powergate_remove_clamping(int id)
+>>
+>>         tegra_pmc_writel(mask, REMOVE_CLAMPING);
+>>
+>> +out:
+>> +       mutex_unlock(&pmc->powergates_lock);
+>> +
+>>         return 0;
+>>  }
+>>  EXPORT_SYMBOL(tegra_powergate_remove_clamping);
+>> @@ -520,9 +528,11 @@ int tegra_io_rail_power_on(int id)
+>>         unsigned int bit, mask;
+>>         int err;
+>>
+>> +       mutex_lock(&pmc->powergates_lock);
+>> +
+>>         err = tegra_io_rail_prepare(id, &request, &status, &bit);
+>>         if (err < 0)
+>> -               return err;
+>> +               goto error;
+>>
+>>         mask = 1 << bit;
+>>
+>> @@ -535,12 +545,15 @@ int tegra_io_rail_power_on(int id)
+>>         err = tegra_io_rail_poll(status, mask, 0, 250);
+>>         if (err < 0) {
+>>                 pr_info("tegra_io_rail_poll() failed: %d\n", err);
+>> -               return err;
+>> +               goto error;
+>>         }
+>>
+>>         tegra_io_rail_unprepare();
+>>
+>> -       return 0;
+>> +error:
+>> +       mutex_unlock(&pmc->powergates_lock);
+>> +
+>> +       return err < 0 ? err : 0;
+> 
+> Is this necessary?  Why simply not returning 'err'?  From what I see
+> 'tegra_io_rail_power_on()' can only return a negative value or '0'.
 
-Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mailbox/Kconfig          |   8 +
- drivers/mailbox/Makefile         |   2 +
- drivers/mailbox/hi6220-mailbox.c | 407 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 417 insertions(+)
- create mode 100644 drivers/mailbox/hi6220-mailbox.c
+Right, this is probably not necessary and so I could simplify this.
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index 546d05f..b8bbeb0 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -78,6 +78,14 @@ config STI_MBOX
- 	  Mailbox implementation for STMicroelectonics family chips with
- 	  hardware for interprocessor communication.
- 
-+config HI6220_MBOX
-+	tristate "Hi6220 Mailbox"
-+	depends on ARCH_HISI
-+	help
-+	  An implementation of the hi6220 mailbox. It is used to send message
-+	  between application processors and MCU. Say Y here if you want to
-+	  build Hi6220 mailbox controller driver.
-+
- config MAILBOX_TEST
- 	tristate "Mailbox Test Client"
- 	depends on OF
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 92435ef..565adda 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -17,3 +17,5 @@ obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
- obj-$(CONFIG_BCM2835_MBOX)	+= bcm2835-mailbox.o
- 
- obj-$(CONFIG_STI_MBOX)		+= mailbox-sti.o
-+
-+obj-$(CONFIG_HI6220_MBOX)	+= hi6220-mailbox.o
-diff --git a/drivers/mailbox/hi6220-mailbox.c b/drivers/mailbox/hi6220-mailbox.c
-new file mode 100644
-index 0000000..42db915
---- /dev/null
-+++ b/drivers/mailbox/hi6220-mailbox.c
-@@ -0,0 +1,407 @@
-+/*
-+ * Hisilicon's Hi6220 mailbox driver
-+ *
-+ * Copyright (c) 2015 Hisilicon Limited.
-+ * Copyright (c) 2015 Linaro Limited.
-+ *
-+ * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation, version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kfifo.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define MBOX_CHAN_MAX			32
-+
-+#define MBOX_RX				0x0
-+#define MBOX_TX				0x1
-+
-+/* Mailbox message length: 8 words */
-+#define MBOX_MSG_LEN			8
-+
-+/* Mailbox Registers */
-+#define MBOX_OFF(m)			(0x40 * (m))
-+#define MBOX_MODE_REG(m)		(MBOX_OFF(m) + 0x0)
-+#define MBOX_DATA_REG(m)		(MBOX_OFF(m) + 0x4)
-+
-+#define MBOX_STATE_MASK			(0xF << 4)
-+#define MBOX_STATE_IDLE			(0x1 << 4)
-+#define MBOX_STATE_TX			(0x2 << 4)
-+#define MBOX_STATE_RX			(0x4 << 4)
-+#define MBOX_STATE_ACK			(0x8 << 4)
-+#define MBOX_ACK_CONFIG_MASK		(0x1 << 0)
-+#define MBOX_ACK_AUTOMATIC		(0x1 << 0)
-+#define MBOX_ACK_IRQ			(0x0 << 0)
-+
-+/* IPC registers */
-+#define ACK_INT_RAW_REG(i)		((i) + 0x400)
-+#define ACK_INT_MSK_REG(i)		((i) + 0x404)
-+#define ACK_INT_STAT_REG(i)		((i) + 0x408)
-+#define ACK_INT_CLR_REG(i)		((i) + 0x40c)
-+#define ACK_INT_ENA_REG(i)		((i) + 0x500)
-+#define ACK_INT_DIS_REG(i)		((i) + 0x504)
-+#define DST_INT_RAW_REG(i)		((i) + 0x420)
-+
-+
-+struct hi6220_mbox_chan {
-+
-+	/*
-+	 * Description for channel's hardware info:
-+	 *  - direction: tx or rx
-+	 *  - dst irq: peer core's irq number
-+	 *  - ack irq: local irq number
-+	 *  - slot number
-+	 */
-+	unsigned int dir, dst_irq, ack_irq;
-+	unsigned int slot;
-+
-+	struct hi6220_mbox *parent;
-+};
-+
-+struct hi6220_mbox {
-+	struct device *dev;
-+
-+	int irq;
-+
-+	/* flag of enabling tx's irq mode */
-+	bool tx_irq_mode;
-+
-+	/* region for ipc event */
-+	void __iomem *ipc;
-+
-+	/* region for mailbox */
-+	void __iomem *base;
-+
-+	unsigned int chan_num;
-+	struct hi6220_mbox_chan *mchan;
-+
-+	void *irq_map_chan[MBOX_CHAN_MAX];
-+	struct mbox_chan *chan;
-+	struct mbox_controller controller;
-+};
-+
-+static void mbox_set_state(struct hi6220_mbox *mbox,
-+			   unsigned int slot, u32 val)
-+{
-+	u32 status;
-+
-+	status = readl(mbox->base + MBOX_MODE_REG(slot));
-+	status = (status & ~MBOX_STATE_MASK) | val;
-+	writel(status, mbox->base + MBOX_MODE_REG(slot));
-+}
-+
-+static void mbox_set_mode(struct hi6220_mbox *mbox,
-+			  unsigned int slot, u32 val)
-+{
-+	u32 mode;
-+
-+	mode = readl(mbox->base + MBOX_MODE_REG(slot));
-+	mode = (mode & ~MBOX_ACK_CONFIG_MASK) | val;
-+	writel(mode, mbox->base + MBOX_MODE_REG(slot));
-+}
-+
-+static bool hi6220_mbox_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct hi6220_mbox_chan *mchan = chan->con_priv;
-+	struct hi6220_mbox *mbox = mchan->parent;
-+	u32 state;
-+
-+	/* Only set idle state for polling mode */
-+	BUG_ON(mbox->tx_irq_mode);
-+
-+	state = readl(mbox->base + MBOX_MODE_REG(mchan->slot));
-+	return ((state & MBOX_STATE_MASK) == MBOX_STATE_IDLE);
-+}
-+
-+static int hi6220_mbox_send_data(struct mbox_chan *chan, void *msg)
-+{
-+	struct hi6220_mbox_chan *mchan = chan->con_priv;
-+	struct hi6220_mbox *mbox = mchan->parent;
-+	unsigned int slot = mchan->slot;
-+	u32 *buf = msg;
-+	int i;
-+
-+	mbox_set_state(mbox, slot, MBOX_STATE_TX);
-+
-+	if (mbox->tx_irq_mode)
-+		mbox_set_mode(mbox, slot, MBOX_ACK_IRQ);
-+	else
-+		mbox_set_mode(mbox, slot, MBOX_ACK_AUTOMATIC);
-+
-+	for (i = 0; i < MBOX_MSG_LEN; i++)
-+		writel(buf[i], mbox->base + MBOX_DATA_REG(slot) + i * 4);
-+
-+	/* trigger remote request */
-+	writel(BIT(mchan->dst_irq), DST_INT_RAW_REG(mbox->ipc));
-+	return 0;
-+}
-+
-+static irqreturn_t hi6220_mbox_interrupt(int irq, void *p)
-+{
-+	struct hi6220_mbox *mbox = p;
-+	struct hi6220_mbox_chan *mchan;
-+	struct mbox_chan *chan;
-+	unsigned int state, intr_bit, i;
-+	u32 msg[MBOX_MSG_LEN];
-+
-+	state = readl(ACK_INT_STAT_REG(mbox->ipc));
-+	if (!state) {
-+		dev_warn(mbox->dev, "%s: spurious interrupt\n",
-+			 __func__);
-+		return IRQ_HANDLED;
-+	}
-+
-+	while (state) {
-+		intr_bit = __ffs(state);
-+		state &= (state - 1);
-+
-+		chan = mbox->irq_map_chan[intr_bit];
-+		if (!chan) {
-+			dev_warn(mbox->dev, "%s: unexpected irq vector %d\n",
-+				 __func__, intr_bit);
-+			continue;
-+		}
-+
-+		mchan = chan->con_priv;
-+		if (mchan->dir == MBOX_TX)
-+			mbox_chan_txdone(chan, 0);
-+		else {
-+			for (i = 0; i < MBOX_MSG_LEN; i++)
-+				msg[i] = readl(mbox->base +
-+					MBOX_DATA_REG(mchan->slot) + i * 4);
-+
-+			mbox_chan_received_data(chan, (void *)msg);
-+		}
-+
-+		/* clear IRQ source */
-+		writel(BIT(mchan->ack_irq), ACK_INT_CLR_REG(mbox->ipc));
-+		mbox_set_state(mbox, mchan->slot, MBOX_STATE_IDLE);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int hi6220_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct hi6220_mbox_chan *mchan = chan->con_priv;
-+	struct hi6220_mbox *mbox = mchan->parent;
-+
-+	mbox->irq_map_chan[mchan->ack_irq] = (void *)chan;
-+
-+	/* enable interrupt */
-+	writel(BIT(mchan->ack_irq), ACK_INT_ENA_REG(mbox->ipc));
-+	return 0;
-+}
-+
-+static void hi6220_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct hi6220_mbox_chan *mchan = chan->con_priv;
-+	struct hi6220_mbox *mbox = mchan->parent;
-+
-+	/* disable interrupt */
-+	writel(BIT(mchan->ack_irq), ACK_INT_DIS_REG(mbox->ipc));
-+	mbox->irq_map_chan[mchan->ack_irq] = NULL;
-+}
-+
-+static struct mbox_chan_ops hi6220_mbox_chan_ops = {
-+	.send_data    = hi6220_mbox_send_data,
-+	.startup      = hi6220_mbox_startup,
-+	.shutdown     = hi6220_mbox_shutdown,
-+	.last_tx_done = hi6220_mbox_last_tx_done,
-+};
-+
-+static int hi6220_mbox_init_hw(struct hi6220_mbox *mbox,
-+			       struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *child;
-+	struct hi6220_mbox_chan *mchan = mbox->mchan;
-+	u32 count;
-+	u32 tmp[3];
-+	int idx, i;
-+	int ret;
-+
-+	for (i = 0; i < mbox->chan_num; i++) {
-+		mbox->chan[i].con_priv = &mchan[i];
-+		mbox->irq_map_chan[i] = NULL;
-+
-+		mchan[i].parent = mbox;
-+		mchan[i].slot   = i;
-+	}
-+
-+	count = of_get_available_child_count(node);
-+	if (!count) {
-+		dev_err(&pdev->dev, "no available mbox devices found\n");
-+		return -ENODEV;
-+	}
-+
-+	child = NULL;
-+	for (i = 0; i < count; i++) {
-+		child = of_get_next_available_child(node, child);
-+		ret = of_property_read_u32_array(child, "hi6220,mbox-tx",
-+						 tmp, ARRAY_SIZE(tmp));
-+		if (!ret) {
-+			idx = tmp[0];
-+			mchan[idx].dir     = MBOX_TX,
-+			mchan[idx].dst_irq = tmp[1];
-+			mchan[idx].ack_irq = tmp[2];
-+		}
-+
-+		ret = of_property_read_u32_array(child, "hi6220,mbox-rx",
-+						 tmp, ARRAY_SIZE(tmp));
-+		if (!ret) {
-+			idx = tmp[0];
-+			mchan[idx].dir     = MBOX_RX,
-+			mchan[idx].dst_irq = tmp[1];
-+			mchan[idx].ack_irq = tmp[2];
-+		}
-+	}
-+
-+	/* mask and clear all interrupt vectors */
-+	writel(0x0,  ACK_INT_MSK_REG(mbox->ipc));
-+	writel(~0x0, ACK_INT_CLR_REG(mbox->ipc));
-+
-+	/* use interrupt for tx's ack */
-+	if (of_find_property(node, "hi6220,mbox-tx-noirq", NULL))
-+		mbox->tx_irq_mode = false;
-+	else
-+		mbox->tx_irq_mode = true;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id hi6220_mbox_of_match[] = {
-+	{ .compatible = "hisilicon,hi6220-mbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hi6220_mbox_of_match);
-+
-+static int hi6220_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct hi6220_mbox *mbox;
-+	struct resource *res;
-+	int err;
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->dev = dev;
-+	mbox->chan_num = MBOX_CHAN_MAX;
-+	mbox->mchan = devm_kzalloc(dev,
-+		mbox->chan_num * sizeof(*mbox->mchan), GFP_KERNEL);
-+	if (!mbox->mchan)
-+		return -ENOMEM;
-+
-+	mbox->chan = devm_kzalloc(dev,
-+		mbox->chan_num * sizeof(*mbox->chan), GFP_KERNEL);
-+	if (!mbox->chan)
-+		return -ENOMEM;
-+
-+	mbox->irq = platform_get_irq(pdev, 0);
-+	if (mbox->irq < 0)
-+		return mbox->irq;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mbox->ipc = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(mbox->ipc)) {
-+		dev_err(dev, "ioremap ipc failed\n");
-+		return PTR_ERR(mbox->ipc);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	mbox->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(mbox->base)) {
-+		dev_err(dev, "ioremap buffer failed\n");
-+		return PTR_ERR(mbox->base);
-+	}
-+
-+	err = devm_request_irq(dev, mbox->irq, hi6220_mbox_interrupt, 0,
-+			dev_name(dev), mbox);
-+	if (err) {
-+		dev_err(dev, "Failed to register a mailbox IRQ handler: %d\n",
-+			err);
-+		return -ENODEV;
-+	}
-+
-+	/* init hardware parameters */
-+	err = hi6220_mbox_init_hw(mbox, pdev);
-+	if (err) {
-+		dev_err(dev, "Failed to init mbox hardware channels: %d\n",
-+			err);
-+		return -ENODEV;
-+	}
-+
-+	mbox->controller.dev = dev;
-+	mbox->controller.chans = &mbox->chan[0];
-+	mbox->controller.num_chans = mbox->chan_num;
-+	mbox->controller.ops = &hi6220_mbox_chan_ops;
-+
-+	if (mbox->tx_irq_mode)
-+		mbox->controller.txdone_irq = true;
-+	else {
-+		mbox->controller.txdone_poll = true;
-+		mbox->controller.txpoll_period = 5;
-+	}
-+
-+	err = mbox_controller_register(&mbox->controller);
-+	if (err) {
-+		dev_err(dev, "Failed to register mailbox %d\n", err);
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, mbox);
-+	dev_info(dev, "Mailbox enabled\n");
-+	return 0;
-+}
-+
-+static int hi6220_mbox_remove(struct platform_device *pdev)
-+{
-+	struct hi6220_mbox *mbox = platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(&mbox->controller);
-+	return 0;
-+}
-+
-+static struct platform_driver hi6220_mbox_driver = {
-+	.driver = {
-+		.name = "hi6220-mbox",
-+		.owner = THIS_MODULE,
-+		.of_match_table = hi6220_mbox_of_match,
-+	},
-+	.probe	= hi6220_mbox_probe,
-+	.remove	= hi6220_mbox_remove,
-+};
-+
-+static int __init hi6220_mbox_init(void)
-+{
-+	return platform_driver_register(&hi6220_mbox_driver);
-+}
-+core_initcall(hi6220_mbox_init);
-+
-+static void __exit hi6220_mbox_exit(void)
-+{
-+	platform_driver_unregister(&hi6220_mbox_driver);
-+}
-+module_exit(hi6220_mbox_exit);
-+
-+MODULE_AUTHOR("Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_DESCRIPTION("Hi6220 mailbox driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+>>  }
+>>  EXPORT_SYMBOL(tegra_io_rail_power_on);
+>>
+>> @@ -550,10 +563,12 @@ int tegra_io_rail_power_off(int id)
+>>         unsigned int bit, mask;
+>>         int err;
+>>
+>> +       mutex_lock(&pmc->powergates_lock);
+>> +
+>>         err = tegra_io_rail_prepare(id, &request, &status, &bit);
+>>         if (err < 0) {
+>>                 pr_info("tegra_io_rail_prepare() failed: %d\n", err);
+>> -               return err;
+>> +               goto error;
+>>         }
+>>
+>>         mask = 1 << bit;
+>> @@ -566,11 +581,14 @@ int tegra_io_rail_power_off(int id)
+>>
+>>         err = tegra_io_rail_poll(status, mask, mask, 250);
+>>         if (err < 0)
+>> -               return err;
+>> +               goto error;
+>>
+>>         tegra_io_rail_unprepare();
+>>
+>> -       return 0;
+>> +error:
+>> +       mutex_unlock(&pmc->powergates_lock);
+>> +
+>> +       return err < 0 ? err : 0;
+> 
+> Same comment as above.
+> 
+>>  }
+>>  EXPORT_SYMBOL(tegra_io_rail_power_off);
+>>
+>> @@ -817,9 +835,15 @@ static int tegra_pmc_probe(struct platform_device *pdev)
+>>
+>>         /* take over the memory region from the early initialization */
+>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +
+>> +       mutex_lock(&pmc->powergates_lock);
+>>         pmc->base = devm_ioremap_resource(&pdev->dev, res);
+>> -       if (IS_ERR(pmc->base))
+>> -               return PTR_ERR(pmc->base);
+>> +       mutex_unlock(&pmc->powergates_lock);
+> 
+> Since the mutex is released there is a window of opportunity for
+> devices to access an erroneous pointer.  A better approach might be to
+> use a temporary variable, do all the initialisation that is required
+> and when things look good set pmc-base to that temporary variable.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks. Not sure what I was thinking here. I will fix that.
+
+Cheers
+Jon
