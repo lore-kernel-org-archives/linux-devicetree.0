@@ -1,117 +1,180 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: ARM: Mediatek: Document bindings for
- MT2701
-Date: Mon, 1 Feb 2016 19:01:18 +0100
-Message-ID: <56AF9D6E.80305@gmail.com>
-References: <1453271747-57397-1-git-send-email-jamesjj.liao@mediatek.com>
- <1453271747-57397-3-git-send-email-jamesjj.liao@mediatek.com>
- <20160120163236.GA21035@rob-hp-laptop> <1453353537.5384.33.camel@mtksdaap41>
- <CAL_JsqLJVLDbPqynmD9-Yc=JVGH4iLPfb2keA5G7c2fjitAsSQ@mail.gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v3 06/14] MIPS: dts: qca: ar9132: use short references for
+ uart and spi nodes
+Date: Mon, 1 Feb 2016 21:41:54 +0300
+Message-ID: <20160201214154.d4242555ea8e9f5da6a7abfa@gmail.com>
+References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
+	<1453580251-2341-7-git-send-email-antonynpavlov@gmail.com>
+	<20160125233148.4951e311@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLJVLDbPqynmD9-Yc=JVGH4iLPfb2keA5G7c2fjitAsSQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Crispin <blogic@openwrt.org>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160125233148.4951e311@tock>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 25 Jan 2016 23:31:48 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+
+> On Sat, 23 Jan 2016 23:17:23 +0300
+> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> I personally prefer the version without aliases :) Is there any
+> guidelines on this?
+
+Here are some Sascha Hauer's arguments for using aliases in the dts fil=
+es:
+
+ - Using aliases reduces the number of indentations in dts files;
+
+ - dts files become independent of the layout of the dtsi files (it
+   becomes possible to introduce another bus {} hierarchy between a
+   toplevel bus and the devices when you have to);
+
+ - less chances for typos. if &i2c2 does not exist you get an error. If
+   instead you duplicate the whole path in the dts file a typo in the
+   path will just create another node.
+
+And here is a Marek Vasut's additional argument:
+
+ - Aliases allow you to introduce some sort of ordering. For example if=
+ you have
+   gmac0 and gmac1 and you want to have them ordered correctly, you use=
+ aliases.
+   (in case we're talking about the /aliases node).
 
 
-On 01/02/16 16:55, Rob Herring wrote:
-> On Wed, Jan 20, 2016 at 11:18 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
->> Hi Rob,
->>
->> On Wed, 2016-01-20 at 10:32 -0600, Rob Herring wrote:
->>> On Wed, Jan 20, 2016 at 02:35:43PM +0800, James Liao wrote:
->>>> This patch adds the binding documentation for apmixedsys, bdpsys,
->>>> ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
->>>> vdecsys for Mediatek MT2701.
->>>>
->>>> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
->>>> Tested-by: John Crispin <blogic@openwrt.org>
->>>> ---
->>>>   .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++++
->>>>   .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++++
->>>>   .../bindings/arm/mediatek/mediatek,hifsys.txt      | 22 ++++++++++++++++++++++
->>>>   .../bindings/arm/mediatek/mediatek,imgsys.txt      |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,mmsys.txt       |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,pericfg.txt     |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
->>>>   .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  1 +
->>>>   10 files changed, 73 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->>>>   create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
->>>>   create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->>>> index 936166f..a701e19 100644
->>>> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->>>> @@ -6,6 +6,7 @@ The Mediatek apmixedsys controller provides the PLLs to the system.
->>>>   Required Properties:
->>>>
->>>>   - compatible: Should be:
->>>> +   - "mediatek,mt2701-apmixedsys"
->>>>      - "mediatek,mt8135-apmixedsys"
->>>>      - "mediatek,mt8173-apmixedsys"
->>>>   - #clock-cells: Must be 1
->>>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->>>> new file mode 100644
->>>> index 0000000..4137196
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->>>> @@ -0,0 +1,22 @@
->>>> +Mediatek bdpsys controller
->>>> +============================
->>>> +
->>>> +The Mediatek bdpsys controller provides various clocks to the system.
->>>
->>> As you clarified these blocks provide more that just clocks. Please list
->>> all the functions here and on the others.
->>
->> Some blocks may provide clock and reset controller at the same time. But
->
-> Then say the block provides clocks and resets is all I'm asking for.
->
->> most of them will not provide functions directly. Instead, some DT
->> blocks which provide specific functions may refer to these controller
->> nodes due to it need to access the same register space.
->>
->> For example, scpsys (the power domain provider) refers to infracfg
->> because it need to control infracfg registers when power on/off domains:
->>
->>          scpsys: scpsys@10006000 {
->>                  compatible = "mediatek,mt2701-scpsys";
->>                  #power-domain-cells = <1>;
->>                  reg = <0 0x10006000 0 0x1000>;
->>                  infracfg = <&infracfg>;
->>          };
->>
->> So I think it should not need to list all functions for each blocks
->> here.
->
-> Sorry, but you do need to describe what functions the blocks provide.
->
-> Also, if you are accessing the infracfg regs directly to modify clock
-> registers outside of the clock driver, that is very bad design. The
-> clock driver could assume that register values are not changing behind
-> its back and it bypasses any locks around register accesses. I can see
-> why it is needed though, but we really need a proper interface.
->
+> > Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> > Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  arch/mips/boot/dts/qca/ar9132.dtsi               |  4 +-
+> >  arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 70 +++++++++++-=
+------------
+> >  2 files changed, 35 insertions(+), 39 deletions(-)
+> >=20
+> > diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dt=
+s/qca/ar9132.dtsi
+> > index cd1602f..a14f6f2 100644
+> > --- a/arch/mips/boot/dts/qca/ar9132.dtsi
+> > +++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+> > @@ -61,7 +61,7 @@
+> >  				#qca,ddr-wb-channel-cells =3D <1>;
+> >  			};
+> > =20
+> > -			uart@18020000 {
+> > +			uart: uart@18020000 {
+> >  				compatible =3D "ns8250";
+> >  				reg =3D <0x18020000 0x20>;
+> >  				interrupts =3D <3>;
+> > @@ -134,7 +134,7 @@
+> >  			};
+> >  		};
+> > =20
+> > -		spi@1f000000 {
+> > +		spi: spi@1f000000 {
+> >  			compatible =3D "qca,ar9132-spi", "qca,ar7100-spi";
+> >  			reg =3D <0x1f000000 0x10>;
+> > =20
+> > diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arc=
+h/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> > index 9618105..f22c22c 100644
+> > --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> > +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+> > @@ -14,43 +14,6 @@
+> >  		reg =3D <0x0 0x2000000>;
+> >  	};
+> > =20
+> > -	ahb {
+> > -		apb {
+> > -			uart@18020000 {
+> > -				status =3D "okay";
+> > -			};
+> > -		};
+> > -
+> > -		spi@1f000000 {
+> > -			status =3D "okay";
+> > -			num-cs =3D <1>;
+> > -
+> > -			flash@0 {
+> > -				#address-cells =3D <1>;
+> > -				#size-cells =3D <1>;
+> > -				compatible =3D "s25sl064a";
+> > -				reg =3D <0>;
+> > -				spi-max-frequency =3D <25000000>;
+> > -
+> > -				partition@0 {
+> > -					label =3D "u-boot";
+> > -					reg =3D <0x000000 0x020000>;
+> > -				};
+> > -
+> > -				partition@1 {
+> > -					label =3D "firmware";
+> > -					reg =3D <0x020000 0x7D0000>;
+> > -				};
+> > -
+> > -				partition@2 {
+> > -					label =3D "art";
+> > -					reg =3D <0x7F0000 0x010000>;
+> > -					read-only;
+> > -				};
+> > -			};
+> > -		};
+> > -	};
+> > -
+> >  	gpio-keys {
+> >  		compatible =3D "gpio-keys-polled";
+> >  		#address-cells =3D <1>;
+> > @@ -100,3 +63,36 @@
+> >  &extosc {
+> >  	clock-frequency =3D <40000000>;
+> >  };
+> > +
+> > +&uart {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&spi {
+> > +	status =3D "okay";
+> > +	num-cs =3D <1>;
+> > +
+> > +	flash@0 {
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <1>;
+> > +		compatible =3D "s25sl064a";
+> > +		reg =3D <0>;
+> > +		spi-max-frequency =3D <25000000>;
+> > +
+> > +		partition@0 {
+> > +			label =3D "u-boot";
+> > +			reg =3D <0x000000 0x020000>;
+> > +		};
+> > +
+> > +		partition@1 {
+> > +			label =3D "firmware";
+> > +			reg =3D <0x020000 0x7D0000>;
+> > +		};
+> > +
+> > +		partition@2 {
+> > +			label =3D "art";
+> > +			reg =3D <0x7F0000 0x010000>;
+> > +			read-only;
+> > +		};
+> > +	};
+> > +};
+>=20
 
-Some of the register blocks like infracfg is a potpourri of different 
-functions. Clocks and power domains are some of them. In the drivers 
-this is isolated, but there are many blocks which are not used at the 
-moment and therefor are not documented in bindings description (e.g. 
-debug control for the very same block, not sure if that will be 
-implemented one day).
 
-Would it be ok for you, if James just lists the blocks which already 
-have an implementation and leaving apart the rest of it?
-
-Regards,
-Matthias
+--=20
+--=A0
+Best regards,
+=A0 Antony Pavlov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
