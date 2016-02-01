@@ -1,161 +1,237 @@
-From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v6 1/2] dt/bindings: Add bindings for PIC32 pin control and GPIO
-Date: Mon, 1 Feb 2016 15:48:29 -0700
-Message-ID: <1454366916-10925-1-git-send-email-joshua.henderson@microchip.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 05/11] drivers: pinctrl: add driver for
+ Allwinner A64 SoC
+Date: Mon, 1 Feb 2016 22:49:16 +0000
+Message-ID: <56AFE0EC.8080207@arm.com>
+References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
+ <20160201182754.GA14737@excalibur.cnev.de>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB4OCX62QKGQEZM2GRFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160201182754.GA14737-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for PINCTRL and GPIO found on Microchip
-PIC32 class devices.
+On 01/02/16 18:27, Karsten Merker wrote:
 
-Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes since v5: None
-Changes since v4: None
-Changes since v3: None
-Changes since v2: None
-Changes since v1:
-	- Complete bindings API change to use standard bindings
----
- .../bindings/gpio/microchip,pic32-gpio.txt         |   49 ++++++++++++++++
- .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 ++++++++++++++++++++
- 2 files changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+Hi Karsten,
 
-diff --git a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-new file mode 100644
-index 0000000..ef37528
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-@@ -0,0 +1,49 @@
-+* Microchip PIC32 GPIO devices (PIO).
-+
-+Required properties:
-+ - compatible: "microchip,pic32mzda-gpio"
-+ - reg: Base address and length for the device.
-+ - interrupts: The port interrupt shared by all pins.
-+ - gpio-controller: Marks the port as GPIO controller.
-+ - #gpio-cells: Two. The first cell is the pin number and
-+   the second cell is used to specify the gpio polarity as defined in
-+   defined in <dt-bindings/gpio/gpio.h>:
-+      0 = GPIO_ACTIVE_HIGH
-+      1 = GPIO_ACTIVE_LOW
-+      2 = GPIO_OPEN_DRAIN
-+ - interrupt-controller: Marks the device node as an interrupt controller.
-+ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-+   is used to specify the trigger type as defined in
-+   <dt-bindings/interrupt-controller/irq.h>:
-+      IRQ_TYPE_EDGE_RISING
-+      IRQ_TYPE_EDGE_FALLING
-+      IRQ_TYPE_EDGE_BOTH
-+ - clocks: Clock specifier (see clock bindings for details).
-+ - microchip,gpio-bank: Specifies which bank a controller owns.
-+ - gpio-ranges: Interaction with the PINCTRL subsystem.
-+
-+Example:
-+
-+/* PORTA */
-+gpio0: gpio0@1f860000 {
-+	compatible = "microchip,pic32mzda-gpio";
-+	reg = <0x1f860000 0x100>;
-+	interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	clocks = <&PBCLK4>;
-+	microchip,gpio-bank = <0>;
-+	gpio-ranges = <&pic32_pinctrl 0 0 16>;
-+};
-+
-+keys {
-+	...
-+
-+	button@sw1 {
-+		label = "ESC";
-+		linux,code = <1>;
-+		gpios = <&gpio0 12 0>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
-new file mode 100644
-index 0000000..4b5efa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
-@@ -0,0 +1,60 @@
-+* Microchip PIC32 Pin Controller
-+
-+Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-+../interrupt-controller/interrupts.txt for generic information regarding
-+pin controller, GPIO, and interrupt bindings.
-+
-+PIC32 'pin configuration node' is a node of a group of pins which can be
-+used for a specific device or function. This node represents configuraions of
-+pins, optional function, and optional mux related configuration.
-+
-+Required properties for pin controller node:
-+ - compatible: "microchip,pic32mada-pinctrl"
-+ - reg: Address range of the pinctrl registers.
-+ - clocks: Clock specifier (see clock bindings for details)
-+
-+Required properties for pin configuration sub-nodes:
-+ - pins: List of pins to which the configuration applies.
-+
-+Optional properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - function: Mux function for the specified pins.
-+ - bias-pull-up: Enable weak pull-up.
-+ - bias-pull-down: Enable weak pull-down.
-+ - input-enable: Set the pin as an input.
-+ - output-low: Set the pin as an output level low.
-+ - output-high: Set the pin as an output level high.
-+ - microchip,digital: Enable digital I/O.
-+ - microchip,analog: Enable analog I/O.
-+
-+Example:
-+
-+pic32_pinctrl: pinctrl@1f801400{
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "microchip,pic32mzda-pinctrl";
-+	reg = <0x1f801400 0x400>;
-+	clocks = <&PBCLK1>;
-+
-+	pinctrl_uart2: pinctrl_uart2 {
-+		uart2-tx {
-+			pins = "G9";
-+			function = "U2TX";
-+			microchip,digital;
-+			output-low;
-+		};
-+		uart2-rx {
-+			pins = "B0";
-+			function = "U2RX";
-+			microchip,digital;
-+			input-enable;
-+		};
-+	};
-+};
-+
-+uart2: serial@1f822200 {
-+	compatible = "microchip,pic32mzda-uart";
-+	reg = <0x1f822200 0x50>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+};
--- 
-1.7.9.5
+thank you very much for your feedback!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Mon, Feb 01, 2016 at 05:39:24PM +0000, Andre Przywara wrote:
+>> Based on the Allwinner A64 user manual and on the previous sunxi
+>> pinctrl drivers this introduces the pin multiplex assignments for
+>> the ARMv8 Allwinner A64 SoC.
+>> Port A is apparently used for the fixed function DRAM controller, so
+>> the ports start at B here (the manual mentions "n from 1 to 7", so
+>> not starting at 0).
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+>>  arch/arm64/Kconfig.platforms                       |   1 +
+>>  drivers/pinctrl/sunxi/Kconfig                      |   4 +
+>>  drivers/pinctrl/sunxi/Makefile                     |   1 +
+>>  drivers/pinctrl/sunxi/pinctrl-a64.c                | 606 +++++++++++++++++++++
+>>  5 files changed, 613 insertions(+)
+>>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-a64.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> index 9213b27..9050002 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+>> @@ -21,6 +21,7 @@ Required properties:
+>>    "allwinner,sun9i-a80-r-pinctrl"
+>>    "allwinner,sun8i-a83t-pinctrl"
+>>    "allwinner,sun8i-h3-pinctrl"
+>> +  "allwinner,a64-pinctrl"
+> 
+> Hello,
+> 
+> on all other Allwinner SoCs we use the SoC family as part of the
+> compatible, as well as in the names of the Kconfig options. To
+> keep things consistent, I would like to propose doing the same on
+> Arm64, i.e. using allwinner,sun50i-a64-pinctrl instead of
+> allwinner,a64-pinctrl.
+
+Yes, I have been told this already. However I don't like this idea so
+much, for the following reasons:
+a) It is mostly redundant. The actual SoC (marketing) name is unique,
+there is no sun6i-a20 or sun7i-a23.
+b) It is not even helpful. If I got Maxime correctly, then the newer
+sunxi generation numbers depend on the ARM _cores_ used in the SoC,
+which is frankly the least interesting part from a Linux support
+perspective. I would see some sense if it would reflect the generation
+of IP blocks used, but so it is even more confusing to see that
+sun7i-a20 and sun8i-a23 are related, but sun8i-h3 is a completely
+different beast. The Allwinner marketing name tells you that, but the
+sunxi one does not.
+c) It is very confusing for people not dealing with it everyday. Just
+because I own a BananaPi I know that the A20 is sun7i, but I am totally
+lost when it comes to all the other names. And even now it took me about
+a minute to find the appropriate Wiki page which explains part of that
+story.
+d) Most importantly ;-): It kills TAB completion, unless you know the
+sunxi number, which is mostly not true as pointed out in c)
+
+So while I see that just a<somenumber> is not really very specific, I'd
+rather do away with current naming scheme for the future. In this
+particular case we have the vendor name as a name space identifier
+already, so there is no possible confusion with ARM Cortex naming, for
+instance.
+
+Also as this is now moving into the arm64 world, I'd like to use the
+opportunity to fix things that are not really optimal, the naming is one
+of them.
+
+>>  - reg: Should contain the register physical address and length for the
+>>    pin controller.
+>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>> index fc7cf4b..03f0f9d 100644
+>> --- a/arch/arm64/Kconfig.platforms
+>> +++ b/arch/arm64/Kconfig.platforms
+>> @@ -2,6 +2,7 @@ menu "Platform selection"
+>>  
+>>  config ARCH_SUNXI
+>>  	bool "Allwinner sunxi 64-bit SoC Family"
+>> +	select PINCTRL_A64
+> 
+> Same as above, just with the name of the Kconfig option.
+> s/PINCTRL_A64/PINCTRL_SUN50I_A64/ ?
+
+I can see the reasoning behind this particular one, as A64 is not very
+specific. And indeed I had planned to replace this, but forgot it over
+merging all the stuff together. However I'd rather go with the generic
+"sunxi" as a stub name (PINCTRL_SUNXI_A64), as the "50" in there is now
+completely stupi^Wconfusing and also kills my favorite sun.i regexp ;-)
+I can see that the term "sunxi" is a shorthand for Allwinner in Linux,
+so it looks reasonable to me to use that.
+
+>>  	select SUNXI_MMC
+>>  	help
+>>  	  This enables support for Allwinner sunxi based SoCs like the A64.
+>> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+>> index f8dbc8b..68873f2 100644
+>> --- a/drivers/pinctrl/sunxi/Kconfig
+>> +++ b/drivers/pinctrl/sunxi/Kconfig
+>> @@ -64,4 +64,8 @@ config PINCTRL_SUN9I_A80_R
+>>  	depends on RESET_CONTROLLER
+>>  	select PINCTRL_SUNXI_COMMON
+>>  
+>> +config PINCTRL_A64
+> 
+> see above
+> 
+>> +	bool
+>> +	select PINCTRL_SUNXI_COMMON
+>> +
+>>  endif
+>> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+>> index ef82f22..e00ccde 100644
+>> --- a/drivers/pinctrl/sunxi/Makefile
+>> +++ b/drivers/pinctrl/sunxi/Makefile
+>> @@ -12,6 +12,7 @@ obj-$(CONFIG_PINCTRL_SUN7I_A20)		+= pinctrl-sun7i-a20.o
+>>  obj-$(CONFIG_PINCTRL_SUN8I_A23)		+= pinctrl-sun8i-a23.o
+>>  obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
+>>  obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
+>> +obj-$(CONFIG_PINCTRL_A64)		+= pinctrl-a64.o
+> 
+> see above
+
+same as above, I'd like to go with pinctrl-sunxi-a64.o.
+
+>>  obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
+>>  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
+>>  obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
+>> diff --git a/drivers/pinctrl/sunxi/pinctrl-a64.c b/drivers/pinctrl/sunxi/pinctrl-a64.c
+>> new file mode 100644
+>> index 0000000..e72b079
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/sunxi/pinctrl-a64.c
+>> @@ -0,0 +1,606 @@
+>> +/*
+>> + * Allwinner A64 SoCs pinctrl driver.
+>> + *
+>> + * Copyright (C) 2016 - ARM Ltd.
+>> + * Author: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> + *
+>> + * Based on pinctrl-sun7i-a20.c, which is:
+>> + * Copyright (C) 2014 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/pinctrl/pinctrl.h>
+>> +
+>> +#include "pinctrl-sunxi.h"
+>> +
+>> +static const struct sunxi_desc_pin a64_pins[] = {
+>> +	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
+>> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+
+....
+
+>> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 11)),	/* EINT11 */
+>> +};
+>> +
+>> +static const struct sunxi_pinctrl_desc a64_pinctrl_data = {
+>> +	.pins = a64_pins,
+>> +	.npins = ARRAY_SIZE(a64_pins),
+>> +	.irq_banks = 3,
+>> +};
+>> +
+>> +static int a64_pinctrl_probe(struct platform_device *pdev)
+>> +{
+>> +	return sunxi_pinctrl_init(pdev,
+>> +				  &a64_pinctrl_data);
+>> +}
+>> +
+>> +static const struct of_device_id a64_pinctrl_match[] = {
+>> +	{ .compatible = "allwinner,a64-pinctrl", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, a64_pinctrl_match);
+>> +
+>> +static struct platform_driver a64_pinctrl_driver = {
+>> +	.probe	= a64_pinctrl_probe,
+>> +	.driver	= {
+>> +		.name		= "a64-pinctrl",
+>> +		.of_match_table	= a64_pinctrl_match,
+>> +	},
+>> +};
+>> +module_platform_driver(a64_pinctrl_driver);
+>> +
+>> +MODULE_AUTHOR("Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>");
+>> +MODULE_DESCRIPTION("Allwinner A64 pinctrl driver");
+>> +MODULE_LICENSE("GPL");
+> 
+> For the above function names one could also think about using the
+> existing naming scheme including the SoC family as we do in the
+> other sunxi pinctrl drivers, but as they are only internal to the
+> driver, that would really just be a matter of cosmetics :-).
+
+Indeed ;-) And it is more to type and may potentially break 80 character
+lines, so if you don't mind, I keep it that way (or could add a "sunxi_"
+if that is really asked for).
+
+Thanks for looking at this and your input!
+
+Cheers,
+Andre.
