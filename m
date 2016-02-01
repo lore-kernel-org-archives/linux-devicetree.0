@@ -1,102 +1,114 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: ARM: Mediatek: Document bindings for MT2701
-Date: Mon, 1 Feb 2016 09:55:53 -0600
-Message-ID: <CAL_JsqLJVLDbPqynmD9-Yc=JVGH4iLPfb2keA5G7c2fjitAsSQ@mail.gmail.com>
-References: <1453271747-57397-1-git-send-email-jamesjj.liao@mediatek.com>
- <1453271747-57397-3-git-send-email-jamesjj.liao@mediatek.com>
- <20160120163236.GA21035@rob-hp-laptop> <1453353537.5384.33.camel@mtksdaap41>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] rtc: add rtc-asm9260 driver
+Date: Mon, 1 Feb 2016 17:05:10 +0100
+Message-ID: <20160201160510.GS20165@piout.net>
+References: <1454056802-23386-1-git-send-email-linux@rempel-privat.de>
+ <1454056802-23386-2-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453353537.5384.33.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <1454056802-23386-2-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 11:18 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Wed, 2016-01-20 at 10:32 -0600, Rob Herring wrote:
->> On Wed, Jan 20, 2016 at 02:35:43PM +0800, James Liao wrote:
->> > This patch adds the binding documentation for apmixedsys, bdpsys,
->> > ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
->> > vdecsys for Mediatek MT2701.
->> >
->> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
->> > ---
->> >  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
->> >  .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++++
->> >  .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++++
->> >  .../bindings/arm/mediatek/mediatek,hifsys.txt      | 22 ++++++++++++++++++++++
->> >  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  1 +
->> >  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
->> >  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  1 +
->> >  .../bindings/arm/mediatek/mediatek,pericfg.txt     |  1 +
->> >  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
->> >  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  1 +
->> >  10 files changed, 73 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
->> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->> > index 936166f..a701e19 100644
->> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
->> > @@ -6,6 +6,7 @@ The Mediatek apmixedsys controller provides the PLLs to the system.
->> >  Required Properties:
->> >
->> >  - compatible: Should be:
->> > +   - "mediatek,mt2701-apmixedsys"
->> >     - "mediatek,mt8135-apmixedsys"
->> >     - "mediatek,mt8173-apmixedsys"
->> >  - #clock-cells: Must be 1
->> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->> > new file mode 100644
->> > index 0000000..4137196
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->> > @@ -0,0 +1,22 @@
->> > +Mediatek bdpsys controller
->> > +============================
->> > +
->> > +The Mediatek bdpsys controller provides various clocks to the system.
->>
->> As you clarified these blocks provide more that just clocks. Please list
->> all the functions here and on the others.
->
-> Some blocks may provide clock and reset controller at the same time. But
+On 29/01/2016 at 09:40:01 +0100, Oleksij Rempel wrote :
+> +static irqreturn_t asm9260_rtc_irq(int irq, void *dev_id)
+> +{
+> +	struct asm9260_rtc_priv *priv = dev_id;
+> +	u32 isr;
+> +	unsigned long events = 0;
+> +
+> +	isr = ioread32(priv->iobase + HW_CIIR);
+> +	if (!isr)
+> +		return IRQ_NONE;
+> +
+> +	iowrite32(0, priv->iobase + HW_CIIR);
+> +
+> +	events |= RTC_AF | RTC_IRQF;
+> +
+> +	rtc_update_irq(priv->rtc, 1, events);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int asm9260_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
+> +	u32 ctime0, ctime1, ctime2;
+> +	unsigned long irq_flags;
+> +
 
-Then say the block provides clocks and resets is all I'm asking for.
+It would be nice to actually use BM_RTC_OSCF and return -EINVAL if it is
+set.
 
-> most of them will not provide functions directly. Instead, some DT
-> blocks which provide specific functions may refer to these controller
-> nodes due to it need to access the same register space.
->
-> For example, scpsys (the power domain provider) refers to infracfg
-> because it need to control infracfg registers when power on/off domains:
->
->         scpsys: scpsys@10006000 {
->                 compatible = "mediatek,mt2701-scpsys";
->                 #power-domain-cells = <1>;
->                 reg = <0 0x10006000 0 0x1000>;
->                 infracfg = <&infracfg>;
->         };
->
-> So I think it should not need to list all functions for each blocks
-> here.
+> +	spin_lock_irqsave(&priv->lock, irq_flags);
+> +	ctime0 = ioread32(priv->iobase + HW_CTIME0);
+> +	ctime1 = ioread32(priv->iobase + HW_CTIME1);
+> +	ctime2 = ioread32(priv->iobase + HW_CTIME2);
+> +
+> +	if (ctime1 != ioread32(priv->iobase + HW_CTIME1)) {
+> +		/*
+> +		 * woops, counter flipped right now. Now we are safe
+> +		 * to reread.
+> +		 */
+> +		ctime0 = ioread32(priv->iobase + HW_CTIME0);
+> +		ctime1 = ioread32(priv->iobase + HW_CTIME1);
+> +		ctime2 = ioread32(priv->iobase + HW_CTIME2);
+> +	}
+> +	spin_unlock_irqrestore(&priv->lock, irq_flags);
+> +
+> +	tm->tm_sec  = (ctime0 >> BM_CTIME0_SEC_S)  & BM_CTIME0_SEC_M;
+> +	tm->tm_min  = (ctime0 >> BM_CTIME0_MIN_S)  & BM_CTIME0_MIN_M;
+> +	tm->tm_hour = (ctime0 >> BM_CTIME0_HOUR_S) & BM_CTIME0_HOUR_M;
+> +	tm->tm_wday = (ctime0 >> BM_CTIME0_DOW_S)  & BM_CTIME0_DOW_M;
+> +
+> +	tm->tm_mday = (ctime1 >> BM_CTIME1_DOM_S)  & BM_CTIME1_DOM_M;
+> +	tm->tm_mon  = (ctime1 >> BM_CTIME1_MON_S)  & BM_CTIME1_MON_M;
+> +	tm->tm_year = (ctime1 >> BM_CTIME1_YEAR_S) & BM_CTIME1_YEAR_M;
+> +
+> +	tm->tm_yday = (ctime2 >> BM_CTIME2_DOY_S)  & BM_CTIME2_DOY_M;
+> +
+> +	return 0;
+> +}
+> +
+> +static int asm9260_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
+> +	unsigned long irq_flags;
+> +
+> +	spin_lock_irqsave(&priv->lock, irq_flags);
+> +	/*
+> +	 * make sure SEC counter will not flip other counter on write time,
+> +	 * real value will be written at the enf of sequence.
+> +	 */
+> +	iowrite32(0, priv->iobase + HW_SEC);
+> +
+> +	iowrite32(tm->tm_year, priv->iobase + HW_YEAR);
+> +	iowrite32(tm->tm_mon,  priv->iobase + HW_MONTH);
+> +	iowrite32(tm->tm_mday, priv->iobase + HW_DOM);
+> +	iowrite32(tm->tm_wday, priv->iobase + HW_DOW);
+> +	iowrite32(tm->tm_yday, priv->iobase + HW_DOY);
+> +	iowrite32(tm->tm_hour, priv->iobase + HW_HOUR);
+> +	iowrite32(tm->tm_min,  priv->iobase + HW_MIN);
+> +	iowrite32(tm->tm_sec,  priv->iobase + HW_SEC);
 
-Sorry, but you do need to describe what functions the blocks provide.
+That would be a good time to reset BM_RTC_OSCF. Maybe it can also be
+useful to enable the interrupt but there isn't much more to do than
+print an error message.
 
-Also, if you are accessing the infracfg regs directly to modify clock
-registers outside of the clock driver, that is very bad design. The
-clock driver could assume that register values are not changing behind
-its back and it bypasses any locks around register accesses. I can see
-why it is needed though, but we really need a proper interface.
+> +	spin_unlock_irqrestore(&priv->lock, irq_flags);
+> +
+> +	return 0;
+> +}
+> +
 
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
