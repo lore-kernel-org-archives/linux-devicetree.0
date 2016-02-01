@@ -1,60 +1,50 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
-Date: Mon, 1 Feb 2016 19:29:00 +0900
-Message-ID: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v4 4/9] pinctrl: Add STM32 MCUs support
+Date: Mon, 1 Feb 2016 11:39:31 +0100
+Message-ID: <CALszF6DTpcU8jFwA0HL8LpkxfO5ZOdFmpHBUxA7WfYgAj_uFhg@mail.gmail.com>
+References: <1452773795-24216-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1452773795-24216-5-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdaBcP6fC5Oxn+d1WPdHq1FtwMkf8Ap5VDLQFg-5UwEBAw@mail.gmail.com>
+	<2151471.Wut3mQ9SS7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2151471.Wut3mQ9SS7@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-This patch is based on the latest renesas.git / renesas-devel-20160129-v4.5-rc1
-tag. (commit id = 0319e29efd838de5a7a4b589b8f07d9c1fd4abf6)
+2016-02-01 11:21 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wednesday 27 January 2016 14:16:32 Linus Walleij wrote:
+>> On Thu, Jan 14, 2016 at 1:16 PM, Maxime Coquelin
+>> <mcoquelin.stm32@gmail.com> wrote:
+>>
+>> > This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
+>> > family of MCUs.
+>> >
+>> > While it only supports STM32F429 for now, it has been designed to enable
+>> > support of other MCUs of the family (e.g. STM32F746).
+>> >
+>> > Acked-by: Patrice Chotard <patrice.chotard@st.com>
+>> > Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>
+>> This patch applied for kernel v4.6.
+>>
+>
+> This breaks the kernel build, please revert:
+>
+> drivers/pinctrl/stm32/pinctrl-stm32.c:26:47: fatal error: dt-bindings/pinctrl/pinctrl-stm32.h: No such file or directory
 
-This patch needs r8a7795-cpg-mssr.c update for usb-dmac clocks.
+Right, I missed to notify this dependency to Linus, sorry about that.
+This dependency is no more needed, so I could just move the macros to
+the driver side.
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Note that I also noticed a breakage at build time due to field
+renaming in gpio_chip structure (dev -> parent).
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 119549e..8cb1838 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -880,5 +880,31 @@
- 			power-domains = <&cpg>;
- 			status = "disabled";
- 		};
-+
-+		usb_dmac0: dma-controller@e65a0000 {
-+			compatible = "renesas,r8a7795-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65a0000 0 0x100>;
-+			interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
-+				      0 109 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 330>;
-+			power-domains = <&cpg>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
-+
-+		usb_dmac1: dma-controller@e65b0000 {
-+			compatible = "renesas,r8a7795-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe65b0000 0 0x100>;
-+			interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH
-+				      0 110 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 331>;
-+			power-domains = <&cpg>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
-+		};
- 	};
- };
--- 
-1.9.1
+I propose to rebase the series and move the defines into the driver.
+Is it ok for you?
+
+Regards,
+Maxime
