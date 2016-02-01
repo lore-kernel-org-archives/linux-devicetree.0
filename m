@@ -1,31 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pinctrl: sunxi: Add H3 R_PIO controller support
-Date: Mon, 1 Feb 2016 08:09:31 -0600
-Message-ID: <20160201140931.GA7238@rob-hp-laptop>
-References: <20160201101225.GA19687@box2.japko.eu>
+Subject: Re: [PATCH v7 1/4] dt/bindings: add bindings for optee
+Date: Mon, 1 Feb 2016 08:11:23 -0600
+Message-ID: <20160201141123.GA7792@rob-hp-laptop>
+References: <1454318140-7962-1-git-send-email-jens.wiklander@linaro.org>
+ <1454318140-7962-2-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160201101225.GA19687@box2.japko.eu>
+In-Reply-To: <1454318140-7962-2-git-send-email-jens.wiklander@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Adamski <k@japko.eu>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, linux-gpio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 11:12:26AM +0100, Krzysztof Adamski wrote:
-> H3 has additional PIO controller similar to what we can find on A23.
-> It's a 12 pin port, described in H3 Datasheet rev 1.1, pages 345-350.
+On Mon, Feb 01, 2016 at 10:15:37AM +0100, Jens Wiklander wrote:
+> Introduces linaro prefix and adds bindings for ARM TrustZone based OP-TEE
+> implementation.
 > 
-> Signed-off-by: Krzysztof Adamski <k@japko.eu>
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 > ---
-> .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
-> arch/arm/boot/dts/sun8i-h3.dtsi                    |  12 +++
+>  .../bindings/arm/firmware/linaro,optee-tz.txt      | 31 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
-
-> drivers/pinctrl/sunxi/Kconfig                      |   4 +
-> drivers/pinctrl/sunxi/Makefile                     |   1 +
-> drivers/pinctrl/sunxi/pinctrl-sun8i-h3-r.c         | 105 +++++++++++++++++++++
-> 5 files changed, 123 insertions(+)
-> create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3-r.c
