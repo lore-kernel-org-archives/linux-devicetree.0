@@ -1,98 +1,68 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] reset: img: Add Pistachio reset controller driver
-Date: Mon, 01 Feb 2016 21:42:07 +0100
-Message-ID: <1454359327.3447.77.camel@pengutronix.de>
-References: <1453122758-651-1-git-send-email-james.hartley@imgtec.com>
-	 <1453122758-651-3-git-send-email-james.hartley@imgtec.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Mon, 1 Feb 2016 13:03:35 -0800
+Message-ID: <20160201210335.GM19540@google.com>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+ <20160113022608.GA17483@rob-hp-laptop>
+ <201601130339.17520.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453122758-651-3-git-send-email-james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201601130339.17520.marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Damien Horsley <damien.horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
-
-Thanks for the reminder. I'll apply these with a few small fixups.
-No need to resend if you agree.
-
-Am Montag, den 18.01.2016, 13:12 +0000 schrieb James Hartley:
-> From: "Damien.Horsley" <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-
-s/Damien.Horsley/Damien Horsley/
-
->
-> Add reset controller driver for Pistachio SoC
+On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
+> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
+> > On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> > > @@ -0,0 +1,56 @@
+> > > +* Cadence Quad SPI controller
+> > > +
+> > > +Required properties:
+> > > +- compatible : Should be "cdns,qspi-nor".
+> > 
+> > Fine, but I expect to see SOCs using this block add their own compatible
+> > strings. It wouldn't surprise me that we already have some using this
+> > block.
+> > 
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Signed-off-by: Damien.Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> I finally got an Ack on this, I am so happy :-)
+> 
+> As for the SoCs, there is Altera SoCFPGA Gen 5 and Gen 10 which uses this.
+> Then there is some TI SoC, but I don't know the model. Vignesh (on CC) would.
+> Then there is some ST SoC, but I have no idea what that's all about, sorry.
+> 
+> All these SoCs should be capable of tweaking the block to fit their needs
+> by just the DT properties. I believe they differ only in the FIFO depth and
+> sometimes someone is greedy and uses 4:16 CS multiplexer, which is an external
+> passive component, but that's all.
+> 
+> Would we need soc-specific compatible strings if this is the case?
 
-Same here.
+It's nice when most things can be supported with a small set of DT
+properties, as you've done. But IUIC, I think it's usually good practice
+to define and use SoC-specific (or maybe SoC family) compatible strings
+in the docs and DTS files, in addition to the generic one, in case there
+are future quirks that need to be handled. Note that you don't actually
+have to use these in the driver yet, but it's good to have a definition.
+So you can, today, have:
 
-> Signed-off-by: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/reset/Makefile                       |    1 +
->  drivers/reset/reset-pistachio.c              |  155 ++++++++++++++++++++++++++
->  include/dt-bindings/reset/pistachio-resets.h |   36 ++++++
->  3 files changed, 192 insertions(+)
->  create mode 100644 drivers/reset/reset-pistachio.c
->  create mode 100644 include/dt-bindings/reset/pistachio-resets.h
-[...]
-> diff --git a/drivers/reset/reset-pistachio.c b/drivers/reset/reset-pistachio.c
-> new file mode 100644
-> index 0000000..8e39465
-> --- /dev/null
-> +++ b/drivers/reset/reset-pistachio.c
-> @@ -0,0 +1,155 @@
-[...]
-> +static int pistachio_reset_assert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
+	foo@xxxx {
+		compatible = "ti,baz-12345", "cdns,qspi-nor";
+		...
+	};
 
-This should be aligned to the open parenthesis.
+And we have the option to pick up "ti,baz-12345" in the Linux driver *if
+needed.*
 
-[...]
-> +static int pistachio_reset_deassert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-
-And this.
-
-[...]
-> +static int pistachio_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct pistachio_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +
-
-And one of these empty lines has to go.
-
-> +static const struct of_device_id pistachio_reset_dt_ids[] = {
-> +	 { .compatible = "img,pistachio-reset", },
-> +	 { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, pistachio_reset_dt_ids);
-> +
-> +static struct platform_driver pistachio_reset_driver = {
-> +	.probe	= pistachio_reset_probe,
-> +	.remove	= pistachio_reset_remove,
-> +	.driver = {
-> +		.name		= "pistachio-reset",
-> +		.of_match_table	= pistachio_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(pistachio_reset_driver);
-> +
-> +MODULE_AUTHOR("Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
-
-regards
-Philipp
-
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
