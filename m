@@ -1,43 +1,99 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RESEND PATCH V2] ARM64: tegra: Add chosen node for tegra132
- norrin
-Date: Mon, 1 Feb 2016 12:20:23 -0800
-Message-ID: <20160201202023.GF13508@localhost>
-References: <1453753555-14634-1-git-send-email-jonathanh@nvidia.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] reset: img: Add Pistachio reset controller driver
+Date: Mon, 01 Feb 2016 21:42:07 +0100
+Message-ID: <1454359327.3447.77.camel@pengutronix.de>
+References: <1453122758-651-1-git-send-email-james.hartley@imgtec.com>
+	 <1453122758-651-3-git-send-email-james.hartley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453753555-14634-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1453122758-651-3-git-send-email-james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Damien Horsley <damien.horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 08:25:55PM +0000, Jon Hunter wrote:
-> The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
-> in the device-tree blob and if it is not then it fails to boot the kernel.
-> Add the chosen node so we can boot the kernel on Tegra132 Norrin with the
-> nvtboot bootloader.
+Hi James,
+
+Thanks for the reminder. I'll apply these with a few small fixups.
+No need to resend if you agree.
+
+Am Montag, den 18.01.2016, 13:12 +0000 schrieb James Hartley:
+> From: "Damien.Horsley" <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+s/Damien.Horsley/Damien Horsley/
+
+>
+> Add reset controller driver for Pistachio SoC
 > 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Damien.Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+
+Same here.
+
+> Signed-off-by: James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > ---
-> v1 -> v2 changes:
-> - minor fixes to commit message
-> 
-> Ideally, we would like to get this into v4.5 as a fix for Tegra132 Norrin
-> so that we can enable booting this board as part of our automated testing
-> setup for Tegra [0][1]. Thierry suggested I send this directly as a fix
-> to ARM-SOC. Let me know if this is ok. I have not included a "fixes" as it
-> may not be needed for all bootloaders, but if you need this we could put:
-> 
-> Fixes: 0f279eb arm64: tegra: Add NVIDIA Tegra132 Norrin support
-> 
-> [0] http://nvtb.github.io/linux/
-> [1] http://nvtb.github.io/linux-next/
+>  drivers/reset/Makefile                       |    1 +
+>  drivers/reset/reset-pistachio.c              |  155 ++++++++++++++++++++++++++
+>  include/dt-bindings/reset/pistachio-resets.h |   36 ++++++
+>  3 files changed, 192 insertions(+)
+>  create mode 100644 drivers/reset/reset-pistachio.c
+>  create mode 100644 include/dt-bindings/reset/pistachio-resets.h
+[...]
+> diff --git a/drivers/reset/reset-pistachio.c b/drivers/reset/reset-pistachio.c
+> new file mode 100644
+> index 0000000..8e39465
+> --- /dev/null
+> +++ b/drivers/reset/reset-pistachio.c
+> @@ -0,0 +1,155 @@
+[...]
+> +static int pistachio_reset_assert(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
 
-Applied to fixes. Thanks.
+This should be aligned to the open parenthesis.
 
+[...]
+> +static int pistachio_reset_deassert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
 
--Olof
+And this.
+
+[...]
+> +static int pistachio_reset_remove(struct platform_device *pdev)
+> +{
+> +	struct pistachio_reset_data *data = platform_get_drvdata(pdev);
+> +
+> +	reset_controller_unregister(&data->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +
+
+And one of these empty lines has to go.
+
+> +static const struct of_device_id pistachio_reset_dt_ids[] = {
+> +	 { .compatible = "img,pistachio-reset", },
+> +	 { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, pistachio_reset_dt_ids);
+> +
+> +static struct platform_driver pistachio_reset_driver = {
+> +	.probe	= pistachio_reset_probe,
+> +	.remove	= pistachio_reset_remove,
+> +	.driver = {
+> +		.name		= "pistachio-reset",
+> +		.of_match_table	= pistachio_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(pistachio_reset_driver);
+> +
+> +MODULE_AUTHOR("Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
