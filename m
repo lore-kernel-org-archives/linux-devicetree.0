@@ -1,115 +1,119 @@
-From: Sushaanth Srirangapathi <sushaanth.s@ti.com>
-Subject: [PATCH 2/3] Input: tps6507x-ts - Add device tree support
-Date: Mon, 1 Feb 2016 11:58:49 +0530
-Message-ID: <1454308130-12452-4-git-send-email-sushaanth.s@ti.com>
-References: <1454308130-12452-1-git-send-email-sushaanth.s@ti.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v4 9/9] ARM: dts: rockchip: support the spi for rk3036
+Date: Mon, 1 Feb 2016 14:32:59 +0800
+Message-ID: <56AEFC1B.60407@gmail.com>
+References: <1453970618-4383-1-git-send-email-wxt@rock-chips.com>
+ <1453970618-4383-10-git-send-email-wxt@rock-chips.com>
+ <3295129.SttO6ack9z@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1454308130-12452-1-git-send-email-sushaanth.s@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Joe Perches <joe@perches.com>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, Sushaanth Srirangapathi <sushaanth.s@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3295129.SttO6ack9z@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, hl@rock-chips.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, sonnyrao@chromium.org, jeffy.chen@rock-chips.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, keescook@google.com, cf@rock-chips.com, jay.xu@rock-chips.com, leozwang@google.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for TPS6507x touchscreen input device.
+Heiko,
 
-Signed-off-by: Sushaanth Srirangapathi <sushaanth.s@ti.com>
----
- drivers/input/touchscreen/tps6507x-ts.c |   51 ++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 4 deletions(-)
+=E5=9C=A8 2016=E5=B9=B401=E6=9C=8831=E6=97=A5 19:06, Heiko Stuebner =E5=
+=86=99=E9=81=93:
+> Hi Caesar,
+>
+> Am Donnerstag, 28. Januar 2016, 16:43:38 schrieb Caesar Wang:
 
-diff --git a/drivers/input/touchscreen/tps6507x-ts.c b/drivers/input/touchscreen/tps6507x-ts.c
-index a340bfc..4c28369 100644
---- a/drivers/input/touchscreen/tps6507x-ts.c
-+++ b/drivers/input/touchscreen/tps6507x-ts.c
-@@ -19,6 +19,7 @@
- #include <linux/input.h>
- #include <linux/input-polldev.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- #include <linux/mfd/tps6507x.h>
- #include <linux/input/tps6507x-ts.h>
- #include <linux/delay.h>
-@@ -32,6 +33,10 @@
- 					 TPS6507X_ADCONFIG_INPUT_REAL_TSC)
- #define	TPS6507X_ADCONFIG_POWER_DOWN_TS (TPS6507X_ADCONFIG_INPUT_REAL_TSC)
- 
-+#define TPS6507X_VENDOR 0
-+#define TPS6507X_PRODUCT 65070
-+#define TPS6507X_VERSION 0x100
-+
- struct ts_event {
- 	u16	x;
- 	u16	y;
-@@ -199,6 +204,44 @@ done:
- 	tps6507x_adc_standby(tsc);
- }
- 
-+static struct tps6507x_board *tps6507x_ts_parse_dt_reg_data(
-+		struct platform_device *pdev) {
-+	struct tps6507x_board *tps_board;
-+	struct device_node *np = pdev->dev.parent->of_node;
-+	struct touchscreen_init_data *reg_data;
-+	struct device_node *touchscreen;
-+	u32 min_pressure;
-+
-+	tps_board = devm_kzalloc(&pdev->dev, sizeof(*tps_board),
-+				GFP_KERNEL);
-+	if (!tps_board)
-+		return NULL;
-+
-+	touchscreen = of_get_child_by_name(np, "touchscreen");
-+	if (!touchscreen) {
-+		dev_err(&pdev->dev, "touchscreen node not found\n");
-+		return NULL;
-+	}
-+
-+	reg_data = devm_kzalloc(&pdev->dev, sizeof(struct touchscreen_init_data),
-+				GFP_KERNEL);
-+	if (!reg_data)
-+		return NULL;
-+
-+	reg_data->poll_period = TSC_DEFAULT_POLL_PERIOD;
-+	reg_data->vendor = TPS6507X_VENDOR;
-+	reg_data->product = TPS6507X_PRODUCT;
-+	reg_data->version = TPS6507X_VERSION;
-+	if (!of_property_read_u32(touchscreen, "ti,min-pressure",
-+				&min_pressure))
-+		reg_data->min_pressure = min_pressure;
-+	else
-+		reg_data->min_pressure = TPS_DEFAULT_MIN_PRESSURE;
-+	tps_board->tps6507x_ts_init_data = reg_data;
-+
-+	return tps_board;
-+}
-+
- static int tps6507x_ts_probe(struct platform_device *pdev)
- {
- 	struct tps6507x_dev *tps6507x_dev = dev_get_drvdata(pdev->dev.parent);
-@@ -214,10 +257,10 @@ static int tps6507x_ts_probe(struct platform_device *pdev)
- 	 * coming from the board-evm file.
- 	 */
- 	tps_board = dev_get_platdata(tps6507x_dev->dev);
--	if (!tps_board) {
--		dev_err(tps6507x_dev->dev,
--			"Could not find tps6507x platform data\n");
--		return -ENODEV;
-+
-+	if (IS_ENABLED(CONFIG_OF) && !tps_board &&
-+			tps6507x_dev->dev->of_node) {
-+		tps_board = tps6507x_ts_parse_dt_reg_data(pdev);
- 	}
- 
- 	/*
--- 
-1.7.9.5
+[...]
+
+>
+>   	memory {
+> @@ -485,6 +486,23 @@
+>   		status =3D "disabled";
+>   	};
+>
+> +	spi: spi@20074000 {
+> +		compatible =3D "rockchip,rockchip-spi";
+> +		reg =3D <0x20074000 0x1000>;
+> +		interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&spi_txd &spi_rxd &spi_clk &spi_cs0 &spi_cs1>;
+> Do we really want to enable both chip-selects by default?
+>
+> On the rk3288 Lin Huang wrote:
+>      * It's assumed that most users of the SPI ports are using chip s=
+elect
+>        0.  Thus the default pinctrl for the ports enables chip select=
+ 0
+>        (but not chip select 1 on ports that have it).  If a board wan=
+ts to
+>        use chip select 1 or wants a GPIO chip select the board should
+>        override the pinctrl (just like boards can override UART pinct=
+rl if
+>        they have hardware flow control).
+>
+> Do we expect again mostly a use of cs0 or will in the major cases bot=
+h chip-
+> selects be needed?
+
+Sound resonable.
+In general, every cs and spi devices should be the one match one.
+
+That should be resonable if we want to use chip select 1 or want a GPIO=
+ chip select the board should
+override the pinctrl.
+
+>> +		num-cs =3D <2>;
+>> +		clocks =3D<&cru PCLK_SPI>, <&cru SCLK_SPI>;
+>> +		clock-names =3D "apb-pclk","spi_pclk";
+>> +		dmas =3D <&pdma 8>, <&pdma 9>;
+>> +		#dma-cells =3D <2>;
+> What do you need #dma-cells for? This is not a dma-controller :-)
+
+=46ixed.
+
+>
+>
+>> +		dma-names =3D "tx", "rx";
+>> +		status =3D "disabled";
+>> +	};
+>
+> Also I'd suggest an ordering like:
+>
+> +	spi: spi@20074000 {
+> +		compatible =3D "rockchip,rockchip-spi";
+> +		reg =3D <0x20074000 0x1000>;
+> +		interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D<&cru PCLK_SPI>, <&cru SCLK_SPI>;
+> +		clock-names =3D "apb-pclk","spi_pclk";
+> +		dmas =3D <&pdma 8>, <&pdma 9>;
+> +		dma-names =3D "tx", "rx";
+> +		num-cs =3D <2>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&spi_txd &spi_rxd &spi_clk &spi_cs0 &spi_cs1>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		status =3D "disabled";
+> +	};
+
+Okay, I will remove the cs1/num-cs in here.
+
+Thanks.
+
+-
+Caesar
+
+>
+> Heiko
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+
+--=20
+Thanks,
+Caesar
