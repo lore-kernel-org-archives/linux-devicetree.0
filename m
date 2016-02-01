@@ -1,608 +1,402 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Add dts for Uniwest evi
-Date: Mon, 1 Feb 2016 20:11:45 +0800
-Message-ID: <20160201121145.GE10671@tiger>
-References: <b11bf2208fe30b96c4d82e634e8abe04343754de.1452717014.git.stillcompiling@gmail.com>
- <66c87b9536b674bdedfdbe2306def8e9bf6a585c.1452717014.git.stillcompiling@gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 3/3] leds: add SN3218 LED driver
+Date: Mon, 01 Feb 2016 13:53:59 +0100
+Message-ID: <56AF5567.4090102@samsung.com>
+References: <1454245156-15747-1-git-send-email-stefan.wahren@i2se.com>
+ <1454245156-15747-4-git-send-email-stefan.wahren@i2se.com>
+ <56AF2C63.6000404@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <66c87b9536b674bdedfdbe2306def8e9bf6a585c.1452717014.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <56AF2C63.6000404@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 12:45:12PM -0800, Joshua Clayton wrote:
-> Uniwest evi is a portable electrical eddy current non-destructive
-> testing device.
-> 
-> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 30bbc37..c284cb6 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -314,6 +314,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6q-cubox-i.dtb \
->  	imx6q-dfi-fs700-m60.dtb \
->  	imx6q-dmo-edmqmx6.dtb \
-> +	imx6q-evi.dtb \
->  	imx6q-gk802.dtb \
->  	imx6q-gw51xx.dtb \
->  	imx6q-gw52xx.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-> new file mode 100644
-> index 0000000..a1ca2b9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-evi.dts
-> @@ -0,0 +1,502 @@
-> +/*
-> + * Copyright 2016 United Western Technologies.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6q.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	model = "Uniwest Evi";
-> +	compatible = "uniwest,imx6q-evi", "fsl,imx6q";
-> +
-> +	memory {
-> +		reg = <0x10000000 0x40000000>;
-> +	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg_usbh1_vbus: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			reg = <0>;
-> +			regulator-name = "usbh1_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			enable-active-high;
-> +			startup-delay-us = <2>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_usbh1_hubreset>;
-> +			gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-> +		};
+On 02/01/2016 10:58 AM, Jacek Anaszewski wrote:
+> Hi Stefan,
+>
+> Thanks for the update. A few more comments below.
+>
+> On 01/31/2016 01:59 PM, Stefan Wahren wrote:
+>> This patch adds support for Si-En SN3218 18 Channel LED Driver.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> ---
+>>   drivers/leds/Kconfig       |   12 ++
+>>   drivers/leds/Makefile      |    1 +
+>>   drivers/leds/leds-sn3218.c |  297
+>> ++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 310 insertions(+)
+>>   create mode 100644 drivers/leds/leds-sn3218.c
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 7f940c2..920c2da 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -568,6 +568,18 @@ config LEDS_SEAD3
+>>         This driver can also be built as a module. If so the module
+>>         will be called leds-sead3.
+>>
+>> +config LEDS_SN3218
+>> +    tristate "LED support for Si-En SN3218 I2C chip"
+>> +    depends on LEDS_CLASS && I2C
+>> +    depends on OF
+>> +    select REGMAP_I2C
+>> +    help
+>> +      This option enables support for the Si-EN SN3218 LED driver
+>> +      connected through I2C. Say Y to enable support for the SN3218 LED.
+>> +
+>> +      This driver can also be built as a module. If so the module
+>> +      will be called leds-sn3218.
+>> +
+>>   comment "LED driver for blink(1) USB RGB LED is under Special HID
+>> drivers (HID_THINGM)"
+>>
+>>   config LEDS_BLINKM
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index e9d5309..89c9b6f 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -66,6 +66,7 @@ obj-$(CONFIG_LEDS_MENF21BMC)        += leds-menf21bmc.o
+>>   obj-$(CONFIG_LEDS_KTD2692)        += leds-ktd2692.o
+>>   obj-$(CONFIG_LEDS_POWERNV)        += leds-powernv.o
+>>   obj-$(CONFIG_LEDS_SEAD3)        += leds-sead3.o
+>> +obj-$(CONFIG_LEDS_SN3218)        += leds-sn3218.o
+>>
+>>   # LED SPI Drivers
+>>   obj-$(CONFIG_LEDS_DAC124S085)        += leds-dac124s085.o
+>> diff --git a/drivers/leds/leds-sn3218.c b/drivers/leds/leds-sn3218.c
+>> new file mode 100644
+>> index 0000000..7a96323
+>> --- /dev/null
+>> +++ b/drivers/leds/leds-sn3218.c
+>> @@ -0,0 +1,297 @@
+>> +/*
+>> + * Si-En SN3218 18 Channel LED Driver
+>> + *
+>> + * Copyright (C) 2016 Stefan Wahren <stefan.wahren@i2se.com>
+>> + *
+>> + * Based on leds-pca963x.c
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * version 2 as published by the Free Software Foundation.
+>> + *
+>> + * Datasheet: http://www.si-en.com/uploadpdf/s2011517171720.pdf
+>> + *
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/leds.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#define SN3218_MODE        0x00
+>> +#define SN3218_PWM_1        0x01
+>> +#define SN3218_PWM_2        0x02
+>> +#define SN3218_PWM_3        0x03
+>> +#define SN3218_PWM_4        0x04
+>> +#define SN3218_PWM_5        0x05
+>> +#define SN3218_PWM_6        0x06
+>> +#define SN3218_PWM_7        0x07
+>> +#define SN3218_PWM_8        0x08
+>> +#define SN3218_PWM_9        0x09
+>> +#define SN3218_PWM_10        0x0a
+>> +#define SN3218_PWM_11        0x0b
+>> +#define SN3218_PWM_12        0x0c
+>> +#define SN3218_PWM_13        0x0d
+>> +#define SN3218_PWM_14        0x0e
+>> +#define SN3218_PWM_15        0x0f
+>> +#define SN3218_PWM_16        0x10
+>> +#define SN3218_PWM_17        0x11
+>> +#define SN3218_PWM_18        0x12
+>> +#define SN3218_LED_1_6        0x13
+>> +#define SN3218_LED_7_12        0x14
+>> +#define SN3218_LED_13_18    0x15
+>> +#define SN3218_UPDATE        0x16    /* applies to reg 0x01 .. 0x15 */
+>> +#define SN3218_RESET        0x17
+>> +
+>> +#define SN3218_LED_MASK        0x3f
+>> +#define SN3218_LED_ON        0x01
+>> +#define SN3218_LED_OFF        0x00
+>> +
+>> +#define NUM_LEDS        18
+>> +
+>> +struct sn3218_led;
+>> +
+>> +/**
+>> + * struct sn3218 -
+>> + * @client - Pointer to the I2C client
+>> + * @leds - Pointer to the individual LEDs
+>> + * @num_leds - Actual number of LEDs
+>> +**/
+>> +struct sn3218 {
+>> +    struct i2c_client *client;
+>> +    struct regmap *regmap;
+>> +    struct sn3218_led *leds;
+>> +    int num_leds;
+>> +};
+>> +
+>> +/**
+>> + * struct sn3218_led -
+>> + * @chip - Pointer to the container
+>> + * @led_cdev - led class device pointer
+>> + * @led_num - LED index ( 0 .. 17 )
+>> +**/
+>> +struct sn3218_led {
+>> +    struct sn3218 *chip;
+>
+> You don't need this if you have led id here. Please refer to
+> drivers/leds/leds-max77693.c, sub_led_to_led() to check how to get
+> a pointer to the parent structure in similar case.
 
-Device tree maintainers do not like the fake simple-bus container for
-these fixed regulators.  We are asked to put them directly under root
-node.  In that case, we do not need the artificial 'reg' property, and
-we can name node in schema like:
+Hmm, it would work only if leds was a static array in struct sn3218.
+So, let's better leave this "chip" pointer intact.
 
-	reg_xxx: regulator-xxx {
-		...
-	}
+>> +    struct led_classdev led_cdev;
+>> +    int led_num;
+>> +};
+>> +
+>> +static int sn3218_led_set(struct led_classdev *led_cdev,
+>> +              enum led_brightness brightness)
+>> +{
+>> +    struct sn3218_led *led =
+>> +            container_of(led_cdev, struct sn3218_led, led_cdev);
+>> +    struct regmap *regmap = led->chip->regmap;
+>> +    u8 bank = led->led_num / 6;
+>> +    u8 mask = 0x1 << (led->led_num % 6);
+>> +    u8 val;
+>> +    int ret;
+>> +
+>> +    if (brightness == LED_OFF)
+>> +        val = 0;
+>> +    else
+>> +        val = mask;
+>> +
+>> +    ret = regmap_update_bits(regmap, SN3218_LED_1_6 + bank, mask, val);
+>> +    if (ret < 0)
+>> +        return ret;
+>> +
+>> +    if (brightness > LED_OFF) {
+>> +        ret = regmap_write(regmap, SN3218_PWM_1 + led->led_num,
+>> +                   brightness);
+>> +        if (ret < 0)
+>> +            return ret;
+>> +    }
+>> +
+>> +    ret = regmap_write(regmap, SN3218_UPDATE, 0xff);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +void sn3218_led_init(struct sn3218 *sn3218, struct device_node *node,
+>> u32 reg)
+>
+> s/void/static void/
+>
+>> +{
+>> +    struct sn3218_led *leds = sn3218->leds;
+>> +    struct led_classdev *cdev = &leds[reg].led_cdev;
+>> +
+>> +    leds[reg].led_num = reg;
+>> +    leds[reg].chip = sn3218;
+>> +
+>> +    if (of_property_read_string(node, "label", &cdev->name))
+>> +        cdev->name = node->name;
+>> +
+>> +    of_property_read_string(node, "linux,default-trigger",
+>> +                &cdev->default_trigger);
+>> +
+>> +    cdev->brightness_set_blocking = sn3218_led_set;
+>> +    cdev->max_brightness = LED_FULL;
+>
+> Skip this line. If max_brightness is 0 led_classdev_register()
+> automatically initializes it to LED_FULL.
+>
+>> +}
+>> +
+>> +static const struct reg_default sn3218_reg_defs[] = {
+>> +    { SN3218_MODE, 0x00},
+>> +    { SN3218_PWM_1, 0x00},
+>> +    { SN3218_PWM_2, 0x00},
+>> +    { SN3218_PWM_3, 0x00},
+>> +    { SN3218_PWM_4, 0x00},
+>> +    { SN3218_PWM_5, 0x00},
+>> +    { SN3218_PWM_6, 0x00},
+>> +    { SN3218_PWM_7, 0x00},
+>> +    { SN3218_PWM_8, 0x00},
+>> +    { SN3218_PWM_9, 0x00},
+>> +    { SN3218_PWM_10, 0x00},
+>> +    { SN3218_PWM_11, 0x00},
+>> +    { SN3218_PWM_12, 0x00},
+>> +    { SN3218_PWM_13, 0x00},
+>> +    { SN3218_PWM_14, 0x00},
+>> +    { SN3218_PWM_15, 0x00},
+>> +    { SN3218_PWM_16, 0x00},
+>> +    { SN3218_PWM_17, 0x00},
+>> +    { SN3218_PWM_18, 0x00},
+>> +    { SN3218_LED_1_6, 0x00},
+>> +    { SN3218_LED_7_12, 0x00},
+>> +    { SN3218_LED_13_18, 0x00},
+>> +    { SN3218_UPDATE, 0x00},
+>> +    { SN3218_RESET, 0x00},
+>> +};
+>> +
+>> +static const struct regmap_config sn3218_regmap_config = {
+>> +    .reg_bits = 8,
+>> +    .val_bits = 8,
+>> +
+>> +    .max_register = SN3218_RESET,
+>> +    .reg_defaults = sn3218_reg_defs,
+>> +    .num_reg_defaults = ARRAY_SIZE(sn3218_reg_defs),
+>> +    .cache_type = REGCACHE_RBTREE,
+>> +};
+>> +
+>> +static int sn3218_init(struct i2c_client *client, struct sn3218 *sn3218)
+>> +{
+>> +    struct device_node *np = client->dev.of_node, *child;
+>> +    struct sn3218_led *leds;
+>> +    int ret, count;
+>> +
+>> +    count = of_get_child_count(np);
+>> +    if (!count)
+>> +        return -ENODEV;
+>> +
+>> +    if (count > NUM_LEDS) {
+>> +        dev_err(&client->dev, "Invalid LED count %d\n", count);
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    leds = devm_kzalloc(&client->dev, count * sizeof(*leds),
+>> GFP_KERNEL);
+>> +    if (!leds)
+>> +        return -ENOMEM;
+>> +
+>> +    sn3218->leds = leds;
+>> +    sn3218->num_leds = count;
+>> +    sn3218->client = client;
+>> +
+>> +    sn3218->regmap = devm_regmap_init_i2c(client,
+>> &sn3218_regmap_config);
+>> +    if (IS_ERR(sn3218->regmap)) {
+>> +        ret = PTR_ERR(sn3218->regmap);
+>> +        dev_err(&client->dev, "Failed to allocate register map: %d\n",
+>> +            ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    for_each_child_of_node(np, child) {
+>> +        u32 reg;
+>> +
+>> +        ret = of_property_read_u32(child, "reg", &reg);
+>> +        if (ret)
+>> +            goto fail;
+>> +
+>> +        if (reg >= count) {
+>> +            dev_err(&client->dev, "Invalid LED (%u >= %d)\n", reg,
+>> +                count);
+>> +            ret = -EINVAL;
+>> +            goto fail;
+>> +        }
+>> +
+>> +        sn3218_led_init(sn3218, child, reg);
+>> +    }
+>> +
+>> +    return 0;
+>> +
+>> +fail:
+>> +    of_node_put(np);
+>
+> s/np/child/
+>
+>> +    return ret;
+>> +}
+>> +
+>> +static int sn3218_probe(struct i2c_client *client,
+>> +            const struct i2c_device_id *id)
+>> +{
+>> +    struct sn3218 *sn3218;
+>> +    struct sn3218_led *leds;
+>> +    struct device *dev = &client->dev;
+>> +    int i, ret;
+>> +
+>> +    sn3218 = devm_kzalloc(dev, sizeof(*sn3218), GFP_KERNEL);
+>> +    if (!sn3218)
+>> +        return -ENOMEM;
+>> +
+>> +    ret = sn3218_init(client, sn3218);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    i2c_set_clientdata(client, sn3218);
+>> +    leds = sn3218->leds;
+>> +
+>> +    /*
+>> +     * Since the chip is write-only we need to reset him into
+>> +     * a defined state (all LEDs off).
+>> +     */
+>> +    ret = regmap_write(sn3218->regmap, SN3218_RESET, 0xff);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    for (i = 0; i < sn3218->num_leds; i++) {
+>> +        ret = devm_led_classdev_register(dev, &leds[i].led_cdev);
+>> +        if (ret < 0)
+>> +            return ret;
+>> +    }
+>> +
+>> +    /* Set normal mode */
+>> +    return regmap_write(sn3218->regmap, SN3218_MODE, 0x01);
+>> +}
+>> +
+>> +static int sn3218_remove(struct i2c_client *client)
+>> +{
+>> +    struct sn3218 *sn3218 = i2c_get_clientdata(client);
+>> +
+>> +    /* Set shutdown mode */
+>> +    regmap_write(sn3218->regmap, SN3218_MODE, 0x00);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct i2c_device_id sn3218_id[] = {
+>> +    { "sn3218", 0 },
+>> +    { }
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, sn3218_id);
+>> +
+>> +static const struct of_device_id of_sn3218_match[] = {
+>> +    { .compatible = "si-en,sn3218", },
+>> +    {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_sn3218_match);
+>> +
+>> +static struct i2c_driver sn3218_driver = {
+>> +    .driver = {
+>> +        .name    = "leds-sn3218",
+>> +        .of_match_table = of_match_ptr(of_sn3218_match),
+>> +    },
+>> +    .probe    = sn3218_probe,
+>> +    .remove    = sn3218_remove,
+>> +    .id_table = sn3218_id,
+>> +};
+>> +
+>> +module_i2c_driver(sn3218_driver);
+>> +
+>> +MODULE_DESCRIPTION("Si-En SN3218 LED Driver");
+>> +MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>
+>
 
-> +
-> +		reg_usb_otg_vbus: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			reg = <1>;
-> +			regulator-name = "usb_otg_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_usbotg_vbus>;
-> +			gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			regulator-always-on;
-> +		};
-> +	};
 
-Have a new line between nodes.
-
-> +	chosen {
-> +		bootargs = "sbs-battery.force_load=1";
-> +	};
-
-We generally put 'chosen' node at the beginning along with 'memory'
-node.  And do we really need this as the default bootargs?
-
-> +
-> +	panel {
-> +		compatible = "sharp,lq101k1ly04";
-
-Undocumented compatible string.
-
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ecspi1 {
-> +	fsl,spi-num-chipselects = <1>;
-> +	cs-gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1_extra>;
-
-You use only one GPIO in cs-gpios.  Why do you need to set up 3 in
-pinctrl_ecspi1_extra?  And why do you name the pinctrl group in the same
-way as ecspi3 and ecspi5, i.e. pinctrl_ecspi1_cs?
-
-> +	status = "okay";
-> +};
-> +
-> +&ecspi3 {
-> +	fsl,spi-num-chipselects = <3>;
-> +	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>,
-> +		<&gpio4 25 GPIO_ACTIVE_LOW>,
-> +		<&gpio4 26 GPIO_ACTIVE_LOW>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs>;
-> +	status = "okay";
-> +};
-> +
-> +&ecspi5 {
-> +	fsl,spi-num-chipselects = <4>;
-> +	cs-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>,
-> +		<&gpio1 13 GPIO_ACTIVE_LOW>,
-> +		<&gpio1 12 GPIO_ACTIVE_LOW>,
-> +		<&gpio2 9 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi5 &pinctrl_ecspi5_cs>;
-> +	status = "okay";
-
-Have a new line between properties and sub-node.
-
-> +	eeprom: m95m02@1 {
-> +		compatible = "st,m95m02", "atmel,at25";
-> +		size = <262144>;
-> +		pagesize = <256>;
-> +		address-width = <24>;
-> +		spi-max-frequency = <5000000>;
-> +		reg = <1>;
-> +	};
-
-Have a new line between nodes.
-
-> +	pb_rtc: rtc@3 {
-> +		compatible = "nxp,rtc-pcf2123";
-> +		spi-max-frequency = <2450000>;
-> +		spi-cs-high;
-> +		reg = <3>;
-> +	};
-> +};
-> +
-> +&fec {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet>;
-> +	phy-mode = "rgmii";
-> +	phy-reset-gpios = <&gpio1 25 0>;
-> +	status = "okay";
-> +};
-> +
-> +&gpmi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c3 {
-> +	pinctrl-names = "default", "gpio";
-> +	pinctrl-0 = <&pinctrl_i2c3>;
-> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-
-We generally put 'status' at the bottom of the property list.
-
-> +	scl-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> +	sda-gpios = <&gpio7 11 GPIO_ACTIVE_HIGH>;
-> +
-> +	battery: sbs-battery@b {
-> +		compatible = "sbs,sbs-battery";
-> +		reg = <0x0b>;
-> +		sbs,poll-retry-count = <100>;
-> +		sbs,i2c-retry-count = <100>;
-> +	};
-> +};
-> +
-> +&ldb {
-> +	status = "okay";
-> +
-> +	lvds0: lvds-channel@0 {
-> +		fsl,data-mapping = "jeida";
-> +		fsl,data-width = <24>;
-> +		status = "okay";
-> +
-> +		port@4 {
-> +			reg = <4>;
-> +
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&panel_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ssi1 {
-> +	fsl,mode = "i2s-slave";
-
-"i2s-slave" is deprecated for fsl,mode, and can be just dropped.
-
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> +
-> +&usbh1 {
-> +	vbus-supply = <&reg_usbh1_vbus>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usbh1>;
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usbotg {
-> +	vbus-supply = <&reg_usb_otg_vbus>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usbotg>;
-> +	disable-over-current;
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&weim {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0 0x08000000 0x08000000>;
-> +	fsl,weim-cs-gpr = <&gpr>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_weim_fpga &pinctrl_weim_cs>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
-> +
-> +	imx6q-evi {
-
-Since commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without
-function nodes), this additional container node can just be saved.
-
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins = <
-> +				/* CPLD Reset */
-> +				MX6QDL_PAD_GPIO_19__GPIO4_IO05 0x1b0b0
-> +				/* pwr mcu alert irq */
-> +				MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0
-> +				/* remainder ???? */
-> +				MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19 0x1b0b0
-> +			>;
-> +		};
-
-Have a new line between nodes.
-
-> +		pinctrl_ecspi1: ecspi1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL1__ECSPI1_MISO 0x100b1
-> +				MX6QDL_PAD_KEY_ROW0__ECSPI1_MOSI 0x100b1
-> +				MX6QDL_PAD_KEY_COL0__ECSPI1_SCLK 0x100b1
-> +			>;
-> +		};
-> +		pinctrl_ecspi1_extra: ecspi1extragrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL2__GPIO4_IO10 0x1b0b0
-> +				MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x1b0b0
-> +				MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_ecspi3: ecspi3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK 0x10068
-> +				MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI 0x10068
-> +				MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO 0x1f068
-> +			>;
-> +		};
-> +		pinctrl_ecspi3_cs: ecspi3cs {
-
-Please name the node consistently, like xxxgrp.
-
-> +			fsl,pins = <
-> +				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x1b0b0
-> +				MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25 0x1b0b0
-> +				MX6QDL_PAD_DISP0_DAT5__GPIO4_IO26 0x1b0b0
-> +				MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_ecspi5: ecspi5grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD2_CLK__ECSPI5_SCLK 0x100b1
-> +				MX6QDL_PAD_SD2_CMD__ECSPI5_MOSI 0x100b1
-> +				MX6QDL_PAD_SD2_DAT0__ECSPI5_MISO 0x100b1
-> +			>;
-> +		};
-> +		pinctrl_ecspi5_cs: ecspi5cs {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD2_DAT1__GPIO1_IO14 0x1b0b0
-> +				MX6QDL_PAD_SD2_DAT2__GPIO1_IO13 0x1b0b0
-> +				MX6QDL_PAD_SD2_DAT3__GPIO1_IO12 0x1b0b0
-> +				MX6QDL_PAD_SD4_DAT1__GPIO2_IO09 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_enet: enetgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_ENET_MDIO__ENET_MDIO 0x1b0b0
-> +				MX6QDL_PAD_ENET_MDC__ENET_MDC 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TXC__RGMII_TXC 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD0__RGMII_TD0 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD1__RGMII_TD1 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD2__RGMII_TD2 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TD3__RGMII_TD3 0x1b0b0
-> +				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
-> +				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RXC__RGMII_RXC 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RD0__RGMII_RD0 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RD1__RGMII_RD1 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RD2__RGMII_RD2 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RD3__RGMII_RD3 0x1b0b0
-> +				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
-> +				MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN 0x4001b0a8
-> +				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_gpmi_nand: gpminandgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
-> +				MX6QDL_PAD_NANDF_ALE__NAND_ALE 0xb0b1
-> +				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B 0xb0b1
-> +				MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
-> +				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B 0xb0b1
-> +				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B 0xb0b1
-> +				MX6QDL_PAD_SD4_CMD__NAND_RE_B 0xb0b1
-> +				MX6QDL_PAD_SD4_CLK__NAND_WE_B 0xb0b1
-> +				MX6QDL_PAD_NANDF_D0__NAND_DATA00 0xb0b1
-> +				MX6QDL_PAD_NANDF_D1__NAND_DATA01 0xb0b1
-> +				MX6QDL_PAD_NANDF_D2__NAND_DATA02 0xb0b1
-> +				MX6QDL_PAD_NANDF_D3__NAND_DATA03 0xb0b1
-> +				MX6QDL_PAD_NANDF_D4__NAND_DATA04 0xb0b1
-> +				MX6QDL_PAD_NANDF_D5__NAND_DATA05 0xb0b1
-> +				MX6QDL_PAD_NANDF_D6__NAND_DATA06 0xb0b1
-> +				MX6QDL_PAD_NANDF_D7__NAND_DATA07 0xb0b1
-> +				MX6QDL_PAD_SD4_DAT0__NAND_DQS 0x00b1
-> +			>;
-> +		};
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-> +			>;
-> +		};
-> +		pinctrl_i2c3: i2c3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
-> +				MX6QDL_PAD_GPIO_16__I2C3_SDA 0x4001b8b1
-> +			>;
-> +		};
-> +		pinctrl_i2c3_gpio: i2c3gpiogrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_5__GPIO1_IO05 0x4001b8b1
-> +				MX6QDL_PAD_GPIO_16__GPIO7_IO11 0x4001b8b1
-> +			>;
-> +		};
-> +		pinctrl_weim_cs: weim_csgrp {
-
-weimcsgrp
-
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_CS0__EIM_CS0_B 0xb0b1
-> +				MX6QDL_PAD_EIM_CS1__EIM_CS1_B 0xb0b1
-> +			>;
-> +		};
-> +		pinctrl_weim_fpga: weim_fpgagrp {
-
-weimfpgagrp
-
-> +			fsl,pins = <
-> +				/* weim misc */
-> +				MX6QDL_PAD_EIM_OE__EIM_OE_B 0xb0b1
-> +				MX6QDL_PAD_EIM_RW__EIM_RW 0xb0b1
-> +				MX6QDL_PAD_EIM_WAIT__EIM_WAIT_B 0xb060
-> +				MX6QDL_PAD_EIM_BCLK__EIM_BCLK 0xb0b1
-> +				MX6QDL_PAD_EIM_LBA__EIM_LBA_B 0xb0b1
-> +				MX6QDL_PAD_EIM_EB0__EIM_EB0_B 0xb0b1
-> +				MX6QDL_PAD_EIM_EB1__EIM_EB1_B 0xb0b1
-> +				MX6QDL_PAD_EIM_EB2__EIM_EB2_B 0xb0b1
-> +				MX6QDL_PAD_EIM_EB3__EIM_EB3_B 0xb0b1
-> +				/* weim data */
-> +				MX6QDL_PAD_CSI0_DATA_EN__EIM_DATA00 0x1b0b0
-> +				MX6QDL_PAD_CSI0_VSYNC__EIM_DATA01 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT4__EIM_DATA02 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT5__EIM_DATA03 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT6__EIM_DATA04 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT7__EIM_DATA05 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT8__EIM_DATA06 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT9__EIM_DATA07 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT12__EIM_DATA08 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT13__EIM_DATA09 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT14__EIM_DATA10 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT15__EIM_DATA11 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT16__EIM_DATA12 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT17__EIM_DATA13 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT18__EIM_DATA14 0x1b0b0
-> +				MX6QDL_PAD_CSI0_DAT19__EIM_DATA15 0x1b0b0
-> +				MX6QDL_PAD_EIM_D16__EIM_DATA16 0x1b0b0
-> +				MX6QDL_PAD_EIM_D17__EIM_DATA17 0x1b0b0
-> +				MX6QDL_PAD_EIM_D18__EIM_DATA18 0x1b0b0
-> +				MX6QDL_PAD_EIM_D19__EIM_DATA19 0x1b0b0
-> +				MX6QDL_PAD_EIM_D20__EIM_DATA20 0x1b0b0
-> +				MX6QDL_PAD_EIM_D21__EIM_DATA21 0x1b0b0
-> +				MX6QDL_PAD_EIM_D22__EIM_DATA22 0x1b0b0
-> +				MX6QDL_PAD_EIM_D23__EIM_DATA23 0x1b0b0
-> +				MX6QDL_PAD_EIM_D24__EIM_DATA24 0x1b0b0
-> +				MX6QDL_PAD_EIM_D25__EIM_DATA25 0x1b0b0
-> +				MX6QDL_PAD_EIM_D26__EIM_DATA26 0x1b0b0
-> +				MX6QDL_PAD_EIM_D27__EIM_DATA27 0x1b0b0
-> +				MX6QDL_PAD_EIM_D28__EIM_DATA28 0x1b0b0
-> +				MX6QDL_PAD_EIM_D29__EIM_DATA29 0x1b0b0
-> +				MX6QDL_PAD_EIM_D30__EIM_DATA30 0x1b0b0
-> +				MX6QDL_PAD_EIM_D31__EIM_DATA31 0x1b0b0
-> +				/* weim address */
-> +				MX6QDL_PAD_EIM_A25__EIM_ADDR25 0xb0b1
-> +				MX6QDL_PAD_EIM_A24__EIM_ADDR24 0xb0b1
-> +				MX6QDL_PAD_EIM_A23__EIM_ADDR23 0xb0b1
-> +				MX6QDL_PAD_EIM_A22__EIM_ADDR22 0xb0b1
-> +				MX6QDL_PAD_EIM_A21__EIM_ADDR21 0xb0b1
-> +				MX6QDL_PAD_EIM_A20__EIM_ADDR20 0xb0b1
-> +				MX6QDL_PAD_EIM_A19__EIM_ADDR19 0xb0b1
-> +				MX6QDL_PAD_EIM_A18__EIM_ADDR18 0xb0b1
-> +				MX6QDL_PAD_EIM_A17__EIM_ADDR17 0xb0b1
-> +				MX6QDL_PAD_EIM_A16__EIM_ADDR16 0xb0b1
-> +				MX6QDL_PAD_EIM_DA15__EIM_AD15 0xb0b1
-> +				MX6QDL_PAD_EIM_DA14__EIM_AD14 0xb0b1
-> +				MX6QDL_PAD_EIM_DA13__EIM_AD13 0xb0b1
-> +				MX6QDL_PAD_EIM_DA12__EIM_AD12 0xb0b1
-> +				MX6QDL_PAD_EIM_DA11__EIM_AD11 0xb0b1
-> +				MX6QDL_PAD_EIM_DA10__EIM_AD10 0xb0b1
-> +				MX6QDL_PAD_EIM_DA9__EIM_AD09 0xb0b1
-> +				MX6QDL_PAD_EIM_DA8__EIM_AD08 0xb0b1
-> +				MX6QDL_PAD_EIM_DA7__EIM_AD07 0xb0b1
-> +				MX6QDL_PAD_EIM_DA6__EIM_AD06 0xb0b1
-> +				MX6QDL_PAD_EIM_DA5__EIM_AD05 0xb0b1
-> +				MX6QDL_PAD_EIM_DA4__EIM_AD04 0xb0b1
-> +				MX6QDL_PAD_EIM_DA3__EIM_AD03 0xb0b1
-> +				MX6QDL_PAD_EIM_DA2__EIM_AD02 0xb0b1
-> +				MX6QDL_PAD_EIM_DA1__EIM_AD01 0xb0b1
-> +				MX6QDL_PAD_EIM_DA0__EIM_AD00 0xb0b1
-> +			>;
-> +		};
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA 0x1b0b1
-> +				MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
-> +			>;
-> +		};
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD3_DAT5__UART2_TX_DATA 0x1b0b1
-> +				MX6QDL_PAD_SD3_DAT4__UART2_RX_DATA 0x1b0b1
-> +				MX6QDL_PAD_SD3_CLK__UART2_RTS_B 0x1b0b1
-> +				MX6QDL_PAD_SD3_CMD__UART2_CTS_B 0x1b0b1
-> +			>;
-> +		};
-> +		pinctrl_usbh1: usbh1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_3__USB_H1_OC 0x1b0b0
-> +				/* usbh1_b OC */
-> +				MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_usbh1_hubreset: usbh1hubresetgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_usbotg: usbotggrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-> +				MX6QDL_PAD_KEY_COL4__USB_OTG_OC 0x1b0b0
-> +			>;
-> +		};
-> +		pinctrl_usbotg_vbus: usbotg_vbusgrp {
-
-usbotgvbusgrp
-
-Shawn
-
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x000b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1: usdhc1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD1_CMD__SD1_CMD 0x17059
-> +				MX6QDL_PAD_SD1_CLK__SD1_CLK 0x10059
-> +				MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
-> +				MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
-> +				MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
-> +				MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
-> +			>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.5.0
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
