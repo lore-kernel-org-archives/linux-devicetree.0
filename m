@@ -1,82 +1,134 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] Documentation: gpio: Update description for
- X-Gene standby GPIO controller DTS binding
-Date: Mon, 1 Feb 2016 09:35:02 -0600
-Message-ID: <20160201153502.GA19725@rob-hp-laptop>
-References: <1454041735-8434-1-git-send-email-qnguyen@apm.com>
- <1454041735-8434-3-git-send-email-qnguyen@apm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V13 08/10] dma: qcom_hidma: read the channel id from HW
+Date: Mon, 1 Feb 2016 15:35:54 +0000
+Message-ID: <20160201153542.GA20396@leverpostej>
+References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
+ <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1454041735-8434-3-git-send-email-qnguyen-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quan Nguyen <qnguyen-qTEPVZfXA3Y@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+In-Reply-To: <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 29, 2016 at 11:28:54AM +0700, Quan Nguyen wrote:
-> Update description for X-Gene standby GPIO controller DTS binding to
-> support GPIO line configuration as input, output or external IRQ pin.
-> 
-> Signed-off-by: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Quan Nguyen <qnguyen-qTEPVZfXA3Y@public.gmane.org>
+On Fri, Jan 29, 2016 at 05:35:11PM -0500, Sinan Kaya wrote:
+> Removing the flexibility to choose the event channel as there is no real
+> use case right now. We have been using the values in ACPI that match the HW
+> defaults. OS is reading the event-channel from the HW register now.
+
+Fold this in to the patches adding the binding and the driver.
+
+There is no reason to add this then remove it within the same series.
+
+Mark.
+
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 > ---
->  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 47 ++++++++++++++++++----
->  1 file changed, 40 insertions(+), 7 deletions(-)
+>  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  3 --
+>  drivers/dma/qcom/hidma.c                           | 39 +---------------------
+>  2 files changed, 1 insertion(+), 41 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> index dae1300..7b8b4cb 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> @@ -1,10 +1,20 @@
->  APM X-Gene Standby GPIO controller bindings
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> index e3677a5..fd5618b 100644
+> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> @@ -51,7 +51,6 @@ Required properties:
+>  - reg: Addresses for the transfer and event channel
+>  - interrupts: Should contain the event interrupt
+>  - desc-count: Number of asynchronous requests this channel can handle
+> -- channel-index: The HW event channel completions will be delivered.
+>  - iommus: required a iommu node
 >  
-> -This is a gpio controller in the standby domain.
+>  Example:
+> @@ -75,7 +74,6 @@ Hypervisor OS configuration:
+>  			interrupts = <0 389 0>;
+>  			desc-count = <10>;
+>  			iommus = <&system_mmu>;
+> -			channel-index = <4>;
+>  		};
+>  	};
+>  
+> @@ -87,6 +85,5 @@ Guest OS configuration:
+>  		      <0 0x5c0b0000 0x0 0x1000>;
+>  		interrupts = <0 389 0>;
+>  		desc-count = <10>;
+> -		channel-index = <4>;
+>  		iommus = <&system_mmu>;
+>  	};
+> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+> index ac20bdb..7180367 100644
+> --- a/drivers/dma/qcom/hidma.c
+> +++ b/drivers/dma/qcom/hidma.c
+> @@ -101,26 +101,6 @@ static unsigned int nr_desc_prm;
+>  module_param(nr_desc_prm, uint, 0644);
+>  MODULE_PARM_DESC(nr_desc_prm, "number of descriptors (default: 0)");
+>  
+> -#define HIDMA_MAX_CHANNELS	64
+> -static int channel_idx[HIDMA_MAX_CHANNELS] = {
+> -	[0 ... (HIDMA_MAX_CHANNELS - 1)] = -1
+> -};
 > -
-> -There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
-> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
-> -is currently 1-to-1 on interrupts 0x28 thru 0x2d.
-> +This is a gpio controller in the standby domain. It also supports interrupt in
-> +some particular pins which are sourced to its parent interrupt controller
-> +as diagram below:
-> +                           +-----------------+
-> +                           | X-Gene standby  |
-> +                           | GPIO controller +--------- GPIO_0
-> ++------------+             |                 | ...
-> +| Parent IRQ |             |                 +--------- GPIO_8/EXT_INT_0
-> +| controller |  EXT_INT_0  |                 | ...
-> +| (GICv2)    +-------------+                 +--------- GPIO_[N+8]/EXT_INT_N
-> +|            |  ...        |                 |
-> +|            |  EXT_INT_N  |                 +--------- GPIO_[N+9]
-> +|            +-------------+                 | ...
-> +|            |             |                 +--------- GPIO_MAX
-> ++------------+             +-----------------+
+> -/*
+> - * Each DMA channel is associated with an event channel for interrupt
+> - * delivery. The event channel index usually comes from the firmware through
+> - * ACPI/DT. When a HIDMA channel is executed in the guest machine context (QEMU)
+> - * the device tree gets auto-generated based on the memory and IRQ resources
+> - * this driver uses on the host machine. Any device specific paraemeter such as
+> - * channel-index gets ignored by the QEMU.
+> - * We are using this command line parameter to pass the event channel index to
+> - * the guest machine.
+> - */
+> -static unsigned int num_channel_idx;
+> -module_param_array_named(channel_idx, channel_idx, int, &num_channel_idx,
+> -			 0644);
+> -MODULE_PARM_DESC(channel_idx, "channel index array for the notifications");
+> -static atomic_t channel_ref_count;
 >  
->  Required properties:
->  - compatible: "apm,xgene-gpio-sb" for the X-Gene Standby GPIO controller
-> @@ -15,10 +25,18 @@ Required properties:
->  		0 = active high
->  		1 = active low
->  - gpio-controller: Marks the device node as a GPIO controller.
-> -- interrupts: Shall contain exactly 6 interrupts.
-> +- interrupts: The EXT_INT_0 parent interrupt resource must be listed first.
-> +- interrupt-parent: Phandle of the parent interrupt controller.
-> +- interrupt-cells: Should be two.
-> +       - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
-> +       - second cell is used to specify flags.
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- apm,nr-gpios: Optional, specify number of gpios pin.
-> +- apm,nr-irqs: Optional, specify number of interrupt pins.
-
-When is this not 6?
-
-> +- apm,irq-start: Optional, specify lowest gpio pin support interrupt.
-
-What determines this value? What value is assumed if not present?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  /* process completed descriptors */
+>  static void hidma_process_completed(struct hidma_chan *mchan)
+> @@ -592,7 +572,6 @@ static int hidma_probe(struct platform_device *pdev)
+>  	struct resource *trca_resource;
+>  	struct resource *evca_resource;
+>  	int chirq;
+> -	int current_channel_index = atomic_read(&channel_ref_count);
+>  	void __iomem *evca;
+>  	void __iomem *trca;
+>  	int rc;
+> @@ -668,22 +647,7 @@ static int hidma_probe(struct platform_device *pdev)
+>  		goto dmafree;
+>  	}
+>  
+> -	if (current_channel_index > HIDMA_MAX_CHANNELS) {
+> -		rc = -EINVAL;
+> -		goto dmafree;
+> -	}
+> -
+> -	dmadev->chidx = -1;
+> -	device_property_read_u32(&pdev->dev, "channel-index", &dmadev->chidx);
+> -
+> -	/* kernel command line override for the guest machine */
+> -	if (channel_idx[current_channel_index] != -1)
+> -		dmadev->chidx = channel_idx[current_channel_index];
+> -
+> -	if (dmadev->chidx == -1) {
+> -		rc = -EINVAL;
+> -		goto dmafree;
+> -	}
+> +	dmadev->chidx = readl(dmadev->dev_trca + 0x28);
+>  
+>  	/* Set DMA mask to 64 bits. */
+>  	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> @@ -724,7 +688,6 @@ static int hidma_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, dmadev);
+>  	pm_runtime_mark_last_busy(dmadev->ddev.dev);
+>  	pm_runtime_put_autosuspend(dmadev->ddev.dev);
+> -	atomic_inc(&channel_ref_count);
+>  	return 0;
+>  
+>  uninit:
+> -- 
+> 1.8.2.1
+> 
