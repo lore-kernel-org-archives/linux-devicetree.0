@@ -1,60 +1,67 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/3] leds: add SN3218 LED driver
-Date: Mon, 1 Feb 2016 14:20:17 +0100
-Message-ID: <56AF5B91.1000209@i2se.com>
-References: <1454245156-15747-1-git-send-email-stefan.wahren@i2se.com>
- <1454245156-15747-4-git-send-email-stefan.wahren@i2se.com>
- <56AF2C63.6000404@samsung.com> <56AF5567.4090102@samsung.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add TPO TPG110 binding
+Date: Mon, 1 Feb 2016 07:22:02 -0600
+Message-ID: <CAL_JsqJSR_fCnCvUnzJaD3-zA0SPgTxjKtbL=up2NyH0GL_56w@mail.gmail.com>
+References: <1454316643-3931-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <56AF5567.4090102@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1454316643-3931-1-git-send-email-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 01.02.2016 um 13:53 schrieb Jacek Anaszewski:
-> On 02/01/2016 10:58 AM, Jacek Anaszewski wrote:
->> Hi Stefan,
->>
->> Thanks for the update. A few more comments below.
->>
->> On 01/31/2016 01:59 PM, Stefan Wahren wrote:
->>> +
->>> +/**
->>> + * struct sn3218 -
->>> + * @client - Pointer to the I2C client
->>> + * @leds - Pointer to the individual LEDs
->>> + * @num_leds - Actual number of LEDs
->>> +**/
->>> +struct sn3218 {
->>> +    struct i2c_client *client;
->>> +    struct regmap *regmap;
->>> +    struct sn3218_led *leds;
->>> +    int num_leds;
->>> +};
->>> +
->>> +/**
->>> + * struct sn3218_led -
->>> + * @chip - Pointer to the container
->>> + * @led_cdev - led class device pointer
->>> + * @led_num - LED index ( 0 .. 17 )
->>> +**/
->>> +struct sn3218_led {
->>> +    struct sn3218 *chip;
->>
->> You don't need this if you have led id here. Please refer to
->> drivers/leds/leds-max77693.c, sub_led_to_led() to check how to get
->> a pointer to the parent structure in similar case.
->
-> Hmm, it would work only if leds was a static array in struct sn3218.
-> So, let's better leave this "chip" pointer intact.
-
-Okay
-
-I will wait until the end of the week before sending a new version.
-
-Thanks
-Stefan
+T24gTW9uLCBGZWIgMSwgMjAxNiBhdCAyOjUwIEFNLCBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
+ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+IFRoaXMgYWRkcyBkZXZpY2UgdHJlZSBiaW5kaW5ncyBm
+b3IgdGhlIFRQTyBUUEcxMTAgcGFuZWwgZm91bmQKPiBtb3VudGVkIGluIHRoZSBOb21hZGlrIE5I
+Szg4MTUuCj4KPiBTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxp
+bmFyby5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAu
+dHh0ICAgICAgICAgIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdl
+ZCwgNDcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRwZzExMC50eHQKPgo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90
+cG8sdHBnMTEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3Rwbyx0cGcxMTAudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
+MDAwMDAwMDAuLmFjYmM2YmVmMzU5Mwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dAo+IEBA
+IC0wLDAgKzEsNDcgQEAKPiArVFBPIFRQRzExMCBQYW5lbAo+ICs9PT09PT09PT09PT09PT09Cj4g
+Kwo+ICtUaGlzIGJpbmRpbmcgYnVpbGRzIG9uIHRoZSBEUEkgYmluZGluZ3MsIGFkZGluZyBhIGZl
+dyBwcm9wZXJ0aWVzCj4gK2FzIGEgc3VwZXJzZXQgb2YgYSBEUEkuIFNlZSBwYW5lbC1kcGkudHh0
+IGZvciB0aGUgcmVxdWlyZWQgRFBJCj4gK2JpbmRpbmdzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiArLSBjb21wYXRpYmxlIDogInRwbyx0cGcxMTAiCj4gKy0gZ3Jlc3RiLWdwaW8gOiBw
+YW5lbCByZXNldCBHUElPCgotZ3Bpb3MKClRoZSBleGFtcGxlIGlzIGNvcnJlY3QuCgpPdGhlcndp
+c2UsCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gKy0gc2Nlbi1n
+cGlvcyA6IHNlcmlhbCBjb250cm9sIGVuYWJsZSBHUElPCj4gKy0gc2NsLWdwaW9zIDogc2VyaWFs
+IGNvbnRyb2wgY2xvY2sgbGluZSBHUElPCj4gKy0gc2RhLWdwaW9zIDogc2VyaWFsIGNvbnRyb2wg
+ZGF0YSBsaW5lIEdQSU8KPiArCj4gK1JlcXVpcmVkIG5vZGVzOgo+ICstIFZpZGVvIHBvcnQgZm9y
+IERQSSBpbnB1dCwgc2VlIHBhbmVsLWRwaS50eHQKPiArLSBQYW5lbCB0aW1pbmcgZm9yIERQSSBz
+ZXR1cCwgc2VlIHBhbmVsLWRwaS50eHQKPiArCj4gK0V4YW1wbGUKPiArLS0tLS0tLQo+ICsKPiAr
+cGFuZWwgewo+ICsgICAgICAgY29tcGF0aWJsZSA9ICJ0cG8sdHBnMTEwIiwgInBhbmVsLWRwaSI7
+Cj4gKyAgICAgICBncmVzdGItZ3Bpb3MgPSA8JnN0bXBlX2dwaW80NCA1IEdQSU9fQUNUSVZFX0xP
+Vz47Cj4gKyAgICAgICBzY2VuLWdwaW9zID0gPCZncGlvMCA2IEdQSU9fQUNUSVZFX0xPVz47Cj4g
+KyAgICAgICBzY2wtZ3Bpb3MgPSA8JmdwaW8wIDUgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyAgICAg
+ICBzZGEtZ3Bpb3MgPSA8JmdwaW8wIDQgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyAgICAgICBiYWNr
+bGlnaHQgPSA8JmJsPjsKPiArCj4gKyAgICAgICBwb3J0IHsKPiArICAgICAgICAgICAgICAgbm9t
+YWRpa19jbGNkX3BhbmVsOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVt
+b3RlLWVuZHBvaW50ID0gPCZub21hZGlrX2NsY2RfcGFkcz47Cj4gKyAgICAgICAgICAgICAgIH07
+Cj4gKyAgICAgICB9Owo+ICsKPiArICAgICAgIHBhbmVsLXRpbWluZyB7Cj4gKyAgICAgICAgICAg
+ICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwzMzIwMDAwMD47Cj4gKyAgICAgICAgICAgICAgIGhhY3Rp
+dmUgPSA8ODAwPjsKPiArICAgICAgICAgICAgICAgaGJhY2stcG9yY2ggPSA8MjE2PjsKPiArICAg
+ICAgICAgICAgICAgaGZyb250LXBvcmNoID0gPDQwPjsKPiArICAgICAgICAgICAgICAgaHN5bmMt
+bGVuID0gPDE+Owo+ICsgICAgICAgICAgICAgICB2YWN0aXZlID0gPDQ4MD47Cj4gKyAgICAgICAg
+ICAgICAgIHZiYWNrLXBvcmNoID0gPDM1PjsKPiArICAgICAgICAgICAgICAgdmZyb250LXBvcmNo
+ID0gPDEwPjsKPiArICAgICAgICAgICAgICAgdnN5bmMtbGVuID0gPDE+Owo+ICsgICAgICAgfTsK
+PiArfTsKPiAtLQo+IDIuNC4zCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
