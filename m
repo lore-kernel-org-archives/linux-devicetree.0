@@ -1,45 +1,57 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V13 09/10] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Mon, 1 Feb 2016 11:56:44 -0500
-Message-ID: <56AF8E4C.10003@codeaurora.org>
-References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
- <1454106914-15857-10-git-send-email-okaya@codeaurora.org>
- <56AF82FA.7000303@linaro.org> <56AF84F4.2080809@codeaurora.org>
- <56AF87E2.8040201@linaro.org> <56AF8B6A.8040504@codeaurora.org>
- <56AF8CAB.3030908@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: cros-ec-keyboard: Add LOCK key to keyboard matrix
+Date: Mon, 01 Feb 2016 18:16:47 +0100
+Message-ID: <2283417.UbYyfQa1E3@diego>
+References: <1454121504-12683-1-git-send-email-djkurtz@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56AF8CAB.3030908@codeaurora.org>
+In-Reply-To: <1454121504-12683-1-git-send-email-djkurtz@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Baptiste Reynal <b.reynal@virtualopensystems.com>
+To: linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, YH Huang <yh.huang@mediatek.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, James Chao <james_chao@asus.com>, dianders@chromium.org, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/1/2016 11:49 AM, Timur Tabi wrote:
-> Sinan Kaya wrote:
->> of-tested-by: ...
->>
->> Shanker and I tested ACPI before pushing the patches to the list and we also
->> posted the corresponding QEMU patches as well to the qemu-devel maillist.
->>
->> http://patchwork.ozlabs.org/patch/575878/
->>
->> I'll ask him to add his acpi-tested-by for the ACPI part.
-> 
-> I would rather not see a tested-by variant, and instead add comments to the line, like this:
-> 
->     Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
->     Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only)
-> 
-> That way, people can still grep for "^Tested-by:".
-> 
+Hi Daniel,
 
-will do.
+Am Samstag, 30. Januar 2016, 10:38:24 schrieb Daniel Kurtz:
+> From: James Chao <james_chao@asus.com>
+> 
+> The LOCK key is at KSO9/KSI3 for Chromebook Flip and other devices
+> that use the Chrome OS EC keyboard matrix.
+> 
+> Signed-off-by: James Chao <james_chao@asus.com>
+> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: YH Huang <yh.huang@mediatek.com>
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+that should probably be a 
+	Reviewed-by: YH Huang <yh.huang@mediatek.com>
+As I don't see any actual patch handling step by him/her.
+
+Also, you might've included Olof as the keeper of all things ChromeOS when 
+sending.
+
+@Olof: this seems to be pretty Veyron-specific for the moment, so I'm inclined 
+to pick that up. Please holler if you disagree and want to pick it up yourself 
+;-)
+
+
+Thanks
+Heiko
+
+> ---
+>  arch/arm/boot/dts/cros-ec-keyboard.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> b/arch/arm/boot/dts/cros-ec-keyboard.dtsi index 4e42f30c..c045105 100644
+> --- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> +++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
+> @@ -55,6 +55,7 @@
+>  			MATRIX_KEY(0x03, 0x04, KEY_F5)
+>  			MATRIX_KEY(0x03, 0x06, KEY_6)
+>  			MATRIX_KEY(0x03, 0x08, KEY_MINUS)
+> +			MATRIX_KEY(0x03, 0x09, KEY_F13)
+>  			MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)
+>  			MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)
