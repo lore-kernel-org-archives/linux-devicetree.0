@@ -1,156 +1,60 @@
-From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
-Date: Mon,  1 Feb 2016 11:25:58 +0100
-Message-ID: <1454322360-8666-4-git-send-email-romain.izard.pro@gmail.com>
-References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454322360-8666-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
+Date: Mon, 1 Feb 2016 19:29:00 +0900
+Message-ID: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Starting with the SAMA5D2, there is a new revision of the Atmel PMECC
-controller that can correct 32 bits in each sector. This controller is
-not 100% compatible with the previous revision that corrected a maximum
-of 24 bits by sector, as some register addresses overlap.
-
-Using information from the device tree, we can configure the driver to
-work with both versions.
-
-For the binding:
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
-v3: rebase on linux-mtd-next
-    constify the atmel_nand_caps structure
-v2: split rewording of the binding into its own patch
+This patch is based on the latest renesas.git / renesas-devel-20160129-v4.5-rc1
+tag. (commit id = 0319e29efd838de5a7a4b589b8f07d9c1fd4abf6)
 
- .../devicetree/bindings/mtd/atmel-nand.txt         |  5 ++++-
- drivers/mtd/nand/atmel_nand.c                      | 23 +++++++++++++++++++++-
- drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
- 3 files changed, 32 insertions(+), 4 deletions(-)
+This patch needs r8a7795-cpg-mssr.c update for usb-dmac clocks.
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-index e68ab404d912..e1887b7d7e53 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -1,7 +1,10 @@
- Atmel NAND flash
- 
- Required properties:
--- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5d4-nand".
-+- compatible: The possible values are:
-+	"atmel,at91rm9200-nand"
-+	"atmel,sama5d2-nand"
-+	"atmel,sama5d4-nand"
- - reg : should specify localbus address and size used for the chip,
- 	and hardware ECC controller if available.
- 	If the hardware ECC is PMECC, it should contain address and size for
-diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index 600c77cb70ef..00fa71045805 100644
---- a/drivers/mtd/nand/atmel_nand.c
-+++ b/drivers/mtd/nand/atmel_nand.c
-@@ -65,6 +65,7 @@ module_param(on_flash_bbt, int, 0);
- 
- struct atmel_nand_caps {
- 	bool pmecc_correct_erase_page;
-+	uint8_t pmecc_max_correction;
- };
- 
- struct atmel_nand_nfc_caps {
-@@ -145,6 +146,7 @@ struct atmel_nand_host {
- 	int			pmecc_cw_len;	/* Length of codeword */
- 
- 	void __iomem		*pmerrloc_base;
-+	void __iomem		*pmerrloc_el_base;
- 	void __iomem		*pmecc_rom_base;
- 
- 	/* lookup table for alpha_to and index_of */
-@@ -818,7 +820,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
- 	sector_size = host->pmecc_sector_size;
- 
- 	while (err_nbr) {
--		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_base, i) - 1;
-+		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_el_base, i) - 1;
- 		byte_pos = tmp / 8;
- 		bit_pos  = tmp % 8;
- 
-@@ -1210,6 +1212,8 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
- 		err_no = PTR_ERR(host->pmerrloc_base);
- 		goto err;
- 	}
-+	host->pmerrloc_el_base = host->pmerrloc_base + ATMEL_PMERRLOC_SIGMAx +
-+		(host->caps->pmecc_max_correction + 1) * 4;
- 
- 	if (!host->has_no_lookup_table) {
- 		regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-@@ -2307,17 +2311,34 @@ static int atmel_nand_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+/*
-+ * AT91RM9200 does not have PMECC or PMECC Errloc peripherals for
-+ * BCH ECC. Combined with the "atmel,has-pmecc", it is used to describe
-+ * devices from the SAM9 family that have those.
-+ */
- static const struct atmel_nand_caps at91rm9200_caps = {
- 	.pmecc_correct_erase_page = false,
-+	.pmecc_max_correction = 24,
- };
- 
- static const struct atmel_nand_caps sama5d4_caps = {
- 	.pmecc_correct_erase_page = true,
-+	.pmecc_max_correction = 24,
-+};
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 119549e..8cb1838 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -880,5 +880,31 @@
+ 			power-domains = <&cpg>;
+ 			status = "disabled";
+ 		};
 +
-+/*
-+ * The PMECC Errloc controller starting in SAMA5D2 is not compatible,
-+ * as the increased correction strength requires more registers.
-+ */
-+static const struct atmel_nand_caps sama5d2_caps = {
-+	.pmecc_correct_erase_page = true,
-+	.pmecc_max_correction = 32,
- };
- 
- static const struct of_device_id atmel_nand_dt_ids[] = {
- 	{ .compatible = "atmel,at91rm9200-nand", .data = &at91rm9200_caps },
- 	{ .compatible = "atmel,sama5d4-nand", .data = &sama5d4_caps },
-+	{ .compatible = "atmel,sama5d2-nand", .data = &sama5d2_caps },
- 	{ /* sentinel */ }
- };
- 
-diff --git a/drivers/mtd/nand/atmel_nand_ecc.h b/drivers/mtd/nand/atmel_nand_ecc.h
-index 668e7358f19b..ec964c43c932 100644
---- a/drivers/mtd/nand/atmel_nand_ecc.h
-+++ b/drivers/mtd/nand/atmel_nand_ecc.h
-@@ -108,7 +108,11 @@
- #define		PMERRLOC_ERR_NUM_MASK		(0x1f << 8)
- #define		PMERRLOC_CALC_DONE		(1 << 0)
- #define ATMEL_PMERRLOC_SIGMAx		0x028	/* Error location SIGMA x */
--#define ATMEL_PMERRLOC_ELx		0x08c	/* Error location x */
++		usb_dmac0: dma-controller@e65a0000 {
++			compatible = "renesas,r8a7795-usb-dmac",
++				     "renesas,usb-dmac";
++			reg = <0 0xe65a0000 0 0x100>;
++			interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
++				      0 109 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ch0", "ch1";
++			clocks = <&cpg CPG_MOD 330>;
++			power-domains = <&cpg>;
++			#dma-cells = <1>;
++			dma-channels = <2>;
++		};
 +
-+/*
-+ * The ATMEL_PMERRLOC_ELx register location depends from the number of
-+ * bits corrected by the PMECC controller. Do not use it.
-+ */
- 
- /* Register access macros for PMECC */
- #define pmecc_readl_relaxed(addr, reg) \
-@@ -136,7 +140,7 @@
- 	readl_relaxed((addr) + ATMEL_PMERRLOC_SIGMAx + ((n) * 4))
- 
- #define pmerrloc_readl_el_relaxed(addr, n) \
--	readl_relaxed((addr) + ATMEL_PMERRLOC_ELx + ((n) * 4))
-+	readl_relaxed((addr) + ((n) * 4))
- 
- /* Galois field dimension */
- #define PMECC_GF_DIMENSION_13			13
++		usb_dmac1: dma-controller@e65b0000 {
++			compatible = "renesas,r8a7795-usb-dmac",
++				     "renesas,usb-dmac";
++			reg = <0 0xe65b0000 0 0x100>;
++			interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH
++				      0 110 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ch0", "ch1";
++			clocks = <&cpg CPG_MOD 331>;
++			power-domains = <&cpg>;
++			#dma-cells = <1>;
++			dma-channels = <2>;
++		};
+ 	};
+ };
 -- 
-2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
