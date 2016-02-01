@@ -1,38 +1,56 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: add vendor TPO
-Date: Mon,  1 Feb 2016 09:48:57 +0100
-Message-ID: <1454316537-3840-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/2] dt-bindings: Add TPO TPG110 binding
+Date: Mon,  1 Feb 2016 09:50:43 +0100
+Message-ID: <1454316643-3931-1-git-send-email-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-TPO was a merger on June 5 2006 of Toppoly Optoelectronics and
-Philips Mobile Display Systems. They manufactured small and medium
-mobile displays.
-
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 72e2c5a2b327..7c3c63d4dbe0 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -237,6 +237,7 @@ toradex	Toradex AG
- toshiba	Toshiba Corporation
- toumaz	Toumaz
- tplink	TP-LINK Technologies Co., Ltd.
-+tpo	TPO
- tronfy	Tronfy
- truly	Truly Semiconductors Limited
- upisemi	uPI Semiconductor Corp.
--- 
-2.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgVFBPIFRQRzExMCBwYW5lbCBm
+b3VuZAptb3VudGVkIGluIHRoZSBOb21hZGlrIE5ISzg4MTUuCgpTaWduZWQtb2ZmLWJ5OiBMaW51
+cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvdHBvLHRwZzExMC50eHQgICAgICAgICAgfCA0NyArKysrKysrKysrKysrKysr
+KysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0
+cGcxMTAudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvdHBvLHRwZzExMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0
+NAppbmRleCAwMDAwMDAwMDAwMDAuLmFjYmM2YmVmMzU5MwotLS0gL2Rldi9udWxsCisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAu
+dHh0CkBAIC0wLDAgKzEsNDcgQEAKK1RQTyBUUEcxMTAgUGFuZWwKKz09PT09PT09PT09PT09PT0K
+KworVGhpcyBiaW5kaW5nIGJ1aWxkcyBvbiB0aGUgRFBJIGJpbmRpbmdzLCBhZGRpbmcgYSBmZXcg
+cHJvcGVydGllcworYXMgYSBzdXBlcnNldCBvZiBhIERQSS4gU2VlIHBhbmVsLWRwaS50eHQgZm9y
+IHRoZSByZXF1aXJlZCBEUEkKK2JpbmRpbmdzLgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBj
+b21wYXRpYmxlIDogInRwbyx0cGcxMTAiCistIGdyZXN0Yi1ncGlvIDogcGFuZWwgcmVzZXQgR1BJ
+TworLSBzY2VuLWdwaW9zIDogc2VyaWFsIGNvbnRyb2wgZW5hYmxlIEdQSU8KKy0gc2NsLWdwaW9z
+IDogc2VyaWFsIGNvbnRyb2wgY2xvY2sgbGluZSBHUElPCistIHNkYS1ncGlvcyA6IHNlcmlhbCBj
+b250cm9sIGRhdGEgbGluZSBHUElPCisKK1JlcXVpcmVkIG5vZGVzOgorLSBWaWRlbyBwb3J0IGZv
+ciBEUEkgaW5wdXQsIHNlZSBwYW5lbC1kcGkudHh0CistIFBhbmVsIHRpbWluZyBmb3IgRFBJIHNl
+dHVwLCBzZWUgcGFuZWwtZHBpLnR4dAorCitFeGFtcGxlCistLS0tLS0tCisKK3BhbmVsIHsKKwlj
+b21wYXRpYmxlID0gInRwbyx0cGcxMTAiLCAicGFuZWwtZHBpIjsKKwlncmVzdGItZ3Bpb3MgPSA8
+JnN0bXBlX2dwaW80NCA1IEdQSU9fQUNUSVZFX0xPVz47CisJc2Nlbi1ncGlvcyA9IDwmZ3BpbzAg
+NiBHUElPX0FDVElWRV9MT1c+OworCXNjbC1ncGlvcyA9IDwmZ3BpbzAgNSBHUElPX0FDVElWRV9I
+SUdIPjsKKwlzZGEtZ3Bpb3MgPSA8JmdwaW8wIDQgR1BJT19BQ1RJVkVfSElHSD47CisJYmFja2xp
+Z2h0ID0gPCZibD47CisKKwlwb3J0IHsKKwkJbm9tYWRpa19jbGNkX3BhbmVsOiBlbmRwb2ludCB7
+CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm5vbWFkaWtfY2xjZF9wYWRzPjsKKwkJfTsKKwl9Owor
+CisJcGFuZWwtdGltaW5nIHsKKwkJY2xvY2stZnJlcXVlbmN5ID0gPDMzMjAwMDAwPjsKKwkJaGFj
+dGl2ZSA9IDw4MDA+OworCQloYmFjay1wb3JjaCA9IDwyMTY+OworCQloZnJvbnQtcG9yY2ggPSA8
+NDA+OworCQloc3luYy1sZW4gPSA8MT47CisJCXZhY3RpdmUgPSA8NDgwPjsKKwkJdmJhY2stcG9y
+Y2ggPSA8MzU+OworCQl2ZnJvbnQtcG9yY2ggPSA8MTA+OworCQl2c3luYy1sZW4gPSA8MT47CisJ
+fTsKK307Ci0tIAoyLjQuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
