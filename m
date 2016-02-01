@@ -1,146 +1,87 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [RESEND PATCH v1] drm: Clean up drm Makefile
-Date: Mon, 1 Feb 2016 10:41:24 +0800
-Message-ID: <CAGd==04_xY8E9NObQEpRraGfUjtsSOZWXGnrW5Krd=2E+WXdYA@mail.gmail.com>
-References: <1454147777-77577-1-git-send-email-xinliang.liu@linaro.org>
- <CAFCwf120-19JKDGGPOBQ4ALg=f5ESG4pVhMeN1s=0uz3OpoFpg@mail.gmail.com>
+From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 1/2] Documentation: bridge: Add documentation for ps8640 DT
+ properties
+Date: Mon, 1 Feb 2016 12:13:31 +0800
+Message-ID: <1454300012-32552-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFCwf120-19JKDGGPOBQ4ALg=f5ESG4pVhMeN1s=0uz3OpoFpg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Jon Corbet <corbet@lwn.net>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: stonea168-9Onoh4P/yGk@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAgSmFudWFyeSAyMDE2IGF0IDE5OjExLCBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlAZ21h
-aWwuY29tPiB3cm90ZToKPiBPbiBTYXQsIEphbiAzMCwgMjAxNiBhdCAxMTo1NiBBTSwgWGlubGlh
-bmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4gd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggY2xl
-YW5zIHVwIHRoZSBNYWtlZmlsZSBvZiBkcm0gcm9vdCBkaXJlY3RvcnkuCj4+IE1ha2UgY29yZSBh
-bmQgZGV2aWNlIGRyaXZlcnMgY29uZmlndXJhdGlvbiBsaXN0IHNvcnRlZCBBbHBoYWJldGljYWxs
-eS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJv
-Lm9yZz4KPj4gUmV2aWV3ZWQtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxp
-Y29uLmNvbT4KPj4gUmV2aWV3ZWQtYnk6IFlpZmFuIExpdSA8bGl1X2ZhbnlpQDE2My5jb20+Cj4+
-IC0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIHwgMTAyICsrKysrKysrKysrKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNTIgaW5z
-ZXJ0aW9ucygrKSwgNTAgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPj4gaW5kZXggNjE3NjZk
-ZWM2YThkLi43NzAwMDcxNzMwNWIgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9NYWtl
-ZmlsZQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPj4gQEAgLTIsNiArMiw5IEBA
-Cj4+ICAjIE1ha2VmaWxlIGZvciB0aGUgZHJtIGRldmljZSBkcml2ZXIuICBUaGlzIGRyaXZlciBw
-cm92aWRlcyBzdXBwb3J0IGZvciB0aGUKPj4gICMgRGlyZWN0IFJlbmRlcmluZyBJbmZyYXN0cnVj
-dHVyZSAoRFJJKSBpbiBYRnJlZTg2IDQuMS4wIGFuZCBoaWdoZXIuCj4+Cj4+ICtDRkxBR1NfZHJt
-X3RyYWNlX3BvaW50cy5vIDo9IC1JJChzcmMpCj4+ICsKPj4gKyMgY29yZS4gUGxlYXNlIGtlZXAg
-dGhpcyBsaXN0IHNvcnRlZCBhbHBoYWJldGljYWxseQo+PiAgZHJtLXkgICAgICAgOj0gZHJtX2F1
-dGgubyBkcm1fYnVmcy5vIGRybV9jYWNoZS5vIFwKPj4gICAgICAgICAgICAgICAgIGRybV9jb250
-ZXh0Lm8gZHJtX2RtYS5vIFwKPj4gICAgICAgICAgICAgICAgIGRybV9mb3BzLm8gZHJtX2dlbS5v
-IGRybV9pb2N0bC5vIGRybV9pcnEubyBcCj4+IEBAIC0xMyw2NCArMTYsNjMgQEAgZHJtLXkgICAg
-ICAgOj0gICAgICBkcm1fYXV0aC5vIGRybV9idWZzLm8gZHJtX2NhY2hlLm8gXAo+PiAgICAgICAg
-ICAgICAgICAgZHJtX3RyYWNlX3BvaW50cy5vIGRybV9nbG9iYWwubyBkcm1fcHJpbWUubyBcCj4+
-ICAgICAgICAgICAgICAgICBkcm1fcmVjdC5vIGRybV92bWFfbWFuYWdlci5vIGRybV9mbGlwX3dv
-cmsubyBcCj4+ICAgICAgICAgICAgICAgICBkcm1fbW9kZXNldF9sb2NrLm8gZHJtX2F0b21pYy5v
-IGRybV9icmlkZ2Uubwo+PiAtCj4+IC1kcm0tJChDT05GSUdfQ09NUEFUKSArPSBkcm1faW9jMzIu
-bwo+PiAtZHJtLSQoQ09ORklHX0RSTV9HRU1fQ01BX0hFTFBFUikgKz0gZHJtX2dlbV9jbWFfaGVs
-cGVyLm8KPj4gIGRybS0kKENPTkZJR19QQ0kpICs9IGF0aV9wY2lnYXJ0Lm8KPj4gLWRybS0kKENP
-TkZJR19EUk1fUEFORUwpICs9IGRybV9wYW5lbC5vCj4+IC1kcm0tJChDT05GSUdfT0YpICs9IGRy
-bV9vZi5vCj4+ICBkcm0tJChDT05GSUdfQUdQKSArPSBkcm1fYWdwc3VwcG9ydC5vCj4+ICtkcm0t
-JChDT05GSUdfRFJNX0dFTV9DTUFfSEVMUEVSKSArPSBkcm1fZ2VtX2NtYV9oZWxwZXIubwo+PiAr
-ZHJtLSQoQ09ORklHX0NPTVBBVCkgKz0gZHJtX2lvYzMyLm8KPj4gK2RybS0kKENPTkZJR19PRikg
-Kz0gZHJtX29mLm8KPj4gK2RybS0kKENPTkZJR19EUk1fUEFORUwpICs9IGRybV9wYW5lbC5vCj4+
-ICtvYmotJChDT05GSUdfRFJNKSAgICAgICs9IGRybS5vCj4+ICsKPj4gK29iai0kKENPTkZJR19E
-Uk1fTUlQSV9EU0kpICs9IGRybV9taXBpX2RzaS5vCj4+Cj4+ICBkcm1fa21zX2hlbHBlci15IDo9
-IGRybV9jcnRjX2hlbHBlci5vIGRybV9kcF9oZWxwZXIubyBkcm1fcHJvYmVfaGVscGVyLm8gXAo+
-PiAgICAgICAgICAgICAgICAgZHJtX3BsYW5lX2hlbHBlci5vIGRybV9kcF9tc3RfdG9wb2xvZ3ku
-byBkcm1fYXRvbWljX2hlbHBlci5vCj4+ICBkcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fTE9B
-RF9FRElEX0ZJUk1XQVJFKSArPSBkcm1fZWRpZF9sb2FkLm8KPj4gLWRybV9rbXNfaGVscGVyLSQo
-Q09ORklHX0RSTV9GQkRFVl9FTVVMQVRJT04pICs9IGRybV9mYl9oZWxwZXIubwo+PiAgZHJtX2tt
-c19oZWxwZXItJChDT05GSUdfRFJNX0tNU19DTUFfSEVMUEVSKSArPSBkcm1fZmJfY21hX2hlbHBl
-ci5vCj4+IC0KPj4gK2RybV9rbXNfaGVscGVyLSQoQ09ORklHX0RSTV9GQkRFVl9FTVVMQVRJT04p
-ICs9IGRybV9mYl9oZWxwZXIubwo+PiAgb2JqLSQoQ09ORklHX0RSTV9LTVNfSEVMUEVSKSArPSBk
-cm1fa21zX2hlbHBlci5vCj4+Cj4+IC1DRkxBR1NfZHJtX3RyYWNlX3BvaW50cy5vIDo9IC1JJChz
-cmMpCj4+ICtvYmotJChDT05GSUdfRFJNX1RUTSkgKz0gdHRtLwo+Pgo+PiAtb2JqLSQoQ09ORklH
-X0RSTSkgICAgICArPSBkcm0ubwo+PiAtb2JqLSQoQ09ORklHX0RSTV9NSVBJX0RTSSkgKz0gZHJt
-X21pcGlfZHNpLm8KPj4gLW9iai0kKENPTkZJR19EUk1fVFRNKSAgKz0gdHRtLwo+PiAtb2JqLSQo
-Q09ORklHX0RSTV9UREZYKSArPSB0ZGZ4Lwo+PiAtb2JqLSQoQ09ORklHX0RSTV9SMTI4KSArPSBy
-MTI4Lwo+PiAtb2JqLSQoQ09ORklHX0hTQV9BTUQpICs9IGFtZC9hbWRrZmQvCj4+IC1vYmotJChD
-T05GSUdfRFJNX1JBREVPTikrPSByYWRlb24vCj4+IC1vYmotJChDT05GSUdfRFJNX0FNREdQVSkr
-PSBhbWQvYW1kZ3B1Lwo+PiAtb2JqLSQoQ09ORklHX0RSTV9NR0EpICArPSBtZ2EvCj4+IC1vYmot
-JChDT05GSUdfRFJNX0k4MTApICs9IGk4MTAvCj4+IC1vYmotJChDT05GSUdfRFJNX0k5MTUpICAr
-PSBpOTE1Lwo+PiAtb2JqLSQoQ09ORklHX0RSTV9NR0FHMjAwKSArPSBtZ2FnMjAwLwo+PiAtb2Jq
-LSQoQ09ORklHX0RSTV9WQzQpICArPSB2YzQvCj4+IC1vYmotJChDT05GSUdfRFJNX0NJUlJVU19R
-RU1VKSArPSBjaXJydXMvCj4+IC1vYmotJChDT05GSUdfRFJNX1NJUykgICArPSBzaXMvCj4+IC1v
-YmotJChDT05GSUdfRFJNX1NBVkFHRSkrPSBzYXZhZ2UvCj4+IC1vYmotJChDT05GSUdfRFJNX1ZN
-V0dGWCkrPSB2bXdnZngvCj4+IC1vYmotJChDT05GSUdfRFJNX1ZJQSkgICs9dmlhLwo+PiAtb2Jq
-LSQoQ09ORklHX0RSTV9WR0VNKSArPSB2Z2VtLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9OT1VWRUFV
-KSArPW5vdXZlYXUvCj4+IC1vYmotJChDT05GSUdfRFJNX0VYWU5PUykgKz1leHlub3MvCj4+IC1v
-YmotJChDT05GSUdfRFJNX1JPQ0tDSElQKSArPXJvY2tjaGlwLwo+PiAtb2JqLSQoQ09ORklHX0RS
-TV9HTUE1MDApICs9IGdtYTUwMC8KPj4gLW9iai0kKENPTkZJR19EUk1fVURMKSArPSB1ZGwvCj4+
-IC1vYmotJChDT05GSUdfRFJNX0FTVCkgKz0gYXN0Lwo+PiAtb2JqLSQoQ09ORklHX0RSTV9BUk1B
-REEpICs9IGFybWFkYS8KPj4gKyMgZGV2aWNlIGRyaXZlcnMuIFBsZWFzZSBrZWVwIHRoaXMgbGlz
-dCBzb3J0ZWQgYWxwaGFiZXRpY2FsbHkKPj4gK29iai0kKENPTkZJR19EUk1fQU1ER1BVKSAgICAg
-ICArPSBhbWQvYW1kZ3B1Lwo+PiArb2JqLSQoQ09ORklHX0hTQV9BTUQpICAgICAgICAgICs9IGFt
-ZC9hbWRrZmQvCj4+ICtvYmotJChDT05GSUdfRFJNX0FSTUFEQSkgICAgICAgKz0gYXJtYWRhLwo+
-PiArb2JqLSQoQ09ORklHX0RSTV9BU1QpICAgICAgICAgICs9IGFzdC8KPj4gIG9iai0kKENPTkZJ
-R19EUk1fQVRNRUxfSExDREMpICArPSBhdG1lbC1obGNkYy8KPj4gLW9iai0kKENPTkZJR19EUk1f
-UkNBUl9EVSkgKz0gcmNhci1kdS8KPj4gLW9iai0kKENPTkZJR19EUk1fU0hNT0JJTEUpICs9c2ht
-b2JpbGUvCj4+IC1vYmoteSAgICAgICAgICAgICAgICAgICs9IG9tYXBkcm0vCj4+IC1vYmoteSAg
-ICAgICAgICAgICAgICAgICs9IHRpbGNkYy8KPj4gLW9iai0kKENPTkZJR19EUk1fUVhMKSArPSBx
-eGwvCj4+IC1vYmotJChDT05GSUdfRFJNX0JPQ0hTKSArPSBib2Nocy8KPj4gLW9iai0kKENPTkZJ
-R19EUk1fVklSVElPX0dQVSkgKz0gdmlydGlvLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9NU00pICs9
-IG1zbS8KPj4gLW9iai0kKENPTkZJR19EUk1fVEVHUkEpICs9IHRlZ3JhLwo+PiAtb2JqLSQoQ09O
-RklHX0RSTV9TVEkpICs9IHN0aS8KPj4gLW9iai0kKENPTkZJR19EUk1fSU1YKSArPSBpbXgvCj4+
-IC1vYmoteSAgICAgICAgICAgICAgICAgICs9IGkyYy8KPj4gLW9iai15ICAgICAgICAgICAgICAg
-ICAgKz0gcGFuZWwvCj4+IC1vYmoteSAgICAgICAgICAgICAgICAgICs9IGJyaWRnZS8KPj4gLW9i
-ai0kKENPTkZJR19EUk1fRlNMX0RDVSkgKz0gZnNsLWRjdS8KPj4gLW9iai0kKENPTkZJR19EUk1f
-RVROQVZJVikgKz0gZXRuYXZpdi8KPj4gK29iai0kKENPTkZJR19EUk1fQk9DSFMpICAgICAgICAg
-ICAgICAgICs9IGJvY2hzLwo+PiArb2JqLXkgICAgICAgICAgICAgICAgICAgICAgICAgICs9IGJy
-aWRnZS8KPj4gK29iai0kKENPTkZJR19EUk1fQ0lSUlVTX1FFTVUpICArPSBjaXJydXMvCj4+ICtv
-YmotJChDT05GSUdfRFJNX0VUTkFWSVYpICAgICAgKz0gZXRuYXZpdi8KPj4gK29iai0kKENPTkZJ
-R19EUk1fRVhZTk9TKSAgICAgICArPSBleHlub3MvCj4+ICtvYmotJChDT05GSUdfRFJNX0ZTTF9E
-Q1UpICAgICAgKz0gZnNsLWRjdS8KPj4gK29iai0kKENPTkZJR19EUk1fR01BNTAwKSAgICAgICAr
-PSBnbWE1MDAvCj4+ICtvYmoteSAgICAgICAgICAgICAgICAgICAgICAgICAgKz0gaTJjLwo+PiAr
-b2JqLSQoQ09ORklHX0RSTV9JODEwKSAgICAgICAgICs9IGk4MTAvCj4+ICtvYmotJChDT05GSUdf
-RFJNX0k5MTUpICAgICAgICAgKz0gaTkxNS8KPj4gK29iai0kKENPTkZJR19EUk1fSU1YKSAgICAg
-ICAgICArPSBpbXgvCj4+ICtvYmotJChDT05GSUdfRFJNX01HQSkgICAgICAgICAgKz0gbWdhLwo+
-PiArb2JqLSQoQ09ORklHX0RSTV9NR0FHMjAwKSAgICAgICs9IG1nYWcyMDAvCj4+ICtvYmotJChD
-T05GSUdfRFJNX01TTSkgICAgICAgICAgKz0gbXNtLwo+PiArb2JqLSQoQ09ORklHX0RSTV9OT1VW
-RUFVKSAgICAgICs9IG5vdXZlYXUvCj4+ICtvYmoteSAgICAgICAgICAgICAgICAgICAgICAgICAg
-Kz0gb21hcGRybS8KPj4gK29iai15ICAgICAgICAgICAgICAgICAgICAgICAgICArPSBwYW5lbC8K
-Pj4gK29iai0kKENPTkZJR19EUk1fUVhMKSAgICAgICAgICArPSBxeGwvCj4+ICtvYmotJChDT05G
-SUdfRFJNX1IxMjgpICAgICAgICAgKz0gcjEyOC8KPj4gK29iai0kKENPTkZJR19EUk1fUkFERU9O
-KSAgICAgICArPSByYWRlb24vCj4+ICtvYmotJChDT05GSUdfRFJNX1JDQVJfRFUpICAgICAgKz0g
-cmNhci1kdS8KPj4gK29iai0kKENPTkZJR19EUk1fUk9DS0NISVApICAgICArPSByb2NrY2hpcC8K
-Pj4gK29iai0kKENPTkZJR19EUk1fU0FWQUdFKSAgICAgICArPSBzYXZhZ2UvCj4+ICtvYmotJChD
-T05GSUdfRFJNX1NITU9CSUxFKSAgICAgKz0gc2htb2JpbGUvCj4+ICtvYmotJChDT05GSUdfRFJN
-X1NJUykgICAgICAgICAgKz0gc2lzLwo+PiArb2JqLSQoQ09ORklHX0RSTV9TVEkpICAgICAgICAg
-ICs9IHN0aS8KPj4gK29iai0kKENPTkZJR19EUk1fVERGWCkgICAgICAgICArPSB0ZGZ4Lwo+PiAr
-b2JqLSQoQ09ORklHX0RSTV9URUdSQSkgICAgICAgICAgICAgICAgKz0gdGVncmEvCj4+ICtvYmot
-eSAgICAgICAgICAgICAgICAgICAgICAgICAgKz0gdGlsY2RjLwo+PiArb2JqLSQoQ09ORklHX0RS
-TV9VREwpICAgICAgICAgICs9IHVkbC8KPj4gK29iai0kKENPTkZJR19EUk1fVkM0KSAgICAgICAg
-ICArPSB2YzQvCj4+ICtvYmotJChDT05GSUdfRFJNX1ZHRU0pICAgICAgICAgKz0gdmdlbS8KPj4g
-K29iai0kKENPTkZJR19EUk1fVklBKSAgICAgICAgICArPSB2aWEvCj4+ICtvYmotJChDT05GSUdf
-RFJNX1ZJUlRJT19HUFUpICAgKz0gdmlydGlvLwo+PiArb2JqLSQoQ09ORklHX0RSTV9WTVdHRlgp
-ICAgICAgICs9IHZtd2dmeC8KPj4gLS0KPj4gMS45LjEKPj4KPj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+
-PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+IGh0dHA6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPgo+IE5BQ0ssIGFtZGtmZCAqbXVz
-dCogYmUgYmVmb3JlIGFtZGdwdSAqYW5kKiByYWRlb24sIGJlY2F1c2UgaXQgbmVlZHMgdG8KPiBi
-ZSBhbHJlYWR5IGxvYWRlZCB3aGVuIGFtZGdwdS9yYWRlb24gZ2V0IGxvYWRlZCwgYW5kIHdoZW4g
-YWxsIHRoZXNlCj4gZHJpdmVycyBhcmUgY29tcGlsZWQgaW5zaWRlIHRoZSBrZXJuZWwsIHRoZSBv
-cmRlciBpcyBtYWludGFpbmVkIGJ5IHRoZQo+IGxpbmthZ2Ugb3JkZXIgaW4gdGhlIG1ha2VmaWxl
-Lgo+Cj4gU2VlOgo+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRl
-dmVsLzIwMTQtRGVjZW1iZXIvMDc0NDUyLmh0bWwKPgoKSGkgT2RlZCwgdGhhbmtzIGZvciBwb2lu
-dGluZyBvdXQgdGhpcy4gd2lsbCBmaXhlZCBpbiB2Mi4KClRoYW5rcywKLXhpbmxpYW5nCgo+Cj4g
-VGhhbmtzLAo+Cj4gICAgIE9kZWQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Add documentation for DT properties supported by
+ps8640 DSI-eDP converter.
+
+Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v7:
+ - No change
+---
+ .../devicetree/bindings/display/bridge/ps8640.txt  |   43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+new file mode 100644
+index 0000000..a3e0971
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+@@ -0,0 +1,43 @@
++ps8640-bridge bindings
++
++Required properties:
++	- compatible: "parade,ps8640"
++	- reg: first page address of the bridge.
++	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
++	- reset-gpios: OF device-tree gpio specification for reset pin.
++	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
++	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
++	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
++	- ports: The device node can contain video interface port nodes per
++		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
++		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++	edp-bridge@18 {
++		compatible = "parade,ps8640";
++		reg = <0x18>;
++		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
++		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
++		vdd12-supply = <&ps8640_fixed_1v2>;
++		vdd33-supply = <&mt6397_vgp2_reg>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				ps8640_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				ps8640_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+1.7.9.5
