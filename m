@@ -1,73 +1,158 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 0/4] mailbox: hisilicon: add Hi6220 mailbox driver
-Date: Mon,  1 Feb 2016 21:34:43 +0800
-Message-ID: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5 4/4] arm64: dts: add Hi6220's stub clock node
+Date: Mon,  1 Feb 2016 21:34:47 +0800
+Message-ID: <1454333687-20421-5-git-send-email-leo.yan@linaro.org>
+References: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454333687-20421-1-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Wei Xu <xuwei5@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Chen Feng <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
-with a maximum message size of 8 words. I/O is performed using register
-access (there is no DMA) and the cell raises an interrupt when messages
-are received.
+Enable SRAM node and stub clock node for Hi6220, which will use mailbox
+channel 0 for CPU's frequency change.
 
-This patch series is to implement Hi6220 mailbox driver. It registers
-two channels into framework for communication with MCU, one is tx channel
-and another is rx channel. Now mailbox driver is used to send message to
-MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
+Furthermore, add the CPU clock phandle in CPU's node and using
+operating-points-v2 to register operating points. So can be used by
+cpufreq-dt driver.
 
-Changes from v4:
-* According to Jassi's suggestion, using DT binding to register channels
-* Change to use operating-points-v2 to register operating points
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 55 +++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Changes from v3:
-* The patch series for enabling idle state for Hi6220 has reserved memory
-  regions, so this series will not include it anymore
-* Refined mailbox driver according to Jassi's suggestion;
-  Removed kfifo from mailbox driver;
-  Removed spinlock for ipc registers accessing, due every channel has its
-  own dedicated bit in ipc register and readl/writel will introduce memory
-  barrier, so don't need spinlock to protect ipc registers accessing
-* After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
-  stub clock driver; finally can enable CPUFreq driver for CPU frequency
-  scaling
-
-Changes from v2:
-* Get rid of unused memory regions from memory node in DT, and don't use
-  reserved-memory node according to Mark and Leif's suggestion; Haojian also
-  has updated UEFI for efi memory info
-
-Changes from v1:
-* Correct lock usage for SMP scenario
-
-Changes from RFC:
-* According to Jassi's review, totally remove the abstract common driver
-  layer and only commit driver dedicated for Hi6220
-* According to Paul Bolle's review, fix typo issue for Kconfig and remove
-  unnecessary dependency with OF and fix minor for mailbox driver
-* Refine a little for dts nodes
-
-
-Leo Yan (4):
-  dt-bindings: mailbox: Document Hi6220 mailbox driver
-  mailbox: Hi6220: add mailbox driver
-  arm64: dts: add mailbox node for Hi6220
-  arm64: dts: add Hi6220's stub clock node
-
- .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  90 +++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  67 ++++
- drivers/mailbox/Kconfig                            |   8 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/hi6220-mailbox.c                   | 407 +++++++++++++++++++++
- 5 files changed, 574 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
- create mode 100644 drivers/mailbox/hi6220-mailbox.c
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index be3d962..d46820a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -81,6 +81,11 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&stub_clock 0>;
++			operating-points-v2 = <&cpu_opp_table>;
++			cooling-min-level = <4>;
++			cooling-max-level = <0>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -89,6 +94,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -97,6 +103,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -105,6 +112,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -113,6 +121,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -121,6 +130,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -129,6 +139,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -137,10 +148,42 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 	};
+ 
++	cpu_opp_table: cpu_opp_table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp00 {
++			opp-hz = /bits/ 64 <208000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <500000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <432000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <500000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <729000000>;
++			opp-microvolt = <1090000>;
++			clock-latency-ns = <500000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <960000000>;
++			opp-microvolt = <1180000>;
++			clock-latency-ns = <500000>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1330000>;
++			clock-latency-ns = <500000>;
++		};
++	};
++
+ 	gic: interrupt-controller@f6801000 {
+ 		compatible = "arm,gic-400";
+ 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
+@@ -168,6 +211,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		sram: sram@fff80000 {
++			compatible = "hisilicon,hi6220-sramctrl", "syscon";
++			reg = <0x0 0xfff80000 0x0 0x12000>;
++		};
++
+ 		ao_ctrl: ao_ctrl@f7800000 {
+ 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
+ 			reg = <0x0 0xf7800000 0x0 0x2000>;
+@@ -193,6 +241,13 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		stub_clock: stub_clock {
++			compatible = "hisilicon,hi6220-stub-clk";
++			hisilicon,hi6220-clk-sram = <&sram>;
++			#clock-cells = <1>;
++			mboxes = <&mailbox 1>;
++		};
++
+ 		uart0: uart@f8015000 {	/* console */
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf8015000 0x0 0x1000>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
