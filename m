@@ -1,120 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] drm/hisilicon: Add device tree binding for
- hi6220 display subsystem
-Date: Mon, 1 Feb 2016 09:10:27 -0600
-Message-ID: <20160201151027.GA5888@rob-hp-laptop>
-References: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
- <1454144075-74361-2-git-send-email-xinliang.liu@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 02/14] clk: sunxi: Add apb0 gates for A83T
+Date: Mon, 1 Feb 2016 23:11:23 +0800
+Message-ID: <CAGb2v64VjfDVDMSO_ov0mJfXTbgB7ffehGu4N8tCTs8Kt00fRg@mail.gmail.com>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-3-git-send-email-vishnupatekar0510@gmail.com> <20160201150218.GA4290@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1454144075-74361-2-git-send-email-xinliang.liu@linaro.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: linux-doc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, xuwei5@hisilicon.com, benjamin.gaignard@linaro.org, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, guodong.xu@linaro.org, emil.l.velikov@gmail.com, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160201150218.GA4290@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKYW4gMzAsIDIwMTYgYXQgMDQ6NTQ6MjZQTSArMDgwMCwgWGlubGlhbmcgTGl1IHdy
-b3RlOgo+IEFkZCBBREUgZGlzcGxheSBjb250cm9sbGVyIGJpbmRpbmcgZG9jLgo+IEFkZCBEZXNp
-Z25XYXJlIERTSSBIb3N0IENvbnRyb2xsZXIgdjEuMjBhIGJpbmRpbmcgZG9jLgo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5vcmc+Cj4gCj4gdjM6
-Cj4gLSBNYWtlIGFkZSBhcyB0aGUgZHJtIG1hc3RlciBub2RlLgo+IC0gVXNlIGFzc2lnbmVkLWNs
-b2NrcyB0byBzZXQgY2xvY2sgcmF0ZS4KPiAtIFVzZSBwb3J0cyB0byBjb25uZWN0IGRpc3BsYXkg
-cmVsYXZhbnQgbm9kZXMuCj4gdjI6Cj4gLSBNb3ZlIGR0IGJpbmRpbmcgZG9jcyB0byBiaW5kaW5n
-cy9kaXNwbGF5L2hpc2lsaWNvbiBkaXJlY3RvcnkuIAoKTG9va3MgcHJldHR5IGdvb2QsIGp1c3Qg
-YSBmZXcgbWlub3IgdGhpbmdzLgoKPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxp
-Y29uL2R3LWRzaS50eHQgICAgICAgICAgfCA2MCArKysrKysrKysrKysrKysrKysrKysrCj4gIC4u
-Li9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWFkZS50eHQgICAgICAgIHwgNTYgKysr
-KysrKysrKysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMTYgaW5zZXJ0aW9ucygrKQo+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvaGlzaWxpY29uL2R3LWRzaS50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWFkZS50eHQK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvaGlzaWxpY29uL2R3LWRzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9oaXNpbGljb24vZHctZHNpLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
-aW5kZXggMDAwMDAwMDAwMDAwLi40NGI5NDVhNTRmM2YKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2R3LWRz
-aS50eHQKPiBAQCAtMCwwICsxLDYwIEBACj4gK0RldmljZS1UcmVlIGJpbmRpbmdzIGZvciBEZXNp
-Z25XYXJlIERTSSBIb3N0IENvbnRyb2xsZXIgdjEuMjBhIGRyaXZlcgo+ICsKPiArQSBEU0kgSG9z
-dCBDb250cm9sbGVyIHJlc2lkZXMgaW4gdGhlIG1pZGRsZSBvZiBkaXNwbGF5IGNvbnRyb2xsZXIg
-YW5kIGV4dGVybmFsCj4gK0hETUkgY29udmVydGVyLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGll
-czoKPiArLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgImhpc2lsaWNvbixoaTYyMjAtZHNp
-Ii4KPiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250
-cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIGNsb2NrczogdGhlIGNsb2NrcyBuZWVkZWQuCj4gKy0g
-Y2xvY2stbmFtZXM6IHRoZSBuYW1lIG9mIHRoZSBjbG9ja3MuCj4gKy0gcG9ydHM6IGNvbnRhaW5z
-IERTSSBjb250cm9sbGVyIGlucHV0IGFuZCBvdXRwdXQgc3ViIHBvcnQuIFRoZSBpbnB1dCBwb3J0
-Cj4gKyAgY29ubmVjdHMgdG8gQURFIG91dHB1dCBwb3J0LCBhbmQgb3V0cHV0IHBvcnQgY29ubmVj
-dGVkIHRvIGV4dGVybmFsIEhETUkKCm9yIHBhbmVsIG9yIGFueSBvdGhlciBicmlkZ2UuCgo+ICsg
-IGVuZHBvaW50LiBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dCBmb3IgbW9yZSBkZXZpY2UKPiArICBncmFwaCBpbmZvLgo+ICsKPiArQSBleGFtcGxlIG9mIEhp
-S2V5IGJvYXJkIGhpNjIyMCBTb0MgYW5kIGJvYXJkIHNwZWNpZmljIERUIGVudHJ5Ogo+ICtFeGFt
-cGxlOgo+ICsKPiArU29DIHNwZWNpZmljOgo+ICsJZHNpOiBkc2lAMHhmNDEwNzgwMCB7CgpEcm9w
-IHRoZSAnMHgnCgo+ICsJCWNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhpNjIyMC1kc2kiOwo+ICsJ
-CXJlZyA9IDwweDAgMHhmNDEwNzgwMCAweDAgMHgxMDA+Owo+ICsJCWNsb2NrcyA9IDwmbWVkaWFf
-Y3RybCAgSEk2MjIwX0RTSV9QQ0xLPjsKPiArCQljbG9jay1uYW1lcyA9ICJwY2xrX2RzaSI7Cj4g
-Kwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNl
-bGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCQkJCWRz
-aV9pbjogZW5kcG9pbnQgewo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmFkZV9vdXQ+OwoK
-SW5kZW50YXRpb24gaXMgd3JvbmcuCgo+ICsJCQkJfTsKPiArCQkJfTsKPiArCj4gKwkJCXBvcnRA
-MSB7Cj4gKwkJCQlyZWcgPSA8MT47IC8qIDEgZm9yIG91dHB1dCBwb3J0ICovCj4gKwkJCQlkc2lf
-b3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJCSByZW1vdGUtZW5kcG9pbnQgPSA8JmFkdjc1MzNfaW4+
-OwoKZGl0dG8uCgo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArCj4gK0JvYXJk
-IHNwZWNpZmljOgo+ICsJaTJjMjogaTJjQGY3MTAyMDAwIHsKPiArCQkuLi4KPiArCj4gKwkJYWR2
-NzUzMzogYWR2NzUzM0AzOSB7Cj4gKwkJCS4uLgo+ICsKPiArCQkJcG9ydCB7Cj4gKwkJCQlhZHY3
-NTMzX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsK
-PiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1hZGUu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29u
-L2hpc2ktYWRlLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAw
-Li40NzkyNTgyNjUzNmMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2ktYWRlLnR4dAo+IEBAIC0wLDAg
-KzEsNTYgQEAKPiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIGhpc2lsaWNvbiBBREUgZGlzcGxh
-eSBjb250cm9sbGVyIGRyaXZlcgo+ICsKPiArQURFIChBZHZhbmNlZCBEaXNwbGF5IEVuZ2luZSkg
-aXMgdGhlIGRpc3BsYXkgY29udHJvbGxlciB3aGljaCBncmFiIGltYWdlCj4gK2RhdGEgZnJvbSBt
-ZW1vcnksIGRvIGNvbXBvc2l0aW9uLCBkbyBwb3N0IGltYWdlIHByb2Nlc3NpbmcsIGdlbmVyYXRl
-IFJHQgo+ICt0aW1pbmcgc3RyZWFtIGFuZCB0cmFuc2ZlciB0byBEU0kuCj4gKwo+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAiaGlzaWxpY29u
-LGhpNjIyMC1hZGUiLgo+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
-b2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCgpJIHNlZSAzIHJhbmdlcyBpbiB0aGUgZXhh
-bXBsZS4gUGxlYXNlIHNwZWNpZnkgd2hhdCBlYWNoIG9uZSBpcyBoZXJlLgoKPiArLSByZWctbmFt
-ZXM6IG5hbWUgb2YgcGh5c2ljYWwgYmFzZS4KPiArLSBpbnRlcnJ1cHQ6IHRoZSBpbnRlcnJ1cHQg
-bnVtYmVyLgo+ICstIGNsb2NrczogdGhlIGNsb2NrcyBuZWVkZWQuCgpTYW1lIGhlcmUuIFNwZWNp
-Znkgd2hhdCB0aGUgY2xvY2tzIGFyZS4KCj4gKy0gY2xvY2stbmFtZXM6IHRoZSBuYW1lIG9mIHRo
-ZSBjbG9ja3MuCj4gKy0gYXNzaWduZWQtY2xvY2tzOiBjbG9ja3MgdG8gYmUgYXNzaWduZWQgcmF0
-ZS4KPiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczogY2xvY2sgcmF0ZXMgd2hpY2ggYXJlIGFzc2ln
-bmVkIHRvIGFzc2lnbmVkLWNsb2Nrcy4KPiArLSBwb3J0OiB0aGUgb3V0cHV0IHBvcnQuIFRoaXMg
-Y29udGFpbnMgb25lIGVuZHBvaW50IHN1Ym5vZGUsIHdpdGggaXRzCj4gKyAgcmVtb3RlLWVuZHBv
-aW50IHNldCB0byB0aGUgcGhhbmRsZSBvZiB0aGUgY29ubmVjdGVkIERTSSBlbmRwb2ludC4KPiAr
-ICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCBmb3IgbW9y
-ZSBkZXZpY2UgZ3JhcGggaW5mby4KPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gZG1h
-LWNvaGVyZW50OiBQcmVzZW50IGlmIGRtYSBvcGVyYXRpb25zIGFyZSBjb2hlcmVudC4KPiArCj4g
-Kwo+ICtBIGV4YW1wbGUgb2YgSGlLZXkgYm9hcmQgaGk2MjIwIFNvQyBzcGVjaWZpYyBEVCBlbnRy
-eToKPiArRXhhbXBsZToKPiArCj4gKwlhZGU6IGFkZUBmNDEwMDAwMCB7Cj4gKwkJY29tcGF0aWJs
-ZSA9ICJoaXNpbGljb24saGk2MjIwLWFkZSI7Cj4gKwkJcmVnID0gPDB4MCAweGY0MTAwMDAwIDB4
-MCAweDc4MDA+LAo+ICsJCSAgICAgIDwweDAgMHhmNDQxMDAwMCAweDAgMHgxMDAwPiwKPiArCQkg
-ICAgICA8MHgwIDB4ZjQ1MjAwMDAgMHgwIDB4MTAwMD47Cj4gKwkJcmVnLW5hbWVzID0gImFkZV9i
-YXNlIiwKPiArCQkJICAgICJtZWRpYV9iYXNlIiwKPiArCQkJICAgICJtZWRpYV9ub2NfYmFzZSI7
-Cj4gKwo+ICsJCWludGVycnVwdHMgPSA8MCAxMTUgND47IC8qIGxkaSBpbnRlcnJ1cHQgKi8KPiAr
-Cj4gKwkJY2xvY2tzID0gPCZtZWRpYV9jdHJsIEhJNjIyMF9BREVfQ09SRT4sCj4gKwkJCSA8Jm1l
-ZGlhX2N0cmwgSEk2MjIwX0NPREVDX0pQRUc+LAo+ICsJCQkgPCZtZWRpYV9jdHJsIEhJNjIyMF9B
-REVfUElYX1NSQz47Cj4gKwkJLypjbG9jayBuYW1lKi8KPiArCQljbG9jay1uYW1lcyAgPSAiY2xr
-X2FkZV9jb3JlIiwKPiArCQkJICAgICAgICJjbGtfY29kZWNfanBlZyIsCj4gKwkJCSAgICAgICAi
-Y2xrX2FkZV9waXgiOwo+ICsKPiArCQlhc3NpZ25lZC1jbG9ja3MgPSA8Jm1lZGlhX2N0cmwgSEk2
-MjIwX0FERV9DT1JFPiwKPiArCQkJPCZtZWRpYV9jdHJsIEhJNjIyMF9DT0RFQ19KUEVHPjsKPiAr
-CQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwzNjAwMDAwMDA+LCA8Mjg4MDAwMDAwPjsKPiArCQlk
-bWEtY29oZXJlbnQ7Cj4gKwo+ICsJCXBvcnQgewo+ICsJCQlhZGVfb3V0OiBlbmRwb2ludCB7Cj4g
-KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9pbj47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07
-Cj4gLS0gCj4gMS45LjEKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Mon, Feb 1, 2016 at 11:02 PM, Rob Herring <robh@kernel.org> wrote:
+> On Sun, Jan 31, 2016 at 09:20:54AM +0800, Vishnu Patekar wrote:
+>> APB0 is part of PRCM, and is compatible with earlier SOCs.
+>> apb0 gates controls R_PIO, R_UART, R_RSB, etc clocks.
+>> This patch adds support for APB0 gates for A83T.
+>>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
+>>  drivers/clk/sunxi/clk-simple-gates.c              | 2 ++
+>>  2 files changed, 3 insertions(+)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Acked-by: Chen-Yu Tsai <wens@csie.org>
