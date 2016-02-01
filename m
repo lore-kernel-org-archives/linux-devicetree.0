@@ -1,52 +1,43 @@
-From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] iio: light: opt3001: Add device tree binding
- documentation
-Date: Mon, 1 Feb 2016 14:01:44 -0600
-Message-ID: <20160201200143.GE9016@LTA0797059A>
-References: <1454094180-2688-1-git-send-email-dannenberg@ti.com>
- <20160201151848.GA11967@rob-hp-laptop>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RESEND PATCH V2] ARM64: tegra: Add chosen node for tegra132
+ norrin
+Date: Mon, 1 Feb 2016 12:20:23 -0800
+Message-ID: <20160201202023.GF13508@localhost>
+References: <1453753555-14634-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160201151848.GA11967@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnuzQB+pC5nmwQ@public.gmane.org, mhornung.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1453753555-14634-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 09:18:48AM -0600, Rob Herring wrote:
-> On Fri, Jan 29, 2016 at 01:03:00PM -0600, Andreas Dannenberg wrote:
-> > Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/light/opt3001.txt      | 26 ++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/opt3001.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> > new file mode 100644
-> > index 0000000..55b9cb3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> > @@ -0,0 +1,26 @@
-> > +* Texas Instruments OPT3001 Ambient Light Sensor
-> > +
-> > +The driver supports interrupt-driven and interrupt-less operation, depending
-> > +on whether an interrupt property has been populated into the DT. Note that
-> > +the optional generation of IIO events on rising/falling light threshold changes
-> > +requires the use of interrupts. Without interrupts, only the simple reading
-> > +of the current light value is supported through the IIO API.
+On Mon, Jan 25, 2016 at 08:25:55PM +0000, Jon Hunter wrote:
+> The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
+> in the device-tree blob and if it is not then it fails to boot the kernel.
+> Add the chosen node so we can boot the kernel on Tegra132 Norrin with the
+> nvtboot bootloader.
 > 
-> Seems like you could poll and do the threshold changes in s/w. Anyway, 
-> that's all irrelevant to the DT binding.
-
-True that. The recent addition of polling mode to the driver did not
-consider this use case so until somebody has a strong need for this and
-adds the needed code at least we have this limitation documented.
-
-Regards,
-Andreas
-
-
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v1 -> v2 changes:
+> - minor fixes to commit message
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Ideally, we would like to get this into v4.5 as a fix for Tegra132 Norrin
+> so that we can enable booting this board as part of our automated testing
+> setup for Tegra [0][1]. Thierry suggested I send this directly as a fix
+> to ARM-SOC. Let me know if this is ok. I have not included a "fixes" as it
+> may not be needed for all bootloaders, but if you need this we could put:
+> 
+> Fixes: 0f279eb arm64: tegra: Add NVIDIA Tegra132 Norrin support
+> 
+> [0] http://nvtb.github.io/linux/
+> [1] http://nvtb.github.io/linux-next/
+
+Applied to fixes. Thanks.
+
+
+-Olof
