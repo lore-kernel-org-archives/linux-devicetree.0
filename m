@@ -1,40 +1,28 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 03/14] clk: sunxi: add bus gates for A83T
-Date: Mon, 1 Feb 2016 23:13:10 +0800
-Message-ID: <CAGb2v67BcLx8g+MDZnMyrgDpHWmQ-kcxFVqDNpMWzyJ_QoDrQA@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
- <1454203266-4450-4-git-send-email-vishnupatekar0510@gmail.com> <20160201150344.GA4947@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V13 08/10] dma: qcom_hidma: read the channel id from HW
+Date: Mon, 1 Feb 2016 09:14:56 -0600
+Message-ID: <20160201151455.GA10961@rob-hp-laptop>
+References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
+ <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160201150344.GA4947@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 1, 2016 at 11:03 PM, Rob Herring <robh@kernel.org> wrote:
-> On Sun, Jan 31, 2016 at 09:20:55AM +0800, Vishnu Patekar wrote:
->> A83T has similar bus gates that of H3, including single gating register has
->> different clock parent.
->>
->> As per H3 and A83T datasheet, usbhost is under AHB2.
->>
->> However,below shows allwinner source code assignment:
->> bits: 26 (ehci0), 27 (ehci1), 29 (ohci0) => AHB1 for A83T.
->> bits: 26 (ehci0), 27 (ehci1) => AHB1 for H3
->> bits  29, 30, 31(ohci0,1,2) => AHB2 for H3.
->>
->> until, this confusion is cleared keep it H3 way.
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
->>  drivers/clk/sunxi/clk-sun8i-bus-gates.c           | 2 ++
->>  2 files changed, 3 insertions(+)
->
-> Acked-by: Rob Herring <robh@kernel.org>
+On Fri, Jan 29, 2016 at 05:35:11PM -0500, Sinan Kaya wrote:
+> Removing the flexibility to choose the event channel as there is no real
+> use case right now. We have been using the values in ACPI that match the HW
+> defaults. OS is reading the event-channel from the HW register now.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  3 --
+>  drivers/dma/qcom/hidma.c                           | 39 +---------------------
+>  2 files changed, 1 insertion(+), 41 deletions(-)
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-
-We should really get the clk parents sorted out though.
+Acked-by: Rob Herring <robh@kernel.org>
