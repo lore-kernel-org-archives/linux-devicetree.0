@@ -1,45 +1,79 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
-Date: Tue, 2 Feb 2016 10:22:21 +0000
-Message-ID: <TY1PR06MB0928E36208538E38E0F24846D8DF0@TY1PR06MB0928.apcprd06.prod.outlook.com>
-References: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 0/3] Input: rotary-encoder - use more than two gpios
+Date: Tue,  2 Feb 2016 11:24:35 +0100
+Message-ID: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLCBTaW1vbi1zYW4sDQoNCj4gRnJvbTogbGludXgtcmVuZXNhcy1zb2Mtb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcmVuZXNhcy1zb2Mtb3duZXJAdmdlci5r
-ZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgR2VlcnQNCj4gVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IFR1
-ZXNkYXksIEZlYnJ1YXJ5IDAyLCAyMDE2IDc6MTAgUE0NCj4gDQo+IE9uIE1vbiwgRmViIDEsIDIw
-MTYgYXQgMTE6MjkgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51
-aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
-c2FzL3I4YTc3OTUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9y
-OGE3Nzk1LmR0c2kNCj4gPiBAQCAtODgwLDUgKzg4MCwzMSBAQA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JmNwZz47DQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgIHVzYl9kbWFjMDogZG1hLWNvbnRyb2xsZXJAZTY1YTAwMDAg
-ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3
-Nzk1LXVzYi1kbWFjIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-InJlbmVzYXMsdXNiLWRtYWMiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDww
-IDB4ZTY1YTAwMDAgMCAweDEwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJy
-dXB0cyA9IDwwIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAwIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gDQo+IFNv
-cnJ5LCBJIG1pc3NlZCB5b3UncmUgbm90IHVzaW5nIHRoZSBHSUNfU1BJIGRlZmluZXMuDQoNCk9v
-cHMhIFRoYW5rIHlvdSBmb3IgdGhlIHBvaW50Lg0KDQpTaW1vbi1zYW4sIA0KV291bGQgeW91IHJl
-dmVydCB0aGlzIHBhdGNoPyBJIHdpbGwgc3VibWl0IHYyIHBhdGNoIHNvb24uDQoNCkJlc3QgcmVn
-YXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
-dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1t
-NjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBw
-ZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRv
-IGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
-YXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMN
-Cg==
+Hello,
+
+Some time ago I sent a v1 of this, now after testing the changes more
+deeply patch 3 changed a bit. The old series started with
+
+	Date: Wed,  2 Dec 2015 11:07:11 +0100                                 =
+                                                             =20
+	From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>          =
+                                                                  =20
+	Subject: [PATCH RFC 0/3] input: rotary_encoder: use more than two gpio=
+s as input                                                   =20
+	Message-Id: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutr=
+onix.de>                                                     =20
+
+The two first patches are just preparation for the third patch.
+
+There is an obvious improvement that allows detection of quick changes
+more reliably with >2 gpios, but I didn't implement this yet. (With 4
+GPIOs you can distinguish a counter clockwise movement of three states
+from a clock wise movement of a single state. Still the patch is useful
+as it makes these devices work at all.
+
+My test device looks as follows:
+
+        rotary@0 {
+                compatible =3D "rotary-encoder";
+                gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 11 GPIO=
+_ACTIVE_HIGH>, <&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIVE_HIGH=
+>;
+
+                rotary-encoder,steps =3D <16>;
+		rotary-encoder,steps-per-period =3D <16>;
+        };
+
+While Daniel Mack and Rojhalat Ibrahim agreed that this device is an
+absolute encoder and should be supported by a simpler logic, I still
+consider it worthwhile to get these patches in as a first step. Also th=
+e
+binding looks right, so IMHO the comments shouldn't stop this series
+from going in.
+
+Best regards
+Uwe
+
+Uwe Kleine-K=C3=B6nig (3):
+  Input: rotary-encoder - make use of devm_* to simplify .probe and
+    .remove
+  Input: rotary-encoder - move configuration data to driver data
+  Input: rotary-encoder - support more than 2 gpios as input
+
+ .../devicetree/bindings/input/rotary-encoder.txt   |   2 +-
+ arch/arm/mach-pxa/raumfeld.c                       |  25 +-
+ drivers/input/misc/rotary_encoder.c                | 327 +++++++++----=
+--------
+ include/linux/rotary_encoder.h                     |   4 -
+ 4 files changed, 158 insertions(+), 200 deletions(-)
+
+--=20
+2.7.0.rc3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
