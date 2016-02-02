@@ -1,297 +1,127 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [RFC 3/3] CMDQ: Mediatek CMDQ driver
-Date: Tue, 2 Feb 2016 14:48:01 +0800
-Message-ID: <1454395681.27603.13.camel@mtksdaap41>
-References: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
-	 <1453266881-16849-4-git-send-email-hs.liao@mediatek.com>
-	 <CAGS+omBjD1pXKY_6bFbiGxa5bttvqg5zEvKevzSfoiMOy7ys6Q@mail.gmail.com>
-	 <1454053150.32413.52.camel@mtksdaap41>
-	 <CAGS+omBrEE21Xxh8hjcf32qfHJE0jJYvxGP6L1ihS6jcNbLvLQ@mail.gmail.com>
-	 <1454070262.7401.21.camel@mtksdaap41>
-	 <CAGS+omBhs7Ks7MVDsxHBBUdgF+0fmAa465HwvNiCzEe97Knt3Q@mail.gmail.com>
-	 <1454292257.22270.3.camel@mtksdaap41>
-	 <CAGS+omCzDisk2TfbDnWiXufWgUsCbhF_JFafaUazhSymX-MT_Q@mail.gmail.com>
-	 <1454307624.22441.18.camel@mtksdaap41>
-	 <CAGS+omB7d3Kq1DKNHxZJjLDmin0rpkDj1kEde3zCxTiT5-xZWw@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/4] ARM: dts: imx53: add ethernet PHY supply regulator
+Date: Tue, 2 Feb 2016 14:53:07 +0800
+Message-ID: <20160202065306.GH8307@tiger>
+References: <1453295362-18798-1-git-send-email-LW@KARO-electronics.de>
+ <1453295362-18798-2-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omB7d3Kq1DKNHxZJjLDmin0rpkDj1kEde3zCxTiT5-xZWw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1453295362-18798-2-git-send-email-LW@KARO-electronics.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Yong
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-02-01 at 18:22 +0800, Daniel Kurtz wrote:
-> On Mon, Feb 1, 2016 at 2:20 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> > On Mon, 2016-02-01 at 12:15 +0800, Daniel Kurtz wrote:
-> >> On Mon, Feb 1, 2016 at 10:04 AM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> >> >
-> >> > On Fri, 2016-01-29 at 21:15 +0800, Daniel Kurtz wrote:
-> >> > > On Fri, Jan 29, 2016 at 8:24 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> >> > > > On Fri, 2016-01-29 at 16:42 +0800, Daniel Kurtz wrote:
-> >> > > >> On Fri, Jan 29, 2016 at 3:39 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> >> > > >> > Hi Dan,
-> >> > > >> >
-> >> > > >> > Many thanks for your comments and time.
-> >> > > >> > I reply my plan inline.
-> >> > > >> >
-> >> > > >> >
-> >> > > >> > On Thu, 2016-01-28 at 12:49 +0800, Daniel Kurtz wrote:
-> >> > > >> >> Hi HS,
-> >> > > >> >>
-> >> > > >> >> Sorry for the delay.  It is hard to find time to review a >3700 line
-> >> > > >> >> driver :-o in detail....
-> >> > > >> >>
-> >> > > >> >> Some review comments inline, although I still do not completely
-> >> > > >> >> understand how all that this driver does and how it works.
-> >> > > >> >> I'll try to find time to go through this driver in detail again next
-> >> > > >> >> time you post it for review.
-> >> > > >> >>
-> >> > > >> >> On Tue, Jan 19, 2016 at 9:14 PM,  <hs.liao@mediatek.com> wrote:
-> >> > > >> >> > From: HS Liao <hs.liao@mediatek.com>
-> >> > > >> >> >
-> >> > > >> >> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> >> > > >> >> > CMDQ is used to help read/write registers with critical time limitation,
-> >> > > >> >> > such as updating display configuration during the vblank. It controls
-> >> > > >> >> > Global Command Engine (GCE) hardware to achieve this requirement.
-> >> > > >> >> > Currently, CMDQ only supports display related hardwares, but we expect
-> >> > > >> >> > it can be extended to other hardwares for future requirements.
-> >> > > >> >> >
-> >> > > >> >> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> >> > > >> >>
-> >> > > >> >> [snip]
-> >> > > >> >>
-> >> > > >> >> > diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
-> >> > > >> >> > new file mode 100644
-> >> > > >> >> > index 0000000..7570f00
-> >> > > >> >> > --- /dev/null
-> >> > > >> >> > +++ b/drivers/soc/mediatek/mtk-cmdq.c
-> >> > > >
-> >> > > > [snip]
-> >> > > >
-> >> > > >> >> > +static const struct cmdq_subsys g_subsys[] = {
-> >> > > >> >> > +       {0x1400, 1, "MMSYS"},
-> >> > > >> >> > +       {0x1401, 2, "DISP"},
-> >> > > >> >> > +       {0x1402, 3, "DISP"},
-> >> > > >> >>
-> >> > > >> >> This isn't going to scale.  These addresses could be different on
-> >> > > >> >> different chips.
-> >> > > >> >> Instead of a static table like this, we probably need specify to the
-> >> > > >> >> connection between gce and other devices via devicetree phandles, and
-> >> > > >> >> then use the phandles to lookup the corresponding device address
-> >> > > >> >> range.
-> >> > > >> >
-> >> > > >> > I will define them in device tree.
-> >> > > >> > E.g.
-> >> > > >> > cmdq {
-> >> > > >> >   reg_domain = 0x14000000, 0x14010000, 0x14020000
-> >> > > >> > }
-> >> > > >>
-> >> > > >> The devicetree should only model hardware relationships, not software
-> >> > > >> considerations.
-> >> > > >>
-> >> > > >> Is the hardware constraint here for using gce with various other
-> >> > > >> hardware blocks?  I think we already model this by only providing a
-> >> > > >> gce phandle in the device tree nodes for those devices that can use
-> >> > > >> gce.
-> >> > > >>
-> >> > > >> Looking at the driver closer, as far as I can tell, the whole subsys
-> >> > > >> concept is a purely software abstraction, and only used to debug the
-> >> > > >> CMDQ_CODE_WRITE command.  In fact, AFAICT, everything would work fine
-> >> > > >> if we just completely removed the 'subsys' concept, and just passed
-> >> > > >> through the raw address provided by the driver.
-> >> > > >>
-> >> > > >> So, I recommend just removing 'subsys' completely from the driver -
-> >> > > >> from this array, and in the masks.
-> >> > > >>
-> >> > > >> Instead, if there is an error on the write command, just print the
-> >> > > >> address that fails.  There are other ways to deduce the subsystem from
-> >> > > >> a physical address.
-> >> > > >>
-> >> > > >> Thanks,
-> >> > > >>
-> >> > > >> -Dan
-> >> > > >
-> >> > > > Hi Dan,
-> >> > > >
-> >> > > > Subsys is not just for debug.
-> >> > > > Its main purpose is to transfer CPU address to GCE address.
-> >> > > > Let me explain it by "write" op,
-> >> > > > I list a code segment from cmdq_rec_append_command().
-> >> > > >
-> >> > > >         case CMDQ_CODE_WRITE:
-> >> > > >                 subsys = cmdq_subsys_from_phys_addr(cqctx, arg_a);
-> >> > > >                 if (subsys < 0) {
-> >> > > >                         dev_err(dev,
-> >> > > >                                 "unsupported memory base address 0x%08x\n",
-> >> > > >                                 arg_a);
-> >> > > >                         return -EFAULT;
-> >> > > >                 }
-> >> > > >
-> >> > > >                 *cmd_ptr++ = arg_b;
-> >> > > >                 *cmd_ptr++ = (CMDQ_CODE_WRITE << CMDQ_OP_CODE_SHIFT) |
-> >> > > >                              (arg_a & CMDQ_ARG_A_WRITE_MASK) |
-> >> > > >                              ((subsys & CMDQ_SUBSYS_MASK) << CMDQ_SUBSYS_SHIFT);
-> >> > > >                 break;
-> >> > > >
-> >> > > > Subsys is mapped from physical address via cmdq_subsys_from_phys_addr(),
-> >> > > > and then it becomes part of GCE command via ((subsys & CMDQ_SUBSYS_MASK)
-> >> > > > << CMDQ_SUBSYS_SHIFT) .
-> >> > > > Only low bits of physical address are the same as GCE address.
-> >> > > > We can get it by (arg_a & CMDQ_ARG_A_WRITE_MASK).
-> >> > > > MASK is used to define how many bits are valid for this op.
-> >> > > > So, GCE address = subsys + valid low bits.
-> >> > >
-> >> > > How are these upper bits of the "GCE address" defined?
-> >> > > In other words, for a given SoC, how is the mapping between physical
-> >> > > io addresses to GCE addresses defined?
-> >> > > Is this mapping fixed by hardware?
-> >>
-> >> Please answer the detailed technical questions:
-> >>
-> >> How are these upper bits of the "GCE address" defined?
-> >
-> > A GCE command is arg_a + arg_b. Both of them have 32 bits length.
-> > arg_a is op + subsys + addr, and arg_b is value.
-> > subsys + addr is less than 32bits, so we need to map address range to
-> > subsys.
-> > The mapping rule is defined by hardware.
-> >
-> >> In other words, for a given SoC, how is the mapping between physical
-> >> io addresses to GCE addresses defined?
-> >
-> > It is (b).
-> >
-> >>
-> >> (a) Does the GCE remap a continuous device IO address range?
-> >>
-> >> AFAICT, the  defines an MT8173 specific mapping of:
-> >>
-> >> For example, the g_subsys table above seems to imply that the MT8173
-> >> gce maps all of:
-> >>   0x1400ffff:0x141fffff => 0x010000:0x1fffff
-> >>
-> >> (b) Or, are the upper 5 bits of the "gce address" significant, and via
-> >> hardware it can map a disjoint groups of device addresses into the
-> >> continuous GCE address space, and really there are 0x1f distinct 64k
-> >> mappings:
-> >>
-> >> mmsys (1) : 0x14000000:0x1400ffff => 0x010000:0x01ffff
-> >> disp  (2) : 0x14010000:0x1401ffff => 0x020000:0x02ffff
-> >> disp  (3) : 0x14020000:0x1402ffff => 0x030000:0x03ffff
-> >> ...
-> >> ???? (1f) : 0x141fffff:0x141fffff => 0x1f0000:0x1fffff
-> >>
-> >> If the mapping is fixed and continuous (a), then I think all we need
-> >> is a single dts entry for the gce node that describes how it performs
-> >> this mapping.  And then, the gce consumers can just pass in their
-> >> regular physical addresses, and the gce driver can remap them directly
-> >> to gce addresses.
-> >>
-> >> WDYT?
-> >
-> > How about this?
-> > hardware_module = <address_base subsys_id mask>;
-> > So, the result is
-> > mmsys_config_base = <0x14000000 1 0xffff0000>;
-> > disp_rdma_config_base = <0x14010000 2 0xffff0000>;
-> > disp_mutex_config_base = <0x14020000 3 0xffff0000>;
-> 
-> What uses ID 0 and 4 - 0x1f?
+On Wed, Jan 20, 2016 at 02:09:19PM +0100, Lothar Wa=DFmann wrote:
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> ---
+>  arch/arm/boot/dts/imx53-tx53.dtsi | 40 +++++++++++++++++++++++++++++=
++---------
+>  1 file changed, 31 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/im=
+x53-tx53.dtsi
+> index d3e50b2..8f08389 100644
+> --- a/arch/arm/boot/dts/imx53-tx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+> @@ -87,9 +87,20 @@
+>  			regulator-max-microvolt =3D <3300000>;
+>  		};
+> =20
+> -		reg_can_xcvr: regulator@2 {
+> +		reg_3v3_etn: regulator@2 {
 
-Subsys is defined by GCE hardware, and other IDs are reserved currently.
+Why cannot this be added as regulator@5 to avoid changing every node?
 
-> According to mt8173.dtsi, here are the blocks in the address ranges above:
-> 
-> @1400:
->   mmsys: clock-controller@14000000
->   ovl0: ovl@1400c000
->   ovl1: ovl@1400d000
->   rdma0: rdma@1400e000
->   rdma1: rdma@1400f000
-> 
-> @1401:
->   rdma2: rdma@14010000
->   wdma0: wdma@14011000
->   wdma1: wdma@14012000
->   color0: color@14013000
->   color1: color@14014000
->   aal@14015000
->   gamma@14016000
->   merge@14017000
->   split0: split@14018000
->   split1: split@14019000
->   ufoe@1401a000
->   dsi0: dsi@1401b000
->   dsi1: dsi@1401c000
->   dpi0: dpi@1401d000
->   pwm0: pwm@1401e000
->   pwm1: pwm@1401f000
-> 
-> @1402:
->   mutex: mutex@14020000
->   od@14023000
->   larb0: larb@14021000
->   smi_common: smi@14022000
->   hdmi0: hdmi@14025000
->   larb4: larb@14027000
-> 
-> I assume that the gce will work with any of the devices in those
-> ranges, not just "mmsys", "rdma" and "mutex", right?   (Also, notice
+>  			compatible =3D "regulator-fixed";
+>  			reg =3D <2>;
+> +			regulator-name =3D "ETN 3V3";
+> +			regulator-min-microvolt =3D <3300000>;
+> +			regulator-max-microvolt =3D <3300000>;
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&pinctrl_etn_phy>;
+> +			gpio =3D <&gpio3 20 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		reg_can_xcvr: regulator@3 {
+> +			compatible =3D "regulator-fixed";
+> +			reg =3D <3>;
+>  			regulator-name =3D "CAN XCVR";
+>  			regulator-min-microvolt =3D <3300000>;
+>  			regulator-max-microvolt =3D <3300000>;
+> @@ -98,9 +109,9 @@
+>  			gpio =3D <&gpio4 21 GPIO_ACTIVE_HIGH>;
+>  		};
+> =20
+> -		reg_usbh1_vbus: regulator@3 {
+> +		reg_usbh1_vbus: regulator@4 {
+>  			compatible =3D "regulator-fixed";
+> -			reg =3D <3>;
+> +			reg =3D <4>;
+>  			regulator-name =3D "usbh1_vbus";
+>  			regulator-min-microvolt =3D <5000000>;
+>  			regulator-max-microvolt =3D <5000000>;
+> @@ -110,9 +121,9 @@
+>  			enable-active-high;
+>  		};
+> =20
+> -		reg_usbotg_vbus: regulator@4 {
+> +		reg_usbotg_vbus: regulator@5 {
+>  			compatible =3D "regulator-fixed";
+> -			reg =3D <4>;
+> +			reg =3D <5>;
+>  			regulator-name =3D "usbotg_vbus";
+>  			regulator-min-microvolt =3D <5000000>;
+>  			regulator-max-microvolt =3D <5000000>;
+> @@ -204,13 +215,20 @@
+>  	phy-mode =3D "rmii";
+>  	phy-reset-gpios =3D <&gpio7 6 GPIO_ACTIVE_HIGH>;
+>  	phy-handle =3D <&phy0>;
+> +	phy-supply =3D <&reg_3v3_etn>;
+>  	mac-address =3D [000000000000]; /* placeholder; will be overwritten=
+ by bootloader */
+>  	status =3D "okay";
+> =20
+> -	phy0: ethernet-phy@0 {
+> -		interrupt-parent =3D <&gpio2>;
+> -		interrupts =3D <4>;
+> -		device_type =3D "ethernet-phy";
+> +	mdio {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		phy0: ethernet-phy@0 {
+> +			compatible =3D "ethernet-phy-id0007.c0f1", "ethernet-phy-ieee802.=
+3-c22";
+> +			reg =3D <0>;
+> +			interrupt-parent =3D <&gpio2>;
+> +			interrupts =3D <4>;
+> +		};
 
-That's right.
+This should be a separate change.
 
-> there are two "rdma" in the @1400 range, so rdma is really not a good
-> name for @1401)
+Shawn
 
-I think we can just use index.
-disp0_config_base = <0x14000000 1 0xffff0000>;
-disp1_config_base = <0x14010000 2 0xffff0000>;
-disp2_config_base = <0x14020000 3 0xffff0000>;
-
-> Further, it looks like the gce just maps a large device address range
-> starting at 0x14000000 to (21-bit) gce address 0x010000, rather than
-> 31 individually addressable 64k "subsys" blocks.  Is there a counter
-> example that I am missing?
-
->From GCE's point of view,
-it's 32 (0x0~0x1f) individually addressable 64k "subsys" blocks.
-Currently, we don't have a counter example since all display related
-address are put together.
-
-> -Dan
-
-Thanks,
-HS Liao
-
-> >
-> >> -Dan
-> >>
-> >> >
-> >> > Yes, this mapping is fixed by hardware.
-> >> >
-> >> > > Does it vary for different SoCs?
-> >> >
-> >> > Yes, it varies for different SoCs.
-> >> >
-> >> > >
-> >> > > -Dan
-> >> > >
-> >> > > > That's why we need to know the mapping between the range of physical
-> >> > > > address and subsys.
-> >> > > > Please guide us a better way to code such requirement.
-> >> > > > Thanks for your help.
-> >> > > >
-> >> > > > Thanks,
-> >> > > > HS Liao
-> >> > > >
-> >> >
-> >> > Thanks,
-> >> > HS Liao
-> >> >
-> >
-> > Thanks,
-> > HS Liao
-> >
+>  	};
+>  };
+> =20
+> @@ -309,6 +327,10 @@
+>  			fsl,pins =3D <MX53_PAD_DISP0_DAT0__GPIO4_21 0xe0>; /* Flexcan XCV=
+R enable */
+>  		};
+> =20
+> +		pinctrl_etn_phy: etn-phygrp {
+> +			fsl,pins =3D <MX53_PAD_EIM_D20__GPIO3_20 0xe0>; /* ETN PHY Power =
+enable */
+> +		};
+> +
+>  		pinctrl_ds1339: ds1339grp {
+>  			fsl,pins =3D <MX53_PAD_DI0_PIN4__GPIO4_20 0xe0>;
+>  		};
+> --=20
+> 2.1.4
+>=20
+>=20
