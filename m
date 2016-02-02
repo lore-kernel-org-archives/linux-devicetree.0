@@ -1,159 +1,289 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v6 4/4] arm64: dts: add Hi6220's stub clock node
-Date: Tue,  2 Feb 2016 18:09:42 +0800
-Message-ID: <1454407782-24674-5-git-send-email-leo.yan@linaro.org>
-References: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Haojian Zhuang <haojian.zhuang@linaro.org>
+From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Subject: [PATCH v10 3/8] dt, numa: adding numa dt binding implementation.
+Date: Tue, 2 Feb 2016 15:39:18 +0530
+Message-ID: <1454407763-1017-4-git-send-email-gkulkarni@caviumnetworks.com>
+References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hog
+Cc: gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Enable SRAM node and stub clock node for Hi6220, which uses mailbox
-channel 1 for CPU's frequency change.
+dt node parsing for numa topology is done using device property
+numa-node-id and device node distance-map.
 
-Furthermore, add the CPU clock phandle in CPU's node and using
-operating-points-v2 to register operating points. So can be used by
-cpufreq-dt driver.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Robert Richter <rrichter@cavium.com>
+Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/of/Kconfig   |  11 +++
+ drivers/of/Makefile  |   1 +
+ drivers/of/of_numa.c | 207 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h   |   4 +
+ 4 files changed, 223 insertions(+)
+ create mode 100644 drivers/of/of_numa.c
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 23c79e1..f588be9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -81,6 +81,11 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&stub_clock 0>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cooling-min-level = <4>;
-+			cooling-max-level = <0>;
-+			#cooling-cells = <2>; /* min followed by max */
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index e2a4841..8f9cc3a 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -112,4 +112,15 @@ config OF_OVERLAY
+ 	  While this option is selected automatically when needed, you can
+ 	  enable it manually to improve device tree unit test coverage.
  
-@@ -89,6 +94,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -97,6 +103,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -105,6 +112,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -113,6 +121,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -121,6 +130,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -129,6 +139,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -137,10 +148,42 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
++config OF_NUMA
++	bool "Device Tree NUMA support"
++	depends on NUMA
++	depends on OF
++	depends on ARM64
++	default y
++	help
++	  Enable Device Tree NUMA support.
++	  This enables the numa mapping of cpu, memory, io and
++	  inter node distances using dt bindings.
 +
-+		opp00 {
-+			opp-hz = /bits/ 64 <208000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <432000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <729000000>;
-+			opp-microvolt = <1090000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			opp-microvolt = <1180000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1330000>;
-+			clock-latency-ns = <500000>;
-+		};
-+	};
-+
- 	gic: interrupt-controller@f6801000 {
- 		compatible = "arm,gic-400";
- 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
-@@ -168,6 +211,11 @@
- 		#size-cells = <2>;
- 		ranges;
+ endif # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index 156c072..bee3fa9 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -14,5 +14,6 @@ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ obj-$(CONFIG_OF_OVERLAY) += overlay.o
++obj-$(CONFIG_OF_NUMA) += of_numa.o
  
-+		sram: sram@fff80000 {
-+			compatible = "hisilicon,hi6220-sramctrl", "syscon";
-+			reg = <0x0 0xfff80000 0x0 0x12000>;
-+		};
+ obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+new file mode 100644
+index 0000000..1142cdb
+--- /dev/null
++++ b/drivers/of/of_numa.c
+@@ -0,0 +1,207 @@
++/*
++ * OF NUMA Parsing support.
++ *
++ * Copyright (C) 2015 Cavium Inc.
++ * Author: Ganapatrao Kulkarni <gkulkarni@cavium.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
 +
- 		ao_ctrl: ao_ctrl@f7800000 {
- 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
- 			reg = <0x0 0xf7800000 0x0 0x2000>;
-@@ -193,6 +241,14 @@
- 			#clock-cells = <1>;
- 		};
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++
++/* define default numa node to 0 */
++#define DEFAULT_NODE 0
++
++/* Returns nid in the range [0..MAX_NUMNODES-1],
++ * or NUMA_NO_NODE if no valid numa-node-id entry found
++ * or DEFAULT_NODE if no numa-node-id entry exists
++ */
++static int of_numa_prop_to_nid(const __be32 *of_numa_prop, int length)
++{
++	int nid;
++
++	if (!of_numa_prop)
++		return DEFAULT_NODE;
++
++	if (length != sizeof(*of_numa_prop)) {
++		pr_warn("NUMA: Invalid of_numa_prop length %d found.\n",
++				length);
++		return NUMA_NO_NODE;
++	}
++
++	nid = of_read_number(of_numa_prop, 1);
++	if (nid >= MAX_NUMNODES) {
++		pr_warn("NUMA: Invalid numa node %d found.\n", nid);
++		return NUMA_NO_NODE;
++	}
++
++	return nid;
++}
++
++static int __init early_init_of_node_to_nid(unsigned long node)
++{
++	int length;
++	const __be32 *of_numa_prop;
++
++	of_numa_prop = of_get_flat_dt_prop(node, "numa-node-id", &length);
++
++	return of_numa_prop_to_nid(of_numa_prop, length);
++}
++
++/*
++ * Even though we connect cpus to numa domains later in SMP
++ * init, we need to know the node ids now for all cpus.
++*/
++static int __init early_init_parse_cpu_node(unsigned long node)
++{
++	int nid;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++
++	if (type == NULL)
++		return 0;
++
++	if (strcmp(type, "cpu") != 0)
++		return 0;
++
++	nid = early_init_of_node_to_nid(node);
++	if (nid == NUMA_NO_NODE)
++		return -EINVAL;
++
++	node_set(nid, numa_nodes_parsed);
++	return 0;
++}
++
++static int __init early_init_parse_memory_node(unsigned long node)
++{
++	const __be32 *reg, *endp;
++	int length;
++	int nid;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++
++	if (type == NULL)
++		return 0;
++
++	if (strcmp(type, "memory") != 0)
++		return 0;
++
++	nid = early_init_of_node_to_nid(node);
++	if (nid == NUMA_NO_NODE)
++		return -EINVAL;
++
++	reg = of_get_flat_dt_prop(node, "reg", &length);
++	endp = reg + (length / sizeof(__be32));
++
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		u64 base, size;
++
++		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_root_size_cells, &reg);
++		pr_debug("NUMA:  base = %llx , node = %u\n",
++				base, nid);
++
++		if (numa_add_memblk(nid, base, size) < 0)
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int __init early_init_parse_distance_map_v1(unsigned long node,
++		const char *uname)
++{
++	const __be32 *prop_dist_matrix;
++	int length = 0, i, matrix_count;
++	int nr_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
++
++	pr_info("NUMA: parsing numa-distance-map-v1\n");
++
++	prop_dist_matrix =
++		of_get_flat_dt_prop(node, "distance-matrix", &length);
++
++	if (!length) {
++		pr_err("NUMA: failed to parse distance-matrix\n");
++		return -ENODEV;
++	}
++
++	matrix_count = ((length / sizeof(__be32)) / (3 * nr_size_cells));
++
++	if ((matrix_count * sizeof(__be32) * 3 * nr_size_cells) !=  length) {
++		pr_warn("NUMA: invalid distance-matrix length %d\n", length);
++		return -EINVAL;
++	}
++
++	for (i = 0; i < matrix_count; i++) {
++		u32 nodea, nodeb, distance;
++
++		nodea = dt_mem_next_cell(nr_size_cells, &prop_dist_matrix);
++		nodeb = dt_mem_next_cell(nr_size_cells, &prop_dist_matrix);
++		distance = dt_mem_next_cell(nr_size_cells, &prop_dist_matrix);
++		numa_set_distance(nodea, nodeb, distance);
++		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
++				nodea, nodeb, distance);
++
++		/* Set default distance of node B->A same as A->B */
++		if (nodeb > nodea)
++			numa_set_distance(nodeb, nodea, distance);
++	}
++
++	return 0;
++}
++
++static int __init early_init_parse_distance_map(unsigned long node,
++		const char *uname)
++{
++	if (strcmp(uname, "distance-map") != 0)
++		return 0;
++
++	if (of_flat_dt_is_compatible(node, "numa-distance-map-v1"))
++		return early_init_parse_distance_map_v1(node, uname);
++
++	pr_err("NUMA: invalid distance-map device node\n");
++	return -EINVAL;
++}
++
++static int __init early_init_of_scan_numa_map(unsigned long node, const char *uname,
++				     int depth, void *data)
++{
++	int ret;
++
++	ret = early_init_parse_cpu_node(node);
++	if (ret)
++		return ret;
++
++	ret = early_init_parse_memory_node(node);
++	if (ret)
++		return ret;
++
++	return early_init_parse_distance_map(node, uname);
++}
++
++int of_node_to_nid(struct device_node *device)
++{
++	const __be32 *of_numa_prop;
++	int length;
++
++	of_numa_prop = of_get_property(device, "numa-node-id", &length);
++	if (of_numa_prop)
++		return of_numa_prop_to_nid(of_numa_prop, length);
++
++	return NUMA_NO_NODE;
++}
++
++/* DT node mapping is done already early_init_of_scan_memory */
++int __init of_numa_init(void)
++{
++	return of_scan_flat_dt(early_init_of_scan_numa_map, NULL);
++}
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dd10626..23e5bad 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -685,6 +685,10 @@ static inline int of_node_to_nid(struct device_node *device)
+ }
+ #endif
  
-+		stub_clock: stub_clock {
-+			compatible = "hisilicon,hi6220-stub-clk";
-+			hisilicon,hi6220-clk-sram = <&sram>;
-+			#clock-cells = <1>;
-+			mbox-names = "mbox-tx";
-+			mboxes = <&mailbox 1 0 11>;
-+		};
++#ifdef CONFIG_OF_NUMA
++extern int __init of_numa_init(void);
++#endif
 +
- 		uart0: uart@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
+ static inline struct device_node *of_find_matching_node(
+ 	struct device_node *from,
+ 	const struct of_device_id *matches)
 -- 
-1.9.1
+1.8.1.4
+
