@@ -1,114 +1,74 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] iio: health: Add driver for the TI AFE4404 heart
- monitor
-Date: Tue, 2 Feb 2016 09:50:35 -0600
-Message-ID: <56B0D04B.1090208@ti.com>
-References: <1453742941-12086-1-git-send-email-afd@ti.com>
- <1453742941-12086-3-git-send-email-afd@ti.com> <56ACCFC6.2000700@kernel.org>
+From: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: ad5755: add support for dt bindings
+Date: Tue, 2 Feb 2016 16:57:55 +0100
+Message-ID: <56B0D203.3050905@prevas.dk>
+References: <1454416574-6645-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <56B0CC2C.6020809@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56ACCFC6.2000700-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B0CC2C.6020809-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/30/2016 08:59 AM, Jonathan Cameron wrote:
-> On 25/01/16 17:28, Andrew F. Davis wrote:
->> Add driver for the TI AFE4404 heart rate monitor and pulse oximeter.
->> This device detects reflected LED light fluctuations and presents an ADC
->> value to the user space for further signal processing.
->>
->> Datasheet: http://www.ti.com/product/AFE4404/datasheet
->>
->> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> Hi Andrew,
->
-> This changed rather more than I was expecting, but fair enough.
->
-> A few bits are missing from remove.  Few other little bits inline,
-> though mostly those are about readability rather than what the code
-> is doing.
->
-> I was a little suprised to see no control over whether the trigger is
-> enabled or not.  I'm trying to get my head around what the result of this will
-> be.  I guess we'll have interrupts pinging away merilly doing nothing until
-> the buffer is attached then the demux will get set up to actually do
-> something with the data.
->
-> hmm. Might be fine, if I ususual.  Normally devices have some means of
-> masking the interrupt.
 
-I wasn't sure about this ether, but it doesn't seem to break anything.
 
+On 2016-02-02 16:33, Lars-Peter Clausen wrote:
+> On 02/02/2016 01:36 PM, Sean Nyekjaer wrote:
+>> Still missing a way to provide default modes and settings
+>> for the driver from dt, but I see this as a start.
+>>
+>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+> Hi,
 >
-> Jonathan
+> Thanks for the patch.
+:-)
 >
 >> ---
->>   .../ABI/testing/sysfs-bus-iio-health-afe440x       |  54 ++
->>   drivers/iio/health/Kconfig                         |  19 +-
+>>   drivers/iio/dac/ad5755.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+>> index bfb350a..e1b6e78 100644
+>> --- a/drivers/iio/dac/ad5755.c
+>> +++ b/drivers/iio/dac/ad5755.c
+>> @@ -607,6 +607,16 @@ static const struct spi_device_id ad5755_id[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(spi, ad5755_id);
+>>   
+>> +static const struct of_device_id ad5755_of_match[] = {
+>> +	{ .compatible = "adi,ad5755" },
+>> +	{ .compatible = "adi,ad5755-1" },
+>> +	{ .compatible = "adi,ad5757" },
+>> +	{ .compatible = "adi,ad5735" },
+>> +	{ .compatible = "adi,ad5737" },
+> This needs to set the ID for the device type, so that the driver gets
+> instantiated for the correct devicetype. And in the probe function check if
+> the driver was probed via DT (by checking spi->dev.of_node) and if it does
+> get the ID from the of_device_id rather the spi_device_id.
+I was planning on doing that.
+And I was experimenting with providing modes and settings for every 
+channel from the dt.
+Is the DAC the only output devices in IIO?
 
-[...]
+I will send an proposal tomorrow :-) And thereby (maybe) pave the way 
+for the runtime mode switching
 
->> +
->> +static const struct afe440x_reg_info afe4404_reg_info[] = {
+Should we drop the platform data support and only rely on dt?
 >
-> As noted below, I'd find
-> [LED1] = AFE440X_REG_INFO(AFE440_LED1VAL...
-> more readable.
->
-
-ACK
-
-[...]
-
->> +	int ret;
->> +
->> +	iio_device_unregister(indio_dev);
->> +
-> Would expect unwinding of the triggered_buffer here.
-> iio_triggered_buffer_cleanup()
->
-
-ACK
-
->> +	iio_trigger_unregister(afe->trig);
-> This should be protected by a check on afe->irq as for the register in probe.
-> There is no protection against afe->trig == NULL in iio_trigger_unregister.
-> That is kind of deliberate as it makes sure the probe / remove in drivers
-> are balanced unlike here.
->
-
-Makes sense, will add.
-
-[...]
-
-> I'm not overly keen on the hiding fo the indexing.  I'd prefer
-> this was just the bit {...} and you had the fact it was filling in an
-> indexed element explicit where used.
-
-That works.
-
-[...]
-
-> I'd prefix reg_type to avoid possible name clashes in future.
->> +enum reg_type {
->> +	SIMPLE,
->> +	RESISTANCE,
->> +	CAPACITANCE,
+>> +	{ }
 >> +};
-
-ACK
-
+>> +MODULE_DEVICE_TABLE(of, ad5755_of_match);
 >> +
->> +/* this could be made more general for other IIO drivers if needed --------- */
->
-> Yes, but lets do that at as a follow up.
->
+>>   static struct spi_driver ad5755_driver = {
+>>   	.driver = {
+>>   		.name = "ad5755",
+>>
 
-Sure.
-
-Thanks,
-Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
