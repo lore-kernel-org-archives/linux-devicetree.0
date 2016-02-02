@@ -1,103 +1,62 @@
-From: Vineet Gupta <vgupta@synopsys.com>
-Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
-Date: Tue, 2 Feb 2016 19:59:03 +0530
-Message-ID: <56B0BD2F.5080409@synopsys.com>
-References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
- <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
- <1454418916.25997.18.camel@synopsys.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 12/14] clk: tegra210: Add the APB2APE audio clock
+Date: Tue, 2 Feb 2016 15:37:02 +0100
+Message-ID: <20160202143702.GA10098@ulmo.nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-13-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454418916.25997.18.camel@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "noamc@ezchip.com" <noamc@ezchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453998832-27383-13-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexey,
 
-On Tuesday 02 February 2016 06:45 PM, Alexey Brodkin wrote:
-> Hi Vineet,
-> 
-> On Tue, 2016-02-02 at 16:28 +0530, Vineet Gupta wrote:
->> +
->> +Required properties:
->> +
->> +- compatible : should be "snps,arc-timer0"
->> +- interrupts : single Interrupt going into parent intc
->> +	       (16 for ARCHS cores, 3 for ARC700 cores)
->> +- clocks     : phandle to the source clock
-> 
-> Actually we're not flexible here.
-> See we have hard-coded "core_clk" in [PATCH 8/9].
-> We use it directly in show_cpuinfo() for reading clock speed
-> as well as in axs103_early_init().
-> 
-> So "source clock" here MUST be "core_clk", otherwise
-> /proc/cpuinfo will report junk instead of meaningful data at least.
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Using hardcoded DT names in generic code is total BS and I slap myself for missing
-that in reviewing 8/9. Please fix it !
+On Thu, Jan 28, 2016 at 04:33:50PM +0000, Jon Hunter wrote:
+> The APB2APE clock for the audio subsystem is required for powering up the
+> audio power domain and accessing the various modules in this subsystem on
+> the tegra210 device. Add this clock for tegra210.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-id.h               | 1 +
+>  drivers/clk/tegra/clk-tegra-periph.c     | 1 +
+>  drivers/clk/tegra/clk-tegra210.c         | 1 +
+>  include/dt-bindings/clock/tegra210-car.h | 2 +-
+>  4 files changed, 4 insertions(+), 1 deletion(-)
 
-FWIW, it is OK to have such hardcoding in say AXS103 DTS and AXS103 platform code
-but it is not the way to go in setup.c
+Applied, thanks.
 
->> +Required properties:
->> +
->> +- compatible : should be "snps,arc-timer1"
->> +- clocks     : phandle to the source clock
->> +
->> +Example:
->> +
->> +	timer1: timer_clksrc {
->> +		compatible = "snps,arc-timer1";
->> +		clocks = <&timer0_clk>;
-> 
-> Ditto, "clocks = <&core_clk>".
+Thierry
 
-Yeah I fixed all those !
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
->> index cfb5052239a1..f9f138efa92c 100644
->> --- a/arch/arc/boot/dts/abilis_tb10x.dtsi
->> +++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
->> @@ -35,6 +35,18 @@
->>  		};
->>  	};
->>  
->> +	timer0: timer_clkevt {
->> +		compatible = "snps,arc-timer0";
->> +		interrupts = <3>;
->> +		interrupt-parent = <&intc>;
->> +		clocks = <&cpu_clk>;
->>
->> +	};
->> +
->> +	timer1: timer_clksrc {
->> +		compatible = "snps,arc-timer1";
->> +		clocks = <&cpu_clk>;
->> +	};
->> +
-> 
-> Hm now that's a question how to fix /proc/cpuinfo output
-> for Abilis? There's no "core_clk" DTS node for Abilis and so
-> show_cpuinfo() won't get proper clock value.
-> 
-> Probably we may fix it with modification of their "pll" node
-> from
-> ------------------------>8----------------------
-> 		pll0: oscillator {
-> 			clock-frequency  = <1000000000>;
-> 		};
-> ------------------------>8----------------------
-> 
-> to
-> ------------------------>8----------------------
-> 		core_clk: oscillator {
-> 			clock
-> -frequency  = <1000000000>;
-> 		};
-> ------------------------>8----------------------
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-This is all moot once we fix the orig problem.
+iQIcBAABCAAGBQJWsL8OAAoJEN0jrNd/PrOh/hoQAJVttYAR4oii5jKSlINFsQtZ
+/1ETAlw1MhYfoCP7joV6/lLDtHPgNwoXMZAjB2bly2C1b4bXEu0M0a0xmdeuP/ZM
+yOj8Q7qsb6yDYi8qgtlpaU3VBrg6/0N5ILHwpSgHrDstwqwPAbw5wUSkWOgYHQZm
+l35pwX66wlD/+OWds6VZsdu6ww+Zi3SaOb4kGf3cvGIJitdVLSzCmYFU2eTJOjdZ
+1NEIfeYVM92crFKF2n84YAe0S2Lp9XcReuAGAch2sCxZI2EidEZaLWJWaOgJC11Q
+eVgZgXSbaxRQfeQphNHHs+koOYq9y/PaCGi97RHcXp1hh/YqE7CfecUJMzDjRfEF
+GfoshzuY8ibSL2MJsOkl0/oTbGhzCZ4vewKBT1r8x3hmlr33RnljUsMMkzRIy+A9
+e46CIPskDerqMbzoOI9fvdb3dx0FFnN4FVv5Ns1zbfJD6guDuTi/lJe9i25rh8ZM
+99C+sNf1gSetTmgnsDU6Yf/Z96GWJOlSR3Jyk9icNiIkwnfTxXKYlCrRuJ7XAB1k
+5oicGs1WvN3fqTUa5ofv2aUKSnj81QD5UE1J2B4SIgpHA6jHRDkW0qOP8N64Zpc0
+rtWz/AAvwdt8ed5pMW2tkNrONDNrKe+pLrzJ1DqGFX1Lw3eGC3IomVp/lGuxFkMq
+4JZ2R4sIwvcXz0uhkJbc
+=hCJn
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
