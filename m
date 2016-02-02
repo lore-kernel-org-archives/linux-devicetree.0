@@ -1,425 +1,122 @@
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: [PATCH v2 1/2] rtc: add rtc-asm9260 driver
-Date: Tue,  2 Feb 2016 20:56:10 +0100
-Message-ID: <1454442971-25225-2-git-send-email-linux@rempel-privat.de>
-References: <20160202102804.GT20165@piout.net>
- <1454442971-25225-1-git-send-email-linux@rempel-privat.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454442971-25225-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Tue, 02 Feb 2016 21:48:45 +0100
+Message-ID: <1930324.vU65IL0x0g@wuerfel>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for RTC controller found on Alphascale asm9260
-SoC.
+On Tuesday 02 February 2016 18:24:45 Zubair Lutfullah Kakakhel wrote:
+> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+> new file mode 100644
+> index 0000000..3bd3c2f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+> @@ -0,0 +1,42 @@
+> +* UCTL SATA controller glue
+> +
+> +UCTL is the bridge unit between the I/O interconnect (an internal bus)
+> +and the SATA AHCI host controller (UAHC). It performs the following functions:
+> +	- provides interfaces for the applications to access the UAHC AHCI
+> +	  registers on the CN71XX I/O space.
+> +	- provides a bridge for UAHC to fetch AHCI command table entries and data
+> +	  buffers from Level 2 Cache.
+> +	- posts interrupts to the CIU.
+> +	- contains registers that:
+> +		- control the behavior of the UAHC
+> +		- control the clock/reset generation to UAHC
+> +		- control endian swapping for all UAHC registers and DMA accesses
+>
 
-Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
----
- drivers/rtc/Kconfig       |  10 ++
- drivers/rtc/Makefile      |   1 +
- drivers/rtc/rtc-asm9260.c | 355 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 366 insertions(+)
- create mode 100644 drivers/rtc/rtc-asm9260.c
+Typically we treat those special registers as part of the device itself
+and have a single device node for the AHCI controller and that one.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 376322f..733b6aa 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1144,6 +1144,16 @@ config RTC_DRV_ZYNQMP
- 
- comment "on-CPU RTC drivers"
- 
-+config RTC_DRV_ASM9260
-+	tristate "Alphascale asm9260 RTC"
-+	depends on MACH_ASM9260
-+	help
-+	  If you say yes here you get support for the RTC on the
-+	  Alphascale asm9260 SoC.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-asm9260.
-+
- config RTC_DRV_DAVINCI
- 	tristate "TI DaVinci RTC"
- 	depends on ARCH_DAVINCI_DM365
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 62d61b2..f4d841b 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_RTC_DRV_ABB5ZES3)	+= rtc-ab-b5ze-s3.o
- obj-$(CONFIG_RTC_DRV_ABX80X)	+= rtc-abx80x.o
- obj-$(CONFIG_RTC_DRV_ARMADA38X)	+= rtc-armada38x.o
- obj-$(CONFIG_RTC_DRV_AS3722)	+= rtc-as3722.o
-+obj-$(CONFIG_RTC_DRV_ASM9260)	+= rtc-asm9260.o
- obj-$(CONFIG_RTC_DRV_AT32AP700X)+= rtc-at32ap700x.o
- obj-$(CONFIG_RTC_DRV_AT91RM9200)+= rtc-at91rm9200.o
- obj-$(CONFIG_RTC_DRV_AT91SAM9)	+= rtc-at91sam9.o
-diff --git a/drivers/rtc/rtc-asm9260.c b/drivers/rtc/rtc-asm9260.c
-new file mode 100644
-index 0000000..14e08c4
---- /dev/null
-+++ b/drivers/rtc/rtc-asm9260.c
-@@ -0,0 +1,355 @@
-+/*
-+ * Copyright (C) 2016 Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation; either version 2 of the License,
-+ * or (at your option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+
-+/* Miscellaneous registers */
-+/* Interrupt Location Register */
-+#define HW_ILR			0x00
-+#define BM_RTCALF		BIT(1)
-+#define BM_RTCCIF		BIT(0)
-+
-+/* Clock Control Register */
-+#define HW_CCR			0x08
-+/* Calibration counter disable */
-+#define BM_CCALOFF		BIT(4)
-+/* Reset internal oscillator divider */
-+#define BM_CTCRST		BIT(1)
-+/* Clock Enable */
-+#define BM_CLKEN		BIT(0)
-+
-+/* Counter Increment Interrupt Register */
-+#define HW_CIIR			0x0C
-+#define BM_CIIR_IMYEAR		BIT(7)
-+#define BM_CIIR_IMMON		BIT(6)
-+#define BM_CIIR_IMDOY		BIT(5)
-+#define BM_CIIR_IMDOW		BIT(4)
-+#define BM_CIIR_IMDOM		BIT(3)
-+#define BM_CIIR_IMHOUR		BIT(2)
-+#define BM_CIIR_IMMIN		BIT(1)
-+#define BM_CIIR_IMSEC		BIT(0)
-+
-+/* Alarm Mask Register */
-+#define HW_AMR			0x10
-+#define BM_AMR_IMYEAR		BIT(7)
-+#define BM_AMR_IMMON		BIT(6)
-+#define BM_AMR_IMDOY		BIT(5)
-+#define BM_AMR_IMDOW		BIT(4)
-+#define BM_AMR_IMDOM		BIT(3)
-+#define BM_AMR_IMHOUR		BIT(2)
-+#define BM_AMR_IMMIN		BIT(1)
-+#define BM_AMR_IMSEC		BIT(0)
-+#define BM_AMR_OFF		0xff
-+
-+/* Consolidated time registers */
-+#define HW_CTIME0		0x14
-+#define BM_CTIME0_DOW_S		24
-+#define BM_CTIME0_DOW_M		0x7
-+#define BM_CTIME0_HOUR_S	16
-+#define BM_CTIME0_HOUR_M	0x1f
-+#define BM_CTIME0_MIN_S		8
-+#define BM_CTIME0_MIN_M		0x3f
-+#define BM_CTIME0_SEC_S		0
-+#define BM_CTIME0_SEC_M		0x3f
-+
-+#define HW_CTIME1		0x18
-+#define BM_CTIME1_YEAR_S	16
-+#define BM_CTIME1_YEAR_M	0xfff
-+#define BM_CTIME1_MON_S		8
-+#define BM_CTIME1_MON_M		0xf
-+#define BM_CTIME1_DOM_S		0
-+#define BM_CTIME1_DOM_M		0x1f
-+
-+#define HW_CTIME2		0x1C
-+#define BM_CTIME2_DOY_S		0
-+#define BM_CTIME2_DOY_M		0xfff
-+
-+/* Time counter registers */
-+#define HW_SEC			0x20
-+#define HW_MIN			0x24
-+#define HW_HOUR			0x28
-+#define HW_DOM			0x2C
-+#define HW_DOW			0x30
-+#define HW_DOY			0x34
-+#define HW_MONTH		0x38
-+#define HW_YEAR			0x3C
-+
-+#define HW_CALIBRATION		0x40
-+#define BM_CALDIR_BACK		BIT(17)
-+#define BM_CALVAL_M		0x1ffff
-+
-+/* General purpose registers */
-+#define HW_GPREG0		0x44
-+#define HW_GPREG1		0x48
-+#define HW_GPREG2		0x4C
-+#define HW_GPREG3		0x50
-+#define HW_GPREG4		0x54
-+
-+/* Alarm register group */
-+#define HW_ALSEC		0x60
-+#define HW_ALMIN		0x64
-+#define HW_ALHOUR		0x68
-+#define HW_ALDOM		0x6C
-+#define HW_ALDOW		0x70
-+#define HW_ALDOY		0x74
-+#define HW_ALMON		0x78
-+#define HW_ALYEAR		0x7C
-+
-+struct asm9260_rtc_priv {
-+	struct device		*dev;
-+	void __iomem		*iobase;
-+	struct rtc_device	*rtc;
-+	struct clk		*clk;
-+	/* io lock */
-+	spinlock_t		lock;
-+};
-+
-+static irqreturn_t asm9260_rtc_irq(int irq, void *dev_id)
-+{
-+	struct asm9260_rtc_priv *priv = dev_id;
-+	u32 isr;
-+	unsigned long events = 0;
-+
-+	isr = ioread32(priv->iobase + HW_CIIR);
-+	if (!isr)
-+		return IRQ_NONE;
-+
-+	iowrite32(0, priv->iobase + HW_CIIR);
-+
-+	events |= RTC_AF | RTC_IRQF;
-+
-+	rtc_update_irq(priv->rtc, 1, events);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int asm9260_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
-+	u32 ctime0, ctime1, ctime2;
-+	unsigned long irq_flags;
-+
-+	spin_lock_irqsave(&priv->lock, irq_flags);
-+	ctime0 = ioread32(priv->iobase + HW_CTIME0);
-+	ctime1 = ioread32(priv->iobase + HW_CTIME1);
-+	ctime2 = ioread32(priv->iobase + HW_CTIME2);
-+
-+	if (ctime1 != ioread32(priv->iobase + HW_CTIME1)) {
-+		/*
-+		 * woops, counter flipped right now. Now we are safe
-+		 * to reread.
-+		 */
-+		ctime0 = ioread32(priv->iobase + HW_CTIME0);
-+		ctime1 = ioread32(priv->iobase + HW_CTIME1);
-+		ctime2 = ioread32(priv->iobase + HW_CTIME2);
-+	}
-+	spin_unlock_irqrestore(&priv->lock, irq_flags);
-+
-+	tm->tm_sec  = (ctime0 >> BM_CTIME0_SEC_S)  & BM_CTIME0_SEC_M;
-+	tm->tm_min  = (ctime0 >> BM_CTIME0_MIN_S)  & BM_CTIME0_MIN_M;
-+	tm->tm_hour = (ctime0 >> BM_CTIME0_HOUR_S) & BM_CTIME0_HOUR_M;
-+	tm->tm_wday = (ctime0 >> BM_CTIME0_DOW_S)  & BM_CTIME0_DOW_M;
-+
-+	tm->tm_mday = (ctime1 >> BM_CTIME1_DOM_S)  & BM_CTIME1_DOM_M;
-+	tm->tm_mon  = (ctime1 >> BM_CTIME1_MON_S)  & BM_CTIME1_MON_M;
-+	tm->tm_year = (ctime1 >> BM_CTIME1_YEAR_S) & BM_CTIME1_YEAR_M;
-+
-+	tm->tm_yday = (ctime2 >> BM_CTIME2_DOY_S)  & BM_CTIME2_DOY_M;
-+
-+	return 0;
-+}
-+
-+static int asm9260_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
-+	unsigned long irq_flags;
-+
-+	spin_lock_irqsave(&priv->lock, irq_flags);
-+	/*
-+	 * make sure SEC counter will not flip other counter on write time,
-+	 * real value will be written at the enf of sequence.
-+	 */
-+	iowrite32(0, priv->iobase + HW_SEC);
-+
-+	iowrite32(tm->tm_year, priv->iobase + HW_YEAR);
-+	iowrite32(tm->tm_mon,  priv->iobase + HW_MONTH);
-+	iowrite32(tm->tm_mday, priv->iobase + HW_DOM);
-+	iowrite32(tm->tm_wday, priv->iobase + HW_DOW);
-+	iowrite32(tm->tm_yday, priv->iobase + HW_DOY);
-+	iowrite32(tm->tm_hour, priv->iobase + HW_HOUR);
-+	iowrite32(tm->tm_min,  priv->iobase + HW_MIN);
-+	iowrite32(tm->tm_sec,  priv->iobase + HW_SEC);
-+	spin_unlock_irqrestore(&priv->lock, irq_flags);
-+
-+	return 0;
-+}
-+
-+static int asm9260_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
-+	unsigned long irq_flags;
-+
-+	spin_lock_irqsave(&priv->lock, irq_flags);
-+	alrm->time.tm_year = ioread32(priv->iobase + HW_ALYEAR);
-+	alrm->time.tm_mon  = ioread32(priv->iobase + HW_ALMON);
-+	alrm->time.tm_mday = ioread32(priv->iobase + HW_ALDOM);
-+	alrm->time.tm_wday = ioread32(priv->iobase + HW_ALDOW);
-+	alrm->time.tm_yday = ioread32(priv->iobase + HW_ALDOY);
-+	alrm->time.tm_hour = ioread32(priv->iobase + HW_ALHOUR);
-+	alrm->time.tm_min  = ioread32(priv->iobase + HW_ALMIN);
-+	alrm->time.tm_sec  = ioread32(priv->iobase + HW_ALSEC);
-+
-+	alrm->enabled = ioread32(priv->iobase + HW_AMR) ? 1 : 0;
-+	alrm->pending = ioread32(priv->iobase + HW_CIIR) ? 1 : 0;
-+	spin_unlock_irqrestore(&priv->lock, irq_flags);
-+
-+	return rtc_valid_tm(&alrm->time);
-+}
-+
-+static int asm9260_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
-+	unsigned long irq_flags;
-+
-+	spin_lock_irqsave(&priv->lock, irq_flags);
-+	iowrite32(alrm->time.tm_year, priv->iobase + HW_ALYEAR);
-+	iowrite32(alrm->time.tm_mon,  priv->iobase + HW_ALMON);
-+	iowrite32(alrm->time.tm_mday, priv->iobase + HW_ALDOM);
-+	iowrite32(alrm->time.tm_wday, priv->iobase + HW_ALDOW);
-+	iowrite32(alrm->time.tm_yday, priv->iobase + HW_ALDOY);
-+	iowrite32(alrm->time.tm_hour, priv->iobase + HW_ALHOUR);
-+	iowrite32(alrm->time.tm_min,  priv->iobase + HW_ALMIN);
-+	iowrite32(alrm->time.tm_sec,  priv->iobase + HW_ALSEC);
-+
-+	iowrite32(alrm->enabled ? 0 : BM_AMR_OFF, priv->iobase + HW_AMR);
-+	spin_unlock_irqrestore(&priv->lock, irq_flags);
-+
-+	return 0;
-+}
-+
-+static int asm9260_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct asm9260_rtc_priv *priv = dev_get_drvdata(dev);
-+
-+	iowrite32(enabled ? 0 : BM_AMR_OFF, priv->iobase + HW_AMR);
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops asm9260_rtc_ops = {
-+	.read_time		= asm9260_rtc_read_time,
-+	.set_time		= asm9260_rtc_set_time,
-+	.read_alarm		= asm9260_rtc_read_alarm,
-+	.set_alarm		= asm9260_rtc_set_alarm,
-+	.alarm_irq_enable	= asm9260_alarm_irq_enable,
-+};
-+
-+static int __init asm9260_rtc_probe(struct platform_device *pdev)
-+{
-+	struct asm9260_rtc_priv *priv;
-+	struct device *dev = &pdev->dev;
-+	struct resource	*res;
-+	int irq_alarm, ret;
-+	u32 ccr;
-+
-+	priv = devm_kzalloc(dev, sizeof(struct asm9260_rtc_priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, priv);
-+
-+	irq_alarm = platform_get_irq(pdev, 0);
-+	if (irq_alarm < 0) {
-+		dev_err(dev, "No alarm IRQ resource defined\n");
-+		return irq_alarm;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->iobase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->iobase))
-+		return PTR_ERR(priv->iobase);
-+
-+	priv->clk = devm_clk_get(dev, "ahb");
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable clk!\n");
-+		return ret;
-+	}
-+
-+	ccr = ioread32(priv->iobase + HW_CCR);
-+	/* if dev is not enabled, reset it */
-+	if ((ccr & (BM_CLKEN | BM_CTCRST)) != BM_CLKEN) {
-+		iowrite32(BM_CTCRST, priv->iobase + HW_CCR);
-+		ccr = 0;
-+	}
-+
-+	iowrite32(BM_CLKEN | ccr, priv->iobase + HW_CCR);
-+	iowrite32(0, priv->iobase + HW_CIIR);
-+	iowrite32(BM_AMR_OFF, priv->iobase + HW_AMR);
-+
-+	priv->rtc = devm_rtc_device_register(dev, dev_name(dev),
-+					     &asm9260_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(priv->rtc)) {
-+		ret = PTR_ERR(priv->rtc);
-+		dev_err(dev, "Failed to register RTC device: %d\n", ret);
-+		goto err_return;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, irq_alarm, NULL,
-+					asm9260_rtc_irq, IRQF_ONESHOT,
-+					dev_name(dev), priv);
-+	if (ret < 0) {
-+		dev_err(dev, "can't get irq %i, err %d\n",
-+			irq_alarm, ret);
-+		goto err_return;
-+	}
-+
-+	return 0;
-+
-+err_return:
-+	clk_disable_unprepare(priv->clk);
-+	return ret;
-+}
-+
-+static int __exit asm9260_rtc_remove(struct platform_device *pdev)
-+{
-+	struct asm9260_rtc_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* Disable alarm matching */
-+	iowrite32(BM_AMR_OFF, priv->iobase + HW_AMR);
-+	clk_disable_unprepare(priv->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id asm9260_dt_ids[] = {
-+	{ .compatible = "alphascale,asm9260-rtc", },
-+	{}
-+};
-+
-+static struct platform_driver asm9260_rtc_driver = {
-+	.probe		= asm9260_rtc_probe,
-+	.remove		= asm9260_rtc_remove,
-+	.driver		= {
-+		.name	= "asm9260-rtc",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = asm9260_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(asm9260_rtc_driver);
-+
-+MODULE_AUTHOR("Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>");
-+MODULE_DESCRIPTION("Alphascale asm9260 SoC Realtime Clock Driver (RTC)");
-+MODULE_LICENSE("GPL");
--- 
-2.5.0
+What is your reason for doing it differently here?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> index 04975b8..6bc1de6 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -76,6 +76,8 @@ static const struct of_device_id ahci_of_match[] = {
+>  	{ .compatible = "ibm,476gtr-ahci", },
+>  	{ .compatible = "snps,dwc-ahci", },
+>  	{ .compatible = "hisilicon,hisi-ahci", },
+> +	{ .compatible = "fsl,qoriq-ahci", },
+> +	{ .compatible = "cavium,octeon-7130-ahci", },
+>  	{},
+
+The qoriq-ahci addition seems misplaced in this patch. Maybe split
+that out into a separate patch?
+
+> +/**
+> + * cvmx_sata_uctl_shim_cfg
+> + * from cvmx-sata-defs.h
+> + *
+> + * Accessible by: only when A_CLKDIV_EN
+> + * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
+> + * This register allows configuration of various shim (UCTL) features.
+> + * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
+> + * indicated in INTSTAT and a new OOB error arrives.
+> + * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
+> + * indicated in INTSTAT and a new DMA error arrives.
+> + */
+> +union cvmx_sata_uctl_shim_cfg {
+> +	uint64_t u64;
+> +	struct cvmx_sata_uctl_shim_cfg_s {
+> +	/*
+> +	 * Read/write error log for out-of-bound UAHC register access.
+> +	 * 0 = read, 1 = write.
+> +	 */
+> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
+> +	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
+> +	/*
+
+Try to avoid bitfields when defining structures that interact with
+the hardware, bitfields often cause problems with mixed-endian
+environments and don't make this easier to understand.
+
+> +static int ahci_octeon_probe(struct platform_device *pdev)
+> +{
+> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	/* set-up endian mode */
+> +	shim_cfg.u64 = cvmx_read_csr(
+> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
+> +#ifdef __BIG_ENDIAN
+> +	shim_cfg.s.dma_endian_mode = 1;
+> +	shim_cfg.s.csr_endian_mode = 1;
+> +#else
+> +	shim_cfg.s.dma_endian_mode = 0;
+> +	shim_cfg.s.csr_endian_mode = 0;
+> +#endif
+> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
+> +	cvmx_write_csr(
+> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
+> +
+
+Maybe add a helper function around cvmx_write_csr() that
+allows you to write to an __iomem address? Drivers should
+generally not need to use __force.
+
+	Arnd
