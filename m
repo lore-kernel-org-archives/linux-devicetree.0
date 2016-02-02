@@ -1,52 +1,70 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Tue, 02 Feb 2016 18:42:09 +0100
-Message-ID: <87wpqn3t72.fsf@dell.be.48ers.dk>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
-	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
-	<20160129001603.GM4130@sirena.org.uk>
-	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
-	<20160129113518.GQ4130@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160129113518.GQ4130-GFdadSzt00ze9xe1eoZjHA@public.gmane.org> (Mark Brown's message of
-	"Fri, 29 Jan 2016 12:35:18 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v4 0/2] Add a DRM display driver to the Allwinner H3
+Date: Tue, 2 Feb 2016 18:59:04 +0100
+Message-ID: <cover.1454435944.git.moinejf@free.fr>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dave Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <emilio@elopez.com.ar>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Mark" == Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+The proposed DRM driver works on a Orange PI 2 with a kernel 4.5.0-rc1
+and some H3 patches found in Hans de Goede's GIT repository.
 
- > On Fri, Jan 29, 2016 at 01:20:08AM +0000, Yang, Wenyou wrote:
- >> > > +static const struct of_device_id act8945a_pmic_of_match[] = {
- >> > > +	{ .compatible = "active-semi,act8945a-regulator" },
- >> > > +	{ },
- >> > > +};
- >> > > +MODULE_DEVICE_TABLE(of, act8945a_pmic_of_match);
+As there is no documentation about the HDMI of the H3,
+the associated encoder/connector driver has not been included
+in this patch series.
+For test purpose, it may be built as a out-of-tree driver
+from the tarball:
+	http://moinejf.free.fr/opi2/h3-hdmi.tar.gz
+and the DT files:
+	http://moinejf.free.fr/opi2/sun8i-h3.dtsi
+	http://moinejf.free.fr/opi2/sun8i-h3-orangepi-plus.dts
 
- >> > This seems mostly OK but why do we have a compatible string here - shouldn't
- >> > the MFD be able to instantiate the regulator function without needing this?
+Jean-Francois Moine (2):
+  clk: sunxi: Add sun6i/8i video support
+  drm: sunxi: Add a basic DRM driver for Allwinner DE2
 
- >> Because I got feedback from Javier for the act8945a-charger patches of this MFD series,
- >> He said missing the OF match table will cause the module autoloading broken. 
+---
+v4: 
+	- drivers/clk/sunxi/Makefile was missing (Emil Velikov)
+v3:
+	- add the hardware cursor
+	- simplify and fix the DE2 init sequences
+	- generation for all SUNXI SoCs (Andre Przywara)
+v2:
+	- remarks from Chen-Yu Tsai and Russell King
+	- DT documentation added
+---
 
- >> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398113.html
-
- >> What do you think about it?
-
- > If then device is not being loaded from the DT (and it shouldn't be, the
- > device looks like it should be instantiated directly by the MFD as it
- > can't exist separately to that MFD) an OF table will do nothing.  
-
-To add to the confusion, the regulator part of the chip is actually
-identical to act8865, so it could use the existing regulator driver /
-compatible, except that it binds to the platform bus instead of i2c.
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
+ .../devicetree/bindings/display/sunxi.txt          |  81 ++++
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-display.c              | 106 +++++
+ drivers/clk/sunxi/clk-sun6i-pll3.c                 | 174 +++++++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/sunxi/Kconfig                      |  20 +
+ drivers/gpu/drm/sunxi/Makefile                     |   7 +
+ drivers/gpu/drm/sunxi/de2_crtc.c                   | 421 +++++++++++++++++
+ drivers/gpu/drm/sunxi/de2_crtc.h                   |  61 +++
+ drivers/gpu/drm/sunxi/de2_de.c                     | 505 +++++++++++++++++++++
+ drivers/gpu/drm/sunxi/de2_drm.h                    |  40 ++
+ drivers/gpu/drm/sunxi/de2_drv.c                    | 377 +++++++++++++++
+ drivers/gpu/drm/sunxi/de2_plane.c                  |  91 ++++
+ 15 files changed, 1890 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/sunxi.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-display.c
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-pll3.c
+ create mode 100644 drivers/gpu/drm/sunxi/Kconfig
+ create mode 100644 drivers/gpu/drm/sunxi/Makefile
+ create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.h
+ create mode 100644 drivers/gpu/drm/sunxi/de2_de.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_drm.h
+ create mode 100644 drivers/gpu/drm/sunxi/de2_drv.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_plane.c
 
 -- 
-Bye, Peter Korsgaard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.0
+
