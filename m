@@ -1,106 +1,223 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Tue, 2 Feb 2016 11:44:42 +0100
-Message-ID: <56B0889A.1010305@gmail.com>
-References: <1453270097-53853-1-git-send-email-jamesjj.liao@mediatek.com>
- <1453270097-53853-2-git-send-email-jamesjj.liao@mediatek.com>
- <56ADF556.6070402@gmail.com> <1454396212.2847.15.camel@mtksdaap41>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 1/9] ARC: [dts] Add clk feeding into timers to DTs
+Date: Tue, 2 Feb 2016 16:28:51 +0530
+Message-ID: <1454410739-24444-2-git-send-email-vgupta@synopsys.com>
+References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454396212.2847.15.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org, Alexey.Brodkin@synopsys.com, Noam Camus <noamc@ezchip.com>
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This allows us to introduce timers in DT in next commit
 
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+ arch/arc/boot/dts/axc001.dtsi         | 6 ++++++
+ arch/arc/boot/dts/axc003.dtsi         | 6 ++++++
+ arch/arc/boot/dts/axc003_idu.dtsi     | 6 ++++++
+ arch/arc/boot/dts/nsim_700.dts        | 6 ++++++
+ arch/arc/boot/dts/nsim_hs.dts         | 6 ++++++
+ arch/arc/boot/dts/nsim_hs_idu.dts     | 6 ++++++
+ arch/arc/boot/dts/nsimosci.dts        | 6 ++++++
+ arch/arc/boot/dts/nsimosci_hs.dts     | 6 ++++++
+ arch/arc/boot/dts/nsimosci_hs_idu.dts | 6 ++++++
+ arch/arc/boot/dts/vdk_axc003.dtsi     | 6 ++++++
+ arch/arc/boot/dts/vdk_axc003_idu.dtsi | 6 ++++++
+ 11 files changed, 66 insertions(+)
 
-On 02/02/16 07:56, James Liao wrote:
-> Hi Matthias,
->
-> On Sun, 2016-01-31 at 12:51 +0100, Matthias Brugger wrote:
->> >
->> >On 20/01/16 07:08, James Liao wrote:
->>> > >Refine scpsys driver common code to support multiple SoC / platform.
->>> > >
->>> > >Signed-off-by: James Liao<jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> > >---
->>> > >   drivers/soc/mediatek/mtk-scpsys.c | 418 ++++++++++++++++++++------------------
->>> > >   drivers/soc/mediatek/mtk-scpsys.h |  55 +++++
->>> > >   2 files changed, 270 insertions(+), 203 deletions(-)
->>> > >   create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
->> >
->> >In general this approach looks fine to me, comments below.
->> >
->>> > >
->>> > >diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
->>> > >index 0221387..339adfc 100644
->>> > >--- a/drivers/soc/mediatek/mtk-scpsys.c
->>> > >+++ b/drivers/soc/mediatek/mtk-scpsys.c
->>> > >@@ -11,29 +11,17 @@
->>> > >    * GNU General Public License for more details.
->>> > >    */
->>> > >   #include <linux/clk.h>
->>> > >-#include <linux/delay.h>
->>> > >+#include <linux/init.h>
->>> > >   #include <linux/io.h>
->>> > >-#include <linux/kernel.h>
->>> > >   #include <linux/mfd/syscon.h>
->> >
->> >When at it, do we need this include?
-> syscon_regmap_lookup_by_phandle() is declared in this head file.
->
->>> > >-#include <linux/init.h>
->>> > >   #include <linux/of_device.h>
->>> > >   #include <linux/platform_device.h>
->>> > >   #include <linux/pm_domain.h>
->>> > >-#include <linux/regmap.h>
->>> > >-#include <linux/soc/mediatek/infracfg.h>
->>> > >   #include <linux/regulator/consumer.h>
->>> > >-#include <dt-bindings/power/mt8173-power.h>
->>> > >+#include <linux/soc/mediatek/infracfg.h>
->>> > >+
->>> > >+#include "mtk-scpsys.h"
->>> > >
->>> > >-#define SPM_VDE_PWR_CON			0x0210
->>> > >-#define SPM_MFG_PWR_CON			0x0214
->>> > >-#define SPM_VEN_PWR_CON			0x0230
->>> > >-#define SPM_ISP_PWR_CON			0x0238
->>> > >-#define SPM_DIS_PWR_CON			0x023c
->>> > >-#define SPM_VEN2_PWR_CON		0x0298
->>> > >-#define SPM_AUDIO_PWR_CON		0x029c
->>> > >-#define SPM_MFG_2D_PWR_CON		0x02c0
->>> > >-#define SPM_MFG_ASYNC_PWR_CON		0x02c4
->>> > >-#define SPM_USB_PWR_CON			0x02cc
->> >
->> >I would prefer to keep this defines and declare SoC specific ones where
->> >necessary. It makes the code more readable.
-> Some register address may be reused by other modules among SoCs, so it's
-> not easy to maintain the defines when we implement multiple SoC drivers
-> in the same file. For example, offset 0x0298 is VEN2_PWR_CON on MT8173,
-> but it is MJC_PWR_CON on other chips.
->
-
-So that sounds as if 0x0298 offset is MT8173 specific.
-I checked [VDE, MFG, VEN, IFR, ISP, DIS, DPY]_PWR_CON on mt8173, mt8135 
-and mt6589 and they all have the same offset. So it doesn't seem as if 
-the offset randomly changes for every SoC.
-
-> Furthermore, these register offsets are only used in scp_domain_data[],
-> and each element has its own power domain name. So I think it's enough
-> to know which power domain are using these registers and status bits.
->
-
-Yes that's true, but it will make it easier for another person to 
-understand the driver, especially if he want's to implement the driver 
-for a new SoC.
-
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arc/boot/dts/axc001.dtsi b/arch/arc/boot/dts/axc001.dtsi
+index e7a83d19c5a3..40bcecfc3687 100644
+--- a/arch/arc/boot/dts/axc001.dtsi
++++ b/arch/arc/boot/dts/axc001.dtsi
+@@ -26,6 +26,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <750000000>;
++		};
++
+ 		core_intc: arc700-intc@cpu {
+ 			compatible = "snps,arc700-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
+index b0e3ccdf8fc7..cabe0deeb2d8 100644
+--- a/arch/arc/boot/dts/axc003.dtsi
++++ b/arch/arc/boot/dts/axc003.dtsi
+@@ -25,6 +25,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <90000000>;
++		};
++
+ 		core_intc: archs-intc@cpu {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
+index f87ae409c8ed..8955881db794 100644
+--- a/arch/arc/boot/dts/axc003_idu.dtsi
++++ b/arch/arc/boot/dts/axc003_idu.dtsi
+@@ -25,6 +25,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <90000000>;
++		};
++
+ 		core_intc: archs-intc@cpu {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsim_700.dts b/arch/arc/boot/dts/nsim_700.dts
+index 987921f711c1..5d5e373e0ebc 100644
+--- a/arch/arc/boot/dts/nsim_700.dts
++++ b/arch/arc/boot/dts/nsim_700.dts
+@@ -32,6 +32,12 @@
+ 		/* child and parent address space 1:1 mapped */
+ 		ranges;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <80000000>;
++		};
++
+ 		core_intc: interrupt-controller {
+ 			compatible = "snps,arc700-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsim_hs.dts b/arch/arc/boot/dts/nsim_hs.dts
+index bd46aec88c6a..cbd08fa38339 100644
+--- a/arch/arc/boot/dts/nsim_hs.dts
++++ b/arch/arc/boot/dts/nsim_hs.dts
+@@ -38,6 +38,12 @@
+ 		/* only perip space at end of low mem accessible */
+ 		ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <80000000>;
++		};
++
+ 		core_intc: core-interrupt-controller {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsim_hs_idu.dts b/arch/arc/boot/dts/nsim_hs_idu.dts
+index cc82781727a1..99eabe1a2bf6 100644
+--- a/arch/arc/boot/dts/nsim_hs_idu.dts
++++ b/arch/arc/boot/dts/nsim_hs_idu.dts
+@@ -29,6 +29,12 @@
+ 		/* child and parent address space 1:1 mapped */
+ 		ranges;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <80000000>;
++		};
++
+ 		core_intc: core-interrupt-controller {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsimosci.dts b/arch/arc/boot/dts/nsimosci.dts
+index 1c169dc74ad1..bc3161ab8f82 100644
+--- a/arch/arc/boot/dts/nsimosci.dts
++++ b/arch/arc/boot/dts/nsimosci.dts
+@@ -35,6 +35,12 @@
+ 		/* child and parent address space 1:1 mapped */
+ 		ranges;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <20000000>;
++		};
++
+ 		intc: interrupt-controller {
+ 			compatible = "snps,arc700-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsimosci_hs.dts b/arch/arc/boot/dts/nsimosci_hs.dts
+index 9444956156d9..273dcce2cc66 100644
+--- a/arch/arc/boot/dts/nsimosci_hs.dts
++++ b/arch/arc/boot/dts/nsimosci_hs.dts
+@@ -35,6 +35,12 @@
+ 		/* child and parent address space 1:1 mapped */
+ 		ranges;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <20000000>;
++		};
++
+ 		core_intc: core-interrupt-controller {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/nsimosci_hs_idu.dts b/arch/arc/boot/dts/nsimosci_hs_idu.dts
+index ff11388ee484..8fe60967a4c5 100644
+--- a/arch/arc/boot/dts/nsimosci_hs_idu.dts
++++ b/arch/arc/boot/dts/nsimosci_hs_idu.dts
+@@ -33,6 +33,12 @@
+ 		/* child and parent address space 1:1 mapped */
+ 		ranges;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <5000000>;
++		};
++
+ 		core_intc: core-interrupt-controller {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/vdk_axc003.dtsi b/arch/arc/boot/dts/vdk_axc003.dtsi
+index 035759ee62a5..ad4ee43bd2ac 100644
+--- a/arch/arc/boot/dts/vdk_axc003.dtsi
++++ b/arch/arc/boot/dts/vdk_axc003.dtsi
+@@ -25,6 +25,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++		};
++
+ 		core_intc: archs-intc@cpu {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+diff --git a/arch/arc/boot/dts/vdk_axc003_idu.dtsi b/arch/arc/boot/dts/vdk_axc003_idu.dtsi
+index 90e18f404889..a3cb6263c581 100644
+--- a/arch/arc/boot/dts/vdk_axc003_idu.dtsi
++++ b/arch/arc/boot/dts/vdk_axc003_idu.dtsi
+@@ -26,6 +26,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++		};
++
+ 		core_intc: archs-intc@cpu {
+ 			compatible = "snps,archs-intc";
+ 			interrupt-controller;
+-- 
+2.5.0
