@@ -1,46 +1,73 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
-Date: Tue, 2 Feb 2016 11:10:00 +0100
-Message-ID: <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
-References: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v6 0/4] mailbox: hisilicon: add Hi6220 mailbox driver
+Date: Tue,  2 Feb 2016 18:09:38 +0800
+Message-ID: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 1, 2016 at 11:29 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -880,5 +880,31 @@
->                         power-domains = <&cpg>;
->                         status = "disabled";
->                 };
-> +
-> +               usb_dmac0: dma-controller@e65a0000 {
-> +                       compatible = "renesas,r8a7795-usb-dmac",
-> +                                    "renesas,usb-dmac";
-> +                       reg = <0 0xe65a0000 0 0x100>;
-> +                       interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 109 IRQ_TYPE_LEVEL_HIGH>;
+Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
+with a maximum message size of 8 words. I/O is performed using register
+access (there is no DMA) and the cell raises an interrupt when messages
+are received.
 
-Sorry, I missed you're not using the GIC_SPI defines.
+This patch series is to implement Hi6220 mailbox driver. It registers
+two channels into framework for communication with MCU, one is tx channel
+and another is rx channel. Now mailbox driver is used to send message to
+MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
 
-Gr{oetje,eeting}s,
+Changes from v5:
+* Refine to use mailbox three specifiers for client driver, so add xlate
+  callback function in mailbox driver to support these specifiers
+* Refine document for property "hi6220,mbox-tx-noirq"
 
-                        Geert
+Changes from v4:
+* According to Jassi's suggestion, using DT binding to register channels
+* Change to use operating-points-v2 to register operating points
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Changes from v3:
+* The patch series for enabling idle state for Hi6220 has reserved memory
+  regions, so this series will not include it anymore
+* Refined mailbox driver according to Jassi's suggestion;
+  Removed kfifo from mailbox driver;
+  Removed spinlock for ipc registers accessing, due every channel has its
+  own dedicated bit in ipc register and readl/writel will introduce memory
+  barrier, so don't need spinlock to protect ipc registers accessing
+* After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
+  stub clock driver; finally can enable CPUFreq driver for CPU frequency
+  scaling
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v2:
+* Get rid of unused memory regions from memory node in DT, and don't use
+  reserved-memory node according to Mark and Leif's suggestion; Haojian also
+  has updated UEFI for efi memory info
+
+Changes from v1:
+* Correct lock usage for SMP scenario
+
+Changes from RFC:
+* According to Jassi's review, totally remove the abstract common driver
+  layer and only commit driver dedicated for Hi6220
+* According to Paul Bolle's review, fix typo issue for Kconfig and remove
+  unnecessary dependency with OF and fix minor for mailbox driver
+* Refine a little for dts nodes
+
+
+Leo Yan (4):
+  dt-bindings: mailbox: Document Hi6220 mailbox driver
+  mailbox: Hi6220: add mailbox driver
+  arm64: dts: add mailbox node for Hi6220
+  arm64: dts: add Hi6220's stub clock node
+
+ .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  74 ++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/hi6220-mailbox.c                   | 395 +++++++++++++++++++++
+ 5 files changed, 543 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+ create mode 100644 drivers/mailbox/hi6220-mailbox.c
+
+-- 
+1.9.1
