@@ -1,243 +1,169 @@
-From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Subject: [PATCH v10 8/8] numa, mm, cleanup: remove redundant NODE_DATA macro from asm header files.
-Date: Tue, 2 Feb 2016 15:39:23 +0530
-Message-ID: <1454407763-1017-9-git-send-email-gkulkarni@caviumnetworks.com>
-References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hog
-Cc: gpkulkarni@gmail.com
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v3 3/4] ARM: dts: rockchip: add syscon-reboot-mode DT node
+Date: Tue,  2 Feb 2016 18:10:37 +0800
+Message-ID: <1454407837-5421-1-git-send-email-andy.yan@rock-chips.com>
+References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, arnd@arndb.de, john.stultz@linaro.org
+Cc: moritz.fischer@ettus.com, matthias.bgg@gmail.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, heiko@sntech.de, sre@kernel.org, dbaryshkov@gmail.com, alexandre.belloni@free-electrons.com, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, mbrugger@suse.com, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-NODE_DATA is defined across multiple asm header files.
-Moving generic definition to asm-generic/mmzone.h to
-remove redundant definitions.
+Rockchip platform use a SYSCON mapped register store
+the reboot mode magic value for bootloader to use when
+system reboot. So add syscon-reboot-mode driver DT node
+for rk3xxx,rk3036, rk3288 platform
 
-Reviewed-by: Robert Richter <rrichter@cavium.com>
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
 ---
- arch/arm64/include/asm/mmzone.h   |  4 +---
- arch/m32r/include/asm/mmzone.h    |  4 +---
- arch/metag/include/asm/mmzone.h   |  4 +---
- arch/powerpc/include/asm/mmzone.h |  8 ++------
- arch/s390/include/asm/mmzone.h    |  6 +-----
- arch/sh/include/asm/mmzone.h      |  4 +---
- arch/sparc/include/asm/mmzone.h   |  6 ++----
- arch/x86/include/asm/mmzone.h     |  3 +--
- arch/x86/include/asm/mmzone_32.h  |  5 -----
- arch/x86/include/asm/mmzone_64.h  | 17 -----------------
- include/asm-generic/mmzone.h      | 24 ++++++++++++++++++++++++
- 11 files changed, 34 insertions(+), 51 deletions(-)
- delete mode 100644 arch/x86/include/asm/mmzone_64.h
- create mode 100644 include/asm-generic/mmzone.h
 
-diff --git a/arch/arm64/include/asm/mmzone.h b/arch/arm64/include/asm/mmzone.h
-index a0de9e6..611a1cf 100644
---- a/arch/arm64/include/asm/mmzone.h
-+++ b/arch/arm64/include/asm/mmzone.h
-@@ -4,9 +4,7 @@
- #ifdef CONFIG_NUMA
+Changes in v3:
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
+
+Changes in v2:
+- make this node as a subnode of PMU
+
+Changes in v1:
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+
+ arch/arm/boot/dts/rk3036.dtsi                | 11 +++++++++-
+ arch/arm/boot/dts/rk3288.dtsi                | 11 ++++++++++
+ arch/arm/boot/dts/rk3xxx.dtsi                | 13 +++++++++++-
+ include/dt-bindings/soc/rockchip_boot-mode.h | 30 ++++++++++++++++++++++++++++
+ 4 files changed, 63 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index b9567c1..64527c6 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3036-cru.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
  
- #include <asm/numa.h>
--
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid)		(node_data[(nid)])
-+#include  <asm-generic/mmzone.h>
+ / {
+@@ -261,8 +262,16 @@
+ 	};
  
- #endif /* CONFIG_NUMA */
- #endif /* __ASM_MMZONE_H */
-diff --git a/arch/m32r/include/asm/mmzone.h b/arch/m32r/include/asm/mmzone.h
-index 115ced3..e3d66a0 100644
---- a/arch/m32r/include/asm/mmzone.h
-+++ b/arch/m32r/include/asm/mmzone.h
-@@ -7,12 +7,10 @@
- #define _ASM_MMZONE_H_
+ 	grf: syscon@20008000 {
+-		compatible = "rockchip,rk3036-grf", "syscon";
++		compatible = "rockchip,rk3036-grf", "syscon", "simple-mfd";
+ 		reg = <0x20008000 0x1000>;
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x1d8>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-fastboot = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_LOADER>;
++		};
+ 	};
  
- #include <asm/smp.h>
-+#include  <asm-generic/mmzone.h>
+ 	acodec: acodec-ana@20030000 {
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 8ac49f3..4d06d84 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -45,6 +45,7 @@
+ #include <dt-bindings/clock/rk3288-cru.h>
+ #include <dt-bindings/thermal/thermal.h>
+ #include <dt-bindings/power/rk3288-power.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
  
- #ifdef CONFIG_DISCONTIGMEM
- 
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid)		(node_data[nid])
--
- #define node_localnr(pfn, nid)	((pfn) - NODE_DATA(nid)->node_start_pfn)
- 
- #define pmd_page(pmd)		(pfn_to_page(pmd_val(pmd) >> PAGE_SHIFT))
-diff --git a/arch/metag/include/asm/mmzone.h b/arch/metag/include/asm/mmzone.h
-index 9c88a9c..b1e95b3 100644
---- a/arch/metag/include/asm/mmzone.h
-+++ b/arch/metag/include/asm/mmzone.h
-@@ -3,9 +3,7 @@
- 
- #ifdef CONFIG_NEED_MULTIPLE_NODES
- #include <linux/numa.h>
--
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid)		(node_data[nid])
-+#include  <asm-generic/mmzone.h>
- 
- static inline int pfn_to_nid(unsigned long pfn)
- {
-diff --git a/arch/powerpc/include/asm/mmzone.h b/arch/powerpc/include/asm/mmzone.h
-index 7b58917..da0c5ba 100644
---- a/arch/powerpc/include/asm/mmzone.h
-+++ b/arch/powerpc/include/asm/mmzone.h
-@@ -19,12 +19,6 @@
- 
- #ifdef CONFIG_NEED_MULTIPLE_NODES
- 
--extern struct pglist_data *node_data[];
--/*
-- * Return a pointer to the node data for node n.
-- */
--#define NODE_DATA(nid)		(node_data[nid])
--
- /*
-  * Following are specific to this numa platform.
-  */
-@@ -42,5 +36,7 @@ u64 memory_hotplug_max(void);
- #define memory_hotplug_max() memblock_end_of_DRAM()
- #endif /* CONFIG_NEED_MULTIPLE_NODES */
- 
-+#include  <asm-generic/mmzone.h>
+ / {
+@@ -713,6 +714,16 @@
+ 				clocks = <&cru ACLK_GPU>;
+ 			};
+ 		};
 +
- #endif /* __KERNEL__ */
- #endif /* _ASM_MMZONE_H_ */
-diff --git a/arch/s390/include/asm/mmzone.h b/arch/s390/include/asm/mmzone.h
-index a9e834e..91f1fcc 100644
---- a/arch/s390/include/asm/mmzone.h
-+++ b/arch/s390/include/asm/mmzone.h
-@@ -7,10 +7,6 @@
- #ifndef _ASM_S390_MMZONE_H
- #define _ASM_S390_MMZONE_H
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x94>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-fastboot = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_LOADER>;
++			mode-maskrom = <BOOT_MASKROM>;
++		};
+ 	};
  
--#ifdef CONFIG_NUMA
-+#include  <asm-generic/mmzone.h>
+ 	sgrf: syscon@ff740000 {
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 99eeea7..d21ed43 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -43,6 +43,7 @@
  
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid) (node_data[nid])
--
--#endif /* CONFIG_NUMA */
- #endif /* _ASM_S390_MMZONE_H */
-diff --git a/arch/sh/include/asm/mmzone.h b/arch/sh/include/asm/mmzone.h
-index 15a8496..c070d00 100644
---- a/arch/sh/include/asm/mmzone.h
-+++ b/arch/sh/include/asm/mmzone.h
-@@ -5,9 +5,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
  
- #ifdef CONFIG_NEED_MULTIPLE_NODES
- #include <linux/numa.h>
--
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid)		(node_data[nid])
-+#include  <asm-generic/mmzone.h>
+ / {
+@@ -243,8 +244,18 @@
+ 	};
  
- static inline int pfn_to_nid(unsigned long pfn)
- {
-diff --git a/arch/sparc/include/asm/mmzone.h b/arch/sparc/include/asm/mmzone.h
-index 99d9b9f..ef1365b 100644
---- a/arch/sparc/include/asm/mmzone.h
-+++ b/arch/sparc/include/asm/mmzone.h
-@@ -5,13 +5,11 @@
- 
- #include <linux/cpumask.h>
- 
--extern struct pglist_data *node_data[];
--
--#define NODE_DATA(nid)		(node_data[nid])
--
- extern int numa_cpu_lookup_table[];
- extern cpumask_t numa_cpumask_lookup_table[];
- 
- #endif /* CONFIG_NEED_MULTIPLE_NODES */
- 
-+#include  <asm-generic/mmzone.h>
+ 	pmu: pmu@20004000 {
+-		compatible = "rockchip,rk3066-pmu", "syscon";
++		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
+ 		reg = <0x20004000 0x100>;
 +
- #endif /* _SPARC64_MMZONE_H */
-diff --git a/arch/x86/include/asm/mmzone.h b/arch/x86/include/asm/mmzone.h
-index d497bc4..5a52815 100644
---- a/arch/x86/include/asm/mmzone.h
-+++ b/arch/x86/include/asm/mmzone.h
-@@ -1,5 +1,4 @@
- #ifdef CONFIG_X86_32
- # include <asm/mmzone_32.h>
--#else
--# include <asm/mmzone_64.h>
- #endif
-+#include  <asm-generic/mmzone.h>
-diff --git a/arch/x86/include/asm/mmzone_32.h b/arch/x86/include/asm/mmzone_32.h
-index 1ec990b..09f7cfb 100644
---- a/arch/x86/include/asm/mmzone_32.h
-+++ b/arch/x86/include/asm/mmzone_32.h
-@@ -8,11 +8,6 @@
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x40>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-fastboot = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_LOADER>;
++			mode-maskrom = <BOOT_MASKROM>;
++		};
+ 	};
  
- #include <asm/smp.h>
- 
--#ifdef CONFIG_NUMA
--extern struct pglist_data *node_data[];
--#define NODE_DATA(nid)	(node_data[nid])
--#endif /* CONFIG_NUMA */
--
- #ifdef CONFIG_DISCONTIGMEM
- 
- /*
-diff --git a/arch/x86/include/asm/mmzone_64.h b/arch/x86/include/asm/mmzone_64.h
-deleted file mode 100644
-index 129d9aa..0000000
---- a/arch/x86/include/asm/mmzone_64.h
-+++ /dev/null
-@@ -1,17 +0,0 @@
--/* K8 NUMA support */
--/* Copyright 2002,2003 by Andi Kleen, SuSE Labs */
--/* 2.5 Version loosely based on the NUMAQ Code by Pat Gaughen. */
--#ifndef _ASM_X86_MMZONE_64_H
--#define _ASM_X86_MMZONE_64_H
--
--#ifdef CONFIG_NUMA
--
--#include <linux/mmdebug.h>
--#include <asm/smp.h>
--
--extern struct pglist_data *node_data[];
--
--#define NODE_DATA(nid)		(node_data[nid])
--
--#endif
--#endif /* _ASM_X86_MMZONE_64_H */
-diff --git a/include/asm-generic/mmzone.h b/include/asm-generic/mmzone.h
+ 	grf: grf@20008000 {
+diff --git a/include/dt-bindings/soc/rockchip_boot-mode.h b/include/dt-bindings/soc/rockchip_boot-mode.h
 new file mode 100644
-index 0000000..ec0fc4c
+index 0000000..eedf113
 --- /dev/null
-+++ b/include/asm-generic/mmzone.h
-@@ -0,0 +1,24 @@
-+/*
-+ * linux/include/asm-generic/mmzone.h
-+ *
-+ * Author: Ganapatrao Kulkarni <gkulkarni@cavium.com>
-+ * Copyright (C) 2016 Cavium Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
++++ b/include/dt-bindings/soc/rockchip_boot-mode.h
+@@ -0,0 +1,30 @@
++#ifndef __ROCKCHIP_BOOT_MODE_H
++#define __ROCKCHIP_BOOT_MODE_H
 +
-+#ifndef _ASM_GENERIC_MMZONE_H
-+#define _ASM_GENERIC_MMZONE_H
++/*high 24 bits is tag, low 8 bits is type*/
++#define	REBOOT_FLAG		0x5242C300
++/* normal boot */
++#define	BOOT_NORMAL		(REBOOT_FLAG + 0)
++/* enter loader rockusb mode */
++#define	BOOT_LOADER		(REBOOT_FLAG + 1)
++/* enter maskrom rockusb mode */
++#define	BOOT_MASKROM		(0xEF08A53C)
++/* enter recovery */
++#define	BOOT_RECOVERY		(REBOOT_FLAG + 3)
++/* do not enter recover */
++#define	BOOT_NORECOVER		(REBOOT_FLAG + 4)
++/* boot second OS*/
++#define	BOOT_SECONDOS		(REBOOT_FLAG + 5)
++/* enter recover and wipe data. */
++#define	BOOT_WIPEDATA		(REBOOT_FLAG + 6)
++/* enter recover and wipe all data. */
++#define	BOOT_WIPEALL		(REBOOT_FLAG + 7)
++/* check firmware img with backup part*/
++#define	BOOT_CHECKIMG		(REBOOT_FLAG + 8)
++ /* enter fast boot mode */
++#define	BOOT_FASTBOOT		(REBOOT_FLAG + 9)
++#define	BOOT_SECUREBOOT_DISABLE	(REBOOT_FLAG + 10)
++/* enter charge mode */
++#define	BOOT_CHARGING		(REBOOT_FLAG + 11)
 +
-+#if defined(CONFIG_NUMA) || defined(CONFIG_NEED_MULTIPLE_NODES)
-+
-+#ifndef NODE_DATA
-+extern struct pglist_data *node_data[];
-+#define NODE_DATA(nid)          (node_data[(nid)])
 +#endif
-+
-+#endif
-+#endif /* _ASM_GENERIC_MMZONE_H */
 -- 
-1.8.1.4
-
+1.9.1
