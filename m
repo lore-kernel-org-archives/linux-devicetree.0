@@ -1,102 +1,105 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
-Date: Tue, 2 Feb 2016 10:39:31 +0000
-Message-ID: <TY1PR06MB0928C88377A9640546246763D8DF0@TY1PR06MB0928.apcprd06.prod.outlook.com>
-References: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
- <20160202102959.GG15554@verge.net.au>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] soc: mediatek: Refine scpsys to support multiple
+ platform
+Date: Tue, 2 Feb 2016 11:44:42 +0100
+Message-ID: <56B0889A.1010305@gmail.com>
+References: <1453270097-53853-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1453270097-53853-2-git-send-email-jamesjj.liao@mediatek.com>
+ <56ADF556.6070402@gmail.com> <1454396212.2847.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160202102959.GG15554-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: ja-JP
+In-Reply-To: <1454396212.2847.15.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
 
-> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> Sent: Tuesday, February 02, 2016 7:30 PM
-> 
-> On Tue, Feb 02, 2016 at 11:10:00AM +0100, Geert Uytterhoeven wrote:
-> > On Mon, Feb 1, 2016 at 11:29 AM, Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > > @@ -880,5 +880,31 @@
-> > >                         power-domains = <&cpg>;
-> > >                         status = "disabled";
-> > >                 };
-> > > +
-> > > +               usb_dmac0: dma-controller@e65a0000 {
-> > > +                       compatible = "renesas,r8a7795-usb-dmac",
-> > > +                                    "renesas,usb-dmac";
-> > > +                       reg = <0 0xe65a0000 0 0x100>;
-> > > +                       interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
-> > > +                                     0 109 IRQ_TYPE_LEVEL_HIGH>;
-> >
-> > Sorry, I missed you're not using the GIC_SPI defines.
-> 
-> Thanks, I fixed that and queued up the following
 
-Thank you very much for the fix!
+On 02/02/16 07:56, James Liao wrote:
+> Hi Matthias,
+>
+> On Sun, 2016-01-31 at 12:51 +0100, Matthias Brugger wrote:
+>> >
+>> >On 20/01/16 07:08, James Liao wrote:
+>>> > >Refine scpsys driver common code to support multiple SoC / platform.
+>>> > >
+>>> > >Signed-off-by: James Liao<jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> > >---
+>>> > >   drivers/soc/mediatek/mtk-scpsys.c | 418 ++++++++++++++++++++------------------
+>>> > >   drivers/soc/mediatek/mtk-scpsys.h |  55 +++++
+>>> > >   2 files changed, 270 insertions(+), 203 deletions(-)
+>>> > >   create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
+>> >
+>> >In general this approach looks fine to me, comments below.
+>> >
+>>> > >
+>>> > >diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+>>> > >index 0221387..339adfc 100644
+>>> > >--- a/drivers/soc/mediatek/mtk-scpsys.c
+>>> > >+++ b/drivers/soc/mediatek/mtk-scpsys.c
+>>> > >@@ -11,29 +11,17 @@
+>>> > >    * GNU General Public License for more details.
+>>> > >    */
+>>> > >   #include <linux/clk.h>
+>>> > >-#include <linux/delay.h>
+>>> > >+#include <linux/init.h>
+>>> > >   #include <linux/io.h>
+>>> > >-#include <linux/kernel.h>
+>>> > >   #include <linux/mfd/syscon.h>
+>> >
+>> >When at it, do we need this include?
+> syscon_regmap_lookup_by_phandle() is declared in this head file.
+>
+>>> > >-#include <linux/init.h>
+>>> > >   #include <linux/of_device.h>
+>>> > >   #include <linux/platform_device.h>
+>>> > >   #include <linux/pm_domain.h>
+>>> > >-#include <linux/regmap.h>
+>>> > >-#include <linux/soc/mediatek/infracfg.h>
+>>> > >   #include <linux/regulator/consumer.h>
+>>> > >-#include <dt-bindings/power/mt8173-power.h>
+>>> > >+#include <linux/soc/mediatek/infracfg.h>
+>>> > >+
+>>> > >+#include "mtk-scpsys.h"
+>>> > >
+>>> > >-#define SPM_VDE_PWR_CON			0x0210
+>>> > >-#define SPM_MFG_PWR_CON			0x0214
+>>> > >-#define SPM_VEN_PWR_CON			0x0230
+>>> > >-#define SPM_ISP_PWR_CON			0x0238
+>>> > >-#define SPM_DIS_PWR_CON			0x023c
+>>> > >-#define SPM_VEN2_PWR_CON		0x0298
+>>> > >-#define SPM_AUDIO_PWR_CON		0x029c
+>>> > >-#define SPM_MFG_2D_PWR_CON		0x02c0
+>>> > >-#define SPM_MFG_ASYNC_PWR_CON		0x02c4
+>>> > >-#define SPM_USB_PWR_CON			0x02cc
+>> >
+>> >I would prefer to keep this defines and declare SoC specific ones where
+>> >necessary. It makes the code more readable.
+> Some register address may be reused by other modules among SoCs, so it's
+> not easy to maintain the defines when we implement multiple SoC drivers
+> in the same file. For example, offset 0x0298 is VEN2_PWR_CON on MT8173,
+> but it is MJC_PWR_CON on other chips.
+>
 
-Best regards,
-Yoshihiro Shimoda
+So that sounds as if 0x0298 offset is MT8173 specific.
+I checked [VDE, MFG, VEN, IFR, ISP, DIS, DPY]_PWR_CON on mt8173, mt8135 
+and mt6589 and they all have the same offset. So it doesn't seem as if 
+the offset randomly changes for every SoC.
 
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Date: Mon, 1 Feb 2016 19:29:00 +0900
-> Subject: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 119549e6502d..95967b72db35 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -880,5 +880,31 @@
->  			power-domains = <&cpg>;
->  			status = "disabled";
->  		};
-> +
-> +		usb_dmac0: dma-controller@e65a0000 {
-> +			compatible = "renesas,r8a7795-usb-dmac",
-> +				     "renesas,usb-dmac";
-> +			reg = <0 0xe65a0000 0 0x100>;
-> +			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH
-> +				      GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "ch0", "ch1";
-> +			clocks = <&cpg CPG_MOD 330>;
-> +			power-domains = <&cpg>;
-> +			#dma-cells = <1>;
-> +			dma-channels = <2>;
-> +		};
-> +
-> +		usb_dmac1: dma-controller@e65b0000 {
-> +			compatible = "renesas,r8a7795-usb-dmac",
-> +				     "renesas,usb-dmac";
-> +			reg = <0 0xe65b0000 0 0x100>;
-> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH
-> +				      GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "ch0", "ch1";
-> +			clocks = <&cpg CPG_MOD 331>;
-> +			power-domains = <&cpg>;
-> +			#dma-cells = <1>;
-> +			dma-channels = <2>;
-> +		};
->  	};
->  };
-> --
-> 2.7.0.rc3.207.g0ac5344
+> Furthermore, these register offsets are only used in scp_domain_data[],
+> and each element has its own power domain name. So I think it's enough
+> to know which power domain are using these registers and status bits.
+>
 
+Yes that's true, but it will make it easier for another person to 
+understand the driver, especially if he want's to implement the driver 
+for a new SoC.
+
+Regards,
+Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
