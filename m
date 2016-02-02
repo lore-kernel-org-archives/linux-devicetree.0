@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 06/10] arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
-Date: Tue, 2 Feb 2016 19:18:54 +0900
-Message-ID: <1454408338-4612-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 07/10] arm64: dts: r8a7795: add HS-USB device node
+Date: Tue, 2 Feb 2016 19:18:55 +0900
+Message-ID: <1454408338-4612-8-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,79 +14,26 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 66 ++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index f0f0c27..76800ba 100644
+index 76800ba..1a47a06 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -908,5 +908,71 @@
- 			#phy-cells = <0>;
+@@ -974,5 +974,18 @@
+ 			power-domains = <&cpg>;
  			status = "disabled";
  		};
 +
-+		ehci0: usb@ee080100 {
-+			compatible = "renesas,ehci-r8a7795", "generic-ehci";
-+			reg = <0 0xee080100 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
++		hsusb: usb@e6590000 {
++			compatible = "renesas,usbhs-r8a7795",
++				     "renesas,rcar-gen3-usbhs";
++			reg = <0 0xe6590000 0 0x100>;
++			interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 704>;
++			renesas,buswait = <11>;
 +			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ehci1: usb@ee0a0100 {
-+			compatible = "renesas,ehci-r8a7795", "generic-ehci";
-+			reg = <0 0xee0a0100 0 0x100>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 702>;
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ehci2: usb@ee0c0100 {
-+			compatible = "renesas,ehci-r8a7795", "generic-ehci";
-+			reg = <0 0xee0c0100 0 0x100>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 701>;
-+			phys = <&usb2_phy2>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ohci0: usb@ee080000 {
-+			compatible = "renesas,ohci-r8a7795", "generic-ohci";
-+			reg = <0 0xee080000 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ohci1: usb@ee0a0000 {
-+			compatible = "renesas,ohci-r8a7795", "generic-ohci";
-+			reg = <0 0xee0a0000 0 0x100>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 702>;
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ohci2: usb@ee0c0000 {
-+			compatible = "renesas,ohci-r8a7795", "generic-ohci";
-+			reg = <0 0xee0c0000 0 0x100>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 701>;
-+			phys = <&usb2_phy2>;
 +			phy-names = "usb";
 +			power-domains = <&cpg>;
 +			status = "disabled";
