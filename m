@@ -1,153 +1,78 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 14/14] ARM: dts: sun8i: Add A83T based Sinovoip Bpi-M3 Board
-Date: Tue, 2 Feb 2016 15:37:22 +0800
-Message-ID: <CAGb2v65BwAcT8920WXt7dBjNx4zjycw2Ea+sNZrm0aM_3JA8pA@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com> <1454203266-4450-15-git-send-email-vishnupatekar0510@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] dts/ls1021a: add the DTS for QSPI support
+Date: Tue, 2 Feb 2016 15:49:07 +0800
+Message-ID: <20160202074907.GK8307@tiger>
+References: <1453970006-46509-1-git-send-email-yao.yuan@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1454203266-4450-15-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-cl
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453970006-46509-1-git-send-email-yao.yuan@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuan Yao <yao.yuan@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Yuan Yao <yao.yuan@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
-> This patch adds support for Sinovoip BPI-M3 A83T based board.
->
-> It has 2G LPDDR3, UART, ethernet, USB, HDMI, USB Sata, MIPI DSI,
-> mic, AP6212 Wifi, etc on it.
-> It is paired with AXP813 PMIC which is almost same as AXP818.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+On Thu, Jan 28, 2016 at 04:33:26PM +0800, Yuan Yao wrote:
+> From: Yuan Yao <yao.yuan@nxp.com>
+> 
+> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
 > ---
->  arch/arm/boot/dts/Makefile                       |  1 +
->  arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts | 88 ++++++++++++++++++++++++
->  2 files changed, 89 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 58e461a..c0dd016 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -694,6 +694,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->         sun8i-a33-sinlinx-sina33.dtb \
->         sun8i-a83t-allwinner-h8homlet-v2.dtb \
->         sun8i-a83t-cubietruck-plus.dtb \
-> +       sun8i-a83t-sinovoip-bpi-m3.dtb \
->         sun8i-h3-orangepi-plus.dtb
->  dtb-$(CONFIG_MACH_SUN9I) += \
->         sun9i-a80-optimus.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
-> new file mode 100644
-> index 0000000..fecc7dc
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
-> @@ -0,0 +1,88 @@
-> +/*
-> + * Copyright 2015 Vishnu Patekar
+> Add in v1:
+> Can merge, but the function depend on the patch:
+> https://patchwork.kernel.org/patch/8118251/
 
-2016?
+Please send me dts patch only after the driver part gets applied.
 
-> + * Vishnu Patekar <vishnupatekar0510@gmail.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+> 
+> mtd: spi-nor: fsl-quadspi: add support for ls1021a
+> 
+> LS1021a also support Freescale Quad SPI controller.
+> Add fsl-quadspi support for ls1021a chip and make SPI_FSL_QUADSPI
+> selectable for LS1021A SOC hardwares.
+> 
+> ---
+>  arch/arm/boot/dts/ls1021a.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 9430a99..c764fa5 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -252,6 +252,21 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		qspi: quadspi@1550000 {
+> +			compatible = "fsl,ls1021a-qspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0 0x1550000 0x0 0x10000>,
+> +				<0x0 0x40000000 0x0 0x4000000>;
+> +			reg-names = "QuadSPI", "QuadSPI-memory";
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +			clock-names = "qspi_en", "qspi";
+> +			clocks = <&platform_clk 1>, <&platform_clk 1>;
+> +			big-endian;
+> +			amba-base = <0x40000000>;
+
+What is this property?  I cannot find it in any bindings doc.  Is it
+added by your patches on driver code?
+
+Shawn
+
+> +			status = "disabled";
+> +		};
 > +
-> +/dts-v1/;
-> +#include "sun8i-a83t.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +/ {
-> +       model = "Sinovoip BananaPi M3 v1.2";
-> +       compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
-> +
-> +       aliases {
-> +               serial0 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +};
-> +
-> +&pio {
-> +       mmc0_cd_pin_bpi_m3: mmc0_cd_pin@0 {
-> +               allwinner,pins = "PF6";
-> +               allwinner,function = "gpio_in";
-> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +       };
-
-Maybe we should just put this in the .dtsi and call it
-"mmc0_cd_pin_reference_design"?
-
-We have something similar for sun4i-a10.
-
-> +};
-> +
-> +&mmc0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bpi_m3>;
-> +       vmmc-supply = <&reg_vcc3v0>;
-> +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-> +       bus-width = <4>;
-> +       cd-inverted;
-> +       status = "okay";
-> +};
-> +
-> +&uart0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart0_pins_b>;
-> +       status = "okay";
-> +};
-> +
-> +&r_rsb {
-
-This goes before uart0.
-
-> +       status = "okay";
-> +};
-
-What about eMMC?
-
-
-Thanks!
-ChenYu
+>  		i2c0: i2c@2180000 {
+>  			compatible = "fsl,vf610-i2c";
+>  			#address-cells = <1>;
+> -- 
+> 2.1.0.27.g96db324
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
