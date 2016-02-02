@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 04/10] phy: rcar-gen3-usb2: add extcon support
-Date: Tue, 2 Feb 2016 19:18:52 +0900
-Message-ID: <1454408338-4612-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 06/10] arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
+Date: Tue, 2 Feb 2016 19:18:54 +0900
+Message-ID: <1454408338-4612-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,102 +12,86 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds extcon support for otg related channel.
-
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/phy/Kconfig              |  1 +
- drivers/phy/phy-rcar-gen3-usb2.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 66 ++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index e7e117d..6d0e625 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -121,6 +121,7 @@ config PHY_RCAR_GEN2
- config PHY_RCAR_GEN3_USB2
- 	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
- 	depends on OF && ARCH_SHMOBILE
-+	depends on EXTCON
- 	select GENERIC_PHY
- 	help
- 	  Support for USB 2.0 PHY found on Renesas R-Car generation 3 SoCs.
-diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-index 2da2148..5ff5653 100644
---- a/drivers/phy/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/phy-rcar-gen3-usb2.c
-@@ -12,6 +12,7 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/extcon.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -76,6 +77,7 @@
- 
- struct rcar_gen3_chan {
- 	void __iomem *base;
-+	struct extcon_dev *extcon;
- 	struct phy *phy;
- 	bool has_otg;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index f0f0c27..76800ba 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -908,5 +908,71 @@
+ 			#phy-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		ehci0: usb@ee080100 {
++			compatible = "renesas,ehci-r8a7795", "generic-ehci";
++			reg = <0 0xee080100 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci1: usb@ee0a0100 {
++			compatible = "renesas,ehci-r8a7795", "generic-ehci";
++			reg = <0 0xee0a0100 0 0x100>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci2: usb@ee0c0100 {
++			compatible = "renesas,ehci-r8a7795", "generic-ehci";
++			reg = <0 0xee0c0100 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 701>;
++			phys = <&usb2_phy2>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci0: usb@ee080000 {
++			compatible = "renesas,ohci-r8a7795", "generic-ohci";
++			reg = <0 0xee080000 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci1: usb@ee0a0000 {
++			compatible = "renesas,ohci-r8a7795", "generic-ohci";
++			reg = <0 0xee0a0000 0 0x100>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci2: usb@ee0c0000 {
++			compatible = "renesas,ohci-r8a7795", "generic-ohci";
++			reg = <0 0xee0c0000 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 701>;
++			phys = <&usb2_phy2>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
+ 	};
  };
-@@ -125,6 +127,9 @@ static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
- 	rcar_gen3_set_linectrl(ch, 1, 1);
- 	rcar_gen3_set_host_mode(ch, 1);
- 	rcar_gen3_enable_vbus_ctrl(ch, 1);
-+
-+	extcon_set_cable_state_(ch->extcon, EXTCON_USB_HOST, true);
-+	extcon_set_cable_state_(ch->extcon, EXTCON_USB, false);
- }
- 
- static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
-@@ -132,6 +137,9 @@ static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
- 	rcar_gen3_set_linectrl(ch, 0, 1);
- 	rcar_gen3_set_host_mode(ch, 0);
- 	rcar_gen3_enable_vbus_ctrl(ch, 0);
-+
-+	extcon_set_cable_state_(ch->extcon, EXTCON_USB_HOST, false);
-+	extcon_set_cable_state_(ch->extcon, EXTCON_USB, true);
- }
- 
- static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
-@@ -250,6 +258,12 @@ static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
- };
- MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
- 
-+static const unsigned int rcar_gen3_phy_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_NONE,
-+};
-+
- static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -275,11 +289,23 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	/* call request_irq for OTG */
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq >= 0) {
-+		int ret;
-+
- 		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
- 				       IRQF_SHARED, dev_name(dev), channel);
- 		if (irq < 0)
- 			dev_err(dev, "No irq handler (%d)\n", irq);
- 		channel->has_otg = true;
-+		channel->extcon = devm_extcon_dev_allocate(dev,
-+							rcar_gen3_phy_cable);
-+		if (IS_ERR(channel->extcon))
-+			return PTR_ERR(channel->extcon);
-+
-+		ret = devm_extcon_dev_register(dev, channel->extcon);
-+		if (ret < 0) {
-+			dev_err(dev, "Failed to register extcon\n");
-+			return ret;
-+		}
- 	}
- 
- 	/* devm_phy_create() will call pm_runtime_enable(dev); */
 -- 
 1.9.1
