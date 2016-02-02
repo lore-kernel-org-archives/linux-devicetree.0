@@ -1,11 +1,10 @@
 From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v3 1/2] clk: sunxi: Add sun6i/8i video support
-Date: Mon, 1 Feb 2016 08:43:52 +0100
-Message-ID: <8fdfe5fe7715f19416d654964e55721b30237b38.1454427224.git.moinejf@free.fr>
+Subject: [PATCH v3 2/2] drm: sunxi: Add a basic DRM driver for Allwinner DE2
+Date: Tue, 2 Feb 2016 16:25:51 +0100
+Message-ID: <c5a9bc3fd3df1063ee938aa59ba9c70efca6754d.1454427224.git.moinejf@free.fr>
 References: <cover.1454427223.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0997900728=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.1454427223.git.moinejf@free.fr>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
@@ -21,175 +20,1734 @@ To: Dave Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBjbG9jayB0eXBlcyB3aGljaCBhcmUgdXNlZCBieSB0aGUgc3VuNmkvOGkgZmFtaWxp
-ZXMgZm9yIHZpZGVvLgoKU2lnbmVkLW9mZi1ieTogSmVhbi1GcmFuY29pcyBNb2luZSA8bW9pbmVq
-ZkBmcmVlLmZyPgotLS0KdjM6IChubyBjaGFuZ2UpCnYyOgoJLSByZW1hcmtzIGZyb20gQ2hlbi1Z
-dSBUc2FpCgktIERUIGRvY3VtZW50YXRpb24gYWRkZWQKLS0tCiBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svc3VueGkudHh0IHwgICAyICsKIGRyaXZlcnMvY2xrL3N1bnhp
-L2Nsay1zdW42aS1kaXNwbGF5LmMgICAgICAgICAgICAgfCAxMDYgKysrKysrKysrKysrKwogZHJp
-dmVycy9jbGsvc3VueGkvY2xrLXN1bjZpLXBsbDMuYyAgICAgICAgICAgICAgICB8IDE3NCArKysr
-KysrKysrKysrKysrKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDI4MiBpbnNlcnRpb25zKCspCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjZpLWRpc3BsYXkuYwog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW42aS1wbGwzLmMKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svc3VueGku
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3N1bnhpLnR4dApp
-bmRleCBlNTlmNTdiLi5hMjJiOTJmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvY2xvY2svc3VueGkudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9zdW54aS50eHQKQEAgLTExLDYgKzExLDcgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoKIAkiYWxsd2lubmVyLHN1bjZpLWEzMS1wbGwxLWNsayIgLSBmb3IgdGhlIG1haW4g
-UExMIGNsb2NrIG9uIEEzMQogCSJhbGx3aW5uZXIsc3VuOGktYTIzLXBsbDEtY2xrIiAtIGZvciB0
-aGUgbWFpbiBQTEwgY2xvY2sgb24gQTIzCiAJImFsbHdpbm5lcixzdW45aS1hODAtcGxsNC1jbGsi
-IC0gZm9yIHRoZSBwZXJpcGhlcmFsIFBMTHMgb24gQTgwCisJImFsbHdpbm5lcixzdW42aS1wbGwz
-LWNsayIgLSBmb3IgdGhlIHZpZGVvIFBMTHMgY2xvY2sKIAkiYWxsd2lubmVyLHN1bjRpLWExMC1w
-bGw1LWNsayIgLSBmb3IgdGhlIFBMTDUgY2xvY2sKIAkiYWxsd2lubmVyLHN1bjRpLWExMC1wbGw2
-LWNsayIgLSBmb3IgdGhlIFBMTDYgY2xvY2sKIAkiYWxsd2lubmVyLHN1bjZpLWEzMS1wbGw2LWNs
-ayIgLSBmb3IgdGhlIFBMTDYgY2xvY2sgb24gQTMxCkBAIC03Nyw2ICs3OCw3IEBAIFJlcXVpcmVk
-IHByb3BlcnRpZXM6CiAJImFsbHdpbm5lcixzdW45aS1hODAtdXNiLW1vZC1jbGsiIC0gZm9yIHVz
-YiBnYXRlcyArIHJlc2V0cyBvbiBBODAKIAkiYWxsd2lubmVyLHN1bjlpLWE4MC11c2ItcGh5LWNs
-ayIgLSBmb3IgdXNiIHBoeSBnYXRlcyArIHJlc2V0cyBvbiBBODAKIAkiYWxsd2lubmVyLHN1bjRp
-LWExMC12ZS1jbGsiIC0gZm9yIHRoZSBWaWRlbyBFbmdpbmUgY2xvY2sKKwkiYWxsd2lubmVyLHN1
-bjZpLWRpc3BsYXktY2xrIiAtIGZvciB0aGUgZGlzcGxheSBjbG9ja3MKIAogUmVxdWlyZWQgcHJv
-cGVydGllcyBmb3IgYWxsIGNsb2NrczoKIC0gcmVnIDogc2hhbGwgYmUgdGhlIGNvbnRyb2wgcmVn
-aXN0ZXIgYWRkcmVzcyBmb3IgdGhlIGNsb2NrLgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3Vu
-eGkvY2xrLXN1bjZpLWRpc3BsYXkuYyBiL2RyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW42aS1kaXNw
-bGF5LmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNDgzNTZlMwotLS0gL2Rl
-di9udWxsCisrKyBiL2RyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW42aS1kaXNwbGF5LmMKQEAgLTAs
-MCArMSwxMDYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxNiBKZWFuLUZyYW5jb2lzIE1vaW5lIDxt
-b2luZWpmQGZyZWUuZnI+CisgKgorICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlv
-dSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKKyAqIGl0IHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5CisgKiB0
-aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNl
-bnNlLCBvcgorICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KKyAqCisgKiBU
-aGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVz
-ZWZ1bCwKKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBs
-aWVkIHdhcnJhbnR5IG9mCisgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJU
-SUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCisgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBm
-b3IgbW9yZSBkZXRhaWxzLgorICovCisKKyNpbmNsdWRlIDxsaW51eC9jbGstcHJvdmlkZXIuaD4K
-KyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+CisjaW5jbHVkZSA8bGludXgvc2xhYi5oPgor
-I2luY2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+CisjaW5jbHVkZSA8bGludXgvcmF0aW9uYWwuaD4K
-KyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgorCitzdGF0aWMgREVGSU5FX1NQSU5MT0NLKHN1bjZp
-X2Rpc3BsYXlfbG9jayk7CisKKyNkZWZpbmUgU1VONklfRElTUExBWV9HQVRFX0JJVAkzMQorI2Rl
-ZmluZSBTVU42SV9ESVNQTEFZX1NFTF9TSElGVAkyNAorI2RlZmluZSBTVU42SV9ESVNQTEFZX1NF
-TF9NQVNLCUdFTk1BU0soMiwgMCkKKyNkZWZpbmUgU1VONklfRElTUExBWV9NU0hJRlQJMAorI2Rl
-ZmluZSBTVU42SV9ESVNQTEFZX01XSURUSAk0CisKK3N0YXRpYyB2b2lkIF9faW5pdCBzdW42aV9k
-aXNwbGF5X3NldHVwKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKK3sKKwljb25zdCBjaGFyICpj
-bGtfbmFtZSA9IG5vZGUtPm5hbWU7CisJY29uc3QgY2hhciAqcGFyZW50c1s4XTsKKwlzdHJ1Y3Qg
-Y2xrX211eCAqbXV4ID0gTlVMTDsKKwlzdHJ1Y3QgY2xrX2RpdmlkZXIgKmRpdjsKKwlzdHJ1Y3Qg
-Y2xrX2dhdGUgKmdhdGU7CisJc3RydWN0IHJlc291cmNlIHJlczsKKwl2b2lkIF9faW9tZW0gKm1t
-aW87CisJc3RydWN0IGNsayAqY2xrOworCWludCBuOworCisJb2ZfcHJvcGVydHlfcmVhZF9zdHJp
-bmcobm9kZSwgImNsb2NrLW91dHB1dC1uYW1lcyIsICZjbGtfbmFtZSk7CisKKwltbWlvID0gb2Zf
-aW9fcmVxdWVzdF9hbmRfbWFwKG5vZGUsIDAsIG9mX25vZGVfZnVsbF9uYW1lKG5vZGUpKTsKKwlp
-ZiAoSVNfRVJSKG1taW8pKSB7CisJCXByX2VycigiJXM6IENvdWxkIG5vdCBtYXAgdGhlIGNsb2Nr
-IHJlZ2lzdGVyc1xuIiwgY2xrX25hbWUpOworCQlyZXR1cm47CisJfQorCisJbiA9IG9mX2Nsa19w
-YXJlbnRfZmlsbChub2RlLCBwYXJlbnRzLCBBUlJBWV9TSVpFKHBhcmVudHMpKTsKKworCWlmIChu
-ID4gMSkgewkJCQkvKiBtYW55IHBvc3NpYmxlIHNvdXJjZXMgKi8KKwkJbXV4ID0ga3phbGxvYyhz
-aXplb2YoKm11eCksIEdGUF9LRVJORUwpOworCQlpZiAoIW11eCkKKwkJCWdvdG8gZnJlZV9pbzsK
-KwkJbXV4LT5yZWcgPSBtbWlvOworCQltdXgtPnNoaWZ0ID0gU1VONklfRElTUExBWV9TRUxfU0hJ
-RlQ7CisJCW11eC0+bWFzayA9IFNVTjZJX0RJU1BMQVlfU0VMX01BU0s7CisJCW11eC0+bG9jayA9
-ICZzdW42aV9kaXNwbGF5X2xvY2s7CisJfQorCisJZ2F0ZSA9IGt6YWxsb2Moc2l6ZW9mKCpnYXRl
-KSwgR0ZQX0tFUk5FTCk7CisJaWYgKCFnYXRlKQorCQlnb3RvIGZyZWVfbXV4OworCisJZ2F0ZS0+
-cmVnID0gbW1pbzsKKwlnYXRlLT5iaXRfaWR4ID0gU1VONklfRElTUExBWV9HQVRFX0JJVDsKKwln
-YXRlLT5sb2NrID0gJnN1bjZpX2Rpc3BsYXlfbG9jazsKKworCWRpdiA9IGt6YWxsb2Moc2l6ZW9m
-KCpkaXYpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIWRpdikKKwkJZ290byBmcmVlX2dhdGU7CisKKwlk
-aXYtPnJlZyA9IG1taW87CisJZGl2LT5zaGlmdCA9IFNVTjZJX0RJU1BMQVlfTVNISUZUOworCWRp
-di0+d2lkdGggPSBTVU42SV9ESVNQTEFZX01XSURUSDsKKwlkaXYtPmxvY2sgPSAmc3VuNmlfZGlz
-cGxheV9sb2NrOworCisJY2xrID0gY2xrX3JlZ2lzdGVyX2NvbXBvc2l0ZShOVUxMLCBjbGtfbmFt
-ZSwKKwkJCQkgICAgIHBhcmVudHMsIG4sCisJCQkJICAgICBtdXggPyAmbXV4LT5odyA6IE5VTEws
-ICZjbGtfbXV4X29wcywKKwkJCQkgICAgICZkaXYtPmh3LCAmY2xrX2RpdmlkZXJfb3BzLAorCQkJ
-CSAgICAgJmdhdGUtPmh3LCAmY2xrX2dhdGVfb3BzLAorCQkJCSAgICAgMCk7CisJaWYgKElTX0VS
-UihjbGspKSB7CisJCXByX2VycigiJXM6IENvdWxkbid0IHJlZ2lzdGVyIHRoZSBjbG9ja1xuIiwg
-Y2xrX25hbWUpOworCQlnb3RvIGZyZWVfZGl2OworCX0KKworCW9mX2Nsa19hZGRfcHJvdmlkZXIo
-bm9kZSwgb2ZfY2xrX3NyY19zaW1wbGVfZ2V0LCBjbGspOworCisJcmV0dXJuOworCitmcmVlX2Rp
-djoKKwlrZnJlZShkaXYpOworZnJlZV9nYXRlOgorCWtmcmVlKGdhdGUpOworZnJlZV9tdXg6CisJ
-a2ZyZWUobXV4KTsKK2ZyZWVfaW86CisJaW91bm1hcChtbWlvKTsKKwlvZl9hZGRyZXNzX3RvX3Jl
-c291cmNlKG5vZGUsIDAsICZyZXMpOworCXJlbGVhc2VfbWVtX3JlZ2lvbihyZXMuc3RhcnQsIHJl
-c291cmNlX3NpemUoJnJlcykpOworfQorCitDTEtfT0ZfREVDTEFSRShzdW42aV9kaXNwbGF5LCAi
-YWxsd2lubmVyLHN1bjZpLWRpc3BsYXktY2xrIiwgc3VuNmlfZGlzcGxheV9zZXR1cCk7CmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2Nsay9zdW54aS9jbGstc3VuNmktcGxsMy5jIGIvZHJpdmVycy9jbGsv
-c3VueGkvY2xrLXN1bjZpLXBsbDMuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAw
-Li4zYzEyOGE0Ci0tLSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjZp
-LXBsbDMuYwpAQCAtMCwwICsxLDE3NCBAQAorLyoKKyAqIEFsbHdpbm5lciB2aWRlbyBQTEwgY2xv
-Y2tzCisgKgorICogQ29weXJpZ2h0IDIwMTYgSmVhbi1GcmFuY29pcyBNb2luZSA8bW9pbmVqZkBm
-cmVlLmZyPgorICoKKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJl
-ZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhl
-IEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUg
-U29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IK
-KyAqIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCisgKgorICogVGhpcyBwcm9n
-cmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsCisg
-KiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJy
-YW50eSBvZgorICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQ
-VVJQT1NFLiAgU2VlIHRoZQorICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUg
-ZGV0YWlscy4KKyAqLworCisjaW5jbHVkZSA8bGludXgvY2xrLXByb3ZpZGVyLmg+CisjaW5jbHVk
-ZSA8bGludXgvb2ZfYWRkcmVzcy5oPgorI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKyNpbmNsdWRl
-IDxsaW51eC9zcGlubG9jay5oPgorI2luY2x1ZGUgPGxpbnV4L3JhdGlvbmFsLmg+CisjaW5jbHVk
-ZSA8bGludXgvaW9wb2xsLmg+CisKK3N0YXRpYyBERUZJTkVfU1BJTkxPQ0soc3VuNmlfcGxsM19s
-b2NrKTsKKworc3RydWN0IGNsa19mYWN0IHsKKwlzdHJ1Y3QgY2xrX2h3IGh3OworCXZvaWQgX19p
-b21lbSAqcmVnOworfTsKKyNkZWZpbmUgdG9fY2xrX2ZhY3QoX2h3KSBjb250YWluZXJfb2YoX2h3
-LCBzdHJ1Y3QgY2xrX2ZhY3QsIGh3KQorCisjZGVmaW5lIFNVTjZJX1BMTDNfTVNISUZUCTAKKyNk
-ZWZpbmUgU1VONklfUExMM19NTUFTSwlHRU5NQVNLKDMsIDApCisjZGVmaW5lIFNVTjZJX1BMTDNf
-TlNISUZUCTgKKyNkZWZpbmUgU1VONklfUExMM19OTUFTSwlHRU5NQVNLKDcsIDApCisjZGVmaW5l
-IFNVTjZJX1BMTDNfTU9ERV9TRUwJQklUKDI0KQorI2RlZmluZSBTVU42SV9QTEwzX0ZSQUNfQ0xL
-CUJJVCgyNSkKKyNkZWZpbmUgU1VONklfUExMM19MT0NLX0JJVAkyOAorI2RlZmluZSBTVU42SV9Q
-TEwzX0dBVEVfQklUCTMxCisKK3N0YXRpYyB1MzIgc3VuNmlfcGxsM19nZXRfZmFjdCh1bnNpZ25l
-ZCBsb25nIHJhdGUsCisJCQl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlLAorCQkJdW5zaWduZWQg
-bG9uZyAqbiwgdW5zaWduZWQgbG9uZyAqbSkKK3sKKwlpZiAocmF0ZSA9PSAyOTcwMDAwMDApCisJ
-CXJldHVybiBTVU42SV9QTEwzX0ZSQUNfQ0xLOworCWlmIChyYXRlID09IDI3MDAwMDAwMCkKKwkJ
-cmV0dXJuIDA7CisJcmF0aW9uYWxfYmVzdF9hcHByb3hpbWF0aW9uKHJhdGUsIHBhcmVudF9yYXRl
-LAorCQkJCVNVTjZJX1BMTDNfTk1BU0sgKyAxLCBTVU42SV9QTEwzX01NQVNLICsgMSwKKwkJCQlu
-LCBtKTsKKwlyZXR1cm4gU1VONklfUExMM19NT0RFX1NFTDsKK30KKworc3RhdGljIHVuc2lnbmVk
-IGxvbmcgc3VuNmlfcGxsM19yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywKKwkJCQkJdW5z
-aWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkKK3sKKwlzdHJ1Y3QgY2xrX2ZhY3QgKmZhY3QgPSB0b19j
-bGtfZmFjdChodyk7CisJdTMyIHJlZzsKKwl1MzIgbiwgbTsKKworCXJlZyA9IHJlYWRsKGZhY3Qt
-PnJlZyk7CisJaWYgKHJlZyAmIFNVTjZJX1BMTDNfTU9ERV9TRUwpIHsKKwkJbiA9IChyZWcgPj4g
-U1VONklfUExMM19OU0hJRlQpICYgU1VONklfUExMM19OTUFTSzsKKwkJbSA9IChyZWcgPj4gU1VO
-NklfUExMM19NU0hJRlQpICYgU1VONklfUExMM19NTUFTSzsKKwkJcmV0dXJuIHBhcmVudF9yYXRl
-IC8gKG0gKyAxKSAqIChuICsgMSk7CisJfQorCWlmIChyZWcgJiBTVU42SV9QTEwzX0ZSQUNfQ0xL
-KQorCQlyZXR1cm4gMjk3MDAwMDAwOworCXJldHVybiAyNzAwMDAwMDA7Cit9CisKK3N0YXRpYyBs
-b25nIHN1bjZpX3BsbDNfcm91bmRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9u
-ZyByYXRlLAorCQkJCXVuc2lnbmVkIGxvbmcgKnBhcmVudF9yYXRlKQoreworCXUzMiBmcmFjOwor
-CXVuc2lnbmVkIGxvbmcgbiwgbTsKKworCWZyYWMgPSBzdW42aV9wbGwzX2dldF9mYWN0KHJhdGUs
-ICpwYXJlbnRfcmF0ZSwgJm4sICZtKTsKKwlpZiAoZnJhYyAmIFNVTjZJX1BMTDNfTU9ERV9TRUwp
-CisJCXJldHVybiAqcGFyZW50X3JhdGUgLyBtICogbjsKKwlpZiAoZnJhYyAmIFNVTjZJX1BMTDNf
-RlJBQ19DTEspCisJCXJldHVybiAyOTcwMDAwMDA7CisJcmV0dXJuIDI3MDAwMDAwMDsKK30KKwor
-c3RhdGljIGludCBzdW42aV9wbGwzX3NldF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25l
-ZCBsb25nIHJhdGUsCisJCQl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlKQoreworCXN0cnVjdCBj
-bGtfZmFjdCAqZmFjdCA9IHRvX2Nsa19mYWN0KGh3KTsKKwl1MzIgcmVnOworCXVuc2lnbmVkIGxv
-bmcgbiwgbTsKKworCXJlZyA9IHJlYWRsKGZhY3QtPnJlZykgJgorCQkJfihTVU42SV9QTEwzX01P
-REVfU0VMIHwKKwkJCSAgU1VONklfUExMM19GUkFDX0NMSyB8CisJCQkgIChTVU42SV9QTEwzX05N
-QVNLIDw8IFNVTjZJX1BMTDNfTlNISUZUKSB8CisJCQkgIChTVU42SV9QTEwzX01NQVNLIDw8IFNV
-TjZJX1BMTDNfTVNISUZUKSk7CisKKwlyZWcgfD0gc3VuNmlfcGxsM19nZXRfZmFjdChyYXRlLCBw
-YXJlbnRfcmF0ZSwgJm4sICZtKTsKKwlpZiAocmVnICYgU1VONklfUExMM19NT0RFX1NFTCkKKwkJ
-cmVnIHw9ICgobiAtIDEpIDw8IFNVTjZJX1BMTDNfTlNISUZUKSB8CisJCQkoKG0gLSAxKSA8PCBT
-VU42SV9QTEwzX01TSElGVCk7CisKKwl3cml0ZWwocmVnLCBmYWN0LT5yZWcpOworCisJcmVhZGxf
-cG9sbF90aW1lb3V0KGZhY3QtPnJlZywgcmVnLCByZWcgJiBTVU42SV9QTEwzX0xPQ0tfQklULCAx
-MCwgNTAwKTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgY29uc3Qgc3RydWN0IGNsa19vcHMg
-Y2xrX3N1bjZpX3BsbDNfZmFjdF9vcHMgPSB7CisJLnJlY2FsY19yYXRlID0gc3VuNmlfcGxsM19y
-ZWNhbGNfcmF0ZSwKKwkucm91bmRfcmF0ZSA9IHN1bjZpX3BsbDNfcm91bmRfcmF0ZSwKKwkuc2V0
-X3JhdGUgPSBzdW42aV9wbGwzX3NldF9yYXRlLAorfTsKKworc3RhdGljIHZvaWQgX19pbml0IHN1
-bjZpX3BsbDNfc2V0dXAoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQoreworCWNvbnN0IGNoYXIg
-KmNsa19uYW1lLCAqcGFyZW50OworCXZvaWQgX19pb21lbSAqbW1pbzsKKwlzdHJ1Y3QgY2xrX2Zh
-Y3QgKmZhY3Q7CisJc3RydWN0IGNsa19nYXRlICpnYXRlOworCXN0cnVjdCByZXNvdXJjZSByZXM7
-CisJc3RydWN0IGNsayAqY2xrOworCisJbW1pbyA9IG9mX2lvX3JlcXVlc3RfYW5kX21hcChub2Rl
-LCAwLCBvZl9ub2RlX2Z1bGxfbmFtZShub2RlKSk7CisJaWYgKElTX0VSUihtbWlvKSkgeworCQlw
-cl9lcnIoIiVzOiBDb3VsZCBub3QgbWFwIHRoZSBjbG9jayByZWdpc3RlcnNcbiIsIGNsa19uYW1l
-KTsKKwkJcmV0dXJuOworCX0KKworCWdhdGUgPSBremFsbG9jKHNpemVvZigqZ2F0ZSksIEdGUF9L
-RVJORUwpOworCWlmICghZ2F0ZSkKKwkJZ290byBmcmVlX21taW87CisJZ2F0ZS0+cmVnID0gbW1p
-bzsKKwlnYXRlLT5iaXRfaWR4ID0gU1VONklfUExMM19HQVRFX0JJVDsKKwlnYXRlLT5sb2NrID0g
-JnN1bjZpX3BsbDNfbG9jazsKKworCWZhY3QgPSBremFsbG9jKHNpemVvZigqZmFjdCksIEdGUF9L
-RVJORUwpOworCWlmICghZmFjdCkKKwkJZ290byBmcmVlX2dhdGU7CisJZmFjdC0+cmVnID0gbW1p
-bzsKKworCXBhcmVudCA9IG9mX2Nsa19nZXRfcGFyZW50X25hbWUobm9kZSwgMCk7CisKKwlvZl9w
-cm9wZXJ0eV9yZWFkX3N0cmluZyhub2RlLCAiY2xvY2stb3V0cHV0LW5hbWVzIiwgJmNsa19uYW1l
-KTsKKworCWNsayA9IGNsa19yZWdpc3Rlcl9jb21wb3NpdGUoTlVMTCwgY2xrX25hbWUsCisJCQkJ
-ICAgICAmcGFyZW50LCAxLAorCQkJCSAgICAgTlVMTCwgTlVMTCwKKwkJCQkgICAgICZmYWN0LT5o
-dywgJmNsa19zdW42aV9wbGwzX2ZhY3Rfb3BzLAorCQkJCSAgICAgJmdhdGUtPmh3LCAmY2xrX2dh
-dGVfb3BzLAorCQkJCSAgICAgMCk7CisJaWYgKElTX0VSUihjbGspKSB7CisJCXByX2VycigiJXM6
-IENvdWxkbid0IHJlZ2lzdGVyIHRoZSBjbG9ja1xuIiwgY2xrX25hbWUpOworCQlnb3RvIGZyZWVf
-ZmFjdDsKKwl9CisKKwlvZl9jbGtfYWRkX3Byb3ZpZGVyKG5vZGUsIG9mX2Nsa19zcmNfc2ltcGxl
-X2dldCwgY2xrKTsKKworCXJldHVybjsKKworZnJlZV9mYWN0OgorCWtmcmVlKGZhY3QpOworZnJl
-ZV9nYXRlOgorCWtmcmVlKGdhdGUpOworZnJlZV9tbWlvOgorCWlvdW5tYXAobW1pbyk7CisJb2Zf
-YWRkcmVzc190b19yZXNvdXJjZShub2RlLCAwLCAmcmVzKTsKKwlyZWxlYXNlX21lbV9yZWdpb24o
-cmVzLnN0YXJ0LCByZXNvdXJjZV9zaXplKCZyZXMpKTsKK30KKworQ0xLX09GX0RFQ0xBUkUoc3Vu
-NmlfcGxsMywgImFsbHdpbm5lcixzdW42aS1wbGwzLWNsayIsIHN1bjZpX3BsbDNfc2V0dXApOwot
-LSAKMi43LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+--===============0997900728==
+Content-Type: text/plain
+
+In recent SoCs, as the H3, Allwinner uses a new display interface, DE2.
+This patch adds a DRM video driver for this interface.
+
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+v3:
+	- add the hardware cursor
+	- simplify and fix the DE2 init sequences
+	- generation for all SUNXI SoCs (Andre Przywara)
+v2:
+	- remarks from Russell King
+	- DT documentation added
+	- working resolution change with xrandr
+	- removal of the HDMI driver
+---
+ .../devicetree/bindings/display/sunxi.txt          |  81 ++++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/sunxi/Kconfig                      |  20 +
+ drivers/gpu/drm/sunxi/Makefile                     |   7 +
+ drivers/gpu/drm/sunxi/de2_crtc.c                   | 421 +++++++++++++++++
+ drivers/gpu/drm/sunxi/de2_crtc.h                   |  61 +++
+ drivers/gpu/drm/sunxi/de2_de.c                     | 505 +++++++++++++++++++++
+ drivers/gpu/drm/sunxi/de2_drm.h                    |  40 ++
+ drivers/gpu/drm/sunxi/de2_drv.c                    | 377 +++++++++++++++
+ drivers/gpu/drm/sunxi/de2_plane.c                  |  91 ++++
+ 11 files changed, 1606 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/sunxi.txt
+ create mode 100644 drivers/gpu/drm/sunxi/Kconfig
+ create mode 100644 drivers/gpu/drm/sunxi/Makefile
+ create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.h
+ create mode 100644 drivers/gpu/drm/sunxi/de2_de.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_drm.h
+ create mode 100644 drivers/gpu/drm/sunxi/de2_drv.c
+ create mode 100644 drivers/gpu/drm/sunxi/de2_plane.c
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi.txt b/Documentation/devicetree/bindings/display/sunxi.txt
+new file mode 100644
+index 0000000..35f9763
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/sunxi.txt
+@@ -0,0 +1,81 @@
++Allwinner sunxi display subsystem
++=================================
++
++The sunxi display subsystems contain a display controller (DE),
++one or two LCD controllers (TCON) and their external interfaces.
++
++Display controller
++==================
++
++Required properties:
++
++- compatible: value should be one of the following
++		"allwinner,sun8i-h3-display-engine"
++
++- clocks: must include clock specifiers corresponding to entries in the
++		clock-names property.
++
++- clock-names: must contain
++		gate: for DE activation
++		clock: DE clock
++
++- resets: phandle to the reset of the device
++
++- ports: phandle's to the LCD ports
++
++LCD controller
++==============
++
++Required properties:
++
++- compatible: value should be one of the following
++		"allwinner,sun8i-h3-lcd"
++
++- clocks: must include clock specifiers corresponding to entries in the
++		clock-names property.
++
++- clock-names: must contain
++		gate: for LCD activation
++		clock: pixel clock
++
++- resets: phandle to the reset of the device
++
++- port: port node with endpoint definitions as defined in
++	Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	de: de-controller@01000000 {
++		compatible = "allwinner,sun8i-h3-display-engine";
++		...
++		clocks = <&bus_gates 44>, <&de_clk>;
++		clock-names = "gate", "clock";
++		resets = <&ahb_rst 44>;
++		ports = <&lcd0_p>;
++	};
++
++	lcd0: lcd-controller@01c0c000 {
++		compatible = "allwinner,sun8i-h3-lcd";
++		...
++		clocks = <&bus_gates 35>, <&tcon0_clk>;
++		clock-names = "gate", "clock";
++		resets = <&ahb_rst 35>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		lcd0_p: port {
++			lcd0_ep: endpoint {
++				remote-endpoint = <&hdmi_ep>;
++			};
++		};
++	};
++
++	hdmi: hdmi@01ee0000 {
++		...
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port {
++			hdmi_ep: endpoint {
++				remote-endpoint = <&lcd0_ep>;
++			};
++		};
++	};
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 8ae7ab6..0cec9a1 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -269,3 +269,5 @@ source "drivers/gpu/drm/imx/Kconfig"
+ source "drivers/gpu/drm/vc4/Kconfig"
+ 
+ source "drivers/gpu/drm/etnaviv/Kconfig"
++
++source "drivers/gpu/drm/sunxi/Kconfig"
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 61766de..eef53f2 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -74,3 +74,4 @@ obj-y			+= panel/
+ obj-y			+= bridge/
+ obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
+ obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
++obj-$(CONFIG_DRM_SUNXI) += sunxi/
+diff --git a/drivers/gpu/drm/sunxi/Kconfig b/drivers/gpu/drm/sunxi/Kconfig
+new file mode 100644
+index 0000000..e452930
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/Kconfig
+@@ -0,0 +1,20 @@
++#
++# Allwinner Video configuration
++#
++
++config DRM_SUNXI
++	tristate "DRM Support for Allwinner Video"
++	depends on DRM && ARCH_SUNXI
++	depends on OF
++	select DRM_KMS_HELPER
++	select DRM_KMS_CMA_HELPER
++	select DRM_GEM_CMA_HELPER
++	help
++	  Choose this option if you have a Allwinner chipset.
++
++config DRM_SUNXI_DE2
++	tristate "Support for Allwinner Video with DE2 interface"
++	depends on DRM_SUNXI
++	help
++	  Choose this option if your Allwinner chipset has the DE2 interface
++	  as the H3.
+diff --git a/drivers/gpu/drm/sunxi/Makefile b/drivers/gpu/drm/sunxi/Makefile
+new file mode 100644
+index 0000000..3778877
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/Makefile
+@@ -0,0 +1,7 @@
++#
++# Makefile for Allwinner's DRM device driver
++#
++
++sunxi-de2-drm-objs := de2_drv.o de2_de.o de2_crtc.o de2_plane.o
++
++obj-$(CONFIG_DRM_SUNXI_DE2) += sunxi-de2-drm.o
+diff --git a/drivers/gpu/drm/sunxi/de2_crtc.c b/drivers/gpu/drm/sunxi/de2_crtc.c
+new file mode 100644
+index 0000000..b5a093e
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_crtc.c
+@@ -0,0 +1,421 @@
++/*
++ * Allwinner DRM driver - DE2 CRTC
++ *
++ * Copyright (C) 2016 Jean-Francois Moine <moinejf@free.fr>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/component.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_atomic_helper.h>
++#include <asm/io.h>
++
++#include "de2_drm.h"
++#include "de2_crtc.h"
++
++/* I/O map */
++
++struct tcon {
++	u32 gctl;
++#define		TCON_GCTL_TCON_En BIT(31)
++	u32 gint0;
++#define		TCON_GINT0_TCON1_Vb_Int_En BIT(30)
++#define		TCON_GINT0_TCON1_Vb_Int_Flag BIT(12)
++	u32 gint1;
++	u32 dum0[13];
++	u32 tcon0_ctl;
++#define		TCON0_CTL_TCON_En BIT(31)
++	u32 dum1[19];
++	u32 tcon1_ctl;
++#define		TCON1_CTL_TCON_En BIT(31)
++#define		TCON1_CTL_Interlace_En BIT(20)
++#define		TCON1_CTL_Start_Delay_SHIFT 4
++#define		TCON1_CTL_Start_Delay_MASK GENMASK(8, 4)
++	u32 basic0;			/* XI/YI */
++	u32 basic1;			/* LS_XO/LS_YO */
++	u32 basic2;			/* XO/YO */
++	u32 basic3;			/* HT/HBP */
++	u32 basic4;			/* VT/VBP */
++	u32 basic5;			/* HSPW/VSPW */
++	u32 dum2;
++	u32 ps_sync;
++	u32 dum3[15];
++	u32 io_pol;
++#define		TCON1_IO_POL_IO0_inv BIT(24)
++#define		TCON1_IO_POL_IO1_inv BIT(25)
++#define		TCON1_IO_POL_IO2_inv BIT(26)
++	u32 io_tri;
++	u32 dum4[2];
++
++	u32 ceu_ctl;			/* 100 */
++#define     TCON_CEU_CTL_ceu_en BIT(31)
++	u32 dum5[3];
++	u32 ceu_rr;
++	u32 ceu_rg;
++	u32 ceu_rb;
++	u32 ceu_rc;
++	u32 ceu_gr;
++	u32 ceu_gg;
++	u32 ceu_gb;
++	u32 ceu_gc;
++	u32 ceu_br;
++	u32 ceu_bg;
++	u32 ceu_bb;
++	u32 ceu_bc;
++	u32 ceu_rv;
++	u32 ceu_gv;
++	u32 ceu_bv;
++	u32 dum6[45];
++
++	u32 mux_ctl;			/* 200 */
++#define		TCON_MUX_CTL_HDMI_SRC_SHIFT 8
++#define		TCON_MUX_CTL_HDMI_SRC_MASK GENMASK(9, 8)
++	u32 dum7[63];
++
++	u32 fill_ctl;			/* 300 */
++	u32 fill_start0;
++	u32 fill_end0;
++	u32 fill_data0;
++};
++
++#define XY(x, y) (((x) << 16) | (y))
++
++#define tcon_read(base, member) \
++	readl_relaxed(base + offsetof(struct tcon, member))
++#define tcon_write(base, member, data) \
++	writel_relaxed(data, base + offsetof(struct tcon, member))
++
++/*
++ * vertical blank functions
++ */
++int de2_enable_vblank(struct drm_device *drm, unsigned crtc)
++{
++	return 0;
++}
++
++void de2_disable_vblank(struct drm_device *drm, unsigned crtc)
++{
++}
++
++static void de2_set_frame_timings(struct lcd *lcd)
++{
++	struct drm_crtc *crtc = &lcd->crtc;
++	const struct drm_display_mode *mode = &crtc->mode;
++	int interlace = mode->flags & DRM_MODE_FLAG_INTERLACE ? 2 : 1;
++	int start_delay;
++	u32 data;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	data = XY(mode->hdisplay - 1, mode->vdisplay / interlace - 1);
++	tcon_write(lcd->mmio, basic0, data);
++	tcon_write(lcd->mmio, basic1, data);
++	tcon_write(lcd->mmio, basic2, data);
++	tcon_write(lcd->mmio, basic3,
++			XY(mode->htotal - 1,
++				mode->htotal - mode->hsync_start - 1));
++	tcon_write(lcd->mmio, basic4,
++			XY(mode->vtotal * (3 - interlace),
++				mode->vtotal - mode->vsync_start - 1));
++	tcon_write(lcd->mmio, basic5,
++			 XY(mode->hsync_end - mode->hsync_start - 1,
++				mode->vsync_end - mode->vsync_start - 1));
++
++	tcon_write(lcd->mmio, ps_sync, XY(1, 1));
++
++	data = TCON1_IO_POL_IO2_inv;
++	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
++		data |= TCON1_IO_POL_IO0_inv;
++	if (mode->flags & DRM_MODE_FLAG_PHSYNC)
++		data |= TCON1_IO_POL_IO1_inv;
++	tcon_write(lcd->mmio, io_pol, data);
++
++	tcon_write(lcd->mmio, ceu_ctl,
++		tcon_read(lcd->mmio, ceu_ctl) & ~TCON_CEU_CTL_ceu_en);
++
++	data = tcon_read(lcd->mmio, tcon1_ctl);
++	if (interlace == 2)
++		data |= TCON1_CTL_Interlace_En;
++	else
++		data &= ~TCON1_CTL_Interlace_En;
++	tcon_write(lcd->mmio, tcon1_ctl, data);
++
++	tcon_write(lcd->mmio, fill_ctl, 0);
++	tcon_write(lcd->mmio, fill_start0, mode->vtotal + 1);
++	tcon_write(lcd->mmio, fill_end0, mode->vtotal);
++	tcon_write(lcd->mmio, fill_data0, 0);
++
++	start_delay = (mode->vtotal - mode->vdisplay) / interlace - 5;
++	if (start_delay > 31)
++		start_delay = 31;
++	data = tcon_read(lcd->mmio, tcon1_ctl);
++	data &= ~TCON1_CTL_Start_Delay_MASK;
++	data |= start_delay << TCON1_CTL_Start_Delay_SHIFT;
++	tcon_write(lcd->mmio, tcon1_ctl, data);
++
++	tcon_write(lcd->mmio, io_tri, 0x0fffffff);
++}
++
++static void de2_crtc_enable(struct drm_crtc *crtc)
++{
++	struct lcd *lcd = crtc_to_lcd(crtc);
++	struct drm_display_mode *mode = &crtc->mode;
++	u32 data;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	de2_set_frame_timings(lcd);
++
++	clk_set_rate(lcd->clk, mode->clock * 1000);
++
++	if (lcd->num == 0) {				/* HDMI */
++		data = tcon_read(lcd->mmio, mux_ctl);
++		data &= ~TCON_MUX_CTL_HDMI_SRC_MASK;
++		data |= lcd->num << TCON_MUX_CTL_HDMI_SRC_SHIFT;
++		tcon_write(lcd->mmio, mux_ctl, data);
++	}
++
++	tcon_write(lcd->mmio, tcon1_ctl,
++		tcon_read(lcd->mmio, tcon1_ctl) | TCON1_CTL_TCON_En);
++
++	de2_de_panel_init(lcd->priv, lcd->num, mode);
++
++	drm_mode_debug_printmodeline(mode);
++}
++
++static void de2_crtc_disable(struct drm_crtc *crtc)
++{
++	struct lcd *lcd = crtc_to_lcd(crtc);
++
++	DRM_DEBUG_DRIVER("\n");
++
++	tcon_write(lcd->mmio, tcon1_ctl,
++		tcon_read(lcd->mmio, tcon1_ctl) & ~TCON1_CTL_TCON_En);
++}
++
++static const struct drm_crtc_funcs de2_crtc_funcs = {
++	.destroy	= drm_crtc_cleanup,
++	.set_config	= drm_atomic_helper_set_config,
++	.page_flip	= drm_atomic_helper_page_flip,
++	.reset		= drm_atomic_helper_crtc_reset,
++	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
++};
++
++static const struct drm_crtc_helper_funcs de2_crtc_helper_funcs = {
++	.enable		= de2_crtc_enable,
++	.disable	= de2_crtc_disable,
++};
++
++static void de2_tcon_enable(struct lcd *lcd)
++{
++	DRM_DEBUG_DRIVER("\n");
++
++	tcon_write(lcd->mmio, tcon0_ctl,
++		tcon_read(lcd->mmio, tcon0_ctl) & ~TCON0_CTL_TCON_En);
++	tcon_write(lcd->mmio, tcon1_ctl,
++		tcon_read(lcd->mmio, tcon1_ctl) & ~TCON1_CTL_TCON_En);
++	tcon_write(lcd->mmio, gctl,
++		tcon_read(lcd->mmio, gctl) & ~TCON_GCTL_TCON_En);
++
++	tcon_write(lcd->mmio, gint0,
++		tcon_read(lcd->mmio, gint0) & ~(TCON_GINT0_TCON1_Vb_Int_En |
++						TCON_GINT0_TCON1_Vb_Int_Flag));
++
++	tcon_write(lcd->mmio, gctl,
++		tcon_read(lcd->mmio, gctl) | TCON_GCTL_TCON_En);
++}
++
++static int de2_crtc_init(struct drm_device *drm, struct lcd *lcd)
++{
++	struct drm_crtc *crtc = &lcd->crtc;
++	int ret;
++
++	ret = de2_plane_init(drm, lcd);
++	if (ret < 0)
++		return ret;
++
++	ret = drm_crtc_init_with_planes(drm, crtc,
++					&lcd->planes[DE2_PRIMARY_PLANE],
++					&lcd->planes[DE2_CURSOR_PLANE],
++					&de2_crtc_funcs, NULL);
++	if (ret < 0)
++		return ret;
++
++	de2_tcon_enable(lcd);
++
++	de2_de_enable(lcd->priv, lcd->num);
++
++	drm_crtc_helper_add(crtc, &de2_crtc_helper_funcs);
++
++	return 0;
++}
++
++/*
++ * device init
++ */
++static int de2_lcd_bind(struct device *dev, struct device *master,
++			void *data)
++{
++	struct drm_device *drm = data;
++	struct priv *priv = drm->dev_private;
++	struct lcd *lcd = dev_get_drvdata(dev);
++	int ret;
++
++	lcd->priv = priv;
++
++	ret = de2_crtc_init(drm, lcd);
++	if (ret < 0) {
++		dev_err(dev, "failed to init the crtc\n");
++		return ret;
++	}
++
++	priv->lcds[lcd->num] = lcd;
++
++	return 0;
++}
++
++static void de2_lcd_unbind(struct device *dev, struct device *master,
++			void *data)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct lcd *lcd = platform_get_drvdata(pdev);
++
++	if (lcd->mmio) {
++		if (lcd->priv)
++			de2_de_disable(lcd->priv, lcd->num);
++		tcon_write(lcd->mmio, gctl,
++			tcon_read(lcd->mmio, gctl) & ~TCON_GCTL_TCON_En);
++	}
++}
++
++static const struct component_ops de2_lcd_ops = {
++	.bind = de2_lcd_bind,
++	.unbind = de2_lcd_unbind,
++};
++
++static int de2_lcd_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node, *tmp, *parent, *port;
++	struct lcd *lcd;
++	struct resource *res;
++	int id, ret;
++
++	id = of_alias_get_id(np, "lcd");
++	if (id < 0) {
++		dev_err(dev, "no alias for lcd\n");
++		id = 0;
++	}
+x+	lcd = devm_kzalloc(dev, sizeof *lcd, GFP_KERNEL);
++	if (!lcd) {
++		dev_err(dev, "failed to allocate private data\n");
++		return -ENOMEM;
++	}
++	dev_set_drvdata(dev, lcd);
++	lcd->dev = dev;
++	lcd->num = id;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(dev, "failed to get memory resource\n");
++		return -EINVAL;
++	}
++
++	lcd->mmio = devm_ioremap_resource(dev, res);
++	if (IS_ERR(lcd->mmio)) {
++		dev_err(dev, "failed to map registers\n");
++		return PTR_ERR(lcd->mmio);
++	}
++
++	snprintf(lcd->name, sizeof(lcd->name), "sunxi-lcd%d", id);
++
++	/* possible CRTCs */
++	parent = np;
++	tmp = of_get_child_by_name(np, "ports");
++	if (tmp)
++		parent = tmp;
++	port = of_get_child_by_name(parent, "port");
++	of_node_put(tmp);
++	if (!port) {
++		dev_err(dev, "no port node\n");
++		return -ENXIO;
++	}
++	lcd->crtc.port = port;
++
++	lcd->gate = devm_clk_get(dev, "gate");
++	if (IS_ERR(lcd->gate)) {
++		dev_err(dev, "gate clock err %d\n", (int) PTR_ERR(lcd->gate));
++		ret = PTR_ERR(lcd->gate);
++		goto err;
++	}
++
++	lcd->clk = devm_clk_get(dev, "clock");
++	if (IS_ERR(lcd->clk)) {
++		dev_err(dev, "video clock err %d\n", (int) PTR_ERR(lcd->clk));
++		ret = PTR_ERR(lcd->clk);
++		goto err;
++	}
++
++	lcd->rstc = devm_reset_control_get(dev, NULL);
++	if (IS_ERR(lcd->rstc)) {
++		dev_err(dev, "reset controller err %d\n",
++				(int) PTR_ERR(lcd->rstc));
++		ret = PTR_ERR(lcd->rstc);
++		goto err;
++	}
++
++	ret = clk_prepare_enable(lcd->clk);
++	if (ret)
++		goto err;
++	ret = clk_prepare_enable(lcd->gate);
++	if (ret)
++		goto err;
++
++	ret = reset_control_deassert(lcd->rstc);
++	if (ret) {
++		dev_err(dev, "reset deassert err %d\n", ret);
++		goto err;
++	}
++
++	return component_add(&pdev->dev, &de2_lcd_ops);
++
++err:
++	clk_disable_unprepare(lcd->gate);
++	clk_disable_unprepare(lcd->clk);
++	of_node_put(lcd->crtc.port);
++	return ret;
++}
++
++static int de2_lcd_remove(struct platform_device *pdev)
++{
++	struct lcd *lcd = platform_get_drvdata(pdev);
++
++	component_del(&pdev->dev, &de2_lcd_ops);
++
++	if (!IS_ERR_OR_NULL(lcd->rstc))
++		reset_control_assert(lcd->rstc);
++	clk_disable_unprepare(lcd->gate);
++	clk_disable_unprepare(lcd->clk);
++	of_node_put(lcd->crtc.port);
++
++	return 0;
++}
++
++static const struct of_device_id de2_lcd_ids[] = {
++	{ .compatible = "allwinner,sun8i-h3-lcd", },
++	{ }
++};
++
++struct platform_driver de2_lcd_platform_driver = {
++	.probe = de2_lcd_probe,
++	.remove = de2_lcd_remove,
++	.driver = {
++		.name = "sun8i-h3-lcd",
++		.of_match_table = of_match_ptr(de2_lcd_ids),
++	},
++};
+diff --git a/drivers/gpu/drm/sunxi/de2_crtc.h b/drivers/gpu/drm/sunxi/de2_crtc.h
+new file mode 100644
+index 0000000..789bd6e
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_crtc.h
+@@ -0,0 +1,61 @@
++#ifndef __DE2_CRTC_H__
++#define __DE2_CRTC_H__
++/*
++ * Copyright (C) 2016 Jean-François Moine
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/clk.h>
++#include <linux/reset.h>
++#include <drm/drm_plane_helper.h>
++
++struct priv;
++
++enum de2_plane2 {
++	DE2_PRIMARY_PLANE,
++	DE2_CURSOR_PLANE,
++	DE2_N_PLANES,
++};
++struct lcd {
++	void __iomem *mmio;
++
++	struct device *dev;
++	struct drm_crtc crtc;
++	struct priv *priv;	/* DRM/DE private data */
++
++	int num;		/* LCD index 0/1 */
++
++	struct clk *clk;
++	struct clk *gate;
++	struct reset_control *rstc;
++
++	char name[16];
++
++	struct drm_pending_vblank_event *event;
++
++	struct drm_plane planes[DE2_N_PLANES];
++};
++
++#define crtc_to_lcd(x) container_of(x, struct lcd, crtc)
++
++/* in de2_de.c */
++void de2_de_enable(struct priv *priv, int lcd_num);
++void de2_de_disable(struct priv *priv, int lcd_num);
++void de2_de_hw_init(struct priv *priv, int lcd_num);
++void de2_de_panel_init(struct priv *priv, int lcd_num,
++			struct drm_display_mode *mode);
++void de2_de_plane_disable(struct priv *priv,
++			int lcd_num, int plane_ix);
++void de2_de_plane_update(struct priv *priv,
++			int lcd_num, int plane_ix,
++			struct drm_plane_state *state,
++			struct drm_plane_state *old_state);
++
++/* in de2_plane.c */
++int de2_plane_init(struct drm_device *drm, struct lcd *lcd);
++
++#endif /* __DE2_CRTC_H__ */
+diff --git a/drivers/gpu/drm/sunxi/de2_de.c b/drivers/gpu/drm/sunxi/de2_de.c
+new file mode 100644
+index 0000000..17fac25
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_de.c
+@@ -0,0 +1,505 @@
++/*
++ * ALLWINNER DRM driver - Display Engine 2
++ *
++ * Copyright (C) 2016 Jean-Francois Moine <moinejf@free.fr>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <asm/io.h>
++#include <drm/drm_gem_cma_helper.h>
++
++#include "de2_drm.h"
++#include "de2_crtc.h"
++
++static DEFINE_SPINLOCK(de_lock);
++
++/* I/O map */
++
++#define DE_MOD_REG 0x0000	/* 1 bit per LCD */
++#define DE_GATE_REG 0x0004
++#define DE_RESET_REG 0x0008
++#define DE_DIV_REG 0x000c	/* 4 bits per LCD */
++#define DE_SEL_REG 0x0010
++
++#define DE_MUX0_BASE 0x00100000
++#define DE_MUX1_BASE 0x00200000
++
++/* MUX registers (addr / MUX base) */
++#define DE_MUX_GLB_REGS 0x00000		/* global control */
++#define DE_MUX_BLD_REGS 0x01000		/* alpha blending */
++#define DE_MUX_CHAN_REGS 0x02000	/* VI/UI overlay channels */
++#define		DE_MUX_CHAN_SZ 0x1000	/* size of a channel */
++#define DE_MUX_VSU_REGS 0x20000		/* VSU */
++#define DE_MUX_GSU1_REGS 0x40000	/* GSUs */
++#define DE_MUX_GSU2_REGS 0x60000
++#define DE_MUX_GSU3_REGS 0x80000
++#define DE_MUX_FCE_REGS 0xa0000		/* FCE */
++#define DE_MUX_BWS_REGS 0xa2000		/* BWS */
++#define DE_MUX_LTI_REGS 0xa4000		/* LTI */
++#define DE_MUX_PEAK_REGS 0xa6000	/* PEAK */
++#define DE_MUX_ASE_REGS 0xa8000		/* ASE */
++#define DE_MUX_FCC_REGS 0xaa000		/* FCC */
++#define DE_MUX_DCSC_REGS 0xb0000	/* DCSC */
++
++/* global control */
++struct de_glb {
++	u32 ctl;
++#define		DE_MUX_GLB_CTL_rt_en BIT(0)
++#define		DE_MUX_GLB_CTL_finish_irq_en BIT(4)
++#define		DE_MUX_GLB_CTL_rtwb_port BIT(12)
++	u32 status;
++	u32 dbuff;
++	u32 size;
++};
++
++/* alpha blending */
++struct de_bld {
++	u32 fcolor_ctl;			/* 00 */
++	struct {
++		u32 fcolor;
++		u32 insize;
++		u32 offset;
++		u32 dum;
++	} attr[4];
++	u32 dum0[15];			/* (end of clear offset) */
++	u32 route;			/* 80 */
++	u32 premultiply;
++	u32 bkcolor;
++	u32 output_size;
++	u32 bld_mode[4];
++	u32 dum1[4];
++	u32 ck_ctl;			/* b0 */
++	u32 ck_cfg;
++	u32 dum2[2];
++	u32 ck_max[4];
++	u32 dum3[4];
++	u32 ck_min[4];
++	u32 dum4[3];
++	u32 out_ctl;			/* fc */
++};
++
++/* VI channel */
++struct de_vi {
++	struct {
++		u32 attr;
++#define			VI_CFG_ATTR_en BIT(0)
++#define			VI_CFG_ATTR_fcolor_en BIT(4)
++#define			VI_CFG_ATTR_fmt_SHIFT 8
++#define			VI_CFG_ATTR_fmt_MASK GENMASK(12, 8)
++#define			VI_CFG_ATTR_ui_sel BIT(15)
++#define			VI_CFG_ATTR_top_down BIT(23)
++		u32 size;
++		u32 coord;
++		u32 pitch[3];
++		u32 top_laddr[3];
++		u32 bot_laddr[3];
++	} cfg[4];
++	u32 fcolor[4];			/* c0 */
++	u32 top_haddr[3];		/* d0 */
++	u32 bot_haddr[3];		/* dc */
++	u32 ovl_size[2];		/* e8 */
++	u32 hori[2];			/* f0 */
++	u32 vert[2];			/* f8 */
++};
++
++/* UI channel */
++struct de_ui {
++	struct {
++		u32 attr;
++#define			UI_CFG_ATTR_en BIT(0)
++#define			UI_CFG_ATTR_alpmod_SHIFT 1
++#define			UI_CFG_ATTR_alpmod_MASK GENMASK(2, 1)
++#define			UI_CFG_ATTR_fcolor_en BIT(4)
++#define			UI_CFG_ATTR_fmt_SHIFT 8
++#define			UI_CFG_ATTR_fmt_MASK GENMASK(12, 8)
++#define			UI_CFG_ATTR_top_down BIT(23)
++#define			UI_CFG_ATTR_alpha_SHIFT 24
++#define			UI_CFG_ATTR_alpha_MASK GENMASK(31, 24)
++		u32 size;
++		u32 coord;
++		u32 pitch;
++		u32 top_laddr;
++		u32 bot_laddr;
++		u32 fcolor;
++		u32 dum;
++	} cfg[4];			/* 00 */
++	u32 top_haddr;			/* 80 */
++	u32 bot_haddr;
++	u32 ovl_size;			/* 88 */
++};
++
++#define DE_CORE_CLK_RATE 432000000
++
++/* coordinates and sizes */
++#define XY(x, y) (((y) << 16) | (x))
++#define WH(w, h) (((h - 1) << 16) | (w - 1))
++
++/* UI video formats */
++#define DE2_FORMAT_ARGB_8888 0
++#define DE2_FORMAT_XRGB_8888 4
++#define DE2_FORMAT_RGB_888 8
++#define DE2_FORMAT_BGR_888 9
++
++#define glb_read(base, member) \
++	readl_relaxed(base + offsetof(struct de_glb, member))
++#define glb_write(base, member, data) \
++	writel_relaxed(data, base + offsetof(struct de_glb, member))
++#define bld_read(base, member) \
++	readl_relaxed(base + offsetof(struct de_bld, member))
++#define bld_write(base, member, data) \
++	writel_relaxed(data, base + offsetof(struct de_bld, member))
++#define ui_read(base, member) \
++	readl_relaxed(base + offsetof(struct de_ui, member))
++#define ui_write(base, member, data) \
++	writel_relaxed(data, base + offsetof(struct de_ui, member))
++#define vi_read(base, member) \
++	readl_relaxed(base + offsetof(struct de_vi, member))
++#define vi_write(base, member, data) \
++	writel_relaxed(data, base + offsetof(struct de_vi, member))
++
++static const struct {
++	char chan;
++	char layer;
++} plane2layer[DE2_N_PLANES] = {
++	[DE2_PRIMARY_PLANE] = {.chan = 1, .layer = 0,},
++	[DE2_CURSOR_PLANE] = {.chan = 2, .layer = 0,},
++};
++
++static inline void de_write(struct priv *priv, int reg, u32 data)
++{
++	writel_relaxed(data, priv->mmio + reg);
++}
++
++static inline u32 de_read(struct priv *priv, int reg)
++{
++	return readl_relaxed(priv->mmio + reg);
++}
++
++static void de_lcd_select(struct priv *priv,
++			int lcd_num,
++			void __iomem *mux_o)
++{
++	u32 data;
++
++	/* select the LCD */
++	data = de_read(priv, DE_SEL_REG);
++	if (lcd_num == 0)
++		data &= ~1;
++	else
++		data |= 1;
++	de_write(priv, DE_SEL_REG, data);
++
++	/* double register switch */
++	glb_write(mux_o + DE_MUX_GLB_REGS, dbuff, 1);
++}
++
++void de2_de_plane_update(struct priv *priv,
++			int lcd_num, int plane_ix,
++			struct drm_plane_state *state,
++			struct drm_plane_state *old_state)
++{
++	struct drm_framebuffer *fb = state->fb;
++	struct drm_gem_cma_object *gem;
++	void __iomem *mux_o = priv->mmio;
++	void __iomem *chan_o;
++	u32 size = WH(state->crtc_w, state->crtc_h);
++	u32 coord = XY(state->crtc_x, state->crtc_y);
++	u32 screen_size;
++	u32 data;
++	int chan, layer;
++	unsigned fmt, alpha_glob;
++	unsigned long flags;
++
++	mux_o += (lcd_num == 0) ? DE_MUX0_BASE : DE_MUX1_BASE;
++
++	chan = plane2layer[plane_ix].chan;
++	layer = plane2layer[plane_ix].layer;
++
++	chan_o = mux_o;
++	chan_o += DE_MUX_CHAN_REGS + DE_MUX_CHAN_SZ * chan;
++
++	if (fb == old_state->fb
++	 && ui_read(chan_o, cfg[layer].attr) != 0) {
++		spin_lock_irqsave(&de_lock, flags);
++		de_lcd_select(priv, lcd_num, mux_o);
++		ui_write(chan_o, cfg[layer].coord, coord);
++		spin_unlock_irqrestore(&de_lock, flags);
++		return;
++	}
++
++	gem = drm_fb_cma_get_gem_obj(fb, 0);
++
++	alpha_glob = 0;
++	switch (fb->pixel_format) {
++	case DRM_FORMAT_ARGB8888:
++		fmt = DE2_FORMAT_ARGB_8888;
++		break;
++	case DRM_FORMAT_XRGB8888:
++		fmt = DE2_FORMAT_XRGB_8888;
++		alpha_glob = 1;
++		break;
++	case DRM_FORMAT_RGB888:
++		fmt = DE2_FORMAT_RGB_888;
++		break;
++	case DRM_FORMAT_BGR888:
++		fmt = DE2_FORMAT_BGR_888;
++		break;
++	default:
++		pr_err("format %.4s not yet treated\n",
++			(char *) &fb->pixel_format);
++		return;
++	}
++	
++	spin_lock_irqsave(&de_lock, flags);
++
++	if (plane_ix == DE2_PRIMARY_PLANE)
++		screen_size = size;
++	else
++		screen_size = glb_read(mux_o + DE_MUX_GLB_REGS, size);
++
++	de_lcd_select(priv, lcd_num, mux_o);
++
++	data = UI_CFG_ATTR_en |
++			(fmt << UI_CFG_ATTR_fmt_SHIFT);
++	if (alpha_glob)
++		data |= (1 << UI_CFG_ATTR_alpmod_SHIFT) |
++			(0xff << UI_CFG_ATTR_alpha_SHIFT);
++	ui_write(chan_o, cfg[layer].attr, data);
++	ui_write(chan_o, cfg[layer].size, size);
++	ui_write(chan_o, cfg[layer].coord, coord);
++	ui_write(chan_o, cfg[layer].pitch, fb->pitches[0]);
++	ui_write(chan_o, cfg[layer].top_laddr,
++			gem->paddr + fb->offsets[0]);
++	ui_write(chan_o, ovl_size, screen_size);
++
++	if (plane_ix == DE2_PRIMARY_PLANE)
++		bld_write(mux_o + DE_MUX_BLD_REGS,
++					fcolor_ctl, 0x0101);
++	else
++		bld_write(mux_o + DE_MUX_BLD_REGS,
++					fcolor_ctl, 0x0301);
++
++	spin_unlock_irqrestore(&de_lock, flags);
++}
++
++void de2_de_plane_disable(struct priv *priv,
++			int lcd_num, int plane_ix)
++{
++	void __iomem *mux_o = priv->mmio;
++	void __iomem *chan_o;
++	int chan, layer;
++	unsigned long flags;
++
++	chan = plane2layer[plane_ix].chan;
++	layer = plane2layer[plane_ix].layer;
++
++	mux_o += (lcd_num == 0) ? DE_MUX0_BASE : DE_MUX1_BASE;
++	chan_o = mux_o + DE_MUX_CHAN_REGS + DE_MUX_CHAN_SZ * chan;
++
++	spin_lock_irqsave(&de_lock, flags);
++
++	de_lcd_select(priv, lcd_num, mux_o);
++
++	ui_write(chan_o, cfg[layer].attr, 0);
++	bld_write(mux_o + DE_MUX_BLD_REGS, fcolor_ctl, 0x0101);
++
++	spin_unlock_irqrestore(&de_lock, flags);
++}
++
++void de2_de_panel_init(struct priv *priv, int lcd_num,
++			struct drm_display_mode *mode)
++{
++	void __iomem *mux_o = priv->mmio;
++	u32 size = WH(mode->hdisplay, mode->vdisplay);
++	unsigned i;
++	unsigned long flags;
++
++	mux_o += (lcd_num == 0) ? DE_MUX0_BASE : DE_MUX1_BASE;
++
++	DRM_DEBUG_DRIVER("%dx%d\n", mode->hdisplay, mode->vdisplay);
++
++	spin_lock_irqsave(&de_lock, flags);
++
++	de_lcd_select(priv, lcd_num, mux_o);
++
++	glb_write(mux_o + DE_MUX_GLB_REGS, size, size);
++
++	/* set alpha blending */
++	for (i = 0; i < 4; i++)
++		bld_write(mux_o + DE_MUX_BLD_REGS, attr[i].insize, size);
++	bld_write(mux_o + DE_MUX_BLD_REGS, output_size, size);
++	bld_write(mux_o + DE_MUX_BLD_REGS, out_ctl,
++			mode->flags & DRM_MODE_FLAG_INTERLACE ? 2 : 0);
++
++	spin_unlock_irqrestore(&de_lock, flags);
++}
++
++void de2_de_enable(struct priv *priv, int lcd_num)
++{
++	void __iomem *mux_o = priv->mmio;
++	unsigned chan;
++	u32 size = WH(1920, 1080);
++	u32 data;
++	unsigned long flags;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	data = 1 << lcd_num;			/* 1 bit / lcd */
++	de_write(priv, DE_RESET_REG,
++			de_read(priv, DE_RESET_REG) | data);
++	de_write(priv, DE_GATE_REG,
++			de_read(priv, DE_GATE_REG) | data);
++	de_write(priv, DE_MOD_REG,
++			de_read(priv, DE_MOD_REG) | data);
++
++	mux_o += (lcd_num == 0) ? DE_MUX0_BASE : DE_MUX1_BASE;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	spin_lock_irqsave(&de_lock, flags);
++
++	/* select the LCD */
++	data = de_read(priv, DE_SEL_REG);
++	if (lcd_num == 0)
++		data &= ~1;
++	else
++		data |= 1;
++	de_write(priv, DE_SEL_REG, data);
++
++	/* start init */
++	glb_write(mux_o + DE_MUX_GLB_REGS, ctl,
++		DE_MUX_GLB_CTL_rt_en | DE_MUX_GLB_CTL_rtwb_port);
++	glb_write(mux_o + DE_MUX_GLB_REGS, status, 0);
++	glb_write(mux_o + DE_MUX_GLB_REGS, dbuff, 1);	/* dble reg switch */
++	glb_write(mux_o + DE_MUX_GLB_REGS, size, size);
++
++	/* clear the VI/UI channels */
++	for (chan = 0; chan < 4; chan++) {
++		void __iomem *chan_o = mux_o + DE_MUX_CHAN_REGS +
++				DE_MUX_CHAN_SZ * chan;
++
++		if (chan == 0)
++			memset_io(chan_o, 0, sizeof(struct de_vi));
++		else
++			memset_io(chan_o, 0, sizeof(struct de_ui));
++		if (chan == 2 && lcd_num != 0)
++			break;		/* lcd1 only 1 VI and 1 UI */
++	}
++
++	/* clear and set alpha blending */
++	memset_io(mux_o + DE_MUX_BLD_REGS, 0, offsetof(struct de_bld, dum0));
++	bld_write(mux_o + DE_MUX_BLD_REGS, fcolor_ctl, 0x00000101);
++						/* fcolor for primary */
++	bld_write(mux_o + DE_MUX_BLD_REGS, route, 0x0021);
++					/* prepare route primary and cursor */
++	bld_write(mux_o + DE_MUX_BLD_REGS, premultiply, 0);
++	bld_write(mux_o + DE_MUX_BLD_REGS, bkcolor, 0xff000000);
++	bld_write(mux_o + DE_MUX_BLD_REGS, bld_mode[0], 0x03010301);
++								/* SRCOVER */
++	bld_write(mux_o + DE_MUX_BLD_REGS, bld_mode[1], 0x03010301);
++	bld_write(mux_o + DE_MUX_BLD_REGS, bld_mode[2], 0x03010301);
++	bld_write(mux_o + DE_MUX_BLD_REGS, out_ctl, 0);
++
++	/* disable the enhancements */
++	writel_relaxed(0, mux_o + DE_MUX_VSU_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_GSU1_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_GSU2_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_GSU3_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_FCE_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_BWS_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_LTI_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_PEAK_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_ASE_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_FCC_REGS);
++	writel_relaxed(0, mux_o + DE_MUX_DCSC_REGS);
++
++	spin_unlock_irqrestore(&de_lock, flags);
++}
++
++void de2_de_disable(struct priv *priv, int lcd_num)
++{
++	u32 data;
++
++	data = ~(1 << lcd_num);
++	de_write(priv, DE_MOD_REG,
++			de_read(priv, DE_MOD_REG) & data);
++	de_write(priv, DE_GATE_REG,
++			de_read(priv, DE_GATE_REG) & data);
++	de_write(priv, DE_RESET_REG,
++			de_read(priv, DE_RESET_REG) & data);
++}
++
++int de2_de_init(struct priv *priv, struct device *dev)
++{
++	struct resource *res;
++	int ret;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	res = platform_get_resource(to_platform_device(dev),
++				IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(dev, "failed to get memory resource\n");
++		return -EINVAL;
++	}
++
++	priv->mmio = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->mmio)) {
++		dev_err(dev, "failed to map registers\n");
++		return PTR_ERR(priv->mmio);
++	}
++
++	priv->gate = devm_clk_get(dev, "gate");
++	if (IS_ERR(priv->gate)) {
++		dev_err(dev, "gate clock err %d\n", (int) PTR_ERR(priv->gate));
++		return PTR_ERR(priv->gate);
++	}
++
++	priv->clk = devm_clk_get(dev, "clock");
++	if (IS_ERR(priv->clk)) {
++		dev_err(dev, "video clock err %d\n", (int) PTR_ERR(priv->clk));
++		return PTR_ERR(priv->clk);
++	}
++
++	priv->rstc = devm_reset_control_get(dev, NULL);
++	if (IS_ERR(priv->rstc)) {
++		dev_err(dev, "reset controller err %d\n",
++				(int) PTR_ERR(priv->rstc));
++		return PTR_ERR(priv->rstc);
++	}
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++	ret = clk_prepare_enable(priv->gate);
++	if (ret)
++		goto err_gate;
++
++	/* the DE has a fixed clock rate */
++	clk_set_rate(priv->clk, DE_CORE_CLK_RATE);
++
++	ret = reset_control_deassert(priv->rstc);
++	if (ret) {
++		dev_err(dev, "reset deassert err %d\n", ret);
++		goto err_reset;
++	}
++
++	return 0;
++
++err_reset:
++	clk_disable_unprepare(priv->gate);
++err_gate:
++	clk_disable_unprepare(priv->clk);
++	return ret;
++}
++
++void de2_de_cleanup(struct priv *priv)
++{
++	reset_control_assert(priv->rstc);
++	clk_disable_unprepare(priv->gate);
++	clk_disable_unprepare(priv->clk);
++}
+diff --git a/drivers/gpu/drm/sunxi/de2_drm.h b/drivers/gpu/drm/sunxi/de2_drm.h
+new file mode 100644
+index 0000000..1e6cf6d
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_drm.h
+@@ -0,0 +1,40 @@
++#ifndef __DE2_DRM_H__
++#define __DE2_DRM_H__
++/*
++ * Copyright (C) 2016 Jean-François Moine
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/clk.h>
++#include <linux/reset.h>
++#include <drm/drmP.h>
++#include <drm/drm_fb_cma_helper.h>
++
++struct lcd;
++
++#define N_LCDS 2
++struct priv {
++	void __iomem *mmio;
++	struct clk *clk;
++	struct clk *gate;
++	struct reset_control *rstc;
++
++	struct drm_fbdev_cma *fbdev;
++
++	struct lcd *lcds[N_LCDS];
++};
++
++/* in de2_crtc.c */
++int de2_enable_vblank(struct drm_device *drm, unsigned crtc);
++void de2_disable_vblank(struct drm_device *drm, unsigned crtc);
++extern struct platform_driver de2_lcd_platform_driver;
++
++/* in de2_de.c */
++int de2_de_init(struct priv *priv, struct device *dev);
++void de2_de_cleanup(struct priv *priv);
++
++#endif /* __DE2_DRM_H__ */
+diff --git a/drivers/gpu/drm/sunxi/de2_drv.c b/drivers/gpu/drm/sunxi/de2_drv.c
+new file mode 100644
+index 0000000..bfb9100
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_drv.c
+@@ -0,0 +1,377 @@
++/*
++ * Allwinner DRM driver - DE2 DRM driver
++ *
++ * Copyright (C) 2016 Jean-Francois Moine <moinejf@free.fr>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/pm_runtime.h>
++#include <linux/of_graph.h>
++#include <linux/component.h>
++#include <drm/drm_of.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_gem_cma_helper.h>
++
++#include "de2_drm.h"
++
++#define DRIVER_NAME	"sunxi-de2"
++#define DRIVER_DESC	"Allwinner DRM DE2"
++#define DRIVER_DATE	"20160201"
++#define DRIVER_MAJOR	1
++#define DRIVER_MINOR	0
++
++static void de2_fb_output_poll_changed(struct drm_device *drm)
++{
++	struct priv *priv = drm->dev_private;
++
++	if (priv->fbdev)
++		drm_fbdev_cma_hotplug_event(priv->fbdev);
++}
++
++static const struct drm_mode_config_funcs de2_mode_config_funcs = {
++	.fb_create = drm_fb_cma_create,
++	.output_poll_changed = de2_fb_output_poll_changed,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++};
++
++/*
++ * DRM operations:
++ */
++static void de2_lastclose(struct drm_device *drm)
++{
++	struct priv *priv = drm->dev_private;
++
++	if (priv->fbdev)
++		drm_fbdev_cma_restore_mode(priv->fbdev);
++}
++
++static const struct file_operations de2_fops = {
++	.owner		= THIS_MODULE,
++	.open		= drm_open,
++	.release	= drm_release,
++	.unlocked_ioctl	= drm_ioctl,
++	.poll		= drm_poll,
++	.read		= drm_read,
++	.llseek		= no_llseek,
++	.mmap		= drm_gem_cma_mmap,
++};
++
++static struct drm_driver de2_drm_driver = {
++	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
++					DRIVER_ATOMIC,
++	.lastclose		= de2_lastclose,
++	.get_vblank_counter	= drm_vblank_no_hw_counter,
++	.enable_vblank		= de2_enable_vblank,
++	.disable_vblank		= de2_disable_vblank,
++	.gem_free_object	= drm_gem_cma_free_object,
++	.gem_vm_ops		= &drm_gem_cma_vm_ops,
++	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
++	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
++	.gem_prime_import	= drm_gem_prime_import,
++	.gem_prime_export	= drm_gem_prime_export,
++	.gem_prime_get_sg_table	= drm_gem_cma_prime_get_sg_table,
++	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
++	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
++	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
++	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
++	.dumb_create		= drm_gem_cma_dumb_create,
++	.dumb_map_offset	= drm_gem_cma_dumb_map_offset,
++	.dumb_destroy		= drm_gem_dumb_destroy,
++	.fops			= &de2_fops,
++	.name			= DRIVER_NAME,
++	.desc			= DRIVER_DESC,
++	.date			= DRIVER_DATE,
++	.major			= DRIVER_MAJOR,
++	.minor			= DRIVER_MINOR,
++};
++
++#ifdef CONFIG_PM_SLEEP
++/*
++ * Power management
++ */
++static int de2_pm_suspend(struct device *dev)
++{
++	struct drm_device *drm = dev_get_drvdata(dev);
++
++	drm_kms_helper_poll_disable(drm);
++	return 0;
++}
++
++static int de2_pm_resume(struct device *dev)
++{
++	struct drm_device *drm = dev_get_drvdata(dev);
++
++	drm_kms_helper_poll_enable(drm);
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops de2_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(de2_pm_suspend, de2_pm_resume)
++};
++
++/*
++ * Platform driver
++ */
++
++static int de2_drm_bind(struct device *dev)
++{
++	struct drm_device *drm;
++	struct priv *priv;
++	int ret;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	drm = drm_dev_alloc(&de2_drm_driver, dev);
++	if (!drm)
++		return -ENOMEM;
++
++	ret = drm_dev_set_unique(drm, dev_name(dev));
++	if (ret < 0)
++		goto out1;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv) {
++		dev_err(dev, "failed to allocate private area\n");
++		ret = -ENOMEM;
++		goto out1;
++	}
++
++	dev_set_drvdata(dev, drm);
++	drm->dev_private = priv;
++
++	drm_mode_config_init(drm);
++	drm->mode_config.min_width = 32;	/* needed for cursor */
++	drm->mode_config.min_height = 32;
++	drm->mode_config.max_width = 1920;
++	drm->mode_config.max_height = 1080;
++	drm->mode_config.funcs = &de2_mode_config_funcs;
++
++	ret = drm_dev_register(drm, 0);
++	if (ret < 0)
++		goto out2;
++
++	/* initialize the display engine */
++	ret = de2_de_init(priv, dev);
++	if (ret)
++		goto out3;
++
++	/* start the subdevices */
++	ret = component_bind_all(dev, drm);
++	if (ret < 0)
++		goto out3;
++
++	DRM_DEBUG_DRIVER("%d crtcs %d connectors\n",
++			 drm->mode_config.num_crtc,
++			 drm->mode_config.num_connector);
++
++	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
++	if (ret < 0)
++		dev_warn(dev, "failed to initialize vblank\n");
++
++	drm_mode_config_reset(drm);
++
++	priv->fbdev = drm_fbdev_cma_init(drm,
++					32,	/* bpp */
++					drm->mode_config.num_crtc,
++					drm->mode_config.num_connector);
++	if (IS_ERR(priv->fbdev)) {
++		ret = PTR_ERR(priv->fbdev);
++		priv->fbdev = NULL;
++		goto out4;
++	}
++
++	drm_kms_helper_poll_init(drm);
++
++	return 0;
++
++out4:
++	component_unbind_all(dev, drm);
++out3:
++	drm_dev_unregister(drm);
++out2:
++	kfree(priv);
++out1:
++	drm_dev_unref(drm);
++	return ret;
++}
++
++static void de2_drm_unbind(struct device *dev)
++{
++	struct drm_device *drm = dev_get_drvdata(dev);
++	struct priv *priv = drm->dev_private;
++
++	if (priv)
++		drm_fbdev_cma_fini(priv->fbdev);
++
++	drm_kms_helper_poll_fini(drm);
++
++	component_unbind_all(dev, drm);
++
++	drm_dev_unregister(drm);
++
++	drm_mode_config_cleanup(drm);
++
++	if (priv) {
++		de2_de_cleanup(priv);
++		kfree(priv);
++	}
++
++	drm_dev_unref(drm);
++}
++
++static const struct component_master_ops de2_drm_comp_ops = {
++	.bind = de2_drm_bind,
++	.unbind = de2_drm_unbind,
++};
++
++static int compare_of(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
++
++static int de2_drm_add_components(struct device *dev,
++				  int (*compare_of)(struct device *, void *),
++				  const struct component_master_ops *m_ops)
++{
++	struct device_node *ep, *port, *remote;
++	struct component_match *match = NULL;
++	int i;
++
++	if (!dev->of_node)
++		return -EINVAL;
++
++	/* bind the CRTCs */
++	for (i = 0; ; i++) {
++		port = of_parse_phandle(dev->of_node, "ports", i);
++		if (!port)
++			break;
++
++		if (!of_device_is_available(port->parent)) {
++			of_node_put(port);
++			continue;
++		}
++
++		component_match_add(dev, &match, compare_of, port->parent);
++		of_node_put(port);
++	}
++
++	if (i == 0) {
++		dev_err(dev, "missing 'ports' property\n");
++		return -ENODEV;
++	}
++	if (!match) {
++		dev_err(dev, "no available port\n");
++		return -ENODEV;
++	}
++
++	/* bind the encoders/connectors */
++	for (i = 0; ; i++) {
++		port = of_parse_phandle(dev->of_node, "ports", i);
++		if (!port)
++			break;
++
++		if (!of_device_is_available(port->parent)) {
++			of_node_put(port);
++			continue;
++		}
++
++		for_each_child_of_node(port, ep) {
++			remote = of_graph_get_remote_port_parent(ep);
++			if (!remote || !of_device_is_available(remote)) {
++				of_node_put(remote);
++				continue;
++			}
++			if (!of_device_is_available(remote->parent)) {
++				dev_warn(dev,
++					 "parent device of %s is not available\n",
++					 remote->full_name);
++				of_node_put(remote);
++				continue;
++			}
++
++			component_match_add(dev, &match, compare_of, remote);
++			of_node_put(remote);
++		}
++		of_node_put(port);
++	}
++
++	return component_master_add_with_match(dev, m_ops, match);
++}
++
++static int de2_drm_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	ret = de2_drm_add_components(&pdev->dev,
++				     compare_of,
++				     &de2_drm_comp_ops);
++	if (ret == -EINVAL)
++		ret = -ENXIO;
++	return ret;
++}
++
++static int de2_drm_remove(struct platform_device *pdev)
++{
++	component_master_del(&pdev->dev, &de2_drm_comp_ops);
++
++	return 0;
++}
++
++static struct of_device_id de2_drm_of_match[] = {
++	{ .compatible = "allwinner,sun8i-h3-display-engine" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, de2_drm_of_match);
++
++static struct platform_driver de2_drm_platform_driver = {
++	.probe      = de2_drm_probe,
++	.remove     = de2_drm_remove,
++	.driver     = {
++		.name = "sun8i-h3-display-engine",
++		.pm = &de2_pm_ops,
++		.of_match_table = de2_drm_of_match,
++	},
++};
++
++static int __init de2_drm_init(void)
++{
++	int ret;
++
++/* uncomment to activate the drm traces at startup time */
++/*	drm_debug = DRM_UT_CORE | DRM_UT_DRIVER | DRM_UT_KMS |
++			DRM_UT_PRIME | DRM_UT_ATOMIC; */
++
++	DRM_DEBUG_DRIVER("\n");
++
++	ret = platform_driver_register(&de2_lcd_platform_driver);
++	if (ret < 0)
++		return ret;
++
++	ret = platform_driver_register(&de2_drm_platform_driver);
++	if (ret < 0)
++		platform_driver_unregister(&de2_lcd_platform_driver);
++
++	return ret;
++}
++
++static void __exit de2_drm_fini(void)
++{
++	platform_driver_unregister(&de2_lcd_platform_driver);
++	platform_driver_unregister(&de2_drm_platform_driver);
++}
++
++module_init(de2_drm_init);
++module_exit(de2_drm_fini);
++
++MODULE_AUTHOR("Jean-Francois Moine <moinejf@free.fr>");
++MODULE_DESCRIPTION("Allwinner DE2 DRM Driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/sunxi/de2_plane.c b/drivers/gpu/drm/sunxi/de2_plane.c
+new file mode 100644
+index 0000000..ae3e13f
+--- /dev/null
++++ b/drivers/gpu/drm/sunxi/de2_plane.c
+@@ -0,0 +1,91 @@
++/*
++ * Allwinner DRM driver - DE2 planes
++ *
++ * Copyright (C) 2016 Jean-Francois Moine <moinejf@free.fr>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_plane_helper.h>
++#include <drm/drm_crtc_helper.h>
++
++#include "de2_drm.h"
++#include "de2_crtc.h"
++
++/* plane formats */
++static const uint32_t ui_formats[] = {
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_RGB888,
++	DRM_FORMAT_BGR888,
++};
++
++static void de2_plane_disable(struct drm_plane *plane,
++				struct drm_plane_state *old_state)
++{
++	struct drm_crtc *crtc = old_state->crtc;
++	struct lcd *lcd = crtc_to_lcd(crtc);
++	int plane_num = plane - lcd->planes;
++
++	de2_de_plane_disable(lcd->priv, lcd->num, plane_num);
++}
++
++static void de2_plane_update(struct drm_plane *plane,
++				struct drm_plane_state *old_state)
++{
++	struct drm_plane_state *state = plane->state;
++	struct drm_crtc *crtc = state->crtc;
++	struct lcd *lcd = crtc_to_lcd(crtc);
++	struct drm_framebuffer *fb = state->fb;
++	int plane_num = plane - lcd->planes;
++
++	if (!crtc || !fb) {
++		DRM_DEBUG_DRIVER("no crtc/fb\n");
++		return;
++	}
++
++	de2_de_plane_update(lcd->priv, lcd->num, plane_num,
++			    state, old_state);
++}
++
++static const struct drm_plane_helper_funcs plane_helper_funcs = {
++	.atomic_disable = de2_plane_disable,
++	.atomic_update = de2_plane_update,
++};
++
++static const struct drm_plane_funcs plane_funcs = {
++	.update_plane = drm_atomic_helper_update_plane,
++	.disable_plane = drm_atomic_helper_disable_plane,
++	.destroy = drm_plane_cleanup,
++	.reset = drm_atomic_helper_plane_reset,
++	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
++};
++
++int de2_plane_init(struct drm_device *drm, struct lcd *lcd)
++{
++	int ret, i;
++
++	for (i = 0; i < ARRAY_SIZE(lcd->planes); i++) {
++		ret = drm_universal_plane_init(drm, &lcd->planes[i], 0,
++					&plane_funcs,
++					ui_formats, ARRAY_SIZE(ui_formats),
++					i == DE2_PRIMARY_PLANE ?
++						DRM_PLANE_TYPE_PRIMARY :
++						DRM_PLANE_TYPE_CURSOR,
++					NULL);
++		if (ret < 0) {
++			dev_err(lcd->dev,
++				"Couldn't initialize plane err %d\n", ret);
++			return ret;
++		}
++		drm_plane_helper_add(&lcd->planes[i],
++				     &plane_helper_funcs);
++	}
++
++	return 0;
++}
+-- 
+2.7.0
+
+
+--===============0997900728==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0997900728==--
