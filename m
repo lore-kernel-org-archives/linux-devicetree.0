@@ -1,77 +1,158 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
- ACT8945A
-Date: Tue, 2 Feb 2016 02:26:29 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D6400956@penmbx01>
-References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
-	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
-	<20160129001603.GM4130@sirena.org.uk>
-	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
-	<20160129113518.GQ4130@sirena.org.uk>
-	<CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
-	<B256D81BAE5131468A838E5D7A243641D63FE2C7@penmbx01>
- <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 1/8] ARM: dts: rockchip: add hdmi/vop device node for rk3036
+Date: Tue,  2 Feb 2016 11:40:50 +0800
+Message-ID: <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
+References: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1454384032-6794-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmF2aWVyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEphdmll
-ciBNYXJ0aW5leiBDYW5pbGxhcyBbbWFpbHRvOmphdmllckBkb3doaWxlMC5vcmddDQo+IFNlbnQ6
-IDIwMTblubQy5pyIMeaXpSAyMToxNQ0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0Bh
-dG1lbC5jb20+DQo+IENjOiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+OyBMaWFtIEdp
-cmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPjsNCj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
-bmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT47IElhbg0KPiBDYW1wYmVs
-bCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBHYWxhIDxnYWxha0Bjb2Rl
-YXVyb3JhLm9yZz47DQo+IEtyenlzenRvZiBLb3psb3dza2kgPGsua296bG93c2tpQHNhbXN1bmcu
-Y29tPjsgTGVlIEpvbmVzDQo+IDxsZWUuam9uZXNAbGluYXJvLm9yZz47IFBldGVyIEtvcnNnYWFy
-ZCA8amFjbWV0QGdtYWlsLmNvbT47IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0
-bWVsLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+
-IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBhZGQgcmVndWxh
-dG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+IEhlbGxvIFdlbnlvdSwNCj4gDQo+IFtz
-bmlwXQ0KPiANCj4gPj4gPg0KPiA+PiA+IElmIHRoZW4gZGV2aWNlIGlzIG5vdCBiZWluZyBsb2Fk
-ZWQgZnJvbSB0aGUgRFQgKGFuZCBpdCBzaG91bGRuJ3QNCj4gPj4gPiBiZSwgdGhlIGRldmljZSBs
-b29rcyBsaWtlIGl0IHNob3VsZCBiZSBpbnN0YW50aWF0ZWQgZGlyZWN0bHkgYnkgdGhlDQo+ID4+
-ID4gTUZEIGFzIGl0IGNhbid0IGV4aXN0IHNlcGFyYXRlbHkgdG8gdGhhdCBNRkQpIGFuIE9GIHRh
-YmxlIHdpbGwgZG8gbm90aGluZy4NCj4gPj4NCj4gPj4gVGhlbiBoZSBzaG91bGQgcmVtb3ZlIHRo
-ZSAub2ZfY29tcGF0aWJsZSBmcm9tIHRoZSBNRkQgY2VsbCBkZWZpbml0aW9uLg0KPiA+DQo+ID4g
-SSB0cmllZCBpdCwNCj4gPg0KPiA+IEJ1dCBpZiByZW1vdmVkIHRoaXMgLm9mX2NvbXBhdGlibGUs
-IGFuZCByZXNlcnZlZCB0aGUgT0YgdGFibGUuDQo+IA0KPiBXaGF0IHdlIHNhaWQgaXMgdGhhdCB5
-b3Ugc2hvdWxkIHJlbW92ZSBib3RoIHRoZSBtZmQgY2VsbCAub2ZfY29tcGF0aWJsZSBmaWVsZCBh
-bmQNCj4gdGhlIE9GIHRhYmxlLiBPZiBjb3Vyc2UgcmVtb3Zpbmcgb25lIGJ1dCBsZWF2aW5nIHRo
-ZSBvdGhlciBpcyBub3QgY29ycmVjdC4NCg0KSSBhbSBjb25mdXNlZCA6KQ0KDQo+IA0KPiA+IHRo
-ZSAmcGRldi0+ZGV2LT5vZl9ub2RlIGlzIE5VTEwsIHRoZSBkcml2ZXIgZmFpbHMgdG8gZ2V0IHRo
-ZQ0KPiA+IGNvbmZpZ3VyYXRpb24gdmFsdWUgZnJvbSBEVCwNCj4gPg0KPiANCj4gSSBzZWUsIHlv
-dSBtZWFuIHRoYXQgeW91IGFyZSBub3QgYWJsZSB0byBsb29rdXAgdGhlICJhY3RpdmUtc2VtaSx2
-c2VsLWhpZ2giDQo+IHByb3BlcnR5Lg0KDQpObyBvbmx5IHRoaXMgcHJvcGVydHksDQoNClRoZSBy
-ZWd1bGF0b3IgaW5pdF9kYXRhcyBhcmUgYWxzbyBub3QgZ290dGVuIGZyb20gRFQgZHVlIHRvIHRo
-ZSAmcGRldi0+ZGV2LT5vZl9ub2RlIGlzIE5VTEwuDQoNCj4gDQo+ID4gSXQgc2VlbXMgdGhlIE9G
-IHRhYmxlIHN0aWxsIGRvZXNuJ3Qgd29yay4gV2hlcmUgaXMgd3Jvbmc/DQo+ID4NCj4gDQo+IEkg
-dGhpbmsgdGhlIHByb2JsZW0gaXMgd2l0aCB5b3VyIERUIGJpbmRpbmcuIFlvdSBoYXZlIGEgUE1J
-QyBkZXYgbm9kZSB3aXRoDQo+IGNvbXBhdGlibGUgImFjdGl2ZS1zZW1pLGFjdDg5NDVhIiB0aGF0
-IGhhcyBhIGNoaWxkIG5vZGUgd2l0aCBjb21wYXRpYmxlICJhY3RpdmUtDQo+IHNlbWksYWN0ODk0
-NWEtcmVndWxhdG9yIiB3aGljaCBpbiB0dXJuIGhhcyB0aGUgInJlZ3VsYXRvcnMiIG5vZGUuDQo+
-IA0KPiBJIGJlbGlldmUgd2hhdCBNYXJrIHNheXMgaXMgdGhhdCB0aGVyZSBzaG91bGRuJ3QgYmUg
-YSBjb21wYXRpYmxlIGFuZCBub2RlIGZvciB0aGUNCj4gcmVndWxhdG9ycyBJQyBzaW5jZSBpcyBw
-YXJ0IG9mIHRoZSBQTUlDLiBJT1csIHlvdSBjYW4ndCBoYXZlIGl0IGFzIGEgc3RhbmRhbG9uZQ0K
-PiBub2RlIGluIHRoZSBEVFMuDQo+IA0KPiA+IENvdWxkIHlvdSBoZWxwIGdpdmUgc29tZSBzdWdn
-ZXN0aW9uPw0KPiA+DQo+IA0KPiBJIHdvdWxkIGp1c3QgcmVtb3ZlIHRoZSAiYWN0aXZlLXNlbWks
-YWN0ODk0NWEtcmVndWxhdG9yIiBub2RlIGFuZCBtYWtlICJhY3RpdmUtDQo+IHNlbWksdnNlbC1o
-aWdoIiBhIHByb3BlcnR5IG9mIHRoZSAiYWN0aXZlLXNlbWksYWN0ODk0NWEiIG5vZGUuDQo+IFRo
-YXQgd2F5IHlvdSBjYW4gcmVtb3ZlIHRoZSBtZmQgY2VsbCAub2ZfY29tcGF0aWJsZSBhbmQgT0Yg
-dGFibGUgaW4gdGhlDQo+IHJlZ3VsYXRvciBkcml2ZXIgYW5kIHJlYWQgdGhlICJhY3RpdmUtc2Vt
-aSx2c2VsLWhpZ2giIHVzaW5nIHRoZSBwbGF0Zm9ybSBkZXZpY2Uncw0KPiBwYXJlbnQgb2Zfbm9k
-ZS4NCj4gDQo+IEJ1dCBpdCdzIGJldHRlciBpZiB5b3Ugd2FpdCBmb3IgTWFyaydzIG9waW5pb25z
-IGJlZm9yZSByZS1zcGluaW5nIHlvdXIgcGF0Y2hlcy4NCg0KQWxsIHJpZ2h0Lg0KDQo+IA0KPiBC
-ZXN0IHJlZ2FyZHMsDQo+IEphdmllcg0KDQpUaGFua3MgDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2Vu
-eW91IFlhbmcNCg==
+This patch adds the needed display info for rk3036 SOCs.
+
+The rk3036 support two overlay plane and one hwc plane,
+it supports IOMMU, and its IOMMU same as rk3288's.
+Meanwhile, add the inno hdmi for HDMI display.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+---
+
+Changes in v5: None
+Changes in v4:
+- solve the lastest conflict, picked up from
+  https://patchwork.kernel.org/patch/8040961/.
+
+ arch/arm/boot/dts/rk3036-kylin.dts | 12 +++++++
+ arch/arm/boot/dts/rk3036.dtsi      | 66 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 3332a7f..1037ad6 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -116,6 +116,10 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
+ &i2c1 {
+ 	clock-frequency = <400000>;
+ 
+@@ -369,6 +373,14 @@
+ 	status = "okay";
+ };
+ 
++&vop {
++	status = "okay";
++};
++
++&vop_mmu {
++	status = "okay";
++};
++
+ &pinctrl {
+ 	leds {
+ 		led_ctl: led-ctl {
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 7897449..7abe3e2 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -147,6 +147,42 @@
+ 		};
+ 	};
+ 
++	vop: vop@10118000 {
++		compatible = "rockchip,rk3036-vop";
++		reg = <0x10118000 0x19c>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_LCDC>, <&cru SCLK_LCDC>, <&cru HCLK_LCDC>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		resets = <&cru SRST_LCDC1_A>, <&cru SRST_LCDC1_H>, <&cru SRST_LCDC1_D>;
++		reset-names = "axi", "ahb", "dclk";
++		iommus = <&vop_mmu>;
++
++		status = "disabled";
++
++		vop_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			vop_out_hdmi: endpoint@0 {
++				reg = <1>;
++				remote-endpoint = <&hdmi_in_vop>;
++			};
++		};
++	};
++
++	display-subsystem {
++		compatible = "rockchip,display-subsystem";
++		ports = <&vop_out>;
++	};
++
++	vop_mmu: iommu@10118300 {
++		compatible = "rockchip,iommu";
++		reg = <0x10118300 0x100>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vop_mmu";
++		#iommu-cells = <0>;
++		status = "disabled";
++	};
++
+ 	gic: interrupt-controller@10139000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
+@@ -274,6 +310,27 @@
+ 		status = "disabled";
+ 	};
+ 
++	hdmi: hdmi@20034000 {
++		compatible = "rockchip,rk3036-inno-hdmi";
++		reg = <0x20034000 0x4000>;
++		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru  PCLK_HDMI>;
++		clock-names = "pclk";
++		rockchip,grf = <&grf>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmi_ctl>;
++		status = "disabled";
++
++		hdmi_in: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			hdmi_in_vop: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&vop_out_hdmi>;
++			};
++		};
++	};
++
+ 	timer: timer@20044000 {
+ 		compatible = "rockchip,rk3036-timer", "rockchip,rk3288-timer";
+ 		reg = <0x20044000 0x20>;
+@@ -588,6 +645,15 @@
+ 			};
+ 		};
+ 
++		hdmi {
++			hdmi_ctl: hdmi-ctl {
++				rockchip,pins = <1 8  RK_FUNC_1 &pcfg_pull_none>,
++						<1 9  RK_FUNC_1 &pcfg_pull_none>,
++						<1 10 RK_FUNC_1 &pcfg_pull_none>,
++						<1 11 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
+ 		uart0 {
+ 			uart0_xfer: uart0-xfer {
+ 				rockchip,pins = <0 16 RK_FUNC_1 &pcfg_pull_default>,
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
