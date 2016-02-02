@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 09/11] ARM: dts: sun9i: cubieboard4: Add AXP809
- PMIC device node and regulators
-Date: Tue,  2 Feb 2016 18:27:42 +0800
-Message-ID: <1454408864-24112-10-git-send-email-wens@csie.org>
+Subject: [PATCH 04/11] regulator: axp20x: Remove voltage readout
+ support for switch regulators
+Date: Tue,  2 Feb 2016 18:27:37 +0800
+Message-ID: <1454408864-24112-5-git-send-email-wens@csie.org>
 References: <1454408864-24112-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNEJYK2QKGQEKY3FRWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBM4JYK2QKGQESCX5ZBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1454408864-24112-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,160 +20,64 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP809 PMIC is the primary PMIC. It provides various supply voltages
-for the SoC and other peripherals. The PMIC's interrupt line is connected
-to NMI pin of the SoC.
+Switch-type regulators, such as DC1SW on AXP22X, are a secondary output
+from DCDC1. They are just an on/off switch, and the driver should not
+try to read its voltage directly from the DCDC1 control registers.
+
+Instead, the core will pass down the voltage from the regulator supply
+chain.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 121 +++++++++++++++++++++++++++-
- 1 file changed, 119 insertions(+), 2 deletions(-)
+ drivers/regulator/axp20x-regulator.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index eb2ccd0a3bd5..4d56dc69713c 100644
---- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -98,7 +98,7 @@
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
--	vmmc-supply = <&reg_vcc3v0>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH18 */
- 	cd-inverted;
-@@ -108,7 +108,7 @@
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_8bit_pins>;
--	vmmc-supply = <&reg_vcc3v0>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <8>;
- 	non-removable;
- 	cap-mmc-hw-reset;
-@@ -126,6 +126,123 @@
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index e86d1fc2d80b..f31d238e85e8 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -78,8 +78,7 @@
+ 		.ops		= &axp20x_ops,					\
+ 	}
  
- &r_rsb {
- 	status = "okay";
-+
-+	axp809: pmic@3a3 {
-+		reg = <0x3a3>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp809.dtsi"
-+
-+&reg_aldo1 {
-+	/* TODO: This should be handled by the USB PHY driver */
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc33-usbh";
-+};
-+
-+&reg_aldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pb-io-cam";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <800000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpus-09-usbh";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-3v";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-min-microvolt = <800000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-gpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <800000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpua";
-+};
-+
-+&reg_dcdc4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <800000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-sys-usb0-hdmi";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1425000>;
-+	regulator-max-microvolt = <1575000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dldo1 {
-+	/*
-+	 * The WiFi chip supports a wide range (3.0 ~ 4.8V) of voltages,
-+	 * and so does this regulator (3.0 ~ 4.2V), but Allwinner SDK
-+	 * always sets it to 3.3V.
-+	 */
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-pl";
-+};
-+
-+&reg_eldo1 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-dvdd-cam";
-+};
-+
-+&reg_eldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pe";
-+};
-+
-+&reg_eldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-pm-codec-io1";
-+};
-+
-+&reg_ldo_io0 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-pg";
-+};
-+
-+&reg_ldo_io1 {
-+	regulator-min-microvolt = <2500000>;
-+	regulator-max-microvolt = <2500000>;
-+	regulator-name = "vcc-pa-gmac-2v5";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc-vdd1v8-io";
+-#define AXP_DESC_SW(_family, _id, _match, _supply, _min, _max, _step, _vreg,	\
+-		    _vmask, _ereg, _emask) 					\
++#define AXP_DESC_SW(_family, _id, _match, _supply, _ereg, _emask)		\
+ 	[_family##_##_id] = {							\
+ 		.name		= #_id,						\
+ 		.supply_name	= (_supply),					\
+@@ -87,12 +86,7 @@
+ 		.regulators_node = of_match_ptr("regulators"),			\
+ 		.type		= REGULATOR_VOLTAGE,				\
+ 		.id		= _family##_##_id,				\
+-		.n_voltages	= (((_max) - (_min)) / (_step) + 1),		\
+ 		.owner		= THIS_MODULE,					\
+-		.min_uV		= (_min) * 1000,				\
+-		.uV_step	= (_step) * 1000,				\
+-		.vsel_reg	= (_vreg),					\
+-		.vsel_mask	= (_vmask),					\
+ 		.enable_reg	= (_ereg),					\
+ 		.enable_mask	= (_emask),					\
+ 		.ops		= &axp20x_ops_sw,				\
+@@ -160,8 +154,6 @@ static struct regulator_ops axp20x_ops = {
  };
  
- &uart0 {
+ static struct regulator_ops axp20x_ops_sw = {
+-	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+-	.list_voltage		= regulator_list_voltage_linear,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
+ 	.is_enabled		= regulator_is_enabled_regmap,
+@@ -196,8 +188,8 @@ static const struct regulator_desc axp22x_regulators[] = {
+ 	AXP_DESC(AXP22X, DCDC5, "dcdc5", "vin5", 1000, 2550, 50,
+ 		 AXP22X_DCDC5_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(5)),
+ 	/* secondary switchable output of DCDC1 */
+-	AXP_DESC_SW(AXP22X, DC1SW, "dc1sw", NULL, 1600, 3400, 100,
+-		    AXP22X_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(7)),
++	AXP_DESC_SW(AXP22X, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
++		    BIT(7)),
+ 	/* LDO regulator internally chained to DCDC5 */
+ 	AXP_DESC(AXP22X, DC5LDO, "dc5ldo", NULL, 700, 1400, 100,
+ 		 AXP22X_DC5LDO_V_OUT, 0x7, AXP22X_PWR_OUT_CTRL1, BIT(0)),
 -- 
 2.7.0
