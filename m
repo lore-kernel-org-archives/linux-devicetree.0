@@ -1,46 +1,136 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] Input: rotary-encoder - make use of devm_* to
- simplify .probe and .remove
-Date: Tue, 2 Feb 2016 14:00:22 +0100
-Message-ID: <20160202130022.GX13664@pengutronix.de>
-References: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1454408678-6011-2-git-send-email-u.kleine-koenig@pengutronix.de>
- <56B09968.9050705@zonque.org>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] clockevents/drivers: add MPS2 Timer driver
+Date: Tue, 2 Feb 2016 14:04:29 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1602021351440.25254@nanos>
+References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com> <1454413199-26573-3-git-send-email-vladimir.murzin@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B09968.9050705@zonque.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454413199-26573-3-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 12:56:24PM +0100, Daniel Mack wrote:
-> On 02/02/2016 11:24 AM, Uwe Kleine-K=F6nig wrote:
-> > For all operations called in .probe there are devm_* variants.
-> > (input_register_device is clever enough to be devm aware on its own=
-=2E)
-> > This allows to get rid of the error unwind code paths in .probe and=
- the
-> > complete .remove function.
->=20
-> While at it, could you also convert this over to the gpiod_* API?
+On Tue, 2 Feb 2016, Vladimir Murzin wrote:
+> +static int __init mps2_clockevent_init(struct device_node *np)
+> +{
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	struct clockevent_mps2 *ce;
+> +	u32 rate;
+> +	int irq, ret;
+> +	const char *name = "mps2-clkevt";
+> +
+> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+> +	if (ret) {
+> +		clk = of_clk_get(np, 0);
+> +		if (IS_ERR(clk)) {
+> +			ret = PTR_ERR(clk);
+> +			pr_err("failed to get clock for clockevent: %d\n", ret);
+> +			goto err_clk_get;
+> +		}
+> +
+> +		ret = clk_prepare_enable(clk);
+> +		if (ret) {
+> +			pr_err("failed to enable clock for clockevent: %d\n", ret);
+> +			clk_put(clk);
+> +			goto err_clk_enable;
+> +		}
+> +
+> +		rate = clk_get_rate(clk);
+> +	}
 
-This is done in patch 3.
+So in case that "clock-frequency" is available in DT, what enables and
+configures the clock?
 
-Best regards
-Uwe
+> +err_ia_alloc:
+> +	kfree(ce);
+> +err_ce_alloc:
+> +err_get_irq:
+> +	iounmap(base);
+> +err_iomap:
+> +	clk_disable_unprepare(clk);
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+clk is not initialized when "clock-frequency" is available in DT. The compiler
+should have told you ....
+
+> +err_clk_enable:
+> +	clk_put(clk);
+
+Put without get ....
+
+> +static int __init mps2_clocksource_init(struct device_node *np)
+> +{
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	u32 rate;
+> +	int ret;
+> +	const char *name = "mps2-clksrc";
+> +
+> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+> +	if (ret) {
+> +		clk = of_clk_get(np, 0);
+> +		if (IS_ERR(clk)) {
+> +			ret = PTR_ERR(clk);
+> +			pr_err("failed to get clock for clocksource: %d\n", ret);
+> +			goto err_clk_get;
+> +		}
+> +
+> +		ret = clk_prepare_enable(clk);
+> +		if (ret) {
+> +			pr_err("failed to enable clock for clocksource: %d\n", ret);
+> +			clk_put(clk);
+> +			goto err_clk_enable;
+> +		}
+> +
+> +		rate = clk_get_rate(clk);
+> +	}
+
+Same problem as above.
+
+> +err_clocksource_init:
+> +	iounmap(base);
+> +err_iomap:
+> +	clk_disable_unprepare(clk);
+
+Ditto.
+
+> +err_clk_enable:
+> +	clk_put(clk);
+
+Ditto.
+
+> +err_clk_get:
+> +	return ret;
+> +}
+> +
+> +static void __init mps2_timer_init(struct device_node *np)
+> +{
+> +	static int has_clocksource, has_clockevent;
+> +	int ret;
+> +
+> +	if (!has_clocksource) {
+> +		ret = mps2_clocksource_init(np);
+> +		if (!ret) {
+> +			has_clocksource = 1;
+> +			return;
+> +		}
+> +	}
+> +
+> +	if (!has_clockevent) {
+> +		ret = mps2_clockevent_init(np);
+> +		if (!ret) {
+> +			has_clockevent = 1;
+> +			return;
+> +		}
+> +	}
+
+You take randomly the first timer as clocksource and the second one as
+clockevent. If clocksource init fails, you try to install it as clockevent.
+
+Sorry, but I really cannot follow the logic here.
+
+Thanks,
+
+	tglx
