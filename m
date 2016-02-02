@@ -1,114 +1,140 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v10 4/8] mfd: fsl imx25 Touchscreen ADC driver
-Date: Tue, 02 Feb 2016 12:41:40 +0100
-Message-ID: <6151166.y0HMDdqtvF@adelgunde>
-References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de> <1450101234-2191-5-git-send-email-mpa@pengutronix.de> <20160111065441.GW3331@x1>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2458794.MQBc4Lxljv"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160111065441.GW3331@x1>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?ISO-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: [PATCH v2 08/10] ARM: configs: add MPS2 defconfig
+Date: Tue,  2 Feb 2016 11:39:57 +0000
+Message-ID: <1454413199-26573-9-git-send-email-vladimir.murzin@arm.com>
+References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de
+Cc: andy.shevchenko@gmail.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds a new config for MPS2 platform.
 
---nextPart2458794.MQBc4Lxljv
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+---
+ arch/arm/configs/mps2_defconfig |  112 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+ create mode 100644 arch/arm/configs/mps2_defconfig
 
-Hi,
-
-On Monday, January 11, 2016 06:54:41 AM Lee Jones wrote:
-> On Mon, 14 Dec 2015, Markus Pargmann wrote:
->=20
-> > This is the core driver for imx25 touchscreen/adc driver. The modul=
-e
-> > has one shared ADC and two different conversion queues which use th=
-e
-> > ADC. The two queues are identical. Both can be used for general pur=
-pose
-> > ADC but one is meant to be used for touchscreens.
-> >=20
-> > This driver is the core which manages the central components and
-> > registers of the TSC/ADC unit. It manages the IRQs and forwards the=
-m to
-> > the correct components.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > [ensure correct ADC clock depending on the IPG clock]
-> > Signed-off-by: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >=20
-> > Notes:
-> >     Changes in v7:
-> >      - Cleanup bit defines in header files to be more readable
-> >      - Fix irq check to return with an error for irq <=3D 0
-> >      - Add COMPILE_TEST in Kconfig file
-> >    =20
-> >     Changes in v5:
-> >      - Remove ifdef CONFIG_OF as this driver is only for DT usage
-> >      - Remove module owner
-> >      - Add Kconfig dependencies ARCH_MX25 and OF
-> >=20
-> >  drivers/mfd/Kconfig             |   9 ++
-> >  drivers/mfd/Makefile            |   2 +
-> >  drivers/mfd/fsl-imx25-tsadc.c   | 203 ++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/imx25-tsadc.h | 140 +++++++++++++++++++++++++++
-> >  4 files changed, 354 insertions(+)
-> >  create mode 100644 drivers/mfd/fsl-imx25-tsadc.c
-> >  create mode 100644 include/linux/mfd/imx25-tsadc.h
->=20
-> For my own reference:
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> I will apply this and sent out pull-requests to the relevant
-> maintainers once -rc1 is out.
-
-Thanks. Do you mean just this patch or the whole series?
-
-Shall I resend the whole series to fix the commit title of the first
-patch?
-
-Best Regards,
-
-Markus
-
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart2458794.MQBc4Lxljv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWsJX0AAoJEEpcgKtcEGQQjNcP/214dQVDTNzK8gpUr6sMUCoF
-L8b8setMn+y+qAQTQD+hJNCfSUMP7O5SFvR+k54XxmBvJxRzrSiGWKFHwBO2lkGu
-zjCVNs8CFn941cBYYn44NKm7q7u11vBq74K0tpercVppG7q/mXkasDJz86Ni+wlN
-FZ2jzGCqT+ct/ZV+AfuSMRc93A5ya2oFIajLw0/KnuR3/TbNKF/NpjFfFgQjyFtg
-w+wdLQ19TxlldDJU8KEKs7dR5ComTNul9JSA+y4SHaiGcLEuR/mCUFhvtOB2S4ys
-UgKhB8XkVVG6fHTBjqQgm9Gu3c9lvTnQKfyd1ywopfv1WH3bR4bU1/Pe3Rb8zEuz
-WoFxgRWiDiPcNTeoO0g0M8uYu8WT4n7cMh/oZ6r1tncn5okPhm3dSeyH0GggpXJ3
-saHc0YeMno3FLoE5sV7Sf5QL+IBM6tK5aB/BpPrTJbP05CFJsPp53gkXLO+UaQxK
-wXnbRxBSynd3xLOjf8eQcZRAnRl6PJc7sGhV7AL9wLJaYXO/uLwKWL93ZEkvxx4/
-at63+vTqw804s9eIxEFDJhUqQ7TpJX7JX09xR7SXuo0r0QLbODu9HLT2nHg0IibJ
-8a3f7+LJuNlklffNdmvphN2DZogT6njaqDkiok4qoJ7uyREUjK44B7DoByH/e4/9
-W4RVRyuZ4wjwXj73dpH4
-=t7PK
------END PGP SIGNATURE-----
-
---nextPart2458794.MQBc4Lxljv--
+diff --git a/arch/arm/configs/mps2_defconfig b/arch/arm/configs/mps2_defconfig
+new file mode 100644
+index 0000000..c36c519
+--- /dev/null
++++ b/arch/arm/configs/mps2_defconfig
+@@ -0,0 +1,112 @@
++# CONFIG_USELIB is not set
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_LOG_BUF_SHIFT=16
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++# CONFIG_UID16 is not set
++# CONFIG_BASE_FULL is not set
++# CONFIG_FUTEX is not set
++# CONFIG_EPOLL is not set
++# CONFIG_SIGNALFD is not set
++# CONFIG_EVENTFD is not set
++# CONFIG_AIO is not set
++CONFIG_EMBEDDED=y
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_SLUB_DEBUG is not set
++# CONFIG_BLOCK is not set
++# CONFIG_MMU is not set
++CONFIG_ARM_SINGLE_ARMV7M=y
++CONFIG_ARCH_MPS2=y
++CONFIG_SET_MEM_PARAM=y
++CONFIG_DRAM_BASE=0x21000000
++CONFIG_DRAM_SIZE=0x1000000
++CONFIG_PREEMPT_VOLUNTARY=y
++# CONFIG_ATAGS is not set
++CONFIG_ZBOOT_ROM_TEXT=0x0
++CONFIG_ZBOOT_ROM_BSS=0x0
++CONFIG_BINFMT_FLAT=y
++CONFIG_BINFMT_SHARED_FLAT=y
++# CONFIG_COREDUMP is not set
++# CONFIG_SUSPEND is not set
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_INET_LRO is not set
++# CONFIG_INET_DIAG is not set
++# CONFIG_IPV6 is not set
++# CONFIG_WIRELESS is not set
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_FW_LOADER is not set
++CONFIG_NETDEVICES=y
++# CONFIG_NET_CORE is not set
++# CONFIG_NET_VENDOR_ARC is not set
++# CONFIG_NET_CADENCE is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_EZCHIP is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_HISILICON is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_QUALCOMM is not set
++# CONFIG_NET_VENDOR_RENESAS is not set
++# CONFIG_NET_VENDOR_ROCKER is not set
++# CONFIG_NET_VENDOR_SAMSUNG is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++CONFIG_SMSC911X=y
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++# CONFIG_WLAN is not set
++# CONFIG_INPUT is not set
++# CONFIG_SERIO is not set
++# CONFIG_VT is not set
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_SERIAL_NONSTANDARD=y
++# CONFIG_DEVKMEM is not set
++CONFIG_SERIAL_MPS2_UART_CONSOLE=y
++CONFIG_SERIAL_MPS2_UART=y
++# CONFIG_HW_RANDOM is not set
++# CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_ARM_SP805_WATCHDOG=y
++CONFIG_MFD_SYSCON=y
++# CONFIG_USB_SUPPORT is not set
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_SYSCON=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_BACKLIGHT=y
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_ARM_TIMER_SP804=y
++# CONFIG_DNOTIFY is not set
++# CONFIG_INOTIFY_USER is not set
++# CONFIG_MISC_FILESYSTEMS is not set
++CONFIG_NFS_FS=y
++CONFIG_NFS_V4=y
++CONFIG_NFS_V4_1=y
++CONFIG_NFS_V4_2=y
++CONFIG_ROOT_NFS=y
++CONFIG_NLS=y
++CONFIG_PRINTK_TIME=y
++CONFIG_DEBUG_INFO=y
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_DEBUG_BUGVERBOSE is not set
++CONFIG_MEMTEST=y
+-- 
+1.7.9.5
