@@ -1,105 +1,57 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v5 8/8] ARM: dts: rockchip: support the spi for rk3036
-Date: Tue,  2 Feb 2016 11:40:53 +0800
-Message-ID: <1454384453-7127-4-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v5 5/8] ASoC: rt5616: add mclk property for rt5616 document
+Date: Tue,  2 Feb 2016 11:44:38 +0800
+Message-ID: <1454384680-7197-1-git-send-email-wxt@rock-chips.com>
 References: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
- <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, keescook@google.com, linux-kernel@vger.kernel.org, jeffy.chen@rock-chips.com, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>
+To: broonie@kernel.org, bardliao@realtek.com
+Cc: alsa-devel@alsa-project.org, oder_chiou@realtek.com, robh+dt@kernel.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, keescook@google.com, linux-kernel@vger.kernel.org, jeffy.chen@rock-chips.com, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the needed spi node for rk3036 dts.
+This patch adds the mclk property for the CODEC driver,
+since sometimes the CODEC driver needs the clock enabled.
 
-We have to use the 4 bus emmc to work if someone want to support
-the spi devices, since the pins are re-used by emmc data[5-8] and spi.
-In some caseswe need to support the spi devices, that will waste the
-emmc performance.
-
-Moment, the kylin/evb hasn't the spi devices to work, so maybe we need wait
-the new required to enable in kylin/evb board.
-
-Anyway, the spi should be needed land in rk3036 dts.
+The system clock of ALC5616 can be selected from MCLK,
+That also makes the codec the master clock provider.
 
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+
+Cc:  alsa-devel@alsa-project.org
+Cc:  Mark Brown <broonie@kernel.org>
+Cc:  Bard Liao <bardliao@realtek.com>
 
 ---
 
 Changes in v5:
-- Remove the unused, as Heiko comments on https://patchwork.kernel.org/patch/8147761/
-- Modify the commit.
+- Fix the wrong word, as the Rob comments on
+  https://patchwork.kernel.org/patch/8147731/.
+- Cc the related alsa experts.
 
 Changes in v4:
 - Add this patch included in kylin series patches.
 
- arch/arm/boot/dts/rk3036.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ Documentation/devicetree/bindings/sound/rt5616.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 532f232..30bb316 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -60,6 +60,7 @@
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-+		spi = &spi;
- 	};
+diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
+index efc48c6..e410858 100644
+--- a/Documentation/devicetree/bindings/sound/rt5616.txt
++++ b/Documentation/devicetree/bindings/sound/rt5616.txt
+@@ -8,6 +8,12 @@ Required properties:
  
- 	memory {
-@@ -485,6 +486,21 @@
- 		status = "disabled";
- 	};
+ - reg : The I2C address of the device.
  
-+	spi: spi@20074000 {
-+		compatible = "rockchip,rockchip-spi";
-+		reg = <0x20074000 0x1000>;
-+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks =<&cru PCLK_SPI>, <&cru SCLK_SPI>;
-+		clock-names = "apb-pclk","spi_pclk";
-+		dmas = <&pdma 8>, <&pdma 9>;
-+		dma-names = "tx", "rx";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi_txd &spi_rxd &spi_clk &spi_cs0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
++Optional properties:
 +
- 	pinctrl: pinctrl {
- 		compatible = "rockchip,rk3036-pinctrl";
- 		rockchip,grf = <&grf>;
-@@ -723,5 +739,29 @@
- 			};
- 			/* no rts / cts for uart2 */
- 		};
++- clocks: The phandle of the master clock to the CODEC.
 +
-+		spi {
-+			spi_txd:spi-txd {
-+				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
-+			};
++- clock-names: Should be "mclk".
 +
-+			spi_rxd:spi-rxd {
-+				rockchip,pins = <1 28 RK_FUNC_3 &pcfg_pull_default>;
-+			};
-+
-+			spi_clk:spi-clk {
-+				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_default>;
-+			};
-+
-+			spi_cs0:spi-cs0 {
-+				rockchip,pins = <1 30 RK_FUNC_3 &pcfg_pull_default>;
-+
-+			};
-+
-+			spi_cs1:spi-cs1 {
-+				rockchip,pins = <1 31 RK_FUNC_3 &pcfg_pull_default>;
-+
-+			};
-+		};
- 	};
- };
+ Pins on the device (for linking into audio routes) for RT5616:
+ 
+   * IN1P
 -- 
 1.9.1
