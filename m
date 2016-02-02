@@ -1,136 +1,61 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] clockevents/drivers: add MPS2 Timer driver
-Date: Tue, 2 Feb 2016 14:04:29 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1602021351440.25254@nanos>
-References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com> <1454413199-26573-3-git-send-email-vladimir.murzin@arm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 02/14] clk: sunxi: Add apb0 gates for A83T
+Date: Tue, 2 Feb 2016 14:12:26 +0100
+Message-ID: <20160202131226.GO4652@lukather>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-3-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454413199-26573-3-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ABYnUdqoGSokwVM+"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454203266-4450-3-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, emilio@elopez.com.ar, jenskuske@gmail.com, hdegoede@redhat.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, patchesrdh@mveas.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2 Feb 2016, Vladimir Murzin wrote:
-> +static int __init mps2_clockevent_init(struct device_node *np)
-> +{
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	struct clockevent_mps2 *ce;
-> +	u32 rate;
-> +	int irq, ret;
-> +	const char *name = "mps2-clkevt";
-> +
-> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
-> +	if (ret) {
-> +		clk = of_clk_get(np, 0);
-> +		if (IS_ERR(clk)) {
-> +			ret = PTR_ERR(clk);
-> +			pr_err("failed to get clock for clockevent: %d\n", ret);
-> +			goto err_clk_get;
-> +		}
-> +
-> +		ret = clk_prepare_enable(clk);
-> +		if (ret) {
-> +			pr_err("failed to enable clock for clockevent: %d\n", ret);
-> +			clk_put(clk);
-> +			goto err_clk_enable;
-> +		}
-> +
-> +		rate = clk_get_rate(clk);
-> +	}
 
-So in case that "clock-frequency" is available in DT, what enables and
-configures the clock?
+--ABYnUdqoGSokwVM+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +err_ia_alloc:
-> +	kfree(ce);
-> +err_ce_alloc:
-> +err_get_irq:
-> +	iounmap(base);
-> +err_iomap:
-> +	clk_disable_unprepare(clk);
+On Sun, Jan 31, 2016 at 09:20:54AM +0800, Vishnu Patekar wrote:
+> APB0 is part of PRCM, and is compatible with earlier SOCs.
+> apb0 gates controls R_PIO, R_UART, R_RSB, etc clocks.
+> This patch adds support for APB0 gates for A83T.
+>=20
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
 
-clk is not initialized when "clock-frequency" is available in DT. The compiler
-should have told you ....
+Applied, thanks!
+Maxime
 
-> +err_clk_enable:
-> +	clk_put(clk);
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Put without get ....
+--ABYnUdqoGSokwVM+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +static int __init mps2_clocksource_init(struct device_node *np)
-> +{
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	u32 rate;
-> +	int ret;
-> +	const char *name = "mps2-clksrc";
-> +
-> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
-> +	if (ret) {
-> +		clk = of_clk_get(np, 0);
-> +		if (IS_ERR(clk)) {
-> +			ret = PTR_ERR(clk);
-> +			pr_err("failed to get clock for clocksource: %d\n", ret);
-> +			goto err_clk_get;
-> +		}
-> +
-> +		ret = clk_prepare_enable(clk);
-> +		if (ret) {
-> +			pr_err("failed to enable clock for clocksource: %d\n", ret);
-> +			clk_put(clk);
-> +			goto err_clk_enable;
-> +		}
-> +
-> +		rate = clk_get_rate(clk);
-> +	}
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Same problem as above.
+iQIcBAEBAgAGBQJWsKs6AAoJEBx+YmzsjxAgy9IQAJEw0Q1H+mFeYIk1yqlWWNqt
+EYyOUdsDSyTxW28L37tN+NYvf1hlYTY5S82qyR+iVYgea229UuWiBIsRIvzIxGoy
+XGfcZkRlMHOTY575q5CjwsSSoYFNU8scDOWY2lMlVYwZSOaW7RAwXO40Xns1qvjf
+AoL/oMn4iXjhJyyHs/U+CfUpNWd5dJ2axGRQ5Mfy8sRdq/Hplix5esElx/CUhnS8
+6cO6v6or0n4EPkPUpveN2BMamHShocve7FYZXaQtv8Eb7NQtAs1K0IeTIMsWr8P0
+wj9E/theB0gIjRahodAVB+zzOU9iYHSCfGfwcTWBmo7r0igAV+dn6hbNPOMWiEpq
+AOVDAKdI1PBxh0TNIoCMlTYh142ywQlFcqfRAC4RSvCq3bpw/4tRuKzJupCZNKbX
+ZFl19zQPOlN1aUak8fg16VypouUycHNeDE035lt5wkkpWTmlpyFLAn+q8TS7sm4R
+NfQ7nNrHhXhhBOvo8KDCej+FaTfE5kSwsdXU2qc1J3pVNiBiBa/GygSwae6E+vm8
+4BkzBrXjQL6U+WHYq8YXxDrtbWMOCGuzS0y/qq1DGCtU28Pm+awOMuInkP7zwiYR
+Bwm4LbLzYIkE9n4uAbuSQsHGcECHMzs1oqaNEMTMIUnwD9dSnz5DMaNyqsaRz/bW
+tndOEhbgw4QvJ14BHV2G
+=RzDP
+-----END PGP SIGNATURE-----
 
-> +err_clocksource_init:
-> +	iounmap(base);
-> +err_iomap:
-> +	clk_disable_unprepare(clk);
-
-Ditto.
-
-> +err_clk_enable:
-> +	clk_put(clk);
-
-Ditto.
-
-> +err_clk_get:
-> +	return ret;
-> +}
-> +
-> +static void __init mps2_timer_init(struct device_node *np)
-> +{
-> +	static int has_clocksource, has_clockevent;
-> +	int ret;
-> +
-> +	if (!has_clocksource) {
-> +		ret = mps2_clocksource_init(np);
-> +		if (!ret) {
-> +			has_clocksource = 1;
-> +			return;
-> +		}
-> +	}
-> +
-> +	if (!has_clockevent) {
-> +		ret = mps2_clockevent_init(np);
-> +		if (!ret) {
-> +			has_clockevent = 1;
-> +			return;
-> +		}
-> +	}
-
-You take randomly the first timer as clocksource and the second one as
-clockevent. If clocksource init fails, you try to install it as clockevent.
-
-Sorry, but I really cannot follow the logic here.
-
-Thanks,
-
-	tglx
+--ABYnUdqoGSokwVM+--
