@@ -1,64 +1,58 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v3 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT node
-Date: Tue,  2 Feb 2016 18:13:19 +0800
-Message-ID: <1454407999-5476-1-git-send-email-andy.yan@rock-chips.com>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, arnd@arndb.de, john.stultz@linaro.org
-Cc: moritz.fischer@ettus.com, matthias.bgg@gmail.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, heiko@sntech.de, sre@kernel.org, dbaryshkov@gmail.com, alexandre.belloni@free-electrons.com, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, mbrugger@suse.com, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 00/10] Add support for USB2.0 host/peripheral on R-Car H3
+Date: Tue, 2 Feb 2016 19:18:48 +0900
+Message-ID: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add syscon-reboot-mode driver DT node for rk3368 platform
+This patch set is based on the renesas-drivers.git /
+renesas-drivers-2016-01-26-v4.5-rc1 tag
+(commit id = 106b6565bfb6e2f35339347f3cfd0858f08bfcaa),
+and the following patches:
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+[ renesas_usbhs driver ]
+http://thread.gmane.org/gmane.linux.usb.general/135895
 
----
+[ generic phy driver for R-Car H3 ]
+http://thread.gmane.org/gmane.linux.kernel/2120685
 
-Changes in v3:
-- descirbe all reboot mode as property instead of subnode
 
-Changes in v2:
-- make this node as a subnode of pmugrf
+This patch set contains patches that are related to generic phy driver.
+As I wrote a comment in patch 8, to handle VBUS on/off for USB2.0 host
+channel 0, I use a regulator driver instead of extcon/max3355 driver.
+This is a reason that I marked this patch set is a RFC because I'm not
+sure that this way is acceptable or not.
 
-Changes in v1: None
+Also patch 6 should resolve checkpatch.pl warnings, and patch 7 should
+have dmas property to use USB-DMAC.
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 122777b..5213713 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip_boot-mode.h>
- #include <dt-bindings/thermal/thermal.h>
- 
- / {
-@@ -554,8 +555,19 @@
- 	};
- 
- 	pmugrf: syscon@ff738000 {
--		compatible = "rockchip,rk3368-pmugrf", "syscon";
-+		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff738000 0x0 0x1000>;
-+
-+		reboot-mode {
-+			compatible = "syscon-reboot-mode";
-+			offset = <0x200>;
-+			mode-normal = <BOOT_NORMAL>;
-+			mode-recovery = <BOOT_RECOVERY>;
-+			mode-fastboot = <BOOT_FASTBOOT>;
-+			mode-loader = <BOOT_LOADER>;
-+			mode-maskrom = <BOOT_MASKROM>;
-+
-+		};
- 	};
- 
- 	cru: clock-controller@ff760000 {
+Takeshi Kihara (1):
+  pinctrl: sh-pfc: r8a7795: Add USB2.0 host support
+
+Yoshihiro Shimoda (9):
+  phy: rcar-gen3-usb2: Add phy-supply description in device tree doc
+  phy: rcar-gen3-usb2: remove unnecesary struct rcar_gen3_data
+  phy: rcar-gen3-usb2: add extcon support
+  arm64: dts: r8a7795: add usb2_phy device nodes
+  arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
+  arm64: dts: r8a7795: add HS-USB device node
+  arm64: dts: salvator-x: enable usb2_phy
+  arm64: dts: salvator-x: enable USB 2.0 Host channels
+  arm64: dts: salvator-x: enable HS-USB
+
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |   2 +
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  73 +++++++++++++-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 107 +++++++++++++++++++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/phy-rcar-gen3-usb2.c                   |  59 ++++++++----
+ drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |  43 +++++++++
+ 6 files changed, 265 insertions(+), 20 deletions(-)
+
 -- 
 1.9.1
