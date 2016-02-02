@@ -1,33 +1,70 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 10/10] arm64: dts: salvator-x: enable HS-USB
-Date: Tue, 2 Feb 2016 19:18:58 +0900
-Message-ID: <1454408338-4612-11-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/7] ARM: dts: r-car: Add BRG support for (H)SCIF
+Date: Tue, 2 Feb 2016 11:20:32 +0100
+Message-ID: <20160202102031.GD15554@verge.net.au>
+References: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1454061883-4043-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On Fri, Jan 29, 2016 at 11:04:36AM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
+> 
+> This patch series adds support for the Baud Rate Generator for External
+> Clock (BRG), as found on SCIF and HSCIF, to the DTS files for all R-Car
+> Gen1, Gen2, and Gen3 SoCs. This increases the range and accuracy of
+> supported baud rates on (H)SCIF.
+> 
+> Support for the extra clocks in the DT bindings and in the driver has
+> been accepted in v4.5-rc1.  
+> 
+> Changes compared to v3:
+>   - Change one-line summary prefix to match current arm-soc practices,
+>   - Rebased,
+> 
+> Changes compared to v2:
+>   - Rename "int_clk" to "brg_int",
+>   - Add support for R-Car M1A (r8a7778) and R-Car H1 (r8a7779),
+>   - Add support for R-Car H2 (r8a7790), R-Car M2-N (r8a7793), and R-Car
+>     E2 (r8a7794),
+>   - Correct internal clock source ZS_CLK to S3D1 in patch description
+>     for r8a7795, 
+> 
+> This has been tested on r8a7778/bockw, r8a7779/marzen, r8a7791/koelsch,
+> r8a7794/alt, and r8a7795/salvator-x.
+> 
+> Dependencies:
+>   - renesas-devel-20160129-v4.5-rc1,
+>   - series "[PATCH v4 0/7] ARM: dts: R-Car: Add SCIF fallback
+>     compatibility strings",
+>   - series "[PATCH v4 00/11] ARM: dts: shmobile: Rename the serial port
+>     clock to fck",
+> 
+> Thanks for applying!
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index c92ec89..6935aa0 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -320,3 +320,7 @@
- &ohci2 {
- 	status = "okay";
- };
-+
-+&hsusb {
-+	status = "okay";
-+};
--- 
-1.9.1
+Is it safe to apply this in the light of the dependency on
+renesas-devel-20160129-v4.5-rc1?
+
+> Geert Uytterhoeven (7):
+>   ARM: dts: r8a7778: Add BRG support for SCIF
+>   ARM: dts: r8a7779: Add BRG support for SCIF
+>   ARM: dts: r8a7790: Add BRG support for (H)SCIF
+>   ARM: dts: r8a7791: Add BRG support for (H)SCIF
+>   ARM: dts: r8a7793: Add BRG support for SCIF
+>   ARM: dts: r8a7794: Add BRG support for (H)SCIF
+>   arm64: dts: r8a7795: Add BRG support for (H)SCIF
+> 
+>  arch/arm/boot/dts/r8a7778.dtsi           | 39 +++++++++++------
+>  arch/arm/boot/dts/r8a7779.dtsi           | 39 +++++++++++------
+>  arch/arm/boot/dts/r8a7790.dtsi           | 29 +++++++++----
+>  arch/arm/boot/dts/r8a7791.dtsi           | 54 +++++++++++++++--------
+>  arch/arm/boot/dts/r8a7793.dtsi           | 54 +++++++++++++++--------
+>  arch/arm/boot/dts/r8a7794.dtsi           | 54 +++++++++++++++--------
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 74 ++++++++++++++++++++++----------
+>  7 files changed, 235 insertions(+), 108 deletions(-)
