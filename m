@@ -1,63 +1,67 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 2/3] input: touchscreen: ad7879: fix default x/y axis assignment
-Date: Tue,  2 Feb 2016 15:20:17 -0800
-Message-ID: <1454455218-13004-2-git-send-email-stefan@agner.ch>
-References: <1454455218-13004-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1454455218-13004-1-git-send-email-stefan@agner.ch>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, michael.hennerich@analog.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] ARM: keystone: Create new binding for K2G SoC
+Date: Tue,  2 Feb 2016 17:25:15 -0600
+Message-ID: <1454455517-7360-2-git-send-email-fcooper@ti.com>
+References: <1454455517-7360-1-git-send-email-fcooper@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454455517-7360-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The X/Y position measurements read from the controller are interpreted
-wrong. The first measurement X+ contains the Y position, and the second
-measurement Y+ the X position (see also Table 11 Register Table in the
-data sheet).
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 
-The problem is already known and a swap option has been introduced:
-commit 6680884a4420 ("Input: ad7879 - add option to correct xy axis")
+K2G SoC family is the newest version of the Keystone family of processors.
 
-However, the meaning of the new boolean is inverted since the underlying
-values are already swapped. Let ts->swap_xy set to true actually be the
-swapped configuration of the two axis.
+The technical reference manual for K2G can be found here:
+http://www.ti.com/lit/ug/spruhy8/spruhy8.pdf
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Add new bindings for K2G and the K2G evm. Also document these new bindings.
+
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 ---
-Changes since v2:
-- (none)
-Changes since v1:
-- Keep axis swapped by default when using platform data
+ Documentation/devicetree/bindings/arm/keystone/keystone.txt | 5 +++++
+ arch/arm/mach-keystone/keystone.c                           | 1 +
+ 2 files changed, 6 insertions(+)
 
- drivers/input/touchscreen/ad7879.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/input/touchscreen/ad7879.c b/drivers/input/touchscreen/ad7879.c
-index 93b8ea2..abd0220 100644
---- a/drivers/input/touchscreen/ad7879.c
-+++ b/drivers/input/touchscreen/ad7879.c
-@@ -94,8 +94,8 @@
- #define AD7879_TEMP_BIT			(1<<1)
+diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+index 3090a8a..48f6703 100644
+--- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
++++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+@@ -22,6 +22,8 @@ SoCs:
+    compatible = "ti,k2l", "ti,keystone"
+ - Keystone 2 Edison
+    compatible = "ti,k2e", "ti,keystone"
++- K2G
++   compatible = "ti,k2g", "ti,keystone"
  
- enum {
--	AD7879_SEQ_XPOS  = 0,
--	AD7879_SEQ_YPOS  = 1,
-+	AD7879_SEQ_YPOS  = 0,
-+	AD7879_SEQ_XPOS  = 1,
- 	AD7879_SEQ_Z1    = 2,
- 	AD7879_SEQ_Z2    = 3,
- 	AD7879_NR_SENSE  = 4,
-@@ -517,7 +517,9 @@ struct ad7879 *ad7879_probe(struct device *dev, u8 devid, unsigned int irq,
- 	ts->dev = dev;
- 	ts->input = input_dev;
- 	ts->irq = irq;
--	ts->swap_xy = pdata->swap_xy;
+ Boards:
+ -  Keystone 2 Hawking/Kepler EVM
+@@ -32,3 +34,6 @@ Boards:
+ 
+ -  Keystone 2 Edison EVM
+    compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone"
 +
-+	/* Use swapped axis by default (backward compatibility) */
-+	ts->swap_xy = !pdata->swap_xy;
- 
- 	setup_timer(&ts->timer, ad7879_timer, (unsigned long) ts);
- 
++-  K2G EVM
++   compatible = "ti,k2g-evm", "ti,k2g", "ti-keystone"
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index c279293..55cb199 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -100,6 +100,7 @@ static const char *const keystone_match[] __initconst = {
+ 	"ti,k2hk",
+ 	"ti,k2e",
+ 	"ti,k2l",
++	"ti,k2g",
+ 	"ti,keystone",
+ 	NULL,
+ };
 -- 
 2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
