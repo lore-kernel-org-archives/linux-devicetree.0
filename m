@@ -1,59 +1,83 @@
 From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] Add initial support for TI's K2G SOC
-Date: Tue,  2 Feb 2016 17:25:14 -0600
-Message-ID: <1454455517-7360-1-git-send-email-fcooper@ti.com>
+Subject: [PATCH 3/3] ARM: dts: keystone: Add minimum support for K2G evm
+Date: Tue,  2 Feb 2016 17:25:17 -0600
+Message-ID: <1454455517-7360-4-git-send-email-fcooper@ti.com>
+References: <1454455517-7360-1-git-send-email-fcooper@ti.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454455517-7360-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset provides initial support for K2G the latest addition to Texas
-Instruments Keystone 2 product family. These patches are built on top of
-the latest 4.5-rc2 commit.
+From: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
 
-K2G is a A15 + C66x DSP processor built to address the needs of industrial
-communication and control, automotive and performance audio applications.
-
-Supported peripherals include MMC,USB2.0,DCAN,DSS,McASP and PCIe SS.
+Add barebones K2G evm dts. This DTS allows the board to boot using a
+ram based filesystem.
 
 The technical reference manual for K2G can be found here:
 http://www.ti.com/lit/ug/spruhy8/spruhy8.pdf
 
-This patchset provides the ability to boot K2G's general purpose evm using
-a ramfs filesystem.
-
-Additional patches will follow this series that will add support for new
-drivers that will enable additional peripherals and features
-
-K2G Bootlog on 4.5-rc2:
-http://pastebin.ubuntu.com/14861580/
-
-To show no regressions:
-K2E Bootlog: http://pastebin.ubuntu.com/14861523/
-Other Keystone 2 devices need this partial revert discussed in the below
-thread.
-http://marc.info/?l=linux-netdev&m=145444838030865&w=2
-
-This is an issue seen on the netcp driver and has nothing to do with this
-patch set.
-
-Nishanth Menon (1):
-  ARM: keystone: Create new binding for K2G SoC
-
-Vitaly Andrianov (2):
-  ARM: dts: keystone: Add Initial DT support for TI K2G SoC family
-  ARM: dts: keystone: Add minimum support for K2G evm
-
- .../devicetree/bindings/arm/keystone/keystone.txt  |  5 ++
- arch/arm/boot/dts/Makefile                         |  3 +-
- arch/arm/boot/dts/k2g-evm.dts                      | 32 ++++++++
- arch/arm/boot/dts/k2g.dtsi                         | 89 ++++++++++++++++++++++
- arch/arm/mach-keystone/keystone.c                  |  1 +
- 5 files changed, 129 insertions(+), 1 deletion(-)
+Signed-off-by: Vitaly Andrianov <vitalya-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile    |  3 ++-
+ arch/arm/boot/dts/k2g-evm.dts | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm/boot/dts/k2g-evm.dts
- create mode 100644 arch/arm/boot/dts/k2g.dtsi
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a4a6d70..8343f66 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -156,7 +156,8 @@ dtb-$(CONFIG_ARCH_INTEGRATOR) += \
+ dtb-$(CONFIG_ARCH_KEYSTONE) += \
+ 	k2hk-evm.dtb \
+ 	k2l-evm.dtb \
+-	k2e-evm.dtb
++	k2e-evm.dtb \
++	k2g-evm.dtb
+ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+ 	kirkwood-b3.dtb \
+ 	kirkwood-blackarmor-nas220.dtb \
+diff --git a/arch/arm/boot/dts/k2g-evm.dts b/arch/arm/boot/dts/k2g-evm.dts
+new file mode 100644
+index 0000000..99663b3
+--- /dev/null
++++ b/arch/arm/boot/dts/k2g-evm.dts
+@@ -0,0 +1,32 @@
++/*
++ * Device Tree Source for K2G EVM
++ *
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++/dts-v1/;
++
++#include "k2g.dtsi"
++
++/ {
++	compatible =  "ti,k2g-evm", "ti,k2g", "ti,keystone";
++	model = "Texas Instruments K2G General Purpose EVM";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000008 0x00000000 0x00000000 0x80000000>;
++	};
++
++};
++
++&uart0 {
++	status = "okay";
++};
 -- 
 2.7.0
 
