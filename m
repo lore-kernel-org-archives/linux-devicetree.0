@@ -1,11 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 00/11] mfd: axp20x: Add support for AXP809 PMIC
-Date: Tue,  2 Feb 2016 18:27:33 +0800
-Message-ID: <1454408864-24112-1-git-send-email-wens@csie.org>
+Subject: [PATCH 09/11] ARM: dts: sun9i: cubieboard4: Add AXP809
+ PMIC device node and regulators
+Date: Tue,  2 Feb 2016 18:27:42 +0800
+Message-ID: <1454408864-24112-10-git-send-email-wens@csie.org>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBM4JYK2QKGQESCX5ZBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNEJYK2QKGQEKY3FRWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1454408864-24112-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,76 +20,160 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The AXP809 PMIC is the primary PMIC. It provides various supply voltages
+for the SoC and other peripherals. The PMIC's interrupt line is connected
+to NMI pin of the SoC.
 
-This series adds support for X-Powers' AXP809 PMIC. This is the primary
-PMIC accompanying Allwinner's A80 SoC. For now, only the power button
-(PEK) and regulators are supported. These are supported using existing
-axp20x drivers. This is based on the AXP223 series v7.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 121 +++++++++++++++++++++++++++-
+ 1 file changed, 119 insertions(+), 2 deletions(-)
 
-Patch 1 adds a MAINTAINERS entry for the X-Powers AXP PMICs. I list
-myself as the maintainer.
-
-Patch 2 adds AXP809 to the axp20x bindings.
-
-Patch 3 adds AXP809 support to the axp20x mfd driver.
-
-Patch 4 removes voltage readout for switch outputs.
-
-Patch 5 converts AXP20X LDO4 from using voltage tables to linear voltage
-ranges. Either one works, but regulators found on later PMICs match up
-with linear ranges better.
-
-Patch 6 adds AXP809 support to the axp20x regulator driver. This patch
-depends on the previous 3 patches. It's probably easier to apply them
-together.
-
-Patch 7 adds a dtsi file for AXP809.
-
-Patch 8 enables AXP809 support on the A80 Optimus board.
-
-Patch 9 enables AXP809 support on the Cubieboard 4.
-
-Patch 10 disables the dummy regulators from sunxi-common-regulators.dtsi
-on the A80 Optimus board. These aren't used in the board DTS anymore.
-
-Patch 11 disables the dummy regulators from sunxi-common-regulators.dtsi,
-on the Cubieboard4. These aren't used in the board DTS anymore.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (11):
-  MAINTAINERS: Add entry for X-Powers AXP family PMIC drivers
-  mfd: axp20x: Add bindings for AXP809 PMIC
-  mfd: axp20x: Add support for AXP809 PMIC
-  regulator: axp20x: Remove voltage readout support for switch
-    regulators
-  regulator: axp20x: Use linear voltage ranges for AXP20X LDO4
-  regulator: axp20x: support AXP809 variant
-  ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
-  ARM: dts: sun9i: a80-optimus: Add AXP809 PMIC device node and
-    regulators
-  ARM: dts: sun9i: cubieboard4: Add AXP809 PMIC device node and
-    regulators
-  ARM: dts: sun9i: a80-optimus: Disable dummy regulators vcc3v0, vcc3v3,
-    vcc5v0
-  ARM: dts: sun9i: cubieboard4: Disable dummy regulators vcc3v0, vcc3v3,
-    vcc5v0
-
- Documentation/devicetree/bindings/mfd/axp20x.txt   |  31 +++-
- MAINTAINERS                                        |   6 +
- .../dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} | 151 ++++++++++---------
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        | 133 ++++++++++++++++-
- arch/arm/boot/dts/sun9i-a80-optimus.dts            | 133 ++++++++++++++++-
- drivers/mfd/axp20x-rsb.c                           |   1 +
- drivers/mfd/axp20x.c                               |  79 ++++++++++
- drivers/regulator/axp20x-regulator.c               | 165 ++++++++++++++-------
- include/linux/mfd/axp20x.h                         |  59 ++++++++
- 9 files changed, 623 insertions(+), 135 deletions(-)
- copy arch/arm/boot/dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} (53%)
-
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index eb2ccd0a3bd5..4d56dc69713c 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -98,7 +98,7 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH18 */
+ 	cd-inverted;
+@@ -108,7 +108,7 @@
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_8bit_pins>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	cap-mmc-hw-reset;
+@@ -126,6 +126,123 @@
+ 
+ &r_rsb {
+ 	status = "okay";
++
++	axp809: pmic@3a3 {
++		reg = <0x3a3>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++#include "axp809.dtsi"
++
++&reg_aldo1 {
++	/* TODO: This should be handled by the USB PHY driver */
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc33-usbh";
++};
++
++&reg_aldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pb-io-cam";
++};
++
++&reg_dc5ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <800000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-cpus-09-usbh";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-3v";
++};
++
++&reg_dcdc2 {
++	regulator-min-microvolt = <800000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-gpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <800000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-cpua";
++};
++
++&reg_dcdc4 {
++	regulator-always-on;
++	regulator-min-microvolt = <800000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-sys-usb0-hdmi";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1425000>;
++	regulator-max-microvolt = <1575000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_dldo1 {
++	/*
++	 * The WiFi chip supports a wide range (3.0 ~ 4.8V) of voltages,
++	 * and so does this regulator (3.0 ~ 4.2V), but Allwinner SDK
++	 * always sets it to 3.3V.
++	 */
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi";
++};
++
++&reg_dldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-pl";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vcc-dvdd-cam";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pe";
++};
++
++&reg_eldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-pm-codec-io1";
++};
++
++&reg_ldo_io0 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-pg";
++};
++
++&reg_ldo_io1 {
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	regulator-name = "vcc-pa-gmac-2v5";
++};
++
++&reg_rtc_ldo {
++	regulator-name = "vcc-rtc-vdd1v8-io";
+ };
+ 
+ &uart0 {
 -- 
 2.7.0
