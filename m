@@ -1,24 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: ad5755: Add DT binding documentation
-Date: Tue, 2 Feb 2016 15:55:16 -0600
-Message-ID: <20160202215516.GA7984@rob-hp-laptop>
-References: <1454416574-6645-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1454416574-6645-2-git-send-email-sean.nyekjaer@prevas.dk>
+From: Stefan Agner <stefan@agner.ch>
+Subject: RE: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
+Date: Tue, 02 Feb 2016 13:56:16 -0800
+Message-ID: <63270b7f7015d99be2cb10377c976b31@agner.ch>
+References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
+ <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
+ <20160129025156.GA26113@rob-hp-laptop>
+ <HE1PR04MB105182735A413F11D6704A7CECDF0@HE1PR04MB1051.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454416574-6645-2-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <HE1PR04MB105182735A413F11D6704A7CECDF0@HE1PR04MB1051.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Meng Yi <meng.yi@nxp.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 01:36:14PM +0100, Sean Nyekjaer wrote:
-> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/dac/ad5755.txt         | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+SGkgTWVuZyBZaSwKCkkgcGxhbiB0byByZXZpZXcgdGhlIHBhdGNoc2V0IHRvbywgYnV0IGRpZCBu
+b3QgY29tZSBhcm91bmQgeWV0LgoKVGhlIGZvcnRoIHBhdGNoIGNvbmZsaWN0cyB3aXRoIG15IGNo
+YW5nZXMgaW4gdGhlIERSTSBEQ1UgZHJpdmVyLiBTaW5jZQppdCB3aWxsIGxpa2VseSBnbyB0aHJv
+dWdoIG15IHRyZWUsIHBsZWFzZSBiYXNlIHYyIG9udG9wIG9mIG15IERDVQpicmFuY2g6Cmh0dHA6
+Ly9naXQuYWduZXIuY2gvZ2l0d2ViLz9wPWxpbnV4LWRybS1mc2wtZGN1LmdpdDthPXN1bW1hcnkK
+Ci0tClN0ZWZhbgoKT24gMjAxNi0wMi0wMiAwMTo1MywgTWVuZyBZaSB3cm90ZToKPiBIaSBSb2IK
+PiAgICAgVGhhbmtzIGZvciB5b3VyIHJlcGx5LiBJIHdpbGwgY29ycmVjdCB0aG9zZSBzb29uLCBh
+bmQgdGhlbiBzZW5kIHYyIG91dC4KPiBCUgo+IE1lbmcgWWkKPiAKPj4gT24gRnJpZGF5LCBKYW51
+YXJ5IDI5LCAyMDE2IDEwOjUyIEFNLCBSb2IgSGVycmluZ1tyb2JoQGtlcm5lbC5vcmddIHdyb3Rl
+Ogo+IAo+PiA+ICtUaGUgU2lJOTAyMkEgaXMgYW4gdWx0cmEgbG93LXBvd2VyIEhETUkgdHJhbnNt
+aXR0ZXIuIEl0IHN1cHBvcnRzCj4+ID4gK3Jlc29sdXRpb25zIGZyb20gc3RhbmRhcmQgZGVmaW5p
+dGlvbiA0ODBpL3AgYW5kIDU3NmkvcCBhbGwgdGhlIHdheSB0bwo+PiA+ICtoaWdoLWRlZmluaXRp
+b24gNzIwcCwgMTA4MGksIGFuZCAxMDgwcCwgdGhlIGhpZ2hlc3QgcmVzb2x1dGlvbgo+PiA+ICtz
+dXBwb3J0ZWQgYnkgSERUVnMgdG9kYXkuIEl0IGFsc28gc3VwcG9ydHMgYWxsCj4+Cj4+IFdlbGws
+IHdlJ3JlIHVwIHRvIDRLIG5vdy4uLgo+IAo+PiA+ICsgICAgICAgICAgICBwb3J0cyB7Cj4+ID4g
+KyAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ID4gKwo+PiA+ICsgICAgICAgICAgICAg
+ICAgICAgIHBvcnRAMCB7Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+MT47Cj4+Cj4+IFlvdXIgdW5pdCBhZGRyZXNzICgwKSBhbmQgcmVnIGRvbid0IG1hdGNoLgo+Pgo+
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2lpOTAyMl9vdXQ6IGVuZHBvaW50IHsK
+Pj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
+ID0gPCZoZG1pX2Nvbj47Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+Pgo+
+PiBUaGlzIG5lZWRzIHRvIGhhdmUgYSBwb3J0IGZvciB0aGUgaW5wdXQgZm9yIHRoZSBjb25uZWN0
+aW9uIHRvIHlvdXIgZGlzcGxheQo+PiBjb250cm9sbGVyLgo+Pgo+PiA+ICsgICAgICAgICAgICAg
+ICAgICAgIH07Cj4+ID4gKyAgICAgICAgICAgIH07Cj4+ID4gKyAgICB9OwpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
