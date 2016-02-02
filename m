@@ -1,69 +1,115 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 03/14] clk: sunxi: add bus gates for A83T
-Date: Tue, 2 Feb 2016 14:13:47 +0100
-Message-ID: <20160202131347.GP4652@lukather>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
- <1454203266-4450-4-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v2 0/3] Input: rotary-encoder - use more than two gpios
+Date: Tue, 2 Feb 2016 14:14:49 +0100
+Message-ID: <56B0ABC9.10107@zonque.org>
+References: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <56B09C27.8070009@zonque.org> <20160202125602.GW13664@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/NwG7NuG0/W8LcLh"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDGXYK2QKGQEQLXCZJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454203266-4450-4-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160202125602.GW13664@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---/NwG7NuG0/W8LcLh
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 02/02/2016 01:56 PM, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Daniel,
+>=20
+> On Tue, Feb 02, 2016 at 01:08:07PM +0100, Daniel Mack wrote:
+>> On 02/02/2016 11:24 AM, Uwe Kleine-K=C3=B6nig wrote:
+>>> Some time ago I sent a v1 of this, now after testing the changes mo=
+re
+>>> deeply patch 3 changed a bit. The old series started with
+>>>
+>>> 	Date: Wed,  2 Dec 2015 11:07:11 +0100
+>>> 	From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>>> 	Subject: [PATCH RFC 0/3] input: rotary_encoder: use more than two =
+gpios as input
+>>> 	Message-Id: <1449050834-31779-1-git-send-email-u.kleine-koenig@pen=
+gutronix.de>
+>>>
+>>> The two first patches are just preparation for the third patch.
+>>>
+>>> There is an obvious improvement that allows detection of quick chan=
+ges
+>>> more reliably with >2 gpios, but I didn't implement this yet. (With=
+ 4
+>>> GPIOs you can distinguish a counter clockwise movement of three sta=
+tes
+>>> from a clock wise movement of a single state. Still the patch is us=
+eful
+>>> as it makes these devices work at all.
+>>>
+>>> My test device looks as follows:
+>>>
+>>>         rotary@0 {
+>>>                 compatible =3D "rotary-encoder";
+>>>                 gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 11 =
+GPIO_ACTIVE_HIGH>, <&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIVE_=
+HIGH>;
+>>>
+>>>                 rotary-encoder,steps =3D <16>;
+>>> 		rotary-encoder,steps-per-period =3D <16>;
+>>>         };
+>>>
+>>> While Daniel Mack and Rojhalat Ibrahim agreed that this device is a=
+n
+>>> absolute encoder and should be supported by a simpler logic, I stil=
+l
+>>> consider it worthwhile to get these patches in as a first step. Als=
+o the
+>>> binding looks right, so IMHO the comments shouldn't stop this serie=
+s
+>>> from going in.
+>>
+>> I still don't understand why this is implemented that way, rather th=
+an
+>> going for a much simpler logic of interpretation that also allows us=
+ers
+>> to read out the absolute position.
+>>
+>> The code to read the value would be really just as simple as reading=
+ all
+>> GPIOs and or-ing their values into the result, and skip the state
+>> machine completely. This code would be active if a new attribute
+>> (something like 'rotary-encoder,hardware-absolute') is set, or even
+>> implicitly, when more than 2 GPIOs are specified.
+>>
+>> Is there any reason for not doing that?
+>=20
+> Currently the reason is lack of time. And when implementing
+> rotary-encoder,hardware-absolute something similar would be the resul=
+t
+> for the relative reporting anyhow. So the problem is only that I don'=
+t
+> have absolute support yet, but the patches as is would be the base fo=
+r
+> that anyhow.
 
-On Sun, Jan 31, 2016 at 09:20:55AM +0800, Vishnu Patekar wrote:
-> A83T has similar bus gates that of H3, including single gating register has
-> different clock parent.
-> 
-> As per H3 and A83T datasheet, usbhost is under AHB2.
-> 
-> However,below shows allwinner source code assignment:
-> bits: 26 (ehci0), 27 (ehci1), 29 (ohci0) => AHB1 for A83T.
-> bits: 26 (ehci0), 27 (ehci1) => AHB1 for H3
-> bits  29, 30, 31(ohci0,1,2) => AHB2 for H3.
-> 
-> until, this confusion is cleared keep it H3 way.
-> 
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
->  drivers/clk/sunxi/clk-sun8i-bus-gates.c           | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index 7f19ef5..4514d77 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -59,6 +59,7 @@ Required properties:
->  	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
->  	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
->  	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
-> +	"allwinner,sun8i-a83t-bus-gates-clk" - for the bus gates on A83T
+Because you would support relative support for such 4-pin encoders as
+well? I would have thought that absolute encoders would report absolute
+values only, but I guess you have a point here. Just to make sure we're
+on the same page: For more than 2 GPIOs, and an absent
+"rotary-encoder,relative-axis", the driver would switch to a mode in
+which it bypasses the state machine, right?
 
-Please order them alphabetically next time.
+If you're planning to implement that eventually, I'm fine with the
+patches for now :)
 
-Applied with the fix, and the Acked-bys
+Dmitry, if you are apply them, feel free to add my
 
-thanks!
-Maxime
+  Acked-by: Daniel Mack <daniel@zonque.org>
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---/NwG7NuG0/W8LcLh--
+to all 3 of them.
+
+
+Thanks,
+Daniel
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
