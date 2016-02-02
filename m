@@ -1,17 +1,15 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and
- regulator supply properties
-Date: Tue, 2 Feb 2016 15:09:24 +0100
-Message-ID: <56B0B894.9040706@gmail.com>
-References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
- <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
- <20151228031340.GD3598@ubuntu> <3310024.mO5K6yH9vU@wuerfel>
- <20160105102455.GA30120@ubuntu> <56B08DA4.8070207@gmail.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: Re: [PATCH v2 02/10] clockevents/drivers: add MPS2 Timer driver
+Date: Tue, 02 Feb 2016 14:06:59 +0000
+Message-ID: <56B0B803.8010003@arm.com>
+References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+ <1454413199-26573-3-git-send-email-vladimir.murzin@arm.com>
+ <alpine.DEB.2.11.1602021351440.25254@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <56B08DA4.8070207@gmail.com>
+In-Reply-To: <alpine.DEB.2.11.1602021351440.25254@nanos>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,57 +19,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com, galak@codeaurora.org, linux-serial@vger.kernel.org, u.kleine-koenig@pengutronix.de, linux-api@vger.kernel.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/02/16 13:04, Thomas Gleixner wrote:
+> On Tue, 2 Feb 2016, Vladimir Murzin wrote:
+>> +static int __init mps2_clockevent_init(struct device_node *np)
+>> +{
+>> +	void __iomem *base;
+>> +	struct clk *clk;
+>> +	struct clockevent_mps2 *ce;
+>> +	u32 rate;
+>> +	int irq, ret;
+>> +	const char *name = "mps2-clkevt";
+>> +
+>> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+>> +	if (ret) {
+>> +		clk = of_clk_get(np, 0);
+>> +		if (IS_ERR(clk)) {
+>> +			ret = PTR_ERR(clk);
+>> +			pr_err("failed to get clock for clockevent: %d\n", ret);
+>> +			goto err_clk_get;
+>> +		}
+>> +
+>> +		ret = clk_prepare_enable(clk);
+>> +		if (ret) {
+>> +			pr_err("failed to enable clock for clockevent: %d\n", ret);
+>> +			clk_put(clk);
+>> +			goto err_clk_enable;
+>> +		}
+>> +
+>> +		rate = clk_get_rate(clk);
+>> +	}
+> 
+> So in case that "clock-frequency" is available in DT, what enables and
+> configures the clock?
 
+They are fixed-clock, so I ended up this *cough* mess *cough* shortcut.
+I'd be glad if you share your thoughts what is preferred way to cope
+with it (is it worth to do at all?)
 
-On 02/02/16 12:06, Matthias Brugger wrote:
->
->
-> On 05/01/16 11:24, Viresh Kumar wrote:
->> On 05-01-16, 11:21, Arnd Bergmann wrote:
->>> On Monday 28 December 2015 08:43:40 Viresh Kumar wrote:
->>>> On 27-12-15, 14:21, Pi-Cheng Chen wrote:
->>>>> Add operating-points-v2, clock, and regulator supply properties
->>>>> required by mt8173-cpufreq driver to enable it.
->>>>>
->>>>> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
->>>>> ---
->>>>> This patch is based on the patch[1] that adds underlying clock MUX for
->>>>> MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
->>>>>
->>>>> [1] http://article.gmane.org/gmane.linux.kernel.clk/325
->>>>> ---
->>>>>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
->>>>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90
->>>>> +++++++++++++++++++++++++++++
->>>>>   2 files changed, 108 insertions(+)
->>>>
->>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->>>>
->>>
->>> This patch is now in linux-next through Rafael's pm tree, and it
->>> breaks the
->>> arm64 build:
->>>
->>>          arm64-defconfig
->>> Error: ../arch/arm64/boot/dts/mediatek/mt8173.dtsi:132.24-25 syntax
->>> error
->>>
->>>
->>> Please revert.
->>>
->>> In the future, please send all dts changes through the proper maintainer
->>> channels (-> Mattias -> arm-soc), and make sure they actually build.
->>
->> Rafael has already reverted that, AFAIK, after Mark Brown reported the
->> build issue.
->>
->
-> Applied to v4.5-next/dts
->
+> 
+>> +err_ia_alloc:
+>> +	kfree(ce);
+>> +err_ce_alloc:
+>> +err_get_irq:
+>> +	iounmap(base);
+>> +err_iomap:
+>> +	clk_disable_unprepare(clk);
+> 
+> clk is not initialized when "clock-frequency" is available in DT. The compiler
+> should have told you ....
 
-I oversaw that this needs a clock patch, which is not yet mainlined.
-I deleted this patch from my tree.
+Shame on me, I've completely messed it up :( Thanks for pointing at it,
+I'll fix this an other places you pointed at...
+
+> 
+>> +err_clk_enable:
+>> +	clk_put(clk);
+> 
+> Put without get ....
+
+or double clk_put() if clk_prepare_enable() failed... shame, shame, shame
+
+> 
+>> +static int __init mps2_clocksource_init(struct device_node *np)
+>> +{
+>> +	void __iomem *base;
+>> +	struct clk *clk;
+>> +	u32 rate;
+>> +	int ret;
+>> +	const char *name = "mps2-clksrc";
+>> +
+>> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+>> +	if (ret) {
+>> +		clk = of_clk_get(np, 0);
+>> +		if (IS_ERR(clk)) {
+>> +			ret = PTR_ERR(clk);
+>> +			pr_err("failed to get clock for clocksource: %d\n", ret);
+>> +			goto err_clk_get;
+>> +		}
+>> +
+>> +		ret = clk_prepare_enable(clk);
+>> +		if (ret) {
+>> +			pr_err("failed to enable clock for clocksource: %d\n", ret);
+>> +			clk_put(clk);
+>> +			goto err_clk_enable;
+>> +		}
+>> +
+>> +		rate = clk_get_rate(clk);
+>> +	}
+> 
+> Same problem as above.
+> 
+>> +err_clocksource_init:
+>> +	iounmap(base);
+>> +err_iomap:
+>> +	clk_disable_unprepare(clk);
+> 
+> Ditto.
+> 
+>> +err_clk_enable:
+>> +	clk_put(clk);
+> 
+> Ditto.
+> 
+>> +err_clk_get:
+>> +	return ret;
+>> +}
+>> +
+>> +static void __init mps2_timer_init(struct device_node *np)
+>> +{
+>> +	static int has_clocksource, has_clockevent;
+>> +	int ret;
+>> +
+>> +	if (!has_clocksource) {
+>> +		ret = mps2_clocksource_init(np);
+>> +		if (!ret) {
+>> +			has_clocksource = 1;
+>> +			return;
+>> +		}
+>> +	}
+>> +
+>> +	if (!has_clockevent) {
+>> +		ret = mps2_clockevent_init(np);
+>> +		if (!ret) {
+>> +			has_clockevent = 1;
+>> +			return;
+>> +		}
+>> +	}
+> 
+> You take randomly the first timer as clocksource and the second one as
+> clockevent. If clocksource init fails, you try to install it as clockevent.
+> 
+> Sorry, but I really cannot follow the logic here.
+> 
+
+It has been done as a response on Daniel's comment [1]. I'm quite happy
+to get known what init sequence is expected here.
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/388223.html
+
+Thanks for your time, Thomas!
+
+Vladimir
+
+> Thanks,
+> 
+> 	tglx
+> 
+> 
+> 
