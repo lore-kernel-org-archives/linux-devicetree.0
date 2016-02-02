@@ -1,148 +1,60 @@
-Return-Path: <djkurtz@google.com>
+Return-Path: <>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v5 1/4] Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
+Date: Tue, 2 Feb 2016 11:50:43 -0600
+Message-ID: <1454435446-20586-2-git-send-email-afd@ti.com>
+In-Reply-To: <1454435446-20586-1-git-send-email-afd@ti.com>
+References: <1454435446-20586-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
-Sender: djkurtz@google.com
-In-Reply-To: <2283417.UbYyfQa1E3@diego>
-References: <1454121504-12683-1-git-send-email-djkurtz@chromium.org>
-	<2283417.UbYyfQa1E3@diego>
-Date: Tue, 2 Feb 2016 07:59:27 +0800
-Message-ID: <CAGS+omAsRFt-3tvfpeNZPBQO8Rekg_pjE9nGSNtADrMKKBGc7A@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: cros-ec-keyboard: Add LOCK key to keyboard matrix
-From: Daniel Kurtz <djkurtz@chromium.org>
-Content-Type: multipart/alternative; boundary=001a114314dcd338b7052abe2cb0
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, YH Huang <yh.huang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, James Chao <james_chao@asus.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, open list <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
 
---001a114314dcd338b7052abe2cb0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Add the TI afe4404 heart monitor DT bindings documentation.
+Create health directory created under iio.
 
-On Feb 2, 2016 01:17, "Heiko St=C3=BCbner" <heiko@sntech.de> wrote:
->
-> Hi Daniel,
->
-> Am Samstag, 30. Januar 2016, 10:38:24 schrieb Daniel Kurtz:
-> > From: James Chao <james_chao@asus.com>
-> >
-> > The LOCK key is at KSO9/KSI3 for Chromebook Flip and other devices
-> > that use the Chrome OS EC keyboard matrix.
-> >
-> > Signed-off-by: James Chao <james_chao@asus.com>
-> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> > Signed-off-by: YH Huang <yh.huang@mediatek.com>
->
-> that should probably be a
->         Reviewed-by: YH Huang <yh.huang@mediatek.com>
-> As I don't see any actual patch handling step by him/her.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/iio/health/afe4404.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
 
-YH independently uploaded an identical patch to a different ChromeOS kernel
-version (v3.18) with his SOB to support a different device.
-I wasn't sure how to deal with it, so I merged the SOB lists when posting
-upstream.
-
-> Also, you might've included Olof as the keeper of all things ChromeOS whe=
-n
-> sending.
->
-> @Olof: this seems to be pretty Veyron-specific for the moment, so I'm
-inclined
-> to pick that up. Please holler if you disagree and want to pick it up
-yourself
-> ;-)
->
->
-> Thanks
-> Heiko
->
-> > ---
-> >  arch/arm/boot/dts/cros-ec-keyboard.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-> > b/arch/arm/boot/dts/cros-ec-keyboard.dtsi index 4e42f30c..c045105 10064=
-4
-> > --- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-> > +++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-> > @@ -55,6 +55,7 @@
-> >                       MATRIX_KEY(0x03, 0x04, KEY_F5)
-> >                       MATRIX_KEY(0x03, 0x06, KEY_6)
-> >                       MATRIX_KEY(0x03, 0x08, KEY_MINUS)
-> > +                     MATRIX_KEY(0x03, 0x09, KEY_F13)
-> >                       MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)
-> >                       MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)
->
-
---001a114314dcd338b7052abe2cb0
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<p dir=3D"ltr"><br>
-On Feb 2, 2016 01:17, &quot;Heiko St=C3=BCbner&quot; &lt;<a href=3D"mailto:=
-heiko@sntech.de">heiko@sntech.de</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi Daniel,<br>
-&gt;<br>
-&gt; Am Samstag, 30. Januar 2016, 10:38:24 schrieb Daniel Kurtz:<br>
-&gt; &gt; From: James Chao &lt;<a href=3D"mailto:james_chao@asus.com">james=
-_chao@asus.com</a>&gt;<br>
-&gt; &gt;<br>
-&gt; &gt; The LOCK key is at KSO9/KSI3 for Chromebook Flip and other device=
-s<br>
-&gt; &gt; that use the Chrome OS EC keyboard matrix.<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: James Chao &lt;<a href=3D"mailto:james_chao@asus.c=
-om">james_chao@asus.com</a>&gt;<br>
-&gt; &gt; Signed-off-by: Daniel Kurtz &lt;<a href=3D"mailto:djkurtz@chromiu=
-m.org">djkurtz@chromium.org</a>&gt;<br>
-&gt; &gt; Signed-off-by: YH Huang &lt;<a href=3D"mailto:yh.huang@mediatek.c=
-om">yh.huang@mediatek.com</a>&gt;<br>
-&gt;<br>
-&gt; that should probably be a<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 Reviewed-by: YH Huang &lt;<a href=3D"mailt=
-o:yh.huang@mediatek.com">yh.huang@mediatek.com</a>&gt;<br>
-&gt; As I don&#39;t see any actual patch handling step by him/her.</p>
-<p dir=3D"ltr">YH independently uploaded an identical patch to a different =
-ChromeOS kernel version (v3.18) with his SOB to support a different device.=
-<br>
-I wasn&#39;t sure how to deal with it, so I merged the SOB lists when posti=
-ng upstream.</p>
-<p dir=3D"ltr">&gt; Also, you might&#39;ve included Olof as the keeper of a=
-ll things ChromeOS when<br>
-&gt; sending.<br>
-&gt;<br>
-&gt; @Olof: this seems to be pretty Veyron-specific for the moment, so I&#3=
-9;m inclined<br>
-&gt; to pick that up. Please holler if you disagree and want to pick it up =
-yourself<br>
-&gt; ;-)<br>
-&gt;<br>
-&gt;<br>
-&gt; Thanks<br>
-&gt; Heiko<br>
-&gt;<br>
-&gt; &gt; ---<br>
-&gt; &gt;=C2=A0 arch/arm/boot/dts/cros-ec-keyboard.dtsi | 1 +<br>
-&gt; &gt;=C2=A0 1 file changed, 1 insertion(+)<br>
-&gt; &gt;<br>
-&gt; &gt; diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi<br>
-&gt; &gt; b/arch/arm/boot/dts/cros-ec-keyboard.dtsi index 4e42f30c..c045105=
- 100644<br>
-&gt; &gt; --- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi<br>
-&gt; &gt; +++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi<br>
-&gt; &gt; @@ -55,6 +55,7 @@<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0MATRIX_KEY(0x03, 0x04, KEY_F5)<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0MATRIX_KEY(0x03, 0x06, KEY_6)<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0MATRIX_KEY(0x03, 0x08, KEY_MINUS)<br>
-&gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0MATRIX_KEY(0x03, 0x09, KEY_F13)<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)<br>
-&gt;<br>
-</p>
-
---001a114314dcd338b7052abe2cb0--
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+new file mode 100644
+index 0000000..de69f20
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+@@ -0,0 +1,30 @@
++Texas Instruments AFE4404 Heart rate and Pulse Oximeter
++
++Required properties:
++ - compatible		: Should be "ti,afe4404".
++ - reg			: I2C address of the device.
++ - tx-supply		: Regulator supply to transmitting LEDs.
++ - interrupt-parent	: Phandle to he parent interrupt controller.
++ - interrupts		: The interrupt line the device ADC_RDY pin is
++			  connected to. For details refer to,
++			  ../interrupt-controller/interrupts.txt.
++
++Optional properties:
++ - reset-gpios		: GPIO used to reset the device.
++			  For details refer to, ../gpio/gpio.txt.
++
++Example:
++
++&i2c2 {
++	heart_mon@58 {
++		compatible = "ti,afe4404";
++		reg = <0x58>;
++
++		tx-supply = <&vbat>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++
++		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++	};
++};
+-- 
+2.7.0
