@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC 02/10] phy: rcar-gen3-usb2: Add phy-supply description in device tree doc
-Date: Tue, 2 Feb 2016 19:18:50 +0900
-Message-ID: <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 03/10] phy: rcar-gen3-usb2: remove unnecesary struct rcar_gen3_data
+Date: Tue, 2 Feb 2016 19:18:51 +0900
+Message-ID: <1454408338-4612-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,132 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-To handle the VBUS on/off by a regulator driver, this patch adds
-description about phy-supply in the rcar-gen3-phy-usb2.txt.
+Since this driver uses the struct rcar_gen3_data in struct rcar_gen3_chan
+only, we can remove the rcar_gen3_data.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/phy/phy-rcar-gen3-usb2.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index eaf7e9b..48b33a9 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -15,6 +15,8 @@ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
- combined, the device tree node should set interrupt properties to use the
- channel as USB OTG:
- - interrupts: interrupt specifier for the PHY.
-+- phy-supply: Phandle to a regulator that provides power to the VBUS. This
-+	      regulator will be managed during the PHY power on/off sequence.
+diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
+index bc4f7dd..2da2148 100644
+--- a/drivers/phy/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/phy-rcar-gen3-usb2.c
+@@ -74,20 +74,15 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
  
- Example (R-Car H3):
+-struct rcar_gen3_data {
+-	void __iomem *base;
+-	struct clk *clk;
+-};
+-
+ struct rcar_gen3_chan {
+-	struct rcar_gen3_data usb2;
++	void __iomem *base;
+ 	struct phy *phy;
+ 	bool has_otg;
+ };
  
+ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_COMMCTRL);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
+@@ -100,7 +95,7 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ 
+ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_LINECTRL1);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+@@ -114,7 +109,7 @@ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ 
+ static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_ADPCTRL);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
+@@ -141,13 +136,13 @@ static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
+ 
+ static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) &
++	return !!(readl(ch->base + USB2_ADPCTRL) &
+ 		  USB2_ADPCTRL_OTGSESSVLD);
+ }
+ 
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
++	return !!(readl(ch->base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
+ }
+ 
+ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+@@ -166,7 +161,7 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+ 
+ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_VBCTRL);
+@@ -187,7 +182,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 
+ 	/* Initialize USB2 part */
+ 	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+@@ -205,7 +200,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+ 
+-	writel(0, channel->usb2.base + USB2_INT_ENABLE);
++	writel(0, channel->base + USB2_INT_ENABLE);
+ 
+ 	return 0;
+ }
+@@ -213,7 +208,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_USBCTR);
+@@ -235,7 +230,7 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
+ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ {
+ 	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 status = readl(usb2_base + USB2_OBINTSTA);
+ 	irqreturn_t ret = IRQ_NONE;
+ 
+@@ -273,9 +268,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	channel->usb2.base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(channel->usb2.base))
+-		return PTR_ERR(channel->usb2.base);
++	channel->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(channel->base))
++		return PTR_ERR(channel->base);
+ 
+ 	/* call request_irq for OTG */
+ 	irq = platform_get_irq(pdev, 0);
 -- 
 1.9.1
