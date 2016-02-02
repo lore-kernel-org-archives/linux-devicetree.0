@@ -1,126 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Input: rotary-encoder - use more than two gpios
-Date: Tue, 2 Feb 2016 14:27:03 +0100
-Message-ID: <20160202132703.GY13664@pengutronix.de>
-References: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <56B09C27.8070009@zonque.org>
- <20160202125602.GW13664@pengutronix.de>
- <56B0ABC9.10107@zonque.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/11] MAINTAINERS: Add entry for X-Powers
+ AXP family PMIC drivers
+Date: Tue, 2 Feb 2016 14:27:54 +0100
+Message-ID: <20160202132754.GV4652@lukather>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-2-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VpY0yS1BYpNZumir"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBXG5YK2QKGQEPGJRYGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56B0ABC9.10107-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1454408864-24112-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Daniel,
+--VpY0yS1BYpNZumir
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Tue, Feb 02, 2016 at 02:14:49PM +0100, Daniel Mack wrote:
-> On 02/02/2016 01:56 PM, Uwe Kleine-K=F6nig wrote:
-> > Hello Daniel,
-> >=20
-> > On Tue, Feb 02, 2016 at 01:08:07PM +0100, Daniel Mack wrote:
-> >> On 02/02/2016 11:24 AM, Uwe Kleine-K=F6nig wrote:
-> >>> Some time ago I sent a v1 of this, now after testing the changes =
-more
-> >>> deeply patch 3 changed a bit. The old series started with
-> >>>
-> >>> 	Date: Wed,  2 Dec 2015 11:07:11 +0100
-> >>> 	From: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>> 	Subject: [PATCH RFC 0/3] input: rotary_encoder: use more than tw=
-o gpios as input
-> >>> 	Message-Id: <1449050834-31779-1-git-send-email-u.kleine-koenig@p=
-engutronix.de>
-> >>>
-> >>> The two first patches are just preparation for the third patch.
-> >>>
-> >>> There is an obvious improvement that allows detection of quick ch=
-anges
-> >>> more reliably with >2 gpios, but I didn't implement this yet. (Wi=
-th 4
-> >>> GPIOs you can distinguish a counter clockwise movement of three s=
-tates
-> >>> from a clock wise movement of a single state. Still the patch is =
-useful
-> >>> as it makes these devices work at all.
-> >>>
-> >>> My test device looks as follows:
-> >>>
-> >>>         rotary@0 {
-> >>>                 compatible =3D "rotary-encoder";
-> >>>                 gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 1=
-1 GPIO_ACTIVE_HIGH>, <&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIV=
-E_HIGH>;
-> >>>
-> >>>                 rotary-encoder,steps =3D <16>;
-> >>> 		rotary-encoder,steps-per-period =3D <16>;
-> >>>         };
-> >>>
-> >>> While Daniel Mack and Rojhalat Ibrahim agreed that this device is=
- an
-> >>> absolute encoder and should be supported by a simpler logic, I st=
-ill
-> >>> consider it worthwhile to get these patches in as a first step. A=
-lso the
-> >>> binding looks right, so IMHO the comments shouldn't stop this ser=
-ies
-> >>> from going in.
-> >>
-> >> I still don't understand why this is implemented that way, rather =
-than
-> >> going for a much simpler logic of interpretation that also allows =
-users
-> >> to read out the absolute position.
-> >>
-> >> The code to read the value would be really just as simple as readi=
-ng all
-> >> GPIOs and or-ing their values into the result, and skip the state
-> >> machine completely. This code would be active if a new attribute
-> >> (something like 'rotary-encoder,hardware-absolute') is set, or eve=
-n
-> >> implicitly, when more than 2 GPIOs are specified.
-> >>
-> >> Is there any reason for not doing that?
-> >=20
-> > Currently the reason is lack of time. And when implementing
-> > rotary-encoder,hardware-absolute something similar would be the res=
-ult
-> > for the relative reporting anyhow. So the problem is only that I do=
-n't
-> > have absolute support yet, but the patches as is would be the base =
-for
-> > that anyhow.
->=20
-> Because you would support relative support for such 4-pin encoders as
-> well? I would have thought that absolute encoders would report absolu=
-te
-> values only, but I guess you have a point here. Just to make sure we'=
-re
-> on the same page: For more than 2 GPIOs, and an absent
-> "rotary-encoder,relative-axis", the driver would switch to a mode in
-> which it bypasses the state machine, right?
+On Tue, Feb 02, 2016 at 06:27:34PM +0800, Chen-Yu Tsai wrote:
+> Add an entry for X-Powers AXP family PMIC drivers and list myself
+> as maintainer.
+> 
+> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Not sure about how this will be represented in the device tree, but yes=
-,
-that's more or less how I imagine to implement this. (And in the end
-having support for a 4-line relative device is just a side effect of
-having support for relative devices and for 4-line devices.)
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Best regards
-Uwe
+Thanks!
+Maxime
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--VpY0yS1BYpNZumir--
