@@ -1,103 +1,99 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH v10 0/8] arm64, numa: Add numa support for arm64 platforms
-Date: Tue, 2 Feb 2016 12:26:42 +0100
-Message-ID: <20160202112642.GE24726@rric.localdomain>
-References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: mark.rutland@arm.com, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, Will.Deacon@arm.com, hpa@zytor.com, catalin.marinas@arm.com, linux-arch@vger.kernel.org, linux-s390@vger.kernel.org, lorenzo.pieralisi@arm.com, pawel.moll@arm.com, al.stone@linaro.org, Prasun.Kapoor@caviumnetworks.com, x86@kernel.org, mingo@redhat.com, msalter@redhat.com, rfranz@cavium.com, lenb@kernel.org, devicetree@vger.kernel.org, james.hogan@imgtec.com, steve.capper@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, leif.lindholm@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, tglx@linutronix.de, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony.luck@intel.com, ard.biesheuvel@linaro.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, fenghua.yu@intel.com, benh@kernel.crashing.org, han
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 00/10] Support for Cortex-M Prototyping System
+Date: Tue,  2 Feb 2016 11:39:49 +0000
+Message-ID: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02.02.16 15:39:15, Ganapatrao Kulkarni wrote:
+Hi,
 
-> Ganapatrao Kulkarni (8):
->   arm64, numa: adding numa support for arm64 platforms.
->   Documentation, dt, numa: dt bindings for numa.
->   dt, numa: adding numa dt binding implementation.
->   arm64, numa : Enable numa dt for arm64 platforms.
->   arm64, dt, thunderx: Add initial dts for Cavium Thunderx in 2 node
->     topology.
->   arm64, mm, numa: Adding numa balancing support for arm64.
->   topology, cleanup: Avoid redefinition of cpumask_of_pcibus in asm
->     header files.
->   numa, mm, cleanup: remove redundant NODE_DATA macro from asm header
->     files.
+This patch series provide the basic support for running ucLinux on V2M-MPS2
+platform.
 
-I have tested the whole series on single and dual node systems for
-devicetree and acpi (with Hanjun's acpi numa v3 patches ported on
-top).
+With these patches applied ucLinux can be run on both HW and FVP models
+with Cortex-M3/M4/M7 configurations.
 
-Tested-by: Robert Richter <rrichter@cavium.com>
+Board description:
 
--Robert
+http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
 
-> 
->  Documentation/devicetree/bindings/numa.txt      | 272 ++++++++
->  arch/arm64/Kconfig                              |  26 +
->  arch/arm64/boot/dts/cavium/Makefile             |   2 +-
->  arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  83 +++
->  arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 806 ++++++++++++++++++++++++
->  arch/arm64/include/asm/mmzone.h                 |  10 +
->  arch/arm64/include/asm/numa.h                   |  45 ++
->  arch/arm64/include/asm/pgtable.h                |  18 +
->  arch/arm64/include/asm/topology.h               |   7 +
->  arch/arm64/kernel/pci.c                         |  10 +
->  arch/arm64/kernel/setup.c                       |   4 +
->  arch/arm64/kernel/smp.c                         |   4 +
->  arch/arm64/mm/Makefile                          |   1 +
->  arch/arm64/mm/init.c                            |  34 +-
->  arch/arm64/mm/mmu.c                             |   1 +
->  arch/arm64/mm/numa.c                            | 404 ++++++++++++
->  arch/ia64/include/asm/topology.h                |   4 -
->  arch/m32r/include/asm/mmzone.h                  |   4 +-
->  arch/metag/include/asm/mmzone.h                 |   4 +-
->  arch/metag/include/asm/topology.h               |   3 -
->  arch/powerpc/include/asm/mmzone.h               |   8 +-
->  arch/powerpc/include/asm/topology.h             |   4 -
->  arch/s390/include/asm/mmzone.h                  |   6 +-
->  arch/s390/include/asm/pci.h                     |   2 +-
->  arch/s390/include/asm/topology.h                |   1 +
->  arch/sh/include/asm/mmzone.h                    |   4 +-
->  arch/sh/include/asm/topology.h                  |   3 -
->  arch/sparc/include/asm/mmzone.h                 |   6 +-
->  arch/tile/include/asm/pci.h                     |   2 -
->  arch/tile/include/asm/topology.h                |   3 +
->  arch/x86/include/asm/mmzone.h                   |   3 +-
->  arch/x86/include/asm/mmzone_32.h                |   5 -
->  arch/x86/include/asm/mmzone_64.h                |  17 -
->  arch/x86/include/asm/pci.h                      |   2 +-
->  arch/x86/include/asm/topology.h                 |   1 +
->  drivers/of/Kconfig                              |  11 +
->  drivers/of/Makefile                             |   1 +
->  drivers/of/of_numa.c                            | 207 ++++++
->  include/asm-generic/mmzone.h                    |  24 +
->  include/asm-generic/topology.h                  |   4 +-
->  include/linux/of.h                              |   4 +
->  41 files changed, 1986 insertions(+), 74 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/numa.txt
->  create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
->  create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
->  create mode 100644 arch/arm64/include/asm/mmzone.h
->  create mode 100644 arch/arm64/include/asm/numa.h
->  create mode 100644 arch/arm64/mm/numa.c
->  delete mode 100644 arch/x86/include/asm/mmzone_64.h
->  create mode 100644 drivers/of/of_numa.c
->  create mode 100644 include/asm-generic/mmzone.h
-> 
-> -- 
-> 1.8.1.4
-> 
+Application notes (cover Cortex-M3/M4/M7):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
+
+Cortex-M System Design Kit (referenced as CMDK from documents above):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
+
+I'd be happy to hear any feedback/comments on this series!
+
+Changelog:
+  v1  -> v2:
+      - rebased on 4.5-rc2
+      - fixes for mps2-timer per Daniel and Rob (added Ack from Daniel)
+      - fixes for mps2-uart per Greg and Andy
+
+  RFC -> v1:
+      - dropped RFC tag
+      - rebased on 4.4-rc3
+      - added Acks from Rob
+      - updated mps2-timer per Daniel
+      - fixed build failures reported by 0-DAY kernel test infrastructure
+
+Thanks!
+
+Vladimir Murzin (10):
+  dt-bindings: document the MPS2 timer bindings
+  clockevents/drivers: add MPS2 Timer driver
+  dt-bindings: document the MPS2 UART bindings
+  serial: mps2-uart: add MPS2 UART driver
+  serial: mps2-uart: add support for early console
+  ARM: mps2: introduce MPS2 platform
+  ARM: mps2: add low-level debug support
+  ARM: configs: add MPS2 defconfig
+  ARM: dts: introduce MPS2 AN385/AN386
+  ARM: dts: introduce MPS2 AN399/AN400
+
+ .../devicetree/bindings/serial/arm,mps2-uart.txt   |   22 +
+ .../devicetree/bindings/timer/arm,mps2-timer.txt   |   28 +
+ arch/arm/Kconfig                                   |    8 +
+ arch/arm/Kconfig.debug                             |   12 +-
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/mps2-an385.dts                   |   90 +++
+ arch/arm/boot/dts/mps2-an399.dts                   |   92 +++
+ arch/arm/boot/dts/mps2.dtsi                        |  227 ++++++++
+ arch/arm/configs/mps2_defconfig                    |  112 ++++
+ arch/arm/include/debug/mps2.S                      |   27 +
+ arch/arm/mach-mps2/Makefile                        |    1 +
+ arch/arm/mach-mps2/Makefile.boot                   |    3 +
+ arch/arm/mach-mps2/dtmachine.c                     |   21 +
+ drivers/clocksource/Kconfig                        |    6 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mps2-timer.c                   |  276 +++++++++
+ drivers/tty/serial/Kconfig                         |   13 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/mps2-uart.c                     |  614 ++++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |    3 +
+ 21 files changed, 1560 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+ create mode 100644 arch/arm/boot/dts/mps2-an385.dts
+ create mode 100644 arch/arm/boot/dts/mps2-an399.dts
+ create mode 100644 arch/arm/boot/dts/mps2.dtsi
+ create mode 100644 arch/arm/configs/mps2_defconfig
+ create mode 100644 arch/arm/include/debug/mps2.S
+ create mode 100644 arch/arm/mach-mps2/Makefile
+ create mode 100644 arch/arm/mach-mps2/Makefile.boot
+ create mode 100644 arch/arm/mach-mps2/dtmachine.c
+ create mode 100644 drivers/clocksource/mps2-timer.c
+ create mode 100644 drivers/tty/serial/mps2-uart.c
+
+-- 
+1.7.9.5
