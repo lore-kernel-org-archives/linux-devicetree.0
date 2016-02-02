@@ -1,37 +1,49 @@
 From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: [PATCH v2 0/2] add Alphascale asm9260 RTC driver
-Date: Tue,  2 Feb 2016 20:56:09 +0100
-Message-ID: <1454442971-25225-1-git-send-email-linux@rempel-privat.de>
+Subject: [PATCH v2 2/2] doc: dt: add documentation for alphascale,asm9260-rtc
+Date: Tue,  2 Feb 2016 20:56:11 +0100
+Message-ID: <1454442971-25225-3-git-send-email-linux@rempel-privat.de>
 References: <20160202102804.GT20165@piout.net>
+ <1454442971-25225-1-git-send-email-linux@rempel-privat.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160202102804.GT20165-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <1454442971-25225-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set provide support for RTC controller found on Alphascale
-ASM9260 SoC.
+Document Alphascale asm9260 RTC bindings
 
-v2:
-- change license to GPLv2 and later
-- remove HW_RTC_AUX and HW_RTC_AUXEN. Thay was taken from reference driver.
-  Documentation do not provide any info about it. According to my tests
-  this regs are not available on asm9260.
-- remove calibration from DT. It will be beter to set it over sysfs.
-
-Oleksij Rempel (2):
-  rtc: add rtc-asm9260 driver
-  doc: dt: add documentation for alphascale,asm9260-rtc
-
- .../bindings/rtc/alphascale,asm9260-rtc.txt        |  19 ++
- drivers/rtc/Kconfig                                |  10 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-asm9260.c                          | 355 +++++++++++++++++++++
- 4 files changed, 385 insertions(+)
+Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+---
+ .../bindings/rtc/alphascale,asm9260-rtc.txt           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
- create mode 100644 drivers/rtc/rtc-asm9260.c
 
+diff --git a/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+new file mode 100644
+index 0000000..76ebca5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+@@ -0,0 +1,19 @@
++* Alphascale asm9260 SoC Real Time Clock
++
++Required properties:
++- compatible: Should be "alphascale,asm9260-rtc"
++- reg: Physical base address of the controller and length
++       of memory mapped region.
++- interrupts: IRQ line for the RTC.
++- clocks: Reference to the clock entry.
++- clock-names: should contain:
++  * "ahb" for the SoC RTC clock
++
++Example:
++rtc0: rtc@800a0000 {
++	compatible = "alphascale,asm9260-rtc";
++	reg = <0x800a0000 0x100>;
++	clocks = <&acc CLKID_AHB_RTC>;
++	clock-names = "ahb";
++	interrupts = <2>;
++};
 -- 
 2.5.0
 
