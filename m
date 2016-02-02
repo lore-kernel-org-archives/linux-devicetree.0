@@ -1,64 +1,60 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V4 2/7] clk: bcm2835: clamp clock divider to highest integer only
-Date: Mon, 01 Feb 2016 15:19:57 -0800
-Message-ID: <87k2mo3tnm.fsf@eliezer.anholt.net>
-References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org> <1452867667-2447-3-git-send-email-kernel@martin.sperl.org>
+From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH 1/2] dt/bindings: Add bindings for PIC32 deadman timer peripheral
+Date: Mon, 1 Feb 2016 17:02:23 -0700
+Message-ID: <1454371348-25104-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1452867667-2447-3-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
-kernel@martin.sperl.org writes:
+Document the devicetree bindings for the deadman timer peripheral found on
+Microchip PIC32 SoC class devices.
 
-> From: Martin Sperl <kernel@martin.sperl.org>
->
-> The clock divider calculation right now clamps the
-> divider to the highest possible fractional divider.
-> So typically (BIT(div_int_bits) - 1) + 4095 / 4096.
->
-> As the fractional clock divider is alterating between
-> (Fosc / div_int) and (Fosc / (div_int + 1))
-> the divider will overflow for the (div_int + 1) case.
-> As with the "underflow" case we have seen for (div < 2),
-> we can assume that the same applies on the upper limit
-> as well.
->
-> So this patch will instead clamp to the divider to the
-> max of (BIT(div_int_bits) - 1)
+Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+---
+Note: Please merge this patch series through the MIPS tree.
+---
+ .../bindings/watchdog/microchip,pic32-dmt.txt      |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
 
-Looks like this restriction might be necessary, though it's not quite
-spelled out in the docs.
+diff --git a/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt b/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
+new file mode 100644
+index 0000000..f7374ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
+@@ -0,0 +1,19 @@
++* Microchip PIC32 Deadman Timer
++
++The deadman timer is used to reset the processor in the event of a software
++malfunction. It is a free-running instruction fetch timer, which is clocked
++whenever an instruction fetch occurs until a count match occurs.
++
++Required properties:
++- compatible: must be "microchip,pic32mzda-dmt".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- clocks: phandle of parent clock (should be &PBCLK7).
++
++Example:
++
++	watchdog2: dmt@1f800a00 {
++		compatible = "microchip,pic32mzda-dmt";
++		reg = <0x1f800a00 0x80>;
++		clocks = <&PBCLK7>;
++	};
+--
+1.7.9.5
 
-This also needs to be conditional on it being a MASH clock, and the
-limit on the divider changes in the same way based on the mash number as
-for the minimum.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWr+gdAAoJELXWKTbR/J7okrEP/27LzAcVY/7Z8mLTgHV1EUWo
-hFJJuh5S/5+cr0hfqEJzG6zmaSBDUqz9I+pkObuKWyQwmpJkMzOZpEeCzi2sXNE9
-9rUbhcXhwJ/VFk3uWdxvUKKL1FYv0IynSPk91Ueo7sh+AXSj1qnVpHFprC6lKJtD
-Rl/3qYk+L+cHxt0Ap37ZUwlG+v+5BE+abJ3NR3UWYtmJb3XMTZRhvfyR5Et0iX6J
-IMAmIxWMptxGVE0VfQqtQXNDH8OysbO9G5HX09WYyC/jT5PI3tR+RkKxKlGIhATA
-Pm7RyZpqSbEOzUWqLWxAUtVMwW6t61Bbx+eHdPcf6DiwmB0Iaa/hjVQvpYcjaqxx
-ZqKk2jp6bbp7NN83/aJh5RIuJbwvIz4jbQlaZGKjzXGXxf7L6oTUcGnHZ9GUH308
-xn65k1lvFZ8NeGQKWaMvqK9T02A1xduvSPcNHhaQxqp2ruajVBc+kEtIieXBmPyc
-8+oQz15XbLotWHbT46+z9gmvuXoxHrPT4/Y1pvSkIciaDMhu0m870Cueussh/FVJ
-KGLz4McO/vaqV+D1cZXO/Oe5ce94c6EBrcWmdVOAVQHhvSokqaMkX7/A/It713NZ
-BNCnGsYxEgphc35+w8DzhChFvv7+RXTGflAKhjapvBT8uyxkQ3M+0U6NVQV3Ndql
-UO2DQtsu1nZM7JZGoDnV
-=NqSn
------END PGP SIGNATURE-----
---=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
