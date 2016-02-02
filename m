@@ -1,78 +1,26 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] dts/ls1021a: add the DTS for QSPI support
-Date: Tue, 2 Feb 2016 15:49:07 +0800
-Message-ID: <20160202074907.GK8307@tiger>
-References: <1453970006-46509-1-git-send-email-yao.yuan@freescale.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf610: Add alias for ethernet controller
+Date: Tue, 2 Feb 2016 16:06:21 +0800
+Message-ID: <20160202080621.GL8307@tiger>
+References: <1454112288-7490-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1453970006-46509-1-git-send-email-yao.yuan@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuan Yao <yao.yuan@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Yuan Yao <yao.yuan@nxp.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1454112288-7490-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 28, 2016 at 04:33:26PM +0800, Yuan Yao wrote:
-> From: Yuan Yao <yao.yuan@nxp.com>
+On Fri, Jan 29, 2016 at 04:04:48PM -0800, Stefan Agner wrote:
+> Add alias for FEC ethernet on Vybrid to allow bootloaders (like U-Boot)
+> patch-in the MAC address using this alias.
 > 
-> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
-> ---
-> Add in v1:
-> Can merge, but the function depend on the patch:
-> https://patchwork.kernel.org/patch/8118251/
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Please send me dts patch only after the driver part gets applied.
-
-> 
-> mtd: spi-nor: fsl-quadspi: add support for ls1021a
-> 
-> LS1021a also support Freescale Quad SPI controller.
-> Add fsl-quadspi support for ls1021a chip and make SPI_FSL_QUADSPI
-> selectable for LS1021A SOC hardwares.
-> 
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 9430a99..c764fa5 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -252,6 +252,21 @@
->  			status = "disabled";
->  		};
->  
-> +		qspi: quadspi@1550000 {
-> +			compatible = "fsl,ls1021a-qspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x1550000 0x0 0x10000>,
-> +				<0x0 0x40000000 0x0 0x4000000>;
-> +			reg-names = "QuadSPI", "QuadSPI-memory";
-> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +			clock-names = "qspi_en", "qspi";
-> +			clocks = <&platform_clk 1>, <&platform_clk 1>;
-> +			big-endian;
-> +			amba-base = <0x40000000>;
-
-What is this property?  I cannot find it in any bindings doc.  Is it
-added by your patches on driver code?
-
-Shawn
-
-> +			status = "disabled";
-> +		};
-> +
->  		i2c0: i2c@2180000 {
->  			compatible = "fsl,vf610-i2c";
->  			#address-cells = <1>;
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
