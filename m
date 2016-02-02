@@ -1,55 +1,51 @@
 From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH 1/2] dt/bindings: Add bindings for PIC32 deadman timer peripheral
-Date: Mon, 1 Feb 2016 17:02:23 -0700
-Message-ID: <1454371348-25104-1-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH 1/2] dt/bindings: Add bindings for PIC32 watchdog peripheral
+Date: Mon, 1 Feb 2016 17:02:56 -0700
+Message-ID: <1454371381-25160-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Document the devicetree bindings for the watchdog peripheral found on Microchip
+PIC32 SoC class devices.
 
-Document the devicetree bindings for the deadman timer peripheral found on
-Microchip PIC32 SoC class devices.
-
-Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 ---
 Note: Please merge this patch series through the MIPS tree.
 ---
- .../bindings/watchdog/microchip,pic32-dmt.txt      |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
+ .../bindings/watchdog/microchip,pic32-wdt.txt      |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
 
-diff --git a/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt b/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
+diff --git a/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt b/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
 new file mode 100644
-index 0000000..f7374ee
+index 0000000..3ce2839
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt
-@@ -0,0 +1,19 @@
-+* Microchip PIC32 Deadman Timer
++++ b/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
+@@ -0,0 +1,18 @@
++* Microchip PIC32 Watchdog Timer
 +
-+The deadman timer is used to reset the processor in the event of a software
-+malfunction. It is a free-running instruction fetch timer, which is clocked
-+whenever an instruction fetch occurs until a count match occurs.
++When enabled, the watchdog peripheral can be used to reset the device if the
++WDT is not cleared periodically in software.
 +
 +Required properties:
-+- compatible: must be "microchip,pic32mzda-dmt".
++- compatible: must be "microchip,pic32mzda-wdt".
 +- reg: physical base address of the controller and length of memory mapped
 +  region.
-+- clocks: phandle of parent clock (should be &PBCLK7).
++- clocks: phandle of source clk. should be <&LPRC> clk.
 +
 +Example:
 +
-+	watchdog2: dmt@1f800a00 {
-+		compatible = "microchip,pic32mzda-dmt";
-+		reg = <0x1f800a00 0x80>;
-+		clocks = <&PBCLK7>;
++	watchdog0: wdt@1f800800 {
++		compatible = "microchip,pic32mzda-wdt";
++		reg = <0x1f800800 0x200>;
++		clocks = <&LPRC>;
 +	};
 --
 1.7.9.5
