@@ -1,24 +1,78 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [RESEND PATCH v2 00/23] HiSilicon SAS v2 hw support
-Date: Mon, 01 Feb 2016 21:12:59 -0500
-Message-ID: <yq18u33oo5w.fsf@sermon.lab.mkp.net>
-References: <1453747643-61875-1-git-send-email-john.garry@huawei.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Tue, 2 Feb 2016 02:26:29 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D6400956@penmbx01>
+References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+	<20160129001603.GM4130@sirena.org.uk>
+	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+	<20160129113518.GQ4130@sirena.org.uk>
+	<CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
+	<B256D81BAE5131468A838E5D7A243641D63FE2C7@penmbx01>
+ <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453747643-61875-1-git-send-email-john.garry@huawei.com> (John
-	Garry's message of "Tue, 26 Jan 2016 02:47:00 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "John" == John Garry <john.garry@huawei.com> writes:
-
-John> This patchset introduces support for the HiSi SAS v2 hw.  The
-John> major difference between v1 and v2 hw is support for SATA/STP.
-
-Applied to 4.6/scsi-queue.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+SGkgSmF2aWVyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEphdmll
+ciBNYXJ0aW5leiBDYW5pbGxhcyBbbWFpbHRvOmphdmllckBkb3doaWxlMC5vcmddDQo+IFNlbnQ6
+IDIwMTblubQy5pyIMeaXpSAyMToxNQ0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0Bh
+dG1lbC5jb20+DQo+IENjOiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+OyBMaWFtIEdp
+cmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPjsNCj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT47IElhbg0KPiBDYW1wYmVs
+bCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBHYWxhIDxnYWxha0Bjb2Rl
+YXVyb3JhLm9yZz47DQo+IEtyenlzenRvZiBLb3psb3dza2kgPGsua296bG93c2tpQHNhbXN1bmcu
+Y29tPjsgTGVlIEpvbmVzDQo+IDxsZWUuam9uZXNAbGluYXJvLm9yZz47IFBldGVyIEtvcnNnYWFy
+ZCA8amFjbWV0QGdtYWlsLmNvbT47IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0
+bWVsLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMS8yXSByZWd1bGF0b3I6IGFjdDg5NDVhOiBhZGQgcmVndWxh
+dG9yIGRyaXZlciBmb3INCj4gQUNUODk0NUENCj4gDQo+IEhlbGxvIFdlbnlvdSwNCj4gDQo+IFtz
+bmlwXQ0KPiANCj4gPj4gPg0KPiA+PiA+IElmIHRoZW4gZGV2aWNlIGlzIG5vdCBiZWluZyBsb2Fk
+ZWQgZnJvbSB0aGUgRFQgKGFuZCBpdCBzaG91bGRuJ3QNCj4gPj4gPiBiZSwgdGhlIGRldmljZSBs
+b29rcyBsaWtlIGl0IHNob3VsZCBiZSBpbnN0YW50aWF0ZWQgZGlyZWN0bHkgYnkgdGhlDQo+ID4+
+ID4gTUZEIGFzIGl0IGNhbid0IGV4aXN0IHNlcGFyYXRlbHkgdG8gdGhhdCBNRkQpIGFuIE9GIHRh
+YmxlIHdpbGwgZG8gbm90aGluZy4NCj4gPj4NCj4gPj4gVGhlbiBoZSBzaG91bGQgcmVtb3ZlIHRo
+ZSAub2ZfY29tcGF0aWJsZSBmcm9tIHRoZSBNRkQgY2VsbCBkZWZpbml0aW9uLg0KPiA+DQo+ID4g
+SSB0cmllZCBpdCwNCj4gPg0KPiA+IEJ1dCBpZiByZW1vdmVkIHRoaXMgLm9mX2NvbXBhdGlibGUs
+IGFuZCByZXNlcnZlZCB0aGUgT0YgdGFibGUuDQo+IA0KPiBXaGF0IHdlIHNhaWQgaXMgdGhhdCB5
+b3Ugc2hvdWxkIHJlbW92ZSBib3RoIHRoZSBtZmQgY2VsbCAub2ZfY29tcGF0aWJsZSBmaWVsZCBh
+bmQNCj4gdGhlIE9GIHRhYmxlLiBPZiBjb3Vyc2UgcmVtb3Zpbmcgb25lIGJ1dCBsZWF2aW5nIHRo
+ZSBvdGhlciBpcyBub3QgY29ycmVjdC4NCg0KSSBhbSBjb25mdXNlZCA6KQ0KDQo+IA0KPiA+IHRo
+ZSAmcGRldi0+ZGV2LT5vZl9ub2RlIGlzIE5VTEwsIHRoZSBkcml2ZXIgZmFpbHMgdG8gZ2V0IHRo
+ZQ0KPiA+IGNvbmZpZ3VyYXRpb24gdmFsdWUgZnJvbSBEVCwNCj4gPg0KPiANCj4gSSBzZWUsIHlv
+dSBtZWFuIHRoYXQgeW91IGFyZSBub3QgYWJsZSB0byBsb29rdXAgdGhlICJhY3RpdmUtc2VtaSx2
+c2VsLWhpZ2giDQo+IHByb3BlcnR5Lg0KDQpObyBvbmx5IHRoaXMgcHJvcGVydHksDQoNClRoZSBy
+ZWd1bGF0b3IgaW5pdF9kYXRhcyBhcmUgYWxzbyBub3QgZ290dGVuIGZyb20gRFQgZHVlIHRvIHRo
+ZSAmcGRldi0+ZGV2LT5vZl9ub2RlIGlzIE5VTEwuDQoNCj4gDQo+ID4gSXQgc2VlbXMgdGhlIE9G
+IHRhYmxlIHN0aWxsIGRvZXNuJ3Qgd29yay4gV2hlcmUgaXMgd3Jvbmc/DQo+ID4NCj4gDQo+IEkg
+dGhpbmsgdGhlIHByb2JsZW0gaXMgd2l0aCB5b3VyIERUIGJpbmRpbmcuIFlvdSBoYXZlIGEgUE1J
+QyBkZXYgbm9kZSB3aXRoDQo+IGNvbXBhdGlibGUgImFjdGl2ZS1zZW1pLGFjdDg5NDVhIiB0aGF0
+IGhhcyBhIGNoaWxkIG5vZGUgd2l0aCBjb21wYXRpYmxlICJhY3RpdmUtDQo+IHNlbWksYWN0ODk0
+NWEtcmVndWxhdG9yIiB3aGljaCBpbiB0dXJuIGhhcyB0aGUgInJlZ3VsYXRvcnMiIG5vZGUuDQo+
+IA0KPiBJIGJlbGlldmUgd2hhdCBNYXJrIHNheXMgaXMgdGhhdCB0aGVyZSBzaG91bGRuJ3QgYmUg
+YSBjb21wYXRpYmxlIGFuZCBub2RlIGZvciB0aGUNCj4gcmVndWxhdG9ycyBJQyBzaW5jZSBpcyBw
+YXJ0IG9mIHRoZSBQTUlDLiBJT1csIHlvdSBjYW4ndCBoYXZlIGl0IGFzIGEgc3RhbmRhbG9uZQ0K
+PiBub2RlIGluIHRoZSBEVFMuDQo+IA0KPiA+IENvdWxkIHlvdSBoZWxwIGdpdmUgc29tZSBzdWdn
+ZXN0aW9uPw0KPiA+DQo+IA0KPiBJIHdvdWxkIGp1c3QgcmVtb3ZlIHRoZSAiYWN0aXZlLXNlbWks
+YWN0ODk0NWEtcmVndWxhdG9yIiBub2RlIGFuZCBtYWtlICJhY3RpdmUtDQo+IHNlbWksdnNlbC1o
+aWdoIiBhIHByb3BlcnR5IG9mIHRoZSAiYWN0aXZlLXNlbWksYWN0ODk0NWEiIG5vZGUuDQo+IFRo
+YXQgd2F5IHlvdSBjYW4gcmVtb3ZlIHRoZSBtZmQgY2VsbCAub2ZfY29tcGF0aWJsZSBhbmQgT0Yg
+dGFibGUgaW4gdGhlDQo+IHJlZ3VsYXRvciBkcml2ZXIgYW5kIHJlYWQgdGhlICJhY3RpdmUtc2Vt
+aSx2c2VsLWhpZ2giIHVzaW5nIHRoZSBwbGF0Zm9ybSBkZXZpY2Uncw0KPiBwYXJlbnQgb2Zfbm9k
+ZS4NCj4gDQo+IEJ1dCBpdCdzIGJldHRlciBpZiB5b3Ugd2FpdCBmb3IgTWFyaydzIG9waW5pb25z
+IGJlZm9yZSByZS1zcGluaW5nIHlvdXIgcGF0Y2hlcy4NCg0KQWxsIHJpZ2h0Lg0KDQo+IA0KPiBC
+ZXN0IHJlZ2FyZHMsDQo+IEphdmllcg0KDQpUaGFua3MgDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2Vu
+eW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
