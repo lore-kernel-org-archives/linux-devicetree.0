@@ -1,74 +1,50 @@
-From: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: ad5755: add support for dt bindings
-Date: Tue, 2 Feb 2016 16:57:55 +0100
-Message-ID: <56B0D203.3050905@prevas.dk>
-References: <1454416574-6645-1-git-send-email-sean.nyekjaer@prevas.dk>
- <56B0CC2C.6020809@metafoo.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 10/11] ARM: dts: sun9i: a80-optimus: Disable
+ dummy regulators vcc3v0, vcc3v3, vcc5v0
+Date: Tue, 2 Feb 2016 17:21:36 +0100
+Message-ID: <20160202162136.GX4652@lukather>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-11-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B0CC2C.6020809-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ggEtdcIX3XIOBw6T"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEVPYO2QKGQEBG44G5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454408864-24112-11-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--ggEtdcIX3XIOBw6T
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+Hi,
 
-On 2016-02-02 16:33, Lars-Peter Clausen wrote:
-> On 02/02/2016 01:36 PM, Sean Nyekjaer wrote:
->> Still missing a way to provide default modes and settings
->> for the driver from dt, but I see this as a start.
->>
->> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> Hi,
->
-> Thanks for the patch.
-:-)
->
->> ---
->>   drivers/iio/dac/ad5755.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
->> index bfb350a..e1b6e78 100644
->> --- a/drivers/iio/dac/ad5755.c
->> +++ b/drivers/iio/dac/ad5755.c
->> @@ -607,6 +607,16 @@ static const struct spi_device_id ad5755_id[] = {
->>   };
->>   MODULE_DEVICE_TABLE(spi, ad5755_id);
->>   
->> +static const struct of_device_id ad5755_of_match[] = {
->> +	{ .compatible = "adi,ad5755" },
->> +	{ .compatible = "adi,ad5755-1" },
->> +	{ .compatible = "adi,ad5757" },
->> +	{ .compatible = "adi,ad5735" },
->> +	{ .compatible = "adi,ad5737" },
-> This needs to set the ID for the device type, so that the driver gets
-> instantiated for the correct devicetype. And in the probe function check if
-> the driver was probed via DT (by checking spi->dev.of_node) and if it does
-> get the ID from the of_device_id rather the spi_device_id.
-I was planning on doing that.
-And I was experimenting with providing modes and settings for every 
-channel from the dt.
-Is the DAC the only output devices in IIO?
+On Tue, Feb 02, 2016 at 06:27:43PM +0800, Chen-Yu Tsai wrote:
+> These 3 regulators are provided in sunxi-common-regulators.dtsi.
+> 3.0V/3.3V and 5.0V are commonly used voltages in Allwinner devices.
+> These dummy regulators provide a stand-in when bindings that require
+> one, but the real regulator is not supported yet.
+> 
+> Since these are no longer needed, we can disable them.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-I will send an proposal tomorrow :-) And thereby (maybe) pave the way 
-for the runtime mode switching
+Why not remove the include entirely then?
 
-Should we drop the platform data support and only rely on dt?
->
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, ad5755_of_match);
->> +
->>   static struct spi_driver ad5755_driver = {
->>   	.driver = {
->>   		.name = "ad5755",
->>
+Maxime
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--ggEtdcIX3XIOBw6T--
