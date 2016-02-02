@@ -1,86 +1,31 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v5 2/8] clk: rockchip: rk3036: fix and add node id for emac clock
-Date: Tue,  2 Feb 2016 11:48:19 +0800
-Message-ID: <1454384899-7270-1-git-send-email-wxt@rock-chips.com>
-References: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, keescook@google.com, linux-kernel@vger.kernel.org, jeffy.chen@rock-chips.com, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v4 1/3] mailbox: Add support for APM X-Gene platform
+ mailbox driver
+Date: Tue, 2 Feb 2016 10:44:00 +0530
+Message-ID: <CABb+yY1cE152ZdfK_aeB8ufG=WfoUVB6BN8kXPphYgMBnpH-GA@mail.gmail.com>
+References: <CABb+yY2zHycEmsVvp8OFwpJ1PZgrEPpV-oOe56wgFJ=EE0nTcg@mail.gmail.com>
+	<cover.1452912126.git.dhdang@apm.com>
+	<abff73c051fd06a9dd3b04a1e7957ad5a9b69a18.1452912126.git.dhdang@apm.com>
+	<CADaLNDmSiK27wYBSo8-DsafmG5jUumUR5WYgConeSFXGNjH6+w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADaLNDmSiK27wYBSo8-DsafmG5jUumUR5WYgConeSFXGNjH6+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Duc Dang <dhdang@apm.com>
+Cc: Paul Bolle <pebolle@tiscali.nl>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: zhengxing <zhengxing@rock-chips.com>
+On Tue, Feb 2, 2016 at 1:08 AM, Duc Dang <dhdang@apm.com> wrote:
+> Hi Jassi,
+>
+> On Fri, Jan 15, 2016 at 6:57 PM, Duc Dang <dhdang@apm.com> wrote:
+>> X-Gene mailbox controller provides 8 mailbox channels, with
+>> each channel has a dedicated interrupt line.
+>
+> Did you have a chance to look into this version 4 of my mail-box patch?
+>
+Seems ok, please just fix the "section mismatch" warnings reported by
+the build-bot.
 
-In the emac driver, we need to refer HCLK_MAC since there are
-only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clock are under the
-GPLL, and it is unable to provide the accurate rate for mac_ref which
-need to 50MHz probability, we should let it under the DPLL and are
-able to set the freq which integer multiples of 50MHz, so we add these
-emac node for reference.
-
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-
----
-
-Changes in v5: None
-Changes in v4:
-- fix the commit, pick up from the
-  https://patchwork.kernel.org/patch/7976631/.
-- The emac parent shouldn't depend on the APLL. instead of DPLL.
-
- drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
- include/dt-bindings/clock/rk3036-cru.h | 2 ++
- 2 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
-index be71a41..701f702 100644
---- a/drivers/clk/rockchip/clk-rk3036.c
-+++ b/drivers/clk/rockchip/clk-rk3036.c
-@@ -343,8 +343,11 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
- 			RK2928_CLKGATE_CON(10), 5, GFLAGS),
- 
--	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
--			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
-+	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
-+			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
-+	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
-+			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
-+
- 	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
- 
-@@ -404,7 +407,7 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 	GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(7), 3, GFLAGS),
- 	GATE(HCLK_I2S, "hclk_i2s", "hclk_peri", 0, RK2928_CLKGATE_CON(7), 2, GFLAGS),
- 	GATE(0, "hclk_sfc", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS),
--	GATE(0, "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15, GFLAGS),
-+	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0, RK2928_CLKGATE_CON(3), 5, GFLAGS),
- 
- 	/* pclk_peri gates */
- 	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 1, GFLAGS),
-diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
-index ebc7a7b..de44109 100644
---- a/include/dt-bindings/clock/rk3036-cru.h
-+++ b/include/dt-bindings/clock/rk3036-cru.h
-@@ -54,6 +54,7 @@
- #define SCLK_PVTM_VIDEO		125
- #define SCLK_MAC		151
- #define SCLK_MACREF		152
-+#define SCLK_MACPLL		153
- #define SCLK_SFC		160
- 
- /* aclk gates */
-@@ -92,6 +93,7 @@
- #define HCLK_SDMMC		456
- #define HCLK_SDIO		457
- #define HCLK_EMMC		459
-+#define HCLK_MAC		460
- #define HCLK_I2S		462
- #define HCLK_LCDC		465
- #define HCLK_ROM		467
--- 
-1.9.1
-
+Thanks
