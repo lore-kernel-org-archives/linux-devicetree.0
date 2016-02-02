@@ -1,13 +1,15 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH v2 05/10] serial: mps2-uart: add support for early console
-Date: Tue,  2 Feb 2016 11:39:54 +0000
-Message-ID: <1454413199-26573-6-git-send-email-vladimir.murzin@arm.com>
-References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v2 1/3] Input: rotary-encoder - make use of devm_* to
+ simplify .probe and .remove
+Date: Tue, 2 Feb 2016 12:56:24 +0100
+Message-ID: <56B09968.9050705@zonque.org>
+References: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1454408678-6011-2-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+In-Reply-To: <1454408678-6011-2-git-send-email-u.kleine-koenig@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,71 +19,96 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, galak@codeaurora.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support early console for MPS2 UART which can be enabled via
-earlycon=mps2,0x40004000
-
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
----
- drivers/tty/serial/Kconfig     |    1 +
- drivers/tty/serial/mps2-uart.c |   30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 3a248be..4ed6e51 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1454,6 +1454,7 @@ config SERIAL_MPS2_UART_CONSOLE
- 	bool "MPS2 UART console support"
- 	depends on SERIAL_MPS2_UART
- 	select SERIAL_CORE_CONSOLE
-+	select SERIAL_EARLYCON
- 
- config SERIAL_MPS2_UART
- 	bool "MPS2 UART port"
-diff --git a/drivers/tty/serial/mps2-uart.c b/drivers/tty/serial/mps2-uart.c
-index 4d113ec..530dcab 100644
---- a/drivers/tty/serial/mps2-uart.c
-+++ b/drivers/tty/serial/mps2-uart.c
-@@ -435,6 +435,36 @@ static struct console mps2_uart_console = {
- 
- #define MPS2_SERIAL_CONSOLE (&mps2_uart_console)
- 
-+static void mps2_early_putchar(struct uart_port *port, int ch)
-+{
-+
-+	while (readb(port->membase + UARTn_STATE) & UARTn_STATE_TX_FULL)
-+		cpu_relax();
-+
-+	writeb((unsigned char)ch, port->membase + UARTn_DATA);
-+}
-+
-+
-+static void mps2_early_write(struct console *con, const char *s, unsigned n)
-+{
-+	struct earlycon_device *dev = con->data;
-+
-+	uart_console_write(&dev->port, s, n, mps2_early_putchar);
-+}
-+
-+static int __init mps2_early_console_setup(struct earlycon_device *device,
-+					   const char *opt)
-+{
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	device->con->write = mps2_early_write;
-+
-+	return 0;
-+}
-+EARLYCON_DECLARE(mps2, mps2_early_console_setup);
-+OF_EARLYCON_DECLARE(mps2, "arm,mps2-uart", mps2_early_console_setup);
-+
- #else
- #define MPS2_SERIAL_CONSOLE NULL
- #endif
--- 
-1.7.9.5
+T24gMDIvMDIvMjAxNiAxMToyNCBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4gRm9yIGFs
+bCBvcGVyYXRpb25zIGNhbGxlZCBpbiAucHJvYmUgdGhlcmUgYXJlIGRldm1fKiB2YXJpYW50cy4K
+PiAoaW5wdXRfcmVnaXN0ZXJfZGV2aWNlIGlzIGNsZXZlciBlbm91Z2ggdG8gYmUgZGV2bSBhd2Fy
+ZSBvbiBpdHMgb3duLikKPiBUaGlzIGFsbG93cyB0byBnZXQgcmlkIG9mIHRoZSBlcnJvciB1bndp
+bmQgY29kZSBwYXRocyBpbiAucHJvYmUgYW5kIHRoZQo+IGNvbXBsZXRlIC5yZW1vdmUgZnVuY3Rp
+b24uCgpXaGlsZSBhdCBpdCwgY291bGQgeW91IGFsc28gY29udmVydCB0aGlzIG92ZXIgdG8gdGhl
+IGdwaW9kXyogQVBJPwoKClRoYW5rcywKRGFuaWVsCgoKCj4gCj4gU2lnbmVkLW9mZi1ieTogVXdl
+IEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPiAtLS0KPiAg
+ZHJpdmVycy9pbnB1dC9taXNjL3JvdGFyeV9lbmNvZGVyLmMgfCA3NCArKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCsp
+LCA1MiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pbnB1dC9taXNjL3Jv
+dGFyeV9lbmNvZGVyLmMgYi9kcml2ZXJzL2lucHV0L21pc2Mvcm90YXJ5X2VuY29kZXIuYwo+IGlu
+ZGV4IDhhZWU3MTk4NjQzMC4uMzg2YmRiNTMxNGU2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvaW5w
+dXQvbWlzYy9yb3RhcnlfZW5jb2Rlci5jCj4gKysrIGIvZHJpdmVycy9pbnB1dC9taXNjL3JvdGFy
+eV9lbmNvZGVyLmMKPiBAQCAtMjExLDggKzIxMSw4IEBAIHN0YXRpYyBzdHJ1Y3Qgcm90YXJ5X2Vu
+Y29kZXJfcGxhdGZvcm1fZGF0YSAqcm90YXJ5X2VuY29kZXJfcGFyc2VfZHQoc3RydWN0IGRldmlj
+Cj4gIAlpZiAoIW9mX2lkIHx8ICFucCkKPiAgCQlyZXR1cm4gTlVMTDsKPiAgCj4gLQlwZGF0YSA9
+IGt6YWxsb2Moc2l6ZW9mKHN0cnVjdCByb3RhcnlfZW5jb2Rlcl9wbGF0Zm9ybV9kYXRhKSwKPiAt
+CQkJR0ZQX0tFUk5FTCk7Cj4gKwlwZGF0YSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZihzdHJ1
+Y3Qgcm90YXJ5X2VuY29kZXJfcGxhdGZvcm1fZGF0YSksCj4gKwkJCSAgICAgR0ZQX0tFUk5FTCk7
+Cj4gIAlpZiAoIXBkYXRhKQo+ICAJCXJldHVybiBFUlJfUFRSKC1FTk9NRU0pOwo+ICAKPiBAQCAt
+Mjc3LDExICsyNzcsMTEgQEAgc3RhdGljIGludCByb3RhcnlfZW5jb2Rlcl9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJCX0KPiAgCX0KPiAgCj4gLQllbmNvZGVyID0ga3ph
+bGxvYyhzaXplb2Yoc3RydWN0IHJvdGFyeV9lbmNvZGVyKSwgR0ZQX0tFUk5FTCk7Cj4gLQlpbnB1
+dCA9IGlucHV0X2FsbG9jYXRlX2RldmljZSgpOwo+ICsJZW5jb2RlciA9IGRldm1fa3phbGxvYyhk
+ZXYsIHNpemVvZihzdHJ1Y3Qgcm90YXJ5X2VuY29kZXIpLCBHRlBfS0VSTkVMKTsKPiArCWlucHV0
+ID0gZGV2bV9pbnB1dF9hbGxvY2F0ZV9kZXZpY2UoJnBkZXYtPmRldik7Cj4gIAlpZiAoIWVuY29k
+ZXIgfHwgIWlucHV0KSB7Cj4gLQkJZXJyID0gLUVOT01FTTsKPiAtCQlnb3RvIGV4aXRfZnJlZV9t
+ZW07Cj4gKwkJZGV2X2VycihkZXYsICJ1bmFibGUgdG8gYWxsb2NhdGUgbWVtb3J5XG4iKTsKPiAr
+CQlyZXR1cm4gLUVOT01FTTsKPiAgCX0KPiAgCj4gIAllbmNvZGVyLT5pbnB1dCA9IGlucHV0Owo+
+IEBAIC0zMDEsMTYgKzMwMSwxOCBAQCBzdGF0aWMgaW50IHJvdGFyeV9lbmNvZGVyX3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAl9Cj4gIAo+ICAJLyogcmVxdWVzdCB0aGUg
+R1BJT3MgKi8KPiAtCWVyciA9IGdwaW9fcmVxdWVzdF9vbmUocGRhdGEtPmdwaW9fYSwgR1BJT0Zf
+SU4sIGRldl9uYW1lKGRldikpOwo+ICsJZXJyID0gZGV2bV9ncGlvX3JlcXVlc3Rfb25lKGRldiwg
+cGRhdGEtPmdwaW9fYSwKPiArCQkJCSAgICBHUElPRl9JTiwgZGV2X25hbWUoZGV2KSk7Cj4gIAlp
+ZiAoZXJyKSB7Cj4gIAkJZGV2X2VycihkZXYsICJ1bmFibGUgdG8gcmVxdWVzdCBHUElPICVkXG4i
+LCBwZGF0YS0+Z3Bpb19hKTsKPiAtCQlnb3RvIGV4aXRfZnJlZV9tZW07Cj4gKwkJcmV0dXJuIGVy
+cjsKPiAgCX0KPiAgCj4gLQllcnIgPSBncGlvX3JlcXVlc3Rfb25lKHBkYXRhLT5ncGlvX2IsIEdQ
+SU9GX0lOLCBkZXZfbmFtZShkZXYpKTsKPiArCWVyciA9IGRldm1fZ3Bpb19yZXF1ZXN0X29uZShk
+ZXYsIHBkYXRhLT5ncGlvX2IsCj4gKwkJCQkgICAgR1BJT0ZfSU4sIGRldl9uYW1lKGRldikpOwo+
+ICAJaWYgKGVycikgewo+ICAJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHJlcXVlc3QgR1BJTyAl
+ZFxuIiwgcGRhdGEtPmdwaW9fYik7Cj4gLQkJZ290byBleGl0X2ZyZWVfZ3Bpb19hOwo+ICsJCXJl
+dHVybiBlcnI7Cj4gIAl9Cj4gIAo+ICAJZW5jb2Rlci0+aXJxX2EgPSBncGlvX3RvX2lycShwZGF0
+YS0+Z3Bpb19hKTsKPiBAQCAtMzMxLDMwICszMzMsMjkgQEAgc3RhdGljIGludCByb3RhcnlfZW5j
+b2Rlcl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJZGVmYXVsdDoKPiAg
+CQlkZXZfZXJyKGRldiwgIiclZCcgaXMgbm90IGEgdmFsaWQgc3RlcHMtcGVyLXBlcmlvZCB2YWx1
+ZVxuIiwKPiAgCQkJcGRhdGEtPnN0ZXBzX3Blcl9wZXJpb2QpOwo+IC0JCWVyciA9IC1FSU5WQUw7
+Cj4gLQkJZ290byBleGl0X2ZyZWVfZ3Bpb19iOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICAJfQo+
+ICAKPiAtCWVyciA9IHJlcXVlc3RfaXJxKGVuY29kZXItPmlycV9hLCBoYW5kbGVyLAo+IC0JCQkg
+IElSUUZfVFJJR0dFUl9SSVNJTkcgfCBJUlFGX1RSSUdHRVJfRkFMTElORywKPiAtCQkJICBEUlZf
+TkFNRSwgZW5jb2Rlcik7Cj4gKwllcnIgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgZW5jb2Rlci0+
+aXJxX2EsIGhhbmRsZXIsCj4gKwkJCSAgICAgICBJUlFGX1RSSUdHRVJfUklTSU5HIHwgSVJRRl9U
+UklHR0VSX0ZBTExJTkcsCj4gKwkJCSAgICAgICBEUlZfTkFNRSwgZW5jb2Rlcik7Cj4gIAlpZiAo
+ZXJyKSB7Cj4gIAkJZGV2X2VycihkZXYsICJ1bmFibGUgdG8gcmVxdWVzdCBJUlEgJWRcbiIsIGVu
+Y29kZXItPmlycV9hKTsKPiAtCQlnb3RvIGV4aXRfZnJlZV9ncGlvX2I7Cj4gKwkJcmV0dXJuIGVy
+cjsKPiAgCX0KPiAgCj4gLQllcnIgPSByZXF1ZXN0X2lycShlbmNvZGVyLT5pcnFfYiwgaGFuZGxl
+ciwKPiAtCQkJICBJUlFGX1RSSUdHRVJfUklTSU5HIHwgSVJRRl9UUklHR0VSX0ZBTExJTkcsCj4g
+LQkJCSAgRFJWX05BTUUsIGVuY29kZXIpOwo+ICsJZXJyID0gZGV2bV9yZXF1ZXN0X2lycShkZXYs
+IGVuY29kZXItPmlycV9iLCBoYW5kbGVyLAo+ICsJCQkgICAgICAgSVJRRl9UUklHR0VSX1JJU0lO
+RyB8IElSUUZfVFJJR0dFUl9GQUxMSU5HLAo+ICsJCQkgICAgICAgRFJWX05BTUUsIGVuY29kZXIp
+Owo+ICAJaWYgKGVycikgewo+ICAJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHJlcXVlc3QgSVJR
+ICVkXG4iLCBlbmNvZGVyLT5pcnFfYik7Cj4gLQkJZ290byBleGl0X2ZyZWVfaXJxX2E7Cj4gKwkJ
+cmV0dXJuIGVycjsKPiAgCX0KPiAgCj4gIAllcnIgPSBpbnB1dF9yZWdpc3Rlcl9kZXZpY2UoaW5w
+dXQpOwo+ICAJaWYgKGVycikgewo+ICAJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVy
+IGlucHV0IGRldmljZVxuIik7Cj4gLQkJZ290byBleGl0X2ZyZWVfaXJxX2I7Cj4gKwkJcmV0dXJu
+IGVycjsKPiAgCX0KPiAgCj4gIAlkZXZpY2VfaW5pdF93YWtldXAoJnBkZXYtPmRldiwgcGRhdGEt
+Pndha2V1cF9zb3VyY2UpOwo+IEBAIC0zNjIsNDIgKzM2MywxMSBAQCBzdGF0aWMgaW50IHJvdGFy
+eV9lbmNvZGVyX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlwbGF0Zm9y
+bV9zZXRfZHJ2ZGF0YShwZGV2LCBlbmNvZGVyKTsKPiAgCj4gIAlyZXR1cm4gMDsKPiAtCj4gLWV4
+aXRfZnJlZV9pcnFfYjoKPiAtCWZyZWVfaXJxKGVuY29kZXItPmlycV9iLCBlbmNvZGVyKTsKPiAt
+ZXhpdF9mcmVlX2lycV9hOgo+IC0JZnJlZV9pcnEoZW5jb2Rlci0+aXJxX2EsIGVuY29kZXIpOwo+
+IC1leGl0X2ZyZWVfZ3Bpb19iOgo+IC0JZ3Bpb19mcmVlKHBkYXRhLT5ncGlvX2IpOwo+IC1leGl0
+X2ZyZWVfZ3Bpb19hOgo+IC0JZ3Bpb19mcmVlKHBkYXRhLT5ncGlvX2EpOwo+IC1leGl0X2ZyZWVf
+bWVtOgo+IC0JaW5wdXRfZnJlZV9kZXZpY2UoaW5wdXQpOwo+IC0Ja2ZyZWUoZW5jb2Rlcik7Cj4g
+LQlpZiAoIWRldl9nZXRfcGxhdGRhdGEoJnBkZXYtPmRldikpCj4gLQkJa2ZyZWUocGRhdGEpOwo+
+IC0KPiAtCXJldHVybiBlcnI7Cj4gIH0KPiAgCj4gIHN0YXRpYyBpbnQgcm90YXJ5X2VuY29kZXJf
+cmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIHsKPiAtCXN0cnVjdCByb3Rh
+cnlfZW5jb2RlciAqZW5jb2RlciA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+IC0JY29u
+c3Qgc3RydWN0IHJvdGFyeV9lbmNvZGVyX3BsYXRmb3JtX2RhdGEgKnBkYXRhID0gZW5jb2Rlci0+
+cGRhdGE7Cj4gLQo+ICAJZGV2aWNlX2luaXRfd2FrZXVwKCZwZGV2LT5kZXYsIGZhbHNlKTsKPiAt
+Cj4gLQlmcmVlX2lycShlbmNvZGVyLT5pcnFfYSwgZW5jb2Rlcik7Cj4gLQlmcmVlX2lycShlbmNv
+ZGVyLT5pcnFfYiwgZW5jb2Rlcik7Cj4gLQlncGlvX2ZyZWUocGRhdGEtPmdwaW9fYSk7Cj4gLQln
+cGlvX2ZyZWUocGRhdGEtPmdwaW9fYik7Cj4gLQo+IC0JaW5wdXRfdW5yZWdpc3Rlcl9kZXZpY2Uo
+ZW5jb2Rlci0+aW5wdXQpOwo+IC0Ja2ZyZWUoZW5jb2Rlcik7Cj4gLQo+IC0JaWYgKCFkZXZfZ2V0
+X3BsYXRkYXRhKCZwZGV2LT5kZXYpKQo+IC0JCWtmcmVlKHBkYXRhKTsKPiAtCj4gIAlyZXR1cm4g
+MDsKPiAgfQo+ICAKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9saW51eC1hcm0ta2VybmVsCg==
