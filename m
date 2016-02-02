@@ -1,181 +1,83 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 07/11] ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
-Date: Tue,  2 Feb 2016 18:27:40 +0800
-Message-ID: <1454408864-24112-8-git-send-email-wens@csie.org>
-References: <1454408864-24112-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] doc: dt: add documentation for alphascale,asm9260-rtc
+Date: Tue, 2 Feb 2016 11:28:04 +0100
+Message-ID: <20160202102804.GT20165@piout.net>
+References: <1454056802-23386-1-git-send-email-linux@rempel-privat.de>
+ <1454056802-23386-3-git-send-email-linux@rempel-privat.de>
+ <20160201152750.GA17595@rob-hp-laptop>
+ <20160201155527.GR20165@piout.net>
+ <56B06CCA.4060208@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNEJYK2QKGQEKY3FRWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1454408864-24112-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56B06CCA.4060208-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP809 PMIC is used with the Allwinner A80 SoC, along with
-an AXP806 PMIC as a slave.
+On 02/02/2016 at 09:46:02 +0100, Oleksij Rempel wrote :
+> Am 01.02.2016 um 16:55 schrieb Alexandre Belloni:
+> > On 01/02/2016 at 09:27:50 -0600, Rob Herring wrote :
+> >> On Fri, Jan 29, 2016 at 09:40:02AM +0100, Oleksij Rempel wrote:
+> >>> Document Alphascale asm9260 RTC bindings
+> >>>
+> >>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> >>> ---
+> >>>  .../bindings/rtc/alphascale,asm9260-rtc.txt        | 25 ++++++++++++++++++++++
+> >>>  1 file changed, 25 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> >>> new file mode 100644
+> >>> index 0000000..2c0ff3c
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+> >>> @@ -0,0 +1,25 @@
+> >>> +* Alphascale asm9260 SoC Real Time Clock
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible: Should be "alphascale,asm9260-rtc"
+> >>> +- reg: Physical base address of the controller and length
+> >>> +       of memory mapped region.
+> >>> +- interrupts: IRQ line for the RTC.
+> >>> +- clocks: Reference to the clock entry.
+> >>> +- clock-names: should contain:
+> >>> +  * "ahb" for the SoC RTC clock
+> >>> +
+> >>> +Optional:
+> >>> +- calibration: calibration value for 1 sec period.
+> >>> +		Max value for forward calibration is 0x1ffff (131071),
+> >>> +		Min value for backward calibration is 0xfffe0001 (-131071).
+> >>
+> >> This should be prefixed with 'alphascale,'
+> >>
+> >> How is this value determined?
+> >>
+> > 
+> > I think this should stay in userspace, see that series:
+> > https://groups.google.com/forum/#!topic/rtc-linux/HGQqiHnMiuw
+> > 
+> > It quite often depends on environmental things like temperature so it may be updated at runtime.
+> > 
+> 
+> I partially agree. IMO default configuration should work properly by
+> 20C. My devkit provide terrible results without default offset.
+> 
 
-This patch adds a dtsi file for all the common bindings and default
-values unrelated to board design. Currently this is just listing all
-the regulator nodes. The regulators are initialized based on their
-device node names.
+I'm not against having a sane default. What I would do is set a default
+hardcoded value from the driver at the time the RTC is reset (that is: it
+has never been set yet) then let the user adjust that calibration
+through sysfs.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/axp809.dtsi | 138 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
- create mode 100644 arch/arm/boot/dts/axp809.dtsi
 
-diff --git a/arch/arm/boot/dts/axp809.dtsi b/arch/arm/boot/dts/axp809.dtsi
-new file mode 100644
-index 000000000000..17769923f9c3
---- /dev/null
-+++ b/arch/arm/boot/dts/axp809.dtsi
-@@ -0,0 +1,138 @@
-+/*
-+ * Copyright 2015 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/*
-+ * AXP809 Integrated Power Management Chip
-+ */
-+
-+&axp809 {
-+	compatible = "x-powers,axp809";
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	regulators {
-+		/* Default work frequency for buck regulators */
-+		x-powers,dcdc-freq = <3000>;
-+
-+		reg_dcdc1: dcdc1 {
-+			regulator-name = "dcdc1";
-+		};
-+
-+		reg_dcdc2: dcdc2 {
-+			regulator-name = "dcdc2";
-+		};
-+
-+		reg_dcdc3: dcdc3 {
-+			regulator-name = "dcdc3";
-+		};
-+
-+		reg_dcdc4: dcdc4 {
-+			regulator-name = "dcdc4";
-+		};
-+
-+		reg_dcdc5: dcdc5 {
-+			regulator-name = "dcdc5";
-+		};
-+
-+		reg_dc1sw: dc1sw {
-+			regulator-name = "dc1sw";
-+		};
-+
-+		reg_dc5ldo: dc5ldo {
-+			regulator-name = "dc5ldo";
-+		};
-+
-+		reg_aldo1: aldo1 {
-+			regulator-name = "aldo1";
-+		};
-+
-+		reg_aldo2: aldo2 {
-+			regulator-name = "aldo2";
-+		};
-+
-+		reg_aldo3: aldo3 {
-+			regulator-name = "aldo3";
-+		};
-+
-+		reg_dldo1: dldo1 {
-+			regulator-name = "dldo1";
-+		};
-+
-+		reg_dldo2: dldo2 {
-+			regulator-name = "dldo2";
-+		};
-+
-+		reg_eldo1: eldo1 {
-+			regulator-name = "eldo1";
-+		};
-+
-+		reg_eldo2: eldo2 {
-+			regulator-name = "eldo2";
-+		};
-+
-+		reg_eldo3: eldo3 {
-+			regulator-name = "eldo3";
-+		};
-+
-+		reg_ldo_io0: ldo_io0 {
-+			regulator-name = "ldo_io0";
-+		};
-+
-+		reg_ldo_io1: ldo_io1 {
-+			regulator-name = "ldo_io1";
-+		};
-+
-+		reg_rtc_ldo: rtc_ldo {
-+			/* RTC_LDO is a fixed, always-on regulator */
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-name = "rtc_ldo";
-+		};
-+
-+		reg_sw: sw {
-+			regulator-name = "sw";
-+		};
-+	};
-+};
+
 -- 
-2.7.0
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
