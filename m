@@ -1,284 +1,133 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v3 2/4] power: reset: add reboot mode driver
-Date: Tue,  2 Feb 2016 18:02:05 +0800
-Message-ID: <1454407325-4804-1-git-send-email-andy.yan@rock-chips.com>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: robh+dt@kernel.org, arnd@arndb.de, john.stultz@linaro.org
-Cc: moritz.fischer@ettus.com, matthias.bgg@gmail.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, heiko@sntech.de, sre@kernel.org, dbaryshkov@gmail.com, alexandre.belloni@free-electrons.com, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, mbrugger@suse.com, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Subject: [PATCH v10 0/8] arm64, numa: Add numa support for arm64 platforms
+Date: Tue, 2 Feb 2016 15:39:15 +0530
+Message-ID: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-ia64@vger.kernel.org, linux-metag@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-arch@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rjw@rjwysocki.net, lenb@kernel.org, marc.zyngier@arm.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tony.luck@intel.com, fenghua.yu@intel.com, james.hog
+Cc: gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This driver parse the reboot commands like "reboot loader"
-and "reboot recovery" to get a boot mode described in the
-device tree , then call the write interfae to store the boot
-mode in some place like special register or sram , which can
-be read by the bootloader after system reboot, then the bootloader
-can take different action according to the mode stored.
+v10:
+	- Incorporated review comments from Rob Herring.
+	- Moved numa binding and implementation to devicetree core.
+	- Added cleanup patch to remove redundant NODE_DATA macro from asm header files
+	- Include numa balancing support for arm64 patch in this series.
+	- Fix tile build issue reported by the kbuild robot(patch 7)
 
-This is commonly used on Android based devices, in order to
-reboot the device into fastboot or recovery mode.
+v9:	- Added cleanup patch to reuse and avoid redefinition of cpumask_of_pcibus
+	  as suggested from Will Deacon and Bjorn Helgaas.
+	- Including patch to Make pci-host-generic driver numa aware.
+	- Incorporated comment from Shannon Zhao.
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+v8:
+	- Incorporated review comments of Mark Rutland and Will Deacon.
+	- Added pci helper function and macro for numa.
 
----
+v7:
+	- managing numa memory mapping using memblock.
+	- Incorporated review comments of Mark Rutland.
 
-Changes in v3:
-- scan multi properities
-- add mask value for some platform which only use some bits of the register
-  to store boot mode magic value
+v6:
+	- defined and implemented the numa dt binding using
+	node property proximity and device node distance-map.
+	- renamed dt_numa to of_numa
 
-Changes in v2:
-- move to dir drivers/power/reset/
-- make syscon-reboot-mode a generic driver
+v5:
+        - created base verion of numa.c which creates dummy numa without using dt
+          on single socket platforms. Then added patches for dt support.
+        - Incorporated review comments from Hanjun Guo.
 
-Changes in v1:
-- fix the embarrassed compile warning
-- correct the maskrom magic number
-- check for the normal reboot
+v4:
+done changes as per Arnd review comments.
 
- drivers/power/reset/Kconfig              |  16 +++++
- drivers/power/reset/Makefile             |   2 +
- drivers/power/reset/reboot-mode.c        | 105 +++++++++++++++++++++++++++++++
- drivers/power/reset/reboot-mode.h        |   6 ++
- drivers/power/reset/syscon-reboot-mode.c |  64 +++++++++++++++++++
- 5 files changed, 193 insertions(+)
- create mode 100644 drivers/power/reset/reboot-mode.c
- create mode 100644 drivers/power/reset/reboot-mode.h
- create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+v3:
+Added changes to support numa on arm64 based platforms.
+Tested these patches on cavium's multinode(2 node topology) platform.
+In this patchset, defined and implemented dt bindings for numa mapping
+for core and memory using device node property arm,associativity.
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 1131cf7..2e6d873 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -173,5 +173,21 @@ config POWER_RESET_ZX
- 	help
- 	  Reboot support for ZTE SoCs.
- 
-+config REBOOT_MODE
-+	tristate
-+	depends on OF
-+	help
-+	 This driver will help to pass the system reboot mode
-+	 to bootloader
-+
-+config SYSCON_REBOOT_MODE
-+	bool "Generic SYSCON regmap reboot mode driver"
-+	select REBOOT_MODE
-+	help
-+	 Say y here will enable reboot mode driver. This will
-+	 get reboot mode arguments and store it in SYSCON mapped
-+	 register, then the bootloader can read it to take different
-+	 action according to the mode.
-+
- endif
- 
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 096fa67..a63865b 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -20,3 +20,5 @@ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
- obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
- obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
- obj-$(CONFIG_POWER_RESET_ZX) += zx-reboot.o
-+obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
-+obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset/reboot-mode.c
-new file mode 100644
-index 0000000..69ba640
---- /dev/null
-+++ b/drivers/power/reset/reboot-mode.c
-@@ -0,0 +1,105 @@
-+/*
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/reboot.h>
-+#include "reboot-mode.h"
-+
-+#define PREFIX "mode-"
-+
-+struct mode_info {
-+	char mode[32];
-+	int magic;
-+	struct list_head list;
-+};
-+
-+struct reboot_mode_driver {
-+	struct list_head head;
-+	int (*write)(int magic);
-+	struct notifier_block reboot_notifier;
-+};
-+
-+static int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
-+				 const char *cmd)
-+{
-+	const char *normal = "normal";
-+	int magic = 0;
-+	struct mode_info *info;
-+
-+	if (!cmd)
-+		cmd = normal;
-+
-+	list_for_each_entry(info, &reboot->head, list) {
-+		if (!strcmp(info->mode, cmd)) {
-+			magic = info->magic;
-+			break;
-+		}
-+	}
-+
-+	return magic;
-+}
-+
-+static int reboot_mode_notify(struct notifier_block *this,
-+			      unsigned long mode, void *cmd)
-+{
-+	struct reboot_mode_driver *reboot;
-+	int magic;
-+
-+	reboot = container_of(this, struct reboot_mode_driver, reboot_notifier);
-+	magic = get_reboot_mode_magic(reboot, cmd);
-+	if (magic)
-+		reboot->write(magic);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+int reboot_mode_register(struct device *dev, int (*write)(int))
-+{
-+	struct reboot_mode_driver *reboot;
-+	struct mode_info *info;
-+	struct property *prop;
-+	size_t len = strlen(PREFIX);
-+	int ret;
-+
-+	reboot = devm_kzalloc(dev, sizeof(*reboot), GFP_KERNEL);
-+	if (!reboot)
-+		return -ENOMEM;
-+
-+	reboot->write = write;
-+	INIT_LIST_HEAD(&reboot->head);
-+	for_each_property_of_node(dev->of_node, prop) {
-+		if (len > strlen(prop->name) || strncmp(prop->name, PREFIX, len))
-+			continue;
-+		info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+		if (!info)
-+			return -ENOMEM;
-+		strcpy(info->mode, prop->name + len);
-+		if (of_property_read_u32(dev->of_node, prop->name, &info->magic)) {
-+			dev_err(dev, "reboot mode %s without magic number\n",
-+				info->mode);
-+			devm_kfree(dev, info);
-+			continue;
-+		}
-+		list_add_tail(&info->list, &reboot->head);
-+	}
-+	reboot->reboot_notifier.notifier_call = reboot_mode_notify;
-+	ret = register_reboot_notifier(&reboot->reboot_notifier);
-+	if (ret)
-+		dev_err(dev, "can't register reboot notifier\n");
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(reboot_mode_register);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-+MODULE_DESCRIPTION("System reboot mode driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/power/reset/reboot-mode.h b/drivers/power/reset/reboot-mode.h
-new file mode 100644
-index 0000000..44ed34f
---- /dev/null
-+++ b/drivers/power/reset/reboot-mode.h
-@@ -0,0 +1,6 @@
-+#ifndef __REBOOT_MODE_H__
-+#define __REBOOT_MODE_H__
-+
-+int reboot_mode_register(struct device *dev, int (*write)(int));
-+
-+#endif
-diff --git a/drivers/power/reset/syscon-reboot-mode.c b/drivers/power/reset/syscon-reboot-mode.c
-new file mode 100644
-index 0000000..8571df3
---- /dev/null
-+++ b/drivers/power/reset/syscon-reboot-mode.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include "reboot-mode.h"
-+
-+static struct regmap *map;
-+static u32 offset;
-+static u32 mask = 0xffffffff;
-+
-+static int syscon_reboot_mode_write(int magic)
-+{
-+	regmap_update_bits(map, offset, mask, magic);
-+
-+	return 0;
-+}
-+
-+static int syscon_reboot_mode_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+	if (of_property_read_u32(pdev->dev.of_node, "offset", &offset))
-+		return -EINVAL;
-+	of_property_read_u32(pdev->dev.of_node, "mask", &mask);
-+	ret = reboot_mode_register(&pdev->dev, syscon_reboot_mode_write);
-+	if (ret)
-+		dev_err(&pdev->dev, "can't register reboot mode\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id syscon_reboot_mode_of_match[] = {
-+	{ .compatible = "syscon-reboot-mode" },
-+	{}
-+};
-+
-+static struct platform_driver syscon_reboot_mode_driver = {
-+	.probe = syscon_reboot_mode_probe,
-+	.driver = {
-+		.name = "syscon-reboot-mode",
-+		.of_match_table = syscon_reboot_mode_of_match,
-+	},
-+};
-+module_platform_driver(syscon_reboot_mode_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-+MODULE_DESCRIPTION("SYSCON reboot mode driver");
-+MODULE_LICENSE("GPL v2");
+v2:
+Defined and implemented numa map for memory, cores to node and
+proximity distance matrix of nodes.
+
+v1:
+Initial patchset to support numa on arm64 platforms.
+
+Note:
+        1. This patchset is tested for numa with dt on
+           thunderx single socket and dual socket boards.
+        2. Numa DT booting needs the dt memory nodes, which are deleted in current efi-stub,
+        hence to try numa with dt, you need to rebase with ard's patchset.
+        http://git.linaro.org/people/ard.biesheuvel/linux-arm.git/shortlog/refs/heads/arm64-uefi-early-fdt-handling
+	3. PATCH[7,8] are not tested for other architectures.
+
+Ganapatrao Kulkarni (8):
+  arm64, numa: adding numa support for arm64 platforms.
+  Documentation, dt, numa: dt bindings for numa.
+  dt, numa: adding numa dt binding implementation.
+  arm64, numa : Enable numa dt for arm64 platforms.
+  arm64, dt, thunderx: Add initial dts for Cavium Thunderx in 2 node
+    topology.
+  arm64, mm, numa: Adding numa balancing support for arm64.
+  topology, cleanup: Avoid redefinition of cpumask_of_pcibus in asm
+    header files.
+  numa, mm, cleanup: remove redundant NODE_DATA macro from asm header
+    files.
+
+ Documentation/devicetree/bindings/numa.txt      | 272 ++++++++
+ arch/arm64/Kconfig                              |  26 +
+ arch/arm64/boot/dts/cavium/Makefile             |   2 +-
+ arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  83 +++
+ arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 806 ++++++++++++++++++++++++
+ arch/arm64/include/asm/mmzone.h                 |  10 +
+ arch/arm64/include/asm/numa.h                   |  45 ++
+ arch/arm64/include/asm/pgtable.h                |  18 +
+ arch/arm64/include/asm/topology.h               |   7 +
+ arch/arm64/kernel/pci.c                         |  10 +
+ arch/arm64/kernel/setup.c                       |   4 +
+ arch/arm64/kernel/smp.c                         |   4 +
+ arch/arm64/mm/Makefile                          |   1 +
+ arch/arm64/mm/init.c                            |  34 +-
+ arch/arm64/mm/mmu.c                             |   1 +
+ arch/arm64/mm/numa.c                            | 404 ++++++++++++
+ arch/ia64/include/asm/topology.h                |   4 -
+ arch/m32r/include/asm/mmzone.h                  |   4 +-
+ arch/metag/include/asm/mmzone.h                 |   4 +-
+ arch/metag/include/asm/topology.h               |   3 -
+ arch/powerpc/include/asm/mmzone.h               |   8 +-
+ arch/powerpc/include/asm/topology.h             |   4 -
+ arch/s390/include/asm/mmzone.h                  |   6 +-
+ arch/s390/include/asm/pci.h                     |   2 +-
+ arch/s390/include/asm/topology.h                |   1 +
+ arch/sh/include/asm/mmzone.h                    |   4 +-
+ arch/sh/include/asm/topology.h                  |   3 -
+ arch/sparc/include/asm/mmzone.h                 |   6 +-
+ arch/tile/include/asm/pci.h                     |   2 -
+ arch/tile/include/asm/topology.h                |   3 +
+ arch/x86/include/asm/mmzone.h                   |   3 +-
+ arch/x86/include/asm/mmzone_32.h                |   5 -
+ arch/x86/include/asm/mmzone_64.h                |  17 -
+ arch/x86/include/asm/pci.h                      |   2 +-
+ arch/x86/include/asm/topology.h                 |   1 +
+ drivers/of/Kconfig                              |  11 +
+ drivers/of/Makefile                             |   1 +
+ drivers/of/of_numa.c                            | 207 ++++++
+ include/asm-generic/mmzone.h                    |  24 +
+ include/asm-generic/topology.h                  |   4 +-
+ include/linux/of.h                              |   4 +
+ 41 files changed, 1986 insertions(+), 74 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/numa.txt
+ create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
+ create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
+ create mode 100644 arch/arm64/include/asm/mmzone.h
+ create mode 100644 arch/arm64/include/asm/numa.h
+ create mode 100644 arch/arm64/mm/numa.c
+ delete mode 100644 arch/x86/include/asm/mmzone_64.h
+ create mode 100644 drivers/of/of_numa.c
+ create mode 100644 include/asm-generic/mmzone.h
+
 -- 
-1.9.1
-
-
+1.8.1.4
