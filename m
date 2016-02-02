@@ -1,159 +1,175 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 1/8] ARM: dts: rockchip: add hdmi/vop device node for rk3036
-Date: Tue,  2 Feb 2016 11:40:50 +0800
-Message-ID: <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v5 3/8] ARM: dts: rockchip: add support emac for RK3036
+Date: Tue,  2 Feb 2016 11:40:51 +0800
+Message-ID: <1454384453-7127-2-git-send-email-wxt@rock-chips.com>
 References: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454384032-6794-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+ <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454384453-7127-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, keescook@google.com, linux-kernel@vger.kernel.org, jeffy.chen@rock-chips.com, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the needed display info for rk3036 SOCs.
+From: zhengxing <zhengxing@rock-chips.com>
 
-The rk3036 support two overlay plane and one hwc plane,
-it supports IOMMU, and its IOMMU same as rk3288's.
-Meanwhile, add the inno hdmi for HDMI display.
+This patch adds the emac device node for rk3036.
+We need to let mac clock under the DPLL which is able to provide
+the accurate 50MHz what mac_ref need, since that will cause some
+unstable things if the cpufreq is working.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 ---
 
-Changes in v5: None
+Changes in v5:
+- remove unused commit content.
+
 Changes in v4:
-- solve the lastest conflict, picked up from
-  https://patchwork.kernel.org/patch/8040961/.
+- included in the kylin series patches.
+- This patch picked up from https://patchwork.kernel.org/patch/7924971/
+- Change to solve the conflict based on the Heiko's branch.
+- Make the emac parent as the DPLL.
 
- arch/arm/boot/dts/rk3036-kylin.dts | 12 +++++++
- arch/arm/boot/dts/rk3036.dtsi      | 66 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
+ arch/arm/boot/dts/rk3036-evb.dts   | 23 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3036-kylin.dts | 21 ++++++++++++++++++++
+ arch/arm/boot/dts/rk3036.dtsi      | 39 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 83 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 3332a7f..1037ad6 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -116,6 +116,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
+index 28a0336..d7d3719 100644
+--- a/arch/arm/boot/dts/rk3036-evb.dts
++++ b/arch/arm/boot/dts/rk3036-evb.dts
+@@ -47,6 +47,17 @@
+ 	compatible = "rockchip,rk3036-evb", "rockchip,rk3036";
  };
  
-+&hdmi {
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
++	phy = <&phy0>;
 +	status = "okay";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
 +};
 +
  &i2c1 {
- 	clock-frequency = <400000>;
+ 	status = "okay";
  
-@@ -369,6 +373,14 @@
+@@ -62,3 +73,15 @@
+ &uart2 {
+ 	status = "okay";
+ };
++
++&pinctrl {
++	pcfg_output_high: pcfg-output-high {
++		output-high;
++	};
++
++	emac {
++		rmii_rst: rmii-rst {
++			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 1037ad6..cd45434 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -112,6 +112,17 @@
  	status = "okay";
  };
  
-+&vop {
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
++	phy = <&phy0>;
 +	status = "okay";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
 +};
 +
-+&vop_mmu {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	leds {
- 		led_ctl: led-ctl {
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 7897449..7abe3e2 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -147,6 +147,42 @@
- 		};
- 	};
+ &emmc {
+ 	status = "okay";
+ };
+@@ -382,6 +393,16 @@
+ };
  
-+	vop: vop@10118000 {
-+		compatible = "rockchip,rk3036-vop";
-+		reg = <0x10118000 0x19c>;
-+		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_LCDC>, <&cru SCLK_LCDC>, <&cru HCLK_LCDC>;
-+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_LCDC1_A>, <&cru SRST_LCDC1_H>, <&cru SRST_LCDC1_D>;
-+		reset-names = "axi", "ahb", "dclk";
-+		iommus = <&vop_mmu>;
+ &pinctrl {
++	pcfg_output_high: pcfg-output-high {
++		output-high;
++	};
 +
-+		status = "disabled";
-+
-+		vop_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			vop_out_hdmi: endpoint@0 {
-+				reg = <1>;
-+				remote-endpoint = <&hdmi_in_vop>;
-+			};
++	emac {
++		rmii_rst: rmii-rst {
++			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
 +		};
 +	};
 +
-+	display-subsystem {
-+		compatible = "rockchip,display-subsystem";
-+		ports = <&vop_out>;
-+	};
-+
-+	vop_mmu: iommu@10118300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0x10118300 0x100>;
-+		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vop_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	gic: interrupt-controller@10139000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
-@@ -274,6 +310,27 @@
+ 	leds {
+ 		led_ctl: led-ctl {
+ 			rockchip,pins = <2 30 RK_FUNC_GPIO &pcfg_pull_none>;
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 7abe3e2..532f232 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -222,6 +222,27 @@
  		status = "disabled";
  	};
  
-+	hdmi: hdmi@20034000 {
-+		compatible = "rockchip,rk3036-inno-hdmi";
-+		reg = <0x20034000 0x4000>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru  PCLK_HDMI>;
-+		clock-names = "pclk";
++	emac: ethernet@10200000 {
++		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
++		reg = <0x10200000 0x4000>;
++		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +		rockchip,grf = <&grf>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hdmi_ctl>;
++		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
++		clock-names = "hclk", "macref", "macclk";
++		/*
++		 * Fix the emac parent clock is DPLL instead of APLL.
++		 * since that will cause some unstable things if the cpufreq
++		 * is working. (e.g: the accurate 50MHz what mac_ref need)
++		 */
++		assigned-clocks = <&cru SCLK_MACPLL>;
++		assigned-clock-parents = <&cru PLL_DPLL>;
++		max-speed = <100>;
++		phy-mode = "rmii";
 +		status = "disabled";
-+
-+		hdmi_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			hdmi_in_vop: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&vop_out_hdmi>;
-+			};
-+		};
 +	};
 +
- 	timer: timer@20044000 {
- 		compatible = "rockchip,rk3036-timer", "rockchip,rk3288-timer";
- 		reg = <0x20044000 0x20>;
-@@ -588,6 +645,15 @@
+ 	sdmmc: dwmmc@10214000 {
+ 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x10214000 0x4000>;
+@@ -613,6 +634,24 @@
  			};
  		};
  
-+		hdmi {
-+			hdmi_ctl: hdmi-ctl {
-+				rockchip,pins = <1 8  RK_FUNC_1 &pcfg_pull_none>,
-+						<1 9  RK_FUNC_1 &pcfg_pull_none>,
-+						<1 10 RK_FUNC_1 &pcfg_pull_none>,
-+						<1 11 RK_FUNC_1 &pcfg_pull_none>;
++		emac {
++			emac_xfer: emac-xfer {
++				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
++						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
++						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
++						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
++						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
++						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
++						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
++						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
++			};
++
++			emac_mdio: emac-mdio {
++				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
++						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
 +			};
 +		};
 +
- 		uart0 {
- 			uart0_xfer: uart0-xfer {
- 				rockchip,pins = <0 16 RK_FUNC_1 &pcfg_pull_default>,
+ 		i2c0 {
+ 			i2c0_xfer: i2c0-xfer {
+ 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
