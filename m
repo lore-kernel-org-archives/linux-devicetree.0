@@ -1,115 +1,106 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2 0/3] Input: rotary-encoder - use more than two gpios
-Date: Tue, 2 Feb 2016 14:14:49 +0100
-Message-ID: <56B0ABC9.10107@zonque.org>
-References: <1454408678-6011-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <56B09C27.8070009@zonque.org> <20160202125602.GW13664@pengutronix.de>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
+Date: Tue, 2 Feb 2016 13:15:17 +0000
+Message-ID: <1454418916.25997.18.camel@synopsys.com>
+References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
+	 <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160202125602.GW13664@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
+Content-Language: en-US
+Content-ID: <F6601994A77F2C4CBE7898B4AD76AF2A@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "noamc@ezchip.com" <noamc@ezchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2016 01:56 PM, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Daniel,
->=20
-> On Tue, Feb 02, 2016 at 01:08:07PM +0100, Daniel Mack wrote:
->> On 02/02/2016 11:24 AM, Uwe Kleine-K=C3=B6nig wrote:
->>> Some time ago I sent a v1 of this, now after testing the changes mo=
-re
->>> deeply patch 3 changed a bit. The old series started with
->>>
->>> 	Date: Wed,  2 Dec 2015 11:07:11 +0100
->>> 	From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
->>> 	Subject: [PATCH RFC 0/3] input: rotary_encoder: use more than two =
-gpios as input
->>> 	Message-Id: <1449050834-31779-1-git-send-email-u.kleine-koenig@pen=
-gutronix.de>
->>>
->>> The two first patches are just preparation for the third patch.
->>>
->>> There is an obvious improvement that allows detection of quick chan=
-ges
->>> more reliably with >2 gpios, but I didn't implement this yet. (With=
- 4
->>> GPIOs you can distinguish a counter clockwise movement of three sta=
-tes
->>> from a clock wise movement of a single state. Still the patch is us=
-eful
->>> as it makes these devices work at all.
->>>
->>> My test device looks as follows:
->>>
->>>         rotary@0 {
->>>                 compatible =3D "rotary-encoder";
->>>                 gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 11 =
-GPIO_ACTIVE_HIGH>, <&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIVE_=
-HIGH>;
->>>
->>>                 rotary-encoder,steps =3D <16>;
->>> 		rotary-encoder,steps-per-period =3D <16>;
->>>         };
->>>
->>> While Daniel Mack and Rojhalat Ibrahim agreed that this device is a=
-n
->>> absolute encoder and should be supported by a simpler logic, I stil=
-l
->>> consider it worthwhile to get these patches in as a first step. Als=
-o the
->>> binding looks right, so IMHO the comments shouldn't stop this serie=
-s
->>> from going in.
->>
->> I still don't understand why this is implemented that way, rather th=
-an
->> going for a much simpler logic of interpretation that also allows us=
-ers
->> to read out the absolute position.
->>
->> The code to read the value would be really just as simple as reading=
- all
->> GPIOs and or-ing their values into the result, and skip the state
->> machine completely. This code would be active if a new attribute
->> (something like 'rotary-encoder,hardware-absolute') is set, or even
->> implicitly, when more than 2 GPIOs are specified.
->>
->> Is there any reason for not doing that?
->=20
-> Currently the reason is lack of time. And when implementing
-> rotary-encoder,hardware-absolute something similar would be the resul=
-t
-> for the relative reporting anyhow. So the problem is only that I don'=
-t
-> have absolute support yet, but the patches as is would be the base fo=
-r
-> that anyhow.
-
-Because you would support relative support for such 4-pin encoders as
-well? I would have thought that absolute encoders would report absolute
-values only, but I guess you have a point here. Just to make sure we're
-on the same page: For more than 2 GPIOs, and an absent
-"rotary-encoder,relative-axis", the driver would switch to a mode in
-which it bypasses the state machine, right?
-
-If you're planning to implement that eventually, I'm fine with the
-patches for now :)
-
-Dmitry, if you are apply them, feel free to add my
-
-  Acked-by: Daniel Mack <daniel@zonque.org>
-
-to all 3 of them.
-
-
-Thanks,
-Daniel
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVmluZWV0LA0KDQpPbiBUdWUsIDIwMTYtMDItMDIgYXQgMTY6MjggKzA1MzAsIFZpbmVldCBH
+dXB0YSB3cm90ZToNCj4gQVJDIFRpbWVycyBoYXZlIGhpc3RvcmljYWxseSBiZWVuIHByb2JlZCBk
+aXJlY3RseS4NCj4gQXMgcHJlY3Vyc29yIHRvIHN0YXJ0IHByb2JpbmcgVGltZXJzIHRocnUgRFQg
+aW50cm9kdWNlIHRoZXNlIGJpbmRpbmdzDQo+IA0KPiBDYzogRGFuaWVsIExlemNhbm8gPGRhbmll
+bC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+Pg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogVmlu
+ZWV0IEd1cHRhIDx2Z3VwdGFAc3lub3BzeXMuY29tPg0KPiAtLS0NCg0KW3NuaXBdDQoNCj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9zbnBzLGFy
+Yy10aW1lcjAudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVy
+L3NucHMsYXJjLXRpbWVyMC50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAw
+MDAwMDAwMDAwLi5jZWI4MGM3MmE5MGINCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvc25wcyxhcmMtdGltZXIwLnR4dA0KPiBA
+QCAtMCwwICsxLDIzIEBADQo+ICtTeW5vcHN5cyBBUkMgTG9jYWwgVGltZXIgd2l0aCBJbnRlcnJ1
+cHQgQ2FwYWJpbGl0aWVzDQo+ICstIEZvdW5kIG9uIGFsbCBBUkMgQ1BVcyAoQVJDNzAwL0FSQ0hT
+KQ0KPiArLSBNYW5kYXRvcnkgY2xvY2tldmVudCBwcm92aWRlcg0KPiArDQo+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KPiArDQo+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgInNucHMsYXJjLXRp
+bWVyMCINCj4gKy0gaW50ZXJydXB0cyA6IHNpbmdsZSBJbnRlcnJ1cHQgZ29pbmcgaW50byBwYXJl
+bnQgaW50Yw0KPiArCSAgICAgICAoMTYgZm9yIEFSQ0hTIGNvcmVzLCAzIGZvciBBUkM3MDAgY29y
+ZXMpDQo+ICstIGNsb2NrcyAgICAgOiBwaGFuZGxlIHRvIHRoZSBzb3VyY2UgY2xvY2sNCg0KQWN0
+dWFsbHkgd2UncmUgbm90IGZsZXhpYmxlIGhlcmUuDQpTZWUgd2UgaGF2ZSBoYXJkLWNvZGVkICJj
+b3JlX2NsayIgaW4gW1BBVENIIDgvOV0uDQpXZSB1c2UgaXQgZGlyZWN0bHkgaW4gc2hvd19jcHVp
+bmZvKCkgZm9yIHJlYWRpbmcgY2xvY2sgc3BlZWQNCmFzIHdlbGwgYXMgaW4gYXhzMTAzX2Vhcmx5
+X2luaXQoKS4NCg0KU28gInNvdXJjZSBjbG9jayIgaGVyZSBNVVNUIGJlICJjb3JlX2NsayIsIG90
+aGVyd2lzZQ0KL3Byb2MvY3B1aW5mbyB3aWxsIHJlcG9ydCBqdW5rIGluc3RlYWQgb2YgbWVhbmlu
+Z2Z1bCBkYXRhIGF0IGxlYXN0Lg0KDQoNCj4gKw0KPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4g
+Kw0KPiArLSBpbnRlcnJ1cHQtcGFyZW50IDogcGhhbmRsZSB0byBwYXJlbnQgaW50Yw0KPiArDQo+
+ICtFeGFtcGxlOg0KPiArDQo+ICsJdGltZXIwOiB0aW1lcl9jbGtldnQgew0KPiArCQljb21wYXRp
+YmxlID0gInNucHMsYXJjLXRpbWVyMCI7DQo+ICsJCWludGVycnVwdHMgPSA8Mz47DQo+ICsJCWlu
+dGVycnVwdC1wYXJlbnQgPSA8JmNvcmVfaW50Yz47DQo+ICsJCWNsb2NrcyA9IDwmdGltZXIwX2Ns
+az47DQo+ICsJfTsNCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy90aW1lci9zbnBzLGFyYy10aW1lcjEudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3RpbWVyL3NucHMsYXJjLXRpbWVyMS50eHQNCj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi40ODg2MTkyY2UyZjINCj4gLS0tIC9kZXYvbnVs
+bA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvc25wcyxh
+cmMtdGltZXIxLnR4dA0KPiBAQCAtMCwwICsxLDE3IEBADQo+ICtTeW5vcHN5cyBBUkMgRnJlZSBS
+dW5uaW5nIExvY2FsIDMyLWJpdCBUaW1lcg0KPiArLSBGb3VuZCBvbiBhbGwgQVJDIENQVXMgKEFS
+QzcwMC9BUkNIUykNCj4gKy0gTWFuZGF0b3J5IGNsb2Nrc291cmNlIHByb3ZpZGVyIG9uIEFSQzcw
+MA0KPiArLSBPcHRpb25hbCBjbG9ja3NvdXJjZSBwcm92aWRlciBvbiBVUCBBUkMgSFMgQ1BVcw0K
+PiArICAoYW5kIGlmIGJldHRlciB0aW1lciBhcmNocy1ydGMgbm90IGF2YWlsYWJsZSBpbiBTb0Mp
+DQo+ICsNCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICsNCj4gKy0gY29tcGF0aWJsZSA6IHNo
+b3VsZCBiZSAic25wcyxhcmMtdGltZXIxIg0KPiArLSBjbG9ja3MgICAgIDogcGhhbmRsZSB0byB0
+aGUgc291cmNlIGNsb2NrDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsNCj4gKwl0aW1lcjE6IHRpbWVy
+X2Nsa3NyYyB7DQo+ICsJCWNvbXBhdGlibGUgPSAic25wcyxhcmMtdGltZXIxIjsNCj4gKwkJY2xv
+Y2tzID0gPCZ0aW1lcjBfY2xrPjsNCg0KRGl0dG8sICJjbG9ja3MgPSA8JmNvcmVfY2xrPiIuDQoN
+Cj4gKwl9Ow0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3RpbWVyL3NucHMsYXJjaHMtZ2ZyYy50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGltZXIvc25wcyxhcmNocy1nZnJjLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmNjZTYwZTE2YWEwZA0KPiAtLS0gL2Rldi9udWxsDQo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9zbnBzLGFyY2hz
+LWdmcmMudHh0DQo+IEBAIC0wLDAgKzEsMTQgQEANCj4gK1N5bm9wc3lzIEFSQyBGcmVlIFJ1bm5p
+bmcgNjQtYml0IEdsb2JhbCBUaW1lciBmb3IgQVJDIEhTIENQVXMNCj4gKy0gY2xvY2tzb3VyYyBw
+cm92aWRlciBmb3IgU01QIFNvQw0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArDQo+
+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgInNucHMsYXJjaHMtZ2ZyYyINCj4gKy0gY2xvY2tz
+ICAgICA6IHBoYW5kbGUgdG8gdGhlIHNvdXJjZSBjbG9jaw0KPiArDQo+ICtFeGFtcGxlOg0KPiAr
+DQo+ICsJdGltZXIxOiB0aW1lcl9jbGtzcmMgew0KPiArCQljb21wYXRpYmxlID0gInNucHMsYXJj
+aHMtZ2ZyYyI7DQo+ICsJCWNsb2NrcyA9IDwmdGltZXIwX2Nsaz47DQoNCkRpdHRvLCAiY2xvY2tz
+ID0gPCZjb3JlX2Nsaz4iLg0KDQo+ICsJfTsNCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9zbnBzLGFyY2hzLXJ0Yy50eHQNCj4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvc25wcyxhcmNocy1ydGMudHh0DQo+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjNiNDk5Mzg4MTJiDQo+
+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3RpbWVyL3NucHMsYXJjaHMtcnRjLnR4dA0KPiBAQCAtMCwwICsxLDE0IEBADQo+ICtTeW5vcHN5
+cyBBUkMgRnJlZSBSdW5uaW5nIDY0LWJpdCBMb2NhbCBUaW1lciBmb3IgQVJDIEhTIENQVXMNCj4g
+Ky0gY2xvY2tzb3VyYyBwcm92aWRlciBmb3IgVVAgU29DDQo+ICsNCj4gK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ICsNCj4gKy0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAic25wcyxhcmNocy1ydGMi
+DQo+ICstIGNsb2NrcyAgICAgOiBwaGFuZGxlIHRvIHRoZSBzb3VyY2UgY2xvY2sNCj4gKw0KPiAr
+RXhhbXBsZToNCj4gKw0KPiArCXRpbWVyMTogdGltZXJfY2xrc3JjIHsNCj4gKwkJY29tcGF0aWJs
+ZSA9ICJzbnBzLGFyYy1ydGMiOw0KPiArCQljbG9ja3MgPSA8JnRpbWVyMF9jbGs+Ow0KPiArCX07
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9ib290L2R0cy9hYmlsaXNfdGIxMHguZHRzaSBiL2Fy
+Y2gvYXJjL2Jvb3QvZHRzL2FiaWxpc190YjEweC5kdHNpDQo+IGluZGV4IGNmYjUwNTIyMzlhMS4u
+ZjlmMTM4ZWZhOTJjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9hYmlsaXNfdGIx
+MHguZHRzaQ0KPiArKysgYi9hcmNoL2FyYy9ib290L2R0cy9hYmlsaXNfdGIxMHguZHRzaQ0KPiBA
+QCAtMzUsNiArMzUsMTggQEANCj4gIAkJfTsNCj4gIAl9Ow0KPiAgDQo+ICsJdGltZXIwOiB0aW1l
+cl9jbGtldnQgew0KPiArCQljb21wYXRpYmxlID0gInNucHMsYXJjLXRpbWVyMCI7DQo+ICsJCWlu
+dGVycnVwdHMgPSA8Mz47DQo+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Ow0KPiArCQlj
+bG9ja3MgPSA8JmNwdV9jbGs+Ow0KPg0KPiArCX07DQo+ICsNCj4gKwl0aW1lcjE6IHRpbWVyX2Ns
+a3NyYyB7DQo+ICsJCWNvbXBhdGlibGUgPSAic25wcyxhcmMtdGltZXIxIjsNCj4gKwkJY2xvY2tz
+ID0gPCZjcHVfY2xrPjsNCj4gKwl9Ow0KPiArDQoNCkhtIG5vdyB0aGF0J3MgYSBxdWVzdGlvbiBo
+b3cgdG8gZml4IC9wcm9jL2NwdWluZm8gb3V0cHV0DQpmb3IgQWJpbGlzPyBUaGVyZSdzIG5vICJj
+b3JlX2NsayIgRFRTIG5vZGUgZm9yIEFiaWxpcyBhbmQgc28NCnNob3dfY3B1aW5mbygpIHdvbid0
+IGdldCBwcm9wZXIgY2xvY2sgdmFsdWUuDQoNClByb2JhYmx5IHdlIG1heSBmaXggaXQgd2l0aCBt
+b2RpZmljYXRpb24gb2YgdGhlaXIgInBsbCIgbm9kZQ0KZnJvbQ0KLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoJCXBsbDA6IG9zY2lsbGF0b3Igew0KCQkJ
+Y2xvY2stZnJlcXVlbmN5ICA9IDwxMDAwMDAwMDAwPjsNCgkJfTsNCi0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQp0bw0KLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoJCWNvcmVfY2xrOiBvc2NpbGxhdG9yIHsN
+CgkJCWNsb2NrDQotZnJlcXVlbmN5ICA9IDwxMDAwMDAwMDAwPjsNCgkJfTsNCi0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQotQWxleGV5
