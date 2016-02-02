@@ -1,42 +1,178 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 10/11] ARM: dts: sun9i: a80-optimus: Disable
- dummy regulators vcc3v0, vcc3v3, vcc5v0
-Date: Wed, 3 Feb 2016 00:41:37 +0800
-Message-ID: <CAGb2v66xjgsoVEBocUfDk6DDx4QcH-4pP94v+4FHLTJ=rii09Q@mail.gmail.com>
-References: <1454408864-24112-1-git-send-email-wens@csie.org>
- <1454408864-24112-11-git-send-email-wens@csie.org> <20160202162136.GX4652@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] Documentation: dt: reset: Add syscon reset binding
+Date: Tue, 02 Feb 2016 17:44:49 +0100
+Message-ID: <1454431489.5358.62.camel@pengutronix.de>
+References: <1453748564-6429-1-git-send-email-afd@ti.com>
+	 <1453748564-6429-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWFYYO2QKGQEY2GFTUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160202162136.GX4652@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453748564-6429-2-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 3, 2016 at 12:21 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Tue, Feb 02, 2016 at 06:27:43PM +0800, Chen-Yu Tsai wrote:
->> These 3 regulators are provided in sunxi-common-regulators.dtsi.
->> 3.0V/3.3V and 5.0V are commonly used voltages in Allwinner devices.
->> These dummy regulators provide a stand-in when bindings that require
->> one, but the real regulator is not supported yet.
->>
->> Since these are no longer needed, we can disable them.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> Why not remove the include entirely then?
+Hi Andrew,
 
-reg_vbus* are still used. Or should we move them as well?
+I like the idea to introduce a generic binding in principle, but it
+should be able to cover a lot of the cases in the wild. And I'm not sure
+we know this to be the case yet.
 
-ChenYu
+Currently we have three syscon users in drivers/reset: reset-berlin,
+reset-zynq, and sti/reset-syscfg.
+berlin is special in that it only has trigger bits, and no state.
+zynq would fit this binding, but it already chose a binding with a
+single address cell because all its resets are in a contiguous range and
+the state and control bits are in the same place.
+sti also chose a single address cell and a logical number to enumerate
+the resets and to store the actual reset control and status bit position
+in a table in the driver. Is there a reason not to follow the same
+approach for ti? This approach of specifying bits in the device tree at
+the consumer side doesn't allow any error handling in the driver to
+determine if the bits are in fact valid.
+
+Am Montag, den 25.01.2016, 13:02 -0600 schrieb Andrew F. Davis:
+> Add syscon reset controller binding. This will hook to the reset
+> framework and use syscon/regmap to set reset bits. This allows
+> reset control of individual SoC subsytems and devices with
+> memory-mapped reset registers in a common register memory
+> space.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> [s-anna@ti.com: revise the binding format]
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  .../devicetree/bindings/reset/syscon-reset.txt     | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
+> new file mode 100644
+> index 0000000..466378a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
+> @@ -0,0 +1,84 @@
+> +SysCon Reset Controller
+> +=======================
+> +
+> +Almost all SoCs have hardware modules that require reset control in addition
+> +to clock and power control for their functionality. The reset control is
+> +typically provided by means of memory-mapped I/O registers. These registers are
+> +sometimes a part of a larger register space region implementing various
+> +functionalities. This register range is best represented as a syscon node to
+> +allow multiple entities to access their relevant registers in the common
+> +register space.
+
+So far, so good.
+
+> +A SysCon Reset Controller node defines a device that uses a syscon node
+> +and provides reset management functionality for various hardware modules
+> +present on the SoC.
+
+But this wording is a bit strange when there is no device.
+
+> +
+> +SysCon Reset Controller Node
+> +============================
+> +Each of the reset provider/controller nodes should have the following
+> +properties.
+> +
+> +Required properties:
+> +--------------------
+> + - compatible	: Should be "syscon-reset"
+
+What if later an erratum turns up and something special needs to be done
+(delays, special care about other bits in the same register, etc.)?
+This should always contain a soc specific compatible.
+
+> + - syscon	: phandle to the syscon node containing the reset registers
+
+This is not needed, the reset node can be mad a child of the syscon and
+then grab the regmap from its parent of_node.
+
+> + - #reset-cells	: Should be 6. Please see the reset consumer node below for
+> +                  usage details
+
+
+This is a binding for single reset bits that are spread throughout the
+register space. For any syscon that has a few registers of contiguous
+resets this is rather suboptimal.
+
+> +SysCon Reset Consumer Nodes
+> +===========================
+> +Each of the reset consumer nodes should have the following properties,
+> +in addition to their own properties.
+> +
+> +Required properties:
+> +--------------------
+> + - resets	: A phandle and reset specifier pair, one pair for each reset
+> +		  signal that affects the device, or that the device manages.
+> +		  The phandle should point to the syscon node containing the
+> +		  reset registers, and the reset specifier should have 6
+> +		  cell-values. The reset specifier contains two similar pairs
+
+One pair, then, not two?
+
+> +		  of 3 cell-values each, the first of the pair containing the
+> +		  reset control register information, and the second of the pair
+> +		  containing the reset status register information. The reset
+> +		  control and status registers can be same on some devices/SoCs.
+> +
+> +		  Each of the pairs of 3 cell-values should have the following
+> +		  values:
+> +		     Cell #1 : register offset of the reset control/status
+> +		               register from the syscon register base
+> +		     Cell #2 : bit shift value for the reset in the respective
+> +		               reset control/status register
+> +		     Cell #3 : polarity of the reset bit. Should be 1 for resets
+> +		               that are asserted when the bit is set, 0 for
+> +		               resets that are asserted when the bit is cleared
+
+The polarity should have some RESET_ACTIVE_HIGH/LOW #define. Using
+numbers in the gpio phandle bindings in the beginning has caused a lot
+of problems over time.
+Do you really have varying polarity across the resets?
+
+> +Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
+> +common reset controller usage by consumers.
+> +
+> +Example:
+> +--------
+> +The following example demonstrates a syscon node, the reset controller node
+> +using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
+> +Hawking SoC.
+> +
+> +/ {
+> +	soc {
+> +		psc: power-sleep-controller@02350000 {
+> +			compatible = "syscon";
+
+Add "simple-mfd", and then ...
+
+> +			reg = <0x02350000 0x1000>;
+> +		};
+> +
+> +		pscrst: psc-reset {
+> +			compatible = "syscon-reset";
+> +			syscon = <&psc>;
+> +			#reset-cells = <6>;
+> +		};
+
+... psc-reset can be put inside power-sleep-controller, and the syscon
+property can be removed.
+
+> +		dsp0: dsp0 {
+> +			...
+> +			resets = <&pscrst 0xa3c 8 0 0x83c 8 0>;
+
+This sounds a bit error prone and rather verbose for all controllers
+that don't have control and status bits peppered randomly around the
+register space.
+
+Personally, I'd prefer if you chose to take the sti approach and maybe
+share code with reset-syscfg.
+
+regards
+Philipp
