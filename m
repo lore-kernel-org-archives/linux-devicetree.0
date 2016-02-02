@@ -1,102 +1,76 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: Add TPO TPG110 binding
-Date: Tue, 2 Feb 2016 17:28:33 +0100
-Message-ID: <20160202162833.GB4918@ulmo>
-References: <1454316643-3931-1-git-send-email-linus.walleij@linaro.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: ad5755: add support for dt bindings
+Date: Tue, 2 Feb 2016 17:37:50 +0100
+Message-ID: <56B0DB5E.7060608@metafoo.de>
+References: <1454416574-6645-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <56B0CC2C.6020809@metafoo.de> <56B0D203.3050905@prevas.dk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1763199281=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454316643-3931-1-git-send-email-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B0D203.3050905-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1763199281==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
-Content-Disposition: inline
-
-
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Feb 01, 2016 at 09:50:43AM +0100, Linus Walleij wrote:
-> This adds device tree bindings for the TPO TPG110 panel found
-> mounted in the Nomadik NHK8815.
+On 02/02/2016 04:57 PM, Sean Nyekj=E6r wrote:
 >=20
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../bindings/display/panel/tpo,tpg110.txt          | 47 ++++++++++++++++=
-++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/tpo,t=
-pg110.txt
 >=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.t=
-xt b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
-> new file mode 100644
-> index 000000000000..acbc6bef3593
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
-> @@ -0,0 +1,47 @@
-> +TPO TPG110 Panel
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +This binding builds on the DPI bindings, adding a few properties
-> +as a superset of a DPI. See panel-dpi.txt for the required DPI
-> +bindings.
+> On 2016-02-02 16:33, Lars-Peter Clausen wrote:
+>> On 02/02/2016 01:36 PM, Sean Nyekjaer wrote:
+>>> Still missing a way to provide default modes and settings
+>>> for the driver from dt, but I see this as a start.
+>>>
+>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>> Hi,
+>>
+>> Thanks for the patch.
+> :-)
+>>
+>>> ---
+>>>   drivers/iio/dac/ad5755.c | 10 ++++++++++
+>>>   1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+>>> index bfb350a..e1b6e78 100644
+>>> --- a/drivers/iio/dac/ad5755.c
+>>> +++ b/drivers/iio/dac/ad5755.c
+>>> @@ -607,6 +607,16 @@ static const struct spi_device_id ad5755_id[] =
+=3D {
+>>>   };
+>>>   MODULE_DEVICE_TABLE(spi, ad5755_id);
+>>>   +static const struct of_device_id ad5755_of_match[] =3D {
+>>> +    { .compatible =3D "adi,ad5755" },
+>>> +    { .compatible =3D "adi,ad5755-1" },
+>>> +    { .compatible =3D "adi,ad5757" },
+>>> +    { .compatible =3D "adi,ad5735" },
+>>> +    { .compatible =3D "adi,ad5737" },
+>> This needs to set the ID for the device type, so that the driver get=
+s
+>> instantiated for the correct devicetype. And in the probe function c=
+heck if
+>> the driver was probed via DT (by checking spi->dev.of_node) and if i=
+t does
+>> get the ID from the of_device_id rather the spi_device_id.
+> I was planning on doing that.
+> And I was experimenting with providing modes and settings for every c=
+hannel
+> from the dt.
+> Is the DAC the only output devices in IIO?
 
-It is unfortunate that we have these two types of bindings, one used by
-some of the legacy fbdev drivers and the other by DRM/KMS drivers. There
-isn't really much we can do about it, though, as far as I can see.
+There is also support for programmable potentiometers (sometimes called
+RDAC), but that's it.
 
-This panel is used with an fbdev driver, right?
+>=20
+> I will send an proposal tomorrow :-) And thereby (maybe) pave the way=
+ for
+> the runtime mode switching
+>=20
+> Should we drop the platform data support and only rely on dt?
 
-Thierry
+No, there might still be some people depending on it. I don't think the
+burden of continuing to maintain the platform data support is that high=
+=2E
 
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWsNkxAAoJEN0jrNd/PrOhJEAQAIoWQJxOymoNSitqfyI/9bKf
-YxtsXuMzLB7DVExaXQq1gOBe0hn8+kLo6q2WhhStXtpFelK+Bi/P/whCo5j0lrQ0
-oCdU3e1t+beQgeq/sBgWsodye3ni1RZVzTe4ZYt3v4PUHCBnbDxF/YTfvkPV5o3e
-q27HW3YAp0wnKv7/clAU0S9OI0g0KLaZogCXmEHGNryb4B/QoK5dQhKNj4TQELyP
-ASEqyjim62O4hKyapXqWGh/zHp43JM7heDHXxSfrN1x/hQOo5rvwtzIB6ZVU+tc/
-Pp07ikpoyCMKRt91otOAFIqhPc8fF/kENvesrJGBOklhxlVV6YfMtR6Qrw50noYS
-pOpKmZH9pH1kKutr7Bae5dfyHVPFnZYk3jjcTwHN72K0cs+kBfd3kq5UDYMSSeQX
-vYz2vkRnbNYKq4sQTERzvi9dUip9DBBVM+jMFss/sOrSRc8K3FAedrQWjX8Hvx31
-mgE/ayODg2FRV7uEB8AhB4c/NIa/KIL8eYKvE1QL8gU0HWqjpH4o7UlvThq8tY8q
-TVDLF4GMWitQJWz1X7PWXv8FYzZg3Dv1QUdQHm71t8qWvm125aAWMVKnQn32SkF0
-wYxcJuXDiA/GEmQTW6l5IM2aKoh2xLrC/+ninKGEbC7aA6tv4J1lEPkF3N7vdIVy
-SQW73l17ajeqx/RFpBM2
-=KL81
------END PGP SIGNATURE-----
-
---6sX45UoQRIJXqkqR--
-
---===============1763199281==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1763199281==--
+- Lars
