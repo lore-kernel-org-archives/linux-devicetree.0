@@ -1,150 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] drm: sunxi: Add a basic DRM driver for Allwinner
- DE2
-Date: Tue, 2 Feb 2016 15:50:36 -0600
-Message-ID: <20160202215036.GA25521@rob-hp-laptop>
+Subject: Re: [PATCH v4 1/2] clk: sunxi: Add sun6i/8i video support
+Date: Tue, 2 Feb 2016 15:52:14 -0600
+Message-ID: <20160202215214.GA6738@rob-hp-laptop>
 References: <cover.1454435944.git.moinejf@free.fr>
- <76ae5b406ad64b2717c0b1c62c3005a62b2715b8.1454435944.git.moinejf@free.fr>
+ <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <76ae5b406ad64b2717c0b1c62c3005a62b2715b8.1454435944.git.moinejf@free.fr>
-Sender: linux-clk-owner@vger.kernel.org
+In-Reply-To: <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Dave Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <emilio@elopez.com.ar>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Emilio Lopez <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 04:25:51PM +0100, Jean-Francois Moine wrote:
-> In recent SoCs, as the H3, Allwinner uses a new display interface, DE2.
-> This patch adds a DRM video driver for this interface.
-> 
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
-> ---
-> v4: (no change)
-> v3:
-> 	- add the hardware cursor
-> 	- simplify and fix the DE2 init sequences
-> 	- generation for all SUNXI SoCs (Andre Przywara)
-> v2:
-> 	- remarks from Russell King
-> 	- DT documentation added
-> 	- working resolution change with xrandr
-> 	- removal of the HDMI driver
-> ---
->  .../devicetree/bindings/display/sunxi.txt          |  81 ++++
->  drivers/gpu/drm/Kconfig                            |   2 +
->  drivers/gpu/drm/Makefile                           |   1 +
->  drivers/gpu/drm/sunxi/Kconfig                      |  20 +
->  drivers/gpu/drm/sunxi/Makefile                     |   7 +
->  drivers/gpu/drm/sunxi/de2_crtc.c                   | 421 +++++++++++++++++
->  drivers/gpu/drm/sunxi/de2_crtc.h                   |  61 +++
->  drivers/gpu/drm/sunxi/de2_de.c                     | 505 +++++++++++++++++++++
->  drivers/gpu/drm/sunxi/de2_drm.h                    |  40 ++
->  drivers/gpu/drm/sunxi/de2_drv.c                    | 377 +++++++++++++++
->  drivers/gpu/drm/sunxi/de2_plane.c                  |  91 ++++
->  11 files changed, 1606 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/sunxi.txt
->  create mode 100644 drivers/gpu/drm/sunxi/Kconfig
->  create mode 100644 drivers/gpu/drm/sunxi/Makefile
->  create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.c
->  create mode 100644 drivers/gpu/drm/sunxi/de2_crtc.h
->  create mode 100644 drivers/gpu/drm/sunxi/de2_de.c
->  create mode 100644 drivers/gpu/drm/sunxi/de2_drm.h
->  create mode 100644 drivers/gpu/drm/sunxi/de2_drv.c
->  create mode 100644 drivers/gpu/drm/sunxi/de2_plane.c
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi.txt b/Documentation/devicetree/bindings/display/sunxi.txt
-> new file mode 100644
-> index 0000000..35f9763
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sunxi.txt
-> @@ -0,0 +1,81 @@
-> +Allwinner sunxi display subsystem
-> +=================================
-> +
-> +The sunxi display subsystems contain a display controller (DE),
-> +one or two LCD controllers (TCON) and their external interfaces.
-> +
-> +Display controller
-> +==================
-> +
-> +Required properties:
-> +
-> +- compatible: value should be one of the following
-> +		"allwinner,sun8i-h3-display-engine"
-> +
-> +- clocks: must include clock specifiers corresponding to entries in the
-> +		clock-names property.
-> +
-> +- clock-names: must contain
-> +		gate: for DE activation
-> +		clock: DE clock
-> +
-> +- resets: phandle to the reset of the device
-> +
-> +- ports: phandle's to the LCD ports
-> +
-> +LCD controller
-> +==============
-> +
-> +Required properties:
-> +
-> +- compatible: value should be one of the following
-> +		"allwinner,sun8i-h3-lcd"
-> +
-> +- clocks: must include clock specifiers corresponding to entries in the
-> +		clock-names property.
-> +
-> +- clock-names: must contain
-> +		gate: for LCD activation
-> +		clock: pixel clock
-> +
-> +- resets: phandle to the reset of the device
-> +
-> +- port: port node with endpoint definitions as defined in
-> +	Documentation/devicetree/bindings/media/video-interfaces.txt
-
-Define how many ports and endpoints.
-
-> +
-> +Example:
-> +
-> +	de: de-controller@01000000 {
-> +		compatible = "allwinner,sun8i-h3-display-engine";
-> +		...
-> +		clocks = <&bus_gates 44>, <&de_clk>;
-> +		clock-names = "gate", "clock";
-> +		resets = <&ahb_rst 44>;
-> +		ports = <&lcd0_p>;
-
-This is pointless if you only have one item in ports. Is this really a 
-separate h/w block? Can't you move all this into the node below?
-
-> +	};
-> +
-> +	lcd0: lcd-controller@01c0c000 {
-> +		compatible = "allwinner,sun8i-h3-lcd";
-> +		...
-> +		clocks = <&bus_gates 35>, <&tcon0_clk>;
-> +		clock-names = "gate", "clock";
-> +		resets = <&ahb_rst 35>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		lcd0_p: port {
-> +			lcd0_ep: endpoint {
-> +				remote-endpoint = <&hdmi_ep>;
-> +			};
-> +		};
-> +	};
-> +
-> +	hdmi: hdmi@01ee0000 {
-> +		...
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port {
-> +			hdmi_ep: endpoint {
-> +				remote-endpoint = <&lcd0_ep>;
-> +			};
-> +		};
-> +	};
+T24gVHVlLCBGZWIgMDIsIDIwMTYgYXQgMDY6MzU6MTBQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBBZGQgdGhlIGNsb2NrIHR5cGVzIHdoaWNoIGFyZSB1c2VkIGJ5IHRoZSBz
+dW42aS84aSBmYW1pbGllcyBmb3IgdmlkZW8uCj4gCj4gU2lnbmVkLW9mZi1ieTogSmVhbi1GcmFu
+Y29pcyBNb2luZSA8bW9pbmVqZkBmcmVlLmZyPgo+IC0tLQo+IHY0Ogo+IAktIGRyaXZlcnMvY2xr
+L3N1bnhpL01ha2VmaWxlIHdhcyBtaXNzaW5nIChFbWlsIFZlbGlrb3YpCj4gdjM6IChubyBjaGFu
+Z2UpCj4gdjI6Cj4gCS0gcmVtYXJrcyBmcm9tIENoZW4tWXUgVHNhaQo+IAktIERUIGRvY3VtZW50
+YXRpb24gYWRkZWQKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ns
+b2NrL3N1bnhpLnR4dCB8ICAgMiArCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4KCj4gIGRyaXZlcnMvY2xrL3N1bnhpL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDIgKwo+ICBkcml2ZXJzL2Nsay9zdW54aS9jbGstc3VuNmktZGlzcGxheS5jICAgICAg
+ICAgICAgIHwgMTA2ICsrKysrKysrKysrKysKPiAgZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjZp
+LXBsbDMuYyAgICAgICAgICAgICAgICB8IDE3NCArKysrKysrKysrKysrKysrKysrKysrCj4gIDQg
+ZmlsZXMgY2hhbmdlZCwgMjg0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvY2xrL3N1bnhpL2Nsay1zdW42aS1kaXNwbGF5LmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW42aS1wbGwzLmMKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
