@@ -1,54 +1,149 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: RE: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
-Date: Tue, 02 Feb 2016 13:56:16 -0800
-Message-ID: <63270b7f7015d99be2cb10377c976b31@agner.ch>
-References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
- <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
- <20160129025156.GA26113@rob-hp-laptop>
- <HE1PR04MB105182735A413F11D6704A7CECDF0@HE1PR04MB1051.eurprd04.prod.outlook.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
+Date: Tue, 2 Feb 2016 16:03:53 -0600
+Message-ID: <20160202220353.GA10273@rob-hp-laptop>
+References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
+ <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <HE1PR04MB105182735A413F11D6704A7CECDF0@HE1PR04MB1051.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Meng Yi <meng.yi@nxp.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454410739-24444-3-git-send-email-vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Noam Camus <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWVuZyBZaSwKCkkgcGxhbiB0byByZXZpZXcgdGhlIHBhdGNoc2V0IHRvbywgYnV0IGRpZCBu
-b3QgY29tZSBhcm91bmQgeWV0LgoKVGhlIGZvcnRoIHBhdGNoIGNvbmZsaWN0cyB3aXRoIG15IGNo
-YW5nZXMgaW4gdGhlIERSTSBEQ1UgZHJpdmVyLiBTaW5jZQppdCB3aWxsIGxpa2VseSBnbyB0aHJv
-dWdoIG15IHRyZWUsIHBsZWFzZSBiYXNlIHYyIG9udG9wIG9mIG15IERDVQpicmFuY2g6Cmh0dHA6
-Ly9naXQuYWduZXIuY2gvZ2l0d2ViLz9wPWxpbnV4LWRybS1mc2wtZGN1LmdpdDthPXN1bW1hcnkK
-Ci0tClN0ZWZhbgoKT24gMjAxNi0wMi0wMiAwMTo1MywgTWVuZyBZaSB3cm90ZToKPiBIaSBSb2IK
-PiAgICAgVGhhbmtzIGZvciB5b3VyIHJlcGx5LiBJIHdpbGwgY29ycmVjdCB0aG9zZSBzb29uLCBh
-bmQgdGhlbiBzZW5kIHYyIG91dC4KPiBCUgo+IE1lbmcgWWkKPiAKPj4gT24gRnJpZGF5LCBKYW51
-YXJ5IDI5LCAyMDE2IDEwOjUyIEFNLCBSb2IgSGVycmluZ1tyb2JoQGtlcm5lbC5vcmddIHdyb3Rl
-Ogo+IAo+PiA+ICtUaGUgU2lJOTAyMkEgaXMgYW4gdWx0cmEgbG93LXBvd2VyIEhETUkgdHJhbnNt
-aXR0ZXIuIEl0IHN1cHBvcnRzCj4+ID4gK3Jlc29sdXRpb25zIGZyb20gc3RhbmRhcmQgZGVmaW5p
-dGlvbiA0ODBpL3AgYW5kIDU3NmkvcCBhbGwgdGhlIHdheSB0bwo+PiA+ICtoaWdoLWRlZmluaXRp
-b24gNzIwcCwgMTA4MGksIGFuZCAxMDgwcCwgdGhlIGhpZ2hlc3QgcmVzb2x1dGlvbgo+PiA+ICtz
-dXBwb3J0ZWQgYnkgSERUVnMgdG9kYXkuIEl0IGFsc28gc3VwcG9ydHMgYWxsCj4+Cj4+IFdlbGws
-IHdlJ3JlIHVwIHRvIDRLIG5vdy4uLgo+IAo+PiA+ICsgICAgICAgICAgICBwb3J0cyB7Cj4+ID4g
-KyAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ID4gKwo+PiA+ICsgICAgICAgICAgICAg
-ICAgICAgIHBvcnRAMCB7Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MT47Cj4+Cj4+IFlvdXIgdW5pdCBhZGRyZXNzICgwKSBhbmQgcmVnIGRvbid0IG1hdGNoLgo+Pgo+
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2lpOTAyMl9vdXQ6IGVuZHBvaW50IHsK
-Pj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
-ID0gPCZoZG1pX2Nvbj47Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+Pgo+
-PiBUaGlzIG5lZWRzIHRvIGhhdmUgYSBwb3J0IGZvciB0aGUgaW5wdXQgZm9yIHRoZSBjb25uZWN0
-aW9uIHRvIHlvdXIgZGlzcGxheQo+PiBjb250cm9sbGVyLgo+Pgo+PiA+ICsgICAgICAgICAgICAg
-ICAgICAgIH07Cj4+ID4gKyAgICAgICAgICAgIH07Cj4+ID4gKyAgICB9OwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Feb 02, 2016 at 04:28:52PM +0530, Vineet Gupta wrote:
+> ARC Timers have historically been probed directly.
+> As precursor to start probing Timers thru DT introduce these bindings
+> 
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/timer/snps,arc-timer0.txt  | 23 ++++++++++++++++++++++
+>  .../devicetree/bindings/timer/snps,arc-timer1.txt  | 17 ++++++++++++++++
+>  .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 +++++++++++++
+>  .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 +++++++++++++
+>  arch/arc/boot/dts/abilis_tb10x.dtsi                | 12 +++++++++++
+>  arch/arc/boot/dts/skeleton.dtsi                    | 12 +++++++++++
+>  arch/arc/boot/dts/skeleton_hs.dtsi                 | 12 +++++++++++
+>  arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 12 +++++++++++
+>  8 files changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer0.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer0.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer0.txt
+> new file mode 100644
+> index 000000000000..ceb80c72a90b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,arc-timer0.txt
+> @@ -0,0 +1,23 @@
+> +Synopsys ARC Local Timer with Interrupt Capabilities
+> +- Found on all ARC CPUs (ARC700/ARCHS)
+> +- Mandatory clockevent provider
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,arc-timer0"
+
+timer0 and timer1 are different h/w blocks, not just different 
+instances?
+
+> +- interrupts : single Interrupt going into parent intc
+> +	       (16 for ARCHS cores, 3 for ARC700 cores)
+> +- clocks     : phandle to the source clock
+> +
+> +Optional properties:
+> +
+> +- interrupt-parent : phandle to parent intc
+> +
+> +Example:
+> +
+> +	timer0: timer_clkevt {
+
+just "timer" for node name. clkevt is a Linuxism.
+
+> +		compatible = "snps,arc-timer0";
+> +		interrupts = <3>;
+> +		interrupt-parent = <&core_intc>;
+> +		clocks = <&timer0_clk>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
+> new file mode 100644
+> index 000000000000..4886192ce2f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
+> @@ -0,0 +1,17 @@
+> +Synopsys ARC Free Running Local 32-bit Timer
+> +- Found on all ARC CPUs (ARC700/ARCHS)
+> +- Mandatory clocksource provider on ARC700
+> +- Optional clocksource provider on UP ARC HS CPUs
+> +  (and if better timer archs-rtc not available in SoC)
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,arc-timer1"
+> +- clocks     : phandle to the source clock
+
+No interrupt because it doesn't have one or you use this as a 
+clocksource and don't need it?
+
+> +
+> +Example:
+> +
+> +	timer1: timer_clksrc {
+> +		compatible = "snps,arc-timer1";
+> +		clocks = <&timer0_clk>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+> new file mode 100644
+> index 000000000000..cce60e16aa0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+> @@ -0,0 +1,14 @@
+> +Synopsys ARC Free Running 64-bit Global Timer for ARC HS CPUs
+> +- clocksourc provider for SMP SoC
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,archs-gfrc"
+> +- clocks     : phandle to the source clock
+> +
+> +Example:
+> +
+> +	timer1: timer_clksrc {
+> +		compatible = "snps,archs-gfrc";
+> +		clocks = <&timer0_clk>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+> new file mode 100644
+> index 000000000000..f3b49938812b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+> @@ -0,0 +1,14 @@
+> +Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
+> +- clocksourc provider for UP SoC
+
+local timer on a UP processor?
+
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,archs-rtc"
+> +- clocks     : phandle to the source clock
+> +
+> +Example:
+> +
+> +	timer1: timer_clksrc {
+> +		compatible = "snps,arc-rtc";
+> +		clocks = <&timer0_clk>;
+> +	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
