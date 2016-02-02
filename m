@@ -1,65 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 0/9] ARM/arm64: dts: rcar: Enable SCIF_CLK frequency
- and pins
-Date: Tue, 2 Feb 2016 11:21:33 +0100
-Message-ID: <20160202102132.GE15554@verge.net.au>
-References: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] arm64: dts: r8a7795: Add USB-DMAC device nodes
+Date: Tue, 2 Feb 2016 10:22:21 +0000
+Message-ID: <TY1PR06MB0928E36208538E38E0F24846D8DF0@TY1PR06MB0928.apcprd06.prod.outlook.com>
+References: <1454322540-5608-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454062646-4826-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <CAMuHMdUEUDkB3=jHAwXDozpdgFCimGS=LXsrxSVWac5xW2bg+A@mail.gmail.com>
+Content-Language: ja-JP
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 29, 2016 at 11:17:17AM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds support for the external crystal feeding SCIF_CLK
-> to (H)SCIF on the various Renesas R-Car Gen1, Gen2, and Gen3 development
-> boards.  This increases the range and accuracy of supported baud rates.
-> Support for this has been accepted in the driver in v4.5-rc1.
-> 
-> Changes compared to v3:
->   - Change one-line summary prefix to match current arm-soc practices,
->   - Tested on r8a7794/alt,
->   - Rebased,
-> 
-> Changes compared to v2:
->   - Add support for r8a7778/bockw, r8a7779/marzen, r8a7790/lager,
->     r8a7791/porter, r8a7793/gose, r8a7794/alt, and r8a7794/silk,
->   - Add Reviewed-by.
-> 
-> Testing:
->   - This was tested locally on r8a7791/koelsch and r8a7795/salvator-x,
->   - This was tested remotely on r8a7778/bockw, r8a7779/marzen, and
->     r8a7794/alt,
->   - This has been in renesas-drivers for a while, so I assume it has
->     received basic testing on other boards,
->   - Hints for various levels of testing:
->       - Change the "dev_dbg" after "done:" in
-> 	drivers/tty/serial/sh-sci.c to "dev_info" to print clock and bit
-> 	rate,
->       - "yes U | tr -d '\n' > /dev/ttySCx" outputs a square wave with a
->         frequency of half the bit rate on TXD,
->       - Modifying the frequency of SCIF_CLK causes garbage on the serial
->         console, unless you compensate by changing the bit rate in
->         /chosen/stdout-path,
->       - If you disable the SCIF_CLK, the brg_int clock will be used. If
->         you change that clock, you'll get garbage again.
-> 
-> Dependencies:
->   - renesas-devel-20160129-v4.5-rc1,
->   - series "[PATCH v4 0/7] ARM: dts: R-Car: Add SCIF fallback
->     compatibility strings",
->   - series "[PATCH v4 00/11] ARM: dts: shmobile: Rename the serial port
->     clock to fck",
->   - series "[PATCH v4 0/7] ARM: dts: r-car: Add BRG support for
->     (H)SCIF".
-> 
-> Thanks for applying!
-
-Is this safe to queue up in the light of the dependency on
-renesas-devel-20160129-v4.5-rc1?
+SGkgR2VlcnQtc2FuLCBTaW1vbi1zYW4sDQoNCj4gRnJvbTogbGludXgtcmVuZXNhcy1zb2Mtb3du
+ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcmVuZXNhcy1zb2Mtb3duZXJAdmdlci5r
+ZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgR2VlcnQNCj4gVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IFR1
+ZXNkYXksIEZlYnJ1YXJ5IDAyLCAyMDE2IDc6MTAgUE0NCj4gDQo+IE9uIE1vbiwgRmViIDEsIDIw
+MTYgYXQgMTE6MjkgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51
+aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
+c2FzL3I4YTc3OTUuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9y
+OGE3Nzk1LmR0c2kNCj4gPiBAQCAtODgwLDUgKzg4MCwzMSBAQA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JmNwZz47DQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiAr
+DQo+ID4gKyAgICAgICAgICAgICAgIHVzYl9kbWFjMDogZG1hLWNvbnRyb2xsZXJAZTY1YTAwMDAg
+ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3
+Nzk1LXVzYi1kbWFjIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+InJlbmVzYXMsdXNiLWRtYWMiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDww
+IDB4ZTY1YTAwMDAgMCAweDEwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJy
+dXB0cyA9IDwwIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAwIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gDQo+IFNv
+cnJ5LCBJIG1pc3NlZCB5b3UncmUgbm90IHVzaW5nIHRoZSBHSUNfU1BJIGRlZmluZXMuDQoNCk9v
+cHMhIFRoYW5rIHlvdSBmb3IgdGhlIHBvaW50Lg0KDQpTaW1vbi1zYW4sIA0KV291bGQgeW91IHJl
+dmVydCB0aGlzIHBhdGNoPyBJIHdpbGwgc3VibWl0IHYyIHBhdGNoIHNvb24uDQoNCkJlc3QgcmVn
+YXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
+dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1t
+NjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBw
+ZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRv
+IGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
+YXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMN
+Cg==
