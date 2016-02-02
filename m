@@ -1,40 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for Armada-3700 serial port
-Date: Tue, 02 Feb 2016 22:07:17 +0100
-Message-ID: <5687888.WDl8xbENFR@wuerfel>
-References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com> <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] doc: dt: add documentation for
+ alphascale,asm9260-rtc
+Date: Tue, 2 Feb 2016 15:12:29 -0600
+Message-ID: <20160202211229.GA16320@rob-hp-laptop>
+References: <20160202102804.GT20165@piout.net>
+ <1454442971-25225-1-git-send-email-linux@rempel-privat.de>
+ <1454442971-25225-3-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Wilson Ding <dingwei@marvell.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454442971-25225-3-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 02 February 2016 19:07:39 Gregory CLEMENT wrote:
+On Tue, Feb 02, 2016 at 08:56:11PM +0100, Oleksij Rempel wrote:
+> Document Alphascale asm9260 RTC bindings
+> 
+> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> ---
+>  .../bindings/rtc/alphascale,asm9260-rtc.txt           | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 39721ec4f415..b291f934d51b 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1606,6 +1606,28 @@ config SERIAL_STM32_CONSOLE
->  	depends on SERIAL_STM32=y
->  	select SERIAL_CORE_CONSOLE
->  
-> +config SERIAL_MVEBU_UART
-> +	bool "Marvell EBU serial port support"
-
-Could this be a loadable module?
-
-> +config SERIAL_MVEBU_CONSOLE
-> +	bool "Console on Marvell EBU serial port"
-> +	depends on SERIAL_MVEBU_UART
-
-If yes, this would become 
-
-	depends on SERIAL_MVEBU_UART=y
-
-	Arnd
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
