@@ -1,102 +1,297 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 10/14] ARM: dts: sun8i-a83t: Add PRCM related clocks and resets
-Date: Tue, 2 Feb 2016 14:44:26 +0800
-Message-ID: <CAGb2v67iO-816KaLttWRRPL2f7hpfgJ1--p69tD_oOrewmOjCA@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com> <1454203266-4450-11-git-send-email-vishnupatekar0510@gmail.com>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [RFC 3/3] CMDQ: Mediatek CMDQ driver
+Date: Tue, 2 Feb 2016 14:48:01 +0800
+Message-ID: <1454395681.27603.13.camel@mtksdaap41>
+References: <1453266881-16849-1-git-send-email-hs.liao@mediatek.com>
+	 <1453266881-16849-4-git-send-email-hs.liao@mediatek.com>
+	 <CAGS+omBjD1pXKY_6bFbiGxa5bttvqg5zEvKevzSfoiMOy7ys6Q@mail.gmail.com>
+	 <1454053150.32413.52.camel@mtksdaap41>
+	 <CAGS+omBrEE21Xxh8hjcf32qfHJE0jJYvxGP6L1ihS6jcNbLvLQ@mail.gmail.com>
+	 <1454070262.7401.21.camel@mtksdaap41>
+	 <CAGS+omBhs7Ks7MVDsxHBBUdgF+0fmAa465HwvNiCzEe97Knt3Q@mail.gmail.com>
+	 <1454292257.22270.3.camel@mtksdaap41>
+	 <CAGS+omCzDisk2TfbDnWiXufWgUsCbhF_JFafaUazhSymX-MT_Q@mail.gmail.com>
+	 <1454307624.22441.18.camel@mtksdaap41>
+	 <CAGS+omB7d3Kq1DKNHxZJjLDmin0rpkDj1kEde3zCxTiT5-xZWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454203266-4450-11-git-send-email-vishnupatekar0510@gmail.com>
+In-Reply-To: <CAGS+omB7d3Kq1DKNHxZJjLDmin0rpkDj1kEde3zCxTiT5-xZWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-cl
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Yong
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
-> This adds A83T PRCM related clocks, clock resets.
->
-> As a83t apb0 gates clock support is added earlier, this enables it.
-> Apart from apb0 gates, other added clocks are compatible with
-> earlier sun8i socs.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 44 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index ac96aa1..5ea20ff 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -268,6 +268,44 @@
->                                              "mmc2_output",
->                                              "mmc2_sample";
->                 };
-> +
-> +               cpus_clk: clk@01f01400 {
-> +                       compatible = "allwinner,sun9i-a80-cpus-clk";
-> +                       reg = <0x01f01400 0x4>;
-> +                       #clock-cells = <0>;
-> +                       clocks = <&osc16Md512>, <&osc24M>, <&pll6>, <&osc16M>;
-> +                       clock-output-names = "cpus";
-> +               };
-> +
-> +               ahb0: ahb0_clk {
-> +                       compatible = "fixed-factor-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-div = <1>;
-> +                       clock-mult = <1>;
-> +                       clocks = <&cpus_clk>;
-> +                       clock-output-names = "ahb0";
-> +               };
-> +
-> +               apb0: clk@01f0140c {
-> +                       compatible = "allwinner,sun8i-a23-apb0-clk";
+On Mon, 2016-02-01 at 18:22 +0800, Daniel Kurtz wrote:
+> On Mon, Feb 1, 2016 at 2:20 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+> > On Mon, 2016-02-01 at 12:15 +0800, Daniel Kurtz wrote:
+> >> On Mon, Feb 1, 2016 at 10:04 AM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+> >> >
+> >> > On Fri, 2016-01-29 at 21:15 +0800, Daniel Kurtz wrote:
+> >> > > On Fri, Jan 29, 2016 at 8:24 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+> >> > > > On Fri, 2016-01-29 at 16:42 +0800, Daniel Kurtz wrote:
+> >> > > >> On Fri, Jan 29, 2016 at 3:39 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+> >> > > >> > Hi Dan,
+> >> > > >> >
+> >> > > >> > Many thanks for your comments and time.
+> >> > > >> > I reply my plan inline.
+> >> > > >> >
+> >> > > >> >
+> >> > > >> > On Thu, 2016-01-28 at 12:49 +0800, Daniel Kurtz wrote:
+> >> > > >> >> Hi HS,
+> >> > > >> >>
+> >> > > >> >> Sorry for the delay.  It is hard to find time to review a >3700 line
+> >> > > >> >> driver :-o in detail....
+> >> > > >> >>
+> >> > > >> >> Some review comments inline, although I still do not completely
+> >> > > >> >> understand how all that this driver does and how it works.
+> >> > > >> >> I'll try to find time to go through this driver in detail again next
+> >> > > >> >> time you post it for review.
+> >> > > >> >>
+> >> > > >> >> On Tue, Jan 19, 2016 at 9:14 PM,  <hs.liao@mediatek.com> wrote:
+> >> > > >> >> > From: HS Liao <hs.liao@mediatek.com>
+> >> > > >> >> >
+> >> > > >> >> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> >> > > >> >> > CMDQ is used to help read/write registers with critical time limitation,
+> >> > > >> >> > such as updating display configuration during the vblank. It controls
+> >> > > >> >> > Global Command Engine (GCE) hardware to achieve this requirement.
+> >> > > >> >> > Currently, CMDQ only supports display related hardwares, but we expect
+> >> > > >> >> > it can be extended to other hardwares for future requirements.
+> >> > > >> >> >
+> >> > > >> >> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> >> > > >> >>
+> >> > > >> >> [snip]
+> >> > > >> >>
+> >> > > >> >> > diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
+> >> > > >> >> > new file mode 100644
+> >> > > >> >> > index 0000000..7570f00
+> >> > > >> >> > --- /dev/null
+> >> > > >> >> > +++ b/drivers/soc/mediatek/mtk-cmdq.c
+> >> > > >
+> >> > > > [snip]
+> >> > > >
+> >> > > >> >> > +static const struct cmdq_subsys g_subsys[] = {
+> >> > > >> >> > +       {0x1400, 1, "MMSYS"},
+> >> > > >> >> > +       {0x1401, 2, "DISP"},
+> >> > > >> >> > +       {0x1402, 3, "DISP"},
+> >> > > >> >>
+> >> > > >> >> This isn't going to scale.  These addresses could be different on
+> >> > > >> >> different chips.
+> >> > > >> >> Instead of a static table like this, we probably need specify to the
+> >> > > >> >> connection between gce and other devices via devicetree phandles, and
+> >> > > >> >> then use the phandles to lookup the corresponding device address
+> >> > > >> >> range.
+> >> > > >> >
+> >> > > >> > I will define them in device tree.
+> >> > > >> > E.g.
+> >> > > >> > cmdq {
+> >> > > >> >   reg_domain = 0x14000000, 0x14010000, 0x14020000
+> >> > > >> > }
+> >> > > >>
+> >> > > >> The devicetree should only model hardware relationships, not software
+> >> > > >> considerations.
+> >> > > >>
+> >> > > >> Is the hardware constraint here for using gce with various other
+> >> > > >> hardware blocks?  I think we already model this by only providing a
+> >> > > >> gce phandle in the device tree nodes for those devices that can use
+> >> > > >> gce.
+> >> > > >>
+> >> > > >> Looking at the driver closer, as far as I can tell, the whole subsys
+> >> > > >> concept is a purely software abstraction, and only used to debug the
+> >> > > >> CMDQ_CODE_WRITE command.  In fact, AFAICT, everything would work fine
+> >> > > >> if we just completely removed the 'subsys' concept, and just passed
+> >> > > >> through the raw address provided by the driver.
+> >> > > >>
+> >> > > >> So, I recommend just removing 'subsys' completely from the driver -
+> >> > > >> from this array, and in the masks.
+> >> > > >>
+> >> > > >> Instead, if there is an error on the write command, just print the
+> >> > > >> address that fails.  There are other ways to deduce the subsystem from
+> >> > > >> a physical address.
+> >> > > >>
+> >> > > >> Thanks,
+> >> > > >>
+> >> > > >> -Dan
+> >> > > >
+> >> > > > Hi Dan,
+> >> > > >
+> >> > > > Subsys is not just for debug.
+> >> > > > Its main purpose is to transfer CPU address to GCE address.
+> >> > > > Let me explain it by "write" op,
+> >> > > > I list a code segment from cmdq_rec_append_command().
+> >> > > >
+> >> > > >         case CMDQ_CODE_WRITE:
+> >> > > >                 subsys = cmdq_subsys_from_phys_addr(cqctx, arg_a);
+> >> > > >                 if (subsys < 0) {
+> >> > > >                         dev_err(dev,
+> >> > > >                                 "unsupported memory base address 0x%08x\n",
+> >> > > >                                 arg_a);
+> >> > > >                         return -EFAULT;
+> >> > > >                 }
+> >> > > >
+> >> > > >                 *cmd_ptr++ = arg_b;
+> >> > > >                 *cmd_ptr++ = (CMDQ_CODE_WRITE << CMDQ_OP_CODE_SHIFT) |
+> >> > > >                              (arg_a & CMDQ_ARG_A_WRITE_MASK) |
+> >> > > >                              ((subsys & CMDQ_SUBSYS_MASK) << CMDQ_SUBSYS_SHIFT);
+> >> > > >                 break;
+> >> > > >
+> >> > > > Subsys is mapped from physical address via cmdq_subsys_from_phys_addr(),
+> >> > > > and then it becomes part of GCE command via ((subsys & CMDQ_SUBSYS_MASK)
+> >> > > > << CMDQ_SUBSYS_SHIFT) .
+> >> > > > Only low bits of physical address are the same as GCE address.
+> >> > > > We can get it by (arg_a & CMDQ_ARG_A_WRITE_MASK).
+> >> > > > MASK is used to define how many bits are valid for this op.
+> >> > > > So, GCE address = subsys + valid low bits.
+> >> > >
+> >> > > How are these upper bits of the "GCE address" defined?
+> >> > > In other words, for a given SoC, how is the mapping between physical
+> >> > > io addresses to GCE addresses defined?
+> >> > > Is this mapping fixed by hardware?
+> >>
+> >> Please answer the detailed technical questions:
+> >>
+> >> How are these upper bits of the "GCE address" defined?
+> >
+> > A GCE command is arg_a + arg_b. Both of them have 32 bits length.
+> > arg_a is op + subsys + addr, and arg_b is value.
+> > subsys + addr is less than 32bits, so we need to map address range to
+> > subsys.
+> > The mapping rule is defined by hardware.
+> >
+> >> In other words, for a given SoC, how is the mapping between physical
+> >> io addresses to GCE addresses defined?
+> >
+> > It is (b).
+> >
+> >>
+> >> (a) Does the GCE remap a continuous device IO address range?
+> >>
+> >> AFAICT, the  defines an MT8173 specific mapping of:
+> >>
+> >> For example, the g_subsys table above seems to imply that the MT8173
+> >> gce maps all of:
+> >>   0x1400ffff:0x141fffff => 0x010000:0x1fffff
+> >>
+> >> (b) Or, are the upper 5 bits of the "gce address" significant, and via
+> >> hardware it can map a disjoint groups of device addresses into the
+> >> continuous GCE address space, and really there are 0x1f distinct 64k
+> >> mappings:
+> >>
+> >> mmsys (1) : 0x14000000:0x1400ffff => 0x010000:0x01ffff
+> >> disp  (2) : 0x14010000:0x1401ffff => 0x020000:0x02ffff
+> >> disp  (3) : 0x14020000:0x1402ffff => 0x030000:0x03ffff
+> >> ...
+> >> ???? (1f) : 0x141fffff:0x141fffff => 0x1f0000:0x1fffff
+> >>
+> >> If the mapping is fixed and continuous (a), then I think all we need
+> >> is a single dts entry for the gce node that describes how it performs
+> >> this mapping.  And then, the gce consumers can just pass in their
+> >> regular physical addresses, and the gce driver can remap them directly
+> >> to gce addresses.
+> >>
+> >> WDYT?
+> >
+> > How about this?
+> > hardware_module = <address_base subsys_id mask>;
+> > So, the result is
+> > mmsys_config_base = <0x14000000 1 0xffff0000>;
+> > disp_rdma_config_base = <0x14010000 2 0xffff0000>;
+> > disp_mutex_config_base = <0x14020000 3 0xffff0000>;
+> 
+> What uses ID 0 and 4 - 0x1f?
 
-This is actually wrong, as it is wrong in sun9i-a80.dtsi.
-I've sent a patch series for it.
+Subsys is defined by GCE hardware, and other IDs are reserved currently.
 
-Also the drivers for "allwinner,sun9i-a80-cpus-clk" and
-"allwinner,sun9i-a80-apbs-clk"
-are only compiled for CONFIG_MACH_SUN9I. Please add a patch to address this.
+> According to mt8173.dtsi, here are the blocks in the address ranges above:
+> 
+> @1400:
+>   mmsys: clock-controller@14000000
+>   ovl0: ovl@1400c000
+>   ovl1: ovl@1400d000
+>   rdma0: rdma@1400e000
+>   rdma1: rdma@1400f000
+> 
+> @1401:
+>   rdma2: rdma@14010000
+>   wdma0: wdma@14011000
+>   wdma1: wdma@14012000
+>   color0: color@14013000
+>   color1: color@14014000
+>   aal@14015000
+>   gamma@14016000
+>   merge@14017000
+>   split0: split@14018000
+>   split1: split@14019000
+>   ufoe@1401a000
+>   dsi0: dsi@1401b000
+>   dsi1: dsi@1401c000
+>   dpi0: dpi@1401d000
+>   pwm0: pwm@1401e000
+>   pwm1: pwm@1401f000
+> 
+> @1402:
+>   mutex: mutex@14020000
+>   od@14023000
+>   larb0: larb@14021000
+>   smi_common: smi@14022000
+>   hdmi0: hdmi@14025000
+>   larb4: larb@14027000
+> 
+> I assume that the gce will work with any of the devices in those
+> ranges, not just "mmsys", "rdma" and "mutex", right?   (Also, notice
 
-Regards
-ChenYu
+That's right.
 
-> +                       reg = <0x01f0140c 0x4>;
-> +                       #clock-cells = <0>;
-> +                       clocks = <&ahb0>;
-> +                       clock-output-names = "apb0";
-> +               };
-> +
-> +               apb0_gates: clk@01f01428 {
-> +                       compatible = "allwinner,sun8i-a83t-apb0-gates-clk";
-> +                       reg = <0x01f01428 0x4>;
-> +                       #clock-cells = <1>;
-> +                       clocks = <&apb0>;
-> +                       clock-indices = <0>, <1>,
-> +                                       <2>, <3>,
-> +                                       <4>, <6>, <7>;
-> +                       clock-output-names = "apb0_pio", "apb0_ir",
-> +                                       "apb0_timer", "apb0_rsb",
-> +                                       "apb0_uart", "apb0_i2c0", "apb0_twd";
-> +               };
->         };
->
->         soc {
-> @@ -434,5 +472,11 @@
->                         #interrupt-cells = <3>;
->                         interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
->                 };
-> +
-> +               apb0_reset: reset@01f014b0 {
-> +                       reg = <0x01f014b0 0x4>;
-> +                       compatible = "allwinner,sun6i-a31-clock-reset";
-> +                       #reset-cells = <1>;
-> +               };
->         };
->  };
-> --
-> 1.9.1
->
+> there are two "rdma" in the @1400 range, so rdma is really not a good
+> name for @1401)
+
+I think we can just use index.
+disp0_config_base = <0x14000000 1 0xffff0000>;
+disp1_config_base = <0x14010000 2 0xffff0000>;
+disp2_config_base = <0x14020000 3 0xffff0000>;
+
+> Further, it looks like the gce just maps a large device address range
+> starting at 0x14000000 to (21-bit) gce address 0x010000, rather than
+> 31 individually addressable 64k "subsys" blocks.  Is there a counter
+> example that I am missing?
+
+>From GCE's point of view,
+it's 32 (0x0~0x1f) individually addressable 64k "subsys" blocks.
+Currently, we don't have a counter example since all display related
+address are put together.
+
+> -Dan
+
+Thanks,
+HS Liao
+
+> >
+> >> -Dan
+> >>
+> >> >
+> >> > Yes, this mapping is fixed by hardware.
+> >> >
+> >> > > Does it vary for different SoCs?
+> >> >
+> >> > Yes, it varies for different SoCs.
+> >> >
+> >> > >
+> >> > > -Dan
+> >> > >
+> >> > > > That's why we need to know the mapping between the range of physical
+> >> > > > address and subsys.
+> >> > > > Please guide us a better way to code such requirement.
+> >> > > > Thanks for your help.
+> >> > > >
+> >> > > > Thanks,
+> >> > > > HS Liao
+> >> > > >
+> >> >
+> >> > Thanks,
+> >> > HS Liao
+> >> >
+> >
+> > Thanks,
+> > HS Liao
+> >
