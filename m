@@ -1,78 +1,109 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Tue, 2 Feb 2016 10:29:32 -0800
-Message-ID: <CALAqxLXBMOicSm41jnD2pqmYEGCA9cy9RfrdXFPNM1m_iH53WA@mail.gmail.com>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
-	<1454407151-4751-1-git-send-email-andy.yan@rock-chips.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for
+ Armada-3700 serial port
+Date: Tue, 2 Feb 2016 18:28:42 +0000
+Message-ID: <20160202182842.GD29778@leverpostej>
+References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
+ <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1454407151-4751-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Moritz Fischer <moritz.fischer@ettus.com>, matthias.bgg@gmail.com, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jun Nie <jun.nie@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, mbrugger@suse.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: linux-ide@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jslaby@suse.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, arm@kernel.org, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 2, 2016 at 1:59 AM, Andy Yan <andy.yan@rock-chips.com> wrote:
-> add device tree bindings document for reboot-mode driver
->
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->
+On Tue, Feb 02, 2016 at 07:07:39PM +0100, Gregory CLEMENT wrote:
+> From: Wilson Ding <dingwei@marvell.com>
+> 
+> Armada-3700's uart is a simple serial port, which doesn't
+> support. Configuring the modem control lines. The uart port has a 32
+> bytes Tx FIFO and a 64 bytes Rx FIFO
+> 
+> The uart driver implements the uart core operations. It also support the
+> system (early) console based on Armada-3700's serial port.
+> 
+> Known Issue:
+> 
+> The uart driver currently doesn't support clock programming, which means
+> the baud-rate stays with the default value configured by the bootloader
+> at boot time
+
+To ensure that the bootloader and kernel match, it's best to place the
+rate in the stdout-path property (as in
+Documentation/devicetree/bindings/chosen.txt).
+
+Presumably that is what you want?
+
+Is it difficutl to add clock programming?
+
+> 
+> [gregory.clement@free-electrons.com: Rewrite many part which are too long
+> to enumerate]
+> 
+> Signed-off-by: Wilson Ding <dingwei@marvell.com>
+> Signed-off-by: Nadav Haklai <nadavh@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
->
-> Changes in v3:
-> - descirbe all reboot mode as properity instead of subnode
->
-> Changes in v2: None
-> Changes in v1: None
->
->  .../bindings/power/reset/reboot-mode.txt           | 26 ++++++++++++++++
->  .../bindings/power/reset/syscon-reboot-mode.txt    | 36 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>  .../devicetree/bindings/tty/serial/mvebu-uart.txt  |  13 +
+>  Documentation/kernel-parameters.txt                |   6 +
+>  drivers/tty/serial/Kconfig                         |  22 +
+>  drivers/tty/serial/Makefile                        |   1 +
+>  drivers/tty/serial/mvebu-uart.c                    | 649 +++++++++++++++++++++
+>  include/uapi/linux/serial_core.h                   |   3 +
+>  6 files changed, 694 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+>  create mode 100644 drivers/tty/serial/mvebu-uart.c
+> 
+> diff --git a/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
 > new file mode 100644
-> index 0000000..517080f
+> index 000000000000..6087defd9f93
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> @@ -0,0 +1,26 @@
-> +Generic reboot mode core map driver
+> +++ b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+> @@ -0,0 +1,13 @@
+> +* Marvell UART : Non standard UART used in some of Marvell EBU SoCs (e.g., Armada-3700)
 > +
-> +This driver get reboot mode arguments and call the write
-> +interface to stores the magic value in special register
-> +or ram . Then the bootloader can read it and take different
-> +action according the argument stored.
+> +Required properties:
+> +- compatible: "marvell,armada-3700-uart"
+> +- reg: offset and length of the register set for the device.
+> +- interrupts: device interrupt
 > +
-> +All mode properties are vendor specific, it is a indication to tell
-> +the bootloder what to do when the system reboot, and should be named
-> +as mode-xxx = <magic> (xxx is mode name).
+> +Example:
+> +	serial@12000 {
+> +		compatible = "marvell,armada-3700-uart";
+> +		reg = <0x12000 0x400>;
+> +		interrupts = <43>;
+> +	};
+
+There are no external clock inputs?
+
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index 87d40a72f6a1..198f6bd56e84 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -1058,6 +1058,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>  			A valid base address must be provided, and the serial
+>  			port must already be setup and configured.
+>  
+> +		mvebu_uart,<addr>
+> +			Start an early, polled-mode console on an some mvebu
+> +			SoC (as the Armada-3700) serial port at the specified
+> +			address. The serial port must already be setup and
+> +			configured. Options are not yet supported.
 > +
-> +- mode-normal: Normal reboot mode, system reboot with command "reboot".
-> +- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
-> +- mode-fastboot: Android fastboot mode, it's a mode to  re-flash partitions on the device.
 
-One minor tweak here, on most Android devices (atleast most Nexus
-devices) getting to fastboot is done via "reboot bootloader" not
-"reboot fastboot".
+Does the the mvebu UART vary between platforms at all?
 
-If we are going to document the commands here to establish a standard,
-I'd prefer we use use what existing userspace expects:
-
-So across nexus devices, there's really two consistent commands:
-"bootloader", and "recovery"
-
-Nexus 6p:  https://android.googlesource.com/kernel/msm.git/+/android-msm-bullhead-3.10-marshmallow-mr1/drivers/power/reset/msm-poweroff.c#230
-Nexus 9: https://android.googlesource.com/kernel/tegra.git/+/android-tegra-flounder-3.10-marshmallow-mr1/drivers/htc_debug/stability/reboot_params.c#86
-Nexus 7: https://android.googlesource.com/kernel/msm.git/+/android-msm-flo-3.4-marshmallow-mr1/arch/arm/mach-msm/restart.c#273
-Nexus 10: https://android.googlesource.com/kernel/exynos.git/+/android-exynos-manta-3.4-lollipop-mr1/arch/arm/mach-exynos/board-manta-power.c#422
-
-While I don't object to having a duplicative mode-fastboot (it is more
-clear as to what the command does), or the other oem specific modes, I
-think we should make it clear that the Android userspace expects the
-"bootloader" and "recovery" commands and document them here.
-
-thanks
--john
+Thanks,
+Mark.
