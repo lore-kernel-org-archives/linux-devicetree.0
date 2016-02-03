@@ -1,80 +1,66 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v3 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT
- node
-Date: Wed, 3 Feb 2016 10:07:50 +0800
-Message-ID: <56B160F6.20308@rock-chips.com>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
- <1454407999-5476-1-git-send-email-andy.yan@rock-chips.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Wed, 3 Feb 2016 02:29:12 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D64026A0@penmbx01>
+References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+	<1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+	<20160129001603.GM4130@sirena.org.uk>
+	<B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+	<20160129113518.GQ4130@sirena.org.uk> <87wpqn3t72.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1454407999-5476-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>, john.stultz@linaro.org
-Cc: robh+dt@kernel.org, arnd@arndb.de, shawn.lin@rock-chips.com, mark.rutland@arm.com, heiko@sntech.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, lorenzo.pieralisi@arm.com, linux@arm.linux.org.uk, dbaryshkov@gmail.com, richard@nod.at, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, moritz.fischer@ettus.com, mbrugger@suse.com, sre@kernel.org, galak@codeaurora.org, jun.nie@linaro.org, dwmw2@infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87wpqn3t72.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/2/2 18:13, Andy Yan wrote:
-> Add syscon-reboot-mode driver DT node for rk3368 platform
->
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->
-
-Work fine with my rk3368-sheep board :)
-
-Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
-
-> ---
->
-> Changes in v3:
-> - descirbe all reboot mode as property instead of subnode
->
-> Changes in v2:
-> - make this node as a subnode of pmugrf
->
-> Changes in v1: None
->
->   arch/arm64/boot/dts/rockchip/rk3368.dtsi | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> index 122777b..5213713 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> @@ -45,6 +45,7 @@
->   #include <dt-bindings/interrupt-controller/irq.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/soc/rockchip_boot-mode.h>
->   #include <dt-bindings/thermal/thermal.h>
->
->   / {
-> @@ -554,8 +555,19 @@
->   	};
->
->   	pmugrf: syscon@ff738000 {
-> -		compatible = "rockchip,rk3368-pmugrf", "syscon";
-> +		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
->   		reg = <0x0 0xff738000 0x0 0x1000>;
-> +
-> +		reboot-mode {
-> +			compatible = "syscon-reboot-mode";
-> +			offset = <0x200>;
-> +			mode-normal = <BOOT_NORMAL>;
-> +			mode-recovery = <BOOT_RECOVERY>;
-> +			mode-fastboot = <BOOT_FASTBOOT>;
-> +			mode-loader = <BOOT_LOADER>;
-> +			mode-maskrom = <BOOT_MASKROM>;
-> +
-> +		};
->   	};
->
->   	cru: clock-controller@ff760000 {
->
-
-
--- 
-Best Regards
-Shawn Lin
-
+SGkgUGV0ZXIsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIg
+S29yc2dhYXJkIFttYWlsdG86amFjbWV0QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIFBldGVyIEtv
+cnNnYWFyZA0KPiBTZW50OiAyMDE2xOoy1MIzyNUgMTo0Mg0KPiBUbzogTWFyayBCcm93biA8YnJv
+b25pZUBrZXJuZWwub3JnPg0KPiBDYzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5j
+b20+OyBMaWFtIEdpcmR3b29kDQo+IDxsZ2lyZHdvb2RAZ21haWwuY29tPjsgUm9iIEhlcnJpbmcg
+PHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwNCj4gPHBhd2VsLm1vbGxAYXJtLmNvbT47
+IElhbiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hcg0KPiBH
+YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGsua296
+bG93c2tpQHNhbXN1bmcuY29tPjsgSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAZG93
+aGlsZTAub3JnPjsNCj4gTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz47IFBldGVyIEtv
+cnNnYWFyZCA8amFjbWV0QGdtYWlsLmNvbT47IEZlcnJlLA0KPiBOaWNvbGFzIDxOaWNvbGFzLkZF
+UlJFQGF0bWVsLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcN
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxLzJdIHJlZ3VsYXRvcjogYWN0ODk0NWE6IGFkZCBy
+ZWd1bGF0b3IgZHJpdmVyIGZvcg0KPiBBQ1Q4OTQ1QQ0KPiANCj4gPj4+Pj4gIk1hcmsiID09IE1h
+cmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4gd3JpdGVzOg0KPiANCj4gID4gT24gRnJpLCBK
+YW4gMjksIDIwMTYgYXQgMDE6MjA6MDhBTSArMDAwMCwgWWFuZywgV2VueW91IHdyb3RlOg0KPiAg
+Pj4gPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhY3Q4OTQ1YV9wbWljX29m
+X21hdGNoW10gPSB7DQo+ICA+PiA+ID4gKwl7IC5jb21wYXRpYmxlID0gImFjdGl2ZS1zZW1pLGFj
+dDg5NDVhLXJlZ3VsYXRvciIgfSwNCj4gID4+ID4gPiArCXsgfSwNCj4gID4+ID4gPiArfTsNCj4g
+ID4+ID4gPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWN0ODk0NWFfcG1pY19vZl9tYXRjaCk7
+DQo+IA0KPiAgPj4gPiBUaGlzIHNlZW1zIG1vc3RseSBPSyBidXQgd2h5IGRvIHdlIGhhdmUgYSBj
+b21wYXRpYmxlIHN0cmluZyBoZXJlIC0NCj4gc2hvdWxkbid0ICA+PiA+IHRoZSBNRkQgYmUgYWJs
+ZSB0byBpbnN0YW50aWF0ZSB0aGUgcmVndWxhdG9yIGZ1bmN0aW9uIHdpdGhvdXQNCj4gbmVlZGlu
+ZyB0aGlzPw0KPiANCj4gID4+IEJlY2F1c2UgSSBnb3QgZmVlZGJhY2sgZnJvbSBKYXZpZXIgZm9y
+IHRoZSBhY3Q4OTQ1YS1jaGFyZ2VyIHBhdGNoZXMgb2YgdGhpcw0KPiBNRkQgc2VyaWVzLCAgPj4g
+SGUgc2FpZCBtaXNzaW5nIHRoZSBPRiBtYXRjaCB0YWJsZSB3aWxsIGNhdXNlIHRoZSBtb2R1bGUN
+Cj4gYXV0b2xvYWRpbmcgYnJva2VuLg0KPiANCj4gID4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL3BpcGVybWFpbC9saW51eC1hcm0ta2VybmVsLzIwMTYtSmFudWFyeS8zOTgxMTMuaHRtbA0K
+PiANCj4gID4+IFdoYXQgZG8geW91IHRoaW5rIGFib3V0IGl0Pw0KPiANCj4gID4gSWYgdGhlbiBk
+ZXZpY2UgaXMgbm90IGJlaW5nIGxvYWRlZCBmcm9tIHRoZSBEVCAoYW5kIGl0IHNob3VsZG4ndCBi
+ZSwgdGhlICA+IGRldmljZQ0KPiBsb29rcyBsaWtlIGl0IHNob3VsZCBiZSBpbnN0YW50aWF0ZWQg
+ZGlyZWN0bHkgYnkgdGhlIE1GRCBhcyBpdCAgPiBjYW4ndCBleGlzdA0KPiBzZXBhcmF0ZWx5IHRv
+IHRoYXQgTUZEKSBhbiBPRiB0YWJsZSB3aWxsIGRvIG5vdGhpbmcuDQo+IA0KPiBUbyBhZGQgdG8g
+dGhlIGNvbmZ1c2lvbiwgdGhlIHJlZ3VsYXRvciBwYXJ0IG9mIHRoZSBjaGlwIGlzIGFjdHVhbGx5
+IGlkZW50aWNhbCB0bw0KPiBhY3Q4ODY1LCBzbyBpdCBjb3VsZCB1c2UgdGhlIGV4aXN0aW5nIHJl
+Z3VsYXRvciBkcml2ZXIgLyBjb21wYXRpYmxlLCBleGNlcHQgdGhhdCBpdA0KPiBiaW5kcyB0byB0
+aGUgcGxhdGZvcm0gYnVzIGluc3RlYWQgb2YgaTJjLg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgb3Bp
+bmlvbi4NCg0KQnV0IEkgdGhpbmsgSXQgaXMgYmV0dGVyIHRvIG1ha2UgaXQgYSBzZXBhcmF0ZSBk
+cml2ZXIsIHRoZSBkcml2ZXIgaXMgc2ltcGxlci4gDQoNCj4gDQo+IC0tDQo+IEJ5ZSwgUGV0ZXIg
+S29yc2dhYXJkDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
