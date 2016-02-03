@@ -1,56 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
-Date: Wed, 03 Feb 2016 14:47:03 +0100
-Message-ID: <2782231.XGO9cUTm7n@wuerfel>
-References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1930324.vU65IL0x0g@wuerfel> <56B1FF7A.3040906@imgtec.com>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
+Date: Wed, 3 Feb 2016 13:50:28 +0000
+Message-ID: <1454507428.3375.44.camel@synopsys.com>
+References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
+	 <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
+	 <1454418916.25997.18.camel@synopsys.com> <56B0BD2F.5080409@synopsys.com>
+	 <1454427373.25997.24.camel@synopsys.com>
+	 <1454453846.25997.31.camel@synopsys.com>
+	 <1454507041.3375.39.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56B1FF7A.3040906@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454507041.3375.39.camel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <B6B8E5B144BD414396BF135861E0A627-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org" <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 February 2016 13:24:10 Zubair Lutfullah Kakakhel wrote:
-> > Typically we treat those special registers as part of the device itself
-> > and have a single device node for the AHCI controller and that one.
-> >
-> > What is your reason for doing it differently here?
-> 
-> Two reasons
-> 
-> 1- The hardware is like a proper split rather than additional hidden registers in
-> the same memory space.
-> 
-> 2- Tons of devices in the field have the following DT node built in the bootloader.
-> 
->                 uctl@118006c000000 {
->                         compatible = "cavium,octeon-7130-sata-uctl";
->                         reg = <0x11800 0x6c000000 0x0 0x100>;
->                         ...
->                          sata: sata@16c0000000000 {
->                                  compatible = "cavium,octeon-7130-ahci";
->                                  reg = <0x16c00 0x00000000 0x0 0x200>;
->                                 ...
->                          };
->                 };
-> 
-> The patch suggests a way to handle this.
-> 
-
-Ok, fair enough. Also, you write in the binding that this is a bus
-bridge, so this indeed matches what the hardware does, and that's ok.
-
-Does the bus bridge actually translate the entire 64-bit CPU MMIO space,
-or is it possible that it only handles one device (or a couple of
-them) with a fairly limited space?
-
-Maybe it's better to represent it as a #address-cells=<1> in the
-example, and have the child device appear at address 0 in there.
-
-For the machines that already ship a DT, that would not matter though,
-it works either way.
-
-	Arnd
+KHJlLXNlbmRpbmcgYmVjYXVzZSBNaWtlJ3MgZW1haWwgQHRpIGlzIG5vIGxvbmdlciB2YWxpZCkN
+Cg0KSGkgTWlrZSwNCg0KT24gV2VkLCAyMDE2LTAyLTAzIGF0IDAxOjU3ICswMzAwLCBBbGV4ZXkg
+QnJvZGtpbiB3cm90ZToNCj4gSGkgVmluZWV0LA0KPiANCj4gT24gVHVlLCAyMDE2LTAyLTAyIGF0
+IDE4OjM2ICswMzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiBIaSBWaW5lZXQsDQo+ID4g
+DQo+ID4gT24gVHVlLCAyMDE2LTAyLTAyIGF0IDE5OjU5ICswNTMwLCBWaW5lZXQgR3VwdGEgd3Jv
+dGU6DQo+ID4gPiBIaSBBbGV4ZXksDQo+ID4gPiANCj4gPiA+IE9uIFR1ZXNkYXkgMDIgRmVicnVh
+cnkgMjAxNiAwNjo0NSBQTSwgQWxleGV5IEJyb2RraW4gd3JvdGU6DQo+ID4gPiA+IEhpIFZpbmVl
+dCwNCj4gPiA+ID4gDQo+ID4gPiA+IE9uIFR1ZSwgMjAxNi0wMi0wMiBhdCAxNjoyOCArMDUzMCwg
+VmluZWV0IEd1cHRhIHdyb3RlOg0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJv
+cGVydGllczoNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKy0gY29tcGF0aWJsZSA6IHNob3VsZCBi
+ZSAic25wcyxhcmMtdGltZXIwIg0KPiA+ID4gPiA+ICstIGludGVycnVwdHMgOiBzaW5nbGUgSW50
+ZXJydXB0IGdvaW5nIGludG8gcGFyZW50IGludGMNCj4gPiA+ID4gPiArICAgICAgICAgICAgKDE2
+IGZvciBBUkNIUyBjb3JlcywgMyBmb3IgQVJDNzAwIGNvcmVzKQ0KPiA+ID4gPiA+ICstIGNsb2Nr
+cyAgICAgOiBwaGFuZGxlIHRvIHRoZSBzb3VyY2UgY2xvY2sNCj4gPiA+ID4gDQo+ID4gPiA+IEFj
+dHVhbGx5IHdlJ3JlIG5vdCBmbGV4aWJsZSBoZXJlLg0KPiA+ID4gPiBTZWUgd2UgaGF2ZSBoYXJk
+LWNvZGVkICJjb3JlX2NsayIgaW4gW1BBVENIIDgvOV0uDQo+ID4gPiA+IFdlIHVzZSBpdCBkaXJl
+Y3RseSBpbiBzaG93X2NwdWluZm8oKSBmb3IgcmVhZGluZyBjbG9jayBzcGVlZA0KPiA+ID4gPiBh
+cyB3ZWxsIGFzIGluIGF4czEwM19lYXJseV9pbml0KCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBTbyAi
+c291cmNlIGNsb2NrIiBoZXJlIE1VU1QgYmUgImNvcmVfY2xrIiwgb3RoZXJ3aXNlDQo+ID4gPiA+
+IC9wcm9jL2NwdWluZm8gd2lsbCByZXBvcnQganVuayBpbnN0ZWFkIG9mIG1lYW5pbmdmdWwgZGF0
+YSBhdCBsZWFzdC4NCj4gPiA+IA0KPiA+ID4gVXNpbmcgaGFyZGNvZGVkIERUIG5hbWVzIGluIGdl
+bmVyaWMgY29kZSBpcyB0b3RhbCBCUyBhbmQgSSBzbGFwIG15c2VsZiBmb3IgbWlzc2luZw0KPiA+
+ID4gdGhhdCBpbiByZXZpZXdpbmcgOC85LiBQbGVhc2UgZml4IGl0ICENCj4gPiANCj4gPiBCdXQg
+dGhlIG9ubHkgb3RoZXIgYWx0ZXJuYXRpdmUgdG8gaGFyZC1jb2RlZCBuYW1lIGlzIHVzZSBvZiBz
+b21lIGludGVybmFsIHZhcmlhYmxlDQo+ID4gbGlrZSAiYXJjX3RpbWVyX2ZyZXEiLg0KPiA+IA0K
+PiA+IEkuZS4gd2UgbWFrZSAiYXJjX3RpbWVyX2ZyZXEiIGdsb2JhbCBhbmQgdXNlIGl0IGZvciBk
+aXNwbGF5aW5nIGNvcmUgZnJlcXVlbmN5Lg0KPiANCj4gV2VsbCBhY3R1YWxseSB0aGVyZSdzIGFu
+b3RoZXIgcG9zc2liaWxpdHkgdGhhdCBpcyB1c2VkIG9uIG1hbnkgb3RoZXIgcGxhdGZvcm1zDQo+
+IChBUk0gYm90aCAzMiBhbmQgNjQtYml0IGZsYXZvcnMgaXMgYSBnb29kIGV4YW1wbGUpIC0ganVz
+dCBwcmludCBib2dvbWlwcyBpbnN0ZWFkDQo+IG9mIGFkZGl0aW9uYWwgY29yZSBmcmVxdWVuY3ku
+DQoNCldlJ3JlIGluIHRoZSBwcm9jZXNzIG9mIHN3aXRjaGluZyBBUkMgdG8gZ2VuZXJpYyBjbGsg
+ZnJhbWV3b3JrLg0KDQpPbmUgb2YgdGhlIHByb2JsZW1zIHdlJ3JlIHRyeWluZyB0byBzb2x2ZSBu
+b3cgaXMgaG93IHRvIG9idGFpbg0KcHJlY2lzZSBDUFUgZnJlcXVlbmN5IHZhbHVlIGZvciBvdXRw
+dXR0aW5nIGl0IGZvciBleGFtcGxlIGJ5IC9wcm9jL2NwdWluZm8uDQoNClRoaXMgcHJlY2lzZSAo
+aW4gdGVybXMgb2Ygd2hhdCB2YWx1ZSB3YXMgc2V0IHZpYSBEZXZpY2UgVHJlZSBvciBleHRyYWN0
+ZWQgYW5kIGRlY29kZWQNCmZyb20gQ1BVIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXJzKSBDUFUgZnJl
+cXVlbmN5IGlzIHZlcnkgdXNlZnVsIGZvciBleGFtcGxlIGZvcg0KYmVuY2htYXJraW5nLiBJbiBj
+b21wYXJpc29uIGJvZ29taXBzIG1pZ2h0IGJlIG1pc2xlYWRpbmcgYXQgdGltZXMuDQoNCkJlZm9y
+ZSBtb3ZpbmcgdG8gY2xrIGZyYW1ld29yayB3ZSB1c2VkIHRvIGhhdmUgMiBBUkMtc3BlY2lmaWMg
+Y2FsbHMNCmFyY19nZXRfY29yZV9mcmVxKCkgYW5kICBhcmNfc2V0X2NvcmVfZnJlcSgpIHdoaWNo
+IHdlcmUgYmFzaWNhbGx5IHdyYXBwZXJzIGZvcg0Kb25lIHZhcmlhYmxlIHdoZXJlIHdlIHN0b3Jl
+ZCBDUFUgZnJlcXVlbmN5Lg0KDQpJIHRvb2sgYSBsb29rIGF0IHdoYXQgb3RoZXIgYXJjaGl0ZWN0
+dXJlcyBkbyBhbmQgc28gZmFyIHNhdyB0aGVzZSBvcHRpb25zOg0KIFsxXSBKdXN0IHByaW50IGJv
+Z29taXBzIChBUk0gYm90aCAzMi0gYW5kIDY0LWJpdCwgbTY0aywgTWljcm9ibGF6ZSwgTWlwcywN
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgbW4xMDMwMCwgb3BlbnJpc2MsIHMzOTAsIHNoLCB1
+bSwgdW5pY29yZTMyLCApDQogWzJdIEdldCBmcmVxdWVuY3kgZnJvbSBzb21lIGtpbmQgb2YgYXJj
+aGl0ZWN0dXJlLXNwZWNpZmljIHN0cnVjdHVyZSBvciB2YXJpYWJsZQ0KICAgICAoQWxwaGEsIEFW
+UjMyLCBjNngsIG5pb3MyLCBwb3dlcnBjLCBzcGFyYywgdGlsZSwgeHRlbnNhKSANCiBbM10gR2V0
+IGZyZXF1ZW5jeSBmcm9tIGNwdWZyZXEgZnJhbWV3b3JrIChpYTY0LCB4ODYpDQogWzRdIERlY29k
+ZSBmcmVxdWVuY3kgZnJvbSBoYXJkd2FyZSByZWdpc3RlcnMgKEJsYWNrZmluKQ0KDQpBbnkgdGhv
+dWdodHMgb24gd2hhdCdzIHRoZSBiZXN0IHdheSB0byBnZXQgQ1BVIGZyZXF1ZW5jeSBpbiBydW4t
+dGltZQ0KKHByZWZlcmFibHkgd2l0aCB1c2Ugb2YgY2xrIGZyYW1ld29yayBzbyB3ZSdsbCBuZWVk
+IG5vIGFyY2gtc3BlY2lmaWMNCnZhcmlhYmxlcyk/DQoNClJlZ2FyZHMsDQpBbGV4ZXk=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
