@@ -1,42 +1,88 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Wed, 3 Feb 2016 12:08:59 -0600
-Message-ID: <56B2423B.1020109@codeaurora.org>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <56B23883.7000501@codeaurora.org>
- <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
- <56B23E99.1030604@codeaurora.org>
- <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+From: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Subject: [PATCH v2] of: resolver: Add missing of_node_get and of_node_put
+Date: Wed, 3 Feb 2016 23:39:01 +0530
+Message-ID: <20160203180901.GA27874@amitoj-Inspiron-3542>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
+To: pantelis.antoniou@konsulko.com, robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: julia.lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-Fu Wei wrote:
-> Actually I am taking your suggestion to avoid touching WCV in
-> interrupt routine.
-> So even we have pre-timeout support , it is useless for this
-> panic-on-half-timeout feature,
-> because pre-timeout  == timeout / 2 (always).
->
-> So maybe I misunderstand your suggestion,
-> could you let me know : why we want pre-timeout here?
+In __of_find_node_by_full_name, add an of_node_get when detecting the
+desired element, to ensure that it ends up with a reference count that is 
+one greater than on entering the function.
 
-Maybe I'm confused.
+Also in __of_find_node_by_full_name, add an of_node_put on breaking
+out of the for_each_child_of_node loop, to ensure that the reference
+count of the returned value is not double incremented. This change
+was made using Coccinelle.
 
-For pre-timeout, I think the SBSA watchdog driver should support only 
-half-timeout.  That is, the user cannot configure the length of the 
-pre-timeout with this driver.  He can only enable it, and it is 
-automatically set to 1/2 timeout.
+The semantic patch used for this is as follows:
 
-So when pre-timeout occurs, the interrupt handler calls panic() or 
-whatever it's supposed to do.
+// <smpl>
+@@
+expression e;
+local idexpression n;
+@@
 
-So "pre-timeout  == timeout / 2 (always)" is exactly what we want.
+ for_each_child_of_node(..., n) {
+   ... when != of_node_put(n)
+       when != e = n
+(
+   return n;
+|
++  of_node_put(n);
+?  return ...;
+)
+   ...
+ }
+// </smpl
+
+Finally, add an of_node_put in for_each_child_of_node in the function
+__of_adjust_phandle_ref after the value returned by
+__of_find_node_by_full_name is no longer useful.
+
+Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+---
+Changes in v2:
+        -Added an of_node_get and an extra of_node_put in the
+         functions __of_find_node_by_full_name and __of_adjust_phandle_ref
+         respectively.
+
+ drivers/of/resolver.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 640eb4c..d313d49 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -36,12 +36,14 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+ 
+ 	/* check */
+ 	if (of_node_cmp(node->full_name, full_name) == 0)
+-		return node;
++		return of_node_get(node);
+ 
+ 	for_each_child_of_node(node, child) {
+ 		found = __of_find_node_by_full_name(child, full_name);
+-		if (found != NULL)
++		if (found != NULL) {
++			of_node_put(child);
+ 			return found;
++		}
+ 	}
+ 
+ 	return NULL;
+@@ -174,6 +176,7 @@ static int __of_adjust_phandle_ref(struct device_node *node,
+ 			if (of_prop_cmp(sprop->name, propstr) == 0)
+ 				break;
+ 		}
++		of_node_put(refnode);
+ 
+ 		if (!sprop) {
+ 			pr_err("%s: Could not find property '%s'\n",
+-- 
+1.9.1
