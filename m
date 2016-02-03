@@ -1,106 +1,141 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
-Date: Wed, 3 Feb 2016 09:39:15 -0600
-Message-ID: <CAL_Jsq+15SERAN8B5vcKVG=O8=pLLw5_0-p2STHjyGUu7mx-7Q@mail.gmail.com>
-References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
- <1454410739-24444-3-git-send-email-vgupta@synopsys.com> <20160202220353.GA10273@rob-hp-laptop>
- <C2D7FE5348E1B147BCA15975FBA23075F4E87B33@us01wembx1.internal.synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
+Date: Wed, 03 Feb 2016 16:39:10 +0100
+Message-ID: <2087303.0ORDEBS3hn@wuerfel>
+References: <cover.1454498292.git.jpinto@synopsys.com> <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F4E87B33-cALIpNOex2c3t6iM5Z/N3fufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: arcml <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Noam Camus <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <56B2164E.5060007@synopsys.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 3, 2016 at 2:04 AM, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Wednesday 03 February 2016 03:33 AM, Rob Herring wrote:
->> On Tue, Feb 02, 2016 at 04:28:52PM +0530, Vineet Gupta wrote:
->>> +Required properties:
->>> +
->>> +- compatible : should be "snps,arc-timer0"
->>
->> timer0 and timer1 are different h/w blocks, not just different
->> instances?
->
-> Functionality wise they are identical (only the address of aux regs used to
-> program them are different). Either can be configured to interrupt-on-limit or
-> free-run-and-wrap-around. So we can indeed consider them 2 instances. ARC Linux
-> uses timer0 for tick handling, timer1 for gtod.
->
-> Do you prefer they not be differentiated as timer0 and timer1 ?
->
-> So we have
->
-> CLOCKSOURCE_OF_DECLARE(arc_clkevt, "snps,arc-timer0", arc_clockevent_setup);
-> CLOCKSOURCE_OF_DECLARE(arc_timer1, "snps,arc-timer1", arc_cs_setup_timer1);
->
-> I don't know how to achieve above, by keeping the DT names the same.
+On Wednesday 03 February 2016 15:01:34 Joao Pinto wrote:
+> 
+> Hi Arnd,
+> 
+> On 2/3/2016 12:54 PM, Arnd Bergmann wrote:
+> > On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
+> >>
+> >> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+> > 
+> > This needs a changelog comment, like every patch.
+> > 
+> >> @@ -0,0 +1,16 @@
+> >> +* Universal Flash Storage (UFS) DesignWare Host Controller
+> >> +
+> >> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
+> >> +Each UFS controller instance should have its own node.
+> >> +
+> >> +Required properties:
+> >> +- compatible        : compatible list, contains "snps,ufshcd"
+> > 
+> > Are there multiple versions of this controller? Usually for designware
+> > parts the version is known, so we should document which versions exist
+> 
+> This controller recent releases was 2.0, but we released last year 1.1. The
+> driver works with both. The driver must work with all DWC UFS versions.
 
-You just need a single CLOCKSOURCE_OF_DECLARE which will be called
-twice. On the first call, setup one timer and on the 2nd call setup
-the other one. IIRC the sp804 timer has something similar.
+Ok, then make the driver match on the "snps,ufshcd-1.1" compatible
+string, but document both strings in the binding document, and make
+it mandatory to specify the 1.1 version as a compatible fallback.
 
-You'll need a unit address in the node name to distinguish them.
+If we ever need to handle a quirk for the 2.0 version then, it can
+easily be done.
 
->
->>
->>> +- interrupts : single Interrupt going into parent intc
->>> +           (16 for ARCHS cores, 3 for ARC700 cores)
->>> +- clocks     : phandle to the source clock
->>> +
->>> +Optional properties:
->>> +
->>> +- interrupt-parent : phandle to parent intc
->>> +
->>> +Example:
->>> +
->>> +    timer0: timer_clkevt {
->>
->> just "timer" for node name. clkevt is a Linuxism.
->
-> OK. So to document that this is for clockevent, change the label ?
+> >> +config SCSI_UFS_DWC_HOOKS
+> >> +	bool "DesignWare hooks to UFS controller"
+> >> +	depends on SCSI_UFSHCD
+> >> +	---help---
+> >> +	  This selects the DesignWare hooks for the UFS host controller.
+> >> +
+> >> +	  Select this if you have a DesignWare UFS controller.
+> >> +	  If unsure, say N.
+> > 
+> > This could be a silent symbol that gets selected by SCSI_UFS_DWC_PLAT
+> 
+> We could do that, but imagine that we select SCSI_UFS_QCOM, then the synopsys
+> hooks would be selected also which in my opinion is not very accurate.
+> In my opinion we should have a selectable DWC_HOOKS.
 
-That shouldn't be documented in the DT at all.
+I don't understand. At the moment, you can enable SCSI_UFS_DWC_HOOKS
+even if nothing uses it and you only have SCSI_UFS_QCOM enabled.
 
->
-> timer_clkevent: timer {
->
->>
->>> +            compatible = "snps,arc-timer0";
->>> +            interrupts = <3>;
->>> +            interrupt-parent = <&core_intc>;
->>> +            clocks = <&timer0_clk>;
->>> +    };
->>> diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
->>> new file mode 100644
->>> index 000000000000..4886192ce2f2
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
->>> @@ -0,0 +1,17 @@
->>> +Synopsys ARC Free Running Local 32-bit Timer
->>> +- Found on all ARC CPUs (ARC700/ARCHS)
->>> +- Mandatory clocksource provider on ARC700
->>> +- Optional clocksource provider on UP ARC HS CPUs
->>> +  (and if better timer archs-rtc not available in SoC)
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : should be "snps,arc-timer1"
->>> +- clocks     : phandle to the source clock
->>
->> No interrupt because it doesn't have one or you use this as a
->> clocksource and don't need it?
->
-> Latter !
+With my suggestion, the hooks would disappear unless they are
+actually used.
 
-Then you should have the interrupt in the DT anyway.
+Then again, with my later comments, we no longer need the hooks.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> >> +/**
+> >> + * ufshcd_dwc_setup_mphy()
+> >> + * This function configures Local (host) Synopsys MPHY specific attributes
+> >> + *
+> >> + * @hba: Pointer to drivers structure
+> >> + *
+> >> + * Returns 0 on success non-zero value on failure
+> >> + */
+> >> +int ufshcd_dwc_setup_mphy(struct ufs_hba *hba)
+> >> +{
+> >> +	int ret = 0;
+> >> +
+> >> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+> >> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
+> >> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
+> >> +	if (ret) {
+> >> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
+> >> +		goto out;
+> >> +	}
+> >> +#else
+> >> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
+> >> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
+> >> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
+> >> +	if (ret) {
+> >> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
+> >> +		goto out;
+> >> +	}
+> >> +#endif
+> >> +#endif
+> >> +	/* To write Shadow register bank to effective configuration block */
+> >> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_MPHYCFGUPDT), 0x01);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	/* To configure Debug OMC */
+> >> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_DEBUGOMC), 0x01);
+> >> +
+> >> +out:
+> >> +	return ret;
+> >> +}
+> > 
+> > Try to use the generic PHY abstraction here and remove all the #ifdef etc.
+> 
+> Could you please point an example for me to check?
+
+drivers/phy/phy-qcom-ufs-qmp-14nm.c is a phy driver, and it gets used through
+the generic devm_phy_get()/phy_power_on()/phy_power_off()/... interfaces.
+
+This should probably be moved into the generic UFS platform driver so the PHY
+handling can be shared between all backends.
+
+> >>  };
+> > 
+> > I think you're better off with a separate PCI driver for this. Remove
+> > all the #ifdef mess here, put whatever is dwc specific into a new file,
+> > and perhaps move the common parts into a shared file that can be used
+> > by both the samsung and designware drivers.
+> 
+> I have a branch with that approach, but honestly it would be a big change in the
+> UFS arch for the pci and I decided to make it simple. I sent that suggestion for
+> the scsi mailing list and the comments showed me that. Does anyone have anything
+> against putting ufshcd-pci.c as a pci common code and then have a ufs-dwc-pci.c
+> and a ufs-samsung-pci.c that uses that common code?
+
+Another approach would be to just rename the existing file to ufs-samsung-pci.c
+and start the  ufs-dwc-pci.c as a copy of that. The file is not really all that
+large anyway.
+
+	Arnd
