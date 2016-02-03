@@ -1,227 +1,77 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v3 01/10] drm/hisilicon: Add device tree binding for
- hi6220 display subsystem
-Date: Wed, 3 Feb 2016 16:32:09 +0800
-Message-ID: <CAGd==05D5XJP6+N8Qo97BomNVhWmML9XH--vgyf0OtKsr0apRg@mail.gmail.com>
-References: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
-	<1454144075-74361-2-git-send-email-xinliang.liu@linaro.org>
-	<20160201151027.GA5888@rob-hp-laptop>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v9 1/2] Documentation: bridge: Add documentation for ps8640 DT properties
+Date: Wed, 3 Feb 2016 16:48:07 +0800
+Message-ID: <1454489288-31951-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160201151027.GA5888@rob-hp-laptop>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@hu
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediat
 List-Id: devicetree@vger.kernel.org
 
-On 1 February 2016 at 23:10, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Jan 30, 2016 at 04:54:26PM +0800, Xinliang Liu wrote:
->> Add ADE display controller binding doc.
->> Add DesignWare DSI Host Controller v1.20a binding doc.
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->>
->> v3:
->> - Make ade as the drm master node.
->> - Use assigned-clocks to set clock rate.
->> - Use ports to connect display relavant nodes.
->> v2:
->> - Move dt binding docs to bindings/display/hisilicon directory.
->
-> Looks pretty good, just a few minor things.
->
+Add documentation for DT properties supported by
+ps8640 DSI-eDP converter.
 
-Thanks for all your help.
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v8:
+ - No change
+---
+ .../devicetree/bindings/display/bridge/ps8640.txt  |   43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
 
->> ---
->>  .../bindings/display/hisilicon/dw-dsi.txt          | 60 ++++++++++++++++++++++
->>  .../bindings/display/hisilicon/hisi-ade.txt        | 56 ++++++++++++++++++++
->>  2 files changed, 116 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
->>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
->> new file mode 100644
->> index 000000000000..44b945a54f3f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
->> @@ -0,0 +1,60 @@
->> +Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
->> +
->> +A DSI Host Controller resides in the middle of display controller and external
->> +HDMI converter.
->> +
->> +Required properties:
->> +- compatible: value should be "hisilicon,hi6220-dsi".
->> +- reg: physical base address and length of the controller's registers.
->> +- clocks: the clocks needed.
->> +- clock-names: the name of the clocks.
->> +- ports: contains DSI controller input and output sub port. The input port
->> +  connects to ADE output port, and output port connected to external HDMI
->
-> or panel or any other bridge.
-
-Right, I plan to support panel soon.
-will change to:
-s/output port connected to external HDMI/output port connected to
-panel or any other bridge/
-
->
->> +  endpoint. See Documentation/devicetree/bindings/graph.txt for more device
->> +  graph info.
->> +
->> +A example of HiKey board hi6220 SoC and board specific DT entry:
->> +Example:
->> +
->> +SoC specific:
->> +     dsi: dsi@0xf4107800 {
->
-> Drop the '0x'
-
-OK, will change to:
-dsi: dsi@f4107800
-
->
->> +             compatible = "hisilicon,hi6220-dsi";
->> +             reg = <0x0 0xf4107800 0x0 0x100>;
->> +             clocks = <&media_ctrl  HI6220_DSI_PCLK>;
->> +             clock-names = "pclk_dsi";
->> +
->> +             ports {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     port@0 {
->> +                             reg = <0>;
->> +                             dsi_in: endpoint {
->> +                                             remote-endpoint = <&ade_out>;
->
-> Indentation is wrong.
->
->> +                             };
->> +                     };
->> +
->> +                     port@1 {
->> +                             reg = <1>; /* 1 for output port */
->> +                             dsi_out: endpoint {
->> +                                              remote-endpoint = <&adv7533_in>;
->
-> ditto.
-
-All the indentation will be fixed in v4.
-
->
->> +                             };
->> +                     };
->> +             };
->> +     };
->> +
->> +Board specific:
->> +     i2c2: i2c@f7102000 {
->> +             ...
->> +
->> +             adv7533: adv7533@39 {
->> +                     ...
->> +
->> +                     port {
->> +                             adv7533_in: endpoint {
->> +                                     remote-endpoint = <&dsi_out>;
->> +                             };
->> +                     };
->> +             };
->> +     };
->> +
->> diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->> new file mode 100644
->> index 000000000000..47925826536c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->> @@ -0,0 +1,56 @@
->> +Device-Tree bindings for hisilicon ADE display controller driver
->> +
->> +ADE (Advanced Display Engine) is the display controller which grab image
->> +data from memory, do composition, do post image processing, generate RGB
->> +timing stream and transfer to DSI.
->> +
->> +Required properties:
->> +- compatible: value should be "hisilicon,hi6220-ade".
->> +- reg: physical base address and length of the controller's registers.
->
-> I see 3 ranges in the example. Please specify what each one is here.
-
-will change to:
-
-- reg: physical base address and length of the controller's registers.
-Three reg ranges are used in ADE driver:
-ADE reg range, value should be <0x0 0xf4100000 0x0 0x7800>;
-media subsystem reg range, value should be <0x0 0xf4410000 0x0 0x1000>;
-media subsystem NOC QoS reg range, value should be <0x0 0xf4520000 0x0 0x1000>;
-
->
->> +- reg-names: name of physical base.
->> +- interrupt: the interrupt number.
->> +- clocks: the clocks needed.
->
-> Same here. Specify what the clocks are.
->
-
-will change to:
-
-- clocks: the clocks needed.
-Three clocks are used in ADE driver:
-ADE core clock, value should be  <&media_ctrl HI6220_ADE_CORE>;
-ADE pixel clok, value should be <&media_ctrl HI6220_ADE_PIX_SRC>;
-media NOC QoS clock, value should be <&media_ctrl HI6220_CODEC_JPEG>;
-
-- assigned-clock-rates: clock rates which are assigned to assigned-clocks.
-The rate of <&media_ctrl HI6220_ADE_CORE> could be 360000000 or 180000000.
-The rate of <&media_ctrl HI6220_CODEC_JPEG> could be less than 1440000000.
-
->> +- clock-names: the name of the clocks.
->> +- assigned-clocks: clocks to be assigned rate.
->> +- assigned-clock-rates: clock rates which are assigned to assigned-clocks.
->> +- port: the output port. This contains one endpoint subnode, with its
->> +  remote-endpoint set to the phandle of the connected DSI endpoint.
->> +  See Documentation/devicetree/bindings/graph.txt for more device graph info.
->> +
->> +Optional properties:
->> +- dma-coherent: Present if dma operations are coherent.
->> +
->> +
->> +A example of HiKey board hi6220 SoC specific DT entry:
->> +Example:
->> +
->> +     ade: ade@f4100000 {
->> +             compatible = "hisilicon,hi6220-ade";
->> +             reg = <0x0 0xf4100000 0x0 0x7800>,
->> +                   <0x0 0xf4410000 0x0 0x1000>,
->> +                   <0x0 0xf4520000 0x0 0x1000>;
->> +             reg-names = "ade_base",
->> +                         "media_base",
->> +                         "media_noc_base";
->> +
->> +             interrupts = <0 115 4>; /* ldi interrupt */
->> +
->> +             clocks = <&media_ctrl HI6220_ADE_CORE>,
->> +                      <&media_ctrl HI6220_CODEC_JPEG>,
->> +                      <&media_ctrl HI6220_ADE_PIX_SRC>;
->> +             /*clock name*/
->> +             clock-names  = "clk_ade_core",
->> +                            "clk_codec_jpeg",
->> +                            "clk_ade_pix";
->> +
->> +             assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
->> +                     <&media_ctrl HI6220_CODEC_JPEG>;
->> +             assigned-clock-rates = <360000000>, <288000000>;
->> +             dma-coherent;
->> +
->> +             port {
->> +                     ade_out: endpoint {
->> +                             remote-endpoint = <&dsi_in>;
->> +                     };
->> +             };
->> +     };
->> --
->> 1.9.1
->>
+diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+new file mode 100644
+index 0000000..a3e0971
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+@@ -0,0 +1,43 @@
++ps8640-bridge bindings
++
++Required properties:
++	- compatible: "parade,ps8640"
++	- reg: first page address of the bridge.
++	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
++	- reset-gpios: OF device-tree gpio specification for reset pin.
++	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
++	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
++	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
++	- ports: The device node can contain video interface port nodes per
++		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
++		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++	edp-bridge@18 {
++		compatible = "parade,ps8640";
++		reg = <0x18>;
++		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
++		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
++		vdd12-supply = <&ps8640_fixed_1v2>;
++		vdd33-supply = <&mt6397_vgp2_reg>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				ps8640_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				ps8640_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+1.7.9.5
