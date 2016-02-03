@@ -1,95 +1,134 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 2/2] ARM: bcm2835: dt: Add the ethernet to the device
- tree
-Date: Wed, 03 Feb 2016 17:32:20 +0100
-Message-ID: <1454517140.25750.16.camel@v3.sk>
-References: <1454511759-24827-1-git-send-email-lkundrak@v3.sk>
-	 <1454511759-24827-3-git-send-email-lkundrak@v3.sk>
-	 <56B226A2.6000101@wwwdotorg.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for Armada-3700 serial port
+Date: Wed, 03 Feb 2016 17:32:41 +0100
+Message-ID: <87r3gt4uvq.fsf@free-electrons.com>
+References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
+	<1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
+	<20160202182842.GD29778@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56B226A2.6000101@wwwdotorg.org>
+In-Reply-To: <20160202182842.GD29778@leverpostej> (Mark Rutland's message of
+	"Tue, 2 Feb 2016 18:28:42 +0000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>, Peter Chen <peter.chen@freescale.com>, Arnd Bergmann <arnd@arndb.de>, popcornmix <popcornmix@gmail.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Wilson Ding <dingwei@marvell.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-02-03 at 09:11 -0700, Stephen Warren wrote:
-> On 02/03/2016 08:02 AM, Lubomir Rintel wrote:
-> > The hub and the ethernet in its port 1 are hardwired on the board.
-> >=20
-> > Compared to the adapters that can be plugged into the USB ports,
-> > this
-> > one has no serial EEPROM to store its MAC. Nevertheless, the
-> > Raspberry Pi
-> > has the MAC address for this adapter in its ROM, accessible from
-> > its
-> > firmware.
-> >=20
-> > U-Boot can read out the address and set the local-mac-address
-> > property of the
-> > node with "ethernet" alias. Let's add the node so that U-Boot can
-> > do its
-> > business.
->=20
-> Good to see we're getting a standard for this.
->=20
-> Have you talked to the RPi Foundation about updating their binary=C2=A0
-> bootloader to follow this protocol?
+Hi Mark,
+=20
+ On mar., f=C3=A9vr. 02 2016, Mark Rutland <mark.rutland@arm.com> wrote=
+:
 
-Not really. Adding Dom Cobley to the Cc list now.
+> On Tue, Feb 02, 2016 at 07:07:39PM +0100, Gregory CLEMENT wrote:
+>> From: Wilson Ding <dingwei@marvell.com>
+>>=20
+>> Armada-3700's uart is a simple serial port, which doesn't
+>> support. Configuring the modem control lines. The uart port has a 32
+>> bytes Tx FIFO and a 64 bytes Rx FIFO
+>>=20
+>> The uart driver implements the uart core operations. It also support=
+ the
+>> system (early) console based on Armada-3700's serial port.
+>>=20
+>> Known Issue:
+>>=20
+>> The uart driver currently doesn't support clock programming, which m=
+eans
+>> the baud-rate stays with the default value configured by the bootloa=
+der
+>> at boot time
+>
+> To ensure that the bootloader and kernel match, it's best to place th=
+e
+> rate in the stdout-path property (as in
+> Documentation/devicetree/bindings/chosen.txt).
+>
+> Presumably that is what you want?
 
-They seem to be passing the MAC address on command line now and even
-evaluating it before attempting a read out from the EEPROM. That sounds
-like it would break if someone plugged another smsc95xx adapter into
-one of the USB ports.
+It is done in patch 7.
 
-> I'll certainly ack changes to make=C2=A0
-> this work for U-Boot, provided the USB core patch this relies upon
-> is=C2=A0
-> accepted.
+>
+> Is it difficutl to add clock programming?
 
-Dom, if the changes mentioned in [1] get merged, you may want to add
-the Ethernet device to your device trees too and drop the cmdline hack.
-
-[1]=C2=A0http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-Feb=
-ruary/003207.html
-
->=20
-> > diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> > b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
->=20
-> > +&usb {
-> > +	usb1@01 {
-> > +		compatible =3D "usb1d6b,0002";
-> > +		reg =3D <01>;
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		ethernet: usbether@01 {
-> > +			compatible =3D "usb0424,9514";
-> > +			reg =3D <01>;
->=20
-> Ib both unit addresses and both reg properties, I would expect "1"
-> not=C2=A0
-> "01" since there's usually no leading 0 fill for those.
-
-Okay, will fix.
-
-> I'm curious why the VID values for the hub and Ethernet device don't=C2=
-=A0
-> match since those are part of the same combo chip. Is there a typo=C2=
-=A0
-> there, or did SMSC really do something odd in HW?
-
-Hm, I think I just did a sysfs walk to see how things are connected.
-The ethernet USB id is certainly wrong though.
-
-The 1d6d:2 id is of the root hub. There I either messed up the commit
-message or the topology. I can't recheck now, but I'll give it another
-look before I send and updated version.
+Currently there is no clock tree support before adding it I would like
+to be able to test it.
 
 Thanks,
-Lubo
+
+Gregory
+
+>
+>>=20
+>> [gregory.clement@free-electrons.com: Rewrite many part which are too=
+ long
+>> to enumerate]
+>>=20
+>> Signed-off-by: Wilson Ding <dingwei@marvell.com>
+>> Signed-off-by: Nadav Haklai <nadavh@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  .../devicetree/bindings/tty/serial/mvebu-uart.txt  |  13 +
+>>  Documentation/kernel-parameters.txt                |   6 +
+>>  drivers/tty/serial/Kconfig                         |  22 +
+>>  drivers/tty/serial/Makefile                        |   1 +
+>>  drivers/tty/serial/mvebu-uart.c                    | 649 ++++++++++=
++++++++++++
+>>  include/uapi/linux/serial_core.h                   |   3 +
+>>  6 files changed, 694 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/tty/serial/mve=
+bu-uart.txt
+>>  create mode 100644 drivers/tty/serial/mvebu-uart.c
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/tty/serial/mvebu-uart=
+=2Etxt b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+>> new file mode 100644
+>> index 000000000000..6087defd9f93
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+>> @@ -0,0 +1,13 @@
+>> +* Marvell UART : Non standard UART used in some of Marvell EBU SoCs=
+ (e.g., Armada-3700)
+>> +
+>> +Required properties:
+>> +- compatible: "marvell,armada-3700-uart"
+>> +- reg: offset and length of the register set for the device.
+>> +- interrupts: device interrupt
+>> +
+>> +Example:
+>> +	serial@12000 {
+>> +		compatible =3D "marvell,armada-3700-uart";
+>> +		reg =3D <0x12000 0x400>;
+>> +		interrupts =3D <43>;
+>> +	};
+>
+> There are no external clock inputs?
+>
+>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/ker=
+nel-parameters.txt
+>> index 87d40a72f6a1..198f6bd56e84 100644
+>> --- a/Documentation/kernel-parameters.txt
+>> +++ b/Documentation/kernel-parameters.txt
+>> @@ -1058,6 +1058,12 @@ bytes respectively. Such letter suffixes can =
+also be entirely omitted.
+>>  			A valid base address must be provided, and the serial
+>>  			port must already be setup and configured.
+>> =20
+>> +		mvebu_uart,<addr>
+>> +			Start an early, polled-mode console on an some mvebu
+>> +			SoC (as the Armada-3700) serial port at the specified
+>> +			address. The serial port must already be setup and
+>> +			configured. Options are not yet supported.
+>> +
+>
+> Does the the mvebu UART vary between platforms at all?
+>
+> Thanks,
+> Mark.
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
