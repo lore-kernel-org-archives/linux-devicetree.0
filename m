@@ -1,163 +1,92 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH v3 09/10] Input: synaptics-rmi4: Add device tree support to the SPI transport driver
-Date: Tue, 2 Feb 2016 17:46:05 -0800
-Message-ID: <1454463965-4370-1-git-send-email-aduggan@synaptics.com>
+From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and
+ regulator supply properties
+Date: Wed, 3 Feb 2016 09:46:25 +0800
+Message-ID: <CALx668UB+o_RYUWSR86nUL7YpiK9fWPzZeOSaOmYTGtdnRKx=Q@mail.gmail.com>
+References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
+ <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
+ <20151228031340.GD3598@ubuntu> <3310024.mO5K6yH9vU@wuerfel>
+ <20160105102455.GA30120@ubuntu> <56B08DA4.8070207@gmail.com>
+ <56B0B894.9040706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56B0B894.9040706-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for SPI devices.
+On Tue, Feb 2, 2016 at 10:09 PM, Matthias Brugger
+<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>
+> On 02/02/16 12:06, Matthias Brugger wrote:
+>>
+>>
+>>
+>> On 05/01/16 11:24, Viresh Kumar wrote:
+>>>
+>>> On 05-01-16, 11:21, Arnd Bergmann wrote:
+>>>>
+>>>> On Monday 28 December 2015 08:43:40 Viresh Kumar wrote:
+>>>>>
+>>>>> On 27-12-15, 14:21, Pi-Cheng Chen wrote:
+>>>>>>
+>>>>>> Add operating-points-v2, clock, and regulator supply properties
+>>>>>> required by mt8173-cpufreq driver to enable it.
+>>>>>>
+>>>>>> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>> ---
+>>>>>> This patch is based on the patch[1] that adds underlying clock MUX for
+>>>>>> MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
+>>>>>>
+>>>>>> [1] http://article.gmane.org/gmane.linux.kernel.clk/325
+>>>>>> ---
+>>>>>>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
+>>>>>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90
+>>>>>> +++++++++++++++++++++++++++++
+>>>>>>   2 files changed, 108 insertions(+)
+>>>>>
+>>>>>
+>>>>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>
+>>>>
+>>>> This patch is now in linux-next through Rafael's pm tree, and it
+>>>> breaks the
+>>>> arm64 build:
+>>>>
+>>>>          arm64-defconfig
+>>>> Error: ../arch/arm64/boot/dts/mediatek/mt8173.dtsi:132.24-25 syntax
+>>>> error
+>>>>
+>>>>
+>>>> Please revert.
+>>>>
+>>>> In the future, please send all dts changes through the proper maintainer
+>>>> channels (-> Mattias -> arm-soc), and make sure they actually build.
+>>>
+>>>
+>>> Rafael has already reverted that, AFAIK, after Mark Brown reported the
+>>> build issue.
+>>>
+>>
+>> Applied to v4.5-next/dts
+>>
+>
+> I oversaw that this needs a clock patch, which is not yet mainlined.
+> I deleted this patch from my tree.
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
- drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
- 2 files changed, 100 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+I should mention that explicitly.
+Sorry for the inconvenience.
 
-diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-new file mode 100644
-index 0000000..367b310
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-@@ -0,0 +1,57 @@
-+Synaptics RMI4 SPI Device Binding
-+
-+The Synaptics RMI4 core is able to support RMI4 devices using different
-+transports and different functions. This file describes the device tree
-+bindings for devices using the SPI transport driver. Complete documentation
-+for other transports and functions can be found in
-+Documentation/devicetree/bindings/input/rmi4.
-+
-+Required Properties:
-+- compatible: syna,rmi4-spi
-+- reg: Chip select address for the device
-+- #address-cells: Set to 1 to indicate that the function child nodes
-+		    consist of only on uint32 value.
-+- #size-cells: Set to 0 to indicate that the function child nodes do not
-+		have a size property.
-+
-+Optional Properties:
-+- interrupts: interrupt which the rmi device is connected to.
-+- interrupt-parent: The interrupt controller.
-+See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+- syna,spi-rx-delay-usec: microsecond delay after a read transfer.
-+- syna,spi-tx-delay-usec: microsecond delay after a write transfer.
-+
-+Function Parameters:
-+Parameters specific to RMI functions are contained in child nodes of the rmi device
-+ node. Documentation for the parameters of each function can be found in:
-+Documentation/devicetree/bindings/input/rmi4/rmi_f*.txt.
-+
-+
-+
-+Example:
-+	spi@7000d800 {
-+		rmi4-spi-dev@0 {
-+			compatible = "syna,rmi4-spi";
-+			reg = <0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			spi-max-frequency = <4000000>;
-+			spi-cpha;
-+			spi-cpol;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(K, 2) 0x2>;
-+			syna,spi-rx-delay-usec = <30>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f11@11 {
-+				reg = <0x11>;
-+				touchscreen-inverted-y;
-+				syna,sensor-type = <2>;
-+			};
-+		};
-+	};
-diff --git a/drivers/input/rmi4/rmi_spi.c b/drivers/input/rmi4/rmi_spi.c
-index 8b4d169..5be321c 100644
---- a/drivers/input/rmi4/rmi_spi.c
-+++ b/drivers/input/rmi4/rmi_spi.c
-@@ -12,6 +12,7 @@
- #include <linux/rmi.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
-+#include <linux/of.h>
- #include "rmi_driver.h"
- 
- #define RMI_SPI_DEFAULT_XFER_BUF_SIZE	64
-@@ -359,6 +360,41 @@ static int rmi_spi_init_irq(struct spi_device *spi)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static int rmi_spi_of_probe(struct spi_device *spi,
-+			struct rmi_device_platform_data *pdata)
-+{
-+	struct device *dev = &spi->dev;
-+	int retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.read_delay_us,
-+			"syna,spi-rx-delay-usec", 1);
-+	if (retval)
-+		return retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.write_delay_us,
-+			"syna,spi-tx-delay-usec", 1);
-+	if (retval)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rmi_spi_of_match[] = {
-+	{ .compatible = "syna,rmi4-spi" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rmi_spi_of_match);
-+#else
-+static inline int rmi_spi_of_probe(struct spi_device *spi,
-+				struct rmi_device_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int rmi_spi_probe(struct spi_device *spi)
- {
- 	struct rmi_spi_xport *rmi_spi;
-@@ -376,8 +412,13 @@ static int rmi_spi_probe(struct spi_device *spi)
- 
- 	pdata = &rmi_spi->xport.pdata;
- 
--	if (spi_pdata)
-+	if (spi->dev.of_node) {
-+		retval = rmi_spi_of_probe(spi, pdata);
-+		if (retval)
-+			return retval;
-+	} else if (spi_pdata) {
- 		*pdata = *spi_pdata;
-+	}
- 
- 	if (pdata->spi_data.bits_per_word)
- 		spi->bits_per_word = pdata->spi_data.bits_per_word;
-@@ -532,6 +573,7 @@ static struct spi_driver rmi_spi_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "rmi4_spi",
- 		.pm	= &rmi_spi_pm,
-+		.of_match_table = of_match_ptr(rmi_spi_of_match),
- 	},
- 	.id_table	= rmi_id,
- 	.probe		= rmi_spi_probe,
--- 
-2.5.0
+Pi-Cheng
