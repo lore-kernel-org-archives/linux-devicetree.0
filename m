@@ -1,122 +1,42 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 00/15] MIPS Boston board support
-Date: Wed, 3 Feb 2016 13:35:26 +0100
-Message-ID: <56B1F40E.3090607@xilinx.com>
-References: <1454499045-5020-1-git-send-email-paul.burton@imgtec.com>
+From: Nathan Rossi <nathan@nathanrossi.com>
+Subject: [PATCH] ARM: dts: zynq: Enable USB and USB PHY for ZYBO
+Date: Wed,  3 Feb 2016 22:41:05 +1000
+Message-ID: <1454503265-20605-1-git-send-email-nathan@nathanrossi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1454499045-5020-1-git-send-email-paul.burton@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Burton <paul.burton@imgtec.com>, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Arnd Bergmann <arnd@arndb.de>, Joshua Kinard <kumba@gentoo.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Jiri Slaby <jslaby@suse.com>, Bjorn Helgaas <bhelgaas@google.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Yijing Wang <wangyijing@huawei.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Richard Cochran <richardcochran@gmail.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Kalle Valo <kvalo@codeaurora.org>, Andrew Bresticker <abre>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Nathan Rossi <nathan@nathanrossi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3.2.2016 12:30, Paul Burton wrote:
-> This series introduces support for the Imagination Technologies MIPS
-> Boston development board. Boston is an FPGA-based development board
-> akin to the much older Malta board, built around a Xilinx FPGA running
-> a MIPS CPU & other logic including a PCIe root port connected to an
-> Intel EG20T Platform Controller Hub. This provides a base set of
-> peripherals including SATA, USB, SD/MMC, ethernet, I2C & GPIOs. PCIe
-> slots are also present for expansion.
-> 
-> v2 of this series splits out the pch_gbe ethernet driver changes to a
-> separate series, but keeps the Xilinx PCIe driver changes since PCIe is
-> so central to the Boston board & the series has shrunk somewhat since
-> its earlier submission.
-> 
-> Applies atop v4.5-rc2.
-> 
-> Paul Burton (15):
->   dt-bindings: ascii-lcd: Document a binding for simple ASCII LCDs
->   auxdisplay: driver for simple memory mapped ASCII LCD displays
->   MIPS: PCI: Compatibility with ARM-like PCI host drivers
->   PCI: xilinx: Keep references to both IRQ domains
->   PCI: xilinx: Unify INTx & MSI interrupt FIFO decode
->   PCI: xilinx: Always clear interrupt decode register
->   PCI: xilinx: Clear interrupt FIFO during probe
->   PCI: xilinx: Fix INTX irq dispatch
->   PCI: xilinx: Allow build on MIPS platforms
->   misc: pch_phub: Allow build on MIPS platforms
->   dmaengine: pch_dma: Allow build on MIPS platforms
->   ptp: pch: Allow build on MIPS platforms
->   MIPS: Support for generating FIT (.itb) images
->   dt-bindings: mips: img,boston: Document img,boston binding
->   MIPS: Boston board support
-> 
->  Documentation/devicetree/bindings/ascii-lcd.txt    |  10 +
->  .../devicetree/bindings/mips/img/boston.txt        |  15 ++
->  MAINTAINERS                                        |  14 ++
->  arch/mips/Kbuild.platforms                         |   1 +
->  arch/mips/Kconfig                                  |  48 +++++
->  arch/mips/Makefile                                 |   6 +-
->  arch/mips/boot/Makefile                            |  61 ++++++
->  arch/mips/boot/dts/Makefile                        |   1 +
->  arch/mips/boot/dts/img/Makefile                    |   7 +
->  arch/mips/boot/dts/img/boston.dts                  | 204 ++++++++++++++++++
->  arch/mips/boot/skeleton.its                        |  24 +++
->  arch/mips/boston/Makefile                          |  12 ++
->  arch/mips/boston/Platform                          |   8 +
->  arch/mips/boston/init.c                            | 106 ++++++++++
->  arch/mips/boston/int.c                             |  33 +++
->  arch/mips/boston/time.c                            |  89 ++++++++
->  arch/mips/boston/vmlinux.its                       |  23 ++
->  arch/mips/configs/boston_defconfig                 | 173 +++++++++++++++
->  .../asm/mach-boston/cpu-feature-overrides.h        |  26 +++
->  arch/mips/include/asm/mach-boston/irq.h            |  18 ++
->  arch/mips/include/asm/mach-boston/spaces.h         |  20 ++
->  arch/mips/include/asm/pci.h                        |  67 +++++-
->  arch/mips/lib/iomap-pci.c                          |   2 +-
->  arch/mips/pci/Makefile                             |   6 +
->  arch/mips/pci/pci-generic.c                        | 138 ++++++++++++
->  arch/mips/pci/pci-legacy.c                         | 232 +++++++++++++++++++++
->  arch/mips/pci/pci.c                                | 226 +-------------------
->  drivers/auxdisplay/Kconfig                         |   7 +
->  drivers/auxdisplay/Makefile                        |   1 +
->  drivers/auxdisplay/ascii-lcd.c                     | 230 ++++++++++++++++++++
->  drivers/dma/Kconfig                                |   2 +-
->  drivers/misc/Kconfig                               |   2 +-
->  drivers/pci/host/Kconfig                           |   2 +-
->  drivers/pci/host/pcie-xilinx.c                     | 125 ++++++-----
->  drivers/ptp/Kconfig                                |   2 +-
->  35 files changed, 1649 insertions(+), 292 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ascii-lcd.txt
->  create mode 100644 Documentation/devicetree/bindings/mips/img/boston.txt
->  create mode 100644 arch/mips/boot/dts/img/Makefile
->  create mode 100644 arch/mips/boot/dts/img/boston.dts
->  create mode 100644 arch/mips/boot/skeleton.its
->  create mode 100644 arch/mips/boston/Makefile
->  create mode 100644 arch/mips/boston/Platform
->  create mode 100644 arch/mips/boston/init.c
->  create mode 100644 arch/mips/boston/int.c
->  create mode 100644 arch/mips/boston/time.c
->  create mode 100644 arch/mips/boston/vmlinux.its
->  create mode 100644 arch/mips/configs/boston_defconfig
->  create mode 100644 arch/mips/include/asm/mach-boston/cpu-feature-overrides.h
->  create mode 100644 arch/mips/include/asm/mach-boston/irq.h
->  create mode 100644 arch/mips/include/asm/mach-boston/spaces.h
->  create mode 100644 arch/mips/pci/pci-generic.c
->  create mode 100644 arch/mips/pci/pci-legacy.c
->  create mode 100644 drivers/auxdisplay/ascii-lcd.c
-> 
-
-These patches are targeting different subsystems and should go to the
-tree via different maintainers that's why please split them to sensible
-pieces and send them separately.
-For pcie-xilinx.c changes please add to CC Bharat Kumar Gogada
-<bharatku@xilinx.com> and Ravikiran Gummaluri <rgummal@xilinx.com>.
-They have patches for pcie-xilinx and I expect there will be some sort
-of collision.
-
-Thanks,
-Michal
+U2V0dXAgdGhlIFVTQiBjb250cm9sbGVyIGFuZCBjb25maWd1cmUgaXQgdG8gb3BlcmF0ZSBpbiBo
+b3N0IG1vZGUuCkFkZGl0aW9uYWxseSBhZGQgdGhlIFVTQiBwaHkgbm9kZSBmb3IgdGhlIFpZQk8s
+IGluY2x1ZGluZyByZXNldCBncGlvCndoaWNoIGlzIGNvbm5lY3RlZCB0byBhIGV4dGVybmFsIE1J
+TyBwaW4uCgpTaWduZWQtb2ZmLWJ5OiBOYXRoYW4gUm9zc2kgPG5hdGhhbkBuYXRoYW5yb3NzaS5j
+b20+CkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5k
+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4KQ2M6IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhp
+bGlueC5jb20+CkNjOiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNv
+bT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy96eW5xLXp5Ym8uZHRzIHwgMTEgKysrKysrKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvenlucS16eWJvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtenliby5kdHMK
+aW5kZXggMTZjOWNhYy4uOGYwODViMyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvenlu
+cS16eWJvLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLXp5Ym8uZHRzCkBAIC0zMyw2
+ICszMywxMSBAQAogCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKIAl9OwogCisJ
+dXNiX3BoeTA6IHBoeTAgeworCQkjcGh5LWNlbGxzID0gPDA+OworCQljb21wYXRpYmxlID0gInVz
+Yi1ub3AteGNlaXYiOworCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzAgNDYgMT47CisJfTsKIH07CiAK
+ICZjbGtjIHsKQEAgLTU2LDMgKzYxLDkgQEAKICZ1YXJ0MSB7CiAJc3RhdHVzID0gIm9rYXkiOwog
+fTsKKworJnVzYjAgeworCXN0YXR1cyA9ICJva2F5IjsKKwlkcl9tb2RlID0gImhvc3QiOworCXVz
+Yi1waHkgPSA8JnVzYl9waHkwPjsKK307Ci0tIAoyLjcuMAoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
