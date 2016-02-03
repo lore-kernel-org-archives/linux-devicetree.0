@@ -1,424 +1,78 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 07/10] arm64: dts: add the Marvell Armada 3700 family
- and a development board
-Date: Wed, 3 Feb 2016 14:37:11 +0800
-Message-ID: <20160203143711.1eee3243@xhacker>
-References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
-	<1454436468-4241-8-git-send-email-gregory.clement@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 01/11] MAINTAINERS: Add entry for X-Powers
+ AXP family PMIC drivers
+Date: Wed, 3 Feb 2016 14:49:49 +0800
+Message-ID: <CAGb2v64JfVdSN7VfgDdi2b0ZRKfJsHim=RiGmuvk853LFprF9Q@mail.gmail.com>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-2-git-send-email-wens@csie.org> <CAGRGNgVxan9RCsLFW9hHWcdW+Rd_SgVG95H-yQg213g-YeE6Ug@mail.gmail.com>
+ <1454462910.7291.53.camel@perches.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1454436468-4241-8-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBJOGY22QKGQE2IZNPUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1454462910.7291.53.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2 Feb 2016 19:07:45 +0100 Gregory CLEMENT wrote:
+On Wed, Feb 3, 2016 at 9:28 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Wed, 2016-02-03 at 11:19 +1100, Julian Calaby wrote:
+>> On Tue, Feb 2, 2016 at 9:27 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> > Add an entry for X-Powers AXP family PMIC drivers and list myself
+>> > as maintainer.
+> []
+>> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+>> > @@ -11941,6 +11941,12 @@ F:     include/linux/workqueue.h
+>> >  F:     kernel/workqueue.c
+>> >  F:     Documentation/workqueue.txt
+>> >
+>> > +X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS
+>> > +M:     Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> > +L:     linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > +S:     Maintained
+>> > +N:     axp[128]
+>>
+>> Should you list the files maintained and this list also?
+>
+> This "N:" pattern is kind of a wildcard.
+>
+> The difference between F: and N: is that git history
+> is also used by default for files that match.
+>
+> There are no files in -next today that match "*axp8*"
+> Dunno if this patchset added any.
 
-> Add initial dtsi files to support Marvell Armada 3700 SoC with Cortex-A53
-> CPUs. There are two members in this family: the Armada 3710 (Single CPU)
-> and the Armada 3720 (Dual CPUs).
-> 
-> It also adds a dts file for the Marvell Armada 3720 DB board.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm64/boot/dts/marvell/Makefile           |   4 +
->  arch/arm64/boot/dts/marvell/armada-371x.dtsi   |  53 ++++++++++
->  arch/arm64/boot/dts/marvell/armada-3720-db.dts |  87 ++++++++++++++++
->  arch/arm64/boot/dts/marvell/armada-372x.dtsi   |  63 ++++++++++++
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 131 +++++++++++++++++++++++++
->  5 files changed, 338 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-371x.dtsi
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-db.dts
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-372x.dtsi
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index 348f4db4f313..bc2eabe1cab1 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -1,6 +1,10 @@
-> +# Berlin SoC Family
->  dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
->  dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
->  
-> +# Mvebu SoC Family
-> +dtb-$(CONFIG_ARCH_ARMADA_3700) += armada-3720-db.dtb
-> +
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
->  clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/marvell/armada-371x.dtsi b/arch/arm64/boot/dts/marvell/armada-371x.dtsi
-> new file mode 100644
-> index 000000000000..c9e5325b8ac3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-371x.dtsi
-> @@ -0,0 +1,53 @@
-> +/*
-> + * Device Tree Include file for Marvell Armada 371x family of SoCs
-> + * (also named 88F3710)
-> + *
-> + * Copyright (C) 2016 Marvell
+This set adds a "axp809.dtsi". A subsequent set will add "axp806.dtsi".
 
-Is it better to Add full Marvell company name, eg. Marvell Technology Group Ltd.
+> This matches:
+>
+>     $ git ls-files | grep "axp[128]"
+>     Documentation/devicetree/bindings/mfd/axp20x.txt
+>     Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
+>     arch/arm/boot/dts/axp152.dtsi
+>     arch/arm/boot/dts/axp209.dtsi
+>     arch/arm/boot/dts/axp22x.dtsi
+>     drivers/extcon/extcon-axp288.c
+>     drivers/iio/adc/axp288_adc.c
+>     drivers/input/misc/axp20x-pek.c
+>     drivers/mfd/axp20x.c
+>     drivers/power/axp20x_usb_power.c
+>     drivers/power/axp288_charger.c
+>     drivers/power/axp288_fuel_gauge.c
+>     drivers/regulator/axp20x-regulator.c
+>     include/linux/mfd/axp20x.h
+>
+> Are all these files appropriate?
+>
 
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+Yes.
 
-Do we need to put "Author: " at the head?
-
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "armada-37xx.dtsi"
-> +
-> +/ {
-> +	model = "Marvell Armada 3710 SoC";
-> +	compatible = "marvell,armada3710", "marvell,armada3700";
-> +};
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> new file mode 100644
-> index 000000000000..76cae6ba2bd6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> @@ -0,0 +1,87 @@
-> +/*
-> + * Device Tree file for Marvell Armada 3720 development board
-> + * (DB-88F3720-DDR3)
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "armada-372x.dtsi"
-> +
-> +/ {
-> +	model = "Marvell Armada 3720 Development Board DB-88F3720-DDR3";
-> +	compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3700";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		/* use only 256 MB on the 512 MB available */
-> +		reg = <0x00000000 0x00000000 0x00000000 0x10000000>;
-> +	};
-> +
-> +	soc {
-> +		internal-regs {
-> +			/*
-> +			* Exported on the micro USB connector CON32
-> +			* through an FTDI
-> +			*/
-> +			uart0: serial@12000 {
-> +				status = "okay";
-> +			};
-> +
-> +			/* CON31 */
-> +			usb3@58000 {
-> +				status = "okay";
-> +			};
-> +
-> +			/* CON3 */
-> +			sata@e0000 {
-> +			       status = "okay";
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/marvell/armada-372x.dtsi b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
-> new file mode 100644
-> index 000000000000..f57f41c20ddf
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
-> @@ -0,0 +1,63 @@
-> +/*
-> + * Device Tree Include file for Marvell Armada 372x family of SoCs
-> + * (also named 88F3720)
-> + *
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "armada-37xx.dtsi"
-> +
-> +/ {
-> +	model = "Marvell Armada 3720 SoC";
-> +	compatible = "marvell,armada3720", "marvell,armada3700";
-> +
-> +	cpus {
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53","arm,armv8";
-> +			reg = <0x1>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +};
-> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> new file mode 100644
-> index 000000000000..ba9df7ff2a72
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> @@ -0,0 +1,131 @@
-> +/*
-> + * Device Tree Include file for Marvell Armada 37xx family of SoCs.
-> + *
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	model = "Marvell Armada 37xx SoC";
-> +	compatible = "marvell,armada3700";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14
-> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11
-> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10
-> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		internal-regs {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			compatible = "simple-bus";
-> +			/* 32M internal register @ 0xd000_0000 */
-> +			ranges = <0x0 0x0 0xd0000000 0x2000000>;
-> +
-> +			uart0: serial@12000 {
-> +				compatible = "marvell,armada-3700-uart";
-> +				reg = <0x12000 0x400>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			usb3@58000 {
-> +				compatible = "generic-xhci";
-> +				reg = <0x58000 0x4000>;
-> +				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			sata@e0000 {
-> +				compatible = "marvell,armada-3700-ahci";
-> +				reg = <0xe0000 0x2000>;
-> +				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			gic: interrupt-controller@1d00000 {
-> +				compatible = "arm,gic-v3";
-> +				#interrupt-cells = <3>;
-> +				interrupt-controller;
-> +				reg = <0x1d00000 0x10000>, /* GICD */
-> +				      <0x1d40000 0x40000>; /* GICR */
-
-There's no GICC, GICV, GICH?
-
-Thanks,
-Jisheng
-
-> +			};
-> +		};
-> +	};
-> +};
-
+ChenYu
