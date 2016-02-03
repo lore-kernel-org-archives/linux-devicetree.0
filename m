@@ -1,72 +1,75 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: FW: [RFC 3/3] CMDQ: Mediatek CMDQ driver
-Date: Wed, 3 Feb 2016 16:04:03 +0800
-Message-ID: <1454486643.29722.2.camel@mtksdaap41>
-References: <8A0FDEEF9DBBD140A3857422D81DA20F867B19FD@mtkmbs01n1>
-	 <1454479333.11967.12.camel@mtksdaap41>
-	 <CAGS+omABD93f3X0pfiFgaxa9Lob2txkJfUUomUvs+hiRkxSuHw@mail.gmail.com>
+From: Marcin Wojtas <mw@semihalf.com>
+Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for Armada-3700
+ serial port
+Date: Wed, 3 Feb 2016 09:05:55 +0100
+Message-ID: <CAPv3WKfGX2dVDu2zWG4gdEMf0vO-X+NMerh9PzNDjzLBDSQcUA@mail.gmail.com>
+References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
+	<1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omABD93f3X0pfiFgaxa9Lob2txkJfUUomUvs+hiRkxSuHw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-02-03 at 14:40 +0800, Daniel Kurtz wrote:
-> > Hi Dan,
-> >
-> > Thanks for your comment.
-> > This solution looks good to me.
-> > I will change it as your suggestion.
-> >
-> > But, I have a question about 'mask out the provided *device virtual*
-> > address'.
-> > Are lower 16-bits (or 24-bits for JUMP op) of device virtual address the
-> > same as device physical address?
-> 
-> I'm not sure.  But I doubt it we can rely on this.
-> My guess would be that the ioremap only preserves the lower 12 bits
-> (4k page size).
-> 
-> > If not, we still need to pass in physical address into CMDQ driver.
-> 
-> Or, instead of the iommu/slot approach, we can just provide a
-> registration function for the gce driver.
-> Each gce consumer could then have a simple gce node, with no slot/address:
-> 
->   mediatek,gce = <&gce>;
-> 
-> Then on probe, the gce consumer could pass in its (struct device *) to
-> gce_register_device().  gce_register_device() could then access the
-> device's of_node to extract its physical address range, and look up
-> its physical address in its table of per-soc of
-> "device_address:gce_subsys_address" entries.  If the physical address
-> is in a valid subsys ranges, the gce_register_device would cache the
-> subsys address, and an offset in a (struct gce_consumer).
-> gce_register_device() could then add this struct to a struct list_head
-> of gce_consumers, and finally return a pointer to it back to the
-> caller.
-> 
-> Later, the gce consumer could pass in ths (struct gce_consumer *) when
-> make gce calls, along with the *offset* (not the physical address or
-> virtual address) for the register that it wishes to access.  Then the
-> gce driver can simply use the gce_consumer->subsys entry to create a
-> gce address from the passed in offset.
-> 
-> This will keep the binding very simple, and would remove the need to
-> convert from device virtual to physical addresses by the gce consumer,
-> but require a little more per-gce-consumer setup.
-> 
-> -Dan
+Hi Gregory
 
-Hi Dan,
+> +
+> +static int mvebu_uart_startup(struct uart_port *port)
+> +{
+> +       int ret;
+> +
+> +       writel(CTRL_TXFIFO_RST | CTRL_RXFIFO_RST,
+> +              port->membase + UART_CTRL);
+> +       udelay(1);
+> +       writel(CTRL_RX_INT, port->membase + UART_CTRL);
+> +
+> +       ret = request_irq(port->irq, mvebu_uart_isr, port->irqflags, "serial",
+> +                         port);
+> +       if (ret) {
+> +               dev_err(port->dev, "failed to request irq\n");
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
 
-This solution is better.
-I will use it.
-Thanks for your suggestion.
+> +static int mvebu_uart_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *reg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> +       struct uart_port *port;
+> +       struct mvebu_uart_data *data;
+> +       int ret;
+> +
+> +       if (!reg || !irq) {
+> +               dev_err(&pdev->dev, "no registers/irq defined\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       port = &mvebu_uart_ports[0];
+> +
+> +       spin_lock_init(&port->lock);
+> +
+> +       port->dev        = &pdev->dev;
+> +       port->type       = PORT_MVEBU;
+> +       port->ops        = &mvebu_uart_ops;
+> +       port->regshift   = 0;
+> +
+> +       port->fifosize   = 32;
+> +       port->iotype     = UPIO_MEM32;
+> +       port->flags      = UPF_FIXED_PORT;
+> +       port->line       = 0; /* single port: force line number to  0 */
+> +
+> +       port->irq        = irq->start;
+> +       port->irqflags   = 0;
 
-Thanks,
-HS Liao
+Please use port->irqflags = IRQF_SHARED;
+As ubuntu opens multiple consoles A3700 can't boot to it (only to
+buildroot with single console).
+
+Best regards,
+Marcin
