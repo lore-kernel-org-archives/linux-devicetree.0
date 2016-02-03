@@ -1,78 +1,33 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
-Date: Wed, 3 Feb 2016 13:50:28 +0000
-Message-ID: <1454507428.3375.44.camel@synopsys.com>
-References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
-	 <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
-	 <1454418916.25997.18.camel@synopsys.com> <56B0BD2F.5080409@synopsys.com>
-	 <1454427373.25997.24.camel@synopsys.com>
-	 <1454453846.25997.31.camel@synopsys.com>
-	 <1454507041.3375.39.camel@synopsys.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: vf610: relicense the device trees under
+ GPLv2/X11
+Date: Wed, 3 Feb 2016 22:28:35 +0800
+Message-ID: <20160203142835.GP8307@tiger>
+References: <1449525076-23569-1-git-send-email-stefan@agner.ch>
+ <5311c9f5234f774dc34118a564f48a4c@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454507041.3375.39.camel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <B6B8E5B144BD414396BF135861E0A627-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5311c9f5234f774dc34118a564f48a4c-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org" <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-KHJlLXNlbmRpbmcgYmVjYXVzZSBNaWtlJ3MgZW1haWwgQHRpIGlzIG5vIGxvbmdlciB2YWxpZCkN
-Cg0KSGkgTWlrZSwNCg0KT24gV2VkLCAyMDE2LTAyLTAzIGF0IDAxOjU3ICswMzAwLCBBbGV4ZXkg
-QnJvZGtpbiB3cm90ZToNCj4gSGkgVmluZWV0LA0KPiANCj4gT24gVHVlLCAyMDE2LTAyLTAyIGF0
-IDE4OjM2ICswMzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiBIaSBWaW5lZXQsDQo+ID4g
-DQo+ID4gT24gVHVlLCAyMDE2LTAyLTAyIGF0IDE5OjU5ICswNTMwLCBWaW5lZXQgR3VwdGEgd3Jv
-dGU6DQo+ID4gPiBIaSBBbGV4ZXksDQo+ID4gPiANCj4gPiA+IE9uIFR1ZXNkYXkgMDIgRmVicnVh
-cnkgMjAxNiAwNjo0NSBQTSwgQWxleGV5IEJyb2RraW4gd3JvdGU6DQo+ID4gPiA+IEhpIFZpbmVl
-dCwNCj4gPiA+ID4gDQo+ID4gPiA+IE9uIFR1ZSwgMjAxNi0wMi0wMiBhdCAxNjoyOCArMDUzMCwg
-VmluZWV0IEd1cHRhIHdyb3RlOg0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJv
-cGVydGllczoNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKy0gY29tcGF0aWJsZSA6IHNob3VsZCBi
-ZSAic25wcyxhcmMtdGltZXIwIg0KPiA+ID4gPiA+ICstIGludGVycnVwdHMgOiBzaW5nbGUgSW50
-ZXJydXB0IGdvaW5nIGludG8gcGFyZW50IGludGMNCj4gPiA+ID4gPiArICAgICAgICAgICAgKDE2
-IGZvciBBUkNIUyBjb3JlcywgMyBmb3IgQVJDNzAwIGNvcmVzKQ0KPiA+ID4gPiA+ICstIGNsb2Nr
-cyAgICAgOiBwaGFuZGxlIHRvIHRoZSBzb3VyY2UgY2xvY2sNCj4gPiA+ID4gDQo+ID4gPiA+IEFj
-dHVhbGx5IHdlJ3JlIG5vdCBmbGV4aWJsZSBoZXJlLg0KPiA+ID4gPiBTZWUgd2UgaGF2ZSBoYXJk
-LWNvZGVkICJjb3JlX2NsayIgaW4gW1BBVENIIDgvOV0uDQo+ID4gPiA+IFdlIHVzZSBpdCBkaXJl
-Y3RseSBpbiBzaG93X2NwdWluZm8oKSBmb3IgcmVhZGluZyBjbG9jayBzcGVlZA0KPiA+ID4gPiBh
-cyB3ZWxsIGFzIGluIGF4czEwM19lYXJseV9pbml0KCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBTbyAi
-c291cmNlIGNsb2NrIiBoZXJlIE1VU1QgYmUgImNvcmVfY2xrIiwgb3RoZXJ3aXNlDQo+ID4gPiA+
-IC9wcm9jL2NwdWluZm8gd2lsbCByZXBvcnQganVuayBpbnN0ZWFkIG9mIG1lYW5pbmdmdWwgZGF0
-YSBhdCBsZWFzdC4NCj4gPiA+IA0KPiA+ID4gVXNpbmcgaGFyZGNvZGVkIERUIG5hbWVzIGluIGdl
-bmVyaWMgY29kZSBpcyB0b3RhbCBCUyBhbmQgSSBzbGFwIG15c2VsZiBmb3IgbWlzc2luZw0KPiA+
-ID4gdGhhdCBpbiByZXZpZXdpbmcgOC85LiBQbGVhc2UgZml4IGl0ICENCj4gPiANCj4gPiBCdXQg
-dGhlIG9ubHkgb3RoZXIgYWx0ZXJuYXRpdmUgdG8gaGFyZC1jb2RlZCBuYW1lIGlzIHVzZSBvZiBz
-b21lIGludGVybmFsIHZhcmlhYmxlDQo+ID4gbGlrZSAiYXJjX3RpbWVyX2ZyZXEiLg0KPiA+IA0K
-PiA+IEkuZS4gd2UgbWFrZSAiYXJjX3RpbWVyX2ZyZXEiIGdsb2JhbCBhbmQgdXNlIGl0IGZvciBk
-aXNwbGF5aW5nIGNvcmUgZnJlcXVlbmN5Lg0KPiANCj4gV2VsbCBhY3R1YWxseSB0aGVyZSdzIGFu
-b3RoZXIgcG9zc2liaWxpdHkgdGhhdCBpcyB1c2VkIG9uIG1hbnkgb3RoZXIgcGxhdGZvcm1zDQo+
-IChBUk0gYm90aCAzMiBhbmQgNjQtYml0IGZsYXZvcnMgaXMgYSBnb29kIGV4YW1wbGUpIC0ganVz
-dCBwcmludCBib2dvbWlwcyBpbnN0ZWFkDQo+IG9mIGFkZGl0aW9uYWwgY29yZSBmcmVxdWVuY3ku
-DQoNCldlJ3JlIGluIHRoZSBwcm9jZXNzIG9mIHN3aXRjaGluZyBBUkMgdG8gZ2VuZXJpYyBjbGsg
-ZnJhbWV3b3JrLg0KDQpPbmUgb2YgdGhlIHByb2JsZW1zIHdlJ3JlIHRyeWluZyB0byBzb2x2ZSBu
-b3cgaXMgaG93IHRvIG9idGFpbg0KcHJlY2lzZSBDUFUgZnJlcXVlbmN5IHZhbHVlIGZvciBvdXRw
-dXR0aW5nIGl0IGZvciBleGFtcGxlIGJ5IC9wcm9jL2NwdWluZm8uDQoNClRoaXMgcHJlY2lzZSAo
-aW4gdGVybXMgb2Ygd2hhdCB2YWx1ZSB3YXMgc2V0IHZpYSBEZXZpY2UgVHJlZSBvciBleHRyYWN0
-ZWQgYW5kIGRlY29kZWQNCmZyb20gQ1BVIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXJzKSBDUFUgZnJl
-cXVlbmN5IGlzIHZlcnkgdXNlZnVsIGZvciBleGFtcGxlIGZvcg0KYmVuY2htYXJraW5nLiBJbiBj
-b21wYXJpc29uIGJvZ29taXBzIG1pZ2h0IGJlIG1pc2xlYWRpbmcgYXQgdGltZXMuDQoNCkJlZm9y
-ZSBtb3ZpbmcgdG8gY2xrIGZyYW1ld29yayB3ZSB1c2VkIHRvIGhhdmUgMiBBUkMtc3BlY2lmaWMg
-Y2FsbHMNCmFyY19nZXRfY29yZV9mcmVxKCkgYW5kICBhcmNfc2V0X2NvcmVfZnJlcSgpIHdoaWNo
-IHdlcmUgYmFzaWNhbGx5IHdyYXBwZXJzIGZvcg0Kb25lIHZhcmlhYmxlIHdoZXJlIHdlIHN0b3Jl
-ZCBDUFUgZnJlcXVlbmN5Lg0KDQpJIHRvb2sgYSBsb29rIGF0IHdoYXQgb3RoZXIgYXJjaGl0ZWN0
-dXJlcyBkbyBhbmQgc28gZmFyIHNhdyB0aGVzZSBvcHRpb25zOg0KIFsxXSBKdXN0IHByaW50IGJv
-Z29taXBzIChBUk0gYm90aCAzMi0gYW5kIDY0LWJpdCwgbTY0aywgTWljcm9ibGF6ZSwgTWlwcywN
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgbW4xMDMwMCwgb3BlbnJpc2MsIHMzOTAsIHNoLCB1
-bSwgdW5pY29yZTMyLCApDQogWzJdIEdldCBmcmVxdWVuY3kgZnJvbSBzb21lIGtpbmQgb2YgYXJj
-aGl0ZWN0dXJlLXNwZWNpZmljIHN0cnVjdHVyZSBvciB2YXJpYWJsZQ0KICAgICAoQWxwaGEsIEFW
-UjMyLCBjNngsIG5pb3MyLCBwb3dlcnBjLCBzcGFyYywgdGlsZSwgeHRlbnNhKSANCiBbM10gR2V0
-IGZyZXF1ZW5jeSBmcm9tIGNwdWZyZXEgZnJhbWV3b3JrIChpYTY0LCB4ODYpDQogWzRdIERlY29k
-ZSBmcmVxdWVuY3kgZnJvbSBoYXJkd2FyZSByZWdpc3RlcnMgKEJsYWNrZmluKQ0KDQpBbnkgdGhv
-dWdodHMgb24gd2hhdCdzIHRoZSBiZXN0IHdheSB0byBnZXQgQ1BVIGZyZXF1ZW5jeSBpbiBydW4t
-dGltZQ0KKHByZWZlcmFibHkgd2l0aCB1c2Ugb2YgY2xrIGZyYW1ld29yayBzbyB3ZSdsbCBuZWVk
-IG5vIGFyY2gtc3BlY2lmaWMNCnZhcmlhYmxlcyk/DQoNClJlZ2FyZHMsDQpBbGV4ZXk=
+On Tue, Feb 02, 2016 at 05:00:23PM -0800, Stefan Agner wrote:
+> Hi Shawn,
+> 
+> For patches 1, 2 and 4 I think we have enough Acks to consider it safe
+> to change the license.
+> 
+> For Patch 3, the Cosmic board, I can not get an Ack nor a Nack from Matt
+> Porter, unfortunately... But IMHO it should not hold us back from
+> merging the rest, what do you think?
+
+Yes.  Applied patches 1, 2 and 4.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
