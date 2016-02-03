@@ -1,56 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v2 08/12] devicetree: bindings: add DT binding for the
- Marvell Armada 3700 SoC family
-Date: Wed, 3 Feb 2016 21:38:25 +0100
-Message-ID: <20160203213825.4fa6a0ef@free-electrons.com>
-References: <1454524889-9207-1-git-send-email-gregory.clement@free-electrons.com>
-	<1454524889-9207-9-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH/RFC 02/10] phy: rcar-gen3-usb2: Add phy-supply
+ description in device tree doc
+Date: Wed, 3 Feb 2016 14:45:20 -0600
+Message-ID: <20160203204520.GA30531@rob-hp-laptop>
+References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454524889-9207-9-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: horms@verge.net.au, magnus.damm@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Wed,  3 Feb 2016 19:41:25 +0100, Gregory CLEMENT wrote:
-> The Marvell Armada 3700 is a family of ARMv8 CA53 SoCs. This commit
-> introduces the Device Tree binding that documents the top-level
-> compatible strings for Armada 3700 based platforms.
+On Tue, Feb 02, 2016 at 07:18:50PM +0900, Yoshihiro Shimoda wrote:
+> To handle the VBUS on/off by a regulator driver, this patch adds
+> description about phy-supply in the rcar-gen3-phy-usb2.txt.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  .../devicetree/bindings/arm/marvell/armada-37xx.txt      | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
-> new file mode 100644
-> index 000000000000..17e90e8b5f76
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
-> @@ -0,0 +1,16 @@
-> +Marvell Armada 37xx Platforms Device Tree Bindings
-> +--------------------------------------------------
-> +
-> +Boards using a SoC of the Marvell Armada 37xx family must carry the
-> +following root node property:
-> +
-> + - compatible: must contain "marvell,armada3710"
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> index eaf7e9b..48b33a9 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -15,6 +15,8 @@ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
+>  combined, the device tree node should set interrupt properties to use the
+>  channel as USB OTG:
+>  - interrupts: interrupt specifier for the PHY.
+> +- phy-supply: Phandle to a regulator that provides power to the VBUS. This
+> +	      regulator will be managed during the PHY power on/off sequence.
 
-Are we sure at this point that the 3720 is a strict super-set of the
-3710 ?
+Is "phy" the actual name of the input supply to the phy?
 
-If that's not the case, then it would be somewhat weird for a platform
-using the 3720 platform to carry the marvell,armada3710 compatible
-string, no?
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>  
+>  Example (R-Car H3):
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
