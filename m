@@ -1,7 +1,7 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v5 2/9] Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
-Date: Wed,  3 Feb 2016 12:04:38 +0100
-Message-ID: <1454497485-464-3-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH v5 8/9] ARM: dts: Add leds support to STM32F429 boards
+Date: Wed,  3 Feb 2016 12:04:44 +0100
+Message-ID: <1454497485-464-9-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1454497485-464-1-git-send-email-mcoquelin.stm32@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454497485-464-1-git-send-email-mcoquelin.stm32@gmail.com>
@@ -12,144 +12,61 @@ List-Id: devicetree@vger.kernel.org
 
 Acked-by: Patrice Chotard <patrice.chotard@st.com>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- .../bindings/pinctrl/st,stm32-pinctrl.txt          | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ arch/arm/boot/dts/stm32429i-eval.dts  | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32f429-disco.dts | 11 +++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-new file mode 100644
-index 0000000..7b4800c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-@@ -0,0 +1,126 @@
-+* STM32 GPIO and Pin Mux/Config controller
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 71fe17a..e3921d9 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -64,6 +64,23 @@
+ 	aliases {
+ 		serial0 = &usart1;
+ 	};
 +
-+STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
-+controller. It controls the input/output settings on the available pins and
-+also provides ability to multiplex and configure the output of various on-chip
-+controllers onto these pads.
-+
-+Pin controller node:
-+Required properies:
-+ - compatible: value should be one of the following:
-+   (a) "st,stm32f429-pinctrl"
-+ - #address-cells: The value of this property must be 1
-+ - #size-cells	: The value of this property must be 1
-+ - ranges	: defines mapping between pin controller node (parent) to
-+   gpio-bank node (children).
-+ - pins-are-numbered: Specify the subnodes are using numbered pinmux to
-+   specify pins.
-+
-+GPIO controller/bank node:
-+Required properties:
-+ - gpio-controller : Indicates this device is a GPIO controller
-+ - #gpio-cells	  : Should be two.
-+			The first cell is the pin number
-+			The second one is the polarity:
-+				- 0 for active high
-+				- 1 for active low
-+ - reg		  : The gpio address range, relative to the pinctrl range
-+ - clocks	  : clock that drives this bank
-+ - st,bank-name	  : Should be a name string for this bank as specified in
-+   the datasheet
-+
-+Optional properties:
-+ - reset:	  : Reference to the reset controller
-+
-+Example:
-+#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
-+...
-+
-+	pin-controller {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "st,stm32f429-pinctrl";
-+		ranges = <0 0x40020000 0x3000>;
-+		pins-are-numbered;
-+
-+		gpioa: gpio@40020000 {
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			reg = <0x0 0x400>;
-+			resets = <&reset_ahb1 0>;
-+			st,bank-name = "GPIOA";
++	leds {
++		compatible = "gpio-leds";
++		green {
++			gpios = <&gpiog 6 1>;
++			linux,default-trigger = "heartbeat";
 +		};
-+		...
-+		pin-functions nodes follow...
-+	};
-+
-+Contents of function subnode node:
-+----------------------------------
-+Subnode format
-+A pinctrl node should contain at least one subnode representing the
-+pinctrl group available on the machine. Each subnode will list the
-+pins it needs, and how they should be configured, with regard to muxer
-+configuration, pullups, drive, output high/low and output speed.
-+
-+    node {
-+	pinmux = <PIN_NUMBER_PINMUX>;
-+	GENERIC_PINCONFIG;
-+    };
-+
-+Required properties:
-+- pinmux: integer array, represents gpio pin number and mux setting.
-+  Supported pin number and mux varies for different SoCs, and are defined in
-+  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-+  These defines are calculated as:
-+    ((port * 16 + line) << 8) | function
-+  With:
-+    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
-+    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
-+    - function: The function number, can be:
-+      * 0 : GPIO
-+      * 1 : Alternate Function 0
-+      * 2 : Alternate Function 1
-+      * 3 : Alternate Function 2
-+      * ...
-+      * 16 : Alternate Function 15
-+      * 17 : Analog
-+
-+Optional properties:
-+- GENERIC_PINCONFIG: is the generic pinconfig options to use.
-+  Available options are:
-+   - bias-disable,
-+   - bias-pull-down,
-+   - bias-pull-up,
-+   - drive-push-pull,
-+   - drive-open-drain,
-+   - output-low
-+   - output-high
-+   - slew-rate = <x>, with x being:
-+       < 0 > : Low speed
-+       < 1 > : Medium speed
-+       < 2 > : Fast speed
-+       < 3 > : High speed
-+
-+Example:
-+
-+pin-controller {
-+...
-+	usart1_pins_a: usart1@0 {
-+		pins1 {
-+			pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
++		orange {
++			gpios = <&gpiog 7 1>;
 +		};
-+		pins2 {
-+			pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
-+			bias-disable;
++		red {
++			gpios = <&gpiog 10 1>;
++		};
++		blue {
++			gpios = <&gpiog 12 1>;
 +		};
 +	};
-+};
+ };
+ 
+ &clk_hse {
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index e3ce796..0140807 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -64,6 +64,17 @@
+ 	aliases {
+ 		serial0 = &usart1;
+ 	};
 +
-+&usart1 {
-+	pinctrl-0 = <&usart1_pins_a>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
++	leds {
++		compatible = "gpio-leds";
++		red {
++			gpios = <&gpiog 14 0>;
++		};
++		green {
++			gpios = <&gpiog 13 0>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
+ };
+ 
+ &clk_hse {
 -- 
 1.9.1
