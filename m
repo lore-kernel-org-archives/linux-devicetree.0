@@ -1,7 +1,7 @@
 From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v3 11/14] mtd: spi-nor: configure the number of dummy clock cycles on Spansion memories
-Date: Wed, 3 Feb 2016 14:26:56 +0100
-Message-ID: <90dbc93adb34c4bbb7d6ea752f9f7a00219944d6.1454505161.git.cyrille.pitchen@atmel.com>
+Subject: [PATCH v3 09/14] mtd: spi-nor: configure the number of dummy clock cycles on Micron memories
+Date: Wed, 3 Feb 2016 14:26:54 +0100
+Message-ID: <5ccaf4d6729c2569728cdf0038af6a3ad799647a.1454505161.git.cyrille.pitchen@atmel.com>
 References: <cover.1454505161.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,211 +12,155 @@ To: computersforpeace@gmail.com, linux-mtd@lists.infradead.org
 Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, marex@denx.de, vigneshr@ti.com, beanhuo@micron.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Spansion memories, the number of dummy clock cycles to be used during
-Fast Read commands is configured through the 2bit latency code (LC). These
-bits are non-volatile inside the Configuration Register.
+The spi-nor framework currently expects all Fast Read operations to use 8
+dummy clock cycles. Especially some drivers like m25p80 can only support
+multiple of 8 dummy clock cycles.
 
-To avoid breaking the configuration expected at reset by some bootloaders,
-we'd rather read the latency code and set the nor->read_dummy value
-accordingly than update those non-volatile bits.
+On Micron memories, the number of dummy clock cycles to be used by Fast
+Read commands can be safely set to 8 by updating the Volatile
+Configuration Register (VCR).
 
-Since the Quad Enable non-volatile bit can be read at the same time from
-the Control Register, we now check its value to avoid some calls of the
-spansion_quad_enable() function when they are not needed.
+Also the XIP bit is set at the same time when updating the VCR so the
+Continuous Read mode is disabled: this prevents us from entering it by
+mistake.
 
 Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 159 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 137 insertions(+), 22 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 72 ++++++++++++++++++++++++++++++++++++++-----
+ include/linux/mtd/spi-nor.h   |  2 ++
+ 2 files changed, 67 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index c560fbbb8479..356db141dcb2 100644
+index ef520048edae..2b1a26588ae6 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1668,47 +1668,162 @@ static int micron_set_single_mode(struct spi_nor *nor)
- 	return micron_set_dummy_cycles(nor, read_dummy);
+@@ -1314,6 +1314,53 @@ static int winbond_set_single_mode(struct spi_nor *nor)
+ 	return 0;
  }
  
--static int spansion_set_quad_mode(struct spi_nor *nor)
-+static inline int spansion_get_config(struct spi_nor *nor,
-+				      bool *quad_enabled,
-+				      u8 *latency_code)
- {
--	int status;
-+	int cr;
- 
--	status = spansion_quad_enable(nor);
--	if (status) {
--		dev_err(nor->dev, "Spansion quad-read not enabled\n");
-+	cr = read_cr(nor);
-+	if (cr < 0) {
-+		dev_err(nor->dev,
-+			"error while reading the configuration register\n");
-+		return cr;
-+	}
-+
-+	if (quad_enabled)
-+		*quad_enabled = !!(cr & CR_QUAD_EN_SPAN);
-+
-+	if (latency_code)
-+		*latency_code = (u8)((cr & GENMASK(7, 6)) >> 6);
-+
-+	return 0;
-+}
-+
-+static int spansion_set_dummy_cycles(struct spi_nor *nor, u8 latency_code)
++static int micron_set_dummy_cycles(struct spi_nor *nor, u8 read_dummy)
 +{
-+	/* SDR dummy cycles */
-+	switch (nor->read_opcode) {
-+	case SPINOR_OP_READ:
-+	case SPINOR_OP_READ4:
-+		nor->read_dummy = 0;
-+		break;
-+
-+	case SPINOR_OP_READ_FAST:
-+	case SPINOR_OP_READ_1_1_2:
-+	case SPINOR_OP_READ_1_1_4:
-+	case SPINOR_OP_READ4_FAST:
-+	case SPINOR_OP_READ4_1_1_2:
-+	case SPINOR_OP_READ4_1_1_4:
-+		nor->read_dummy = (latency_code == 3) ? 0 : 8;
-+		break;
-+
-+	case SPINOR_OP_READ_1_2_2:
-+	case SPINOR_OP_READ4_1_2_2:
-+		switch (latency_code) {
-+		default:
-+		case 0:
-+		case 3:
-+			nor->read_dummy = 4;
-+			break;
-+		case 1:
-+			nor->read_dummy = 5;
-+			break;
-+		case 2:
-+			nor->read_dummy = 6;
-+			break;
-+		}
-+		break;
-+
-+
-+	case SPINOR_OP_READ_1_4_4:
-+	case SPINOR_OP_READ4_1_4_4:
-+		switch (latency_code) {
-+		default:
-+		case 0:
-+		case 1:
-+			nor->read_dummy = 4;
-+			break;
-+		case 2:
-+			nor->read_dummy = 5;
-+			break;
-+		case 3:
-+			nor->read_dummy = 1;
-+			break;
-+		}
-+
-+	default:
- 		return -EINVAL;
- 	}
-+
-+	return 0;
-+}
-+
-+static int spansion_set_quad_mode(struct spi_nor *nor)
-+{
-+	bool quad_enabled;
-+	u8 latency_code;
++	u8 vcr, val, mask;
 +	int ret;
 +
-+	/*
-+	 * The QUAD bit of Configuration Register must be set (CR Bit1=1) for
-+	 * using any Quad SPI command.
-+	 */
-+	ret = spansion_get_config(nor, &quad_enabled, &latency_code);
++	/* Set bit3 (XIP) to disable the Continuous Read mode */
++	mask = GENMASK(7, 4) | BIT(3);
++	val = ((read_dummy << 4) | BIT(3)) & mask;
++
++	/* Read the Volatile Configuration Register (VCR). */
++	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &vcr, 1);
++	if (ret < 0) {
++		dev_err(nor->dev, "error while reading VCR register\n");
++		return ret;
++	}
++
++	/* Check whether we need to update the number of dummy cycles. */
++	if ((vcr & mask) == val) {
++		nor->read_dummy = read_dummy;
++		return 0;
++	}
++
++	/* Update the number of dummy into the VCR. */
++	write_enable(nor);
++	vcr = (vcr & ~mask) | val;
++	ret = nor->write_reg(nor, SPINOR_OP_WR_VCR, &vcr, 1);
++	if (ret < 0) {
++		dev_err(nor->dev, "error while writing VCR register\n");
++		return ret;
++	}
++
++	ret = spi_nor_wait_till_ready(nor);
 +	if (ret)
 +		return ret;
 +
-+	/* The Quad mode should be enabled ... */
-+	if (!quad_enabled) {
-+		/* ... if not try to enable it. */
-+		dev_warn(nor->dev, "Spansion Quad mode disabled, enable it\n");
-+		ret = spansion_quad_enable(nor);
-+		if (ret)
-+			return ret;
++	/* Read VCR and check it. */
++	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &vcr, 1);
++	if (ret < 0 || (vcr & mask) != val) {
++		dev_err(nor->dev, "Micron VCR dummy cycles not updated\n");
++		return -EINVAL;
 +	}
 +
-+	/*
-+	 * Don't use the Fast Read Quad I/O (0xeb / 0xec) commands as their
-+	 * number of dummy cycles can not be set to a multiple of 8: some SPI
-+	 * controllers, especially those relying on the m25p80 driver, expect
-+	 * the number of dummy cycles to be a multiple of 8.
-+	 * Also when using a Fast Read Quad I/O command, the memory checks the
-+	 * value of the first mode/dummy cycles to decice whether it enters or
-+	 * leaves the Countinuous Read mode. We should never enter the
-+	 * Countinuous Read mode as the spi-nor framework doesn't support it.
-+	 * For all these reason, we'd rather use the Fast Read Quad Output
-+	 * 1-1-4 (0x6b / 0x6c) commands instead.
-+	 */
- 	nor->read_proto = SNOR_PROTO_1_1_4;
++	/* Save the number of dummy cycles to use with Fast Read commands */
++	nor->read_dummy = read_dummy;
++	return 0;
++}
++
+ static int micron_set_protocol(struct spi_nor *nor, u8 mask, u8 val,
+ 			       enum spi_nor_protocol proto)
+ {
+@@ -1398,12 +1445,15 @@ static int micron_set_quad_mode(struct spi_nor *nor)
+ 	/*
+ 	 * Whatever the Quad mode is enabled or not, the
+ 	 * Fast Read Quad Output 1-1-4 (0x6b) op code is supported.
++	 * Force the number of dummy cycles to 8 and disable the Continuous Read
++	 * mode to prevent some drivers from using it by mistake (m25p80).
++	 * We can change these settings safely as we write into a volatile
++	 * register.
+ 	 */
+ 	if (nor->read_proto != SNOR_PROTO_4_4_4)
+ 		nor->read_proto = SNOR_PROTO_1_1_4;
  	nor->read_opcode = SPINOR_OP_READ_1_1_4;
 -	nor->read_dummy = 8;
 -	return 0;
-+	return spansion_set_dummy_cycles(nor, latency_code);
++	return micron_set_dummy_cycles(nor, 8);
  }
  
- static int spansion_set_dual_mode(struct spi_nor *nor)
- {
-+	u8 latency_code;
-+	int ret;
-+
-+	/* We don't care about the quad mode status */
-+	ret = spansion_get_config(nor, NULL, &latency_code);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Don't use the Fast Read Dual I/O (0xbb / 0xbc) commands as their
-+	 * number of dummy cycles can not bet set to a multiple of 8: some SPI
-+	 * controllers, especially those relying on the m25p80 driver, expect
-+	 * the number of dummy cycles to be a multiple of 8.
-+	 * For this reason, w'd rather use the Fast Read Dual Output 1-1-2
-+	 * (0x3b / 0x3c) commands instead.
-+	 */
- 	nor->read_proto = SNOR_PROTO_1_1_2;
+ static int micron_set_dual_mode(struct spi_nor *nor)
+@@ -1428,12 +1478,15 @@ static int micron_set_dual_mode(struct spi_nor *nor)
+ 	/*
+ 	 * Whatever the Dual mode is enabled or not, the
+ 	 * Fast Read Dual Output 1-1-2 (0x3b) op code is supported.
++	 * Force the number of dummy cycles to 8 and disable the Continuous Read
++	 * mode to prevent some drivers from using it by mistake (m25p80).
++	 * We can change these settings safely as we write into a volatile
++	 * register.
+ 	 */
+ 	if (nor->read_proto != SNOR_PROTO_2_2_2)
+ 		nor->read_proto = SNOR_PROTO_1_1_2;
  	nor->read_opcode = SPINOR_OP_READ_1_1_2;
 -	nor->read_dummy = 8;
 -	return 0;
-+	return spansion_set_dummy_cycles(nor, latency_code);
++	return micron_set_dummy_cycles(nor, 8);
  }
  
- static int spansion_set_single_mode(struct spi_nor *nor)
- {
--	u8 read_dummy;
--
--	switch (nor->read_opcode) {
--	case SPINOR_OP_READ:
--	case SPINOR_OP_READ4:
--		read_dummy = 0;
--		break;
-+	u8 latency_code;
-+	int ret;
+ static int micron_set_single_mode(struct spi_nor *nor)
+@@ -1456,7 +1509,13 @@ static int micron_set_single_mode(struct spi_nor *nor)
+ 		nor->read_proto = SNOR_PROTO_1_1_1;
+ 	}
  
--	default:
--		read_dummy = 8;
--		break;
--	}
-+	/* We don't care about the quad mode status */
-+	ret = spansion_get_config(nor, NULL, &latency_code);
-+	if (ret)
-+		return ret;
- 
- 	nor->read_proto = SNOR_PROTO_1_1_1;
+-	/* Force the number of dummy cycles to 8 for Fast Read, 0 for Read. */
++	/*
++	 * Force the number of dummy cycles to 8 for Fast Read, 0 for Read
++	 * and disable the Continuous Read mode to prevent some drivers from
++	 * using it by mistake (m25p80).
++	 * We can change these settings safely as we write into a volatile
++	 * register.
++	 */
+ 	switch (nor->read_opcode) {
+ 	case SPINOR_OP_READ:
+ 	case SPINOR_OP_READ4:
+@@ -1467,8 +1526,7 @@ static int micron_set_single_mode(struct spi_nor *nor)
+ 		read_dummy = 8;
+ 		break;
+ 	}
 -	nor->read_dummy = read_dummy;
 -	return 0;
-+	return spansion_set_dummy_cycles(nor, latency_code);
++	return micron_set_dummy_cycles(nor, read_dummy);
  }
  
- static int set_quad_mode(struct spi_nor *nor, const struct flash_info *info)
+ static int spansion_set_quad_mode(struct spi_nor *nor)
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index d0a6f343a063..2dc0f8b429ca 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -86,6 +86,8 @@
+ 
+ /* Used for Micron flashes only. */
+ #define SPINOR_OP_MIO_RDID	0xaf	/* Multiple I/O Read JEDEC ID */
++#define SPINOR_OP_RD_VCR	0x85	/* Read VCR register */
++#define SPINOR_OP_WR_VCR	0x81	/* Write VCR register */
+ #define SPINOR_OP_RD_EVCR	0x65    /* Read EVCR register */
+ #define SPINOR_OP_WD_EVCR	0x61    /* Write EVCR register */
+ 
 -- 
 1.8.2.2
