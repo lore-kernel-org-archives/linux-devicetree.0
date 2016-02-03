@@ -1,53 +1,88 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 4.5
-Date: Wed, 3 Feb 2016 09:28:12 -0600
-Message-ID: <CAL_Jsq+NcJKgZ1AVJUGjSc9+2RjYsw5ubjDw4bHuCz5DJRY4Qg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Wed, 03 Feb 2016 16:31:23 +0100
+Message-ID: <1725737.t6I7PsvPbL@wuerfel>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com> <2782231.XGO9cUTm7n@wuerfel> <56B21250.5050807@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56B21250.5050807@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wednesday 03 February 2016 14:44:32 Zubair Lutfullah Kakakhel wrote:
+> 
+> Possible in the example.
+> 
+> I'll update the example to
+> 
+>         uctl@118006c000000 {
+>                 compatible = "cavium,octeon-7130-sata-uctl";
+>                 reg = <0x11800 0x6c000000 0x0 0x100>;
+>                 ranges; /* Direct mapping */
+>                 dma-ranges;
+>                 #address-cells = <1>;
+>                 #size-cells = <2>;
+> 
+>                 sata: sata@0 {
+>                         compatible = "cavium,octeon-7130-ahci";
+>                         reg = <0x16c00 0x00000000 0x0 0x200>;
+>                         interrupt-parent = <&cibsata>;
+>                         interrupts = <2 4>; /* Bit: 2, level */
+>                 };
+>         };
 
-Please pull these 2 DT fixes for 4.5.
+Sorry, I should have been clearer. What I meant is
 
-Rob
 
-The following changes since commit 92e963f50fc74041b5e9e744c330dca48e04f08d:
+         uctl@118006c000000 {
+                compatible = "cavium,octeon-7130-sata-uctl";
+                reg = <0x11800 0x6c000000 0x0 0x100>;
+                ranges = <0   0x16c00 0x00000000   0xffffffff>;
+                dma-ranges;
+                #address-cells = <1>;
+                #size-cells = <1>;
 
-  Linux 4.5-rc1 (2016-01-24 13:06:47 -0800)
+                sata: sata@0 {
+                        compatible = "cavium,octeon-7130-ahci";
+                        reg = <0x00000000 0x200>;
+                        interrupt-parent = <&cibsata>;
+                        interrupts = <2 4>; /* Bit: 2, level */
+                };
+        };
 
-are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.5
+However, I realized that this would break the dma-ranges, if the
+child device is indeed 64-bit DMA capable. When #address-cells and/or
+#size-cells don't match between parent and child, you have to provide
+non-empty ranges as well as dma-ranges, and the dma-ranges for
+#address-cells=<1> would imply only supporting 32-bit DMA.
 
-for you to fetch changes up to 71f50c6d9a2276f3ec85384bffe2aee1962f4669:
 
-  of: drop symbols declared by _OF_DECLARE() from modules (2016-01-25
-08:35:50 -0600)
+It could still be
 
-----------------------------------------------------------------
-DeviceTree fixes for 4.5:
+         uctl@118006c000000 {
+                compatible = "cavium,octeon-7130-sata-uctl";
+                reg = <0x11800 0x6c000000 0x0 0x100>;
+                ranges = <0 0  0x16c00 0x00000000   1 0>;
+                dma-ranges;
+                #address-cells = <1>;
+                #size-cells = <1>;
 
-- Fix build error with *_OF_DECLARE() when used in modules
+                sata: sata@0 {
+                        compatible = "cavium,octeon-7130-ahci";
+                        reg = <0 0  0x200>;
+                        interrupt-parent = <&cibsata>;
+                        interrupts = <2 4>; /* Bit: 2, level */
+                };
+        };
 
-- Add missing platform maintainers for dts files in MAINTAINERS
+to have a ranges property that shows we are only translating one 4GB
+segment of MMIO addresses into the child, but that the child has DMA
+access to the entire CPU address space (including 64-bit wide RAM
+as well as all MMIO).
 
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      of: drop symbols declared by _OF_DECLARE() from modules
-
-Rob Herring (1):
-      MAINTAINERS: Add missing platform maintainers for dts files
-
- MAINTAINERS        | 19 ++++++++++++++++++-
- include/linux/of.h |  2 +-
- 2 files changed, 19 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
