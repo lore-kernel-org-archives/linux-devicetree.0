@@ -1,177 +1,186 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
-Date: Wed, 03 Feb 2016 13:54:25 +0100
-Message-ID: <2072510.CA47OHQsUN@wuerfel>
-References: <cover.1454498292.git.jpinto@synopsys.com> <a519617624ecdc98be82c376d4359a91f6a823b0.1454498292.git.jpinto@synopsys.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Wed, 3 Feb 2016 13:24:10 +0000
+Message-ID: <56B1FF7A.3040906@imgtec.com>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+ <1930324.vU65IL0x0g@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <a519617624ecdc98be82c376d4359a91f6a823b0.1454498292.git.jpinto@synopsys.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1930324.vU65IL0x0g@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, aleksey.makarov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
-> 
-> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+Hi,
 
-This needs a changelog comment, like every patch.
+Thanks for the review.
 
-> @@ -0,0 +1,16 @@
-> +* Universal Flash Storage (UFS) DesignWare Host Controller
-> +
-> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
-> +Each UFS controller instance should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains "snps,ufshcd"
+Response and further questions below.
 
-Are there multiple versions of this controller? Usually for designware
-parts the version is known, so we should document which versions exist
+On 02/02/16 20:48, Arnd Bergmann wrote:
+> On Tuesday 02 February 2016 18:24:45 Zubair Lutfullah Kakakhel wrote:
+>> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>> new file mode 100644
+>> index 0000000..3bd3c2f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>> @@ -0,0 +1,42 @@
+>> +* UCTL SATA controller glue
+>> +
+>> +UCTL is the bridge unit between the I/O interconnect (an internal bus)
+>> +and the SATA AHCI host controller (UAHC). It performs the following functions:
+>> +	- provides interfaces for the applications to access the UAHC AHCI
+>> +	  registers on the CN71XX I/O space.
+>> +	- provides a bridge for UAHC to fetch AHCI command table entries and data
+>> +	  buffers from Level 2 Cache.
+>> +	- posts interrupts to the CIU.
+>> +	- contains registers that:
+>> +		- control the behavior of the UAHC
+>> +		- control the clock/reset generation to UAHC
+>> +		- control endian swapping for all UAHC registers and DMA accesses
+>>
+>
+> Typically we treat those special registers as part of the device itself
+> and have a single device node for the AHCI controller and that one.
+>
+> What is your reason for doing it differently here?
 
-> +
-> +config SCSI_UFS_DWC_HOOKS
-> +	bool "DesignWare hooks to UFS controller"
-> +	depends on SCSI_UFSHCD
-> +	---help---
-> +	  This selects the DesignWare hooks for the UFS host controller.
-> +
-> +	  Select this if you have a DesignWare UFS controller.
-> +	  If unsure, say N.
+Two reasons
 
-This could be a silent symbol that gets selected by SCSI_UFS_DWC_PLAT
+1- The hardware is like a proper split rather than additional hidden registers in
+the same memory space.
 
-> +config SCSI_UFS_DWC_MPHY_TC
-> +	bool "Support for the Synopsys MPHY Test Chip"
-> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
-> +	---help---
-> +	  This selects the support for the Synopsys MPHY Test Chip.
-> +
-> +	  Select this if you have a Synopsys MPHY Test Chip.
-> +	  If unsure, say N.
-> +
-> +config SCSI_UFS_DWC_20BIT_RMMI
-> +	bool "20-bit RMMI MPHY"
-> +	depends on SCSI_UFS_DWC_MPHY_TC
-> +	---help---
-> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
-> +
-> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
-> +	  If unsure, say N.
-> +
-> +config SCSI_UFS_DWC_40BIT_RMMI
-> +	bool "40-bit RMMI MPHY"
-> +	depends on SCSI_UFS_DWC_MPHY_TC
-> +	---help---
-> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
-> +
-> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
-> +	  If unsure, say N.
+2- Tons of devices in the field have the following DT node built in the bootloader.
 
-Move the PHY config options to drivers/phy/ along with the respective
-drivers, the device using the PHY should not need to be aware which
-one is being used.
+		uctl@118006c000000 {
+			compatible = "cavium,octeon-7130-sata-uctl";
+			reg = <0x11800 0x6c000000 0x0 0x100>;
+			...
+                         sata: sata@16c0000000000 {
+                                 compatible = "cavium,octeon-7130-ahci";
+                                 reg = <0x16c00 0x00000000 0x0 0x200>;
+				...
+                         };
+		};
 
-> +/**
-> + * ufshcd_dwc_setup_mphy()
-> + * This function configures Local (host) Synopsys MPHY specific attributes
-> + *
-> + * @hba: Pointer to drivers structure
-> + *
-> + * Returns 0 on success non-zero value on failure
-> + */
-> +int ufshcd_dwc_setup_mphy(struct ufs_hba *hba)
-> +{
-> +	int ret = 0;
-> +
-> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
-> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
-> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
-> +	if (ret) {
-> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
-> +		goto out;
-> +	}
-> +#else
-> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
-> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
-> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
-> +	if (ret) {
-> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
-> +		goto out;
-> +	}
-> +#endif
-> +#endif
-> +	/* To write Shadow register bank to effective configuration block */
-> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_MPHYCFGUPDT), 0x01);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* To configure Debug OMC */
-> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_DEBUGOMC), 0x01);
-> +
-> +out:
-> +	return ret;
-> +}
+The patch suggests a way to handle this.
 
-Try to use the generic PHY abstraction here and remove all the #ifdef etc.
+>
+>> index 04975b8..6bc1de6 100644
+>> --- a/drivers/ata/ahci_platform.c
+>> +++ b/drivers/ata/ahci_platform.c
+>> @@ -76,6 +76,8 @@ static const struct of_device_id ahci_of_match[] = {
+>>   	{ .compatible = "ibm,476gtr-ahci", },
+>>   	{ .compatible = "snps,dwc-ahci", },
+>>   	{ .compatible = "hisilicon,hisi-ahci", },
+>> +	{ .compatible = "fsl,qoriq-ahci", },
+>> +	{ .compatible = "cavium,octeon-7130-ahci", },
+>>   	{},
+>
+> The qoriq-ahci addition seems misplaced in this patch. Maybe split
+> that out into a separate patch?
+>
 
-> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
-> index d15eaa4..66518a1 100644
-> --- a/drivers/scsi/ufs/ufshcd-pci.c
-> +++ b/drivers/scsi/ufs/ufshcd-pci.c
-> @@ -34,6 +34,9 @@
->   */
->  
->  #include "ufshcd.h"
-> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
-> +#include "ufshcd-dwc.h"
-> +#endif
->  #include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  
-> @@ -83,6 +86,16 @@ static int ufshcd_pci_runtime_idle(struct device *dev)
->  #define ufshcd_pci_runtime_idle	NULL
->  #endif /* CONFIG_PM */
->  
-> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
-> +/**
-> + * struct ufs_hba_dwc_vops - UFS DWC specific variant operations
-> + */
-> +static struct ufs_hba_variant_ops ufs_dwc_pci_hba_vops = {
-> +	.name                   = "dwc-pci",
-> +	.custom_probe_hba	= ufshcd_dwc_configuration,
-> +};
-> +#endif
-> +
->  /**
->   * ufshcd_pci_shutdown - main function to put the controller in reset state
->   * @pdev: pointer to PCI device handle
-> @@ -144,6 +157,9 @@ ufshcd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  
->  	INIT_LIST_HEAD(&hba->clk_list_head);
->  
-> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
-> +	hba->vops = &ufs_dwc_pci_hba_vops;
-> +#endif
->  	err = ufshcd_init(hba, mmio_base, pdev->irq);
->  	if (err) {
->  		dev_err(&pdev->dev, "Initialization failed\n");
-> @@ -167,6 +183,10 @@ static const struct dev_pm_ops ufshcd_pci_pm_ops = {
->  
->  static const struct pci_device_id ufshcd_pci_tbl[] = {
->  	{ PCI_VENDOR_ID_SAMSUNG, 0xC00C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
-> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
-> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB101, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
-> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB102, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
-> +#endif
->  	{ }	/* terminate list */
->  };
+oops. Sorry. Will fix.
 
-I think you're better off with a separate PCI driver for this. Remove
-all the #ifdef mess here, put whatever is dwc specific into a new file,
-and perhaps move the common parts into a shared file that can be used
-by both the samsung and designware drivers.
+>> +/**
+>> + * cvmx_sata_uctl_shim_cfg
+>> + * from cvmx-sata-defs.h
+>> + *
+>> + * Accessible by: only when A_CLKDIV_EN
+>> + * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
+>> + * This register allows configuration of various shim (UCTL) features.
+>> + * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
+>> + * indicated in INTSTAT and a new OOB error arrives.
+>> + * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
+>> + * indicated in INTSTAT and a new DMA error arrives.
+>> + */
+>> +union cvmx_sata_uctl_shim_cfg {
+>> +	uint64_t u64;
+>> +	struct cvmx_sata_uctl_shim_cfg_s {
+>> +	/*
+>> +	 * Read/write error log for out-of-bound UAHC register access.
+>> +	 * 0 = read, 1 = write.
+>> +	 */
+>> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
+>> +	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
+>> +	/*
+>
+> Try to avoid bitfields when defining structures that interact with
+> the hardware, bitfields often cause problems with mixed-endian
+> environments and don't make this easier to understand.
+>
 
-	Arnd
+Bitfields for both endians are used and handled by mips.
+Mainly used by cavium.
+
+As this is a cavium driver, would it be acceptable?
+
+Or should I replace with the following.
+
+	v = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
+	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << DMA_ENDIAN_MODE);
+	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << CSR_ENDIAN_MODE);
+#ifdef __BIG_ENDIAN
+	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << DMA_ENDIAN_MODE;
+	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << CSR_ENDIAN_MODE;
+#else
+	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << DMA_ENDIAN_MODE;
+	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << CSR_ENDIAN_MODE;
+#endif
+	v |= 1 << DMA_READ_CMD;
+	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, v);
+
+>> +static int ahci_octeon_probe(struct platform_device *pdev)
+>> +{
+>> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *node = dev->of_node;
+>> +	struct resource *res;
+>> +	void __iomem *base;
+>> +	int ret;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res) {
+>> +		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(base))
+>> +		return PTR_ERR(base);
+>> +
+>> +	/* set-up endian mode */
+>> +	shim_cfg.u64 = cvmx_read_csr(
+>> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
+>> +#ifdef __BIG_ENDIAN
+>> +	shim_cfg.s.dma_endian_mode = 1;
+>> +	shim_cfg.s.csr_endian_mode = 1;
+>> +#else
+>> +	shim_cfg.s.dma_endian_mode = 0;
+>> +	shim_cfg.s.csr_endian_mode = 0;
+>> +#endif
+>> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
+>> +	cvmx_write_csr(
+>> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
+>> +
+>
+> Maybe add a helper function around cvmx_write_csr() that
+> allows you to write to an __iomem address? Drivers should
+> generally not need to use __force.
+
+Hmm. Will see.
+
+Thanks
+ZubairLK
+
+>
+> 	Arnd
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
