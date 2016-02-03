@@ -1,43 +1,140 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 1/8] clk: rockchip: add id of the tsadc clock found on rk3228 SoCs
-Date: Wed,  3 Feb 2016 12:12:40 +0800
-Message-ID: <1454472767-5767-2-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH 8/8] ARM: dts: rockchip: add the thermal main info found on rk3228
+Date: Wed,  3 Feb 2016 12:12:47 +0800
+Message-ID: <1454472767-5767-9-git-send-email-wxt@rock-chips.com>
 References: <1454472767-5767-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454472767-5767-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, edubezval@gmail.com
-Cc: huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, zhangqing@rock-chips.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, zhangqing@rock-chips.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Caesar Wang <wxt@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds 'SCLK_TSADC' and 'PCLK_TSADC' id found on rk3228 SoCs.
-That will be needed by TSADC controller.
+This patch adds the thermal needed main information for rk3228 SoCS.
+
+Basically has the following content:
+
+1) TSADC controller:
+Add the needed attributes for rk3036 TSADC controller.
+
+Especially for the TSHUT, in some cases if we are unable to shut it down
+in orderly fashion (says: kernel is stuck holding a lock or similar), then
+hardware TSHUT will reset it.
+If the temperature is over 95C over a period of time the thermal shutdown
+of the tsadc is invoked with can either reset the entire chip via the CRU,
+or notify the PMIC via a GPIO. This should be set in the specific board.
+
+2) Thermal zones:
+Add the needed device mode for thermal generic framework.
+Detail in Documentation/devicetree/bindings/thermal/thermal.txt.
 
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
- include/dt-bindings/clock/rk3228-cru.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/rk3228.dtsi | 69 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/include/dt-bindings/clock/rk3228-cru.h b/include/dt-bindings/clock/rk3228-cru.h
-index a78dd89..cd2e06b 100644
---- a/include/dt-bindings/clock/rk3228-cru.h
-+++ b/include/dt-bindings/clock/rk3228-cru.h
-@@ -29,6 +29,7 @@
- #define SCLK_SDMMC		68
- #define SCLK_SDIO		69
- #define SCLK_EMMC		71
-+#define SCLK_TSADC		72
- #define SCLK_UART0		77
- #define SCLK_UART1		78
- #define SCLK_UART2		79
-@@ -68,6 +69,7 @@
- #define PCLK_UART0		341
- #define PCLK_UART1		342
- #define PCLK_UART2		343
-+#define PCLK_TSADC		344
- #define PCLK_PWM		350
- #define PCLK_TIMER		353
- #define PCLK_PERI		363
+diff --git a/arch/arm/boot/dts/rk3228.dtsi b/arch/arm/boot/dts/rk3228.dtsi
+index 119ff12..afce7fd 100644
+--- a/arch/arm/boot/dts/rk3228.dtsi
++++ b/arch/arm/boot/dts/rk3228.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3228-cru.h>
++#include <dt-bindings/thermal/thermal.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -69,6 +70,7 @@
+ 				/* KHz    uV */
+ 				 816000 1000000
+ 			>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
+ 		};
+@@ -247,6 +249,63 @@
+ 		assigned-clock-rates = <594000000>;
+ 	};
+ 
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			polling-delay-passive = <100>; /* milliseconds */
++			polling-delay = <5000>; /* milliseconds */
++
++			thermal-sensors = <&tsadc 0>;
++
++			trips {
++				cpu_alert0: cpu_alert0 {
++					temperature = <70000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "passive";
++				};
++				cpu_alert1: cpu_alert1 {
++					temperature = <75000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "passive";
++				};
++				cpu_crit: cpu_crit {
++					temperature = <90000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT 6>;
++				};
++				map1 {
++					trip = <&cpu_alert1>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
++
++	tsadc: tsadc@11150000 {
++		compatible = "rockchip,rk3228-tsadc";
++		reg = <0x11150000 0x100>;
++		interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
++		clock-names = "tsadc", "apb_pclk";
++		resets = <&cru SRST_TSADC>;
++		reset-names = "tsadc-apb";
++		pinctrl-names = "init", "default", "sleep";
++		pinctrl-0 = <&otp_gpio>;
++		pinctrl-1 = <&otp_out>;
++		pinctrl-2 = <&otp_gpio>;
++		#thermal-sensor-cells = <0>;
++		rockchip,hw-tshut-temp = <95000>;
++		status = "disabled";
++	};
++
+ 	emmc: dwmmc@30020000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30020000 0x4000>;
+@@ -394,6 +453,16 @@
+ 			};
+ 		};
+ 
++		tsadc {
++			otp_gpio: otp-gpio {
++				rockchip,pins = <0 24 RK_FUNC_GPIO &pcfg_pull_none>;
++			};
++
++			otp_out: otp-out {
++				rockchip,pins = <0 24 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
+ 		uart0 {
+ 			uart0_xfer: uart0-xfer {
+ 				rockchip,pins = <2 26 RK_FUNC_1 &pcfg_pull_none>,
 -- 
 1.9.1
