@@ -1,77 +1,66 @@
-From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 4/4] drm/layerscape: Add HDMI driver for freescale DCU
-Date: Wed, 3 Feb 2016 03:23:35 +0000
-Message-ID: <HE1PR04MB105133BFC2DBAC3EB1CB715BECD00@HE1PR04MB1051.eurprd04.prod.outlook.com>
-References: <1453780833-32289-1-git-send-email-meng.yi@nxp.com>
- <1453780833-32289-4-git-send-email-meng.yi@nxp.com>
- <20160129025156.GA26113@rob-hp-laptop>
- <HE1PR04MB105182735A413F11D6704A7CECDF0@HE1PR04MB1051.eurprd04.prod.outlook.com>
- <63270b7f7015d99be2cb10377c976b31@agner.ch>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v8 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Wed, 3 Feb 2016 11:29:29 +0800
+Message-ID: <CAGS+omAhExDg1H96nFY1EEKwTPVsnS6vNnxJCPYL4QwMt+hAcw@mail.gmail.com>
+References: <1454300012-32552-1-git-send-email-jitao.shi@mediatek.com>
+ <1454300012-32552-2-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <63270b7f7015d99be2cb10377c976b31-XLVq0VzYD2Y@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "airlied-cv59FeDIM0c@public.gmane.org" <airlied-cv59FeDIM0c@public.gmane.org>, "jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1454300012-32552-2-git-send-email-jitao.shi@mediatek.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-    I will take PTO during Chinese Spring Festival, and I will rebase my patches according to your tree and send out after 2/16/2016 ^_^
-BR 
-Meng
-
-> On Wednesday, February 03, 2016 5:56 AM, Stefan Agner [stefan-XLVq0VzYD2Y@public.gmane.org] wrote:
-> 
-> Hi Meng Yi,
-> 
-> I plan to review the patchset too, but did not come around yet.
-> 
-> The forth patch conflicts with my changes in the DRM DCU driver. Since it will
-> likely go through my tree, please base v2 ontop of my DCU
-> branch:
-> http://git.agner.ch/gitweb/?p=linux-drm-fsl-dcu.git;a=summary
-> 
-> --
-> Stefan
-> 
-> On 2016-02-02 01:53, Meng Yi wrote:
-> > Hi Rob
-> >     Thanks for your reply. I will correct those soon, and then send v2 out.
-> > BR
-> > Meng Yi
-> >
-> >> On Friday, January 29, 2016 10:52 AM, Rob Herring[robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org] wrote:
-> >
-> >> > +The SiI9022A is an ultra low-power HDMI transmitter. It supports
-> >> > +resolutions from standard definition 480i/p and 576i/p all the way
-> >> > +to high-definition 720p, 1080i, and 1080p, the highest resolution
-> >> > +supported by HDTVs today. It also supports all
-> >>
-> >> Well, we're up to 4K now...
-> >
-> >> > +            ports {
-> >> > +                    #address-cells = <1>;
-> >> > +                    #size-cells = <0>;
-> >> > +
-> >> > +                    port@0 {
-> >> > +                            reg = <1>;
-> >>
-> >> Your unit address (0) and reg don't match.
-> >>
-> >> > +                            sii9022_out: endpoint {
-> >> > +                                    remote-endpoint = <&hdmi_con>;
-> >> > +                            };
-> >>
-> >> This needs to have a port for the input for the connection to your
-> >> display controller.
-> >>
-> >> > +                    };
-> >> > +            };
-> >> > +    };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSml0YW8sCgpPbmUgbW9yZSBjb21tZW50LCBpbmxpbmUuLi4KCk9uIE1vbiwgRmViIDEsIDIw
+MTYgYXQgMTI6MTMgUE0sIEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4gd3JvdGU6
+Cj4gVGhpcyBwYXRjaCBhZGRzIGRybV9icmlkZ2UgZHJpdmVyIGZvciBwYXJhZGUgRFNJIHRvIGVE
+UCBicmlkZ2UgY2hpcC4KPgo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
+ZGlhdGVrLmNvbT4KCltzbmlwXQoKPiArc3RhdGljIGludCBwczg2NDBfcHJvYmUoc3RydWN0IGky
+Y19jbGllbnQgKmNsaWVudCwKPiArICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3Qg
+aTJjX2RldmljZV9pZCAqaWQpCj4gK3sKPiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZj
+bGllbnQtPmRldjsKPiArICAgICAgIHN0cnVjdCBwczg2NDAgKnBzX2JyaWRnZTsKPiArICAgICAg
+IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYtPm9mX25vZGU7Cj4gKyAgICAgICBzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKnBvcnQsICpvdXRfZXA7Cj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUg
+KnBhbmVsX25vZGUgPSBOVUxMOwo+ICsgICAgICAgaW50IGksIHJldDsKPiArCj4gKyAgICAgICBw
+c19icmlkZ2UgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnBzX2JyaWRnZSksIEdGUF9LRVJO
+RUwpOwo+ICsgICAgICAgcHNfYnJpZGdlLT5kc2kgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2Yo
+c3RydWN0IG1pcGlfZHNpX2RldmljZSksCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBHRlBfS0VSTkVMKTsKPiArICAgICAgIGlmICghcHNfYnJpZGdlKSB7Cj4gKyAgICAg
+ICAgICAgICAgIHJldCA9IC1FTk9NRU07Cj4gKyAgICAgICAgICAgICAgIGdvdG8gZXhpdDsKPiAr
+ICAgICAgIH0KPiArICAgICAgIC8qIHBvcnRAMSBpcyBwczg2NDAgb3V0cHV0IHBvcnQgKi8KPiAr
+ICAgICAgIHBvcnQgPSBvZl9ncmFwaF9nZXRfcG9ydF9ieV9pZChucCwgMSk7Cj4gKyAgICAgICBp
+ZiAocG9ydCkgewo+ICsgICAgICAgICAgICAgICBvdXRfZXAgPSBvZl9nZXRfY2hpbGRfYnlfbmFt
+ZShwb3J0LCAiZW5kcG9pbnQiKTsKPiArICAgICAgICAgICAgICAgb2Zfbm9kZV9wdXQocG9ydCk7
+Cj4gKyAgICAgICAgICAgICAgIGlmIChvdXRfZXApIHsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICBwYW5lbF9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChvdXRfZXApOwo+
+ICsgICAgICAgICAgICAgICAgICAgICAgIG9mX25vZGVfcHV0KG91dF9lcCk7Cj4gKyAgICAgICAg
+ICAgICAgIH0KPiArICAgICAgIH0KPiArICAgICAgIGlmIChwYW5lbF9ub2RlKSB7Cj4gKyAgICAg
+ICAgICAgICAgIHBzX2JyaWRnZS0+cGFuZWwgPSBvZl9kcm1fZmluZF9wYW5lbChwYW5lbF9ub2Rl
+KTsKPiArICAgICAgICAgICAgICAgb2Zfbm9kZV9wdXQocGFuZWxfbm9kZSk7Cj4gKyAgICAgICAg
+ICAgICAgIGlmICghcHNfYnJpZGdlLT5wYW5lbCkgewo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHJldCA9IC1FUFJPQkVfREVGRVI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgZ290byBleGl0
+Owo+ICsgICAgICAgICAgICAgICB9Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgcHNfYnJpZGdl
+LT5wd3JfM3YzX3N1cHBseSA9IGRldm1fcmVndWxhdG9yX2dldChkZXYsICJ2ZGQzMyIpOwo+ICsg
+ICAgICAgaWYgKElTX0VSUihwc19icmlkZ2UtPnB3cl8zdjNfc3VwcGx5KSkgewo+ICsgICAgICAg
+ICAgICAgICByZXQgPSBQVFJfRVJSKHBzX2JyaWRnZS0+cHdyXzN2M19zdXBwbHkpOwo+ICsgICAg
+ICAgICAgICAgICBkZXZfZXJyKGRldiwgImNhbm5vdCBnZXQgdmRkMzMgc3VwcGx5OiAlZFxuIiwg
+cmV0KTsKPiArICAgICAgICAgICAgICAgZ290byBleGl0Owo+ICsgICAgICAgfQo+ICsKPiArICAg
+ICAgIHBzX2JyaWRnZS0+cHdyXzF2Ml9zdXBwbHkgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAi
+dmRkMTIiKTsKClNpbmNlIHdlIGhhdmUgdHdvIHJlZ3VsYXRvcnMsIGFuZCB0aGV5IG11c3QgYWx3
+YXlzIGJlIGVuYWJsZWQgJgpkaXNhYmxlZCB0b2dldGhlciwgd2UgY2FuIGp1c3QgdXNlIHRoZSAn
+YnVsayByZWd1bGF0b3InIEFQSXM6CgogIGRldm1fcmVndWxhdG9yX2J1bGtfZ2V0KCkKICByZWd1
+bGF0b3JfYnVsa19lbmFibGUoKQogIHJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoKQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
