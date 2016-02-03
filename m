@@ -1,37 +1,31 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] clk: bcm2835: Add PWM clock support to the device tree
-Date: Tue, 02 Feb 2016 17:33:36 -0800
-Message-ID: <874mdqr30v.fsf@eliezer.anholt.net>
-References: <1450728779-2599-1-git-send-email-repk@triplefau.lt> <87twnbe4o5.fsf@eliezer.anholt.net>
+Subject: Re: [PATCH V3 1/4] ARM: bcm2835: follow dt uart node-naming convention
+Date: Tue, 02 Feb 2016 17:34:19 -0800
+Message-ID: <871t8ur2zo.fsf@eliezer.anholt.net>
+References: <1453032932-2512-1-git-send-email-kernel@martin.sperl.org> <1453032932-2512-2-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87twnbe4o5.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+In-Reply-To: <1453032932-2512-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
 
-Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> writes:
+kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
 
-> Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org> writes:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 >
->> Signed-off-by: Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
->> ---
->>
->> With the upcomming PWM clock patch (see https://lkml.org/lkml/2015/12/6/74)
->> PWM can now be used and can be added in the RPI devicetree.
+> This patch fixes the naming of the device tree node: uart@7e201000
+> to conform to the standard of: serial@7e201000
 >
-> Looks good to me.  I'll try to keep a watch on the clock tree and
-> include this (possibly moved to bcm283x.dtsi depending on if 2836 lands
-> first) when I have something I can pull from for the BCM2835_CLOCK_PWM
-> definition.
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Did the rebase and merged to bcm2835-dt-next.
+Did the rebase and merged this one to bcm2835-dt-next.
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -39,19 +33,19 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJWsVjxAAoJELXWKTbR/J7os2QP/jvl+cXcvwLSkB8HUvxxjcPo
-m4XhW6NvF1VdYqNrvqFxp80MDEFdNd3ZSJysQZ83vPb+O14FKOlPfMtUoIw+orQd
-iwq/hIpMo+DyAp92XGCs4SFwlU98pPeEmy+jnQlRVYUrV3Gj/HBRZXpUnfDtiKAh
-Glk28vPUmgGkDwgB4XMHzUmkk62me97Mtry0cGrXVFi8SK048COtZbMfGc1Fgmj5
-vbW6ezyYRtzdU3sRMmLWMMqWmznKPsLH+3X7tVeUj4i8uu0GPjkiOzn75ZNAT3SJ
-1o9IdETXOTSYEt+5izATaiTq3dPjb8gxhZwTMdyYbXB/B+bl8jMtFqHqU7zdY49I
-rzPr4/zHWzIV64EBQ3zuUbw9LZh/VvcRYoXsnEmL0mG3PVnePrHWHBK3MN10NZiD
-jIE61E5F+1ivu7vY9Tab1ncQLBeVG34D3gmsHCdhVYAYsG4egf3MNErlM7GrNYAq
-MFoUfTCEa4UjKfgDQMVF/itdU0wLP4Ml2Jnh8HQWIz7TnoJ5fZvdXZHlky6Z7AXv
-ndivPSNsLq6N/ZwddX5BeuA22QDU6JAJ0IQ0eaiTxjmFxTiR/hgtkg+Z2COWbMqO
-5aCR+N4+hGYgAVOPcs3Iuqp7pYilvmj7DfbvdzqNg1k6KpZiA8+nKjgz95V0kF96
-nIxZqHiCEgmQ0zk06BIJ
-=pJBA
+iQIcBAEBCgAGBQJWsVkbAAoJELXWKTbR/J7oH4EP/RlVKOgHv6rbi2HKITHtatuP
+kHNuBZVY9NcnS9/TufeKaK6zg04Jplynl0mers5VSPQd5toDto8zGFweJpmtZTRD
+wtB7dLWPrnUSS72Vzq34hgegu96BY+6uDzMz4JzgxGAB4NyZ3/i8ovJZGBMgHyCc
+Jw+OVJXeZisbnRewpgwGHlHzflq93fYFQt46o7LK92k26TmjKOet7GGMwWptdCgg
+5TlpB5VCiwPya0DFQaF6y9kjqKlYViVU8Dktha1oriinvIiJlLPHK+F6iWQmom+g
+db2u76zgI/lNSxCyUir+YRcoaSP4+/fd1d4xlnzMFyCw68RcbPj1z/SUTj4dfMWI
+4ppan4sbLeeIK1t91gW4bhqMAzLB5aY0QH5CF/wkIjdSZPbrrKiwpeEOCBIbFjtU
+IlJAcAZYweEJCy6VYFTV1HcJNg57IQOb7qgAokvs6aq/7Sliy3aqFyXmMhIfuPNF
+CIAv5qxvE57NiRy91Iku9tVLvuzDYpvABjugfg/P460Vyq/51ODQXVlb7LmpcM8O
+RH5RNxA1N1HpaptIxxRMyY/1fbjYArtlcuEqTthwGxaI7ebJtTb6b7QE7BrKk6Rl
+p+HA0YroyI20KFq61vnGdD9Q8dkiKddsBfyjVubgZDpgkd5j43q7VTzKa6KJBiJa
+a+lvkQzAB0VfDjSo+TUl
+=cWt5
 -----END PGP SIGNATURE-----
 --=-=-=--
 --
