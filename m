@@ -1,88 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: arm,gic-v3: require that reserved cells are
- always 0
-Date: Wed, 3 Feb 2016 18:20:54 +0000
-Message-ID: <20160203182054.GH1234@leverpostej>
-References: <1454522458-29643-1-git-send-email-will.deacon@arm.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
+ panic support
+Date: Wed, 3 Feb 2016 12:26:10 -0600
+Message-ID: <56B24642.8090105@codeaurora.org>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+ <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
+ <56B23883.7000501@codeaurora.org>
+ <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
+ <56B23E99.1030604@codeaurora.org>
+ <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+ <56B2423B.1020109@codeaurora.org>
+ <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454522458-29643-1-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 03, 2016 at 06:00:58PM +0000, Will Deacon wrote:
-> The arm,gic-v3 binding was written with good intentions and doesn't
-> enforce interrupt-cells to be 3, therefore making it easy to extend
-> the irq description in future if necessary:
-> 
->   > Cells 4 and beyond are reserved for future use.
-> 
-> Unfortunately, this sentence is immediately followed up with:
-> 
->   > When the 1st cell has a value of 0 or 1, cells 4 and beyond act as
->   > padding, and may be ignored. It is recommended that padding cells
->   > have a value of 0.
+Fu Wei wrote:
+> Actually,
+> the SBSA watchdog driver should support only  half-timeout for panic
+> the user cannot configure the length of "panic time",  He can only
+> enable it, and it is automatically set to 1/2 timeout.
+>
+> we don't need pre-timeout here.
+>
+> Hope I understand you correctly:-)  sorry for your confusion
+>
+>> >
+>> >So when pre-timeout occurs, the interrupt handler calls panic() or whatever
+>> >it's supposed to do.
+> Actually,
+> So when 1/2 timeout occurs, the interrupt handler calls panic() or
+> whatever it's supposed to do.
+>
 
-The initial intention of this was to allow for new, longer entries which
-were identified by a new value in cell 1.
-
-Regardless, I agree that it should be a requirement that padding cells
-must be zero.
-
-> Consequently, any extensions to the PPI or SPI interrupt specifiers must
-> be able to work with random crap from legacy DTs, effectively
-> necessitating a new interrupt type in the first cell. Sigh.
-
-I'm not sure that's true if we allocate a new value for the 1st cell for
-"extended" PPI or SPI interrupt-sepcficiers (which presumably add
-restrictions). That would also allow old kernels to safely skip such
-interrupts rather than mis-parsing them.
-
-> This patch fixes the text so that additional, reserved cells are
-> required to be zero. This looks like a reasonable thing to require and
-> is already satisifed by the .dts files in-tree.
-> 
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-
-This patch itself makes sense, so FWIW:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Any proposed extention to the binding requires its own discussion.
-
-Thanks,
-Mark.
-
-> ---
->  .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt          | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> index 7803e77d85cb..007a5b46256a 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> @@ -24,9 +24,8 @@ Main node required properties:
->  		1 = edge triggered
->  		4 = level triggered
->  
-> -  Cells 4 and beyond are reserved for future use. When the 1st cell
-> -  has a value of 0 or 1, cells 4 and beyond act as padding, and may be
-> -  ignored. It is recommended that padding cells have a value of 0.
-> +  Cells 4 and beyond are reserved for future use and must have a value
-> +  of 0 if present.
->  
->  - reg : Specifies base physical address(s) and size of the GIC
->    registers, in the following order:
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I understand all that.  What I'm saying is that, in the future, when 
+pre-timeout support is added to the watchdog layer, I think it makes 
+sense to modify this driver to use pre-timeout support.
