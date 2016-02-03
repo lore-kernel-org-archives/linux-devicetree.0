@@ -1,66 +1,43 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/11] MAINTAINERS: Add entry for X-Powers
- AXP family PMIC drivers
-Date: Wed, 3 Feb 2016 11:19:52 +1100
-Message-ID: <CAGRGNgVxan9RCsLFW9hHWcdW+Rd_SgVG95H-yQg213g-YeE6Ug@mail.gmail.com>
-References: <1454408864-24112-1-git-send-email-wens@csie.org> <1454408864-24112-2-git-send-email-wens@csie.org>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH v5 5/8] ASoC: rt5616: add mclk property for
+ rt5616 document
+Date: Wed, 3 Feb 2016 08:52:34 +0800
+Message-ID: <56B14F52.3080008@rock-chips.com>
+References: <1454384032-6794-1-git-send-email-wxt@rock-chips.com>
+ <1454384680-7197-1-git-send-email-wxt@rock-chips.com>
+ <20160202193607.GW4455@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBPEPYW2QKGQE72D6ELQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1454408864-24112-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160202193607.GW4455@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: oder_chiou@realtek.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, jeffy.chen@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, keescook@google.com, bardliao@realtek.com, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chen-Yu,
-
-On Tue, Feb 2, 2016 at 9:27 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Add an entry for X-Powers AXP family PMIC drivers and list myself
-> as maintainer.
->
-> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f678c37107f5..7ea4e54f566a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11941,6 +11941,12 @@ F:     include/linux/workqueue.h
->  F:     kernel/workqueue.c
->  F:     Documentation/workqueue.txt
->
-> +X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS
-> +M:     Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> +L:     linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:     Maintained
-> +N:     axp[128]
-
-Should you list the files maintained and this list also?
-
-> +
->  X.25 NETWORK LAYER
->  M:     Andrew Hendry <andrew.hendry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  L:     linux-x25-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+CgrlnKggMjAxNuW5tDAy5pyIMDPml6UgMDM6MzYsIE1hcmsgQnJvd24g5YaZ6YGTOgo+IE9uIFR1
+ZSwgRmViIDAyLCAyMDE2IGF0IDExOjQ0OjM4QU0gKzA4MDAsIENhZXNhciBXYW5nIHdyb3RlOgo+
+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIG1jbGsgcHJvcGVydHkgZm9yIHRoZSBDT0RFQyBkcml2ZXIs
+Cj4+IHNpbmNlIHNvbWV0aW1lcyB0aGUgQ09ERUMgZHJpdmVyIG5lZWRzIHRoZSBjbG9jayBlbmFi
+bGVkLgo+IFRoaXMgYXBwZWFycyB0byBiZSBhIHJlc2VuZCBvZiBhIHBhdGNoIHRoYXQncyBhbHJl
+YWR5IGJlZW4gYXBwbGllZC4gIElmCj4gYW55IGNoYW5nZXMgYXJlIHJlcXVpcmVkIHBsZWFzZSBz
+ZW5kIGluY3JlbWVudGFsIHBhdGNoZXMgYWdhaW5zdCBjdXJyZW50Cj4gZ2l0LgoKU29ycnkgZm9y
+IG5vaXNpbmcuICBJIGhhdmVuJ3QgZ290IHlvdXIgYXV0byByZXBseSBpZiB0aGUgcGF0Y2ggYXBw
+bGllZC46LSgKQW55d2F5LCB0aGUgYXBwbGllZCBwYXRjaGVzIGFyZSBPSyBmb3IgbWUuCgpUaGFu
+a3MhCgoKCi0KQ2Flc2FyCj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2No
+aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAKCgotLSAKY2Flc2FyIHdhbmcgfCBzb2Z0d2FyZSBl
+bmdpbmVlciB8IHd4dEByb2NrLWNoaXAuY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFs
+c2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2Fsc2EtZGV2ZWwK
