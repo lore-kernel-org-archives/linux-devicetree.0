@@ -1,7 +1,7 @@
 From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] mwifiex: parse host wakeup configuration from device tree
-Date: Tue, 2 Feb 2016 22:14:20 -0800
-Message-ID: <1454480060-27314-3-git-send-email-akarwar@marvell.com>
+Subject: [PATCH 2/3] mwifiex: parse chip specific gpio from device tree
+Date: Tue, 2 Feb 2016 22:14:19 -0800
+Message-ID: <1454480060-27314-2-git-send-email-akarwar@marvell.com>
 References: <1454480060-27314-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,166 +14,66 @@ List-Id: devicetree@vger.kernel.org
 
 From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-This patch implement a framework for board specific wakeup.
-driver parse irq/gpio number from device tree, corresponding
-resources will be allocated, and used for host suspend/resume.
-driver private binding file is also updated in the patch.
+This patch parse chip specific gpio parameter from device
+tree. Corresponding binding file is also updated.
 
 Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mwifiex.txt      | 10 +++
- .../net/wireless/marvell/mwifiex/platform_drv.c    | 93 ++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
+ Documentation/devicetree/bindings/mwifiex.txt  | 6 ++++--
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 9 +++++++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mwifiex.txt b/Documentation/devicetree/bindings/mwifiex.txt
-index 367c97e..68919c7 100644
+index 39b6a74..367c97e 100644
 --- a/Documentation/devicetree/bindings/mwifiex.txt
 +++ b/Documentation/devicetree/bindings/mwifiex.txt
-@@ -14,6 +14,11 @@ Optional properties:
-   - mwifiex,chip-gpio : Chip's wakeup gpio pin number. This needs to be downloaded
- 			to to firmware. Chip notifies wifi wakeup signal to SOC
- 			through this pin.
-+  - interrupt-parent: phandle of the parent interrupt controller
-+  - interrupts : interrupt number to the cpu
-+  - gpios: specify SOC's wakeup GPIO
-+  - pinctrl-names : a pinctrl state named "default" must be defined
-+  - pinctrl-0 : pin control group to be used for this controller
+@@ -11,7 +11,9 @@ Optional properties:
+   - mwifiex,caldata* : A series of properties with marvell,caldata prefix,
+   		      represent Calibration data downloaded to the device during
+ 		      initialization. This is an array of unsigned values.
+-
++  - mwifiex,chip-gpio : Chip's wakeup gpio pin number. This needs to be downloaded
++			to to firmware. Chip notifies wifi wakeup signal to SOC
++			through this pin.
  
  Example:
  
-@@ -27,5 +32,10 @@ mwifiex {
+@@ -24,6 +26,6 @@ mwifiex {
+ 
  	mwifiex,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
  0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
- 	mwifiex,chip-gpio = <3>;
-+	interrupt-parent = <&pio>;
-+	interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
-+	gpios = <&pio 38 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wake_pins>;
+-
++	mwifiex,chip-gpio = <3>;
  };
  
-diff --git a/drivers/net/wireless/marvell/mwifiex/platform_drv.c b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-index f64a12a..ed5dfc8 100644
---- a/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-+++ b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-@@ -18,9 +18,63 @@
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index 64fc697..e6123af 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -2134,6 +2134,7 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 	enum state_11d_t state_11d;
+ 	struct mwifiex_ds_11n_tx_cfg tx_cfg;
+ 	u8 sdio_sp_rx_aggr_enable;
++	u32 data;
  
- struct platform_device *mwifiex_plt_dev;
- 
-+struct mwifiex_wake_dev {
-+	struct device	*dev;
-+	int		irq_wifi;
-+	bool		wake_by_wifi;
-+};
+ 	if (first_sta) {
+ 		if (priv->adapter->iface_type == MWIFIEX_PCIE) {
+@@ -2156,6 +2157,14 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 		 */
+ 		adapter->dt_node = mwifiex_plt_dev->dev.of_node;
+ 		if (adapter->dt_node) {
++			if (of_property_read_u32(adapter->dt_node,
++						 "mwifiex,chip-gpio",
++						 &data) == 0) {
++				mwifiex_dbg(adapter, INFO,
++					    "chip_gpio = 0x%x\n", data);
++				adapter->hs_cfg.gpio = data;
++			}
 +
-+static irqreturn_t mwifiex_wake_irq_wifi(int irq, void *priv)
-+{
-+	struct mwifiex_wake_dev *ctx = priv;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ctx->wake_by_wifi = true;
-+		disable_irq_nosync(ctx->irq_wifi);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int mwifiex_plt_probe(struct platform_device *pdev)
- {
-+	int ret;
-+	struct mwifiex_wake_dev *ctx;
-+	int gpio;
-+
- 	mwifiex_plt_dev = pdev;
-+
-+	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->dev = &pdev->dev;
-+	ctx->irq_wifi = platform_get_irq(pdev, 0);
-+	if (ctx->irq_wifi < 0)
-+		dev_err(&pdev->dev, "Failed to get irq_wifi\n");
-+
-+	gpio = of_get_gpio(pdev->dev.of_node, 0);
-+	if (gpio_is_valid(gpio))
-+		gpio_direction_input(gpio);
-+	else
-+		dev_err(&pdev->dev, "gpio wifi is invalid\n");
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ret = devm_request_irq(&pdev->dev, ctx->irq_wifi,
-+				       mwifiex_wake_irq_wifi,
-+				       IRQF_TRIGGER_LOW,
-+				       "wifi_wake", ctx);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to request irq_wifi %d (%d)\n",
-+				ctx->irq_wifi, ret);
-+			return -EINVAL;
-+		}
-+		disable_irq(ctx->irq_wifi);
-+	}
-+
-+	platform_set_drvdata(pdev, ctx);
-+
- 	return 0;
- }
- 
-@@ -30,6 +84,44 @@ static int mwifiex_plt_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int mwifiex_plt_suspend(struct device *dev)
-+{
-+	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ctx->wake_by_wifi = false;
-+		enable_irq(ctx->irq_wifi);
-+		ret = enable_irq_wake(ctx->irq_wifi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mwifiex_plt_resume(struct device *dev)
-+{
-+	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ret = disable_irq_wake(ctx->irq_wifi);
-+		if (!ctx->wake_by_wifi)
-+			disable_irq(ctx->irq_wifi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mwifiex_plt_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mwifiex_plt_suspend, mwifiex_plt_resume)
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id mwifiex_dt_match[] = {
- 	{
- 		.compatible = "marvell,mwifiex",
-@@ -45,6 +137,7 @@ static struct platform_driver mwifiex_platform_driver = {
- 	.driver = {
- 		.name	= "mwifiex_plt",
- 		.of_match_table = mwifiex_dt_match,
-+		.pm             = &mwifiex_plt_pm_ops,
- 	}
- };
- 
+ 			ret = mwifiex_dnld_dt_cfgdata(priv, adapter->dt_node,
+ 						      "mwifiex,caldata");
+ 			if (ret)
 -- 
 1.8.1.4
 
