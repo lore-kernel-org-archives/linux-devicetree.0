@@ -1,50 +1,111 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for Armada-3700
- serial port
-Date: Wed, 03 Feb 2016 17:36:01 +0100
-Message-ID: <87mvrh4uq6.fsf@free-electrons.com>
-References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
- <1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
- <5687888.WDl8xbENFR@wuerfel>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem to
+ support  generic Xilinx  AXI PCIe Host Bridge IP driver
+Date: Wed, 3 Feb 2016 10:38:05 -0600
+Message-ID: <20160203163805.GA6112@localhost>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <1452620173-4905-6-git-send-email-bharatku@xilinx.com>
+ <20160203163207.GC32546@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5687888.WDl8xbENFR@wuerfel> (Arnd Bergmann's message of "Tue, 02
- Feb 2016 22:07:17 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-ide@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jslaby@suse.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, arm@kernel.org, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wilson Ding <dingwei@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160203163207.GC32546@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJuZCwKIAogT24gbWFyLiwgZsOpdnIuIDAyIDIwMTYsIEFybmQgQmVyZ21hbm4gPGFybmRA
-YXJuZGIuZGU+IHdyb3RlOgoKPiBPbiBUdWVzZGF5IDAyIEZlYnJ1YXJ5IDIwMTYgMTk6MDc6Mzkg
-R3JlZ29yeSBDTEVNRU5UIHdyb3RlOgo+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9zZXJp
-YWwvS2NvbmZpZyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9LY29uZmlnCj4+IGluZGV4IDM5NzIxZWM0
-ZjQxNS4uYjI5MWY5MzRkNTFiIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3R0eS9zZXJpYWwvS2Nv
-bmZpZwo+PiArKysgYi9kcml2ZXJzL3R0eS9zZXJpYWwvS2NvbmZpZwo+PiBAQCAtMTYwNiw2ICsx
-NjA2LDI4IEBAIGNvbmZpZyBTRVJJQUxfU1RNMzJfQ09OU09MRQo+PiAgCWRlcGVuZHMgb24gU0VS
-SUFMX1NUTTMyPXkKPj4gIAlzZWxlY3QgU0VSSUFMX0NPUkVfQ09OU09MRQo+PiAgCj4+ICtjb25m
-aWcgU0VSSUFMX01WRUJVX1VBUlQKPj4gKwlib29sICJNYXJ2ZWxsIEVCVSBzZXJpYWwgcG9ydCBz
-dXBwb3J0Igo+Cj4gQ291bGQgdGhpcyBiZSBhIGxvYWRhYmxlIG1vZHVsZT8KCkkgZG9uJ3Qgc2Vl
-IGFueSByZWFzb24gdG8gbm90IGJlaW5nIGFibGUgdG8gdXNlIGl0IGFzIGEgbW9kdWxlLiBCdXQg
-SQpkaWRuJ3QgdGVzdCBpdCBiZWNhdXNlIGN1cnJlbnRseSB0ZSBzZXJpYWwgcG9ydCBpcyB0aGUg
-b25seSB3YXkgcm8KY2ltbXVuaWNhdGUgd2l0aCB0aGUgYm9hcmQuCgo+Cj4+ICtjb25maWcgU0VS
-SUFMX01WRUJVX0NPTlNPTEUKPj4gKwlib29sICJDb25zb2xlIG9uIE1hcnZlbGwgRUJVIHNlcmlh
-bCBwb3J0Igo+PiArCWRlcGVuZHMgb24gU0VSSUFMX01WRUJVX1VBUlQKPgo+IElmIHllcywgdGhp
-cyB3b3VsZCBiZWNvbWUgCj4KPiAJZGVwZW5kcyBvbiBTRVJJQUxfTVZFQlVfVUFSVD15CgpPSywg
-bGV0J3MgdHJ5IHRvIGVuYWJsZSBpdC4KClRoYW5rcywKCkdyZWdvcnkKCj4KPiAJQXJuZAo+Cgot
-LSAKR3JlZ29yeSBDbGVtZW50LCBGcmVlIEVsZWN0cm9ucwpLZXJuZWwsIGRyaXZlcnMsIHJlYWwt
-dGltZSBhbmQgZW1iZWRkZWQgTGludXgKZGV2ZWxvcG1lbnQsIGNvbnN1bHRpbmcsIHRyYWluaW5n
-IGFuZCBzdXBwb3J0LgpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+[+cc Ben for real this time]
+
+On Wed, Feb 03, 2016 at 10:32:07AM -0600, Bjorn Helgaas wrote:
+> [+cc Ben, pcibios_get_phb_of_node() question]
+> 
+> On Tue, Jan 12, 2016 at 11:06:13PM +0530, Bharat Kumar Gogada wrote:
+> > This patch does required modifications to microblaze PCI subsystem, to
+> > work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
+> > and Zynq.
+> > 
+> > Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> >...
+> 
+> >  resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> >  				resource_size_t size, resource_size_t align)
+> >  {
+> > -	struct pci_dev *dev = data;
+> >  	resource_size_t start = res->start;
+> >  
+> > -	if (res->flags & IORESOURCE_IO) {
+> > -		if (skip_isa_ioresource_align(dev))
+> > -			return start;
+> > -		if (start & 0x300)
+> > -			start = (start + 0x3ff) & ~0x3ff;
+> > -	}
+> > -
+> >  	return start;
+> 
+> "return res->start;" is sufficient; no need for a temporary variable.
+> 
+> >  }
+> >  EXPORT_SYMBOL(pcibios_align_resource);
+> >  
+> > +int pcibios_add_device(struct pci_dev *dev)
+> > +{
+> > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(pcibios_add_device);
+> > +
+> >  /*
+> >   * Reparent resource children of pr that conflict with res
+> >   * under res, and make res replace those children.
+> > @@ -1335,9 +1308,21 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
+> >  
+> >  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
+> >  {
+> > -	struct pci_controller *hose = bus->sysdata;
+> > +	struct device_node *np;
+> > +
+> > +	for_each_node_by_type(np, "pci") {
+> > +		const void *prop;
+> > +		unsigned int bus_min;
+> > +
+> > +		prop = of_get_property(np, "bus-range", NULL);
+> > +		if (!prop)
+> > +			continue;
+> > +		bus_min = be32_to_cpup(prop);
+> > +		if (bus->number == bus_min)
+> > +			return np;
+> > +	}
+> >  
+> > -	return of_node_get(hose->dn);
+> > +	return NULL;
+> 
+> Hmmm.  The old microblaze code ("return of_node_get(hose->dn);") is
+> basically the same as the mips and powerpc versions.  The new code is
+> basically the same as the x86 version.
+> 
+> I like the generic weak version in drivers/pci/of.c because it doesn't
+> use any arch-specific data, and it looks like if we just set the
+> struct device.of_node members correctly, everything should Just Work.
+> 
+> But Ben added both the generic and the x86 versions the same day, so
+> there must be some complication:
+> 
+>   98d9f30c820d ("pci/of: Match PCI devices to OF nodes dynamically")
+>   3d5fe5a65af9 ("x86/devicetree: Use generic PCI <-> OF matching")
+> 
+> So I guess my question is, why do we need a microblaze-specific
+> version at all?
+> 
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
