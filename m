@@ -1,166 +1,43 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v3 09/14] mtd: spi-nor: configure the number of dummy clock cycles on Micron memories
-Date: Wed, 3 Feb 2016 14:26:54 +0100
-Message-ID: <5ccaf4d6729c2569728cdf0038af6a3ad799647a.1454505161.git.cyrille.pitchen@atmel.com>
-References: <cover.1454505161.git.cyrille.pitchen@atmel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Wed, 03 Feb 2016 14:41:10 +0100
+Message-ID: <3554031.r9sGg8j827@wuerfel>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1930324.vU65IL0x0g@wuerfel> <56B1FF7A.3040906@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1454505161.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: computersforpeace@gmail.com, linux-mtd@lists.infradead.org
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, marex@denx.de, vigneshr@ti.com, beanhuo@micron.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56B1FF7A.3040906@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The spi-nor framework currently expects all Fast Read operations to use 8
-dummy clock cycles. Especially some drivers like m25p80 can only support
-multiple of 8 dummy clock cycles.
+On Wednesday 03 February 2016 13:24:10 Zubair Lutfullah Kakakhel wrote:
+> 
+> Bitfields for both endians are used and handled by mips.
+> Mainly used by cavium.
+> 
+> As this is a cavium driver, would it be acceptable?
+> 
+> Or should I replace with the following.
+> 
+>         v = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
+>         v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << DMA_ENDIAN_MODE);
+>         v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << CSR_ENDIAN_MODE);
+> #ifdef __BIG_ENDIAN
+>         v |= SATA_UCTL_ENDIAN_MODE_E_BIG << DMA_ENDIAN_MODE;
+>         v |= SATA_UCTL_ENDIAN_MODE_E_BIG << CSR_ENDIAN_MODE;
+> #else
+>         v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << DMA_ENDIAN_MODE;
+>         v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << CSR_ENDIAN_MODE;
+> #endif
+>         v |= 1 << DMA_READ_CMD;
+>         cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, v);
 
-On Micron memories, the number of dummy clock cycles to be used by Fast
-Read commands can be safely set to 8 by updating the Volatile
-Configuration Register (VCR).
+I think something like this would be more conventional, yes. Or maybe
+define the macros so you don't have to do the shift everywhere:
 
-Also the XIP bit is set at the same time when updating the VCR so the
-Continuous Read mode is disabled: this prevents us from entering it by
-mistake.
+         v &= ~SATA_UCTL_ENDIAN_MODE_E_MASK | SATA_UCTL_ENDIAN_MODE | SATA_UCTL_DMA_READ_CMD;
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 72 ++++++++++++++++++++++++++++++++++++++-----
- include/linux/mtd/spi-nor.h   |  2 ++
- 2 files changed, 67 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index ef520048edae..2b1a26588ae6 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1314,6 +1314,53 @@ static int winbond_set_single_mode(struct spi_nor *nor)
- 	return 0;
- }
- 
-+static int micron_set_dummy_cycles(struct spi_nor *nor, u8 read_dummy)
-+{
-+	u8 vcr, val, mask;
-+	int ret;
-+
-+	/* Set bit3 (XIP) to disable the Continuous Read mode */
-+	mask = GENMASK(7, 4) | BIT(3);
-+	val = ((read_dummy << 4) | BIT(3)) & mask;
-+
-+	/* Read the Volatile Configuration Register (VCR). */
-+	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &vcr, 1);
-+	if (ret < 0) {
-+		dev_err(nor->dev, "error while reading VCR register\n");
-+		return ret;
-+	}
-+
-+	/* Check whether we need to update the number of dummy cycles. */
-+	if ((vcr & mask) == val) {
-+		nor->read_dummy = read_dummy;
-+		return 0;
-+	}
-+
-+	/* Update the number of dummy into the VCR. */
-+	write_enable(nor);
-+	vcr = (vcr & ~mask) | val;
-+	ret = nor->write_reg(nor, SPINOR_OP_WR_VCR, &vcr, 1);
-+	if (ret < 0) {
-+		dev_err(nor->dev, "error while writing VCR register\n");
-+		return ret;
-+	}
-+
-+	ret = spi_nor_wait_till_ready(nor);
-+	if (ret)
-+		return ret;
-+
-+	/* Read VCR and check it. */
-+	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &vcr, 1);
-+	if (ret < 0 || (vcr & mask) != val) {
-+		dev_err(nor->dev, "Micron VCR dummy cycles not updated\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Save the number of dummy cycles to use with Fast Read commands */
-+	nor->read_dummy = read_dummy;
-+	return 0;
-+}
-+
- static int micron_set_protocol(struct spi_nor *nor, u8 mask, u8 val,
- 			       enum spi_nor_protocol proto)
- {
-@@ -1398,12 +1445,15 @@ static int micron_set_quad_mode(struct spi_nor *nor)
- 	/*
- 	 * Whatever the Quad mode is enabled or not, the
- 	 * Fast Read Quad Output 1-1-4 (0x6b) op code is supported.
-+	 * Force the number of dummy cycles to 8 and disable the Continuous Read
-+	 * mode to prevent some drivers from using it by mistake (m25p80).
-+	 * We can change these settings safely as we write into a volatile
-+	 * register.
- 	 */
- 	if (nor->read_proto != SNOR_PROTO_4_4_4)
- 		nor->read_proto = SNOR_PROTO_1_1_4;
- 	nor->read_opcode = SPINOR_OP_READ_1_1_4;
--	nor->read_dummy = 8;
--	return 0;
-+	return micron_set_dummy_cycles(nor, 8);
- }
- 
- static int micron_set_dual_mode(struct spi_nor *nor)
-@@ -1428,12 +1478,15 @@ static int micron_set_dual_mode(struct spi_nor *nor)
- 	/*
- 	 * Whatever the Dual mode is enabled or not, the
- 	 * Fast Read Dual Output 1-1-2 (0x3b) op code is supported.
-+	 * Force the number of dummy cycles to 8 and disable the Continuous Read
-+	 * mode to prevent some drivers from using it by mistake (m25p80).
-+	 * We can change these settings safely as we write into a volatile
-+	 * register.
- 	 */
- 	if (nor->read_proto != SNOR_PROTO_2_2_2)
- 		nor->read_proto = SNOR_PROTO_1_1_2;
- 	nor->read_opcode = SPINOR_OP_READ_1_1_2;
--	nor->read_dummy = 8;
--	return 0;
-+	return micron_set_dummy_cycles(nor, 8);
- }
- 
- static int micron_set_single_mode(struct spi_nor *nor)
-@@ -1456,7 +1509,13 @@ static int micron_set_single_mode(struct spi_nor *nor)
- 		nor->read_proto = SNOR_PROTO_1_1_1;
- 	}
- 
--	/* Force the number of dummy cycles to 8 for Fast Read, 0 for Read. */
-+	/*
-+	 * Force the number of dummy cycles to 8 for Fast Read, 0 for Read
-+	 * and disable the Continuous Read mode to prevent some drivers from
-+	 * using it by mistake (m25p80).
-+	 * We can change these settings safely as we write into a volatile
-+	 * register.
-+	 */
- 	switch (nor->read_opcode) {
- 	case SPINOR_OP_READ:
- 	case SPINOR_OP_READ4:
-@@ -1467,8 +1526,7 @@ static int micron_set_single_mode(struct spi_nor *nor)
- 		read_dummy = 8;
- 		break;
- 	}
--	nor->read_dummy = read_dummy;
--	return 0;
-+	return micron_set_dummy_cycles(nor, read_dummy);
- }
- 
- static int spansion_set_quad_mode(struct spi_nor *nor)
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index d0a6f343a063..2dc0f8b429ca 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -86,6 +86,8 @@
- 
- /* Used for Micron flashes only. */
- #define SPINOR_OP_MIO_RDID	0xaf	/* Multiple I/O Read JEDEC ID */
-+#define SPINOR_OP_RD_VCR	0x85	/* Read VCR register */
-+#define SPINOR_OP_WR_VCR	0x81	/* Write VCR register */
- #define SPINOR_OP_RD_EVCR	0x65    /* Read EVCR register */
- #define SPINOR_OP_WD_EVCR	0x61    /* Write EVCR register */
- 
--- 
-1.8.2.2
+	Arnd
