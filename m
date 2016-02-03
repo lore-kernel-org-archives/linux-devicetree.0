@@ -1,53 +1,80 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: dt: Add Raspberry Pi Model A
-Date: Tue, 02 Feb 2016 17:59:38 -0800
-Message-ID: <87wpqmpn91.fsf@eliezer.anholt.net>
-References: <1453754406-3739-1-git-send-email-lkundrak@v3.sk>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT
+ node
+Date: Wed, 3 Feb 2016 10:07:50 +0800
+Message-ID: <56B160F6.20308@rock-chips.com>
+References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
+ <1454407999-5476-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453754406-3739-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1454407999-5476-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>, john.stultz@linaro.org
+Cc: robh+dt@kernel.org, arnd@arndb.de, shawn.lin@rock-chips.com, mark.rutland@arm.com, heiko@sntech.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, lorenzo.pieralisi@arm.com, linux@arm.linux.org.uk, dbaryshkov@gmail.com, richard@nod.at, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, moritz.fischer@ettus.com, mbrugger@suse.com, sre@kernel.org, galak@codeaurora.org, jun.nie@linaro.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
-
-> This one is essentially the same as revision 2 B board (with the I2S on
-> P5 header).
+On 2016/2/2 18:13, Andy Yan wrote:
+> Add syscon-reboot-mode driver DT node for rk3368 platform
 >
-> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>
 
-Pulled to bcm2835-dt-next, with a rebase fix for
-548c3a39e0359383839d43d0cb435dbb4de101e3
+Work fine with my rk3368-sheep board :)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> ---
+>
+> Changes in v3:
+> - descirbe all reboot mode as property instead of subnode
+>
+> Changes in v2:
+> - make this node as a subnode of pmugrf
+>
+> Changes in v1: None
+>
+>   arch/arm64/boot/dts/rockchip/rk3368.dtsi | 14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> index 122777b..5213713 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> @@ -45,6 +45,7 @@
+>   #include <dt-bindings/interrupt-controller/irq.h>
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/soc/rockchip_boot-mode.h>
+>   #include <dt-bindings/thermal/thermal.h>
+>
+>   / {
+> @@ -554,8 +555,19 @@
+>   	};
+>
+>   	pmugrf: syscon@ff738000 {
+> -		compatible = "rockchip,rk3368-pmugrf", "syscon";
+> +		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
+>   		reg = <0x0 0xff738000 0x0 0x1000>;
+> +
+> +		reboot-mode {
+> +			compatible = "syscon-reboot-mode";
+> +			offset = <0x200>;
+> +			mode-normal = <BOOT_NORMAL>;
+> +			mode-recovery = <BOOT_RECOVERY>;
+> +			mode-fastboot = <BOOT_FASTBOOT>;
+> +			mode-loader = <BOOT_LOADER>;
+> +			mode-maskrom = <BOOT_MASKROM>;
+> +
+> +		};
+>   	};
+>
+>   	cru: clock-controller@ff760000 {
+>
 
-iQIcBAEBCgAGBQJWsV8LAAoJELXWKTbR/J7of1sQALCYkvKcz7J2xN5GSVxOC+Vw
-CKIOdIyF/MR0zjLpB4D9Gh53mzA8vj760X/Z54/r5+wZ5SaXnlBM4uHgXwwbSBrF
-AyjGTlnH361LXjx/73ZGEQABc+ZOPr4nWXoUOK0CBwpM0mZcZYjJKpQXDBCGgwNL
-ky1sQQJMUsFv7qagkXde944NeggQEddwlTB7FDuZLCPopESw8uDZR476dfllqzay
-iF8QaPavtaQxHoiaTLDjRyrssvUX8ygTNBsz7bShk53HREs2FTynCy161QQC6oiv
-Hsa4SOm6su10tPB7/E9IuC81C2qSmKOK33vZCpE44s7zDhgiEyGBEBA8vYe7RWLo
-eeLBmmS1SxbXJusiFz8ilDomx9HTDbMrv1RNROFzOGJwTAUkB82UlQrGWX7FEtnC
-g8rmq/sFIrzbhSesLjtBD3WRNyVHt8mpG00B68g/ilyT6iQAdPacc5qrJ0G91d0g
-QbbgM3IsrZyBd39U89rH0aCICZHFzhPfZik1ApipyTRSX+71sfWetfIBnWAFRneL
-5//weLNjpEghiDKaX9MaSAbqJmq1WXfM5egUL7UeYYui+c3Agb7FpKd3o6RPJZ0c
-P3l12y287YdyteoCQpq+v/x1cXgaG36nB+grjjYtv7Wl5zEEYPcbIpza/mettsKm
-gda8XjDjbhNBCj44C+IG
-=wNwb
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Best Regards
+Shawn Lin
+
