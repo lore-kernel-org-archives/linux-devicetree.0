@@ -1,103 +1,95 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem to
- support  generic Xilinx  AXI PCIe Host Bridge IP driver
-Date: Wed, 3 Feb 2016 10:32:07 -0600
-Message-ID: <20160203163207.GC32546@localhost>
-References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
- <1452620173-4905-6-git-send-email-bharatku@xilinx.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 2/2] ARM: bcm2835: dt: Add the ethernet to the device
+ tree
+Date: Wed, 03 Feb 2016 17:32:20 +0100
+Message-ID: <1454517140.25750.16.camel@v3.sk>
+References: <1454511759-24827-1-git-send-email-lkundrak@v3.sk>
+	 <1454511759-24827-3-git-send-email-lkundrak@v3.sk>
+	 <56B226A2.6000101@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452620173-4905-6-git-send-email-bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56B226A2.6000101@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>, Peter Chen <peter.chen@freescale.com>, Arnd Bergmann <arnd@arndb.de>, popcornmix <popcornmix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Ben, pcibios_get_phb_of_node() question]
+On Wed, 2016-02-03 at 09:11 -0700, Stephen Warren wrote:
+> On 02/03/2016 08:02 AM, Lubomir Rintel wrote:
+> > The hub and the ethernet in its port 1 are hardwired on the board.
+> >=20
+> > Compared to the adapters that can be plugged into the USB ports,
+> > this
+> > one has no serial EEPROM to store its MAC. Nevertheless, the
+> > Raspberry Pi
+> > has the MAC address for this adapter in its ROM, accessible from
+> > its
+> > firmware.
+> >=20
+> > U-Boot can read out the address and set the local-mac-address
+> > property of the
+> > node with "ethernet" alias. Let's add the node so that U-Boot can
+> > do its
+> > business.
+>=20
+> Good to see we're getting a standard for this.
+>=20
+> Have you talked to the RPi Foundation about updating their binary=C2=A0
+> bootloader to follow this protocol?
 
-On Tue, Jan 12, 2016 at 11:06:13PM +0530, Bharat Kumar Gogada wrote:
-> This patch does required modifications to microblaze PCI subsystem, to
-> work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
-> and Zynq.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->...
+Not really. Adding Dom Cobley to the Cc list now.
 
->  resource_size_t pcibios_align_resource(void *data, const struct resource *res,
->  				resource_size_t size, resource_size_t align)
->  {
-> -	struct pci_dev *dev = data;
->  	resource_size_t start = res->start;
->  
-> -	if (res->flags & IORESOURCE_IO) {
-> -		if (skip_isa_ioresource_align(dev))
-> -			return start;
-> -		if (start & 0x300)
-> -			start = (start + 0x3ff) & ~0x3ff;
-> -	}
-> -
->  	return start;
+They seem to be passing the MAC address on command line now and even
+evaluating it before attempting a read out from the EEPROM. That sounds
+like it would break if someone plugged another smsc95xx adapter into
+one of the USB ports.
 
-"return res->start;" is sufficient; no need for a temporary variable.
+> I'll certainly ack changes to make=C2=A0
+> this work for U-Boot, provided the USB core patch this relies upon
+> is=C2=A0
+> accepted.
 
->  }
->  EXPORT_SYMBOL(pcibios_align_resource);
->  
-> +int pcibios_add_device(struct pci_dev *dev)
-> +{
-> +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(pcibios_add_device);
-> +
->  /*
->   * Reparent resource children of pr that conflict with res
->   * under res, and make res replace those children.
-> @@ -1335,9 +1308,21 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
->  
->  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
->  {
-> -	struct pci_controller *hose = bus->sysdata;
-> +	struct device_node *np;
-> +
-> +	for_each_node_by_type(np, "pci") {
-> +		const void *prop;
-> +		unsigned int bus_min;
-> +
-> +		prop = of_get_property(np, "bus-range", NULL);
-> +		if (!prop)
-> +			continue;
-> +		bus_min = be32_to_cpup(prop);
-> +		if (bus->number == bus_min)
-> +			return np;
-> +	}
->  
-> -	return of_node_get(hose->dn);
-> +	return NULL;
+Dom, if the changes mentioned in [1] get merged, you may want to add
+the Ethernet device to your device trees too and drop the cmdline hack.
 
-Hmmm.  The old microblaze code ("return of_node_get(hose->dn);") is
-basically the same as the mips and powerpc versions.  The new code is
-basically the same as the x86 version.
+[1]=C2=A0http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-Feb=
+ruary/003207.html
 
-I like the generic weak version in drivers/pci/of.c because it doesn't
-use any arch-specific data, and it looks like if we just set the
-struct device.of_node members correctly, everything should Just Work.
+>=20
+> > diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+> > b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+>=20
+> > +&usb {
+> > +	usb1@01 {
+> > +		compatible =3D "usb1d6b,0002";
+> > +		reg =3D <01>;
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +
+> > +		ethernet: usbether@01 {
+> > +			compatible =3D "usb0424,9514";
+> > +			reg =3D <01>;
+>=20
+> Ib both unit addresses and both reg properties, I would expect "1"
+> not=C2=A0
+> "01" since there's usually no leading 0 fill for those.
 
-But Ben added both the generic and the x86 versions the same day, so
-there must be some complication:
+Okay, will fix.
 
-  98d9f30c820d ("pci/of: Match PCI devices to OF nodes dynamically")
-  3d5fe5a65af9 ("x86/devicetree: Use generic PCI <-> OF matching")
+> I'm curious why the VID values for the hub and Ethernet device don't=C2=
+=A0
+> match since those are part of the same combo chip. Is there a typo=C2=
+=A0
+> there, or did SMSC really do something odd in HW?
 
-So I guess my question is, why do we need a microblaze-specific
-version at all?
+Hm, I think I just did a sysfs walk to see how things are connected.
+The ethernet USB id is certainly wrong though.
 
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The 1d6d:2 id is of the root hub. There I either messed up the commit
+message or the topology. I can't recheck now, but I'll give it another
+look before I send and updated version.
+
+Thanks,
+Lubo
