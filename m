@@ -1,42 +1,82 @@
-From: fu.wei@linaro.org
-Subject: [PATCH v10 2/5] ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
-Date: Thu,  4 Feb 2016 01:18:40 +0800
-Message-ID: <1454519923-25230-3-git-send-email-fu.wei@linaro.org>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, Suravee.Suthikulpanit@amd.com
-Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, cov@codeaurora.org, timur@codeaurora.org, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.com, arnd@arndb.de, leo.duran@amd.com, sudeep.holla@arm.com, Fu Wei <fu.wei@linaro.org>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: r8a7795: Add L2 cache-controller nodes
+Date: Wed, 3 Feb 2016 18:21:17 +0100
+Message-ID: <56B2370D.2010102@gmail.com>
+References: <1452953856-5146-1-git-send-email-dirk.behme@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1452953856-5146-1-git-send-email-dirk.behme@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fu Wei <fu.wei@linaro.org>
+On 16.01.2016 15:17, Dirk Behme wrote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Add device nodes for the L2 caches, and link the CPU node to its L2
+> cache node.
+>
+> The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
+> 128 KiB x 16 ways).
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+> ---
+> Changes in v2: Dropped the not yet merged Cortex A53 part.
+>
+>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index a82bce8..a22ae65 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -39,6 +39,7 @@
+>   			compatible = "arm,cortex-a57", "arm,armv8";
+>   			reg = <0x0>;
+>   			device_type = "cpu";
+> +			next-level-cache = <&L2_CA57>;
+>   			enable-method = "psci";
+>   		};
+>
+> @@ -46,22 +47,29 @@
+>   			compatible = "arm,cortex-a57","arm,armv8";
+>   			reg = <0x1>;
+>   			device_type = "cpu";
+> +			next-level-cache = <&L2_CA57>;
+>   			enable-method = "psci";
+>   		};
+>   		a57_2: cpu@2 {
+>   			compatible = "arm,cortex-a57","arm,armv8";
+>   			reg = <0x2>;
+>   			device_type = "cpu";
+> +			next-level-cache = <&L2_CA57>;
+>   			enable-method = "psci";
+>   		};
+>   		a57_3: cpu@3 {
+>   			compatible = "arm,cortex-a57","arm,armv8";
+>   			reg = <0x3>;
+>   			device_type = "cpu";
+> +			next-level-cache = <&L2_CA57>;
+>   			enable-method = "psci";
+>   		};
+>   	};
+>
+> +	L2_CA57: cache-controller@0 {
+> +		compatible = "cache";
+> +	};
+> +
+>   	extal_clk: extal {
+>   		compatible = "fixed-clock";
+>   		#clock-cells = <0>;
+>
 
-This can be a example of adding SBSA Generic Watchdog device node
-into some dts files for the Soc which contains SBSA Generic Watchdog.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Fu Wei <fu.wei@linaro.org>
----
- arch/arm64/boot/dts/arm/foundation-v8.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Any further comments to this? If not, could this be applied?
 
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-index 4eac8dc..75da16b 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-@@ -237,4 +237,12 @@
- 			};
- 		};
- 	};
-+	watchdog@2a440000 {
-+		compatible = "arm,sbsa-gwdt";
-+		reg = <0x0 0x2a440000 0 0x1000>,
-+			<0x0 0x2a450000 0 0x1000>;
-+		interrupts = <0 27 4>;
-+		timeout-sec = <30>;
-+		status = "okay";
-+	};
- };
--- 
-2.5.0
+Best regards
+
+Dirk
