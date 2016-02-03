@@ -1,55 +1,210 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
-Date: Wed, 3 Feb 2016 14:44:50 +0000
-Message-ID: <56B21262.6080109@imgtec.com>
-References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1930324.vU65IL0x0g@wuerfel> <56B1FF7A.3040906@imgtec.com>
- <3554031.r9sGg8j827@wuerfel>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 4/7] ARM: dts: imx: Add support for Advantech/GE Bx50v3
+Date: Wed, 3 Feb 2016 22:52:56 +0800
+Message-ID: <20160203145256.GR8307@tiger>
+References: <1454109558-22800-1-git-send-email-akshay.bhat@timesys.com>
+ <1454109558-22800-5-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3554031.r9sGg8j827@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454109558-22800-5-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 29, 2016 at 06:19:15PM -0500, Akshay Bhat wrote:
+> From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> 
+> Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
+> the Advantech BA-16 module (based on iMX6D). This file has the
+> devicetree entries that are common to all 3 boards.
+> 
+> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 239 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 239 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> new file mode 100644
+> index 0000000..a44b074
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> @@ -0,0 +1,239 @@
+> +/*
+> + * Copyright 2015 Timesys Corporation.
+> + * Copyright 2015 General Electric Company
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "imx6q-ba16.dtsi"
+> +
+> +/ {
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 
+These are already specified in imx6qdl.dtsi.
 
-On 03/02/16 13:41, Arnd Bergmann wrote:
-> On Wednesday 03 February 2016 13:24:10 Zubair Lutfullah Kakakhel wrote:
->>
->> Bitfields for both endians are used and handled by mips.
->> Mainly used by cavium.
->>
->> As this is a cavium driver, would it be acceptable?
->>
->> Or should I replace with the following.
->>
->>          v = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
->>          v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << DMA_ENDIAN_MODE);
->>          v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << CSR_ENDIAN_MODE);
->> #ifdef __BIG_ENDIAN
->>          v |= SATA_UCTL_ENDIAN_MODE_E_BIG << DMA_ENDIAN_MODE;
->>          v |= SATA_UCTL_ENDIAN_MODE_E_BIG << CSR_ENDIAN_MODE;
->> #else
->>          v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << DMA_ENDIAN_MODE;
->>          v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << CSR_ENDIAN_MODE;
->> #endif
->>          v |= 1 << DMA_READ_CMD;
->>          cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, v);
->
-> I think something like this would be more conventional, yes. Or maybe
-> define the macros so you don't have to do the shift everywhere:
->
->           v &= ~SATA_UCTL_ENDIAN_MODE_E_MASK | SATA_UCTL_ENDIAN_MODE | SATA_UCTL_DMA_READ_CMD;
+> +
+> +		mclk: clock@0 {
+> +			compatible = "fixed-clock";
+> +			reg = <0>;
+> +			#clock-cells = <0>;
+> +			clock-frequency = <22000000>;
+> +		};
+> +	};
 
-Sure.
+<snip>
 
-Thanks
-ZubairLK
+> +&i2c1 {
+> +	pca9547: mux@70 {
+> +		compatible = "nxp,pca9547";
+> +		reg = <0x70>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		mux1_i2c1: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0>;
+> +
+> +			ads7830: ads7830@48 {
+> +				compatible = "ti,ads7830";
+> +				reg = <0x48>;
+> +			};
+> +
+> +			mma8453: mma8453@1c {
+> +				compatible = "fsl,mma8453";
+> +				reg = <0x1c>;
+> +			};
+> +		};
+> +
+> +		mux1_i2c2: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x1>;
+> +
+> +			eeprom: eeprom@50 {
+> +				compatible = "atmel,24c08";
+> +				reg = <0x50>;
+> +			};
+> +
+> +			mpl3115: mpl3115@60 {
+> +				compatible = "fsl,mpl3115";
+> +				reg = <0x60>;
+> +			};
+> +		};
+> +
+> +		mux1_i2c3: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x2>;
+> +		};
+> +
+> +		mux1_i2c4: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x3>;
+> +
+> +			codec: sgtl5000@0a {
 
->
-> 	Arnd
->
+I think the naming schema below matches DT convention better, i.e. the
+node name should be generic.
+
+			sgtl5000: codec@0a {
+
+> +				compatible = "fsl,sgtl5000";
+> +				reg = <0x0a>;
+> +				clocks = <&mclk>;
+> +				VDDA-supply = <&reg_1p8v>;
+> +				VDDIO-supply = <&reg_3p3v>;
+> +			};
+> +		};
+
+<snip>
+
+> +&usdhc4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc4>;
+> +	bus-width = <4>;
+> +	vmmc-supply = <&reg_wl18xx_vmmc>;
+> +	no-1-8-v;
+> +	non-removable;
+> +	wakeup-source;
+> +	keep-power-in-suspend;
+> +	cap-power-off-card;
+> +	max-frequency = <25000000>;
+> +	status = "okay";
+> +
+
+Drop this new line and have 'status' be the last property.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+I'm not sure why this and a 'reg' property in sub-nodes are necessary at
+all, but ...
+
+> +
+> +	wlcore: wlcore@0 {
+> +		compatible = "ti,wl1837";
+> +		reg = <2>;
+
+... at least the 'reg' property should match the unit-address after node
+name.
+
+Shawn
+
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
+> +		tcxo-clock-frequency = <26000000>;
+> +	};
+> +};
+> -- 
+> 2.7.0
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
