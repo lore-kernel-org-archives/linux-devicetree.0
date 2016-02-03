@@ -1,151 +1,227 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
-Date: Wed, 3 Feb 2016 08:04:03 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F4E87B33@us01wembx1.internal.synopsys.com>
-References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
- <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
- <20160202220353.GA10273@rob-hp-laptop>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v3 01/10] drm/hisilicon: Add device tree binding for
+ hi6220 display subsystem
+Date: Wed, 3 Feb 2016 16:32:09 +0800
+Message-ID: <CAGd==05D5XJP6+N8Qo97BomNVhWmML9XH--vgyf0OtKsr0apRg@mail.gmail.com>
+References: <1454144075-74361-1-git-send-email-xinliang.liu@linaro.org>
+	<1454144075-74361-2-git-send-email-xinliang.liu@linaro.org>
+	<20160201151027.GA5888@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160201151027.GA5888@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: arcml <linux-snps-arc@lists.infradead.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Noam Camus <noamc@ezchip.com>, lkml <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@hu
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 1 February 2016 at 23:10, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Jan 30, 2016 at 04:54:26PM +0800, Xinliang Liu wrote:
+>> Add ADE display controller binding doc.
+>> Add DesignWare DSI Host Controller v1.20a binding doc.
+>>
+>> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+>>
+>> v3:
+>> - Make ade as the drm master node.
+>> - Use assigned-clocks to set clock rate.
+>> - Use ports to connect display relavant nodes.
+>> v2:
+>> - Move dt binding docs to bindings/display/hisilicon directory.
+>
+> Looks pretty good, just a few minor things.
+>
 
-On Wednesday 03 February 2016 03:33 AM, Rob Herring wrote:
-> On Tue, Feb 02, 2016 at 04:28:52PM +0530, Vineet Gupta wrote:
->> +Required properties:
+Thanks for all your help.
+
+>> ---
+>>  .../bindings/display/hisilicon/dw-dsi.txt          | 60 ++++++++++++++++++++++
+>>  .../bindings/display/hisilicon/hisi-ade.txt        | 56 ++++++++++++++++++++
+>>  2 files changed, 116 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+>>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+>> new file mode 100644
+>> index 000000000000..44b945a54f3f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+>> @@ -0,0 +1,60 @@
+>> +Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
 >> +
->> +- compatible : should be "snps,arc-timer0"
-> 
-> timer0 and timer1 are different h/w blocks, not just different 
-> instances?
+>> +A DSI Host Controller resides in the middle of display controller and external
+>> +HDMI converter.
+>> +
+>> +Required properties:
+>> +- compatible: value should be "hisilicon,hi6220-dsi".
+>> +- reg: physical base address and length of the controller's registers.
+>> +- clocks: the clocks needed.
+>> +- clock-names: the name of the clocks.
+>> +- ports: contains DSI controller input and output sub port. The input port
+>> +  connects to ADE output port, and output port connected to external HDMI
+>
+> or panel or any other bridge.
 
-Functionality wise they are identical (only the address of aux regs used to
-program them are different). Either can be configured to interrupt-on-limit or
-free-run-and-wrap-around. So we can indeed consider them 2 instances. ARC Linux
-uses timer0 for tick handling, timer1 for gtod.
+Right, I plan to support panel soon.
+will change to:
+s/output port connected to external HDMI/output port connected to
+panel or any other bridge/
 
-Do you prefer they not be differentiated as timer0 and timer1 ?
+>
+>> +  endpoint. See Documentation/devicetree/bindings/graph.txt for more device
+>> +  graph info.
+>> +
+>> +A example of HiKey board hi6220 SoC and board specific DT entry:
+>> +Example:
+>> +
+>> +SoC specific:
+>> +     dsi: dsi@0xf4107800 {
+>
+> Drop the '0x'
 
-So we have
+OK, will change to:
+dsi: dsi@f4107800
 
-CLOCKSOURCE_OF_DECLARE(arc_clkevt, "snps,arc-timer0", arc_clockevent_setup);
-CLOCKSOURCE_OF_DECLARE(arc_timer1, "snps,arc-timer1", arc_cs_setup_timer1);
+>
+>> +             compatible = "hisilicon,hi6220-dsi";
+>> +             reg = <0x0 0xf4107800 0x0 0x100>;
+>> +             clocks = <&media_ctrl  HI6220_DSI_PCLK>;
+>> +             clock-names = "pclk_dsi";
+>> +
+>> +             ports {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     port@0 {
+>> +                             reg = <0>;
+>> +                             dsi_in: endpoint {
+>> +                                             remote-endpoint = <&ade_out>;
+>
+> Indentation is wrong.
+>
+>> +                             };
+>> +                     };
+>> +
+>> +                     port@1 {
+>> +                             reg = <1>; /* 1 for output port */
+>> +                             dsi_out: endpoint {
+>> +                                              remote-endpoint = <&adv7533_in>;
+>
+> ditto.
 
-I don't know how to achieve above, by keeping the DT names the same.
+All the indentation will be fixed in v4.
 
-> 
->> +- interrupts : single Interrupt going into parent intc
->> +	       (16 for ARCHS cores, 3 for ARC700 cores)
->> +- clocks     : phandle to the source clock
+>
+>> +                             };
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>> +Board specific:
+>> +     i2c2: i2c@f7102000 {
+>> +             ...
+>> +
+>> +             adv7533: adv7533@39 {
+>> +                     ...
+>> +
+>> +                     port {
+>> +                             adv7533_in: endpoint {
+>> +                                     remote-endpoint = <&dsi_out>;
+>> +                             };
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>> diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+>> new file mode 100644
+>> index 000000000000..47925826536c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+>> @@ -0,0 +1,56 @@
+>> +Device-Tree bindings for hisilicon ADE display controller driver
+>> +
+>> +ADE (Advanced Display Engine) is the display controller which grab image
+>> +data from memory, do composition, do post image processing, generate RGB
+>> +timing stream and transfer to DSI.
+>> +
+>> +Required properties:
+>> +- compatible: value should be "hisilicon,hi6220-ade".
+>> +- reg: physical base address and length of the controller's registers.
+>
+> I see 3 ranges in the example. Please specify what each one is here.
+
+will change to:
+
+- reg: physical base address and length of the controller's registers.
+Three reg ranges are used in ADE driver:
+ADE reg range, value should be <0x0 0xf4100000 0x0 0x7800>;
+media subsystem reg range, value should be <0x0 0xf4410000 0x0 0x1000>;
+media subsystem NOC QoS reg range, value should be <0x0 0xf4520000 0x0 0x1000>;
+
+>
+>> +- reg-names: name of physical base.
+>> +- interrupt: the interrupt number.
+>> +- clocks: the clocks needed.
+>
+> Same here. Specify what the clocks are.
+>
+
+will change to:
+
+- clocks: the clocks needed.
+Three clocks are used in ADE driver:
+ADE core clock, value should be  <&media_ctrl HI6220_ADE_CORE>;
+ADE pixel clok, value should be <&media_ctrl HI6220_ADE_PIX_SRC>;
+media NOC QoS clock, value should be <&media_ctrl HI6220_CODEC_JPEG>;
+
+- assigned-clock-rates: clock rates which are assigned to assigned-clocks.
+The rate of <&media_ctrl HI6220_ADE_CORE> could be 360000000 or 180000000.
+The rate of <&media_ctrl HI6220_CODEC_JPEG> could be less than 1440000000.
+
+>> +- clock-names: the name of the clocks.
+>> +- assigned-clocks: clocks to be assigned rate.
+>> +- assigned-clock-rates: clock rates which are assigned to assigned-clocks.
+>> +- port: the output port. This contains one endpoint subnode, with its
+>> +  remote-endpoint set to the phandle of the connected DSI endpoint.
+>> +  See Documentation/devicetree/bindings/graph.txt for more device graph info.
 >> +
 >> +Optional properties:
+>> +- dma-coherent: Present if dma operations are coherent.
 >> +
->> +- interrupt-parent : phandle to parent intc
 >> +
+>> +A example of HiKey board hi6220 SoC specific DT entry:
 >> +Example:
 >> +
->> +	timer0: timer_clkevt {
-> 
-> just "timer" for node name. clkevt is a Linuxism.
-
-OK. So to document that this is for clockevent, change the label ?
-
-timer_clkevent: timer {
-
-> 
->> +		compatible = "snps,arc-timer0";
->> +		interrupts = <3>;
->> +		interrupt-parent = <&core_intc>;
->> +		clocks = <&timer0_clk>;
->> +	};
->> diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
->> new file mode 100644
->> index 000000000000..4886192ce2f2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/snps,arc-timer1.txt
->> @@ -0,0 +1,17 @@
->> +Synopsys ARC Free Running Local 32-bit Timer
->> +- Found on all ARC CPUs (ARC700/ARCHS)
->> +- Mandatory clocksource provider on ARC700
->> +- Optional clocksource provider on UP ARC HS CPUs
->> +  (and if better timer archs-rtc not available in SoC)
+>> +     ade: ade@f4100000 {
+>> +             compatible = "hisilicon,hi6220-ade";
+>> +             reg = <0x0 0xf4100000 0x0 0x7800>,
+>> +                   <0x0 0xf4410000 0x0 0x1000>,
+>> +                   <0x0 0xf4520000 0x0 0x1000>;
+>> +             reg-names = "ade_base",
+>> +                         "media_base",
+>> +                         "media_noc_base";
 >> +
->> +Required properties:
+>> +             interrupts = <0 115 4>; /* ldi interrupt */
 >> +
->> +- compatible : should be "snps,arc-timer1"
->> +- clocks     : phandle to the source clock
-> 
-> No interrupt because it doesn't have one or you use this as a 
-> clocksource and don't need it?
-
-Latter !
-
-
+>> +             clocks = <&media_ctrl HI6220_ADE_CORE>,
+>> +                      <&media_ctrl HI6220_CODEC_JPEG>,
+>> +                      <&media_ctrl HI6220_ADE_PIX_SRC>;
+>> +             /*clock name*/
+>> +             clock-names  = "clk_ade_core",
+>> +                            "clk_codec_jpeg",
+>> +                            "clk_ade_pix";
 >> +
->> +Example:
+>> +             assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
+>> +                     <&media_ctrl HI6220_CODEC_JPEG>;
+>> +             assigned-clock-rates = <360000000>, <288000000>;
+>> +             dma-coherent;
 >> +
->> +	timer1: timer_clksrc {
->> +		compatible = "snps,arc-timer1";
->> +		clocks = <&timer0_clk>;
->> +	};
->> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
->> new file mode 100644
->> index 000000000000..cce60e16aa0d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
->> @@ -0,0 +1,14 @@
->> +Synopsys ARC Free Running 64-bit Global Timer for ARC HS CPUs
->> +- clocksourc provider for SMP SoC
->> +
->> +Required properties:
->> +
->> +- compatible : should be "snps,archs-gfrc"
->> +- clocks     : phandle to the source clock
->> +
->> +Example:
->> +
->> +	timer1: timer_clksrc {
->> +		compatible = "snps,archs-gfrc";
->> +		clocks = <&timer0_clk>;
->> +	};
->> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
->> new file mode 100644
->> index 000000000000..f3b49938812b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
->> @@ -0,0 +1,14 @@
->> +Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
->> +- clocksourc provider for UP SoC
-> 
-> local timer on a UP processor?
-
-Not sure what you mean to change.
-
-This timer could be present in UP or SMP hardware configs but only usable as
-clocksource for UP since it is local and we don't do tick broadcast etc for SMP.
-
-To me clocksource is one level higher in level of abstraction than processor and
-thus applies to overall system / SoC than the processor.
-
-Thx,
--Vineet
-
->> +Required properties:
->> +
->> +- compatible : should be "snps,archs-rtc"
->> +- clocks     : phandle to the source clock
->> +
->> +Example:
->> +
->> +	timer1: timer_clksrc {
->> +		compatible = "snps,arc-rtc";
->> +		clocks = <&timer0_clk>;
->> +	};
-> --
+>> +             port {
+>> +                     ade_out: endpoint {
+>> +                             remote-endpoint = <&dsi_in>;
+>> +                     };
+>> +             };
+>> +     };
+>> --
+>> 1.9.1
+>>
