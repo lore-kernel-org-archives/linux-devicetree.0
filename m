@@ -1,76 +1,45 @@
-From: Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH v3 2/3] input: touchscreen: ad7879: fix default x/y axis
- assignment
-Date: Wed, 3 Feb 2016 08:41:42 +0100
-Message-ID: <56B1AF36.9080204@analog.com>
-References: <1454455218-13004-1-git-send-email-stefan@agner.ch>
- <1454455218-13004-2-git-send-email-stefan@agner.ch>
-Reply-To: <michael.hennerich@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454455218-13004-2-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, realmz6@gmail.com, broonie@kernel.org, jic23@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH net-next 0/4] Add support for Classifier and RSS
+Date: Tue,  2 Feb 2016 23:55:12 -0800
+Message-ID: <1454486116-23783-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, toanle@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2016 12:20 AM, Stefan Agner wrote:
-> The X/Y position measurements read from the controller are interpreted
-> wrong. The first measurement X+ contains the Y position, and the second
-> measurement Y+ the X position (see also Table 11 Register Table in the
-> data sheet).
->
-> The problem is already known and a swap option has been introduced:
-> commit 6680884a4420 ("Input: ad7879 - add option to correct xy axis")
->
-> However, the meaning of the new boolean is inverted since the underlying
-> values are already swapped. Let ts->swap_xy set to true actually be the
-> swapped configuration of the two axis.
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+This patch series enables 
 
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+(i) Classifier engine that is used for parsing
+through the packet and extracting a search string that is then used
+to search a database to find associative data.
 
-> ---
-> Changes since v2:
-> - (none)
-> Changes since v1:
-> - Keep axis swapped by default when using platform data
->
->   drivers/input/touchscreen/ad7879.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/ad7879.c b/drivers/input/touchscreen/ad7879.c
-> index 93b8ea2..abd0220 100644
-> --- a/drivers/input/touchscreen/ad7879.c
-> +++ b/drivers/input/touchscreen/ad7879.c
-> @@ -94,8 +94,8 @@
->   #define AD7879_TEMP_BIT			(1<<1)
->
->   enum {
-> -	AD7879_SEQ_XPOS  = 0,
-> -	AD7879_SEQ_YPOS  = 1,
-> +	AD7879_SEQ_YPOS  = 0,
-> +	AD7879_SEQ_XPOS  = 1,
->   	AD7879_SEQ_Z1    = 2,
->   	AD7879_SEQ_Z2    = 3,
->   	AD7879_NR_SENSE  = 4,
-> @@ -517,7 +517,9 @@ struct ad7879 *ad7879_probe(struct device *dev, u8 devid, unsigned int irq,
->   	ts->dev = dev;
->   	ts->input = input_dev;
->   	ts->irq = irq;
-> -	ts->swap_xy = pdata->swap_xy;
-> +
-> +	/* Use swapped axis by default (backward compatibility) */
-> +	ts->swap_xy = !pdata->swap_xy;
->
->   	setup_timer(&ts->timer, ad7879_timer, (unsigned long) ts);
->
->
+(ii) Receive Side Scaling (RSS) that does dynamic load
+balancing of the CPUs by controlling the number of messages enqueued
+per CPU though the help of Toeplitz Hash function of 4-tuple of
+source TCP/UDP port, destination TCP/UDP port, source IPV4 address and
+destination IPV4 address.
 
+(iii) Multi queue, to make advantage of RSS
+
+---
+Iyappan Subramanian (4):
+  drivers: net: xgene: Add support for Classifier engine
+  drivers: net: xgene: Add support for RSS
+  drivers: net: xgene: Add support for multiple queues
+  dtb: xgene: Add irqs to support multi queue
+
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi       |   8 +-
+ arch/arm64/boot/dts/apm/apm-storm.dtsi           |   8 +-
+ drivers/net/ethernet/apm/xgene/Makefile          |   3 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_cle.c  | 734 +++++++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_cle.h  | 316 ++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h   |   1 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 481 +++++++++------
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h |  34 +-
+ 8 files changed, 1385 insertions(+), 200 deletions(-)
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_cle.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_cle.h
 
 -- 
-Greetings,
-Michael
+1.9.1
