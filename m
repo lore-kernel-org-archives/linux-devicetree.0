@@ -1,165 +1,134 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
-Date: Wed, 3 Feb 2016 15:54:48 +0000
-Message-ID: <56B222C8.5010509@synopsys.com>
-References: <cover.1454498292.git.jpinto@synopsys.com>
- <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
- <2087303.0ORDEBS3hn@wuerfel>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 05/14] soc: tegra: pmc: Wait for powergate state to change
+Date: Wed, 3 Feb 2016 08:58:58 -0700
+Message-ID: <CANLsYkyPj+ExhBFffokvtMcZ-OWocMc0Hx3_nfVgRu=uUVvJfg@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+	<1453998832-27383-6-git-send-email-jonathanh@nvidia.com>
+	<CANLsYkycbEo+wyMX8RJ9H-S5kDTjQR4nnDZc5gvf2kShOZAv9w@mail.gmail.com>
+	<56AF613A.1000909@nvidia.com>
+	<56B1C647.4060504@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2087303.0ORDEBS3hn@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B1C647.4060504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2/3/2016 3:39 PM, Arnd Bergmann wrote:
-> On Wednesday 03 February 2016 15:01:34 Joao Pinto wrote:
->>
->> Hi Arnd,
->>
->> On 2/3/2016 12:54 PM, Arnd Bergmann wrote:
->>> On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
->>>>
->>>> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
->>>
->>> This needs a changelog comment, like every patch.
->>>
->>>> @@ -0,0 +1,16 @@
->>>> +* Universal Flash Storage (UFS) DesignWare Host Controller
->>>> +
->>>> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
->>>> +Each UFS controller instance should have its own node.
->>>> +
->>>> +Required properties:
->>>> +- compatible        : compatible list, contains "snps,ufshcd"
->>>
->>> Are there multiple versions of this controller? Usually for designware
->>> parts the version is known, so we should document which versions exist
->>
->> This controller recent releases was 2.0, but we released last year 1.1. The
->> driver works with both. The driver must work with all DWC UFS versions.
-> 
-> Ok, then make the driver match on the "snps,ufshcd-1.1" compatible
-> string, but document both strings in the binding document, and make
-> it mandatory to specify the 1.1 version as a compatible fallback.
-> 
-> If we ever need to handle a quirk for the 2.0 version then, it can
-> easily be done.
-
-We need the driver to support UFS 2.0 because it is our latest release and is
-the done that Synopsys is focused now. We could call it "snps, ufshcd-2.0" then.
-What do you think?
-
-> 
->>>> +config SCSI_UFS_DWC_HOOKS
->>>> +	bool "DesignWare hooks to UFS controller"
->>>> +	depends on SCSI_UFSHCD
->>>> +	---help---
->>>> +	  This selects the DesignWare hooks for the UFS host controller.
->>>> +
->>>> +	  Select this if you have a DesignWare UFS controller.
->>>> +	  If unsure, say N.
->>>
->>> This could be a silent symbol that gets selected by SCSI_UFS_DWC_PLAT
->>
->> We could do that, but imagine that we select SCSI_UFS_QCOM, then the synopsys
->> hooks would be selected also which in my opinion is not very accurate.
->> In my opinion we should have a selectable DWC_HOOKS.
-> 
-> I don't understand. At the moment, you can enable SCSI_UFS_DWC_HOOKS
-> even if nothing uses it and you only have SCSI_UFS_QCOM enabled.
-
-SCSI_UFS_QCOM is select if you are using a QCOM and PLAT is enabled.
-We can do it the following way: If DWC Platform or DWC PCI are selected than
-automatically select the HOOKS. What do you think?
-
-> 
-> With my suggestion, the hooks would disappear unless they are
-> actually used.
-> 
-> Then again, with my later comments, we no longer need the hooks.
-> 
-> 
->>>> +/**
->>>> + * ufshcd_dwc_setup_mphy()
->>>> + * This function configures Local (host) Synopsys MPHY specific attributes
->>>> + *
->>>> + * @hba: Pointer to drivers structure
->>>> + *
->>>> + * Returns 0 on success non-zero value on failure
->>>> + */
->>>> +int ufshcd_dwc_setup_mphy(struct ufs_hba *hba)
->>>> +{
->>>> +	int ret = 0;
->>>> +
->>>> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
->>>> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
->>>> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
->>>> +	if (ret) {
->>>> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
->>>> +		goto out;
->>>> +	}
->>>> +#else
->>>> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
->>>> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
->>>> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
->>>> +	if (ret) {
->>>> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
->>>> +		goto out;
->>>> +	}
->>>> +#endif
->>>> +#endif
->>>> +	/* To write Shadow register bank to effective configuration block */
->>>> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_MPHYCFGUPDT), 0x01);
->>>> +	if (ret)
->>>> +		goto out;
->>>> +
->>>> +	/* To configure Debug OMC */
->>>> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_DEBUGOMC), 0x01);
->>>> +
->>>> +out:
->>>> +	return ret;
->>>> +}
->>>
->>> Try to use the generic PHY abstraction here and remove all the #ifdef etc.
->>
->> Could you please point an example for me to check?
-> 
-> drivers/phy/phy-qcom-ufs-qmp-14nm.c is a phy driver, and it gets used through
-> the generic devm_phy_get()/phy_power_on()/phy_power_off()/... interfaces.
-> 
-> This should probably be moved into the generic UFS platform driver so the PHY
-> handling can be shared between all backends.
-> 
-
-I will check it out.
-
->>>>  };
->>>
->>> I think you're better off with a separate PCI driver for this. Remove
->>> all the #ifdef mess here, put whatever is dwc specific into a new file,
->>> and perhaps move the common parts into a shared file that can be used
->>> by both the samsung and designware drivers.
->>
->> I have a branch with that approach, but honestly it would be a big change in the
->> UFS arch for the pci and I decided to make it simple. I sent that suggestion for
->> the scsi mailing list and the comments showed me that. Does anyone have anything
->> against putting ufshcd-pci.c as a pci common code and then have a ufs-dwc-pci.c
->> and a ufs-samsung-pci.c that uses that common code?
-> 
-> Another approach would be to just rename the existing file to ufs-samsung-pci.c
-> and start the  ufs-dwc-pci.c as a copy of that. The file is not really all that
-> large anyway.
-> 
-
-Yes we can do that, it is less intrusive.
-
-> 	Arnd
+On 3 February 2016 at 02:20, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 >
+> On 01/02/16 13:44, Jon Hunter wrote:
+>>
+>> On 29/01/16 16:58, Mathieu Poirier wrote:
+>>> On 28 January 2016 at 09:33, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Currently, the function tegra_powergate_set() simply sets the desired
+>>>> powergate state but does not wait for the state to change. In most cases
+>>>> we should wait for the state to change before proceeding. Currently, there
+>>>> is a case for tegra114 and tegra124 devices where we do not wait when
+>>>> starting the secondary CPU as this is not necessary. However, this is only
+>>>> done at boot time and so waiting here will only have a small impact on
+>>>> boot time. Therefore, update tegra_powergate_set() to wait when setting
+>>>> the powergate.
+>>>>
+>>>> By adding this feature, we can also eliminate the polling loop from
+>>>> tegra30_boot_secondary().
+>>>>
+>>>> A function has been added for checking the status of the powergate and
+>>>> so update the tegra_powergate_is_powered() to use this macro as well.
+>>>>
+>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/mach-tegra/platsmp.c | 16 +++-------------
+>>>>  drivers/soc/tegra/pmc.c       |  9 ++++++++-
+>>>>  2 files changed, 11 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+>>>> index f3f61dbbda97..75620ae73913 100644
+>>>> --- a/arch/arm/mach-tegra/platsmp.c
+>>>> +++ b/arch/arm/mach-tegra/platsmp.c
+>>>> @@ -108,19 +108,9 @@ static int tegra30_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>>>>          * be un-gated by un-toggling the power gate register
+>>>>          * manually.
+>>>>          */
+>>>> -       if (!tegra_pmc_cpu_is_powered(cpu)) {
+>>>> -               ret = tegra_pmc_cpu_power_on(cpu);
+>>>> -               if (ret)
+>>>> -                       return ret;
+>>>> -
+>>>> -               /* Wait for the power to come up. */
+>>>> -               timeout = jiffies + msecs_to_jiffies(100);
+>>>> -               while (!tegra_pmc_cpu_is_powered(cpu)) {
+>>>> -                       if (time_after(jiffies, timeout))
+>>>> -                               return -ETIMEDOUT;
+>>>> -                       udelay(10);
+>>>> -               }
+>>>> -       }
+>>>> +       ret = tegra_pmc_cpu_power_on(cpu);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>>
+>>>>  remove_clamps:
+>>>>         /* CPU partition is powered. Enable the CPU clock. */
+>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>> index 99cb2fdd29e1..35ee60fd17be 100644
+>>>> --- a/drivers/soc/tegra/pmc.c
+>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>> @@ -28,6 +28,7 @@
+>>>>  #include <linux/export.h>
+>>>>  #include <linux/init.h>
+>>>>  #include <linux/io.h>
+>>>> +#include <linux/iopoll.h>
+>>>>  #include <linux/of.h>
+>>>>  #include <linux/of_address.h>
+>>>>  #include <linux/platform_device.h>
+>>>> @@ -186,6 +187,9 @@ static inline bool tegra_powergate_state(int id)
+>>>>   */
+>>>>  static int tegra_powergate_set(unsigned int id, bool new_state)
+>>>>  {
+>>>> +       bool status;
+>>>> +       int err;
+>>>> +
+>>>>         mutex_lock(&pmc->powergates_lock);
+>>>>
+>>>>         if (tegra_powergate_state(id) == new_state) {
+>>>> @@ -195,9 +199,12 @@ static int tegra_powergate_set(unsigned int id, bool new_state)
+>>>>
+>>>>         tegra_pmc_writel(PWRGATE_TOGGLE_START | id, PWRGATE_TOGGLE);
+>>>>
+>>>> +       err = readx_poll_timeout(tegra_powergate_state, id, status,
+>>>> +                                status == new_state, 10, 100000);
+>>>> +
+>>>
+>>> I understand (and agree) with the goal of this patch but I wonder (and
+>>> I don't know much about the system/context) if holding a mutex while
+>>> sleeping won't incur adverse effect on other parts of the system that
+>>> weren't use to see this wait.  One way to fix this might be to use
+>>> "mutex_trylock()" and let callers retry as they see fit if an
+>>> operation is already in progress.
+>>
+>> I could unlock the mutex after writing the TOGGLE_START register. I
+>> don't believe that we need to waiting for a powergate to change before
+>> writing again.
+>
+> I was not thinking clearly here, the whole reason for the locking is to
+> protect the base address as we swap it during the probe.
+>
+> In general, I prefer to keep it the way we have it in this patch. By
+> using mutex_trylock() would mean that now clients would have to handle
+> retrying if they cannot get the lock and make it more complex.
 
-Joao
+Yes, the complexity is indeed pushed to the caller but that way we
+know exactly what is going on.  Another way to implement this without
+any locks at all would be through RCUs.  I'll let Stephen and Thierry
+make the call here.
+
+Thanks,
+Mahtieu
+
+> Powergates should not be turned on and off that frequently and so
+> hopefully a delay here should be tolerable. For CPUs, this should only
+> be used on cold boot and not during CPU hotplug events.
+>
+> Cheers
+> Jon
