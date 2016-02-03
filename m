@@ -1,100 +1,79 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ARM: dts: vf610: relicense the device trees under
- GPLv2/X11
-Date: Tue, 02 Feb 2016 17:00:23 -0800
-Message-ID: <5311c9f5234f774dc34118a564f48a4c@agner.ch>
-References: <1449525076-23569-1-git-send-email-stefan@agner.ch>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 01/11] MAINTAINERS: Add entry for X-Powers
+ AXP family PMIC drivers
+Date: Tue, 02 Feb 2016 17:28:30 -0800
+Message-ID: <1454462910.7291.53.camel@perches.com>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+	 <1454408864-24112-2-git-send-email-wens@csie.org>
+	 <CAGRGNgVxan9RCsLFW9hHWcdW+Rd_SgVG95H-yQg213g-YeE6Ug@mail.gmail.com>
+Reply-To: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449525076-23569-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDY3NC743AGBBRFPYW2QKGQEGOCT7IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGRGNgVxan9RCsLFW9hHWcdW+Rd_SgVG95H-yQg213g-YeE6Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Todd Brandt <todd.e.brandt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Wed, 2016-02-03 at 11:19 +1100, Julian Calaby wrote:
+> On Tue, Feb 2, 2016 at 9:27 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > Add an entry for X-Powers AXP family PMIC drivers and list myself
+> > as maintainer.
+[]
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> > @@ -11941,6 +11941,12 @@ F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0include/linux/=
+workqueue.h
+> > =C2=A0F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kernel/workqueue.c
+> > =C2=A0F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Documentation/workqueue.txt
+> >=20
+> > +X-POWERS MULTIFUNCTION PMIC DEVICE DRIVERS
+> > +M:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > +L:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > +S:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Maintained
+> > +N:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp[128]
+>=20
+> Should you list the files maintained and this list also?
 
-For patches 1, 2 and 4 I think we have enough Acks to consider it safe
-to change the license.
+This "N:" pattern is kind of a wildcard.
 
-For Patch 3, the Cosmic board, I can not get an Ack nor a Nack from Matt
-Porter, unfortunately... But IMHO it should not hold us back from
-merging the rest, what do you think?
+The difference between F: and N: is that git history
+is also used by default for files that match.
 
---
-Stefan
+There are no files in -next today that match "*axp8*"
+Dunno if this patchset added any.
 
-On 2015-12-07 13:51, Stefan Agner wrote:
-> I collected the Acks I received so far and removed them from the list
-> below. Several Freescale addresses are no longer valid (the once
-> starting with --)... I would interprete the Ack from Yuan Yao as an
-> Ack from Freescale.
-> 
-> Matt, you introduced the vf610-cosmic.dts board, is it possible to
-> get an ack for this too? I think you did not receive v1 of this patch
-> due to an old email address, sorry about that.
-> 
-> vf???.dtsi:
->   --Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> vf610-colibri:
->   <all done>
-> 
-> vf610-cosmic:
->   Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> 
-> vf610-twr:
->   --Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   --Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> CC: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> CC: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
-> --CC: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> CC: Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> --CC: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> --CC: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> --CC: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> CC: Matt Porter <mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> CC: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> --CC: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Stefan Agner (4):
->   ARM: dts: vf610: relicense vf???.dtsi under GPLv2/X11
->   ARM: dts: vf610-colibri: relicense vf*colibri* under GPLv2/X11
->   ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts under GPLv2/X11
->   ARM: dts: vf610-twr: relicense vf610-twr.dts under GPLv2/X11
-> 
->  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi   | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf-colibri.dtsi           | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500-colibri-eval-v3.dts | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500-colibri.dtsi        | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500.dtsi                | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-colibri-eval-v3.dts | 42 +++++++++++++++++++++++++----
->  arch/arm/boot/dts/vf610-colibri.dtsi        | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-cosmic.dts          | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-twr.dts             | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610.dtsi                | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vfxxx.dtsi                | 40 ++++++++++++++++++++++++---
->  11 files changed, 397 insertions(+), 45 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This matches:
+
+    $ git ls-files | grep "axp[128]"
+    Documentation/devicetree/bindings/mfd/axp20x.txt
+    Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
+    arch/arm/boot/dts/axp152.dtsi
+    arch/arm/boot/dts/axp209.dtsi
+    arch/arm/boot/dts/axp22x.dtsi
+    drivers/extcon/extcon-axp288.c
+    drivers/iio/adc/axp288_adc.c
+    drivers/input/misc/axp20x-pek.c
+    drivers/mfd/axp20x.c
+    drivers/power/axp20x_usb_power.c
+    drivers/power/axp288_charger.c
+    drivers/power/axp288_fuel_gauge.c
+    drivers/regulator/axp20x-regulator.c
+    include/linux/mfd/axp20x.h
+
+Are all these files appropriate?
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
