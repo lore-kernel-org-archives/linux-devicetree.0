@@ -1,85 +1,60 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v10 09/13] arm64: dts: mt8173: Add HDMI related nodes
-Date: Wed,  3 Feb 2016 20:25:58 +0100
-Message-ID: <1454527562-28154-10-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v10 11/13] clk: mediatek: Add hdmi_ref HDMI PHY PLL reference clock output
+Date: Wed,  3 Feb 2016 20:26:00 +0100
+Message-ID: <1454527562-28154-12-git-send-email-p.zabel@pengutronix.de>
 References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454527562-28154-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KClRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV2
-aWNlIG5vZGVzIGZvciB0aGUgSERNSSBlbmNvZGVyLCBIRE1JIFBIWSwKYW5kIEhETUkgQ0VDIG1v
-ZHVsZXMuCgpTaWduZWQtb2ZmLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgpTaWduZWQt
-b2ZmLWJ5OiBDYXdhIENoZW5nIDxjYXdhLmNoZW5nQG1lZGlhdGVrLmNvbT4KU2lnbmVkLW9mZi1i
-eTogSmllIFFpdSA8amllLnFpdUBtZWRpYXRlay5jb20+ClNpZ25lZC1vZmYtYnk6IERhbmllbCBL
-dXJ0eiA8ZGprdXJ0ekBjaHJvbWl1bS5vcmc+ClNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwg
-PHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Ci0tLQpDaGFuZ2VzIHNpbmNlIHY5OgogLSByZW1vdmUg
-Zmx0XzV2IHBpbiBzZXR1cAogLSBkaXNhYmxlIGNlYywgaGRtaV9waHksIGFuZCBoZG1pMCBub2Rl
-cyBieSBkZWZhdWx0Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRz
-aSB8IDY5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwg
-NjkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
-ZWsvbXQ4MTczLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNp
-CmluZGV4IDQ0YzIwNWYuLmY4MmI3ZGYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-bWVkaWF0ZWsvbXQ4MTczLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9t
-dDgxNzMuZHRzaQpAQCAtMTk5LDYgKzE5OSwxNiBAQAogCQkJCSAgICAgPEdJQ19TUEkgMTQ2IElS
-UV9UWVBFX0xFVkVMX0hJR0g+LAogCQkJCSAgICAgPEdJQ19TUEkgMTQ3IElSUV9UWVBFX0xFVkVM
-X0hJR0g+OwogCisJCQloZG1pX3BpbjogeHh4IHsKKworCQkJCS8qaGRtaSBodHBsZyBwaW4qLwor
-CQkJCXBpbnMxIHsKKwkJCQkJcGlubXV4ID0gPE1UODE3M19QSU5fMjFfSFRQTEdfX0ZVTkNfSFRQ
-TEc+OworCQkJCQlpbnB1dC1lbmFibGU7CisJCQkJCWJpYXMtcHVsbC1kb3duOworCQkJCX07CisJ
-CQl9OworCiAJCQlpMmMwX3BpbnNfYTogaTJjMCB7CiAJCQkJcGluczEgewogCQkJCQlwaW5tdXgg
-PSA8TVQ4MTczX1BJTl80NV9TREEwX19GVU5DX1NEQTA+LApAQCAtMjg2LDYgKzI5NiwxNCBAQAog
-CQkJY2xvY2stbmFtZXMgPSAic3BpIiwgIndyYXAiOwogCQl9OwogCisJCWNlYzogY2VjQDEwMDEz
-MDAwIHsKKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWNlYyI7CisJCQlyZWcgPSA8
-MCAweDEwMDEzMDAwIDAgMHhiYz47CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTY3IElSUV9U
-WVBFX0xFVkVMX0xPVz47CisJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19JTkZSQV9DRUM+Owor
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwkJfTsKKwogCQlzeXNpcnE6IGludHBvbC1jb250cm9s
-bGVyQDEwMjAwNjIwIHsKIAkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLXN5c2lycSIs
-CiAJCQkJICAgICAibWVkaWF0ZWssbXQ2NTc3LXN5c2lycSI7CkBAIC0zMTIsNiArMzMwLDE5IEBA
-CiAJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCX07CiAKKwkJaGRtaV9waHk6IGhkbWktcGh5QDEw
-MjA5MTAwIHsKKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWhkbWktcGh5IjsKKwkJ
-CXJlZyA9IDwwIDB4MTAyMDkxMDAgMCAweDI0PjsKKwkJCWNsb2NrcyA9IDwmYXBtaXhlZHN5cyBD
-TEtfQVBNSVhFRF9IRE1JX1JFRj47CisJCQljbG9jay1uYW1lcyA9ICJwbGxfcmVmIjsKKwkJCWNs
-b2NrLW91dHB1dC1uYW1lcyA9ICJoZG1pdHhfZGlnX2N0cyI7CisJCQltZWRpYXRlayxpYmlhcyA9
-IDwweGE+OworCQkJbWVkaWF0ZWssaWJpYXNfdXAgPSA8MHgxYz47CisJCQkjY2xvY2stY2VsbHMg
-PSA8MD47CisJCQkjcGh5LWNlbGxzID0gPDA+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwkJ
-fTsKKwogCQltaXBpX3R4MDogbWlwaS1kcGh5QDEwMjE1MDAwIHsKIAkJCWNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ4MTczLW1pcGktdHgiOwogCQkJcmVnID0gPDAgMHgxMDIxNTAwMCAwIDB4MTAw
-MD47CkBAIC03OTgsNiArODI5LDEyIEBACiAJCQkJIDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9U
-VkRQTEw+OwogCQkJY2xvY2stbmFtZXMgPSAicGl4ZWwiLCAiZW5naW5lIiwgInBsbCI7CiAJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOworCisJCQlwb3J0IHsKKwkJCQlkcGkwX291dDogZW5kcG9pbnQg
-eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX2luPjsKKwkJCQl9OworCQkJfTsKIAkJ
-fTsKIAogCQlwd20wOiBwd21AMTQwMWUwMDAgewpAQCAtODU1LDYgKzg5MiwzOCBAQAogCQkJY2xv
-Y2stbmFtZXMgPSAiYXBiIiwgInNtaSI7CiAJCX07CiAKKwkJaGRtaTA6IGhkbWlAMTQwMjUwMDAg
-eworCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtaGRtaSI7CisJCQlyZWcgPSA8MCAw
-eDE0MDI1MDAwIDAgMHg0MDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIwNiBJUlFfVFlQ
-RV9MRVZFTF9MT1c+OworCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fSERNSV9QSVhFTD4sCisJ
-CQkJIDwmbW1zeXMgQ0xLX01NX0hETUlfUExMQ0s+LAorCQkJCSA8Jm1tc3lzIENMS19NTV9IRE1J
-X0FVRElPPiwKKwkJCQkgPCZtbXN5cyBDTEtfTU1fSERNSV9TUERJRj47CisJCQljbG9jay1uYW1l
-cyA9ICJwaXhlbCIsICJwbGwiLCAiYmNsayIsICJzcGRpZiI7CisJCQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOworCQkJcGluY3RybC0wID0gPCZoZG1pX3Bpbj47CisJCQlwaHlzID0gPCZoZG1p
-X3BoeT47CisJCQlwaHktbmFtZXMgPSAiaGRtaSI7CisJCQltZWRpYXRlayxzeXNjb24taGRtaSA9
-IDwmbW1zeXMgMHg5MDA+OworCQkJYXNzaWduZWQtY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtfVE9Q
-X0hETUlfU0VMPjsKKwkJCWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmhkbWlfcGh5PjsKKwkJ
-CXN0YXR1cyA9ICJkaXNhYmxlZCI7CisKKwkJCXBvcnRzIHsKKwkJCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCXBvcnRAMCB7CisJCQkJCXJlZyA9
-IDwwPjsKKworCQkJCQloZG1pMF9pbjogZW5kcG9pbnQgeworCQkJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZkcGkwX291dD47CisJCQkJCX07CisJCQkJfTsKKwkJCX07CisJCX07CisKIAkJbGFyYjQ6
-IGxhcmJAMTQwMjcwMDAgewogCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtc21pLWxh
-cmIiOwogCQkJcmVnID0gPDAgMHgxNDAyNzAwMCAwIDB4MTAwMD47Ci0tIAoyLjcuMC5yYzMKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The configurable hdmi_ref output of the PLL block is derived from
+the tvdpll_594m clock signal via a configurable PLL post-divider.
+It is used as the PLL reference input to the HDMI PHY module.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/clk/mediatek/clk-mt8173.c      | 5 +++++
+ include/dt-bindings/clock/mt8173-clk.h | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 682b275..3ae0b88 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -1091,6 +1091,11 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
+ 		clk_data->clks[cku->id] = clk;
+ 	}
+ 
++	clk = clk_register_divider(NULL, "hdmi_ref", "tvdpll_594m", 0,
++				   base + 0x40, 16, 3, CLK_DIVIDER_POWER_OF_TWO,
++				   NULL);
++	clk_data->clks[CLK_APMIXED_HDMI_REF] = clk;
++
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+ 	if (r)
+ 		pr_err("%s(): could not register clock provider: %d\n",
+diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+index 7956ba1..6094bf7 100644
+--- a/include/dt-bindings/clock/mt8173-clk.h
++++ b/include/dt-bindings/clock/mt8173-clk.h
+@@ -176,7 +176,8 @@
+ #define CLK_APMIXED_LVDSPLL		13
+ #define CLK_APMIXED_MSDCPLL2		14
+ #define CLK_APMIXED_REF2USB_TX		15
+-#define CLK_APMIXED_NR_CLK		16
++#define CLK_APMIXED_HDMI_REF		16
++#define CLK_APMIXED_NR_CLK		17
+ 
+ /* INFRA_SYS */
+ 
+-- 
+2.7.0.rc3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
