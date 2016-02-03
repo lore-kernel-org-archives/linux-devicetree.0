@@ -1,71 +1,64 @@
-From: "Interfax" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
-Subject: You have 1 new fax, document 00000221645
-Date: Wed, 3 Feb 2016 18:45:46 +0100
-Message-ID: <de0c58b5826c1da79f2beb86a95fcf14@interfax.net>
-Reply-To: "Interfax" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] regulator: act8945a: add regulator driver for
+ ACT8945A
+Date: Wed, 3 Feb 2016 17:47:53 +0000
+Message-ID: <20160203174753.GJ4455@sirena.org.uk>
+References: <1453863463-30515-1-git-send-email-wenyou.yang@atmel.com>
+ <1453863463-30515-2-git-send-email-wenyou.yang@atmel.com>
+ <20160129001603.GM4130@sirena.org.uk>
+ <B256D81BAE5131468A838E5D7A243641D63FBF8B@penmbx01>
+ <20160129113518.GQ4130@sirena.org.uk>
+ <CABxcv=kNKmgRytxB5ppawrAvC-GDRhV4T_UUGvpHgKp9+BsUmQ@mail.gmail.com>
+ <B256D81BAE5131468A838E5D7A243641D63FE2C7@penmbx01>
+ <CABxcv=nJsWEv9KW-5iPpUnyN8ZVpx6CV07gBRaLNWqd644YOqQ@mail.gmail.com>
+ <B256D81BAE5131468A838E5D7A243641D64026CB@penmbx01>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="b1_f4de2adabdd31d3f76b25ec891413ac3"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KCBbHYs95wY/7dOt"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D64026CB@penmbx01>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---b1_f4de2adabdd31d3f76b25ec891413ac3
+
+--KCBbHYs95wY/7dOt
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You have a new fax!
+On Wed, Feb 03, 2016 at 02:33:11AM +0000, Yang, Wenyou wrote:
 
-Scanned fax document is attached to this email.
+> > I would just remove the "active-semi,act8945a-regulator" node and make "active-
+> > semi,vsel-high" a property of the "active-semi,act8945a" node.
+> > That way you can remove the mfd cell .of_compatible and OF table in the
+> > regulator driver and read the "active-semi,vsel-high" using the platform device's
+> > parent of_node.
 
-File name:             scanned.00000221645.doc
-Scanned by:            Howard Morgan
-Scan duration:         31 seconds
-Quality:               300 DPI
-Date:                  Wed, 3 Feb 2016 11:40:54 +0300
-Pages sent:            5
-Filesize:              163 Kb
+> > But it's better if you wait for Mark's opinions before re-spining your patches.
 
-Thank you for using Interfax!
+> Hi Mark, what is your opinions?
 
+Like Javier says you should make your DT binding look like the DT
+bindings for other MFDs and not use of_compatible.
 
---b1_f4de2adabdd31d3f76b25ec891413ac3
-Content-Type: application/zip; name="scanned.00000221645.zip"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=scanned.00000221645.zip
+--KCBbHYs95wY/7dOt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-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
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJWsj1IAAoJECTWi3JdVIfQMdQH/j0NYzOJ2v9+G9LjVcvUoJXq
+d0QDzmlrwO/J9DCqEsx6Opb4/d5os+vpU0QefBIpyYjCEw/MPxtmvatQ6H/Aruh5
+uC6ZW6lt+N4VuHs0dDzWsUzj0yDTM4kDyYvdpMKuZULOghvRzgfskDTd2O9XE0tm
+BhDBHQ7DgYG04GWvrWYgNOEn7osIYbi2trIn6OvK21J/vtg7Wfke3hY48LSBStAX
+yQd0AS878BVfsnvecCLDMPwddaezVigKYok8zM5f2OkStI5NfyeSxY8Ty2oM5S6b
+xavNbzxx/595JXBraKwW0NxJ6IfTEh0wZZRjrr51U37uDcYgfsx6UsBLCJHICF4=
+=5o0o
+-----END PGP SIGNATURE-----
 
---b1_f4de2adabdd31d3f76b25ec891413ac3--
-
+--KCBbHYs95wY/7dOt--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
