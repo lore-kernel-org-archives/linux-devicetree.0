@@ -1,54 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] ARM: bcm2835: dt: Add the ethernet to the device tree
-Date: Wed, 3 Feb 2016 09:11:14 -0700
-Message-ID: <56B226A2.6000101@wwwdotorg.org>
-References: <1454511759-24827-1-git-send-email-lkundrak@v3.sk>
- <1454511759-24827-3-git-send-email-lkundrak@v3.sk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Wed, 03 Feb 2016 17:23:18 +0100
+Message-ID: <8562433.7oWe1ikqcL@wuerfel>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1725737.t6I7PsvPbL@wuerfel> <56B2247D.5040501@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454511759-24827-3-git-send-email-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>, Peter Chen <peter.chen@freescale.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56B2247D.5040501@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2016 08:02 AM, Lubomir Rintel wrote:
-> The hub and the ethernet in its port 1 are hardwired on the board.
->
-> Compared to the adapters that can be plugged into the USB ports, this
-> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-> has the MAC address for this adapter in its ROM, accessible from its
-> firmware.
->
-> U-Boot can read out the address and set the local-mac-address property of the
-> node with "ethernet" alias. Let's add the node so that U-Boot can do its
-> business.
+On Wednesday 03 February 2016 16:02:05 Zubair Lutfullah Kakakhel wrote:
 
-Good to see we're getting a standard for this.
-
-Have you talked to the RPi Foundation about updating their binary 
-bootloader to follow this protocol? I'll certainly ack changes to make 
-this work for U-Boot, provided the USB core patch this relies upon is 
-accepted.
-
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-
-> +&usb {
-> +	usb1@01 {
-> +		compatible = "usb1d6b,0002";
-> +		reg = <01>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> Hence, I find the original binding simpler and easier to understand when looking at the hardware manual
+> 
+> +       uctl@118006c000000 {
+> +               compatible = "cavium,octeon-7130-sata-uctl";
+> +               reg = <0x11800 0x6c000000 0x0 0x100>;
+> +               ranges; /* Direct mapping */
+> +               dma-ranges;
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
 > +
-> +		ethernet: usbether@01 {
-> +			compatible = "usb0424,9514";
-> +			reg = <01>;
+> +               sata: sata@16c0000000000 {
+> +                       compatible = "cavium,octeon-7130-ahci";
+> +                       reg = <0x16c00 0x00000000 0x0 0x200>;
+> +                       interrupt-parent = <&cibsata>;
+> +                       interrupts = <2 4>; /* Bit: 2, level */
+> +               };
+> +       };
+> 
+> Is it possible to let this example go in as is?
+> 
 
-Ib both unit addresses and both reg properties, I would expect "1" not 
-"01" since there's usually no leading 0 fill for those.
+I don't have the hardware manual, so I'm just guessing what the hardware
+looks like. If the manual describes the device as a bridge with a 1:1 mapping,
+then your existing example above absolutely makes sense.
 
-I'm curious why the VID values for the hub and Ethernet device don't 
-match since those are part of the same combo chip. Is there a typo 
-there, or did SMSC really do something odd in HW?
+	Arnd
