@@ -1,50 +1,45 @@
-From: Marcin Wojtas <mw@semihalf.com>
-Subject: Re: [PATCH v2 03/12] serial: mvebu-uart: initial support for
- Armada-3700 serial port
-Date: Wed, 3 Feb 2016 23:22:36 +0100
-Message-ID: <CAPv3WKe6=705iEtsuo0cUtugofiFa_Zt9xydRsgOV+mZ18H-3Q@mail.gmail.com>
-References: <1454524889-9207-1-git-send-email-gregory.clement@free-electrons.com>
-	<1454524889-9207-4-git-send-email-gregory.clement@free-electrons.com>
-	<CAPv3WKdh8D8GYMabALQQW-Z7L+=XhkZw2cXdYpcQ8tF0Rjckag@mail.gmail.com>
-	<20160203230224.5ea52f65@free-electrons.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v4 1/2] ARM: dts: imx6: Add support for Toradex Apalis
+ iMX6Q/D SoM
+Date: Wed, 3 Feb 2016 22:46:18 +0000
+Message-ID: <1454539575.11389.5.camel@toradex.com>
+References: <1453675703-31594-1-git-send-email-marcel.ziswiler@toradex.com>
+ <1453675703-31594-2-git-send-email-marcel.ziswiler@toradex.com>
+ <20160125094628.GH27359@ibawizard.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20160203230224.5ea52f65@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ofer Heifetz <oferh@marvell.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Lior Amsalem <alior@marvell.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160125094628.GH27359@ibawizard.net>
+Content-Language: en-US
+Content-ID: <8E084F5DB6DA2149852B48D7FB2C1A50@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "ynezz@true.cz" <ynezz@true.cz>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stillcompiling@gmail.com" <stillcompiling@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-I'm sorry, indeed, I was the one to overlook - there was a lot going
-on in a thread and I missed it.
-
-Ofer, as you found out that IRQF_SHARED help booting ubuntu - do you
-think it's a hack or fix?
-
-Best regards,
-Marcin
-
-2016-02-03 23:02 GMT+01:00 Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com>:
-> Dear Marcin Wojtas,
->
-> On Wed, 3 Feb 2016 22:41:15 +0100, Marcin Wojtas wrote:
->> Hi Gregory,
->>
->> > +       port->irq        = irq->start;
->> > +       port->irqflags   = 0;
->>
->> Same request as for v1, which you must have overlooked:
->> port->irqflags = IRQF_SHARED;
->
-> Gregory didn't overlook this comment you made on v1, he even replied to
-> it. Please check Gregory's reply to your review.
->
-> Best regards,
->
-> Thomas
-> --
-> Thomas Petazzoni, CTO, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+SGkgUGV0cg0KDQpPbiBNb24sIDIwMTYtMDEtMjUgYXQgMTA6NDYgKzAxMDAsIFBldHIgxaB0ZXRp
+YXIgd3JvdGU6DQoNCltzbmlwXQ0KDQo+IFdoYXQgcHJvYmxlbXMgYXJlIHlvdSBoYXZpbmcgaWYg
+eW91IHJlbW92ZSB0aGF0IHBhcmVudCByZWd1bGF0b3JzDQo+IG5vZGU/DQoNClRvIGJlIGhvbmVz
+dCBJIGRvbid0IHJlbWVtYmVyIHRoZSBleGFjdCBpc3N1ZXMgaXQgY2F1c2VkLiBJIGp1c3QgdHJp
+ZWQNCmFnYWluIG5vdyB3aXRoIGxhdGVzdMKgbmV4dC0yMDE2MDIwMyBhbmQgYmVzaWRlcyBzbGFi
+IGJlaW5nIGJyb2tlbiBpdA0Kd29ya2VkIGxpa2UgYSBjaGFybS4gU28gZmluYWxseSByaWQgb2Yg
+aXQgSSBnb3QgKDstcCkuDQoNCj4gMS4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
+YWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS1Ob3ZlbWJlDQo+IHIvMzg2NDU2Lmh0bWwNCj4gMi4g
+aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3luZXp6L2xpbnV4LTIuNi81YTIxMTc4
+NDU0NGEzYTQ2DQo+IDBkZjdlN2U0NTQ3OTAxMGFlM2ZlYWY3Ni9hcmNoL2FybS9ib290L2R0cy9p
+bXg2cWRsLWFwYWxpcy5kdHNpDQo+IDMuIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
+dXgva2VybmVsL2dpdC9hcm0vYXJtLXNvYw0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHdvcmshDQoN
+CllvdSBhcmUgdmVyeSB3ZWxjb21lLg0KDQo+IC0tIHluZXp6DQoNCkNoZWVycw0KDQpNYXJjZWwK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
