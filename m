@@ -1,98 +1,83 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: Add dts for Uniwest evi
-Date: Wed, 03 Feb 2016 10:24:19 +0100
-Message-ID: <1454491459.3415.6.camel@pengutronix.de>
-References: <patches/evidts/35215>
-	 <1454451202-1687-1-git-send-email-stillcompiling@gmail.com>
+From: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: ad5755: add support for dt bindings
+Date: Wed, 3 Feb 2016 10:29:21 +0100
+Message-ID: <56B1C871.6070105@prevas.dk>
+References: <1454416574-6645-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <56B0CC2C.6020809@metafoo.de> <56B0D203.3050905@prevas.dk>
+ <56B0DB5E.7060608@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454451202-1687-1-git-send-email-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B0DB5E.7060608-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joshua,
 
-Am Dienstag, den 02.02.2016, 14:13 -0800 schrieb Joshua Clayton:
-> Uniwest evi is a portable electrical eddy current non-destructive
-> testing device.
-> 
-> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile      |   1 +
->  arch/arm/boot/dts/imx6q-evi.dts | 506 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 507 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-evi.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c4f42a78..4a4ef29 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -326,6 +326,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6q-cubox-i.dtb \
->  	imx6q-dfi-fs700-m60.dtb \
->  	imx6q-dmo-edmqmx6.dtb \
-> +	imx6q-evi.dtb \
->  	imx6q-gk802.dtb \
->  	imx6q-gw51xx.dtb \
->  	imx6q-gw52xx.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-> new file mode 100644
-> index 0000000..10f566e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-evi.dts
-> @@ -0,0 +1,506 @@
-[...]
-> +/dts-v1/;
-> +#include "imx6q.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	model = "Uniwest Evi";
-> +	compatible = "uniwest,imx6q-evi", "fsl,imx6q";
-[...]
-> +	panel {
-> +		compatible = "sharp,lq101k1ly04";
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> +};
-[...]
-> +&ldb {
-> +	status = "okay";
-> +
-> +	lvds0: lvds-channel@0 {
-> +		fsl,data-mapping = "jeida";
-> +		fsl,data-width = <24>;
 
-The "sharp,lq101k1ly04" panel compatible already specifies the bus
-format (it is set to MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA in the
-simple-panel entry), these two properties can be removed.
+On 2016-02-02 17:37, Lars-Peter Clausen wrote:
+> On 02/02/2016 04:57 PM, Sean Nyekj=E6r wrote:
+>>
+>> On 2016-02-02 16:33, Lars-Peter Clausen wrote:
+>>> On 02/02/2016 01:36 PM, Sean Nyekjaer wrote:
+>>>> Still missing a way to provide default modes and settings
+>>>> for the driver from dt, but I see this as a start.
+>>>>
+>>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>>> Hi,
+>>>
+>>> Thanks for the patch.
+>> :-)
+>>>> ---
+>>>>    drivers/iio/dac/ad5755.c | 10 ++++++++++
+>>>>    1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+>>>> index bfb350a..e1b6e78 100644
+>>>> --- a/drivers/iio/dac/ad5755.c
+>>>> +++ b/drivers/iio/dac/ad5755.c
+>>>> @@ -607,6 +607,16 @@ static const struct spi_device_id ad5755_id[]=
+ =3D {
+>>>>    };
+>>>>    MODULE_DEVICE_TABLE(spi, ad5755_id);
+>>>>    +static const struct of_device_id ad5755_of_match[] =3D {
+>>>> +    { .compatible =3D "adi,ad5755" },
+>>>> +    { .compatible =3D "adi,ad5755-1" },
+>>>> +    { .compatible =3D "adi,ad5757" },
+>>>> +    { .compatible =3D "adi,ad5735" },
+>>>> +    { .compatible =3D "adi,ad5737" },
+>>> This needs to set the ID for the device type, so that the driver ge=
+ts
+>>> instantiated for the correct devicetype. And in the probe function =
+check if
+>>> the driver was probed via DT (by checking spi->dev.of_node) and if =
+it does
+>>> get the ID from the of_device_id rather the spi_device_id.
+If I probe the driver via DT the spi_get_device_id(spi)->driver_data=20
+returns the type...
+So this works as it is :-)
 
-> +		status = "okay";
-> +
-> +		port@4 {
-> +			reg = <4>;
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&panel_in>;
-> +			};
-> +		};
-> +	};
-> +};
-[...]
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll continue with the proposal...
+>> I was planning on doing that.
+>> And I was experimenting with providing modes and settings for every =
+channel
+>> from the dt.
+>> Is the DAC the only output devices in IIO?
+> There is also support for programmable potentiometers (sometimes call=
+ed
+> RDAC), but that's it.
+>
+>> I will send an proposal tomorrow :-) And thereby (maybe) pave the wa=
+y for
+>> the runtime mode switching
+>>
+>> Should we drop the platform data support and only rely on dt?
+> No, there might still be some people depending on it. I don't think t=
+he
+> burden of continuing to maintain the platform data support is that hi=
+gh.
+>
+> - Lars
