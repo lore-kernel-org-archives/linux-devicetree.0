@@ -1,60 +1,95 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] dt-bindings: arm,gic-v3: require that reserved cells are always 0
-Date: Wed,  3 Feb 2016 18:00:58 +0000
-Message-ID: <1454522458-29643-1-git-send-email-will.deacon@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
+ panic support
+Date: Thu, 4 Feb 2016 02:06:02 +0800
+Message-ID: <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+	<1454519923-25230-6-git-send-email-fu.wei@linaro.org>
+	<56B23883.7000501@codeaurora.org>
+	<CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
+	<56B23E99.1030604@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56B23E99.1030604@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
 List-Id: devicetree@vger.kernel.org
 
-The arm,gic-v3 binding was written with good intentions and doesn't
-enforce interrupt-cells to be 3, therefore making it easy to extend
-the irq description in future if necessary:
+Hi Timur
 
-  > Cells 4 and beyond are reserved for future use.
+On 4 February 2016 at 01:53, Timur Tabi <timur@codeaurora.org> wrote:
+> Fu Wei wrote:
+>>
+>> sorry, are you saying : using pre-timeout instead of this half timeout?
+>>
+>> But even we have pre-timeout support, pre-timeout  == timeout / 2, it
+>> can not be configured without touch timeout.
+>>
+>> if you want pre-timeout  != timeout / 2, we have to modify WCV in the
+>> interrupt routine.
+>>   (because of the explicit watchdog refresh  mechanism)
+>>
+>> Could you let me know why we need pre-timeout  here ??:-)
+>
+>
+> What I meant was that if we had full-blown pre-timeout support in the
+> watchdog layer, then you could use that to implement the
+> panic-on-half-timeout feature.
+>
+> When pre-timeout is implemented, will you modify the interrupt handler to
+> use it?
 
-Unfortunately, this sentence is immediately followed up with:
+Sorry I am little confused.
 
-  > When the 1st cell has a value of 0 or 1, cells 4 and beyond act as
-  > padding, and may be ignored. It is recommended that padding cells
-  > have a value of 0.
+Actually I am taking your suggestion to avoid touching WCV in
+interrupt routine.
+So even we have pre-timeout support , it is useless for this
+panic-on-half-timeout feature,
+because pre-timeout  == timeout / 2 (always).
 
-Consequently, any extensions to the PPI or SPI interrupt specifiers must
-be able to work with random crap from legacy DTs, effectively
-necessitating a new interrupt type in the first cell. Sigh.
+So maybe I misunderstand your suggestion,
+could you let me know : why we want pre-timeout here?
 
-This patch fixes the text so that additional, reserved cells are
-required to be zero. This looks like a reasonable thing to require and
-is already satisifed by the .dts files in-tree.
 
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
----
- .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt          | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+>
+>>> >belong upstream.  But like I said, it's just my opinion, and I won't
+>>> >complain if I'm outvoted.
+>>
+>>   I think this debugging feature is the  purpose of the two-stage
+>> watchdog, if I understand correctly
+>
+>
+> Hmmm... that make sense.  I think maybe you should drop the Kconfig option,
+> and just have "static bool panic_enabled = false;"  Also, then do this:
+>
+> if (panic_enabled) {
+>         ret = devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
+>                                pdev->name, gwdt);
+>         if (ret) {
+>                 dev_err(dev, "unable to request IRQ %d\n", irq);
+>                 return ret;
+>         }
+> }
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-index 7803e77d85cb..007a5b46256a 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-@@ -24,9 +24,8 @@ Main node required properties:
- 		1 = edge triggered
- 		4 = level triggered
- 
--  Cells 4 and beyond are reserved for future use. When the 1st cell
--  has a value of 0 or 1, cells 4 and beyond act as padding, and may be
--  ignored. It is recommended that padding cells have a value of 0.
-+  Cells 4 and beyond are reserved for future use and must have a value
-+  of 0 if present.
- 
- - reg : Specifies base physical address(s) and size of the GIC
-   registers, in the following order:
+yes, agree
+
+>
+> That way, the interrupt handler is never registered if the command-line
+> parameter is not specified.
+>
+
+
+
 -- 
-2.1.4
+Best regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
