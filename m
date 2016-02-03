@@ -1,111 +1,97 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem to
- support  generic Xilinx  AXI PCIe Host Bridge IP driver
-Date: Wed, 3 Feb 2016 10:38:05 -0600
-Message-ID: <20160203163805.GA6112@localhost>
-References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
- <1452620173-4905-6-git-send-email-bharatku@xilinx.com>
- <20160203163207.GC32546@localhost>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 01/10] serial: mvebu-uart: initial support for Armada-3700 serial port
+Date: Wed, 03 Feb 2016 17:43:59 +0100
+Message-ID: <87io254ucw.fsf@free-electrons.com>
+References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
+	<1454436468-4241-2-git-send-email-gregory.clement@free-electrons.com>
+	<CAPv3WKfGX2dVDu2zWG4gdEMf0vO-X+NMerh9PzNDjzLBDSQcUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160203163207.GC32546@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPv3WKfGX2dVDu2zWG4gdEMf0vO-X+NMerh9PzNDjzLBDSQcUA@mail.gmail.com>
+	(Marcin Wojtas's message of "Wed, 3 Feb 2016 09:05:55 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcin Wojtas <mw@semihalf.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Ben for real this time]
+Hi Marcin,
+=20
+ On mer., f=C3=A9vr. 03 2016, Marcin Wojtas <mw@semihalf.com> wrote:
 
-On Wed, Feb 03, 2016 at 10:32:07AM -0600, Bjorn Helgaas wrote:
-> [+cc Ben, pcibios_get_phb_of_node() question]
-> 
-> On Tue, Jan 12, 2016 at 11:06:13PM +0530, Bharat Kumar Gogada wrote:
-> > This patch does required modifications to microblaze PCI subsystem, to
-> > work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
-> > and Zynq.
-> > 
-> > Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> >...
-> 
-> >  resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> >  				resource_size_t size, resource_size_t align)
-> >  {
-> > -	struct pci_dev *dev = data;
-> >  	resource_size_t start = res->start;
-> >  
-> > -	if (res->flags & IORESOURCE_IO) {
-> > -		if (skip_isa_ioresource_align(dev))
-> > -			return start;
-> > -		if (start & 0x300)
-> > -			start = (start + 0x3ff) & ~0x3ff;
-> > -	}
-> > -
-> >  	return start;
-> 
-> "return res->start;" is sufficient; no need for a temporary variable.
-> 
-> >  }
-> >  EXPORT_SYMBOL(pcibios_align_resource);
-> >  
-> > +int pcibios_add_device(struct pci_dev *dev)
-> > +{
-> > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(pcibios_add_device);
-> > +
-> >  /*
-> >   * Reparent resource children of pr that conflict with res
-> >   * under res, and make res replace those children.
-> > @@ -1335,9 +1308,21 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
-> >  
-> >  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
-> >  {
-> > -	struct pci_controller *hose = bus->sysdata;
-> > +	struct device_node *np;
-> > +
-> > +	for_each_node_by_type(np, "pci") {
-> > +		const void *prop;
-> > +		unsigned int bus_min;
-> > +
-> > +		prop = of_get_property(np, "bus-range", NULL);
-> > +		if (!prop)
-> > +			continue;
-> > +		bus_min = be32_to_cpup(prop);
-> > +		if (bus->number == bus_min)
-> > +			return np;
-> > +	}
-> >  
-> > -	return of_node_get(hose->dn);
-> > +	return NULL;
-> 
-> Hmmm.  The old microblaze code ("return of_node_get(hose->dn);") is
-> basically the same as the mips and powerpc versions.  The new code is
-> basically the same as the x86 version.
-> 
-> I like the generic weak version in drivers/pci/of.c because it doesn't
-> use any arch-specific data, and it looks like if we just set the
-> struct device.of_node members correctly, everything should Just Work.
-> 
-> But Ben added both the generic and the x86 versions the same day, so
-> there must be some complication:
-> 
->   98d9f30c820d ("pci/of: Match PCI devices to OF nodes dynamically")
->   3d5fe5a65af9 ("x86/devicetree: Use generic PCI <-> OF matching")
-> 
-> So I guess my question is, why do we need a microblaze-specific
-> version at all?
-> 
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hi Gregory
+>
+>> +
+>> +static int mvebu_uart_startup(struct uart_port *port)
+>> +{
+>> +       int ret;
+>> +
+>> +       writel(CTRL_TXFIFO_RST | CTRL_RXFIFO_RST,
+>> +              port->membase + UART_CTRL);
+>> +       udelay(1);
+>> +       writel(CTRL_RX_INT, port->membase + UART_CTRL);
+>> +
+>> +       ret =3D request_irq(port->irq, mvebu_uart_isr, port->irqflag=
+s, "serial",
+>> +                         port);
+>> +       if (ret) {
+>> +               dev_err(port->dev, "failed to request irq\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>
+>> +static int mvebu_uart_probe(struct platform_device *pdev)
+>> +{
+>> +       struct resource *reg =3D platform_get_resource(pdev, IORESOU=
+RCE_MEM, 0);
+>> +       struct resource *irq =3D platform_get_resource(pdev, IORESOU=
+RCE_IRQ, 0);
+>> +       struct uart_port *port;
+>> +       struct mvebu_uart_data *data;
+>> +       int ret;
+>> +
+>> +       if (!reg || !irq) {
+>> +               dev_err(&pdev->dev, "no registers/irq defined\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       port =3D &mvebu_uart_ports[0];
+>> +
+>> +       spin_lock_init(&port->lock);
+>> +
+>> +       port->dev        =3D &pdev->dev;
+>> +       port->type       =3D PORT_MVEBU;
+>> +       port->ops        =3D &mvebu_uart_ops;
+>> +       port->regshift   =3D 0;
+>> +
+>> +       port->fifosize   =3D 32;
+>> +       port->iotype     =3D UPIO_MEM32;
+>> +       port->flags      =3D UPF_FIXED_PORT;
+>> +       port->line       =3D 0; /* single port: force line number to=
+  0 */
+>> +
+>> +       port->irq        =3D irq->start;
+>> +       port->irqflags   =3D 0;
+>
+> Please use port->irqflags =3D IRQF_SHARED;
+> As ubuntu opens multiple consoles A3700 can't boot to it (only to
+> buildroot with single console).
+
+But this irq is not shared, this looks like a hack hidding the real
+issue.
+
+Gregory
+
+>
+> Best regards,
+> Marcin
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
