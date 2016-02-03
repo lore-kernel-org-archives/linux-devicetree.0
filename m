@@ -1,209 +1,214 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 4/7] ARM: dts: imx: Add support for Advantech/GE Bx50v3
-Date: Wed, 3 Feb 2016 22:52:56 +0800
-Message-ID: <20160203145256.GR8307@tiger>
-References: <1454109558-22800-1-git-send-email-akshay.bhat@timesys.com>
- <1454109558-22800-5-git-send-email-akshay.bhat@timesys.com>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
+Date: Wed, 3 Feb 2016 15:01:34 +0000
+Message-ID: <56B2164E.5060007@synopsys.com>
+References: <cover.1454498292.git.jpinto@synopsys.com>
+ <a519617624ecdc98be82c376d4359a91f6a823b0.1454498292.git.jpinto@synopsys.com>
+ <2072510.CA47OHQsUN@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454109558-22800-5-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2072510.CA47OHQsUN@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: santosh.sy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, h.vinayak-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 29, 2016 at 06:19:15PM -0500, Akshay Bhat wrote:
-> From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+
+Hi Arnd,
+
+On 2/3/2016 12:54 PM, Arnd Bergmann wrote:
+> On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
+>>
+>> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > 
-> Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
-> the Advantech BA-16 module (based on iMX6D). This file has the
-> devicetree entries that are common to all 3 boards.
+> This needs a changelog comment, like every patch.
 > 
-> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 239 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 239 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>> @@ -0,0 +1,16 @@
+>> +* Universal Flash Storage (UFS) DesignWare Host Controller
+>> +
+>> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
+>> +Each UFS controller instance should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible list, contains "snps,ufshcd"
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> new file mode 100644
-> index 0000000..a44b074
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> @@ -0,0 +1,239 @@
-> +/*
-> + * Copyright 2015 Timesys Corporation.
-> + * Copyright 2015 General Electric Company
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "imx6q-ba16.dtsi"
-> +
-> +/ {
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> Are there multiple versions of this controller? Usually for designware
+> parts the version is known, so we should document which versions exist
 
-These are already specified in imx6qdl.dtsi.
+This controller recent releases was 2.0, but we released last year 1.1. The
+driver works with both. The driver must work with all DWC UFS versions.
 
-> +
-> +		mclk: clock@0 {
-> +			compatible = "fixed-clock";
-> +			reg = <0>;
-> +			#clock-cells = <0>;
-> +			clock-frequency = <22000000>;
-> +		};
-> +	};
-
-<snip>
-
-> +&i2c1 {
-> +	pca9547: mux@70 {
-> +		compatible = "nxp,pca9547";
-> +		reg = <0x70>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		mux1_i2c1: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0>;
-> +
-> +			ads7830: ads7830@48 {
-> +				compatible = "ti,ads7830";
-> +				reg = <0x48>;
-> +			};
-> +
-> +			mma8453: mma8453@1c {
-> +				compatible = "fsl,mma8453";
-> +				reg = <0x1c>;
-> +			};
-> +		};
-> +
-> +		mux1_i2c2: i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x1>;
-> +
-> +			eeprom: eeprom@50 {
-> +				compatible = "atmel,24c08";
-> +				reg = <0x50>;
-> +			};
-> +
-> +			mpl3115: mpl3115@60 {
-> +				compatible = "fsl,mpl3115";
-> +				reg = <0x60>;
-> +			};
-> +		};
-> +
-> +		mux1_i2c3: i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x2>;
-> +		};
-> +
-> +		mux1_i2c4: i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x3>;
-> +
-> +			codec: sgtl5000@0a {
-
-I think the naming schema below matches DT convention better, i.e. the
-node name should be generic.
-
-			sgtl5000: codec@0a {
-
-> +				compatible = "fsl,sgtl5000";
-> +				reg = <0x0a>;
-> +				clocks = <&mclk>;
-> +				VDDA-supply = <&reg_1p8v>;
-> +				VDDIO-supply = <&reg_3p3v>;
-> +			};
-> +		};
-
-<snip>
-
-> +&usdhc4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc4>;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&reg_wl18xx_vmmc>;
-> +	no-1-8-v;
-> +	non-removable;
-> +	wakeup-source;
-> +	keep-power-in-suspend;
-> +	cap-power-off-card;
-> +	max-frequency = <25000000>;
-> +	status = "okay";
-> +
-
-Drop this new line and have 'status' be the last property.
-
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-
-I'm not sure why this and a 'reg' property in sub-nodes are necessary at
-all, but ...
-
-> +
-> +	wlcore: wlcore@0 {
-> +		compatible = "ti,wl1837";
-> +		reg = <2>;
-
-... at least the 'reg' property should match the unit-address after node
-name.
-
-Shawn
-
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
-> +		tcxo-clock-frequency = <26000000>;
-> +	};
-> +};
-> -- 
-> 2.7.0
 > 
+>> +
+>> +config SCSI_UFS_DWC_HOOKS
+>> +	bool "DesignWare hooks to UFS controller"
+>> +	depends on SCSI_UFSHCD
+>> +	---help---
+>> +	  This selects the DesignWare hooks for the UFS host controller.
+>> +
+>> +	  Select this if you have a DesignWare UFS controller.
+>> +	  If unsure, say N.
 > 
+> This could be a silent symbol that gets selected by SCSI_UFS_DWC_PLAT
+
+We could do that, but imagine that we select SCSI_UFS_QCOM, then the synopsys
+hooks would be selected also which in my opinion is not very accurate.
+In my opinion we should have a selectable DWC_HOOKS.
+
+> 
+>> +config SCSI_UFS_DWC_MPHY_TC
+>> +	bool "Support for the Synopsys MPHY Test Chip"
+>> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
+>> +	---help---
+>> +	  This selects the support for the Synopsys MPHY Test Chip.
+>> +
+>> +	  Select this if you have a Synopsys MPHY Test Chip.
+>> +	  If unsure, say N.
+>> +
+>> +config SCSI_UFS_DWC_20BIT_RMMI
+>> +	bool "20-bit RMMI MPHY"
+>> +	depends on SCSI_UFS_DWC_MPHY_TC
+>> +	---help---
+>> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
+>> +
+>> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
+>> +	  If unsure, say N.
+>> +
+>> +config SCSI_UFS_DWC_40BIT_RMMI
+>> +	bool "40-bit RMMI MPHY"
+>> +	depends on SCSI_UFS_DWC_MPHY_TC
+>> +	---help---
+>> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
+>> +
+>> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
+>> +	  If unsure, say N.
+> 
+> Move the PHY config options to drivers/phy/ along with the respective
+> drivers, the device using the PHY should not need to be aware which
+> one is being used.
+
+This MPHY config is just to enable parts of the host config which consists of
+specific unipro commands and nothing else. The unipro command execution uses
+functions that are in the ufshcd.c. But if everyone agree we can do as you suggest.
+
+> 
+>> +/**
+>> + * ufshcd_dwc_setup_mphy()
+>> + * This function configures Local (host) Synopsys MPHY specific attributes
+>> + *
+>> + * @hba: Pointer to drivers structure
+>> + *
+>> + * Returns 0 on success non-zero value on failure
+>> + */
+>> +int ufshcd_dwc_setup_mphy(struct ufs_hba *hba)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+>> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
+>> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
+>> +		goto out;
+>> +	}
+>> +#else
+>> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
+>> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
+>> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
+>> +		goto out;
+>> +	}
+>> +#endif
+>> +#endif
+>> +	/* To write Shadow register bank to effective configuration block */
+>> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_MPHYCFGUPDT), 0x01);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	/* To configure Debug OMC */
+>> +	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_DEBUGOMC), 0x01);
+>> +
+>> +out:
+>> +	return ret;
+>> +}
+> 
+> Try to use the generic PHY abstraction here and remove all the #ifdef etc.
+
+Could you please point an example for me to check?
+
+> 
+>> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
+>> index d15eaa4..66518a1 100644
+>> --- a/drivers/scsi/ufs/ufshcd-pci.c
+>> +++ b/drivers/scsi/ufs/ufshcd-pci.c
+>> @@ -34,6 +34,9 @@
+>>   */
+>>  
+>>  #include "ufshcd.h"
+>> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
+>> +#include "ufshcd-dwc.h"
+>> +#endif
+>>  #include <linux/pci.h>
+>>  #include <linux/pm_runtime.h>
+>>  
+>> @@ -83,6 +86,16 @@ static int ufshcd_pci_runtime_idle(struct device *dev)
+>>  #define ufshcd_pci_runtime_idle	NULL
+>>  #endif /* CONFIG_PM */
+>>  
+>> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
+>> +/**
+>> + * struct ufs_hba_dwc_vops - UFS DWC specific variant operations
+>> + */
+>> +static struct ufs_hba_variant_ops ufs_dwc_pci_hba_vops = {
+>> +	.name                   = "dwc-pci",
+>> +	.custom_probe_hba	= ufshcd_dwc_configuration,
+>> +};
+>> +#endif
+>> +
+>>  /**
+>>   * ufshcd_pci_shutdown - main function to put the controller in reset state
+>>   * @pdev: pointer to PCI device handle
+>> @@ -144,6 +157,9 @@ ufshcd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>  
+>>  	INIT_LIST_HEAD(&hba->clk_list_head);
+>>  
+>> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
+>> +	hba->vops = &ufs_dwc_pci_hba_vops;
+>> +#endif
+>>  	err = ufshcd_init(hba, mmio_base, pdev->irq);
+>>  	if (err) {
+>>  		dev_err(&pdev->dev, "Initialization failed\n");
+>> @@ -167,6 +183,10 @@ static const struct dev_pm_ops ufshcd_pci_pm_ops = {
+>>  
+>>  static const struct pci_device_id ufshcd_pci_tbl[] = {
+>>  	{ PCI_VENDOR_ID_SAMSUNG, 0xC00C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+>> +#ifdef CONFIG_SCSI_UFS_DWC_HOOKS
+>> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB101, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+>> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB102, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+>> +#endif
+>>  	{ }	/* terminate list */
+>>  };
+> 
+> I think you're better off with a separate PCI driver for this. Remove
+> all the #ifdef mess here, put whatever is dwc specific into a new file,
+> and perhaps move the common parts into a shared file that can be used
+> by both the samsung and designware drivers.
+
+I have a branch with that approach, but honestly it would be a big change in the
+UFS arch for the pci and I decided to make it simple. I sent that suggestion for
+the scsi mailing list and the comments showed me that. Does anyone have anything
+against putting ufshcd-pci.c as a pci common code and then have a ufs-dwc-pci.c
+and a ufs-samsung-pci.c that uses that common code?
+
+> 
+> 	Arnd
+> 
+
+Thanks,
+Joao
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
