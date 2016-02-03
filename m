@@ -1,89 +1,92 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V5 10/14] Documentation: DT: bindings: Add power domain
- info for NVIDIA PMC
-Date: Wed, 3 Feb 2016 11:02:24 +0000
-Message-ID: <56B1DE40.7080403@nvidia.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
- <1453998832-27383-11-git-send-email-jonathanh@nvidia.com>
- <20160129160625.GA21918@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160129160625.GA21918@rob-hp-laptop>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH v5 0/9] Add STM32 pinctrl/GPIO driver
+Date: Wed,  3 Feb 2016 12:04:36 +0100
+Message-ID: <1454497485-464-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
-On 29/01/16 16:06, Rob Herring wrote:
-> On Thu, Jan 28, 2016 at 04:33:48PM +0000, Jon Hunter wrote:
->> Add power-domain binding documentation for the NVIDIA PMC driver in
->> order to support generic power-domains.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 55 ++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->> index 53aa5496c5cf..3c77373aa826 100644
->> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->> @@ -1,5 +1,7 @@
->>  NVIDIA Tegra Power Management Controller (PMC)
->>  
->> +== Power Management Controller Node ==
->> +
->>  The PMC block interacts with an external Power Management Unit. The PMC
->>  mostly controls the entry and exit of the system from different sleep
->>  modes. It provides power-gating controllers for SoC and CPU power-islands.
->> @@ -70,6 +72,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
->>                       Defaults to 0. Valid values are described in section 12.5.2
->>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
->>  
->> +Optional nodes:
->> +- powergates : This node contains a hierarchy of power domain nodes, which
->> +	       should match the powergates on the Tegra SoC.
->> +
->>  Example:
->>  
->>  / SoC dts including file
->> @@ -115,3 +121,52 @@ pmc@7000f400 {
->>  	};
->>  	...
->>  };
->> +
->> +
->> +== PM Domain Nodes ==
->> +
->> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
->> +that can be power-gated by the PMC and should be named appropriately.
->> +
->> +Required properties:
->> +  - clocks: Must contain an entry for each clock required by the PMC for
->> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
->> +  - resets: Must contain an entry for each reset required by the PMC for
->> +    controlling a power-gate. See ../reset/reset.txt for details.
->> +  - nvidia,powergate: Integer cell that contains an identifier for the PMC
->> +    power-gate that is associated with the power-domain. Please refer to
->> +    the Tegra TRM for more details.
-> 
-> Why not make this value be the power-domain cell for consumers and the 
-> pmc be the phandle.
+This is the fifth round of STM32 pinctrl series, which is rebased on top of
+v4.5-rc1 and removes no more needed dependency between DT and driver.
 
-Is there anything wrong with using a label for the consumers? Seems
-simpler, if you can just say ...
+Also, it fixes the Makefile so that it is really built when COMPILE_TEST is
+set and not ARCH_STM32.
 
-	adma: adma@702e2000 {
-		...
-		power-domains = <&pd_audio>;
-		...
-	};
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
 
-> Then use reg property for the subnodes. That avoids a custom property.
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
 
-That is fine with me.
+Changes since v4:
+-----------------
+ - Rebase on v4.5-rc1
+ - Fix compilation breakage due to gpio_chip struct .dev field renaming
+ - Move the macros from includes/dt-bindings to STM32 pinctrl driver directory
+to avoid uneeded dependency between DT and driver.
+ - Fix Makefile so that driver is built with COMPILE_TEST set
 
-Jon
+Changes since v3:
+-----------------
+ - Rebase on v4.4
+ - Fix error paths in stm32_pctrl_dt_subnode_to_map() (Patrice)
+ - Remove useless stm32_pctrl_find_function_by_pin function (Patrice)
+
+Changes since v2:
+-----------------
+ - Rebase on v4.4-rc1
+ - Declare leds also for Eval board
+ - Set green led as heartbeat
+ - Collect some acks
+
+Changes since v1:
+-----------------
+ - Add GPIO LEDs support in DT and defconfig
+ - Changes pinmux DT bindings from macros to raw values (Daniel)
+ - Improve DT bindings documentation (Daniel)
+ - Fix some commit fixup and rebase issues.
+
+Kind regards,
+Maxime
+
+Maxime Coquelin (9):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  pinctrl: Add STM32 MCUs support
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+  ARM: dts: Add leds support to STM32F429 boards
+  ARM: config: Enable GPIO Led driver in stm32_defconfig
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  126 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   19 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   13 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ arch/arm/configs/stm32_defconfig                   |    1 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  832 ++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   51 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1239 +++++++++++++++
+ 14 files changed, 4018 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
+-- 
+1.9.1
+
