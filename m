@@ -1,73 +1,56 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH 2/9] ARC: [dts] Introduce Timer bindings
-Date: Wed, 3 Feb 2016 13:44:02 +0000
-Message-ID: <1454507041.3375.39.camel@synopsys.com>
-References: <1454410739-24444-1-git-send-email-vgupta@synopsys.com>
-	 <1454410739-24444-3-git-send-email-vgupta@synopsys.com>
-	 <1454418916.25997.18.camel@synopsys.com> <56B0BD2F.5080409@synopsys.com>
-	 <1454427373.25997.24.camel@synopsys.com>
-	 <1454453846.25997.31.camel@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
+Date: Wed, 03 Feb 2016 14:47:03 +0100
+Message-ID: <2782231.XGO9cUTm7n@wuerfel>
+References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com> <1930324.vU65IL0x0g@wuerfel> <56B1FF7A.3040906@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454453846.25997.31.camel@synopsys.com>
-Content-Language: en-US
-Content-ID: <9EBF973ADA374840A4F6D11FAA46591B@internal.synopsys.com>
+In-Reply-To: <56B1FF7A.3040906@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mturquette@ti.com" <mturquette@ti.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "noamc@ezchip.com" <noamc@ezchip.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlrZSwNCg0KT24gV2VkLCAyMDE2LTAyLTAzIGF0IDAxOjU3ICswMzAwLCBBbGV4ZXkgQnJv
-ZGtpbiB3cm90ZToNCj4gSGkgVmluZWV0LA0KPiANCj4gT24gVHVlLCAyMDE2LTAyLTAyIGF0IDE4
-OjM2ICswMzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToNCj4gPiBIaSBWaW5lZXQsDQo+ID4gDQo+
-ID4gT24gVHVlLCAyMDE2LTAyLTAyIGF0IDE5OjU5ICswNTMwLCBWaW5lZXQgR3VwdGEgd3JvdGU6
-DQo+ID4gPiBIaSBBbGV4ZXksDQo+ID4gPiANCj4gPiA+IE9uIFR1ZXNkYXkgMDIgRmVicnVhcnkg
-MjAxNiAwNjo0NSBQTSwgQWxleGV5IEJyb2RraW4gd3JvdGU6DQo+ID4gPiA+IEhpIFZpbmVldCwN
-Cj4gPiA+ID4gDQo+ID4gPiA+IE9uIFR1ZSwgMjAxNi0wMi0wMiBhdCAxNjoyOCArMDUzMCwgVmlu
-ZWV0IEd1cHRhIHdyb3RlOg0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKy0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAi
-c25wcyxhcmMtdGltZXIwIg0KPiA+ID4gPiA+ICstIGludGVycnVwdHMgOiBzaW5nbGUgSW50ZXJy
-dXB0IGdvaW5nIGludG8gcGFyZW50IGludGMNCj4gPiA+ID4gPiArCSAgICAgICAoMTYgZm9yIEFS
-Q0hTIGNvcmVzLCAzIGZvciBBUkM3MDAgY29yZXMpDQo+ID4gPiA+ID4gKy0gY2xvY2tzICAgICA6
-IHBoYW5kbGUgdG8gdGhlIHNvdXJjZSBjbG9jaw0KPiA+ID4gPiANCj4gPiA+ID4gQWN0dWFsbHkg
-d2UncmUgbm90IGZsZXhpYmxlIGhlcmUuDQo+ID4gPiA+IFNlZSB3ZSBoYXZlIGhhcmQtY29kZWQg
-ImNvcmVfY2xrIiBpbiBbUEFUQ0ggOC85XS4NCj4gPiA+ID4gV2UgdXNlIGl0IGRpcmVjdGx5IGlu
-IHNob3dfY3B1aW5mbygpIGZvciByZWFkaW5nIGNsb2NrIHNwZWVkDQo+ID4gPiA+IGFzIHdlbGwg
-YXMgaW4gYXhzMTAzX2Vhcmx5X2luaXQoKS4NCj4gPiA+ID4gDQo+ID4gPiA+IFNvICJzb3VyY2Ug
-Y2xvY2siIGhlcmUgTVVTVCBiZSAiY29yZV9jbGsiLCBvdGhlcndpc2UNCj4gPiA+ID4gL3Byb2Mv
-Y3B1aW5mbyB3aWxsIHJlcG9ydCBqdW5rIGluc3RlYWQgb2YgbWVhbmluZ2Z1bCBkYXRhIGF0IGxl
-YXN0Lg0KPiA+ID4gDQo+ID4gPiBVc2luZyBoYXJkY29kZWQgRFQgbmFtZXMgaW4gZ2VuZXJpYyBj
-b2RlIGlzIHRvdGFsIEJTIGFuZCBJIHNsYXAgbXlzZWxmIGZvciBtaXNzaW5nDQo+ID4gPiB0aGF0
-IGluIHJldmlld2luZyA4LzkuIFBsZWFzZSBmaXggaXQgIQ0KPiA+IA0KPiA+IEJ1dCB0aGUgb25s
-eSBvdGhlciBhbHRlcm5hdGl2ZSB0byBoYXJkLWNvZGVkIG5hbWUgaXMgdXNlIG9mIHNvbWUgaW50
-ZXJuYWwgdmFyaWFibGUNCj4gPiBsaWtlICJhcmNfdGltZXJfZnJlcSIuDQo+ID4gDQo+ID4gSS5l
-LiB3ZSBtYWtlICJhcmNfdGltZXJfZnJlcSIgZ2xvYmFsIGFuZCB1c2UgaXQgZm9yIGRpc3BsYXlp
-bmcgY29yZSBmcmVxdWVuY3kuDQo+IA0KPiBXZWxsIGFjdHVhbGx5IHRoZXJlJ3MgYW5vdGhlciBw
-b3NzaWJpbGl0eSB0aGF0IGlzIHVzZWQgb24gbWFueSBvdGhlciBwbGF0Zm9ybXMNCj4gKEFSTSBi
-b3RoIDMyIGFuZCA2NC1iaXQgZmxhdm9ycyBpcyBhIGdvb2QgZXhhbXBsZSkgLSBqdXN0IHByaW50
-IGJvZ29taXBzIGluc3RlYWQNCj4gb2YgYWRkaXRpb25hbCBjb3JlIGZyZXF1ZW5jeS4NCg0KV2Un
-cmUgaW4gdGhlIHByb2Nlc3Mgb2Ygc3dpdGNoaW5nIEFSQyB0byBnZW5lcmljIGNsayBmcmFtZXdv
-cmsuDQoNCk9uZSBvZiB0aGUgcHJvYmxlbXMgd2UncmUgdHJ5aW5nIHRvIHNvbHZlIG5vdyBpcyBo
-b3cgdG8gb2J0YWluDQpwcmVjaXNlIENQVSBmcmVxdWVuY3kgdmFsdWUgZm9yIG91dHB1dHRpbmcg
-aXQgZm9yIGV4YW1wbGUgYnkgL3Byb2MvY3B1aW5mby4NCg0KVGhpcyBwcmVjaXNlIChpbiB0ZXJt
-cyBvZiB3aGF0IHZhbHVlIHdhcyBzZXQgdmlhIERldmljZSBUcmVlIG9yIGV4dHJhY3RlZCBhbmQg
-ZGVjb2RlZA0KZnJvbSBDUFUgY29uZmlndXJhdGlvbiByZWdpc3RlcnMpIENQVSBmcmVxdWVuY3kg
-aXMgdmVyeSB1c2VmdWwgZm9yIGV4YW1wbGUgZm9yDQpiZW5jaG1hcmtpbmcuIEluIGNvbXBhcmlz
-b24gYm9nb21pcHMgbWlnaHQgYmUgbWlzbGVhZGluZyBhdCB0aW1lcy4NCg0KQmVmb3JlIG1vdmlu
-ZyB0byBjbGsgZnJhbWV3b3JrIHdlIHVzZWQgdG8gaGF2ZSAyIEFSQy1zcGVjaWZpYyBjYWxscw0K
-YXJjX2dldF9jb3JlX2ZyZXEoKSBhbmQgIGFyY19zZXRfY29yZV9mcmVxKCkgd2hpY2ggd2VyZSBi
-YXNpY2FsbHkgd3JhcHBlcnMgZm9yDQpvbmUgdmFyaWFibGUgd2hlcmUgd2Ugc3RvcmVkIENQVSBm
-cmVxdWVuY3kuDQoNCkkgdG9vayBhIGxvb2sgYXQgd2hhdCBvdGhlciBhcmNoaXRlY3R1cmVzIGRv
-IGFuZCBzbyBmYXIgc2F3IHRoZXNlIG9wdGlvbnM6DQogWzFdIEp1c3QgcHJpbnQgYm9nb21pcHMg
-KEFSTSBib3RoIDMyLSBhbmQgNjQtYml0LCBtNjRrLCBNaWNyb2JsYXplLCBNaXBzLA0KICAgICAg
-ICAgICAgICAgICAgICAgICAgICBtbjEwMzAwLCBvcGVucmlzYywgczM5MCwgc2gsIHVtLCB1bmlj
-b3JlMzIsICkNCiBbMl0gR2V0IGZyZXF1ZW5jeSBmcm9tIHNvbWUga2luZCBvZiBhcmNoaXRlY3R1
-cmUtc3BlY2lmaWMgc3RydWN0dXJlIG9yIHZhcmlhYmxlDQogICAgIChBbHBoYSwgQVZSMzIsIGM2
-eCwgbmlvczIsIHBvd2VycGMsIHNwYXJjLCB0aWxlLCB4dGVuc2EpIA0KIFszXSBHZXQgZnJlcXVl
-bmN5IGZyb20gY3B1ZnJlcSBmcmFtZXdvcmsgKGlhNjQsIHg4NikNCiBbNF0gRGVjb2RlIGZyZXF1
-ZW5jeSBmcm9tIGhhcmR3YXJlIHJlZ2lzdGVycyAoQmxhY2tmaW4pDQoNCkFueSB0aG91Z2h0cyBv
-biB3aGF0J3MgdGhlIGJlc3Qgd2F5IHRvIGdldCBDUFUgZnJlcXVlbmN5IGluIHJ1bi10aW1lDQoo
-cHJlZmVyYWJseSB3aXRoIHVzZSBvZiBjbGsgZnJhbWV3b3JrIHNvIHdlJ2xsIG5lZWQgbm8gYXJj
-aC1zcGVjaWZpYw0KdmFyaWFibGVzKT8NCg0KUmVnYXJkcywNCkFsZXhleQ==
+On Wednesday 03 February 2016 13:24:10 Zubair Lutfullah Kakakhel wrote:
+> > Typically we treat those special registers as part of the device itself
+> > and have a single device node for the AHCI controller and that one.
+> >
+> > What is your reason for doing it differently here?
+> 
+> Two reasons
+> 
+> 1- The hardware is like a proper split rather than additional hidden registers in
+> the same memory space.
+> 
+> 2- Tons of devices in the field have the following DT node built in the bootloader.
+> 
+>                 uctl@118006c000000 {
+>                         compatible = "cavium,octeon-7130-sata-uctl";
+>                         reg = <0x11800 0x6c000000 0x0 0x100>;
+>                         ...
+>                          sata: sata@16c0000000000 {
+>                                  compatible = "cavium,octeon-7130-ahci";
+>                                  reg = <0x16c00 0x00000000 0x0 0x200>;
+>                                 ...
+>                          };
+>                 };
+> 
+> The patch suggests a way to handle this.
+> 
+
+Ok, fair enough. Also, you write in the binding that this is a bus
+bridge, so this indeed matches what the hardware does, and that's ok.
+
+Does the bus bridge actually translate the entire 64-bit CPU MMIO space,
+or is it possible that it only handles one device (or a couple of
+them) with a fairly limited space?
+
+Maybe it's better to represent it as a #address-cells=<1> in the
+example, and have the child device appear at address 0 in there.
+
+For the machines that already ship a DT, that would not matter though,
+it works either way.
+
+	Arnd
