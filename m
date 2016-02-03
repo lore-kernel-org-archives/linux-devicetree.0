@@ -1,245 +1,187 @@
 From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/3] mwifiex: register platform specific driver
-Date: Tue, 2 Feb 2016 22:22:02 -0800
-Message-ID: <1454480524-27463-1-git-send-email-akarwar@marvell.com>
+Subject: [PATCH v2 3/3] mwifiex: parse host wakeup configuration from device tree
+Date: Tue, 2 Feb 2016 22:22:04 -0800
+Message-ID: <1454480524-27463-3-git-send-email-akarwar@marvell.com>
+References: <1454480524-27463-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454480524-27463-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Platform device and driver provides easy way to
-interact with device-tree-enabled system.
-
-This patch registers platform driver and reorganise
-existing device tree specific code.
-Corresponding device tree binding file is
-also created.
+This patch implement a framework for board specific wakeup.
+driver parse irq/gpio number from device tree, corresponding
+resources will be allocated, and used for host suspend/resume.
+driver private binding file is also updated in the patch.
 
 Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mwifiex.txt      | 29 +++++++++++
- drivers/net/wireless/marvell/mwifiex/Makefile      |  1 +
- drivers/net/wireless/marvell/mwifiex/main.c        |  2 +
- drivers/net/wireless/marvell/mwifiex/main.h        | 14 +++++
- .../net/wireless/marvell/mwifiex/platform_drv.c    | 59 ++++++++++++++++++++++
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  5 +-
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c   |  2 +-
- 7 files changed, 108 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mwifiex.txt
- create mode 100644 drivers/net/wireless/marvell/mwifiex/platform_drv.c
+v2: Guarded ".pm = mwifiex_plt_pm_ops" line with CONFIG_PM_SLEEP
+---
+ Documentation/devicetree/bindings/mwifiex.txt      | 10 +++
+ .../net/wireless/marvell/mwifiex/platform_drv.c    | 95 ++++++++++++++++++++++
+ 2 files changed, 105 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/mwifiex.txt b/Documentation/devicetree/bindings/mwifiex.txt
-new file mode 100644
-index 0000000..39b6a74
---- /dev/null
+index 367c97e..68919c7 100644
+--- a/Documentation/devicetree/bindings/mwifiex.txt
 +++ b/Documentation/devicetree/bindings/mwifiex.txt
-@@ -0,0 +1,29 @@
-+mwifiex
-+------
-+
-+Required properties:
-+
-+  - name : must be "mwifiex"
-+  - compatible : must be "marvell,mwifiex"
-+
-+Optional properties:
-+
-+  - mwifiex,caldata* : A series of properties with marvell,caldata prefix,
-+  		      represent Calibration data downloaded to the device during
-+		      initialization. This is an array of unsigned values.
-+
-+
-+Example:
-+
-+Tx power limit calibration data is configured in below example.
-+The calibration data is an array of unsigned values, the length
-+can vary between hw versions.
-+
-+mwifiex {
-+	compatible = "marvell,mwifiex";
-+
-+	mwifiex,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
-+0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
-+
-+};
-+
-diff --git a/drivers/net/wireless/marvell/mwifiex/Makefile b/drivers/net/wireless/marvell/mwifiex/Makefile
-index fdfd9bf..1444fd1 100644
---- a/drivers/net/wireless/marvell/mwifiex/Makefile
-+++ b/drivers/net/wireless/marvell/mwifiex/Makefile
-@@ -42,6 +42,7 @@ mwifiex-y += cfg80211.o
- mwifiex-y += ethtool.o
- mwifiex-y += 11h.o
- mwifiex-y += tdls.o
-+mwifiex-y += platform_drv.o
- mwifiex-$(CONFIG_DEBUG_FS) += debugfs.o
- obj-$(CONFIG_MWIFIEX) += mwifiex.o
+@@ -14,6 +14,11 @@ Optional properties:
+   - mwifiex,chip-gpio : Chip's wakeup gpio pin number. This needs to be downloaded
+ 			to to firmware. Chip notifies wifi wakeup signal to SOC
+ 			through this pin.
++  - interrupt-parent: phandle of the parent interrupt controller
++  - interrupts : interrupt number to the cpu
++  - gpios: specify SOC's wakeup GPIO
++  - pinctrl-names : a pinctrl state named "default" must be defined
++  - pinctrl-0 : pin control group to be used for this controller
  
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index 3cfa946..b93ae69 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -1538,6 +1538,7 @@ EXPORT_SYMBOL_GPL(_mwifiex_dbg);
- static int
- mwifiex_init_module(void)
- {
-+	mwifiex_platform_drv_init();
- #ifdef CONFIG_DEBUG_FS
- 	mwifiex_debugfs_init();
- #endif
-@@ -1552,6 +1553,7 @@ mwifiex_init_module(void)
- static void
- mwifiex_cleanup_module(void)
- {
-+	mwifiex_platform_drv_exit();
- #ifdef CONFIG_DEBUG_FS
- 	mwifiex_debugfs_remove();
- #endif
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index aea7aee..464d79f 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -37,6 +37,16 @@
- #include <linux/idr.h>
- #include <linux/inetdevice.h>
- #include <linux/devcoredump.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/gfp.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
+ Example:
  
- #include "decl.h"
- #include "ioctl.h"
-@@ -47,6 +57,7 @@
- #include "sdio.h"
+@@ -27,5 +32,10 @@ mwifiex {
+ 	mwifiex,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
+ 0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
+ 	mwifiex,chip-gpio = <3>;
++	interrupt-parent = <&pio>;
++	interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
++	gpios = <&pio 38 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&wake_pins>;
+ };
  
- extern const char driver_version[];
-+extern struct platform_device *mwifiex_plt_dev;
- 
- struct mwifiex_adapter;
- struct mwifiex_private;
-@@ -1597,6 +1608,9 @@ void mwifiex_process_multi_chan_event(struct mwifiex_private *priv,
- 				      struct sk_buff *event_skb);
- void mwifiex_multi_chan_resync(struct mwifiex_adapter *adapter);
- 
-+int mwifiex_platform_drv_init(void);
-+void mwifiex_platform_drv_exit(void);
-+
- #ifdef CONFIG_DEBUG_FS
- void mwifiex_debugfs_init(void);
- void mwifiex_debugfs_remove(void);
 diff --git a/drivers/net/wireless/marvell/mwifiex/platform_drv.c b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-new file mode 100644
-index 0000000..f64a12a
---- /dev/null
+index f64a12a..2eb813c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/platform_drv.c
 +++ b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-@@ -0,0 +1,59 @@
-+/* Marvell wireless LAN device driver: platform specific driver
-+ *
-+ * Copyright (C) 2015, Marvell International Ltd.
-+ *
-+ * This software file (the "File") is distributed by Marvell International
-+ * Ltd. under the terms of the GNU General Public License Version 2, June 1991
-+ * (the "License").  You may use, redistribute and/or modify this File in
-+ * accordance with the terms and conditions of the License, a copy of which
-+ * is available on the worldwide web at
-+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-+ *
-+ * THE FILE IS DISTRIBUTED AS-IS, WITHOUT WARRANTY OF ANY KIND, AND THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE
-+ * ARE EXPRESSLY DISCLAIMED.  The License provides additional details about
-+ * this warranty disclaimer.
-+ */
-+#include "main.h"
-+
-+struct platform_device *mwifiex_plt_dev;
-+
-+static int mwifiex_plt_probe(struct platform_device *pdev)
-+{
-+	mwifiex_plt_dev = pdev;
-+	return 0;
-+}
-+
-+static int mwifiex_plt_remove(struct platform_device *pdev)
-+{
-+	mwifiex_plt_dev = NULL;
-+	return 0;
-+}
-+
-+static const struct of_device_id mwifiex_dt_match[] = {
-+	{
-+		.compatible = "marvell,mwifiex",
-+	},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, mwifiex_dt_match);
-+
-+static struct platform_driver mwifiex_platform_driver = {
-+	.probe		= mwifiex_plt_probe,
-+	.remove		= mwifiex_plt_remove,
-+	.driver = {
-+		.name	= "mwifiex_plt",
-+		.of_match_table = mwifiex_dt_match,
-+	}
-+};
-+
-+int mwifiex_platform_drv_init(void)
-+{
-+	return platform_driver_register(&mwifiex_platform_driver);
-+}
-+
-+void mwifiex_platform_drv_exit(void)
-+{
-+	platform_driver_unregister(&mwifiex_platform_driver);
-+}
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index 30f1526..64fc697 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -2154,11 +2154,10 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
- 		 * The cal-data can be read from device tree and/or
- 		 * a configuration file and downloaded to firmware.
- 		 */
--		adapter->dt_node =
--				of_find_node_by_name(NULL, "marvell_cfgdata");
-+		adapter->dt_node = mwifiex_plt_dev->dev.of_node;
- 		if (adapter->dt_node) {
- 			ret = mwifiex_dnld_dt_cfgdata(priv, adapter->dt_node,
--						      "marvell,caldata");
-+						      "mwifiex,caldata");
- 			if (ret)
- 				return -1;
- 		}
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-index 5cbee58..c598f66 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -195,7 +195,7 @@ int mwifiex_fill_new_bss_desc(struct mwifiex_private *priv,
- void mwifiex_dnld_txpwr_table(struct mwifiex_private *priv)
- {
- 	if (priv->adapter->dt_node) {
--		char txpwr[] = {"marvell,00_txpwrlimit"};
-+		char txpwr[] = {"mwifiex,00_txpwrlimit"};
+@@ -18,9 +18,63 @@
  
- 		memcpy(&txpwr[8], priv->adapter->country_code, 2);
- 		mwifiex_dnld_dt_cfgdata(priv, priv->adapter->dt_node, txpwr);
+ struct platform_device *mwifiex_plt_dev;
+ 
++struct mwifiex_wake_dev {
++	struct device	*dev;
++	int		irq_wifi;
++	bool		wake_by_wifi;
++};
++
++static irqreturn_t mwifiex_wake_irq_wifi(int irq, void *priv)
++{
++	struct mwifiex_wake_dev *ctx = priv;
++
++	if (ctx->irq_wifi >= 0) {
++		ctx->wake_by_wifi = true;
++		disable_irq_nosync(ctx->irq_wifi);
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static int mwifiex_plt_probe(struct platform_device *pdev)
+ {
++	int ret;
++	struct mwifiex_wake_dev *ctx;
++	int gpio;
++
+ 	mwifiex_plt_dev = pdev;
++
++	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->dev = &pdev->dev;
++	ctx->irq_wifi = platform_get_irq(pdev, 0);
++	if (ctx->irq_wifi < 0)
++		dev_err(&pdev->dev, "Failed to get irq_wifi\n");
++
++	gpio = of_get_gpio(pdev->dev.of_node, 0);
++	if (gpio_is_valid(gpio))
++		gpio_direction_input(gpio);
++	else
++		dev_err(&pdev->dev, "gpio wifi is invalid\n");
++
++	if (ctx->irq_wifi >= 0) {
++		ret = devm_request_irq(&pdev->dev, ctx->irq_wifi,
++				       mwifiex_wake_irq_wifi,
++				       IRQF_TRIGGER_LOW,
++				       "wifi_wake", ctx);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Failed to request irq_wifi %d (%d)\n",
++				ctx->irq_wifi, ret);
++			return -EINVAL;
++		}
++		disable_irq(ctx->irq_wifi);
++	}
++
++	platform_set_drvdata(pdev, ctx);
++
+ 	return 0;
+ }
+ 
+@@ -30,6 +84,44 @@ static int mwifiex_plt_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int mwifiex_plt_suspend(struct device *dev)
++{
++	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
++	int ret;
++
++	if (ctx->irq_wifi >= 0) {
++		ctx->wake_by_wifi = false;
++		enable_irq(ctx->irq_wifi);
++		ret = enable_irq_wake(ctx->irq_wifi);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int mwifiex_plt_resume(struct device *dev)
++{
++	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
++	int ret;
++
++	if (ctx->irq_wifi >= 0) {
++		ret = disable_irq_wake(ctx->irq_wifi);
++		if (!ctx->wake_by_wifi)
++			disable_irq(ctx->irq_wifi);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops mwifiex_plt_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(mwifiex_plt_suspend, mwifiex_plt_resume)
++};
++#endif /* CONFIG_PM_SLEEP */
++
+ static const struct of_device_id mwifiex_dt_match[] = {
+ 	{
+ 		.compatible = "marvell,mwifiex",
+@@ -45,6 +137,9 @@ static struct platform_driver mwifiex_platform_driver = {
+ 	.driver = {
+ 		.name	= "mwifiex_plt",
+ 		.of_match_table = mwifiex_dt_match,
++#ifdef CONFIG_PM_SLEEP
++		.pm             = &mwifiex_plt_pm_ops,
++#endif
+ 	}
+ };
+ 
 -- 
 1.8.1.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
