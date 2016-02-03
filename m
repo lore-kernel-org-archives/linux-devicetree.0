@@ -1,124 +1,112 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: mailbox: Document Hi6220 mailbox
- driver
-Date: Wed, 3 Feb 2016 14:47:17 -0600
-Message-ID: <20160203204717.GA1713@rob-hp-laptop>
-References: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
- <1454407782-24674-2-git-send-email-leo.yan@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 17/26] drm: sun4i: Add DT bindings documentation
+Date: Wed, 3 Feb 2016 21:47:30 +0100
+Message-ID: <20160203204730.GH3327@lukather>
+References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452785109-6172-18-git-send-email-maxime.ripard@free-electrons.com>
+ <20160115031515.GA19797@rob-hp-laptop>
+ <20160203195919.GB3327@lukather>
+ <CAL_JsqLLvK0L+PaOxesgr9u_3hb6EWbb9w2-yw80D8sUqiohTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454407782-24674-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0403805270=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLLvK0L+PaOxesgr9u_3hb6EWbb9w2-yw80D8sUqiohTA@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexander Kaplan <alex@nextthing.co>, Chen-Yu Tsai <wens@csie.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 06:09:39PM +0800, Leo Yan wrote:
-> Document DT binding for Hisilicon Hi6220 mailbox driver.
-> 
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 74 ++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
 
-One nit, otherwise:
+--===============0403805270==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Enx9fNJ0XV5HaWRu"
+Content-Disposition: inline
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-> new file mode 100644
-> index 0000000..8508c8a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-> @@ -0,0 +1,74 @@
-> +Hisilicon Hi6220 Mailbox Driver
-> +===============================
-> +
-> +Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
-> +is unidirectional with a maximum message size of 8 words. I/O is
-> +performed using register access (there is no DMA) and the cell
-> +raises an interrupt when messages are received.
-> +
-> +Mailbox Device Node:
-> +====================
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Shall be "hisilicon,hi6220-mbox"
-> +- reg:			Contains the mailbox register address range (base
-> +			address and length); the first item is for IPC
-> +			registers, the second item is shared buffer for
-> +			slots.
-> +- #mbox-cells:		Common mailbox binding property to identify the number
-> +			of cells required for the mailbox specifier. Must be 3.
-> +			<&phandle slot_id dst_irq ack_irq>
-> +			  phandle: Label name of mailbox controller
-> +			  slot_id: Slot id used either for TX or RX
-> +			  dst_irq: IRQ identifier index number which used by MCU
-> +			  ack_irq: IRQ identifier index number with generating a
-> +			           TX/RX interrupt to application processor,
-> +				   mailbox driver uses it to acknowledge interrupt
-> +- interrupts:		Contains the interrupt information for the mailbox
-> +			device. The format is dependent on which interrupt
-> +			controller the SoCs use.
-> +
-> +Optional Properties:
-> +--------------------
-> +- hi6220,mbox-tx-noirq: Property of MCU firmware's feature, so mailbox driver
-> +			use this flag to ask MCU to enable "automatic idle
-> +			flag" mode or IRQ generated mode to acknowledge a TX
-> +			completion.
-> +
-> +Example:
-> +--------
-> +
-> +	mailbox: mailbox@F7510000 {
+--Enx9fNJ0XV5HaWRu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-use lowercase for hex
+On Wed, Feb 03, 2016 at 02:19:31PM -0600, Rob Herring wrote:
+> >> > +Required properties:
+> >> > +  - compatible: value must be one of:
+> >> > +    * allwinner,sun5i-a13-display-engine
+> >> > +  - allwinner,pipelines: list of phandle to the entry points of the
+> >> > +    pipelines (either to the frontend or backend)
+> >> > +
+> >> > +Example:
+> >> > +
+> >> > +panel: panel {
+> >> > +   compatible =3D "olimex,lcd-olinuxino-43-ts";
+> >>
+> >> This should either be a child of what it is attached to or use of-grap=
+h.
+> >
+> > You had a similar discussion with Thierry last time I sent it, and it
+> > seemed to settle on keeping that property:
+> >
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/3821=
+15.html
+> >
+> > Has that changed?
+>=20
+> No, I still disagree. We already have 2 ways to describe panels: as a
+> child node of its controller or with of-graph. We don't need a 3rd way
+> even if it is simple. The problem with of-graph today is too much of
+> the parsing is left to the individual drivers. We need to fix that and
+> make it be handled by common code.
 
-> +		compatible = "hisilicon,hi6220-mbox";
-> +		reg = <0x0 0xF7510000 0x0 0x1000>, /* IPC_S */
-> +		      <0x0 0x06DFF800 0x0 0x0800>; /* Mailbox */
+Ok. I'm guessing from your answer you prefer of-graph over a child
+node ?
 
-and here too.
+Maxime
 
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> +		#mbox-cells = <3>;
-> +	};
-> +
-> +
-> +Mailbox client
-> +===============
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Many (See the client docs).
-> +- mboxes:		Standard property to specify a Mailbox (See ./mailbox.txt)
-> +			Cells must match 'mbox-cells' (See Mailbox Device Node above).
-> +
-> +Optional Properties:
-> +--------------------
-> +- mbox-names:		Name given to channels seen in the 'mboxes' property.
-> +
-> +Example:
-> +--------
-> +
-> +	stub_clock: stub_clock {
-> +		compatible = "hisilicon,hi6220-stub-clk";
-> +		hisilicon,hi6220-clk-sram = <&sram>;
-> +		#clock-cells = <1>;
-> +		mbox-names = "mbox-tx", "mbox-rx";
-> +		mboxes = <&mailbox 1 0 11>, <&mailbox 0 1 10>;
-> +	};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Enx9fNJ0XV5HaWRu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWsmdiAAoJEBx+YmzsjxAgjjUP/ihzDkHF+6IFISkyEOzDwhll
+oLsbKRh9ANnXhv1lYPk/4Eum3/27pk634k1wxwE/bH/l84/SJ5ttOir/fztm7Pal
+qTzc0A5hgL/IG7y00JTtSzS+mWG4RBzr3clkmvleAqAtea63lenxj5uQCJOrpJ3S
+rKgW5WlWxb4Bt8GY3Yye2LfZcu1XGl/DVQuCXjutgwB+UurluUQ9AVqWFp5fVPbf
+Hv0lwxmdudIplskjM2/soPRflVC3G5zyeRrm/OAejhMoFcxz+VqVJBegS3SheN6A
+/r2GpjcXKsNqqXgGfAEmeFbTnCOtT0PAzRI0cKIRgRYc99sZE0WEJc2jqzUGRclS
+q+yxMv3gInIBhllZJzVNM6PbQn0XN7cQQqPvwHy4h4wo4TdDA0rG6QwLEm4+n3DO
+AFLos38mWAOxDc/GP6mh9RV1C7Jmn383Q4UuHvxQix/eq/d33v/Ha+1EYo4gKX5k
+VWgjMfGWVB5rXO4u9uZihmcDL+G24sinB9lMWZiy6ephqyVq52e7deipzbrbRa/e
+Mny9pO1THbvyYSNJzwShzMMTa9zZfwX6xiVVlAwl5NMP6iks+rgYJ4hyvysoWcpA
+wzmE2rgM1trVilkK7SlG8hyXE0uVveKQXqCJn7FIO0uwUvOlERikxryzfWiu4b6J
+8y/xGj+vAItasxHqzrur
+=kXQ2
+-----END PGP SIGNATURE-----
+
+--Enx9fNJ0XV5HaWRu--
+
+--===============0403805270==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0403805270==--
