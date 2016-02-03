@@ -1,63 +1,424 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: FW: [RFC 3/3] CMDQ: Mediatek CMDQ driver
-Date: Wed, 3 Feb 2016 14:40:47 +0800
-Message-ID: <CAGS+omABD93f3X0pfiFgaxa9Lob2txkJfUUomUvs+hiRkxSuHw@mail.gmail.com>
-References: <8A0FDEEF9DBBD140A3857422D81DA20F867B19FD@mtkmbs01n1> <1454479333.11967.12.camel@mtksdaap41>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 07/10] arm64: dts: add the Marvell Armada 3700 family
+ and a development board
+Date: Wed, 3 Feb 2016 14:37:11 +0800
+Message-ID: <20160203143711.1eee3243@xhacker>
+References: <1454436468-4241-1-git-send-email-gregory.clement@free-electrons.com>
+	<1454436468-4241-8-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454479333.11967.12.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1454436468-4241-8-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi Dan,
->
-> Thanks for your comment.
-> This solution looks good to me.
-> I will change it as your suggestion.
->
-> But, I have a question about 'mask out the provided *device virtual*
-> address'.
-> Are lower 16-bits (or 24-bits for JUMP op) of device virtual address the
-> same as device physical address?
+On Tue, 2 Feb 2016 19:07:45 +0100 Gregory CLEMENT wrote:
 
-I'm not sure.  But I doubt it we can rely on this.
-My guess would be that the ioremap only preserves the lower 12 bits
-(4k page size).
+> Add initial dtsi files to support Marvell Armada 3700 SoC with Cortex-A53
+> CPUs. There are two members in this family: the Armada 3710 (Single CPU)
+> and the Armada 3720 (Dual CPUs).
+> 
+> It also adds a dts file for the Marvell Armada 3720 DB board.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  arch/arm64/boot/dts/marvell/Makefile           |   4 +
+>  arch/arm64/boot/dts/marvell/armada-371x.dtsi   |  53 ++++++++++
+>  arch/arm64/boot/dts/marvell/armada-3720-db.dts |  87 ++++++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-372x.dtsi   |  63 ++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 131 +++++++++++++++++++++++++
+>  5 files changed, 338 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-371x.dtsi
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-db.dts
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-372x.dtsi
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 348f4db4f313..bc2eabe1cab1 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -1,6 +1,10 @@
+> +# Berlin SoC Family
+>  dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
+>  dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+>  
+> +# Mvebu SoC Family
+> +dtb-$(CONFIG_ARCH_ARMADA_3700) += armada-3720-db.dtb
+> +
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+>  clean-files	:= *.dtb
+> diff --git a/arch/arm64/boot/dts/marvell/armada-371x.dtsi b/arch/arm64/boot/dts/marvell/armada-371x.dtsi
+> new file mode 100644
+> index 000000000000..c9e5325b8ac3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-371x.dtsi
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Device Tree Include file for Marvell Armada 371x family of SoCs
+> + * (also named 88F3710)
+> + *
+> + * Copyright (C) 2016 Marvell
 
-> If not, we still need to pass in physical address into CMDQ driver.
+Is it better to Add full Marvell company name, eg. Marvell Technology Group Ltd.
 
-Or, instead of the iommu/slot approach, we can just provide a
-registration function for the gce driver.
-Each gce consumer could then have a simple gce node, with no slot/address:
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-  mediatek,gce = <&gce>;
+Do we need to put "Author: " at the head?
 
-Then on probe, the gce consumer could pass in its (struct device *) to
-gce_register_device().  gce_register_device() could then access the
-device's of_node to extract its physical address range, and look up
-its physical address in its table of per-soc of
-"device_address:gce_subsys_address" entries.  If the physical address
-is in a valid subsys ranges, the gce_register_device would cache the
-subsys address, and an offset in a (struct gce_consumer).
-gce_register_device() could then add this struct to a struct list_head
-of gce_consumers, and finally return a pointer to it back to the
-caller.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "armada-37xx.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Armada 3710 SoC";
+> +	compatible = "marvell,armada3710", "marvell,armada3700";
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+> new file mode 100644
+> index 000000000000..76cae6ba2bd6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+> @@ -0,0 +1,87 @@
+> +/*
+> + * Device Tree file for Marvell Armada 3720 development board
+> + * (DB-88F3720-DDR3)
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "armada-372x.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Armada 3720 Development Board DB-88F3720-DDR3";
+> +	compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3700";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* use only 256 MB on the 512 MB available */
+> +		reg = <0x00000000 0x00000000 0x00000000 0x10000000>;
+> +	};
+> +
+> +	soc {
+> +		internal-regs {
+> +			/*
+> +			* Exported on the micro USB connector CON32
+> +			* through an FTDI
+> +			*/
+> +			uart0: serial@12000 {
+> +				status = "okay";
+> +			};
+> +
+> +			/* CON31 */
+> +			usb3@58000 {
+> +				status = "okay";
+> +			};
+> +
+> +			/* CON3 */
+> +			sata@e0000 {
+> +			       status = "okay";
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> diff --git a/arch/arm64/boot/dts/marvell/armada-372x.dtsi b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
+> new file mode 100644
+> index 000000000000..f57f41c20ddf
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
+> @@ -0,0 +1,63 @@
+> +/*
+> + * Device Tree Include file for Marvell Armada 372x family of SoCs
+> + * (also named 88F3720)
+> + *
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "armada-37xx.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Armada 3720 SoC";
+> +	compatible = "marvell,armada3720", "marvell,armada3700";
+> +
+> +	cpus {
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53","arm,armv8";
+> +			reg = <0x1>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> new file mode 100644
+> index 000000000000..ba9df7ff2a72
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> @@ -0,0 +1,131 @@
+> +/*
+> + * Device Tree Include file for Marvell Armada 37xx family of SoCs.
+> + *
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	model = "Marvell Armada 37xx SoC";
+> +	compatible = "marvell,armada3700";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 14
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 11
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 10
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		internal-regs {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "simple-bus";
+> +			/* 32M internal register @ 0xd000_0000 */
+> +			ranges = <0x0 0x0 0xd0000000 0x2000000>;
+> +
+> +			uart0: serial@12000 {
+> +				compatible = "marvell,armada-3700-uart";
+> +				reg = <0x12000 0x400>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usb3@58000 {
+> +				compatible = "generic-xhci";
+> +				reg = <0x58000 0x4000>;
+> +				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			sata@e0000 {
+> +				compatible = "marvell,armada-3700-ahci";
+> +				reg = <0xe0000 0x2000>;
+> +				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			gic: interrupt-controller@1d00000 {
+> +				compatible = "arm,gic-v3";
+> +				#interrupt-cells = <3>;
+> +				interrupt-controller;
+> +				reg = <0x1d00000 0x10000>, /* GICD */
+> +				      <0x1d40000 0x40000>; /* GICR */
 
-Later, the gce consumer could pass in ths (struct gce_consumer *) when
-make gce calls, along with the *offset* (not the physical address or
-virtual address) for the register that it wishes to access.  Then the
-gce driver can simply use the gce_consumer->subsys entry to create a
-gce address from the passed in offset.
+There's no GICC, GICV, GICH?
 
-This will keep the binding very simple, and would remove the need to
-convert from device virtual to physical addresses by the gce consumer,
-but require a little more per-gce-consumer setup.
+Thanks,
+Jisheng
 
--Dan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			};
+> +		};
+> +	};
+> +};
+
