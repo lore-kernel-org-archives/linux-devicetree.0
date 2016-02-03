@@ -1,278 +1,555 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH v7] SATA: OCTEON: support SATA on OCTEON platform
-Date: Wed, 3 Feb 2016 17:35:15 +0000
-Message-ID: <1454520915-27948-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tj@kernel.org, hdegoede@redhat.com
-Cc: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Zubair.Kakakhel@imgtec.com
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: Add dts for Uniwest evi
+Date: Wed,  3 Feb 2016 09:37:45 -0800
+Message-ID: <1454521065-14241-1-git-send-email-stillcompiling@gmail.com>
+References: <1454491459.3415.6.camel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454491459.3415.6.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
+Uniwest evi is a portable electrical eddy current non-destructive
+testing device.
 
-The OCTEON SATA controller is currently found on cn71XX devices.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: David Daney <david.daney@cavium.com>
-Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes in v7
-- Rebase to v4.5-rc2
-- Use #defines instead of __BITFIELD
-- Add sign off from Zubair
 
-Changes in v6
-- Rebase to v4.5-rc1
-- Tested on utm8 by rhino labs. CN7130
+Changes since v2:
+- removed fsl,data-mapping and fsl,data-width from lvds0 per Phillip Zabel
+- removed MX6QDL_PAD_GPIO_19__GPIO4_IO05 from hoggrp. This pin is
+  used in a not yet upstreamed input driver.
 
-Changes in v5:
-- Sparse warnings are fixed
-- Device tree docs are improved
+ arch/arm/boot/dts/Makefile      |   1 +
+ arch/arm/boot/dts/imx6q-evi.dts | 502 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 503 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-evi.dts
 
-Changes in v4:
-- The call to dma_coerce_mask_and_coherent() was removed as suggested
-  by Arnd Bergmann dma_mask and coherent_dma_mask are actually set
-  in the ahci_platform_init_host() (libahci_platform.c)
-
-Changes in v3:
-- Rebased to v4.0-rc2
-- Cosmetic changes
-
-Changes in v2:
-- The driver was rewritten as a driver for the UCTL SATA controller glue.
-  It allowed to get rid of the most changes in ahci_platform.c
-- Documentation for the device tree bindings was fixed.
----
- .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
- .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  42 +++++++++
- drivers/ata/Kconfig                                |   9 ++
- drivers/ata/Makefile                               |   1 +
- drivers/ata/ahci_platform.c                        |   1 +
- drivers/ata/sata_octeon.c                          | 105 +++++++++++++++++++++
- 6 files changed, 159 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
- create mode 100644 drivers/ata/sata_octeon.c
-
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index c2340ee..3d84dca 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -11,6 +11,7 @@ Required properties:
- - compatible        : compatible string, one of:
-   - "allwinner,sun4i-a10-ahci"
-   - "hisilicon,hisi-ahci"
-+  - "cavium,octeon-7130-ahci"
-   - "ibm,476gtr-ahci"
-   - "marvell,armada-380-ahci"
-   - "snps,dwc-ahci"
-diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index c4f42a78..4a4ef29 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -326,6 +326,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-cubox-i.dtb \
+ 	imx6q-dfi-fs700-m60.dtb \
+ 	imx6q-dmo-edmqmx6.dtb \
++	imx6q-evi.dtb \
+ 	imx6q-gk802.dtb \
+ 	imx6q-gw51xx.dtb \
+ 	imx6q-gw52xx.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
 new file mode 100644
-index 0000000..3bd3c2f
+index 0000000..4fa5601
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-@@ -0,0 +1,42 @@
-+* UCTL SATA controller glue
-+
-+UCTL is the bridge unit between the I/O interconnect (an internal bus)
-+and the SATA AHCI host controller (UAHC). It performs the following functions:
-+	- provides interfaces for the applications to access the UAHC AHCI
-+	  registers on the CN71XX I/O space.
-+	- provides a bridge for UAHC to fetch AHCI command table entries and data
-+	  buffers from Level 2 Cache.
-+	- posts interrupts to the CIU.
-+	- contains registers that:
-+		- control the behavior of the UAHC
-+		- control the clock/reset generation to UAHC
-+		- control endian swapping for all UAHC registers and DMA accesses
-+
-+Properties:
-+
-+- compatible: "cavium,octeon-7130-sata-uctl"
-+
-+  Compatibility with the cn7130 SOC.
-+
-+- reg: The base address of the UCTL register bank.
-+
-+- #address-cells, #size-cells, ranges and dma-ranges must be present and hold
-+	suitable values to map all child nodes.
-+
-+Example:
-+
-+	uctl@118006c000000 {
-+		compatible = "cavium,octeon-7130-sata-uctl";
-+		reg = <0x11800 0x6c000000 0x0 0x100>;
-+		ranges; /* Direct mapping */
-+		dma-ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		sata: sata@16c0000000000 {
-+			compatible = "cavium,octeon-7130-ahci";
-+			reg = <0x16c00 0x00000000 0x0 0x200>;
-+			interrupt-parent = <&cibsata>;
-+			interrupts = <2 4>; /* Bit: 2, level */
-+		};
-+	};
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 861643ea..98c5215 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -215,6 +215,15 @@ config SATA_SIL24
- 
- 	  If unsure, say N.
- 
-+config SATA_OCTEON
-+	tristate "Cavium Octeon Soc Serial ATA"
-+	depends on SATA_AHCI_PLATFORM && CAVIUM_OCTEON_SOC
-+	default y
-+	help
-+	  This option enables support for Cavium Octeon SoC Serial ATA.
-+
-+	  If unsure, say N.
-+
- config ATA_SFF
- 	bool "ATA SFF support (for legacy IDE and PATA)"
- 	default y
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index af45eff..dd6a036 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_SATA_ACARD_AHCI)	+= acard-ahci.o libahci.o
- obj-$(CONFIG_SATA_AHCI_PLATFORM) += ahci_platform.o libahci.o libahci_platform.o
- obj-$(CONFIG_SATA_FSL)		+= sata_fsl.o
- obj-$(CONFIG_SATA_INIC162X)	+= sata_inic162x.o
-+obj-$(CONFIG_SATA_OCTEON)	+= sata_octeon.o
- obj-$(CONFIG_SATA_SIL24)	+= sata_sil24.o
- obj-$(CONFIG_SATA_DWC)		+= sata_dwc_460ex.o
- obj-$(CONFIG_SATA_HIGHBANK)	+= sata_highbank.o libahci.o
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 04975b8..4044233 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -76,6 +76,7 @@ static const struct of_device_id ahci_of_match[] = {
- 	{ .compatible = "ibm,476gtr-ahci", },
- 	{ .compatible = "snps,dwc-ahci", },
- 	{ .compatible = "hisilicon,hisi-ahci", },
-+	{ .compatible = "cavium,octeon-7130-ahci", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ahci_of_match);
-diff --git a/drivers/ata/sata_octeon.c b/drivers/ata/sata_octeon.c
-new file mode 100644
-index 0000000..4ea12e6
---- /dev/null
-+++ b/drivers/ata/sata_octeon.c
-@@ -0,0 +1,105 @@
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -0,0 +1,502 @@
 +/*
-+ * SATA glue for Cavium Octeon III SOCs.
++ * Copyright 2016 United Western Technologies.
 + *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole
 + *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
 + *
-+ * Copyright (C) 2010-2015 Cavium Networks
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + *
 + */
 +
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
++/dts-v1/;
++#include "imx6q.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+#include <asm/octeon/octeon.h>
-+#include <asm/bitfield.h>
++/ {
++	model = "Uniwest Evi";
++	compatible = "uniwest,imx6q-evi", "fsl,imx6q";
 +
-+#define CVMX_SATA_UCTL_SHIM_CFG		0xE8
++	memory {
++		reg = <0x10000000 0x40000000>;
++	};
 +
-+#define SATA_UCTL_ENDIAN_MODE_BIG	1
-+#define SATA_UCTL_ENDIAN_MODE_LITTLE	0
-+#define SATA_UCTL_ENDIAN_MODE_MASK	3
++	reg_usbh1_vbus: regulator-usbhubreset {
++		compatible = "regulator-fixed";
++		regulator-name = "usbh1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		startup-delay-us = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbh1_hubreset>;
++		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
++	};
 +
-+#define SATA_UCTL_DMA_ENDIAN_MODE_SHIFT	8
-+#define SATA_UCTL_CSR_ENDIAN_MODE_SHIFT	0
-+#define SATA_UCTL_DMA_READ_CMD_SHIFT	12
++	reg_usb_otg_vbus: regulator-usbotgvbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbotgvbus>;
++		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
 +
-+static int ahci_octeon_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct resource *res;
-+	void __iomem *base;
-+	u64 cfg;
-+	int ret;
++	panel {
++		compatible = "sharp,lq101k1ly04";
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
-+		return -ENODEV;
-+	}
-+
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	cfg = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-+
-+	cfg &= ~(SATA_UCTL_ENDIAN_MODE_MASK << SATA_UCTL_DMA_ENDIAN_MODE_SHIFT);
-+	cfg &= ~(SATA_UCTL_ENDIAN_MODE_MASK << SATA_UCTL_CSR_ENDIAN_MODE_SHIFT);
-+
-+#ifdef __BIG_ENDIAN
-+	cfg |= SATA_UCTL_ENDIAN_MODE_BIG << SATA_UCTL_DMA_ENDIAN_MODE_SHIFT;
-+	cfg |= SATA_UCTL_ENDIAN_MODE_BIG << SATA_UCTL_CSR_ENDIAN_MODE_SHIFT;
-+#else
-+	cfg |= SATA_UCTL_ENDIAN_MODE_LITTLE << SATA_UCTL_DMA_ENDIAN_MODE_SHIFT;
-+	cfg |= SATA_UCTL_ENDIAN_MODE_LITTLE << SATA_UCTL_CSR_ENDIAN_MODE_SHIFT;
-+#endif
-+
-+	cfg |= 1 << SATA_UCTL_DMA_READ_CMD_SHIFT;
-+
-+	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, cfg);
-+
-+	if (!node) {
-+		dev_err(dev, "no device node, failed to add octeon sata\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_platform_populate(node, NULL, NULL, dev);
-+	if (ret) {
-+		dev_err(dev, "failed to add ahci-platform core\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ahci_octeon_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id octeon_ahci_match[] = {
-+	{ .compatible = "cavium,octeon-7130-sata-uctl", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, octeon_ahci_match);
-+
-+static struct platform_driver ahci_octeon_driver = {
-+	.probe          = ahci_octeon_probe,
-+	.remove         = ahci_octeon_remove,
-+	.driver         = {
-+		.name   = "octeon-ahci",
-+		.of_match_table = octeon_ahci_match,
-+	},
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
 +};
 +
-+module_platform_driver(ahci_octeon_driver);
++&ecspi1 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
++	status = "okay";
++};
 +
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Cavium, Inc. <support@cavium.com>");
-+MODULE_DESCRIPTION("Cavium Inc. sata config.");
++&ecspi3 {
++	fsl,spi-num-chipselects = <3>;
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>,
++		<&gpio4 25 GPIO_ACTIVE_LOW>,
++		<&gpio4 26 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3cs>;
++	status = "okay";
++};
++
++&ecspi5 {
++	fsl,spi-num-chipselects = <4>;
++	cs-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>,
++		<&gpio1 13 GPIO_ACTIVE_LOW>,
++		<&gpio1 12 GPIO_ACTIVE_LOW>,
++		<&gpio2 9 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi5 &pinctrl_ecspi5cs>;
++	status = "okay";
++
++	eeprom: m95m02@1 {
++		compatible = "st,m95m02", "atmel,at25";
++		size = <262144>;
++		pagesize = <256>;
++		address-width = <24>;
++		spi-max-frequency = <5000000>;
++		reg = <1>;
++	};
++
++	pb_rtc: rtc@3 {
++		compatible = "nxp,rtc-pcf2123";
++		spi-max-frequency = <2450000>;
++		spi-cs-high;
++		reg = <3>;
++	};
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii";
++	phy-reset-gpios = <&gpio1 25 0>;
++	status = "okay";
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpminand>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	clock-frequency = <100000>;
++	status = "okay";
++};
++
++&i2c3 {
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-1 = <&pinctrl_i2c3_gpio>;
++	clock-frequency = <100000>;
++	scl-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
++	sda-gpios = <&gpio7 11 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	battery: sbs-battery@b {
++		compatible = "sbs,sbs-battery";
++		reg = <0x0b>;
++		sbs,poll-retry-count = <100>;
++		sbs,i2c-retry-count = <100>;
++	};
++};
++
++&ldb {
++	status = "okay";
++
++	lvds0: lvds-channel@0 {
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
++&ssi1 {
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usbh1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh1>;
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	non-removable;
++	status = "okay";
++};
++
++&weim {
++	#address-cells = <2>;
++	#size-cells = <1>;
++	ranges = <0 0 0x08000000 0x08000000>;
++	fsl,weim-cs-gpr = <&gpr>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_weimfpga &pinctrl_weimcs>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			/* pwr mcu alert irq */
++			MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0
++			/* remainder ???? */
++			MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19 0x1b0b0
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__ECSPI1_MISO 0x100b1
++			MX6QDL_PAD_KEY_ROW0__ECSPI1_MOSI 0x100b1
++			MX6QDL_PAD_KEY_COL0__ECSPI1_SCLK 0x100b1
++		>;
++	};
++
++	pinctrl_ecspi1cs: ecspi1csgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL2__GPIO4_IO10 0x1b0b0
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK 0x10068
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI 0x10068
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO 0x1f068
++		>;
++	};
++
++	pinctrl_ecspi3cs: ecspi3csgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x1b0b0
++			MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25 0x1b0b0
++			MX6QDL_PAD_DISP0_DAT5__GPIO4_IO26 0x1b0b0
++			MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x1b0b0
++		>;
++	};
++
++	pinctrl_ecspi5: ecspi5grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CLK__ECSPI5_SCLK 0x100b1
++			MX6QDL_PAD_SD2_CMD__ECSPI5_MOSI 0x100b1
++			MX6QDL_PAD_SD2_DAT0__ECSPI5_MISO 0x100b1
++		>;
++	};
++
++	pinctrl_ecspi5cs: ecspi5csgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_DAT1__GPIO1_IO14 0x1b0b0
++			MX6QDL_PAD_SD2_DAT2__GPIO1_IO13 0x1b0b0
++			MX6QDL_PAD_SD2_DAT3__GPIO1_IO12 0x1b0b0
++			MX6QDL_PAD_SD4_DAT1__GPIO2_IO09 0x1b0b0
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO 0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC 0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC 0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0 0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1 0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2 0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3 0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK 0x1b0b0
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC 0x1b0b0
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0 0x1b0b0
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1 0x1b0b0
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2 0x1b0b0
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3 0x1b0b0
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
++			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN 0x4001b0a8
++			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x1b0b0
++		>;
++	};
++
++	pinctrl_gpminand: gpminandgrp {
++		fsl,pins = <
++			MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
++			MX6QDL_PAD_NANDF_ALE__NAND_ALE 0xb0b1
++			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B 0xb0b1
++			MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
++			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B 0xb0b1
++			MX6QDL_PAD_NANDF_CS1__NAND_CE1_B 0xb0b1
++			MX6QDL_PAD_SD4_CMD__NAND_RE_B 0xb0b1
++			MX6QDL_PAD_SD4_CLK__NAND_WE_B 0xb0b1
++			MX6QDL_PAD_NANDF_D0__NAND_DATA00 0xb0b1
++			MX6QDL_PAD_NANDF_D1__NAND_DATA01 0xb0b1
++			MX6QDL_PAD_NANDF_D2__NAND_DATA02 0xb0b1
++			MX6QDL_PAD_NANDF_D3__NAND_DATA03 0xb0b1
++			MX6QDL_PAD_NANDF_D4__NAND_DATA04 0xb0b1
++			MX6QDL_PAD_NANDF_D5__NAND_DATA05 0xb0b1
++			MX6QDL_PAD_NANDF_D6__NAND_DATA06 0xb0b1
++			MX6QDL_PAD_NANDF_D7__NAND_DATA07 0xb0b1
++			MX6QDL_PAD_SD4_DAT0__NAND_DQS 0x00b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
++			MX6QDL_PAD_GPIO_16__I2C3_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3_gpio: i2c3gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__GPIO1_IO05 0x4001b8b1
++			MX6QDL_PAD_GPIO_16__GPIO7_IO11 0x4001b8b1
++		>;
++	};
++
++	pinctrl_weimcs: weimcsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_CS0__EIM_CS0_B 0xb0b1
++			MX6QDL_PAD_EIM_CS1__EIM_CS1_B 0xb0b1
++		>;
++	};
++
++	pinctrl_weimfpga: weimfpgagrp {
++		fsl,pins = <
++			/* weim misc */
++			MX6QDL_PAD_EIM_OE__EIM_OE_B 0xb0b1
++			MX6QDL_PAD_EIM_RW__EIM_RW 0xb0b1
++			MX6QDL_PAD_EIM_WAIT__EIM_WAIT_B 0xb060
++			MX6QDL_PAD_EIM_BCLK__EIM_BCLK 0xb0b1
++			MX6QDL_PAD_EIM_LBA__EIM_LBA_B 0xb0b1
++			MX6QDL_PAD_EIM_EB0__EIM_EB0_B 0xb0b1
++			MX6QDL_PAD_EIM_EB1__EIM_EB1_B 0xb0b1
++			MX6QDL_PAD_EIM_EB2__EIM_EB2_B 0xb0b1
++			MX6QDL_PAD_EIM_EB3__EIM_EB3_B 0xb0b1
++			/* weim data */
++			MX6QDL_PAD_CSI0_DATA_EN__EIM_DATA00 0x1b0b0
++			MX6QDL_PAD_CSI0_VSYNC__EIM_DATA01 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT4__EIM_DATA02 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT5__EIM_DATA03 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT6__EIM_DATA04 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT7__EIM_DATA05 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT8__EIM_DATA06 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT9__EIM_DATA07 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT12__EIM_DATA08 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT13__EIM_DATA09 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT14__EIM_DATA10 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT15__EIM_DATA11 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT16__EIM_DATA12 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT17__EIM_DATA13 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT18__EIM_DATA14 0x1b0b0
++			MX6QDL_PAD_CSI0_DAT19__EIM_DATA15 0x1b0b0
++			MX6QDL_PAD_EIM_D16__EIM_DATA16 0x1b0b0
++			MX6QDL_PAD_EIM_D17__EIM_DATA17 0x1b0b0
++			MX6QDL_PAD_EIM_D18__EIM_DATA18 0x1b0b0
++			MX6QDL_PAD_EIM_D19__EIM_DATA19 0x1b0b0
++			MX6QDL_PAD_EIM_D20__EIM_DATA20 0x1b0b0
++			MX6QDL_PAD_EIM_D21__EIM_DATA21 0x1b0b0
++			MX6QDL_PAD_EIM_D22__EIM_DATA22 0x1b0b0
++			MX6QDL_PAD_EIM_D23__EIM_DATA23 0x1b0b0
++			MX6QDL_PAD_EIM_D24__EIM_DATA24 0x1b0b0
++			MX6QDL_PAD_EIM_D25__EIM_DATA25 0x1b0b0
++			MX6QDL_PAD_EIM_D26__EIM_DATA26 0x1b0b0
++			MX6QDL_PAD_EIM_D27__EIM_DATA27 0x1b0b0
++			MX6QDL_PAD_EIM_D28__EIM_DATA28 0x1b0b0
++			MX6QDL_PAD_EIM_D29__EIM_DATA29 0x1b0b0
++			MX6QDL_PAD_EIM_D30__EIM_DATA30 0x1b0b0
++			MX6QDL_PAD_EIM_D31__EIM_DATA31 0x1b0b0
++			/* weim address */
++			MX6QDL_PAD_EIM_A25__EIM_ADDR25 0xb0b1
++			MX6QDL_PAD_EIM_A24__EIM_ADDR24 0xb0b1
++			MX6QDL_PAD_EIM_A23__EIM_ADDR23 0xb0b1
++			MX6QDL_PAD_EIM_A22__EIM_ADDR22 0xb0b1
++			MX6QDL_PAD_EIM_A21__EIM_ADDR21 0xb0b1
++			MX6QDL_PAD_EIM_A20__EIM_ADDR20 0xb0b1
++			MX6QDL_PAD_EIM_A19__EIM_ADDR19 0xb0b1
++			MX6QDL_PAD_EIM_A18__EIM_ADDR18 0xb0b1
++			MX6QDL_PAD_EIM_A17__EIM_ADDR17 0xb0b1
++			MX6QDL_PAD_EIM_A16__EIM_ADDR16 0xb0b1
++			MX6QDL_PAD_EIM_DA15__EIM_AD15 0xb0b1
++			MX6QDL_PAD_EIM_DA14__EIM_AD14 0xb0b1
++			MX6QDL_PAD_EIM_DA13__EIM_AD13 0xb0b1
++			MX6QDL_PAD_EIM_DA12__EIM_AD12 0xb0b1
++			MX6QDL_PAD_EIM_DA11__EIM_AD11 0xb0b1
++			MX6QDL_PAD_EIM_DA10__EIM_AD10 0xb0b1
++			MX6QDL_PAD_EIM_DA9__EIM_AD09 0xb0b1
++			MX6QDL_PAD_EIM_DA8__EIM_AD08 0xb0b1
++			MX6QDL_PAD_EIM_DA7__EIM_AD07 0xb0b1
++			MX6QDL_PAD_EIM_DA6__EIM_AD06 0xb0b1
++			MX6QDL_PAD_EIM_DA5__EIM_AD05 0xb0b1
++			MX6QDL_PAD_EIM_DA4__EIM_AD04 0xb0b1
++			MX6QDL_PAD_EIM_DA3__EIM_AD03 0xb0b1
++			MX6QDL_PAD_EIM_DA2__EIM_AD02 0xb0b1
++			MX6QDL_PAD_EIM_DA1__EIM_AD01 0xb0b1
++			MX6QDL_PAD_EIM_DA0__EIM_AD00 0xb0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA 0x1b0b1
++			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_DAT5__UART2_TX_DATA 0x1b0b1
++			MX6QDL_PAD_SD3_DAT4__UART2_RX_DATA 0x1b0b1
++			MX6QDL_PAD_SD3_CLK__UART2_RTS_B 0x1b0b1
++			MX6QDL_PAD_SD3_CMD__UART2_CTS_B 0x1b0b1
++		>;
++	};
++
++	pinctrl_usbh1: usbh1grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__USB_H1_OC 0x1b0b0
++			/* usbh1_b OC */
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0
++		>;
++	};
++
++	pinctrl_usbh1_hubreset: usbh1hubresetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x1b0b0
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++			MX6QDL_PAD_KEY_COL4__USB_OTG_OC 0x1b0b0
++		>;
++	};
++
++	pinctrl_usbotgvbus: usbotgvbusgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x000b0
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD 0x17059
++			MX6QDL_PAD_SD1_CLK__SD1_CLK 0x10059
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
++		>;
++	};
++};
 -- 
-1.9.1
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
