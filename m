@@ -1,47 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] net/smscx5xx: use the device tree for mac address
-Date: Wed, 03 Feb 2016 16:23:59 +0100
-Message-ID: <2240729.oauKHqo53h@wuerfel>
-References: <1454511759-24827-1-git-send-email-lkundrak@v3.sk> <1454511759-24827-2-git-send-email-lkundrak@v3.sk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.5
+Date: Wed, 3 Feb 2016 09:28:12 -0600
+Message-ID: <CAL_Jsq+NcJKgZ1AVJUGjSc9+2RjYsw5ubjDw4bHuCz5DJRY4Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454511759-24827-2-git-send-email-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Peter Chen <peter.chen@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 February 2016 16:02:38 Lubomir Rintel wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> This takes the MAC address for smsc75xx/smsc95xx USB network devices
-> from a the device tree. This is required to get a usable persistent
-> address on the popular beagleboard, whose hardware designers
-> accidentally forgot that an ethernet device really requires an a
-> MAC address to be functional.
-> 
-> The smsc75xx and smsc95xx drivers are just two copies of the
-> same code, so better fix both.
-> 
-> Tested-by: Lubomir Rintel <lkundrak@v3.sk>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
+Hi Linus,
 
-I have no memory of writing this patch, where did you find it?
+Please pull these 2 DT fixes for 4.5.
 
-The changelog sounds like I wrote it, so I assume it was me after all.
+Rob
 
-> +       address = of_get_property(dev->udev->dev.of_node,
-> +                                 "local-mac-address", NULL);
-> +       if (address) {
-> +               memcpy(dev->net->dev_addr, address, ETH_ALEN);
-> +               return;
-> +       }
+The following changes since commit 92e963f50fc74041b5e9e744c330dca48e04f08d:
 
-This should use of_get_mac_address(), not an open-coded property
-lookup. The function was probably added after I wrote the
-the original patch.
+  Linux 4.5-rc1 (2016-01-24 13:06:47 -0800)
 
-	Arnd
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.5
+
+for you to fetch changes up to 71f50c6d9a2276f3ec85384bffe2aee1962f4669:
+
+  of: drop symbols declared by _OF_DECLARE() from modules (2016-01-25
+08:35:50 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.5:
+
+- Fix build error with *_OF_DECLARE() when used in modules
+
+- Add missing platform maintainers for dts files in MAINTAINERS
+
+----------------------------------------------------------------
+Masahiro Yamada (1):
+      of: drop symbols declared by _OF_DECLARE() from modules
+
+Rob Herring (1):
+      MAINTAINERS: Add missing platform maintainers for dts files
+
+ MAINTAINERS        | 19 ++++++++++++++++++-
+ include/linux/of.h |  2 +-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
