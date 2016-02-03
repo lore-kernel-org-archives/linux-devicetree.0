@@ -1,132 +1,210 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Wed, 3 Feb 2016 13:22:48 +0800
-Message-ID: <1454476968.2847.59.camel@mtksdaap41>
-References: <1453270097-53853-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1453270097-53853-2-git-send-email-jamesjj.liao@mediatek.com>
-	 <56ADF556.6070402@gmail.com> <1454396212.2847.15.camel@mtksdaap41>
-	 <56B0889A.1010305@gmail.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/2] bluetooth: btmrvl: register platform specific driver
+Date: Tue, 2 Feb 2016 21:34:20 -0800
+Message-ID: <1454477661-26734-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B0889A.1010305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-On Tue, 2016-02-02 at 11:44 +0100, Matthias Brugger wrote:
-> On 02/02/16 07:56, James Liao wrote:
-> > On Sun, 2016-01-31 at 12:51 +0100, Matthias Brugger wrote:
-> >> >On 20/01/16 07:08, James Liao wrote:
-> >>> > >Refine scpsys driver common code to support multiple SoC / platform.
-> >>> > >
-> >>> > >Signed-off-by: James Liao<jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> > >---
-> >>> > >   drivers/soc/mediatek/mtk-scpsys.c | 418 ++++++++++++++++++++------------------
-> >>> > >   drivers/soc/mediatek/mtk-scpsys.h |  55 +++++
-> >>> > >   2 files changed, 270 insertions(+), 203 deletions(-)
-> >>> > >   create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
-> >> >
-> >> >In general this approach looks fine to me, comments below.
-> >> >
-> >>> > >
-> >>> > >diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> >>> > >index 0221387..339adfc 100644
-> >>> > >--- a/drivers/soc/mediatek/mtk-scpsys.c
-> >>> > >+++ b/drivers/soc/mediatek/mtk-scpsys.c
-> >>> > >@@ -11,29 +11,17 @@
-> >>> > >    * GNU General Public License for more details.
-> >>> > >    */
-> >>> > >   #include <linux/clk.h>
-> >>> > >-#include <linux/delay.h>
-> >>> > >+#include <linux/init.h>
-> >>> > >   #include <linux/io.h>
-> >>> > >-#include <linux/kernel.h>
-> >>> > >   #include <linux/mfd/syscon.h>
-> >> >
-> >> >When at it, do we need this include?
-> > syscon_regmap_lookup_by_phandle() is declared in this head file.
-> >
-> >>> > >-#include <linux/init.h>
-> >>> > >   #include <linux/of_device.h>
-> >>> > >   #include <linux/platform_device.h>
-> >>> > >   #include <linux/pm_domain.h>
-> >>> > >-#include <linux/regmap.h>
-> >>> > >-#include <linux/soc/mediatek/infracfg.h>
-> >>> > >   #include <linux/regulator/consumer.h>
-> >>> > >-#include <dt-bindings/power/mt8173-power.h>
-> >>> > >+#include <linux/soc/mediatek/infracfg.h>
-> >>> > >+
-> >>> > >+#include "mtk-scpsys.h"
-> >>> > >
-> >>> > >-#define SPM_VDE_PWR_CON			0x0210
-> >>> > >-#define SPM_MFG_PWR_CON			0x0214
-> >>> > >-#define SPM_VEN_PWR_CON			0x0230
-> >>> > >-#define SPM_ISP_PWR_CON			0x0238
-> >>> > >-#define SPM_DIS_PWR_CON			0x023c
-> >>> > >-#define SPM_VEN2_PWR_CON		0x0298
-> >>> > >-#define SPM_AUDIO_PWR_CON		0x029c
-> >>> > >-#define SPM_MFG_2D_PWR_CON		0x02c0
-> >>> > >-#define SPM_MFG_ASYNC_PWR_CON		0x02c4
-> >>> > >-#define SPM_USB_PWR_CON			0x02cc
-> >> >
-> >> >I would prefer to keep this defines and declare SoC specific ones where
-> >> >necessary. It makes the code more readable.
-> > Some register address may be reused by other modules among SoCs, so it's
-> > not easy to maintain the defines when we implement multiple SoC drivers
-> > in the same file. For example, offset 0x0298 is VEN2_PWR_CON on MT8173,
-> > but it is MJC_PWR_CON on other chips.
-> >
-> 
-> So that sounds as if 0x0298 offset is MT8173 specific.
-> I checked [VDE, MFG, VEN, IFR, ISP, DIS, DPY]_PWR_CON on mt8173, mt8135 
-> and mt6589 and they all have the same offset. So it doesn't seem as if 
-> the offset randomly changes for every SoC.
-> 
-> > Furthermore, these register offsets are only used in scp_domain_data[],
-> > and each element has its own power domain name. So I think it's enough
-> > to know which power domain are using these registers and status bits.
-> >
-> 
-> Yes that's true, but it will make it easier for another person to 
-> understand the driver, especially if he want's to implement the driver 
-> for a new SoC.
+Platform device and driver provide easy way to
+interact with device-tree-enabled system.
 
-There are two kinds of conflicts may happen:
+This patch registers platform driver and reorganise
+existing device tree specific code.
 
-1. Different modules use the same register address.
-2. Different register addresses are used by the same module (on
-different IC).
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/btmrvl.txt |  8 ++--
+ drivers/bluetooth/Makefile                   |  1 +
+ drivers/bluetooth/btmrvl_drv.h               | 16 ++++++++
+ drivers/bluetooth/btmrvl_main.c              |  7 +++-
+ drivers/bluetooth/btmrvl_platform.c          | 60 ++++++++++++++++++++++++++++
+ 5 files changed, 87 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/bluetooth/btmrvl_platform.c
 
-Type 1. for example:
-
-	#define SPM_BDP_PWR_CON			0x029c /* 2701 */
-	#define SPM_AUDIO_PWR_CON		0x029c /* 8173 */
-
-We can resolve this conflict easily, such as define these two register
-name to the same register address.
-
-Type 2. for example:
-
-	#define SPM_VDE_PWR_CON			0x0300 /* 6755 */
-	#define SPM_VDE_PWR_CON			0x0210 /* 8173 */
-
-We can not reuse the register defines in this case. We may need to name
-the registers with its IC name, such as MT8173_SPM_VDE_PWR_CON and
-MT6755_VDE_PWR_CON. But it will increase the maintain effort. That's why
-I prefer to remove register defines if we implement multiple SoC's
-scpsys in a single file.
-
-
-Best regards,
-
-James
-
+diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
+index 58f964b..25b804b 100644
+--- a/Documentation/devicetree/bindings/btmrvl.txt
++++ b/Documentation/devicetree/bindings/btmrvl.txt
+@@ -3,7 +3,7 @@ btmrvl
+ 
+ Required properties:
+ 
+-  - compatible : must be "btmrvl,cfgdata"
++  - compatible : must be "marvell,btmrvl"
+ 
+ Optional properties:
+ 
+@@ -15,11 +15,11 @@ Optional properties:
+ 
+ Example:
+ 
+-GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
+-in below example.
++GPIO pin 13 and gap 100ms are configured for host wakeup, calibration
++data is also available in below example.
+ 
+ btmrvl {
+-	compatible = "btmrvl,cfgdata";
++	compatible = "marvell,btmrvl";
+ 
+ 	btmrvl,cal-data = /bits/ 8 <
+ 		0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+diff --git a/drivers/bluetooth/Makefile b/drivers/bluetooth/Makefile
+index 07c9cf3..9bc3828 100644
+--- a/drivers/bluetooth/Makefile
++++ b/drivers/bluetooth/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_BT_RTL)		+= btrtl.o
+ obj-$(CONFIG_BT_QCA)		+= btqca.o
+ 
+ btmrvl-y			:= btmrvl_main.o
++btmrvl-y			+= btmrvl_platform.o
+ btmrvl-$(CONFIG_DEBUG_FS)	+= btmrvl_debugfs.o
+ 
+ hci_uart-y				:= hci_ldisc.o
+diff --git a/drivers/bluetooth/btmrvl_drv.h b/drivers/bluetooth/btmrvl_drv.h
+index 0590473..de6309b 100644
+--- a/drivers/bluetooth/btmrvl_drv.h
++++ b/drivers/bluetooth/btmrvl_drv.h
+@@ -22,8 +22,22 @@
+ #include <linux/kthread.h>
+ #include <linux/bitops.h>
+ #include <linux/slab.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/gfp.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <net/bluetooth/bluetooth.h>
+ 
++extern struct platform_device *btmrvl_plt_dev;
++
+ #define BTM_HEADER_LEN			4
+ #define BTM_UPLD_SIZE			2312
+ 
+@@ -174,6 +188,8 @@ int btmrvl_enable_ps(struct btmrvl_private *priv);
+ int btmrvl_prepare_command(struct btmrvl_private *priv);
+ int btmrvl_enable_hs(struct btmrvl_private *priv);
+ void btmrvl_firmware_dump(struct btmrvl_private *priv);
++int btmrvl_platform_drv_init(void);
++void btmrvl_platform_drv_exit(void);
+ 
+ #ifdef CONFIG_DEBUG_FS
+ void btmrvl_debugfs_init(struct hci_dev *hdev);
+diff --git a/drivers/bluetooth/btmrvl_main.c b/drivers/bluetooth/btmrvl_main.c
+index f25a825..3604894 100644
+--- a/drivers/bluetooth/btmrvl_main.c
++++ b/drivers/bluetooth/btmrvl_main.c
+@@ -514,7 +514,8 @@ static int btmrvl_check_device_tree(struct btmrvl_private *priv)
+ 	int ret;
+ 	u32 val;
+ 
+-	for_each_compatible_node(dt_node, NULL, "btmrvl,cfgdata") {
++	dt_node = btmrvl_plt_dev->dev.of_node;
++	if (dt_node) {
+ 		ret = of_property_read_u32(dt_node, "btmrvl,gpio-gap", &val);
+ 		if (!ret)
+ 			priv->btmrvl_dev.gpio_gap = val;
+@@ -733,6 +734,8 @@ struct btmrvl_private *btmrvl_add_card(void *card)
+ 		goto err_adapter;
+ 	}
+ 
++	btmrvl_platform_drv_init();
++
+ 	btmrvl_init_adapter(priv);
+ 
+ 	BT_DBG("Starting kthread...");
+@@ -776,6 +779,8 @@ int btmrvl_remove_card(struct btmrvl_private *priv)
+ 	btmrvl_debugfs_remove(hdev);
+ #endif
+ 
++	btmrvl_platform_drv_exit();
++
+ 	hci_unregister_dev(hdev);
+ 
+ 	hci_free_dev(hdev);
+diff --git a/drivers/bluetooth/btmrvl_platform.c b/drivers/bluetooth/btmrvl_platform.c
+new file mode 100644
+index 0000000..4e91d27
+--- /dev/null
++++ b/drivers/bluetooth/btmrvl_platform.c
+@@ -0,0 +1,60 @@
++/* Marvell Bluetooth driver: platform specific driver
++ *
++ * Copyright (C) 2015, Marvell International Ltd.
++ *
++ * This software file (the "File") is distributed by Marvell International
++ * Ltd. under the terms of the GNU General Public License Version 2, June 1991
++ * (the "License").  You may use, redistribute and/or modify this File in
++ * accordance with the terms and conditions of the License, a copy of which
++ * is available on the worldwide web at
++ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
++ *
++ * THE FILE IS DISTRIBUTED AS-IS, WITHOUT WARRANTY OF ANY KIND, AND THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE
++ * ARE EXPRESSLY DISCLAIMED.  The License provides additional details about
++ * this warranty disclaimer.
++ */
++
++#include "btmrvl_drv.h"
++
++struct platform_device *btmrvl_plt_dev;
++
++static int btmrvl_plt_probe(struct platform_device *pdev)
++{
++	btmrvl_plt_dev = pdev;
++	return 0;
++}
++
++static int btmrvl_plt_remove(struct platform_device *pdev)
++{
++	btmrvl_plt_dev = NULL;
++	return 0;
++}
++
++static const struct of_device_id btmrvl_dt_match[] = {
++	{
++		.compatible = "marvell,btmrvl",
++	},
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, btmrvl_dt_match);
++
++static struct platform_driver btmrvl_platform_driver = {
++	.probe		= btmrvl_plt_probe,
++	.remove		= btmrvl_plt_remove,
++	.driver = {
++		.name	= "btmrvl_plt",
++		.of_match_table = btmrvl_dt_match,
++	}
++};
++
++int btmrvl_platform_drv_init(void)
++{
++	return platform_driver_register(&btmrvl_platform_driver);
++}
++
++void btmrvl_platform_drv_exit(void)
++{
++	platform_driver_unregister(&btmrvl_platform_driver);
++}
+-- 
+1.8.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
