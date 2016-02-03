@@ -1,50 +1,42 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: pmu: switch to Cortex specific
- device nodes
-Date: Wed, 3 Feb 2016 18:20:52 +0100
-Message-ID: <56B236F4.4090409@gmail.com>
-References: <1452953636-4995-1-git-send-email-dirk.behme@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1452953636-4995-1-git-send-email-dirk.behme@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com
+From: fu.wei@linaro.org
+Subject: [PATCH v10 2/5] ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+Date: Thu,  4 Feb 2016 01:18:40 +0800
+Message-ID: <1454519923-25230-3-git-send-email-fu.wei@linaro.org>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, Suravee.Suthikulpanit@amd.com
+Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, cov@codeaurora.org, timur@codeaurora.org, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.com, arnd@arndb.de, leo.duran@amd.com, sudeep.holla@arm.com, Fu Wei <fu.wei@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.01.2016 15:13, Dirk Behme wrote:
-> Instead of using the generic armv8-pmuv3 compatibility use the more
-> specific Cortex A57 compatibility.
->
-> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
-> ---
-> Changes in v2: Drop the not yet merged Cortex A53 part.
->
->   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 266c5de..a82bce8 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -247,8 +247,8 @@
->   			power-domains = <&cpg>;
->   		};
->
-> -		pmu {
-> -			compatible = "arm,armv8-pmuv3";
-> +		pmu_a57 {
-> +			compatible = "arm,cortex-a57-pmu";
->   			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
->   				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
->   				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
->
+From: Fu Wei <fu.wei@linaro.org>
 
+This can be a example of adding SBSA Generic Watchdog device node
+into some dts files for the Soc which contains SBSA Generic Watchdog.
 
-Any further comments to this? If not, could this be applied?
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Fu Wei <fu.wei@linaro.org>
+---
+ arch/arm64/boot/dts/arm/foundation-v8.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Best regards
-
-Dirk
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
+index 4eac8dc..75da16b 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dts
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+@@ -237,4 +237,12 @@
+ 			};
+ 		};
+ 	};
++	watchdog@2a440000 {
++		compatible = "arm,sbsa-gwdt";
++		reg = <0x0 0x2a440000 0 0x1000>,
++			<0x0 0x2a450000 0 0x1000>;
++		interrupts = <0 27 4>;
++		timeout-sec = <30>;
++		status = "okay";
++	};
+ };
+-- 
+2.5.0
