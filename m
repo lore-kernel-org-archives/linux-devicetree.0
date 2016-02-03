@@ -1,49 +1,124 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC 02/10] phy: rcar-gen3-usb2: Add phy-supply
- description in device tree doc
-Date: Wed, 3 Feb 2016 14:45:20 -0600
-Message-ID: <20160203204520.GA30531@rob-hp-laptop>
-References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] dt-bindings: mailbox: Document Hi6220 mailbox
+ driver
+Date: Wed, 3 Feb 2016 14:47:17 -0600
+Message-ID: <20160203204717.GA1713@rob-hp-laptop>
+References: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
+ <1454407782-24674-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: horms@verge.net.au, magnus.damm@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1454407782-24674-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 07:18:50PM +0900, Yoshihiro Shimoda wrote:
-> To handle the VBUS on/off by a regulator driver, this patch adds
-> description about phy-supply in the rcar-gen3-phy-usb2.txt.
+On Tue, Feb 02, 2016 at 06:09:39PM +0800, Leo Yan wrote:
+> Document DT binding for Hisilicon Hi6220 mailbox driver.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+
+One nit, otherwise:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> index eaf7e9b..48b33a9 100644
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -15,6 +15,8 @@ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
->  combined, the device tree node should set interrupt properties to use the
->  channel as USB OTG:
->  - interrupts: interrupt specifier for the PHY.
-> +- phy-supply: Phandle to a regulator that provides power to the VBUS. This
-> +	      regulator will be managed during the PHY power on/off sequence.
+> diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> new file mode 100644
+> index 0000000..8508c8a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> @@ -0,0 +1,74 @@
+> +Hisilicon Hi6220 Mailbox Driver
+> +===============================
+> +
+> +Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
+> +is unidirectional with a maximum message size of 8 words. I/O is
+> +performed using register access (there is no DMA) and the cell
+> +raises an interrupt when messages are received.
+> +
+> +Mailbox Device Node:
+> +====================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Shall be "hisilicon,hi6220-mbox"
+> +- reg:			Contains the mailbox register address range (base
+> +			address and length); the first item is for IPC
+> +			registers, the second item is shared buffer for
+> +			slots.
+> +- #mbox-cells:		Common mailbox binding property to identify the number
+> +			of cells required for the mailbox specifier. Must be 3.
+> +			<&phandle slot_id dst_irq ack_irq>
+> +			  phandle: Label name of mailbox controller
+> +			  slot_id: Slot id used either for TX or RX
+> +			  dst_irq: IRQ identifier index number which used by MCU
+> +			  ack_irq: IRQ identifier index number with generating a
+> +			           TX/RX interrupt to application processor,
+> +				   mailbox driver uses it to acknowledge interrupt
+> +- interrupts:		Contains the interrupt information for the mailbox
+> +			device. The format is dependent on which interrupt
+> +			controller the SoCs use.
+> +
+> +Optional Properties:
+> +--------------------
+> +- hi6220,mbox-tx-noirq: Property of MCU firmware's feature, so mailbox driver
+> +			use this flag to ask MCU to enable "automatic idle
+> +			flag" mode or IRQ generated mode to acknowledge a TX
+> +			completion.
+> +
+> +Example:
+> +--------
+> +
+> +	mailbox: mailbox@F7510000 {
 
-Is "phy" the actual name of the input supply to the phy?
+use lowercase for hex
 
->  
->  Example (R-Car H3):
->  
+> +		compatible = "hisilicon,hi6220-mbox";
+> +		reg = <0x0 0xF7510000 0x0 0x1000>, /* IPC_S */
+> +		      <0x0 0x06DFF800 0x0 0x0800>; /* Mailbox */
+
+and here too.
+
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> +		#mbox-cells = <3>;
+> +	};
+> +
+> +
+> +Mailbox client
+> +===============
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Many (See the client docs).
+> +- mboxes:		Standard property to specify a Mailbox (See ./mailbox.txt)
+> +			Cells must match 'mbox-cells' (See Mailbox Device Node above).
+> +
+> +Optional Properties:
+> +--------------------
+> +- mbox-names:		Name given to channels seen in the 'mboxes' property.
+> +
+> +Example:
+> +--------
+> +
+> +	stub_clock: stub_clock {
+> +		compatible = "hisilicon,hi6220-stub-clk";
+> +		hisilicon,hi6220-clk-sram = <&sram>;
+> +		#clock-cells = <1>;
+> +		mbox-names = "mbox-tx", "mbox-rx";
+> +		mboxes = <&mailbox 1 0 11>, <&mailbox 0 1 10>;
+> +	};
 > -- 
 > 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
