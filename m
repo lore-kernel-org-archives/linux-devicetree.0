@@ -1,186 +1,136 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6] SATA: OCTEON: support SATA on OCTEON platform
-Date: Wed, 3 Feb 2016 13:24:10 +0000
-Message-ID: <56B1FF7A.3040906@imgtec.com>
-References: <1454437485-48009-1-git-send-email-Zubair.Kakakhel@imgtec.com>
- <1930324.vU65IL0x0g@wuerfel>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH v3 00/14] mtd: spi-nor: add driver for Atmel QSPI controller
+Date: Wed, 3 Feb 2016 14:26:45 +0100
+Message-ID: <cover.1454505161.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1930324.vU65IL0x0g@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, aleksey.makarov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: computersforpeace@gmail.com, linux-mtd@lists.infradead.org
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, marex@denx.de, vigneshr@ti.com, beanhuo@micron.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-Thanks for the review.
+This series of patches adds support to the Atmel QSPI controller available
+on sama5d2 SoCs. It was tested on a sama5d2 xplained ultra board with  
+Micron n25q128a13, Spansion s25fl512 and Macronix mx25l51245g QSPI
+memories and a at25df321a SPI memory.
 
-Response and further questions below.
+The SPI protocol to be used by .read_reg(), .write_reg(), .read(), .write()
+and .erase() hooks should be read by these hooks from new *_proto fields in
+the struct spi_nor, the same way as the .read(), .write() and .erase()
+hooks already get the op code value from dedicated *_opcode fields in the
+very same struct spi_nor.
+Doing so, there is no need to modify the current prototypes of all these
+hooks.
 
-On 02/02/16 20:48, Arnd Bergmann wrote:
-> On Tuesday 02 February 2016 18:24:45 Zubair Lutfullah Kakakhel wrote:
->> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> new file mode 100644
->> index 0000000..3bd3c2f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
->> @@ -0,0 +1,42 @@
->> +* UCTL SATA controller glue
->> +
->> +UCTL is the bridge unit between the I/O interconnect (an internal bus)
->> +and the SATA AHCI host controller (UAHC). It performs the following functions:
->> +	- provides interfaces for the applications to access the UAHC AHCI
->> +	  registers on the CN71XX I/O space.
->> +	- provides a bridge for UAHC to fetch AHCI command table entries and data
->> +	  buffers from Level 2 Cache.
->> +	- posts interrupts to the CIU.
->> +	- contains registers that:
->> +		- control the behavior of the UAHC
->> +		- control the clock/reset generation to UAHC
->> +		- control endian swapping for all UAHC registers and DMA accesses
->>
->
-> Typically we treat those special registers as part of the device itself
-> and have a single device node for the AHCI controller and that one.
->
-> What is your reason for doing it differently here?
+Also, if some implementation is not interrested in supporting Dual or Quad
+SPI protocols, it can simply ignore the value of the new  *_proto fields,
+thus assuming the SPI 1-1-1 protocol is always used. Such an
+implementation would work exactly as it did before introducing the *_proto
+fields hence no regression should happen.
+Indeed SPI protocols other than SPI 1-1-1 are used only if the caller of
+spi_nor_scan() sets the value of the 'mode' argument to either
+SPI_NOR_DUAL or SPI_NOR_QUAD.
 
-Two reasons
 
-1- The hardware is like a proper split rather than additional hidden registers in
-the same memory space.
+This series was based and tested on linux-next
 
-2- Tons of devices in the field have the following DT node built in the bootloader.
+1 - Atmel QSPI controller + Micron n25q128a13 (atmel-quadspi.c driver)
 
-		uctl@118006c000000 {
-			compatible = "cavium,octeon-7130-sata-uctl";
-			reg = <0x11800 0x6c000000 0x0 0x100>;
-			...
-                         sata: sata@16c0000000000 {
-                                 compatible = "cavium,octeon-7130-ahci";
-                                 reg = <0x16c00 0x00000000 0x0 0x200>;
-				...
-                         };
-		};
+SPI 1-1-1: This mode was tested replacing SPI_NOR_QUAD by SPI_NOR_FAST as
+           argument to spi_nor_scan() called from atmel_qspi_probe().
 
-The patch suggests a way to handle this.
+SPI 1-1-4: Bootloaders (at91bootstrap/uboot) don't enable the Quad SPI
+           mode of the Micron memory. When probed from Linux, the memory
+           uses its Extended SPI mode and replies to the regular Read ID
+           (0x9f) command.
 
->
->> index 04975b8..6bc1de6 100644
->> --- a/drivers/ata/ahci_platform.c
->> +++ b/drivers/ata/ahci_platform.c
->> @@ -76,6 +76,8 @@ static const struct of_device_id ahci_of_match[] = {
->>   	{ .compatible = "ibm,476gtr-ahci", },
->>   	{ .compatible = "snps,dwc-ahci", },
->>   	{ .compatible = "hisilicon,hisi-ahci", },
->> +	{ .compatible = "fsl,qoriq-ahci", },
->> +	{ .compatible = "cavium,octeon-7130-ahci", },
->>   	{},
->
-> The qoriq-ahci addition seems misplaced in this patch. Maybe split
-> that out into a separate patch?
->
+SPI 4-4-4: The romcode enabled the Quad SPI mode the of Micron memory
+           before loading the at91bootstrap. When probed from Linux, the
+           memory uses its Quad SPI mode and no longer replies to the
+           regular Read ID (0x9f) command but instead to the Read ID
+           Multiple I/O (0xaf) command. The memory expects ALL commands
+           to use the SPI 4-4-4 protocol.
 
-oops. Sorry. Will fix.
+2 - Atmel QSPI controller + Macronix mx25l51245g (atmel-quadspi.c driver)
 
->> +/**
->> + * cvmx_sata_uctl_shim_cfg
->> + * from cvmx-sata-defs.h
->> + *
->> + * Accessible by: only when A_CLKDIV_EN
->> + * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
->> + * This register allows configuration of various shim (UCTL) features.
->> + * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
->> + * indicated in INTSTAT and a new OOB error arrives.
->> + * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
->> + * indicated in INTSTAT and a new DMA error arrives.
->> + */
->> +union cvmx_sata_uctl_shim_cfg {
->> +	uint64_t u64;
->> +	struct cvmx_sata_uctl_shim_cfg_s {
->> +	/*
->> +	 * Read/write error log for out-of-bound UAHC register access.
->> +	 * 0 = read, 1 = write.
->> +	 */
->> +	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
->> +	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
->> +	/*
->
-> Try to avoid bitfields when defining structures that interact with
-> the hardware, bitfields often cause problems with mixed-endian
-> environments and don't make this easier to understand.
->
+SPI 1-1-4: the number of dummy cycles is set to 8 so drivers such as the
+           m25p80 one can work properly.
 
-Bitfields for both endians are used and handled by mips.
-Mainly used by cavium.
+3 - Atmel QSPI controller + Spansion s25fl512 (atmel-quadspi.c driver)
 
-As this is a cavium driver, would it be acceptable?
+SPI 1-1-4: default settings. Early developpements on a FPGA board.
 
-Or should I replace with the following.
+4 - Atmel SPI contoller + at25df321a (m25p80.c driver)
 
-	v = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << DMA_ENDIAN_MODE);
-	v &= ~(SATA_UCTL_ENDIAN_MODE_E_MASK << CSR_ENDIAN_MODE);
-#ifdef __BIG_ENDIAN
-	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << DMA_ENDIAN_MODE;
-	v |= SATA_UCTL_ENDIAN_MODE_E_BIG << CSR_ENDIAN_MODE;
-#else
-	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << DMA_ENDIAN_MODE;
-	v |= SATA_UCTL_ENDIAN_MODE_E_LITTLE << CSR_ENDIAN_MODE;
-#endif
-	v |= 1 << DMA_READ_CMD;
-	cvmx_write_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, v);
+SPI 1-1-1: tested with the m25p80 driver for non regression purpose.
 
->> +static int ahci_octeon_probe(struct platform_device *pdev)
->> +{
->> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *node = dev->of_node;
->> +	struct resource *res;
->> +	void __iomem *base;
->> +	int ret;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!res) {
->> +		dev_err(&pdev->dev, "Platform resource[0] is missing\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	/* set-up endian mode */
->> +	shim_cfg.u64 = cvmx_read_csr(
->> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
->> +#ifdef __BIG_ENDIAN
->> +	shim_cfg.s.dma_endian_mode = 1;
->> +	shim_cfg.s.csr_endian_mode = 1;
->> +#else
->> +	shim_cfg.s.dma_endian_mode = 0;
->> +	shim_cfg.s.csr_endian_mode = 0;
->> +#endif
->> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
->> +	cvmx_write_csr(
->> +		(__force uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
->> +
->
-> Maybe add a helper function around cvmx_write_csr() that
-> allows you to write to an __iomem address? Drivers should
-> generally not need to use __force.
 
-Hmm. Will see.
+Winbond memories were NOT tested since I don't have any sample yet. The
+patches were written only based on the manufacturers' datasheets.
 
-Thanks
-ZubairLK
 
->
-> 	Arnd
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+
+Cyrille
+
+
+ChangeLog:
+
+v2 > v3:
+- no longer check patterns such as FFFFFF or 000000 to detect a Read Jedec
+  ID failure: always look the read ID up in the spi_nor_ids[] table (patch 2).
+- fix patch 10 to configure the number of dummy cycles on Macronix memories:
+  these memories use op code 0x15 to read their Configuration Register. Op
+  code 0x35 is used to enter Macronix QPI mode, which was not intented.
+- add "Acked-by Nicolas Ferre <nicolas.ferre@atmel.com>" to patch 14:
+  driver for Atmel QSPI controller.
+
+v1 -> v2:
+- I've totally reworked the whole series. Especially I have split the
+  former patch 2 to ease the code review. The Single/Dual/Quad SPI mode
+  support fixes are now done by manufacturer.
+- fix support and probing of Winbond memories.
+- m25p80: compute the number of dummy bytes from both the number of dummy
+  clock cycles and the number of I/O lines used to send them.
+- fix Kconfig dependencies for the Atmel QSPI controller driver (it should
+  fix the kbuild test robot warnings).
+- add more comments.
+
+Cyrille Pitchen (14):
+  mtd: spi-nor: remove micron_quad_enable()
+  mtd: spi-nor: properly detect the memory when it boots in Quad or Dual
+    mode
+  mtd: spi-nor: select op codes and SPI NOR protocols by manufacturer
+  mtd: spi-nor: fix support of Macronix memories
+  mtd: spi-nor: fix support of Winbond memories
+  mtd: spi-nor: fix support of Micron memories
+  mtd: spi-nor: fix support of Spansion memories
+  mtd: spi-nor: configure the number of dummy clock cycles by
+    manufacturer
+  mtd: spi-nor: configure the number of dummy clock cycles on Micron
+    memories
+  mtd: spi-nor: configure the number of dummy clock cycles on Macronix
+    memories
+  mtd: spi-nor: configure the number of dummy clock cycles on Spansion
+    memories
+  mtd: m25p80: add support of dual and quad spi protocols to all
+    commands
+  Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
+  mtd: atmel-quadspi: add driver for Atmel QSPI controller
+
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      |  32 +
+ drivers/mtd/devices/m25p80.c                       | 192 ++++-
+ drivers/mtd/spi-nor/Kconfig                        |   9 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/atmel-quadspi.c                | 877 ++++++++++++++++++++
+ drivers/mtd/spi-nor/spi-nor.c                      | 921 +++++++++++++++++++--
+ include/linux/mtd/spi-nor.h                        |  74 +-
+ 7 files changed, 1971 insertions(+), 135 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/atmel-quadspi.c
+
+-- 
+1.8.2.2
