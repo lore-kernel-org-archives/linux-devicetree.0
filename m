@@ -1,95 +1,89 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 06/26] clk: sunxi: Add PLL3 clock
-Date: Wed, 3 Feb 2016 21:27:58 +0100
-Message-ID: <20160203202758.GD3327@lukather>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 07/26] clk: sunxi: Add TCON channel1 clock
+Date: Wed, 3 Feb 2016 21:29:26 +0100
+Message-ID: <20160203202926.GE3327@lukather>
 References: <1452785109-6172-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452785109-6172-7-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v64pj5Ga4-QaF7RpExUSyYntyMU2dQ87TPsm5WbNeAXMOQ@mail.gmail.com>
+ <1452785109-6172-8-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v65_jsmiQ6DNCznFuQCcWxqs1N2fYJ-8OiUJ_BR+jf314w@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1125174477=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v64pj5Ga4-QaF7RpExUSyYntyMU2dQ87TPsm5WbNeAXMOQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexander Kaplan <alex@nextthing.co>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ep0oHQY+/Gbo/zt0"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ6GZG2QKGQEMGV6K6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65_jsmiQ6DNCznFuQCcWxqs1N2fYJ-8OiUJ_BR+jf314w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1125174477==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+--ep0oHQY+/Gbo/zt0
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
+Hi,
 
---P+33d92oIH25kiaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jan 17, 2016 at 12:05:06AM +0800, Chen-Yu Tsai wrote:
+On Sun, Jan 17, 2016 at 12:36:20AM +0800, Chen-Yu Tsai wrote:
 > Hi,
->=20
+> 
 > On Thu, Jan 14, 2016 at 11:24 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The A10 SoCs and relatives have a PLL controller to drive the PLL3 and
-> > PLL7, clocked from a 3MHz oscillator, that drives the display related
-> > clocks (GPU, display engine, TCON, etc.)
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > The TCON is a controller generating the timings to output videos signals,
+> > acting like both a CRTC and an encoder.
 > >
-> > Add a driver for it.
+> > It has two channels depending on the output, each channel being driven by
+> > its own clock (and own clock controller).
 > >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > Add a driver for the channel 1 clock.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
-> >  drivers/clk/sunxi/Makefile                        |  1 +
-> >  drivers/clk/sunxi/clk-sun4i-pll3.c                | 90 +++++++++++++++=
-++++++++
-> >  3 files changed, 92 insertions(+)
-> >  create mode 100644 drivers/clk/sunxi/clk-sun4i-pll3.c
+> >  Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
+> >  drivers/clk/sunxi/Makefile                        |   1 +
+> >  drivers/clk/sunxi/clk-sun4i-tcon-ch1.c            | 154 ++++++++++++++++++++++
+> >  3 files changed, 156 insertions(+)
+> >  create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
 > >
-> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Docume=
-ntation/devicetree/bindings/clock/sunxi.txt
-> > index 5360554a7d3f..bb9fb78dcff8 100644
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > index bb9fb78dcff8..fe34fc56e803 100644
 > > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
 > > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> > @@ -10,6 +10,7 @@ Required properties:
-> >         "allwinner,sun4i-a10-pll1-clk" - for the main PLL clock and PLL4
-> >         "allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
-> >         "allwinner,sun8i-a23-pll1-clk" - for the main PLL clock on A23
-> > +       "allwinner,sun4i-a10-pll3-clk" - for the video PLL clock on A10
-> >         "allwinner,sun9i-a80-pll4-clk" - for the peripheral PLLs on A80
-> >         "allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
-> >         "allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
+> > @@ -67,6 +67,7 @@ Required properties:
+> >         "allwinner,sun7i-a20-out-clk" - for the external output clocks
+> >         "allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
+> >         "allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
+> > +       "allwinner,sun4i-a10-tcon-ch1-clk" - for the TCON channel 1 clock on the A10
+> >         "allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+> >         "allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+> >         "allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
 > > diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> > index a991cd8ca509..40c32ffd912c 100644
+> > index 40c32ffd912c..0a20873cd103 100644
 > > --- a/drivers/clk/sunxi/Makefile
 > > +++ b/drivers/clk/sunxi/Makefile
-> > @@ -11,6 +11,7 @@ obj-y +=3D clk-a20-gmac.o
-> >  obj-y +=3D clk-mod0.o
-> >  obj-y +=3D clk-simple-gates.o
-> >  obj-y +=3D clk-sun4i-display.o
-> > +obj-y +=3D clk-sun4i-pll3.o
-> >  obj-y +=3D clk-sun8i-mbus.o
-> >  obj-y +=3D clk-sun9i-core.o
-> >  obj-y +=3D clk-sun9i-mmc.o
-> > diff --git a/drivers/clk/sunxi/clk-sun4i-pll3.c b/drivers/clk/sunxi/clk=
--sun4i-pll3.c
+> > @@ -12,6 +12,7 @@ obj-y += clk-mod0.o
+> >  obj-y += clk-simple-gates.o
+> >  obj-y += clk-sun4i-display.o
+> >  obj-y += clk-sun4i-pll3.o
+> > +obj-y += clk-sun4i-tcon-ch1.o
+> >  obj-y += clk-sun8i-mbus.o
+> >  obj-y += clk-sun9i-core.o
+> >  obj-y += clk-sun9i-mmc.o
+> > diff --git a/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
 > > new file mode 100644
-> > index 000000000000..6c9c2210b6b2
+> > index 000000000000..51ddc38821f7
 > > --- /dev/null
-> > +++ b/drivers/clk/sunxi/clk-sun4i-pll3.c
-> > @@ -0,0 +1,90 @@
+> > +++ b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
+> > @@ -0,0 +1,154 @@
 > > +/*
 > > + * Copyright 2015 Maxime Ripard
 > > + *
-> > + * Maxime Ripard <maxime.ripard@free-electrons.com>
+> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > > + *
 > > + * This program is free software; you can redistribute it and/or modify
 > > + * it under the terms of the GNU General Public License as published by
@@ -108,125 +102,157 @@ ntation/devicetree/bindings/clock/sunxi.txt
 > > +#include <linux/slab.h>
 > > +#include <linux/spinlock.h>
 > > +
-> > +#define SUN4I_A10_PLL3_GATE_BIT        31
-> > +#define SUN4I_A10_PLL3_DIV_WIDTH       7
-> > +#define SUN4I_A10_PLL3_DIV_SHIFT       0
+> > +#define SUN4I_TCON_CH1_SCLK_NAME_LEN   32
 > > +
-> > +static DEFINE_SPINLOCK(sun4i_a10_pll3_lock);
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_PARENTS       4
 > > +
-> > +static void __init sun4i_a10_pll3_setup(struct device_node *node)
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_GATE_BIT      31
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_MUX_MASK      3
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_MUX_SHIFT     24
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_DIV_WIDTH     4
+> > +#define SUN4I_A10_TCON_CH1_SCLK2_DIV_SHIFT     0
+> > +
+> > +#define SUN4I_A10_TCON_CH1_SCLK1_GATE_BIT      15
+> > +#define SUN4I_A10_TCON_CH1_SCLK1_DIV_WIDTH     1
+> > +#define SUN4I_A10_TCON_CH1_SCLK1_DIV_SHIFT     11
+> > +
+> > +static DEFINE_SPINLOCK(sun4i_a10_tcon_ch1_lock);
+> > +
+> > +static void __init sun4i_a10_tcon_ch1_setup(struct device_node *node)
 > > +{
-> > +       const char *clk_name =3D node->name, *parent;
-> > +       struct clk_multiplier *mult;
-> > +       struct clk_gate *gate;
+> > +       const char *sclk2_parents[SUN4I_A10_TCON_CH1_SCLK2_PARENTS];
+> > +       const char *sclk1_name = node->name;
+> > +       const char *sclk2_name;
+> > +       struct clk_divider *sclk1_div, *sclk2_div;
+> > +       struct clk_gate *sclk1_gate, *sclk2_gate;
+> > +       struct clk_mux *sclk2_mux;
+> > +       struct clk *sclk1, *sclk2;
 > > +       void __iomem *reg;
-> > +       struct clk *clk;
-> > +       int ret;
+> > +       int i, ret;
 > > +
-> > +       of_property_read_string(node, "clock-output-names", &clk_name);
-> > +       parent =3D of_clk_get_parent_name(node, 0);
+> > +       of_property_read_string(node, "clock-output-names",
+> > +                               &sclk1_name);
 > > +
-> > +       reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
+> > +       sclk2_name = kasprintf(GFP_KERNEL, "%s2", sclk1_name);
+> > +       if (!sclk2_name)
+> > +               return;
+> > +
+> > +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
 > > +       if (IS_ERR(reg)) {
-> > +               pr_err("%s: Could not map the clock registers\n", clk_n=
-ame);
+> > +               pr_err("%s: Could not map the clock registers\n", sclk2_name);
 > > +               return;
 > > +       }
 > > +
-> > +       gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
-> > +       if (!gate)
+> > +       for (i = 0; i < SUN4I_A10_TCON_CH1_SCLK2_PARENTS; i++)
+> > +               sclk2_parents[i] = of_clk_get_parent_name(node, i);
+> 
+> of_clk_parent_fill?
+
+Indeed
+
+> 
+> > +
+> > +       sclk2_mux = kzalloc(sizeof(*sclk2_mux), GFP_KERNEL);
+> > +       if (!sclk2_mux)
 > > +               return;
 > > +
-> > +       gate->reg =3D reg;
-> > +       gate->bit_idx =3D SUN4I_A10_PLL3_GATE_BIT;
-> > +       gate->lock =3D &sun4i_a10_pll3_lock;
+> > +       sclk2_mux->reg = reg;
+> > +       sclk2_mux->shift = SUN4I_A10_TCON_CH1_SCLK2_MUX_SHIFT;
+> > +       sclk2_mux->mask = SUN4I_A10_TCON_CH1_SCLK2_MUX_MASK;
+> > +       sclk2_mux->lock = &sun4i_a10_tcon_ch1_lock;
 > > +
-> > +       mult =3D kzalloc(sizeof(*mult), GFP_KERNEL);
-> > +       if (!mult)
-> > +               goto err_free_gate;
+> > +       sclk2_gate = kzalloc(sizeof(*sclk2_gate), GFP_KERNEL);
+> > +       if (!sclk2_gate)
+> > +               goto free_sclk2_mux;
 > > +
-> > +       mult->reg =3D reg;
-> > +       mult->shift =3D SUN4I_A10_PLL3_DIV_SHIFT;
-> > +       mult->width =3D SUN4I_A10_PLL3_DIV_WIDTH;
-> > +       mult->lock =3D &sun4i_a10_pll3_lock;
+> > +       sclk2_gate->reg = reg;
+> > +       sclk2_gate->bit_idx = SUN4I_A10_TCON_CH1_SCLK2_GATE_BIT;
+> > +       sclk2_gate->lock = &sun4i_a10_tcon_ch1_lock;
 > > +
-> > +       clk =3D clk_register_composite(NULL, clk_name,
-> > +                                    &parent, 1,
-> > +                                    NULL, NULL,
-> > +                                    &mult->hw, &clk_multiplier_ops,
-> > +                                    &gate->hw, &clk_gate_ops,
-> > +                                    0);
-> > +       if (IS_ERR(clk)) {
-> > +               pr_err("%s: Couldn't register the clock\n", clk_name);
-> > +               goto err_free_mult;
+> > +       sclk2_div = kzalloc(sizeof(*sclk2_div), GFP_KERNEL);
+> > +       if (!sclk2_div)
+> > +               goto free_sclk2_gate;
+> > +
+> > +       sclk2_div->reg = reg;
+> > +       sclk2_div->shift = SUN4I_A10_TCON_CH1_SCLK2_DIV_SHIFT;
+> > +       sclk2_div->width = SUN4I_A10_TCON_CH1_SCLK2_DIV_WIDTH;
+> > +       sclk2_div->lock = &sun4i_a10_tcon_ch1_lock;
+> > +
+> > +       sclk2 = clk_register_composite(NULL, sclk2_name, sclk2_parents,
+> > +                                      SUN4I_A10_TCON_CH1_SCLK2_PARENTS,
+> > +                                      &sclk2_mux->hw, &clk_mux_ops,                                   &
+> 
+> > +                                      sclk2_div->hw, &clk_divider_ops,
+> 
+> Placement of the "&" is very weird.
+
+Hmm, right. I don't know what happened here, but it's obviously wrong :)
+
+> 
+> > +                                      &sclk2_gate->hw, &clk_gate_ops,
+> > +                                      0);
+> > +       if (IS_ERR(sclk2)) {
+> > +               pr_err("%s: Couldn't register the clock\n", sclk2_name);
+> > +               goto free_sclk2_div;
 > > +       }
 > > +
-> > +       ret =3D of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> > +       sclk1_div = kzalloc(sizeof(*sclk1_div), GFP_KERNEL);
+> > +       if (!sclk1_div)
+> > +               goto free_sclk2;
+> > +
+> > +       sclk1_div->reg = reg;
+> > +       sclk1_div->shift = SUN4I_A10_TCON_CH1_SCLK1_DIV_SHIFT;
+> > +       sclk1_div->width = SUN4I_A10_TCON_CH1_SCLK1_DIV_WIDTH;
+> > +       sclk1_div->lock = &sun4i_a10_tcon_ch1_lock;
+> > +
+> > +       sclk1_gate = kzalloc(sizeof(*sclk1_gate), GFP_KERNEL);
+> > +       if (!sclk1_gate)
+> > +               goto free_sclk1_mux;
+> > +
+> > +       sclk1_gate->reg = reg;
+> > +       sclk1_gate->bit_idx = SUN4I_A10_TCON_CH1_SCLK1_GATE_BIT;
+> > +       sclk1_gate->lock = &sun4i_a10_tcon_ch1_lock;
+> > +
+> > +       sclk1 = clk_register_composite(NULL, sclk1_name, &sclk2_name, 1,
+> > +                                      NULL, NULL,
+> > +                                      &sclk1_div->hw, &clk_divider_ops,
+> > +                                      &sclk1_gate->hw, &clk_gate_ops,
+> > +                                      0);
+> > +       if (IS_ERR(sclk1)) {
+> > +               pr_err("%s: Couldn't register the clock\n", sclk1_name);
+> > +               goto free_sclk1_gate;
+> > +       }
+> > +
+> > +       ret = of_clk_add_provider(node, of_clk_src_simple_get, sclk1);
 > > +       if (WARN_ON(ret))
->=20
-> Any particular reason for WARN_ON instead of pr_err like above?
-
-I guess not, I'll change that.
-
->=20
-> > +               goto err_clk_unregister;
+> > +               goto free_sclk1;
 > > +
 > > +       return;
 > > +
-> > +err_clk_unregister:
-> > +       clk_unregister_composite(clk);
-> > +err_free_mult:
-> > +       kfree(mult);
-> > +err_free_gate:
-> > +       kfree(gate);
->=20
-> Clean up after of_io_request_and_map(), otherwise
+> > +free_sclk1:
+> > +       clk_unregister_composite(sclk1);
+> > +free_sclk1_gate:
+> > +       kfree(sclk1_gate);
+> > +free_sclk1_mux:
+> > +       kfree(sclk1_div);
+> > +free_sclk2:
+> > +       clk_unregister(sclk2);
+> > +free_sclk2_div:
+> > +       kfree(sclk2_div);
+> > +free_sclk2_gate:
+> > +       kfree(sclk2_gate);
+> > +free_sclk2_mux:
+> > +       kfree(sclk2_mux);
+> 
+> Cleanup after of_io_request_and_map?
 
-Ack
-
->=20
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+Indeed.
 
 Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---P+33d92oIH25kiaB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWsmLOAAoJEBx+YmzsjxAgPtoP/0aO9J2QOr6CNTzA6gqO+ajJ
-hvRvpFyuSRryu22/VBzovMSmmkTEOrJBBn7vQ/ACRmU10wC2C190cstwZqOvNnOc
-oG/O+08/Onc8WwXRxuL4zIGgMh2XxgCJUS1kVauKWWpPimIbLTjTNA69cyxj9C02
-CjW9BIhYfTjshT2LyNwEuPyetfxEbyEKdrr4OE55Hlj5xsZecv0A/A6bXdUkkvS1
-Jp7SnqRStO8jefqmVGx6Xw2/tRM5xSLJNQeMz+IFXJRVYSc//uBpT9MqfJP4tBfo
-/fSaX//7VeweyDWQFylnjKW5pJ9gOCbTrWa1S3RNTgF/0Es2v7OD5holIhSR6kuI
-hfiO6rI9q+5mrJIaDMdaxt5vy+QNmlWglfcdtH3BSxBx4uehjwvu9y3B1/qRS7vF
-vsi3CVbi4zQsxduVnFMVjP3m/WKUVWZiO554SjfIPxkBKH6fjm/xi6lcS3vhRqLQ
-m30d1iIm4yhml96QCGZ8t0pwZLQejbJNVB2AGd6hKKDrGWIJs4fjxXBvsIXZCDHz
-9w72geQQO5WUK7IMYB+wej9LNCj5CcXUZTA8wWAyFVnSHzBtFkdZJt479TjH33qw
-lbRIUCAfIarVmXEODO2gr+rebBU+je61qMLWjRqE0fjhtB0djjjDru7OamWavT6q
-AKAOnURCfqoc/Z/+2hu0
-=FKi8
------END PGP SIGNATURE-----
-
---P+33d92oIH25kiaB--
-
---===============1125174477==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1125174477==--
+--ep0oHQY+/Gbo/zt0--
