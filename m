@@ -1,210 +1,89 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v9 03/14] drm/mediatek: Add DSI sub driver
-Date: Wed, 03 Feb 2016 12:01:44 +0100
-Message-ID: <1454497304.3867.1.camel@pengutronix.de>
-References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
- <1452611750-16283-4-git-send-email-p.zabel@pengutronix.de>
- <CAGS+omCqKFQ-E_q7x=i95fhZSGgTOVW+_EoiRb++E14Xrob-tA@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 10/14] Documentation: DT: bindings: Add power domain
+ info for NVIDIA PMC
+Date: Wed, 3 Feb 2016 11:02:24 +0000
+Message-ID: <56B1DE40.7080403@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-11-git-send-email-jonathanh@nvidia.com>
+ <20160129160625.GA21918@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGS+omCqKFQ-E_q7x=i95fhZSGgTOVW+_EoiRb++E14Xrob-tA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Kurtz <djkurtz@chromium.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "open
- list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160129160625.GA21918@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLAoKQW0gRGllbnN0YWcsIGRlbiAwMi4wMi4yMDE2LCAyMTozMiArMDgwMCBzY2hy
-aWViIERhbmllbCBLdXJ0ejoKPiBIaSBQaGlsaXBwLAo+IAo+IEkgcmFuIGludG8gc29tZSBpc3N1
-ZXMgd2hlbiB0cnlpbmcgdG8gYnJpbmcgdXAganVzdCB0aGUgRFNJIHBhdGggb2YKPiB0aGUgTWVk
-aWF0ZWsgRFJNIGRyaXZlci4KPiBUaGluZ3Mgd2VyZSBmYWlsaW5nIGluIHByb2JlL2JpbmQgdGhh
-dCB0cmlnZ2VyZWQgc29tZSBvb3BzZXMgaW4gdGhlCj4gdW5iaW5kL2Vycm9yIHBhdGhzLgo+IFRo
-aXMgcmVzdWx0ZWQgaW4gdGhlIGZvbGxvd2luZyByZXZpZXcgb2YgdGhlIGRzaSBwYXRjaC4uLgo+
-IAo+IE9uIFR1ZSwgSmFuIDEyLCAyMDE2IGF0IDExOjE1IFBNLCBQaGlsaXBwIFphYmVsIDxwLnph
-YmVsQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiA+IEZyb206IENLIEh1IDxjay5odUBtZWRpYXRl
-ay5jb20+Cj4gPgo+ID4gVGhpcyBwYXRjaCBhZGQgYSBkcm0gZW5jb2Rlci9jb25uZWN0b3IgZHJp
-dmVyIGZvciB0aGUgTUlQSSBEU0kgZnVuY3Rpb24KPiA+IGJsb2NrIG9mIHRoZSBNZWRpYXRlayBk
-aXNwbGF5IHN1YnN5c3RlbSBhbmQgYSBwaHkgZHJpdmVyIGZvciB0aGUgTUlQSSBUWAo+ID4gRC1Q
-SFkgY29udHJvbCBtb2R1bGUuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRh
-by5zaGlAbWVkaWF0ZWsuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56
-YWJlbEBwZW5ndXRyb25peC5kZT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9LY29uZmlnICAgICAgIHwgICAzICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFr
-ZWZpbGUgICAgICB8ICAgNCArLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2Rydi5jIHwgICAyICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYu
-aCB8ICAgMiArCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgfCA4
-NDcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kc2kuaCAgICAgfCAgNTggKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19taXBpX3R4LmMgfCA0ODcgKysrKysrKysrKysrKysrKysrKwo+ID4gIDcgZmls
-ZXMgY2hhbmdlZCwgMTQwMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuaAo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHguYwo+
-ID4KWy4uLl0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
-aS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+ID4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjZhYjVhMzEKPiA+IC0tLSAvZGV2L251bGwKPiA+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKWy4uLl0KPiA+ICsjZGVm
-aW5lIERTSV9QSFlfVElNRUNPTjMgICAgICAgMHgxMWMKPiA+ICsjZGVmaW5lIENMS19IU19QUlBS
-ICAgICAgICAgICAgICAgICAgICAoMHhmZiA8PCAwKQo+ID4gKyNkZWZpbmUgQ0xLX0hTX1BPU1Qg
-ICAgICAgICAgICAgICAgICAgICgweGZmIDw8IDgpCj4gPiArI2RlZmluZSBDTEtfSFNfRVhJVCAg
-ICAgICAgICAgICAgICAgICAgKDB4ZmYgPDwgMTYpCj4gPiArCj4gPiArI2RlZmluZSBOU19UT19D
-WUNMRShuLCBjKSAgICAoKG4pIC8gYyArICgoKG4pICUgYykgPyAxIDogMCkpCj4gCj4gKCkgYXJv
-dW5kIGVhY2ggb2YgdGhlIHR3byAnYycgaW4gdGhlIG1hY3JvLgoKT2suCgpbLi4uXQo+ID4gK3N0
-YXRpYyBpbnQgbXRrX2RzaV9wb3dlcm9uKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gPiArewo+ID4g
-KyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSBkc2ktPmRldjsKPiA+ICsgICAgICAgaW50IHJl
-dDsKPiA+ICsKPiA+ICsgICAgICAgaWYgKCsrZHNpLT5yZWZjb3VudCAhPSAxKQo+ID4gKyAgICAg
-ICAgICAgICAgIHJldHVybiAwOwo+ID4gKwo+ID4gKyAgICAgICAvKioKPiA+ICsgICAgICAgICog
-ZGF0YV9yYXRlID0gKHBpeGVsX2Nsb2NrIC8gMTAwMCkgKiBwaXhlbF9kaXB0aCAqIG1pcGlfcmF0
-aW87Cj4gPiArICAgICAgICAqIHBpeGVsX2Nsb2NrIHVuaXQgaXMgS2h6LCBkYXRhX3JhdGEgdW5p
-dCBpcyBNSHosIHNvIG5lZWQgZGl2aWRlIDEwMDAuCj4gPiArICAgICAgICAqIG1pcGlfcmF0aW8g
-aXMgbWlwaSBjbGsgY29lZmZpY2llbnQgZm9yIGJhbGFuY2UgdGhlIHBpeGVsIGNsayBpbiBtaXBp
-Lgo+ID4gKyAgICAgICAgKiB3ZSBzZXQgbWlwaV9yYXRpbyBpcyAxLjA1Lgo+ID4gKyAgICAgICAg
-Ki8KPiA+ICsgICAgICAgZHNpLT5kYXRhX3JhdGUgPSBkc2ktPnZtLnBpeGVsY2xvY2sgKiAzICog
-MjEgLyAoMSAqIDEwMDAgKiAxMCk7Cj4gPiArCj4gPiArICAgICAgIHJldCA9IGNsa19zZXRfcmF0
-ZShkc2ktPmhzX2NsaywgZHNpLT5kYXRhX3JhdGUgKiAxMDAwMDAwKTsKPiA+ICsgICAgICAgaWYg
-KHJldCA8IDApCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gc2V0
-IGRhdGEgcmF0ZTogJWRcbiIsIHJldCk7Cj4gCj4gU2hvdWxkIHdlIGVycm9yIG91dCBoZXJlPwoK
-UHJvYmFibHkgeWVzLiBBdCBsZWFzdCB3ZSBzaG91bGQgY2hlY2sgY2xrX2dldF9yYXRlIGJlZm9y
-ZSB3ZSB0cnkgdG8gZ28KYWhlYWQgYW55d2F5LiBJJ2xsIHJldHVybiB0aGUgZXJyb3IgaGVyZS4K
-Cj4gPiArc3RhdGljIHZvaWQgbXRrX291dHB1dF9kc2lfZGlzYWJsZShzdHJ1Y3QgbXRrX2RzaSAq
-ZHNpKQo+ID4gK3sKPiA+ICsgICAgICAgaWYgKCFkc2ktPmVuYWJsZWQpCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuOwo+ID4gKwo+ID4gKyAgICAgICBpZiAoZHNpLT5wYW5lbCkgewo+ID4gKyAg
-ICAgICAgICAgICAgIGlmIChkcm1fcGFuZWxfZGlzYWJsZShkc2ktPnBhbmVsKSkgewo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJmYWlsZWQgdG8gZGlzYWJsZSB0aGUgcGFu
-ZWxcbiIpOwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOwo+ID4gKyAgICAgICAg
-ICAgICAgIH0KPiA+ICsgICAgICAgfQo+ID4gKwo+ID4gKyAgICAgICBtdGtfZHNpX3Bvd2Vyb2Zm
-KGRzaSk7Cj4gCj4gVGhlIG9yZGVyIGlzIGEgYml0IHN1c3BpY2lvdXMgaGVyZTsgSSB3b3VsZCBl
-eHBlY3QgdG8gcG93ZXJvZmYgZHNpCj4gYmVmb3JlIHRoZSBwYW5lbCB0byBtaXJyb3IgdGhlIHR1
-cm4gb24gb3JkZXIuCgpDSywgY291bGQgeW91IGNvbW1lbnQgb24gdGhpcz8KCkkgY2FuIHJlb3Jk
-ZXIgdGhpcywgYnV0IEknbSBub3Qgc3VyZSBhYm91dCB0aGUgcmVhc29uaW5nICh3aGF0IGhhcHBl
-bnMKaGFyZHdhcmUgd2lzZSBpZiB3ZSBqdXN0IGN1dCBwYW5lbCBwb3dlciB2cy4gaWYgdGhlIERT
-SSBwYW5lbCBmaXJzdCBzZWVzCnRoZSBVTFAgdHJhbnNpdGlvbikuIEZ1cnRoZXIsIEkgZG9uJ3Qg
-aGF2ZSBhIHBhbmVsIHRvIHRlc3QsIGp1c3QgdGhlClBTODY0MC4KCj4gPiArCj4gPiArICAgICAg
-IGRzaS0+ZW5hYmxlZCA9IGZhbHNlOwo+ID4gK30KWy4uLl0KPiA+ICtzdGF0aWMgaW50IG10a19k
-cm1fYXR0YWNoX2xjbV9icmlkZ2Uoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSwKPiAKPiBXaGF0
-IGlzICJsY20iPwoKTm8gaWRlYSwgSSdsbCBkcm9wIGl0LgoKPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPiArewo+
-ID4gKyAgICAgICBpbnQgcmV0Owo+ID4gKwo+ID4gKyAgICAgICBlbmNvZGVyLT5icmlkZ2UgPSBi
-cmlkZ2U7Cj4gPiArICAgICAgIGJyaWRnZS0+ZW5jb2RlciA9IGVuY29kZXI7Cj4gPiArICAgICAg
-IHJldCA9IGRybV9icmlkZ2VfYXR0YWNoKGVuY29kZXItPmRldiwgYnJpZGdlKTsKPiA+ICsgICAg
-ICAgaWYgKHJldCkgewo+ID4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigiRmFpbGVkIHRvIGF0
-dGFjaCBicmlkZ2UgdG8gZHJtXG4iKTsKPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+
-ID4gKyAgICAgICB9Cj4gPiArCj4gPiArICAgICAgIHJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+
-ICtzdGF0aWMgaW50IG10a19kc2lfY3JlYXRlX2Nvbm5fZW5jKHN0cnVjdCBkcm1fZGV2aWNlICpk
-cm0sIHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gPiArewo+ID4gKyAgICAgICBpbnQgcmV0Owo+ID4g
-Kwo+ID4gKyAgICAgICByZXQgPSBkcm1fZW5jb2Rlcl9pbml0KGRybSwgJmRzaS0+ZW5jb2Rlciwg
-Jm10a19kc2lfZW5jb2Rlcl9mdW5jcywKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBEUk1fTU9ERV9FTkNPREVSX0RTSSk7Cj4gPiArICAgICAgIGlmIChyZXQpIHsKPiA+ICsgICAg
-ICAgICAgICAgICBEUk1fRVJST1IoIkZhaWxlZCB0byBlbmNvZGVyIGluaXQgdG8gZHJtXG4iKTsK
-PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+ID4gKyAgICAgICB9Cj4gPiArICAgICAg
-IGRybV9lbmNvZGVyX2hlbHBlcl9hZGQoJmRzaS0+ZW5jb2RlciwgJm10a19kc2lfZW5jb2Rlcl9o
-ZWxwZXJfZnVuY3MpOwo+ID4gKwo+ID4gKyAgICAgICBkc2ktPmVuY29kZXIucG9zc2libGVfY3J0
-Y3MgPSAxOwo+IAo+IFRoaXMgZG9lc24ndCBsb29rIHJpZ2h0LiAgSWYgdGhlcmUgYXJlIE4gY3J0
-Y3MgaW4gdGhlIHN5c3RlbSwgaG93IGNhbgo+IHdlIGtub3cgdGhpcyBEU0kgd2lsbCBhbHdheXMg
-YmUgYXNzb2NpYXRlZCB3aXRoIENSVEM6MCA/CgpUaGlzIGlzIHJlbGF0ZWQgdG8gdGhlIGNvbW1l
-bnQgaW4gbXRrX2RybV9kcnYuYzoKCgkvKgoJICogV2UgY3VycmVudGx5IHN1cHBvcnQgdHdvIGZp
-eGVkIGRhdGEgc3RyZWFtcywgZWFjaCBzdGF0aWNhbGx5CgkgKiBhc3NpZ25lZCB0byBhIGNydGM6
-CgkgKiBPVkwwIC0+IENPTE9SMCAtPiBBQUwgLT4gT0QgLT4gUkRNQTAgLT4gVUZPRSAtPiBEU0kw
-IC4uLgoJICogLi4uIGFuZCBPVkwxIC0+IENPTE9SMSAtPiBHQU1NQSAtPiBSRE1BMSAtPiBEUEkw
-LgoJICovCgpJbiB0aGVvcnkgdGhlIERTSTAgc2luayBjYW4gYmUgZHJpdmVuIGJ5IGFueSBvZiB0
-aGUgT1ZMMC8xLCBSRE1BMC8xLzIKc291cmNlcywgZGVwZW5kaW5nIG9uIHRoZSBkaXNwbGF5IHBh
-dGggY29uZmlndXJhdGlvbiwgYnV0IGhvdyB0aG9zZQpzb3VyY2VzIHNob3VsZCBjb3JyZXNwb25k
-IHRvIHRoZSBjcnRjcyBpbiB0aGUgZHluYW1pYyBjYXNlIGhhc24ndCBiZWVuCndvcmtlZCBvdXQg
-eWV0LgoKPiA+ICsKPiA+ICsgICAgICAgLyogUHJlLWVtcHQgRFAgY29ubmVjdG9yIGNyZWF0aW9u
-IGlmIHRoZXJlJ3MgYSBicmlkZ2UgKi8KPiA+ICsgICAgICAgcmV0ID0gbXRrX2RybV9hdHRhY2hf
-bGNtX2JyaWRnZShkc2ktPmJyaWRnZSwgJmRzaS0+ZW5jb2Rlcik7Cj4gPiArICAgICAgIGlmICgh
-cmV0KQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAwOwo+IAo+IFRyaWNreS4gIFRoZSAibm8t
-ZXJyb3IiIGNhc2UgaGVyZSBpcyB0byByZXR1cm4gMCBhbmQgc2tpcCB0aGUgcmVzdCBvZgo+IHRo
-aXMgZnVuY3Rpb24/Cj4gSW4gcGFydGljdWxhciwgdGhpcyBza2lwcyBpbml0aWFsaXppbmcgYW5k
-IHJlZ2lzdGVyaW5nIHRoZSBjb25uZWN0b3IuCgpZZXMuIFRoZXJlIGlzIG5vIERTSSBjb25uZWN0
-b3IgaW4gYSBzeXN0ZW0gdGhhdCBoYXMgYSBEU0ktdG8tZURQIGJyaWRnZQpjb25uZWN0ZWQgdG8g
-dGhlIFNvQ3MgRFNJIG91dHB1dCwgc28gd2UgbGVhdmUgaXQgdG8gdGhlIGJyaWRnZSBkcml2ZXIg
-dG8KcmVnaXN0ZXIgYW4gZURQIGNvbm5lY3RvciBpdHNlbGYuCgo+IFVuZm9ydHVuYXRlbHksIGFm
-YWljdCwgdGhlcmUgaXMgbm8gd2F5IHRvIHRlbGwgdGhhdCB3ZSBza2lwcGVkIHRoaXMsCj4gc28g
-aW4gbXRrX2RzaV91bmJpbmQoKSB3ZSB3aWxsIGFsd2F5cyBjYWxsIG10a19kc2lfZGVzdHJveV9j
-b25uX2VuYygpLAo+IHdoaWNoIHdpbGwgdHJ5IHRvIGNsZWFudXAgdGhlIGNvbm5lY3RvciB0aGF0
-IHdlIGRpZG4ndCBpbml0LgoKU2VlIGJlbG93LCBkcm1fY29ubmVjdG9yX2luaXQgc2V0cyBkc2kt
-PmNvbm4uZGV2LCBzbyB3ZSBjYW4gdXNlIHRoYXQgdG8KZGV0ZWN0IHRoZSBicmlkZ2UgY2FzZS4K
-QWx0aG91Z2ggaWYgdGhlIGJyaWRnZSBkcml2ZXIgc2hvdWxkIHJlZ2lzdGVyIHRoZSBjb25uZWN0
-b3IgYW5kIHRoZW4KZmFpbHMgZm9yIHNvbWUgb3RoZXIgcmVhc29uLCB3ZSdsbCBoYXBwaWx5IHRy
-eSB0byByZWdpc3RlciBvdXIgb3duLgpIbS4uLgoKPiA+ICsKPiA+ICsgICAgICAgcmV0ID0gZHJt
-X2Nvbm5lY3Rvcl9pbml0KGRybSwgJmRzaS0+Y29ubiwgJm10a19kc2lfY29ubmVjdG9yX2Z1bmNz
-LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRFJNX01PREVfQ09OTkVDVE9S
-X0RTSSk7Cj4gPiArICAgICAgIGlmIChyZXQpIHsKPiA+ICsgICAgICAgICAgICAgICBEUk1fRVJS
-T1IoIkZhaWxlZCB0byBjb25uZWN0b3IgaW5pdCB0byBkcm1cbiIpOwo+ID4gKyAgICAgICAgICAg
-ICAgIGdvdG8gZXJyY29ubmVjdG9yOwo+ID4gKyAgICAgICB9Cj4gPiArCj4gPiArICAgICAgIGRy
-bV9jb25uZWN0b3JfaGVscGVyX2FkZCgmZHNpLT5jb25uLCAmbXRrX2RzaV9jb25uZWN0b3JfaGVs
-cGVyX2Z1bmNzKTsKPiA+ICsKPiA+ICsgICAgICAgcmV0ID0gZHJtX2Nvbm5lY3Rvcl9yZWdpc3Rl
-cigmZHNpLT5jb25uKTsKPiA+ICsgICAgICAgaWYgKHJldCkgewo+ID4gKyAgICAgICAgICAgICAg
-IERSTV9FUlJPUigiRmFpbGVkIHRvIGNvbm5lY3RvciByZWdpc3RlciB0byBkcm1cbiIpOwo+ID4g
-KyAgICAgICAgICAgICAgIGdvdG8gZXJyY29ubmVjdG9ycmVnOwo+ID4gKyAgICAgICB9Cj4gPiAr
-Cj4gPiArICAgICAgIGRzaS0+Y29ubi5kcG1zID0gRFJNX01PREVfRFBNU19PRkY7Cj4gPiArICAg
-ICAgIGRybV9tb2RlX2Nvbm5lY3Rvcl9hdHRhY2hfZW5jb2RlcigmZHNpLT5jb25uLCAmZHNpLT5l
-bmNvZGVyKTsKPiA+ICsKPiA+ICsgICAgICAgaWYgKGRzaS0+cGFuZWwpIHsKPiA+ICsgICAgICAg
-ICAgICAgICByZXQgPSBkcm1fcGFuZWxfYXR0YWNoKGRzaS0+cGFuZWwsICZkc2ktPmNvbm4pOwo+
-ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQpIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IERSTV9FUlJPUigiRmFpbGVkIHRvIGF0dGFjdCBwYW5lbCB0byBkcm1cbiIpOwo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiA+ICsgICAgICAgICAgICAgICB9Cj4gPiAr
-ICAgICAgIH0KPiA+ICsgICAgICAgcmV0dXJuIDA7Cj4gPiArCj4gPiArZXJyY29ubmVjdG9yOgo+
-ID4gKyAgICAgICBkcm1fZW5jb2Rlcl9jbGVhbnVwKCZkc2ktPmVuY29kZXIpOwo+ID4gK2VycmNv
-bm5lY3RvcnJlZzoKPiA+ICsgICAgICAgZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwKCZkc2ktPmNvbm4p
-Owo+IAo+IFRoZSBjbGVhbnVwIG9yZGVyIGlzIGJhY2t3YXJkczsgY2xlYW4gdXAgZW5jb2RlciBs
-YXN0IHRvIGludmVydCBpbml0IG9yZGVyLgo+IEFsc28sIHRoZXNlIGxhYmVscyBhcmUgbm90IHZl
-cnkgcmVhZGFibGUuCgpJJ2xsIHJlb3JkZXIgdGhlc2UgYW5kIHJlbmFtZSB0aGUgbGFiZWxzLgoK
-Wy4uLl0KPiA+ICtzdGF0aWMgdm9pZCBtdGtfZHNpX2Rlc3Ryb3lfY29ubl9lbmMoc3RydWN0IG10
-a19kc2kgKmRzaSkKPiA+ICt7Cj4gPiArICAgICAgIGRybV9lbmNvZGVyX2NsZWFudXAoJmRzaS0+
-ZW5jb2Rlcik7Cj4gPiArICAgICAgIGRybV9jb25uZWN0b3JfdW5yZWdpc3RlcigmZHNpLT5jb25u
-KTsKPiA+ICsgICAgICAgZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwKCZkc2ktPmNvbm4pOwo+IAo+IHVu
-cmVnaXN0ZXJpbmcgLyBjbGVhbmluZyB1cCB0aGUgY29ubmVjdG9yIHdpbGwgb29wcyBoZXJlIGlm
-IHdlIHRvb2sKPiB0aGUgIlByZS1lbXB0IERQIGNvbm5lY3RvciBjcmVhdGlvbiBpZiB0aGVyZSdz
-IGEgYnJpZGdlIiBjYXNlIGluCj4gbXRrX2RzaV9jcmVhdGVfY29ubl9lbmMgYW5kIG91ciBjb25u
-ZWN0b3IgaXMgbm90IGluaXRpYWxpemVkLgoKSSdsbCB3cmFwIHRoZSBjb25uZWN0b3IgdW5yZWdp
-c3Rlci9jbGVhbnVwOgoKCS8qIFNraXAgY29ubmVjdG9yIGNsZWFudXAgaWYgY3JlYXRpb24gd2Fz
-IGRlbGVnYXRlZCB0byB0aGUgYnJpZGdlICovCglpZiAoZHNpLT5jb25uLmRldikgewoJCWRybV9j
-b25uZWN0b3JfdW5yZWdpc3RlcigmZHNpLT5jb25uKTsKCQlkcm1fY29ubmVjdG9yX2NsZWFudXAo
-JmRzaS0+Y29ubik7Cgl9CgpbLi4uXQo+ID4gK3N0YXRpYyB2b2lkIG10a19kc2lfdW5iaW5kKHN0
-cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdm9pZCAqZGF0YSkKPiA+ICt7Cj4gPiArICAgICAgIHN0cnVjdCBkcm1f
-ZGV2aWNlICpkcm0gPSBkYXRhOwo+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX2RzaSAqZHNpOwo+ID4g
-Kwo+ID4gKyAgICAgICBkc2kgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YSh0b19wbGF0Zm9ybV9kZXZp
-Y2UoZGV2KSk7Cj4gCj4gSnVzdDoKPiAgICAgICAgc3RydWN0IG10a19kc2kgKmRzaSA9IGRldl9n
-ZXRfZHJ2ZGF0YShkZXYpOwoKT2suCgpbLi4uXQo+ID4gK3N0YXRpYyBpbnQgbXRrX2RzaV9wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sKPiA+ICsgICAgICAgc3RydWN0
-IG10a19kc2kgKmRzaTsKPiA+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
-djsKPiA+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpyZW1vdGVfbm9kZSwgKmVuZHBvaW50
-Owo+ID4gKyAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlZ3M7Cj4gPiArICAgICAgIGludCBjb21w
-X2lkOwo+ID4gKyAgICAgICBpbnQgcmV0Owo+ID4gKwo+ID4gKyAgICAgICBkc2kgPSBkZXZtX2t6
-YWxsb2MoZGV2LCBzaXplb2YoKmRzaSksIEdGUF9LRVJORUwpOwo+IAo+IEFsd2F5cyBOVUxMIGNo
-ZWNrIGFsbG9jYXRpb25zLgoKT2suCgo+ID4gKyAgICAgICBkc2ktPm1vZGVfZmxhZ3MgPSBNSVBJ
-X0RTSV9NT0RFX1ZJREVPIHwgTUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNFOwo+ID4gKyAg
-ICAgICBkc2ktPmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I4ODg7Cj4gPiArICAgICAgIGRzaS0+
-bGFuZXMgPSA0Owo+IAo+IEFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGVzZSB0aHJlZSBmaWVsZHMg
-YXJlIGNvbnN0YW50cywgd2hpY2ggbWVhbnMgZWl0aGVyIHdlCj4gYXJlIG1pc3NpbmcgY29kZSB0
-byBwYXJzZSB0aGVzZSBmcm9tIHNvbWV3aGVyZSwgb3Igd2UgY2FuIGhhcmQgY29kZSB0aGlzCj4g
-dGhyb3VnaG91dCBhbmQgc2ltcGxpZnkgdGhlIGRyaXZlci4KClRoZXNlIHVzdWFsbHkgY29tZSBm
-cm9tIHRoZSBzdHJ1Y3QgcGFuZWxfZGVzY19kc2kgYW5kIGFyZSBmaWxsZWQgaW50bwpzdHJ1Y3Qg
-bWlwaV9kc2lfZGV2aWNlIGZvciBEU0kgYnVzIHByb2JlZCBwYW5lbHMuIEknbSBub3Qgc3VyZSBo
-b3cgd2UKY2FuIGdldCB0byB0aGlzIGluZm9ybWF0aW9uIGZvciBwbGF0Zm9ybSBkZXZpY2Ugc2lt
-cGxlIHBhbmVscyBvciBJMkMgYnVzCnByb2JlZCBlbmNvZGVycy4gSW4gZmFjdCB0aGUgUFM4NjQw
-IGVuY29kZXIgdXNlZCBvbiBvYWsgZG9lc24ndCBldmVuCmhhdmUgYSBmaXhlZCBtb2RlLCBidXQg
-c3VwcG9ydHMgc2V2ZXJhbCBmcm9tIFJHQjU2NSB0byBSR0IxMDEwMTAuClRoaXMgc2hvdWxkIHBy
-b2JhYmx5IGJlIGNob3NlbiBkeW5hbWljYWxseSwgZGVwZW5kaW5nIG9uIHRoZSBtb2RlIHNldC4K
-ClsuLi5dCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBp
-X3R4LmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHguYwo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjNiOTFhMzYKPiA+IC0tLSAvZGV2L251
-bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jClsuLi5d
-Cj4gPiArc3RhdGljIHN0cnVjdCBjbGtfb3BzIG10a19taXBpX3R4X3BsbF9vcHMgPSB7Cj4gCj4g
-c3RhdGljIGNvbnN0ClsuLi5dCj4gPiArc3RhdGljIHN0cnVjdCBwaHlfb3BzIG10a19taXBpX3R4
-X29wcyA9IHsKPiAKPiBzdGF0aWMgY29uc3QKCk9rLgoKdGhhbmtzClBoaWxpcHAKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+On 29/01/16 16:06, Rob Herring wrote:
+> On Thu, Jan 28, 2016 at 04:33:48PM +0000, Jon Hunter wrote:
+>> Add power-domain binding documentation for the NVIDIA PMC driver in
+>> order to support generic power-domains.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 55 ++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> index 53aa5496c5cf..3c77373aa826 100644
+>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> @@ -1,5 +1,7 @@
+>>  NVIDIA Tegra Power Management Controller (PMC)
+>>  
+>> +== Power Management Controller Node ==
+>> +
+>>  The PMC block interacts with an external Power Management Unit. The PMC
+>>  mostly controls the entry and exit of the system from different sleep
+>>  modes. It provides power-gating controllers for SoC and CPU power-islands.
+>> @@ -70,6 +72,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
+>>                       Defaults to 0. Valid values are described in section 12.5.2
+>>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
+>>  
+>> +Optional nodes:
+>> +- powergates : This node contains a hierarchy of power domain nodes, which
+>> +	       should match the powergates on the Tegra SoC.
+>> +
+>>  Example:
+>>  
+>>  / SoC dts including file
+>> @@ -115,3 +121,52 @@ pmc@7000f400 {
+>>  	};
+>>  	...
+>>  };
+>> +
+>> +
+>> +== PM Domain Nodes ==
+>> +
+>> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
+>> +that can be power-gated by the PMC and should be named appropriately.
+>> +
+>> +Required properties:
+>> +  - clocks: Must contain an entry for each clock required by the PMC for
+>> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
+>> +  - resets: Must contain an entry for each reset required by the PMC for
+>> +    controlling a power-gate. See ../reset/reset.txt for details.
+>> +  - nvidia,powergate: Integer cell that contains an identifier for the PMC
+>> +    power-gate that is associated with the power-domain. Please refer to
+>> +    the Tegra TRM for more details.
+> 
+> Why not make this value be the power-domain cell for consumers and the 
+> pmc be the phandle.
+
+Is there anything wrong with using a label for the consumers? Seems
+simpler, if you can just say ...
+
+	adma: adma@702e2000 {
+		...
+		power-domains = <&pd_audio>;
+		...
+	};
+
+> Then use reg property for the subnodes. That avoids a custom property.
+
+That is fine with me.
+
+Jon
