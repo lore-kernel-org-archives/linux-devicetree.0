@@ -1,88 +1,62 @@
-From: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Subject: [PATCH v2] of: resolver: Add missing of_node_get and of_node_put
-Date: Wed, 3 Feb 2016 23:39:01 +0530
-Message-ID: <20160203180901.GA27874@amitoj-Inspiron-3542>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v10 4/5] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 4 Feb 2016 02:09:55 +0800
+Message-ID: <CADyBb7vRTz9NxEmeGvxDooUUUXPPFFcNsjUADHcmSKHS56ZYjA@mail.gmail.com>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+	<1454519923-25230-5-git-send-email-fu.wei@linaro.org>
+	<56B23D61.2050001@codeaurora.org>
+	<CADyBb7tteV7VF9oxMaq5NprVdS2UBKobupxoyfSp+jQwp5wmQA@mail.gmail.com>
+	<56B23FE1.2010207@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: pantelis.antoniou@konsulko.com, robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: julia.lawall@lip6.fr
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <56B23FE1.2010207@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
 List-Id: devicetree@vger.kernel.org
 
-In __of_find_node_by_full_name, add an of_node_get when detecting the
-desired element, to ensure that it ends up with a reference count that is 
-one greater than on entering the function.
+On 4 February 2016 at 01:58, Timur Tabi <timur@codeaurora.org> wrote:
+> Fu Wei wrote:
+>>
+>> I have posted  GTDT support separately :https://lkml.org/lkml/2016/2/1/660
+>>
+>> devicetree driver and GTDT driver both export sbsa gwdt info to
+>> "platform resource".
+>>
+>> this driver get hardware info from platform resource.
+>
+>
+> I must be missing something.  How does the driver probe?  It only has an
 
-Also in __of_find_node_by_full_name, add an of_node_put on breaking
-out of the for_each_child_of_node loop, to ensure that the reference
-count of the returned value is not double incremented. This change
-was made using Coccinelle.
+maybe you miss a  line of code for platform resource :
 
-The semantic patch used for this is as follows:
+---------------------
+static const struct platform_device_id sbsa_gwdt_pdev_match[] = {
+ { .name = "sbsa-gwdt", },
+ {},
+};
+MODULE_DEVICE_TABLE(platform, sbsa_gwdt_pdev_match);
+---------------------
 
-// <smpl>
-@@
-expression e;
-local idexpression n;
-@@
+> entry for device tree:
+>
+> +               .of_match_table = sbsa_gwdt_of_match,
+>
+> Doesn't there need to be an ACPI match table to probe on an ACPI system?
 
- for_each_child_of_node(..., n) {
-   ... when != of_node_put(n)
-       when != e = n
-(
-   return n;
-|
-+  of_node_put(n);
-?  return ...;
-)
-   ...
- }
-// </smpl
+No, we don't. And this have been tested.
 
-Finally, add an of_node_put in for_each_child_of_node in the function
-__of_adjust_phandle_ref after the value returned by
-__of_find_node_by_full_name is no longer useful.
 
-Signed-off-by: Amitoj Kaur Chawla <amitoj1606@gmail.com>
----
-Changes in v2:
-        -Added an of_node_get and an extra of_node_put in the
-         functions __of_find_node_by_full_name and __of_adjust_phandle_ref
-         respectively.
 
- drivers/of/resolver.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 640eb4c..d313d49 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -36,12 +36,14 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
- 
- 	/* check */
- 	if (of_node_cmp(node->full_name, full_name) == 0)
--		return node;
-+		return of_node_get(node);
- 
- 	for_each_child_of_node(node, child) {
- 		found = __of_find_node_by_full_name(child, full_name);
--		if (found != NULL)
-+		if (found != NULL) {
-+			of_node_put(child);
- 			return found;
-+		}
- 	}
- 
- 	return NULL;
-@@ -174,6 +176,7 @@ static int __of_adjust_phandle_ref(struct device_node *node,
- 			if (of_prop_cmp(sprop->name, propstr) == 0)
- 				break;
- 		}
-+		of_node_put(refnode);
- 
- 		if (!sprop) {
- 			pr_err("%s: Could not find property '%s'\n",
 -- 
-1.9.1
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
