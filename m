@@ -1,134 +1,193 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 05/14] soc: tegra: pmc: Wait for powergate state to change
-Date: Wed, 3 Feb 2016 08:58:58 -0700
-Message-ID: <CANLsYkyPj+ExhBFffokvtMcZ-OWocMc0Hx3_nfVgRu=uUVvJfg@mail.gmail.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
-	<1453998832-27383-6-git-send-email-jonathanh@nvidia.com>
-	<CANLsYkycbEo+wyMX8RJ9H-S5kDTjQR4nnDZc5gvf2kShOZAv9w@mail.gmail.com>
-	<56AF613A.1000909@nvidia.com>
-	<56B1C647.4060504@nvidia.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem to
+ support  generic Xilinx  AXI PCIe Host Bridge IP driver
+Date: Wed, 3 Feb 2016 09:59:20 -0600
+Message-ID: <20160203155920.GB32546@localhost>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <1452620173-4905-6-git-send-email-bharatku@xilinx.com>
+ <8520D5D51A55D047800579B0941471982587F02E@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B1C647.4060504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8520D5D51A55D047800579B0941471982587F02E@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: Bharat Kumar Gogada <bharatku@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.o>
 List-Id: devicetree@vger.kernel.org
 
-On 3 February 2016 at 02:20, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On 01/02/16 13:44, Jon Hunter wrote:
->>
->> On 29/01/16 16:58, Mathieu Poirier wrote:
->>> On 28 January 2016 at 09:33, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Currently, the function tegra_powergate_set() simply sets the desired
->>>> powergate state but does not wait for the state to change. In most cases
->>>> we should wait for the state to change before proceeding. Currently, there
->>>> is a case for tegra114 and tegra124 devices where we do not wait when
->>>> starting the secondary CPU as this is not necessary. However, this is only
->>>> done at boot time and so waiting here will only have a small impact on
->>>> boot time. Therefore, update tegra_powergate_set() to wait when setting
->>>> the powergate.
->>>>
->>>> By adding this feature, we can also eliminate the polling loop from
->>>> tegra30_boot_secondary().
->>>>
->>>> A function has been added for checking the status of the powergate and
->>>> so update the tegra_powergate_is_powered() to use this macro as well.
->>>>
->>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  arch/arm/mach-tegra/platsmp.c | 16 +++-------------
->>>>  drivers/soc/tegra/pmc.c       |  9 ++++++++-
->>>>  2 files changed, 11 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
->>>> index f3f61dbbda97..75620ae73913 100644
->>>> --- a/arch/arm/mach-tegra/platsmp.c
->>>> +++ b/arch/arm/mach-tegra/platsmp.c
->>>> @@ -108,19 +108,9 @@ static int tegra30_boot_secondary(unsigned int cpu, struct task_struct *idle)
->>>>          * be un-gated by un-toggling the power gate register
->>>>          * manually.
->>>>          */
->>>> -       if (!tegra_pmc_cpu_is_powered(cpu)) {
->>>> -               ret = tegra_pmc_cpu_power_on(cpu);
->>>> -               if (ret)
->>>> -                       return ret;
->>>> -
->>>> -               /* Wait for the power to come up. */
->>>> -               timeout = jiffies + msecs_to_jiffies(100);
->>>> -               while (!tegra_pmc_cpu_is_powered(cpu)) {
->>>> -                       if (time_after(jiffies, timeout))
->>>> -                               return -ETIMEDOUT;
->>>> -                       udelay(10);
->>>> -               }
->>>> -       }
->>>> +       ret = tegra_pmc_cpu_power_on(cpu);
->>>> +       if (ret)
->>>> +               return ret;
->>>>
->>>>  remove_clamps:
->>>>         /* CPU partition is powered. Enable the CPU clock. */
->>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>> index 99cb2fdd29e1..35ee60fd17be 100644
->>>> --- a/drivers/soc/tegra/pmc.c
->>>> +++ b/drivers/soc/tegra/pmc.c
->>>> @@ -28,6 +28,7 @@
->>>>  #include <linux/export.h>
->>>>  #include <linux/init.h>
->>>>  #include <linux/io.h>
->>>> +#include <linux/iopoll.h>
->>>>  #include <linux/of.h>
->>>>  #include <linux/of_address.h>
->>>>  #include <linux/platform_device.h>
->>>> @@ -186,6 +187,9 @@ static inline bool tegra_powergate_state(int id)
->>>>   */
->>>>  static int tegra_powergate_set(unsigned int id, bool new_state)
->>>>  {
->>>> +       bool status;
->>>> +       int err;
->>>> +
->>>>         mutex_lock(&pmc->powergates_lock);
->>>>
->>>>         if (tegra_powergate_state(id) == new_state) {
->>>> @@ -195,9 +199,12 @@ static int tegra_powergate_set(unsigned int id, bool new_state)
->>>>
->>>>         tegra_pmc_writel(PWRGATE_TOGGLE_START | id, PWRGATE_TOGGLE);
->>>>
->>>> +       err = readx_poll_timeout(tegra_powergate_state, id, status,
->>>> +                                status == new_state, 10, 100000);
->>>> +
->>>
->>> I understand (and agree) with the goal of this patch but I wonder (and
->>> I don't know much about the system/context) if holding a mutex while
->>> sleeping won't incur adverse effect on other parts of the system that
->>> weren't use to see this wait.  One way to fix this might be to use
->>> "mutex_trylock()" and let callers retry as they see fit if an
->>> operation is already in progress.
->>
->> I could unlock the mutex after writing the TOGGLE_START register. I
->> don't believe that we need to waiting for a powergate to change before
->> writing again.
->
-> I was not thinking clearly here, the whole reason for the locking is to
-> protect the base address as we swap it during the probe.
->
-> In general, I prefer to keep it the way we have it in this patch. By
-> using mutex_trylock() would mean that now clients would have to handle
-> retrying if they cannot get the lock and make it more complex.
+Hi Bharat,
 
-Yes, the complexity is indeed pushed to the caller but that way we
-know exactly what is going on.  Another way to implement this without
-any locks at all would be through RCUs.  I'll let Stephen and Thierry
-make the call here.
+On Wed, Feb 03, 2016 at 03:40:21PM +0000, Bharat Kumar Gogada wrote:
+> Ping
 
-Thanks,
-Mahtieu
+You said you were going to do another revision, so I'm waiting for r3.
 
-> Powergates should not be turned on and off that frequently and so
-> hopefully a delay here should be tolerable. For CPUs, this should only
-> be used on cold boot and not during CPU hotplug events.
->
-> Cheers
-> Jon
+> > This patch does required modifications to microblaze PCI subsystem, to
+> > work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
+> > and Zynq.
+> > 
+> > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > ---
+> > Changes:
+> > Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
+> > Modified pcibios_align_resource in pci-common.c, as per generic
+> > architecuture.
+> > Modified pcibios_get_phb_of_node function in pci-common.c, to remove
+> > dependency on struct pci_controller.
+> > Removed pci_domain_nr in pci-common.c, instead using generic code.
+> > Added pcibios_add_device in pci-common.c, as per generic architecuture.
+> > Adding Kernel configuration in arch/microblaze as required for generic PCI
+> > domains.
+> > Added kernel configuration for driver to support Microblaze.
+> > ---
+> >  arch/microblaze/Kconfig          |  3 ++
+> >  arch/microblaze/pci/pci-common.c | 61 +++++++++++++++--------------------
+> > -----
+> >  drivers/pci/host/Kconfig         |  2 +-
+> >  3 files changed, 27 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+> > index 0bce820..c3702b9 100644
+> > --- a/arch/microblaze/Kconfig
+> > +++ b/arch/microblaze/Kconfig
+> > @@ -271,6 +271,9 @@ config PCI
+> >  config PCI_DOMAINS
+> >  	def_bool PCI
+> > 
+> > +config PCI_DOMAINS_GENERIC
+> > +	def_bool PCI_DOMAINS
+> > +
+> >  config PCI_SYSCALL
+> >  	def_bool PCI
+> > 
+> > diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-
+> > common.c
+> > index ae838ed..bc72856 100644
+> > --- a/arch/microblaze/pci/pci-common.c
+> > +++ b/arch/microblaze/pci/pci-common.c
+> > @@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t
+> > address)
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_address_to_pio);
+> > 
+> > -/*
+> > - * Return the domain number for this bus.
+> > - */
+> > -int pci_domain_nr(struct pci_bus *bus)
+> > -{
+> > -	struct pci_controller *hose = pci_bus_to_host(bus);
+> > -
+> > -	return hose->global_number;
+> > -}
+> > -EXPORT_SYMBOL(pci_domain_nr);
+> > -
+> >  /* This routine is meant to be used early during boot, when the
+> >   * PCI bus numbers have not yet been assigned, and you need to
+> >   * issue PCI config cycles to an OF device.
+> > @@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus
+> > *bus)
+> > 
+> >  void pcibios_fixup_bus(struct pci_bus *bus)
+> >  {
+> > -	/* When called from the generic PCI probe, read PCI<->PCI bridge
+> > -	 * bases. This is -not- called when generating the PCI tree from
+> > -	 * the OF device-tree.
+> > -	 */
+> > -	if (bus->self != NULL)
+> > -		pci_read_bridge_bases(bus);
+> > -
+> > -	/* Now fixup the bus bus */
+> > -	pcibios_setup_bus_self(bus);
+> > -
+> > -	/* Now fixup devices on that bus */
+> > -	pcibios_setup_bus_devices(bus);
+> > +	/* nothing to do */
+> >  }
+> >  EXPORT_SYMBOL(pcibios_fixup_bus);
+> > 
+> > -static int skip_isa_ioresource_align(struct pci_dev *dev)
+> > -{
+> > -	return 0;
+> > -}
+> > -
+> >  /*
+> >   * We need to avoid collisions with `mirrored' VGA ports
+> >   * and other strange ISA hardware, so we always want the
+> > @@ -899,20 +872,20 @@ static int skip_isa_ioresource_align(struct pci_dev
+> > *dev)
+> >  resource_size_t pcibios_align_resource(void *data, const struct resource
+> > *res,
+> >  				resource_size_t size, resource_size_t align)
+> >  {
+> > -	struct pci_dev *dev = data;
+> >  	resource_size_t start = res->start;
+> > 
+> > -	if (res->flags & IORESOURCE_IO) {
+> > -		if (skip_isa_ioresource_align(dev))
+> > -			return start;
+> > -		if (start & 0x300)
+> > -			start = (start + 0x3ff) & ~0x3ff;
+> > -	}
+> > -
+> >  	return start;
+> >  }
+> >  EXPORT_SYMBOL(pcibios_align_resource);
+> > 
+> > +int pcibios_add_device(struct pci_dev *dev)
+> > +{
+> > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(pcibios_add_device);
+> > +
+> >  /*
+> >   * Reparent resource children of pr that conflict with res
+> >   * under res, and make res replace those children.
+> > @@ -1335,9 +1308,21 @@ static void pcibios_setup_phb_resources(struct
+> > pci_controller *hose,
+> > 
+> >  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
+> >  {
+> > -	struct pci_controller *hose = bus->sysdata;
+> > +	struct device_node *np;
+> > +
+> > +	for_each_node_by_type(np, "pci") {
+> > +		const void *prop;
+> > +		unsigned int bus_min;
+> > +
+> > +		prop = of_get_property(np, "bus-range", NULL);
+> > +		if (!prop)
+> > +			continue;
+> > +		bus_min = be32_to_cpup(prop);
+> > +		if (bus->number == bus_min)
+> > +			return np;
+> > +	}
+> > 
+> > -	return of_node_get(hose->dn);
+> > +	return NULL;
+> >  }
+> > 
+> >  static void pcibios_scan_phb(struct pci_controller *hose)
+> > diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> > index d5e58ba..7c56c2e 100644
+> > --- a/drivers/pci/host/Kconfig
+> > +++ b/drivers/pci/host/Kconfig
+> > @@ -79,7 +79,7 @@ config PCI_KEYSTONE
+> > 
+> >  config PCIE_XILINX
+> >  	bool "Xilinx AXI PCIe host bridge support"
+> > -	depends on ARCH_ZYNQ
+> > +	depends on ARCH_ZYNQ || MICROBLAZE
+> >  	help
+> >  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+> >  	  Host Bridge driver.
+> > --
+> > 2.1.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
