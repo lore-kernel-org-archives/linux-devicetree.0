@@ -1,140 +1,260 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Thu, 4 Feb 2016 15:46:15 -0800
-Message-ID: <CALAqxLVyznpLd2MLgGr28TDECpLZ=RpmhxH-SHqntXfBsctcmQ@mail.gmail.com>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
- <1454407151-4751-1-git-send-email-andy.yan@rock-chips.com>
- <20160204230814.GA4847@rob-hp-laptop>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 4/7] ARM: dts: imx: Add support for Advantech/GE Bx50v3
+Date: Thu, 4 Feb 2016 18:57:44 -0500
+Message-ID: <56B3E578.2080209@timesys.com>
+References: <1454109558-22800-1-git-send-email-akshay.bhat@timesys.com>
+ <1454109558-22800-5-git-send-email-akshay.bhat@timesys.com>
+ <20160203145256.GR8307@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160204230814.GA4847@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Moritz
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160203145256.GR8307@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 4, 2016 at 3:08 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Feb 02, 2016 at 05:59:11PM +0800, Andy Yan wrote:
->> add device tree bindings document for reboot-mode driver
+
+
+On 02/03/2016 09:52 AM, Shawn Guo wrote:
+> On Fri, Jan 29, 2016 at 06:19:15PM -0500, Akshay Bhat wrote:
+>> From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 >>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
+>> the Advantech BA-16 module (based on iMX6D). This file has the
+>> devicetree entries that are common to all 3 boards.
 >>
+>> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 >> ---
+>>   arch/arm/boot/dts/imx6q-bx50v3.dtsi | 239 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 239 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
 >>
->> Changes in v3:
->> - descirbe all reboot mode as properity instead of subnode
->>
->> Changes in v2: None
->> Changes in v1: None
->>
->>  .../bindings/power/reset/reboot-mode.txt           | 26 ++++++++++++++++
->>  .../bindings/power/reset/syscon-reboot-mode.txt    | 36 ++++++++++++++++++++++
->>  2 files changed, 62 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
 >> new file mode 100644
->> index 0000000..517080f
+>> index 0000000..a44b074
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
->> @@ -0,0 +1,26 @@
->> +Generic reboot mode core map driver
+>> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>> @@ -0,0 +1,239 @@
+>> +/*
+>> + * Copyright 2015 Timesys Corporation.
+>> + * Copyright 2015 General Electric Company
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License
+>> + *     version 2 as published by the Free Software Foundation.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
 >> +
->> +This driver get reboot mode arguments and call the write
->> +interface to stores the magic value in special register
->> +or ram . Then the bootloader can read it and take different
->> +action according the argument stored.
+>> +#include "imx6q-ba16.dtsi"
 >> +
->> +All mode properties are vendor specific, it is a indication to tell
+>> +/ {
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
 >
-> The values should be vendor specific. The property names should not. We
-> can allow vendor specific ones, but we need to have a common set.
+> These are already specified in imx6qdl.dtsi.
 >
->> +the bootloder what to do when the system reboot, and should be named
->> +as mode-xxx = <magic> (xxx is mode name).
+
+Will fix this. Once it is removed, should I have a new line before the 
+child node?
+eg:
+
+clocks {
+
+	mclk: clock@0 {
+		compatible = "fixed-clock";
 >> +
->> +- mode-normal: Normal reboot mode, system reboot with command "reboot".
->> +- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
->> +- mode-fastboot: Android fastboot mode, it's a mode to  re-flash partitions on the device.
->> +- mode-loader: A bootloader mode, it's a mode used to download image on Rockchip platform,
->> +            usually used in development.
->> +- mode-maskrom: It's a mode to download bootloader on Rockchip platform.
+>> +		mclk: clock@0 {
+>> +			compatible = "fixed-clock";
+>> +			reg = <0>;
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <22000000>;
+>> +		};
+>> +	};
+>
+> <snip>
+>
+>> +&i2c1 {
+>> +	pca9547: mux@70 {
+>> +		compatible = "nxp,pca9547";
+>> +		reg = <0x70>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
 >> +
->> +Example:
->> +     reboot-mode {
->> +             mode-normal = <BOOT_NORMAL>;
->> +             mode-recovery = <BOOT_RECOVERY>;
->> +             mode-fastboot = <BOOT_FASTBOOT>;
+>> +		mux1_i2c1: i2c@0 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x0>;
+>> +
+>> +			ads7830: ads7830@48 {
+>> +				compatible = "ti,ads7830";
+>> +				reg = <0x48>;
+>> +			};
+>> +
+>> +			mma8453: mma8453@1c {
+>> +				compatible = "fsl,mma8453";
+>> +				reg = <0x1c>;
+>> +			};
+>> +		};
+>> +
+>> +		mux1_i2c2: i2c@1 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x1>;
+>> +
+>> +			eeprom: eeprom@50 {
+>> +				compatible = "atmel,24c08";
+>> +				reg = <0x50>;
+>> +			};
+>> +
+>> +			mpl3115: mpl3115@60 {
+>> +				compatible = "fsl,mpl3115";
+>> +				reg = <0x60>;
+>> +			};
+>> +		};
+>> +
+>> +		mux1_i2c3: i2c@2 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x2>;
+>> +		};
+>> +
+>> +		mux1_i2c4: i2c@3 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x3>;
+>> +
+>> +			codec: sgtl5000@0a {
 >
-> I tend to agree with John on calling this mode-bootloader.
+> I think the naming schema below matches DT convention better, i.e. the
+> node name should be generic.
 >
-> OTOH, fastboot is more specific about what the mode is. The name in DT
-> and the userspace name don't necessarily have to be the same.
-
-Wait. This is a bit confusing. The utility of adding a property name
-and using that name be the reboot command parsed for made sense
-(compared to earlier versions which had command strings) as it made
-the dts more terse.   But it sounds here like you're suggesting we
-should have some logic in the driver that translates "reboot fastboot"
-to mode-bootloader or vice versa.
-
->> +             mode-loader = <BOOT_LOADER>;
+> 			sgtl5000: codec@0a {
 >
-> This one needs a better name. Maybe it should be 'rockchip,mode-loader'
-> as it is vendor specific. Either way, loader is vague. Perhaps
-> rockchip,mode-bl-download?
 
-Hrm. So how what reboot command do you expect to trigger that?
+Will update the naming.
 
-Though I do like the vendor specific prefix here, as it clarifies how
-universal the command is (and its easy add standard commands if they
-become more established and remap things in the future).
-
+>> +				compatible = "fsl,sgtl5000";
+>> +				reg = <0x0a>;
+>> +				clocks = <&mclk>;
+>> +				VDDA-supply = <&reg_1p8v>;
+>> +				VDDIO-supply = <&reg_3p3v>;
+>> +			};
+>> +		};
 >
->> +             mode-maskrom = <BOOT_MASKROM>;
+> <snip>
 >
-> I think this should be "mode-rom-download".
+>> +&usdhc4 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usdhc4>;
+>> +	bus-width = <4>;
+>> +	vmmc-supply = <&reg_wl18xx_vmmc>;
+>> +	no-1-8-v;
+>> +	non-removable;
+>> +	wakeup-source;
+>> +	keep-power-in-suspend;
+>> +	cap-power-off-card;
+>> +	max-frequency = <25000000>;
+>> +	status = "okay";
+>> +
+>
+> Drop this new line and have 'status' be the last property.
+>
 
-I think one of the difficult things here is that there's no real
-standards for all bios/bootloader modes. So they are somewhat
-firmware/bootloader/device specific, and thus we need something that
-is flexible enough to allow lots of different modes to be easily
-specified.  That said, this does expose a userspace interface (though
-one could argue kernel ABI doesn't cross reboots :) so we should try
-to have some consistency so the same userspace can work on various
-devices.
+Will update the same.
 
-I do think the "bootloader" and "recovery" arguments are somewhat
-defacto standards, well established on most android devices.
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>
+> I'm not sure why this and a 'reg' property in sub-nodes are necessary at
+> all, but ...
+>
 
-I think here the concern is rockchip probably has some userspace that
-is already using "reboot maskrom" or "reboot loader" for their own
-uses. And its a bit of a pain to ask that userspace to be reworked to
-use "reboot rom-download" or "reboot rockchip,rom-download" depending
-on how we try to deal with these.  (Granted, non-upstream interfaces
-aren't official, so that is their risk somewhat, but we avoid being
-smug about that :)
+Most other devicetrees that use ti wlcore had the above properties along 
+with a 'reg' property in the sub-node. So I used them as reference. 
+Since there is a single child node here, is it preferred to change this to:
 
-Another part of the issue is there isn't really a way to probe for
-reboot cmd capability here. As much as I'd rather not complicate
-things, one couldn't easily extend existing userspace to work with
-current kernels as well as future kernels, since the reboot with an
-invalid command won't fail. The machine still resets. So you can't try
-one and fallback to the other.
+&usdhc4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc4>;
+	bus-width = <4>;
+	vmmc-supply = <&reg_wl18xx_vmmc>;
+	no-1-8-v;
+	non-removable;
+	wakeup-source;
+	keep-power-in-suspend;
+	cap-power-off-card;
+	max-frequency = <25000000>;
+	status = "okay";
 
-Maybe there needs to be a sysfs entry with the list of the supported commands?
+	wlcore {
+		compatible = "ti,wl1837";
+		interrupt-parent = <&gpio2>;
+		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
+		tcxo-clock-frequency = <26000000>;
+	};	
+};
 
-thanks
--john
+>> +
+>> +	wlcore: wlcore@0 {
+>> +		compatible = "ti,wl1837";
+>> +		reg = <2>;
+>
+> ... at least the 'reg' property should match the unit-address after node
+> name.
+>
+> Shawn
+>
+Will fix this.
+
+Thanks,
+Akshay
+
+>> +		interrupt-parent = <&gpio2>;
+>> +		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
+>> +		tcxo-clock-frequency = <26000000>;
+>> +	};
+>> +};
+>> --
+>> 2.7.0
+>>
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
