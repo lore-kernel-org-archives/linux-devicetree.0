@@ -1,59 +1,34 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Wed, 3 Feb 2016 21:17:24 -0800
-Message-ID: <56B2DEE4.7060901@roeck-us.net>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <56B23883.7000501@codeaurora.org>
- <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
- <56B23E99.1030604@codeaurora.org>
- <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
- <56B2423B.1020109@codeaurora.org>
- <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
- <56B24642.8090105@codeaurora.org>
- <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
- <56B24AB5.3070001@codeaurora.org>
- <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>, Timur Tabi <timur@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun
+From: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] Fix headphone detection on Acer Chromebook 13
+Date: Wed,  3 Feb 2016 22:30:58 -0700
+Message-ID: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2016 03:00 PM, Fu Wei wrote:
-> On 4 February 2016 at 02:45, Timur Tabi <timur@codeaurora.org> wrote:
->> Fu Wei wrote:
->>>
->>> As you know I have made the pre-timeout support patch, If people like
->>> it, i am happy to go on upstream it separately.
->>>
->>> If we want to use pre-timeout here, user only can use get_pretimeout
->>> and disable panic by setting pretimeout to 0
->>> but user can not really set pretimeout, because "pre-timeout  ==
->>> timeout / 2 (always)".
->>> if user want to change pretimeout, he/she has to set_time instead.
->>
->>
->> Ok, I think patches 4 and 5 should be combined, and I think the Kconfig
->> entry should be removed and just use panic_enabled.
+Headphone output works, but headphone detection does not. The problem
+is improper inversion of the jack gpio, and improper naming of the
+DAPM switch. With these changes, headphone insertion and removal is
+picked up by userspace, and the switch properly toggled.
 
-Agreed.
->
-> NP, will update this patchset like that ,  thanks :-)
->
+Jonathan Tinkham (4):
+  soc/sound: tegra_max98090: do not invert headphone jack
+  sound/soc: tegra_max98090: rename headphone jack DAPM
+  sound/soc: tegra_max98090: document headphone jack rename
+  soc/sound: tegra_max98090: update dts affected by rename
 
-Also, if panic is enabled, the timeout needs to be adjusted accordingly
-(to only panic after the entire timeout period has expired, not after
-half of it). We can not panic the system after timeout / 2.
+ .../devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt  |  6 +++---
+ arch/arm/boot/dts/tegra124-nyan.dtsi                           |  4 ++--
+ arch/arm/boot/dts/tegra124-venice2.dts                         |  4 ++--
+ sound/soc/tegra/tegra_max98090.c                               | 10 +++++-----
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-I am not too happy with the parameter name (panic_enabled). How about
-"action", to match machzwd ?
+-- 
+2.7.0
 
-Thanks,
-Guenter
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
