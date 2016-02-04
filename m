@@ -1,56 +1,116 @@
-From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
-Date: Thu, 4 Feb 2016 15:43:45 +0100
-Message-ID: <CAGkQfmMVeM+xHqP=2izZ5Xufu+8R=Q_BTwUpXnhOz4o6LV4JQw@mail.gmail.com>
-References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com> <20160204143340.1ffa2292@bbrezillon>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem to
+ support  generic Xilinx  AXI PCIe Host Bridge IP driver
+Date: Thu, 4 Feb 2016 08:51:48 -0600
+Message-ID: <20160204145148.GA26361@localhost>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
+ <1452620173-4905-6-git-send-email-bharatku@xilinx.com>
+ <20160203163207.GC32546@localhost>
+ <20160203163805.GA6112@localhost>
+ <8520D5D51A55D047800579B0941471982587F199@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160204143340.1ffa2292@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8520D5D51A55D047800579B0941471982587F199@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>"linux-kernel@vger.kernel.org" <linux->
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Thu, Feb 04, 2016 at 05:49:20AM +0000, Bharat Kumar Gogada wrote:
+> > Subject: Re: [PATCH V2 5/5] Microblaze: Modifying microblaze PCI subsytem
+> > to support generic Xilinx AXI PCIe Host Bridge IP driver
+> > 
+> > [+cc Ben for real this time]
+> > 
+> > On Wed, Feb 03, 2016 at 10:32:07AM -0600, Bjorn Helgaas wrote:
+> > > [+cc Ben, pcibios_get_phb_of_node() question]
+> > >
+> > > On Tue, Jan 12, 2016 at 11:06:13PM +0530, Bharat Kumar Gogada wrote:
+> > > > This patch does required modifications to microblaze PCI subsystem,
+> > > > to work with generic driver (drivers/pci/host/pcie-xilinx.c) on
+> > > > Microblaze and Zynq.
+> > > >
+> > > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com> ...
+> > >
+> > > >  resource_size_t pcibios_align_resource(void *data, const struct resource
+> > *res,
+> > > >  				resource_size_t size, resource_size_t align)  {
+> > > > -	struct pci_dev *dev = data;
+> > > >  	resource_size_t start = res->start;
+> > > >
+> > > > -	if (res->flags & IORESOURCE_IO) {
+> > > > -		if (skip_isa_ioresource_align(dev))
+> > > > -			return start;
+> > > > -		if (start & 0x300)
+> > > > -			start = (start + 0x3ff) & ~0x3ff;
+> > > > -	}
+> > > > -
+> > > >  	return start;
+> > >
+> > > "return res->start;" is sufficient; no need for a temporary variable.
+> > >
+> Agreed will address in next patch.
+> > > >  }
+> > > >  EXPORT_SYMBOL(pcibios_align_resource);
+> > > >
+> > > > +int pcibios_add_device(struct pci_dev *dev) {
+> > > > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL(pcibios_add_device);
+> > > > +
+> > > >  /*
+> > > >   * Reparent resource children of pr that conflict with res
+> > > >   * under res, and make res replace those children.
+> > > > @@ -1335,9 +1308,21 @@ static void
+> > > > pcibios_setup_phb_resources(struct pci_controller *hose,
+> > > >
+> > > >  struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)  {
+> > > > -	struct pci_controller *hose = bus->sysdata;
+> > > > +	struct device_node *np;
+> > > > +
+> > > > +	for_each_node_by_type(np, "pci") {
+> > > > +		const void *prop;
+> > > > +		unsigned int bus_min;
+> > > > +
+> > > > +		prop = of_get_property(np, "bus-range", NULL);
+> > > > +		if (!prop)
+> > > > +			continue;
+> > > > +		bus_min = be32_to_cpup(prop);
+> > > > +		if (bus->number == bus_min)
+> > > > +			return np;
+> > > > +	}
+> > > >
+> > > > -	return of_node_get(hose->dn);
+> > > > +	return NULL;
+> > >
+> > > Hmmm.  The old microblaze code ("return of_node_get(hose->dn);") is
+> > > basically the same as the mips and powerpc versions.  The new code is
+> > > basically the same as the x86 version.
+> > >
+> > > I like the generic weak version in drivers/pci/of.c because it doesn't
+> > > use any arch-specific data, and it looks like if we just set the
+> > > struct device.of_node members correctly, everything should Just Work.
+> > >
+> > > But Ben added both the generic and the x86 versions the same day, so
+> > > there must be some complication:
+> > >
+> > >   98d9f30c820d ("pci/of: Match PCI devices to OF nodes dynamically")
+> > >   3d5fe5a65af9 ("x86/devicetree: Use generic PCI <-> OF matching")
+> > >
+> > > So I guess my question is, why do we need a microblaze-specific
+> > > version at all?
+> > >
+> I did not notice the weak version in /pci/of.c, I have tested with
+> weak version also and it is working.  We might not need this
+> microblaze specific version, but will wait for ben's reply.  
 
-2016-02-04 14:33 GMT+01:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi Romain,
->
-> Just a remark that is not directly related to your work: when people
-> take the time to review your work, try to keep them in Cc of the
-> following versions of your patchset.
->
-OK. I'll keep it in mind for my next submission.
+If the generic version works, and you don't need the microblaze-
+specific version, just remove it and we'll get this wrapped up.  No
+need to wait for Ben.
 
-> On Mon,  1 Feb 2016 11:25:55 +0100
-> Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> The NAND Flash controller for SAMA5D2 has small differences that make it
->> impossible to use the existing driver for SAMA5D3. This patchset uses the
->> device tree's compatible string to get those differences, and the code is
->> slightly modified to handle them.
->>
->> Base on linux-mtd-next, commit 15c0be7bec002f9a529dd0966d0db96dde176fd0
->>
->> See previous revisions to apply on the Atmel Linux 4.1 branch.
->>
->> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
->> existing SAMA5D2 board with NAND Flash memory (yet).
->
-> Overall, it looks good to me (even if I don't fully agree on how you
-> decided to define NFC_SR_RB_EDGEX values :-P, but that's just a
-> nitpick).
->
-> Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-
-Thanks for your review.
-
-Best regards,
--- 
-Romain Izard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
