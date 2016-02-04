@@ -1,44 +1,86 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Thu, 4 Feb 2016 07:48:08 -0600
-Message-ID: <56B35698.4020100@codeaurora.org>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <56B23883.7000501@codeaurora.org>
- <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
- <56B23E99.1030604@codeaurora.org>
- <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
- <56B2423B.1020109@codeaurora.org>
- <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
- <56B24642.8090105@codeaurora.org>
- <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
- <56B24AB5.3070001@codeaurora.org>
- <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
- <56B2DEE4.7060901@roeck-us.net>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver
+ for mt2701
+Date: Thu, 4 Feb 2016 14:48:58 +0100
+Message-ID: <56B356CA.1010200@gmail.com>
+References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
+ <1451286546-5920-5-git-send-email-biao.huang@mediatek.com>
+ <1451290066.11129.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B2DEE4.7060901-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451290066.11129.4.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Biao Huang <biao.huang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Guenter Roeck wrote:
-> Also, if panic is enabled, the timeout needs to be adjusted accordingly
-> (to only panic after the entire timeout period has expired, not after
-> half of it). We can not panic the system after timeout / 2.
 
-It's a debugging feature, not an actual watchdog timeout panic.  That's 
-why it's disabled by default.
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 28/12/15 09:07, Yingjoe Chen wrote:
+> On Mon, 2015-12-28 at 15:09 +0800, Biao Huang wrote:
+>> Add mt2701 support using mediatek common pinctrl driver.
+>> MT2701 have some special pins need an extra setting register
+>> than other ICs, so adding this support to common code.
+>>
+>> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+>> Acked-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> <...>
+>> +
+>> +static struct platform_driver mtk_pinctrl_driver = {
+>> +	.probe = mt2701_pinctrl_probe,
+>> +	.driver = {
+>> +		.name = "mediatek-mt2701-pinctrl",
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = mt2701_pctrl_match,
+>> +	},
+>> +};
+>> +
+>> +static int __init mtk_pinctrl_init(void)
+>> +{
+>> +	return platform_driver_register(&mtk_pinctrl_driver);
+>> +}
+>> +
+>> +arch_initcall(mtk_pinctrl_init);
+>
+>
+> As discussed in
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003350.html
+> we should use subsys_initcall() instead.
+>
+>
+>> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+>> index f307f1d..76279f0 100644
+>> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+>> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> <...>
+>> @@ -347,6 +352,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
+>>   		ret = mtk_pconf_set_pull_select(pctl, pin, true, false, arg);
+>>   		break;
+>>   	case PIN_CONFIG_INPUT_ENABLE:
+>> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
+>>   		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
+>>   		break;
+>>   	case PIN_CONFIG_OUTPUT:
+>> @@ -354,6 +360,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
+>>   		ret = mtk_pmx_gpio_set_direction(pctldev, NULL, pin, false);
+>>   		break;
+>>   	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+>> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
+>>   		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
+>>   		break;
+>>   	case PIN_CONFIG_DRIVE_STRENGTH:
+>
+> This change is not directly related to adding mt2710 support and change
+> behavior for all MTK pinctrl drivers, please create a separate patch for
+> this.
+>
+
+Hi Biao,
+
+This patch didn't make it into v4.5-rc1. Are you thinking of sending a 
+new version addressing the comments from Yingjoe?
+
+Regards,
+Matthias
