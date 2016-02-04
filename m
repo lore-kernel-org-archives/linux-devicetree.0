@@ -1,28 +1,77 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/4] soc/sound: tegra_max98090: do not invert headphone
- jack
-Date: Thu, 4 Feb 2016 09:36:41 -0700
-Message-ID: <56B37E19.6010002@wwwdotorg.org>
-References: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
- <1454563862-1971-2-git-send-email-sctincman@gmail.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
+Date: Thu, 4 Feb 2016 11:36:53 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1602041130590.1515-100000@iolanthe.rowland.org>
+References: <20160204015928.GA11158@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454563862-1971-2-git-send-email-sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160204015928.GA11158@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2016 10:30 PM, Jonathan Tinkham wrote:
-> The headphone jack should not be inverted
+On Thu, 4 Feb 2016, Peter Chen wrote:
 
-Have you tested this on Venice2 as well as Nyan? I'm pretty sure Venice2 
-was tested when this driver was written, and whoever added Nyan support 
-to the kernel simply assumed it would work. As such, my suspicion is 
-that this series will break Venice2 even as it fixes Nyan.
+> On Mon, Jan 25, 2016 at 03:24:39PM +0800, Peter Chen wrote:
+> > Although most of USB devices are hot-plug's, there are still some devices
+> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> > If these kinds of USB devices are multiple functions, and they can supply
+> > other interfaces like i2c, gpios for other devices, we may need to
+> > describe these at device tree.
+> > 
+> > In this commit, it uses "reg" in dts as physical port number to match
+> > the phyiscal port number decided by USB core, if they are the same,
+> > then the device node is for the device we are creating for USB core.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > Changes for v4:
+> > - The range of "reg" should be 1-31, changing device node address
+> >   style as in lower case hexadecimal with leading zeroes suppressed
+> >   [binding doc, usb-device.txt]
+> > - Improve the example at binding doc, it describes node from the top
+> >   (the controller)
+> > - Delete the struct of_node * within struct usb_device
+> > - Using usb_hcd_find_raw_port_number to get raw port number under root
+> >   hub port
+> > 
+> 
+> Hi Alan, Arnd, and others, would you please give Ack for it if you
+> are OK with this patch? I am not sure if Greg will queue it or not
+> if no one Acks it, thanks.
+
+
+> > @@ -508,11 +509,20 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+> >  	dev->connect_time = jiffies;
+> >  	dev->active_duration = -jiffies;
+> >  #endif
+> > -	if (root_hub)	/* Root hub always ok [and always wired] */
+> > +	if (root_hub) {	/* Root hub always ok [and always wired] */
+> >  		dev->authorized = 1;
+> > -	else {
+> > +		dev->dev.of_node = bus->controller->of_node;
+> > +	} else {
+> >  		dev->authorized = !!HCD_DEV_AUTHORIZED(usb_hcd);
+> >  		dev->wusb = usb_bus_is_wusb(bus) ? 1 : 0;
+> > +
+> > +		if (dev->dev.parent->parent == bus->controller)
+> > +			/* device under root hub's port */
+> > +			port1 = usb_hcd_find_raw_port_number(usb_hcd,
+> > +				port1);
+
+I would change the test to "if (!parent->parent)" and add {} around the 
+body (since it's 3 lines long).  Also, although this doesn't really 
+matter, you could consider putting the new code inside the previous big 
+"if" statement instead of down here at the end of the function.
+
+Otherwise the USB parts of this patch look okay to me.  I can't comment 
+on the DT parts.
+
+Alan Stern
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
