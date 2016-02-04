@@ -1,74 +1,61 @@
-From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement
- init_cpu_capacity_default()
-Date: Thu, 4 Feb 2016 12:16:20 +0000
-Message-ID: <20160204121620.GB29586@e106622-lin>
-References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
- <1454500799-18451-3-git-send-email-juri.lelli@arm.com>
- <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
- <20160204093559.GA14099@e105550-lin.cambridge.arm.com>
- <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: dts: sun8i-a83t: Correct low
+ speed oscillator clocks
+Date: Thu, 4 Feb 2016 13:04:07 +0100
+Message-ID: <20160204120407.GB4270@lukather>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-7-git-send-email-vishnupatekar0510@gmail.com>
+ <20160202131947.GS4652@lukather>
+ <CAEzqOZvcy58T_uxvymGxuQXh_Goj3yHmgkmL4VL+x2_bycMgNg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDECZW2QKGQEND5KZTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAEzqOZvcy58T_uxvymGxuQXh_Goj3yHmgkmL4VL+x2_bycMgNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinde
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+--3lcZGd9BuhuYXNfi
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 04/02/16 13:03, Vincent Guittot wrote:
-> On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
-> >> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org> wrote:
+On Thu, Feb 04, 2016 at 04:51:06PM +0800, Vishnu Patekar wrote:
+> Hello Maxime,
 > 
-> [snip]
 > 
-> >> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> >> > index 9e63fb1..c4025fd 100644
-> >> > --- a/drivers/cpufreq/Makefile
-> >> > +++ b/drivers/cpufreq/Makefile
-> >> > @@ -1,5 +1,5 @@
-> >> >  # CPUfreq core
-> >> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
-> >> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
+> On Tue, Feb 2, 2016 at 9:19 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Sun, Jan 31, 2016 at 09:20:58AM +0800, Vishnu Patekar wrote:
+> >> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > >>
-> >> Do you really want to have the calibration of capacity dependent of
-> >> cpufreq ? It means that we can't use it without a cpufreq driver.
-> >> IMHO, this creates a unnecessary dependency. I understand that you
-> >> must ensure that core runs at max fequency if a driver is present but
-> >> you should be able to calibrate the capacity if cpufreq is not
-> >> available but you have different capacity because micro architecture
+> >> The A83T does not have a 32.768 kHz low speed oscillator, either as
+> >> an external crystal or input. It has a 16 MHz RC-based (inaccurate)
+> >> internal oscillator, which is then divided by 512 for a clock close
+> >> to 32 kHz.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > >
-> > We could remove the dependency on cpufreq, but it would make things more
-> > complicated for systems which do have frequency scaling as we would have
-> > to either:
+> > You should have your SoB here.
 > >
-> > 1) Run the calibration again once cpufreq has been initialized.
-> 
-> or wait and let time for a driver to initialize and trig the
-> calibration. If calibration has not been done at the end of the boot,
-> you can force a calibration. If the cpufeq driver is a module and is
-> loaded far later for any good or bad reason, we will have to run the
-> calibration once again but at least the capacity will reflect he
-> current capacity of the CPUs.
-> I'm mainly worried that the compilation of the calibration is
-> dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
-> sequence
-> 
+> > Is it ok to add it?
+> Yes, please add.
 
-Yes, I guess we can make this work in some way. Out of curiosity,
-though, are out there heterogenous platforms that don't use cpufreq?
-I mean, I wouldn't add code and complexity from start, if there are not
-good reasons to do so.
+Done, thanks.
 
-Thanks,
+Maxime
 
-- Juri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--3lcZGd9BuhuYXNfi--
