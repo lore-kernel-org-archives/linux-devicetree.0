@@ -1,56 +1,59 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 0/3] leds: add SN3218 LED driver
-Date: Thu,  4 Feb 2016 18:56:03 +0000
-Message-ID: <1454612167-8680-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 10/11] ARM: dts: sun9i: a80-optimus: Disable
+ dummy regulators vcc3v0, vcc3v3, vcc5v0
+Date: Thu, 4 Feb 2016 17:44:38 +0100
+Message-ID: <20160204164438.GJ4270@lukather>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-11-git-send-email-wens@csie.org>
+ <20160202162136.GX4652@lukather>
+ <CAGb2v66xjgsoVEBocUfDk6DDx4QcH-4pP94v+4FHLTJ=rii09Q@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="I/5syFLg1Ed7r+1G"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE56Z22QKGQEJBRWHPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66xjgsoVEBocUfDk6DDx4QcH-4pP94v+4FHLTJ=rii09Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series implements support for the Si-En SN3218
-18 Channel LED Driver connected through I2C. The SN3218
-doesn't support reading so the LED states are cached in a
-regmap.
+--I/5syFLg1Ed7r+1G
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The driver has been tested on a Raspberry Pi B.
+On Wed, Feb 03, 2016 at 12:41:37AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Feb 3, 2016 at 12:21 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Tue, Feb 02, 2016 at 06:27:43PM +0800, Chen-Yu Tsai wrote:
+> >> These 3 regulators are provided in sunxi-common-regulators.dtsi.
+> >> 3.0V/3.3V and 5.0V are commonly used voltages in Allwinner devices.
+> >> These dummy regulators provide a stand-in when bindings that require
+> >> one, but the real regulator is not supported yet.
+> >>
+> >> Since these are no longer needed, we can disable them.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >
+> > Why not remove the include entirely then?
+> 
+> reg_vbus* are still used. Or should we move them as well?
 
-Changes since V1:
-  * add shutdown handler
-  * use defines for modes
-  * remove empty line at the end of binding doc
-  * make sn3218_led_init static
-  * skip setting default max brightness
-  * fix fail sn3218_init
+I think so yeah. It's totally fine to disable per-boards regulators.
 
-Changes since RFC:
-  * using regmap instead of direct I2C
-  * add new function to init single LED
-  * add module name to Kconfig help
-  * replace of_get_property() with of_property_read_string()
-  * remove lock, leds_state and name from priv structure
-  * drop sn3218 LED name prefix
-  * don't use led_info and led_platform_data
-  * abort probing if no SN3218 is connected or DT invalid
-  * fix some style and text issues
-  * fix license
-  * move i2c_device_id and of_device_id at the end of file
-  * use devm_* calls
-  * use device function as node name in DT binding
-
-Stefan Wahren (3):
-  of: Add vendor prefix for Si-En Technology
-  DT: add binding for SN3218 LED driver
-  leds: add SN3218 LED driver
-
- .../devicetree/bindings/leds/leds-sn3218.txt       |   41 +++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/leds/Kconfig                               |   12 +
- drivers/leds/Makefile                              |    1 +
- drivers/leds/leds-sn3218.c                         |  306 ++++++++++++++++++++
- 5 files changed, 361 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
- create mode 100644 drivers/leds/leds-sn3218.c
+Maxime
 
 -- 
-1.7.9.5
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--I/5syFLg1Ed7r+1G--
