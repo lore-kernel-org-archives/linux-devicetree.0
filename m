@@ -1,88 +1,199 @@
 From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: bcm2835: dt: Add the ethernet to the device
- tree
-Date: Thu, 04 Feb 2016 08:18:13 +0100
-Message-ID: <1454570293.25750.23.camel@v3.sk>
-References: <1454511759-24827-1-git-send-email-lkundrak@v3.sk>
-	 <1454511759-24827-3-git-send-email-lkundrak@v3.sk>
-	 <m37fil8iq4.fsf@euphor.blino.org>
-	 <HE1PR04MB14503FBA55F4F9C19EE669B68BD10@HE1PR04MB1450.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Thu,  4 Feb 2016 08:36:03 +0100
+Message-ID: <1454571364-24708-2-git-send-email-lkundrak@v3.sk>
+References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <HE1PR04MB14503FBA55F4F9C19EE669B68BD10-6LN7OEpIatVC+P/YwrXEHc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <1454571364-24708-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
-Cc: "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-02-04 at 06:28 +0000, Peter Chen wrote:
-> =C2=A0
-> > Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
-> >=20
-> > > diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> > > b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> > > index ef54050..32bbd2a 100644
-> > > --- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> > > +++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-> >=20
-> > Hi,
-> >=20
-> > Shouldn't this be common to all RPi1 B and RPi2 models, instead of
-> > being
-> > specific to just RPi B+?
-> >=20
-> > > +&usb {
-> > > +	usb1@01 {
-> > > +		compatible =3D "usb1d6b,0002";
-> > > +		reg =3D <01>;
-> > > +		#address-cells =3D <1>;
-> > > +		#size-cells =3D <0>;
-> > > +
-> > > +		ethernet: usbether@01 {
-> > > +			compatible =3D "usb0424,9514";
-> > > +			reg =3D <01>;
-> > > +		};
-> > > +	};
-> > > +};
-> >=20
-> > For reference, on RPi2:
->=20
-> Using "lsusb -t" you may get bus topology.
->=20
-> > Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp.
-> > SMSC9512/9514 Fast Ethernet Adapter
->=20
-> It is the ethernet device, you may need to change vid/pid in dts.=C2=A0
->=20
-> > Bus 001 Device 002: ID 0424:9514 Standard Microsystems Corp.
-> > SMC9514 Hub
->=20
-> It is the hub device, you may need to change vid/pid in dts.
->=20
-> > Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-> >=20
-> =C2=A0
-> It is root hub, it doesn't need to be described at dts.
+The hub and the ethernet in its port 1 are hardwired on the board.
 
-Thank you; neither of the vid/pid pairs in the original submission is
-okay. I'll follow up with an updated version.
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
 
-I've also checked this on RPi B rev2; and I'll be including that one,
-and the RPI2 too.
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
 
-I can't find my rev1 RPi B; but maybe I can just do the same for the
-same board. It would likely work, but I may get the vid/pid wrong if
-it's different from rev2.=C2=A0
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Olivier Blin. Original
+Model B is a blind short, though very likely correct.
 
-> Best regards,
-> Peter
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+---
+Changes since v1:
+  - s/@01/@1/ for ethernet and the hub
+  - Corrected the vid/pid pairs for hub and ethernet
+  - Added Model B rev2 and version 2 board changes
+  - Fixed a missing semicolon typo
 
-Thanks
-Lubo
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 18 ++++++++++++++++++
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 18 ++++++++++++++++++
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      | 18 ++++++++++++++++++
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 18 ++++++++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi           |  4 +++-
+ 5 files changed, 75 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index ef54050..983353f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -6,6 +6,10 @@
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+ 	model = "Raspberry Pi Model B+";
+ 
++	aliases {
++		ethernet = &ethernet;
++	};
++
+ 	leds {
+ 		act {
+ 			gpios = <&gpio 47 0>;
+@@ -29,3 +33,17 @@
+ 		brcm,function = <BCM2835_FSEL_ALT0>;
+ 	};
+ };
++
++&usb {
++	usb1@1 {
++		compatible = "usb0424,9514";
++		reg = <01>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb0424,ec00";
++			reg = <01>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 86f1f2f..4b695a0 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -6,6 +6,10 @@
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+ 	model = "Raspberry Pi Model B rev2";
+ 
++	aliases {
++		ethernet = &ethernet;
++	};
++
+ 	leds {
+ 		act {
+ 			gpios = <&gpio 16 1>;
+@@ -22,3 +26,17 @@
+ 		brcm,function = <BCM2835_FSEL_ALT2>;
+ 	};
+ };
++
++&usb {
++	usb1@1 {
++		compatible = "usb0424,9512";
++		reg = <01>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb0424,ec00";
++			reg = <01>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4859e9d..749648e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -6,6 +6,10 @@
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+ 	model = "Raspberry Pi Model B";
+ 
++	aliases {
++		ethernet = &ethernet;
++	};
++
+ 	leds {
+ 		act {
+ 			gpios = <&gpio 16 1>;
+@@ -16,3 +20,17 @@
+ &gpio {
+ 	pinctrl-0 = <&gpioout &alt0 &alt3>;
+ };
++
++&usb {
++	usb1@1 {
++		compatible = "usb0424,9512";
++		reg = <01>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb0424,ec00";
++			reg = <01>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index ff94666..2bc1a96 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -10,6 +10,10 @@
+ 		reg = <0 0x40000000>;
+ 	};
+ 
++	aliases {
++		ethernet = &ethernet;
++	};
++
+ 	leds {
+ 		act {
+ 			gpios = <&gpio 47 0>;
+@@ -33,3 +37,17 @@
+ 		brcm,function = <BCM2835_FSEL_ALT0>;
+ 	};
+ };
++
++&usb {
++	usb1@1 {
++		compatible = "usb0424,9514";
++		reg = <01>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb0424,ec00";
++			reg = <01>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 971e741..bc5fde1 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -187,10 +187,12 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb@7e980000 {
++		usb: usb@7e980000 {
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 	};
+ 
+-- 
+2.5.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
