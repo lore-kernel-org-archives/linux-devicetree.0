@@ -1,127 +1,66 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: mailbox: Document Hi6220 mailbox
- driver
-Date: Thu, 4 Feb 2016 16:28:10 +0800
-Message-ID: <20160204082810.GA28299@leoy-linaro>
-References: <1454407782-24674-1-git-send-email-leo.yan@linaro.org>
- <1454407782-24674-2-git-send-email-leo.yan@linaro.org>
- <20160203204717.GA1713@rob-hp-laptop>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH/RFC 02/10] phy: rcar-gen3-usb2: Add phy-supply description
+ in device tree doc
+Date: Thu, 4 Feb 2016 08:49:20 +0000
+Message-ID: <SG2PR06MB091989E7308B517A35941A35D8D10@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1454408338-4612-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20160203204520.GA30531@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160203204717.GA1713@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160203204520.GA30531@rob-hp-laptop>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 03, 2016 at 02:47:17PM -0600, Rob Herring wrote:
-> On Tue, Feb 02, 2016 at 06:09:39PM +0800, Leo Yan wrote:
-> > Document DT binding for Hisilicon Hi6220 mailbox driver.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Hi Rob,
+
+> From: Rob Herring
+> Sent: Thursday, February 04, 2016 5:45 AM
+> 
+> On Tue, Feb 02, 2016 at 07:18:50PM +0900, Yoshihiro Shimoda wrote:
+> > To handle the VBUS on/off by a regulator driver, this patch adds
+> > description about phy-supply in the rcar-gen3-phy-usb2.txt.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > > ---
-> >  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 74 ++++++++++++++++++++++
-> >  1 file changed, 74 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> >  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > index eaf7e9b..48b33a9 100644
+> > --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > @@ -15,6 +15,8 @@ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
+> >  combined, the device tree node should set interrupt properties to use the
+> >  channel as USB OTG:
+> >  - interrupts: interrupt specifier for the PHY.
+> > +- phy-supply: Phandle to a regulator that provides power to the VBUS. This
+> > +	      regulator will be managed during the PHY power on/off sequence.
 > 
-> One nit, otherwise:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Is "phy" the actual name of the input supply to the phy?
 
-Thanks, Rob. I will send a new version to fix them.
+Thank you for the comment!
+Yes, the "phy" is the actual name for the phy.
+So, I checked other phy drivers and then some drivers have "vbus-supply" to handle the vbus.
+And then, I think that this driver (or Generic PHY framework?) should have such property
+to handle the vbus.
 
-Thanks,
-Leo Yan
+Best regards,
+Yoshihiro Shimoda
 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-> > new file mode 100644
-> > index 0000000..8508c8a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-> > @@ -0,0 +1,74 @@
-> > +Hisilicon Hi6220 Mailbox Driver
-> > +===============================
-> > +
-> > +Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
-> > +is unidirectional with a maximum message size of 8 words. I/O is
-> > +performed using register access (there is no DMA) and the cell
-> > +raises an interrupt when messages are received.
-> > +
-> > +Mailbox Device Node:
-> > +====================
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:		Shall be "hisilicon,hi6220-mbox"
-> > +- reg:			Contains the mailbox register address range (base
-> > +			address and length); the first item is for IPC
-> > +			registers, the second item is shared buffer for
-> > +			slots.
-> > +- #mbox-cells:		Common mailbox binding property to identify the number
-> > +			of cells required for the mailbox specifier. Must be 3.
-> > +			<&phandle slot_id dst_irq ack_irq>
-> > +			  phandle: Label name of mailbox controller
-> > +			  slot_id: Slot id used either for TX or RX
-> > +			  dst_irq: IRQ identifier index number which used by MCU
-> > +			  ack_irq: IRQ identifier index number with generating a
-> > +			           TX/RX interrupt to application processor,
-> > +				   mailbox driver uses it to acknowledge interrupt
-> > +- interrupts:		Contains the interrupt information for the mailbox
-> > +			device. The format is dependent on which interrupt
-> > +			controller the SoCs use.
-> > +
-> > +Optional Properties:
-> > +--------------------
-> > +- hi6220,mbox-tx-noirq: Property of MCU firmware's feature, so mailbox driver
-> > +			use this flag to ask MCU to enable "automatic idle
-> > +			flag" mode or IRQ generated mode to acknowledge a TX
-> > +			completion.
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +	mailbox: mailbox@F7510000 {
-> 
-> use lowercase for hex
-> 
-> > +		compatible = "hisilicon,hi6220-mbox";
-> > +		reg = <0x0 0xF7510000 0x0 0x1000>, /* IPC_S */
-> > +		      <0x0 0x06DFF800 0x0 0x0800>; /* Mailbox */
-> 
-> and here too.
-> 
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > +		#mbox-cells = <3>;
-> > +	};
-> > +
-> > +
-> > +Mailbox client
-> > +===============
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:		Many (See the client docs).
-> > +- mboxes:		Standard property to specify a Mailbox (See ./mailbox.txt)
-> > +			Cells must match 'mbox-cells' (See Mailbox Device Node above).
-> > +
-> > +Optional Properties:
-> > +--------------------
-> > +- mbox-names:		Name given to channels seen in the 'mboxes' property.
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +	stub_clock: stub_clock {
-> > +		compatible = "hisilicon,hi6220-stub-clk";
-> > +		hisilicon,hi6220-clk-sram = <&sram>;
-> > +		#clock-cells = <1>;
-> > +		mbox-names = "mbox-tx", "mbox-rx";
-> > +		mboxes = <&mailbox 1 0 11>, <&mailbox 0 1 10>;
-> > +	};
-> > -- 
+> >
+> >  Example (R-Car H3):
+> >
+> > --
 > > 1.9.1
-> > 
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
