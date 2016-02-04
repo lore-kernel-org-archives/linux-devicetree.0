@@ -1,124 +1,96 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
- strings
-Date: Thu, 4 Feb 2016 16:01:46 -0600
-Message-ID: <20160204220146.GA17060@localhost>
-References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
- <20151209183743.GH31930@localhost>
- <20151211021434.GH9927@verge.net.au>
- <20151211145916.GA21907@localhost>
- <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: apq8016-sbc: Add DT node for the uSD SDHC interface
+Date: Thu, 04 Feb 2016 14:06:19 -0800
+Message-ID: <7hmvrgb06c.fsf@baylibre.com>
+References: <1454590402-13507-1-git-send-email-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1454590402-13507-1-git-send-email-georgi.djakov@linaro.org>
+	(Georgi Djakov's message of "Thu, 4 Feb 2016 14:53:22 +0200")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Georgi Djakov <georgi.djakov@linaro.org> writes:
 
-On Fri, Dec 11, 2015 at 04:58:06PM +0100, Geert Uytterhoeven wrote:
-> On Fri, Dec 11, 2015 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Dec 11, 2015 at 11:14:34AM +0900, Simon Horman wrote:
-> >> On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
-> >> > On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
-> >> > > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
-> >> > > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
-> >> > > provide a complete set of compatibility strings for known Gen2 SoCs.
-> >> > >
-> >> > > Key Changes in v2:
-> >> > > * Include "rcar-" in generic bindings
-> >> > >
-> >> > > Simon Horman (4):
-> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
-> >> > >   PCI: rcar-gen2: add device tree support for r8a7793
-> >> > >   PCI: rcar: add gen2 fallback compatibility string
-> >> > >   PCI: rcar: add device tree support for r8a7793
-> >> > >
-> >> > >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
-> >> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
-> >> > >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
-> >> > >  drivers/pci/host/pcie-rcar.c                            |  1 +
-> >> > >  4 files changed, 23 insertions(+), 5 deletions(-)
-> >> >
-> >> > I applied these:
-> >> >
-> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
-> >> > >   PCI: rcar: add gen2 fallback compatibility string
-> >> >
-> >> > to pci/host-rcar for v4.5, thanks!
-> >> >
-> >> > I haven't applied the R8A7793 binding documentation updates yet, but
-> >> > I'll be happy to do so given a short description of why they're
-> >> > useful (since they don't update a DT or the driver).  Or they could be
-> >> > merged via a DT tree.
-> >>
-> >> To clarify: you would like a description in the changelog?
-> >
-> > Yes, please.  The email discussion so far hasn't contained what I'm
-> > looking for (if it had, I would have just inserted it and been done
-> > with it).
-> >
-> > Apparently it has to do with the stable DT rules, which I don't know.
-> > A concrete example would probably help clear it up.
-> 
-> The stable DT rules mean that an old DTS should keep on working with
-> newer kernels.
-> 
-> Suppose we have two SoCs, that both contain "foo" modules, which look
-> identical. Hence the DTS for both declares the devices to be compatible
-> with "vendor,foo".
-> 
-> Later, we discover a difference between the two "foo" modules in the two
-> SoCs (e.g. a feature present in one of them, or worse, a bug), which we
-> need to handle in the driver. But how can we distinguish between them?
-> We can change the compatible value in the DTS, but that means the user
-> has to update the DTS when updating the kernel. For a new feature that
-> may be deemed acceptable, for a bug fix that's not acceptable.
-> 
-> Hence we always use an SoC-specific compatible value, which may or may
-> not be accompanied by a family-specific and/or generic compatible value.
-> As long as everything can be handled the same, the driver will just match
-> against the most generic compatible value used. But if needed later, the
-> driver can be updated to match against a more specific compatible value,
-> and can have special handling for  a module in a specific SoC.
-> 
-> So that's why we want to have compatible value in the DT bindings that
-> are not necessarily used by the driver.
-> 
-> In a perfect world, where all hardware is properly documented, or even
-> Open Source, we wouldn't need this. There we could just declare a device
-> compatible with what it really is, based on the module's internal version ID
-> (ideally a git commit ID of its HDL source ;-).
-> 
-> I hope the above explains it. If you have more questions, feel free to ask!
+> Add the necessary properties to enable the SD-card on db410c boards.
+>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-The above is all pretty standard device identification technique.
-That's not what I've been missing.
+I tried this with 2 different SD cards on my dragonboard 410c but it's
+not detecting either card. 
 
-But I just had an epiphany.  Tell me if I'm talking sense or
-gibberish:
+Some relevant stuff from one of the boots, but definitely seems like
+some voltage switching not going well:
 
-  If a patch adds a use of "renesas,pcie-r8a7793" in a .dts, .c, or .h
-  file, e.g., in arch/arm/boot/dts/ or in the driver, and somebody
-  runs checkpatch on that patch, checkpatch will complain unless
-  "renesas,pcie-r8a7793" appears somewhere in
-  devicetree/bindings/pci/.
+[    1.450613] sdhci_msm 7864900.sdhci: Got CD GPIO
+[    1.460379] sdhci_msm 7864900.sdhci: Failed getting OCR mask: 0
+[    1.462862] l11: voltage operation not allowed
+[    1.465097] sdhci_msm 7864900.sdhci: could not set regulator OCR (-1)
+[    1.469684] mmc0: MAN_BKOPS_EN bit is not set
+[    1.476456] l12: voltage operation not allowed
+[    1.480527] mmc1: Switching to 3.3V signalling voltage failed
+[    1.484909] l12: voltage operation not allowed
+[    1.490674] mmc1: Switching to 1.8V signalling voltage failed
+[    1.495058] l12: voltage operation not allowed
+[    1.500817] mmc1: Switching to 1.2V signalling voltage failed
+[    1.507342] mmc0: new HS200 MMC card at address 0001
+[    1.515354] mmcblk0: mmc0:0001 DS2008 7.28 GiB 
+[    1.520125] mmcblk0boot0: mmc0:0001 DS2008 partition 1 4.00 MiB
+[    1.524369] mmcblk0boot1: mmc0:0001 DS2008 partition 2 4.00 MiB
+[    1.530288] mmcblk0rpmb: mmc0:0001 DS2008 partition 3 4.00 MiB
+[    1.533864] mmc1: SDHCI controller on 7864900.sdhci [7864900.sdhci] using ADMA 64-bit
 
-So if I understand correctly, the only point of this patch is to shut
-up checkpatch in that situation.  It doesn't seem terribly useful to
-me because checkpatch is only relevant to Linux kernel patches, and
-even there it's optional and advisory.
+[...]
 
-The latest changelog says "By documenting this compat string it may be
-used in DTSs shipped, for example as part of ROMs", which seems to be
-saying a DTS may not be shipped unless checkpatch approves of it.
-That's a social and procedural question, not a coding question.
+[    1.614109] mmc1: error -110 whilst initialising SD card
+[    1.716226] mmc1: Reset 0x1 never completed.
+[    1.749438] random: udevd urandom read with 2 bits of entropy available
+[    1.884756] l11: voltage operation not allowed
+[    1.884787] sdhci_msm 7864900.sdhci: could not set regulator OCR (-1)
+[    1.892888] l12: voltage operation not allowed
+[    1.896335] mmc1: Switching to 3.3V signalling voltage failed
+[    1.901712] l12: voltage operation not allowed
+[    1.908095] mmc1: Switching to 1.8V signalling voltage failed
+[    1.909095] l12: voltage operation not allowed
+[    1.921811] mmc1: Switching to 1.2V signalling voltage failed
+[    2.005997] mmc1: new high speed SDHC card at address 1234
+[    2.014077] mmcblk1: mmc1:1234 SA08G 7.21 GiB 
+[    2.021387] mmcblk1: error -110 sending status command, retrying
+[    2.023544] mmcblk1: error -110 sending status command, retrying
+[    2.028580] mmcblk1: error -110 sending status command, aborting
+[    2.137791] mmc1: Reset 0x1 never completed.
+[    2.255152] l11: voltage operation not allowed
+[    2.255184] sdhci_msm 7864900.sdhci: could not set regulator OCR (-1)
+[    2.261830] l12: voltage operation not allowed
+[    2.264992] mmc1: Switching to 3.3V signalling voltage failed
+[    2.277445] l12: voltage operation not allowed
+[    2.277468] mmc1: Switching to 1.8V signalling voltage failed
+[    2.284473] l12: voltage operation not allowed
+[    2.288964] mmc1: Switching to 1.2V signalling voltage failed
+[    2.346835] mmc1: tried to reset card
+[    2.351026] mmcblk1: error -110 sending status command, retrying
+[    2.353088] mmcblk1: error -110 sending status command, retrying
+[    2.359550] mmcblk1: error -110 sending status command, aborting
+[    2.362116] blk_update_request: I/O error, dev mmcblk1, sector 0
+[    2.374049] Buffer I/O error on dev mmcblk1, logical block 0, async page read
+[    2.381316] mmcblk1: error -110 sending status command, retrying
+[    2.383455] mmcblk1: error -110 sending status command, retrying
+[    2.391444] mmcblk1: error -110 sending status command, aborting
+[    2.393162] blk_update_request: I/O error, dev mmcblk1, sector 0
+[    2.401488] Buffer I/O error on dev mmcblk1, logical block 0, async page read
+[    2.412265]  mmcblk1: unable to read partition table
+[    2.420256] mmcblk1: error -110 sending status command, retrying
+[    2.422410] mmcblk1: error -110 sending status command, retrying
+[    2.427528] mmcblk1: error -110 sending status command, aborting
+[    2.440903] blk_update_request: I/O error, dev mmcblk1, sector 15122304
+[    2.445257] mmcblk1: error -110 sending status command, retrying
+[    2.449248] mmcblk1: error -110 sending status command, retrying
+[    2.459827] mmcblk1: error -110 sending status command, aborting
+[    2.459863] blk_update_request: I/O error, dev mmcblk1, sector 15122304
+[    2.471744] Buffer I/O error on dev mmcblk1, logical block 1890288, async page read
 
-It's fine with me if you want to try to enforce that via checkpatch,
-but I'd just like to be clear on the mechanism.
 
-Bjorn
+Kevin
