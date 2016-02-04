@@ -1,100 +1,61 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v2 4/4] Documentation: atmel-pmc: add DT bindings for fast startup
-Date: Thu, 4 Feb 2016 15:37:51 +0800
-Message-ID: <1454571471-4434-5-git-send-email-wenyou.yang@atmel.com>
-References: <1454571471-4434-1-git-send-email-wenyou.yang@atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] clk: sunxi: add ahb1 clock for A83T
+Date: Thu, 4 Feb 2016 09:01:09 +0100
+Message-ID: <20160204080109.GA4270@lukather>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-5-git-send-email-vishnupatekar0510@gmail.com>
+ <20160202131725.GQ4652@lukather>
+ <CAEzqOZuBz2jexvZvvtkvjbE8UtzUMKL9nT5JJ9JcvMPmzEKTcQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1454571471-4434-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRUKZS2QKGQETK34XRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEzqOZuBz2jexvZvvtkvjbE8UtzUMKL9nT5JJ9JcvMPmzEKTcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinde
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings to configurate the PMC_FSMR and PMC_FSPR registers
-to trigger a fast restart signal to PMC.
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
+On Thu, Feb 04, 2016 at 02:06:45PM +0800, Vishnu Patekar wrote:
+> Hello Maxime,
+> 
+> 
+> On Tue, Feb 2, 2016 at 9:17 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Sun, Jan 31, 2016 at 09:20:56AM +0800, Vishnu Patekar wrote:
+> >> AHB1 on A83T is similar to ahb1 on A31, except parents are different.
+> >> clock index 0b1x is PLL6.
+> >>
+> >> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > If the clock is the same but the parents are different, then we don't
+> > need to duplicate all the logic. Simply add the number of parents to
+> > mux_data, and you're all set.
+> 
+> Problem here is: parent 0b10 for A31 ahb1 is AXI, 0b11 is pll6/pre_div.
+> 0b10 and 0b11 is pll6/pre_div.
+> So, just adding number of parents to mux_data will not solve problem.
 
-Changes in v2:
- - change the property name and property description.
+Is anyone using 0b11 ? Can't we just ignore it?
 
- .../devicetree/bindings/arm/atmel-pmc.txt          |   63 ++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+Maxime
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-pmc.txt b/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-index 795cc78..1b3833b 100644
---- a/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-@@ -12,3 +12,66 @@ Examples:
- 		compatible = "atmel,at91rm9200-pmc";
- 		reg = <0xfffffc00 0x100>;
- 	};
-+
-+PMC Fast Startup Signals
-+
-+The PMC Fast Start Signals are used as the wake up source to trigger the PMC
-+to wake up the system from the ULP1 mode.
-+
-+required properties:
-+- compatible: Should be "atmel,sama5d2-pmc-fast-startup".
-+
-+optional properties:
-+- atmel,wkup-trigger: boolean, WKUP input can trigger a fast restart signal.
-+- atmel,secumod-trigger: boolean, SECUMOD can trigger a fast restart signal.
-+- atmel,piobu0-trigger: boolean, PIOBU0 input can trigger a fast restart signal.
-+- atmel,piobu1-trigger: boolean, PIOBU1 input can trigger a fast restart signal.
-+- atmel,piobu2-trigger: boolean, PIOBU2 input can trigger a fast restart signal.
-+- atmel,piobu3-trigger: boolean, PIOBU3 input can trigger a fast restart signal.
-+- atmel,piobu4-trigger: boolean, PIOBU4 input can trigger a fast restart signal.
-+- atmel,piobu5-trigger: boolean, PIOBU5 input can trigger a fast restart signal.
-+- atmel,piobu6-trigger: boolean, PIOBU6 input can trigger a fast restart signal.
-+- atmel,piobu7-trigger: boolean, PIOBU7 input can trigger a fast restart signal.
-+- atmel,gmac-wol-trigger: boolean, GMAC_WOL can trigger a fast restart signal.
-+- atmel,rtc-alarm-trigger: boolean, RTC alarm can trigger a fast restart signal.
-+- atmel,usb-resume-trigger: boolean, USB resume can trigger a fast restart
-+  signal.
-+- atmel,sdmmc-cd-trigger: boolean, SDMMC card detect can trigger a fast
-+  restart signal.
-+- atmel,rxlp-match-trigger: boolean, Matching condition on RXLP can trigger
-+  a fast restart signal.
-+- atmel,acc-comparison-trigger: boolean, ACC comparison can trigger a fast
-+  restart signal.
-+
-+- atmel,wkup-trigger-level: string, defines the active polarity of the wake-up
-+  input. Supported values are: "high" or "low".
-+- atmel,piobu0-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU0 input. Supported values are: "high" or "low".
-+- atmel,piobu1-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU1 input. Supported values are: "high" or "low".
-+- atmel,piobu2-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU2 input. Supported values are: "high" or "low".
-+- atmel,piobu3-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU3 input. Supported values are: "high" or "low".
-+- atmel,piobu4-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU4 input. Supported values are: "high" or "low".
-+- atmel,piobu5-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU5 input. Supported values are: "high" or "low".
-+- atmel,piobu6-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU6 input. Supported values are: "high" or "low".
-+- atmel,piobu7-trigger-level: string, defines the active polarity of
-+  the corresponding PIOBU7 input. Supported values are: "high" or "low".
-+
-+Example:
-+
-+	pmc: pmc@f0014000 {
-+		compatible = "atmel,sama5d2-pmc";
-+		reg = <0xf0014000 0x160>;
-+
-+		pmc_fast_restart {
-+			compatible = "atmel,sama5d2-pmc-fast-startup";
-+			atmel,wkup-trigger;
-+			atmel,rtc-alarm-trigger;
-+			atmel,wkup-trigger-level = "low";
-+		};
-+	};
 -- 
-1.7.9.5
-
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--ikeVEW9yuYc//A+q--
