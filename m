@@ -1,84 +1,69 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on
- SAMA5D2
-Date: Thu, 4 Feb 2016 14:33:40 +0100
-Message-ID: <20160204143340.1ffa2292@bbrezillon>
-References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Thu, 04 Feb 2016 14:37:52 +0100
+Message-ID: <2084444.JalqY5vdCm@wuerfel>
+References: <1454590807-26566-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454322360-8666-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454590807-26566-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
-
-Just a remark that is not directly related to your work: when people
-take the time to review your work, try to keep them in Cc of the
-following versions of your patchset.
-
-On Mon,  1 Feb 2016 11:25:55 +0100
-Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> The NAND Flash controller for SAMA5D2 has small differences that make it
-> impossible to use the existing driver for SAMA5D3. This patchset uses the
-> device tree's compatible string to get those differences, and the code is
-> slightly modified to handle them.
+On Thursday 04 February 2016 14:00:07 Petr Kulhavy wrote:
+> @@ -560,6 +626,97 @@ static int da8xx_probe(struct platform_device *pdev)
+>  	glue->dev			= &pdev->dev;
+>  	glue->clk			= clk;
 > 
-> Base on linux-mtd-next, commit 15c0be7bec002f9a529dd0966d0db96dde176fd0
-> 
-> See previous revisions to apply on the Atmel Linux 4.1 branch.
-> 
-> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
-> existing SAMA5D2 board with NAND Flash memory (yet).
+> +	if (np) {
+> +		struct musb_hdrc_config *config;
+> +		struct musb_hdrc_platform_data *data;
+> +		u32 phy20_refclock_freq, phy20_clkmux_cfg;
+> +
+> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata) {
+> +			ret = -ENOMEM;
+> +			goto err5;
+> +		}
 
-Overall, it looks good to me (even if I don't fully agree on how you
-decided to define NFC_SR_RB_EDGEX values :-P, but that's just a
-nitpick).
+So all the code here is built unconditionally...
 
-Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> @@ -627,11 +784,22 @@ static int da8xx_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id da8xx_id_table[] = {
+> +	{
+> +		.compatible = "ti,da8xx-musb"
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, da8xx_id_table);
+> +#endif
+> +
 
-> 
-> V3 -> V2:
-> - Rebase on linux-mtd-next
-> - Skip patches already in the tree
-> 
-> V2 -> V1:
-> - Rebase on v4.4
-> - Use of_device_get_match_data
-> - Split message cleanup
-> - Reword a small part of the atmel_nand device tree binding
-> - Use 'caps' for all private data structures
-> 
-> RFC -> V1:
-> - Split the support of 32-bit ECC on SAMA5D2 in two commits
-> - Fix the missing ECC strength configuration code
-> 
-> Romain Izard (5):
->   mtd: atmel_nand: Support variable RB_EDGE interrupts
->   dt-bindings: atmel_nand: Reword the documenation
->   mtd: atmel_nand: Support PMECC on SAMA5D2
->   mtd: atmel_nand: Support 32-bit ECC strength
->   ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
-> 
->  .../devicetree/bindings/mtd/atmel-nand.txt         | 31 +++++----
->  arch/arm/boot/dts/sama5d2.dtsi                     | 38 +++++++++++
->  drivers/mtd/nand/atmel_nand.c                      | 77 ++++++++++++++++++----
->  drivers/mtd/nand/atmel_nand_ecc.h                  |  9 ++-
->  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
->  5 files changed, 131 insertions(+), 27 deletions(-)
-> 
+but this is in an #ifdef?
 
+I would suggest you do the opposite and leave the id table in there
+but change the first check to
 
+	if (IS_ENABLED(CONFIG_OF) && np)
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+So the compiler can discard that code when CONFIG_OF is disabled.
+
+> +		pdev->dev.dma_mask = &da8xx_dmamask;
+> +		pdev->dev.coherent_dma_mask = da8xx_dmamask;
+
+Don't hardcode DMA masks like this, the mask should be set to a 32-bit
+mask whenever the device is created, and the driver can override it
+by calling dma_set_mask().
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
