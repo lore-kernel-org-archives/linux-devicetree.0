@@ -1,39 +1,48 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH v10 03/13] drm/mediatek: Add DSI sub driver
-Date: Thu, 4 Feb 2016 13:09:56 +0000
-Message-ID: <CACvgo528oR23PFbZwfm7RPwTZ6Z2Bv8uc0WHNyyG0SPQypMzDg@mail.gmail.com>
+Date: Thu, 04 Feb 2016 14:27:07 +0100
+Message-ID: <1454592427.3356.24.camel@pengutronix.de>
 References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
- <1454527562-28154-4-git-send-email-p.zabel@pengutronix.de>
+	 <1454527562-28154-4-git-send-email-p.zabel@pengutronix.de>
+	 <CACvgo528oR23PFbZwfm7RPwTZ6Z2Bv8uc0WHNyyG0SPQypMzDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454527562-28154-4-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Cawa Cheng <cawa.cheng@mediatek.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACvgo528oR23PFbZwfm7RPwTZ6Z2Bv8uc0WHNyyG0SPQypMzDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIDMgRmVicnVhcnkgMjAxNiBhdCAxOToyNSwgUGhpbGlwcCBaYWJlbCA8
-cC56YWJlbEBwZW5ndXRyb25peC5kZT4gd3JvdGU6Cgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmln
-Cj4gaW5kZXggOGRhZDg5Mi4uYjdlMDQwNCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmln
-Cj4gQEAgLTMsNiArMyw5IEBAIGNvbmZpZyBEUk1fTUVESUFURUsKPiAgICAgICAgIGRlcGVuZHMg
-b24gRFJNCj4gICAgICAgICBkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgfHwgKEFSTSAmJiBDT01Q
-SUxFX1RFU1QpCj4gICAgICAgICBzZWxlY3QgRFJNX0tNU19IRUxQRVIKPiArICAgICAgIHNlbGVj
-dCBEUk1fTUlQSV9EU0kKPiArICAgICAgIHNlbGVjdCBEUk1fUEFORUwKCj4gKyAgICAgICBzZWxl
-Y3QgRFJNX1BBTkVMX1NJTVBMRQpQbGVhc2UgZG9uJ3QgZm9yY2UgYSBwYXJ0aWN1bGFyIHBhbmVs
-IGxpa2UgdGhhdC4gTm8gb3RoZXIgZHJpdmVyIGRvZXMKaXQsIHNvIG1pZ2h0IGFzIHdlbGwgbm90
-IHN0YXJ0IG5vdyA/CgpDaGVlcnMsCkVtaWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+Hi Emil,
+
+Am Donnerstag, den 04.02.2016, 13:09 +0000 schrieb Emil Velikov:
+> Hi Philipp,
+> 
+> On 3 February 2016 at 19:25, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> 
+> > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
+> > index 8dad892..b7e0404 100644
+> > --- a/drivers/gpu/drm/mediatek/Kconfig
+> > +++ b/drivers/gpu/drm/mediatek/Kconfig
+> > @@ -3,6 +3,9 @@ config DRM_MEDIATEK
+> >         depends on DRM
+> >         depends on ARCH_MEDIATEK || (ARM && COMPILE_TEST)
+> >         select DRM_KMS_HELPER
+> > +       select DRM_MIPI_DSI
+> > +       select DRM_PANEL
+> 
+> > +       select DRM_PANEL_SIMPLE
+> Please don't force a particular panel like that. No other driver does
+> it, so might as well not start now ?
+
+I'll drop this select on DRM_PANEL_SIMPLE.
+
+thanks
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
