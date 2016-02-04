@@ -1,56 +1,77 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v9 03/14] drm/mediatek: Add DSI sub driver
-Date: Thu, 4 Feb 2016 20:24:06 +0800
-Message-ID: <CAGS+omAyi2_JunXrhAOUgUGS64uZOj7iEG8eURtWMnn0CiaZxQ@mail.gmail.com>
-References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
- <1452611750-16283-4-git-send-email-p.zabel@pengutronix.de>
- <CAGS+omCqKFQ-E_q7x=i95fhZSGgTOVW+_EoiRb++E14Xrob-tA@mail.gmail.com>
- <1454497304.3867.1.camel@pengutronix.de> <1454567865.12573.7.camel@mtksdaap41>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement init_cpu_capacity_default()
+Date: Thu, 4 Feb 2016 13:35:35 +0100
+Message-ID: <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-3-git-send-email-juri.lelli@arm.com> <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
+ <20160204093559.GA14099@e105550-lin.cambridge.arm.com> <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
+ <20160204121620.GB29586@e106622-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454567865.12573.7.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Sasha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160204121620.GB29586@e106622-lin>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgNCwgMjAxNiBhdCAyOjM3IFBNLCBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29t
-PiB3cm90ZToKPiBIaSBQaGlsaXBwOgo+Cj4gT24gV2VkLCAyMDE2LTAyLTAzIGF0IDEyOjAxICsw
-MTAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+PiBIaSBEYW5pZWwsCj4+Cj4KPj4gPiA+ICtzdGF0
-aWMgdm9pZCBtdGtfb3V0cHV0X2RzaV9kaXNhYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4+ID4g
-PiArewo+PiA+ID4gKyAgICAgICBpZiAoIWRzaS0+ZW5hYmxlZCkKPj4gPiA+ICsgICAgICAgICAg
-ICAgICByZXR1cm47Cj4+ID4gPiArCj4+ID4gPiArICAgICAgIGlmIChkc2ktPnBhbmVsKSB7Cj4+
-ID4gPiArICAgICAgICAgICAgICAgaWYgKGRybV9wYW5lbF9kaXNhYmxlKGRzaS0+cGFuZWwpKSB7
-Cj4+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBEUk1fRVJST1IoImZhaWxlZCB0byBkaXNh
-YmxlIHRoZSBwYW5lbFxuIik7Cj4+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47
-Cj4+ID4gPiArICAgICAgICAgICAgICAgfQo+PiA+ID4gKyAgICAgICB9Cj4+ID4gPiArCj4+ID4g
-PiArICAgICAgIG10a19kc2lfcG93ZXJvZmYoZHNpKTsKPj4gPgo+PiA+IFRoZSBvcmRlciBpcyBh
-IGJpdCBzdXNwaWNpb3VzIGhlcmU7IEkgd291bGQgZXhwZWN0IHRvIHBvd2Vyb2ZmIGRzaQo+PiA+
-IGJlZm9yZSB0aGUgcGFuZWwgdG8gbWlycm9yIHRoZSB0dXJuIG9uIG9yZGVyLgo+Pgo+PiBDSywg
-Y291bGQgeW91IGNvbW1lbnQgb24gdGhpcz8KPj4KPgo+IEFjY29yZGluZyB0byB0aGUgZXhwZXJp
-ZW5jZSBvZiBvdGhlciBNZWRpYXRlayBTb0MsCj4gSW4gbXRrX291dHB1dF9kc2lfZW5hYmxlKCks
-IHdlIHNob3VsZCBkbyBwb3dlciBvbiBkc2kgZmlyc3QgYW5kIHRoZW4KPiBwcmVwYXJlIHBhbmVs
-IGJlY2F1c2UgZHNpIHNob3VsZCBiZSByZWFkeSB0byByZWNlaXZlIHBhbmVsIHByZXBhcmUgZXJy
-b3IKPiBtZXNzYWdlLiBTbyB3ZSBzaG91bGQgZGlzYWJsZSBwYW5lbCBhbmQgdGhlbiBwb3dlciBv
-ZmYgZHNpIGluCj4gbXRrX291dHB1dF9kc2lfZGlzYWJsZSgpLgoKVGhlbiB3aGF0IGFib3V0IHRo
-ZSBvdGhlciBkaXJlY3Rpb24/ClNob3VsZCB3ZSBiZSBwb3dlcmluZyB1cCBkc2kgZmlyc3QgYmVm
-b3JlIGVuYWJsaW5nIHRoZSBwYW5lbCBzbyBEU0kKY2FuIHJlY2VpdmUgYW4gcGFuZWwgZW5hYmxp
-bmcgZXJyb3JzPwoKLURhbgoKPgo+PiBJIGNhbiByZW9yZGVyIHRoaXMsIGJ1dCBJJ20gbm90IHN1
-cmUgYWJvdXQgdGhlIHJlYXNvbmluZyAod2hhdCBoYXBwZW5zCj4+IGhhcmR3YXJlIHdpc2UgaWYg
-d2UganVzdCBjdXQgcGFuZWwgcG93ZXIgdnMuIGlmIHRoZSBEU0kgcGFuZWwgZmlyc3Qgc2Vlcwo+
-PiB0aGUgVUxQIHRyYW5zaXRpb24pLiBGdXJ0aGVyLCBJIGRvbid0IGhhdmUgYSBwYW5lbCB0byB0
-ZXN0LCBqdXN0IHRoZQo+PiBQUzg2NDAuCj4+Cj4+IHRoYW5rcwo+PiBQaGlsaXBwCj4+Cj4+Cj4K
-PiBSZWdhcmRzLAo+IENLCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On 4 February 2016 at 13:16, Juri Lelli <juri.lelli@arm.com> wrote:
+> Hi Vincent,
+>
+> On 04/02/16 13:03, Vincent Guittot wrote:
+>> On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+>> > On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
+>> >> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli@arm.com> wrote:
+>>
+>> [snip]
+>>
+>> >> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> >> > index 9e63fb1..c4025fd 100644
+>> >> > --- a/drivers/cpufreq/Makefile
+>> >> > +++ b/drivers/cpufreq/Makefile
+>> >> > @@ -1,5 +1,5 @@
+>> >> >  # CPUfreq core
+>> >> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
+>> >> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
+>> >>
+>> >> Do you really want to have the calibration of capacity dependent of
+>> >> cpufreq ? It means that we can't use it without a cpufreq driver.
+>> >> IMHO, this creates a unnecessary dependency. I understand that you
+>> >> must ensure that core runs at max fequency if a driver is present but
+>> >> you should be able to calibrate the capacity if cpufreq is not
+>> >> available but you have different capacity because micro architecture
+>> >
+>> > We could remove the dependency on cpufreq, but it would make things more
+>> > complicated for systems which do have frequency scaling as we would have
+>> > to either:
+>> >
+>> > 1) Run the calibration again once cpufreq has been initialized.
+>>
+>> or wait and let time for a driver to initialize and trig the
+>> calibration. If calibration has not been done at the end of the boot,
+>> you can force a calibration. If the cpufeq driver is a module and is
+>> loaded far later for any good or bad reason, we will have to run the
+>> calibration once again but at least the capacity will reflect he
+>> current capacity of the CPUs.
+>> I'm mainly worried that the compilation of the calibration is
+>> dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
+>> sequence
+>>
+>
+> Yes, I guess we can make this work in some way. Out of curiosity,
+> though, are out there heterogenous platforms that don't use cpufreq?
+
+At least, you can find several heterogeneous platforms without OPP
+table for CPUs in the kernel. That's probably a temporary situation
+but which can become a permanent one. It means that we can't calibrate
+the CPUs for these platforms.
+
+Thanks,
+Vincent
+
+> I mean, I wouldn't add code and complexity from start, if there are not
+> good reasons to do so.
+>
+> Thanks,
+>
+> - Juri
