@@ -1,73 +1,52 @@
-From: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Thu, 4 Feb 2016 23:00:27 +0530
-Message-ID: <56B38AB3.3070801@ti.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <201602012213.46740.marex@denx.de> <56B30007.1010305@ti.com>
- <201602041225.11679.marex@denx.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] Fix headphone detection on Acer Chromebook 13
+Date: Thu, 4 Feb 2016 18:03:26 +0000
+Message-ID: <20160204180326.GP4455@sirena.org.uk>
+References: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gIhrS3Q23Nl70UJ5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201602041225.11679.marex-ynQEQJNshbs@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454563862-1971-1-git-send-email-sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--gIhrS3Q23Nl70UJ5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/4/2016 4:55 PM, Marek Vasut wrote:
-> On Thursday, February 04, 2016 at 08:38:47 AM, Vignesh R wrote:
->> On 02/02/2016 02:43 AM, Marek Vasut wrote:
->>> On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
->>>> On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
->>>>> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
->>>>>> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
->> [...]
->>
->>>>> All these SoCs should be capable of tweaking the block to fit their
->>>>> needs by just the DT properties. I believe they differ only in the
->>>>> FIFO depth and sometimes someone is greedy and uses 4:16 CS
->>>>> multiplexer, which is an external passive component, but that's all.
->>>>>
->>>>> Would we need soc-specific compatible strings if this is the case?
->>>>
->>>> It's nice when most things can be supported with a small set of DT
->>>> properties, as you've done. But IUIC, I think it's usually good practice
->>>> to define and use SoC-specific (or maybe SoC family) compatible strings
->>>> in the docs and DTS files, in addition to the generic one, in case there
->>>> are future quirks that need to be handled. Note that you don't actually
->>>> have to use these in the driver yet, but it's good to have a definition.
->>>>
->>>> So you can, today, have:
->>>> 	foo@xxxx {
->>>> 	
->>>> 		compatible = "ti,baz-12345", "cdns,qspi-nor";
->>>> 		...
->>>> 	
->>>> 	};
->>>>
->>>> And we have the option to pick up "ti,baz-12345" in the Linux driver *if
->>>> needed.*
->>
->> The support for TI SoC that has this IP is not in upstream yet. I will
->> add TI-specific compatible later. It will be:
->>
->> 	foo@xxxx {
->> 		compatible = "ti,k2g-qspi", "cdns,qspi-nor";
->>  		...
->>  	};
-> 
-> Do you expect any specifics which cannot be handled by the current bindings btw?
-> In my socfpga case, the compatible strings will be probably:
-> 
+On Wed, Feb 03, 2016 at 10:30:58PM -0700, Jonathan Tinkham wrote:
 
-Yeah, there is delay(of few ns) required between writing to
-INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
-call). This is specific to TI K2G SoC and needs to be tied to the new
-binding.
+> Jonathan Tinkham (4):
+>   soc/sound: tegra_max98090: do not invert headphone jack
+>   sound/soc: tegra_max98090: rename headphone jack DAPM
+>   sound/soc: tegra_max98090: document headphone jack rename
+>   soc/sound: tegra_max98090: update dts affected by rename
+
+Please try to use subject lines reflecting the style for the subsystem -
+this makes it easier for people to spot relevant content.  The above
+isn't even internally consistent :(
+
+--gIhrS3Q23Nl70UJ5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWs5JuAAoJECTWi3JdVIfQDVcH/2bISj8BZpcEaTMwXuyWrfQ8
+DybA+ST6T6VI9ceLQrnDul2Q/4zuxEkW22uRKCtaNrvMIH4XdU8QDiRzcjLuTrCE
+ZvWPmvrch6rHIchcfM7sklnmn8XPL6w5LRF3EmZ0Fy+Zoyrs1Pr1WfIQK4mI2fRK
+GSkME8UNEqwYyVHp6jn+mgjIVibM6HdmxG4h7BpHLziZBZkS4vagdCN9l2u4xQ/y
+DI9jvVJP4fZf2NF2K+sp2YviFoq7p2tZiGkvK+q3AWiQaBcPk0eBKkxFWML0R+HB
+meZBf/kjZRQUaAfEJMqbW3ySp8RKS0JYPOML4hWZukQXN6+QaSfF2dqVyrBqmUA=
+=1li2
+-----END PGP SIGNATURE-----
+
+--gIhrS3Q23Nl70UJ5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
