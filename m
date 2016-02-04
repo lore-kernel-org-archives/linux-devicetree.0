@@ -1,61 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: dts: sun8i-a83t: Correct low
- speed oscillator clocks
-Date: Thu, 4 Feb 2016 13:04:07 +0100
-Message-ID: <20160204120407.GB4270@lukather>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
- <1454203266-4450-7-git-send-email-vishnupatekar0510@gmail.com>
- <20160202131947.GS4652@lukather>
- <CAEzqOZvcy58T_uxvymGxuQXh_Goj3yHmgkmL4VL+x2_bycMgNg@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v9 03/14] drm/mediatek: Add DSI sub driver
+Date: Thu, 4 Feb 2016 20:24:06 +0800
+Message-ID: <CAGS+omAyi2_JunXrhAOUgUGS64uZOj7iEG8eURtWMnn0CiaZxQ@mail.gmail.com>
+References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
+ <1452611750-16283-4-git-send-email-p.zabel@pengutronix.de>
+ <CAGS+omCqKFQ-E_q7x=i95fhZSGgTOVW+_EoiRb++E14Xrob-tA@mail.gmail.com>
+ <1454497304.3867.1.camel@pengutronix.de> <1454567865.12573.7.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDECZW2QKGQEND5KZTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEzqOZvcy58T_uxvymGxuQXh_Goj3yHmgkmL4VL+x2_bycMgNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinde
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1454567865.12573.7.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Sasha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---3lcZGd9BuhuYXNfi
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Thu, Feb 04, 2016 at 04:51:06PM +0800, Vishnu Patekar wrote:
-> Hello Maxime,
-> 
-> 
-> On Tue, Feb 2, 2016 at 9:19 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Sun, Jan 31, 2016 at 09:20:58AM +0800, Vishnu Patekar wrote:
-> >> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >>
-> >> The A83T does not have a 32.768 kHz low speed oscillator, either as
-> >> an external crystal or input. It has a 16 MHz RC-based (inaccurate)
-> >> internal oscillator, which is then divided by 512 for a clock close
-> >> to 32 kHz.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >
-> > You should have your SoB here.
-> >
-> > Is it ok to add it?
-> Yes, please add.
-
-Done, thanks.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---3lcZGd9BuhuYXNfi--
+T24gVGh1LCBGZWIgNCwgMjAxNiBhdCAyOjM3IFBNLCBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29t
+PiB3cm90ZToKPiBIaSBQaGlsaXBwOgo+Cj4gT24gV2VkLCAyMDE2LTAyLTAzIGF0IDEyOjAxICsw
+MTAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+PiBIaSBEYW5pZWwsCj4+Cj4KPj4gPiA+ICtzdGF0
+aWMgdm9pZCBtdGtfb3V0cHV0X2RzaV9kaXNhYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4+ID4g
+PiArewo+PiA+ID4gKyAgICAgICBpZiAoIWRzaS0+ZW5hYmxlZCkKPj4gPiA+ICsgICAgICAgICAg
+ICAgICByZXR1cm47Cj4+ID4gPiArCj4+ID4gPiArICAgICAgIGlmIChkc2ktPnBhbmVsKSB7Cj4+
+ID4gPiArICAgICAgICAgICAgICAgaWYgKGRybV9wYW5lbF9kaXNhYmxlKGRzaS0+cGFuZWwpKSB7
+Cj4+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBEUk1fRVJST1IoImZhaWxlZCB0byBkaXNh
+YmxlIHRoZSBwYW5lbFxuIik7Cj4+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47
+Cj4+ID4gPiArICAgICAgICAgICAgICAgfQo+PiA+ID4gKyAgICAgICB9Cj4+ID4gPiArCj4+ID4g
+PiArICAgICAgIG10a19kc2lfcG93ZXJvZmYoZHNpKTsKPj4gPgo+PiA+IFRoZSBvcmRlciBpcyBh
+IGJpdCBzdXNwaWNpb3VzIGhlcmU7IEkgd291bGQgZXhwZWN0IHRvIHBvd2Vyb2ZmIGRzaQo+PiA+
+IGJlZm9yZSB0aGUgcGFuZWwgdG8gbWlycm9yIHRoZSB0dXJuIG9uIG9yZGVyLgo+Pgo+PiBDSywg
+Y291bGQgeW91IGNvbW1lbnQgb24gdGhpcz8KPj4KPgo+IEFjY29yZGluZyB0byB0aGUgZXhwZXJp
+ZW5jZSBvZiBvdGhlciBNZWRpYXRlayBTb0MsCj4gSW4gbXRrX291dHB1dF9kc2lfZW5hYmxlKCks
+IHdlIHNob3VsZCBkbyBwb3dlciBvbiBkc2kgZmlyc3QgYW5kIHRoZW4KPiBwcmVwYXJlIHBhbmVs
+IGJlY2F1c2UgZHNpIHNob3VsZCBiZSByZWFkeSB0byByZWNlaXZlIHBhbmVsIHByZXBhcmUgZXJy
+b3IKPiBtZXNzYWdlLiBTbyB3ZSBzaG91bGQgZGlzYWJsZSBwYW5lbCBhbmQgdGhlbiBwb3dlciBv
+ZmYgZHNpIGluCj4gbXRrX291dHB1dF9kc2lfZGlzYWJsZSgpLgoKVGhlbiB3aGF0IGFib3V0IHRo
+ZSBvdGhlciBkaXJlY3Rpb24/ClNob3VsZCB3ZSBiZSBwb3dlcmluZyB1cCBkc2kgZmlyc3QgYmVm
+b3JlIGVuYWJsaW5nIHRoZSBwYW5lbCBzbyBEU0kKY2FuIHJlY2VpdmUgYW4gcGFuZWwgZW5hYmxp
+bmcgZXJyb3JzPwoKLURhbgoKPgo+PiBJIGNhbiByZW9yZGVyIHRoaXMsIGJ1dCBJJ20gbm90IHN1
+cmUgYWJvdXQgdGhlIHJlYXNvbmluZyAod2hhdCBoYXBwZW5zCj4+IGhhcmR3YXJlIHdpc2UgaWYg
+d2UganVzdCBjdXQgcGFuZWwgcG93ZXIgdnMuIGlmIHRoZSBEU0kgcGFuZWwgZmlyc3Qgc2Vlcwo+
+PiB0aGUgVUxQIHRyYW5zaXRpb24pLiBGdXJ0aGVyLCBJIGRvbid0IGhhdmUgYSBwYW5lbCB0byB0
+ZXN0LCBqdXN0IHRoZQo+PiBQUzg2NDAuCj4+Cj4+IHRoYW5rcwo+PiBQaGlsaXBwCj4+Cj4+Cj4K
+PiBSZWdhcmRzLAo+IENLCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
