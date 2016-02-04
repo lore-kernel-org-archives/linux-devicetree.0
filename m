@@ -1,167 +1,124 @@
-From: suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 2/3] libahci: ata: Remove the AHCI_HFLAG_EDGE_IRQ support from libahci.
-Date: Fri,  5 Feb 2016 02:50:25 +0530
-Message-ID: <1454620826-22554-3-git-send-email-stripathi@apm.com>
-References: <1454620826-22554-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454620826-22554-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
+ strings
+Date: Thu, 4 Feb 2016 16:01:46 -0600
+Message-ID: <20160204220146.GA17060@localhost>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+ <20151209183743.GH31930@localhost>
+ <20151211021434.GH9927@verge.net.au>
+ <20151211145916.GA21907@localhost>
+ <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Hi Geert,
 
-This patch removes the AHCI_HFLAG_EDGE_IRQ support from libahci.
-The flexibility to override the irq handlers in the LLD's are
-already present, so controller's implementing a EDGE triger latch
-can implement their own interrupt handler inside the driver.
+On Fri, Dec 11, 2015 at 04:58:06PM +0100, Geert Uytterhoeven wrote:
+> On Fri, Dec 11, 2015 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Dec 11, 2015 at 11:14:34AM +0900, Simon Horman wrote:
+> >> On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
+> >> > On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
+> >> > > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
+> >> > > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
+> >> > > provide a complete set of compatibility strings for known Gen2 SoCs.
+> >> > >
+> >> > > Key Changes in v2:
+> >> > > * Include "rcar-" in generic bindings
+> >> > >
+> >> > > Simon Horman (4):
+> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
+> >> > >   PCI: rcar-gen2: add device tree support for r8a7793
+> >> > >   PCI: rcar: add gen2 fallback compatibility string
+> >> > >   PCI: rcar: add device tree support for r8a7793
+> >> > >
+> >> > >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+> >> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+> >> > >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+> >> > >  drivers/pci/host/pcie-rcar.c                            |  1 +
+> >> > >  4 files changed, 23 insertions(+), 5 deletions(-)
+> >> >
+> >> > I applied these:
+> >> >
+> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
+> >> > >   PCI: rcar: add gen2 fallback compatibility string
+> >> >
+> >> > to pci/host-rcar for v4.5, thanks!
+> >> >
+> >> > I haven't applied the R8A7793 binding documentation updates yet, but
+> >> > I'll be happy to do so given a short description of why they're
+> >> > useful (since they don't update a DT or the driver).  Or they could be
+> >> > merged via a DT tree.
+> >>
+> >> To clarify: you would like a description in the changelog?
+> >
+> > Yes, please.  The email discussion so far hasn't contained what I'm
+> > looking for (if it had, I would have just inserted it and been done
+> > with it).
+> >
+> > Apparently it has to do with the stable DT rules, which I don't know.
+> > A concrete example would probably help clear it up.
+> 
+> The stable DT rules mean that an old DTS should keep on working with
+> newer kernels.
+> 
+> Suppose we have two SoCs, that both contain "foo" modules, which look
+> identical. Hence the DTS for both declares the devices to be compatible
+> with "vendor,foo".
+> 
+> Later, we discover a difference between the two "foo" modules in the two
+> SoCs (e.g. a feature present in one of them, or worse, a bug), which we
+> need to handle in the driver. But how can we distinguish between them?
+> We can change the compatible value in the DTS, but that means the user
+> has to update the DTS when updating the kernel. For a new feature that
+> may be deemed acceptable, for a bug fix that's not acceptable.
+> 
+> Hence we always use an SoC-specific compatible value, which may or may
+> not be accompanied by a family-specific and/or generic compatible value.
+> As long as everything can be handled the same, the driver will just match
+> against the most generic compatible value used. But if needed later, the
+> driver can be updated to match against a more specific compatible value,
+> and can have special handling for  a module in a specific SoC.
+> 
+> So that's why we want to have compatible value in the DT bindings that
+> are not necessarily used by the driver.
+> 
+> In a perfect world, where all hardware is properly documented, or even
+> Open Source, we wouldn't need this. There we could just declare a device
+> compatible with what it really is, based on the module's internal version ID
+> (ideally a git commit ID of its HDL source ;-).
+> 
+> I hope the above explains it. If you have more questions, feel free to ask!
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/ata/ahci.h       |    3 +--
- drivers/ata/ahci_xgene.c |   40 +++++++++++++++++++++++++++++++++++++++-
- drivers/ata/libahci.c    |   44 ++------------------------------------------
- 3 files changed, 42 insertions(+), 45 deletions(-)
+The above is all pretty standard device identification technique.
+That's not what I've been missing.
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 3d883ee..284ce3a 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -240,8 +240,7 @@ enum {
- 						        error-handling stage) */
- 	AHCI_HFLAG_NO_DEVSLP		= (1 << 17), /* no device sleep */
- 	AHCI_HFLAG_NO_FBS		= (1 << 18), /* no FBS */
--	AHCI_HFLAG_EDGE_IRQ		= (1 << 19), /* HOST_IRQ_STAT behaves as
--							Edge Triggered */
-+
- #ifdef CONFIG_PCI_MSI
- 	AHCI_HFLAG_MULTI_MSI		= (1 << 20), /* multiple PCI MSIs */
- 	AHCI_HFLAG_MULTI_MSIX		= (1 << 21), /* per-port MSI-X */
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index e2c6d9e..a56ceeb 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -548,6 +548,43 @@ softreset_retry:
- 	return rc;
- }
+But I just had an epiphany.  Tell me if I'm talking sense or
+gibberish:
 
-+static irqreturn_t xgene_ahci_irq_intr(int irq, void *dev_instance)
-+{
-+	struct ata_host *host = dev_instance;
-+	struct ahci_host_priv *hpriv;
-+	unsigned int rc = 0;
-+	void __iomem *mmio;
-+	u32 irq_stat, irq_masked;
-+
-+	VPRINTK("ENTER\n");
-+
-+	hpriv = host->private_data;
-+	mmio = hpriv->mmio;
-+
-+	/* sigh.  0xffffffff is a valid return from h/w */
-+	irq_stat = readl(mmio + HOST_IRQ_STAT);
-+	if (!irq_stat)
-+		return IRQ_NONE;
-+
-+	irq_masked = irq_stat & hpriv->port_map;
-+
-+	spin_lock(&host->lock);
-+
-+	/*
-+	 * HOST_IRQ_STAT behaves as edge triggered latch meaning that
-+	 * it should be cleared before all the port events are cleared.
-+	 */
-+	writel(irq_stat, mmio + HOST_IRQ_STAT);
-+
-+	rc = ahci_handle_port_intr(host, irq_masked);
-+
-+	spin_unlock(&host->lock);
-+
-+	VPRINTK("EXIT\n");
-+
-+	return IRQ_RETVAL(rc);
-+}
-+
- static struct ata_port_operations xgene_ahci_v1_ops = {
- 	.inherits = &ahci_ops,
- 	.host_stop = xgene_ahci_host_stop,
-@@ -779,7 +816,8 @@ skip_clk_phy:
- 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
- 		break;
- 	case XGENE_AHCI_V2:
--		hpriv->flags |= AHCI_HFLAG_YES_FBS | AHCI_HFLAG_EDGE_IRQ;
-+		hpriv->flags |= AHCI_HFLAG_YES_FBS;
-+		hpriv->ahci_irq_intr = xgene_ahci_irq_intr;
- 		break;
- 	default:
- 		break;
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 5d3035a..424d2b3 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1844,43 +1844,6 @@ u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
- }
- EXPORT_SYMBOL_GPL(ahci_handle_port_intr);
+  If a patch adds a use of "renesas,pcie-r8a7793" in a .dts, .c, or .h
+  file, e.g., in arch/arm/boot/dts/ or in the driver, and somebody
+  runs checkpatch on that patch, checkpatch will complain unless
+  "renesas,pcie-r8a7793" appears somewhere in
+  devicetree/bindings/pci/.
 
--static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance)
--{
--	struct ata_host *host = dev_instance;
--	struct ahci_host_priv *hpriv;
--	unsigned int rc = 0;
--	void __iomem *mmio;
--	u32 irq_stat, irq_masked;
--
--	VPRINTK("ENTER\n");
--
--	hpriv = host->private_data;
--	mmio = hpriv->mmio;
--
--	/* sigh.  0xffffffff is a valid return from h/w */
--	irq_stat = readl(mmio + HOST_IRQ_STAT);
--	if (!irq_stat)
--		return IRQ_NONE;
--
--	irq_masked = irq_stat & hpriv->port_map;
--
--	spin_lock(&host->lock);
--
--	/*
--	 * HOST_IRQ_STAT behaves as edge triggered latch meaning that
--	 * it should be cleared before all the port events are cleared.
--	 */
--	writel(irq_stat, mmio + HOST_IRQ_STAT);
--
--	rc = ahci_handle_port_intr(host, irq_masked);
--
--	spin_unlock(&host->lock);
--
--	VPRINTK("EXIT\n");
--
--	return IRQ_RETVAL(rc);
--}
--
- static irqreturn_t ahci_single_level_irq_intr(int irq, void *dev_instance)
- {
- 	struct ata_host *host = dev_instance;
-@@ -2517,11 +2480,8 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
- 				 and custom irq handler implemented\n");
+So if I understand correctly, the only point of this patch is to shut
+up checkpatch in that situation.  It doesn't seem terribly useful to
+me because checkpatch is only relevant to Linux kernel patches, and
+even there it's optional and advisory.
 
- 	} else {
--		if (!ahci_irq_handler) {
--			ahci_irq_handler = (hpriv->flags & AHCI_HFLAG_EDGE_IRQ ?
--			 		    ahci_single_edge_irq_intr :
--					    ahci_single_level_irq_intr);
--		}
-+		if (!ahci_irq_handler)
-+			ahci_irq_handler = ahci_single_level_irq_intr;
- 	}
+The latest changelog says "By documenting this compat string it may be
+used in DTSs shipped, for example as part of ROMs", which seems to be
+saying a DTS may not be shipped unless checkpatch approves of it.
+That's a social and procedural question, not a coding question.
 
- 	rc = ata_host_activate(host, irq, ahci_irq_handler,
---
-1.7.1
+It's fine with me if you want to try to enforce that via checkpatch,
+but I'd just like to be clear on the mechanism.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
