@@ -1,175 +1,52 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 00/15] MIPS Boston board support
-Date: Thu, 4 Feb 2016 06:53:44 +0100
-Message-ID: <56B2E768.1040701@xilinx.com>
-References: <1454499045-5020-1-git-send-email-paul.burton@imgtec.com>
- <56B1F40E.3090607@xilinx.com> <20160203160311.GD30470@NP-P-BURTON>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/14] clk: sunxi: add ahb1 clock for A83T
+Date: Thu, 4 Feb 2016 14:06:45 +0800
+Message-ID: <CAEzqOZuBz2jexvZvvtkvjbE8UtzUMKL9nT5JJ9JcvMPmzEKTcQ@mail.gmail.com>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-5-git-send-email-vishnupatekar0510@gmail.com> <20160202131725.GQ4652@lukather>
+Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160203160311.GD30470@NP-P-BURTON>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Burton <paul.burton@imgtec.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Phil Edworthy <phil.edworthy@renesas.com>, Arnd Bergmann <arnd@arndb.de>, Joshua Kinard <kumba@gentoo.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Jiri Slaby <jslaby@suse.com>, Bjorn Helgaas <bhelgaas@google.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Yijing Wang <wangyijing@huawei.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Richard Cochran <richardcochran@gmail.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kalle Valo <kvalo@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBCGVZO2QKGQESCLOYSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160202131725.GQ4652@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rein
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hello Maxime,
 
-On 3.2.2016 17:03, Paul Burton wrote:
-> On Wed, Feb 03, 2016 at 01:35:26PM +0100, Michal Simek wrote:
->> On 3.2.2016 12:30, Paul Burton wrote:
->>> This series introduces support for the Imagination Technologies MIPS
->>> Boston development board. Boston is an FPGA-based development board
->>> akin to the much older Malta board, built around a Xilinx FPGA running
->>> a MIPS CPU & other logic including a PCIe root port connected to an
->>> Intel EG20T Platform Controller Hub. This provides a base set of
->>> peripherals including SATA, USB, SD/MMC, ethernet, I2C & GPIOs. PCIe
->>> slots are also present for expansion.
->>>
->>> v2 of this series splits out the pch_gbe ethernet driver changes to a
->>> separate series, but keeps the Xilinx PCIe driver changes since PCIe is
->>> so central to the Boston board & the series has shrunk somewhat since
->>> its earlier submission.
->>>
->>> Applies atop v4.5-rc2.
->>>
->>> Paul Burton (15):
->>>   dt-bindings: ascii-lcd: Document a binding for simple ASCII LCDs
->>>   auxdisplay: driver for simple memory mapped ASCII LCD displays
->>>   MIPS: PCI: Compatibility with ARM-like PCI host drivers
->>>   PCI: xilinx: Keep references to both IRQ domains
->>>   PCI: xilinx: Unify INTx & MSI interrupt FIFO decode
->>>   PCI: xilinx: Always clear interrupt decode register
->>>   PCI: xilinx: Clear interrupt FIFO during probe
->>>   PCI: xilinx: Fix INTX irq dispatch
->>>   PCI: xilinx: Allow build on MIPS platforms
->>>   misc: pch_phub: Allow build on MIPS platforms
->>>   dmaengine: pch_dma: Allow build on MIPS platforms
->>>   ptp: pch: Allow build on MIPS platforms
->>>   MIPS: Support for generating FIT (.itb) images
->>>   dt-bindings: mips: img,boston: Document img,boston binding
->>>   MIPS: Boston board support
->>>
->>>  Documentation/devicetree/bindings/ascii-lcd.txt    |  10 +
->>>  .../devicetree/bindings/mips/img/boston.txt        |  15 ++
->>>  MAINTAINERS                                        |  14 ++
->>>  arch/mips/Kbuild.platforms                         |   1 +
->>>  arch/mips/Kconfig                                  |  48 +++++
->>>  arch/mips/Makefile                                 |   6 +-
->>>  arch/mips/boot/Makefile                            |  61 ++++++
->>>  arch/mips/boot/dts/Makefile                        |   1 +
->>>  arch/mips/boot/dts/img/Makefile                    |   7 +
->>>  arch/mips/boot/dts/img/boston.dts                  | 204 ++++++++++++++++++
->>>  arch/mips/boot/skeleton.its                        |  24 +++
->>>  arch/mips/boston/Makefile                          |  12 ++
->>>  arch/mips/boston/Platform                          |   8 +
->>>  arch/mips/boston/init.c                            | 106 ++++++++++
->>>  arch/mips/boston/int.c                             |  33 +++
->>>  arch/mips/boston/time.c                            |  89 ++++++++
->>>  arch/mips/boston/vmlinux.its                       |  23 ++
->>>  arch/mips/configs/boston_defconfig                 | 173 +++++++++++++++
->>>  .../asm/mach-boston/cpu-feature-overrides.h        |  26 +++
->>>  arch/mips/include/asm/mach-boston/irq.h            |  18 ++
->>>  arch/mips/include/asm/mach-boston/spaces.h         |  20 ++
->>>  arch/mips/include/asm/pci.h                        |  67 +++++-
->>>  arch/mips/lib/iomap-pci.c                          |   2 +-
->>>  arch/mips/pci/Makefile                             |   6 +
->>>  arch/mips/pci/pci-generic.c                        | 138 ++++++++++++
->>>  arch/mips/pci/pci-legacy.c                         | 232 +++++++++++++++++++++
->>>  arch/mips/pci/pci.c                                | 226 +-------------------
->>>  drivers/auxdisplay/Kconfig                         |   7 +
->>>  drivers/auxdisplay/Makefile                        |   1 +
->>>  drivers/auxdisplay/ascii-lcd.c                     | 230 ++++++++++++++++++++
->>>  drivers/dma/Kconfig                                |   2 +-
->>>  drivers/misc/Kconfig                               |   2 +-
->>>  drivers/pci/host/Kconfig                           |   2 +-
->>>  drivers/pci/host/pcie-xilinx.c                     | 125 ++++++-----
->>>  drivers/ptp/Kconfig                                |   2 +-
->>>  35 files changed, 1649 insertions(+), 292 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/ascii-lcd.txt
->>>  create mode 100644 Documentation/devicetree/bindings/mips/img/boston.txt
->>>  create mode 100644 arch/mips/boot/dts/img/Makefile
->>>  create mode 100644 arch/mips/boot/dts/img/boston.dts
->>>  create mode 100644 arch/mips/boot/skeleton.its
->>>  create mode 100644 arch/mips/boston/Makefile
->>>  create mode 100644 arch/mips/boston/Platform
->>>  create mode 100644 arch/mips/boston/init.c
->>>  create mode 100644 arch/mips/boston/int.c
->>>  create mode 100644 arch/mips/boston/time.c
->>>  create mode 100644 arch/mips/boston/vmlinux.its
->>>  create mode 100644 arch/mips/configs/boston_defconfig
->>>  create mode 100644 arch/mips/include/asm/mach-boston/cpu-feature-overrides.h
->>>  create mode 100644 arch/mips/include/asm/mach-boston/irq.h
->>>  create mode 100644 arch/mips/include/asm/mach-boston/spaces.h
->>>  create mode 100644 arch/mips/pci/pci-generic.c
->>>  create mode 100644 arch/mips/pci/pci-legacy.c
->>>  create mode 100644 drivers/auxdisplay/ascii-lcd.c
->>>
+
+On Tue, Feb 2, 2016 at 9:17 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Sun, Jan 31, 2016 at 09:20:56AM +0800, Vishnu Patekar wrote:
+>> AHB1 on A83T is similar to ahb1 on A31, except parents are different.
+>> clock index 0b1x is PLL6.
 >>
-> 
-> Hi Michal,
-> 
-> On Wed, Feb 03, 2016 at 01:35:26PM +0100, Michal Simek wrote:
->> These patches are targeting different subsystems and should go to the
->> tree via different maintainers
-> 
-> Not necessarily, for example the dmaengine & ptp patches both received
-> acks last time they were posted - presumably with the intent that Ralf
-> can merge them through the MIPS tree.
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> If the clock is the same but the parents are different, then we don't
+> need to duplicate all the logic. Simply add the number of parents to
+> mux_data, and you're all set.
 
-I don't know if Ralf can do that or not but patches should go via
-appropriate maintainer.
+Problem here is: parent 0b10 for A31 ahb1 is AXI, 0b11 is pll6/pre_div.
+0b10 and 0b11 is pll6/pre_div.
+So, just adding number of parents to mux_data will not solve problem.
 
-
-> On Wed, Feb 03, 2016 at 01:35:26PM +0100, Michal Simek wrote:
->> that's why please split them to sensible pieces and send them separately.
-> 
-> I could split out the Xilinx PCIe changes if it's insisted upon, but:
-> 
->   - They are the motivation for what's probably the largest of the MIPS
->     patches, so it's good to see those changes in context.
-> 
->   - The Boston board is very heavily PCIe based, with all peripherals
->     apart from a single UART & an 8 character LCD display being accessed
->     via PCIe. Thus Boston is pretty useless without the Xilinx PCIe
->     driver.
-> 
->   - Each patch is only CC'd to people who should be relevant to it
->     anyway (using the patman tool), so it's not like the MIPS changes
->     are spamming people only interested in PCI.
-> 
->   - 15 patches really isn't all that many.
-> 
-> So I think there is value in keeping the remainder of this series
-> together. I already split out the fairly standalone ethernet driver
-> changes. I certainly think saying this approach isn't sensible is a
-> stretch.
-> 
->> For pcie-xilinx.c changes please add to CC Bharat Kumar Gogada
->> <bharatku@xilinx.com> and Ravikiran Gummaluri <rgummal@xilinx.com>.
->> They have patches for pcie-xilinx and I expect there will be some sort
->> of collision.
-> 
-> I'll CC them if there's another revision, but if they should be CC'd for
-> changes to this driver is there a reason they're not in MAINTAINERS?
-> That would lead to tools like patman automatically CC'ing them, which
-> makes tons more sense than people needing to be informed after
-> submitting patches that they should CC some random extra email
-> addresses.
-
-I am just telling you there are other guys who are affected by your
-patches and politely asking you to add them to CC.
-Because your patches are in conflict with their patches. It doesn't mean
-that these guys have to be listed in MAINTAINERS.
-
-Thanks,
-Michal
+Regards,
+Vishnu
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
