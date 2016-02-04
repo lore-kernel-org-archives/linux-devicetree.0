@@ -1,92 +1,84 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v3 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver
- for mt2701
-Date: Thu, 4 Feb 2016 21:57:48 +0800
-Message-ID: <1454594268.15541.14.camel@mtksdaap41>
-References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
-	 <1451286546-5920-5-git-send-email-biao.huang@mediatek.com>
-	 <1451290066.11129.4.camel@mtksdaap41> <56B356CA.1010200@gmail.com>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement
+ init_cpu_capacity_default()
+Date: Thu, 4 Feb 2016 14:13:45 +0000
+Message-ID: <20160204141345.GD29586@e106622-lin>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-3-git-send-email-juri.lelli@arm.com>
+ <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
+ <20160204093559.GA14099@e105550-lin.cambridge.arm.com>
+ <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
+ <20160204121620.GB29586@e106622-lin>
+ <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56B356CA.1010200@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Biao Huang <biao.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-02-04 at 14:48 +0100, Matthias Brugger wrote:
-> 
-> On 28/12/15 09:07, Yingjoe Chen wrote:
-> > On Mon, 2015-12-28 at 15:09 +0800, Biao Huang wrote:
-> >> Add mt2701 support using mediatek common pinctrl driver.
-> >> MT2701 have some special pins need an extra setting register
-> >> than other ICs, so adding this support to common code.
+On 04/02/16 13:35, Vincent Guittot wrote:
+> On 4 February 2016 at 13:16, Juri Lelli <juri.lelli@arm.com> wrote:
+> > Hi Vincent,
+> >
+> > On 04/02/16 13:03, Vincent Guittot wrote:
+> >> On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+> >> > On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
+> >> >> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli@arm.com> wrote:
 > >>
-> >> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> >> Acked-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > <...>
-> >> +
-> >> +static struct platform_driver mtk_pinctrl_driver = {
-> >> +	.probe = mt2701_pinctrl_probe,
-> >> +	.driver = {
-> >> +		.name = "mediatek-mt2701-pinctrl",
-> >> +		.owner = THIS_MODULE,
-> >> +		.of_match_table = mt2701_pctrl_match,
-> >> +	},
-> >> +};
-> >> +
-> >> +static int __init mtk_pinctrl_init(void)
-> >> +{
-> >> +	return platform_driver_register(&mtk_pinctrl_driver);
-> >> +}
-> >> +
-> >> +arch_initcall(mtk_pinctrl_init);
+> >> [snip]
+> >>
+> >> >> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> >> >> > index 9e63fb1..c4025fd 100644
+> >> >> > --- a/drivers/cpufreq/Makefile
+> >> >> > +++ b/drivers/cpufreq/Makefile
+> >> >> > @@ -1,5 +1,5 @@
+> >> >> >  # CPUfreq core
+> >> >> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
+> >> >> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
+> >> >>
+> >> >> Do you really want to have the calibration of capacity dependent of
+> >> >> cpufreq ? It means that we can't use it without a cpufreq driver.
+> >> >> IMHO, this creates a unnecessary dependency. I understand that you
+> >> >> must ensure that core runs at max fequency if a driver is present but
+> >> >> you should be able to calibrate the capacity if cpufreq is not
+> >> >> available but you have different capacity because micro architecture
+> >> >
+> >> > We could remove the dependency on cpufreq, but it would make things more
+> >> > complicated for systems which do have frequency scaling as we would have
+> >> > to either:
+> >> >
+> >> > 1) Run the calibration again once cpufreq has been initialized.
+> >>
+> >> or wait and let time for a driver to initialize and trig the
+> >> calibration. If calibration has not been done at the end of the boot,
+> >> you can force a calibration. If the cpufeq driver is a module and is
+> >> loaded far later for any good or bad reason, we will have to run the
+> >> calibration once again but at least the capacity will reflect he
+> >> current capacity of the CPUs.
+> >> I'm mainly worried that the compilation of the calibration is
+> >> dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
+> >> sequence
+> >>
 > >
-> >
-> > As discussed in
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003350.html
-> > we should use subsys_initcall() instead.
-> >
-> >
-> >> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> >> index f307f1d..76279f0 100644
-> >> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> >> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > <...>
-> >> @@ -347,6 +352,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
-> >>   		ret = mtk_pconf_set_pull_select(pctl, pin, true, false, arg);
-> >>   		break;
-> >>   	case PIN_CONFIG_INPUT_ENABLE:
-> >> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
-> >>   		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
-> >>   		break;
-> >>   	case PIN_CONFIG_OUTPUT:
-> >> @@ -354,6 +360,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
-> >>   		ret = mtk_pmx_gpio_set_direction(pctldev, NULL, pin, false);
-> >>   		break;
-> >>   	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> >> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
-> >>   		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
-> >>   		break;
-> >>   	case PIN_CONFIG_DRIVE_STRENGTH:
-> >
-> > This change is not directly related to adding mt2710 support and change
-> > behavior for all MTK pinctrl drivers, please create a separate patch for
-> > this.
-> >
+> > Yes, I guess we can make this work in some way. Out of curiosity,
+> > though, are out there heterogenous platforms that don't use cpufreq?
 > 
-> Hi Biao,
+> At least, you can find several heterogeneous platforms without OPP
+> table for CPUs in the kernel. That's probably a temporary situation
+> but which can become a permanent one. It means that we can't calibrate
+> the CPUs for these platforms.
 > 
-> This patch didn't make it into v4.5-rc1. Are you thinking of sending a 
-> new version addressing the comments from Yingjoe?
 
-He already did,
-http://lists.infradead.org/pipermail/linux-mediatek/2016-February/003980.html
+Sorry, can you make some examples so that I'm sure I understand what you
+are referring to?
 
-The issue now is whether this change match the property.
+Anyway, don't these platform still make use of cpufreq (even if without
+an OPP table) so that we can still control policy->max and min?
 
-Joe.C
+Thanks,
 
-
+- Juri
