@@ -1,53 +1,56 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Thu, 4 Feb 2016 06:41:35 -0800
-Message-ID: <56B3631F.6090304@roeck-us.net>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <56B23883.7000501@codeaurora.org>
- <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
- <56B23E99.1030604@codeaurora.org>
- <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
- <56B2423B.1020109@codeaurora.org>
- <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
- <56B24642.8090105@codeaurora.org>
- <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
- <56B24AB5.3070001@codeaurora.org>
- <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
- <56B2DEE4.7060901@roeck-us.net> <56B35698.4020100@codeaurora.org>
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
+Date: Thu, 4 Feb 2016 15:43:45 +0100
+Message-ID: <CAGkQfmMVeM+xHqP=2izZ5Xufu+8R=Q_BTwUpXnhOz4o6LV4JQw@mail.gmail.com>
+References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com> <20160204143340.1ffa2292@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B35698.4020100-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160204143340.1ffa2292@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2016 05:48 AM, Timur Tabi wrote:
-> Guenter Roeck wrote:
->> Also, if panic is enabled, the timeout needs to be adjusted accordingly
->> (to only panic after the entire timeout period has expired, not after
->> half of it). We can not panic the system after timeout / 2.
+Hi Boris,
+
+2016-02-04 14:33 GMT+01:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi Romain,
 >
-> It's a debugging feature, not an actual watchdog timeout panic.  That's why it's disabled by default.
+> Just a remark that is not directly related to your work: when people
+> take the time to review your work, try to keep them in Cc of the
+> following versions of your patchset.
+>
+OK. I'll keep it in mind for my next submission.
+
+> On Mon,  1 Feb 2016 11:25:55 +0100
+> Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> The NAND Flash controller for SAMA5D2 has small differences that make it
+>> impossible to use the existing driver for SAMA5D3. This patchset uses the
+>> device tree's compatible string to get those differences, and the code is
+>> slightly modified to handle them.
+>>
+>> Base on linux-mtd-next, commit 15c0be7bec002f9a529dd0966d0db96dde176fd0
+>>
+>> See previous revisions to apply on the Atmel Linux 4.1 branch.
+>>
+>> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
+>> existing SAMA5D2 board with NAND Flash memory (yet).
+>
+> Overall, it looks good to me (even if I don't fully agree on how you
+> decided to define NFC_SR_RB_EDGEX values :-P, but that's just a
+> nitpick).
+>
+> Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >
 
-"* When the first stage(the half timeout) is reached, WS0 interrupt is
-  * triggered, at this moment the second watch period starts;
-  * In the WS0 interrupt routine, panic will be triggered for saving the
-  * system context.
-  * If the system is getting into trouble and cannot be reset by panic or
-  * restart properly by the kdump kernel(if supported), then the second
-  * stage (the timeout) will be reached, system will be reset by WS1."
+Thanks for your review.
 
-That doesn't sound like debugging to me.
-
-Guenter
-
+Best regards,
+-- 
+Romain Izard
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
