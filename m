@@ -1,243 +1,52 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
-Date: Thu, 4 Feb 2016 09:59:28 +0800
-Message-ID: <20160204015928.GA11158@shlinux2>
-References: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
+From: Ofer Heifetz <oferh@marvell.com>
+Subject: RE: [PATCH v2 03/12] serial: mvebu-uart: initial support for
+ Armada-3700 serial port
+Date: Thu, 4 Feb 2016 03:22:04 +0000
+Message-ID: <d18a261fae544e27b12a56bebf4a7006@IL-EXCH01.marvell.com>
+References: <1454524889-9207-1-git-send-email-gregory.clement@free-electrons.com>
+	<1454524889-9207-4-git-send-email-gregory.clement@free-electrons.com>
+	<CAPv3WKdh8D8GYMabALQQW-Z7L+=XhkZw2cXdYpcQ8tF0Rjckag@mail.gmail.com>
+	<20160203230224.5ea52f65@free-electrons.com>
+ <CAPv3WKe6=705iEtsuo0cUtugofiFa_Zt9xydRsgOV+mZ18H-3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453706679-18948-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <CAPv3WKe6=705iEtsuo0cUtugofiFa_Zt9xydRsgOV+mZ18H-3Q@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-ide-owner@vger.kernel.org
+To: Marcin Wojtas <mw@semihalf.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "arm@kernel.org" <arm@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Omri Itach <omrii@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Lior Amsalem <alior@marvell.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvel>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 03:24:39PM +0800, Peter Chen wrote:
-> Although most of USB devices are hot-plug's, there are still some devices
-> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> If these kinds of USB devices are multiple functions, and they can supply
-> other interfaces like i2c, gpios for other devices, we may need to
-> describe these at device tree.
-> 
-> In this commit, it uses "reg" in dts as physical port number to match
-> the phyiscal port number decided by USB core, if they are the same,
-> then the device node is for the device we are creating for USB core.
-> 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Changes for v4:
-> - The range of "reg" should be 1-31, changing device node address
->   style as in lower case hexadecimal with leading zeroes suppressed
->   [binding doc, usb-device.txt]
-> - Improve the example at binding doc, it describes node from the top
->   (the controller)
-> - Delete the struct of_node * within struct usb_device
-> - Using usb_hcd_find_raw_port_number to get raw port number under root
->   hub port
-> 
-
-Hi Alan, Arnd, and others, would you please give Ack for it if you
-are OK with this patch? I am not sure if Greg will queue it or not
-if no one Acks it, thanks.
-
-Peter
-
-> Changes for v3:
-> - typo: s/descirbe/describe/
-> 
-> Changes for v2:
-> - Fix build error reported by kbuild robot, lack of "static" for
->   inline usb_of_get_child_node
-> - Fix typo, "devcie_node" -> "device_node"
-> - Add kernel-doc for of_node at struct usb_device
-> 
-> Changes from RFC:
-> - Fix the error address for binding doc, and add compatible for binding doc
-> - Change get child node API from "usb_of_find_node" to
->   "usb_of_get_child_node"
-> - Delete unecessary header files
-> - One typo
-> 
->  .../devicetree/bindings/usb/usb-device.txt         | 25 ++++++++++++
->  drivers/usb/core/Makefile                          |  2 +-
->  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
->  drivers/usb/core/usb.c                             | 14 ++++++-
->  include/linux/usb/of.h                             |  7 ++++
->  5 files changed, 92 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
->  create mode 100644 drivers/usb/core/of.c
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> new file mode 100644
-> index 0000000..c702885
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> @@ -0,0 +1,25 @@
-> +Generic USB Device Properties
-> +
-> +Usually, we only use device tree for hard wired USB device.
-> +The reference binding doc is from:
-> +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-> +
-> +Required properties:
-> +- compatible: usbVID,PID
-> +- reg: the port number which this device is connecting to, the range
-> +  is 1-31.
-> +
-> +
-> +Example:
-> +
-> +&usb1 {
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	hub: genesys@1 {
-> +		compatible = "usb05e3,0608";
-> +		reg = <0x1>;
-> +	};
-> +}
-> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> index 2f6f932..9780877 100644
-> --- a/drivers/usb/core/Makefile
-> +++ b/drivers/usb/core/Makefile
-> @@ -5,7 +5,7 @@
->  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
->  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
->  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
-> -usbcore-y += port.o
-> +usbcore-y += port.o of.o
->  
->  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
->  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-> new file mode 100644
-> index 0000000..2289700
-> --- /dev/null
-> +++ b/drivers/usb/core/of.c
-> @@ -0,0 +1,47 @@
-> +/*
-> + * of.c		The helpers for hcd device tree support
-> + *
-> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2  of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +
-> +/**
-> + * usb_of_get_child_node - Find the device node match port number
-> + * @parent: the parent device node
-> + * @portnum: the port number which device is connecting
-> + *
-> + * Find the node from device tree according to its port number.
-> + *
-> + * Return: On success, a pointer to the device node, %NULL on failure.
-> + */
-> +struct device_node *usb_of_get_child_node(struct device_node *parent,
-> +					int portnum)
-> +{
-> +	struct device_node *node;
-> +	u32 port;
-> +
-> +	for_each_child_of_node(parent, node) {
-> +		if (!of_property_read_u32(node, "reg", &port)) {
-> +			if (port == portnum)
-> +				return node;
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_of_get_child_node);
-> +
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index ebb29ca..25d9770 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -36,6 +36,7 @@
->  #include <linux/mutex.h>
->  #include <linux/workqueue.h>
->  #include <linux/debugfs.h>
-> +#include <linux/usb/of.h>
->  
->  #include <asm/io.h>
->  #include <linux/scatterlist.h>
-> @@ -508,11 +509,20 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
->  	dev->connect_time = jiffies;
->  	dev->active_duration = -jiffies;
->  #endif
-> -	if (root_hub)	/* Root hub always ok [and always wired] */
-> +	if (root_hub) {	/* Root hub always ok [and always wired] */
->  		dev->authorized = 1;
-> -	else {
-> +		dev->dev.of_node = bus->controller->of_node;
-> +	} else {
->  		dev->authorized = !!HCD_DEV_AUTHORIZED(usb_hcd);
->  		dev->wusb = usb_bus_is_wusb(bus) ? 1 : 0;
-> +
-> +		if (dev->dev.parent->parent == bus->controller)
-> +			/* device under root hub's port */
-> +			port1 = usb_hcd_find_raw_port_number(usb_hcd,
-> +				port1);
-> +
-> +		dev->dev.of_node = usb_of_get_child_node(parent->dev.of_node,
-> +				port1);
->  	}
->  	return dev;
->  }
-> diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> index 974bce9..de3237f 100644
-> --- a/include/linux/usb/of.h
-> +++ b/include/linux/usb/of.h
-> @@ -16,6 +16,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
->  bool of_usb_host_tpl_support(struct device_node *np);
->  int of_usb_update_otg_caps(struct device_node *np,
->  			struct usb_otg_caps *otg_caps);
-> +struct device_node *usb_of_get_child_node(struct device_node *parent,
-> +			int portnum);
->  #else
->  static inline enum usb_dr_mode
->  of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-> @@ -31,6 +33,11 @@ static inline int of_usb_update_otg_caps(struct device_node *np,
->  {
->  	return 0;
->  }
-> +static inline struct device_node *usb_of_get_child_node
-> +		(struct device_node *parent, int portnum)
-> +{
-> +	return NULL;
-> +}
->  #endif
->  
->  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWFyY2luLA0KDQpJIHRoaW5rIGl0IGlzIGEgcGFydGlhbCBmaXggc2luY2Ugb25jZSBRQSBz
+dGFydGVkIHRvIHVzZSB0aGlzIHBhdGNoIGFuZCBmb3VuZCB0aGF0IC9wcm9jL2ludGVycnVwdHMg
+cHJpbnRzIHNlcmlhbCBpbnRlcnJ1cHQgc3RyaW5nIG11bHRpcGxlIHRpbWVzIHdoaWNoIGlzIGNs
+b2JiZXJpbmcgdGhlIHByaW50Lg0KDQovT2Zlcg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQpGcm9tOiBNYXJjaW4gV29qdGFzIFttYWlsdG86bXdAc2VtaWhhbGYuY29tXSANClNlbnQ6
+IFRodXJzZGF5LCBGZWJydWFyeSAwNCwgMjAxNiAxMjoyMyBBTQ0KVG86IFRob21hcyBQZXRhenpv
+bmk7IE9mZXIgSGVpZmV0eg0KQ2M6IEdyZWdvcnkgQ0xFTUVOVDsgSmFzb24gQ29vcGVyOyBBbmRy
+ZXcgTHVubjsgU2ViYXN0aWFuIEhlc3NlbGJhcnRoOyBhcm1Aa2VybmVsLm9yZzsgQ2F0YWxpbiBN
+YXJpbmFzOyBXaWxsIERlYWNvbjsgSm9uYXRoYW4gQ29yYmV0OyBNYXJrIFJ1dGxhbmQ7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBHcmVnIEty
+b2FoLUhhcnRtYW47IE9tcmkgSXRhY2g7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE5h
+ZGF2IEhha2xhaTsgSGFucyBkZSBHb2VkZTsgTGlvciBBbXNhbGVtOyBsaW51eC1zZXJpYWxAdmdl
+ci5rZXJuZWwub3JnOyBKaXJpIFNsYWJ5OyBUZWp1biBIZW87IFdpbHNvbiBEaW5nOyBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMDMv
+MTJdIHNlcmlhbDogbXZlYnUtdWFydDogaW5pdGlhbCBzdXBwb3J0IGZvciBBcm1hZGEtMzcwMCBz
+ZXJpYWwgcG9ydA0KDQpJJ20gc29ycnksIGluZGVlZCwgSSB3YXMgdGhlIG9uZSB0byBvdmVybG9v
+ayAtIHRoZXJlIHdhcyBhIGxvdCBnb2luZyBvbiBpbiBhIHRocmVhZCBhbmQgSSBtaXNzZWQgaXQu
+DQoNCk9mZXIsIGFzIHlvdSBmb3VuZCBvdXQgdGhhdCBJUlFGX1NIQVJFRCBoZWxwIGJvb3Rpbmcg
+dWJ1bnR1IC0gZG8geW91IHRoaW5rIGl0J3MgYSBoYWNrIG9yIGZpeD8NCg0KQmVzdCByZWdhcmRz
+LA0KTWFyY2luDQoNCjIwMTYtMDItMDMgMjM6MDIgR01UKzAxOjAwIFRob21hcyBQZXRhenpvbmkN
+Cjx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT46DQo+IERlYXIgTWFyY2luIFdv
+anRhcywNCj4NCj4gT24gV2VkLCAzIEZlYiAyMDE2IDIyOjQxOjE1ICswMTAwLCBNYXJjaW4gV29q
+dGFzIHdyb3RlOg0KPj4gSGkgR3JlZ29yeSwNCj4+DQo+PiA+ICsgICAgICAgcG9ydC0+aXJxICAg
+ICAgICA9IGlycS0+c3RhcnQ7DQo+PiA+ICsgICAgICAgcG9ydC0+aXJxZmxhZ3MgICA9IDA7DQo+
+Pg0KPj4gU2FtZSByZXF1ZXN0IGFzIGZvciB2MSwgd2hpY2ggeW91IG11c3QgaGF2ZSBvdmVybG9v
+a2VkOg0KPj4gcG9ydC0+aXJxZmxhZ3MgPSBJUlFGX1NIQVJFRDsNCj4NCj4gR3JlZ29yeSBkaWRu
+J3Qgb3Zlcmxvb2sgdGhpcyBjb21tZW50IHlvdSBtYWRlIG9uIHYxLCBoZSBldmVuIHJlcGxpZWQg
+DQo+IHRvIGl0LiBQbGVhc2UgY2hlY2sgR3JlZ29yeSdzIHJlcGx5IHRvIHlvdXIgcmV2aWV3Lg0K
+Pg0KPiBCZXN0IHJlZ2FyZHMsDQo+DQo+IFRob21hcw0KPiAtLQ0KPiBUaG9tYXMgUGV0YXp6b25p
+LCBDVE8sIEZyZWUgRWxlY3Ryb25zDQo+IEVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJv
+aWQgZW5naW5lZXJpbmcgDQo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg==
