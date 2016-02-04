@@ -1,52 +1,174 @@
-From: Ofer Heifetz <oferh@marvell.com>
-Subject: RE: [PATCH v2 03/12] serial: mvebu-uart: initial support for
- Armada-3700 serial port
-Date: Thu, 4 Feb 2016 03:22:04 +0000
-Message-ID: <d18a261fae544e27b12a56bebf4a7006@IL-EXCH01.marvell.com>
-References: <1454524889-9207-1-git-send-email-gregory.clement@free-electrons.com>
-	<1454524889-9207-4-git-send-email-gregory.clement@free-electrons.com>
-	<CAPv3WKdh8D8GYMabALQQW-Z7L+=XhkZw2cXdYpcQ8tF0Rjckag@mail.gmail.com>
-	<20160203230224.5ea52f65@free-electrons.com>
- <CAPv3WKe6=705iEtsuo0cUtugofiFa_Zt9xydRsgOV+mZ18H-3Q@mail.gmail.com>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 14/14] ARM: dts: sun8i: Add A83T based
+ Sinovoip Bpi-M3 Board
+Date: Thu, 4 Feb 2016 12:25:14 +0800
+Message-ID: <CAEzqOZtwyk2oChsSvfxWwqc=bKn3dT0eLDzcgAXi--N0W=cMuA@mail.gmail.com>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-15-git-send-email-vishnupatekar0510@gmail.com> <CAGb2v65BwAcT8920WXt7dBjNx4zjycw2Ea+sNZrm0aM_3JA8pA@mail.gmail.com>
+Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAPv3WKe6=705iEtsuo0cUtugofiFa_Zt9xydRsgOV+mZ18H-3Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-ide-owner@vger.kernel.org
-To: Marcin Wojtas <mw@semihalf.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "arm@kernel.org" <arm@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Omri Itach <omrii@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Lior Amsalem <alior@marvell.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Wilson Ding <dingwei@marvel>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBPNFZO2QKGQE7NLUWWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65BwAcT8920WXt7dBjNx4zjycw2Ea+sNZrm0aM_3JA8pA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY2luLA0KDQpJIHRoaW5rIGl0IGlzIGEgcGFydGlhbCBmaXggc2luY2Ugb25jZSBRQSBz
-dGFydGVkIHRvIHVzZSB0aGlzIHBhdGNoIGFuZCBmb3VuZCB0aGF0IC9wcm9jL2ludGVycnVwdHMg
-cHJpbnRzIHNlcmlhbCBpbnRlcnJ1cHQgc3RyaW5nIG11bHRpcGxlIHRpbWVzIHdoaWNoIGlzIGNs
-b2JiZXJpbmcgdGhlIHByaW50Lg0KDQovT2Zlcg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQpGcm9tOiBNYXJjaW4gV29qdGFzIFttYWlsdG86bXdAc2VtaWhhbGYuY29tXSANClNlbnQ6
-IFRodXJzZGF5LCBGZWJydWFyeSAwNCwgMjAxNiAxMjoyMyBBTQ0KVG86IFRob21hcyBQZXRhenpv
-bmk7IE9mZXIgSGVpZmV0eg0KQ2M6IEdyZWdvcnkgQ0xFTUVOVDsgSmFzb24gQ29vcGVyOyBBbmRy
-ZXcgTHVubjsgU2ViYXN0aWFuIEhlc3NlbGJhcnRoOyBhcm1Aa2VybmVsLm9yZzsgQ2F0YWxpbiBN
-YXJpbmFzOyBXaWxsIERlYWNvbjsgSm9uYXRoYW4gQ29yYmV0OyBNYXJrIFJ1dGxhbmQ7IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBHcmVnIEty
-b2FoLUhhcnRtYW47IE9tcmkgSXRhY2g7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE5h
-ZGF2IEhha2xhaTsgSGFucyBkZSBHb2VkZTsgTGlvciBBbXNhbGVtOyBsaW51eC1zZXJpYWxAdmdl
-ci5rZXJuZWwub3JnOyBKaXJpIFNsYWJ5OyBUZWp1biBIZW87IFdpbHNvbiBEaW5nOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMDMv
-MTJdIHNlcmlhbDogbXZlYnUtdWFydDogaW5pdGlhbCBzdXBwb3J0IGZvciBBcm1hZGEtMzcwMCBz
-ZXJpYWwgcG9ydA0KDQpJJ20gc29ycnksIGluZGVlZCwgSSB3YXMgdGhlIG9uZSB0byBvdmVybG9v
-ayAtIHRoZXJlIHdhcyBhIGxvdCBnb2luZyBvbiBpbiBhIHRocmVhZCBhbmQgSSBtaXNzZWQgaXQu
-DQoNCk9mZXIsIGFzIHlvdSBmb3VuZCBvdXQgdGhhdCBJUlFGX1NIQVJFRCBoZWxwIGJvb3Rpbmcg
-dWJ1bnR1IC0gZG8geW91IHRoaW5rIGl0J3MgYSBoYWNrIG9yIGZpeD8NCg0KQmVzdCByZWdhcmRz
-LA0KTWFyY2luDQoNCjIwMTYtMDItMDMgMjM6MDIgR01UKzAxOjAwIFRob21hcyBQZXRhenpvbmkN
-Cjx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT46DQo+IERlYXIgTWFyY2luIFdv
-anRhcywNCj4NCj4gT24gV2VkLCAzIEZlYiAyMDE2IDIyOjQxOjE1ICswMTAwLCBNYXJjaW4gV29q
-dGFzIHdyb3RlOg0KPj4gSGkgR3JlZ29yeSwNCj4+DQo+PiA+ICsgICAgICAgcG9ydC0+aXJxICAg
-ICAgICA9IGlycS0+c3RhcnQ7DQo+PiA+ICsgICAgICAgcG9ydC0+aXJxZmxhZ3MgICA9IDA7DQo+
-Pg0KPj4gU2FtZSByZXF1ZXN0IGFzIGZvciB2MSwgd2hpY2ggeW91IG11c3QgaGF2ZSBvdmVybG9v
-a2VkOg0KPj4gcG9ydC0+aXJxZmxhZ3MgPSBJUlFGX1NIQVJFRDsNCj4NCj4gR3JlZ29yeSBkaWRu
-J3Qgb3Zlcmxvb2sgdGhpcyBjb21tZW50IHlvdSBtYWRlIG9uIHYxLCBoZSBldmVuIHJlcGxpZWQg
-DQo+IHRvIGl0LiBQbGVhc2UgY2hlY2sgR3JlZ29yeSdzIHJlcGx5IHRvIHlvdXIgcmV2aWV3Lg0K
-Pg0KPiBCZXN0IHJlZ2FyZHMsDQo+DQo+IFRob21hcw0KPiAtLQ0KPiBUaG9tYXMgUGV0YXp6b25p
-LCBDVE8sIEZyZWUgRWxlY3Ryb25zDQo+IEVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJv
-aWQgZW5naW5lZXJpbmcgDQo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg==
+Hello Wens,
+
+
+
+On Tue, Feb 2, 2016 at 3:37 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>
+> On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
+> <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > This patch adds support for Sinovoip BPI-M3 A83T based board.
+> >
+> > It has 2G LPDDR3, UART, ethernet, USB, HDMI, USB Sata, MIPI DSI,
+> > mic, AP6212 Wifi, etc on it.
+> > It is paired with AXP813 PMIC which is almost same as AXP818.
+> >
+> > Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/Makefile                       |  1 +
+> >  arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts | 88 ++++++++++++++++++++++++
+> >  2 files changed, 89 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
+> >
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 58e461a..c0dd016 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -694,6 +694,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+> >         sun8i-a33-sinlinx-sina33.dtb \
+> >         sun8i-a83t-allwinner-h8homlet-v2.dtb \
+> >         sun8i-a83t-cubietruck-plus.dtb \
+> > +       sun8i-a83t-sinovoip-bpi-m3.dtb \
+> >         sun8i-h3-orangepi-plus.dtb
+> >  dtb-$(CONFIG_MACH_SUN9I) += \
+> >         sun9i-a80-optimus.dtb \
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
+> > new file mode 100644
+> > index 0000000..fecc7dc
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-sinovoip-bpi-m3.dts
+> > @@ -0,0 +1,88 @@
+> > +/*
+> > + * Copyright 2015 Vishnu Patekar
+>
+> 2016?
+>
+> > + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "sun8i-a83t.dtsi"
+> > +#include "sunxi-common-regulators.dtsi"
+> > +
+> > +/ {
+> > +       model = "Sinovoip BananaPi M3 v1.2";
+> > +       compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
+> > +
+> > +       aliases {
+> > +               serial0 = &uart0;
+> > +       };
+> > +
+> > +       chosen {
+> > +               stdout-path = "serial0:115200n8";
+> > +       };
+> > +};
+> > +
+> > +&pio {
+> > +       mmc0_cd_pin_bpi_m3: mmc0_cd_pin@0 {
+> > +               allwinner,pins = "PF6";
+> > +               allwinner,function = "gpio_in";
+> > +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> > +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> > +       };
+>
+> Maybe we should just put this in the .dtsi and call it
+> "mmc0_cd_pin_reference_design"?
+>
+> We have something similar for sun4i-a10.
+Yes, I'll modify it.
+>
+> > +};
+> > +
+> > +&mmc0 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bpi_m3>;
+> > +       vmmc-supply = <&reg_vcc3v0>;
+> > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> > +       bus-width = <4>;
+> > +       cd-inverted;
+> > +       status = "okay";
+> > +};
+> > +
+> > +&uart0 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&uart0_pins_b>;
+> > +       status = "okay";
+> > +};
+> > +
+> > +&r_rsb {
+>
+> This goes before uart0.
+Okie.
+>
+> > +       status = "okay";
+> > +};
+>
+> What about eMMC?
+I've not yet tried the emmc.
+>
+>
+> Thanks!
+> ChenYu
+
+Regards,
+Vishnu
