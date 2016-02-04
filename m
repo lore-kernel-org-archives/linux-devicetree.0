@@ -1,74 +1,420 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: [PATCH 1/2] devicetree: Add bindings documentation for Analog Devices axi-spi-engine
-Date: Thu,  4 Feb 2016 17:13:29 +0100
-Message-ID: <1454602410-14049-1-git-send-email-lars@metafoo.de>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 4 Feb 2016 09:25:51 -0700
+Message-ID: <CANLsYkzQpEHa4hnO4D1E0+P-i961+ak=Hr_RPPrOxd-+VMhLSQ@mail.gmail.com>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+	<1454519923-25230-5-git-send-email-fu.wei@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454519923-25230-5-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo@li
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree bindings documentation for the Analog Devices
-axi-spi-engine SPI master peripheral. This is a soft-peripheral used in
-FPGAs.
+On 3 February 2016 at 10:18,  <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> According to Server Base System Architecture (SBSA) specification,
+> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
+> is for alerting the system by interrupt, the second one (WS1) is a real
+> hardware reset.
+>
+> This patch initially implements a simple single stage watchdog driver:
+> when the timeout is reached, your system will be reset by the second
+> signal (WS1).
+> The first signal (WS0) is ignored in this driver.
+>
+> This driver bases on linux kernel watchdog framework, so it can get
+> timeout from module parameter and FDT at the driver init stage.
+>
+> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig     |  17 +++
+>  drivers/watchdog/Makefile    |   1 +
+>  drivers/watchdog/sbsa_gwdt.c | 322 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 340 insertions(+)
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 4f0e7be..4ab1b05 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -201,6 +201,23 @@ config ARM_SP805_WATCHDOG
+>           ARM Primecell SP805 Watchdog timer. This will reboot your system when
+>           the timeout is reached.
+>
+> +config ARM_SBSA_WATCHDOG
+> +       tristate "ARM SBSA Generic Watchdog"
+> +       depends on ARM64
+> +       depends on ARM_ARCH_TIMER
+> +       select WATCHDOG_CORE
+> +       help
+> +         ARM SBSA Generic Watchdog has two stage timeouts:
+> +         the first signal (WS0) is for alerting the system by interrupt,
+> +         the second one (WS1) is a real hardware reset.
+> +         More details: ARM DEN0029B - Server Base System Architecture (SBSA)
+> +
+> +         This is a simple single stage driver: when the timeout is reached,
+> +         your system will be reset by WS1. The first signal (WS0) is ignored.
+> +
+> +         To compile this driver as module, choose M here: The module
+> +         will be called sbsa_gwdt.
+> +
+>  config ASM9260_WATCHDOG
+>         tristate "Alphascale ASM9260 watchdog"
+>         depends on MACH_ASM9260
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index f566753..f9826d4 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
+>
+>  # ARM Architecture
+>  obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
+> +obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
+>  obj-$(CONFIG_ASM9260_WATCHDOG) += asm9260_wdt.o
+>  obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
+>  obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
+> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
+> new file mode 100644
+> index 0000000..5a2dba3
+> --- /dev/null
+> +++ b/drivers/watchdog/sbsa_gwdt.c
+> @@ -0,0 +1,322 @@
+> +/*
+> + * SBSA(Server Base System Architecture) Generic Watchdog driver
+> + *
+> + * Copyright (c) 2015, Linaro Ltd.
+> + * Author: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *         Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+> + *         Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *         Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License 2 as published
+> + * by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * This SBSA Generic watchdog driver is a single stage timeout version.
+> + * Since this watchdog timer has two stages, and each stage is determined
+> + * by WOR. So the timeout is (WOR * 2).
+> + * When first timeout is reached, WS0 is triggered, the interrupt
+> + * triggered by WS0 will be ignored, then the second watch period starts;
+> + * when second timeout is reached, then WS1 is triggered, system reset.
+> + *
+> + * More details about the hardware specification of this device:
+> + * ARM DEN0029B - Server Base System Architecture (SBSA)
+> + *
+> + * SBSA GWDT: |--------WOR-------WS0--------WOR-------WS1
+> + *            |----------------timeout----------------reset
+> + *
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/watchdog.h>
+> +#include <asm/arch_timer.h>
+> +
+> +/* SBSA Generic Watchdog register definitions */
+> +/* refresh frame */
+> +#define SBSA_GWDT_WRR                          0x000
+> +
+> +/* control frame */
+> +#define SBSA_GWDT_WCS                          0x000
+> +#define SBSA_GWDT_WOR                          0x008
+> +#define SBSA_GWDT_WCV                          0x010
+> +
+> +/* refresh/control frame */
+> +#define SBSA_GWDT_W_IIDR                       0xfcc
+> +#define SBSA_GWDT_IDR                          0xfd0
+> +
+> +/* Watchdog Control and Status Register */
+> +#define SBSA_GWDT_WCS_EN                       BIT(0)
+> +#define SBSA_GWDT_WCS_WS0                      BIT(1)
+> +#define SBSA_GWDT_WCS_WS1                      BIT(2)
+> +
+> +/**
+> + * struct sbsa_gwdt - Internal representation of the SBSA GWDT
+> + * @wdd:               kernel watchdog_device structure
+> + * @clk:               store the System Counter clock frequency, in Hz.
+> + * @refresh_base:      Virtual address of the watchdog refresh frame
+> + * @control_base:      Virtual address of the watchdog control frame
+> + */
+> +struct sbsa_gwdt {
+> +       struct watchdog_device  wdd;
+> +       u32                     clk;
+> +       void __iomem            *refresh_base;
+> +       void __iomem            *control_base;
+> +};
+> +
+> +#define to_sbsa_gwdt(e) container_of(e, struct sbsa_gwdt, wdd)
+> +
+> +#define DEFAULT_TIMEOUT                20 /* seconds, the 1st + 2nd watch periods*/
+> +
+> +static unsigned int timeout;
+> +module_param(timeout, uint, 0);
+> +MODULE_PARM_DESC(timeout,
+> +                "Watchdog timeout in seconds. (>=0, default="
+> +                __MODULE_STRING(DEFAULT_TIMEOUT) ")");
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, S_IRUGO);
+> +MODULE_PARM_DESC(nowayout,
+> +                "Watchdog cannot be stopped once started (default="
+> +                __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +/*
+> + * watchdog operation functions
+> + */
+> +static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
+> +                                unsigned int timeout)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +
+> +       wdd->timeout = timeout;
+> +       writel(timeout / 2 * gwdt->clk, gwdt->control_base + SBSA_GWDT_WOR);
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +       u64 timeleft = readq(gwdt->control_base + SBSA_GWDT_WCV) -
+> +                      arch_counter_get_cntvct();
+> +
+> +       do_div(timeleft, gwdt->clk);
+> +
+> +       if (readl(gwdt->control_base + SBSA_GWDT_WCS) & SBSA_GWDT_WCS_WS0)
+> +               return timeleft;
+> +
+> +       return timeleft + wdd->timeout / 2;
 
-The external interfaces of the peripheral are:
-	* A memory mapped register map which is used to configure the
-	  peripheral.
-	* One interrupt.
-	* Two clocks, one for the memory mapped register interface and one
-	  for the SPI bus.
-	* A SPI master interface to which the slave devices are connected.
+It would be great to have a comment whenever hard coded values are
+used.  That way people understand why things were set this way.  The
+same applies for the rest of this patch.
 
-These interfaces are described by the devicetree bindings accordingly.
-
-Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
----
- .../devicetree/bindings/spi/adi,axi-spi-engine.txt | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
-new file mode 100644
-index 0000000..8a18d71
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
-@@ -0,0 +1,31 @@
-+Analog Devices AXI SPI Engine controller Device Tree Bindings
-+
-+Required properties:
-+- compatible		: Must be "adi,axi-spi-engine-1.00.a""
-+- reg			: Physical base address and size of the register map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- clock-names		: List of input clock names - "s_axi_aclk", "spi_clk"
-+- clocks		: Clock phandles and specifiers (See clock bindings for
-+			  details on clock-names and clocks).
-+- #address-cells	: Must be <1>
-+- #size-cells		: Must be <0>
-+
-+Optional subnodes:
-+	Subnodes are use to represent the SPI slave devices connected to the SPI
-+	master. They follow the generic SPI bindings as outlined in spi-bus.txt.
-+
-+Example:
-+
-+    spi@@44a00000 {
-+		compatible = "adi,axi-spi-engine-1.00.a";
-+		reg = <0x44a00000 0x1000>;
-+		interrupts = <0 56 4>;
-+		clocks = <&clkc 15 &clkc 15>;
-+		clock-names = "s_axi_aclk", "spi_clk";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* SPI devices */
-+    };
--- 
-2.1.4
-
+> +}
+> +
+> +static int sbsa_gwdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +
+> +       /*
+> +       * Writing WRR for an explicit watchdog refresh.
+> +       * You can write anyting(like 0xc0ffee).
+> +       */
+> +       writel(0xc0ffee, gwdt->refresh_base + SBSA_GWDT_WRR);
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned int sbsa_gwdt_status(struct watchdog_device *wdd)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +       u32 status = readl(gwdt->control_base + SBSA_GWDT_WCS);
+> +
+> +       /* is the watchdog timer running? */
+> +       return (status & SBSA_GWDT_WCS_EN) << WDOG_ACTIVE;
+> +}
+> +
+> +static int sbsa_gwdt_start(struct watchdog_device *wdd)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +
+> +       /* writing WCS will cause an explicit watchdog refresh */
+> +       writel(SBSA_GWDT_WCS_EN, gwdt->control_base + SBSA_GWDT_WCS);
+> +
+> +       return sbsa_gwdt_keepalive(wdd);
+> +}
+> +
+> +static int sbsa_gwdt_stop(struct watchdog_device *wdd)
+> +{
+> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +
+> +       writel(0, gwdt->control_base + SBSA_GWDT_WCS);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct watchdog_info sbsa_gwdt_info = {
+> +       .identity       = "SBSA Generic Watchdog",
+> +       .options        = WDIOF_SETTIMEOUT |
+> +                         WDIOF_KEEPALIVEPING |
+> +                         WDIOF_MAGICCLOSE |
+> +                         WDIOF_CARDRESET,
+> +};
+> +
+> +static struct watchdog_ops sbsa_gwdt_ops = {
+> +       .owner          = THIS_MODULE,
+> +       .start          = sbsa_gwdt_start,
+> +       .stop           = sbsa_gwdt_stop,
+> +       .status         = sbsa_gwdt_status,
+> +       .ping           = sbsa_gwdt_keepalive,
+> +       .set_timeout    = sbsa_gwdt_set_timeout,
+> +       .get_timeleft   = sbsa_gwdt_get_timeleft,
+> +};
+> +
+> +static int sbsa_gwdt_probe(struct platform_device *pdev)
+> +{
+> +       void __iomem *rf_base, *cf_base;
+> +       struct device *dev = &pdev->dev;
+> +       struct watchdog_device *wdd;
+> +       struct sbsa_gwdt *gwdt;
+> +       struct resource *res;
+> +       u32 status;
+> +       int ret;
+> +
+> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
+> +       if (!gwdt)
+> +               return -ENOMEM;
+> +       platform_set_drvdata(pdev, gwdt);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       cf_base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(cf_base))
+> +               return PTR_ERR(cf_base);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       rf_base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(rf_base))
+> +               return PTR_ERR(rf_base);
+> +
+> +       /*
+> +        * Get the frequency of system counter from the cp15 interface of ARM
+> +        * Generic timer. We don't need to check it, because if it returns "0",
+> +        * system would panic in very early stage.
+> +        */
+> +       gwdt->clk = arch_timer_get_cntfrq();
+> +       gwdt->refresh_base = rf_base;
+> +       gwdt->control_base = cf_base;
+> +
+> +       wdd = &gwdt->wdd;
+> +       wdd->parent = dev;
+> +       wdd->info = &sbsa_gwdt_info;
+> +       wdd->ops = &sbsa_gwdt_ops;
+> +       watchdog_set_drvdata(wdd, gwdt);
+> +       watchdog_set_nowayout(wdd, nowayout);
+> +
+> +       wdd->min_timeout = 2;
+> +       wdd->max_timeout = U32_MAX / gwdt->clk * 2;
+> +       wdd->timeout = DEFAULT_TIMEOUT;
+> +       watchdog_init_timeout(wdd, timeout, dev);
+> +
+> +       status = readl(gwdt->control_base + SBSA_GWDT_WCS);
+> +       if (status & SBSA_GWDT_WCS_WS1) {
+> +               dev_warn(dev, "System reset by WDT.\n");
+> +               wdd->bootstatus |= WDIOF_CARDRESET;
+> +       }
+> +
+> +       ret = watchdog_register_device(wdd);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * Update timeout to WOR.
+> +        * Because of the explicit watchdog refresh mechanism,
+> +        * it's also a ping, if watchdog is enabled.
+> +        */
+> +       sbsa_gwdt_set_timeout(wdd, wdd->timeout);
+> +
+> +       dev_info(dev, "Initialized with %ds timeout @ %u Hz%s\n", wdd->timeout,
+> +                gwdt->clk, status & SBSA_GWDT_WCS_EN ? " [enabled]" : "");
+> +
+> +       return 0;
+> +}
+> +
+> +static void sbsa_gwdt_shutdown(struct platform_device *pdev)
+> +{
+> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
+> +
+> +       sbsa_gwdt_stop(&gwdt->wdd);
+> +}
+> +
+> +static int sbsa_gwdt_remove(struct platform_device *pdev)
+> +{
+> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
+> +
+> +       watchdog_unregister_device(&gwdt->wdd);
+> +
+> +       return 0;
+> +}
+> +
+> +/* Disable watchdog if it is active during suspend */
+> +static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
+> +{
+> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
+> +
+> +       if (watchdog_active(&gwdt->wdd))
+> +               sbsa_gwdt_stop(&gwdt->wdd);
+> +
+> +       return 0;
+> +}
+> +
+> +/* Enable watchdog and configure it if necessary */
+> +static int __maybe_unused sbsa_gwdt_resume(struct device *dev)
+> +{
+> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
+> +
+> +       if (watchdog_active(&gwdt->wdd))
+> +               sbsa_gwdt_start(&gwdt->wdd);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops sbsa_gwdt_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(sbsa_gwdt_suspend, sbsa_gwdt_resume)
+> +};
+> +
+> +static const struct of_device_id sbsa_gwdt_of_match[] = {
+> +       { .compatible = "arm,sbsa-gwdt", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, sbsa_gwdt_of_match);
+> +
+> +static const struct platform_device_id sbsa_gwdt_pdev_match[] = {
+> +       { .name = "sbsa-gwdt", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sbsa_gwdt_pdev_match);
+> +
+> +static struct platform_driver sbsa_gwdt_driver = {
+> +       .driver = {
+> +               .name = "sbsa-gwdt",
+> +               .pm = &sbsa_gwdt_pm_ops,
+> +               .of_match_table = sbsa_gwdt_of_match,
+> +       },
+> +       .probe = sbsa_gwdt_probe,
+> +       .remove = sbsa_gwdt_remove,
+> +       .shutdown = sbsa_gwdt_shutdown,
+> +       .id_table = sbsa_gwdt_pdev_match,
+> +};
+> +
+> +module_platform_driver(sbsa_gwdt_driver);
+> +
+> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
+> +MODULE_AUTHOR("Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>");
+> +MODULE_AUTHOR("Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_AUTHOR("Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.5.0
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
