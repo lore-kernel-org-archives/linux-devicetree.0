@@ -1,58 +1,371 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 05/11] drivers: pinctrl: add driver for
- Allwinner A64 SoC
-Date: Thu, 4 Feb 2016 17:51:51 +0100
-Message-ID: <20160204165151.GK4270@lukather>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
- <20160201182754.GA14737@excalibur.cnev.de>
- <56AFE0EC.8080207@arm.com>
- <20160202100046.GM4652@lukather>
- <56B0DF26.10203@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="45wMVEkw4XUbiYON"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE56Z22QKGQEJBRWHPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56B0DF26.10203-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V2 3/3] leds: add SN3218 LED driver
+Date: Thu,  4 Feb 2016 18:56:06 +0000
+Message-ID: <1454612167-8680-4-git-send-email-stefan.wahren@i2se.com>
+References: <1454612167-8680-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454612167-8680-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
---45wMVEkw4XUbiYON
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+This patch adds support for Si-En SN3218 18 Channel LED Driver.
 
-Hi Andre,
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ drivers/leds/Kconfig       |   12 ++
+ drivers/leds/Makefile      |    1 +
+ drivers/leds/leds-sn3218.c |  306 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 319 insertions(+)
+ create mode 100644 drivers/leds/leds-sn3218.c
 
-On Tue, Feb 02, 2016 at 04:53:58PM +0000, Andre Przywara wrote:
-> > So, droping it in the filenames, why not. But I'd really like to keep
-> > the same compatible scheme.
-> 
-> And I still don't get this: in the DT compatible scheme we always have a
-> vendor prefix, so allwinner,a64 is surely not a mysterious ARM Ltd. core
-> or a new Apple SoC. Instead it is the A64 from Allwinner, full stop. So
-> why should we add an arbitrary and confusing sun50i naming to it (when
-> it actually should be more like "sun8i-a64").
-
-I don't decide on their marketing names. And I know you want to start
-anew with the arm64 SoCs, but the truth is, you don't. Most of the
-compatibles in the DTSI are from earlier SoCs, and we have to keep
-that legacy and remain consistent with it. With all the good and bad
-things a legacy imply.
-
-Maxime
-
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 7f940c2..1034696 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -568,6 +568,18 @@ config LEDS_SEAD3
+ 	  This driver can also be built as a module. If so the module
+ 	  will be called leds-sead3.
+ 
++config LEDS_SN3218
++	tristate "LED support for Si-En SN3218 I2C chip"
++	depends on LEDS_CLASS && I2C
++	depends on OF
++	select REGMAP_I2C
++	help
++	  This option enables support for the Si-EN SN3218 LED driver
++	  connected through I2C. Say Y to enable support for the SN3218 LED.
++
++	  This driver can also be built as a module. If so the module
++	  will be called leds-sn3218.
++
+ comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
+ 
+ config LEDS_BLINKM
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index e9d5309..89c9b6f 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
+ obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
+ obj-$(CONFIG_LEDS_POWERNV)		+= leds-powernv.o
+ obj-$(CONFIG_LEDS_SEAD3)		+= leds-sead3.o
++obj-$(CONFIG_LEDS_SN3218)		+= leds-sn3218.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+diff --git a/drivers/leds/leds-sn3218.c b/drivers/leds/leds-sn3218.c
+new file mode 100644
+index 0000000..dcc2581
+--- /dev/null
++++ b/drivers/leds/leds-sn3218.c
+@@ -0,0 +1,306 @@
++/*
++ * Si-En SN3218 18 Channel LED Driver
++ *
++ * Copyright (C) 2016 Stefan Wahren <stefan.wahren@i2se.com>
++ *
++ * Based on leds-pca963x.c
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * Datasheet: http://www.si-en.com/uploadpdf/s2011517171720.pdf
++ *
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++#define SN3218_MODE		0x00
++#define SN3218_PWM_1		0x01
++#define SN3218_PWM_2		0x02
++#define SN3218_PWM_3		0x03
++#define SN3218_PWM_4		0x04
++#define SN3218_PWM_5		0x05
++#define SN3218_PWM_6		0x06
++#define SN3218_PWM_7		0x07
++#define SN3218_PWM_8		0x08
++#define SN3218_PWM_9		0x09
++#define SN3218_PWM_10		0x0a
++#define SN3218_PWM_11		0x0b
++#define SN3218_PWM_12		0x0c
++#define SN3218_PWM_13		0x0d
++#define SN3218_PWM_14		0x0e
++#define SN3218_PWM_15		0x0f
++#define SN3218_PWM_16		0x10
++#define SN3218_PWM_17		0x11
++#define SN3218_PWM_18		0x12
++#define SN3218_LED_1_6		0x13
++#define SN3218_LED_7_12		0x14
++#define SN3218_LED_13_18	0x15
++#define SN3218_UPDATE		0x16	/* applies to reg 0x01 .. 0x15 */
++#define SN3218_RESET		0x17
++
++#define SN3218_LED_MASK		0x3f
++#define SN3218_LED_ON		0x01
++#define SN3218_LED_OFF		0x00
++
++#define SN3218_MODE_SHUTDOWN	0x00
++#define SN3218_MODE_NORMAL	0x01
++
++#define NUM_LEDS		18
++
++struct sn3218_led;
++
++/**
++ * struct sn3218 -
++ * @client - Pointer to the I2C client
++ * @leds - Pointer to the individual LEDs
++ * @num_leds - Actual number of LEDs
++**/
++struct sn3218 {
++	struct i2c_client *client;
++	struct regmap *regmap;
++	struct sn3218_led *leds;
++	int num_leds;
++};
++
++/**
++ * struct sn3218_led -
++ * @chip - Pointer to the container
++ * @led_cdev - led class device pointer
++ * @led_num - LED index ( 0 .. 17 )
++**/
++struct sn3218_led {
++	struct sn3218 *chip;
++	struct led_classdev led_cdev;
++	int led_num;
++};
++
++static int sn3218_led_set(struct led_classdev *led_cdev,
++			  enum led_brightness brightness)
++{
++	struct sn3218_led *led =
++			container_of(led_cdev, struct sn3218_led, led_cdev);
++	struct regmap *regmap = led->chip->regmap;
++	u8 bank = led->led_num / 6;
++	u8 mask = 0x1 << (led->led_num % 6);
++	u8 val;
++	int ret;
++
++	if (brightness == LED_OFF)
++		val = 0;
++	else
++		val = mask;
++
++	ret = regmap_update_bits(regmap, SN3218_LED_1_6 + bank, mask, val);
++	if (ret < 0)
++		return ret;
++
++	if (brightness > LED_OFF) {
++		ret = regmap_write(regmap, SN3218_PWM_1 + led->led_num,
++				   brightness);
++		if (ret < 0)
++			return ret;
++	}
++
++	ret = regmap_write(regmap, SN3218_UPDATE, 0xff);
++
++	return ret;
++}
++
++static void sn3218_led_init(struct sn3218 *sn3218, struct device_node *node,
++			    u32 reg)
++{
++	struct sn3218_led *leds = sn3218->leds;
++	struct led_classdev *cdev = &leds[reg].led_cdev;
++
++	leds[reg].led_num = reg;
++	leds[reg].chip = sn3218;
++
++	if (of_property_read_string(node, "label", &cdev->name))
++		cdev->name = node->name;
++
++	of_property_read_string(node, "linux,default-trigger",
++				&cdev->default_trigger);
++
++	cdev->brightness_set_blocking = sn3218_led_set;
++}
++
++static const struct reg_default sn3218_reg_defs[] = {
++	{ SN3218_MODE, 0x00},
++	{ SN3218_PWM_1, 0x00},
++	{ SN3218_PWM_2, 0x00},
++	{ SN3218_PWM_3, 0x00},
++	{ SN3218_PWM_4, 0x00},
++	{ SN3218_PWM_5, 0x00},
++	{ SN3218_PWM_6, 0x00},
++	{ SN3218_PWM_7, 0x00},
++	{ SN3218_PWM_8, 0x00},
++	{ SN3218_PWM_9, 0x00},
++	{ SN3218_PWM_10, 0x00},
++	{ SN3218_PWM_11, 0x00},
++	{ SN3218_PWM_12, 0x00},
++	{ SN3218_PWM_13, 0x00},
++	{ SN3218_PWM_14, 0x00},
++	{ SN3218_PWM_15, 0x00},
++	{ SN3218_PWM_16, 0x00},
++	{ SN3218_PWM_17, 0x00},
++	{ SN3218_PWM_18, 0x00},
++	{ SN3218_LED_1_6, 0x00},
++	{ SN3218_LED_7_12, 0x00},
++	{ SN3218_LED_13_18, 0x00},
++	{ SN3218_UPDATE, 0x00},
++	{ SN3218_RESET, 0x00},
++};
++
++static const struct regmap_config sn3218_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = SN3218_RESET,
++	.reg_defaults = sn3218_reg_defs,
++	.num_reg_defaults = ARRAY_SIZE(sn3218_reg_defs),
++	.cache_type = REGCACHE_RBTREE,
++};
++
++static int sn3218_init(struct i2c_client *client, struct sn3218 *sn3218)
++{
++	struct device_node *np = client->dev.of_node, *child;
++	struct sn3218_led *leds;
++	int ret, count;
++
++	count = of_get_child_count(np);
++	if (!count)
++		return -ENODEV;
++
++	if (count > NUM_LEDS) {
++		dev_err(&client->dev, "Invalid LED count %d\n", count);
++		return -EINVAL;
++	}
++
++	leds = devm_kzalloc(&client->dev, count * sizeof(*leds), GFP_KERNEL);
++	if (!leds)
++		return -ENOMEM;
++
++	sn3218->leds = leds;
++	sn3218->num_leds = count;
++	sn3218->client = client;
++
++	sn3218->regmap = devm_regmap_init_i2c(client, &sn3218_regmap_config);
++	if (IS_ERR(sn3218->regmap)) {
++		ret = PTR_ERR(sn3218->regmap);
++		dev_err(&client->dev, "Failed to allocate register map: %d\n",
++			ret);
++		return ret;
++	}
++
++	for_each_child_of_node(np, child) {
++		u32 reg;
++
++		ret = of_property_read_u32(child, "reg", &reg);
++		if (ret)
++			goto fail;
++
++		if (reg >= count) {
++			dev_err(&client->dev, "Invalid LED (%u >= %d)\n", reg,
++				count);
++			ret = -EINVAL;
++			goto fail;
++		}
++
++		sn3218_led_init(sn3218, child, reg);
++	}
++
++	return 0;
++
++fail:
++	of_node_put(child);
++	return ret;
++}
++
++static int sn3218_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct sn3218 *sn3218;
++	struct sn3218_led *leds;
++	struct device *dev = &client->dev;
++	int i, ret;
++
++	sn3218 = devm_kzalloc(dev, sizeof(*sn3218), GFP_KERNEL);
++	if (!sn3218)
++		return -ENOMEM;
++
++	ret = sn3218_init(client, sn3218);
++	if (ret)
++		return ret;
++
++	i2c_set_clientdata(client, sn3218);
++	leds = sn3218->leds;
++
++	/*
++	 * Since the chip is write-only we need to reset him into
++	 * a defined state (all LEDs off).
++	 */
++	ret = regmap_write(sn3218->regmap, SN3218_RESET, 0xff);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < sn3218->num_leds; i++) {
++		ret = devm_led_classdev_register(dev, &leds[i].led_cdev);
++		if (ret < 0)
++			return ret;
++	}
++
++	return regmap_write(sn3218->regmap, SN3218_MODE, SN3218_MODE_NORMAL);
++}
++
++static int sn3218_remove(struct i2c_client *client)
++{
++	struct sn3218 *sn3218 = i2c_get_clientdata(client);
++
++	regmap_write(sn3218->regmap, SN3218_MODE, SN3218_MODE_SHUTDOWN);
++
++	return 0;
++}
++
++static void sn3218_shutdown(struct i2c_client *client)
++{
++	struct sn3218 *sn3218 = i2c_get_clientdata(client);
++
++	regmap_write(sn3218->regmap, SN3218_MODE, SN3218_MODE_SHUTDOWN);
++}
++
++static const struct i2c_device_id sn3218_id[] = {
++	{ "sn3218", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, sn3218_id);
++
++static const struct of_device_id of_sn3218_match[] = {
++	{ .compatible = "si-en,sn3218", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_sn3218_match);
++
++static struct i2c_driver sn3218_driver = {
++	.driver = {
++		.name	= "leds-sn3218",
++		.of_match_table = of_match_ptr(of_sn3218_match),
++	},
++	.probe	= sn3218_probe,
++	.remove	= sn3218_remove,
++	.shutdown = sn3218_shutdown,
++	.id_table = sn3218_id,
++};
++
++module_i2c_driver(sn3218_driver);
++
++MODULE_DESCRIPTION("Si-En SN3218 LED Driver");
++MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
++MODULE_LICENSE("GPL v2");
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---45wMVEkw4XUbiYON--
+1.7.9.5
