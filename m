@@ -1,72 +1,44 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
-Date: Thu, 4 Feb 2016 12:25:11 +0100
-Message-ID: <201602041225.11679.marex@denx.de>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602012213.46740.marex@denx.de> <56B30007.1010305@ti.com>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: Add a binding for Mediatek Video
+ Processor
+Date: Thu, 4 Feb 2016 19:49:43 +0800
+Message-ID: <1454586583.7571.3.camel@mtksdaap41>
+References: <1451902316-55931-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1451902316-55931-2-git-send-email-tiffany.lin@mediatek.com>
+	 <20160104141506.GA22801@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B30007.1010305-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160104141506.GA22801@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Kurtz <djkurtz@chromium.org>, Eddie Huang =?UTF-8?Q?=28=E9=BB=83=E6=99=BA=E5=82=91=29?= <eddie.huang@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= <Andrew-CT.Chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, February 04, 2016 at 08:38:47 AM, Vignesh R wrote:
-> On 02/02/2016 02:43 AM, Marek Vasut wrote:
-> > On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
-> >> On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
-> >>> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
-> >>>> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
-> [...]
+Hi Rob,
+
+
+
+
+On Mon, 2016-01-04 at 22:15 +0800, Rob Herring wrote:
+> On Mon, Jan 04, 2016 at 06:11:49PM +0800, Tiffany Lin wrote:
+> > From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> > 
+> > Add a DT binding documentation of Video Processor Unit for the
+> > MT8173 SoC from Mediatek.
+> > 
+> > Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 > 
-> >>> All these SoCs should be capable of tweaking the block to fit their
-> >>> needs by just the DT properties. I believe they differ only in the
-> >>> FIFO depth and sometimes someone is greedy and uses 4:16 CS
-> >>> multiplexer, which is an external passive component, but that's all.
-> >>> 
-> >>> Would we need soc-specific compatible strings if this is the case?
-> >> 
-> >> It's nice when most things can be supported with a small set of DT
-> >> properties, as you've done. But IUIC, I think it's usually good practice
-> >> to define and use SoC-specific (or maybe SoC family) compatible strings
-> >> in the docs and DTS files, in addition to the generic one, in case there
-> >> are future quirks that need to be handled. Note that you don't actually
-> >> have to use these in the driver yet, but it's good to have a definition.
-> >> 
-> >> So you can, today, have:
-> >> 	foo@xxxx {
-> >> 	
-> >> 		compatible = "ti,baz-12345", "cdns,qspi-nor";
-> >> 		...
-> >> 	
-> >> 	};
-> >> 
-> >> And we have the option to pick up "ti,baz-12345" in the Linux driver *if
-> >> needed.*
+> Please add acks when sending new versions as I already acked the last 
+> version.
 > 
-> The support for TI SoC that has this IP is not in upstream yet. I will
-> add TI-specific compatible later. It will be:
-> 
-> 	foo@xxxx {
-> 		compatible = "ti,k2g-qspi", "cdns,qspi-nor";
->  		...
->  	};
+Since we remove iommu attach and add 4GB support for VPU.
+We send the new device tree and binding document.
+We do not add Acked-by in v4 patches.
 
-Do you expect any specifics which cannot be handled by the current bindings btw?
-In my socfpga case, the compatible strings will be probably:
+> Acked-by: Rob Herring <robh@kernel.org>
 
-"altr,socfpga-gen5-qspi"
-
-Dinh, Graham, do you agree with this or should we use something else ?
-
-Thanks!
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+best regards,
+Tiffany
