@@ -1,159 +1,89 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v7 4/4] arm64: dts: add Hi6220's stub clock node
-Date: Thu,  4 Feb 2016 23:25:00 +0800
-Message-ID: <1454599500-15600-5-git-send-email-leo.yan@linaro.org>
-References: <1454599500-15600-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454599500-15600-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Leo Yan <leo.yan@linaro.org>, Tyler Baker <tyler.baker@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement init_cpu_capacity_default()
+Date: Thu, 4 Feb 2016 16:44:28 +0100
+Message-ID: <CAKfTPtDWP-AgqXsSuxCfVj33dh+i7oqDTkL=gUy7n-AB1anoow@mail.gmail.com>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-3-git-send-email-juri.lelli@arm.com> <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
+ <20160204093559.GA14099@e105550-lin.cambridge.arm.com> <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
+ <20160204121620.GB29586@e106622-lin> <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
+ <20160204141345.GD29586@e106622-lin>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160204141345.GD29586@e106622-lin>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable SRAM node and stub clock node for Hi6220, which uses mailbox
-channel 1 for CPU's frequency change.
+On 4 February 2016 at 15:13, Juri Lelli <juri.lelli@arm.com> wrote:
+> On 04/02/16 13:35, Vincent Guittot wrote:
+>> On 4 February 2016 at 13:16, Juri Lelli <juri.lelli@arm.com> wrote:
+>> > Hi Vincent,
+>> >
+>> > On 04/02/16 13:03, Vincent Guittot wrote:
+>> >> On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+>> >> > On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
+>> >> >> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli@arm.com> wrote:
+>> >>
+>> >> [snip]
+>> >>
+>> >> >> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> >> >> > index 9e63fb1..c4025fd 100644
+>> >> >> > --- a/drivers/cpufreq/Makefile
+>> >> >> > +++ b/drivers/cpufreq/Makefile
+>> >> >> > @@ -1,5 +1,5 @@
+>> >> >> >  # CPUfreq core
+>> >> >> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
+>> >> >> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
+>> >> >>
+>> >> >> Do you really want to have the calibration of capacity dependent of
+>> >> >> cpufreq ? It means that we can't use it without a cpufreq driver.
+>> >> >> IMHO, this creates a unnecessary dependency. I understand that you
+>> >> >> must ensure that core runs at max fequency if a driver is present but
+>> >> >> you should be able to calibrate the capacity if cpufreq is not
+>> >> >> available but you have different capacity because micro architecture
+>> >> >
+>> >> > We could remove the dependency on cpufreq, but it would make things more
+>> >> > complicated for systems which do have frequency scaling as we would have
+>> >> > to either:
+>> >> >
+>> >> > 1) Run the calibration again once cpufreq has been initialized.
+>> >>
+>> >> or wait and let time for a driver to initialize and trig the
+>> >> calibration. If calibration has not been done at the end of the boot,
+>> >> you can force a calibration. If the cpufeq driver is a module and is
+>> >> loaded far later for any good or bad reason, we will have to run the
+>> >> calibration once again but at least the capacity will reflect he
+>> >> current capacity of the CPUs.
+>> >> I'm mainly worried that the compilation of the calibration is
+>> >> dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
+>> >> sequence
+>> >>
+>> >
+>> > Yes, I guess we can make this work in some way. Out of curiosity,
+>> > though, are out there heterogenous platforms that don't use cpufreq?
+>>
+>> At least, you can find several heterogeneous platforms without OPP
+>> table for CPUs in the kernel. That's probably a temporary situation
+>> but which can become a permanent one. It means that we can't calibrate
+>> the CPUs for these platforms.
+>>
+>
+> Sorry, can you make some examples so that I'm sure I understand what you
+> are referring to?
 
-Furthermore, add the CPU clock phandle in CPU's node and using
-operating-points-v2 to register operating points. So can be used by
-cpufreq-dt driver.
+As an example, the uniphier arm64 Soc doesn't have a cpufreq driver so far
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+>
+> Anyway, don't these platform still make use of cpufreq (even if without
+> an OPP table) so that we can still control policy->max and min?
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 23c79e1..f588be9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -81,6 +81,11 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&stub_clock 0>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cooling-min-level = <4>;
-+			cooling-max-level = <0>;
-+			#cooling-cells = <2>; /* min followed by max */
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -89,6 +94,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -97,6 +103,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -105,6 +112,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -113,6 +121,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -121,6 +130,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -129,6 +139,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -137,10 +148,42 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <208000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <432000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <729000000>;
-+			opp-microvolt = <1090000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			opp-microvolt = <1180000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1330000>;
-+			clock-latency-ns = <500000>;
-+		};
-+	};
-+
- 	gic: interrupt-controller@f6801000 {
- 		compatible = "arm,gic-400";
- 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
-@@ -168,6 +211,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@fff80000 {
-+			compatible = "hisilicon,hi6220-sramctrl", "syscon";
-+			reg = <0x0 0xfff80000 0x0 0x12000>;
-+		};
-+
- 		ao_ctrl: ao_ctrl@f7800000 {
- 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
- 			reg = <0x0 0xf7800000 0x0 0x2000>;
-@@ -193,6 +241,14 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		stub_clock: stub_clock {
-+			compatible = "hisilicon,hi6220-stub-clk";
-+			hisilicon,hi6220-clk-sram = <&sram>;
-+			#clock-cells = <1>;
-+			mbox-names = "mbox-tx";
-+			mboxes = <&mailbox 1 0 11>;
-+		};
-+
- 		uart0: uart@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
--- 
-1.9.1
+AFAICT, They don't have a dedicated cpufreq driver.
+
+More generally speaking, it can take time before having
+
+>
+> Thanks,
+>
+> - Juri
