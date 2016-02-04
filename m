@@ -1,69 +1,66 @@
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Subject: [PATCH] ARM: bcm2835: dt: Add Raspberry Pi Zero
-Date: Thu,  4 Feb 2016 08:39:06 +0100
-Message-ID: <1454571546-25481-1-git-send-email-lkundrak@v3.sk>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Thu, 4 Feb 2016 13:08:47 +0530
+Message-ID: <56B30007.1010305@ti.com>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+ <201601130339.17520.marex@denx.de> <20160201210335.GM19540@google.com>
+ <201602012213.46740.marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201602012213.46740.marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Notable difference from the other Raspberry Pi boards is the lack of PWR LED.
 
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
----
- arch/arm/boot/dts/Makefile             |  3 ++-
- arch/arm/boot/dts/bcm2835-rpi-zero.dts | 24 ++++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d000814..5d38b88 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -64,7 +64,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-rev2.dtb \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
--	bcm2836-rpi-2-b.dtb
-+	bcm2836-rpi-2-b.dtb \
-+	bcm2835-rpi-zero.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-new file mode 100644
-index 0000000..f9afc1a
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-@@ -0,0 +1,24 @@
-+/dts-v1/;
-+#include "bcm2835.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,model-zero", "brcm,bcm2835";
-+	model = "Raspberry Pi Zero";
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 0>;
-+		};
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-+
-+	/* I2S interface */
-+	i2s_alt0: i2s_alt0 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+};
+On 02/02/2016 02:43 AM, Marek Vasut wrote:
+> On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
+>> On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
+>>> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
+>>>> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
+
+[...]
+
+>>>
+>>> All these SoCs should be capable of tweaking the block to fit their needs
+>>> by just the DT properties. I believe they differ only in the FIFO depth
+>>> and sometimes someone is greedy and uses 4:16 CS multiplexer, which is
+>>> an external passive component, but that's all.
+>>>
+>>> Would we need soc-specific compatible strings if this is the case?
+>>
+>> It's nice when most things can be supported with a small set of DT
+>> properties, as you've done. But IUIC, I think it's usually good practice
+>> to define and use SoC-specific (or maybe SoC family) compatible strings
+>> in the docs and DTS files, in addition to the generic one, in case there
+>> are future quirks that need to be handled. Note that you don't actually
+>> have to use these in the driver yet, but it's good to have a definition.
+>> So you can, today, have:
+>>
+>> 	foo@xxxx {
+>> 		compatible = "ti,baz-12345", "cdns,qspi-nor";
+>> 		...
+>> 	};
+>>
+>> And we have the option to pick up "ti,baz-12345" in the Linux driver *if
+>> needed.*
+
+The support for TI SoC that has this IP is not in upstream yet. I will
+add TI-specific compatible later. It will be:
+
+	foo@xxxx {
+		compatible = "ti,k2g-qspi", "cdns,qspi-nor";
+ 		...
+ 	};
+
 -- 
-2.5.0
-
+Regards
+Vignesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
