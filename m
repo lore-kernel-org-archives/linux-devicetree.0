@@ -1,44 +1,62 @@
-From: tiffany lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH v3 1/8] dt-bindings: Add a binding for Mediatek Video
- Processor
-Date: Thu, 4 Feb 2016 19:49:43 +0800
-Message-ID: <1454586583.7571.3.camel@mtksdaap41>
-References: <1451902316-55931-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1451902316-55931-2-git-send-email-tiffany.lin@mediatek.com>
-	 <20160104141506.GA22801@rob-hp-laptop>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement init_cpu_capacity_default()
+Date: Thu, 4 Feb 2016 13:03:07 +0100
+Message-ID: <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-3-git-send-email-juri.lelli@arm.com> <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
+ <20160204093559.GA14099@e105550-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160104141506.GA22801@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Kurtz <djkurtz@chromium.org>, Eddie Huang =?UTF-8?Q?=28=E9=BB=83=E6=99=BA=E5=82=91=29?= <eddie.huang@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= <Andrew-CT.Chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160204093559.GA14099@e105550-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Juri Lelli <juri.lelli@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+> On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
+>> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli@arm.com> wrote:
 
+[snip]
 
+>> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> > index 9e63fb1..c4025fd 100644
+>> > --- a/drivers/cpufreq/Makefile
+>> > +++ b/drivers/cpufreq/Makefile
+>> > @@ -1,5 +1,5 @@
+>> >  # CPUfreq core
+>> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
+>> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
+>>
+>> Do you really want to have the calibration of capacity dependent of
+>> cpufreq ? It means that we can't use it without a cpufreq driver.
+>> IMHO, this creates a unnecessary dependency. I understand that you
+>> must ensure that core runs at max fequency if a driver is present but
+>> you should be able to calibrate the capacity if cpufreq is not
+>> available but you have different capacity because micro architecture
+>
+> We could remove the dependency on cpufreq, but it would make things more
+> complicated for systems which do have frequency scaling as we would have
+> to either:
+>
+> 1) Run the calibration again once cpufreq has been initialized.
 
+or wait and let time for a driver to initialize and trig the
+calibration. If calibration has not been done at the end of the boot,
+you can force a calibration. If the cpufeq driver is a module and is
+loaded far later for any good or bad reason, we will have to run the
+calibration once again but at least the capacity will reflect he
+current capacity of the CPUs.
+I'm mainly worried that the compilation of the calibration is
+dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
+sequence
 
-On Mon, 2016-01-04 at 22:15 +0800, Rob Herring wrote:
-> On Mon, Jan 04, 2016 at 06:11:49PM +0800, Tiffany Lin wrote:
-> > From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-> > 
-> > Add a DT binding documentation of Video Processor Unit for the
-> > MT8173 SoC from Mediatek.
-> > 
-> > Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-> > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> 
-> Please add acks when sending new versions as I already acked the last 
-> version.
-> 
-Since we remove iommu attach and add 4GB support for VPU.
-We send the new device tree and binding document.
-We do not add Acked-by in v4 patches.
-
-> Acked-by: Rob Herring <robh@kernel.org>
-
-best regards,
-Tiffany
+>
+> 2) Know the frequency of all cpus at calibration time so we can
+> determine the correct micro-archicture difference. This option would
+> however mean that we have to provide a frequency scaling factor even for
+> systems that don't have cpufreq.
+>
+> 3) Find a way to do the calibration anyway if cpufreq doesn't
+> initialize. I'm not sure how that would work though.
