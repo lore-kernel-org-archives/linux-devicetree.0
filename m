@@ -1,66 +1,52 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Thu, 4 Feb 2016 13:08:47 +0530
-Message-ID: <56B30007.1010305@ti.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <201601130339.17520.marex@denx.de> <20160201210335.GM19540@google.com>
- <201602012213.46740.marex@denx.de>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] ARM: at91: pm: add ULP1 mode support
+Date: Thu, 4 Feb 2016 15:37:47 +0800
+Message-ID: <1454571471-4434-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201602012213.46740.marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The ULP1 (Ultra Low-power mode 1) is introduced by SAMA5D2.
 
+In order to achieve the lowest power consumption, in the ULP1 mode,
+all the clocks are shut off, inclusive the embedded 12MHz RC oscillator.
 
-On 02/02/2016 02:43 AM, Marek Vasut wrote:
-> On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
->> On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
->>> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
->>>> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
+The fast startup signal is used as a wake up source for ULP1 mode.
+As soon as the wake up event is asserted, the embedded 12MHz RC
+oscillator restarts automatically, which fast startup signal
+to trigger the PMC to wake up the system from the ULP1 mode can be
+configured via DT.
 
-[...]
+It is based on the following patch set:
+	http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390954.html
 
->>>
->>> All these SoCs should be capable of tweaking the block to fit their needs
->>> by just the DT properties. I believe they differ only in the FIFO depth
->>> and sometimes someone is greedy and uses 4:16 CS multiplexer, which is
->>> an external passive component, but that's all.
->>>
->>> Would we need soc-specific compatible strings if this is the case?
->>
->> It's nice when most things can be supported with a small set of DT
->> properties, as you've done. But IUIC, I think it's usually good practice
->> to define and use SoC-specific (or maybe SoC family) compatible strings
->> in the docs and DTS files, in addition to the generic one, in case there
->> are future quirks that need to be handled. Note that you don't actually
->> have to use these in the driver yet, but it's good to have a definition.
->> So you can, today, have:
->>
->> 	foo@xxxx {
->> 		compatible = "ti,baz-12345", "cdns,qspi-nor";
->> 		...
->> 	};
->>
->> And we have the option to pick up "ti,baz-12345" in the Linux driver *if
->> needed.*
+Changes in v2:
+ - fix label pm_exit to ulp_exit.
+ - shorten the pmc-fast-startup property's name.
+ - use the value property, instead of bool property for high
+   or low triggered.
+ - change the property name and property description.
 
-The support for TI SoC that has this IP is not in upstream yet. I will
-add TI-specific compatible later. It will be:
+Wenyou Yang (4):
+  ARM: at91: pm: create a separate procedure for the ULP0 mode
+  ARM: at91: pm: add ULP1 mode support
+  ARM: at91: pm: configure PMC fast startup signals
+  Documentation: atmel-pmc: add DT bindings for fast startup
 
-	foo@xxxx {
-		compatible = "ti,k2g-qspi", "cdns,qspi-nor";
- 		...
- 	};
+ .../devicetree/bindings/arm/atmel-pmc.txt          |   63 ++++++++
+ arch/arm/mach-at91/pm.c                            |  131 +++++++++++++++-
+ arch/arm/mach-at91/pm.h                            |    7 +
+ arch/arm/mach-at91/pm_suspend.S                    |  158 +++++++++++++++++---
+ include/linux/clk/at91_pmc.h                       |   36 +++++
+ 5 files changed, 370 insertions(+), 25 deletions(-)
 
 -- 
-Regards
-Vignesh
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
