@@ -1,84 +1,53 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH v3 2/6] drivers/cpufreq: implement
- init_cpu_capacity_default()
-Date: Thu, 4 Feb 2016 14:13:45 +0000
-Message-ID: <20160204141345.GD29586@e106622-lin>
-References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
- <1454500799-18451-3-git-send-email-juri.lelli@arm.com>
- <CAKfTPtDGk5BC25WqHdhDYDOBgUsuidAMhrXS=eDi6wJPZjfrwA@mail.gmail.com>
- <20160204093559.GA14099@e105550-lin.cambridge.arm.com>
- <CAKfTPtB4G3bP5N0hU6zWXJTddO34x3RnyGpp-4_otc8O=Wq2hw@mail.gmail.com>
- <20160204121620.GB29586@e106622-lin>
- <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
+ panic support
+Date: Thu, 4 Feb 2016 06:41:35 -0800
+Message-ID: <56B3631F.6090304@roeck-us.net>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+ <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
+ <56B23883.7000501@codeaurora.org>
+ <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
+ <56B23E99.1030604@codeaurora.org>
+ <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+ <56B2423B.1020109@codeaurora.org>
+ <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
+ <56B24642.8090105@codeaurora.org>
+ <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
+ <56B24AB5.3070001@codeaurora.org>
+ <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
+ <56B2DEE4.7060901@roeck-us.net> <56B35698.4020100@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDVasamRtG2kLxP0HsohmVQTPrXRgx36e+jb3gozDoo6g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B35698.4020100-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/16 13:35, Vincent Guittot wrote:
-> On 4 February 2016 at 13:16, Juri Lelli <juri.lelli@arm.com> wrote:
-> > Hi Vincent,
-> >
-> > On 04/02/16 13:03, Vincent Guittot wrote:
-> >> On 4 February 2016 at 10:36, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
-> >> > On Wed, Feb 03, 2016 at 10:04:37PM +0100, Vincent Guittot wrote:
-> >> >> On 3 February 2016 at 12:59, Juri Lelli <juri.lelli@arm.com> wrote:
-> >>
-> >> [snip]
-> >>
-> >> >> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> >> >> > index 9e63fb1..c4025fd 100644
-> >> >> > --- a/drivers/cpufreq/Makefile
-> >> >> > +++ b/drivers/cpufreq/Makefile
-> >> >> > @@ -1,5 +1,5 @@
-> >> >> >  # CPUfreq core
-> >> >> > -obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o
-> >> >> > +obj-$(CONFIG_CPU_FREQ)                 += cpufreq.o freq_table.o cpufreq_capacity.o
-> >> >>
-> >> >> Do you really want to have the calibration of capacity dependent of
-> >> >> cpufreq ? It means that we can't use it without a cpufreq driver.
-> >> >> IMHO, this creates a unnecessary dependency. I understand that you
-> >> >> must ensure that core runs at max fequency if a driver is present but
-> >> >> you should be able to calibrate the capacity if cpufreq is not
-> >> >> available but you have different capacity because micro architecture
-> >> >
-> >> > We could remove the dependency on cpufreq, but it would make things more
-> >> > complicated for systems which do have frequency scaling as we would have
-> >> > to either:
-> >> >
-> >> > 1) Run the calibration again once cpufreq has been initialized.
-> >>
-> >> or wait and let time for a driver to initialize and trig the
-> >> calibration. If calibration has not been done at the end of the boot,
-> >> you can force a calibration. If the cpufeq driver is a module and is
-> >> loaded far later for any good or bad reason, we will have to run the
-> >> calibration once again but at least the capacity will reflect he
-> >> current capacity of the CPUs.
-> >> I'm mainly worried that the compilation of the calibration is
-> >> dependent of CONFIG_CPU_FREQ not that cpufreq can trig the calibration
-> >> sequence
-> >>
-> >
-> > Yes, I guess we can make this work in some way. Out of curiosity,
-> > though, are out there heterogenous platforms that don't use cpufreq?
-> 
-> At least, you can find several heterogeneous platforms without OPP
-> table for CPUs in the kernel. That's probably a temporary situation
-> but which can become a permanent one. It means that we can't calibrate
-> the CPUs for these platforms.
-> 
+On 02/04/2016 05:48 AM, Timur Tabi wrote:
+> Guenter Roeck wrote:
+>> Also, if panic is enabled, the timeout needs to be adjusted accordingly
+>> (to only panic after the entire timeout period has expired, not after
+>> half of it). We can not panic the system after timeout / 2.
+>
+> It's a debugging feature, not an actual watchdog timeout panic.  That's why it's disabled by default.
+>
 
-Sorry, can you make some examples so that I'm sure I understand what you
-are referring to?
+"* When the first stage(the half timeout) is reached, WS0 interrupt is
+  * triggered, at this moment the second watch period starts;
+  * In the WS0 interrupt routine, panic will be triggered for saving the
+  * system context.
+  * If the system is getting into trouble and cannot be reset by panic or
+  * restart properly by the kdump kernel(if supported), then the second
+  * stage (the timeout) will be reached, system will be reset by WS1."
 
-Anyway, don't these platform still make use of cpufreq (even if without
-an OPP table) so that we can still control policy->max and min?
+That doesn't sound like debugging to me.
 
-Thanks,
+Guenter
 
-- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
