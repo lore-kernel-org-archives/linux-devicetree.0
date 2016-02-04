@@ -1,34 +1,40 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Thu, 4 Feb 2016 10:43:12 -0600
-Message-ID: <56B37FA0.5000209@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v10 4/5] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 4 Feb 2016 08:46:49 -0800
+Message-ID: <56B38079.10607@roeck-us.net>
 References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <CANLsYkyLBfSKFM6CCyPP+Eaua2B+n80wL2hnQVSvfUNMPd3OdQ@mail.gmail.com>
+ <1454519923-25230-5-git-send-email-fu.wei@linaro.org>
+ <20160204163101.GH17257@arm.com> <56B37E52.300@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkyLBfSKFM6CCyPP+Eaua2B+n80wL2hnQVSvfUNMPd3OdQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, fu.wei@linaro.org
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, wim@iguana.be, linux@roeck-us.net, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee.Suthikulpanit@amd.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, Christopher Covington <cov@codeaurora.org>, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.co
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56B37E52.300@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Will Deacon <will.deacon@arm.com>, fu.wei@linaro.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, corbet@lwn.net, catalin.marinas@arm.com, Suravee.Suthikulpanit@amd.com, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, cov@codeaurora.org, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.com, arnd@arndb.de, leo.duran@amd.com, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Mathieu Poirier wrote:
->> >+#ifdef CONFIG_ARM_SBSA_WATCHDOG_PANIC
->> >+       irq = platform_get_irq(pdev, 0);
->> >+       if (irq < 0) {
->> >+               dev_err(dev, "unable to get ws0 interrupt.\n");
->> >+               return irq;
->> >+       }
->> >+#endif
->> >+
-> Can't the driver revert to single stage mode if platform_get_irq()
-> fails?  That way the value of 'irq' can be tested throughout the
-> _probe() function and the #ifdefs removed.
+On 02/04/2016 08:37 AM, Timur Tabi wrote:
+> Will Deacon wrote:
+>>> +static int sbsa_gwdt_keepalive(struct watchdog_device *wdd)
+>>> >+{
+>>> >+    struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>>> >+
+>>> >+    /*
+>>> >+    * Writing WRR for an explicit watchdog refresh.
+>>> >+    * You can write anyting(like 0xc0ffee).
+>>> >+    */
+>>> >+    writel(0xc0ffee, gwdt->refresh_base + SBSA_GWDT_WRR);
+>>> >+
+>>> >+    return 0;
+>>> >+}
+>> You might get in trouble for that. 0xd09f00d is probably less poisonous.
+>>
+>> http://www.petpoisonhelpline.com/poison/caffeine/
+>
+> Any reason why we can't just keep it simple and write 0?
 
-I like that idea.  The same can be done with the devm_request_irq() 
-call.  It should definitely still display a warning if the command-line 
-option is set but no interrupt is available.
++1
+
+Guenter
