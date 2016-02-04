@@ -1,186 +1,148 @@
-From: Yaniv Gardi <ygardi@codeaurora.org>
-Subject: [v3 01/14] scsi: ufs-qcom: add number of lanes per direction
-Date: Thu,  4 Feb 2016 11:45:15 +0200
-Message-ID: <1454579128-2682-2-git-send-email-ygardi@codeaurora.org>
-References: <1454579128-2682-1-git-send-email-ygardi@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454579128-2682-1-git-send-email-ygardi@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robherring2@gmail.com, James.Bottomley@HansenPartnership.com, pebolle@tiscali.nl, hch@infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, ygardi@codeaurora.org, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
+Date: Thu, 04 Feb 2016 11:44:50 +0100
+Message-ID: <1454582690.3356.18.camel@pengutronix.de>
+References: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, stillcompiling@gmail.com, arnd@arndb.de, pawel.moll@arm.com, valentin.longchamp@keymile.com, gregkh@linuxfoundation.org, s.hauer@pengutronix.de, linux-usb@vger.kernel.org, balbi@ti.com, robh+dt@kernel.org, stern@rowland.harvard.edu, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Different platform may have different number of lanes
-for the UFS link.
-Add parameter to device tree specifying how many lanes
-should be configured for the UFS link.
+Hi Peter,
 
-Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+Am Montag, den 25.01.2016, 15:24 +0800 schrieb Peter Chen:
+> Although most of USB devices are hot-plug's, there are still some devices
+> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> If these kinds of USB devices are multiple functions, and they can supply
+> other interfaces like i2c, gpios for other devices, we may need to
+> describe these at device tree.
+> 
+> In this commit, it uses "reg" in dts as physical port number to match
+> the phyiscal port number decided by USB core, if they are the same,
+> then the device node is for the device we are creating for USB core.
+> 
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> ---
+> Changes for v4:
+> - The range of "reg" should be 1-31, changing device node address
+>   style as in lower case hexadecimal with leading zeroes suppressed
+>   [binding doc, usb-device.txt]
+> - Improve the example at binding doc, it describes node from the top
+>   (the controller)
+> - Delete the struct of_node * within struct usb_device
+> - Using usb_hcd_find_raw_port_number to get raw port number under root
+>   hub port
+> 
+> Changes for v3:
+> - typo: s/descirbe/describe/
+> 
+> Changes for v2:
+> - Fix build error reported by kbuild robot, lack of "static" for
+>   inline usb_of_get_child_node
+> - Fix typo, "devcie_node" -> "device_node"
+> - Add kernel-doc for of_node at struct usb_device
+> 
+> Changes from RFC:
+> - Fix the error address for binding doc, and add compatible for binding doc
+> - Change get child node API from "usb_of_find_node" to
+>   "usb_of_get_child_node"
+> - Delete unecessary header files
+> - One typo
+> 
+>  .../devicetree/bindings/usb/usb-device.txt         | 25 ++++++++++++
+>  drivers/usb/core/Makefile                          |  2 +-
+>  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
+>  drivers/usb/core/usb.c                             | 14 ++++++-
+>  include/linux/usb/of.h                             |  7 ++++
+>  5 files changed, 92 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+>  create mode 100644 drivers/usb/core/of.c
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> new file mode 100644
+> index 0000000..c702885
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -0,0 +1,25 @@
+> +Generic USB Device Properties
+> +
+> +Usually, we only use device tree for hard wired USB device.
+> +The reference binding doc is from:
+> +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> +
+> +Required properties:
+> +- compatible: usbVID,PID
 
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  3 ++
- drivers/scsi/ufs/ufs-qcom.c                        | 39 ++++++++++++----------
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 19 +++++++++++
- drivers/scsi/ufs/ufshcd.c                          |  1 +
- drivers/scsi/ufs/ufshcd.h                          |  2 ++
- 5 files changed, 47 insertions(+), 17 deletions(-)
+The reference recommendation states that for single-configuration USB
+devices the compatible should contain all of the applicable strings from
+the list starting with 2) "usbVID,PID.REV" and ending with 11)
+"usb,device". Are we going to ignore this?
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 03c0e98..66f6adf 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -38,6 +38,9 @@ Optional properties:
- 			  defined or a value in the array is "0" then it is assumed
- 			  that the frequency is set by the parent clock or a
- 			  fixed rate clock source.
-+-lanes-per-direction	: number of lanes available per direction - either 1 or 2.
-+			  Note that it is assume same number of lanes is used both
-+			  directions at once. If not specified, default is 2 lanes per direction.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 4f38d00..ed57729 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2013-2015, Linux Foundation. All rights reserved.
-+ * Copyright (c) 2013-2016, Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -132,21 +132,24 @@ static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
- 	if (err)
- 		goto disable_rx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
--		host->rx_l1_sync_clk);
--	if (err)
--		goto disable_tx_l0;
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
-+			host->rx_l1_sync_clk);
-+		if (err)
-+			goto disable_tx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
--		host->tx_l1_sync_clk);
--	if (err)
--		goto disable_rx_l1;
-+		err = ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
-+			host->tx_l1_sync_clk);
-+		if (err)
-+			goto disable_rx_l1;
-+	}
- 
- 	host->is_lane_clks_enabled = true;
- 	goto out;
- 
- disable_rx_l1:
--	clk_disable_unprepare(host->rx_l1_sync_clk);
-+	if (host->hba->lanes_per_direction > 1)
-+		clk_disable_unprepare(host->rx_l1_sync_clk);
- disable_tx_l0:
- 	clk_disable_unprepare(host->tx_l0_sync_clk);
- disable_rx_l0:
-@@ -170,14 +173,16 @@ static int ufs_qcom_init_lane_clks(struct ufs_qcom_host *host)
- 	if (err)
- 		goto out;
- 
--	err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
--		&host->rx_l1_sync_clk);
--	if (err)
--		goto out;
--
--	err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
--		&host->tx_l1_sync_clk);
-+	/* In case of single lane per direction, don't read lane1 clocks */
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
-+			&host->rx_l1_sync_clk);
-+		if (err)
-+			goto out;
- 
-+		err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
-+			&host->tx_l1_sync_clk);
-+	}
- out:
- 	return err;
- }
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index d2a7b12..718f12e 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -40,6 +40,8 @@
- #include "ufshcd.h"
- #include "ufshcd-pltfrm.h"
- 
-+#define UFSHCD_DEFAULT_LANES_PER_DIRECTION		2
-+
- static int ufshcd_parse_clock_info(struct ufs_hba *hba)
- {
- 	int ret = 0;
-@@ -277,6 +279,21 @@ void ufshcd_pltfrm_shutdown(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(ufshcd_pltfrm_shutdown);
- 
-+static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	int ret;
-+
-+	ret = of_property_read_u32(dev->of_node, "lanes-per-direction",
-+		&hba->lanes_per_direction);
-+	if (ret) {
-+		dev_dbg(hba->dev,
-+			"%s: failed to read lanes-per-direction, ret=%d\n",
-+			__func__, ret);
-+		hba->lanes_per_direction = UFSHCD_DEFAULT_LANES_PER_DIRECTION;
-+	}
-+}
-+
- /**
-  * ufshcd_pltfrm_init - probe routine of the driver
-  * @pdev: pointer to Platform device handle
-@@ -331,6 +348,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	ufshcd_init_lanes_per_dir(hba);
-+
- 	err = ufshcd_init(hba, mmio_base, irq);
- 	if (err) {
- 		dev_err(dev, "Initialization failed\n");
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7ab6a45..65593b3 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -40,6 +40,7 @@
- #include <linux/async.h>
- #include <linux/devfreq.h>
- 
-+#include <linux/of.h>
- #include "ufshcd.h"
- #include "unipro.h"
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 8e22e6c..2e5bbce 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -509,6 +509,8 @@ struct ufs_hba {
- 
- 	bool wlun_dev_clr_ua;
- 
-+	/* Number of lanes available (1 or 2) for Rx/Tx */
-+	u32 lanes_per_direction;
- 	struct ufs_pa_layer_attr pwr_info;
- 	struct ufs_pwr_mode_info max_pwr_info;
- 
--- 
-1.8.5.2
+The document also states that "the textual representation of VID, PID
+[...] shall be in lower case hexadecimal with leading zeroes
+suppressed". This should be documented here.
 
--- 
-QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> +- reg: the port number which this device is connecting to, the range
+> +  is 1-31.
+> +
+> +
+> +Example:
+> +
+> +&usb1 {
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	hub: genesys@1 {
+
+There are node names specified for hubs and mass storage devices:
+"hub", "storage", "cdrom", "tape", "solid-state", and "device" for
+everything else. Should we follow this recommendation?
+
+> +		compatible = "usb05e3,0608";
+> +		reg = <0x1>;
+> +	};
+
+I'd have written this node as:
+
+	hub: hub@1 {
+		compatible = "usb5e3,608", "usb5e3,class9",
+			     "usb,class9", "usb,device";
+		reg = <1>;
+	};
+
+As another example, I'd like to introduce the USB WLAN Adapter soldered
+onto the imx6q-gk802 board to its power enable GPIO via the device tree:
+
+/* Internal USB port (USBH1) */
+&usbh1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* RTL8192CU 802.11n WLAN Adapter */
+	device@1 {
+		compatible = "usbbda,8176.200", "usbbda,8176",
+			     "usb,device";
+		reg = <1>;
+
+		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+	};
+};
+
+regards
+Philipp
