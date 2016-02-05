@@ -1,113 +1,86 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v2] drm: Clean up drm Makefile
-Date: Fri,  5 Feb 2016 11:10:30 +0800
-Message-ID: <1454641830-19307-1-git-send-email-xinliang.liu@linaro.org>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v10 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+Date: Fri, 5 Feb 2016 11:36:28 +0800
+Message-ID: <1454643390-16910-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, oded.gabbay@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBjbGVhbnMgdXAgdGhlIE1ha2VmaWxlIG9mIGRybSByb290IGRpcmVjdG9yeS4K
-TWFrZSBjb3JlIGFuZCBkZXZpY2UgZHJpdmVycyBjb25maWd1cmF0aW9uIGxpc3Qgc29ydGVkIEFs
-cGhhYmV0aWNhbGx5LgoKU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVA
-bGluYXJvLm9yZz4KUmV2aWV3ZWQtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlz
-aWxpY29uLmNvbT4KUmV2aWV3ZWQtYnk6IFlpZmFuIExpdSA8bGl1X2ZhbnlpQDE2My5jb20+Ci0t
-LQogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIHwgMTAyICsrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygr
-KSwgNTAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxl
-IGIvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlCmluZGV4IDYxNzY2ZGVjNmE4ZC4uMjNlNTc5NDhm
-NjhmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKKysrIGIvZHJpdmVycy9n
-cHUvZHJtL01ha2VmaWxlCkBAIC0yLDYgKzIsOSBAQAogIyBNYWtlZmlsZSBmb3IgdGhlIGRybSBk
-ZXZpY2UgZHJpdmVyLiAgVGhpcyBkcml2ZXIgcHJvdmlkZXMgc3VwcG9ydCBmb3IgdGhlCiAjIERp
-cmVjdCBSZW5kZXJpbmcgSW5mcmFzdHJ1Y3R1cmUgKERSSSkgaW4gWEZyZWU4NiA0LjEuMCBhbmQg
-aGlnaGVyLgogCitDRkxBR1NfZHJtX3RyYWNlX3BvaW50cy5vIDo9IC1JJChzcmMpCisKKyMgY29y
-ZS4gUGxlYXNlIGtlZXAgdGhpcyBsaXN0IHNvcnRlZCBhbHBoYWJldGljYWxseQogZHJtLXkgICAg
-ICAgOj0JZHJtX2F1dGgubyBkcm1fYnVmcy5vIGRybV9jYWNoZS5vIFwKIAkJZHJtX2NvbnRleHQu
-byBkcm1fZG1hLm8gXAogCQlkcm1fZm9wcy5vIGRybV9nZW0ubyBkcm1faW9jdGwubyBkcm1faXJx
-Lm8gXApAQCAtMTMsNjQgKzE2LDYzIEBAIGRybS15ICAgICAgIDo9CWRybV9hdXRoLm8gZHJtX2J1
-ZnMubyBkcm1fY2FjaGUubyBcCiAJCWRybV90cmFjZV9wb2ludHMubyBkcm1fZ2xvYmFsLm8gZHJt
-X3ByaW1lLm8gXAogCQlkcm1fcmVjdC5vIGRybV92bWFfbWFuYWdlci5vIGRybV9mbGlwX3dvcmsu
-byBcCiAJCWRybV9tb2Rlc2V0X2xvY2subyBkcm1fYXRvbWljLm8gZHJtX2JyaWRnZS5vCi0KLWRy
-bS0kKENPTkZJR19DT01QQVQpICs9IGRybV9pb2MzMi5vCi1kcm0tJChDT05GSUdfRFJNX0dFTV9D
-TUFfSEVMUEVSKSArPSBkcm1fZ2VtX2NtYV9oZWxwZXIubwogZHJtLSQoQ09ORklHX1BDSSkgKz0g
-YXRpX3BjaWdhcnQubwotZHJtLSQoQ09ORklHX0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVsLm8KLWRy
-bS0kKENPTkZJR19PRikgKz0gZHJtX29mLm8KIGRybS0kKENPTkZJR19BR1ApICs9IGRybV9hZ3Bz
-dXBwb3J0Lm8KK2RybS0kKENPTkZJR19EUk1fR0VNX0NNQV9IRUxQRVIpICs9IGRybV9nZW1fY21h
-X2hlbHBlci5vCitkcm0tJChDT05GSUdfQ09NUEFUKSArPSBkcm1faW9jMzIubworZHJtLSQoQ09O
-RklHX09GKSArPSBkcm1fb2YubworZHJtLSQoQ09ORklHX0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVs
-Lm8KK29iai0kKENPTkZJR19EUk0pCSs9IGRybS5vCisKK29iai0kKENPTkZJR19EUk1fTUlQSV9E
-U0kpICs9IGRybV9taXBpX2RzaS5vCiAKIGRybV9rbXNfaGVscGVyLXkgOj0gZHJtX2NydGNfaGVs
-cGVyLm8gZHJtX2RwX2hlbHBlci5vIGRybV9wcm9iZV9oZWxwZXIubyBcCiAJCWRybV9wbGFuZV9o
-ZWxwZXIubyBkcm1fZHBfbXN0X3RvcG9sb2d5Lm8gZHJtX2F0b21pY19oZWxwZXIubwogZHJtX2tt
-c19oZWxwZXItJChDT05GSUdfRFJNX0xPQURfRURJRF9GSVJNV0FSRSkgKz0gZHJtX2VkaWRfbG9h
-ZC5vCi1kcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fRkJERVZfRU1VTEFUSU9OKSArPSBkcm1f
-ZmJfaGVscGVyLm8KIGRybV9rbXNfaGVscGVyLSQoQ09ORklHX0RSTV9LTVNfQ01BX0hFTFBFUikg
-Kz0gZHJtX2ZiX2NtYV9oZWxwZXIubwotCitkcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fRkJE
-RVZfRU1VTEFUSU9OKSArPSBkcm1fZmJfaGVscGVyLm8KIG9iai0kKENPTkZJR19EUk1fS01TX0hF
-TFBFUikgKz0gZHJtX2ttc19oZWxwZXIubwogCi1DRkxBR1NfZHJtX3RyYWNlX3BvaW50cy5vIDo9
-IC1JJChzcmMpCitvYmotJChDT05GSUdfRFJNX1RUTSkgKz0gdHRtLwogCi1vYmotJChDT05GSUdf
-RFJNKQkrPSBkcm0ubwotb2JqLSQoQ09ORklHX0RSTV9NSVBJX0RTSSkgKz0gZHJtX21pcGlfZHNp
-Lm8KLW9iai0kKENPTkZJR19EUk1fVFRNKQkrPSB0dG0vCi1vYmotJChDT05GSUdfRFJNX1RERlgp
-CSs9IHRkZngvCi1vYmotJChDT05GSUdfRFJNX1IxMjgpCSs9IHIxMjgvCi1vYmotJChDT05GSUdf
-SFNBX0FNRCkgKz0gYW1kL2FtZGtmZC8KLW9iai0kKENPTkZJR19EUk1fUkFERU9OKSs9IHJhZGVv
-bi8KLW9iai0kKENPTkZJR19EUk1fQU1ER1BVKSs9IGFtZC9hbWRncHUvCi1vYmotJChDT05GSUdf
-RFJNX01HQSkJKz0gbWdhLwotb2JqLSQoQ09ORklHX0RSTV9JODEwKQkrPSBpODEwLwotb2JqLSQo
-Q09ORklHX0RSTV9JOTE1KSAgKz0gaTkxNS8KLW9iai0kKENPTkZJR19EUk1fTUdBRzIwMCkgKz0g
-bWdhZzIwMC8KLW9iai0kKENPTkZJR19EUk1fVkM0KSAgKz0gdmM0Lwotb2JqLSQoQ09ORklHX0RS
-TV9DSVJSVVNfUUVNVSkgKz0gY2lycnVzLwotb2JqLSQoQ09ORklHX0RSTV9TSVMpICAgKz0gc2lz
-Lwotb2JqLSQoQ09ORklHX0RSTV9TQVZBR0UpKz0gc2F2YWdlLwotb2JqLSQoQ09ORklHX0RSTV9W
-TVdHRlgpKz0gdm13Z2Z4Lwotb2JqLSQoQ09ORklHX0RSTV9WSUEpCSs9dmlhLwotb2JqLSQoQ09O
-RklHX0RSTV9WR0VNKQkrPSB2Z2VtLwotb2JqLSQoQ09ORklHX0RSTV9OT1VWRUFVKSArPW5vdXZl
-YXUvCi1vYmotJChDT05GSUdfRFJNX0VYWU5PUykgKz1leHlub3MvCi1vYmotJChDT05GSUdfRFJN
-X1JPQ0tDSElQKSArPXJvY2tjaGlwLwotb2JqLSQoQ09ORklHX0RSTV9HTUE1MDApICs9IGdtYTUw
-MC8KLW9iai0kKENPTkZJR19EUk1fVURMKSArPSB1ZGwvCi1vYmotJChDT05GSUdfRFJNX0FTVCkg
-Kz0gYXN0Lwotb2JqLSQoQ09ORklHX0RSTV9BUk1BREEpICs9IGFybWFkYS8KKyMgZGV2aWNlIGRy
-aXZlcnMuIFBsZWFzZSBrZWVwIHRoaXMgbGlzdCBzb3J0ZWQgYWxwaGFiZXRpY2FsbHkKK29iai0k
-KENPTkZJR19IU0FfQU1EKQkJKz0gYW1kL2FtZGtmZC8KK29iai0kKENPTkZJR19EUk1fQU1ER1BV
-KQkrPSBhbWQvYW1kZ3B1Lworb2JqLSQoQ09ORklHX0RSTV9BUk1BREEpCSs9IGFybWFkYS8KK29i
-ai0kKENPTkZJR19EUk1fQVNUKQkJKz0gYXN0Lwogb2JqLSQoQ09ORklHX0RSTV9BVE1FTF9ITENE
-QykJKz0gYXRtZWwtaGxjZGMvCi1vYmotJChDT05GSUdfRFJNX1JDQVJfRFUpICs9IHJjYXItZHUv
-Ci1vYmotJChDT05GSUdfRFJNX1NITU9CSUxFKSArPXNobW9iaWxlLwotb2JqLXkJCQkrPSBvbWFw
-ZHJtLwotb2JqLXkJCQkrPSB0aWxjZGMvCi1vYmotJChDT05GSUdfRFJNX1FYTCkgKz0gcXhsLwot
-b2JqLSQoQ09ORklHX0RSTV9CT0NIUykgKz0gYm9jaHMvCi1vYmotJChDT05GSUdfRFJNX1ZJUlRJ
-T19HUFUpICs9IHZpcnRpby8KLW9iai0kKENPTkZJR19EUk1fTVNNKSArPSBtc20vCi1vYmotJChD
-T05GSUdfRFJNX1RFR1JBKSArPSB0ZWdyYS8KLW9iai0kKENPTkZJR19EUk1fU1RJKSArPSBzdGkv
-Ci1vYmotJChDT05GSUdfRFJNX0lNWCkgKz0gaW14Lwotb2JqLXkJCQkrPSBpMmMvCi1vYmoteQkJ
-CSs9IHBhbmVsLwotb2JqLXkJCQkrPSBicmlkZ2UvCi1vYmotJChDT05GSUdfRFJNX0ZTTF9EQ1Up
-ICs9IGZzbC1kY3UvCi1vYmotJChDT05GSUdfRFJNX0VUTkFWSVYpICs9IGV0bmF2aXYvCitvYmot
-JChDT05GSUdfRFJNX0JPQ0hTKQkJKz0gYm9jaHMvCitvYmoteQkJCQkrPSBicmlkZ2UvCitvYmot
-JChDT05GSUdfRFJNX0NJUlJVU19RRU1VKQkrPSBjaXJydXMvCitvYmotJChDT05GSUdfRFJNX0VU
-TkFWSVYpCSs9IGV0bmF2aXYvCitvYmotJChDT05GSUdfRFJNX0VYWU5PUykJKz0gZXh5bm9zLwor
-b2JqLSQoQ09ORklHX0RSTV9GU0xfRENVKQkrPSBmc2wtZGN1Lworb2JqLSQoQ09ORklHX0RSTV9H
-TUE1MDApCSs9IGdtYTUwMC8KK29iai15CQkJCSs9IGkyYy8KK29iai0kKENPTkZJR19EUk1fSTgx
-MCkJCSs9IGk4MTAvCitvYmotJChDT05GSUdfRFJNX0k5MTUpCQkrPSBpOTE1Lworb2JqLSQoQ09O
-RklHX0RSTV9JTVgpCQkrPSBpbXgvCitvYmotJChDT05GSUdfRFJNX01HQSkJCSs9IG1nYS8KK29i
-ai0kKENPTkZJR19EUk1fTUdBRzIwMCkJKz0gbWdhZzIwMC8KK29iai0kKENPTkZJR19EUk1fTVNN
-KQkJKz0gbXNtLworb2JqLSQoQ09ORklHX0RSTV9OT1VWRUFVKQkrPSBub3V2ZWF1Lworb2JqLXkJ
-CQkJKz0gb21hcGRybS8KK29iai15CQkJCSs9IHBhbmVsLworb2JqLSQoQ09ORklHX0RSTV9RWEwp
-CQkrPSBxeGwvCitvYmotJChDT05GSUdfRFJNX1IxMjgpCQkrPSByMTI4Lworb2JqLSQoQ09ORklH
-X0RSTV9SQURFT04pCSs9IHJhZGVvbi8KK29iai0kKENPTkZJR19EUk1fUkNBUl9EVSkJKz0gcmNh
-ci1kdS8KK29iai0kKENPTkZJR19EUk1fUk9DS0NISVApCSs9IHJvY2tjaGlwLworb2JqLSQoQ09O
-RklHX0RSTV9TQVZBR0UpCSs9IHNhdmFnZS8KK29iai0kKENPTkZJR19EUk1fU0hNT0JJTEUpCSs9
-IHNobW9iaWxlLworb2JqLSQoQ09ORklHX0RSTV9TSVMpCQkrPSBzaXMvCitvYmotJChDT05GSUdf
-RFJNX1NUSSkJCSs9IHN0aS8KK29iai0kKENPTkZJR19EUk1fVERGWCkJCSs9IHRkZngvCitvYmot
-JChDT05GSUdfRFJNX1RFR1JBKQkJKz0gdGVncmEvCitvYmoteQkJCQkrPSB0aWxjZGMvCitvYmot
-JChDT05GSUdfRFJNX1VETCkJCSs9IHVkbC8KK29iai0kKENPTkZJR19EUk1fVkM0KQkJKz0gdmM0
-Lworb2JqLSQoQ09ORklHX0RSTV9WR0VNKQkJKz0gdmdlbS8KK29iai0kKENPTkZJR19EUk1fVklB
-KQkJKz0gdmlhLworb2JqLSQoQ09ORklHX0RSTV9WSVJUSU9fR1BVKQkrPSB2aXJ0aW8vCitvYmot
-JChDT05GSUdfRFJNX1ZNV0dGWCkJKz0gdm13Z2Z4LwotLSAKMS45LjEKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patch set adds support for the Active-semi ACT8945A PMIC
+MFD driver. It is a Multi Function Device with the following
+subdevices:
+ - Regulator
+ - Charger
+
+It is interfaced to the host controller using I2C interface,
+ACT8945A is a child device of the I2C.
+
+Changes in v10:
+ - remove the mfd cell .of_compatible.
+ - update the example, due to the subdevices are not regarded as
+   a child node.
+
+Changes in v9:
+ - remove unneeded struct act8945a_dev structure.
+ - collect Acked from Lee.
+ - collect Acked from Peter.
+
+Changes in v8:
+ - change the subdevice's name "act8945a-pmic" to "act8945a-regulator".
+
+Changes in v7:
+ - remove struct act8945a_dev to .c file.
+ - remove unused .h file.
+ - collect Acked-by from Lee Jones
+
+Changes in v6:
+ - change MFD_ACT8945A type from bool to tristate.
+ - revert depends on to 'I2C'.
+ - change the regulator name.
+
+Changes in v5:
+ - change depends on to 'I2C=y'.
+
+Changes in v4:
+ - add a space before .compatible.
+ - collect Reviewed-by from Krzysztof Kozlowski.
+
+Changes in v3:
+ - fix the tabbing errors in Example.
+ - use "pmic@5b" label, not "act8945a@5b" in Example.
+ - collect Acked-by from Rob.
+
+Changes in v2:
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure members (dev, i2c_client) of stuct act8945a_dev.
+ - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of '-1'.
+ - use more explicit info to indicate the failure to add sub devices.
+ - remove the unnecessary print out.
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - use more specific label in Example.
+ - add pmic and charger nodes in Example.
+
+Wenyou Yang (2):
+  mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+  mfd: add documentation for ACT8945A DT bindings
+
+ Documentation/devicetree/bindings/mfd/act8945a.txt |   76 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +++
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/act8945a.c                             |  102 ++++++++++++++++++++
+ 4 files changed, 190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+ create mode 100644 drivers/mfd/act8945a.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
