@@ -1,130 +1,76 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v4 2/2] pci, pci-thunder-pem: Add PCIe host driver for
- ThunderX processors.
-Date: Thu, 4 Feb 2016 16:28:29 -0800
-Message-ID: <56B3ECAD.4050605@caviumnetworks.com>
-References: <1453844781-24380-1-git-send-email-ddaney.cavm@gmail.com> <1453844781-24380-3-git-send-email-ddaney.cavm@gmail.com> <20160205000452.GI7031@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160205000452.GI7031@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: David Daney <ddaney.cavm@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/7] MIPS: Add support for OCTEON cn78xx and cn73xx.
+Date: Thu,  4 Feb 2016 16:42:47 -0800
+Message-ID: <1454632974-7686-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2016 04:04 PM, Bjorn Helgaas wrote:
-> Hi David,
->
-> Looks good, a few trival questions below.
->
-> On Tue, Jan 26, 2016 at 01:46:21PM -0800, David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
->>
->> Some Cavium ThunderX processors require quirky access methods for the
->> config space of the PCIe bridge.  Add a driver to provide these config
->> space accessor functions.  The pci-host-common code is used to
->> configure the PCI machinery.
->>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>   .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 ++++
->>   MAINTAINERS                                        |   8 +
->>   drivers/pci/host/Kconfig                           |   7 +
->>   drivers/pci/host/Makefile                          |   1 +
->>   drivers/pci/host/pci-thunder-pem.c                 | 283 +++++++++++++++++++++
->
-> What's the significance of the "pem" part of the name?  I'm wondering
-> if we can shorten the filenames and function names by dropping it and
-> referring to this simply as "thunder" or "thunderx".
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-PEM == PCI Express MAC, Essentially the circuitry related to off-chip 
-PCI devices.  This differentiates it from the internal on-chip devices 
-which are connected to internal buses we refer to as "ECAMs"
+The OCTEON III cn78xx and cn73xx family of SoCs has some architectural
+differences from previous OCTEON processors.
 
-See also the follow on patch, from me, that adds the pci-thunder-ecam.c 
-driver.
+Here we add support for the new interrupt controller and related IPI
+machinery.  This is enough to be able to boot an initrd based system
+to a command prompt on the serial console.
 
-Since PEM and ECAM are terminology used in the hardware manuals that 
-have specific meanings relative to the Thunder SoC family, I think it is 
-not too inconvenient to carry them over into the file names.
+Still pending are support for: PCI, Watchdog, I2C, Sata, USB,
+Ethernet, etc.
 
->
->>   5 files changed, 342 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
->>   create mode 100644 drivers/pci/host/pci-thunder-pem.c
->>
+This set depends on these two sets:
+http://www.linux-mips.org/archives/linux-mips/2016-02/msg00051.html
+http://www.linux-mips.org/archives/linux-mips/2016-02/msg00041.html
 
->> +
->> +static int thunder_pem_config_write(struct pci_bus *bus, unsigned int devfn,
->> +				    int where, int size, u32 val)
->> +{
->> +	struct gen_pci *pci = bus->sysdata;
->> +	struct thunder_pem_pci *pem_pci;
->> +
->> +	pem_pci = container_of(pci, struct thunder_pem_pci, gen_pci);
->> +
->> +	/*
->> +	 * The first device on the bus in the PEM PCIe bridge.
->> +	 * Special case its config access.
->> +	 */
->> +	if (bus->number == pci->cfg.bus_range->start) {
->> +		u64 write_val, read_val;
->> +
->> +		if (devfn != 0 || where >= 2048)
->> +			return PCIBIOS_DEVICE_NOT_FOUND;
->> +
->> +		/*
->> +		 * 32-bit accesses only.  If the write is for a size
->> +		 * smaller than 32-bits, we must first read the 32-bit
->> +		 * value and merge in the desired bits and then write
->> +		 * the whole 32-bits back out.
->> +		 */
->
-> Ugh.  Another device that only supports 32-bit writes.  I guess this
-> only affects this single device, and maybe you "know" that it has no
-> registers where RW1C bits may be corrupted.  Although I suppose this
-> device has the standard status registers (Status at 0x06, Secondary
-> Status at 0x1e, Device Status in PCIe capability, etc.), which do
-> contain RW1C bits.
+All patches are to the MIPS tree except the device tree binding
+definition.  Probably they could be merged via Ralf's tree if there
+were no objections.
 
-This device is exactly the specific PCIe host bridge implementation, 
-present on these SoCs.  The only sane way to access its config space is 
-via 32-bit operations.  We know that it presents the appropriate Class 
-and other registers to be recognized as, and operate as, a standard PCIe 
-bridge.
+David Daney (7):
+  MIPS: OCTEON: Remove some code limiting NR_IRQS to 255
+  MIPS: Select CONFIG_HANDLE_DOMAIN_IRQ and make it work.
+  MIPS: OCTEON: Add register definitions for cn73xx, cnf75xx and
+    cn78xx.
+  MIPS: OCTEON: Add model checking support for cn73xx, cnf75xx and
+    cn78xx
+  MIPS: OCTEON: Don't attempt to use nonexistent registers on OCTEON
+    III models.
+  MIPS: OCTEON: Add support for OCTEON III interrupt  controller.
+  MIPS: OCTEON: Add SMP support for OCTEON cn78xx et al.
 
->
-> We need to print a warning at probe-time so we know to consider the
-> possibility of corruption when debugging.
+ .../devicetree/bindings/mips/cavium/ciu3.txt       |  27 +
+ arch/mips/Kconfig                                  |   1 +
+ arch/mips/cavium-octeon/csrc-octeon.c              |  13 +-
+ arch/mips/cavium-octeon/executive/octeon-model.c   |  82 ++-
+ arch/mips/cavium-octeon/octeon-irq.c               | 678 ++++++++++++++++++++-
+ arch/mips/cavium-octeon/setup.c                    |  36 +-
+ arch/mips/cavium-octeon/smp.c                      | 145 ++++-
+ arch/mips/include/asm/irq_regs.h                   |  10 +
+ arch/mips/include/asm/octeon/cvmx-ciu3-defs.h      | 353 +++++++++++
+ arch/mips/include/asm/octeon/cvmx-fpa-defs.h       |   1 +
+ arch/mips/include/asm/octeon/cvmx-mio-defs.h       | 410 ++++++++++++-
+ arch/mips/include/asm/octeon/cvmx.h                |  27 +-
+ arch/mips/include/asm/octeon/octeon-feature.h      |  19 +-
+ arch/mips/include/asm/octeon/octeon-model.h        |   5 +
+ arch/mips/include/asm/octeon/octeon.h              |   8 +
+ 15 files changed, 1733 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/cavium/ciu3.txt
+ create mode 100644 arch/mips/include/asm/octeon/cvmx-ciu3-defs.h
 
-If you really want it, I suppose I can add that, but I am somewhat hesitant.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 
->
-[...]
->> +
->> +static struct gen_pci_cfg_bus_ops thunder_pem_bus_ops = {
->> +	.bus_shift	= 24,
->> +	.ops		= {
->> +		.map_bus	= map_cfg_bus_thunder_pem,
->
-> How about "thunder_pem_map_bus"?
+-- 
+1.7.11.7
 
-That would be better.  Actually, I wonder how I came up with that crappy 
-name in the first place...
-
->
->> +		.read		= thunder_pem_config_read,
->> +		.write		= thunder_pem_config_write,
->> +	}
->> +};
->> +
-
-I will wait a day to see if you have any response, and then send a new 
-version of the patch set.
-
-Thanks,
-David Daney
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
