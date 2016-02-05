@@ -1,34 +1,120 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/6] arm64: dts: qcom: add lpass node
-Date: Fri, 5 Feb 2016 11:55:14 -0800
-Message-ID: <56B4FE22.8030403@codeaurora.org>
-References: <1454698819-13885-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1454698896-14058-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
+ strings
+Date: Fri, 5 Feb 2016 14:21:35 -0600
+Message-ID: <20160205202135.GA9594@localhost>
+References: <1453093785-21067-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454698896-14058-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453093785-21067-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2016 11:01 AM, Srinivas Kandagatla wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index c1592d4..cdda026 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -343,6 +343,32 @@
->  			status = "disabled";
->  		};
->  
-> +		lpass: lpass@07700000 {
-[..]
-> +			reg = <0x07708000 0x10000>;
+Hi Simon,
 
-Unit address and reg don't match. Please make them the same.
+On Mon, Jan 18, 2016 at 02:09:41PM +0900, Simon Horman wrote:
+> this short series adds fallback gen2 and SoC-specific r8a7793 compatibility
+> strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
+> provide a complete set of compatibility strings for known Gen2 SoCs.
+> 
+> Bjorn, the intention of the revised changelogs for the r8a7793 is to
+> address your concerns regarding providing an explanation of why there are
+> no driver changes. Please consider taking this series through your tree.
+> 
+> Key Changes between v2 and v3:
+> * Enhance changelog to describe why documenting the r8a7793 is necessary
+>   and sufficient
+> * Added acks.
+> 
+> Key Changes between v1 and v2:
+> * Include "rcar-" in generic bindings
+> 
+> Simon Horman (4):
+>   PCI: rcar-gen2: add gen2 fallback compatibility string
+>   PCI: rcar-gen2: add device tree support for r8a7793
+>   PCI: rcar: add gen2 fallback compatibility string
+>   PCI: rcar: add device tree support for r8a7793
+> 
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+>  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+>  drivers/pci/host/pcie-rcar.c                            |  1 +
+>  4 files changed, 23 insertions(+), 5 deletions(-)
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Whew, it took a long time to pound that through my thick skull :)
+
+I think patches 1 and 3 are already in v4.5-rc1, and I applied patches 2
+and 4 to my for-linus branch as below.  Please double-check and make sure
+for-linus has everything you want.  I'll ask Linus to pull that before
+v4.5.
+
+Bjorn
+
+
+commit a176cd304a8a07d6d9191126fd9bece4f67358c3
+Author: Simon Horman <horms+renesas@verge.net.au>
+Date:   Fri Feb 5 14:10:04 2016 -0600
+
+    PCI: rcar: Add gen2 device tree support for r8a7793
+    
+    Add "renesas,pci-r8a7793" as a compatibility string for
+    "renesas,pci-rcar-gen2".
+    
+    This doesn't change the driver, so it does nothing by itself.  But it
+    does mean that checkpatch won't complain about a future patch that adds
+    "renesas,pci-r8a7793" to a DT, which helps ensure that shipped DTs use
+    documented compatibility strings.
+    
+    [bhelgaas: changelog]
+    Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Acked-by: Rob Herring <robh@kernel.org>
+
+diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+index 4e8b90e..07a7509 100644
+--- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
++++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+@@ -8,6 +8,7 @@ OHCI and EHCI controllers.
+ Required properties:
+ - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+ 	      "renesas,pci-r8a7791" for the R8A7791 SoC;
++	      "renesas,pci-r8a7793" for the R8A7793 SoC;
+ 	      "renesas,pci-r8a7794" for the R8A7794 SoC;
+ 	      "renesas,pci-rcar-gen2" for a generic R-Car Gen2 compatible device
+ 
+
+commit 0cf1337e0b83c16de4e7e98dad3a6afce6043fea
+Author: Simon Horman <horms+renesas@verge.net.au>
+Date:   Fri Feb 5 14:10:13 2016 -0600
+
+    PCI: rcar: Add device tree support for r8a7793
+    
+    Add "renesas,pcie-r8a7793" as a compatibility string for
+    "renesas,pcie-rcar-gen2".
+    
+    This doesn't change the driver, so it does nothing by itself.  But it
+    does mean that checkpatch won't complain about a future patch that adds
+    "renesas,pci-r8a7793" to a DT, which helps ensure that shipped DTs use
+    documented compatibility strings.
+    
+    [bhelgaas: changelog]
+    Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Acked-by: Rob Herring <robh@kernel.org>
+
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+index 558fe52..6cf9969 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
++++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+@@ -4,6 +4,7 @@ Required properties:
+ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+ 	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+ 	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
++	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+ 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+ 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
+ 
