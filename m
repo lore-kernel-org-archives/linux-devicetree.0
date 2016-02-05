@@ -1,67 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: Add Analog Devices AXI SPI Engine controller support
-Date: Fri, 5 Feb 2016 17:32:04 +0200
-Message-ID: <CAHp75Vd1WEGDaFx99mX3jN5xXNZ9Rc6R_pE8G5kyGfNirF7T6A@mail.gmail.com>
-References: <1454602410-14049-1-git-send-email-lars@metafoo.de>
-	<1454602410-14049-2-git-send-email-lars@metafoo.de>
-	<CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ@mail.gmail.com>
-	<56B4B1E9.7080804@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B4B1E9.7080804-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/2] ASoC: ads117x: Add device tree compatible string
+Date: Fri,  5 Feb 2016 16:32:14 +0100
+Message-ID: <1454686334-9668-3-git-send-email-florian.vaussard@heig-vd.ch>
+References: <1454686334-9668-1-git-send-email-florian.vaussard@heig-vd.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454686334-9668-1-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 5, 2016 at 4:30 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>> +       clk_div = DIV_ROUND_UP(clk_get_rate(spi_engine->ref_clk),
->>> +               xfer->speed_hz * 2);
->>
->>> +       if (clk_div > 255)
->>> +               clk_div = 255;
->>> +       else if (clk_div > 0)
->>> +               clk_div -= 1;
->>
->> 255 is okay, 254 is not, 253- is okay. Why 254 is so special?
->
-> I don't see that. The condition is > 255, so everything greater or equal
-> than 256 gets mapped to 255. Everything else to x - 1, so 255 to 254, 254 to
-> 253.
+This patch adds the necessary device tree compatible string to allow DT
+probing.
 
-Ah, you are right.
+Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+---
+ sound/soc/codecs/ads117x.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
->>> +               for (i = 0; i < m; i++)
->>> +                       writel_relaxed(buf[i], addr);
->>
->> writesl() ?
->
-> Hm, maybe. Does it really have the same semantics?
-
-It's a loop inside, so it has a count parameter. Otherwise it should be similar.
-
->>> +static int spi_engine_transfer_one_message(struct spi_master *master,
->>> +       struct spi_message *msg)
->>
->> And you are not using transfer_one() because of..?
->
-> transfer_one() does flow control in software. Execution is passed back to
-> software after each transfer and it also takes care of handling the chip
-> select assertion/deassertion as well as the delays. It's useful for hardware
-> which does not support hardware flow control. In this case the hardware
-> supports flow control including chip-select logic as well as delays. Making
-> use of this generates far less context switches per message and also has
-> predictable timings between transfers within a message.
-
-Maybe the hardware flow control implementation is needed?
-
-Do we have more SPI hosts that support HW flow control?
-
+diff --git a/sound/soc/codecs/ads117x.c b/sound/soc/codecs/ads117x.c
+index 1222282..c5be1bd 100644
+--- a/sound/soc/codecs/ads117x.c
++++ b/sound/soc/codecs/ads117x.c
+@@ -20,6 +20,8 @@
+ #include <sound/initval.h>
+ #include <sound/soc.h>
+ 
++#include <linux/of.h>
++
+ #define ADS117X_RATES (SNDRV_PCM_RATE_8000_48000)
+ #define ADS117X_FORMATS (SNDRV_PCM_FMTBIT_S16_LE)
+ 
+@@ -75,9 +77,19 @@ static int ads117x_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id ads117x_dt_ids[] = {
++	{ .compatible = "ti,ads1174" },
++	{ .compatible = "ti,ads1178" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ads117x_dt_ids);
++#endif
++
+ static struct platform_driver ads117x_codec_driver = {
+ 	.driver = {
+ 			.name = "ads117x-codec",
++			.of_match_table = of_match_ptr(ads117x_dt_ids),
+ 	},
+ 
+ 	.probe = ads117x_probe,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.1.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
