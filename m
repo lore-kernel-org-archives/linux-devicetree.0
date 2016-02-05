@@ -1,181 +1,305 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Thu, 4 Feb 2016 22:35:07 -0600
-Message-ID: <20160205043507.GB4847@rob-hp-laptop>
-References: <1454406981-4692-1-git-send-email-andy.yan@rock-chips.com>
- <1454407151-4751-1-git-send-email-andy.yan@rock-chips.com>
- <20160204230814.GA4847@rob-hp-laptop>
- <CALAqxLVyznpLd2MLgGr28TDECpLZ=RpmhxH-SHqntXfBsctcmQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVyznpLd2MLgGr28TDECpLZ=RpmhxH-SHqntXfBsctcmQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, lkml <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Richard Weinberger <richard@nod.at>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Moritz
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V14 6/9] dma: qcom_hidma: add debugfs hooks
+Date: Thu,  4 Feb 2016 23:34:37 -0500
+Message-ID: <1454646882-24369-7-git-send-email-okaya@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 03:46:15PM -0800, John Stultz wrote:
-> On Thu, Feb 4, 2016 at 3:08 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Tue, Feb 02, 2016 at 05:59:11PM +0800, Andy Yan wrote:
-> >> add device tree bindings document for reboot-mode driver
-> >>
-> >> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> >>
-> >> ---
-> >>
-> >> Changes in v3:
-> >> - descirbe all reboot mode as properity instead of subnode
-> >>
-> >> Changes in v2: None
-> >> Changes in v1: None
-> >>
-> >>  .../bindings/power/reset/reboot-mode.txt           | 26 ++++++++++++++++
-> >>  .../bindings/power/reset/syscon-reboot-mode.txt    | 36 ++++++++++++++++++++++
-> >>  2 files changed, 62 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> >> new file mode 100644
-> >> index 0000000..517080f
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> >> @@ -0,0 +1,26 @@
-> >> +Generic reboot mode core map driver
-> >> +
-> >> +This driver get reboot mode arguments and call the write
-> >> +interface to stores the magic value in special register
-> >> +or ram . Then the bootloader can read it and take different
-> >> +action according the argument stored.
-> >> +
-> >> +All mode properties are vendor specific, it is a indication to tell
-> >
-> > The values should be vendor specific. The property names should not. We
-> > can allow vendor specific ones, but we need to have a common set.
-> >
-> >> +the bootloder what to do when the system reboot, and should be named
-> >> +as mode-xxx = <magic> (xxx is mode name).
-> >> +
-> >> +- mode-normal: Normal reboot mode, system reboot with command "reboot".
-> >> +- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
-> >> +- mode-fastboot: Android fastboot mode, it's a mode to  re-flash partitions on the device.
-> >> +- mode-loader: A bootloader mode, it's a mode used to download image on Rockchip platform,
-> >> +            usually used in development.
-> >> +- mode-maskrom: It's a mode to download bootloader on Rockchip platform.
-> >> +
-> >> +Example:
-> >> +     reboot-mode {
-> >> +             mode-normal = <BOOT_NORMAL>;
-> >> +             mode-recovery = <BOOT_RECOVERY>;
-> >> +             mode-fastboot = <BOOT_FASTBOOT>;
-> >
-> > I tend to agree with John on calling this mode-bootloader.
-> >
-> > OTOH, fastboot is more specific about what the mode is. The name in DT
-> > and the userspace name don't necessarily have to be the same.
-> 
-> Wait. This is a bit confusing. The utility of adding a property name
-> and using that name be the reboot command parsed for made sense
-> (compared to earlier versions which had command strings) as it made
-> the dts more terse.   But it sounds here like you're suggesting we
-> should have some logic in the driver that translates "reboot fastboot"
-> to mode-bootloader or vice versa.
+Add debugfs hooks for debugging the execution behavior of the DMA
+channel. The debugfs hooks get initialized by the probe function and
+uninitialized by the remove function.
 
-I said early on the DT names and kernel-userspace names should not 
-necessarily be linked. They can be, but we shouldn't require that.
+A stats file is created in debugfs. The stats file will show the
+information about each HIDMA channel as well as each asynchronous job
+queued and completed at a given time.
 
-My concern with mode-bootloader is what if you can boot into multiple 
-bootloader modes. Say USB mass storage is one option. "bootloader" is 
-not real specific.
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ drivers/dma/qcom/Makefile    |   2 +-
+ drivers/dma/qcom/hidma.c     |   3 +
+ drivers/dma/qcom/hidma.h     |   2 +
+ drivers/dma/qcom/hidma_dbg.c | 219 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 225 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
 
-> >> +             mode-loader = <BOOT_LOADER>;
-> >
-> > This one needs a better name. Maybe it should be 'rockchip,mode-loader'
-> > as it is vendor specific. Either way, loader is vague. Perhaps
-> > rockchip,mode-bl-download?
-> 
-> Hrm. So how what reboot command do you expect to trigger that?
-
-Whatever your OS has defined to map to that.
-
-We could just decide the kernel will strip <vendor> and 'mode-' and 
-match commands against what remains.
-
-> Though I do like the vendor specific prefix here, as it clarifies how
-> universal the command is (and its easy add standard commands if they
-> become more established and remap things in the future).
-> 
-> >
-> >> +             mode-maskrom = <BOOT_MASKROM>;
-> >
-> > I think this should be "mode-rom-download".
-> 
-> I think one of the difficult things here is that there's no real
-> standards for all bios/bootloader modes. So they are somewhat
-> firmware/bootloader/device specific, and thus we need something that
-> is flexible enough to allow lots of different modes to be easily
-> specified.  That said, this does expose a userspace interface (though
-> one could argue kernel ABI doesn't cross reboots :) so we should try
-> to have some consistency so the same userspace can work on various
-> devices.
-
-There is: UEFI. Boot mode efivars are standard. But then they are pretty 
-much PC oriented though. It is more which device to boot off of, but 
-there is network boot or boot to bios setup.
-
-> I do think the "bootloader" and "recovery" arguments are somewhat
-> defacto standards, well established on most android devices.
-
-Yes, otherwise I'd be completely against "mode-bootloader" as the 
-property.
-
-> I think here the concern is rockchip probably has some userspace that
-> is already using "reboot maskrom" or "reboot loader" for their own
-> uses. And its a bit of a pain to ask that userspace to be reworked to
-
-Perhaps those are only for development and change would not be so 
-painful.
-
-> use "reboot rom-download" or "reboot rockchip,rom-download" depending
-> on how we try to deal with these.  (Granted, non-upstream interfaces
-> aren't official, so that is their risk somewhat, but we avoid being
-> smug about that :)
-
-Or vendor specific modes require vendor specific translation in the 
-kernel. 
-
-To some extent we need to design what is right and worry about future 
-devices rather than cater to past devices. There's always some 
-compromise. What would you design ignoring the existing conditions. 
-Start there and then figure out how to make it work with current 
-designs.
-
-> Another part of the issue is there isn't really a way to probe for
-> reboot cmd capability here. As much as I'd rather not complicate
-> things, one couldn't easily extend existing userspace to work with
-> current kernels as well as future kernels, since the reboot with an
-> invalid command won't fail. The machine still resets. So you can't try
-> one and fallback to the other.
-
-Well, that's nice. Maybe we should change that? Or we're stuck with 
-that ABI?
-
-> Maybe there needs to be a sysfs entry with the list of the supported commands?
-
-You can just read the DT. Although, the problem then is what happens 
-when we move to the next firmware interface. We see that some with 
-devices having userspace dependencies on ATAGS.
-
-Rob
+diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
+index 6bf9267..4bfc38b 100644
+--- a/drivers/dma/qcom/Makefile
++++ b/drivers/dma/qcom/Makefile
+@@ -2,4 +2,4 @@ obj-$(CONFIG_QCOM_BAM_DMA) += bam_dma.o
+ obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
+ hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
+ obj-$(CONFIG_QCOM_HIDMA) +=  hdma.o
+-hdma-objs        := hidma_ll.o hidma.o
++hdma-objs        := hidma_ll.o hidma.o hidma_dbg.o
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 83006dd..c0832c7 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -644,6 +644,7 @@ static int hidma_probe(struct platform_device *pdev)
+ 
+ 	dmadev->irq = chirq;
+ 	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
++	hidma_debug_init(dmadev);
+ 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
+ 	platform_set_drvdata(pdev, dmadev);
+ 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
+@@ -651,6 +652,7 @@ static int hidma_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ uninit:
++	hidma_debug_uninit(dmadev);
+ 	hidma_ll_uninit(dmadev->lldev);
+ dmafree:
+ 	if (dmadev)
+@@ -668,6 +670,7 @@ static int hidma_remove(struct platform_device *pdev)
+ 	pm_runtime_get_sync(dmadev->ddev.dev);
+ 	dma_async_device_unregister(&dmadev->ddev);
+ 	devm_free_irq(dmadev->ddev.dev, dmadev->irq, dmadev->lldev);
++	hidma_debug_uninit(dmadev);
+ 	hidma_ll_uninit(dmadev->lldev);
+ 	hidma_free(dmadev);
+ 
+diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
+index 1e09d7c..c6b3ae0 100644
+--- a/drivers/dma/qcom/hidma.h
++++ b/drivers/dma/qcom/hidma.h
+@@ -157,4 +157,6 @@ int hidma_ll_uninit(struct hidma_lldev *llhndl);
+ irqreturn_t hidma_ll_inthandler(int irq, void *arg);
+ void hidma_cleanup_pending_tre(struct hidma_lldev *llhndl, u8 err_info,
+ 				u8 err_code);
++int hidma_debug_init(struct hidma_dev *dmadev);
++void hidma_debug_uninit(struct hidma_dev *dmadev);
+ #endif
+diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
+new file mode 100644
+index 0000000..fe35002
+--- /dev/null
++++ b/drivers/dma/qcom/hidma_dbg.c
+@@ -0,0 +1,219 @@
++/*
++ * Qualcomm Technologies HIDMA debug file
++ *
++ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/debugfs.h>
++#include <linux/device.h>
++#include <linux/list.h>
++#include <linux/pm_runtime.h>
++
++#include "hidma.h"
++
++static void hidma_ll_chstats(struct seq_file *s, void *llhndl, u32 tre_ch)
++{
++	struct hidma_lldev *lldev = llhndl;
++	struct hidma_tre *tre;
++	u32 length;
++	dma_addr_t src_start;
++	dma_addr_t dest_start;
++	u32 *tre_local;
++
++	if (tre_ch >= lldev->nr_tres) {
++		dev_err(lldev->dev, "invalid TRE number in chstats:%d", tre_ch);
++		return;
++	}
++	tre = &lldev->trepool[tre_ch];
++	seq_printf(s, "------Channel %d -----\n", tre_ch);
++	seq_printf(s, "allocated=%d\n", atomic_read(&tre->allocated));
++	seq_printf(s, "queued = 0x%x\n", tre->queued);
++	seq_printf(s, "err_info = 0x%x\n",
++		   lldev->tx_status_list[tre->idx].err_info);
++	seq_printf(s, "err_code = 0x%x\n",
++		   lldev->tx_status_list[tre->idx].err_code);
++	seq_printf(s, "status = 0x%x\n", tre->status);
++	seq_printf(s, "idx = 0x%x\n", tre->idx);
++	seq_printf(s, "dma_sig = 0x%x\n", tre->dma_sig);
++	seq_printf(s, "dev_name=%s\n", tre->dev_name);
++	seq_printf(s, "callback=%p\n", tre->callback);
++	seq_printf(s, "data=%p\n", tre->data);
++	seq_printf(s, "tre_index = 0x%x\n", tre->tre_index);
++
++	tre_local = &tre->tre_local[0];
++	src_start = tre_local[TRE_SRC_LOW_IDX];
++	src_start = ((u64) (tre_local[TRE_SRC_HI_IDX]) << 32) + src_start;
++	dest_start = tre_local[TRE_DEST_LOW_IDX];
++	dest_start += ((u64) (tre_local[TRE_DEST_HI_IDX]) << 32);
++	length = tre_local[TRE_LEN_IDX];
++
++	seq_printf(s, "src=%pap\n", &src_start);
++	seq_printf(s, "dest=%pap\n", &dest_start);
++	seq_printf(s, "length = 0x%x\n", length);
++}
++
++static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
++{
++	struct hidma_lldev *lldev = llhndl;
++
++	seq_puts(s, "------Device -----\n");
++	seq_printf(s, "lldev init = 0x%x\n", lldev->initialized);
++	seq_printf(s, "trch_state = 0x%x\n", lldev->trch_state);
++	seq_printf(s, "evch_state = 0x%x\n", lldev->evch_state);
++	seq_printf(s, "chidx = 0x%x\n", lldev->chidx);
++	seq_printf(s, "nr_tres = 0x%x\n", lldev->nr_tres);
++	seq_printf(s, "trca=%p\n", lldev->trca);
++	seq_printf(s, "tre_ring=%p\n", lldev->tre_ring);
++	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_ring_handle);
++	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
++	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
++	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
++	seq_printf(s, "evca=%p\n", lldev->evca);
++	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
++	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_ring_handle);
++	seq_printf(s, "evre_ring_size = 0x%x\n", lldev->evre_ring_size);
++	seq_printf(s, "evre_processed_off = 0x%x\n", lldev->evre_processed_off);
++	seq_printf(s, "tre_write_offset = 0x%x\n", lldev->tre_write_offset);
++}
++
++/*
++ * hidma_chan_stats: display HIDMA channel statistics
++ *
++ * Display the statistics for the current HIDMA virtual channel device.
++ */
++static int hidma_chan_stats(struct seq_file *s, void *unused)
++{
++	struct hidma_chan *mchan = s->private;
++	struct hidma_desc *mdesc;
++	struct hidma_dev *dmadev = mchan->dmadev;
++
++	pm_runtime_get_sync(dmadev->ddev.dev);
++	seq_printf(s, "paused=%u\n", mchan->paused);
++	seq_printf(s, "dma_sig=%u\n", mchan->dma_sig);
++	seq_puts(s, "prepared\n");
++	list_for_each_entry(mdesc, &mchan->prepared, node)
++		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++
++	seq_puts(s, "active\n");
++	list_for_each_entry(mdesc, &mchan->active, node)
++		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++
++	seq_puts(s, "completed\n");
++	list_for_each_entry(mdesc, &mchan->completed, node)
++		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++
++	hidma_ll_devstats(s, mchan->dmadev->lldev);
++	pm_runtime_mark_last_busy(dmadev->ddev.dev);
++	pm_runtime_put_autosuspend(dmadev->ddev.dev);
++	return 0;
++}
++
++/*
++ * hidma_dma_info: display HIDMA device info
++ *
++ * Display the info for the current HIDMA device.
++ */
++static int hidma_dma_info(struct seq_file *s, void *unused)
++{
++	struct hidma_dev *dmadev = s->private;
++	resource_size_t sz;
++
++	seq_printf(s, "nr_descriptors=%d\n", dmadev->nr_descriptors);
++	seq_printf(s, "dev_trca=%p\n", &dmadev->dev_trca);
++	seq_printf(s, "dev_trca_phys=%pa\n", &dmadev->trca_resource->start);
++	sz = resource_size(dmadev->trca_resource);
++	seq_printf(s, "dev_trca_size=%pa\n", &sz);
++	seq_printf(s, "dev_evca=%p\n", &dmadev->dev_evca);
++	seq_printf(s, "dev_evca_phys=%pa\n", &dmadev->evca_resource->start);
++	sz = resource_size(dmadev->evca_resource);
++	seq_printf(s, "dev_evca_size=%pa\n", &sz);
++	return 0;
++}
++
++static int hidma_chan_stats_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, hidma_chan_stats, inode->i_private);
++}
++
++static int hidma_dma_info_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, hidma_dma_info, inode->i_private);
++}
++
++static const struct file_operations hidma_chan_fops = {
++	.open = hidma_chan_stats_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static const struct file_operations hidma_dma_fops = {
++	.open = hidma_dma_info_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++void hidma_debug_uninit(struct hidma_dev *dmadev)
++{
++	debugfs_remove_recursive(dmadev->debugfs);
++	debugfs_remove_recursive(dmadev->stats);
++}
++
++int hidma_debug_init(struct hidma_dev *dmadev)
++{
++	int rc = 0;
++	int chidx = 0;
++	struct list_head *position = NULL;
++
++	dmadev->debugfs = debugfs_create_dir(dev_name(dmadev->ddev.dev), NULL);
++	if (!dmadev->debugfs) {
++		rc = -ENODEV;
++		return rc;
++	}
++
++	/* walk through the virtual channel list */
++	list_for_each(position, &dmadev->ddev.channels) {
++		struct hidma_chan *chan;
++
++		chan = list_entry(position, struct hidma_chan,
++				  chan.device_node);
++		sprintf(chan->dbg_name, "chan%d", chidx);
++		chan->debugfs = debugfs_create_dir(chan->dbg_name,
++						   dmadev->debugfs);
++		if (!chan->debugfs) {
++			rc = -ENOMEM;
++			goto cleanup;
++		}
++		chan->stats = debugfs_create_file("stats", S_IRUGO,
++						  chan->debugfs, chan,
++						  &hidma_chan_fops);
++		if (!chan->stats) {
++			rc = -ENOMEM;
++			goto cleanup;
++		}
++		chidx++;
++	}
++
++	dmadev->stats = debugfs_create_file("stats", S_IRUGO,
++					    dmadev->debugfs, dmadev,
++					    &hidma_dma_fops);
++	if (!dmadev->stats) {
++		rc = -ENOMEM;
++		goto cleanup;
++	}
++
++	return 0;
++cleanup:
++	hidma_debug_uninit(dmadev);
++	return rc;
++}
+-- 
+1.8.2.1
