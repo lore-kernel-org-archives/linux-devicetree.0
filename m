@@ -1,57 +1,86 @@
-From: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Fri, 05 Feb 2016 15:25:01 +0100
-Message-ID: <m3fux76xqa.fsf@euphor.blino.org>
-References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
-	<1454571364-24708-2-git-send-email-lkundrak@v3.sk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
+Date: Fri, 5 Feb 2016 15:33:28 +0100
+Message-ID: <20160205143328.GD31506@lukather>
+References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160112143100.GA14628@rob-hp-laptop>
+ <20160115085734.GG4581@lukather>
+ <20160117000434.GB7774@rob-hp-laptop>
+ <20160118162538.GH6588@sirena.org.uk>
+ <20160121154649.GE3997@lukather>
+ <20160121162802.GL6588@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454571364-24708-2-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org> (Lubomir
-	Rintel's message of "Thu, 4 Feb 2016 08:36:03 +0100")
+Content-Disposition: inline
+In-Reply-To: <20160121162802.GL6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
 
-> diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-[...]
-> @@ -33,3 +37,17 @@
->  		brcm,function = <BCM2835_FSEL_ALT0>;
->  	};
->  };
-> +
-> +&usb {
-> +	usb1@1 {
-> +		compatible = "usb0424,9514";
-> +		reg = <01>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethernet: usbether@1 {
-> +			compatible = "usb0424,ec00";
-> +			reg = <01>;
-> +		};
-> +	};
-> +};
+--JwB53PgKC5A7+0Ej
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Mark,
 
-This works for me, after making sure that your u-boot patch gets a
-chance to be run (unset usbethaddr from u-boot).
+On Thu, Jan 21, 2016 at 04:28:02PM +0000, Mark Brown wrote:
+> On Thu, Jan 21, 2016 at 04:46:49PM +0100, Maxime Ripard wrote:
+>=20
+> > I guess a separate driver would make it easier to deal with cases like
+> > the one you suggested (shutting down when the load is going to be
+> > lower). I don't see how we could have a good DT representation of that
+> > if we're going to use lists.
+>=20
+> We can have a driver regardless of what the DT looks like, it's a
+> question of how things get instantiated.
+>=20
+> > Anyway, I'm fine with both approaches, just let me know what you
+> > prefer.
+>=20
+> Without seeing an implementation of the lists it's hard to say.
 
-Though, I am not really DT-literate, but shouldn't the ethernet block
-use the PID from the ethernet device?
-The usbether device is 9514 on RPi2, while ec00 is the hub.
+Just to make sure we're on the same page: you want to keep the
+regulator, but instead of giving the parent through vinX-supplies
+properties, you want to have a single *-supply property, with a list
+of regulators, right?
 
-Your patch works, but this works as well after swapping the PIDs.
+Thanks!
+Maxime
 
-Thanks
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
--- 
-Olivier Blin - blino
+--JwB53PgKC5A7+0Ej
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWtLK4AAoJEBx+YmzsjxAguNoQALmfXhbIgg1W/Xw3LZgD4nrZ
+R751Jt56rA/0dIwaNBQE3/lbFu4VSgeB4Htl6avk4aLhic+QRwB8N2VmtW5UA0Tx
+T6OcGJmJ5MbY/36xexX+2iQodWB2xedNEzLNKlfq22ZtVXnF3otKRD6eBL0Zvs5U
+cRYVAT18+UmAYAkpTJZJCSly5Mn+WqagFCt2Ry8+6liUukFHXMmbvgHGRRBOuDHi
+QcBa9bYoOzIlGJLSba9UU2fUZFusYI+pDcf+iNdZCL6cfw90ZtTnYANKwjeP7XPm
+sKXTrvvmlHJbfFRLpFEQ9QIgbsbstH3clZcMK8lbJw6DYU815SsDkKjfXWcJnOkR
+jqBS/Pr8cue++/167WlueBByppbKvGyki33eyFDA6G0zbl3Bsgu8A88Nje95dxoi
+62GiZM29PCSyvfldRAWFTB/HkkadSTd4RmRO/c2YSbRwrmykTANYSpbzSGXWxvCJ
+B4cC/fRVedboeQJmQL25H0ZldlaVFvpF7sxAF8oxKOuBFcT8K7QyfsW65l+8IbYu
+CJC9dUgPbmJ2YkpauiG5oZpbD8w1cTYQt7E78V42DLVq3uQIzEn8Emaf4Vnnm4HP
+h1IVy+gzp2VfaBziLKFROjF3vUUWhwy0oZe7MFMBDVYrh/P3EHZBZNc+KySP4Xm8
+0pWUvNjvhb2C7yYMy8zB
+=5OpA
+-----END PGP SIGNATURE-----
+
+--JwB53PgKC5A7+0Ej--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
