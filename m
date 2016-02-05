@@ -1,232 +1,328 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH V3] ASoC: pcm179x: Add support for pcm1795 and pcm1796
-Date: Fri, 5 Feb 2016 18:24:57 +0100
-Message-ID: <20160205172451.GA30542@panicking>
-References: <1452382685-18009-1-git-send-email-michael@amarulasolutions.com>
- <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
- <20160110120045.GW6588@sirena.org.uk>
- <20160110173812.GA16304@panicking>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160110173812.GA16304@panicking>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jacob Siverskog <jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Fri,  5 Feb 2016 18:34:36 +0100
+Message-ID: <1454693676-20211-1-git-send-email-petr@barix.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+TI DA8xx MUSB driver equipped with DeviceTree support.
+Tested with AM1808 board and USB2.0 (OTG) in host mode.
 
-Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 ---
-Not get time to retest
+ .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
+ drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
+ include/linux/platform_data/usb-davinci.h          |   3 +-
+ 3 files changed, 227 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 
-Changes v3 -> v2:
-	- rebase after i2c support
-
-Changes v1 -> v2:
-	- Use switch for support new variants
-	- sort the compatible list
-
- sound/soc/codecs/pcm179x-i2c.c |  6 ----
- sound/soc/codecs/pcm179x-spi.c |  6 ----
- sound/soc/codecs/pcm179x.c     | 62 ++++++++++++++++++++++++++++++++++++++++--
- sound/soc/codecs/pcm179x.h     |  9 ++++--
- 4 files changed, 66 insertions(+), 17 deletions(-)
-
-diff --git a/sound/soc/codecs/pcm179x-i2c.c b/sound/soc/codecs/pcm179x-i2c.c
-index 4118106..609f07f 100644
---- a/sound/soc/codecs/pcm179x-i2c.c
-+++ b/sound/soc/codecs/pcm179x-i2c.c
-@@ -44,12 +44,6 @@ static int pcm179x_i2c_remove(struct i2c_client *client)
- 	return pcm179x_common_exit(&client->dev);
+diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+new file mode 100644
+index 0000000..69c0961
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+@@ -0,0 +1,63 @@
++TI DA8xx MUSB
++~~~~~~~~~~~~~
++
++Required properties:
++~~~~~~~~~~~~~~~~~~~~
++ - compatible : Should be "ti,da8xx-musb"
++
++ - reg: offset and length of the usbss register sets
++
++ - interrupts: USB interrupt number
++
++ - interrupt-names: should be set to "mc"
++
++ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
++
++ - mentor,power : Specifies the maximum current in milli-ampers the controller can
++     supply in host mode. The maximum configurable value is 510mA.
++
++ - mentor,num-eps : Valid only in host mode. Specifies the number of target endpoints
++     supported by the controller. For DA8xx it is "5".
++
++ - mentor,multipoint : Valid only in host mode. Enables addressing of USB hubs,
++     which is normally something you want and therefore should be set to "1".
++     If set to "0" only point-to-point communication is enabled, i.e. only a single
++     device can be attached.
++
++ - mentor,ram-bits : This 2-base logarithm value defines the RAM FIFO size of the controller.
++     The FIFO size is calculated in 32-bit words. E.g. if your controller has 4kiB of RAM FIFO
++     this value should be set to "10": 2^10 = 1024 words of 32-bits, i.e. 4096 bytes.
++     For the DA8xx controller this value should be set to 10.
++
++
++Optional properties:
++
++ - ti,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
++     Supported values: "0" for external pin, "1" for internal PLL.
++
++ - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
++     frequency in Hz in case the clock is generated by the internal PLL.
++     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
++
++
++Example:
++
++	usb20: usb@1e00000 {
++		compatible = "ti,da8xx-musb";
++		ti,hwmods = "usb_otg_hs";
++		reg =   <0x00200000 0x10000>;
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++		interrupt-names = "mc";
++
++		dr_mode = "host";
++		mentor,power = <500>;
++		mentor,multipoint = <1>;
++		mentor,num-eps = <5>;
++		mentor,ram-bits = <10>;
++
++		ti,phy20-clkmux-cfg = <1>;	/* PHY clock internally generated from the PLL */
++		ti,phy20-refclock-frequency = <24000000>;
++
++		status = "okay";
++	};
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 4e13fe2..281d503 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -1,6 +1,9 @@
+ /*
+  * Texas Instruments DA8xx/OMAP-L1x "glue layer"
+  *
++ * DT support
++ * Copyright (c) 2015-2016 Petr Kulhavy, Barix AG <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
++ *
+  * Copyright (c) 2008-2009 MontaVista Software, Inc. <source-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+  *
+  * Based on the DaVinci "glue layer" code.
+@@ -36,6 +39,8 @@
+ 
+ #include <mach/da8xx.h>
+ #include <linux/platform_data/usb-davinci.h>
++#include <linux/of_platform.h>
++#include <linux/usb/of.h>
+ 
+ #include "musb_core.h"
+ 
+@@ -134,6 +139,35 @@ static inline void phy_off(void)
+ 	__raw_writel(cfgchip2, CFGCHIP2);
  }
  
--static const struct of_device_id pcm179x_of_match[] = {
--	{ .compatible = "ti,pcm1792a", },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, pcm179x_of_match);
--
- static const struct i2c_device_id pcm179x_i2c_ids[] = {
- 	{ "pcm179x", 0 },
- 	{ }
-diff --git a/sound/soc/codecs/pcm179x-spi.c b/sound/soc/codecs/pcm179x-spi.c
-index da924d4..6ae0e4d 100644
---- a/sound/soc/codecs/pcm179x-spi.c
-+++ b/sound/soc/codecs/pcm179x-spi.c
-@@ -43,12 +43,6 @@ static int pcm179x_spi_remove(struct spi_device *spi)
- 	return pcm179x_common_exit(&spi->dev);
- }
- 
--static const struct of_device_id pcm179x_of_match[] = {
--	{ .compatible = "ti,pcm1792a", },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, pcm179x_of_match);
--
- static const struct spi_device_id pcm179x_spi_ids[] = {
- 	{ "pcm179x", 0 },
- 	{ },
-diff --git a/sound/soc/codecs/pcm179x.c b/sound/soc/codecs/pcm179x.c
-index 06a6657..73c80d3 100644
---- a/sound/soc/codecs/pcm179x.c
-+++ b/sound/soc/codecs/pcm179x.c
-@@ -20,6 +20,8 @@
- #include <linux/slab.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <sound/core.h>
- #include <sound/pcm.h>
-@@ -72,8 +74,31 @@ struct pcm179x_private {
- 	struct regmap *regmap;
- 	unsigned int format;
- 	unsigned int rate;
-+#define PCM1795	1
-+	unsigned int codec_model;
- };
- 
-+static int pcm179x_startup(struct snd_pcm_substream *substream,
-+			    struct snd_soc_dai *dai)
++/* converts PHY refclk frequency in HZ into USB0REF_FREQ config value
++ * on unsupported frequency returns -1
++ */
++static inline int phy_refclk_cfg(int frequency)
 +{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct pcm179x_private *priv = snd_soc_codec_get_drvdata(codec);
-+	u64 formats = PCM1792A_FORMATS;
-+
-+	switch (priv->codec_model) {
-+	case PCM1795:
-+		formats = PCM1795_FORMATS;
-+		break;
++	switch (frequency) {
++	case 12000000:
++		return 0x01;
++	case 13000000:
++		return 0x06;
++	case 19200000:
++		return 0x05;
++	case 20000000:
++		return 0x08;
++	case 24000000:
++		return 0x02;
++	case 26000000:
++		return 0x07;
++	case 38400000:
++		return 0x05;
++	case 40000000:
++		return 0x09;
++	case 48000000:
++		return 0x03;
 +	default:
-+		break;
++		return -1;
 +	}
-+
-+	snd_pcm_hw_constraint_mask64(substream->runtime,
-+				     SNDRV_PCM_HW_PARAM_FORMAT, formats);
-+
-+	return 0;
 +}
 +
- static int pcm179x_set_dai_fmt(struct snd_soc_dai *codec_dai,
-                              unsigned int format)
- {
-@@ -112,8 +137,10 @@ static int pcm179x_hw_params(struct snd_pcm_substream *substream,
- 	switch (priv->format & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 		switch (params_width(params)) {
--		case 24:
- 		case 32:
-+			val = 1;
-+			break;
-+		case 24:
- 			val = 2;
- 			break;
- 		case 16:
-@@ -125,8 +152,10 @@ static int pcm179x_hw_params(struct snd_pcm_substream *substream,
- 		break;
- 	case SND_SOC_DAIFMT_I2S:
- 		switch (params_width(params)) {
--		case 24:
- 		case 32:
-+			val = 4;
-+			break;
-+		case 24:
- 			val = 5;
- 			break;
- 		case 16:
-@@ -152,6 +181,7 @@ static int pcm179x_hw_params(struct snd_pcm_substream *substream,
- }
- 
- static const struct snd_soc_dai_ops pcm179x_dai_ops = {
-+	.startup	= pcm179x_startup,
- 	.set_fmt	= pcm179x_set_dai_fmt,
- 	.hw_params	= pcm179x_hw_params,
- 	.digital_mute	= pcm179x_digital_mute,
-@@ -190,7 +220,7 @@ static struct snd_soc_dai_driver pcm179x_dai = {
- 		.rates = SNDRV_PCM_RATE_CONTINUOUS,
- 		.rate_min = 10000,
- 		.rate_max = 200000,
--		.formats = PCM1792A_FORMATS, },
-+		.formats = PCM179X_FORMATS, },
- 	.ops = &pcm179x_dai_ops,
+ /*
+  * Because we don't set CTRL.UINT, it's "important" to:
+  *	- not read/write INTRUSB/INTRUSBE (except during
+@@ -527,6 +561,35 @@ static const struct platform_device_info da8xx_dev_info = {
+ 	.dma_mask	= DMA_BIT_MASK(32),
  };
  
-@@ -214,15 +244,41 @@ static struct snd_soc_codec_driver soc_codec_dev_pcm179x = {
- 	.num_dapm_routes	= ARRAY_SIZE(pcm179x_dapm_routes),
- };
- 
-+static const unsigned int codec_model = PCM1795;
++static int get_musb_port_mode(struct device_node *np)
++{
++	enum usb_dr_mode mode;
 +
-+const struct of_device_id pcm179x_of_match[] = {
-+	{ .compatible = "ti,pcm1792a", },
-+	{ .compatible = "ti,pcm1795",
-+	  .data = &codec_model,
-+	},
-+	{ .compatible = "ti,pcm1796", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pcm179x_of_match);
-+EXPORT_SYMBOL_GPL(pcm179x_of_match);
++	mode = of_usb_get_dr_mode(np);
++	switch (mode) {
++	case USB_DR_MODE_HOST:
++		return MUSB_HOST;
 +
- int pcm179x_common_init(struct device *dev, struct regmap *regmap)
++	case USB_DR_MODE_PERIPHERAL:
++		return MUSB_PERIPHERAL;
++
++	case USB_DR_MODE_OTG:
++		return MUSB_OTG;
++
++	default:
++		return MUSB_UNDEFINED;
++	}
++}
++
++static int get_int_prop(struct device_node *dn, const char *s)
++{
++	int ret;
++	u32 val;
++
++	ret = of_property_read_u32(dn, s, &val);
++	return ret ? 0 : val;
++}
++
+ static int da8xx_probe(struct platform_device *pdev)
  {
- 	struct pcm179x_private *pcm179x;
-+	struct device_node *np = dev->of_node;
-+	const unsigned int *codec_model = NULL;
+ 	struct resource musb_resources[2];
+@@ -535,6 +598,7 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue;
+ 	struct platform_device_info	pinfo;
+ 	struct clk			*clk;
++	struct device_node		*np = pdev->dev.of_node;
  
- 	pcm179x = devm_kzalloc(dev, sizeof(struct pcm179x_private),
- 				GFP_KERNEL);
- 	if (!pcm179x)
- 		return -ENOMEM;
+ 	int				ret = -ENOMEM;
  
-+	if (np) {
-+		const struct of_device_id *of_id;
+@@ -560,6 +624,95 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	glue->dev			= &pdev->dev;
+ 	glue->clk			= clk;
+ 
++	if (IS_ENABLED(CONFIG_OF) && np) {
++		struct musb_hdrc_config *config;
++		struct musb_hdrc_platform_data *data;
++		u32 phy20_refclock_freq, phy20_clkmux_cfg;
 +
-+		of_id = of_match_device(pcm179x_of_match, dev);
-+		if (of_id)
-+			codec_model = of_id->data;
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			ret = -ENOMEM;
++			goto err5;
++		}
++
++		data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++		if (!data) {
++			ret = -ENOMEM;
++			goto err5;
++		}
++
++		config = devm_kzalloc(&pdev->dev, sizeof(*config), GFP_KERNEL);
++		if (!config) {
++			ret = -ENOMEM;
++			goto err5;
++		}
++
++		pdata->mode = get_musb_port_mode(np);
++		config->num_eps = get_int_prop(np, "mentor,num-eps");
++		config->ram_bits = get_int_prop(np, "mentor,ram-bits");
++		/* the "mentor,power" value is in milli-amps, whereas
++		 * the mentor configuration is in 2mA units
++		 */
++		pdata->power = get_int_prop(np, "mentor,power") / 2;
++		config->multipoint = of_property_read_bool(np,
++			"mentor,multipoint");
++
++		pdata->board_data	= data;
++		pdata->config		= config;
++
++		/* optional parameter reference clock frequency */
++		if (!of_property_read_u32(np, "ti,phy20-clkmux-cfg",
++			&phy20_clkmux_cfg)) {
++			u32 cfgchip2;
++
++			/*
++			 * Select internal reference clock for USB 2.0 PHY
++			 * and use it as a clock source for USB 1.1 PHY
++			 * (this is the default setting anyway).
++			 */
++
++			cfgchip2 = __raw_readl(
++				DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++			cfgchip2 &= ~CFGCHIP2_USB2PHYCLKMUX;
++			cfgchip2 |=  (phy20_clkmux_cfg & 1) <<
++					CFGCHIP2_USB2PHYCLKMUX_SHIFT;
++
++			__raw_writel(cfgchip2,
++				     DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++		}
++
++		/* optional parameter reference clock frequency */
++		if (!of_property_read_u32(np, "ti,phy20-refclock-frequency",
++			&phy20_refclock_freq)) {
++			u32 cfgchip2;
++			int phy20_refclk_cfg;
++
++			phy20_refclk_cfg = phy_refclk_cfg(phy20_refclock_freq);
++			if (phy20_refclk_cfg < 0) {
++				dev_err(&pdev->dev,
++					"invalid PHY clock frequency %u Hz\n",
++					phy20_refclock_freq);
++				ret = -EINVAL;
++				goto err5;
++			}
++
++			/*
++			 * Set up USB clock/mode in the CFGCHIP2 register.
++			 */
++			cfgchip2 = __raw_readl(
++				DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++			/* USB2.0 PHY reference clock is 24 MHz */
++			cfgchip2 &= ~CFGCHIP2_REFFREQ;
++			cfgchip2 |=  phy20_refclk_cfg;
++
++			__raw_writel(cfgchip2,
++				     DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++		}
 +	}
 +
-+	if (codec_model)
-+		pcm179x->codec_model =  *codec_model;
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+ 	glue->phy = usb_phy_generic_register();
+@@ -627,11 +780,20 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id da8xx_id_table[] = {
++	{
++		.compatible = "ti,da8xx-musb"
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, da8xx_id_table);
 +
- 	pcm179x->regmap = regmap;
- 	dev_set_drvdata(dev, pcm179x);
+ static struct platform_driver da8xx_driver = {
+ 	.probe		= da8xx_probe,
+ 	.remove		= da8xx_remove,
+ 	.driver		= {
+ 		.name	= "musb-da8xx",
++		.of_match_table = of_match_ptr(da8xx_id_table),
+ 	},
+ };
  
-diff --git a/sound/soc/codecs/pcm179x.h b/sound/soc/codecs/pcm179x.h
-index 11e3312..4c00047 100644
---- a/sound/soc/codecs/pcm179x.h
-+++ b/sound/soc/codecs/pcm179x.h
-@@ -17,10 +17,15 @@
- #ifndef __PCM179X_H__
- #define __PCM179X_H__
- 
--#define PCM1792A_FORMATS (SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE | \
--			  SNDRV_PCM_FMTBIT_S16_LE)
-+#define PCM179X_FORMATS (SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE | \
-+			 SNDRV_PCM_FMTBIT_S16_LE)
-+
-+#define PCM1792A_FORMATS (SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S16_LE)
-+
-+#define PCM1795_FORMATS (SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE)
- 
- extern const struct regmap_config pcm179x_regmap_config;
-+extern const struct of_device_id pcm179x_of_match[];
- 
- int pcm179x_common_init(struct device *dev, struct regmap *regmap);
- int pcm179x_common_exit(struct device *dev);
--- 
-2.7.0
-
--- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
+index e0bc4ab..0948ce5 100644
+--- a/include/linux/platform_data/usb-davinci.h
++++ b/include/linux/platform_data/usb-davinci.h
+@@ -21,7 +21,8 @@
+ #define CFGCHIP2_FORCE_DEVICE 	(2 << 13)
+ #define CFGCHIP2_FORCE_HOST_VBUS_LOW (3 << 13)
+ #define CFGCHIP2_USB1PHYCLKMUX	(1 << 12)
+-#define CFGCHIP2_USB2PHYCLKMUX	(1 << 11)
++#define CFGCHIP2_USB2PHYCLKMUX_SHIFT	(11)
++#define CFGCHIP2_USB2PHYCLKMUX	(1 << CFGCHIP2_USB2PHYCLKMUX_SHIFT)
+ #define CFGCHIP2_PHYPWRDN	(1 << 10)
+ #define CFGCHIP2_OTGPWRDN	(1 << 9)
+ #define CFGCHIP2_DATPOL 	(1 << 8)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
