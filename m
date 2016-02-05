@@ -1,37 +1,41 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5/6] arm64: dts: qcom: apq8016-sbc: enable lpass on DB410c
-Date: Fri,  5 Feb 2016 19:01:44 +0000
-Message-ID: <1454698904-14100-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 6/6] arm64: dts: qcom: fix usb digital voltage levels
+Date: Fri,  5 Feb 2016 19:01:50 +0000
+Message-ID: <1454698910-14142-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1454698819-13885-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454698819-13885-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454698819-13885-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the lpass on DB410C. LPASS is used as cpu dai for
-both analog and digital audio.
+This patch updates the digital voltage levels from corner values to
+microvolts as we are going to use s1 regulator directly for vddcx
+instead of s1_corner.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index e80bdc2..cb52afb 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -186,6 +186,10 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&usb_sw_sel_pm>;
- 		};
-+
-+		lpass@07700000 {
-+			status = "okay";
-+		};
- 	};
- };
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index cdda026..cb82f4f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -421,7 +421,7 @@
+ 			interrupts = <GIC_SPI 134 IRQ_TYPE_EDGE_BOTH>,
+ 				     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>;
  
+-			qcom,vdd-levels = <1 5 7>;
++			qcom,vdd-levels = <500000 1000000 1320000>;
+ 			qcom,phy-init-sequence = <0x44 0x6B 0x24 0x13>;
+ 			dr_mode = "peripheral";
+ 			qcom,otg-control = <2>; // PMIC
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
