@@ -1,70 +1,67 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V7 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
-Date: Fri, 5 Feb 2016 13:30:25 +0530
-Message-ID: <006e01d15feb$4a08d0a0$de1a71e0$@codeaurora.org>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org> <1453197766-18976-4-git-send-email-sricharan@codeaurora.org> <20160124112915.GA1775@katana> <001401d15988$59f6dcf0$0de496d0$@codeaurora.org> <20160204200903.GE1958@tetsubishi>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH V2 0/3] leds: add SN3218 LED driver
+Date: Fri, 05 Feb 2016 09:15:34 +0100
+Message-ID: <56B45A26.1060002@samsung.com>
+References: <1454612167-8680-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160204200903.GE1958@tetsubishi>
-Content-Language: en-us
-Sender: linux-i2c-owner@vger.kernel.org
-To: 'Wolfram Sang' <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1454612167-8680-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi Stefan,
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-
-> bounces@lists.infradead.org] On Behalf Of Wolfram Sang
-> Sent: Friday, February 05, 2016 1:39 AM
-> To: Sricharan
-> Cc: devicetree@vger.kernel.org; architt@codeaurora.org; linux-arm-
-> msm@vger.kernel.org; ntelkar@codeaurora.org; galak@codeaurora.org;
-> linux-kernel@vger.kernel.org; andy.gross@linaro.org; linux-
-> i2c@vger.kernel.org; iivanov@mm-sol.com; agross@codeaurora.org;
-> dmaengine@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH V7 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs
-> without a stop bit
-> 
-> Hi,
-> 
-> > Ah, so what I meant above is there is no 'STOP' bit between each msg
-> > in i2c_msgs, but 'REAPEATED_START' still holds true.  We are sending
-> > 'START' bit for each msg.
-> > So these is how each msg in i2c_msg is sent,
-> >
-> > |------MSG1--------|-----MSG2---------|------MSG3------------|
-> >
-> >   |START|DATA|------|START|DATA|---|START|DATA|STOP|
-> >
-> > If my commit text does not make this clear, I  can reword that ?
-> 
-> OK, now this looks to me perfectly fine: A number of *messages*
-> concatenated into one *transfer* by repeated start. That's the way it
-should
-> be.
-> 
-> So, I'd simply remove these words:
-> 
-> "The QUP i2c hardware has no way to inform that there should not be a
-> 'STOP' at the end of transaction. The only way to implement this is to
-> coalesce all the i2c_msg in i2c_msgs in to one transaction and transfer
-them."
-> 
-> This sounded like the HW needed a special handling, so I was under the
-> impression REP_START was broken. However, unless I misunderstood
-> something again, this now sounds like the standard case and we can keep
-> the commit message simple. If you are okay with that, I can update it
-here,
-> no need to resend.
-> 
-      Yes the above modified commit text looks perfect to be updated and
-thanks
-      for the update as well.
+Patch set applied to the for-next branch of linux-leds.git.
 
-Regards,
- Sricharan
+Thanks,
+Jacek Anaszewski
+
+On 02/04/2016 07:56 PM, Stefan Wahren wrote:
+> This patch series implements support for the Si-En SN3218
+> 18 Channel LED Driver connected through I2C. The SN3218
+> doesn't support reading so the LED states are cached in a
+> regmap.
+>
+> The driver has been tested on a Raspberry Pi B.
+>
+> Changes since V1:
+>    * add shutdown handler
+>    * use defines for modes
+>    * remove empty line at the end of binding doc
+>    * make sn3218_led_init static
+>    * skip setting default max brightness
+>    * fix fail sn3218_init
+>
+> Changes since RFC:
+>    * using regmap instead of direct I2C
+>    * add new function to init single LED
+>    * add module name to Kconfig help
+>    * replace of_get_property() with of_property_read_string()
+>    * remove lock, leds_state and name from priv structure
+>    * drop sn3218 LED name prefix
+>    * don't use led_info and led_platform_data
+>    * abort probing if no SN3218 is connected or DT invalid
+>    * fix some style and text issues
+>    * fix license
+>    * move i2c_device_id and of_device_id at the end of file
+>    * use devm_* calls
+>    * use device function as node name in DT binding
+>
+> Stefan Wahren (3):
+>    of: Add vendor prefix for Si-En Technology
+>    DT: add binding for SN3218 LED driver
+>    leds: add SN3218 LED driver
+>
+>   .../devicetree/bindings/leds/leds-sn3218.txt       |   41 +++
+>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>   drivers/leds/Kconfig                               |   12 +
+>   drivers/leds/Makefile                              |    1 +
+>   drivers/leds/leds-sn3218.c                         |  306 ++++++++++++++++++++
+>   5 files changed, 361 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
+>   create mode 100644 drivers/leds/leds-sn3218.c
+>
