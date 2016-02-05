@@ -1,85 +1,83 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
-Date: Fri, 05 Feb 2016 10:37:00 +0100
-Message-ID: <1454665020.6406.21.camel@pengutronix.de>
-References: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
-	 <1454582690.3356.18.camel@pengutronix.de> <20160205061124.GB1858@shlinux2>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v6 1/7] clk: mediatek: Refine the makefile to support multiple clock drivers
+Date: Fri, 5 Feb 2016 17:37:24 +0800
+Message-ID: <1454665050-37776-2-git-send-email-jamesjj.liao@mediatek.com>
+References: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160205061124.GB1858@shlinux2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, James Liao <jamesjj.liao@mediatek.com>, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 05.02.2016, 14:11 +0800 schrieb Peter Chen:
-[...]
-> > The reference recommendation states that for single-configuration USB
-> > devices the compatible should contain all of the applicable strings from
-> > the list starting with 2) "usbVID,PID.REV" and ending with 11)
-> > "usb,device". Are we going to ignore this?
->
-> I have not seen benefits if we write several compatibles in dts,
-> the information of compatibles listed in doc can be got during
-> the enumeration.
-> 
-> I suggest we use the simple pattern for this compatible, in that
-> case, every one can be easy to follow it, and will not be confused
-> which compatibles should be used, and the style can be unify.
+Add a Kconfig to define clock configuration for each SoC, and
+modify the Makefile to build drivers that only selected in config.
 
-Just pointing it out, a comment why this differs from the recommendation
-would be nice to avoid confusion.
+Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Tested-by: John Crispin <blogic@openwrt.org>
+---
+ drivers/clk/Kconfig           |  1 +
+ drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
+ drivers/clk/mediatek/Makefile |  6 +++---
+ 3 files changed, 27 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/clk/mediatek/Kconfig
 
-[...]
-> > > +		compatible = "usb05e3,0608";
-> > > +		reg = <0x1>;
-> > > +	};
-> > 
-> > I'd have written this node as:
-> > 
-> > 	hub: hub@1 {
-> > 		compatible = "usb5e3,608", "usb5e3,class9",
-> > 			     "usb,class9", "usb,device";
-> > 		reg = <1>;
-> > 	};
-> 
-> The reg should be hexadecimal, do we need to add "0x" before the value?
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index de707b2..d333863 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -202,6 +202,7 @@ config COMMON_CLK_CDCE706
+ 
+ source "drivers/clk/bcm/Kconfig"
+ source "drivers/clk/hisilicon/Kconfig"
++source "drivers/clk/mediatek/Kconfig"
+ source "drivers/clk/mvebu/Kconfig"
+ source "drivers/clk/qcom/Kconfig"
+ source "drivers/clk/samsung/Kconfig"
+diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+new file mode 100644
+index 0000000..dc224e6
+--- /dev/null
++++ b/drivers/clk/mediatek/Kconfig
+@@ -0,0 +1,23 @@
++#
++# MediaTek SoC drivers
++#
++config COMMON_CLK_MEDIATEK
++	bool
++	---help---
++	  Mediatek SoCs' clock support.
++
++config COMMON_CLK_MT8135
++	bool "Clock driver for Mediatek MT8135"
++	depends on COMMON_CLK
++	select COMMON_CLK_MEDIATEK
++	default ARCH_MEDIATEK
++	---help---
++	  This driver supports Mediatek MT8135 clocks.
++
++config COMMON_CLK_MT8173
++	bool "Clock driver for Mediatek MT8173"
++	depends on COMMON_CLK
++	select COMMON_CLK_MEDIATEK
++	default ARCH_MEDIATEK
++	---help---
++	  This driver supports Mediatek MT8173 clocks.
+diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+index 95fdfac..32e7222 100644
+--- a/drivers/clk/mediatek/Makefile
++++ b/drivers/clk/mediatek/Makefile
+@@ -1,4 +1,4 @@
+-obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
++obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+ obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+-obj-y += clk-mt8135.o
+-obj-y += clk-mt8173.o
++obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
++obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
+-- 
+1.9.1
 
-The unit-address name part should be hexadecimal, the reg property value
-doesn't have to be. As long as the value is < 10 I don't see a problem.
-
-> > As another example, I'd like to introduce the USB WLAN Adapter soldered
-> > onto the imx6q-gk802 board to its power enable GPIO via the device tree:
-> > 
-> > /* Internal USB port (USBH1) */
-> > &usbh1 {
-> > 	#address-cells = <1>;
-> > 	#size-cells = <0>;
-> > 	status = "okay";
-> > 
-> > 	/* RTL8192CU 802.11n WLAN Adapter */
-> > 	device@1 {
-> > 		compatible = "usbbda,8176.200", "usbbda,8176",
-> > 			     "usb,device";
-> > 		reg = <1>;
-> > 
-> > 		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-> > 	};
-> > };
-> > 
-> 
-> It is okay to use your example, but I still insist like below:
-
-Sorry for being imprecise. The hub example is fine for the
-documentation. I just wanted to illustrate how and why I am interested
-in this discussion.
-
-best regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
