@@ -1,53 +1,104 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH] arm64: dts: apq8016-sbc: Add DT node for the uSD SDHC
- interface
-Date: Fri, 5 Feb 2016 19:45:41 +0200
-Message-ID: <56B4DFC5.7030700@linaro.org>
-References: <1454590402-13507-1-git-send-email-georgi.djakov@linaro.org>
- <7hmvrgb06c.fsf@baylibre.com>
- <CAOi56cWWfJCFyC_ndRqhm6c0QeQF=nXkcK3RCVdCDXTBag=+ow@mail.gmail.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] arm64: add sysfs cpu_capacity attribute
+Date: Fri, 5 Feb 2016 17:49:44 +0000
+Message-ID: <20160205174944.GG11415@e106622-lin>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-7-git-send-email-juri.lelli@arm.com>
+ <56B4D98F.3090103@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAOi56cWWfJCFyC_ndRqhm6c0QeQF=nXkcK3RCVdCDXTBag=+ow@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56B4D98F.3090103-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2016 12:44 AM, Kevin Hilman wrote:
-> On Thu, Feb 4, 2016 at 2:06 PM, Kevin Hilman <khilman@baylibre.com> wrote:
->> Georgi Djakov <georgi.djakov@linaro.org> writes:
->>
->>> Add the necessary properties to enable the SD-card on db410c boards.
->>>
->>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->>
->> I tried this with 2 different SD cards on my dragonboard 410c but it's
->> not detecting either card.
-> 
-> To be more precise, I tried this patch on v4.5-rc1 and today's
-> linux-next using the default defconfig + CONFIG_MMC_SDHCI_MSM=y, and
-> see the same voltage errors on both.
->
+Hi,
 
-Hi Kevin, thanks for trying this. I got the same with v4.5-rc2, but
-this is expected as it depends on the another recently merged patch
-in linux-next. Perhaps I should have mentioned this in the commit
-message.
+On 05/02/16 17:19, Dietmar Eggemann wrote:
+> Hi Juri,
+>=20
+> On 03/02/16 11:59, Juri Lelli wrote:
+> > Add a sysfs cpu_capacity attribute with which it is possible to rea=
+d and
+> > write (thus over-writing default values) CPUs capacity. This might =
+be
+> > useful in situation where there is no way to get proper default val=
+ues
+> > at boot time.
+> >=20
+> > The new attribute shows up as:
+> >=20
+> >  /sys/devices/system/cpu/cpu*/cpu_capacity
+> >=20
+> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  arch/arm64/kernel/topology.c | 68 ++++++++++++++++++++++++++++++++=
+++++++++++++
+> >  1 file changed, 68 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topol=
+ogy.c
+> > index f2513a6..f05cc07 100644
+> > --- a/arch/arm64/kernel/topology.c
+> > +++ b/arch/arm64/kernel/topology.c
+> > @@ -40,6 +40,74 @@ bool arch_wants_init_cpu_capacity(void)
+> >  	return true;
+> >  }
+> > =20
+> > +#ifdef CONFIG_PROC_SYSCTL
+> > +#include <asm/cpu.h>
+> > +#include <linux/string.h>
+> > +static ssize_t show_cpu_capacity(struct device *dev,
+> > +				 struct device_attribute *attr,
+> > +				 char *buf)
+> > +{
+> > +	struct cpu *cpu =3D container_of(dev, struct cpu, dev);
+> > +	ssize_t rc;
+> > +	int cpunum =3D cpu->dev.id;
+> > +	unsigned long capacity =3D arch_scale_cpu_capacity(NULL, cpunum);
+>=20
+> Gives me an implicit declaration of function =E2=80=98arch_scale_cpu_=
+capacity=E2=80=99
+> error [without the commit fbc899610e1a ("arm64: Update
+> arch_scale_cpu_capacity() to reflect change to define") on your
+> git://linux-arm.org/linux-jl.git upstream/default_caps_v3 branch].
+>=20
+> Why don't you just return cpu_scale
+>=20
+> @@ -49,10 +49,8 @@ static ssize_t show_cpu_capacity(struct device *de=
+v,
+>  {
+>         struct cpu *cpu =3D container_of(dev, struct cpu, dev);
+>         ssize_t rc;
+> -       int cpunum =3D cpu->dev.id;
+> -       unsigned long capacity =3D arch_scale_cpu_capacity(NULL, cpun=
+um);
+>=20
+> -       rc =3D sprintf(buf, "%lu\n", capacity);
+> +       rc =3D sprintf(buf, "%lu\n", per_cpu(cpu_scale, cpu->dev.id))=
+;
+>=20
+>         return rc;
+>  }
+>=20
+> to get rid of this dependency?
+>=20
 
-Anyway, just checked with next-20160205 and it works for me - tested
-with 3 different cards. Not sure why it does not work for you.
-Could you please check if you have the following patch in your tree:
+Right! I'll fix this in the next version.
 
-4fbdc4e6adbc arm64: dts: apq8016-sbc: add regulators support
-$ git tag --contains 4fbdc4e6adbc
-next-20160201
-next-20160202
-next-20160203
-next-20160204
-next-20160205
+Thanks,
 
-BR,
-Georgi
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
