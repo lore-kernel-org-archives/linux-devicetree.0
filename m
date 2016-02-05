@@ -1,435 +1,316 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v10 4/5] Watchdog: introduce ARM SBSA watchdog driver
-Date: Fri, 5 Feb 2016 17:01:55 +0800
-Message-ID: <CADyBb7tjoTPj2uAS23Rpqzfq3tyfSTxq4t7rAxivj64W9Xx4kg@mail.gmail.com>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
-	<1454519923-25230-5-git-send-email-fu.wei@linaro.org>
-	<CANLsYkzQpEHa4hnO4D1E0+P-i961+ak=Hr_RPPrOxd-+VMhLSQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 11/11] arm64: dts: add Pine64 support
+Date: Fri, 5 Feb 2016 10:03:37 +0100
+Message-ID: <20160205090337.GB1139@lukather>
+References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkzQpEHa4hnO4D1E0+P-i961+ak=Hr_RPPrOxd-+VMhLSQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>Timur Tabi <t>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2WK2G2QKGQEES55ONQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454348370-3816-12-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 February 2016 at 00:25, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
-> On 3 February 2016 at 10:18,  <fu.wei@linaro.org> wrote:
->> From: Fu Wei <fu.wei@linaro.org>
->>
->> According to Server Base System Architecture (SBSA) specification,
->> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
->> is for alerting the system by interrupt, the second one (WS1) is a real
->> hardware reset.
->>
->> This patch initially implements a simple single stage watchdog driver:
->> when the timeout is reached, your system will be reset by the second
->> signal (WS1).
->> The first signal (WS0) is ignored in this driver.
->>
->> This driver bases on linux kernel watchdog framework, so it can get
->> timeout from module parameter and FDT at the driver init stage.
->>
->> Signed-off-by: Fu Wei <fu.wei@linaro.org>
->> Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
->> Tested-by: Pratyush Anand <panand@redhat.com>
->> ---
->>  drivers/watchdog/Kconfig     |  17 +++
->>  drivers/watchdog/Makefile    |   1 +
->>  drivers/watchdog/sbsa_gwdt.c | 322 +++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 340 insertions(+)
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 4f0e7be..4ab1b05 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -201,6 +201,23 @@ config ARM_SP805_WATCHDOG
->>           ARM Primecell SP805 Watchdog timer. This will reboot your system when
->>           the timeout is reached.
->>
->> +config ARM_SBSA_WATCHDOG
->> +       tristate "ARM SBSA Generic Watchdog"
->> +       depends on ARM64
->> +       depends on ARM_ARCH_TIMER
->> +       select WATCHDOG_CORE
->> +       help
->> +         ARM SBSA Generic Watchdog has two stage timeouts:
->> +         the first signal (WS0) is for alerting the system by interrupt,
->> +         the second one (WS1) is a real hardware reset.
->> +         More details: ARM DEN0029B - Server Base System Architecture (SBSA)
->> +
->> +         This is a simple single stage driver: when the timeout is reached,
->> +         your system will be reset by WS1. The first signal (WS0) is ignored.
->> +
->> +         To compile this driver as module, choose M here: The module
->> +         will be called sbsa_gwdt.
->> +
->>  config ASM9260_WATCHDOG
->>         tristate "Alphascale ASM9260 watchdog"
->>         depends on MACH_ASM9260
->> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->> index f566753..f9826d4 100644
->> --- a/drivers/watchdog/Makefile
->> +++ b/drivers/watchdog/Makefile
->> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
->>
->>  # ARM Architecture
->>  obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
->> +obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
->>  obj-$(CONFIG_ASM9260_WATCHDOG) += asm9260_wdt.o
->>  obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
->>  obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
->> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
->> new file mode 100644
->> index 0000000..5a2dba3
->> --- /dev/null
->> +++ b/drivers/watchdog/sbsa_gwdt.c
->> @@ -0,0 +1,322 @@
->> +/*
->> + * SBSA(Server Base System Architecture) Generic Watchdog driver
->> + *
->> + * Copyright (c) 2015, Linaro Ltd.
->> + * Author: Fu Wei <fu.wei@linaro.org>
->> + *         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> + *         Al Stone <al.stone@linaro.org>
->> + *         Timur Tabi <timur@codeaurora.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License 2 as published
->> + * by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * This SBSA Generic watchdog driver is a single stage timeout version.
->> + * Since this watchdog timer has two stages, and each stage is determined
->> + * by WOR. So the timeout is (WOR * 2).
->> + * When first timeout is reached, WS0 is triggered, the interrupt
->> + * triggered by WS0 will be ignored, then the second watch period starts;
->> + * when second timeout is reached, then WS1 is triggered, system reset.
->> + *
->> + * More details about the hardware specification of this device:
->> + * ARM DEN0029B - Server Base System Architecture (SBSA)
->> + *
->> + * SBSA GWDT: |--------WOR-------WS0--------WOR-------WS1
->> + *            |----------------timeout----------------reset
->> + *
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/moduleparam.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/uaccess.h>
->> +#include <linux/watchdog.h>
->> +#include <asm/arch_timer.h>
->> +
->> +/* SBSA Generic Watchdog register definitions */
->> +/* refresh frame */
->> +#define SBSA_GWDT_WRR                          0x000
->> +
->> +/* control frame */
->> +#define SBSA_GWDT_WCS                          0x000
->> +#define SBSA_GWDT_WOR                          0x008
->> +#define SBSA_GWDT_WCV                          0x010
->> +
->> +/* refresh/control frame */
->> +#define SBSA_GWDT_W_IIDR                       0xfcc
->> +#define SBSA_GWDT_IDR                          0xfd0
->> +
->> +/* Watchdog Control and Status Register */
->> +#define SBSA_GWDT_WCS_EN                       BIT(0)
->> +#define SBSA_GWDT_WCS_WS0                      BIT(1)
->> +#define SBSA_GWDT_WCS_WS1                      BIT(2)
->> +
->> +/**
->> + * struct sbsa_gwdt - Internal representation of the SBSA GWDT
->> + * @wdd:               kernel watchdog_device structure
->> + * @clk:               store the System Counter clock frequency, in Hz.
->> + * @refresh_base:      Virtual address of the watchdog refresh frame
->> + * @control_base:      Virtual address of the watchdog control frame
->> + */
->> +struct sbsa_gwdt {
->> +       struct watchdog_device  wdd;
->> +       u32                     clk;
->> +       void __iomem            *refresh_base;
->> +       void __iomem            *control_base;
->> +};
->> +
->> +#define to_sbsa_gwdt(e) container_of(e, struct sbsa_gwdt, wdd)
->> +
->> +#define DEFAULT_TIMEOUT                20 /* seconds, the 1st + 2nd watch periods*/
->> +
->> +static unsigned int timeout;
->> +module_param(timeout, uint, 0);
->> +MODULE_PARM_DESC(timeout,
->> +                "Watchdog timeout in seconds. (>=0, default="
->> +                __MODULE_STRING(DEFAULT_TIMEOUT) ")");
->> +
->> +static bool nowayout = WATCHDOG_NOWAYOUT;
->> +module_param(nowayout, bool, S_IRUGO);
->> +MODULE_PARM_DESC(nowayout,
->> +                "Watchdog cannot be stopped once started (default="
->> +                __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->> +
->> +/*
->> + * watchdog operation functions
->> + */
->> +static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
->> +                                unsigned int timeout)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +
->> +       wdd->timeout = timeout;
->> +       writel(timeout / 2 * gwdt->clk, gwdt->control_base + SBSA_GWDT_WOR);
->> +
->> +       return 0;
->> +}
->> +
->> +static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +       u64 timeleft = readq(gwdt->control_base + SBSA_GWDT_WCV) -
->> +                      arch_counter_get_cntvct();
->> +
->> +       do_div(timeleft, gwdt->clk);
->> +
->> +       if (readl(gwdt->control_base + SBSA_GWDT_WCS) & SBSA_GWDT_WCS_WS0)
->> +               return timeleft;
->> +
->> +       return timeleft + wdd->timeout / 2;
->
-> It would be great to have a comment whenever hard coded values are
-> used.  That way people understand why things were set this way.  The
-> same applies for the rest of this patch.
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-OK, will do , thanks
+Hi,
 
->
->> +}
->> +
->> +static int sbsa_gwdt_keepalive(struct watchdog_device *wdd)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +
->> +       /*
->> +       * Writing WRR for an explicit watchdog refresh.
->> +       * You can write anyting(like 0xc0ffee).
->> +       */
->> +       writel(0xc0ffee, gwdt->refresh_base + SBSA_GWDT_WRR);
->> +
->> +       return 0;
->> +}
->> +
->> +static unsigned int sbsa_gwdt_status(struct watchdog_device *wdd)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +       u32 status = readl(gwdt->control_base + SBSA_GWDT_WCS);
->> +
->> +       /* is the watchdog timer running? */
->> +       return (status & SBSA_GWDT_WCS_EN) << WDOG_ACTIVE;
->> +}
->> +
->> +static int sbsa_gwdt_start(struct watchdog_device *wdd)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +
->> +       /* writing WCS will cause an explicit watchdog refresh */
->> +       writel(SBSA_GWDT_WCS_EN, gwdt->control_base + SBSA_GWDT_WCS);
->> +
->> +       return sbsa_gwdt_keepalive(wdd);
->> +}
->> +
->> +static int sbsa_gwdt_stop(struct watchdog_device *wdd)
->> +{
->> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
->> +
->> +       writel(0, gwdt->control_base + SBSA_GWDT_WCS);
->> +
->> +       return 0;
->> +}
->> +
->> +static struct watchdog_info sbsa_gwdt_info = {
->> +       .identity       = "SBSA Generic Watchdog",
->> +       .options        = WDIOF_SETTIMEOUT |
->> +                         WDIOF_KEEPALIVEPING |
->> +                         WDIOF_MAGICCLOSE |
->> +                         WDIOF_CARDRESET,
->> +};
->> +
->> +static struct watchdog_ops sbsa_gwdt_ops = {
->> +       .owner          = THIS_MODULE,
->> +       .start          = sbsa_gwdt_start,
->> +       .stop           = sbsa_gwdt_stop,
->> +       .status         = sbsa_gwdt_status,
->> +       .ping           = sbsa_gwdt_keepalive,
->> +       .set_timeout    = sbsa_gwdt_set_timeout,
->> +       .get_timeleft   = sbsa_gwdt_get_timeleft,
->> +};
->> +
->> +static int sbsa_gwdt_probe(struct platform_device *pdev)
->> +{
->> +       void __iomem *rf_base, *cf_base;
->> +       struct device *dev = &pdev->dev;
->> +       struct watchdog_device *wdd;
->> +       struct sbsa_gwdt *gwdt;
->> +       struct resource *res;
->> +       u32 status;
->> +       int ret;
->> +
->> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
->> +       if (!gwdt)
->> +               return -ENOMEM;
->> +       platform_set_drvdata(pdev, gwdt);
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       cf_base = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(cf_base))
->> +               return PTR_ERR(cf_base);
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +       rf_base = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(rf_base))
->> +               return PTR_ERR(rf_base);
->> +
->> +       /*
->> +        * Get the frequency of system counter from the cp15 interface of ARM
->> +        * Generic timer. We don't need to check it, because if it returns "0",
->> +        * system would panic in very early stage.
->> +        */
->> +       gwdt->clk = arch_timer_get_cntfrq();
->> +       gwdt->refresh_base = rf_base;
->> +       gwdt->control_base = cf_base;
->> +
->> +       wdd = &gwdt->wdd;
->> +       wdd->parent = dev;
->> +       wdd->info = &sbsa_gwdt_info;
->> +       wdd->ops = &sbsa_gwdt_ops;
->> +       watchdog_set_drvdata(wdd, gwdt);
->> +       watchdog_set_nowayout(wdd, nowayout);
->> +
->> +       wdd->min_timeout = 2;
->> +       wdd->max_timeout = U32_MAX / gwdt->clk * 2;
->> +       wdd->timeout = DEFAULT_TIMEOUT;
->> +       watchdog_init_timeout(wdd, timeout, dev);
->> +
->> +       status = readl(gwdt->control_base + SBSA_GWDT_WCS);
->> +       if (status & SBSA_GWDT_WCS_WS1) {
->> +               dev_warn(dev, "System reset by WDT.\n");
->> +               wdd->bootstatus |= WDIOF_CARDRESET;
->> +       }
->> +
->> +       ret = watchdog_register_device(wdd);
->> +       if (ret)
->> +               return ret;
->> +
->> +       /*
->> +        * Update timeout to WOR.
->> +        * Because of the explicit watchdog refresh mechanism,
->> +        * it's also a ping, if watchdog is enabled.
->> +        */
->> +       sbsa_gwdt_set_timeout(wdd, wdd->timeout);
->> +
->> +       dev_info(dev, "Initialized with %ds timeout @ %u Hz%s\n", wdd->timeout,
->> +                gwdt->clk, status & SBSA_GWDT_WCS_EN ? " [enabled]" : "");
->> +
->> +       return 0;
->> +}
->> +
->> +static void sbsa_gwdt_shutdown(struct platform_device *pdev)
->> +{
->> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
->> +
->> +       sbsa_gwdt_stop(&gwdt->wdd);
->> +}
->> +
->> +static int sbsa_gwdt_remove(struct platform_device *pdev)
->> +{
->> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
->> +
->> +       watchdog_unregister_device(&gwdt->wdd);
->> +
->> +       return 0;
->> +}
->> +
->> +/* Disable watchdog if it is active during suspend */
->> +static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
->> +{
->> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
->> +
->> +       if (watchdog_active(&gwdt->wdd))
->> +               sbsa_gwdt_stop(&gwdt->wdd);
->> +
->> +       return 0;
->> +}
->> +
->> +/* Enable watchdog and configure it if necessary */
->> +static int __maybe_unused sbsa_gwdt_resume(struct device *dev)
->> +{
->> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
->> +
->> +       if (watchdog_active(&gwdt->wdd))
->> +               sbsa_gwdt_start(&gwdt->wdd);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct dev_pm_ops sbsa_gwdt_pm_ops = {
->> +       SET_SYSTEM_SLEEP_PM_OPS(sbsa_gwdt_suspend, sbsa_gwdt_resume)
->> +};
->> +
->> +static const struct of_device_id sbsa_gwdt_of_match[] = {
->> +       { .compatible = "arm,sbsa-gwdt", },
->> +       {},
->> +};
->> +MODULE_DEVICE_TABLE(of, sbsa_gwdt_of_match);
->> +
->> +static const struct platform_device_id sbsa_gwdt_pdev_match[] = {
->> +       { .name = "sbsa-gwdt", },
->> +       {},
->> +};
->> +MODULE_DEVICE_TABLE(platform, sbsa_gwdt_pdev_match);
->> +
->> +static struct platform_driver sbsa_gwdt_driver = {
->> +       .driver = {
->> +               .name = "sbsa-gwdt",
->> +               .pm = &sbsa_gwdt_pm_ops,
->> +               .of_match_table = sbsa_gwdt_of_match,
->> +       },
->> +       .probe = sbsa_gwdt_probe,
->> +       .remove = sbsa_gwdt_remove,
->> +       .shutdown = sbsa_gwdt_shutdown,
->> +       .id_table = sbsa_gwdt_pdev_match,
->> +};
->> +
->> +module_platform_driver(sbsa_gwdt_driver);
->> +
->> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
->> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
->> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
->> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
->> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.5.0
->>
+On Mon, Feb 01, 2016 at 05:39:30PM +0000, Andre Przywara wrote:
+> The Pine64 is a cost-efficient development board based on the
+> Allwinner A64 SoC.
+> There are three models: the basic version with Fast Ethernet and
+> 512 MB of DRAM (Pine64) and two Pine64+ versions, which both
+> feature Gigabit Ethernet and additional connectors for touchscreens
+> and a camera. Or as my son put it: "Those are smaller and these are
+> missing." ;-)
+> The two Pine64+ models just differ in the amount of DRAM
+> (1GB vs. 2GB). Since U-Boot will figure out the right size for us and
+> patches the DT accordingly we just need to provide one DT for the
+> Pine64+.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm64/boot/dts/Makefile                       |  1 +
+>  arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
+>  arch/arm64/boot/dts/allwinner/pine64.dts           | 58 +++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/pine64_common.dtsi   | 76 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/pine64_plus.dts      | 59 +++++++++++++++++
+>  6 files changed, 200 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+>  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_plus.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 72e2c5a..0c22fa9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -175,6 +175,7 @@ parade	Parade Technologies Inc.
+>  pericom	Pericom Technology Inc.
+>  phytec	PHYTEC Messtechnik GmbH
+>  picochip	Picochip Ltd
+> +pine64	Pine64
+>  plathome	Plat'Home Co., Ltd.
+>  plda	PLDA
+>  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
 
+Please make a separate patch for this one.
 
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index f832b8a..3b7428a 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dts-dirs += allwinner
+
+Could you also add a patch to add this path to MAINTAINERS too?
+
+>  dts-dirs += altera
+>  dts-dirs += amd
+>  dts-dirs += apm
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> new file mode 100644
+> index 0000000..65f4e24
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -0,0 +1,5 @@
+> +dtb-$(CONFIG_ARCH_SUNXI) += pine64_plus.dtb pine64.dtb
+> +
+> +always		:= $(dtb-y)
+> +subdir-y	:= $(dts-dirs)
+> +clean-files	:= *.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64.dts b/arch/arm64/boot/dts/allwinner/pine64.dts
+> new file mode 100644
+> index 0000000..ebea5dd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64.dts
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "pine64_common.dtsi"
+> +
+> +/ {
+> +	model = "Pine64";
+> +	compatible = "pine64,pine64", "allwinner,a64", "allwinner,sunxi";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x40000000 0x20000000>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64_common.dtsi b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+> new file mode 100644
+> index 0000000..d968d76
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
+> @@ -0,0 +1,76 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "a64.dtsi"
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	cd-gpios = <&pio 5 6 0>;
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart3_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart4_pins>;
+> +	status = "okay";
+> +};
+
+Our policy for boards with "open" pin headers the user can plug
+anything he wants is that unless the pin is explicitly dedicated to
+that usage, we simply leave them aside so that we don't enforce
+anything.
+
+>From the quick look at the schematics, I guess only the UART0 on the
+10-pin expansion header is elligible.
+
+> diff --git a/arch/arm64/boot/dts/allwinner/pine64_plus.dts b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
+> new file mode 100644
+> index 0000000..344752e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Copyright (c) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "pine64_common.dtsi"
+> +
+> +/ {
+> +	model = "Pine64+";
+> +	compatible = "pine64,pine64_plus", "allwinner,a64", "allwinner,sunxi";
+
+The usual separator in the compatibles is a dash and not an underscore.
+
+Thanks!
+Maxime
 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--61jdw2sOBCFtR2d/--
