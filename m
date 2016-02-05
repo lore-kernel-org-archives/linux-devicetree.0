@@ -1,86 +1,58 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v4 16/17] FDT: Add a helper to get specified name
- subnode
-Date: Fri, 5 Feb 2016 14:15:18 +0000
-Message-ID: <alpine.DEB.2.02.1602051415120.27008@kaball.uk.xensource.com>
-References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
- <1454641552-12576-17-git-send-email-zhaoshenglong@huawei.com>
+From: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Fri, 05 Feb 2016 15:25:01 +0100
+Message-ID: <m3fux76xqa.fsf@euphor.blino.org>
+References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
+	<1454571364-24708-2-git-send-email-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454641552-12576-17-git-send-email-zhaoshenglong@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shannon Zhao <zhaoshenglong@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, Rob Herring <robh@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454571364-24708-2-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org> (Lubomir
+	Rintel's message of "Thu, 4 Feb 2016 08:36:03 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Feb 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao@linaro.org>
-> 
-> Sometimes it needs to check if there is a node in FDT by full path.
-> Introduce this helper to get the specified name subnode if it exists.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
 
-Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+[...]
+> @@ -33,3 +37,17 @@
+>  		brcm,function = <BCM2835_FSEL_ALT0>;
+>  	};
+>  };
+> +
+> +&usb {
+> +	usb1@1 {
+> +		compatible = "usb0424,9514";
+> +		reg = <01>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethernet: usbether@1 {
+> +			compatible = "usb0424,ec00";
+> +			reg = <01>;
+> +		};
+> +	};
+> +};
 
+Hi,
 
-> CC: Rob Herring <robh@kernel.org>
-> ---
->  drivers/of/fdt.c       | 25 +++++++++++++++++++++++++
->  include/linux/of_fdt.h |  2 ++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 655f79d..eacb188 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -645,6 +645,31 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->  }
->  
->  /**
-> + * of_get_flat_dt_subnode_by_name - get subnode of specified node by name
-> + *
-> + * @node: the parent node
-> + * @uname: the name of subnode
-> + * @return offset of the subnode, or -FDT_ERR_NOTFOUND if there is none
-> + */
-> +
-> +int of_get_flat_dt_subnode_by_name(unsigned long node, const char *uname)
-> +{
-> +	const void *blob = initial_boot_params;
-> +	int offset;
-> +	const char *pathp;
-> +
-> +	for (offset = fdt_first_subnode(blob, node);
-> +	     offset >= 0;
-> +	     offset = fdt_next_subnode(blob, offset)) {
-> +		pathp = fdt_get_name(blob, offset, NULL);
-> +		if (strcmp(pathp, uname) == 0)
-> +			return offset;
-> +	}
-> +
-> +	return -FDT_ERR_NOTFOUND;
-> +}
-> +
-> +/**
->   * of_get_flat_dt_root - find the root node in the flat blob
->   */
->  unsigned long __init of_get_flat_dt_root(void)
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index df9ef38..fc28162 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -52,6 +52,8 @@ extern char __dtb_end[];
->  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
->  				     int depth, void *data),
->  			   void *data);
-> +extern int of_get_flat_dt_subnode_by_name(unsigned long node,
-> +					  const char *uname);
->  extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
->  				       int *size);
->  extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
-> -- 
-> 2.0.4
-> 
-> 
+This works for me, after making sure that your u-boot patch gets a
+chance to be run (unset usbethaddr from u-boot).
+
+Though, I am not really DT-literate, but shouldn't the ethernet block
+use the PID from the ethernet device?
+The usbether device is 9514 on RPi2, while ec00 is the hub.
+
+Your patch works, but this works as well after swapping the PIDs.
+
+Thanks
+
+-- 
+Olivier Blin - blino
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
