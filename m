@@ -1,155 +1,113 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 2/2] pci, pci-thunder-pem: Add PCIe host driver for
- ThunderX processors.
-Date: Thu, 4 Feb 2016 21:10:42 -0600
-Message-ID: <20160205031042.GA31722@localhost>
-References: <1453844781-24380-1-git-send-email-ddaney.cavm@gmail.com>
- <1453844781-24380-3-git-send-email-ddaney.cavm@gmail.com>
- <20160205000452.GI7031@localhost>
- <56B3ECAD.4050605@caviumnetworks.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v2] drm: Clean up drm Makefile
+Date: Fri,  5 Feb 2016 11:10:30 +0800
+Message-ID: <1454641830-19307-1-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B3ECAD.4050605@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, oded.gabbay@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 04:28:29PM -0800, David Daney wrote:
-> On 02/04/2016 04:04 PM, Bjorn Helgaas wrote:
-> >On Tue, Jan 26, 2016 at 01:46:21PM -0800, David Daney wrote:
-> >>From: David Daney <david.daney@cavium.com>
-> >>
-> >>Some Cavium ThunderX processors require quirky access methods for the
-> >>config space of the PCIe bridge.  Add a driver to provide these config
-> >>space accessor functions.  The pci-host-common code is used to
-> >>configure the PCI machinery.
-> >>
-> >>Signed-off-by: David Daney <david.daney@cavium.com>
-> >>Acked-by: Rob Herring <robh@kernel.org>
-> >>Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >>---
-> >>  .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 ++++
-> >>  MAINTAINERS                                        |   8 +
-> >>  drivers/pci/host/Kconfig                           |   7 +
-> >>  drivers/pci/host/Makefile                          |   1 +
-> >>  drivers/pci/host/pci-thunder-pem.c                 | 283 +++++++++++++++++++++
-> >
-> >What's the significance of the "pem" part of the name?  I'm wondering
-> >if we can shorten the filenames and function names by dropping it and
-> >referring to this simply as "thunder" or "thunderx".
-> 
-> PEM == PCI Express MAC, Essentially the circuitry related to
-> off-chip PCI devices.  This differentiates it from the internal
-> on-chip devices which are connected to internal buses we refer to as
-> "ECAMs"
-
-That's an unusual and confusing usage of ECAM, since the PCIe spec
-uses ECAM for "Enhanced Configuration Access Mechanism", which is not
-a bus.
-
-> See also the follow on patch, from me, that adds the
-> pci-thunder-ecam.c driver.
-
-OK.  In PCIe spec terms, I guess your PEM and ECAM are two separate
-root complexes?  The spec defines a way to build a logical topology
-and doesn't really care whether the devices are on-chip or off-chip.
-
-> Since PEM and ECAM are terminology used in the hardware manuals that
-> have specific meanings relative to the Thunder SoC family, I think
-> it is not too inconvenient to carry them over into the file names.
-
-As long as PEM and ECAM are really two distinct root complexes that
-are unrelated, I guess this is OK.
-
-I was imagining that PEM devices and ECAM devices would be in the same
-hierarchy, in the same domain, in the same bus number space, but with
-different ways of accessing their config space.  If that were the
-case, you could have a single driver with config accessors that were
-smart enough to figure out which method to use.  But if they're truly
-separate and unrelated, then I guess it makes sense to have two
-drivers.
-
-Maybe a concrete example would make this clearer to me.  Can you share
-a dmesg log and lspci output showing both PEM and ECAM devices?
-
-> >>  5 files changed, 342 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
-> >>  create mode 100644 drivers/pci/host/pci-thunder-pem.c
-> >>
-> 
-> >>+
-> >>+static int thunder_pem_config_write(struct pci_bus *bus, unsigned int devfn,
-> >>+				    int where, int size, u32 val)
-> >>+{
-> >>+	struct gen_pci *pci = bus->sysdata;
-> >>+	struct thunder_pem_pci *pem_pci;
-> >>+
-> >>+	pem_pci = container_of(pci, struct thunder_pem_pci, gen_pci);
-> >>+
-> >>+	/*
-> >>+	 * The first device on the bus in the PEM PCIe bridge.
-> >>+	 * Special case its config access.
-> >>+	 */
-> >>+	if (bus->number == pci->cfg.bus_range->start) {
-> >>+		u64 write_val, read_val;
-> >>+
-> >>+		if (devfn != 0 || where >= 2048)
-> >>+			return PCIBIOS_DEVICE_NOT_FOUND;
-> >>+
-> >>+		/*
-> >>+		 * 32-bit accesses only.  If the write is for a size
-> >>+		 * smaller than 32-bits, we must first read the 32-bit
-> >>+		 * value and merge in the desired bits and then write
-> >>+		 * the whole 32-bits back out.
-> >>+		 */
-> >
-> >Ugh.  Another device that only supports 32-bit writes.  I guess this
-> >only affects this single device, and maybe you "know" that it has no
-> >registers where RW1C bits may be corrupted.  Although I suppose this
-> >device has the standard status registers (Status at 0x06, Secondary
-> >Status at 0x1e, Device Status in PCIe capability, etc.), which do
-> >contain RW1C bits.
-> 
-> This device is exactly the specific PCIe host bridge implementation,
-> present on these SoCs.  The only sane way to access its config space
-> is via 32-bit operations.  We know that it presents the appropriate
-> Class and other registers to be recognized as, and operate as, a
-> standard PCIe bridge.
-
-The only sane way to manage spec-conformant 16-bit Command and Status
-Registers is to use 16-bit accesses.  Using a 32-bit read/modify/write
-cycle to emulate a 16-bit write to the Command register means that we
-inadvertently clear any RW1C bits that happened to be set in the
-adjacent Status register.
-
-Note that these are generic PCI-defined registers, and the code doing
-16-bit accesses to them may be in the PCI core or possibly in a
-driver.  They're not ThunderX-specific registers, and it's not
-ThunderX-specific code.
-
-> >We need to print a warning at probe-time so we know to consider the
-> >possibility of corruption when debugging.
-> 
-> If you really want it, I suppose I can add that, but I am somewhat hesitant.
-
-I think this is a serious quality of implementation issue, and I do
-not want to debug status bits that mysteriously get cleared when
-nothing in the PCI core code even touches them.  I at least want a
-hint.
-
-We have a warning in pcie-hisi.c already, and I intend to do something
-similar in tegra, xgene, and iproc, which use
-pci_generic_config_write32().  There are probably others that roll
-their own.  I'm thinking something along the lines of
-dev_warn("sub-32-bit writes may corrupt adjacent RW1C bits").
-
-I don't really like this either, so I'm open to better ideas.  I
-considered a one-time warning in pci_generic_config_write32(), but
-that would associate the message with the PCI device when the problem
-is in the host bridge, and obviously it wouldn't help for ThunderX
-anyway.
-
-Bjorn
+VGhpcyBwYXRjaCBjbGVhbnMgdXAgdGhlIE1ha2VmaWxlIG9mIGRybSByb290IGRpcmVjdG9yeS4K
+TWFrZSBjb3JlIGFuZCBkZXZpY2UgZHJpdmVycyBjb25maWd1cmF0aW9uIGxpc3Qgc29ydGVkIEFs
+cGhhYmV0aWNhbGx5LgoKU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVA
+bGluYXJvLm9yZz4KUmV2aWV3ZWQtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlz
+aWxpY29uLmNvbT4KUmV2aWV3ZWQtYnk6IFlpZmFuIExpdSA8bGl1X2ZhbnlpQDE2My5jb20+Ci0t
+LQogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIHwgMTAyICsrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygr
+KSwgNTAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxl
+IGIvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlCmluZGV4IDYxNzY2ZGVjNmE4ZC4uMjNlNTc5NDhm
+NjhmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKKysrIGIvZHJpdmVycy9n
+cHUvZHJtL01ha2VmaWxlCkBAIC0yLDYgKzIsOSBAQAogIyBNYWtlZmlsZSBmb3IgdGhlIGRybSBk
+ZXZpY2UgZHJpdmVyLiAgVGhpcyBkcml2ZXIgcHJvdmlkZXMgc3VwcG9ydCBmb3IgdGhlCiAjIERp
+cmVjdCBSZW5kZXJpbmcgSW5mcmFzdHJ1Y3R1cmUgKERSSSkgaW4gWEZyZWU4NiA0LjEuMCBhbmQg
+aGlnaGVyLgogCitDRkxBR1NfZHJtX3RyYWNlX3BvaW50cy5vIDo9IC1JJChzcmMpCisKKyMgY29y
+ZS4gUGxlYXNlIGtlZXAgdGhpcyBsaXN0IHNvcnRlZCBhbHBoYWJldGljYWxseQogZHJtLXkgICAg
+ICAgOj0JZHJtX2F1dGgubyBkcm1fYnVmcy5vIGRybV9jYWNoZS5vIFwKIAkJZHJtX2NvbnRleHQu
+byBkcm1fZG1hLm8gXAogCQlkcm1fZm9wcy5vIGRybV9nZW0ubyBkcm1faW9jdGwubyBkcm1faXJx
+Lm8gXApAQCAtMTMsNjQgKzE2LDYzIEBAIGRybS15ICAgICAgIDo9CWRybV9hdXRoLm8gZHJtX2J1
+ZnMubyBkcm1fY2FjaGUubyBcCiAJCWRybV90cmFjZV9wb2ludHMubyBkcm1fZ2xvYmFsLm8gZHJt
+X3ByaW1lLm8gXAogCQlkcm1fcmVjdC5vIGRybV92bWFfbWFuYWdlci5vIGRybV9mbGlwX3dvcmsu
+byBcCiAJCWRybV9tb2Rlc2V0X2xvY2subyBkcm1fYXRvbWljLm8gZHJtX2JyaWRnZS5vCi0KLWRy
+bS0kKENPTkZJR19DT01QQVQpICs9IGRybV9pb2MzMi5vCi1kcm0tJChDT05GSUdfRFJNX0dFTV9D
+TUFfSEVMUEVSKSArPSBkcm1fZ2VtX2NtYV9oZWxwZXIubwogZHJtLSQoQ09ORklHX1BDSSkgKz0g
+YXRpX3BjaWdhcnQubwotZHJtLSQoQ09ORklHX0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVsLm8KLWRy
+bS0kKENPTkZJR19PRikgKz0gZHJtX29mLm8KIGRybS0kKENPTkZJR19BR1ApICs9IGRybV9hZ3Bz
+dXBwb3J0Lm8KK2RybS0kKENPTkZJR19EUk1fR0VNX0NNQV9IRUxQRVIpICs9IGRybV9nZW1fY21h
+X2hlbHBlci5vCitkcm0tJChDT05GSUdfQ09NUEFUKSArPSBkcm1faW9jMzIubworZHJtLSQoQ09O
+RklHX09GKSArPSBkcm1fb2YubworZHJtLSQoQ09ORklHX0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVs
+Lm8KK29iai0kKENPTkZJR19EUk0pCSs9IGRybS5vCisKK29iai0kKENPTkZJR19EUk1fTUlQSV9E
+U0kpICs9IGRybV9taXBpX2RzaS5vCiAKIGRybV9rbXNfaGVscGVyLXkgOj0gZHJtX2NydGNfaGVs
+cGVyLm8gZHJtX2RwX2hlbHBlci5vIGRybV9wcm9iZV9oZWxwZXIubyBcCiAJCWRybV9wbGFuZV9o
+ZWxwZXIubyBkcm1fZHBfbXN0X3RvcG9sb2d5Lm8gZHJtX2F0b21pY19oZWxwZXIubwogZHJtX2tt
+c19oZWxwZXItJChDT05GSUdfRFJNX0xPQURfRURJRF9GSVJNV0FSRSkgKz0gZHJtX2VkaWRfbG9h
+ZC5vCi1kcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fRkJERVZfRU1VTEFUSU9OKSArPSBkcm1f
+ZmJfaGVscGVyLm8KIGRybV9rbXNfaGVscGVyLSQoQ09ORklHX0RSTV9LTVNfQ01BX0hFTFBFUikg
+Kz0gZHJtX2ZiX2NtYV9oZWxwZXIubwotCitkcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fRkJE
+RVZfRU1VTEFUSU9OKSArPSBkcm1fZmJfaGVscGVyLm8KIG9iai0kKENPTkZJR19EUk1fS01TX0hF
+TFBFUikgKz0gZHJtX2ttc19oZWxwZXIubwogCi1DRkxBR1NfZHJtX3RyYWNlX3BvaW50cy5vIDo9
+IC1JJChzcmMpCitvYmotJChDT05GSUdfRFJNX1RUTSkgKz0gdHRtLwogCi1vYmotJChDT05GSUdf
+RFJNKQkrPSBkcm0ubwotb2JqLSQoQ09ORklHX0RSTV9NSVBJX0RTSSkgKz0gZHJtX21pcGlfZHNp
+Lm8KLW9iai0kKENPTkZJR19EUk1fVFRNKQkrPSB0dG0vCi1vYmotJChDT05GSUdfRFJNX1RERlgp
+CSs9IHRkZngvCi1vYmotJChDT05GSUdfRFJNX1IxMjgpCSs9IHIxMjgvCi1vYmotJChDT05GSUdf
+SFNBX0FNRCkgKz0gYW1kL2FtZGtmZC8KLW9iai0kKENPTkZJR19EUk1fUkFERU9OKSs9IHJhZGVv
+bi8KLW9iai0kKENPTkZJR19EUk1fQU1ER1BVKSs9IGFtZC9hbWRncHUvCi1vYmotJChDT05GSUdf
+RFJNX01HQSkJKz0gbWdhLwotb2JqLSQoQ09ORklHX0RSTV9JODEwKQkrPSBpODEwLwotb2JqLSQo
+Q09ORklHX0RSTV9JOTE1KSAgKz0gaTkxNS8KLW9iai0kKENPTkZJR19EUk1fTUdBRzIwMCkgKz0g
+bWdhZzIwMC8KLW9iai0kKENPTkZJR19EUk1fVkM0KSAgKz0gdmM0Lwotb2JqLSQoQ09ORklHX0RS
+TV9DSVJSVVNfUUVNVSkgKz0gY2lycnVzLwotb2JqLSQoQ09ORklHX0RSTV9TSVMpICAgKz0gc2lz
+Lwotb2JqLSQoQ09ORklHX0RSTV9TQVZBR0UpKz0gc2F2YWdlLwotb2JqLSQoQ09ORklHX0RSTV9W
+TVdHRlgpKz0gdm13Z2Z4Lwotb2JqLSQoQ09ORklHX0RSTV9WSUEpCSs9dmlhLwotb2JqLSQoQ09O
+RklHX0RSTV9WR0VNKQkrPSB2Z2VtLwotb2JqLSQoQ09ORklHX0RSTV9OT1VWRUFVKSArPW5vdXZl
+YXUvCi1vYmotJChDT05GSUdfRFJNX0VYWU5PUykgKz1leHlub3MvCi1vYmotJChDT05GSUdfRFJN
+X1JPQ0tDSElQKSArPXJvY2tjaGlwLwotb2JqLSQoQ09ORklHX0RSTV9HTUE1MDApICs9IGdtYTUw
+MC8KLW9iai0kKENPTkZJR19EUk1fVURMKSArPSB1ZGwvCi1vYmotJChDT05GSUdfRFJNX0FTVCkg
+Kz0gYXN0Lwotb2JqLSQoQ09ORklHX0RSTV9BUk1BREEpICs9IGFybWFkYS8KKyMgZGV2aWNlIGRy
+aXZlcnMuIFBsZWFzZSBrZWVwIHRoaXMgbGlzdCBzb3J0ZWQgYWxwaGFiZXRpY2FsbHkKK29iai0k
+KENPTkZJR19IU0FfQU1EKQkJKz0gYW1kL2FtZGtmZC8KK29iai0kKENPTkZJR19EUk1fQU1ER1BV
+KQkrPSBhbWQvYW1kZ3B1Lworb2JqLSQoQ09ORklHX0RSTV9BUk1BREEpCSs9IGFybWFkYS8KK29i
+ai0kKENPTkZJR19EUk1fQVNUKQkJKz0gYXN0Lwogb2JqLSQoQ09ORklHX0RSTV9BVE1FTF9ITENE
+QykJKz0gYXRtZWwtaGxjZGMvCi1vYmotJChDT05GSUdfRFJNX1JDQVJfRFUpICs9IHJjYXItZHUv
+Ci1vYmotJChDT05GSUdfRFJNX1NITU9CSUxFKSArPXNobW9iaWxlLwotb2JqLXkJCQkrPSBvbWFw
+ZHJtLwotb2JqLXkJCQkrPSB0aWxjZGMvCi1vYmotJChDT05GSUdfRFJNX1FYTCkgKz0gcXhsLwot
+b2JqLSQoQ09ORklHX0RSTV9CT0NIUykgKz0gYm9jaHMvCi1vYmotJChDT05GSUdfRFJNX1ZJUlRJ
+T19HUFUpICs9IHZpcnRpby8KLW9iai0kKENPTkZJR19EUk1fTVNNKSArPSBtc20vCi1vYmotJChD
+T05GSUdfRFJNX1RFR1JBKSArPSB0ZWdyYS8KLW9iai0kKENPTkZJR19EUk1fU1RJKSArPSBzdGkv
+Ci1vYmotJChDT05GSUdfRFJNX0lNWCkgKz0gaW14Lwotb2JqLXkJCQkrPSBpMmMvCi1vYmoteQkJ
+CSs9IHBhbmVsLwotb2JqLXkJCQkrPSBicmlkZ2UvCi1vYmotJChDT05GSUdfRFJNX0ZTTF9EQ1Up
+ICs9IGZzbC1kY3UvCi1vYmotJChDT05GSUdfRFJNX0VUTkFWSVYpICs9IGV0bmF2aXYvCitvYmot
+JChDT05GSUdfRFJNX0JPQ0hTKQkJKz0gYm9jaHMvCitvYmoteQkJCQkrPSBicmlkZ2UvCitvYmot
+JChDT05GSUdfRFJNX0NJUlJVU19RRU1VKQkrPSBjaXJydXMvCitvYmotJChDT05GSUdfRFJNX0VU
+TkFWSVYpCSs9IGV0bmF2aXYvCitvYmotJChDT05GSUdfRFJNX0VYWU5PUykJKz0gZXh5bm9zLwor
+b2JqLSQoQ09ORklHX0RSTV9GU0xfRENVKQkrPSBmc2wtZGN1Lworb2JqLSQoQ09ORklHX0RSTV9H
+TUE1MDApCSs9IGdtYTUwMC8KK29iai15CQkJCSs9IGkyYy8KK29iai0kKENPTkZJR19EUk1fSTgx
+MCkJCSs9IGk4MTAvCitvYmotJChDT05GSUdfRFJNX0k5MTUpCQkrPSBpOTE1Lworb2JqLSQoQ09O
+RklHX0RSTV9JTVgpCQkrPSBpbXgvCitvYmotJChDT05GSUdfRFJNX01HQSkJCSs9IG1nYS8KK29i
+ai0kKENPTkZJR19EUk1fTUdBRzIwMCkJKz0gbWdhZzIwMC8KK29iai0kKENPTkZJR19EUk1fTVNN
+KQkJKz0gbXNtLworb2JqLSQoQ09ORklHX0RSTV9OT1VWRUFVKQkrPSBub3V2ZWF1Lworb2JqLXkJ
+CQkJKz0gb21hcGRybS8KK29iai15CQkJCSs9IHBhbmVsLworb2JqLSQoQ09ORklHX0RSTV9RWEwp
+CQkrPSBxeGwvCitvYmotJChDT05GSUdfRFJNX1IxMjgpCQkrPSByMTI4Lworb2JqLSQoQ09ORklH
+X0RSTV9SQURFT04pCSs9IHJhZGVvbi8KK29iai0kKENPTkZJR19EUk1fUkNBUl9EVSkJKz0gcmNh
+ci1kdS8KK29iai0kKENPTkZJR19EUk1fUk9DS0NISVApCSs9IHJvY2tjaGlwLworb2JqLSQoQ09O
+RklHX0RSTV9TQVZBR0UpCSs9IHNhdmFnZS8KK29iai0kKENPTkZJR19EUk1fU0hNT0JJTEUpCSs9
+IHNobW9iaWxlLworb2JqLSQoQ09ORklHX0RSTV9TSVMpCQkrPSBzaXMvCitvYmotJChDT05GSUdf
+RFJNX1NUSSkJCSs9IHN0aS8KK29iai0kKENPTkZJR19EUk1fVERGWCkJCSs9IHRkZngvCitvYmot
+JChDT05GSUdfRFJNX1RFR1JBKQkJKz0gdGVncmEvCitvYmoteQkJCQkrPSB0aWxjZGMvCitvYmot
+JChDT05GSUdfRFJNX1VETCkJCSs9IHVkbC8KK29iai0kKENPTkZJR19EUk1fVkM0KQkJKz0gdmM0
+Lworb2JqLSQoQ09ORklHX0RSTV9WR0VNKQkJKz0gdmdlbS8KK29iai0kKENPTkZJR19EUk1fVklB
+KQkJKz0gdmlhLworb2JqLSQoQ09ORklHX0RSTV9WSVJUSU9fR1BVKQkrPSB2aXJ0aW8vCitvYmot
+JChDT05GSUdfRFJNX1ZNV0dGWCkJKz0gdm13Z2Z4LwotLSAKMS45LjEKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
