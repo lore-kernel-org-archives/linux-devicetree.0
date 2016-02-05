@@ -1,53 +1,184 @@
-From: Dawei Chien <dawei.chien@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8173: add node for thermal calibration
-Date: Fri, 5 Feb 2016 13:47:38 +0800
-Message-ID: <1454651258-41990-1-git-send-email-dawei.chien@mediatek.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
+Date: Fri, 5 Feb 2016 14:11:25 +0800
+Message-ID: <20160205061124.GB1858@shlinux2>
+References: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
+ <1454582690.3356.18.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Kurtz <djkurtz@chromium.org>, Dawei Chien <dawei.chien@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454582690.3356.18.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add this for supporting thermal calibration by e-fuse data.
+On Thu, Feb 04, 2016 at 11:44:50AM +0100, Philipp Zabel wrote:
+> Hi Peter,
+> 
+> Am Montag, den 25.01.2016, 15:24 +0800 schrieb Peter Chen:
+> > Although most of USB devices are hot-plug's, there are still some devices
+> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> > If these kinds of USB devices are multiple functions, and they can supply
+> > other interfaces like i2c, gpios for other devices, we may need to
+> > describe these at device tree.
+> > 
+> > In this commit, it uses "reg" in dts as physical port number to match
+> > the phyiscal port number decided by USB core, if they are the same,
+> > then the device node is for the device we are creating for USB core.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > Changes for v4:
+> > - The range of "reg" should be 1-31, changing device node address
+> >   style as in lower case hexadecimal with leading zeroes suppressed
+> >   [binding doc, usb-device.txt]
+> > - Improve the example at binding doc, it describes node from the top
+> >   (the controller)
+> > - Delete the struct of_node * within struct usb_device
+> > - Using usb_hcd_find_raw_port_number to get raw port number under root
+> >   hub port
+> > 
+> > Changes for v3:
+> > - typo: s/descirbe/describe/
+> > 
+> > Changes for v2:
+> > - Fix build error reported by kbuild robot, lack of "static" for
+> >   inline usb_of_get_child_node
+> > - Fix typo, "devcie_node" -> "device_node"
+> > - Add kernel-doc for of_node at struct usb_device
+> > 
+> > Changes from RFC:
+> > - Fix the error address for binding doc, and add compatible for binding doc
+> > - Change get child node API from "usb_of_find_node" to
+> >   "usb_of_get_child_node"
+> > - Delete unecessary header files
+> > - One typo
+> > 
+> >  .../devicetree/bindings/usb/usb-device.txt         | 25 ++++++++++++
+> >  drivers/usb/core/Makefile                          |  2 +-
+> >  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
+> >  drivers/usb/core/usb.c                             | 14 ++++++-
+> >  include/linux/usb/of.h                             |  7 ++++
+> >  5 files changed, 92 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+> >  create mode 100644 drivers/usb/core/of.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > new file mode 100644
+> > index 0000000..c702885
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > @@ -0,0 +1,25 @@
+> > +Generic USB Device Properties
+> > +
+> > +Usually, we only use device tree for hard wired USB device.
+> > +The reference binding doc is from:
+> > +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> > +
+> > +Required properties:
+> > +- compatible: usbVID,PID
+> 
+> The reference recommendation states that for single-configuration USB
+> devices the compatible should contain all of the applicable strings from
+> the list starting with 2) "usbVID,PID.REV" and ending with 11)
+> "usb,device". Are we going to ignore this?
+> 
 
-Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
----
-Because MTK thermal/efuse patches hadn't landed on mainline, this patch
-must base on following patchset:
-https://lkml.org/lkml/2015/11/17/251
-https://lkml.org/lkml/2015/11/19/169
-https://lkml.org/lkml/2015/11/30/239
-https://lkml.org/lkml/2015/12/16/195
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
+I have not seen benefits if we write several compatibles in dts,
+the information of compatibles listed in doc can be got during
+the enumeration.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index ffcca66..0c9d17e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -391,6 +391,11 @@
- 		efuse: efuse@10206000 {
- 			compatible = "mediatek,mt8173-efuse";
- 			reg = <0 0x10206000 0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			thermal_calibration: calib@528 {
-+				reg = <0x528 0xc>;
-+			};
- 		};
- 
- 		apmixedsys: clock-controller@10209000 {
-@@ -744,6 +749,8 @@
- 			resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
- 			mediatek,auxadc = <&auxadc>;
- 			mediatek,apmixedsys = <&apmixedsys>;
-+			nvmem-cells = <&thermal_calibration>;
-+			nvmem-cell-names = "calibration-data";
- 		};
- 	};
- };
+I suggest we use the simple pattern for this compatible, in that
+case, every one can be easy to follow it, and will not be confused
+which compatibles should be used, and the style can be unify.
+
+> The document also states that "the textual representation of VID, PID
+> [...] shall be in lower case hexadecimal with leading zeroes
+> suppressed". This should be documented here.
+
+I will change.
+
+> 
+> > +- reg: the port number which this device is connecting to, the range
+> > +  is 1-31.
+> > +
+> > +
+> > +Example:
+> > +
+> > +&usb1 {
+> > +	status = "okay";
+> > +
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	hub: genesys@1 {
+> 
+> There are node names specified for hubs and mass storage devices:
+> "hub", "storage", "cdrom", "tape", "solid-state", and "device" for
+> everything else. Should we follow this recommendation?
+
+I agree.
+
+> 
+> > +		compatible = "usb05e3,0608";
+> > +		reg = <0x1>;
+> > +	};
+> 
+> I'd have written this node as:
+> 
+> 	hub: hub@1 {
+> 		compatible = "usb5e3,608", "usb5e3,class9",
+> 			     "usb,class9", "usb,device";
+> 		reg = <1>;
+> 	};
+
+The reg should be hexadecimal, do we need to add "0x" before the value?
+
+> As another example, I'd like to introduce the USB WLAN Adapter soldered
+> onto the imx6q-gk802 board to its power enable GPIO via the device tree:
+> 
+> /* Internal USB port (USBH1) */
+> &usbh1 {
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 	status = "okay";
+> 
+> 	/* RTL8192CU 802.11n WLAN Adapter */
+> 	device@1 {
+> 		compatible = "usbbda,8176.200", "usbbda,8176",
+> 			     "usb,device";
+> 		reg = <1>;
+> 
+> 		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+> 	};
+> };
+> 
+
+It is okay to use your example, but I still insist like below:
+
+/* Internal USB port (USBH1) */
+&usbh1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* RTL8192CU 802.11n WLAN Adapter */
+	device@1 {
+		compatible = "usbbda,8176";
+		reg = <1>;
+
+		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+	};
+};
+
+
 -- 
-1.7.9.5
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
