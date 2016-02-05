@@ -1,58 +1,81 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Fri, 05 Feb 2016 23:22:26 +0100
-Message-ID: <364593765.PbysHF8iXJ@wuerfel>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: layerscape: add ls2085a compatible
+Date: Fri, 5 Feb 2016 16:25:25 -0600
+Message-ID: <20160205222525.GA16238@localhost>
+References: <1453915925-19198-1-git-send-email-yang.shi@linaro.org>
+ <20160205203858.GA11780@localhost>
+ <56B509E5.2050602@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454693676-20211-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B509E5.2050602@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Shi, Yang" <yang.shi@linaro.org>
+Cc: Mingkai.Hu@freescale.com, Minghuan.Lian@freescale.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 February 2016 18:34:36 Petr Kulhavy wrote:
-> TI DA8xx MUSB driver equipped with DeviceTree support.
-> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+On Fri, Feb 05, 2016 at 12:45:25PM -0800, Shi, Yang wrote:
+> On 2/5/2016 12:38 PM, Bjorn Helgaas wrote:
+> >[+cc Rob, et al]
+> >
+> >On Wed, Jan 27, 2016 at 09:32:05AM -0800, Yang Shi wrote:
+> >>The layerscape PCI host driver needs recognize ls2085a compatible when using
+> >>firmware with ls2085a compatible property, otherwise the PCI bus won't be
+> >>detected even though ls2085a compatible is included by the dts.
+> >>
+> >>Signed-off-by: Yang Shi <yang.shi@linaro.org>
+> >>---
+> >>  drivers/pci/host/pci-layerscape.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >>diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-layerscape.c
+> >>index 3923bed..c40d8b2 100644
+> >>--- a/drivers/pci/host/pci-layerscape.c
+> >>+++ b/drivers/pci/host/pci-layerscape.c
+> >>@@ -203,6 +203,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
+> >>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
+> >>  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+> >>  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+> >>+	{ .compatible = "fsl,ls2085a-pcie", .data = &ls2080_drvdata },
+> >
+> >Hmm, "fsl,ls2085a-pcie" doesn't appear in
+> >Documentation/devicetree/bindings/pci/.
+> >
+> >Aren't we supposed to add these strings to the bindings before or at
+> >the same time we add them to drivers?
 > 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
->  drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
->  include/linux/platform_data/usb-davinci.h          |   3 +-
-
-The changes look good, thanks.
-
-One more thing:
-
->  3 files changed, 227 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> The below patch will add it into dts and binding doc. I should
+> mentioned this in the commit log.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> new file mode 100644
-> index 0000000..69c0961
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -0,0 +1,63 @@
-> +TI DA8xx MUSB
-> +~~~~~~~~~~~~~
-> +
-> +Required properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> + - compatible : Should be "ti,da8xx-musb"
-> +
+> https://patchwork.kernel.org/patch/7767061/
 
-Please make this
+OK.  This is really annoying as a reviewer.  To me, adding
+"fsl,ls2085a-pcie" to:
 
-	Should be one of "ti,da850-musb" or "ti,da830-musb"
+  - the binding in Documentation/devicetree/bindings/pci/layerscape-pci.txt
+  - the DT in arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+  - the driver in drivers/pci/host/pci-layerscape.c
 
-We don't use wildcards in compatible strings, so better use specific model
-names in case we later find something that is different betweent the models.
+are all logically related, and it would make sense to have them all in
+a single patch.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But whatever.  I applied this to pci/host-layerscape for v4.6.
+
+> >checkpatch doesn't complain though, so maybe I'm wrong about this.
+> >
+> >>  	{ },
+> >>  };
+> >>  MODULE_DEVICE_TABLE(of, ls_pcie_of_match);
+> >>--
+> >>2.0.2
+> >>
+> >>--
+> >>To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> >>the body of a message to majordomo@vger.kernel.org
+> >>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
