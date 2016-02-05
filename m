@@ -1,760 +1,435 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 10/11] arm64: dts: add Allwinner A64 SoC .dtsi
-Date: Fri, 5 Feb 2016 16:55:06 +0800
-Message-ID: <CAGb2v664eH23JEK5prT-z3joPesdUf+FGYQEdnX1TBs9+SUWRA@mail.gmail.com>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-11-git-send-email-andre.przywara@arm.com>
- <56B0D83E.5090604@gmail.com> <56B0DD67.3060802@arm.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v10 4/5] Watchdog: introduce ARM SBSA watchdog driver
+Date: Fri, 5 Feb 2016 17:01:55 +0800
+Message-ID: <CADyBb7tjoTPj2uAS23Rpqzfq3tyfSTxq4t7rAxivj64W9Xx4kg@mail.gmail.com>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+	<1454519923-25230-5-git-send-email-fu.wei@linaro.org>
+	<CANLsYkzQpEHa4hnO4D1E0+P-i961+ak=Hr_RPPrOxd-+VMhLSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBAWH2G2QKGQEJIBLUWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <56B0DD67.3060802-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkzQpEHa4hnO4D1E0+P-i961+ak=Hr_RPPrOxd-+VMhLSQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>Timur Tabi <t>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 3, 2016 at 12:46 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Jens,
->
-> thanks for having such an elaborate look!
->
-> On 02/02/16 16:24, Jens Kuske wrote:
->> Hi,
+On 5 February 2016 at 00:25, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+> On 3 February 2016 at 10:18,  <fu.wei@linaro.org> wrote:
+>> From: Fu Wei <fu.wei@linaro.org>
 >>
->> On 01/02/16 18:39, Andre Przywara wrote:
->>> The Allwinner A64 SoC is low-cost SoC with 4 ARM Cortex-A53 cores
->>> and the typical tablet / TV box peripherals.
->>> The Soc is based on the (32-bit) Allwinner H3 chip, sharing most of
->>> the peripherals and the memory map.
->>> Although the cores are proper 64-bit ones, the whole SoC is actually
->>> limited to 4GB (including all the supported DRAM), so we use 32-bit
->>> address and size cells. This has the nice feature of us being able to
->>> reuse the DT for 32-bit kernels as well.
->>> This .dtsi lists the hardware that we support so far.
->>>
->>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/sunxi.txt   |   1 +
->>>  Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
->>>  arch/arm64/boot/dts/allwinner/a64.dtsi            | 583 ++++++++++++++++++++++
->>>  3 files changed, 585 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/allwinner/a64.dtsi
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
->>> index 980e065..4a83853 100644
->>> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
->>> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
->>> @@ -14,6 +14,7 @@ using one of the following compatible strings:
->>>    allwinner,sun8i-a83t
->>>    allwinner,sun8i-h3
->>>    allwinner,sun9i-a80
->>> +  allwinner,a64
->>>
->>>  For Allwinner SoCs without any specific needs the generic fallback value of:
->>>    allwinner,sunxi
->>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->>> index e59f57b..44b0c6c 100644
->>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->>> @@ -77,6 +77,7 @@ Required properties:
->>>      "allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
->>>      "allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
->>>      "allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
->>> +    "allwinner,a64-bus-gates-clk" - for the A64 multi-parent bus gates clock
->>>
->>>  Required properties for all clocks:
->>>  - reg : shall be the control register address for the clock.
->>> diff --git a/arch/arm64/boot/dts/allwinner/a64.dtsi b/arch/arm64/boot/dts/allwinner/a64.dtsi
->>> new file mode 100644
->>> index 0000000..8dce10f
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/allwinner/a64.dtsi
->>> @@ -0,0 +1,583 @@
->>> +/*
->>> + * Copyright (C) 2016 ARM Ltd.
->>> + * based on the Allwinner H3 dtsi:
->>> + *    Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> + *
->>> + * This file is dual-licensed: you can use it either under the terms
->>> + * of the GPL or the X11 license, at your option. Note that this dual
->>> + * licensing only applies to this file, and not this project as a
->>> + * whole.
->>> + *
->>> + *  a) This file is free software; you can redistribute it and/or
->>> + *     modify it under the terms of the GNU General Public License as
->>> + *     published by the Free Software Foundation; either version 2 of the
->>> + *     License, or (at your option) any later version.
->>> + *
->>> + *     This file is distributed in the hope that it will be useful,
->>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + *     GNU General Public License for more details.
->>> + *
->>> + * Or, alternatively,
->>> + *
->>> + *  b) Permission is hereby granted, free of charge, to any person
->>> + *     obtaining a copy of this software and associated documentation
->>> + *     files (the "Software"), to deal in the Software without
->>> + *     restriction, including without limitation the rights to use,
->>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->>> + *     sell copies of the Software, and to permit persons to whom the
->>> + *     Software is furnished to do so, subject to the following
->>> + *     conditions:
->>> + *
->>> + *     The above copyright notice and this permission notice shall be
->>> + *     included in all copies or substantial portions of the Software.
->>> + *
->>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->>> + *     OTHER DEALINGS IN THE SOFTWARE.
->>> + */
->>> +
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->>> +
->>> +/ {
->>> +    compatible = "allwinner,a64", "allwinner,sunxi";
->>> +    interrupt-parent = <&gic>;
->>> +    #address-cells = <1>;
->>> +    #size-cells = <1>;
->>> +
->>> +    aliases {
->>> +            serial0 = &uart0;
->>> +            serial1 = &uart1;
->>> +            serial2 = &uart2;
->>> +            serial3 = &uart3;
->>> +            serial4 = &uart4;
->>> +    };
->>> +
->>> +    cpus {
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>> +
->>> +            cpu@0 {
->>> +                    compatible = "arm,cortex-a53", "arm,armv8";
->>> +                    device_type = "cpu";
->>> +                    reg = <0>;
->>> +                    enable-method = "psci";
->>> +            };
->>> +
->>> +            cpu@1 {
->>> +                    compatible = "arm,cortex-a53", "arm,armv8";
->>> +                    device_type = "cpu";
->>> +                    reg = <1>;
->>> +                    enable-method = "psci";
->>> +            };
->>> +
->>> +            cpu@2 {
->>> +                    compatible = "arm,cortex-a53", "arm,armv8";
->>> +                    device_type = "cpu";
->>> +                    reg = <2>;
->>> +                    enable-method = "psci";
->>> +            };
->>> +
->>> +            cpu@3 {
->>> +                    compatible = "arm,cortex-a53", "arm,armv8";
->>> +                    device_type = "cpu";
->>> +                    reg = <3>;
->>> +                    enable-method = "psci";
->>> +            };
->>> +    };
->>> +
->>> +    psci {
->>> +            compatible = "arm,psci-0.2", "arm,psci";
->>> +            method = "smc";
->>> +            cpu_suspend = <0xc4000001>;
->>> +            cpu_off = <0x84000002>;
->>> +            cpu_on = <0xc4000003>;
->>> +    };
->>> +
->>> +    memory {
->>> +            device_type = "memory";
->>> +            reg = <0x40000000 0>;
->>> +    };
->>> +
->>> +    timer {
->>> +            compatible = "arm,armv8-timer";
->>> +            interrupts = <GIC_PPI 13
->>> +                    (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
->>> +                         <GIC_PPI 14
->>> +                    (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
->>> +                         <GIC_PPI 11
->>> +                    (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
->>> +                         <GIC_PPI 10
->>> +                    (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>> +    };
->>> +
->>> +    clocks {
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            ranges;
->>> +
->>> +            osc24M: osc24M_clk {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "fixed-clock";
->>> +                    clock-frequency = <24000000>;
->>> +                    clock-output-names = "osc24M";
->>> +            };
->>> +
->>> +            osc32k: osc32k_clk {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "fixed-clock";
->>> +                    clock-frequency = <32768>;
->>> +                    clock-output-names = "osc32k";
->>> +            };
->>> +
->>> +            pll1: clk@01c20000 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun8i-a23-pll1-clk";
->>> +                    reg = <0x01c20000 0x4>;
->>> +                    clocks = <&osc24M>;
->>> +                    clock-output-names = "pll1";
->>> +            };
->>> +
->>> +            pll6: clk@01c20028 {
->>> +                    #clock-cells = <1>;
->>> +                    compatible = "allwinner,sun6i-a31-pll6-clk";
->>> +                    reg = <0x01c20028 0x4>;
->>> +                    clocks = <&osc24M>;
->>> +                    clock-output-names = "pll6", "pll6x2";
->>> +            };
->>> +
->>> +            pll6d2: pll6d2_clk {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "fixed-factor-clock";
->>> +                    clock-div = <2>;
->>> +                    clock-mult = <1>;
->>> +                    clocks = <&pll6 0>;
->>> +                    clock-output-names = "pll6d2";
->>> +            };
->>> +
->>> +            /* dummy clock until pll6 can be reused */
->>> +            pll8: pll8_clk {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "fixed-clock";
->>> +                    clock-frequency = <1>;
->>> +                    clock-output-names = "pll8";
->>> +            };
->
-> Since I have you (as the original author ;-) in the loop: What was again
-> the reason for this dummy clock? Can't it be modelled with the existing
-> clock drivers in Linux?
-
-The driver for "allwinner,sun6i-a31-pll6-clk" has it's name hard coded,
-which means it's not reusable for other clocks. The placeholder is there
-to provide a proper representation of the clock tree. It works because
-nothing is clocked from pll8 by default.
-
->>> +
->>> +            cpu: cpu_clk@01c20050 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun4i-a10-cpu-clk";
->>> +                    reg = <0x01c20050 0x4>;
->>> +                    clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
->>> +                    clock-output-names = "cpu";
->>> +                    critical-clocks = <0>;
->>> +            };
->>> +
->>> +            axi: axi_clk@01c20050 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun4i-a10-axi-clk";
->>> +                    reg = <0x01c20050 0x4>;
->>> +                    clocks = <&cpu>;
->>> +                    clock-output-names = "axi";
->>> +            };
->>> +
->>> +            ahb1: ahb1_clk@01c20054 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun6i-a31-ahb1-clk";
->>> +                    reg = <0x01c20054 0x4>;
->>> +                    clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
->>> +                    clock-output-names = "ahb1";
->>> +            };
->>> +
->>> +            ahb2: ahb2_clk@01c2005c {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun8i-h3-ahb2-clk";
->>> +                    reg = <0x01c2005c 0x4>;
->>> +                    clocks = <&ahb1>, <&pll6d2>;
->>> +                    clock-output-names = "ahb2";
->>> +            };
->>> +
->>> +            apb1: apb1_clk@01c20054 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun4i-a10-apb0-clk";
->>> +                    reg = <0x01c20054 0x4>;
->>> +                    clocks = <&ahb1>;
->>> +                    clock-output-names = "apb1";
->>> +            };
->>> +
->>> +            apb2: apb2_clk@01c20058 {
->>> +                    #clock-cells = <0>;
->>> +                    compatible = "allwinner,sun4i-a10-apb1-clk";
->>> +                    reg = <0x01c20058 0x4>;
->>> +                    clocks = <&osc32k>, <&osc24M>, <&pll6 1>, <&pll6 1>;
->>> +                    clock-output-names = "apb2";
->>> +            };
->>> +
->>> +            bus_gates: clk@01c20060 {
->>> +                    #clock-cells = <1>;
->>> +                    compatible = "allwinner,a64-bus-gates-clk",
->>> +                                 "allwinner,sunxi-multi-bus-gates-clk";
->>> +                    reg = <0x01c20060 0x14>;
->>> +                    ahb1_parent {
->>> +                            clocks = <&ahb1>;
->>> +                            clock-indices = <1>, <5>,
->>> +                                            <6>, <8>,
->>> +                                            <9>, <10>,
->>> +                                            <13>, <14>,
->>> +                                            <18>, <19>,
->>> +                                            <20>, <21>,
->>> +                                            <23>, <24>,
->>> +                                            <25>, <28>,
->>> +                                            <32>, <35>,
->>> +                                            <36>, <37>,
->>> +                                            <40>, <43>,
->>> +                                            <44>, <52>,
->>> +                                            <53>, <54>,
->>> +                                            <135>;
->>> +                            clock-output-names = "bus_mipidsi", "bus_ce",
->>> +                                            "bus_dma", "bus_mmc0",
->>> +                                            "bus_mmc1", "bus_mmc2",
->>> +                                            "bus_nand", "bus_sdram",
->>> +                                            "bus_ts", "bus_hstimer",
->>> +                                            "bus_spi0", "bus_spi1",
->>> +                                            "bus_otg", "bus_otg_ehci0",
->>> +                                            "bus_ehci0", "bus_otg_ohci0",
->>> +                                            "bus_ve", "bus_lcd0",
->>> +                                            "bus_lcd1", "bus_deint",
->>> +                                            "bus_csi", "bus_hdmi",
->>> +                                            "bus_de", "bus_gpu",
->>> +                                            "bus_msgbox", "bus_spinlock",
->>> +                                            "bus_dbg";
->>> +                    };
->>> +                    ahb2_parent {
->>> +                            clocks = <&ahb2>;
->>> +                            clock-indices = <17>, <29>;
->>> +                            clock-output-names = "bus_gmac", "bus_ohci0";
->>> +                    };
->>> +                    apb1_parent {
->>> +                            clocks = <&apb1>;
->>> +                            clock-indices = <64>, <65>,
->>> +                                            <69>, <72>,
->>> +                                            <76>, <77>,
->>> +                                            <78>;
->>> +                            clock-output-names = "bus_codec", "bus_spdif",
->>> +                                            "bus_pio", "bus_ths",
->>> +                                            "bus_i2s0", "bus_i2s1",
->>> +                                            "bus_i2s2";
->>> +                    };
->>> +                    abp2_parent {
->>> +                            clocks = <&apb2>;
->>> +                            clock-indices = <96>, <97>,
->>> +                                            <98>, <101>,
->>> +                                            <112>, <113>,
->>> +                                            <114>, <115>,
->>> +                                            <116>;
->>> +                            clock-output-names = "bus_i2c0", "bus_i2c1",
->>> +                                            "bus_i2c2", "bus_scr",
->>> +                                            "bus_uart0", "bus_uart1",
->>> +                                            "bus_uart2", "bus_uart3",
->>> +                                            "bus_uart4";
->>> +                    };
->>> +            };
->>> +
->>> +            mmc0_clk: clk@01c20088 {
->>> +                    #clock-cells = <1>;
->>> +                    compatible = "allwinner,sun4i-a10-mmc-clk";
+>> According to Server Base System Architecture (SBSA) specification,
+>> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
+>> is for alerting the system by interrupt, the second one (WS1) is a real
+>> hardware reset.
 >>
->> The A64 MMC clocks don't seem to be fully compatible to A10. The output
->> and sample phase control has been moved to the MMC module itself.
->> The dividers are the same, but the additional special "outputs" are gone.
->
-> So from comparing the H3 and the A64 datasheet I see that this is one of
-> the rare deviations of the A64 from the H3?
-
-Without the extra phase delay clocks, this is now just a mod0 clock.
-
->>> +                    reg = <0x01c20088 0x4>;
->>> +                    clocks = <&osc24M>, <&pll6 0>, <&pll8>;
+>> This patch initially implements a simple single stage watchdog driver:
+>> when the timeout is reached, your system will be reset by the second
+>> signal (WS1).
+>> The first signal (WS0) is ignored in this driver.
 >>
->> Parents are PLL6(2x) and PLL8(2x) according to manual.
->
-> Indeed, thanks for pointing this out! So do we need a proper pll8 clock?
-
-You could add a pll8x2 fixed-factor-clk for now, until Maxime's clk series
-is worked out.
-
->
+>> This driver bases on linux kernel watchdog framework, so it can get
+>> timeout from module parameter and FDT at the driver init stage.
 >>
->>> +                    clock-output-names = "mmc0",
->>> +                                         "mmc0_output",
->>> +                                         "mmc0_sample";
->>> +            };
->>> +
->>> +            mmc1_clk: clk@01c2008c {
->>> +                    #clock-cells = <1>;
->>> +                    compatible = "allwinner,sun4i-a10-mmc-clk";
->>> +                    reg = <0x01c2008c 0x4>;
->>> +                    clocks = <&osc24M>, <&pll6 0>, <&pll8>;
->>> +                    clock-output-names = "mmc1",
->>> +                                         "mmc1_output",
->>> +                                         "mmc1_sample";
->>> +            };
->>> +
->>> +            mmc2_clk: clk@01c20090 {
->>> +                    #clock-cells = <1>;
->>> +                    compatible = "allwinner,sun4i-a10-mmc-clk";
->>> +                    reg = <0x01c20090 0x4>;
->>> +                    clocks = <&osc24M>, <&pll6 0>, <&pll8>;
->>> +                    clock-output-names = "mmc2",
->>> +                                         "mmc2_output",
->>> +                                         "mmc2_sample";
->>> +            };
->>> +    };
->>> +
->>> +    regulators {
->>> +            reg_vcc3v3: vcc3v3 {
->>> +                    compatible = "regulator-fixed";
->>> +                    regulator-name = "vcc3v3";
->>> +                    regulator-min-microvolt = <3300000>;
->>> +                    regulator-max-microvolt = <3300000>;
->>> +            };
-
-Why is this in the .dtsi?
-
->>> +    };
->>> +
->>> +    soc {
->>> +            compatible = "simple-bus";
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            ranges;
->>> +
->>> +            mmc0: mmc@01c0f000 {
->>> +                    compatible = "allwinner,sun5i-a13-mmc";
->>> +                    reg = <0x01c0f000 0x1000>;
->>> +                    clocks = <&bus_gates 8>,
->>> +                             <&mmc0_clk 0>,
+>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+>> Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
+>> Tested-by: Pratyush Anand <panand@redhat.com>
+>> ---
+>>  drivers/watchdog/Kconfig     |  17 +++
+>>  drivers/watchdog/Makefile    |   1 +
+>>  drivers/watchdog/sbsa_gwdt.c | 322 +++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 340 insertions(+)
 >>
->> Consequently, the MMC driver now has to control the output/sample phase
->> with registers 0x140-0x148 instead of
->>> +                             <&mmc0_clk 1>,
->>> +                             <&mmc0_clk 2>;
->
-> OK, good point. I was just briefly browsing over the register
-> descriptions and missed that.
-> So it looks like I need to change the driver. Interestingly it seems to
-> work anyways ...
-
-The default delay values probably are good enough. Or they included routing
-tolerances in the design notes. :)
-
-You should still check Allwinner's kernel for new delay values though.
-
->> And there seems to be some new clock divider somewhere which I haven't
->> found in the manual yet. The clock measured at the CLK pin is always
->> half the expected rate (even with 24MHz as MMC clock parent, so no
->> PLL6*2 problem).
->
-> Mmh, I heard about that mysterious clock doubling / halving already. Was
-> that actually causing any issues?
-
-On the A83T there was this "new timing mode" feature in the mmc clocks and
-controller, which halved the card clock. I don't see any mention of it on
-A64 though.
-
+>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> index 4f0e7be..4ab1b05 100644
+>> --- a/drivers/watchdog/Kconfig
+>> +++ b/drivers/watchdog/Kconfig
+>> @@ -201,6 +201,23 @@ config ARM_SP805_WATCHDOG
+>>           ARM Primecell SP805 Watchdog timer. This will reboot your system when
+>>           the timeout is reached.
 >>
->>> +                    clock-names = "ahb",
->>> +                                  "mmc",
->>> +                                  "output",
->>> +                                  "sample";
->>> +                    resets = <&ahb_rst 8>;
->>> +                    reset-names = "ahb";
->>> +                    interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    status = "disabled";
->>> +                    #address-cells = <1>;
->>> +                    #size-cells = <0>;
->>> +            };
->>> +
->>> +            mmc1: mmc@01c10000 {
->>> +                    compatible = "allwinner,sun5i-a13-mmc";
->>> +                    reg = <0x01c10000 0x1000>;
->>> +                    clocks = <&bus_gates 9>,
->>> +                             <&mmc1_clk 0>,
->>> +                             <&mmc1_clk 1>,
->>> +                             <&mmc1_clk 2>;
->>> +                    clock-names = "ahb",
->>> +                                  "mmc",
->>> +                                  "output",
->>> +                                  "sample";
->>> +                    resets = <&ahb_rst 9>;
->>> +                    reset-names = "ahb";
->>> +                    interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    status = "disabled";
->>> +                    #address-cells = <1>;
->>> +                    #size-cells = <0>;
->>> +            };
->>> +
->>> +            mmc2: mmc@01c11000 {
->>> +                    compatible = "allwinner,sun5i-a13-mmc";
->>> +                    reg = <0x01c11000 0x1000>;
->>> +                    clocks = <&bus_gates 10>,
->>> +                             <&mmc2_clk 0>,
->>> +                             <&mmc2_clk 1>,
->>> +                             <&mmc2_clk 2>;
->>> +                    clock-names = "ahb",
->>> +                                  "mmc",
->>> +                                  "output",
->>> +                                  "sample";
->>> +                    resets = <&ahb_rst 10>;
->>> +                    reset-names = "ahb";
->>> +                    interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    status = "disabled";
->>> +                    #address-cells = <1>;
->>> +                    #size-cells = <0>;
->>> +            };
->>> +
->>> +            pio: pinctrl@01c20800 {
->>> +                    compatible = "allwinner,a64-pinctrl";
->>> +                    reg = <0x01c20800 0x400>;
->>> +                    interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
->>> +                                 <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
->>> +                                 <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    clocks = <&bus_gates 69>;
->>> +                    gpio-controller;
->>> +                    #gpio-cells = <3>;
->>> +                    interrupt-controller;
->>> +                    #interrupt-cells = <2>;
->>> +
->>> +                    uart0_pins_a: uart0@0 {
->>> +                            allwinner,pins = "PB8", "PB9";
->>> +                            allwinner,function = "uart0";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart0_pins_b: uart0@1 {
->>> +                            allwinner,pins = "PF2", "PF3";
->>> +                            allwinner,function = "uart0";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart1_pins: uart1@0 {
->>> +                            allwinner,pins = "PG6", "PG7", "PG8", "PG9";
->>> +                            allwinner,function = "uart1";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart2_pins: uart2@0 {
->>> +                            allwinner,pins = "PB0", "PB1", "PB2", "PB3";
->>> +                            allwinner,function = "uart2";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart3_pins_a: uart3@0 {
->>> +                            allwinner,pins = "PD0", "PD1";
->>> +                            allwinner,function = "uart3";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart3_pins_b: uart3@1 {
->>> +                            allwinner,pins = "PH4", "PH5", "PH6", "PH7";
->>> +                            allwinner,function = "uart3";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    uart4_pins: uart4@0 {
->>> +                            allwinner,pins = "PD2", "PD3", "PD4", "PD5";
->>> +                            allwinner,function = "uart4";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
-
-We normally don't add these until someone uses them.
-And one could choose to use 2 pins instead of 4. :|
-
->>> +
->>> +                    mmc0_pins: mmc0@0 {
->>> +                            allwinner,pins = "PF0", "PF1", "PF2", "PF3",
->>> +                                             "PF4", "PF5";
->>> +                            allwinner,function = "mmc0";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    mmc0_default_cd_pin: mmc0_cd_pin@0 {
->>> +                            allwinner,pins = "PF6";
->>> +                            allwinner,function = "gpio_in";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>> +                    };
->>> +
->>> +                    mmc1_pins: mmc1@0 {
->>> +                            allwinner,pins = "PG0", "PG1", "PG2", "PG3",
->>> +                                             "PG4", "PG5";
->>> +                            allwinner,function = "mmc1";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +
->>> +                    mmc2_pins: mmc2@0 {
->>> +                            allwinner,pins = "PC1", "PC5", "PC6", "PC8",
->>> +                                             "PC9", "PC10";
->>> +                            allwinner,function = "mmc2";
->>> +                            allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->>> +                            allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +                    };
->>> +            };
->>> +
->>> +            ahb_rst: reset@01c202c0 {
->>> +                    #reset-cells = <1>;
->>> +                    compatible = "allwinner,sun6i-a31-ahb1-reset";
->>> +                    reg = <0x01c202c0 0xc>;
->>> +            };
->>> +
->>> +            apb1_rst: reset@01c202d0 {
->>> +                    #reset-cells = <1>;
->>> +                    compatible = "allwinner,sun6i-a31-clock-reset";
->>> +                    reg = <0x01c202d0 0x4>;
->>> +            };
->>> +
->>> +            apb2_rst: reset@01c202d8 {
->>> +                    #reset-cells = <1>;
->>> +                    compatible = "allwinner,sun6i-a31-clock-reset";
->>> +                    reg = <0x01c202d8 0x4>;
->>> +            };
->>> +
->>> +            uart0: serial@01c28000 {
->>> +                    compatible = "snps,dw-apb-uart";
->>> +                    reg = <0x01c28000 0x400>;
->>> +                    interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    reg-shift = <2>;
->>> +                    reg-io-width = <4>;
->>> +                    clocks = <&bus_gates 112>;
->>> +                    resets = <&apb2_rst 16>;
->>> +                    reset-names = "apb2";
+>> +config ARM_SBSA_WATCHDOG
+>> +       tristate "ARM SBSA Generic Watchdog"
+>> +       depends on ARM64
+>> +       depends on ARM_ARCH_TIMER
+>> +       select WATCHDOG_CORE
+>> +       help
+>> +         ARM SBSA Generic Watchdog has two stage timeouts:
+>> +         the first signal (WS0) is for alerting the system by interrupt,
+>> +         the second one (WS1) is a real hardware reset.
+>> +         More details: ARM DEN0029B - Server Base System Architecture (SBSA)
+>> +
+>> +         This is a simple single stage driver: when the timeout is reached,
+>> +         your system will be reset by WS1. The first signal (WS0) is ignored.
+>> +
+>> +         To compile this driver as module, choose M here: The module
+>> +         will be called sbsa_gwdt.
+>> +
+>>  config ASM9260_WATCHDOG
+>>         tristate "Alphascale ASM9260 watchdog"
+>>         depends on MACH_ASM9260
+>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>> index f566753..f9826d4 100644
+>> --- a/drivers/watchdog/Makefile
+>> +++ b/drivers/watchdog/Makefile
+>> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
 >>
->> Do we need reset-names here (and below)?
+>>  # ARM Architecture
+>>  obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
+>> +obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
+>>  obj-$(CONFIG_ASM9260_WATCHDOG) += asm9260_wdt.o
+>>  obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
+>>  obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
+>> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
+>> new file mode 100644
+>> index 0000000..5a2dba3
+>> --- /dev/null
+>> +++ b/drivers/watchdog/sbsa_gwdt.c
+>> @@ -0,0 +1,322 @@
+>> +/*
+>> + * SBSA(Server Base System Architecture) Generic Watchdog driver
+>> + *
+>> + * Copyright (c) 2015, Linaro Ltd.
+>> + * Author: Fu Wei <fu.wei@linaro.org>
+>> + *         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>> + *         Al Stone <al.stone@linaro.org>
+>> + *         Timur Tabi <timur@codeaurora.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License 2 as published
+>> + * by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * This SBSA Generic watchdog driver is a single stage timeout version.
+>> + * Since this watchdog timer has two stages, and each stage is determined
+>> + * by WOR. So the timeout is (WOR * 2).
+>> + * When first timeout is reached, WS0 is triggered, the interrupt
+>> + * triggered by WS0 will be ignored, then the second watch period starts;
+>> + * when second timeout is reached, then WS1 is triggered, system reset.
+>> + *
+>> + * More details about the hardware specification of this device:
+>> + * ARM DEN0029B - Server Base System Architecture (SBSA)
+>> + *
+>> + * SBSA GWDT: |--------WOR-------WS0--------WOR-------WS1
+>> + *            |----------------timeout----------------reset
+>> + *
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/moduleparam.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/uaccess.h>
+>> +#include <linux/watchdog.h>
+>> +#include <asm/arch_timer.h>
+>> +
+>> +/* SBSA Generic Watchdog register definitions */
+>> +/* refresh frame */
+>> +#define SBSA_GWDT_WRR                          0x000
+>> +
+>> +/* control frame */
+>> +#define SBSA_GWDT_WCS                          0x000
+>> +#define SBSA_GWDT_WOR                          0x008
+>> +#define SBSA_GWDT_WCV                          0x010
+>> +
+>> +/* refresh/control frame */
+>> +#define SBSA_GWDT_W_IIDR                       0xfcc
+>> +#define SBSA_GWDT_IDR                          0xfd0
+>> +
+>> +/* Watchdog Control and Status Register */
+>> +#define SBSA_GWDT_WCS_EN                       BIT(0)
+>> +#define SBSA_GWDT_WCS_WS0                      BIT(1)
+>> +#define SBSA_GWDT_WCS_WS1                      BIT(2)
+>> +
+>> +/**
+>> + * struct sbsa_gwdt - Internal representation of the SBSA GWDT
+>> + * @wdd:               kernel watchdog_device structure
+>> + * @clk:               store the System Counter clock frequency, in Hz.
+>> + * @refresh_base:      Virtual address of the watchdog refresh frame
+>> + * @control_base:      Virtual address of the watchdog control frame
+>> + */
+>> +struct sbsa_gwdt {
+>> +       struct watchdog_device  wdd;
+>> +       u32                     clk;
+>> +       void __iomem            *refresh_base;
+>> +       void __iomem            *control_base;
+>> +};
+>> +
+>> +#define to_sbsa_gwdt(e) container_of(e, struct sbsa_gwdt, wdd)
+>> +
+>> +#define DEFAULT_TIMEOUT                20 /* seconds, the 1st + 2nd watch periods*/
+>> +
+>> +static unsigned int timeout;
+>> +module_param(timeout, uint, 0);
+>> +MODULE_PARM_DESC(timeout,
+>> +                "Watchdog timeout in seconds. (>=0, default="
+>> +                __MODULE_STRING(DEFAULT_TIMEOUT) ")");
+>> +
+>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>> +module_param(nowayout, bool, S_IRUGO);
+>> +MODULE_PARM_DESC(nowayout,
+>> +                "Watchdog cannot be stopped once started (default="
+>> +                __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>> +
+>> +/*
+>> + * watchdog operation functions
+>> + */
+>> +static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
+>> +                                unsigned int timeout)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +       wdd->timeout = timeout;
+>> +       writel(timeout / 2 * gwdt->clk, gwdt->control_base + SBSA_GWDT_WOR);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +       u64 timeleft = readq(gwdt->control_base + SBSA_GWDT_WCV) -
+>> +                      arch_counter_get_cntvct();
+>> +
+>> +       do_div(timeleft, gwdt->clk);
+>> +
+>> +       if (readl(gwdt->control_base + SBSA_GWDT_WCS) & SBSA_GWDT_WCS_WS0)
+>> +               return timeleft;
+>> +
+>> +       return timeleft + wdd->timeout / 2;
 >
-> Probably not, in fact I was wondering about that already. Actually I
-> just copied them from some other DT ;-)
+> It would be great to have a comment whenever hard coded values are
+> used.  That way people understand why things were set this way.  The
+> same applies for the rest of this patch.
 
-Nope. Not needed.
+OK, will do , thanks
 
-
-Regards
-ChenYu
-
->>> +                    status = "disabled";
->>> +            };
->>> +
->>> +            uart1: serial@01c28400 {
->>> +                    compatible = "snps,dw-apb-uart";
->>> +                    reg = <0x01c28400 0x400>;
->>> +                    interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    reg-shift = <2>;
->>> +                    reg-io-width = <4>;
->>> +                    clocks = <&bus_gates 113>;
->>> +                    resets = <&apb2_rst 17>;
->>> +                    reset-names = "apb2";
->>> +                    status = "disabled";
->>> +            };
->>> +
->>> +            uart2: serial@01c28800 {
->>> +                    compatible = "snps,dw-apb-uart";
->>> +                    reg = <0x01c28800 0x400>;
->>> +                    interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    reg-shift = <2>;
->>> +                    reg-io-width = <4>;
->>> +                    clocks = <&bus_gates 114>;
->>> +                    resets = <&apb2_rst 18>;
->>> +                    reset-names = "apb2";
->>> +                    status = "disabled";
->>> +            };
->>> +
->>> +            uart3: serial@01c28c00 {
->>> +                    compatible = "snps,dw-apb-uart";
->>> +                    reg = <0x01c28c00 0x400>;
->>> +                    interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    reg-shift = <2>;
->>> +                    reg-io-width = <4>;
->>> +                    clocks = <&bus_gates 115>;
->>> +                    resets = <&apb2_rst 19>;
->>> +                    reset-names = "apb2";
->>> +                    status = "disabled";
->>> +            };
->>> +
->>> +            uart4: serial@01c29000 {
->>> +                    compatible = "snps,dw-apb-uart";
->>> +                    reg = <0x01c29000 0x400>;
->>> +                    interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    reg-shift = <2>;
->>> +                    reg-io-width = <4>;
->>> +                    clocks = <&bus_gates 116>;
->>> +                    resets = <&apb2_rst 20>;
->>> +                    reset-names = "apb2";
->>> +                    status = "disabled";
->>> +            };
->>> +
->>> +            rtc: rtc@01f00000 {
->>> +                    compatible = "allwinner,sun6i-a31-rtc";
->>> +                    reg = <0x01f00000 0x54>;
->>> +                    interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
->>> +                                 <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
->>> +            };
->>> +    };
->>> +
->>> +    gic: interrupt-controller@{
->>> +            compatible = "arm,gic-400";
->>> +            interrupt-controller;
->>> +            #interrupt-cells = <3>;
->>> +            #address-cells = <0>;
->>> +
->>> +            reg = <0x01C81000 0x1000>,
->>> +                  <0x01C82000 0x2000>,
->>> +                  <0x01C84000 0x2000>,
->>> +                  <0x01C86000 0x2000>;
+>
+>> +}
+>> +
+>> +static int sbsa_gwdt_keepalive(struct watchdog_device *wdd)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +       /*
+>> +       * Writing WRR for an explicit watchdog refresh.
+>> +       * You can write anyting(like 0xc0ffee).
+>> +       */
+>> +       writel(0xc0ffee, gwdt->refresh_base + SBSA_GWDT_WRR);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static unsigned int sbsa_gwdt_status(struct watchdog_device *wdd)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +       u32 status = readl(gwdt->control_base + SBSA_GWDT_WCS);
+>> +
+>> +       /* is the watchdog timer running? */
+>> +       return (status & SBSA_GWDT_WCS_EN) << WDOG_ACTIVE;
+>> +}
+>> +
+>> +static int sbsa_gwdt_start(struct watchdog_device *wdd)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +       /* writing WCS will cause an explicit watchdog refresh */
+>> +       writel(SBSA_GWDT_WCS_EN, gwdt->control_base + SBSA_GWDT_WCS);
+>> +
+>> +       return sbsa_gwdt_keepalive(wdd);
+>> +}
+>> +
+>> +static int sbsa_gwdt_stop(struct watchdog_device *wdd)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+>> +
+>> +       writel(0, gwdt->control_base + SBSA_GWDT_WCS);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static struct watchdog_info sbsa_gwdt_info = {
+>> +       .identity       = "SBSA Generic Watchdog",
+>> +       .options        = WDIOF_SETTIMEOUT |
+>> +                         WDIOF_KEEPALIVEPING |
+>> +                         WDIOF_MAGICCLOSE |
+>> +                         WDIOF_CARDRESET,
+>> +};
+>> +
+>> +static struct watchdog_ops sbsa_gwdt_ops = {
+>> +       .owner          = THIS_MODULE,
+>> +       .start          = sbsa_gwdt_start,
+>> +       .stop           = sbsa_gwdt_stop,
+>> +       .status         = sbsa_gwdt_status,
+>> +       .ping           = sbsa_gwdt_keepalive,
+>> +       .set_timeout    = sbsa_gwdt_set_timeout,
+>> +       .get_timeleft   = sbsa_gwdt_get_timeleft,
+>> +};
+>> +
+>> +static int sbsa_gwdt_probe(struct platform_device *pdev)
+>> +{
+>> +       void __iomem *rf_base, *cf_base;
+>> +       struct device *dev = &pdev->dev;
+>> +       struct watchdog_device *wdd;
+>> +       struct sbsa_gwdt *gwdt;
+>> +       struct resource *res;
+>> +       u32 status;
+>> +       int ret;
+>> +
+>> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
+>> +       if (!gwdt)
+>> +               return -ENOMEM;
+>> +       platform_set_drvdata(pdev, gwdt);
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       cf_base = devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(cf_base))
+>> +               return PTR_ERR(cf_base);
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +       rf_base = devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(rf_base))
+>> +               return PTR_ERR(rf_base);
+>> +
+>> +       /*
+>> +        * Get the frequency of system counter from the cp15 interface of ARM
+>> +        * Generic timer. We don't need to check it, because if it returns "0",
+>> +        * system would panic in very early stage.
+>> +        */
+>> +       gwdt->clk = arch_timer_get_cntfrq();
+>> +       gwdt->refresh_base = rf_base;
+>> +       gwdt->control_base = cf_base;
+>> +
+>> +       wdd = &gwdt->wdd;
+>> +       wdd->parent = dev;
+>> +       wdd->info = &sbsa_gwdt_info;
+>> +       wdd->ops = &sbsa_gwdt_ops;
+>> +       watchdog_set_drvdata(wdd, gwdt);
+>> +       watchdog_set_nowayout(wdd, nowayout);
+>> +
+>> +       wdd->min_timeout = 2;
+>> +       wdd->max_timeout = U32_MAX / gwdt->clk * 2;
+>> +       wdd->timeout = DEFAULT_TIMEOUT;
+>> +       watchdog_init_timeout(wdd, timeout, dev);
+>> +
+>> +       status = readl(gwdt->control_base + SBSA_GWDT_WCS);
+>> +       if (status & SBSA_GWDT_WCS_WS1) {
+>> +               dev_warn(dev, "System reset by WDT.\n");
+>> +               wdd->bootstatus |= WDIOF_CARDRESET;
+>> +       }
+>> +
+>> +       ret = watchdog_register_device(wdd);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /*
+>> +        * Update timeout to WOR.
+>> +        * Because of the explicit watchdog refresh mechanism,
+>> +        * it's also a ping, if watchdog is enabled.
+>> +        */
+>> +       sbsa_gwdt_set_timeout(wdd, wdd->timeout);
+>> +
+>> +       dev_info(dev, "Initialized with %ds timeout @ %u Hz%s\n", wdd->timeout,
+>> +                gwdt->clk, status & SBSA_GWDT_WCS_EN ? " [enabled]" : "");
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void sbsa_gwdt_shutdown(struct platform_device *pdev)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
+>> +
+>> +       sbsa_gwdt_stop(&gwdt->wdd);
+>> +}
+>> +
+>> +static int sbsa_gwdt_remove(struct platform_device *pdev)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
+>> +
+>> +       watchdog_unregister_device(&gwdt->wdd);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/* Disable watchdog if it is active during suspend */
+>> +static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
+>> +
+>> +       if (watchdog_active(&gwdt->wdd))
+>> +               sbsa_gwdt_stop(&gwdt->wdd);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/* Enable watchdog and configure it if necessary */
+>> +static int __maybe_unused sbsa_gwdt_resume(struct device *dev)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
+>> +
+>> +       if (watchdog_active(&gwdt->wdd))
+>> +               sbsa_gwdt_start(&gwdt->wdd);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops sbsa_gwdt_pm_ops = {
+>> +       SET_SYSTEM_SLEEP_PM_OPS(sbsa_gwdt_suspend, sbsa_gwdt_resume)
+>> +};
+>> +
+>> +static const struct of_device_id sbsa_gwdt_of_match[] = {
+>> +       { .compatible = "arm,sbsa-gwdt", },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sbsa_gwdt_of_match);
+>> +
+>> +static const struct platform_device_id sbsa_gwdt_pdev_match[] = {
+>> +       { .name = "sbsa-gwdt", },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, sbsa_gwdt_pdev_match);
+>> +
+>> +static struct platform_driver sbsa_gwdt_driver = {
+>> +       .driver = {
+>> +               .name = "sbsa-gwdt",
+>> +               .pm = &sbsa_gwdt_pm_ops,
+>> +               .of_match_table = sbsa_gwdt_of_match,
+>> +       },
+>> +       .probe = sbsa_gwdt_probe,
+>> +       .remove = sbsa_gwdt_remove,
+>> +       .shutdown = sbsa_gwdt_shutdown,
+>> +       .id_table = sbsa_gwdt_pdev_match,
+>> +};
+>> +
+>> +module_platform_driver(sbsa_gwdt_driver);
+>> +
+>> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
+>> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
+>> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
+>> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
+>> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.5.0
 >>
->> Maybe lowercase hex here too.
->
-> Yes.
->
->
-> Thanks for actually going through this!
->
-> Cheers,
-> Andre.
->
->>> +            interrupts = <GIC_PPI 9
->>> +                  (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>> +    };
->>> +};
->>>
->>
->> Regards,
->> Jens
->>
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
