@@ -1,59 +1,30 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half
- timeout panic support
-Date: Fri, 5 Feb 2016 14:33:18 +0100
-Message-ID: <20160205143318.2de2815c@free-electrons.com>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
-	<1454519923-25230-6-git-send-email-fu.wei@linaro.org>
-	<56B23883.7000501@codeaurora.org>
-	<CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
-	<56B23E99.1030604@codeaurora.org>
-	<CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
-	<56B2423B.1020109@codeaurora.org>
-	<CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
-	<56B24642.8090105@codeaurora.org>
-	<CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
-	<56B24AB5.3070001@codeaurora.org>
-	<CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
-	<56B2DEE4.7060901@roeck-us.net>
-	<CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
-	<20160205140259.72a33699@free-electrons.com>
-	<56B49EC7.4050306@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 0/5] pinctrl: mediatek: add pinctrl/GPIO/EINT driver
+ for mt2701
+Date: Fri, 5 Feb 2016 14:59:30 +0100
+Message-ID: <CACRpkdYrU3cz_Kh2J3Z=iptwmZO_nOEpweK0rDXkACDmL+eDtQ@mail.gmail.com>
+References: <1453857883-28436-1-git-send-email-biao.huang@mediatek.com>
+	<CACRpkdbxpc19bdzGDUDoqseTA-TW3V8dAA4Oe+G860qTsHd-dQ@mail.gmail.com>
+	<1454018920.14802.41.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56B49EC7.4050306@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Fu Wei <fu.wei@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454018920.14802.41.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: biao huang <biao.huang@mediatek.com>
+Cc: John Crispin <blogic@openwrt.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "arm@kernel.org" <arm@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Jan 28, 2016 at 11:08 PM, biao huang <biao.huang@mediatek.com> wrote:
 
-On Fri, 5 Feb 2016 07:08:23 -0600, Timur Tabi wrote:
+> Hi Linus,
+>         [PATCH v4 1/5] pinctrl: mediatek: fix direction control issue
+>         this patch is also a pinctrl patch, and it seems not merged in
+> devel-mt2701 branch.
 
-> > I'm quite certainly missing something completely obvious here, but how
-> > can you get the WS1 interrupt*after*  raising a panic? Aren't all
-> > interrupts disabled and the system fully halted once you get a panic(),
-> > especially when raised from an interrupt handler? If that's the case,
-> > how can the system continue to do things, such as receiving the WS1
-> > interrupt and resetting ?
-> 
-> Typically, WS1 is not an interrupt.  Instead, it's a hard system-level 
-> reset.
+Sorry I screwed up.
 
-Ah, right, true. I missed that aspect because on my HW, triggering a
-system-level reset on WS1 is optional. I can actually get an interrupt
-on both WS0 and WS1, and no reset at all.
+Applied this for fixes.
 
-But a normal configuration indeed involves having the WS1 event
-configured in HW to be a system-level reset.
-
-So, OK, it makes sense. Thanks for the clarification!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Yours,
+Linus Walleij
