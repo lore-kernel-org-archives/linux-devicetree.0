@@ -1,33 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [rtc-linux] [PATCH V7 5/8] gpio: add DT binding doc for gpio of
- PMIC max77620/max20024
-Date: Fri, 5 Feb 2016 15:48:48 +0100
-Message-ID: <CACRpkdYNBHvefR_qdjZ7hWr=cFzhv1gEgb5jBCrqHdWzNWgV6w@mail.gmail.com>
-References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
-	<1454171931-27752-6-git-send-email-ldewangan@nvidia.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Analog Devices AXI SPI Engine controller
+ support
+Date: Fri, 5 Feb 2016 14:50:55 +0000
+Message-ID: <20160205145055.GV4455@sirena.org.uk>
+References: <1454602410-14049-1-git-send-email-lars@metafoo.de>
+ <1454602410-14049-2-git-send-email-lars@metafoo.de>
+ <CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1454171931-27752-6-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, vreddytalla@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="95xjieIIiUQImiTX"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 30, 2016 at 5:38 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-> Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
-> which act as GPIO as well as special function mode.
->
-> Add DT binding document to support these pins in GPIO
-> mode via GPIO framework.
->
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+--95xjieIIiUQImiTX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Feb 05, 2016 at 04:04:48PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 4, 2016 at 6:13 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
 
-Lee can merge this too.
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-Yours,
-Linus Walleij
+--95xjieIIiUQImiTX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWtLbKAAoJECTWi3JdVIfQVVkH/2A9ZezKHRUD7pXUDnuCbFMq
+q61GMPDxRE47RqalssMxnPdKF68TQZhd21PjQpPf2YmUSwK147rG/HiEBUx0nwLf
+HhA9M5oe7c/DClZsEUfpW43onOQNzUL5oqucN8RDtEsjqsDaOnhcykhHZL5NZnyR
+XOc71+lm0Ps6Rq5avzl7NF6fqC36XO+0RrYvk/6LK6NbOxY8EXvcgxNhTuE1CfTZ
+P2nWqNFYHtPxdd9XJlodk3SnrgIBlD7q1/5cKLvHkkpGnuYViIC/VZwPU2UTUhlW
+BZf7OMGRTYdWcTx+ccEwDxejRed9A4n4POVaZDC1wLAbXUGeTZpYGMSUKeALu+Y=
+=4Olw
+-----END PGP SIGNATURE-----
+
+--95xjieIIiUQImiTX--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
