@@ -1,184 +1,143 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
-Date: Fri, 5 Feb 2016 14:11:25 +0800
-Message-ID: <20160205061124.GB1858@shlinux2>
-References: <1453706679-18948-1-git-send-email-peter.chen@freescale.com>
- <1454582690.3356.18.camel@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility strings
+Date: Fri, 5 Feb 2016 08:43:55 +0100
+Message-ID: <CAMuHMdXJqSpgaundL4-hMpD4jvYn5ZWyZP8ofr-4uqqZjcJ9kQ@mail.gmail.com>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+	<20151209183743.GH31930@localhost>
+	<20151211021434.GH9927@verge.net.au>
+	<20151211145916.GA21907@localhost>
+	<CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
+	<20160204220146.GA17060@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454582690.3356.18.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160204220146.GA17060@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 11:44:50AM +0100, Philipp Zabel wrote:
-> Hi Peter,
-> 
-> Am Montag, den 25.01.2016, 15:24 +0800 schrieb Peter Chen:
-> > Although most of USB devices are hot-plug's, there are still some devices
-> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> > If these kinds of USB devices are multiple functions, and they can supply
-> > other interfaces like i2c, gpios for other devices, we may need to
-> > describe these at device tree.
-> > 
-> > In this commit, it uses "reg" in dts as physical port number to match
-> > the phyiscal port number decided by USB core, if they are the same,
-> > then the device node is for the device we are creating for USB core.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> > Changes for v4:
-> > - The range of "reg" should be 1-31, changing device node address
-> >   style as in lower case hexadecimal with leading zeroes suppressed
-> >   [binding doc, usb-device.txt]
-> > - Improve the example at binding doc, it describes node from the top
-> >   (the controller)
-> > - Delete the struct of_node * within struct usb_device
-> > - Using usb_hcd_find_raw_port_number to get raw port number under root
-> >   hub port
-> > 
-> > Changes for v3:
-> > - typo: s/descirbe/describe/
-> > 
-> > Changes for v2:
-> > - Fix build error reported by kbuild robot, lack of "static" for
-> >   inline usb_of_get_child_node
-> > - Fix typo, "devcie_node" -> "device_node"
-> > - Add kernel-doc for of_node at struct usb_device
-> > 
-> > Changes from RFC:
-> > - Fix the error address for binding doc, and add compatible for binding doc
-> > - Change get child node API from "usb_of_find_node" to
-> >   "usb_of_get_child_node"
-> > - Delete unecessary header files
-> > - One typo
-> > 
-> >  .../devicetree/bindings/usb/usb-device.txt         | 25 ++++++++++++
-> >  drivers/usb/core/Makefile                          |  2 +-
-> >  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
-> >  drivers/usb/core/usb.c                             | 14 ++++++-
-> >  include/linux/usb/of.h                             |  7 ++++
-> >  5 files changed, 92 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
-> >  create mode 100644 drivers/usb/core/of.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > new file mode 100644
-> > index 0000000..c702885
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > @@ -0,0 +1,25 @@
-> > +Generic USB Device Properties
-> > +
-> > +Usually, we only use device tree for hard wired USB device.
-> > +The reference binding doc is from:
-> > +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-> > +
-> > +Required properties:
-> > +- compatible: usbVID,PID
-> 
-> The reference recommendation states that for single-configuration USB
-> devices the compatible should contain all of the applicable strings from
-> the list starting with 2) "usbVID,PID.REV" and ending with 11)
-> "usb,device". Are we going to ignore this?
-> 
+Hi Bjorn,
 
-I have not seen benefits if we write several compatibles in dts,
-the information of compatibles listed in doc can be got during
-the enumeration.
+On Thu, Feb 4, 2016 at 11:01 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Fri, Dec 11, 2015 at 04:58:06PM +0100, Geert Uytterhoeven wrote:
+>> On Fri, Dec 11, 2015 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> > On Fri, Dec 11, 2015 at 11:14:34AM +0900, Simon Horman wrote:
+>> >> On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
+>> >> > On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
+>> >> > > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
+>> >> > > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
+>> >> > > provide a complete set of compatibility strings for known Gen2 SoCs.
+>> >> > >
+>> >> > > Key Changes in v2:
+>> >> > > * Include "rcar-" in generic bindings
+>> >> > >
+>> >> > > Simon Horman (4):
+>> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
+>> >> > >   PCI: rcar-gen2: add device tree support for r8a7793
+>> >> > >   PCI: rcar: add gen2 fallback compatibility string
+>> >> > >   PCI: rcar: add device tree support for r8a7793
+>> >> > >
+>> >> > >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+>> >> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+>> >> > >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+>> >> > >  drivers/pci/host/pcie-rcar.c                            |  1 +
+>> >> > >  4 files changed, 23 insertions(+), 5 deletions(-)
+>> >> >
+>> >> > I applied these:
+>> >> >
+>> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
+>> >> > >   PCI: rcar: add gen2 fallback compatibility string
+>> >> >
+>> >> > to pci/host-rcar for v4.5, thanks!
+>> >> >
+>> >> > I haven't applied the R8A7793 binding documentation updates yet, but
+>> >> > I'll be happy to do so given a short description of why they're
+>> >> > useful (since they don't update a DT or the driver).  Or they could be
+>> >> > merged via a DT tree.
+>> >>
+>> >> To clarify: you would like a description in the changelog?
+>> >
+>> > Yes, please.  The email discussion so far hasn't contained what I'm
+>> > looking for (if it had, I would have just inserted it and been done
+>> > with it).
+>> >
+>> > Apparently it has to do with the stable DT rules, which I don't know.
+>> > A concrete example would probably help clear it up.
+>>
+>> The stable DT rules mean that an old DTS should keep on working with
+>> newer kernels.
+>>
+>> Suppose we have two SoCs, that both contain "foo" modules, which look
+>> identical. Hence the DTS for both declares the devices to be compatible
+>> with "vendor,foo".
+>>
+>> Later, we discover a difference between the two "foo" modules in the two
+>> SoCs (e.g. a feature present in one of them, or worse, a bug), which we
+>> need to handle in the driver. But how can we distinguish between them?
+>> We can change the compatible value in the DTS, but that means the user
+>> has to update the DTS when updating the kernel. For a new feature that
+>> may be deemed acceptable, for a bug fix that's not acceptable.
+>>
+>> Hence we always use an SoC-specific compatible value, which may or may
+>> not be accompanied by a family-specific and/or generic compatible value.
+>> As long as everything can be handled the same, the driver will just match
+>> against the most generic compatible value used. But if needed later, the
+>> driver can be updated to match against a more specific compatible value,
+>> and can have special handling for  a module in a specific SoC.
+>>
+>> So that's why we want to have compatible value in the DT bindings that
+>> are not necessarily used by the driver.
+>>
+>> In a perfect world, where all hardware is properly documented, or even
+>> Open Source, we wouldn't need this. There we could just declare a device
+>> compatible with what it really is, based on the module's internal version ID
+>> (ideally a git commit ID of its HDL source ;-).
+>>
+>> I hope the above explains it. If you have more questions, feel free to ask!
+>
+> The above is all pretty standard device identification technique.
+> That's not what I've been missing.
+>
+> But I just had an epiphany.  Tell me if I'm talking sense or
+> gibberish:
+>
+>   If a patch adds a use of "renesas,pcie-r8a7793" in a .dts, .c, or .h
+>   file, e.g., in arch/arm/boot/dts/ or in the driver, and somebody
+>   runs checkpatch on that patch, checkpatch will complain unless
+>   "renesas,pcie-r8a7793" appears somewhere in
+>   devicetree/bindings/pci/.
+>
+> So if I understand correctly, the only point of this patch is to shut
+> up checkpatch in that situation.  It doesn't seem terribly useful to
+> me because checkpatch is only relevant to Linux kernel patches, and
+> even there it's optional and advisory.
+>
+> The latest changelog says "By documenting this compat string it may be
+> used in DTSs shipped, for example as part of ROMs", which seems to be
+> saying a DTS may not be shipped unless checkpatch approves of it.
+> That's a social and procedural question, not a coding question.
+>
+> It's fine with me if you want to try to enforce that via checkpatch,
+> but I'd just like to be clear on the mechanism.
 
-I suggest we use the simple pattern for this compatible, in that
-case, every one can be easy to follow it, and will not be confused
-which compatibles should be used, and the style can be unify.
+A DT binding (e.g. a compatible value) may only be used in a DTS after it's
+been documented and approved in a DT binding document.
 
-> The document also states that "the textual representation of VID, PID
-> [...] shall be in lower case hexadecimal with leading zeroes
-> suppressed". This should be documented here.
+Checkpath is just a tool. AFAIK there's no other tool enforcing the above.
 
-I will change.
+As both DTSes and DT binding documents are (still) in the kernel, and changes
+to them go in the kernel through patches, and most people run checkpatch
+on patches, I think having the check in checkpatch makes perfect sense.
+Adding and using yet another tool would complicate matters.
 
-> 
-> > +- reg: the port number which this device is connecting to, the range
-> > +  is 1-31.
-> > +
-> > +
-> > +Example:
-> > +
-> > +&usb1 {
-> > +	status = "okay";
-> > +
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +
-> > +	hub: genesys@1 {
-> 
-> There are node names specified for hubs and mass storage devices:
-> "hub", "storage", "cdrom", "tape", "solid-state", and "device" for
-> everything else. Should we follow this recommendation?
+Gr{oetje,eeting}s,
 
-I agree.
+                        Geert
 
-> 
-> > +		compatible = "usb05e3,0608";
-> > +		reg = <0x1>;
-> > +	};
-> 
-> I'd have written this node as:
-> 
-> 	hub: hub@1 {
-> 		compatible = "usb5e3,608", "usb5e3,class9",
-> 			     "usb,class9", "usb,device";
-> 		reg = <1>;
-> 	};
-
-The reg should be hexadecimal, do we need to add "0x" before the value?
-
-> As another example, I'd like to introduce the USB WLAN Adapter soldered
-> onto the imx6q-gk802 board to its power enable GPIO via the device tree:
-> 
-> /* Internal USB port (USBH1) */
-> &usbh1 {
-> 	#address-cells = <1>;
-> 	#size-cells = <0>;
-> 	status = "okay";
-> 
-> 	/* RTL8192CU 802.11n WLAN Adapter */
-> 	device@1 {
-> 		compatible = "usbbda,8176.200", "usbbda,8176",
-> 			     "usb,device";
-> 		reg = <1>;
-> 
-> 		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-> 	};
-> };
-> 
-
-It is okay to use your example, but I still insist like below:
-
-/* Internal USB port (USBH1) */
-&usbh1 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	status = "okay";
-
-	/* RTL8192CU 802.11n WLAN Adapter */
-	device@1 {
-		compatible = "usbbda,8176";
-		reg = <1>;
-
-		enable-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-	};
-};
-
-
--- 
-
-Best Regards,
-Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
