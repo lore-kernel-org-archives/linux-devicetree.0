@@ -1,148 +1,153 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
- strings
-Date: Fri, 5 Feb 2016 10:10:28 -0600
-Message-ID: <20160205161028.GC29306@localhost>
-References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
- <20151209183743.GH31930@localhost>
- <20151211021434.GH9927@verge.net.au>
- <20151211145916.GA21907@localhost>
- <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
- <20160204220146.GA17060@localhost>
- <CAMuHMdXJqSpgaundL4-hMpD4jvYn5ZWyZP8ofr-4uqqZjcJ9kQ@mail.gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/2] ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM/Ixora carrier board
+Date: Fri,  5 Feb 2016 17:12:19 +0100
+Message-ID: <1454688741-4238-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXJqSpgaundL4-hMpD4jvYn5ZWyZP8ofr-4uqqZjcJ9kQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 08:43:55AM +0100, Geert Uytterhoeven wrote:
-> On Thu, Feb 4, 2016 at 11:01 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Dec 11, 2015 at 04:58:06PM +0100, Geert Uytterhoeven wrote:
-> >> On Fri, Dec 11, 2015 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >> > On Fri, Dec 11, 2015 at 11:14:34AM +0900, Simon Horman wrote:
-> >> >> On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
-> >> >> > On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
-> >> >> > > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
-> >> >> > > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
-> >> >> > > provide a complete set of compatibility strings for known Gen2 SoCs.
-> >> >> > >
-> >> >> > > Key Changes in v2:
-> >> >> > > * Include "rcar-" in generic bindings
-> >> >> > >
-> >> >> > > Simon Horman (4):
-> >> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
-> >> >> > >   PCI: rcar-gen2: add device tree support for r8a7793
-> >> >> > >   PCI: rcar: add gen2 fallback compatibility string
-> >> >> > >   PCI: rcar: add device tree support for r8a7793
-> >> >> > >
-> >> >> > >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
-> >> >> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
-> >> >> > >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
-> >> >> > >  drivers/pci/host/pcie-rcar.c                            |  1 +
-> >> >> > >  4 files changed, 23 insertions(+), 5 deletions(-)
-> >> >> >
-> >> >> > I applied these:
-> >> >> >
-> >> >> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
-> >> >> > >   PCI: rcar: add gen2 fallback compatibility string
-> >> >> >
-> >> >> > to pci/host-rcar for v4.5, thanks!
-> >> >> >
-> >> >> > I haven't applied the R8A7793 binding documentation updates yet, but
-> >> >> > I'll be happy to do so given a short description of why they're
-> >> >> > useful (since they don't update a DT or the driver).  Or they could be
-> >> >> > merged via a DT tree.
-> >> >>
-> >> >> To clarify: you would like a description in the changelog?
-> >> >
-> >> > Yes, please.  The email discussion so far hasn't contained what I'm
-> >> > looking for (if it had, I would have just inserted it and been done
-> >> > with it).
-> >> >
-> >> > Apparently it has to do with the stable DT rules, which I don't know.
-> >> > A concrete example would probably help clear it up.
-> >>
-> >> The stable DT rules mean that an old DTS should keep on working with
-> >> newer kernels.
-> >>
-> >> Suppose we have two SoCs, that both contain "foo" modules, which look
-> >> identical. Hence the DTS for both declares the devices to be compatible
-> >> with "vendor,foo".
-> >>
-> >> Later, we discover a difference between the two "foo" modules in the two
-> >> SoCs (e.g. a feature present in one of them, or worse, a bug), which we
-> >> need to handle in the driver. But how can we distinguish between them?
-> >> We can change the compatible value in the DTS, but that means the user
-> >> has to update the DTS when updating the kernel. For a new feature that
-> >> may be deemed acceptable, for a bug fix that's not acceptable.
-> >>
-> >> Hence we always use an SoC-specific compatible value, which may or may
-> >> not be accompanied by a family-specific and/or generic compatible value.
-> >> As long as everything can be handled the same, the driver will just match
-> >> against the most generic compatible value used. But if needed later, the
-> >> driver can be updated to match against a more specific compatible value,
-> >> and can have special handling for  a module in a specific SoC.
-> >>
-> >> So that's why we want to have compatible value in the DT bindings that
-> >> are not necessarily used by the driver.
-> >>
-> >> In a perfect world, where all hardware is properly documented, or even
-> >> Open Source, we wouldn't need this. There we could just declare a device
-> >> compatible with what it really is, based on the module's internal version ID
-> >> (ideally a git commit ID of its HDL source ;-).
-> >>
-> >> I hope the above explains it. If you have more questions, feel free to ask!
-> >
-> > The above is all pretty standard device identification technique.
-> > That's not what I've been missing.
-> >
-> > But I just had an epiphany.  Tell me if I'm talking sense or
-> > gibberish:
-> >
-> >   If a patch adds a use of "renesas,pcie-r8a7793" in a .dts, .c, or .h
-> >   file, e.g., in arch/arm/boot/dts/ or in the driver, and somebody
-> >   runs checkpatch on that patch, checkpatch will complain unless
-> >   "renesas,pcie-r8a7793" appears somewhere in
-> >   devicetree/bindings/pci/.
-> >
-> > So if I understand correctly, the only point of this patch is to shut
-> > up checkpatch in that situation.  It doesn't seem terribly useful to
-> > me because checkpatch is only relevant to Linux kernel patches, and
-> > even there it's optional and advisory.
-> >
-> > The latest changelog says "By documenting this compat string it may be
-> > used in DTSs shipped, for example as part of ROMs", which seems to be
-> > saying a DTS may not be shipped unless checkpatch approves of it.
-> > That's a social and procedural question, not a coding question.
-> >
-> > It's fine with me if you want to try to enforce that via checkpatch,
-> > but I'd just like to be clear on the mechanism.
-> 
-> A DT binding (e.g. a compatible value) may only be used in a DTS after it's
-> been documented and approved in a DT binding document.
-> 
-> Checkpath is just a tool. AFAIK there's no other tool enforcing the above.
-> 
-> As both DTSes and DT binding documents are (still) in the kernel, and changes
-> to them go in the kernel through patches, and most people run checkpatch
-> on patches, I think having the check in checkpatch makes perfect sense.
-> Adding and using yet another tool would complicate matters.
 
-Like I said, it's fine with me if your DTS process relies on
-checkpatch, and I'm not suggesting any other tool.
+This patch series adds support for Toradex Apalis iMX6Q/D SoM module [1=
+] and
+Ixora carrier board [2].
 
-I'm just trying to get clarity on the nitty-gritty technical benefits
-of this patch, and I think it is "this patch enables people to add a
-DTS containing 'renesas,pcie-r8a7793' to the kernel source without
-having checkpatch complain."
+Petr =C5=A0tetiar has simply taken content of DTSes from Toradex's Git =
+tree [3],
+removed not mainlined stuff and fixed all errors returned by checkpatch=
+ script.
 
-If the convention is that OEMs can't ship a DT unless it's in the
-kernel source and has passed checkpatch, that's fine, but it can't be
-enforced by a kernel patch.
+Please note that RESET_MOCI# used as mini-PCIe PERST# is not directly
+GPIO1_IO28 but rather inverted (e.g. active-high and ored with RESETBMC=
+U coming
+off the PMIC but that is not relevant in this context). As changing the
+reset-gpio polarity wasn't previously supported Petr =C5=A0tetiar's
+"PCI: imx6: Fix reset-gpio to work with active low GPIO" fix [4] is nee=
+ded.
 
-Bjorn
+1. https://www.toradex.com/computer-on-modules/apalis-arm-family/freesc=
+ale-imx-6
+2. https://www.toradex.com/products/carrier-boards/ixora-carrier-board
+3. https://git.toradex.com/cgit/linux-toradex.git/log/?h=3Dtoradex_imx_=
+3.14.28_1.0.0_ga
+4. https://patchwork.ozlabs.org/patch/552886/
+
+Changes in v5:
+- finally get rid of regulators simple bus as suggested by Lucas, Petr =
+and Shawn
+- use reg_xxx: regulator-xxx naming scheme as suggested by Shawn
+- get rid of disabled hdmi node as suggested by Shawn
+- have a new line between properties and sub-node as suggested by Shawn
+- get rid of disabled usbh1 node as suggested by Shawn
+- drop iomux/pinctrl function container nodes as suggested by Shawn
+- added new lines between nodes as suggested by Shawn
+- use consistent pinctrl group node naming schema xxxgrp as suggested b=
+y Shawn
+- further clean-up and re-order iomux/pinctrl stuff
+- configure eMMC reset as required once fast boot mode is used
+- properly set usdhc1, usdhc2 and usdhc3 vqmmc-supply rather than vmmc-=
+supply we previously set leading to wrong signal voltage being reported
+- drop iomux/pinctrl function container node as suggested by Shawn
+- added new line between nodes as suggested by Shawn
+- use consistent pinctrl group node naming schema xxxgrp as suggested b=
+y Shawn
+- replace the gpio-key,wakeup property with the generic wakeup-source o=
+ne as suggested by Shawn
+- drop regulators function container node and use simple label referenc=
+e to enable USB VBUS' as suggested by Shawn
+
+Changes in v4:
+- integrated review feedback from Fabio
+
+Changes in v3:
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- move I2C DDC enablement and assignement handling into carrier board D=
+TS where it belongs
+- move CAN nodes up a little to keep the alphabetical order
+- added an explanatory comment about PWR_I2C usage
+- integrated review feedback from Petr
+- integrated review feedback from Stefan
+- fix comment concerning Apalis GPIO usage as GPIO7 is only used for PC=
+Ie switch reset on Apalis Evaluation board
+- move I2C DDC handling into carrier board DTS where it belongs
+- simplify RTC alias
+
+Changes in v2:
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
+- clarify exact Apalis iMX6Q/D SoM type in cover letter
+- clarify exact Apalis iMX6Q/D module type and Ixora carrier board in m=
+odel
+  node
+- got rid of obsolete mmc aliases
+- working SGTL5000 audio/sound integration
+- working STMPE811 touch screen controller integration
+- integrated review feedback from Lucas
+- left and even added some more comments as I don't see why putting any
+  explanatory comments in dts' should be such a bad thing to do
+- completely got rid of the memory node as that is something typically =
+filled
+  in by the boot loader e.g. U-Boot
+- without the regulators simple-bus it no longer boots
+- even though we supposedly shipped a few hundred V1.0a modules drop DC=
+E UART
+  support for now and simplify file layout
+- replaced obsolete no-1-8-v by mainline supported voltage-ranges =3D <=
+3300 3300>
+  usdhc property and yes card detects are indeed active low (;-p)
+- integrated review feedback from Stefan
+- fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to b=
+e
+  enabled)
+- fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
+- fixed SPDIF
+
+Petr =C5=A0tetiar (2):
+  ARM: dts: imx6: Add support for Toradex Apalis iMX6Q/D SoM
+  ARM: dts: imx6: Add support for Toradex Ixora carrier board
+
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts | 272 +++++++++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 984 +++++++++++++++++++++++=
+++++++++
+ 3 files changed, 1257 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-apalis.dtsi
+
+--=20
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
