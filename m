@@ -1,88 +1,131 @@
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v3 6/6] arm64: add sysfs cpu_capacity attribute
-Date: Fri, 5 Feb 2016 17:19:11 +0000
-Message-ID: <56B4D98F.3090103@arm.com>
-References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
- <1454500799-18451-7-git-send-email-juri.lelli@arm.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH 6/7] [PATCH] MIPS: OCTEON: Add support for OCTEON III
+ interrupt controller.
+Date: Fri, 5 Feb 2016 09:22:03 -0800
+Message-ID: <56B4DA3B.40607@caviumnetworks.com>
+References: <1454632974-7686-1-git-send-email-ddaney.cavm@gmail.com> <1454632974-7686-7-git-send-email-ddaney.cavm@gmail.com> <alpine.DEB.2.11.1602050954480.25254@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1454500799-18451-7-git-send-email-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org, Mark Brown <broonie@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <alpine.DEB.2.11.1602050954480.25254@nanos>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Juri,
+On 02/05/2016 01:06 AM, Thomas Gleixner wrote:
+> On Thu, 4 Feb 2016, David Daney wrote:
+>> +static int octeon_irq_ciu_set_type(struct irq_data *data, unsigned int t)
+>> +{
+>> +	irqd_set_trigger_type(data, t);
+>> +
+>> +	if (irqd_get_trigger_type(data) & IRQ_TYPE_EDGE_BOTH)
+>> +		irq_set_handler_locked(data, handle_edge_irq);
+>> +	else
+>> +		irq_set_handler_locked(data, handle_level_irq);
+>> +
+>> +	return IRQ_SET_MASK_OK;
+>
+> That doesn't make any sense. First you store the type 't' in irq data, then
+> you query irq data for the type and at the end you tell the core to set the
+> type in irq data.
+>
+>       if (t & IRQ_TYPE_EDGE_BOTH)
+>       	...
+>       else
+>          ...
+>       return IRQ_SET_MASK_OK;
+>
+> does the same, right?
 
-On 03/02/16 11:59, Juri Lelli wrote:
-> Add a sysfs cpu_capacity attribute with which it is possible to read =
-and
-> write (thus over-writing default values) CPUs capacity. This might be
-> useful in situation where there is no way to get proper default value=
-s
-> at boot time.
->=20
-> The new attribute shows up as:
->=20
->  /sys/devices/system/cpu/cpu*/cpu_capacity
->=20
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Brown <broonie@linaro.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-> ---
->  arch/arm64/kernel/topology.c | 68 ++++++++++++++++++++++++++++++++++=
-++++++++++
->  1 file changed, 68 insertions(+)
->=20
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topolog=
-y.c
-> index f2513a6..f05cc07 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -40,6 +40,74 @@ bool arch_wants_init_cpu_capacity(void)
->  	return true;
->  }
-> =20
-> +#ifdef CONFIG_PROC_SYSCTL
-> +#include <asm/cpu.h>
-> +#include <linux/string.h>
-> +static ssize_t show_cpu_capacity(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 char *buf)
-> +{
-> +	struct cpu *cpu =3D container_of(dev, struct cpu, dev);
-> +	ssize_t rc;
-> +	int cpunum =3D cpu->dev.id;
-> +	unsigned long capacity =3D arch_scale_cpu_capacity(NULL, cpunum);
+Yes, clearly that is better.  I don't know what we were thinking there.
 
-Gives me an implicit declaration of function =91arch_scale_cpu_capacity=
-=92
-error [without the commit fbc899610e1a ("arm64: Update
-arch_scale_cpu_capacity() to reflect change to define") on your
-git://linux-arm.org/linux-jl.git upstream/default_caps_v3 branch].
 
-Why don't you just return cpu_scale
+>
+>> +int octeon_irq_ciu3_xlat(struct irq_domain *d,
+>
+> static ?
 
-@@ -49,10 +49,8 @@ static ssize_t show_cpu_capacity(struct device *dev,
- {
-        struct cpu *cpu =3D container_of(dev, struct cpu, dev);
-        ssize_t rc;
--       int cpunum =3D cpu->dev.id;
--       unsigned long capacity =3D arch_scale_cpu_capacity(NULL, cpunum=
-);
+To be used in follow-on patch for MSI-X irq_chip driver residing in a 
+separate file.
 
--       rc =3D sprintf(buf, "%lu\n", capacity);
-+       rc =3D sprintf(buf, "%lu\n", per_cpu(cpu_scale, cpu->dev.id));
+The idea was to not be changing the to/from static multiple times as the 
+new patches were merged.  If you think it preferable, I can make them 
+all static and then remove the static later, when needed.
 
-        return rc;
- }
+>
+>> +			 struct device_node *node,
+>> +			 const u32 *intspec,
+>> +			 unsigned int intsize,
+>> +			 unsigned long *out_hwirq,
+>> +			 unsigned int *out_type)
+>> +{
+>> +
+>> +void octeon_irq_ciu3_enable(struct irq_data *data)
+>
+> static
+>
+>> +void octeon_irq_ciu3_disable(struct irq_data *data)
+>> +void octeon_irq_ciu3_ack(struct irq_data *data)
+>> +void octeon_irq_ciu3_mask(struct irq_data *data)
+>> +void octeon_irq_ciu3_mask_ack(struct irq_data *data)
+>> +int octeon_irq_ciu3_set_affinity(struct irq_data *data,
+>> +				 const struct cpumask *dest, bool force)
+>
+> ditto
 
-to get rid of this dependency?
+Same, see above.
 
--- Dietmar
 
-[...]
+>
+>> +int octeon_irq_ciu3_mapx(struct irq_domain *d, unsigned int virq,
+>> +			 irq_hw_number_t hw, struct irq_chip *chip)
+>
+> ....
+
+Yep.
+
+>
+>> +void octeon_ciu3_mbox_send(int cpu, unsigned int mbox)
+>> +{
+>> +	struct octeon_ciu3_info *ciu3_info;
+>> +	unsigned int intsn;
+>> +	union cvmx_ciu3_iscx_w1s isc_w1s;
+>> +	u64 isc_w1s_addr;
+>> +
+>> +	if (WARN_ON_ONCE(mbox >= CIU3_MBOX_PER_CORE))
+>> +		return;
+>> +
+>> +	intsn = octeon_irq_ciu3_mbox_intsn_for_cpu(cpu, mbox);
+>> +	ciu3_info = per_cpu(octeon_ciu3_info, cpu);
+>> +	isc_w1s_addr = ciu3_info->ciu3_addr + CIU3_ISC_W1S(intsn);
+>> +
+>> +	isc_w1s.u64 = 0;
+>> +	isc_w1s.s.raw = 1;
+>> +
+>> +	cvmx_write_csr(isc_w1s_addr, isc_w1s.u64);
+>> +	cvmx_read_csr(isc_w1s_addr);
+>> +}
+>> +EXPORT_SYMBOL(octeon_ciu3_mbox_send);
+>
+> Why need modules that function?
+
+Similar to the MSI-X irq_chip thing, but this time for follow-on 
+kexec/kdump patches which may be implemented as a module.
+
+I will remove the EXPORT_SYMBOL().
+
+>
+> Thanks,
+>
+> 	tglx
+>
