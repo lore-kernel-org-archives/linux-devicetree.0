@@ -1,84 +1,53 @@
-From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for the PIC32 SPI
- peripheral
-Date: Fri, 5 Feb 2016 10:38:28 +0530
-Message-ID: <56B42E4C.8040201@microchip.com>
-References: <1454366701-10847-1-git-send-email-joshua.henderson@microchip.com>
- <56B08EEB.3050808@cogentembedded.com>
+From: Dawei Chien <dawei.chien@mediatek.com>
+Subject: [PATCH] arm64: dts: mt8173: add node for thermal calibration
+Date: Fri, 5 Feb 2016 13:47:38 +0800
+Message-ID: <1454651258-41990-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B08EEB.3050808-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Kurtz <djkurtz@chromium.org>, Dawei Chien <dawei.chien@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2016 04:41 PM, Sergei Shtylyov wrote:
+Add this for supporting thermal calibration by e-fuse data.
 
-> Hello.
-> On 2/2/2016 1:44 AM, Joshua Henderson wrote:
->> From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Document the devicetree bindings for the SPI peripheral found
->> on Microchip PIC32 class devices.
->> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> ---
->>   .../bindings/spi/microchip,spi-pic32.txt           |   44 ++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
->> diff --git a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
->> new file mode 100644
->> index 0000000..a555618
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
->> @@ -0,0 +1,44 @@
->> +* Microchip PIC32 SPI device
->> +
->> +Required properties:
->> +- compatible: Should be "microchip,pic32mzda-spi".
->> +- reg: Address and length of the register set for the device
->> +- interrupts: Should contain all three spi interrupts in sequence
->> +              of <fault-irq>, <receive-irq>, <transmit-irq>.
->> +- interrupt-names: Should be "fault","rx","tx" in order.
->>
-> Please insert spaces after commas.
+Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+---
+Because MTK thermal/efuse patches hadn't landed on mainline, this patch
+must base on following patchset:
+https://lkml.org/lkml/2015/11/17/251
+https://lkml.org/lkml/2015/11/19/169
+https://lkml.org/lkml/2015/11/30/239
+https://lkml.org/lkml/2015/12/16/195
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-ack.
-
->> +- clocks: phandles of baud generation clocks. Maximum two possible clocks
->>
-> Baud in the SPI context?
-
-Yes, clock for generating spi clock (SCK). Will update the comment.
-
->> +      can be provided (&PBCLK2, &REFCLKO1).
->>
-> Please align.
-
-ack.
-
->> +          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +- clock-names: Should be "mck0","mck1".
->>
-> Please insert space after comma.
-
-ack.
-
-> [...]
->> +Example:
->> +
->> +    spi1:spi@0x1f821000 {
-> Please insert spaces after colon.
-
-ack
-
-> [...]
-> MBR, Sergei
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index ffcca66..0c9d17e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -391,6 +391,11 @@
+ 		efuse: efuse@10206000 {
+ 			compatible = "mediatek,mt8173-efuse";
+ 			reg = <0 0x10206000 0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			thermal_calibration: calib@528 {
++				reg = <0x528 0xc>;
++			};
+ 		};
+ 
+ 		apmixedsys: clock-controller@10209000 {
+@@ -744,6 +749,8 @@
+ 			resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
+ 			mediatek,auxadc = <&auxadc>;
+ 			mediatek,apmixedsys = <&apmixedsys>;
++			nvmem-cells = <&thermal_calibration>;
++			nvmem-cell-names = "calibration-data";
+ 		};
+ 	};
+ };
+-- 
+1.7.9.5
