@@ -1,37 +1,80 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 1/3] fixup! Input: rotary_encoder - convert to use gpiod API
-Date: Fri,  5 Feb 2016 13:08:19 +0100
-Message-ID: <1454674101-1194-2-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <1454674101-1194-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454674101-1194-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/1] USB: core: let USB device know device node
+Date: Fri, 5 Feb 2016 20:55:55 +0800
+Message-ID: <CAL411-oOgSYJy_cLVkGWkLbzBewKtj1jgfQqxCsjE_-3NLYcTA@mail.gmail.com>
+References: <20160204015928.GA11158@shlinux2> <Pine.LNX.4.44L0.1602041130590.1515-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1602041130590.1515-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
----
- arch/arm/mach-pxa/raumfeld.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Feb 5, 2016 at 12:36 AM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Thu, 4 Feb 2016, Peter Chen wrote:
+>
+>> On Mon, Jan 25, 2016 at 03:24:39PM +0800, Peter Chen wrote:
+>> > Although most of USB devices are hot-plug's, there are still some devices
+>> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+>> > If these kinds of USB devices are multiple functions, and they can supply
+>> > other interfaces like i2c, gpios for other devices, we may need to
+>> > describe these at device tree.
+>> >
+>> > In this commit, it uses "reg" in dts as physical port number to match
+>> > the phyiscal port number decided by USB core, if they are the same,
+>> > then the device node is for the device we are creating for USB core.
+>> >
+>> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> > ---
+>> > Changes for v4:
+>> > - The range of "reg" should be 1-31, changing device node address
+>> >   style as in lower case hexadecimal with leading zeroes suppressed
+>> >   [binding doc, usb-device.txt]
+>> > - Improve the example at binding doc, it describes node from the top
+>> >   (the controller)
+>> > - Delete the struct of_node * within struct usb_device
+>> > - Using usb_hcd_find_raw_port_number to get raw port number under root
+>> >   hub port
+>> >
+>>
+>> Hi Alan, Arnd, and others, would you please give Ack for it if you
+>> are OK with this patch? I am not sure if Greg will queue it or not
+>> if no one Acks it, thanks.
+>
+>
+>> > @@ -508,11 +509,20 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+>> >     dev->connect_time = jiffies;
+>> >     dev->active_duration = -jiffies;
+>> >  #endif
+>> > -   if (root_hub)   /* Root hub always ok [and always wired] */
+>> > +   if (root_hub) { /* Root hub always ok [and always wired] */
+>> >             dev->authorized = 1;
+>> > -   else {
+>> > +           dev->dev.of_node = bus->controller->of_node;
+>> > +   } else {
+>> >             dev->authorized = !!HCD_DEV_AUTHORIZED(usb_hcd);
+>> >             dev->wusb = usb_bus_is_wusb(bus) ? 1 : 0;
+>> > +
+>> > +           if (dev->dev.parent->parent == bus->controller)
+>> > +                   /* device under root hub's port */
+>> > +                   port1 = usb_hcd_find_raw_port_number(usb_hcd,
+>> > +                           port1);
+>
+> I would change the test to "if (!parent->parent)" and add {} around the
+> body (since it's 3 lines long).  Also, although this doesn't really
+> matter, you could consider putting the new code inside the previous big
+> "if" statement instead of down here at the end of the function.
+>
 
-diff --git a/arch/arm/mach-pxa/raumfeld.c b/arch/arm/mach-pxa/raumfeld.c
-index c559114431eb..77e412cd2766 100644
---- a/arch/arm/mach-pxa/raumfeld.c
-+++ b/arch/arm/mach-pxa/raumfeld.c
-@@ -368,7 +368,7 @@ static struct pxaohci_platform_data raumfeld_ohci_info = {
-  */
- 
- static struct gpiod_lookup_table raumfeld_rotary_gpios_table = {
--	.dev_id = "rotary-encoder",
-+	.dev_id = "rotary-encoder.0",
- 	.table = {
- 		GPIO_LOOKUP_IDX("gpio-0",
- 				GPIO_VOLENC_A, NULL, 0, GPIO_ACTIVE_LOW),
+Sorry, Alan, I can understand using (!parent->parent) to stands for
+the device connects to the root hub port, others I can't understand.
+
 -- 
-2.7.0
-
+BR,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
