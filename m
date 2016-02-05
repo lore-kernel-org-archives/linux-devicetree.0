@@ -1,44 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 3/3] gpio: tps65086: Add GPO driver for the TPS65086 PMIC
-Date: Fri, 5 Feb 2016 15:43:55 +0100
-Message-ID: <CACRpkdY9P=opTEzsMJ42dqMUV-kVmDzLuVq_vSgr3on3=9LtqQ@mail.gmail.com>
-References: <1453737012-3130-1-git-send-email-afd@ti.com>
-	<1453737012-3130-4-git-send-email-afd@ti.com>
+Subject: Re: [PATCH V7 3/8] pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
+Date: Fri, 5 Feb 2016 15:48:05 +0100
+Message-ID: <CACRpkda+z19COrBBhwZks_69w-BEyOjQMHnadjdRVic+3uN_7g@mail.gmail.com>
+References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
+	<1454171931-27752-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1453737012-3130-4-git-send-email-afd@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454171931-27752-4-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, vreddytalla@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 4:50 PM, Andrew F. Davis <afd@ti.com> wrote:
+On Sat, Jan 30, 2016 at 5:38 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-> Add support for the TPS65086 PMIC GPOs.
+> Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
+> which act as GPIO as well as special function mode.
 >
-> TPS65086 has four configurable GPOs that can be used for several
-> purposes. These are output only.
+> Add DT binding document to configure pins in function mode as
+> well as pin configuration parameters.
 >
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-(...)
-> +static inline struct tps65086_gpio *to_tps65086_gpio(struct gpio_chip *chip)
-> +{
-> +       return container_of(chip, struct tps65086_gpio, chip);
-> +}
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes from V4:
+> - Separate out from pincontrol driver
 
-Remove this and use gpiochip_get_data() instead.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +       ret = gpiochip_add(&gpio->chip);
-
-And use gpiochip_add_data() to pass what gpiochip_get_data()
-will return.
-
-Apart from that no strong opinions.
-
-If there is a header file dependency this either has to go to
-Lee's tree with my ACK, or wait until the next kernel cycle.
-But first change the above.
+Lee can merge this with the rest of the patches.
 
 Yours,
 Linus Walleij
