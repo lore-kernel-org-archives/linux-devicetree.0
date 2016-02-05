@@ -1,108 +1,149 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Fri, 5 Feb 2016 06:42:42 -0800
-Message-ID: <56B4B4E2.40105@roeck-us.net>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
- <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
- <56B23883.7000501@codeaurora.org>
- <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
- <56B23E99.1030604@codeaurora.org>
- <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
- <56B2423B.1020109@codeaurora.org>
- <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
- <56B24642.8090105@codeaurora.org>
- <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
- <56B24AB5.3070001@codeaurora.org>
- <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
- <56B2DEE4.7060901@roeck-us.net>
- <CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Analog Devices AXI SPI Engine controller
+ support
+Date: Fri, 5 Feb 2016 15:30:01 +0100
+Message-ID: <56B4B1E9.7080804@metafoo.de>
+References: <1454602410-14049-1-git-send-email-lars@metafoo.de>
+ <1454602410-14049-2-git-send-email-lars@metafoo.de>
+ <CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Timur Tabi <timur@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2016 01:51 AM, Fu Wei wrote:
-> Hi Guenter,
->
-> On 4 February 2016 at 13:17, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 02/03/2016 03:00 PM, Fu Wei wrote:
->>>
->>> On 4 February 2016 at 02:45, Timur Tabi <timur@codeaurora.org> wrote:
->>>>
->>>> Fu Wei wrote:
->>>>>
->>>>>
->>>>> As you know I have made the pre-timeout support patch, If people like
->>>>> it, i am happy to go on upstream it separately.
->>>>>
->>>>> If we want to use pre-timeout here, user only can use get_pretimeout
->>>>> and disable panic by setting pretimeout to 0
->>>>> but user can not really set pretimeout, because "pre-timeout  ==
->>>>> timeout / 2 (always)".
->>>>> if user want to change pretimeout, he/she has to set_time instead.
->>>>
->>>>
->>>>
->>>> Ok, I think patches 4 and 5 should be combined, and I think the Kconfig
->>>> entry should be removed and just use panic_enabled.
->>
->>
->> Agreed.
->
-> np, will do
->
->>>
->>>
->>> NP, will update this patchset like that ,  thanks :-)
->>>
->>
->> Also, if panic is enabled, the timeout needs to be adjusted accordingly
->> (to only panic after the entire timeout period has expired, not after
->> half of it). We can not panic the system after timeout / 2.
->
-> OK, my thought is
->
-> if panic is enabled :
-> |--------WOR-------WS0--------WOR-------WS1
-> |------timeout------(panic)------timeout-----reset
->
-> if panic is disabled .
-> |--------WOR-------WS0--------WOR-------WS1
-> |---------------------timeout---------------------reset
->
->   panic_enabled only can be configured when module is loaded by module parameter
->
-> But user should know that max_timeout(panic_enable) =
-> max_timeout(panic_disable) / 2
->
+Hi,
 
-That means you'll have to update max_timeout accordingly.
+Thanks for review.
 
->>
->> I am not too happy with the parameter name (panic_enabled). How about
->> "action", to match machzwd ?
->
-> yes, makes sense. Maybe we can do something  like this:
->
-> /*
->   * action refers to action taken when watchdog gets WS0
->   * 0 = SKIP
->   * 1 = PANIC
->   * defaults to SKIP (0)
->   */
-> static int action;
-> module_param(action, int, 0);
-> MODULE_PARM_DESC(action, "after watchdog gets WS0 interrupt, do: "
-> "0 = SKIP(*)  1 = PANIC");
->
-Yes, though I would suggest to use lower case letters.
+On 02/05/2016 03:04 PM, Andy Shevchenko wrote:
+[...]
+>> +++ b/drivers/spi/spi-axi-spi-engine.c
+>> @@ -0,0 +1,591 @@
+> 
+>> +static unsigned int spi_engine_get_clk_div(struct spi_engine *spi_engine,
+>> +       struct spi_device *spi, struct spi_transfer *xfer)
+>> +{
+>> +       unsigned int clk_div;
+>> +
+>> +       clk_div = DIV_ROUND_UP(clk_get_rate(spi_engine->ref_clk),
+>> +               xfer->speed_hz * 2);
+> 
+>> +       if (clk_div > 255)
+>> +               clk_div = 255;
+>> +       else if (clk_div > 0)
+>> +               clk_div -= 1;
+> 
+> 255 is okay, 254 is not, 253- is okay. Why 254 is so special?
 
-Thanks,
-Guenter
+I don't see that. The condition is > 255, so everything greater or equal
+than 256 gets mapped to 255. Everything else to x - 1, so 255 to 254, 254 to
+253.
 
+> 
+>> +
+>> +       return clk_div;
+>> +}
+> 
+> 
+>> +static int spi_engine_compile_message(struct spi_engine *spi_engine,
+>> +       struct spi_message *msg, bool dry, struct spi_engine_program *p)
+>> +{
+>> +       struct spi_device *spi = msg->spi;
+>> +       struct spi_transfer *xfer;
+>> +       int clk_div, new_clk_div;
+>> +       bool cs_change = true;
+>> +
+>> +       clk_div = -1;
+>> +
+>> +       spi_engine_program_add_cmd(p, dry,
+>> +               SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CONFIG,
+>> +                       spi_engine_get_config(spi)));
+>> +
+>> +       list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+>> +               new_clk_div = spi_engine_get_clk_div(spi_engine, spi, xfer);
+> 
+>> +               if (new_clk_div != clk_div) {
+>> +                       clk_div = new_clk_div;
+>> +                       spi_engine_program_add_cmd(p, dry,
+>> +                               SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CLK_DIV,
+>> +                                       clk_div));
+>> +               }
+> 
+> Shouldn't be speed programmed per transfer?
+
+Speed is programmed if it is not the same as the previous transfer. For the
+first transfer in the message it always gets programmed.
+
+> 
+>> +
+>> +               if (cs_change)
+>> +                       spi_engine_gen_cs(p, dry, spi, true);
+>> +
+>> +               spi_engine_gen_xfer(p, dry, xfer);
+>> +               spi_engine_gen_sleep(p, dry, spi_engine, clk_div,
+>> +                       xfer->delay_usecs);
+>> +
+>> +               cs_change = xfer->cs_change;
+>> +               if (list_is_last(&xfer->transfer_list, &msg->transfers))
+>> +                       cs_change = !cs_change;
+>> +
+>> +               if (cs_change)
+>> +                       spi_engine_gen_cs(p, dry, spi, false);
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+[...]
+>> +static bool spi_engine_write_tx_fifo(struct spi_engine *spi_engine)
+>> +{
+>> +       void __iomem *addr = spi_engine->base + SPI_ENGINE_REG_SDO_DATA_FIFO;
+>> +       unsigned int n, m, i;
+>> +       const uint8_t *buf;
+>> +
+>> +       n = readl_relaxed(spi_engine->base + SPI_ENGINE_REG_SDO_FIFO_ROOM);
+>> +       while (n && spi_engine->tx_length) {
+>> +               m = min(n, spi_engine->tx_length);
+>> +               buf = spi_engine->tx_buf;
+> 
+>> +               for (i = 0; i < m; i++)
+>> +                       writel_relaxed(buf[i], addr);
+> 
+> writesl() ?
+
+Hm, maybe. Does it really have the same semantics?
+
+> 
+>> +               spi_engine->tx_buf += m;
+>> +               spi_engine->tx_length -= m;
+>> +               n -= m;
+>> +               if (spi_engine->tx_length == 0)
+>> +                       spi_engine_tx_next(spi_engine);
+>> +       }
+>> +
+>> +       return spi_engine->tx_length != 0;
+>> +}
+>> +
+[...]
+>> +static int spi_engine_transfer_one_message(struct spi_master *master,
+>> +       struct spi_message *msg)
+> 
+> And you are not using transfer_one() because of..?
+
+transfer_one() does flow control in software. Execution is passed back to
+software after each transfer and it also takes care of handling the chip
+select assertion/deassertion as well as the delays. It's useful for hardware
+which does not support hardware flow control. In this case the hardware
+supports flow control including chip-select logic as well as delays. Making
+use of this generates far less context switches per message and also has
+predictable timings between transfers within a message.
+
+[...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
