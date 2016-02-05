@@ -1,47 +1,73 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: Add L2 cache-controller nodes
-Date: Fri, 5 Feb 2016 10:57:59 +0100
-Message-ID: <20160205095758.GE16556@verge.net.au>
-References: <1452953856-5146-1-git-send-email-dirk.behme@gmail.com>
- <56B2370D.2010102@gmail.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v2] arm64: dts: r8a7795: pmu: switch to Cortex specific
+ device nodes
+Date: Fri, 5 Feb 2016 11:03:36 +0100
+Message-ID: <56B47378.3080209@de.bosch.com>
+References: <1452953636-4995-1-git-send-email-dirk.behme@gmail.com>
+ <56B236F4.4090409@gmail.com> <20160205095445.GD16556@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56B2370D.2010102-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160205095445.GD16556@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Dirk Behme <dirk.behme@gmail.com>
+Cc: linux-sh@vger.kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[CC new linux-renesas-soc ML]
+On 05.02.2016 10:54, Simon Horman wrote:
+> [CC shiny new linux-renesas-soc ML]
 
-Hi Dirk,
 
-On Wed, Feb 03, 2016 at 06:21:17PM +0100, Dirk Behme wrote:
-> On 16.01.2016 15:17, Dirk Behme wrote:
-> >From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >
-> >Add device nodes for the L2 caches, and link the CPU node to its L2
-> >cache node.
-> >
-> >The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
-> >128 KiB x 16 ways).
-> >
-> >Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >Signed-off-by: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Yes, thanks. I've to learn and remember this, too :)
 
-[snip]
 
-> Any further comments to this? If not, could this be applied?
+> On Wed, Feb 03, 2016 at 06:20:52PM +0100, Dirk Behme wrote:
+>> On 16.01.2016 15:13, Dirk Behme wrote:
+>>> Instead of using the generic armv8-pmuv3 compatibility use the more
+>>> specific Cortex A57 compatibility.
+>>>
+>>> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+>>> ---
+>>> Changes in v2: Drop the not yet merged Cortex A53 part.
+>>>
+>>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> index 266c5de..a82bce8 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> @@ -247,8 +247,8 @@
+>>>   			power-domains = <&cpg>;
+>>>   		};
+>>>
+>>> -		pmu {
+>>> -			compatible = "arm,armv8-pmuv3";
+>>> +		pmu_a57 {
+>>> +			compatible = "arm,cortex-a57-pmu";
+>>>   			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+>>>   				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+>>>   				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+>>>
+>>
+>>
+>> Any further comments to this? If not, could this be applied?
+>
+> Hi Dirk,
+>
+> I apologise for loosing track of this one.
+>
+> Does this change work? I saw some discussion about using arm,cortex-a57-pmu
+> not working correctly on the r8a7795 in an earlier thread.
 
-Sorry for the delay.
+Yes, the A57 PMU probe is successful.
 
-This looks good; I have queued it up.
+What's not working with the latest Renesas BSP is the A53, because these 
+cores are disabled in the firmware coming with that BSP. But that's not 
+a PMU issue, it's just because the cores are disabled. Using an older 
+BSP firmware enabling all cores makes the A53 PMU probe fine, too.
 
-It should appear in the next (and devel) branches of my renesas tree soon.
-And in linux-next whenever it includes my updated next branch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+
+Dirk
