@@ -1,50 +1,60 @@
-From: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Fri, 05 Feb 2016 16:07:53 +0100
-Message-ID: <m38u2z6vqu.fsf@euphor.blino.org>
-References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
-	<1454571364-24708-2-git-send-email-lkundrak@v3.sk>
-	<m3fux76xqa.fsf@euphor.blino.org> <1454684126.2779.2.camel@v3.sk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7] SATA: OCTEON: support SATA on OCTEON platform
+Date: Fri, 05 Feb 2016 16:10:40 +0100
+Message-ID: <4427989.vm6oM7UICv@wuerfel>
+References: <1454520915-27948-1-git-send-email-Zubair.Kakakhel@imgtec.com> <56B342FF.1090709@caviumnetworks.com> <56B376CE.9010600@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454684126.2779.2.camel-NGH9Lh4a5iE@public.gmane.org> (Lubomir Rintel's message of
-	"Fri, 05 Feb 2016 15:55:26 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56B376CE.9010600@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
+On Thursday 04 February 2016 16:05:34 Zubair Lutfullah Kakakhel wrote:
+> Thank-you for the review.
+> 
+> On 04/02/16 12:24, Aleksey Makarov wrote:
+> >
+> > Hi Zubair,
+> >
+> >> +    void __iomem *base;
+> >
+> > [..]
+> >
+> >> +    cfg = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
+> >
+> > sparse will complain here.  See Documentation/sparse.txt
+> 
+> Yes. sparse says
+> 
+> ...
+> CHECK   drivers/ata/sata_octeon.c
+> drivers/ata/sata_octeon.c:50:30: warning: cast removes address space of expression
+> drivers/ata/sata_octeon.c:65:25: warning: cast removes address space of expression
+> ...
+> 
+> Use of (__force uint64_t) removes the sparse warning. But it was
+> frowned upon by arnd.
+> 
+> He suggested a wrapper helper in asm/octeon/cvmx.h which handles iomem
+> addresses and __force behind the scenes rather than in the driver.
 
->> Though, I am not really DT-literate, but shouldn't the ethernet bloc=
-k
->> use the PID from the ethernet device?
->> The usbether device is 9514 on RPi2, while ec00 is the hub.
->
-> Are you sure? I didn't check on RPi2, but I check the Models B and B+
-> and the ethernet device was 0xec00 on both. The driver attaches to th=
-at
-> product ID:
->
-> [lkundrak@odvarok linux]$ modinfo smsc95xx |grep EC
-> alias:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0usb=
-:v0424pEC00d*dc*dsc*dp*ic*isc*ip*in*
-> [lkundrak@odvarok linux]$ modinfo smsc95xx |grep 9514
-> [lkundrak@odvarok linux]$
+Obviously I was not suggesting to remove the __force without fixing
+the address space mismatch first.
 
-My mistake, I am not sure how I mixed that.
-Sorry for the noise.
+> static inline void cvmx_write_csr_resource(void __iomem *csr_addr, uint64_t val)
+> {
+>         cvmx_write_csr((__force uint64_t)csr_addr, val)
+> }
+> 
+> Alternatives? Or should I resend with the above wrapper?
 
-Tested-by: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
+Maybe just name it cvmx_writeq()? This is close enough to the normal
+writeq, except it does not serialize against DMA or spinlocks as
+writeq does, and it assumes that the device is the same endianess
+as the CPU, whereas writeq assumes that devices are fixed-endian.
 
-Thanks
-
---=20
-Olivier Blin - blino
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
