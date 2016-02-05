@@ -1,60 +1,142 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7] SATA: OCTEON: support SATA on OCTEON platform
-Date: Fri, 05 Feb 2016 16:10:40 +0100
-Message-ID: <4427989.vm6oM7UICv@wuerfel>
-References: <1454520915-27948-1-git-send-email-Zubair.Kakakhel@imgtec.com> <56B342FF.1090709@caviumnetworks.com> <56B376CE.9010600@imgtec.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v6] mtd: spi-nor: add hisilicon spi-nor flash controller driver
+Date: Fri, 5 Feb 2016 12:26:18 -0300
+Message-ID: <CAAEAJfDnA5zkvHgqOkSjPZTJQp41N6_U=oO_OmR-4BSb7dUKoQ@mail.gmail.com>
+References: <1454639113-16748-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <56B376CE.9010600@imgtec.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454639113-16748-1-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, shijie.huang@intel.com, pengbinquan@huawei.com, han.xu@freescale.com, fabio.estevam@freescale.com, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 February 2016 16:05:34 Zubair Lutfullah Kakakhel wrote:
-> Thank-you for the review.
-> 
-> On 04/02/16 12:24, Aleksey Makarov wrote:
-> >
-> > Hi Zubair,
-> >
-> >> +    void __iomem *base;
-> >
-> > [..]
-> >
-> >> +    cfg = cvmx_read_csr((uint64_t)base + CVMX_SATA_UCTL_SHIM_CFG);
-> >
-> > sparse will complain here.  See Documentation/sparse.txt
-> 
-> Yes. sparse says
-> 
-> ...
-> CHECK   drivers/ata/sata_octeon.c
-> drivers/ata/sata_octeon.c:50:30: warning: cast removes address space of expression
-> drivers/ata/sata_octeon.c:65:25: warning: cast removes address space of expression
-> ...
-> 
-> Use of (__force uint64_t) removes the sparse warning. But it was
-> frowned upon by arnd.
-> 
-> He suggested a wrapper helper in asm/octeon/cvmx.h which handles iomem
-> addresses and __force behind the scenes rather than in the driver.
+On 4 February 2016 at 23:25, Jiancheng Xue <xuejiancheng@huawei.com> wr=
+ote:
+> Add hisilicon spi-nor flash controller driver
+>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> change log
+> v6:
+> Based on v4.5-rc2
+> Fixed issues pointed by Ezequiel Garcia.
+> v5:
+> Fixed a compile error.
+> v4:
+> Rebased to v4.5-rc1
+> v3:
+> Added a compatible string "hisilicon,hi3519-sfc".
+> v2:
+> Fixed some compiling warings.
+>
+>  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  25 ++
+> This file has already been acked by Rob Herring <robh@kernel.org>.
+>  drivers/mtd/spi-nor/Kconfig                        |   6 +
+>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>  drivers/mtd/spi-nor/hisi-sfc.c                     | 494 +++++++++++=
+++++++++++
+>  4 files changed, 526 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sf=
+c.txt
+>  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b=
+/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+> new file mode 100644
+> index 0000000..7407147
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+> @@ -0,0 +1,25 @@
+> +HiSilicon SPI-NOR Flash Controller
+> +
+> +Required properties:
+> +- compatible : Should be "hisilicon,hisi-sfc" and one of the followi=
+ng strings:
+> +               "hisilicon,hi3519-sfc"
+> +- address-cells : number of cells required to define a chip select
+> +        address on the SPI bus. Should be set to 1. See spi-bus.txt.
+> +- size-cells : Should be 0.
+> +- reg : Offset and length of the register set for the controller dev=
+ice.
+> +- reg-names : Must include the following two entries: "control", "me=
+mory".
+> +- clocks : handle to spi-nor flash controller clock.
+> +
+> +Example:
+> +spi-nor-controller@10000000 {
+> +       compatible =3D "hisilicon,hi3519-sfc", "hisilicon,hisi-sfc";
+> +       #address-cells =3D <1>;
+> +       #size-cells =3D <0>;
+> +       reg =3D <0x10000000 0x1000>, <0x14000000 0x1000000>;
+> +       reg-names =3D "control", "memory";
+> +       clocks =3D <&clock HI3519_FMC_CLK>;
+> +       spi-nor@0 {
+> +               compatible =3D "jedec,spi-nor";
+> +               reg =3D <0>;
+> +       };
+> +};
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfi=
+g
+> index 0dc9275..763e48a 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -37,6 +37,12 @@ config SPI_FSL_QUADSPI
+>           This controller does not support generic SPI. It only suppo=
+rts
+>           SPI NOR.
+>
+> +config SPI_HISI_SFC
+> +       tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
+> +       depends on ARCH_HISI
 
-Obviously I was not suggesting to remove the __force without fixing
-the address space mismatch first.
+I believe that using COMPILE_TEST would allow the build bots
+to pick up your driver and report any issues.
 
-> static inline void cvmx_write_csr_resource(void __iomem *csr_addr, uint64_t val)
-> {
->         cvmx_write_csr((__force uint64_t)csr_addr, val)
-> }
-> 
-> Alternatives? Or should I resend with the above wrapper?
+See how NXP_SPIFI does it below.
 
-Maybe just name it cvmx_writeq()? This is close enough to the normal
-writeq, except it does not serialize against DMA or spinlocks as
-writeq does, and it assumes that the device is the same endianess
-as the CPU, whereas writeq assumes that devices are fixed-endian.
+> +       help
+> +         This enables support for hisilicon SPI-NOR flash controller=
+=2E
+> +
+>  config SPI_NXP_SPIFI
+>         tristate "NXP SPI Flash Interface (SPIFI)"
+>         depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
+> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makef=
+ile
+> index 0bf3a7f8..8a6fa69 100644
+> --- a/drivers/mtd/spi-nor/Makefile
+> +++ b/drivers/mtd/spi-nor/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-$(CONFIG_MTD_SPI_NOR)      +=3D spi-nor.o
+>  obj-$(CONFIG_SPI_FSL_QUADSPI)  +=3D fsl-quadspi.o
+> +obj-$(CONFIG_SPI_HISI_SFC)     +=3D hisi-sfc.o
+>  obj-$(CONFIG_MTD_MT81xx_NOR)    +=3D mtk-quadspi.o
+>  obj-$(CONFIG_SPI_NXP_SPIFI)    +=3D nxp-spifi.o
+[..]
+> +
+> +               ret =3D mtd_device_register(mtd, NULL, 0);
+> +               if (ret)
+> +                       goto fail;
+> +
+> +               i++;
+> +               host->num_chip++;
+> +               if (i =3D=3D HIFMC_MAX_CHIP_NUM) {
+> +                       dev_dbg(dev, "Flash device number exceeds the=
+ maxinum chipselect number\n");
+> +                       break;
 
-	Arnd
+Maybe dev_warn(FW_WARN ...) since it's a warning about a devicetree
+(firmware) issue ?
+
+Also: s/maxinum/maximum
+
+Otherwise, looks fine:
+
+Reviewed-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
