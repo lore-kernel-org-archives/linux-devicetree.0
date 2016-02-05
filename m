@@ -1,142 +1,67 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v6] mtd: spi-nor: add hisilicon spi-nor flash controller driver
-Date: Fri, 5 Feb 2016 12:26:18 -0300
-Message-ID: <CAAEAJfDnA5zkvHgqOkSjPZTJQp41N6_U=oO_OmR-4BSb7dUKoQ@mail.gmail.com>
-References: <1454639113-16748-1-git-send-email-xuejiancheng@huawei.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Analog Devices AXI SPI Engine controller support
+Date: Fri, 5 Feb 2016 17:32:04 +0200
+Message-ID: <CAHp75Vd1WEGDaFx99mX3jN5xXNZ9Rc6R_pE8G5kyGfNirF7T6A@mail.gmail.com>
+References: <1454602410-14049-1-git-send-email-lars@metafoo.de>
+	<1454602410-14049-2-git-send-email-lars@metafoo.de>
+	<CAHp75VcQ1WrHVxk=6xNrjhsep=2YhcMLiXAPChXeB+fG3MX2fQ@mail.gmail.com>
+	<56B4B1E9.7080804@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454639113-16748-1-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, shijie.huang@intel.com, pengbinquan@huawei.com, han.xu@freescale.com, fabio.estevam@freescale.com, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B4B1E9.7080804-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 February 2016 at 23:25, Jiancheng Xue <xuejiancheng@huawei.com> wr=
-ote:
-> Add hisilicon spi-nor flash controller driver
+On Fri, Feb 5, 2016 at 4:30 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>> +       clk_div = DIV_ROUND_UP(clk_get_rate(spi_engine->ref_clk),
+>>> +               xfer->speed_hz * 2);
+>>
+>>> +       if (clk_div > 255)
+>>> +               clk_div = 255;
+>>> +       else if (clk_div > 0)
+>>> +               clk_div -= 1;
+>>
+>> 255 is okay, 254 is not, 253- is okay. Why 254 is so special?
 >
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> change log
-> v6:
-> Based on v4.5-rc2
-> Fixed issues pointed by Ezequiel Garcia.
-> v5:
-> Fixed a compile error.
-> v4:
-> Rebased to v4.5-rc1
-> v3:
-> Added a compatible string "hisilicon,hi3519-sfc".
-> v2:
-> Fixed some compiling warings.
+> I don't see that. The condition is > 255, so everything greater or equal
+> than 256 gets mapped to 255. Everything else to x - 1, so 255 to 254, 254 to
+> 253.
+
+Ah, you are right.
+
+>>> +               for (i = 0; i < m; i++)
+>>> +                       writel_relaxed(buf[i], addr);
+>>
+>> writesl() ?
 >
->  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  25 ++
-> This file has already been acked by Rob Herring <robh@kernel.org>.
->  drivers/mtd/spi-nor/Kconfig                        |   6 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/hisi-sfc.c                     | 494 +++++++++++=
-++++++++++
->  4 files changed, 526 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sf=
-c.txt
->  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+> Hm, maybe. Does it really have the same semantics?
+
+It's a loop inside, so it has a count parameter. Otherwise it should be similar.
+
+>>> +static int spi_engine_transfer_one_message(struct spi_master *master,
+>>> +       struct spi_message *msg)
+>>
+>> And you are not using transfer_one() because of..?
 >
-> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b=
-/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
-> new file mode 100644
-> index 0000000..7407147
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
-> @@ -0,0 +1,25 @@
-> +HiSilicon SPI-NOR Flash Controller
-> +
-> +Required properties:
-> +- compatible : Should be "hisilicon,hisi-sfc" and one of the followi=
-ng strings:
-> +               "hisilicon,hi3519-sfc"
-> +- address-cells : number of cells required to define a chip select
-> +        address on the SPI bus. Should be set to 1. See spi-bus.txt.
-> +- size-cells : Should be 0.
-> +- reg : Offset and length of the register set for the controller dev=
-ice.
-> +- reg-names : Must include the following two entries: "control", "me=
-mory".
-> +- clocks : handle to spi-nor flash controller clock.
-> +
-> +Example:
-> +spi-nor-controller@10000000 {
-> +       compatible =3D "hisilicon,hi3519-sfc", "hisilicon,hisi-sfc";
-> +       #address-cells =3D <1>;
-> +       #size-cells =3D <0>;
-> +       reg =3D <0x10000000 0x1000>, <0x14000000 0x1000000>;
-> +       reg-names =3D "control", "memory";
-> +       clocks =3D <&clock HI3519_FMC_CLK>;
-> +       spi-nor@0 {
-> +               compatible =3D "jedec,spi-nor";
-> +               reg =3D <0>;
-> +       };
-> +};
-> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfi=
-g
-> index 0dc9275..763e48a 100644
-> --- a/drivers/mtd/spi-nor/Kconfig
-> +++ b/drivers/mtd/spi-nor/Kconfig
-> @@ -37,6 +37,12 @@ config SPI_FSL_QUADSPI
->           This controller does not support generic SPI. It only suppo=
-rts
->           SPI NOR.
->
-> +config SPI_HISI_SFC
-> +       tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
-> +       depends on ARCH_HISI
+> transfer_one() does flow control in software. Execution is passed back to
+> software after each transfer and it also takes care of handling the chip
+> select assertion/deassertion as well as the delays. It's useful for hardware
+> which does not support hardware flow control. In this case the hardware
+> supports flow control including chip-select logic as well as delays. Making
+> use of this generates far less context switches per message and also has
+> predictable timings between transfers within a message.
 
-I believe that using COMPILE_TEST would allow the build bots
-to pick up your driver and report any issues.
+Maybe the hardware flow control implementation is needed?
 
-See how NXP_SPIFI does it below.
+Do we have more SPI hosts that support HW flow control?
 
-> +       help
-> +         This enables support for hisilicon SPI-NOR flash controller=
-=2E
-> +
->  config SPI_NXP_SPIFI
->         tristate "NXP SPI Flash Interface (SPIFI)"
->         depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makef=
-ile
-> index 0bf3a7f8..8a6fa69 100644
-> --- a/drivers/mtd/spi-nor/Makefile
-> +++ b/drivers/mtd/spi-nor/Makefile
-> @@ -1,4 +1,5 @@
->  obj-$(CONFIG_MTD_SPI_NOR)      +=3D spi-nor.o
->  obj-$(CONFIG_SPI_FSL_QUADSPI)  +=3D fsl-quadspi.o
-> +obj-$(CONFIG_SPI_HISI_SFC)     +=3D hisi-sfc.o
->  obj-$(CONFIG_MTD_MT81xx_NOR)    +=3D mtk-quadspi.o
->  obj-$(CONFIG_SPI_NXP_SPIFI)    +=3D nxp-spifi.o
-[..]
-> +
-> +               ret =3D mtd_device_register(mtd, NULL, 0);
-> +               if (ret)
-> +                       goto fail;
-> +
-> +               i++;
-> +               host->num_chip++;
-> +               if (i =3D=3D HIFMC_MAX_CHIP_NUM) {
-> +                       dev_dbg(dev, "Flash device number exceeds the=
- maxinum chipselect number\n");
-> +                       break;
-
-Maybe dev_warn(FW_WARN ...) since it's a warning about a devicetree
-(firmware) issue ?
-
-Also: s/maxinum/maximum
-
-Otherwise, looks fine:
-
-Reviewed-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
