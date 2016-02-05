@@ -1,81 +1,56 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: layerscape: add ls2085a compatible
-Date: Fri, 5 Feb 2016 16:25:25 -0600
-Message-ID: <20160205222525.GA16238@localhost>
-References: <1453915925-19198-1-git-send-email-yang.shi@linaro.org>
- <20160205203858.GA11780@localhost>
- <56B509E5.2050602@linaro.org>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH 2/5] ARM: dts: NSP: Fix CPU DT issue
+Date: Fri,  5 Feb 2016 17:43:21 -0500
+Message-ID: <1454712204-30419-3-git-send-email-jonmason@broadcom.com>
+References: <1454712204-30419-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B509E5.2050602@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Shi, Yang" <yang.shi@linaro.org>
-Cc: Mingkai.Hu@freescale.com, Minghuan.Lian@freescale.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1454712204-30419-1-git-send-email-jonmason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 12:45:25PM -0800, Shi, Yang wrote:
-> On 2/5/2016 12:38 PM, Bjorn Helgaas wrote:
-> >[+cc Rob, et al]
-> >
-> >On Wed, Jan 27, 2016 at 09:32:05AM -0800, Yang Shi wrote:
-> >>The layerscape PCI host driver needs recognize ls2085a compatible when using
-> >>firmware with ls2085a compatible property, otherwise the PCI bus won't be
-> >>detected even though ls2085a compatible is included by the dts.
-> >>
-> >>Signed-off-by: Yang Shi <yang.shi@linaro.org>
-> >>---
-> >>  drivers/pci/host/pci-layerscape.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >>diff --git a/drivers/pci/host/pci-layerscape.c b/drivers/pci/host/pci-layerscape.c
-> >>index 3923bed..c40d8b2 100644
-> >>--- a/drivers/pci/host/pci-layerscape.c
-> >>+++ b/drivers/pci/host/pci-layerscape.c
-> >>@@ -203,6 +203,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
-> >>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> >>  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
-> >>  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> >>+	{ .compatible = "fsl,ls2085a-pcie", .data = &ls2080_drvdata },
-> >
-> >Hmm, "fsl,ls2085a-pcie" doesn't appear in
-> >Documentation/devicetree/bindings/pci/.
-> >
-> >Aren't we supposed to add these strings to the bindings before or at
-> >the same time we add them to drivers?
-> 
-> The below patch will add it into dts and binding doc. I should
-> mentioned this in the commit log.
-> 
-> https://patchwork.kernel.org/patch/7767061/
+There is a double definition of the CPUs present in the device tree.
+Remove unnecessary cpu device tree definition.
 
-OK.  This is really annoying as a reviewer.  To me, adding
-"fsl,ls2085a-pcie" to:
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-  - the binding in Documentation/devicetree/bindings/pci/layerscape-pci.txt
-  - the DT in arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-  - the driver in drivers/pci/host/pci-layerscape.c
-
-are all logically related, and it would make sense to have them all in
-a single patch.
-
-But whatever.  I applied this to pci/host-layerscape for v4.6.
-
-> >checkpatch doesn't complain though, so maybe I'm wrong about this.
-> >
-> >>  	{ },
-> >>  };
-> >>  MODULE_DEVICE_TABLE(of, ls_pcie_of_match);
-> >>--
-> >>2.0.2
-> >>
-> >>--
-> >>To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> >>the body of a message to majordomo@vger.kernel.org
-> >>More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index c5b0c09c..c37778e 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -68,18 +68,6 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		cpus {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			cpu@0 {
+-				device_type = "cpu";
+-				compatible = "arm,cortex-a9";
+-				next-level-cache = <&L2>;
+-				reg = <0x0>;
+-			};
+-		};
+-
+ 		a9pll: arm_clk@00000 {
+ 			#clock-cells = <0>;
+ 			compatible = "brcm,nsp-armpll";
+-- 
+1.9.1
