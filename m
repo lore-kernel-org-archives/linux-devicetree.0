@@ -1,142 +1,191 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v10 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Fri, 5 Feb 2016 11:36:30 +0800
-Message-ID: <1454643390-16910-3-git-send-email-wenyou.yang@atmel.com>
-References: <1454643390-16910-1-git-send-email-wenyou.yang@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454643390-16910-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
+Date: Thu,  4 Feb 2016 23:34:31 -0500
+Message-ID: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-two subdevices:
- - Regulator
- - Charger
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-This patch adds documentation for ACT8945A DT bindings.
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-Changes in v10:
- - update the example, due to the subdevices are not regarded as
-   a child node.
+The management driver is executed in host context and
+is the main management entity for all channels provided by
+the device.
 
-Changes in v9: None
-Changes in v8: None
-Changes in v7:
- - collect Acked-by from Lee Jones
+------------------------
+What's new
+------------------------
+- Add back default number of descriptors.
+- Fix compilation error in VFIO ACPI support.
+- Merge the event-channel patch back to DTS and channel driver.
 
-Changes in v6:
- - change the regulator name.
+------------------------
+Git repos
+------------------------
+QEMU Support
+https://www.codeaurora.org/cgit/quic/qemu/qemu/log/?h=v2.5.0-sriov
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
- - fix the tabbing errors in Example.
- - use "pmic@5b" label, not "act8945a@5b" in Example.
- - collect Acked-by from Rob.
+------------------------
+History of Changes
+------------------------
+dma: hidma: Add Device Tree Binding
+Changes from V13: (https://lkml.org/lkml/2016/1/29/672)
+* merged event-channel change.
 
-Changes in v2:
- - use more specific label in Example.
- - add pmic and charger nodes in Example.
+dma: add Qualcomm Technologies HIDMA channel driver
+Changes from V13: (https://lkml.org/lkml/2016/1/29/685)
+* add back default descriptor count
+* merged event-channel change.
 
- Documentation/devicetree/bindings/mfd/act8945a.txt |   76 ++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+dma: qcom_hidma: add support for object hierarchy
+Changes from V13: (https://lkml.org/lkml/2016/1/29/680)
+* initialize platform info data structure.
+* configure DMA by calling of_dma_configure. DMA mask was not set when
+* IOMMU driver is not present for the children devices.
 
-diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
-new file mode 100644
-index 0000000..f712830
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-@@ -0,0 +1,76 @@
-+Device-Tree bindings for Active-semi ACT8945A MFD driver
-+
-+Required properties:
-+ - compatible: "active-semi,act8945a".
-+ - reg: the I2C slave address for the ACT8945A chip
-+
-+The chip exposes two subdevices:
-+ - a regulators: see ../regulator/act8945a-regulator.txt
-+ - a charger: see ../power/act8945a-charger.txt
-+
-+Example:
-+	pmic@5b {
-+		compatible = "active-semi,act8945a";
-+		reg = <0x5b>;
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_charger_chglev>;
-+		active-semi,chglev-gpio = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+		active-semi,input-voltage-threshold-microvolt = <6600>;
-+		active-semi,precondition-timeout = <40>;
-+		active-semi,total-timeout = <3>;
-+
-+		active-semi,vsel-high;
-+
-+		regulators {
-+			vdd_1v35_reg: REG_DCDC1 {
-+				regulator-name = "VDD_1V35";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_1v2_reg: REG_DCDC2 {
-+				regulator-name = "VDD_1V2";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_reg: REG_DCDC3 {
-+				regulator-name = "VDD_3V3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_fuse_reg: REG_LDO1 {
-+				regulator-name = "VDD_FUSE";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_3v3_lp_reg: REG_LDO2 {
-+				regulator-name = "VDD_3V3_LP";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_led_reg: REG_LDO3 {
-+				regulator-name = "VDD_LED";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_sdhc_1v8_reg: REG_LDO4 {
-+				regulator-name = "VDD_SDHC_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
+vfio, platform: add support for ACPI while detecting the reset driver
+Changes from V13: (https://lkml.org/lkml/2016/1/29/679)
+* add forgotten pointer during merge
+* clarify the driver loading rules in commit message
+
+------------------------
+FAQ
+------------------------
+- This doesn't seem to tie into KVM or VFIO, and as far as I can tell
+  there's no mechanism for associating channels with a particular virtual
+  address space (i.e. no configuration of an external or internal IOMMU),
+  nor pinning of guest pages to allow for DMA to occur safely.
+
+   I'm using VFIO platform driver for this purpose. VFIO platform driver is
+   capable of assigning any platform device to a guest machine with this
+   driver.
+
+- Are there additional patches, or do you have some userspace that works
+  with this in some limited configuration?
+
+   No, these are the only patches. We have one patch for the QEMU but from
+   kernel perspective this is it. I just rely on the platform VFIO driver
+   to do the work.
+
+- How do host and guest communicate, what is the infrastructure, how is
+  HIDMA meant to be used?
+
+   They don't. Guest machine uses HIDMA channel driver to offload DMA
+   operations in isolation. The guest machine owns the HW registers for the
+   channel. It doesn't need to trap to host for register read/writes etc.
+
+   All guest machine pages used are assumed to be pinned similar to VFIO
+   PCI. The reason is performance. The IOMMU takes care of the address
+   translation for me.
+
+- How do host and guest communicate?
+   They don't.
+
+- How is the integration performed in the hypervisor?
+
+   Hypervisor has a bunch of channel resources. For each guest machine, the
+   channel gets unbound from the hypervisor. Channels get bind to each VFIO
+   platform device and then control is given to the guest machine.
+
+   Once the guest machine is shutdown, VFIO driver still owns the channel
+   device. It can assign the device to another guest machine.
+
+- Does the HYP side requires any context switch (and how is that done)?
+
+   No communication is needed.
+
+- What makes it safe?
+   No communication is needed.
+
+- Does the HYP side requires any context switch (and how is that done)?
+
+   I don't believe this requires any context-switch -- it's the same as
+   assigning any other platform device other than additional proeprties
+   being controlled in the managament interface.
+
+- I'm concerned with how this is safe, and with the userspace interface.
+  e.g. if the user wants to up the QoS for a VM, how to they find the
+  right channel in sysfs  to alter?
+
+   The HW supports changing the QoS values on the flight. In order to
+   locate the object, I'm exporting a chid attribute in sysfs.
+
+   Each management object has one priority and weight file per channel that
+   is indexed by the channel id read from the DMA object.
+   /sys/devices/platform/hidma-mgmt*/chanops/chan*/priority
+   /sys/devices/platform/QCOM8060:*/chanops/chan*/priority
+
+- So what is that hypervisor code used for? Is that your reset driver?
+
+   The HIDMA "management" driver which runs at the hypervisor owns the
+   management HW. Management driver serves two purposes.
+
+   1. Common bus parameter configuration (could be called reset driver).
+   2. Fine tuning the HW resources on the flight.
+
+Sinan Kaya (9):
+  dma: qcom_bam_dma: move to qcom directory
+  dma: hidma: Add Device Tree binding
+  dma: add Qualcomm Technologies HIDMA management driver
+  dma: add Qualcomm Technologies HIDMA channel driver
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+  vfio, platform: add support for ACPI while detecting the reset driver
+  vfio, platform: add QTI HIDMA reset driver
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  89 ++
+ drivers/dma/Kconfig                                |  11 +-
+ drivers/dma/Makefile                               |   2 +-
+ drivers/dma/qcom/Kconfig                           |  29 +
+ drivers/dma/qcom/Makefile                          |   5 +
+ drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c}     |   4 +-
+ drivers/dma/qcom/hidma.c                           | 746 +++++++++++++++++
+ drivers/dma/qcom/hidma.h                           | 162 ++++
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 927 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 407 +++++++++
+ drivers/dma/qcom/hidma_mgmt.h                      |  39 +
+ drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 +++++++
+ drivers/vfio/platform/reset/Kconfig                |   9 +
+ drivers/vfio/platform/reset/Makefile               |   2 +
+ .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   3 +-
+ .../platform/reset/vfio_platform_calxedaxgmac.c    |   3 +-
+ .../vfio/platform/reset/vfio_platform_qcomhidma.c  |  99 +++
+ drivers/vfio/platform/vfio_platform_common.c       |  80 +-
+ drivers/vfio/platform/vfio_platform_private.h      |  41 +-
+ 22 files changed, 3235 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ create mode 100644 drivers/dma/qcom/Kconfig
+ create mode 100644 drivers/dma/qcom/Makefile
+ rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ create mode 100644 drivers/dma/qcom/hidma.c
+ create mode 100644 drivers/dma/qcom/hidma.h
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.h
+ create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+ create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
