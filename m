@@ -1,129 +1,274 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V14 2/9] dma: hidma: Add Device Tree binding
-Date: Thu,  4 Feb 2016 23:34:33 -0500
-Message-ID: <1454646882-24369-3-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V14 8/9] vfio, platform: add support for ACPI while detecting the reset driver
+Date: Thu,  4 Feb 2016 23:34:39 -0500
+Message-ID: <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
 References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: vikrams@codeaurora.org, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, linux-arm-kernel@lists.infradead.org, agross@codeaurora.org, shankerd@codeaurora.org
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the Qualcomm Technologies HIDMA binding.
+The code is using the compatible DT string to associate a reset driver with
+the actual device itself. The compatible string does not exist on ACPI
+based systems. HID is the unique identifier for a device driver instead.
+The change allows a driver to register with DT compatible string or ACPI
+HID and then match the object with one of these conditions.
 
+Rules for loading the reset driver are as follow:
+- ACPI HID needs match for ACPI systems
+- DT compat needs to match for OF systems
+
+Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
+Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only)
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 89 ++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ .../vfio/platform/reset/vfio_platform_amdxgbe.c    |  3 +-
+ .../platform/reset/vfio_platform_calxedaxgmac.c    |  3 +-
+ drivers/vfio/platform/vfio_platform_common.c       | 80 +++++++++++++++++++---
+ drivers/vfio/platform/vfio_platform_private.h      | 41 ++++++-----
+ 4 files changed, 96 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-new file mode 100644
-index 0000000..fd5618b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -0,0 +1,89 @@
-+Qualcomm Technologies HIDMA Management interface
+diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+index d4030d0..cc5b4fa 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
++++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+@@ -119,7 +119,8 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+ 	return 0;
+ }
+ 
+-module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
++module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
++			  vfio_platform_amdxgbe_reset);
+ 
+ MODULE_VERSION("0.1");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+index e3d3d94..0e57529 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
++++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+@@ -77,7 +77,8 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
+ 	return 0;
+ }
+ 
+-module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
++module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
++			  vfio_platform_calxedaxgmac_reset);
+ 
+ MODULE_VERSION(DRIVER_VERSION);
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+index 418cdd9..5b42e93 100644
+--- a/drivers/vfio/platform/vfio_platform_common.c
++++ b/drivers/vfio/platform/vfio_platform_common.c
+@@ -13,6 +13,7 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/acpi.h>
+ #include <linux/iommu.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
+ static DEFINE_MUTEX(driver_lock);
+ 
+ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+-					struct module **module)
++				  const char *acpihid, struct module **module)
+ {
+ 	struct vfio_platform_reset_node *iter;
+ 	vfio_platform_reset_fn_t reset_fn = NULL;
+ 
+ 	mutex_lock(&driver_lock);
+ 	list_for_each_entry(iter, &reset_list, link) {
+-		if (!strcmp(iter->compat, compat) &&
++		if (acpihid && iter->acpihid &&
++		    !strcmp(iter->acpihid, acpihid) &&
++			try_module_get(iter->owner)) {
++			*module = iter->owner;
++			reset_fn = iter->reset;
++			break;
++		}
++		if (compat && iter->compat &&
++		    !strcmp(iter->compat, compat) &&
+ 			try_module_get(iter->owner)) {
+ 			*module = iter->owner;
+ 			reset_fn = iter->reset;
+@@ -51,11 +60,12 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+ 
+ static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
+ {
+-	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+-						&vdev->reset_module);
++	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
++						 &vdev->reset_module);
+ 	if (!vdev->reset) {
+ 		request_module("vfio-reset:%s", vdev->compat);
+ 		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
++							 vdev->acpihid,
+ 							 &vdev->reset_module);
+ 	}
+ }
+@@ -541,6 +551,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
+ 	.mmap		= vfio_platform_mmap,
+ };
+ 
++#ifdef CONFIG_ACPI
++int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
++			     struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
 +
-+Qualcomm Technologies HIDMA is a high speed DMA device. It only supports
-+memcpy and memset capabilities. It has been designed for virtualized
-+environments.
++	if (!adev)
++		return -EINVAL;
 +
-+Each HIDMA HW instance consists of multiple DMA channels. These channels
-+share the same bandwidth. The bandwidth utilization can be parititioned
-+among channels based on the priority and weight assignments.
++	vdev->acpihid = acpi_device_hid(adev);
++	if (!vdev->acpihid) {
++		pr_err("VFIO: cannot find ACPI HID for %s\n",
++		       vdev->name);
++		return -EINVAL;
++	}
++	return 0;
++}
++#else
++int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
++			     struct device *dev)
++{
++	return -EINVAL;
++}
++#endif
 +
-+There are only two priority levels and 15 weigh assignments possible.
++int vfio_platform_probe_of(struct vfio_platform_device *vdev,
++			   struct device *dev)
++{
++	int ret;
 +
-+Other parameters here determine how much of the system bus this HIDMA
-+instance can use like maximum read/write request and and number of bytes to
-+read/write in a single burst.
++	ret = device_property_read_string(dev, "compatible",
++					  &vdev->compat);
++	if (ret) {
++		pr_err("VFIO: cannot retrieve compat for %s\n",
++			vdev->name);
++		return -EINVAL;
++	}
++	return 0;
++}
 +
-+Main node required properties:
-+- compatible: "qcom,hidma-mgmt-1.0";
-+- reg: Address range for DMA device
-+- dma-channels: Number of channels supported by this DMA controller.
-+- max-write-burst-bytes: Maximum write burst in bytes that HIDMA can
-+  occupy the bus for in a single transaction. A memcpy requested is
-+  fragmented to multiples of this amount. This parameter is used while
-+  writing into destination memory. Setting this value incorrectly can
-+  starve other peripherals in the system.
-+- max-read-burst-bytes: Maximum read burst in bytes that HIDMA can
-+  occupy the bus for in a single transaction. A memcpy request is
-+  fragmented to multiples of this amount. This parameter is used while
-+  reading the source memory. Setting this value incorrectly can starve
-+  other peripherals in the system.
-+- max-write-transactions: This value is how many times a write burst is
-+  applied back to back while writing to the destination before yielding
-+  the bus.
-+- max-read-transactions: This value is how many times a read burst is
-+  applied back to back while reading the source before yielding the bus.
-+- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
-+  Once a reset is applied to the HW, HW starts a timer for reset operation
-+  to confirm. If reset is not completed within this time, HW reports reset
-+  failure.
+ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 			       struct device *dev)
+ {
+@@ -550,14 +600,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 	if (!vdev)
+ 		return -EINVAL;
+ 
+-	ret = device_property_read_string(dev, "compatible", &vdev->compat);
+-	if (ret) {
+-		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
+-		return -EINVAL;
+-	}
++	ret = vfio_platform_probe_acpi(vdev, dev);
++	if (ret)
++		ret = vfio_platform_probe_of(vdev, dev);
+ 
+-	vdev->device = dev;
++	if (ret)
++		return ret;
+ 
++	vdev->device = dev;
+ 	group = iommu_group_get(dev);
+ 	if (!group) {
+ 		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+@@ -602,13 +652,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
+ EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
+ 
+ void vfio_platform_unregister_reset(const char *compat,
++				    const char *acpihid,
+ 				    vfio_platform_reset_fn_t fn)
+ {
+ 	struct vfio_platform_reset_node *iter, *temp;
+ 
+ 	mutex_lock(&driver_lock);
+ 	list_for_each_entry_safe(iter, temp, &reset_list, link) {
+-		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
++		if (acpihid && iter->acpihid &&
++		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
++			list_del(&iter->link);
++			break;
++		}
 +
-+Sub-nodes:
++		if (compat && iter->compat &&
++		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
+ 			list_del(&iter->link);
+ 			break;
+ 		}
+diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+index 42816dd..32feba3 100644
+--- a/drivers/vfio/platform/vfio_platform_private.h
++++ b/drivers/vfio/platform/vfio_platform_private.h
+@@ -58,6 +58,7 @@ struct vfio_platform_device {
+ 	struct mutex			igate;
+ 	struct module			*parent_module;
+ 	const char			*compat;
++	const char			*acpihid;
+ 	struct module			*reset_module;
+ 	struct device			*device;
+ 
+@@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
+ struct vfio_platform_reset_node {
+ 	struct list_head link;
+ 	char *compat;
++	char *acpihid;
+ 	struct module *owner;
+ 	vfio_platform_reset_fn_t reset;
+ };
+@@ -98,27 +100,30 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
+ 
+ extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
+ extern void vfio_platform_unregister_reset(const char *compat,
++					   const char *acpihid,
+ 					   vfio_platform_reset_fn_t fn);
+-#define vfio_platform_register_reset(__compat, __reset)		\
+-static struct vfio_platform_reset_node __reset ## _node = {	\
+-	.owner = THIS_MODULE,					\
+-	.compat = __compat,					\
+-	.reset = __reset,					\
+-};								\
 +
-+HIDMA has one or more DMA channels that are used to move data from one
-+memory location to another.
-+
-+When the OS is not in control of the management interface (i.e. it's a guest),
-+the channel nodes appear on their own, not under a management node.
-+
-+Required properties:
-+- compatible: must contain "qcom,hidma-1.0"
-+- reg: Addresses for the transfer and event channel
-+- interrupts: Should contain the event interrupt
-+- desc-count: Number of asynchronous requests this channel can handle
-+- iommus: required a iommu node
-+
-+Example:
-+
-+Hypervisor OS configuration:
-+
-+	hidma-mgmt@f9984000 = {
-+		compatible = "qcom,hidma-mgmt-1.0";
-+		reg = <0xf9984000 0x15000>;
-+		dma-channels = <6>;
-+		max-write-burst-bytes = <1024>;
-+		max-read-burst-bytes = <1024>;
-+		max-write-transactions = <31>;
-+		max-read-transactions = <31>;
-+		channel-reset-timeout-cycles = <0x500>;
-+
-+		hidma_24: dma-controller@0x5c050000 {
-+			compatible = "qcom,hidma-1.0";
-+			reg = <0 0x5c050000 0x0 0x1000>,
-+			      <0 0x5c0b0000 0x0 0x1000>;
-+			interrupts = <0 389 0>;
-+			desc-count = <10>;
-+			iommus = <&system_mmu>;
-+		};
-+	};
-+
-+Guest OS configuration:
-+
-+	hidma_24: dma-controller@0x5c050000 {
-+		compatible = "qcom,hidma-1.0";
-+		reg = <0 0x5c050000 0x0 0x1000>,
-+		      <0 0x5c0b0000 0x0 0x1000>;
-+		interrupts = <0 389 0>;
-+		desc-count = <10>;
-+		iommus = <&system_mmu>;
-+	};
++#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
++static struct vfio_platform_reset_node __reset ## _node = {		\
++	.owner = THIS_MODULE,						\
++	.compat = __compat,						\
++	.acpihid = __acpihid,						\
++	.reset = __reset,						\
++};									\
+ __vfio_platform_register_reset(&__reset ## _node)
+ 
+-#define module_vfio_reset_handler(compat, reset)		\
+-MODULE_ALIAS("vfio-reset:" compat);				\
+-static int __init reset ## _module_init(void)			\
+-{								\
+-	vfio_platform_register_reset(compat, reset);		\
+-	return 0;						\
+-};								\
+-static void __exit reset ## _module_exit(void)			\
+-{								\
+-	vfio_platform_unregister_reset(compat, reset);		\
+-};								\
+-module_init(reset ## _module_init);				\
++#define module_vfio_reset_handler(compat, acpihid, reset)		\
++MODULE_ALIAS("vfio-reset:" compat);					\
++static int __init reset ## _module_init(void)				\
++{									\
++	vfio_platform_register_reset(compat, acpihid, reset);		\
++	return 0;							\
++};									\
++static void __exit reset ## _module_exit(void)				\
++{									\
++	vfio_platform_unregister_reset(compat, acpihid, reset);		\
++};									\
++module_init(reset ## _module_init);					\
+ module_exit(reset ## _module_exit)
+ 
+ #endif /* VFIO_PLATFORM_PRIVATE_H */
 -- 
 1.8.2.1
