@@ -1,89 +1,86 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 1/3] libahci: Implement the capability to override the
- generic ahci interrupt handler.
-Date: Fri, 5 Feb 2016 17:12:40 +0300
-Message-ID: <56B4ADD8.1020008@cogentembedded.com>
-References: <1454620826-22554-1-git-send-email-stripathi@apm.com>
- <1454620826-22554-2-git-send-email-stripathi@apm.com>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH v4 16/17] FDT: Add a helper to get specified name
+ subnode
+Date: Fri, 5 Feb 2016 14:15:18 +0000
+Message-ID: <alpine.DEB.2.02.1602051415120.27008@kaball.uk.xensource.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
+ <1454641552-12576-17-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1454620826-22554-2-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: suman Tripathi <stripathi@apm.com>, olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454641552-12576-17-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, 5 Feb 2016, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
+> 
+> Sometimes it needs to check if there is a node in FDT by full path.
+> Introduce this helper to get the specified name subnode if it exists.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
 
-On 02/05/2016 12:20 AM, suman Tripathi wrote:
+Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
 
-> From: Suman Tripathi <stripathi@apm.com>
->
-> This patch implements the capability to override the generic
-> ahci interrupt handler so that the LDD drivers can implement
 
-    AHCI.
-
-> there own custom interrupt handler routines.
-
-    s/there/their/.
-
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> CC: Rob Herring <robh@kernel.org>
 > ---
->   drivers/ata/ahci.h    |    2 ++
->   drivers/ata/libahci.c |   32 +++++++++++++++++++++++---------
->   2 files changed, 25 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index a4faa43..3d883ee 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -360,6 +360,7 @@ struct ahci_host_priv {
->   	 * be overridden anytime before the host is activated.
->   	 */
->   	void			(*start_engine)(struct ata_port *ap);
-> +	irqreturn_t 		(*ahci_irq_intr)(int irq, void *dev_instance);
-
-    The 'ahci_irq_intr' name is somewhat tautological.
-
-
-[...]
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index eda3cf2..5d3035a 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-[...]
-> @@ -2504,15 +2505,28 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
->   	struct ahci_host_priv *hpriv = host->private_data;
->   	int irq = hpriv->irq;
->   	int rc;
-> +	irqreturn_t (*ahci_irq_handler)(int irq, void *dev_instance);
->
-> -	if (hpriv->flags & (AHCI_HFLAG_MULTI_MSI | AHCI_HFLAG_MULTI_MSIX))
-> -		rc = ahci_host_activate_multi_irqs(host, sht);
-> -	else if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ)
-> -		rc = ata_host_activate(host, irq, ahci_single_edge_irq_intr,
-> -				       IRQF_SHARED, sht);
-> -	else
-> -		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
-> -				       IRQF_SHARED, sht);
-> +	ahci_irq_handler = hpriv->ahci_irq_intr;
+>  drivers/of/fdt.c       | 25 +++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  2 ++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 655f79d..eacb188 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -645,6 +645,31 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+>  }
+>  
+>  /**
+> + * of_get_flat_dt_subnode_by_name - get subnode of specified node by name
+> + *
+> + * @node: the parent node
+> + * @uname: the name of subnode
+> + * @return offset of the subnode, or -FDT_ERR_NOTFOUND if there is none
+> + */
 > +
-> +	if (hpriv->flags & (AHCI_HFLAG_MULTI_MSI | AHCI_HFLAG_MULTI_MSIX)) {
-> +		if (!ahci_irq_handler)
-> +			rc = ahci_host_activate_multi_irqs(host, sht);
-> +		else
-> +			dev_warn(host->dev, "both AHCI_HFLAG_MULTI_MSI flag set \
-> +				 and custom irq handler implemented\n");
+> +int of_get_flat_dt_subnode_by_name(unsigned long node, const char *uname)
+> +{
+> +	const void *blob = initial_boot_params;
+> +	int offset;
+> +	const char *pathp;
 > +
-> +	} else {
-> +		if (!ahci_irq_handler) {
-
-    Why not *else* *if* on a single line?
-
-[...]
-
-MBR, Sergei
-
+> +	for (offset = fdt_first_subnode(blob, node);
+> +	     offset >= 0;
+> +	     offset = fdt_next_subnode(blob, offset)) {
+> +		pathp = fdt_get_name(blob, offset, NULL);
+> +		if (strcmp(pathp, uname) == 0)
+> +			return offset;
+> +	}
+> +
+> +	return -FDT_ERR_NOTFOUND;
+> +}
+> +
+> +/**
+>   * of_get_flat_dt_root - find the root node in the flat blob
+>   */
+>  unsigned long __init of_get_flat_dt_root(void)
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index df9ef38..fc28162 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -52,6 +52,8 @@ extern char __dtb_end[];
+>  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+>  				     int depth, void *data),
+>  			   void *data);
+> +extern int of_get_flat_dt_subnode_by_name(unsigned long node,
+> +					  const char *uname);
+>  extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
+>  				       int *size);
+>  extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+> -- 
+> 2.0.4
+> 
+> 
