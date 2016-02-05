@@ -1,7 +1,7 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
-Date: Thu,  4 Feb 2016 23:34:40 -0500
-Message-ID: <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V14 7/9] dma: qcom_hidma: add support for object hierarchy
+Date: Thu,  4 Feb 2016 23:34:38 -0500
+Message-ID: <1454646882-24369-8-git-send-email-okaya@codeaurora.org>
 References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
@@ -10,157 +10,249 @@ To: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur
 Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In situations where the userspace driver is stopped abnormally and the
-VFIO platform device is released, the assigned HW device currently is
-left running. As a consequence the HW device might continue issuing IRQs
-and performing DMA accesses.
+In order to create a relationship model between the channels and the
+management object, we are adding support for object hierarchy to the
+drivers. This patch simplifies the userspace application development.
+We will not have to traverse different firmware paths based on device
+tree or ACPI baed kernels.
 
-This patch is implementing a reset driver for HIDMA platform driver.
-This gets called by the VFIO platform reset interface.
+No matter what flavor of kernel is used, objects will be represented as
+platform devices.
+
+The new layout is as follows:
+
+hidmam_10: hidma-mgmt@0x5A000000 {
+	compatible = "qcom,hidma-mgmt-1.0";
+	...
+
+	hidma_10: hidma@0x5a010000 {
+			compatible = "qcom,hidma-1.0";
+			...
+	}
+}
+
+The hidma_mgmt_init detects each instance of the hidma-mgmt-1.0 objects
+in device tree and calls into the channel driver to create platform devices
+for each child of the management object.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/vfio/platform/reset/Kconfig                |  9 ++
- drivers/vfio/platform/reset/Makefile               |  2 +
- .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+ Documentation/ABI/testing/sysfs-platform-hidma |   9 ++
+ drivers/dma/qcom/hidma.c                       |  39 ++++++++-
+ drivers/dma/qcom/hidma_mgmt.c                  | 111 ++++++++++++++++++++++++-
+ 3 files changed, 155 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
 
-diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
-index 70cccc5..d02b3b5 100644
---- a/drivers/vfio/platform/reset/Kconfig
-+++ b/drivers/vfio/platform/reset/Kconfig
-@@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
- 	  Enables the VFIO platform driver to handle reset for AMD XGBE
- 
- 	  If you don't know what to do here, say N.
-+
-+config VFIO_PLATFORM_QCOMHIDMA_RESET
-+	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
-+	depends on VFIO_PLATFORM
-+	help
-+	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
-+	  HIDMA Channel.
-+
-+	  If you don't know what to do here, say N.
-diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
-index 93f4e23..ec7748a 100644
---- a/drivers/vfio/platform/reset/Makefile
-+++ b/drivers/vfio/platform/reset/Makefile
-@@ -1,7 +1,9 @@
- vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
- vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
-+vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
- 
- ccflags-y += -Idrivers/vfio/platform
- 
- obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
-+obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
- obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
-diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+diff --git a/Documentation/ABI/testing/sysfs-platform-hidma b/Documentation/ABI/testing/sysfs-platform-hidma
 new file mode 100644
-index 0000000..70d7eed
+index 0000000..d364415
 --- /dev/null
-+++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
-@@ -0,0 +1,99 @@
-+/*
-+ * Qualcomm Technologies HIDMA VFIO Reset Driver
-+ *
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/device.h>
-+#include <linux/iopoll.h>
-+
-+#include "vfio_platform_private.h"
-+
-+#define TRCA_CTRLSTS_OFFSET		0x000
-+#define EVCA_CTRLSTS_OFFSET		0x000
-+
-+#define CH_CONTROL_MASK		GENMASK(7, 0)
-+#define CH_STATE_MASK			GENMASK(7, 0)
-+#define CH_STATE_BIT_POS		0x8
-+
-+#define HIDMA_CH_STATE(val)	\
-+	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
-+
-+#define EVCA_IRQ_EN_OFFSET		0x110
-+
-+#define CH_RESET			9
-+#define CH_DISABLED			0
-+
-+int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
++++ b/Documentation/ABI/testing/sysfs-platform-hidma
+@@ -0,0 +1,9 @@
++What:		/sys/devices/platform/hidma-*/chid
++		/sys/devices/platform/QCOM8061:*/chid
++Date:		Dec 2015
++KernelVersion:	4.4
++Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
++Description:
++		Contains the ID of the channel within the HIDMA instance.
++		It is used to associate a given HIDMA channel with the
++		priority and weight calls in the management interface.
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index c0832c7..58e128c 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -530,6 +530,43 @@ static irqreturn_t hidma_chirq_handler(int chirq, void *arg)
+ 	return hidma_ll_inthandler(chirq, lldev);
+ }
+ 
++static ssize_t hidma_show_values(struct device *dev,
++				 struct device_attribute *attr, char *buf)
 +{
-+	struct vfio_platform_region *trreg;
-+	struct vfio_platform_region *evreg;
-+	u32 val;
-+	int ret;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct hidma_dev *mdev = platform_get_drvdata(pdev);
 +
-+	if (vdev->num_regions != 2)
-+		return -ENODEV;
++	buf[0] = 0;
 +
-+	trreg = &vdev->regions[0];
-+	if (!trreg->ioaddr) {
-+		trreg->ioaddr =
-+			ioremap_nocache(trreg->addr, trreg->size);
-+		if (!trreg->ioaddr)
-+			return -ENOMEM;
++	if (strcmp(attr->attr.name, "chid") == 0)
++		sprintf(buf, "%d\n", mdev->chidx);
++
++	return strlen(buf);
++}
++
++static int hidma_create_sysfs_entry(struct hidma_dev *dev, char *name,
++				    int mode)
++{
++	struct device_attribute *attrs;
++	char *name_copy;
++
++	attrs = devm_kmalloc(dev->ddev.dev, sizeof(struct device_attribute),
++			     GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	name_copy = devm_kstrdup(dev->ddev.dev, name, GFP_KERNEL);
++	if (!name_copy)
++		return -ENOMEM;
++
++	attrs->attr.name = name_copy;
++	attrs->attr.mode = mode;
++	attrs->show = hidma_show_values;
++	sysfs_attr_init(&attrs->attr);
++
++	return device_create_file(dev->ddev.dev, attrs);
++}
++
+ static int hidma_probe(struct platform_device *pdev)
+ {
+ 	struct hidma_dev *dmadev;
+@@ -645,6 +682,7 @@ static int hidma_probe(struct platform_device *pdev)
+ 	dmadev->irq = chirq;
+ 	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
+ 	hidma_debug_init(dmadev);
++	hidma_create_sysfs_entry(dmadev, "chid", S_IRUGO);
+ 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
+ 	platform_set_drvdata(pdev, dmadev);
+ 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
+@@ -692,7 +730,6 @@ static const struct of_device_id hidma_match[] = {
+ 	{.compatible = "qcom,hidma-1.0",},
+ 	{},
+ };
+-
+ MODULE_DEVICE_TABLE(of, hidma_match);
+ 
+ static struct platform_driver hidma_driver = {
+diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
+index ef491b8..143acdd 100644
+--- a/drivers/dma/qcom/hidma_mgmt.c
++++ b/drivers/dma/qcom/hidma_mgmt.c
+@@ -17,13 +17,14 @@
+ #include <linux/acpi.h>
+ #include <linux/of.h>
+ #include <linux/property.h>
+-#include <linux/interrupt.h>
+-#include <linux/platform_device.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
+ #include <linux/module.h>
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bitops.h>
++#include <linux/dma-mapping.h>
+ 
+ #include "hidma_mgmt.h"
+ 
+@@ -298,5 +299,109 @@ static struct platform_driver hidma_mgmt_driver = {
+ 	},
+ };
+ 
+-module_platform_driver(hidma_mgmt_driver);
++#if defined(CONFIG_OF) && defined(CONFIG_OF_IRQ)
++static int object_counter;
++
++static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
++{
++	struct platform_device *pdev_parent = of_find_device_by_node(np);
++	struct platform_device_info pdevinfo;
++	struct of_phandle_args out_irq;
++	struct device_node *child;
++	struct resource *res;
++	const __be32 *cell;
++	int ret = 0, size, i, num;
++	u64 addr, addr_size;
++
++	for_each_available_child_of_node(np, child) {
++		struct resource *res_iter;
++		struct platform_device *new_pdev;
++
++		cell = of_get_property(child, "reg", &size);
++		if (!cell) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		size /= sizeof(*cell);
++		num = size /
++			(of_n_addr_cells(child) + of_n_size_cells(child)) + 1;
++
++		/* allocate a resource array */
++		res = kcalloc(num, sizeof(*res), GFP_KERNEL);
++		if (!res) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		/* read each reg value */
++		i = 0;
++		res_iter = res;
++		while (i < size) {
++			addr = of_read_number(&cell[i],
++					      of_n_addr_cells(child));
++			i += of_n_addr_cells(child);
++
++			addr_size = of_read_number(&cell[i],
++						   of_n_size_cells(child));
++			i += of_n_size_cells(child);
++
++			res_iter->start = addr;
++			res_iter->end = res_iter->start + addr_size - 1;
++			res_iter->flags = IORESOURCE_MEM;
++			res_iter++;
++		}
++
++		ret = of_irq_parse_one(child, 0, &out_irq);
++		if (ret)
++			goto out;
++
++		res_iter->start = irq_create_of_mapping(&out_irq);
++		res_iter->name = "hidma event irq";
++		res_iter->flags = IORESOURCE_IRQ;
++
++		memset(&pdevinfo, 0, sizeof(pdevinfo));
++		pdevinfo.fwnode = &child->fwnode;
++		pdevinfo.parent = pdev_parent ? &pdev_parent->dev : NULL;
++		pdevinfo.name = child->name;
++		pdevinfo.id = object_counter++;
++		pdevinfo.res = res;
++		pdevinfo.num_res = num;
++		pdevinfo.data = NULL;
++		pdevinfo.size_data = 0;
++		pdevinfo.dma_mask = DMA_BIT_MASK(64);
++		new_pdev = platform_device_register_full(&pdevinfo);
++		if (!new_pdev) {
++			ret = -ENODEV;
++			goto out;
++		}
++		of_dma_configure(&new_pdev->dev, new_pdev->dev.of_node);
++
++		kfree(res);
++		res = NULL;
 +	}
++out:
++	kfree(res);
 +
-+	evreg = &vdev->regions[1];
-+	if (!evreg->ioaddr) {
-+		evreg->ioaddr =
-+			ioremap_nocache(evreg->addr, evreg->size);
-+		if (!evreg->ioaddr)
-+			return -ENOMEM;
++	return ret;
++}
++#endif
++
++static int __init hidma_mgmt_init(void)
++{
++#if defined(CONFIG_OF) && defined(CONFIG_OF_IRQ)
++	struct device_node *child;
++
++	for (child = of_find_matching_node(NULL, hidma_mgmt_match); child;
++	     child = of_find_matching_node(child, hidma_mgmt_match)) {
++		/* device tree based firmware here */
++		hidma_mgmt_of_populate_channels(child);
++		of_node_put(child);
 +	}
++#endif
++	platform_driver_register(&hidma_mgmt_driver);
 +
-+	/* disable IRQ */
-+	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
-+
-+	/* reset both transfer and event channels */
-+	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
-+	val &= ~(CH_CONTROL_MASK << 16);
-+	val |= CH_RESET << 16;
-+	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
-+
-+	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
-+				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-+				 10000);
-+	if (ret)
-+		return ret;
-+
-+	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
-+	val &= ~(CH_CONTROL_MASK << 16);
-+	val |= CH_RESET << 16;
-+	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
-+
-+	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
-+				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-+				 10000);
-+	if (ret)
-+		return ret;
-+
-+	pr_info("HIDMA channel reset\n");
 +	return 0;
 +}
-+module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
-+			  vfio_platform_qcomhidma_reset);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
++module_init(hidma_mgmt_init);
+ MODULE_LICENSE("GPL v2");
 -- 
 1.8.2.1
