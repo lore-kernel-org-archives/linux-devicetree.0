@@ -1,87 +1,108 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Fri, 5 Feb 2016 15:33:28 +0100
-Message-ID: <20160205143328.GD31506@lukather>
-References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160112143100.GA14628@rob-hp-laptop>
- <20160115085734.GG4581@lukather>
- <20160117000434.GB7774@rob-hp-laptop>
- <20160118162538.GH6588@sirena.org.uk>
- <20160121154649.GE3997@lukather>
- <20160121162802.GL6588@sirena.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
+ panic support
+Date: Fri, 5 Feb 2016 06:42:42 -0800
+Message-ID: <56B4B4E2.40105@roeck-us.net>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+ <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
+ <56B23883.7000501@codeaurora.org>
+ <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
+ <56B23E99.1030604@codeaurora.org>
+ <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+ <56B2423B.1020109@codeaurora.org>
+ <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
+ <56B24642.8090105@codeaurora.org>
+ <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
+ <56B24AB5.3070001@codeaurora.org>
+ <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
+ <56B2DEE4.7060901@roeck-us.net>
+ <CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160121162802.GL6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Timur Tabi <timur@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
 List-Id: devicetree@vger.kernel.org
 
+On 02/05/2016 01:51 AM, Fu Wei wrote:
+> Hi Guenter,
+>
+> On 4 February 2016 at 13:17, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On 02/03/2016 03:00 PM, Fu Wei wrote:
+>>>
+>>> On 4 February 2016 at 02:45, Timur Tabi <timur@codeaurora.org> wrote:
+>>>>
+>>>> Fu Wei wrote:
+>>>>>
+>>>>>
+>>>>> As you know I have made the pre-timeout support patch, If people like
+>>>>> it, i am happy to go on upstream it separately.
+>>>>>
+>>>>> If we want to use pre-timeout here, user only can use get_pretimeout
+>>>>> and disable panic by setting pretimeout to 0
+>>>>> but user can not really set pretimeout, because "pre-timeout  ==
+>>>>> timeout / 2 (always)".
+>>>>> if user want to change pretimeout, he/she has to set_time instead.
+>>>>
+>>>>
+>>>>
+>>>> Ok, I think patches 4 and 5 should be combined, and I think the Kconfig
+>>>> entry should be removed and just use panic_enabled.
+>>
+>>
+>> Agreed.
+>
+> np, will do
+>
+>>>
+>>>
+>>> NP, will update this patchset like that ,  thanks :-)
+>>>
+>>
+>> Also, if panic is enabled, the timeout needs to be adjusted accordingly
+>> (to only panic after the entire timeout period has expired, not after
+>> half of it). We can not panic the system after timeout / 2.
+>
+> OK, my thought is
+>
+> if panic is enabled :
+> |--------WOR-------WS0--------WOR-------WS1
+> |------timeout------(panic)------timeout-----reset
+>
+> if panic is disabled .
+> |--------WOR-------WS0--------WOR-------WS1
+> |---------------------timeout---------------------reset
+>
+>   panic_enabled only can be configured when module is loaded by module parameter
+>
+> But user should know that max_timeout(panic_enable) =
+> max_timeout(panic_disable) / 2
+>
 
---JwB53PgKC5A7+0Ej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That means you'll have to update max_timeout accordingly.
 
-Hi Mark,
+>>
+>> I am not too happy with the parameter name (panic_enabled). How about
+>> "action", to match machzwd ?
+>
+> yes, makes sense. Maybe we can do something  like this:
+>
+> /*
+>   * action refers to action taken when watchdog gets WS0
+>   * 0 = SKIP
+>   * 1 = PANIC
+>   * defaults to SKIP (0)
+>   */
+> static int action;
+> module_param(action, int, 0);
+> MODULE_PARM_DESC(action, "after watchdog gets WS0 interrupt, do: "
+> "0 = SKIP(*)  1 = PANIC");
+>
+Yes, though I would suggest to use lower case letters.
 
-On Thu, Jan 21, 2016 at 04:28:02PM +0000, Mark Brown wrote:
-> On Thu, Jan 21, 2016 at 04:46:49PM +0100, Maxime Ripard wrote:
->=20
-> > I guess a separate driver would make it easier to deal with cases like
-> > the one you suggested (shutting down when the load is going to be
-> > lower). I don't see how we could have a good DT representation of that
-> > if we're going to use lists.
->=20
-> We can have a driver regardless of what the DT looks like, it's a
-> question of how things get instantiated.
->=20
-> > Anyway, I'm fine with both approaches, just let me know what you
-> > prefer.
->=20
-> Without seeing an implementation of the lists it's hard to say.
+Thanks,
+Guenter
 
-Just to make sure we're on the same page: you want to keep the
-regulator, but instead of giving the parent through vinX-supplies
-properties, you want to have a single *-supply property, with a list
-of regulators, right?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---JwB53PgKC5A7+0Ej
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWtLK4AAoJEBx+YmzsjxAguNoQALmfXhbIgg1W/Xw3LZgD4nrZ
-R751Jt56rA/0dIwaNBQE3/lbFu4VSgeB4Htl6avk4aLhic+QRwB8N2VmtW5UA0Tx
-T6OcGJmJ5MbY/36xexX+2iQodWB2xedNEzLNKlfq22ZtVXnF3otKRD6eBL0Zvs5U
-cRYVAT18+UmAYAkpTJZJCSly5Mn+WqagFCt2Ry8+6liUukFHXMmbvgHGRRBOuDHi
-QcBa9bYoOzIlGJLSba9UU2fUZFusYI+pDcf+iNdZCL6cfw90ZtTnYANKwjeP7XPm
-sKXTrvvmlHJbfFRLpFEQ9QIgbsbstH3clZcMK8lbJw6DYU815SsDkKjfXWcJnOkR
-jqBS/Pr8cue++/167WlueBByppbKvGyki33eyFDA6G0zbl3Bsgu8A88Nje95dxoi
-62GiZM29PCSyvfldRAWFTB/HkkadSTd4RmRO/c2YSbRwrmykTANYSpbzSGXWxvCJ
-B4cC/fRVedboeQJmQL25H0ZldlaVFvpF7sxAF8oxKOuBFcT8K7QyfsW65l+8IbYu
-CJC9dUgPbmJ2YkpauiG5oZpbD8w1cTYQt7E78V42DLVq3uQIzEn8Emaf4Vnnm4HP
-h1IVy+gzp2VfaBziLKFROjF3vUUWhwy0oZe7MFMBDVYrh/P3EHZBZNc+KySP4Xm8
-0pWUvNjvhb2C7yYMy8zB
-=5OpA
------END PGP SIGNATURE-----
-
---JwB53PgKC5A7+0Ej--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
