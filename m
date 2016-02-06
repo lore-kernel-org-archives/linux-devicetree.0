@@ -1,81 +1,39 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
-Date: Sat, 6 Feb 2016 08:42:38 +0100
-Message-ID: <201602060842.38290.marex@denx.de>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602041225.11679.marex@denx.de> <56B38AB3.3070801@ti.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v4 1/2] clk: sunxi: Add sun6i/8i video support
+Date: Sat, 6 Feb 2016 10:37:51 +0100
+Message-ID: <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
+References: <cover.1454435944.git.moinejf@free.fr>
+ <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
+ <20160205093915.GF1139@lukather>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B38AB3.3070801-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160205093915.GF1139@lukather>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Emilio Lopez <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, February 04, 2016 at 06:30:27 PM, R, Vignesh wrote:
-> On 2/4/2016 4:55 PM, Marek Vasut wrote:
-> > On Thursday, February 04, 2016 at 08:38:47 AM, Vignesh R wrote:
-> >> On 02/02/2016 02:43 AM, Marek Vasut wrote:
-> >>> On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
-> >>>> On Wed, Jan 13, 2016 at 03:39:17AM +0100, Marek Vasut wrote:
-> >>>>> On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
-> >>>>>> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
-> >> [...]
-> >> 
-> >>>>> All these SoCs should be capable of tweaking the block to fit their
-> >>>>> needs by just the DT properties. I believe they differ only in the
-> >>>>> FIFO depth and sometimes someone is greedy and uses 4:16 CS
-> >>>>> multiplexer, which is an external passive component, but that's all.
-> >>>>> 
-> >>>>> Would we need soc-specific compatible strings if this is the case?
-> >>>> 
-> >>>> It's nice when most things can be supported with a small set of DT
-> >>>> properties, as you've done. But IUIC, I think it's usually good
-> >>>> practice to define and use SoC-specific (or maybe SoC family)
-> >>>> compatible strings in the docs and DTS files, in addition to the
-> >>>> generic one, in case there are future quirks that need to be handled.
-> >>>> Note that you don't actually have to use these in the driver yet, but
-> >>>> it's good to have a definition.
-> >>>> 
-> >>>> So you can, today, have:
-> >>>> 	foo@xxxx {
-> >>>> 	
-> >>>> 		compatible = "ti,baz-12345", "cdns,qspi-nor";
-> >>>> 		...
-> >>>> 	
-> >>>> 	};
-> >>>> 
-> >>>> And we have the option to pick up "ti,baz-12345" in the Linux driver
-> >>>> *if needed.*
-> >> 
-> >> The support for TI SoC that has this IP is not in upstream yet. I will
-> >> 
-> >> add TI-specific compatible later. It will be:
-> >> 	foo@xxxx {
-> >> 	
-> >> 		compatible = "ti,k2g-qspi", "cdns,qspi-nor";
-> >> 		
-> >>  		...
-> >>  	
-> >>  	};
-> > 
-> > Do you expect any specifics which cannot be handled by the current
-> > bindings btw?
-> 
-> > In my socfpga case, the compatible strings will be probably:
-> Yeah, there is delay(of few ns) required between writing to
-> INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
-> call). This is specific to TI K2G SoC and needs to be tied to the new
-> binding.
-
-Can't you somehow poll the hardware to check whether or not it's ready instead
-of adding some random delay ?
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCA1IEZlYiAyMDE2IDEwOjM5OjE1ICswMTAwCk1heGltZSBSaXBhcmQgPG1heGltZS5y
+aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKCj4gPiArQ0xLX09GX0RFQ0xBUkUoc3Vu
+NmlfZGlzcGxheSwgImFsbHdpbm5lcixzdW42aS1kaXNwbGF5LWNsayIsIHN1bjZpX2Rpc3BsYXlf
+c2V0dXApOwo+IAo+IFBsZWFzZSB1c2UgdGhlIGRpc3BsYXkgZHJpdmVyIGZyb20gbXkgRFJNIHNl
+cmllLCBpdCBjb3ZlcnMgZXZlcnl0aGluZwo+IHlvdSBuZWVkIGhlcmUuCgpJZiB5b3UgZ2l2ZSBt
+ZSBhIHBvaW50ZXIsIEkgd2lsbCBoYXZlIGEgbG9vay4KCj4gPiArQ0xLX09GX0RFQ0xBUkUoc3Vu
+NmlfcGxsMywgImFsbHdpbm5lcixzdW42aS1wbGwzLWNsayIsIHN1bjZpX3BsbDNfc2V0dXApOwo+
+IAo+IEFuZCBwbGVhc2UgdXNlIHRoZSBjbGstZmFjdG9ycyBjb2RlIGhlcmUuCgpJIGRvbid0IHNl
+ZSBob3cgSSBjYW4gZ2V0IGRpcmVjdCAyOTdNSHogYW5kIDI3ME1IeiBpbiBmcmFjdGlvbmFsIG1v
+ZGUKd2l0aCB0aGF0IGNvZGUuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6
+aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
