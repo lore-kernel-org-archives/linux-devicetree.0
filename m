@@ -1,39 +1,52 @@
-From: Jean-Francois Moine <moinejf@free.fr>
+From: Chen-Yu Tsai <wens@csie.org>
 Subject: Re: [PATCH v4 1/2] clk: sunxi: Add sun6i/8i video support
-Date: Sat, 6 Feb 2016 10:37:51 +0100
-Message-ID: <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
-References: <cover.1454435944.git.moinejf@free.fr>
- <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
- <20160205093915.GF1139@lukather>
+Date: Sat, 6 Feb 2016 17:56:00 +0800
+Message-ID: <CAGb2v640YWtdT7Rhz2jP7gnQ1U6HJe9POU40HCp==7GrZxDz0A@mail.gmail.com>
+References: <cover.1454435944.git.moinejf@free.fr> <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
+ <20160205093915.GF1139@lukather> <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160205093915.GF1139@lukather>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Emilio Lopez <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Dave Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA1IEZlYiAyMDE2IDEwOjM5OjE1ICswMTAwCk1heGltZSBSaXBhcmQgPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKCj4gPiArQ0xLX09GX0RFQ0xBUkUoc3Vu
-NmlfZGlzcGxheSwgImFsbHdpbm5lcixzdW42aS1kaXNwbGF5LWNsayIsIHN1bjZpX2Rpc3BsYXlf
-c2V0dXApOwo+IAo+IFBsZWFzZSB1c2UgdGhlIGRpc3BsYXkgZHJpdmVyIGZyb20gbXkgRFJNIHNl
-cmllLCBpdCBjb3ZlcnMgZXZlcnl0aGluZwo+IHlvdSBuZWVkIGhlcmUuCgpJZiB5b3UgZ2l2ZSBt
-ZSBhIHBvaW50ZXIsIEkgd2lsbCBoYXZlIGEgbG9vay4KCj4gPiArQ0xLX09GX0RFQ0xBUkUoc3Vu
-NmlfcGxsMywgImFsbHdpbm5lcixzdW42aS1wbGwzLWNsayIsIHN1bjZpX3BsbDNfc2V0dXApOwo+
-IAo+IEFuZCBwbGVhc2UgdXNlIHRoZSBjbGstZmFjdG9ycyBjb2RlIGhlcmUuCgpJIGRvbid0IHNl
-ZSBob3cgSSBjYW4gZ2V0IGRpcmVjdCAyOTdNSHogYW5kIDI3ME1IeiBpbiBmcmFjdGlvbmFsIG1v
-ZGUKd2l0aCB0aGF0IGNvZGUuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6
-aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sat, Feb 6, 2016 at 5:37 PM, Jean-Francois Moine <moinejf@free.fr> wrote:
+> On Fri, 5 Feb 2016 10:39:15 +0100
+> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+>
+>> > +CLK_OF_DECLARE(sun6i_display, "allwinner,sun6i-display-clk", sun6i_display_setup);
+>>
+>> Please use the display driver from my DRM serie, it covers everything
+>> you need here.
+>
+> If you give me a pointer, I will have a look.
+>
+>> > +CLK_OF_DECLARE(sun6i_pll3, "allwinner,sun6i-pll3-clk", sun6i_pll3_setup);
+>>
+>> And please use the clk-factors code here.
+>
+> I don't see how I can get direct 297MHz and 270MHz in fractional mode
+> with that code.
+
+clk-factors now supports a custom .recalc callback. Along with get_factors,
+you can support pretty much any clock that has four variables, not including
+the mux and clock gate.
+
+So for this you'd have the div as factor m, and the integer mode bit as p,
+and the fraction bit as n, and recalc would be somewhat like this:
+
+if (p) {
+        rate = parent_rate / (m + 1);
+} else if (n) {
+        rate = 297000000;
+} else {
+        rate = 270000000;
+}
+
+get_factors should be easy enough to figure out.
+
+Regards
+ChenYu
