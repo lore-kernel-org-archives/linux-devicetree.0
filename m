@@ -1,21 +1,21 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
-Date: Sat, 6 Feb 2016 08:42:07 +0100
-Message-ID: <201602060842.07120.marex@denx.de>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602041225.11679.marex@denx.de> <56B38488.2000502@opensource.altera.com>
+Date: Sat, 6 Feb 2016 08:42:38 +0100
+Message-ID: <201602060842.38290.marex@denx.de>
+References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602041225.11679.marex@denx.de> <56B38AB3.3070801@ti.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B38488.2000502-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <56B38AB3.3070801-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, February 04, 2016 at 06:04:08 PM, Dinh Nguyen wrote:
-> On 02/04/2016 05:25 AM, Marek Vasut wrote:
+On Thursday, February 04, 2016 at 06:30:27 PM, R, Vignesh wrote:
+> On 2/4/2016 4:55 PM, Marek Vasut wrote:
 > > On Thursday, February 04, 2016 at 08:38:47 AM, Vignesh R wrote:
 > >> On 02/02/2016 02:43 AM, Marek Vasut wrote:
 > >>> On Monday, February 01, 2016 at 10:03:35 PM, Brian Norris wrote:
@@ -62,16 +62,16 @@ On Thursday, February 04, 2016 at 06:04:08 PM, Dinh Nguyen wrote:
 > >>  	};
 > > 
 > > Do you expect any specifics which cannot be handled by the current
-> > bindings btw? In my socfpga case, the compatible strings will be
-> > probably:
-> > 
-> > "altr,socfpga-gen5-qspi"
-> > 
-> > Dinh, Graham, do you agree with this or should we use something else ?
+> > bindings btw?
 > 
-> I agree.
+> > In my socfpga case, the compatible strings will be probably:
+> Yeah, there is delay(of few ns) required between writing to
+> INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
+> call). This is specific to TI K2G SoC and needs to be tied to the new
+> binding.
 
-Thanks
+Can't you somehow poll the hardware to check whether or not it's ready instead
+of adding some random delay ?
 
 Best regards,
 Marek Vasut
