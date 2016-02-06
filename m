@@ -1,161 +1,139 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
- panic support
-Date: Sun, 7 Feb 2016 02:02:12 +0800
-Message-ID: <CADyBb7vRKjDoeOfH=3Uwz+D0xyXaC9cM4ZSEO+MwL8Gw5T-Umg@mail.gmail.com>
-References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
-	<1454519923-25230-6-git-send-email-fu.wei@linaro.org>
-	<56B23883.7000501@codeaurora.org>
-	<CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
-	<56B23E99.1030604@codeaurora.org>
-	<CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
-	<56B2423B.1020109@codeaurora.org>
-	<CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
-	<56B24642.8090105@codeaurora.org>
-	<CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
-	<56B24AB5.3070001@codeaurora.org>
-	<CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
-	<56B2DEE4.7060901@roeck-us.net>
-	<CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
-	<56B4B4E2.40105@roeck-us.net>
-	<CADyBb7sP=d+BWOdmNEAs38yRcmXVjYsFX=XNffNpGqfybpxTfQ@mail.gmail.com>
-	<56B5363D.20200@roeck-us.net>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] iio: ad5755: Add full DT binding documentation
+Date: Sat, 6 Feb 2016 18:30:04 +0000
+Message-ID: <56B63BAC.2040001@kernel.org>
+References: <1454509864-32285-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1454509864-32285-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <1454509864-32285-3-git-send-email-sean.nyekjaer@prevas.dk>
+ <1454509864-32285-4-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56B5363D.20200@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454509864-32285-4-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On 03/02/16 14:31, Sean Nyekjaer wrote:
+> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Hmm. Complex beast.  Going to want Lars to look at this in particular.
+Also a device tree review would be good on this one.
 
-On 6 February 2016 at 07:54, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 02/05/2016 10:21 AM, Fu Wei wrote:
->>
->> On 5 February 2016 at 22:42, Guenter Roeck <linux@roeck-us.net> wrote:
->>>
->>> On 02/05/2016 01:51 AM, Fu Wei wrote:
->>>>
->>>>
->>>> Hi Guenter,
->>>>
->>>> On 4 February 2016 at 13:17, Guenter Roeck <linux@roeck-us.net> wrote:
->>>>>
->>>>>
->>>>> On 02/03/2016 03:00 PM, Fu Wei wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 4 February 2016 at 02:45, Timur Tabi <timur@codeaurora.org> wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Fu Wei wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> As you know I have made the pre-timeout support patch, If people
->>>>>>>> like
->>>>>>>> it, i am happy to go on upstream it separately.
->>>>>>>>
->>>>>>>> If we want to use pre-timeout here, user only can use get_pretimeout
->>>>>>>> and disable panic by setting pretimeout to 0
->>>>>>>> but user can not really set pretimeout, because "pre-timeout  ==
->>>>>>>> timeout / 2 (always)".
->>>>>>>> if user want to change pretimeout, he/she has to set_time instead.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Ok, I think patches 4 and 5 should be combined, and I think the
->>>>>>> Kconfig
->>>>>>> entry should be removed and just use panic_enabled.
->>>>>
->>>>>
->>>>>
->>>>>
->>>>> Agreed.
->>>>
->>>>
->>>>
->>>> np, will do
->>>>
->>>>>>
->>>>>>
->>>>>> NP, will update this patchset like that ,  thanks :-)
->>>>>>
->>>>>
->>>>> Also, if panic is enabled, the timeout needs to be adjusted accordingly
->>>>> (to only panic after the entire timeout period has expired, not after
->>>>> half of it). We can not panic the system after timeout / 2.
->>>>
->>>>
->>>>
->>>> OK, my thought is
->>>>
->>>> if panic is enabled :
->>>> |--------WOR-------WS0--------WOR-------WS1
->>>> |------timeout------(panic)------timeout-----reset
->>>>
->>>> if panic is disabled .
->>>> |--------WOR-------WS0--------WOR-------WS1
->>>> |---------------------timeout---------------------reset
->>>>
->>>>    panic_enabled only can be configured when module is loaded by module
->>>> parameter
->>>>
->>>> But user should know that max_timeout(panic_enable) =
->>>> max_timeout(panic_disable) / 2
->>>>
->>>
->>> That means you'll have to update max_timeout accordingly.
->>
->>
->> panic_enabled only can be configured when module is loaded, so we
->> don't need to update it.
->>
->> max_timeout will only be set up in the init stage.
->>
->> Does it make sense ? :-)
->>
-> Not sure I understand your problem or question.
->
-> max_timeout will have to reflect the correct maximum timeout, under
-> all circumstances. It will have to be set to the correct value before
-> the watchdog driver is registered.
+My personal gut feeling is not to wrap up things that are really numeric
+with names, but rather to provide docs on the valid values for them.
+Not sure what is the preferred by the device tree guys??
 
-yes, understood,  my thought is :
-
-in  static int sbsa_gwdt_probe(struct platform_device *pdev)
-
-if (action) {
-        wdd->min_timeout = 1;
-        wdd->max_timeout = U32_MAX / gwdt->clk;
-} else {
-        wdd->min_timeout = 2;
-        wdd->max_timeout = U32_MAX / gwdt->clk * 2;
-}
-
-
-
->
-> Guenter
->
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Jonathan
+> ---
+> Changes since v1:
+> - this patch added
+> 
+>  .../devicetree/bindings/iio/dac/ad5755.txt         | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> index 4c91583..3aac20d 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> @@ -15,10 +15,93 @@ Recommended properties:
+>   - spi-max-frequency: Definition as per
+>  		Documentation/devicetree/bindings/spi/spi-bus.txt
+>  
+> +Optional properties:
+> +See include/dt-bindings/iio/ad5755.h
+> + - adi,ext_dc_dc_compenstation_resistor: boolean set if using compensation resistor
+> + - adi,dc_dc_phase: can be set to
+> +	AD5755_DC_DC_PHASE_ALL_SAME_EDGE
+> +	AD5755_DC_DC_PHASE_A_B_SAME_EDGE_C_D_OPP_EDGE
+> +	AD5755_DC_DC_PHASE_A_C_SAME_EDGE_B_D_OPP_EDGE
+> +	AD5755_DC_DC_PHASE_90_DEGREE
+> + - adi,dc_dc_freq:
+> +	AD5755_DC_DC_FREQ_250kHZ
+> +	AD5755_DC_DC_FREQ_410kHZ
+> +	AD5755_DC_DC_FREQ_650kHZ
+Can we not just make this numeric with a set of valid values specified in this doc?
+> + - adi,dc_dc_maxv:
+> +	AD5755_DC_DC_MAXV_23V
+> +	AD5755_DC_DC_MAXV_24V5
+> +	AD5755_DC_DC_MAXV_27V
+> +	AD5755_DC_DC_MAXV_29V5
+Same on this.
+> +
+> +Optional for every channel:
+> +	 - adi,mode:
+> +		AD5755_MODE_VOLTAGE_0V_5V
+> +		AD5755_MODE_VOLTAGE_0V_10V
+> +		AD5755_MODE_VOLTAGE_PLUSMINUS_5V
+> +		AD5755_MODE_VOLTAGE_PLUSMINUS_10V
+> +		AD5755_MODE_CURRENT_4mA_20mA
+> +		AD5755_MODE_CURRENT_0mA_20mA
+> +		AD5755_MODE_CURRENT_0mA_24mA
+Again, could break this into two numeric values and have options specified in the
+doc + reject any invalid ones. 
+> +	 - adi,ext_current_sense_resistor: boolean set if using external
+> +					   current sense resistor
+> +	 - adi,enable_voltage_overrange: boolean enable voltage overrange
+> +	 - adi,slew: Array of slewrate settings should contain 3 fields:
+> +		1: Should be either 0 or 1 in order to enable or disable slew
+> +		2: Slew rate settings:
+> +			AD5755_SLEW_RATE_64k
+> +			AD5755_SLEW_RATE_32k
+> +			AD5755_SLEW_RATE_16k
+> +			AD5755_SLEW_RATE_8k
+> +			AD5755_SLEW_RATE_4k
+> +			AD5755_SLEW_RATE_2k
+> +			AD5755_SLEW_RATE_1k
+> +			AD5755_SLEW_RATE_500
+> +			AD5755_SLEW_RATE_250
+> +			AD5755_SLEW_RATE_125
+> +			AD5755_SLEW_RATE_64
+> +			AD5755_SLEW_RATE_32
+> +			AD5755_SLEW_RATE_16
+> +			AD5755_SLEW_RATE_8
+> +			AD5755_SLEW_RATE_4
+> +			AD5755_SLEW_RATE_0_5
+> +		3: Slew step size:
+> +			AD5755_SLEW_STEP_SIZE_1
+> +			AD5755_SLEW_STEP_SIZE_2
+> +			AD5755_SLEW_STEP_SIZE_4
+> +			AD5755_SLEW_STEP_SIZE_8
+> +			AD5755_SLEW_STEP_SIZE_16
+> +			AD5755_SLEW_STEP_SIZE_32
+> +			AD5755_SLEW_STEP_SIZE_64
+> +			AD5755_SLEW_STEP_SIZE_128
+> +			AD5755_SLEW_STEP_SIZE_256
+Same with these.
+> +
+>  Example:
+>  dac@0 {
+>  	compatible = "adi,ad5755";
+>  	reg = <0>;
+>  	spi-max-frequency = <1000000>;
+>  	spi-cpha;
+> +	adi,dc_dc_phase = <AD5755_DC_DC_PHASE_ALL_SAME_EDGE>;
+> +	adi,dc_dc_freq = <AD5755_DC_DC_FREQ_410kHZ>;
+> +	adi,dc_dc_maxv = <AD5755_DC_DC_MAXV_23V>;
+> +	channel@0 {
+> +		adi,mode = <AD5755_MODE_CURRENT_4mA_20mA>;
+> +		adi,ext_current_sense_resistor;
+> +		adi,slew = <0 AD5755_SLEW_RATE_64k AD5755_SLEW_STEP_SIZE_1>;
+> +	};
+> +	channel@1 {
+> +		adi,mode = <AD5755_MODE_CURRENT_4mA_20mA>;
+> +		adi,ext_current_sense_resistor;
+> +		adi,slew = <0 AD5755_SLEW_RATE_64k AD5755_SLEW_STEP_SIZE_1>;
+> +	};
+> +	channel@2 {
+> +		adi,mode = <AD5755_MODE_CURRENT_4mA_20mA>;
+> +		adi,ext_current_sense_resistor;
+> +		adi,slew = <0 AD5755_SLEW_RATE_64k AD5755_SLEW_STEP_SIZE_1>;
+> +	};
+> +	channel@3 {
+> +		adi,mode = <AD5755_MODE_CURRENT_4mA_20mA>;
+> +		adi,ext_current_sense_resistor;
+> +		adi,slew = <0 AD5755_SLEW_RATE_64k AD5755_SLEW_STEP_SIZE_1>;
+> +	};
+>  };
+> 
