@@ -1,85 +1,116 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device
- trees
-Date: Fri, 5 Feb 2016 21:13:12 -0700
-Message-ID: <56B572D8.9030701@wwwdotorg.org>
-References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
- <1454571364-24708-2-git-send-email-lkundrak@v3.sk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454571364-24708-2-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v4 1/3] libahci: Implement the capability to override the generic ahci interrupt handler.
+Date: Sat,  6 Feb 2016 11:25:22 +0530
+Message-ID: <1454738124-9351-2-git-send-email-stripathi@apm.com>
+References: <1454738124-9351-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1454738124-9351-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2016 12:36 AM, Lubomir Rintel wrote:
-> The hub and the ethernet in its port 1 are hardwired on the board.
-> 
-> Compared to the adapters that can be plugged into the USB ports, this
-> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-> has the MAC address for this adapter in its ROM, accessible from its
-> firmware.
-> 
-> U-Boot can read out the address and set the local-mac-address property of the
-> node with "ethernet" alias. Let's add the node so that U-Boot can do its
-> business.
-> 
-> Model B rev2 and Model B+ entries were verified by me, the hierarchy and
-> pid/vid pair for the Version 2 was provided by Olivier Blin. Original
-> Model B is a blind short, though very likely correct.
+From: Suman Tripathi <stripathi@apm.com>
 
-The series,
-Tested-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+This patch implements the capability to override the generic AHCI
+interrupt handler so that the LDD drivers can implement their own
+custom interrupt handler routines.
 
-A few nits though...
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ drivers/ata/ahci.h    |    2 ++
+ drivers/ata/libahci.c |   29 +++++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 8 deletions(-)
 
->  arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 18 ++++++++++++++++++
->  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 18 ++++++++++++++++++
->  arch/arm/boot/dts/bcm2835-rpi-b.dts      | 18 ++++++++++++++++++
->  arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 18 ++++++++++++++++++
->  arch/arm/boot/dts/bcm283x.dtsi           |  4 +++-
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index a4faa43..e64bdad 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -360,6 +360,7 @@ struct ahci_host_priv {
+ 	 * be overridden anytime before the host is activated.
+ 	 */
+ 	void			(*start_engine)(struct ata_port *ap);
++	irqreturn_t 		(*ahci_irq_handler)(int irq, void *dev_instance);
+ };
 
-Rather than cut/paste everything, can't we share the duplicate content
-using a *.dtsi file? IIRC some dtsi files already exist. Perhaps there
-could be a bcm283x-rpi-smsc9512.dtsi and bcm283x-rpi-smsc9514.dtsi, and
-even a bcm283x-rpi-smsc-eth.dtsi since 99% of those two are common?
-Hopefully that doesn't sound like busy work/bike-shedding too much.
+ #ifdef CONFIG_PCI_MSI
+@@ -423,6 +424,7 @@ int ahci_reset_em(struct ata_host *host);
+ void ahci_print_info(struct ata_host *host, const char *scc_s);
+ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht);
+ void ahci_error_handler(struct ata_port *ap);
++u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked);
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+ static inline void __iomem *__ahci_port_base(struct ata_host *host,
+ 					     unsigned int port_no)
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index eda3cf2..d45a7a5 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -113,6 +113,9 @@ static ssize_t ahci_store_em_buffer(struct device *dev,
+ 				    const char *buf, size_t size);
+ static ssize_t ahci_show_em_supported(struct device *dev,
+ 				      struct device_attribute *attr, char *buf);
++static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance);
++
++static irqreturn_t ahci_single_level_irq_intr(int irq, void *dev_instance);
 
-> +&usb {
-> +	usb1@1 {
-> +		compatible = "usb0424,9514";
-> +		reg = <01>;
+ static DEVICE_ATTR(ahci_host_caps, S_IRUGO, ahci_show_host_caps, NULL);
+ static DEVICE_ATTR(ahci_host_cap2, S_IRUGO, ahci_show_host_cap2, NULL);
+@@ -512,6 +515,11 @@ void ahci_save_initial_config(struct device *dev, struct ahci_host_priv *hpriv)
 
-Here and ...
+ 	if (!hpriv->start_engine)
+ 		hpriv->start_engine = ahci_start_engine;
++
++	if (!hpriv->ahci_irq_handler)
++		hpriv->ahci_irq_handler = (hpriv->flags & AHCI_HFLAG_EDGE_IRQ) ?
++					   ahci_single_edge_irq_intr :
++					   ahci_single_level_irq_intr;
+ }
+ EXPORT_SYMBOL_GPL(ahci_save_initial_config);
 
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethernet: usbether@1 {
-> +			compatible = "usb0424,ec00";
-> +			reg = <01>;
+@@ -1816,7 +1824,7 @@ static irqreturn_t ahci_multi_irqs_intr_hard(int irq, void *dev_instance)
+ 	return IRQ_HANDLED;
+ }
 
-... here, reg should be "1" not "01". Same in all the files.
+-static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
++u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
+ {
+ 	unsigned int i, handled = 0;
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1842,6 +1850,7 @@ static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
 
-> +&usb {
-> +	usb1@1 {
-> +		compatible = "usb0424,9512";
+ 	return handled;
+ }
++EXPORT_SYMBOL_GPL(ahci_handle_port_intr);
 
-I don't think that ID is correct. On my systems, I have:
+ static irqreturn_t ahci_single_edge_irq_intr(int irq, void *dev_instance)
+ {
+@@ -2505,14 +2514,18 @@ int ahci_host_activate(struct ata_host *host, struct scsi_host_template *sht)
+ 	int irq = hpriv->irq;
+ 	int rc;
 
-RPi B (original, rev 1, 2 USB ports): 9512
-RPi B (rev 2 w/ P5, 2 USB ports): 9512
-RPi B+ (4 USB ports): 9514
-RPi 2 (4 USB ports): 9514
-
+-	if (hpriv->flags & (AHCI_HFLAG_MULTI_MSI | AHCI_HFLAG_MULTI_MSIX))
++	if (hpriv->flags & (AHCI_HFLAG_MULTI_MSI | AHCI_HFLAG_MULTI_MSIX)) {
++		if (hpriv->ahci_irq_handler)
++			dev_warn(host->dev, "both AHCI_HFLAG_MULTI_MSI flag set \
++				 and custom irq handler implemented\n");
++
+ 		rc = ahci_host_activate_multi_irqs(host, sht);
+-	else if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ)
+-		rc = ata_host_activate(host, irq, ahci_single_edge_irq_intr,
+-				       IRQF_SHARED, sht);
+-	else
+-		rc = ata_host_activate(host, irq, ahci_single_level_irq_intr,
+-				       IRQF_SHARED, sht);
++	} else {
++		rc = ata_host_activate(host, irq, hpriv->ahci_irq_handler,
++			       	       IRQF_SHARED, sht);
++	}
++
++
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(ahci_host_activate);
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.1
+
