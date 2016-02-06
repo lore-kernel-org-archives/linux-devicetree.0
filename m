@@ -1,52 +1,31 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 1/2] clk: sunxi: Add sun6i/8i video support
-Date: Sat, 6 Feb 2016 17:56:00 +0800
-Message-ID: <CAGb2v640YWtdT7Rhz2jP7gnQ1U6HJe9POU40HCp==7GrZxDz0A@mail.gmail.com>
-References: <cover.1454435944.git.moinejf@free.fr> <3c0e2cdea659e9e682f80ecf42b252c740095f15.1454435944.git.moinejf@free.fr>
- <20160205093915.GF1139@lukather> <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Sat, 6 Feb 2016 11:23:07 +0100
+Message-ID: <CAJZ5v0id-035AtyQ_SccPuCxD7+pa6GCgj3WBAojM+rFqssGQQ@mail.gmail.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
+	<1454641552-12576-2-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160206103751.eb21edf56ddc6ef7c27907f0@free.fr>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Dave Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454641552-12576-2-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, julien.grall@citrix.com, xen-devel@lists.xen.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-efi@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ian.campbell@citrix.com, Shannon Zhao <shannon.zhao@linaro.org>, peter.huangpeng@huawei.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 6, 2016 at 5:37 PM, Jean-Francois Moine <moinejf@free.fr> wrote:
-> On Fri, 5 Feb 2016 10:39:15 +0100
-> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong@huawei.com> wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
 >
->> > +CLK_OF_DECLARE(sun6i_display, "allwinner,sun6i-display-clk", sun6i_display_setup);
->>
->> Please use the display driver from my DRM serie, it covers everything
->> you need here.
+> ACPI 6.0 introduces a new table STAO to list the devices which are used
+> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> UART is used by Xen. So here it hides UART from Dom0.
 >
-> If you give me a pointer, I will have a look.
->
->> > +CLK_OF_DECLARE(sun6i_pll3, "allwinner,sun6i-pll3-clk", sun6i_pll3_setup);
->>
->> And please use the clk-factors code here.
->
-> I don't see how I can get direct 297MHz and 270MHz in fractional mode
-> with that code.
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
 
-clk-factors now supports a custom .recalc callback. Along with get_factors,
-you can support pretty much any clock that has four variables, not including
-the mux and clock gate.
+Well, this doesn't look right to me.
 
-So for this you'd have the div as factor m, and the integer mode bit as p,
-and the fraction bit as n, and recalc would be somewhat like this:
+We need to find a nicer way to achieve what you want.
 
-if (p) {
-        rate = parent_rate / (m + 1);
-} else if (n) {
-        rate = 297000000;
-} else {
-        rate = 270000000;
-}
-
-get_factors should be easy enough to figure out.
-
-Regards
-ChenYu
+Thanks,
+Rafael
