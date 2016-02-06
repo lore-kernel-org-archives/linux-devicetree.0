@@ -1,71 +1,49 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] Documentation: afe4404: Add DT bindings for the
- AFE4404 heart monitor
-Date: Sat, 6 Feb 2016 18:51:09 +0000
-Message-ID: <56B6409D.1030501@kernel.org>
-References: <1454435446-20586-1-git-send-email-afd@ti.com>
- <1454435446-20586-2-git-send-email-afd@ti.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v10 5/5] Watchdog: ARM SBSA Generic Watchdog half timeout
+ panic support
+Date: Sat, 6 Feb 2016 12:55:37 -0600
+Message-ID: <56B641A9.3040801@codeaurora.org>
+References: <1454519923-25230-1-git-send-email-fu.wei@linaro.org>
+ <1454519923-25230-6-git-send-email-fu.wei@linaro.org>
+ <56B23883.7000501@codeaurora.org>
+ <CADyBb7sxPg-QUjTbeHFtYkctKc_g7D8O=+jqbXN+DCCoCEnFqA@mail.gmail.com>
+ <56B23E99.1030604@codeaurora.org>
+ <CADyBb7s4opxfPFuX=1-qEE6uhsaMXgofAJPbHUQHrng2AUwqNA@mail.gmail.com>
+ <56B2423B.1020109@codeaurora.org>
+ <CADyBb7uULCn97ea19zH8dB4QX1QA8=AXL94d6gXgFxXM8haBNA@mail.gmail.com>
+ <56B24642.8090105@codeaurora.org>
+ <CADyBb7s_QeU=pYqN9G+5WMtx-L+=QC6uZR6N6ZWPOixnkHzPjw@mail.gmail.com>
+ <56B24AB5.3070001@codeaurora.org>
+ <CADyBb7usPpY=YLjecXce63zY5e1tniPLmNsVY=8CJHJsCqBgQw@mail.gmail.com>
+ <56B2DEE4.7060901@roeck-us.net>
+ <CADyBb7unAHEOMfruWS82RkHK6uwPAWCxUx9jqzSkiHU4LHDSeA@mail.gmail.com>
+ <56B4B4E2.40105@roeck-us.net>
+ <CADyBb7sP=d+BWOdmNEAs38yRcmXVjYsFX=XNffNpGqfybpxTfQ@mail.gmail.com>
+ <56B5363D.20200@roeck-us.net>
+ <CADyBb7vRKjDoeOfH=3Uwz+D0xyXaC9cM4ZSEO+MwL8Gw5T-Umg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454435446-20586-2-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7vRKjDoeOfH=3Uwz+D0xyXaC9cM4ZSEO+MwL8Gw5T-Umg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/16 17:50, Andrew F. Davis wrote:
-> Add the TI afe4404 heart monitor DT bindings documentation.
-> Create health directory created under iio.
-> 
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-Nothing terribly controversial in here I think and its been around in roughly this
-form for a long time so I'm applying this now.
+Fu Wei wrote:
+> if (action) {
+>          wdd->min_timeout = 1;
+>          wdd->max_timeout = U32_MAX / gwdt->clk;
+> } else {
+>          wdd->min_timeout = 2;
+>          wdd->max_timeout = U32_MAX / gwdt->clk * 2;
+> }
 
-Applied to the togreg branch of iio.git - initially pushed out as testing
-for the autobuilders to test the other patches in the series.
+Why would the minimum timeout be 2?  You can program WOR to timeout in 
+half a second, can't you?
 
-Jonathan
-> ---
->  .../devicetree/bindings/iio/health/afe4404.txt     | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
-> new file mode 100644
-> index 0000000..de69f20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
-> @@ -0,0 +1,30 @@
-> +Texas Instruments AFE4404 Heart rate and Pulse Oximeter
-> +
-> +Required properties:
-> + - compatible		: Should be "ti,afe4404".
-> + - reg			: I2C address of the device.
-> + - tx-supply		: Regulator supply to transmitting LEDs.
-> + - interrupt-parent	: Phandle to he parent interrupt controller.
-> + - interrupts		: The interrupt line the device ADC_RDY pin is
-> +			  connected to. For details refer to,
-> +			  ../interrupt-controller/interrupts.txt.
-> +
-> +Optional properties:
-> + - reset-gpios		: GPIO used to reset the device.
-> +			  For details refer to, ../gpio/gpio.txt.
-> +
-> +Example:
-> +
-> +&i2c2 {
-> +	heart_mon@58 {
-> +		compatible = "ti,afe4404";
-> +		reg = <0x58>;
-> +
-> +		tx-supply = <&vbat>;
-> +
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
-> +
-> +		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> 
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
