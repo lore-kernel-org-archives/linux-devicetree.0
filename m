@@ -1,53 +1,58 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 1/1 v2] imx6q-wandboard-revb1.dts: use unique machine name
-Date: Sat,  6 Feb 2016 13:06:59 +0100
-Message-ID: <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
-References: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454758226-4561-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 07/11] ARM: dts: sunxi: Add dtsi file for
+ AXP809 PMIC
+Date: Sat, 6 Feb 2016 20:42:24 +0800
+Message-ID: <CAGb2v657zYT30KbuK0fyVOmhv0kzJjj9gTsTFRaS4i3d6YhiHQ@mail.gmail.com>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-8-git-send-email-wens@csie.org> <20160202121733.GO4455@sirena.org.uk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBR6U262QKGQEVTHWBKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160202121733.GO4455-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Downstream packages like Debian flash-kernel use
-/proc/device-tree/model
-to determine which dtb file to install.
+On Tue, Feb 2, 2016 at 8:17 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Feb 02, 2016 at 06:27:40PM +0800, Chen-Yu Tsai wrote:
+>
+>> +             reg_dcdc1: dcdc1 {
+>> +                     regulator-name = "dcdc1";
+>> +             };
+>
+> Why is this generic DTS include specifying regulator names?
 
-Hence each dts in the Linux kernel should provide a unique model identifier.
+My intent is to provide better looking names by default.
+I just realized I could do this in the driver by replacing
+a few fields.
 
-https://lkml.org/lkml/2014/7/8/579 created the new file
-imx6q-wandboard-revb1.dts but used the same model identifier
-as in imx6q-wandboard.dts.
+But I still might need to do this for the AXP806, which
+is a slave PMIC also used with A80 SoCs. The names overlap
+with the AXP809. Allwinner gets around this by adding a
+"s_" prefix to them. I suppose that works too.
 
-This patch provides a unique model identifier for revision B1 of
-the Wandboard Quad.
+Mark, may I assume you are OK with this DTS include listing
+the regulators, even if their sections are empty?
 
-v2:
-	correct name of referenced Debian package
+>
+>> +             reg_rtc_ldo: rtc_ldo {
+>> +                     /* RTC_LDO is a fixed, always-on regulator */
+>> +                     regulator-always-on;
+>> +                     regulator-min-microvolt = <1800000>;
+>> +                     regulator-max-microvolt = <1800000>;
+>
+> If the regulator itself is limited in this way there is no need to
+> specify this in the DTS.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-wandboard-revb1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Will remove.
 
-diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
-index 20bf3c2..9207d80 100644
---- a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
-+++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
-@@ -13,7 +13,7 @@
- #include "imx6qdl-wandboard-revb1.dtsi"
- 
- / {
--	model = "Wandboard i.MX6 Quad Board";
-+	model = "Wandboard i.MX6 Quad Board rev B1";
- 	compatible = "wand,imx6q-wandboard", "fsl,imx6q";
- 
- 	memory {
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+ChenYu
