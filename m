@@ -1,40 +1,48 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Sat, 6 Feb 2016 10:21:24 -0600
-Message-ID: <56B61D84.9000709@ti.com>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
- <20160128064149.GM3368@x1> <20160128114026.GB6078@sirena.org.uk>
- <20160128120423.GP3368@x1> <20160128124525.GF6078@sirena.org.uk>
- <20160128133049.GQ3368@x1> <56B0C559.7060204@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56B0C559.7060204@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v2 4/5] ARM: dts: NSP: Add SP804 Support to DT
+Date: Sat,  6 Feb 2016 12:53:39 -0500
+Message-ID: <1454781219-2640-1-git-send-email-jonmason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2016 09:03 AM, Andrew F. Davis wrote:
-> On 01/28/2016 07:30 AM, Lee Jones wrote:
->> On Thu, 28 Jan 2016, Mark Brown wrote:
->>
->>> On Thu, Jan 28, 2016 at 12:04:23PM +0000, Lee Jones wrote:
->>>> On Thu, 28 Jan 2016, Mark Brown wrote:
->>>
->>>>> Please be more specific?  What is it that you are looking for beyond the
->>>>> review I already did for the regulator driver?
->>>
->>>> Patch 2.
->>>
->>> I reviewed that *ages* ago.
->>
->> Link or it didn't happen. ;)
->>
->
-> Might be best to take his ack for the new regulator driver
-> as approval to remove the old one. :)
+Add support for the ARM SP804 timer to the Northstar Plus device tree.
 
-If not, is there anything I can do to help keep this from getting
-delayed another cycle?
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index ee03bee..63a0a53 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -194,6 +194,24 @@
+ 			brcm,nand-has-wp;
+ 		};
+ 
++		ccbtimer0: timer@34000 {
++			compatible = "arm,sp804";
++			reg = <0x34000 0x1000>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&iprocslow>;
++			clock-names = "apb_pclk";
++		};
++
++		ccbtimer1: timer@35000 {
++			compatible = "arm,sp804";
++			reg = <0x35000 0x1000>;
++			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&iprocslow>;
++			clock-names = "apb_pclk";
++		};
++
+ 		i2c0: i2c@38000 {
+ 			compatible = "brcm,iproc-i2c";
+ 			reg = <0x38000 0x50>;
+-- 
+1.9.1
