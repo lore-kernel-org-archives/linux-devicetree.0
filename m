@@ -1,25 +1,16 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] imx6q-wandboard-revb1.dts: use unique machine name
-Date: Sat,  6 Feb 2016 12:30:26 +0100
-Message-ID: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, George Joseph <george.joseph@fairview5.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Heinrich Schuchardt <xypron.glpk@gmx.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 1/1 v2] imx6q-wandboard-revb1.dts: use unique machine name
+Date: Sat,  6 Feb 2016 13:06:59 +0100
+Message-ID: <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
+References: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454758226-4561-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Downstream packages like Debian flash-install use
+Downstream packages like Debian flash-kernel use
 /proc/device-tree/model
 to determine which dtb file to install.
 
@@ -32,7 +23,10 @@ as in imx6q-wandboard.dts.
 This patch provides a unique model identifier for revision B1 of
 the Wandboard Quad.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+v2:
+	correct name of referenced Debian package
+
+Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 ---
  arch/arm/boot/dts/imx6q-wandboard-revb1.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -52,3 +46,8 @@ index 20bf3c2..9207d80 100644
  	memory {
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
