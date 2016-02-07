@@ -1,27 +1,44 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 03/12] serial: mvebu-uart: initial support for
- Armada-3700 serial port
-Date: Sat, 6 Feb 2016 23:17:47 -0800
-Message-ID: <20160207071747.GA14010@kroah.com>
-References: <1454524889-9207-1-git-send-email-gregory.clement@free-electrons.com>
- <1454524889-9207-4-git-send-email-gregory.clement@free-electrons.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v8 2/4] kobject: export kset_find_obj() for module use
+Date: Sat, 6 Feb 2016 23:24:23 -0800
+Message-ID: <20160207072423.GC16215@kroah.com>
+References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
+ <1453990994-17801-3-git-send-email-somlo@cmu.edu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454524889-9207-4-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Wilson Ding <dingwei@marvell.com>
+In-Reply-To: <1453990994-17801-3-git-send-email-somlo-D+Gtc/HYRWM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 03, 2016 at 07:41:20PM +0100, Gregory CLEMENT wrote:
-> +static struct console mvebu_uart_console = {
-> +	.name	= "ttyS",
+On Thu, Jan 28, 2016 at 09:23:12AM -0500, Gabriel L. Somlo wrote:
+> From: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+> 
+> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+> ---
+>  lib/kobject.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/kobject.c b/lib/kobject.c
+> index 7cbccd2..90d1be6 100644
+> --- a/lib/kobject.c
+> +++ b/lib/kobject.c
+> @@ -861,6 +861,7 @@ struct kobject *kset_find_obj(struct kset *kset, const char *name)
+>  	spin_unlock(&kset->list_lock);
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL(kset_find_obj);
 
-You aren't ttyS, that's a reserved name for a different chip, please use
-a new name and major/minor numbers.
+EXPORT_SYMBOL_GPL() please here.  I'll edit it by hand if you don't want
+to resend the series.
 
-thanks,
+thanks.
 
 greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
