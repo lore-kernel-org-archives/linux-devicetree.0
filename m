@@ -1,44 +1,44 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V13 08/10] dma: qcom_hidma: read the channel id from HW
-Date: Sun, 7 Feb 2016 10:04:24 -0500
-Message-ID: <56B75CF8.9070709@codeaurora.org>
-References: <1454106914-15857-1-git-send-email-okaya@codeaurora.org>
- <1454106914-15857-9-git-send-email-okaya@codeaurora.org>
- <20160201153542.GA20396@leverpostej> <56B247A1.20503@codeaurora.org>
- <20160203183650.GI1234@leverpostej>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/1 v2] imx6q-wandboard-revb1.dts: use unique machine name
+Date: Sun, 7 Feb 2016 13:19:55 -0200
+Message-ID: <CAOMZO5CuCqWbZakc3POzPTYVOb_7zZ3VO807W+Q1M1fhtzUpYw@mail.gmail.com>
+References: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
+ <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160203183650.GI1234@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, George Joseph <george.joseph@fairview5.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Sat, Feb 6, 2016 at 10:06 AM, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> Downstream packages like Debian flash-kernel use
+> /proc/device-tree/model
+> to determine which dtb file to install.
+>
+> Hence each dts in the Linux kernel should provide a unique model identifier.
+>
+> https://lkml.org/lkml/2014/7/8/579 created the new file
+> imx6q-wandboard-revb1.dts but used the same model identifier
+> as in imx6q-wandboard.dts.
+>
+> This patch provides a unique model identifier for revision B1 of
+> the Wandboard Quad.
+>
+> v2:
+>         correct name of referenced Debian package
+>
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-On 2/3/2016 1:36 PM, Mark Rutland wrote:
-> Sorry, but it's going to be far easier to review with useless code
-> removed, so I will wait until the next posting where this patch is
-> folded in.
-
-V14 of the patch have been posted on the mail-list where this patch has
-been folder into the existing code. 
-
-https://lkml.org/lkml/2016/2/4/1086
-
-I have also captured the information you previously asked into the cover 
-letter as you asked.
-
-I'm looking forward to hear your other comments.
-Sinan
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
