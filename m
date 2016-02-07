@@ -1,243 +1,162 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Sun, 7 Feb 2016 01:27:29 +0300
-Message-ID: <56B67351.1030604@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v16 1/6] fpga: add bindings document for fpga region
+Date: Sat, 6 Feb 2016 19:16:16 -0600
+Message-ID: <alpine.DEB.2.10.1602060811160.2302@atull-730U3E-740U3E>
+References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com> <1454707803-27947-2-git-send-email-atull@opensource.altera.com> <20160205224446.GG9579@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454693676-20211-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160205224446.GG9579@jcartwri.amer.corp.natinst.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>
+Cc: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Moritz Fischer <moritz.fischer@ettus.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, 5 Feb 2016, Josh Cartwright wrote:
 
-    [Changed Felipe's address to the kernel.org one, so thta he can read this 
-too. :-)]
+> Hey Alan-
+> 
+> First off, thanks for all of your (and others') work on this.
+> 
+> On Fri, Feb 05, 2016 at 03:29:58PM -0600, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > New bindings document for FPGA Region to support programming
+> > FPGA's under Device Tree control
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+> [..]
+> > ---
+> >  .../devicetree/bindings/fpga/fpga-region.txt       |  348 ++++++++++++++++++++
+> >  1 file changed, 348 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+> > new file mode 100644
+> > index 0000000..ccd7127
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+> [..]
+> > +FPGA Manager & FPGA Manager Framework
+> > + * An FPGA Manager is a hardware block that programs an FPGA under the control
+> > +   of a host processor.
+> > + * The FPGA Manager Framework provides drivers and functions to program an
+> > +   FPGA.
+> > +
+> > +FPGA Bridge Framework
+> > + * Provides drivers and functions to control bridges that enable/disable
+> > +   data to the FPGA.
+> > + * FPGA Bridges should be disabled while the FPGA is being programmed to
+> > +   prevent spurious data on the bus.
+> > + * FPGA Bridges may not be needed in implementations where the FPGA Manager
+> > +   handles this.
+> 
+> It still seems strange for me architecturally for the FPGA Bridge to be
+> a first-class top-level concept in your architecture, as they are a
+> reflection of the SoC FPGA manager design.
 
-On 02/05/2016 08:34 PM, Petr Kulhavy wrote:
+It's not so strange if you keep in mind the intent: I want to support
+both partial and full reconfiguration.  Also I want this to work not
+just for Xilinx but also for Altera :) That makes it a top-level
+concept.
 
-> TI DA8xx MUSB driver equipped with DeviceTree support.
-> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+>  That is, I would expect the
+> bridges not to be associated with the FPGA Region, but with the FPGA
+> manager.
 
-    Have you notices "depends on BROKEN" in Kconfig, BTW? Felipe wants the PHY 
-specific parts moved to a PHY driver...
+Maybe for the one use case of full reconfiguation on Zynq.  More
+generally, FPGA Bridges may be hardened hardware devices or they may
+be soft hardware in the FPGA that allow some regions of the FGPA to be
+isolated from the cpu busses while other FPGA regions are active. The
+latter case is to support partial reconfiguration for devices that can
+support partial reconfiguration.  The partial reconfiguration region
+that is being programmed will need to be isolated from the bus during
+programming while the rest of the FPGA remains active.  That requires
+that the bridges for each partial reconfiguration region be specified
+per region.  Supporting both full and partial reconfiguration is a
+priority for me.  I'll have to review this document and see how I can
+make this more clear.
 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> ---
->   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
->   drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
->   include/linux/platform_data/usb-davinci.h          |   3 +-
->   3 files changed, 227 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> new file mode 100644
-> index 0000000..69c0961
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -0,0 +1,63 @@
-> +TI DA8xx MUSB
-> +~~~~~~~~~~~~~
-> +
-> +Required properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> + - compatible : Should be "ti,da8xx-musb"
+> 
+> Although, I will concede that you you've made it possible to not use
+> FPGA Bridges (like on Zynq where they aren't necessary), so maybe it
+> doesn't matter, just smells strangely.
 
-    No way. You'l probably need to select a lowest common denominator model. I 
-don't remember offhand but I don't think DA850 (AM1808) is different from 
-DA830 (AM170x)...
+Hmmm my patches are extra fragrent today...  
 
-> +
-> + - reg: offset and length of the usbss register sets
+> 
+> > +Freeze Blocks
+> > + * Freeze Blocks function as FPGA Bridges within the FPGA fabric.  In the case
+> > +   of PR, the buses from the processor are split within the FPGA.  Each PR
+> > +   region gets its own split of the buses, protected by an independently
+> > +   controlled Freeze Block.  Several busses may be connected to a single
+> > +   PR region; a Freeze Block controls the traffic of all these busses
+> > +   together.
+> > +
+> > +
+> [..]
+> > +Device Tree Examples
+> > +====================
+> > +
+> > +The intention of this section is to give some simple examples, focusing on
+> > +the placement of the elements detailed above, especially:
+> > + * FPGA Manager
+> > + * FPGA Bridges
+> > + * FPGA Region
+> > + * ranges
+> > + * target-path or target
+> > +
+> > +For the purposes of this section, I'm dividing the Device Tree into two parts,
+> > +each with its own requirements.  The two parts are:
+> > + * The live DT prior to the overlay being added
+> > + * The DT overlay
+> > +
+> > +The live Device Tree must contain an FPGA Region, an FPGA Manager, and any FPGA
+> > +Bridges.  The FPGA Region's "fpga-mgr" property specifies the manager by phandle
+> > +to handle programming the FPGA.  If the FPGA Region is the child of another FPGA
+> > +Region, the parent's FPGA Manager is used.  If FPGA Bridges need to be involved,
+> > +they are specified in the FPGA Region by the "fpga-bridges" property.  During
+> > +FPGA programming, the FPGA Region will disable the bridges that are in its
+> > +"fpga-bridges" list and will re-enable them after FPGA programming has
+> > +succeeded.
+> > +
+> > +The Device Tree Overlay will contain:
+> > + * "target-path" or "target"
+> > +   The insertion point where the the contents of the overlay will go into the
+> > +   live tree.  target-path is a full path, while target is a phandle.
+> > + * "ranges"
+> > + * "firmware-name"
+> > +   Specifies the name of the FPGA image file on the firmware search
+> > +   path.  The search path is described in the firmware class documentation.
+> > + * "partial-reconfig"
+> > +   This binding is a boolean and should be present if partial reconfiguration
+> > +   is to be done.
+> 
+> Another architectural smell: there are categorically two different types
+> of properties here.  The first kind is those properties which describe
+> _what_ IP exists within the FPGA image (all of the nodes under the regions, etc).
+> The second kind of properties are those which describe _how_ the image
+> should be written (partial-reconfig, firmware-name).
+> 
+> It seems weird, but maybe it doesn't matter much.
 
-    Sets?! How many?! (If more than one, you better have "reg-names" as well.)
+Reprogramming an FPGA will always involve 3 types of information:
+static information of the hardened hardware (FPGA Manager and hardware
+bridges), configuration information (FPGA image and whether to do
+partial or full reconfiguration), and post-configuration information
+(devices that will exist after programming).  That's going to be true
+whether we use the device tree or not.  My goal is to have a
+convenient way to reprogram the FPGA and populate the children.  So if
+the smell can be tolerated, it can perhaps be very sweet to have the
+convenience of having all this information together in a manageable
+fashion.  Let's see what the DT folks say.
 
-> +
-> + - interrupts: USB interrupt number
-> +
-> + - interrupt-names: should be set to "mc"
-> +
-> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
-> +
-> + - mentor,power : Specifies the maximum current in milli-ampers the controller can
-> +     supply in host mode. The maximum configurable value is 510mA.
-> +
-> + - mentor,num-eps : Valid only in host mode. Specifies the number of target endpoints
-> +     supported by the controller. For DA8xx it is "5".
+Anyway thanks for reviewing my stinky patches!  
 
-    That number should actually be deducible from the "compatible" prop. I'm 
-not sure it's a good idea to specify this in DT... although TI have done this 
-once already, for OMAPs...
+Alan
 
-> +
-> + - mentor,multipoint : Valid only in host mode. Enables addressing of USB hubs,
-> +     which is normally something you want and therefore should be set to "1".
-> +     If set to "0" only point-to-point communication is enabled, i.e. only a single
-> +     device can be attached.
-
-    Same here.
-
-> +
-> + - mentor,ram-bits : This 2-base logarithm value defines the RAM FIFO size of the controller.
-> +     The FIFO size is calculated in 32-bit words. E.g. if your controller has 4kiB of RAM FIFO
-> +     this value should be set to "10": 2^10 = 1024 words of 32-bits, i.e. 4096 bytes.
-> +     For the DA8xx controller this value should be set to 10.
-
-    And here.
-
-> +
-> +
-> +Optional properties:
-> +
-> + - ti,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
-> +     Supported values: "0" for external pin, "1" for internal PLL.
-
-    Boolean prop looks more promising in this case.
-
-> +
-> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
-> +     frequency in Hz in case the clock is generated by the internal PLL.
-> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
-
-    Ugh. At least these both are something board specific indeed...
-
-> +
-> +
-> +Example:
-> +
-> +	usb20: usb@1e00000 {
-> +		compatible = "ti,da8xx-musb";
-> +		ti,hwmods = "usb_otg_hs";
-
-    We need this on AM1808 too now?
-
-[...]
-> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-> index 4e13fe2..281d503 100644
-> --- a/drivers/usb/musb/da8xx.c
-> +++ b/drivers/usb/musb/da8xx.c
-[...]
-> @@ -134,6 +139,35 @@ static inline void phy_off(void)
->   	__raw_writel(cfgchip2, CFGCHIP2);
->   }
->
-> +/* converts PHY refclk frequency in HZ into USB0REF_FREQ config value
-
-    It's Hz, no?
-
-[...]
-> @@ -527,6 +561,35 @@ static const struct platform_device_info da8xx_dev_info = {
->   	.dma_mask	= DMA_BIT_MASK(32),
->   };
->
-> +static int get_musb_port_mode(struct device_node *np)
-> +{
-> +	enum usb_dr_mode mode;
-> +
-> +	mode = of_usb_get_dr_mode(np);
-> +	switch (mode) {
-> +	case USB_DR_MODE_HOST:
-> +		return MUSB_HOST;
-> +
-> +	case USB_DR_MODE_PERIPHERAL:
-> +		return MUSB_PERIPHERAL;
-> +
-> +	case USB_DR_MODE_OTG:
-> +		return MUSB_OTG;
-> +
-> +	default:
-> +		return MUSB_UNDEFINED;
-> +	}
-> +}
-
-    This is clearly MUSB generic code.
-
-[...]
-> @@ -560,6 +624,95 @@ static int da8xx_probe(struct platform_device *pdev)
->   	glue->dev			= &pdev->dev;
->   	glue->clk			= clk;
->
-> +	if (IS_ENABLED(CONFIG_OF) && np) {
-> +		struct musb_hdrc_config *config;
-> +		struct musb_hdrc_platform_data *data;
-> +		u32 phy20_refclock_freq, phy20_clkmux_cfg;
-[...]
-> +		pdata->mode = get_musb_port_mode(np);
-> +		config->num_eps = get_int_prop(np, "mentor,num-eps");
-> +		config->ram_bits = get_int_prop(np, "mentor,ram-bits");
-> +		/* the "mentor,power" value is in milli-amps, whereas
-> +		 * the mentor configuration is in 2mA units
-> +		 */
-> +		pdata->power = get_int_prop(np, "mentor,power") / 2;
-> +		config->multipoint = of_property_read_bool(np,
-> +			"mentor,multipoint");
-
-    These props are MUSB generic. Parsing them in each glue separately doesn't 
-make much sense...
-
-[...]
-> +		/* optional parameter reference clock frequency */
-> +		if (!of_property_read_u32(np, "ti,phy20-clkmux-cfg",
-> +			&phy20_clkmux_cfg)) {
-> +			u32 cfgchip2;
-> +
-> +			/*
-> +			 * Select internal reference clock for USB 2.0 PHY
-> +			 * and use it as a clock source for USB 1.1 PHY
-> +			 * (this is the default setting anyway).
-> +			 */
-> +
-> +			cfgchip2 = __raw_readl(
-> +				DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
-
-    That's why a PHY driver is needed. DA8XX_SYSCFG2_VIRT() shouldn't be used 
-outside arch/arm/mach-davinci/.
-
-> +		/* optional parameter reference clock frequency */
-> +		if (!of_property_read_u32(np, "ti,phy20-refclock-frequency",
-> +			&phy20_refclock_freq)) {
-> +			u32 cfgchip2;
-> +			int phy20_refclk_cfg;
-> +
-> +			phy20_refclk_cfg = phy_refclk_cfg(phy20_refclock_freq);
-> +			if (phy20_refclk_cfg < 0) {
-> +				dev_err(&pdev->dev,
-> +					"invalid PHY clock frequency %u Hz\n",
-> +					phy20_refclock_freq);
-> +				ret = -EINVAL;
-> +				goto err5;
-> +			}
-> +
-> +			/*
-> +			 * Set up USB clock/mode in the CFGCHIP2 register.
-> +			 */
-> +			cfgchip2 = __raw_readl(
-> +				DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
-> +
-> +			/* USB2.0 PHY reference clock is 24 MHz */
-
-    You've just read this freq. out of DT, why this comment?
-
-> +			cfgchip2 &= ~CFGCHIP2_REFFREQ;
-> +			cfgchip2 |=  phy20_refclk_cfg;
-> +
-> +			__raw_writel(cfgchip2,
-> +				     DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
-> +		}
-> +	}
-> +
->   	pdata->platform_ops		= &da8xx_ops;
->
->   	glue->phy = usb_phy_generic_register();
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+>   Josh
+> 
