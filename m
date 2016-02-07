@@ -1,86 +1,229 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH v2 3/4] ARM: LG Optimus Black (P970) codename sniper
- support, with basic features
-Date: Sun, 07 Feb 2016 16:23:51 +0100
-Message-ID: <1454858631.2547.7.camel@aldrin>
-References: <1454697741-8687-1-git-send-email-contact@paulk.fr>
-	 <1454697741-8687-4-git-send-email-contact@paulk.fr>
-	 <1454701140.2623.12.camel@collins>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt: reset: Add syscon reset binding
+Date: Sun, 7 Feb 2016 10:39:56 -0600
+Message-ID: <56B7735C.6080406@ti.com>
+References: <1453748564-6429-1-git-send-email-afd@ti.com>
+ <1453748564-6429-2-git-send-email-afd@ti.com>
+ <1454431489.5358.62.camel@pengutronix.de> <56B102B4.1010000@ti.com>
+ <1454600979.3356.68.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-orC9SjzuTY+QQEEaffKH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454701140.2623.12.camel@collins>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Milo Kim <milo.kim@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454600979.3356.68.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/04/2016 09:49 AM, Philipp Zabel wrote:
+> Hi Andrew,
+>
+> Am Dienstag, den 02.02.2016, 13:25 -0600 schrieb Andrew F. Davis:
+> [...]
+>>> sti also chose a single address cell and a logical number to enumerate
+>>> the resets and to store the actual reset control and status bit position
+>>> in a table in the driver. Is there a reason not to follow the same
+>>> approach for ti?
+>>
+>> The number of reset-able modules is rather large, and we would have to
+>> have an entry for them, and then a table of them for each chip, I
+>> would like to avoid this as it may become unmaintainable with the number
+>> of devices we would like to support.
+>
+> Maybe I underestimate the amount of work necessary to translate the
+> register bit positions from the reference manuals into tables in a
+> driver (after all the imx-src driver that started this framework only
+> has 5 reset controls registered with it), but to me this doesn't sound
+> like a very strong argument.
+>
 
---=-orC9SjzuTY+QQEEaffKH
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+You're right it's not a pain for a single device, in fact I think
+we only need 2 or 3 resets currently for any given device, I was more
+concerned about the number of different devices leading to hard to
+maintain sets of tables. But I concede this isn't the best argument,
+I'd just like as little chip layout specific information in the driver
+as possible.
 
-Hi,
+>> We currently only need to reset one module this way currently anyway, we
+>> will be moving away from toggling bits from the host side to perform resets,
+>> but rather ask a power management controller to perform the reset for us
+>> (I also have a reset driver that communicates with this controller that I
+>> will post when the rest of the needed framework is upstreamed). So, for TI,
+>> this syscon based driver will probably mostly be used for compatibility with
+>> older SoCs that do not support the management controller, allowing new device
+>> drivers to use the reset framework and still function with older SoCs.
+>
+> So this will only be used for a few legacy devices? I'd probably be less
+> hesitant if you proposed this as some ti chip specific binding, as right
+> now I just don't expect that many other devices to use this supposedly
+> generic binding.
+>
 
-Le vendredi 05 f=C3=A9vrier 2016 =C3=A0 20:39 +0100, Paul Kocialkowski a =
-=C3=A9crit :
-> Le vendredi 05 f=C3=A9vrier 2016 =C3=A0 19:42 +0100, Paul Kocialkowski a =
-=C3=A9crit :
-> > The LG Optimus Black (P970) codename sniper is a smartphone that was de=
-signed
-> > and manufactured by LG Electronics (LGE) and released back in 2011.
-> > It is using an OMAP3630 SoC, GP version.
-> >=20
-> > This adds devicetree support for the device, with only a few basic feat=
-ures
-> > supported, such as debug uart, i2c, internal emmc and external mmc.
+I'll probably do that as a last resort if we cant get something more
+useful from this driver.
 
-[snip}
+>>> This approach of specifying bits in the device tree at
+>>> the consumer side doesn't allow any error handling in the driver to
+>>> determine if the bits are in fact valid.
+>>
+>> Yes, that is lost by not having a table of all valid resets, but this would
+>> be like many DT driver/node that allow registers/addresses to be specified
+>> and then write/read from those.
+>
+> True. Still, I'd argue that having a list of registers and bit-shifts in
+> a single place (whether that is in the driver or in the reset controller
+> node), that can be easily checked against a manual. On the other hand
+> sprinkling these values around the device tree at the consumer sites
+> makes this much harder to review.
+>
 
-> > +&mmc2 {
-> > +
->=20
-> Please discard this newline in case v2 gets merged.
+Hmmm, I wouldn't be opposed to that, it's suggested a couple times below,
+so I might see if that works well. I've worked out a little example,
+so before I implement these changes, would something like this be more
+acceptable?:
 
-All things considered, I'd rather not have this patch merged as-is, but
-wait for the next version.
+(child node of syscon node)
+reset: reset {
+	compatible = "syscon-reset";
+	#reset-cells = <1>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+		
+	dsp@0 {
+		reg = <0>;
+		control = <0xa44 8 RESET_ASSERT_SET>;
+	};
 
-I'll wait for feedback before sending v3.
+	imu@1 {
+		reg = <1>;
+		control = <0xa46 7 RESET_ASSERT_SET>;
+		status = <0x844 7 RESET_ASSERT_CLEAR>;
+		toggle-only;
+	};
+};
 
---=20
-Paul Kocialkowski, Replicant developer
+then consumers could just
 
-Replicant is a fully free Android distribution running on several
-devices, a free software mobile operating system putting the emphasis on
-freedom and privacy/security.
+resets = <&reset 0>, <&reset 1>;
+resest-names = "dsp", "imu";
 
-Website: https://www.replicant.us/
-Blog: https://blog.replicant.us/
-Wiki/tracker/forums: https://redmine.replicant.us/
+like normal.
 
+> [...]
+>>>> +Required properties:
+>>>> +--------------------
+>>>> + - compatible	: Should be "syscon-reset"
+>>>
+>>> What if later an erratum turns up and something special needs to be done
+>>> (delays, special care about other bits in the same register, etc.)?
+>>> This should always contain a soc specific compatible.
+>>
+>> In this case a specific reset driver would be needed for that device, this
+>> driver only intends to cover the more traditional base cases.
+>
+> And for that to work in a backwards compatible way, you need to have the
+> SoC specific compatible value already in the device tree.
+>
 
---=-orC9SjzuTY+QQEEaffKH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Then it can be added, "syscon-reset" would just be the generic fall-back when
+no other more specific driver matches. This is already the case though, or are
+you saying you would like the example DT to contain one?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> [...]
+>>> This is a binding for single reset bits that are spread throughout the
+>>> register space. For any syscon that has a few registers of contiguous
+>>> resets this is rather suboptimal.
+>>
+>> Yes, this is only intended for when a few resets need controlling out of
+>> a large reset space without having to directly encode the reset information
+>> into the device driver for that hardware module.
+>
+> How about if we came up with a way to encode the bit fields in the reset
+> controller node?
+>
 
-iQIcBAABAgAGBQJWt2GHAAoJEIT9weqP7pUMdWAP/17uFA/yrclKe9LAGFUrGCLm
-C4ddc9/EJI3RG8nVZml787vuv+TjOVv/Rz/sJft3AjMkEuSJkRSOUARm0g93yN/m
-jwiMqcHt0FN9iPl8ZYAqTa3epdrcgdrEL8AOtzqm1h4e/hJ0B2vDzht8AXDCNq0A
-5uG7uqwv0Twp2z7XUOqYIw4gAHzgyNEWQ83W5FO3qVgjmyG8ZkmlLsMTbVA5EkVH
-05y0EGFXxliaS0yBkoP300xqlZZfEujaJYptqdG0u+Xlvb5Bx7Pkod6YgQy0wV5L
-YJXc9pF3FK6dQkRAqJ7ow+xdgPBsbdrhua0K/78PnfYlRzV7QyEHb2HnU2Pql93f
-PztSRa//QiCv9EVz+1TOJL5wcOQvyvKBflglrqwYKla4m8kN+tlnlvKFYCLGke5i
-LmTDJ/VXyO9/SQ5+tO13qkPuPs1cYm0BVXCiZIDuJ9/OaS2rr1t1de1LXOWkQ+6H
-RX6Fl6W8vsYhBKTYphfHniq3fOspBgrlxODsSlg7H8oxiScgpAp5GsTbyn40yTQ0
-FgAyl3scV1Ez/H4luOTWd2vz+QT38+1jWMQsVmGhTHS18b5286rc5lbEN7EMaKAl
-7tCsojrd2QhbPITreW4/XAc5M3faWRB1egy0CUZ3uaR0oKFy/EfjP5t+jkvT0U7o
-AmnuHG7i0qdGSCnA3fMt
-=o1ga
------END PGP SIGNATURE-----
+Above.
 
---=-orC9SjzuTY+QQEEaffKH--
+> [...]
+>>> The polarity should have some RESET_ACTIVE_HIGH/LOW #define. Using
+>>> numbers in the gpio phandle bindings in the beginning has caused a lot
+>>> of problems over time.
+>>
+>> That works, I'll add these. Something like RESET_ASSERT_{SET,CLEAR} work?
+>
+> Yes, this is better.
+>
+>>> Do you really have varying polarity across the resets?
+>>
+>> Not on the part I'm using, but this should keep things generic.
+>
+> We already established that this binding is not generic enough for most
+> of the current cases, so I'm not convinced it is valuable to complicate
+> it for some theoretical case.
+>
+>> The alternative would be to set the polarity per reset controller node, then
+>> if a system has both it could have two controllers and the consumers would
+>> have a phandle to the correct one, then all consumers would only need 4
+>> instead of 6 args. Actually now that I think about it, this is probably the
+>> way to go as most systems I would imagine only have one polarity and it still
+>> can work for systems that do have both. I think I'll make this change.
+>
+> How about going one more step and also moving the register and bit-shift
+> description into a property of the reset controller node?
+>
+
+Above.
+
+>>>> +		dsp0: dsp0 {
+>>>> +			...
+>>>> +			resets = <&pscrst 0xa3c 8 0 0x83c 8 0>;
+>>>
+>>> This sounds a bit error prone and rather verbose for all controllers
+>>> that don't have control and status bits peppered randomly around the
+>>> register space.
+>>
+>> I was also thinking about adding the ability to have only one set of args
+>> for control, then we just return ENOTSUPP when asked for status when only
+>> the control register is provided.
+>
+> Yes, that should work.
+>
+>> With the above polarity change, we end up allowing:
+>>
+>> resets = <&pscrst 0xa3c 8>;
+>
+> Would this be a reset controller with no control bit, but just a trigger
+> that is triggered when the bit is set? (or cleared?).
+>
+
+Should be addressed by above binding change.
+
+>> when appropriate. This would cover many common use-cases and keep the
+>> framework clean for unique case drivers when needed. It would eliminate
+>> the need for many reset-berlin like drivers that only differentiate
+>> themselves in trivial ways, like offsets/polarity, etc..
+>
+> That's not a good example. reset-berlin needs a bit to be set to trigger
+> the reset pulse, and doesn't have support for manual assert/deassert.
+> Also according to the driver it doesn't signal reset status, so there is
+> a fixed delay needed.
+> Honestly, I expect most drivers in the near future to fall into two
+> categories: either they need special attention, or they are not a good
+> fit for this binding because all the resets are (at least mostly)
+> contiguous.
+>
+
+I'm thinking the same, but at least for the devices I'm working with,
+this could still be a useful thing to have.
+
+Thanks,
+Andrew
+
+> regards
+> Philipp
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
