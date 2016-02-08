@@ -1,59 +1,55 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: [PATCH V2 06/12] dtb: amd: Misc changes for SATA device tree nodes
-Date: Mon, 8 Feb 2016 11:59:11 -0600
-Message-ID: <1454954357-8395-7-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V2 01/12] MAINTAINERS: Adding Maintainers for AMD Seattle
+ Device Tree
+Date: Mon, 8 Feb 2016 11:59:06 -0600
+Message-ID: <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org, arm@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Add new SATA1 device node, and fix the register range size of SATA0.
+Adding maintainers for AMD Seattle device tree.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 4be36fd..9f59381 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -66,12 +66,22 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7f1fa4f..e349a32 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -673,6 +673,13 @@ F:	drivers/gpu/drm/radeon/radeon_kfd.c
+ F:	drivers/gpu/drm/radeon/radeon_kfd.h
+ F:	include/uapi/linux/kfd_ioctl.h
  
- 		sata0: sata@e0300000 {
- 			compatible = "snps,dwc-ahci";
--			reg = <0 0xe0300000 0 0x800>;
-+			reg = <0 0xe0300000 0 0xf0000>;
- 			interrupts = <0 355 4>;
- 			clocks = <&sataclk_333mhz>;
- 			dma-coherent;
- 		};
- 
-+		/* This is for Rev B only */
-+		sata1: sata@e0d00000 {
-+			status = "disabled";
-+			compatible = "snps,dwc-ahci";
-+			reg = <0 0xe0d00000 0 0xf0000>;
-+			interrupts = <0 354 4>;
-+			clocks = <&sataclk_333mhz>;
-+			dma-coherent;
-+		};
++AMD SEATTLE DEVICE TREE SUPPORT
++M:	Brijesh Singh <brijeshkumar.singh@amd.com>
++M:	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
++M:	Tom Lendacky <thomas.lendacky@amd.com>
++S:	Supported
++F:	arch/arm64/boot/dts/amd/
 +
- 		i2c0: i2c@e1000000 {
- 			status = "disabled";
- 			compatible = "snps,designware-i2c";
+ AMD XGBE DRIVER
+ M:	Tom Lendacky <thomas.lendacky@amd.com>
+ L:	netdev@vger.kernel.org
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
