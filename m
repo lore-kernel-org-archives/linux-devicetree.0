@@ -1,141 +1,100 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 12:48:40 +0100
-Message-ID: <56B88098.1070309@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] ASoC: bcm2835: move to use the clock framework
+Date: Mon, 8 Feb 2016 13:08:00 +0100
+Message-ID: <56B88520.5060606@martin.sperl.org>
+References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org>
+ <1452602149-5875-2-git-send-email-kernel@martin.sperl.org>
+ <87vb6dfjbu.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B87A07.1060103-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87vb6dfjbu.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei,
 
 
-On 08.02.2016 12:20, Sergei Shtylyov wrote:
->    And the patch is against 3.17? You should only submit patches 
-> against the recent kernel. In this case, against the -next branch of 
-> Felipe's repo on kernel.org.
+On 28.01.2016 23:08, Eric Anholt wrote:
+> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
 >
-
-Could you give me the full branch name please.
-
->
->> I was wondering about a PHY driver too. However the AM1808 has no 
->> standalone
->> PHY module like e.g. the AM335x does.  The PHY together with the USB 
->> core are
->> integrated into a single block and there is only a little control 
->> through the
->> SYSCFG registers.
->
->    The CFGCHIP2 register controls the PHY in practice. The code 
-> manipulating it should be moved to a PHY driver.
->
-I'm not sure if I can do that at the moment. Would you accept the patch 
-using the current situation, i.e. the CFGCHIP2 being manipulated in the 
-da8xx.c?
->>>
->>>    No way. You'l probably need to select a lowest common denominator 
->>> model.
->>> I don't remember offhand but I don't think DA850 (AM1808) is 
->>> different from
->>> DA830 (AM170x)...
->
->    So I'd suggest "ti,da830-musb".
-
-Thanks. I've just checked the da830 doc and I don't see any difference 
-in the USB register sets. So I will update the name as you suggest.
-
->> All the other MUSBs specify these parameters in the DT. Do you want 
->> to make an
->> exception?
->
->    I'd prefer doing it that way, sure.
-
-OK. So I will move the num_eps and ram_bits into the "compatible" 
-structure.
-And leave the mode, power and multipoint still configurable via DT as 
-they depend on the hardware wiring.
-I believe someone still might want to set multipoint to 0 if he has a 
-single device (not a hub) hard-connected directly to the controller. 
-Even if I don't see a benefit of doing so.
-
-Why does this parameter exist at all?
-
-[...]
->>> [...]
->>>> @@ -527,6 +561,35 @@ static const struct platform_device_info
->>>> da8xx_dev_info = {
->>>>       .dma_mask    = DMA_BIT_MASK(32),
->>>>   };
->>>>
->>>> +static int get_musb_port_mode(struct device_node *np)
->>>> +{
->>>> +    enum usb_dr_mode mode;
->>>> +
->>>> +    mode = of_usb_get_dr_mode(np);
->>>> +    switch (mode) {
->>>> +    case USB_DR_MODE_HOST:
->>>> +        return MUSB_HOST;
->>>> +
->>>> +    case USB_DR_MODE_PERIPHERAL:
->>>> +        return MUSB_PERIPHERAL;
->>>> +
->>>> +    case USB_DR_MODE_OTG:
->>>> +        return MUSB_OTG;
->>>> +
->>>> +    default:
->>>> +        return MUSB_UNDEFINED;
->>>> +    }
->>>> +}
->>>
->>>    This is clearly MUSB generic code.
+>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 >>
->> So what does it mean?
+>> Since the move to the new clock framework with commit 94cb7f76caa0
+>> ("ARM: bcm2835: Switch to using the new clock driver support.")
+>> this driver was no longer functional as it was manipulating the
+>> clock registers locally without going true the framework.
+>>
+>> This patch moves to use the new clock framework and also
+>> moves away from the hardcoded address offsets for DMA getting
+>> the dma-address directly from the device tree.
+>>
+>> Note that the optimal bclk_ratio selection to avoid jitter
+>> due to the use of fractional dividers, which is in the
+>> current version has been removed, because not all devices
+>> support these non power of 2 sized transfers, which resulted
+>> in lots of (downstream) modules that use:
+>>    snd_soc_dai_set_bclk_ratio(cpu_dai, sample_bits * 2);
+>>
+>> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>> ---
+>>   sound/soc/bcm/bcm2835-i2s.c |  284 ++++++++++---------------------------------
+>>   1 file changed, 64 insertions(+), 220 deletions(-)
+>>
+>> diff --git a/sound/soc/bcm/bcm2835-i2s.c b/sound/soc/bcm/bcm2835-i2s.c
+>> index 3303d5f..1c1f221 100644
+>> --- a/sound/soc/bcm/bcm2835-i2s.c
+>> +++ b/sound/soc/bcm/bcm2835-i2s.c
 >
->    Define this function in musb_core.c.
+>> -	dev->i2s_regmap = regmap[0];
+>> -	dev->clk_regmap = regmap[1];
+>> +	/* get the clock */
+>> +	dev->clk_prepared = false;
+>> +	dev->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(dev->clk)) {
+>> +		dev_err(&pdev->dev, "could not get clk: %ld\n",
+>> +			PTR_ERR(dev->clk));
+>> +		return PTR_ERR(dev->clk);
+>> +	}
+>> +
+>> +	/* Request ioarea */
+>> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	base = devm_ioremap_resource(&pdev->dev, mem);
+>> +	if (IS_ERR(base))
+>> +		return PTR_ERR(base);
+>> +
+>> +	dev->i2s_regmap = devm_regmap_init_mmio(&pdev->dev, base,
+>> +				&bcm2835_regmap_config);
+>> +	if (IS_ERR(dev->i2s_regmap))
+>> +		return PTR_ERR(dev->i2s_regmap);
+>> +
+>> +	/* Set the DMA address - we have to parse DT ourselves */
+>> +	addr = of_get_address(pdev->dev.of_node, 0, NULL, NULL);
+>> +	if (!addr) {
+>> +		dev_err(&pdev->dev, "could not get DMA-register address\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	dma_base = be32_to_cpup(addr);
 >
-I will do. Why doesn't the musb core use directly the USB_DR_MODE_xxx 
-literals instead?
-I don't see any benefit of defining them again and translating.
+> Why aren't we just using mem->start like before?  That seems like an
+> independent change that should be justified on its own.  I'd be ready to
+> ack the patch if that change is removed.
 >
->>>
->>> [...]
->>>> +        /* optional parameter reference clock frequency */
->>>> +        if (!of_property_read_u32(np, "ti,phy20-clkmux-cfg",
->>>> +            &phy20_clkmux_cfg)) {
->>>> +            u32 cfgchip2;
->>>> +
->>>> +            /*
->>>> +             * Select internal reference clock for USB 2.0 PHY
->>>> +             * and use it as a clock source for USB 1.1 PHY
->>>> +             * (this is the default setting anyway).
->>>> +             */
->>>> +
->>>> +            cfgchip2 = __raw_readl(
->>>> +                DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
->>>
->>>    That's why a PHY driver is needed. DA8XX_SYSCFG2_VIRT() shouldn't 
->>> be used
->>> outside arch/arm/mach-davinci/.
->>>
->> See above.
->
->    Why are you not using CFGCHIP2 macro in this file as the rest of 
-> the code does?
 
-I've just noticed that too. I will use the CFGCHIP2 macro.
+Problem is that we need the VC4 bus-address (0x7e203000),
+which is the actual <reg> value from the device tree without any
+mapping.
 
-Regards
-Petr
+Not the ARM MMU visible address mappings that mem->start provides
+(typically 0x20203000 or 0x3f203000 for bcm2836)
+
+Nor the mapped address (base) available in the kernel (typically
+0xdc......).
+
+This is the only way to get it correctly and has been done the same way
+with spi-bcm2835.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
