@@ -1,52 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] mwifiex: parse host wakeup configuration from device tree
-Date: Mon, 08 Feb 2016 13:12:31 +0100
-Message-ID: <2675319.xbIeWCdnho@wuerfel>
-References: <1454926528-17480-1-git-send-email-akarwar@marvell.com> <1454926528-17480-3-git-send-email-akarwar@marvell.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V4 2/7] clk: bcm2835: clamp clock divider to highest
+ integer only
+Date: Mon, 8 Feb 2016 13:20:12 +0100
+Message-ID: <56B887FC.5070001@martin.sperl.org>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
+ <1452867667-2447-3-git-send-email-kernel@martin.sperl.org>
+ <87k2mo3tnm.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454926528-17480-3-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <87k2mo3tnm.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 February 2016 02:15:28 Amitkumar Karwar wrote:
-> @@ -30,6 +84,44 @@ static int mwifiex_plt_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int mwifiex_plt_suspend(struct device *dev)
-> +{
-> +	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
-> +	int ret;
-> +
-...
-> +static const struct dev_pm_ops mwifiex_plt_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(mwifiex_plt_suspend, mwifiex_plt_resume)
-> +};
-> +#endif /* CONFIG_PM_SLEEP */
-> +
->  static const struct of_device_id mwifiex_dt_match[] = {
->  	{
->  		.compatible = "marvell,mwifiex",
-> @@ -45,6 +137,9 @@ static struct platform_driver mwifiex_platform_driver = {
->  	.driver = {
->  		.name	= "mwifiex_plt",
->  		.of_match_table = mwifiex_dt_match,
-> +#ifdef CONFIG_PM_SLEEP
-> +		.pm             = &mwifiex_plt_pm_ops,
-> +#endif
->  	}
->  };
 
-Just remove the #ifdef here, and mark the functions as __maybe_unused.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02.02.2016 00:19, Eric Anholt wrote:
+> kernel@martin.sperl.org writes:
+>
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>>
+>> The clock divider calculation right now clamps the
+>> divider to the highest possible fractional divider.
+>> So typically (BIT(div_int_bits) - 1) + 4095 / 4096.
+>>
+>> As the fractional clock divider is alterating between
+>> (Fosc / div_int) and (Fosc / (div_int + 1))
+>> the divider will overflow for the (div_int + 1) case.
+>> As with the "underflow" case we have seen for (div < 2),
+>> we can assume that the same applies on the upper limit
+>> as well.
+>>
+>> So this patch will instead clamp to the divider to the
+>> max of (BIT(div_int_bits) - 1)
+>
+> Looks like this restriction might be necessary, though it's not quite
+> spelled out in the docs.
+>
+> This also needs to be conditional on it being a MASH clock, and the
+> limit on the divider changes in the same way based on the mash number as
+> for the minimum.
+>
+See:
+[PATCH V4 7/7] clk: bcm2835: apply limits on dividers to MASH mode.
+That "downgrades" to lower mash values in case we are out of range.
+Also note that it applies to MASH=1 as well.
+
+If the other (non mash-supported) clocks support this "better" (if it 
+works), then we can make that change only apply to mash enabled clocks.
+But so far I doubt it works correctly so I have applied those limits to
+all clocks.
