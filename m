@@ -1,76 +1,97 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH 2/6] Documentation: bindings: document the Alpine MSIX
- driver
-Date: Mon, 8 Feb 2016 16:05:01 +0100
-Message-ID: <20160208150501.GA19758@kwain>
-References: <1454922971-17405-1-git-send-email-antoine.tenart@free-electrons.com>
- <1454922971-17405-3-git-send-email-antoine.tenart@free-electrons.com>
- <56B8AC7D.8060102@arm.com>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
+Date: Mon, 8 Feb 2016 15:17:11 +0000
+Message-ID: <56B8B177.2050000@synopsys.com>
+References: <cover.1454498292.git.jpinto@synopsys.com>
+ <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
+ <2087303.0ORDEBS3hn@wuerfel> <56B222C8.5010509@synopsys.com>
+ <20160204162700.GD17587@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B8AC7D.8060102@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, tglx@linutronix.de, jason@lakedaemon.net, tsahee@annapurnalabs.com, rshitrit@annapurnalabs.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160204162700.GD17587@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, santosh.sy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, h.vinayak-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark and Arnd,
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am planning the v2 of this patch set. I have a doubt in the version
+compatibility strings... The core driver must support the UFS 2.0 controller and
+this patch set includes a patch that adds 2.0 capabilities to it. The core
+driver can get from the controller's version and with that use or not a specific
+2.0 feature.
 
-On Mon, Feb 08, 2016 at 02:55:57PM +0000, Marc Zyngier wrote:
-> On 08/02/16 09:16, Antoine Tenart wrote:
-> > +
-> > +Example:
-> > +
-> > +msix: msix {
-> > +	compatible =3D "al,alpine-msix";
-> > +	reg =3D <0x0 0xfbe00000 0x0 0x100000>;
-> > +	interrupt-controller;
-> > +	msi-controller;
-> > +	al,msi-base-spi =3D <160>;
-> > +	al,msi-num-spis =3D <160>;
-> > +};
-> >=20
->=20
-> This example seems to rely on an implicit interrupt-parent. You probably
-> want to update the example to clarify it.
+What would be the real added-value of having a compatibility string like
+"snps,ufshcd-1.1" and "snps,ufshcd-2.0" if the driver can perform as 2.0 if it
+detects a 2.0 controller? Are you saying that a user that puts "snps,ufshcd-1.1"
+in the DT compatibility string disables the UFS 2.0 in the core driver despite
+the controller is 2.0? Please clarify.
 
-Right. I'll add the interrupt-parent property in the required properties
-and in the example msix node.
+Thanks,
+Joao
 
-Antoine
+On 2/4/2016 4:27 PM, Mark Rutland wrote:
+> On Wed, Feb 03, 2016 at 03:54:48PM +0000, Joao Pinto wrote:
+>> Hi,
+>>
+>> On 2/3/2016 3:39 PM, Arnd Bergmann wrote:
+>>> On Wednesday 03 February 2016 15:01:34 Joao Pinto wrote:
+>>>>
+>>>> Hi Arnd,
+>>>>
+>>>> On 2/3/2016 12:54 PM, Arnd Bergmann wrote:
+>>>>> On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
+>>>>>>
+>>>>>> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> This needs a changelog comment, like every patch.
+>>>>>
+>>>>>> @@ -0,0 +1,16 @@
+>>>>>> +* Universal Flash Storage (UFS) DesignWare Host Controller
+>>>>>> +
+>>>>>> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
+>>>>>> +Each UFS controller instance should have its own node.
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible        : compatible list, contains "snps,ufshcd"
+>>>>>
+>>>>> Are there multiple versions of this controller? Usually for designware
+>>>>> parts the version is known, so we should document which versions exist
+>>>>
+>>>> This controller recent releases was 2.0, but we released last year 1.1. The
+>>>> driver works with both. The driver must work with all DWC UFS versions.
+>>>
+>>> Ok, then make the driver match on the "snps,ufshcd-1.1" compatible
+>>> string, but document both strings in the binding document, and make
+>>> it mandatory to specify the 1.1 version as a compatible fallback.
+>>>
+>>> If we ever need to handle a quirk for the 2.0 version then, it can
+>>> easily be done.
+>>
+>> We need the driver to support UFS 2.0 because it is our latest release and is
+>> the done that Synopsys is focused now. We could call it "snps, ufshcd-2.0" then.
+>> What do you think?
+> 
+> Arnd's point was that the driver can handle only "snps,ufshcd-1.1" for
+> now, and in your DT you can have:
+> 
+> 	compatible = "snps,ufshcd-2.0", "snps,ufshcd-1.1";
+> 
+> That allows driver to handle 2.0 and 1.1 without knowing anything about
+> 2.0 for now. If in future the two need to be handled differently we can
+> update the driver to explicitly match "snps,ufshcd-2.0".
+> 
+> Regardless, both compatible string should go in the documentation, and
+> it should be explicitly mentioned that "snps,ufshcd-1.1" should be used
+> as a fallback entry.
+> 
+> Mark.
+> 
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWuK6cAAoJEFxNi8it27zYyJEP/AkzqvKDMWi+hjLsrbN9Rwap
-HwfM4nBucwvc9928yUX+DUBUqbcUxIxw2Ton+8envsIo3kqqE9QE2dlgq9ElSWwi
-g8JzAo4DFJCU128+zQOpVrSIP8F3GGKRDj0WRQNQvvByQQHz5hFf9cIhsZ46MV1N
-Vh6TpMd66thtupQFOuHv59knWccN+lxW6IvooDCPHNkhhKUB0QtDReOuFzghJeHC
-nNV6tb35MoCYjLLKKL1yLN4U4UATyZz7EH1PcUxGcC9C1I1lyOfSrTgrJe76h2PZ
-mUx7XKJxKr0qS3sfnE3cCOZOmNm/GpW4fNR2r/oFLUFAqJOh62T78E3LrJPIrRfx
-cHqJKM8yKcywmFfnrtlMDL0lryKOOnjtiQzevVvqXAywVawkYTwG48K8FncQtZhO
-hmcFC9IEGVFG7oXcK+3wesEcIIqariFcJi5GqhiNa1+yVFiyoecOHejtbVM/t1AZ
-hXu7g05ear0jDhKfvVDGpePu+6zhlLea7/C0oZsS/t6oihANDlGV5mGQFDMOmdul
-ZFwL9dbm8Dv0StoSEUQK4owjYBvoFoogtOi3vcls6/Qhgxhs2iCHmd7tm623Iiss
-mlq8t9CEUWcYnnWJeKU4T2YPOetgTeKJUSCu+XFTx7WSk4RaonhTjZ78vzWzKsj0
-blF08auT2EPmJ0zi6Duo
-=nKnM
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
