@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 08/10] ARM64: dts: rockchip: Add tsadc for GeekBox
-Date: Mon,  8 Feb 2016 03:17:37 +0100
-Message-ID: <1454897859-7601-9-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 06/10] ARM64: dts: rockchip: Add IR receiver to GeekBox
+Date: Mon,  8 Feb 2016 03:17:35 +0100
+Message-ID: <1454897859-7601-7-git-send-email-afaerber@suse.de>
 References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -18,27 +18,41 @@ Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
  v2: New
 =20
- arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/arm=
 64/boot/dts/rockchip/rk3368-geekbox.dts
-index fe5aa785cfda..7e518768f8b0 100644
+index e4523a74050f..e84383fd6f10 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-@@ -298,6 +298,12 @@
+@@ -63,6 +63,13 @@
+ 		#clock-cells =3D <0>;
  	};
+=20
++	ir: ir-receiver {
++		compatible =3D "gpio-ir-receiver";
++		gpios =3D <&gpio3 30 GPIO_ACTIVE_LOW>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&ir_int>;
++	};
++
+ 	leds: gpio-leds {
+ 		compatible =3D "gpio-leds";
+=20
+@@ -252,6 +259,12 @@
  };
 =20
-+&tsadc {
-+	status =3D "okay";
-+	rockchip,hw-tshut-mode =3D <0>; /* CRU */
-+	rockchip,hw-tshut-polarity =3D <0>; /* low */
-+};
+ &pinctrl {
++	ir {
++		ir_int: ir-int {
++			rockchip,pins =3D <3 30 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
 +
- &uart2 {
- 	status =3D "okay";
- };
+ 	pmic {
+ 		pmic_sleep: pmic-sleep {
+ 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
 --=20
 2.6.2
 
