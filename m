@@ -1,81 +1,51 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
-Date: Mon, 8 Feb 2016 09:24:39 -0500
-Message-ID: <56B8A527.7010206@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <20160208101432.GA1150@cbox>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/11] ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
+Date: Mon, 8 Feb 2016 14:53:47 +0000
+Message-ID: <20160208145347.GD7265@sirena.org.uk>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-8-git-send-email-wens@csie.org>
+ <20160202121733.GO4455@sirena.org.uk>
+ <CAGb2v657zYT30KbuK0fyVOmhv0kzJjj9gTsTFRaS4i3d6YhiHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160208101432.GA1150@cbox>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Christoffer Dall <christoffer.dall@linaro.org>
-Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, vikrams@codeaurora.org, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@codeaurora.org, shankerd@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="g7w8+K/95kPelPD2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v657zYT30KbuK0fyVOmhv0kzJjj9gTsTFRaS4i3d6YhiHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2/8/2016 5:14 AM, Christoffer Dall wrote:
-> Hi Sinan,
-> 
-> On Thu, Feb 04, 2016 at 11:34:31PM -0500, Sinan Kaya wrote:
->> The Qualcomm Technologies HIDMA device has been designed
->> to support virtualization technology. The driver has been
->> divided into two to follow the hardware design.
->>
->> 1. HIDMA Management driver
->> 2. HIDMA Channel driver
->>
->> Each HIDMA HW consists of multiple channels. These channels
->> share some set of common parameters. These parameters are
->> initialized by the management driver during power up.
->> Same management driver is used for monitoring the execution
->> of the channels. Management driver can change the performance
->> behavior dynamically such as bandwidth allocation and
->> prioritization in the future.
->>
->> The management driver is executed in host context and
->> is the main management entity for all channels provided by
->> the device.
-> 
-> I'm not at all familiar with this kind of hardware.
-> 
+--g7w8+K/95kPelPD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Let me help. 
+On Sat, Feb 06, 2016 at 08:42:24PM +0800, Chen-Yu Tsai wrote:
 
-> Once an entity (userspace or VM) has a HIDAM channel assigned via VFIO,
-> how does it use it?  
+> Mark, may I assume you are OK with this DTS include listing
+> the regulators, even if their sections are empty?
 
-HIDMA is a HW accelerator for memory operations like memcpy and memset. It fits
-into the DMA engine framework.
+If it has no content why have it?
 
-There are two classes of DMA HW. These are slave DMA and standalone DMA. Slave DMA
-is generally related to another piece of HW that needs DMA for moving data. 
-Standalone DMA is intended for OS/CPU consumption not HW. These can be used to offload
-crypto operations (XOR) or other memory transactions (memcpy and memset) that are
-lengthy. 
+--g7w8+K/95kPelPD2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Once the HIDMA channel is assigned to the guest machine, guest operating system uses the
-DMA channel to offload memory operations as HIDMA only supports memcpy. 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-IOMMU HW provides the isolation from the rest of the host kernel or from other guest machines.
+iQEcBAEBCAAGBQJWuKv6AAoJECTWi3JdVIfQH3IH/iXsz9h3pung6e3kJKhwUKGK
+OoWo8b6CnpOumlWdZsW2s2IrahY1BaRrQ83DQHrMCRBf/8JT5m/o1cSoFBa9psuU
+Qydj98Pdf5pComsctZAHAHZQVM2mMn9zO9WvGTeOiDThtQWz97AyHCfXs+Vs7JXw
+WvaGVy4TeHQ2JewNzfeb79sxKcLOmVXjme5uIwrANc6xPCLn+NF89zfNmmGEzkqk
+t0+M+26N1i2KrU+WwPRVrRR73DZloTQQdCWkRXIavTRA6e6RQ2GHQwf12rBxdCEu
+NotMYbRA+FW02swCm7PSsp6rRjzdO5IEqvFgPA2BZmfzRJCX3ezmhvZ2Hqg3Mtg=
+=tiN5
+-----END PGP SIGNATURE-----
 
-> Is it used in relation with another device to
-> perform DMA on its behalf or is a HIDMA channel something that's useful
-> on its own?
-
-It is standalone only. The relationship you are referring to is known as slave DMA engine. 
-HIDMA does not support slave DMA. HIDMA only supports memcpy and memset in HW and only memcpy in SW
-as the memset support has been removed from the kernel long time ago.
-
-> 
-> Thanks,
-> -Christoffer
-> 
-
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--g7w8+K/95kPelPD2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
