@@ -1,100 +1,64 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] ASoC: bcm2835: move to use the clock framework
-Date: Mon, 8 Feb 2016 13:08:00 +0100
-Message-ID: <56B88520.5060606@martin.sperl.org>
-References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org>
- <1452602149-5875-2-git-send-email-kernel@martin.sperl.org>
- <87vb6dfjbu.fsf@eliezer.anholt.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] mwifiex: register platform specific driver
+Date: Mon, 08 Feb 2016 13:09:45 +0100
+Message-ID: <8264177.UI5sMC7XWi@wuerfel>
+References: <1454926528-17480-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87vb6dfjbu.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454926528-17480-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 08 February 2016 02:15:26 Amitkumar Karwar wrote:
+> diff --git a/Documentation/devicetree/bindings/mwifiex.txt b/Documentation/devicetree/bindings/mwifiex.txt
+> new file mode 100644
+> index 0000000..39b6a74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mwifiex.txt
+> @@ -0,0 +1,29 @@
+> +mwifiex
+> +------
+> +
+> +Required properties:
+> +
+> +  - name : must be "mwifiex"
 
+This is a very unusual requirement.
 
-On 28.01.2016 23:08, Eric Anholt wrote:
-> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
->
->> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>
->> Since the move to the new clock framework with commit 94cb7f76caa0
->> ("ARM: bcm2835: Switch to using the new clock driver support.")
->> this driver was no longer functional as it was manipulating the
->> clock registers locally without going true the framework.
->>
->> This patch moves to use the new clock framework and also
->> moves away from the hardcoded address offsets for DMA getting
->> the dma-address directly from the device tree.
->>
->> Note that the optimal bclk_ratio selection to avoid jitter
->> due to the use of fractional dividers, which is in the
->> current version has been removed, because not all devices
->> support these non power of 2 sized transfers, which resulted
->> in lots of (downstream) modules that use:
->>    snd_soc_dai_set_bclk_ratio(cpu_dai, sample_bits * 2);
->>
->> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->> ---
->>   sound/soc/bcm/bcm2835-i2s.c |  284 ++++++++++---------------------------------
->>   1 file changed, 64 insertions(+), 220 deletions(-)
->>
->> diff --git a/sound/soc/bcm/bcm2835-i2s.c b/sound/soc/bcm/bcm2835-i2s.c
->> index 3303d5f..1c1f221 100644
->> --- a/sound/soc/bcm/bcm2835-i2s.c
->> +++ b/sound/soc/bcm/bcm2835-i2s.c
->
->> -	dev->i2s_regmap = regmap[0];
->> -	dev->clk_regmap = regmap[1];
->> +	/* get the clock */
->> +	dev->clk_prepared = false;
->> +	dev->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(dev->clk)) {
->> +		dev_err(&pdev->dev, "could not get clk: %ld\n",
->> +			PTR_ERR(dev->clk));
->> +		return PTR_ERR(dev->clk);
->> +	}
->> +
->> +	/* Request ioarea */
->> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	base = devm_ioremap_resource(&pdev->dev, mem);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	dev->i2s_regmap = devm_regmap_init_mmio(&pdev->dev, base,
->> +				&bcm2835_regmap_config);
->> +	if (IS_ERR(dev->i2s_regmap))
->> +		return PTR_ERR(dev->i2s_regmap);
->> +
->> +	/* Set the DMA address - we have to parse DT ourselves */
->> +	addr = of_get_address(pdev->dev.of_node, 0, NULL, NULL);
->> +	if (!addr) {
->> +		dev_err(&pdev->dev, "could not get DMA-register address\n");
->> +		return -EINVAL;
->> +	}
->> +	dma_base = be32_to_cpup(addr);
->
-> Why aren't we just using mem->start like before?  That seems like an
-> independent change that should be justified on its own.  I'd be ready to
-> ack the patch if that change is removed.
->
+Can you use one of the standard device names instead?
 
-Problem is that we need the VC4 bus-address (0x7e203000),
-which is the actual <reg> value from the device tree without any
-mapping.
+> +  - compatible : must be "marvell,mwifiex"
+> +
+> +Optional properties:
+> +
+> +  - mwifiex,caldata* : A series of properties with marvell,caldata prefix,
+> +                     represent Calibration data downloaded to the device during
+> +                     initialization. This is an array of unsigned values.
+> +
+> +
+> +Example:
+> +
+> +Tx power limit calibration data is configured in below example.
+> +The calibration data is an array of unsigned values, the length
+> +can vary between hw versions.
+> +
+> +mwifiex {
+> +       compatible = "marvell,mwifiex";
+> +
+> +       mwifiex,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
+> +0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
+> +
+> +};
 
-Not the ARM MMU visible address mappings that mem->start provides
-(typically 0x20203000 or 0x3f203000 for bcm2836)
+Should we list the mac-address here as well, or is there always an eeprom
+for that but not the calibration data?
 
-Nor the mapped address (base) available in the kernel (typically
-0xdc......).
-
-This is the only way to get it correctly and has been done the same way
-with spi-bcm2835.
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
