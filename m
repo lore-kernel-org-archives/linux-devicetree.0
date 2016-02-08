@@ -1,53 +1,105 @@
-From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH 2/5] drivers/of: add EXPORT_SYMBOL to of_irq_count
-Date: Sun, 7 Feb 2016 19:00:41 -0500
-Message-ID: <1454889644-27830-3-git-send-email-paul.gortmaker@windriver.com>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 1/1 v2] imx6q-wandboard-revb1.dts: use unique machine name
+Date: Mon, 8 Feb 2016 01:25:15 +0100
+Message-ID: <56B7E06B.2060701@gmx.de>
+References: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
+ <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
+ <CAOCHtYiHUgcw6Vzdp8EmD_5+d52fhpuj-oSCFwt_3J5xAncCGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454889644-27830-1-git-send-email-paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+In-Reply-To: <CAOCHtYiHUgcw6Vzdp8EmD_5+d52fhpuj-oSCFwt_3J5xAncCGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-vgrsnd+bvIE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We would like to modularize some of the PCI platform specific
-support code to keep multi platform bzImage sizes in check.
 
-However, in a couple of the files we see this:
 
-$ git grep -l of_irq_count drivers/pci
-drivers/pci/host/pci-keystone.c
-drivers/pci/host/pcie-iproc-msi.c
+On 08.02.2016 00:52, Robert Nelson wrote:
+> On Sat, Feb 6, 2016 at 6:06 AM, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org> wrote:
+>> Downstream packages like Debian flash-kernel use
+>> /proc/device-tree/model
+>> to determine which dtb file to install.
+>>
+>> Hence each dts in the Linux kernel should provide a unique model identifier.
+>>
+>> https://lkml.org/lkml/2014/7/8/579 created the new file
+>> imx6q-wandboard-revb1.dts but used the same model identifier
+>> as in imx6q-wandboard.dts.
+>>
+>> This patch provides a unique model identifier for revision B1 of
+>> the Wandboard Quad.
+>>
+>> v2:
+>>         correct name of referenced Debian package
+>>
+>> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/imx6q-wandboard-revb1.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+>> index 20bf3c2..9207d80 100644
+>> --- a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+>> +++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+>> @@ -13,7 +13,7 @@
+>>  #include "imx6qdl-wandboard-revb1.dtsi"
+>>
+>>  / {
+>> -       model = "Wandboard i.MX6 Quad Board";
+>> +       model = "Wandboard i.MX6 Quad Board rev B1";
+> 
+> Okay, this seems a little silly....
+> 
+> The wandboard has 5 versions:
+> 
+> solo: imx6dl-wandboard-revb1.dts
+> 
+> model = "Wandboard i.MX6 Dual Lite Board";
+> 
+> dual rev b: imx6dl-wandboard-revb1.dts
+> 
+> model = "Wandboard i.MX6 Dual Lite Board";
+> 
+> dual rev c: imx6dl-wandboard.dts
+> 
+> model = "Wandboard i.MX6 Dual Lite Board";
+> 
+> quad rev b: imx6q-wandboard-revb1.dts
+> model = "Wandboard i.MX6 Quad Board"; - > model = "Wandboard i.MX6
+> Quad Board rev B1";
+> 
+> quad rev c: imx6q-wandboard.dts
+> model = "Wandboard i.MX6 Quad Board";
+> 
+> 
+> Do you guys see the issue?  Either we change them "ALL", rev b or rev c...
+> 
+> Or "flash-kernel" needs to learn to copy more then one dtb (in this
+> case 5 *.dtb's)
+> 
+> PS, u-boot already can boot on all these with the same SPL/u-boot
+> image and detect which board and load the correct device tree binary..
+> 
+> Regards,
+> 
+Hello Robert,
 
-So, we export of_irq_count so we can make headway with the
-modularization goal.
+I only see four dts files mentioned in your mail (solo using the same as
+dual rev B1).
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
----
- drivers/of/irq.c | 1 +
- 1 file changed, 1 insertion(+)
+We do not know if imx6dl-wandboard.dts and imx6q-wandboard.dts
+will support future revisions of the boards. So it doesn't make
+much sense to mark them as restricted to revision C1.
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 7ee21ae305ae..0d714748a571 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -449,6 +449,7 @@ int of_irq_count(struct device_node *dev)
- 
- 	return nr;
- }
-+EXPORT_SYMBOL(of_irq_count);
- 
- /**
-  * of_irq_to_resource_table - Fill in resource table with node's IRQ info
--- 
-2.6.1
+You are right in that we should add a change to
+imx6dl-wandboard-revb1.dts to the same patch.
 
+Best regards
+
+Heinrich Schuchardt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
