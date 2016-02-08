@@ -1,92 +1,83 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: Add L2 cache-controller nodes
-Date: Mon, 8 Feb 2016 18:08:57 +0100
-Message-ID: <56B8CBA9.8@gmail.com>
-References: <1452953856-5146-1-git-send-email-dirk.behme@gmail.com>
- <56B2370D.2010102@gmail.com> <20160205095758.GE16556@verge.net.au>
- <CAMuHMdVRhwGh2bvfNSguX0XnMW0eEgLRTCt3Y3-+KfV0Jy9WHw@mail.gmail.com>
- <56B857AC.4090701@de.bosch.com>
- <CAMuHMdUTUss=fR0Mdz+7tDD=RC6hufvkLC99Fp=PTiTgaSSGNA@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: add documentation on standard property unit
+ suffixes
+Date: Mon, 8 Feb 2016 17:08:59 +0000
+Message-ID: <20160208170858.GA15443@leverpostej>
+References: <1454951044-18223-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUTUss=fR0Mdz+7tDD=RC6hufvkLC99Fp=PTiTgaSSGNA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-renesas-soc@vger.kernel.org, Sudeep Holla <Sudeep.Holla@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454951044-18223-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Mon, Feb 08, 2016 at 11:04:04AM -0600, Rob Herring wrote:
+> A common review comment is to add units to DT property names. The naming
+> convention is inconsistent unfortunately although there are clear
+> majorities in use already. This makes it hard to remember the exact name
+> preferred, so I'm documenting this to provide an easy point of
+> reference.
 
-On 08.02.2016 10:01, Geert Uytterhoeven wrote:
-> Hi Dirk,
->
-> On Mon, Feb 8, 2016 at 9:54 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->> On 08.02.2016 09:42, Geert Uytterhoeven wrote:
->>> On Fri, Feb 5, 2016 at 10:57 AM, Simon Horman <horms@verge.net.au> wrote:
->>>> On Wed, Feb 03, 2016 at 06:21:17PM +0100, Dirk Behme wrote:
->>>>> On 16.01.2016 15:17, Dirk Behme wrote:
->>>>>> From: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>>>
->>>>>> Add device nodes for the L2 caches, and link the CPU node to its L2
->>>>>> cache node.
->>>>>>
->>>>>> The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
->>>>>> 128 KiB x 16 ways).
->>>>>>
->>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>>> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
->>>>
->>>> [snip]
->>>>
->>>>> Any further comments to this? If not, could this be applied?
->>>>
->>>> Sorry for the delay.
->>>>
->>>> This looks good; I have queued it up.
->>>>
->>>> It should appear in the next (and devel) branches of my renesas tree
->>>> soon.
->>>> And in linux-next whenever it includes my updated next branch.
->>>
->>> So you not only dropped the (controversial) timing related properties, but
->>> in addition:
->>>
->>> +               cache-unified;
->>> +               cache-level = <2>;
->>>
->>> At least the "cache-level" property is marked as required in ePAPR.
->>> For "cache-unified", the wording is not that strict in ePAPR, but that
->>> property
->>> depends on being a unified cache in the first place.
->>>
->>> So I think these two properties should be re-added.
->>
->> If I remember correctly, first, these entries are not used at all on ARMv8.
->> And second, I think it was mentioned that we therefore want to drop them:
->>
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/394936.html
->>
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/Documentation/devicetree/bindings/arm/l2c2x0.txt?id=0bed4b7aa02c06e05121875dc443295d55b9d91d
->
-> I believe the discussion was only about the latency properties, which are
-> documented in the l2c2x0 DT bindings, and deemed to not apply here
+This looks good to me. FWIW:
 
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Hmm, the two bindings cache-unified and cache-level are documented in 
-bindings/arm/l2c2x0.txt, too.
+Mark.
 
-
-> The DT bindings documented in ePAPR are generic, and apply to all hardware,
-> unless extended or overridden by more-specific DT bindings.
-
-
-I still can't see the benefit of adding entries to the device tree 
-which are not used at all (and most probably don't make sense on that 
-platform). But if anybody has a different opinion and maybe good 
-arguments for it, that would be fine, too :)
-
-Best regards
-
-Dirk
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/property-units.txt         | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/property-units.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> new file mode 100644
+> index 0000000..f8231ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -0,0 +1,35 @@
+> +Standard Unit Suffixes for Property names
+> +
+> +Properties which have a unit of measure are recommended to have a unit
+> +suffix appended to the property name. The list below contains the
+> +recommended suffixes. Other variations exist in bindings, but should not
+> +be used in new bindings or added here. The inconsistency in the unit
+> +prefixes is due to selecting the most commonly used variants.
+> +
+> +It is also recommended to use the units listed here and not add additional
+> +unit prefixes.
+> +
+> +Time/Frequency
+> +----------------------------------------
+> +-mhz		: megahertz
+> +-hz		: Hertz (preferred)
+> +-sec		: seconds
+> +-ms		: milliseconds
+> +-us		: microseconds
+> +-ns		: nanoseconds
+> +
+> +Electricity
+> +----------------------------------------
+> +-microamp	: micro amps
+> +-ohms		: Ohms
+> +-micro-ohms	: micro Ohms
+> +-microvolt	: micro volts
+> +
+> +Temperature
+> +----------------------------------------
+> +-celsius	: Degrees Celsius
+> +-millicelsius	: Degreee milli-Celsius
+> +
+> +Pressure
+> +----------------------------------------
+> +-kpascal	: kiloPascal
+> -- 
+> 2.5.0
+> 
