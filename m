@@ -1,35 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 1/2] regulator: Add document for MT6323 regulator
-Date: Mon, 8 Feb 2016 15:24:43 -0600
-Message-ID: <20160208212443.GA32296@rob-hp-laptop>
-References: <1454874037-38905-1-git-send-email-blogic@openwrt.org>
+Subject: Re: [PATCH v2 01/10] Documentation: devicetree: Add vendor prefix
+ for GeekBuying.com
+Date: Mon, 8 Feb 2016 15:27:38 -0600
+Message-ID: <20160208212738.GA564@rob-hp-laptop>
+References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
+ <1454897859-7601-2-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454874037-38905-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1454897859-7601-2-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, HenryC.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 07, 2016 at 08:40:36PM +0100, John Crispin wrote:
-> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> ---
-> Changes in V5
-> * regulator vs regulators
-> 
-> Changes in V4
-> * regulator is a subnode and not a property
-> 
->  .../bindings/regulator/mt6323-regulator.txt        |  244 ++++++++++++++++++++
->  1 file changed, 244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+On Mon, Feb 08, 2016 at 03:17:30AM +0100, Andreas F=E4rber wrote:
+> Use "geekbuying".
+>=20
+> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
