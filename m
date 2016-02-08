@@ -1,42 +1,40 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v4 05/17] xen: memory : Add new XENMAPSPACE type
- XENMAPSPACE_dev_mmio
-Date: Mon, 8 Feb 2016 11:43:27 +0000
-Message-ID: <alpine.DEB.2.02.1602081142360.27008@kaball.uk.xensource.com>
-References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
- <1454641552-12576-6-git-send-email-zhaoshenglong@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Mon, 8 Feb 2016 14:47:05 +0300
+Message-ID: <56B88039.2010103@cogentembedded.com>
+References: <1454693676-20211-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454641552-12576-6-git-send-email-zhaoshenglong@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shannon Zhao <zhaoshenglong@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, julien.grall@citrix.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, ian.campbell@citrix.com, shannon.zhao@linaro.org, peter.huangpeng@huawei.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454693676-20211-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Feb 2016, Shannon Zhao wrote:
-> From: Shannon Zhao <shannon.zhao@linaro.org>
-> 
-> Add a new type of Xen map space for Dom0 to map device's MMIO region.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> ---
->  include/xen/interface/memory.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/xen/interface/memory.h b/include/xen/interface/memory.h
-> index 2ecfe4f..9aa8988 100644
-> --- a/include/xen/interface/memory.h
-> +++ b/include/xen/interface/memory.h
-> @@ -160,6 +160,7 @@ DEFINE_GUEST_HANDLE_STRUCT(xen_machphys_mapping_t);
->  #define XENMAPSPACE_gmfn_foreign 4 /* GMFN from another dom,
->  				    * XENMEM_add_to_physmap_range only.
->  				    */
-> +#define XENMAPSPACE_dev_mmio     5 /* device mmio region */
->  
->  /*
->   * Sets the GPFN at which a particular page appears in the specified guest's
+On 2/5/2016 8:34 PM, Petr Kulhavy wrote:
 
-This patch needs to wait at least until the corresponding Xen patch
-(the one which introduces XENMAPSPACE_dev_mmio on the Xen side) is
-Acked by one of the Xen maintainers.
+> TI DA8xx MUSB driver equipped with DeviceTree support.
+> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
+
+    BTW Documentation/devicetree/bindings/submitting-patches.txt tells to 
+submit the bindings in a separate patch.
+
+>   drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
+>   include/linux/platform_data/usb-davinci.h          |   3 +-
+>   3 files changed, 227 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
