@@ -1,209 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 5/5] ARM: dts: r8a7794 add sound support
-Date: Tue, 09 Feb 2016 02:04:07 +0300
-Message-ID: <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
-References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 3/3] pci, pci-thunder-ecam: Add driver for
+ ThunderX-pass1 on-chip devices
+Date: Mon, 8 Feb 2016 17:24:30 -0600
+Message-ID: <20160208232430.GA1353@localhost>
+References: <1454715675-17512-1-git-send-email-ddaney.cavm@gmail.com>
+ <1454715675-17512-4-git-send-email-ddaney.cavm@gmail.com>
+ <20160208195642.GA15103@rob-hp-laptop>
+ <56B8FED6.1050804@caviumnetworks.com>
+ <CAL_JsqJNndZ59465YhpkP=dQYaijaar+LcQG4KQEJwF5e1ryLQ@mail.gmail.com>
+ <56B90B09.7090500@caviumnetworks.com>
+ <20160208221204.GA30821@localhost>
+ <56B919A5.5090000@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B919A5.5090000@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: Rob Herring <robh@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7794 part of  the sound device node.
-This sound device  is a complex one and comprises the Audio Clock Generator
-(ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
-(SSI[U]), and Audio DMAC-Peripheral-Peripheral.
-It is up  to the board file to enable the device.
+On Mon, Feb 08, 2016 at 02:41:41PM -0800, David Daney wrote:
+> On 02/08/2016 02:12 PM, Bjorn Helgaas wrote:
+> >On Mon, Feb 08, 2016 at 01:39:21PM -0800, David Daney wrote:
+> >>On 02/08/2016 01:12 PM, Rob Herring wrote:
+> >>>On Mon, Feb 8, 2016 at 2:47 PM, David Daney <ddaney@caviumnetworks.com> wrote:
+> >>>>On 02/08/2016 11:56 AM, Rob Herring wrote:
+> >>>>>On Fri, Feb 05, 2016 at 03:41:15PM -0800, David Daney wrote:
+> >>>>>>From: David Daney <david.daney@cavium.com>
+> >>>>>>+Properties of the host controller node that differ from
+> >>>>>>+host-generic-pci.txt:
+> >>>>>>+
+> >>>>>>+- compatible     : Must be "cavium,pci-host-thunder-ecam"
+> >>>>>>+
+> >>>>>>+Example:
+> >>>>>>+
+> >>>>>>+       pci@84b0,00000000 {
+> ...
+> >>>>>and the node name should be "pcie".
+> >>>>
+> >>>>Why pcie?
+> >>>>
+> >>>>There are no PCIe devices or buses reachable from this type of root complex.
+> >>>>There are however many PCI devices.
+> ...
 
-This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+> >>Really, it is a bit of a gray area here as we don't have any bridges
+> >>to PCIe buses and there are multiple devices residing on each bus,
+> >>so from that point of view it cannot be PCIe.  There are, however,
+> >>devices that implement the PCI Express Capability structure, so does
+> >>that make it PCIe?  It is not clear what the specifications demand
+> >>here.
+> >
+> >The PCI core doesn't care about the node name in the device tree.  But
+> >it *does* care about some details of PCI/PCIe topology.  We consider
+> >anything with a PCIe capability to be PCIe.  For example,
+> >
+> >   - pci_cfg_space_size() thinks PCIe devices have 4K of config space
+> >
+> >   - only_one_child() thinks a PCIe bus, i.e., a link, only has a
+> >     single device on it
+> >
+> >   - a PCIe device should have a PCIe Root Port or PCIe Downstream Port
+> >     upstream from it (we did remove some of these restrictions with
+> >     b35b1df5e6c2 ("PCI: Tolerate hierarchies with no Root Port"), but
+> >     it's possible we didn't get them all)
+> >
+> >I assume your system conforms to expectations like these; I'm just
+> >pointing them out because you mentioned buses with multiple devices on
+> >them, which is definitely something one doesn't expect in PCIe.
+> 
+> The topology we have is currently working with the kernel's core PCI
+> code.  I don't really want to get into discussing what the
+> definition of PCIe is.  We have multiple devices (more than 32) on a
+> single bus, and they have PCI Express and ARI Capabilities.  Is that
+> PCIe?  I don't know.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I don't need to know the details of your topology.  As long as it
+conforms to the PCIe spec, it should be fine.  If it *doesn't* conform
+to the spec, but things currently seem to work, that's less fine,
+because a future Linux change is liable to break something for you.
 
----
- arch/arm/boot/dts/r8a7794.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 171 insertions(+)
+I was a little concerned about your statement that "there are multiple
+devices residing on each bus, so from that point of view it cannot be
+PCIe."  That made it sound like you're doing something outside the
+spec.  If you're just using regular multi-function devices or ARI,
+then I don't see any issue (or any reason to say it can't be PCIe).
 
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -1309,4 +1309,175 @@
- 		#iommu-cells = <1>;
- 		status = "disabled";
- 	};
-+
-+	rcar_sound: sound@ec500000 {
-+		/*
-+		 * #sound-dai-cells is required
-+		 *
-+		 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
-+		 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
-+		 */
-+		compatible = "renesas,rcar_sound-r8a7794",
-+			     "renesas,rcar_sound-gen2";
-+		reg =	<0 0xec500000 0 0x1000>, /* SCU */
-+			<0 0xec5a0000 0 0x100>,  /* ADG */
-+			<0 0xec540000 0 0x1000>, /* SSIU */
-+			<0 0xec541000 0 0x280>,  /* SSI */
-+			<0 0xec740000 0 0x200>;  /* Audio DMAC peri peri */
-+		reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
-+
-+		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
-+			 <&mstp10_clks R8A7794_CLK_SSI9>,
-+			 <&mstp10_clks R8A7794_CLK_SSI8>,
-+			 <&mstp10_clks R8A7794_CLK_SSI7>,
-+			 <&mstp10_clks R8A7794_CLK_SSI6>,
-+			 <&mstp10_clks R8A7794_CLK_SSI5>,
-+			 <&mstp10_clks R8A7794_CLK_SSI4>,
-+			 <&mstp10_clks R8A7794_CLK_SSI3>,
-+			 <&mstp10_clks R8A7794_CLK_SSI2>,
-+			 <&mstp10_clks R8A7794_CLK_SSI1>,
-+			 <&mstp10_clks R8A7794_CLK_SSI0>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
-+			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
-+			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
-+			 <&m2_clk>;
-+		clock-names = "ssi-all",
-+			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
-+			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
-+			      "src.9", "src.8", "src.7", "src.6", "src.5",
-+			      "src.4", "src.3", "src.2", "src.1", "src.0",
-+			      "clk_a", "clk_b", "clk_c", "clk_i";
-+		power-domains = <&cpg_clocks>;
-+
-+		status = "disabled";
-+		rcar_sound,src {
-+			src0: src@0 {
-+				interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x85>, <&audma0 0x9a>;
-+				dma-names = "rx", "tx";
-+			};
-+			src1: src@1 {
-+				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x87>, <&audma0 0x9c>;
-+				dma-names = "rx", "tx";
-+			};
-+			src2: src@2 {
-+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x89>, <&audma0 0x9e>;
-+				dma-names = "rx", "tx";
-+			};
-+			src3: src@3 {
-+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
-+				dma-names = "rx", "tx";
-+			};
-+			src4: src@4 {
-+				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
-+				dma-names = "rx", "tx";
-+			};
-+			src5: src@5 {
-+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
-+				dma-names = "rx", "tx";
-+			};
-+			src6: src@6 {
-+				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x91>, <&audma0 0xb4>;
-+				dma-names = "rx", "tx";
-+			};
-+			src7: src@7 {
-+				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x93>, <&audma0 0xb6>;
-+				dma-names = "rx", "tx";
-+			};
-+			src8: src@8 {
-+				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x95>, <&audma0 0xb8>;
-+				dma-names = "rx", "tx";
-+			};
-+			src9: src@9 {
-+				interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x97>, <&audma0 0xba>;
-+				dma-names = "rx", "tx";
-+			};
-+		};
-+
-+		rcar_sound,ssi {
-+			ssi0: ssi@0 {
-+				interrupts = <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x01>, <&audma0 0x02>,
-+				       <&audma0 0x15>, <&audma0 0x16>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi1: ssi@1 {
-+				interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x03>, <&audma0 0x04>,
-+				       <&audma0 0x49>, <&audma0 0x4a>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi2: ssi@2 {
-+				interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x05>, <&audma0 0x06>,
-+				       <&audma0 0x63>, <&audma0 0x64>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi3: ssi@3 {
-+				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x07>, <&audma0 0x08>,
-+				       <&audma0 0x6f>, <&audma0 0x70>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi4: ssi@4 {
-+				interrupts = <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x09>, <&audma0 0x0a>,
-+				       <&audma0 0x71>, <&audma0 0x72>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi5: ssi@5 {
-+				interrupts = <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x0b>, <&audma0 0x0c>,
-+				       <&audma0 0x73>, <&audma0 0x74>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi6: ssi@6 {
-+				interrupts = <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x0d>, <&audma0 0x0e>,
-+				       <&audma0 0x75>, <&audma0 0x76>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi7: ssi@7 {
-+				interrupts = <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x0f>, <&audma0 0x10>,
-+				       <&audma0 0x79>, <&audma0 0x7a>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi8: ssi@8 {
-+				interrupts = <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x11>, <&audma0 0x12>,
-+				       <&audma0 0x7b>, <&audma0 0x7c>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+			ssi9: ssi@9 {
-+				interrupts = <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&audma0 0x13>, <&audma0 0x14>,
-+				       <&audma0 0x7d>, <&audma0 0x7e>;
-+				dma-names = "rx", "tx", "rxu", "txu";
-+			};
-+		};
-+	};
- };
+Bjorn
