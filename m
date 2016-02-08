@@ -1,187 +1,71 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 3/3] mwifiex: parse host wakeup configuration from device tree
-Date: Mon, 8 Feb 2016 02:15:28 -0800
-Message-ID: <1454926528-17480-3-git-send-email-akarwar@marvell.com>
-References: <1454926528-17480-1-git-send-email-akarwar@marvell.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 04/10] ARM64: dts: rockchip: Add GMAC to GeekBox
+Date: Mon, 08 Feb 2016 11:28:22 +0100
+Message-ID: <5875277.Y7zJ7W9GkY@phil>
+References: <1454897859-7601-1-git-send-email-afaerber@suse.de> <1454897859-7601-5-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454926528-17480-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454897859-7601-5-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Hi Andreas,
 
-This patch implement a framework for board specific wakeup.
-driver parse irq/gpio number from device tree, corresponding
-resources will be allocated, and used for host suspend/resume.
-driver private binding file is also updated in the patch.
+Am Montag, 8. Februar 2016, 03:17:33 schrieb Andreas F=E4rber:
+> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
 
-Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
-v2: Guarded ".pm = mwifiex_plt_pm_ops" line with CONFIG_PM_SLEEP
----
- Documentation/devicetree/bindings/mwifiex.txt      | 10 +++
- .../net/wireless/marvell/mwifiex/platform_drv.c    | 95 ++++++++++++++++++++++
- 2 files changed, 105 insertions(+)
+is there some special reason that gmac, emmc, ir, etc are in separate=20
+patches? I guess I'll just fold them into the core patch otherwise.
 
-diff --git a/Documentation/devicetree/bindings/mwifiex.txt b/Documentation/devicetree/bindings/mwifiex.txt
-index 367c97e..68919c7 100644
---- a/Documentation/devicetree/bindings/mwifiex.txt
-+++ b/Documentation/devicetree/bindings/mwifiex.txt
-@@ -14,6 +14,11 @@ Optional properties:
-   - mwifiex,chip-gpio : Chip's wakeup gpio pin number. This needs to be downloaded
- 			to to firmware. Chip notifies wifi wakeup signal to SOC
- 			through this pin.
-+  - interrupt-parent: phandle of the parent interrupt controller
-+  - interrupts : interrupt number to the cpu
-+  - gpios: specify SOC's wakeup GPIO
-+  - pinctrl-names : a pinctrl state named "default" must be defined
-+  - pinctrl-0 : pin control group to be used for this controller
- 
- Example:
- 
-@@ -27,5 +32,10 @@ mwifiex {
- 	mwifiex,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
- 0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
- 	mwifiex,chip-gpio = <3>;
-+	interrupt-parent = <&pio>;
-+	interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
-+	gpios = <&pio 38 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wake_pins>;
- };
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/platform_drv.c b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-index f64a12a..2eb813c 100644
---- a/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-+++ b/drivers/net/wireless/marvell/mwifiex/platform_drv.c
-@@ -18,9 +18,63 @@
- 
- struct platform_device *mwifiex_plt_dev;
- 
-+struct mwifiex_wake_dev {
-+	struct device	*dev;
-+	int		irq_wifi;
-+	bool		wake_by_wifi;
-+};
-+
-+static irqreturn_t mwifiex_wake_irq_wifi(int irq, void *priv)
-+{
-+	struct mwifiex_wake_dev *ctx = priv;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ctx->wake_by_wifi = true;
-+		disable_irq_nosync(ctx->irq_wifi);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int mwifiex_plt_probe(struct platform_device *pdev)
- {
-+	int ret;
-+	struct mwifiex_wake_dev *ctx;
-+	int gpio;
-+
- 	mwifiex_plt_dev = pdev;
-+
-+	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->dev = &pdev->dev;
-+	ctx->irq_wifi = platform_get_irq(pdev, 0);
-+	if (ctx->irq_wifi < 0)
-+		dev_err(&pdev->dev, "Failed to get irq_wifi\n");
-+
-+	gpio = of_get_gpio(pdev->dev.of_node, 0);
-+	if (gpio_is_valid(gpio))
-+		gpio_direction_input(gpio);
-+	else
-+		dev_err(&pdev->dev, "gpio wifi is invalid\n");
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ret = devm_request_irq(&pdev->dev, ctx->irq_wifi,
-+				       mwifiex_wake_irq_wifi,
-+				       IRQF_TRIGGER_LOW,
-+				       "wifi_wake", ctx);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to request irq_wifi %d (%d)\n",
-+				ctx->irq_wifi, ret);
-+			return -EINVAL;
-+		}
-+		disable_irq(ctx->irq_wifi);
-+	}
-+
-+	platform_set_drvdata(pdev, ctx);
-+
- 	return 0;
- }
- 
-@@ -30,6 +84,44 @@ static int mwifiex_plt_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int mwifiex_plt_suspend(struct device *dev)
-+{
-+	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ctx->wake_by_wifi = false;
-+		enable_irq(ctx->irq_wifi);
-+		ret = enable_irq_wake(ctx->irq_wifi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mwifiex_plt_resume(struct device *dev)
-+{
-+	struct mwifiex_wake_dev *ctx = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (ctx->irq_wifi >= 0) {
-+		ret = disable_irq_wake(ctx->irq_wifi);
-+		if (!ctx->wake_by_wifi)
-+			disable_irq(ctx->irq_wifi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mwifiex_plt_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mwifiex_plt_suspend, mwifiex_plt_resume)
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id mwifiex_dt_match[] = {
- 	{
- 		.compatible = "marvell,mwifiex",
-@@ -45,6 +137,9 @@ static struct platform_driver mwifiex_platform_driver = {
- 	.driver = {
- 		.name	= "mwifiex_plt",
- 		.of_match_table = mwifiex_dt_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm             = &mwifiex_plt_pm_ops,
-+#endif
- 	}
- };
- 
--- 
-1.8.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
+
+> ---
+>  v2: New
+>=20
+>  arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 +++++++++++++++=
++++++
+> 1 file changed, 20 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts index
+> bc91d39758ab..a8dcf3c2b0c1 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> @@ -56,6 +56,13 @@
+>  		reg =3D <0x0 0x0 0x0 0x80000000>;
+>  	};
+>=20
+> +	ext_gmac: gmac-clk {
+> +		compatible =3D "fixed-clock";
+> +		clock-frequency =3D <125000000>;
+> +		clock-output-names =3D "ext_gmac";
+> +		#clock-cells =3D <0>;
+> +	};
+> +
+>  	leds: gpio-leds {
+>  		compatible =3D "gpio-leds";
+>=20
+> @@ -82,6 +89,19 @@
+>  	};
+>  };
+>=20
+> +&gmac {
+> +	status =3D "okay";
+> +	phy-supply =3D <&vcc_lan>;
+> +	phy-mode =3D "rgmii";
+> +	clock_in_out =3D "input";
+> +	assigned-clocks =3D <&cru SCLK_MAC>;
+> +	assigned-clock-parents =3D <&ext_gmac>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&rgmii_pins>;
+> +	tx_delay =3D <0x30>;
+> +	rx_delay =3D <0x10>;
+> +};
+> +
+>  &i2c0 {
+>  	status =3D "okay";
