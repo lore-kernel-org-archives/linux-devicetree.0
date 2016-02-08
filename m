@@ -1,58 +1,65 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: apq8016-sbc: Add DT node for the uSD SDHC interface
-Date: Mon, 08 Feb 2016 15:02:02 -0800
-Message-ID: <7h4mdibyc5.fsf@baylibre.com>
-References: <1454590402-13507-1-git-send-email-georgi.djakov@linaro.org>
-	<7hmvrgb06c.fsf@baylibre.com>
-	<CAOi56cWWfJCFyC_ndRqhm6c0QeQF=nXkcK3RCVdCDXTBag=+ow@mail.gmail.com>
-	<56B4DFC5.7030700@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 4/5] ARM: dts: r8a7794: add Audio-DMAC support
+Date: Tue, 09 Feb 2016 02:03:12 +0300
+Message-ID: <2262360.JfPBBBJWSV@wasted.cogentembedded.com>
+References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B4DFC5.7030700-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (Georgi Djakov's message of "Fri, 5
-	Feb 2016 19:45:41 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+Describe Audio-DMAC in the R8A7794 device tree.
 
-> On 02/05/2016 12:44 AM, Kevin Hilman wrote:
->> On Thu, Feb 4, 2016 at 2:06 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>> Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->>>
->>>> Add the necessary properties to enable the SD-card on db410c boards.
->>>>
->>>> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> I tried this with 2 different SD cards on my dragonboard 410c but it's
->>> not detecting either card.
->> 
->> To be more precise, I tried this patch on v4.5-rc1 and today's
->> linux-next using the default defconfig + CONFIG_MMC_SDHCI_MSM=y, and
->> see the same voltage errors on both.
->>
->
-> Hi Kevin, thanks for trying this. I got the same with v4.5-rc2, but
-> this is expected as it depends on the another recently merged patch
-> in linux-next. Perhaps I should have mentioned this in the commit
-> message.
->
-> Anyway, just checked with next-20160205 and it works for me - tested
-> with 3 different cards. Not sure why it does not work for you.
-> Could you please check if you have the following patch in your tree:
+This patch is loosely based on the commit 8994fff67761 ("ARM: shmobile:
+r8a7791: Add Audio DMAC devices to DT").
 
-I re-tested with next-20160205 and it seems to work fine.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Feel free to add
+---
+ arch/arm/boot/dts/r8a7794.dtsi |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-Thanks,
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -281,6 +281,34 @@
+ 		dma-channels = <15>;
+ 	};
+ 
++	audma0: dma-controller@ec700000 {
++		compatible = "renesas,dmac-r8a7794", "renesas,rcar-dmac";
++		reg = <0 0xec700000 0 0x10000>;
++		interrupts =	<GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
++				 GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error",
++				  "ch0", "ch1", "ch2", "ch3", "ch4", "ch5",
++				  "ch6", "ch7", "ch8", "ch9", "ch10", "ch11",
++				  "ch12";
++		clocks = <&mstp5_clks R8A7794_CLK_AUDIO_DMAC0>;
++		clock-names = "fck";
++		power-domains = <&cpg_clocks>;
++		#dma-cells = <1>;
++		dma-channels = <13>;
++	};
++
+ 	scifa0: serial@e6c40000 {
+ 		compatible = "renesas,scifa-r8a7794",
+ 			     "renesas,rcar-gen2-scifa", "renesas,scifa";
