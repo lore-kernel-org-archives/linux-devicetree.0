@@ -1,38 +1,218 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 04/10] ARM64: dts: rockchip: Add GMAC to GeekBox
-Date: Mon, 8 Feb 2016 11:40:15 +0100
-Message-ID: <56B8708F.50802@suse.de>
-References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
- <1454897859-7601-5-git-send-email-afaerber@suse.de> <5875277.Y7zJ7W9GkY@phil>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v4 01/11] drm/hisilicon: Add device tree binding for
+ hi6220 display subsystem
+Date: Mon, 8 Feb 2016 16:13:34 +0530
+Message-ID: <56B87156.1040506@codeaurora.org>
+References: <1454729098-79807-1-git-send-email-xinliang.liu@linaro.org>
+ <1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5875277.Y7zJ7W9GkY@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi,
 
-Am 08.02.2016 um 11:28 schrieb Heiko Stuebner:
-> Am Montag, 8. Februar 2016, 03:17:33 schrieb Andreas F=E4rber:
->> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
->=20
-> is there some special reason that gmac, emmc, ir, etc are in separate=
-=20
-> patches? I guess I'll just fold them into the core patch otherwise.
+On 02/06/2016 08:54 AM, Xinliang Liu wrote:
+> Add ADE display controller binding doc.
+> Add DesignWare DSI Host Controller v1.20a binding doc.
+>
+> v4:
+> - Describe more specific of clocks and ports.
+> - Fix indentation.
+> v3:
+> - Make ade as the drm master node.
+> - Use assigned-clocks to set clock rate.
+> - Use ports to connect display relavant nodes.
+> v2:
+> - Move dt binding docs to bindings/display/hisilicon directory.
+>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> ---
+>   .../bindings/display/hisilicon/dw-dsi.txt          | 77 ++++++++++++++++++++++
+>   .../bindings/display/hisilicon/hisi-ade.txt        | 69 +++++++++++++++++++
+>   2 files changed, 146 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+>   create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+> new file mode 100644
+> index 000000000000..af6d702f3282
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+> @@ -0,0 +1,77 @@
+> +Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
+> +
+> +A DSI Host Controller resides in the middle of display controller and external
+> +HDMI converter.
+> +
+> +Required properties:
+> +- compatible: value should be "hisilicon,hi6220-dsi".
+> +- reg: physical base address and length of dsi controller's registers.
+> +- clocks: the clocks needed.
+> +- clock-names: the name of the clocks.
+> +- ports: contains DSI controller input and output sub port.
+> +  The input port connects to ADE output port with the reg value "0".
+> +  The output port with the reg value "1", it could connect to panel or
+> +  any other bridge endpoints. And the reg value for bridge endpoint is "0",
+> +  other values for panel endpoint.
+> +  See Documentation/devicetree/bindings/graph.txt for more device graph info.
+> +
+> +A example of HiKey board hi6220 SoC and board specific DT entry:
+> +Example:
+> +
+> +SoC specific:
+> +	dsi: dsi@f4107800 {
+> +		compatible = "hisilicon,hi6220-dsi";
+> +		reg = <0x0 0xf4107800 0x0 0x100>;
+> +		clocks = <&media_ctrl  HI6220_DSI_PCLK>;
+> +		clock-names = "pclk_dsi";
+> +		status = "disabled";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/* 0 for input port */
+> +			port@0 {
+> +				reg = <0>;
+> +				dsi_in: endpoint {
+> +					remote-endpoint = <&ade_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +
+> +Board specific:
+> +	&dsi {
+> +		status = "ok";
+> +
+> +		ports {
+> +			/* 1 for output port */
+> +			port@1 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <1>;
+> +
+> +				/* 0 for bridge, other value for panel */
+> +				dsi_out0: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&adv7533_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	&i2c2 {
+> +		...
+> +
+> +		adv7533: adv7533@39 {
+> +			...
+> +
+> +			port {
+> +				adv7533_in: endpoint {
+> +					remote-endpoint = <&dsi_out0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+> new file mode 100644
+> index 000000000000..1eff5a41b98d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+> @@ -0,0 +1,69 @@
+> +Device-Tree bindings for hisilicon ADE display controller driver
+> +
+> +ADE (Advanced Display Engine) is the display controller which grab image
+> +data from memory, do composition, do post image processing, generate RGB
+> +timing stream and transfer to DSI.
+> +
+> +Required properties:
+> +- compatible: value should be "hisilicon,hi6220-ade".
+> +- reg: physical base address and length of the controller's registers.
+> +  Three reg ranges are used in ADE driver:
+> +  ADE reg range, value should be "<0x0 0xf4100000 0x0 0x7800>";
+> +  media subsystem reg range, value should be "<0x0 0xf4410000 0x0 0x1000>";
+> +  media subsystem NOC QoS reg range, value should be "<0x0 0xf4520000 0x0
+> +  0x1000>".
+> +- reg-names: name of physical base.Valuse should be "ade_base",	"media_base"
+> +  and "media_noc_base".
 
-Yes, feel free to squash. They are separate because they were not in v1=
-,
-it makes them easier to review and I didn't want errors in them to hold
-up the base .dts. :) For example, SDIO I am still fighting with.
+The "media_base" and "media_noc_base" don't really look like a part of 
+the ADE subsytem's MMIO region. If we need to configure these registers,
+and currently don't have a driver/api to achieve this, I think it would
+be better off to use syscon, because that'll at least ensure that the
+registers are consistent among multiple drivers that have ioremapped
+these regions. The other possibility would be to keep this out of 
+mainline linux until we get drivers that support this in a proper way.
 
-Cheers,
-Andreas
+Otherwise, this looks good to me.
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
-rnberg)
+Archit
+
+> +- interrupt: the ldi vblank interrupt number used.
+> +- clocks: the clocks needed. Three clocks are used in ADE driver:
+> +  ADE core clock, value should be "<&media_ctrl HI6220_ADE_CORE>";
+> +  ADE pixel clok, value should be "<&media_ctrl HI6220_ADE_PIX_SRC>";
+> +  media NOC QoS clock, value should be "<&media_ctrl HI6220_CODEC_JPEG>".
+> +- clock-names: the name of the clocks. Values should be "clk_ade_core",
+> +  "clk_codec_jpeg" and "clk_ade_pix".
+> +- assigned-clocks: clocks to be assigned rate.
+> +- assigned-clock-rates: clock rates which are assigned to assigned-clocks.
+> +  The rate of <&media_ctrl HI6220_ADE_CORE> could be "360000000" or
+> +  "180000000";
+> +  The rate of <&media_ctrl HI6220_CODEC_JPEG> could be less than "1440000000".
+> +- port: the output port. This contains one endpoint subnode, with its
+> +  remote-endpoint set to the phandle of the connected DSI input endpoint.
+> +  See Documentation/devicetree/bindings/graph.txt for more device graph info.
+> +
+> +Optional properties:
+> +- dma-coherent: Present if dma operations are coherent.
+> +
+> +
+> +A example of HiKey board hi6220 SoC specific DT entry:
+> +Example:
+> +
+> +	ade: ade@f4100000 {
+> +		compatible = "hisilicon,hi6220-ade";
+> +		reg = <0x0 0xf4100000 0x0 0x7800>,
+> +		      <0x0 0xf4410000 0x0 0x1000>,
+> +		      <0x0 0xf4520000 0x0 0x1000>;
+> +		reg-names = "ade_base",
+> +			    "media_base",
+> +			    "media_noc_base";
+> +
+> +		interrupts = <0 115 4>; /* ldi interrupt */
+> +
+> +		clocks = <&media_ctrl HI6220_ADE_CORE>,
+> +			 <&media_ctrl HI6220_CODEC_JPEG>,
+> +			 <&media_ctrl HI6220_ADE_PIX_SRC>;
+> +		/*clock name*/
+> +		clock-names  = "clk_ade_core",
+> +			       "clk_codec_jpeg",
+> +			       "clk_ade_pix";
+> +
+> +		assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
+> +			<&media_ctrl HI6220_CODEC_JPEG>;
+> +		assigned-clock-rates = <360000000>, <288000000>;
+> +		dma-coherent;
+> +
+> +		port {
+> +			ade_out: endpoint {
+> +				remote-endpoint = <&dsi_in>;
+> +			};
+> +		};
+> +	};
+>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, hosted by The Linux Foundation
