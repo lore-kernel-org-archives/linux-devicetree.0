@@ -1,42 +1,101 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH V2 02/12] dtb: amd: Fix GICv2 hypervisor and virtual interface sizes
-Date: Mon, 8 Feb 2016 11:59:07 -0600
-Message-ID: <1454954357-8395-3-git-send-email-Suravee.Suthikulpanit@amd.com>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 7/8] [media] tvp5150: document input connectors DT
+ bindings
+Date: Mon, 8 Feb 2016 15:23:20 -0300
+Message-ID: <56B8DD18.3060802@osg.samsung.com>
+References: <1454699398-8581-1-git-send-email-javier@osg.samsung.com>
+ <1454699398-8581-8-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1454699398-8581-8-git-send-email-javier@osg.samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
+Hello,
 
-This patch fixes incorrect sizes of the GICv2 device tree node.
-This has triggered error message when booting Xen hypervisor.
+I noticed that I missed the DT folks in the cc list so I'm adding
+them now, sorry for the noise...
 
-Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 02/05/2016 04:09 PM, Javier Martinez Canillas wrote:
+> The tvp5150 decoder has different input connectors so extend the device
+> tree binding to allow device tree source files to define the connectors
+> that are available on a given board.
+>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+>
+>   .../devicetree/bindings/media/i2c/tvp5150.txt      | 43 ++++++++++++++++++++++
+>   1 file changed, 43 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> index 8c0fc1a26bf0..daa20e43a8e3 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> @@ -12,6 +12,32 @@ Optional Properties:
+>   - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+>   - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+>
+> +Optional nodes:
+> +- connectors: The input connectors of tvp5150 have to be defined under
+> +  a subnode name "connectors" using the following format:
+> +
+> +	input-connector-name {
+> +		input connector properties
+> +	};
+> +
+> +Each input connector must contain the following properties:
+> +
+> +	- label: a name for the connector.
+> +	- input: the input connector.
+> +
+> +The possible values for the "input" property are:
+> +	0: Composite0
+> +	1: Composite1
+> +	2: S-Video
+> +
+> +and on a tvp5150am1 and tvp5151 there is another:
+> +	4: Signal generator
+> +
+> +The list of valid input connectors are defined in dt-bindings/media/tvp5150.h
+> +header file and can be included by device tree source files.
+> +
+> +Each input connector can be defined only once.
+> +
+>   The device node must contain one 'port' child node for its digital output
+>   video port, in accordance with the video interface bindings defined in
+>   Documentation/devicetree/bindings/media/video-interfaces.txt.
+> @@ -36,6 +62,23 @@ Example:
+>   		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
+>   		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+>
+> +		connectors {
+> +			composite0 {
+> +				label = "Composite0";
+> +				input = <TVP5150_COMPOSITE0>;
+> +			};
+> +
+> +			composite1 {
+> +				label = "Composite1";
+> +				input = <TVP5150_COMPOSITE1>;
+> +			};
+> +
+> +			s-video {
+> +				label = "S-Video";
+> +				input = <TVP5150_SVIDEO>;
+> +			};
+> +		};
+> +
+>   		port {
+>   			tvp5150_1: endpoint {
+>   				remote-endpoint = <&ccdc_ep>;
+>
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 2874d92..fdd0c96 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -18,8 +18,8 @@
- 		#size-cells = <2>;
- 		reg = <0x0 0xe1110000 0 0x1000>,
- 		      <0x0 0xe112f000 0 0x2000>,
--		      <0x0 0xe1140000 0 0x10000>,
--		      <0x0 0xe1160000 0 0x10000>;
-+		      <0x0 0xe1140000 0 0x2000>,
-+		      <0x0 0xe1160000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
- 		ranges = <0 0 0 0xe1100000 0 0x100000>;
- 		v2m0: v2m@e0080000 {
+Best regards,
 -- 
-2.5.0
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
