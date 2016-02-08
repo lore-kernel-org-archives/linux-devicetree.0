@@ -1,26 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: Add United Radiant Technology Corporation vendor
- prefix
-Date: Mon, 8 Feb 2016 13:00:26 -0600
-Message-ID: <20160208190026.GA17975@rob-hp-laptop>
-References: <56B3DC9C.6070801@maciej.szmigiero.name>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv9 3/4] ARM: socfpga: enable L2 cache ECC on startup
+Date: Mon, 8 Feb 2016 13:00:44 -0600
+Message-ID: <56B8E5DC.5090600@opensource.altera.com>
+References: <1453911203-30202-1-git-send-email-tthayer@opensource.altera.com>
+ <1453911203-30202-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B3DC9C.6070801@maciej.szmigiero.name>
+In-Reply-To: <1453911203-30202-3-git-send-email-tthayer@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 12:19:56AM +0100, Maciej S. Szmigiero wrote:
-> Add vendor prefix for United Radiant Technology Corporation,
-> a provider of liquid crystal display technologies.
-> 
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 01/27/2016 10:13 AM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> This patch enables the ECC for L2 cache on machine startup. The ECC has to
+> be enabled before data is stored in memory otherwise the ECC will fail on
+> reads.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v9: Improve node put handling.
+> v8: Address community suggestions for strings. Fix string based on
+>     maintainer feedback. Update year in header.
+> v7: unmap locally scoped mapped_l2_edac_addr and add of_node_put(np)
+> v6: Remove pr_debug() & update year in header.
+> ---
+>  arch/arm/mach-socfpga/Makefile   |    1 +
+>  arch/arm/mach-socfpga/core.h     |    1 +
+>  arch/arm/mach-socfpga/l2_cache.c |   41 ++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-socfpga/socfpga.c  |    2 ++
+>  4 files changed, 45 insertions(+)
+>  create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+> 
+
+Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
