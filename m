@@ -1,48 +1,59 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
-Date: Mon, 8 Feb 2016 11:59:14 -0600
-Message-ID: <1454954357-8395-10-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: [PATCH V2 06/12] dtb: amd: Misc changes for SATA device tree nodes
+Date: Mon, 8 Feb 2016 11:59:11 -0600
+Message-ID: <1454954357-8395-7-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 
-Add KCS device node to support IPMI solution on Overdrive
-system.
+Add new SATA1 device node, and fix the register range size of SATA0.
 
-Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index c5461b2..a7fc059 100644
+index 4be36fd..9f59381 100644
 --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
 +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -236,5 +236,16 @@
- 			reg = <0x0 0xe8000000 0 0x1000000>;
- 			interrupts = <0 380 4>;
+@@ -66,12 +66,22 @@
+ 
+ 		sata0: sata@e0300000 {
+ 			compatible = "snps,dwc-ahci";
+-			reg = <0 0xe0300000 0 0x800>;
++			reg = <0 0xe0300000 0 0xf0000>;
+ 			interrupts = <0 355 4>;
+ 			clocks = <&sataclk_333mhz>;
+ 			dma-coherent;
  		};
-+
-+		ipmi_kcs: kcs@e0010000 {
+ 
++		/* This is for Rev B only */
++		sata1: sata@e0d00000 {
 +			status = "disabled";
-+			compatible = "ipmi-kcs";
-+			device_type = "ipmi";
-+			reg = <0x0 0xe0010000 0 0x8>;
-+			interrupts = <0 389 4>;
-+			interrupt-names = "ipmi_kcs";
-+			reg-size = <1>;
-+			reg-spacing = <4>;
++			compatible = "snps,dwc-ahci";
++			reg = <0 0xe0d00000 0 0xf0000>;
++			interrupts = <0 354 4>;
++			clocks = <&sataclk_333mhz>;
++			dma-coherent;
 +		};
- 	};
- };
++
+ 		i2c0: i2c@e1000000 {
+ 			status = "disabled";
+ 			compatible = "snps,designware-i2c";
 -- 
 2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
