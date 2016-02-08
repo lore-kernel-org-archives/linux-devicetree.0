@@ -1,111 +1,41 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V2] ARM64: tegra: Add support for Google Pixel C
-Date: Mon, 8 Feb 2016 16:33:19 +0000
-Message-ID: <1454949199-27050-1-git-send-email-jonathanh@nvidia.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] serial: mps2-uart: add MPS2 UART driver
+Date: Mon, 8 Feb 2016 08:52:26 -0800
+Message-ID: <20160208165226.GA11593@kroah.com>
+References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
+ <1454413199-26573-5-git-send-email-vladimir.murzin@arm.com>
+ <20160207071154.GA32017@kroah.com>
+ <56B87928.7020803@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Olof Johansson <olofj@chromium.org>, linux-arm-kernel@lists.infradead.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56B87928.7020803-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
-upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
+On Mon, Feb 08, 2016 at 11:16:56AM +0000, Vladimir Murzin wrote:
+> On 07/02/16 07:11, Greg KH wrote:
+> >> +
+> >> +#define SERIAL_NAME "ttyS"
+> > 
+> > You can't be "ttyS", there's already a serial port named that, please
+> > use a unique name and a new major/minor number (dynamic ideally).
+> > 
+> 
+> Hi Greg,
+> 
+> I did s/ttyMPS/ttyS per your request for v1 [1]. I'm fine to change it
+> back if you prefer that, but I'd be glad to know what I've been missing?
+> 
+> [1] https://lkml.org/lkml/2015/12/13/8
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/Makefile           |  1 +
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 60 +++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+Yeah, I was wrong, sorry about that, my fault.
 
-diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
-index a7e865da1005..0f7cdf3e05c1 100644
---- a/arch/arm64/boot/dts/nvidia/Makefile
-+++ b/arch/arm64/boot/dts/nvidia/Makefile
-@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
-+dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
- 
- always		:= $(dtb-y)
- clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-new file mode 100644
-index 000000000000..59acdb6b4f23
---- /dev/null
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-@@ -0,0 +1,60 @@
-+/dts-v1/;
-+
-+#include "tegra210.dtsi"
-+
-+/ {
-+	model = "Google Pixel C";
-+	compatible = "google,smaug-rev8", "google,smaug-rev7",
-+		     "google,smaug-rev6", "google,smaug-rev5",
-+		     "google,smaug-rev4", "google,smaug-rev3",
-+		     "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
-+
-+	aliases {
-+		serial0 = &uarta;
-+	};
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0xc0000000>;
-+	};
-+
-+	serial@0,70006000 {
-+		status = "okay";
-+	};
-+
-+	pmc@0,7000e400 {
-+		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <12000 6000>;
-+		nvidia,core-pwr-off-time = <39053>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
-+		status = "okay";
-+	};
-+
-+	sdhci@0,700b0600 {
-+		bus-width = <8>;
-+		non-removable;
-+		status = "okay";
-+	};
-+
-+	clocks {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		clk32k_in: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+		};
-+	};
-+};
--- 
-2.1.4
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
