@@ -1,53 +1,52 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH V2 03/12] dtb: amd: Fix DMA ranges in device tree
-Date: Mon, 8 Feb 2016 11:59:08 -0600
-Message-ID: <1454954357-8395-4-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: [PATCH V2 05/12] dtb: amd: Misc changes for I2C device nodes
+Date: Mon, 8 Feb 2016 11:59:10 -0600
+Message-ID: <1454954357-8395-6-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 
-Fix DMA ranges of smb0 and pcie0 nodes in AMD Seattle SOC.
+Add new i2c1 device node, and fix the incorrect clock frequency.
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index fdd0c96..5c73117 100644
+index c7c759a..4be36fd 100644
 --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
 +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -55,8 +55,12 @@
- 		#size-cells = <2>;
- 		ranges;
+@@ -77,7 +77,15 @@
+ 			compatible = "snps,designware-i2c";
+ 			reg = <0 0xe1000000 0 0x1000>;
+ 			interrupts = <0 357 4>;
+-			clocks = <&uartspiclk_100mhz>;
++			clocks = <&miscclk_250mhz>;
++		};
++
++		i2c1: i2c@e0050000 {
++			status = "disabled";
++			compatible = "snps,designware-i2c";
++			reg = <0 0xe0050000 0 0x1000>;
++			interrupts = <0 340 4>;
++			clocks = <&miscclk_250mhz>;
+ 		};
  
--		/* DDR range is 40-bit addressing */
--		dma-ranges = <0x80 0x0 0x80 0x0 0x7f 0xffffffff>;
-+		/*
-+		 * dma-ranges is 40-bit address space containing:
-+		 * - GICv2m MSI register is at 0xe0080000
-+		 * - DRAM range [0x8000000000 to 0xffffffffff]
-+		 */
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x100 0x0>;
- 
- 		/include/ "amd-seattle-clks.dtsi"
- 
-@@ -159,7 +163,7 @@
- 				<0x1000 0x0 0x0 0x4 &gic0 0x0 0x0 0x0 0x123 0x1>;
- 
- 			dma-coherent;
--			dma-ranges = <0x43000000 0x80 0x0 0x80 0x0 0x7f 0xffffffff>;
-+			dma-ranges = <0x43000000 0x0 0x0 0x0 0x0 0x100 0x0>;
- 			ranges =
- 				/* I/O Memory (size=64K) */
- 				<0x01000000 0x00 0x00000000 0x00 0xefff0000 0x00 0x00010000>,
+ 		serial0: serial@e1010000 {
 -- 
 2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
