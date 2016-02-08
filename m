@@ -1,58 +1,53 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
-Date: Mon, 8 Feb 2016 16:17:20 +0000
-Message-ID: <56B8BF90.3050602@synopsys.com>
-References: <cover.1454498292.git.jpinto@synopsys.com>
- <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
- <2087303.0ORDEBS3hn@wuerfel> <56B222C8.5010509@synopsys.com>
- <20160204162700.GD17587@leverpostej> <56B8B177.2050000@synopsys.com>
- <20160208153005.GB12536@leverpostej> <56B8B614.10306@synopsys.com>
- <20160208161530.GB14146@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/11] ARM: dts: sunxi: Add dtsi file for
+ AXP809 PMIC
+Date: Mon, 8 Feb 2016 16:22:44 +0000
+Message-ID: <20160208162244.GG7265@sirena.org.uk>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-8-git-send-email-wens@csie.org>
+ <20160202121733.GO4455@sirena.org.uk>
+ <CAGb2v657zYT30KbuK0fyVOmhv0kzJjj9gTsTFRaS4i3d6YhiHQ@mail.gmail.com>
+ <20160208145347.GD7265@sirena.org.uk>
+ <CAGb2v64ySLAVbPf_XaZnzm5T=SmQLip4iO2p4cGXg=C0=51eqA@mail.gmail.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20160208161530.GB14146@leverpostej>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBB24B4O2QKGQEJ3ZPS6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64ySLAVbPf_XaZnzm5T=SmQLip4iO2p4cGXg=C0=51eqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/8/2016 4:15 PM, Mark Rutland wrote:
-> On Mon, Feb 08, 2016 at 03:36:52PM +0000, Joao Pinto wrote:
->> Hi Mark,
->>
->> On 2/8/2016 3:30 PM, Mark Rutland wrote:
->>> On Mon, Feb 08, 2016 at 03:17:11PM +0000, Joao Pinto wrote:
->>>> Hi Mark and Arnd,
->>>> Are you saying that a user that puts "snps,ufshcd-1.1"
->>>> in the DT compatibility string disables the UFS 2.0 in the core driver despite
->>>> the controller is 2.0? Please clarify.
->>>
->>> If you can consistently and safely detect that the HW is 2.0, using 2.0
->>> functionality is fine.
->>>
->>> Regardless, you should have a -1.1 compatible string for the 1.1 HW, and
->>> a -2.0 string for the 2.0 HW, so that DTs are explicit about what the
->>> hardware is. If 2.0 is intended to be a superset of 1.1, you can have a
->>> 1.1 fallback entry for the 2.0 hardware.
->>>
->>
->> Ok, I will include the version in the compatibility strings, but if someone
->> mentions "snps,ufshcd-1.1" only and the driver detects that the HW is 2.0
->> capable it will activate the 2.0 features independently of what mentioned in the
->> DT, correct?
-> 
-> As above, if that can be detected safely and reliably, then I don't see
-> a problem with that.
+--zGQnqpIoxlsbsOfg
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Ok, thanks for the comments! I am working a bit in PCI next version patch and so
-I predict to produce a new version for UFS next Wednesday.
+On Mon, Feb 08, 2016 at 10:56:05PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Feb 8, 2016 at 10:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Sat, Feb 06, 2016 at 08:42:24PM +0800, Chen-Yu Tsai wrote:
 
-Joao
+> >> Mark, may I assume you are OK with this DTS include listing
+> >> the regulators, even if their sections are empty?
 
-> 
-> Thanks,
-> Mark.
-> 
+> > If it has no content why have it?
 
+> I'd like the regulator core to disable any unused ones. The core
+> considers regulators that don't have nodes as not having constraints,
+> and won't touch them.
+
+> Any other ways to do this? Or am I going about this the wrong way?
+
+The whole point with constraints is that they describe what is safe on a
+given board.  This includes powering off unused regulators - it should
+be something that the system integrator configures, not something that
+they get as default.
+--zGQnqpIoxlsbsOfg--
