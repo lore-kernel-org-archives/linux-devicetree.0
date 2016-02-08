@@ -1,130 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/5] ARM: dts: r8a7794: add MSTP10 clocks
-Date: Tue, 09 Feb 2016 01:59:23 +0300
-Message-ID: <9117518.oomsaSkM7k@wasted.cogentembedded.com>
-References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: apq8016-sbc: Add DT node for the uSD SDHC interface
+Date: Mon, 08 Feb 2016 15:02:02 -0800
+Message-ID: <7h4mdibyc5.fsf@baylibre.com>
+References: <1454590402-13507-1-git-send-email-georgi.djakov@linaro.org>
+	<7hmvrgb06c.fsf@baylibre.com>
+	<CAOi56cWWfJCFyC_ndRqhm6c0QeQF=nXkcK3RCVdCDXTBag=+ow@mail.gmail.com>
+	<56B4DFC5.7030700@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B4DFC5.7030700-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (Georgi Djakov's message of "Fri, 5
+	Feb 2016 19:45:41 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add MSTP10 clocks to R8A7790 device tree.
+Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-This patch is based on the commit ee9141522dcf ("ARM: shmobile: r8a7791:
-add MSTP10 support on DTSI").
+> On 02/05/2016 12:44 AM, Kevin Hilman wrote:
+>> On Thu, Feb 4, 2016 at 2:06 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>>> Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+>>>
+>>>> Add the necessary properties to enable the SD-card on db410c boards.
+>>>>
+>>>> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>> I tried this with 2 different SD cards on my dragonboard 410c but it's
+>>> not detecting either card.
+>> 
+>> To be more precise, I tried this patch on v4.5-rc1 and today's
+>> linux-next using the default defconfig + CONFIG_MMC_SDHCI_MSM=y, and
+>> see the same voltage errors on both.
+>>
+>
+> Hi Kevin, thanks for trying this. I got the same with v4.5-rc2, but
+> this is expected as it depends on the another recently merged patch
+> in linux-next. Perhaps I should have mentioned this in the commit
+> message.
+>
+> Anyway, just checked with next-20160205 and it works for me - tested
+> with 3 different cards. Not sure why it does not work for you.
+> Could you please check if you have the following patch in your tree:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I re-tested with next-20160205 and it seems to work fine.
 
----
- arch/arm/boot/dts/r8a7794.dtsi            |   53 ++++++++++++++++++++++++++++++
- include/dt-bindings/clock/r8a7794-clock.h |   28 +++++++++++++++
- 2 files changed, 81 insertions(+)
+Feel free to add
 
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -1165,6 +1165,59 @@
- 				"gpio1", "gpio0", "qspi_mod",
- 				"i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
- 		};
-+		mstp10_clks: mstp10_clks@e6150998 {
-+			compatible = "renesas,r8a7794-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe6150998 0 4>, <0 0xe61509a8 0 4>;
-+			clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-+				 <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-+				 <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-+				 <&mstp10_clks R8A7794_CLK_SCU_ALL>;
-+			#clock-cells = <1>;
-+			clock-indices = <R8A7794_CLK_SSI_ALL
-+					 R8A7794_CLK_SSI9 R8A7794_CLK_SSI8
-+					 R8A7794_CLK_SSI7 R8A7794_CLK_SSI6
-+					 R8A7794_CLK_SSI5 R8A7794_CLK_SSI4
-+					 R8A7794_CLK_SSI3 R8A7794_CLK_SSI2
-+					 R8A7794_CLK_SSI1 R8A7794_CLK_SSI0
-+					 R8A7794_CLK_SCU_ALL
-+					 R8A7794_CLK_SCU_DVC1
-+					 R8A7794_CLK_SCU_DVC0
-+					 R8A7794_CLK_SCU_CTU1_MIX1
-+					 R8A7794_CLK_SCU_CTU0_MIX0
-+					 R8A7794_CLK_SCU_SRC9
-+					 R8A7794_CLK_SCU_SRC8
-+					 R8A7794_CLK_SCU_SRC7
-+					 R8A7794_CLK_SCU_SRC6
-+					 R8A7794_CLK_SCU_SRC5
-+					 R8A7794_CLK_SCU_SRC4
-+					 R8A7794_CLK_SCU_SRC3
-+					 R8A7794_CLK_SCU_SRC2
-+					 R8A7794_CLK_SCU_SRC1
-+					 R8A7794_CLK_SCU_SRC0>;
-+			clock-output-names = "ssi-all", "ssi9", "ssi8", "ssi7",
-+					     "ssi6", "ssi5", "ssi4", "ssi3",
-+					     "ssi2", "ssi1", "ssi0",
-+					     "scu-all", "scu-dvc1", "scu-dvc0",
-+					     "scu-ctu1-mix1", "scu-ctu0-mix0",
-+					     "scu-src9", "scu-src8", "scu-src7",
-+					     "scu-src6", "scu-src5", "scu-src4",
-+					     "scu-src3", "scu-src2", "scu-src1",
-+					     "scu-src0";
-+		};
- 		mstp11_clks: mstp11_clks@e615099c {
- 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
-Index: renesas/include/dt-bindings/clock/r8a7794-clock.h
-===================================================================
---- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
-+++ renesas/include/dt-bindings/clock/r8a7794-clock.h
-@@ -103,6 +103,34 @@
- #define R8A7794_CLK_I2C1		30
- #define R8A7794_CLK_I2C0		31
- 
-+/* MSTP10 */
-+#define R8A7794_CLK_SSI_ALL		5
-+#define R8A7794_CLK_SSI9		6
-+#define R8A7794_CLK_SSI8		7
-+#define R8A7794_CLK_SSI7		8
-+#define R8A7794_CLK_SSI6		9
-+#define R8A7794_CLK_SSI5		10
-+#define R8A7794_CLK_SSI4		11
-+#define R8A7794_CLK_SSI3		12
-+#define R8A7794_CLK_SSI2		13
-+#define R8A7794_CLK_SSI1		14
-+#define R8A7794_CLK_SSI0		15
-+#define R8A7794_CLK_SCU_ALL		17
-+#define R8A7794_CLK_SCU_DVC1		18
-+#define R8A7794_CLK_SCU_DVC0		19
-+#define R8A7794_CLK_SCU_CTU1_MIX1	20
-+#define R8A7794_CLK_SCU_CTU0_MIX0	21
-+#define R8A7794_CLK_SCU_SRC9		22
-+#define R8A7794_CLK_SCU_SRC8		23
-+#define R8A7794_CLK_SCU_SRC7		24
-+#define R8A7794_CLK_SCU_SRC6		25
-+#define R8A7794_CLK_SCU_SRC5		26
-+#define R8A7794_CLK_SCU_SRC4		27
-+#define R8A7794_CLK_SCU_SRC3		28
-+#define R8A7794_CLK_SCU_SRC2		29
-+#define R8A7794_CLK_SCU_SRC1		30
-+#define R8A7794_CLK_SCU_SRC0		31
-+
- /* MSTP11 */
- #define R8A7794_CLK_SCIFA3		6
- #define R8A7794_CLK_SCIFA4		7
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+Thanks,
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
