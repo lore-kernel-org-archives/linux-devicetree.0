@@ -1,53 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
-Date: Mon, 8 Feb 2016 10:51:05 +0000
-Message-ID: <20160208105104.GA12991@leverpostej>
-References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
- <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
+Date: Mon, 08 Feb 2016 11:52:21 +0100
+Message-ID: <5060470.dfeHX20DRa@phil>
+References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
+ <56B869F4.6090507@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, tsahee@annapurnalabs.com, linux-arm-kernel@lists.infradead.org, rshitrit@annapurnalabs.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Barak Wasserstrom <barak@annapurnalabs.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56B869F4.6090507@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, treding@nvidia.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> +	chosen {
-> +		stdout-path = "console0:115200n8";
-> +	};
-
-There is no console0 alias, so this cannot work.
-
-Did you mean serial0?
-
-[...]
-
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +	};
-
-[...]
-
-> +	psci {
-> +		compatible = "arm,psci-0.2", "arm,psci";
-> +		method = "smc";
-> +		cpu_on = <0x84000003>;
-> +	};
-
-If you have PSCI 0.2, the cpu_on ID (and all other mandatory function
-IDs) are implicit.
-
-If you want to have "arm,psci" as a fallback, then please add the IDs
-for functions mandatory in PSCI 0.2 which existed in the "arm,psci"
-binding. Otherwise, drop "arm,psci" from the compatible list, along
-with the cpu_on function ID.
-
-THanks,
-Mark.
+SGkgQXJjaGl0LAoKQW0gTW9udGFnLCA4LiBGZWJydWFyIDIwMTYsIDE1OjQyOjA0IHNjaHJpZWIg
+QXJjaGl0IFRhbmVqYToKPiBPbiAwMS8wNi8yMDE2IDA5OjMzIEFNLCBDaHJpcyBaaG9uZyB3cm90
+ZToKPiA+IFRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkg
+RFNJIGhvc3QgY29udHJvbGxlcgo+ID4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3Ig
+YSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPiA+IGNvbnRyb2xsZXIgRFJNIGRy
+aXZlci4KPiA+IAo+ID4gVGhlIE1JUEkgRFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBl
+dmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPiA+IGNocm9tZSBvcyBrZXJuZWwgY2hyb21lX3Yz
+LjE0LCBhbmQgaXQgY2FuIGRpc3BsYXkgbm9ybWFsbHkuCj4gPiAKPiA+IFRoaXMgcGF0Y2hzZXQg
+aXMgYmFzZSBvbiB0aGUgcGF0Y2hzZXQgZnJvbSBZaW5nLmxpdUBmcmVlc2NhbGUuY29tLgo+ID4g
+PGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzc3MTgxLmh0bWw+Cj4g
+PiAKPiA+IEFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBn
+ZXQgcmlkIG9mIHRoZSBicmlkZ2UsCj4gPiBhbmQgcmVnaXN0ZXIgdGhlIGVuY29kZXIgJiBjb25u
+ZWN0ZXIgaW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4gCj4gSSd2ZSByYWlzZWQgdGhp
+cyBxdWVzdGlvbiB0b28gbGF0ZSwgYnV0IHdoYXQgd2FzIHRoZSByZWFzb24gdG8gbm90Cj4gaW1w
+bGVtZW50IHRoZSBEU0kgYmxvY2sgYXMgYSBicmlkZ2UgZHJpdmVyPwoKVGhlcmUgc2VlbXMgdG8g
+YWx3YXlzIGJlIHNvbWUgc29ydCBvZiBjb250ZW50aW9uIGFib3V0IHRob3NlIGJlaW5nIGJyaWRn
+ZSAKZHJpdmVycyAtIEkgdGhpbmsgSSByZW1lbWJlciBUaGllcnJ5IHNwZWFraW5nIHVwIGFib3V0
+IHRoYXQuIEJ1dCBJIGRvbid0IApyZW1lbWJlciBpZiBhbnkgZGlmZmVyZW50IHNvbHV0aW9uIHdh
+cyBzdWdnZXN0ZWQuCgpBbHNvIGFzIHdlIGhhdmUgc2VlbiB3aXRoIGN1cnJlbnQgc2hhcmVkIElQ
+cyAoZHctaGRtaSArIGFuYWxvZ2l4LWRwKSB0aGVyZSAKYXJlIGFsd2F5cyBpbXBsZW1lbnRhdGlv
+bi1zcGVjaWZpYyBwYXJ0cyBhbmQgZGVjaWRpbmcgd2hpY2ggbmVlZHMgdG8gbGFuZCAKd2hlcmUg
+aXMgZGlmZmljdWx0IHdpdGhvdXQgdGhlIHNlY29uZGFyeSB1c2VyIHByZXNlbnQuCgpUaGUgZmly
+c3QgaXRlcmF0aW9ucyB3aGVyZSB1c2luZyBhIGJyaWRnZS1kcml2ZXItYmFzZSBmb3IgaXQgYnV0
+IEkgZ3Vlc3MgaXQgCndhcyB0byBtdWNoIGhhc3NsZSB3aXRob3V0IHNlZWluZyBhbm90aGVyIHVz
+ZXIgb24gdGhlIGhvcml6b24uCgoKPiBUaGUgZHJtL2hpc2lsaWNvbiBJUCBzZWVtcyB0byB1c2Ug
+YSB2ZXJ5IHNpbWlsYXIgRFNJIERlc2lnbndhcmUgSVAgKHRoZQo+IHJlZ2lzdGVyIG9mZnNldHMg
+c2VlbXMgdG8gYmUgdGhlIHNhbWUpLiBUaGVyZSBpcyBhIGdvb2QgcG90ZW50aWFsIG9mCj4gcmUt
+dXNlIGhlcmUgYnkgZGlmZmVyZW50IGttcyBkcml2ZXJzIGhlcmUgdGhlIHdheSBpdCdzIGFscmVh
+ZHkgZG9uZSBmb3IKPiBEVyBIRE1JIGFuZCB0aGUgYW5hbG9naXggRFAgZHJpdmVyIHRoYXQncyBp
+biByZXZpZXcgcHJvY2Vzcy4KCkkgZ3Vlc3MsIHRoZSBzZWNvbmQgdXNlciBub3cgZ2V0cyB0byBk
+byB0aGUgZ2VuZXJhbGl6YXRpb24gOy0pCgoKSGVpa28KCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
