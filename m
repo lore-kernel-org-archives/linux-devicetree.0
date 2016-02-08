@@ -1,54 +1,221 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 8 Feb 2016 16:49:25 +0530
-Message-ID: <56B879BD.2070608@ti.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <201602041225.11679.marex@denx.de> <56B38AB3.3070801@ti.com>
- <201602060842.38290.marex@denx.de>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Mon, 8 Feb 2016 14:20:39 +0300
+Message-ID: <56B87A07.1060103@cogentembedded.com>
+References: <1454693676-20211-1-git-send-email-petr@barix.com>
+ <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201602060842.38290.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B85DB6.9030605-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2/8/2016 12:19 PM, Petr Kulhavy wrote:
 
+>>    [Changed Felipe's address to the kernel.org one, so thta he can read this
+>> too. :-)]
+>
+> He should also update the MAINTAINERS file with his new address.
 
-On 02/06/2016 01:12 PM, Marek Vasut wrote:
-> On Thursday, February 04, 2016 at 06:30:27 PM, R, Vignesh wrote:
->> On 2/4/2016 4:55 PM, Marek Vasut wrote:
+    He has submitted a patch to do that.
+
+>>> TI DA8xx MUSB driver equipped with DeviceTree support.
+>>> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+>>
+>>    Have you notices "depends on BROKEN" in Kconfig, BTW?
+>
+> Honestly, I don't see any "depends on BROKEN". However I do build with the
+> 3.17 kernel.
+
+    And the patch is against 3.17? You should only submit patches against the 
+recent kernel. In this case, against the -next branch of Felipe's repo on 
+kernel.org.
+
+>> Felipe wants the PHY specific parts moved to a PHY driver...
+
+> I was wondering about a PHY driver too. However the AM1808 has no standalone
+> PHY module like e.g. the AM335x does.  The PHY together with the USB core are
+> integrated into a single block and there is only a little control through the
+> SYSCFG registers.
+
+    The CFGCHIP2 register controls the PHY in practice. The code manipulating 
+it should be moved to a PHY driver.
+
+> And that change has nothing to do with DT support - it's a structural change
+> of the da8xx USB and platform drivers.
+> That's why I didn't go for that.
+
+    OK, just thought I'd let you know.
+
+>>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
+>>>   drivers/usb/musb/da8xx.c                           | 162
+>>> +++++++++++++++++++++
+>>>   include/linux/platform_data/usb-davinci.h          |   3 +-
+>>>   3 files changed, 227 insertions(+), 1 deletion(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> new file mode 100644
+>>> index 0000000..69c0961
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> @@ -0,0 +1,63 @@
+>>> +TI DA8xx MUSB
+>>> +~~~~~~~~~~~~~
+>>> +
+>>> +Rquired properties:
+>>> +~~~~~~~~~~~~~~~~~~~~
+>>> + - compatible : Should be "ti,da8xx-musb"
+>>
+>>    No way. You'l probably need to select a lowest common denominator model.
+>> I don't remember offhand but I don't think DA850 (AM1808) is different from
+>> DA830 (AM170x)...
+
+    So I'd suggest "ti,da830-musb".
+
+> I just did what the guys here on the mailing list told me. I'm getting a bit
+> confused now what is the right approach then...
+
+    Wildcards are not allowed in the "compatible" prop. People here told you 
+the same.
+
+>>> +
+>>> + - interrupts: USB interrupt number
+>>> +
+>>> + - interrupt-names: should be set to "mc"
+>>> +
+>>> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral"
+>>> or "otg".
+>>> +
+>>> + - mentor,power : Specifies the maximum current in milli-ampers the
+>>> controller can
+>>> +     supply in host mode. The maximum configurable value is 510mA.
+>>> +
+>>> + - mentor,num-eps : Valid only in host mode. Specifies the number of
+>>> target endpoints
+>>> +     supported by the controller. For DA8xx it is "5".
+>>
+>>    That number should actually be deducible from the "compatible" prop. I'm
+>> not sure it's a good idea to specify this in DT... although TI have done
+>> this once already, for OMAPs...
+
+    Even twice, in omap2430.c and musb_dsps.c. omap2430.c even parses 
+non-prefixed props, ew...
+
+> All the other MUSBs specify these parameters in the DT. Do you want to make an
+> exception?
+
+    I'd prefer doing it that way, sure.
 
 [...]
+>>> @@ -134,6 +139,35 @@ static inline void phy_off(void)
+>>>       __raw_writel(cfgchip2, CFGCHIP2);
+>>>   }
+>>>
+>>> +/* converts PHY refclk frequency in HZ into USB0REF_FREQ config value
+>>
+>>    It's Hz, no?
+> Nope, see the spruh82a.pdf
 
->> Yeah, there is delay(of few ns) required between writing to
->> INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
->> call). This is specific to TI K2G SoC and needs to be tied to the new
->> binding.
-> 
-> Can't you somehow poll the hardware to check whether or not it's ready instead
-> of adding some random delay ?
+    Refering me to the AM18xx TRM when I asked for just correctly naming the 
+SI unit is strange. :-)
 
-There is no dedicated register to poll as such.
+>> [...]
+>>> @@ -527,6 +561,35 @@ static const struct platform_device_info
+>>> da8xx_dev_info = {
+>>>       .dma_mask    = DMA_BIT_MASK(32),
+>>>   };
+>>>
+>>> +static int get_musb_port_mode(struct device_node *np)
+>>> +{
+>>> +    enum usb_dr_mode mode;
+>>> +
+>>> +    mode = of_usb_get_dr_mode(np);
+>>> +    switch (mode) {
+>>> +    case USB_DR_MODE_HOST:
+>>> +        return MUSB_HOST;
+>>> +
+>>> +    case USB_DR_MODE_PERIPHERAL:
+>>> +        return MUSB_PERIPHERAL;
+>>> +
+>>> +    case USB_DR_MODE_OTG:
+>>> +        return MUSB_OTG;
+>>> +
+>>> +    default:
+>>> +        return MUSB_UNDEFINED;
+>>> +    }
+>>> +}
+>>
+>>    This is clearly MUSB generic code.
+>
+> So what does it mean?
 
-According to TRM:
-"Wait for couple of cycles of QSPI_REF_CLK(functional clock of QSPI
-@384MHz) until CQSPI_REG_INDIRECTWR[0] bit is internally synchronized by
-the QSPI module before writing to flash".
+    Define this function in musb_core.c.
 
-So, a few ns(~6ns @384MHz) delay is needed (or accessing a QSPI module
-register should be sufficient as it will take more than 2 clock cycles).
-I believe this delay is specific to TI K2G SoC and maybe needs to be
-tied to the binding.
+>> [...]
+>>> @@ -560,6 +624,95 @@ static int da8xx_probe(struct platform_device *pdev)
+>>>       glue->dev            = &pdev->dev;
+>>>       glue->clk            = clk;
+>>>
+>>> +    if (IS_ENABLED(CONFIG_OF) && np) {
+>>> +        struct musb_hdrc_config *config;
+>>> +        struct musb_hdrc_platform_data *data;
+>>> +        u32 phy20_refclock_freq, phy20_clkmux_cfg;
+>> [...]
+>>> +        pdata->mode = get_musb_port_mode(np);
+>>> +        config->num_eps = get_int_prop(np, "mentor,num-eps");
+>>> +        config->ram_bits = get_int_prop(np, "mentor,ram-bits");
+>>> +        /* the "mentor,power" value is in milli-amps, whereas
+>>> +         * the mentor configuration is in 2mA units
+>>> +         */
+>>> +        pdata->power = get_int_prop(np, "mentor,power") / 2;
+>>> +        config->multipoint = of_property_read_bool(np,
+>>> +            "mentor,multipoint");
+>>
+>>    These props are MUSB generic. Parsing them in each glue separately
+>> doesn't make much sense...
+ >
+> What do you suggest then?
 
+    musb_core.c again.
 
--- 
-Regards
-Vignesh
+>>
+>> [...]
+>>> +        /* optional parameter reference clock frequency */
+>>> +        if (!of_property_read_u32(np, "ti,phy20-clkmux-cfg",
+>>> +            &phy20_clkmux_cfg)) {
+>>> +            u32 cfgchip2;
+>>> +
+>>> +            /*
+>>> +             * Select internal reference clock for USB 2.0 PHY
+>>> +             * and use it as a clock source for USB 1.1 PHY
+>>> +             * (this is the default setting anyway).
+>>> +             */
+>>> +
+>>> +            cfgchip2 = __raw_readl(
+>>> +                DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+>>
+>>    That's why a PHY driver is needed. DA8XX_SYSCFG2_VIRT() shouldn't be used
+>> outside arch/arm/mach-davinci/.
+>>
+> See above.
+
+    Why are you not using CFGCHIP2 macro in this file as the rest of the code 
+does?
+
+> Regards
+> Petr
+
+MBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
