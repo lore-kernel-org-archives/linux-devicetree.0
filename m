@@ -1,53 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/11] ARM: dts: sunxi: Add dtsi file for
- AXP809 PMIC
-Date: Mon, 8 Feb 2016 16:22:44 +0000
-Message-ID: <20160208162244.GG7265@sirena.org.uk>
-References: <1454408864-24112-1-git-send-email-wens@csie.org>
- <1454408864-24112-8-git-send-email-wens@csie.org>
- <20160202121733.GO4455@sirena.org.uk>
- <CAGb2v657zYT30KbuK0fyVOmhv0kzJjj9gTsTFRaS4i3d6YhiHQ@mail.gmail.com>
- <20160208145347.GD7265@sirena.org.uk>
- <CAGb2v64ySLAVbPf_XaZnzm5T=SmQLip4iO2p4cGXg=C0=51eqA@mail.gmail.com>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBB24B4O2QKGQEJ3ZPS6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64ySLAVbPf_XaZnzm5T=SmQLip4iO2p4cGXg=C0=51eqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Julien Chauveau <chauveau.julien@gmail.com>
+Subject: Re: [PATCH v2 07/10] ARM64: dts: rockchip: Add power key to GeekBox
+Date: Mon, 8 Feb 2016 17:26:04 +0100
+Message-ID: <99011D31-E0AE-4F02-B769-E10617EA4F01@gmail.com>
+References: <1454897859-7601-1-git-send-email-afaerber@suse.de> <1454897859-7601-8-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454897859-7601-8-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---zGQnqpIoxlsbsOfg
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello Andreas,
 
-On Mon, Feb 08, 2016 at 10:56:05PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Feb 8, 2016 at 10:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Sat, Feb 06, 2016 at 08:42:24PM +0800, Chen-Yu Tsai wrote:
+> Le 8 f=C3=A9vr. 2016 =C3=A0 03:17, Andreas F=C3=A4rber <afaerber@suse=
+=2Ede> a =C3=A9crit :
+>=20
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+> v2: New
+>=20
+> arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 22 ++++++++++++++++=
+++++++
+> 1 file changed, 22 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3368-geekbox.dts
+> index e84383fd6f10..fe5aa785cfda 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> @@ -70,6 +70,22 @@
+> 		pinctrl-0 =3D <&ir_int>;
+> 	};
+>=20
+> +	keys: gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pwr_key>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
 
-> >> Mark, may I assume you are OK with this DTS include listing
-> >> the regulators, even if their sections are empty?
+I think #address-cells and #size-cells are not necessary.
 
-> > If it has no content why have it?
+> +
+> +		button@0 {
+> +			reg =3D <0>;
 
-> I'd like the regulator core to disable any unused ones. The core
-> considers regulators that don't have nodes as not having constraints,
-> and won't touch them.
+reg can be removed too.
 
-> Any other ways to do this? Or am I going about this the wrong way?
+> +			gpio-key,wakeup =3D <1>;
 
-The whole point with constraints is that they describe what is safe on a
-given board.  This includes powering off unused regulators - it should
-be something that the system integrator configures, not something that
-they get as default.
---zGQnqpIoxlsbsOfg--
+You should use the new "wakeup-source =C2=BB property.
+
+> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+> +			label =3D "GPIO Power";
+> +			linux,code =3D <116>;
+
+#include <dt-bindings/input/input.h>
+and use KEY_POWER instead of 116
+
+> +		};
+> +	};
+> +
+> 	leds: gpio-leds {
+> 		compatible =3D "gpio-leds";
+>=20
+> @@ -265,6 +281,12 @@
+> 		};
+> 	};
+>=20
+> +	keys {
+> +		pwr_key: pwr-key {
+> +			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_up>;
+
+Is there a reason you want to enable the internal pull-up resistor on t=
+his pin?
+
+The schematic shows there's already an external pull-up resistor so the=
+ internal one should not be needed.
+
+
+> +		};
+> +	};
+> +
+> 	pmic {
+> 		pmic_sleep: pmic-sleep {
+> 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
