@@ -1,42 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/7] dt-bindings: ARM: Mediatek: Document bindings for
- MT2701
-Date: Mon, 8 Feb 2016 13:24:28 -0600
-Message-ID: <20160208192428.GA26367@rob-hp-laptop>
-References: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
- <1454665050-37776-3-git-send-email-jamesjj.liao@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ASoC: ads117x: Add bindings documentation for TI
+ ADS117x ADC
+Date: Mon, 8 Feb 2016 13:26:26 -0600
+Message-ID: <20160208192626.GA31758@rob-hp-laptop>
+References: <1454686334-9668-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1454686334-9668-2-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454665050-37776-3-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <1454686334-9668-2-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 05:37:25PM +0800, James Liao wrote:
-> This patch adds the binding documentation for apmixedsys, bdpsys,
-> ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
-> vdecsys for Mediatek MT2701.
+On Fri, Feb 05, 2016 at 04:32:13PM +0100, Florian Vaussard wrote:
+> Currently the binding is only made of the compatible string.
 > 
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> Tested-by: John Crispin <blogic@openwrt.org>
+> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 > ---
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  3 ++-
->  .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,hifsys.txt      | 24 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  3 ++-
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  3 ++-
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  3 ++-
->  .../bindings/arm/mediatek/mediatek,pericfg.txt     |  3 ++-
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  3 ++-
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  3 ++-
->  10 files changed, 82 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+>  Documentation/devicetree/bindings/sound/ti,ads117x.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,ads117x.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
