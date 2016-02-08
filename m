@@ -1,30 +1,69 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH V2 01/12] MAINTAINERS: Adding Maintainers for AMD Seattle
- Device Tree
-Date: Mon, 8 Feb 2016 13:38:58 -0800
-Message-ID: <20160208213858.GG25468@localhost>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com
+From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v5 0/3] mailbox: Add APM X-Gene platform mailbox driver
+Date: Mon,  8 Feb 2016 14:04:06 -0800
+Message-ID: <cover.1454967957.git.dhdang@apm.com>
+References: <CABb+yY1cE152ZdfK_aeB8ufG=WfoUVB6BN8kXPphYgMBnpH-GA@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY1cE152ZdfK_aeB8ufG=WfoUVB6BN8kXPphYgMBnpH-GA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 11:59:06AM -0600, Suravee Suthikulpanit wrote:
-> From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> 
-> Adding maintainers for AMD Seattle device tree.
-> 
-> Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+APM X-Gene SoC has a mailbox controller that provides
+communication mechanism for X-Gene Arm64 cores to communicate
+with X-Gene SoC's Cortex M3 (SLIMpro) processor.
 
-Thanks, I've applied the series to next/dt64 now.
+X-Gene mailbox controller provides 8 mailbox channels, with
+each channel has a dedicated interrupt line.
 
+Changes since v4:
+        - Rebase over v4.5-rc1
+        - Fix section mismatch warning during compiling
+	- Correctly print channel number when there is
+	no IRQ for that channel
+        - Change node name to mailbox@10540000
+        - Correct the number of IRQs in documentation
 
--Olof
+Changes since v3:
+        - Rebase over v4.4
+        - Remove 'id' in slimpro_mbox_chan structure
+        - Remove functions that are only called once
+        and fold them into the other callers
+        - Remove void* pointer type cast
+        - Relax the number of mailbox IRQs condition
+        - Fix error and address comment in documentation
+        (xgene-slimpro-mailbox.txt)
+
+Changes since v2:
+        - Rebase Feng's patch set over v4.3-rc5
+        - Remove uneccessary 'inline' in function definition
+        - Use module_platform_driver instead of subsys_initcall
+        - Minor coding stype clean up
+
+Changes since v1:
+        - Add ACPI support
+        - Use defines for reg offset
+
+Duc Dang (3):
+  mailbox: Add support for APM X-Gene platform mailbox driver
+  Documentation: mailbox: Add APM X-Gene SLIMpro mailbox dts
+    documentation
+  arm64: dts: mailbox device tree node for APM X-Gene platform.
+
+ .../bindings/mailbox/xgene-slimpro-mailbox.txt     |  35 +++
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |  14 ++
+ drivers/mailbox/Kconfig                            |   9 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox-xgene-slimpro.c            | 264 +++++++++++++++++++++
+ 5 files changed, 324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
+ create mode 100644 drivers/mailbox/mailbox-xgene-slimpro.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
