@@ -1,63 +1,58 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH 2/6] Documentation: bindings: document the Alpine MSIX driver
-Date: Mon,  8 Feb 2016 10:16:07 +0100
-Message-ID: <1454922971-17405-3-git-send-email-antoine.tenart@free-electrons.com>
-References: <1454922971-17405-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 2/3] arm: dts: DRA7: Add IVA thermal data
+Date: Mon, 8 Feb 2016 14:46:29 +0530
+Message-ID: <1454922990-7501-3-git-send-email-j-keerthy@ti.com>
+References: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1454922971-17405-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, tsahee@annapurnalabs.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, rshitrit@annapurnalabs.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, edubezval@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Following the addition of the Alpine MSIX driver, this patch adds the
-corresponding bindings documentation.
+This patch changes a dtsi file to contain the thermal data
+for IVA domain. This data will enable a thermal shutdown at 125C.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Signed-off-by: Tsahee Zidenberg <tsahee@annapurnalabs.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- .../interrupt-controller/al,alpine-msix.txt        | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
+ arch/arm/boot/dts/dra7-iva-thermal.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt b/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
+diff --git a/arch/arm/boot/dts/dra7-iva-thermal.dtsi b/arch/arm/boot/dts/dra7-iva-thermal.dtsi
 new file mode 100644
-index 000000000000..a77d5a76e8d5
+index 0000000..dd74a53
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
-@@ -0,0 +1,22 @@
-+Alpine MSIX controller
++++ b/arch/arm/boot/dts/dra7-iva-thermal.dtsi
+@@ -0,0 +1,27 @@
++/*
++ * Device Tree Source for DRA7x SoC IVA thermal
++ *
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
-+Required properties:
++#include <dt-bindings/thermal/thermal.h>
 +
-+- compatible: should be "al,alpine-msix"
-+- reg: physical base address and size of the registers
-+- interrupt-controller: identifies the node as an interrupt controller
-+- msi-controller: identifies the node as an PCI Message Signaled Interrupt
-+		  controller
-+- al,msi-base-spi: SPI base of the MSI frame
-+- al,msi-num-spis: number of SPIs assigned to the MSI frame
++iva_thermal: iva_thermal {
++	polling-delay-passive = <250>; /* milliseconds */
++	polling-delay = <500>; /* milliseconds */
 +
-+Example:
++			/* sensor       ID */
++	thermal-sensors = <&bandgap     4>;
 +
-+msix: msix {
-+	compatible = "al,alpine-msix";
-+	reg = <0x0 0xfbe00000 0x0 0x100000>;
-+	interrupt-controller;
-+	msi-controller;
-+	al,msi-base-spi = <160>;
-+	al,msi-num-spis = <160>;
++	trips {
++		iva_crit: iva_crit {
++			temperature = <125000>; /* milliCelsius */
++			hysteresis = <2000>; /* milliCelsius */
++			type = "critical";
++		};
++	};
 +};
 -- 
-2.7.0
+1.9.1
