@@ -1,84 +1,84 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: Add bindings documentation for Analog
- Devices axi-spi-engine
-Date: Mon, 8 Feb 2016 12:59:28 -0600
-Message-ID: <20160208185928.GA16097@rob-hp-laptop>
-References: <1454602410-14049-1-git-send-email-lars@metafoo.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/4] soc/sound: tegra_max98090: do not invert headphone
+ jack
+Date: Mon, 8 Feb 2016 11:59:57 -0700
+Message-ID: <56B8E5AD.8040707@wwwdotorg.org>
+References: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
+ <1454563862-1971-2-git-send-email-sctincman@gmail.com>
+ <56B37E19.6010002@wwwdotorg.org> <56B3A10E.4010508@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454602410-14049-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B3A10E.4010508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 05:13:29PM +0100, Lars-Peter Clausen wrote:
-> Add the devicetree bindings documentation for the Analog Devices
-> axi-spi-engine SPI master peripheral. This is a soft-peripheral used in
-> FPGAs.
-> 
-> The external interfaces of the peripheral are:
-> 	* A memory mapped register map which is used to configure the
-> 	  peripheral.
-> 	* One interrupt.
-> 	* Two clocks, one for the memory mapped register interface and one
-> 	  for the SPI bus.
-> 	* A SPI master interface to which the slave devices are connected.
-> 
-> These interfaces are described by the devicetree bindings accordingly.
-> 
-> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> ---
->  .../devicetree/bindings/spi/adi,axi-spi-engine.txt | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
+On 02/04/2016 12:05 PM, Jonathan Tinkham wrote:
+> On 02/04/2016 09:36 AM, Stephen Warren wrote:
+>> On 02/03/2016 10:30 PM, Jonathan Tinkham wrote:
+>>> The headphone jack should not be inverted
+>>
+>> Have you tested this on Venice2 as well as Nyan? I'm pretty sure
+>> Venice2 was tested when this driver was written, and whoever added
+>> Nyan support to the kernel simply assumed it would work. As such, my
+>> suspicion is that this series will break Venice2 even as it fixes Nyan.
+>
+> I have not tested this on Venice2, only on Nyan. That seems like a
+> plausible cause and reasonable suspicion.
+>
+>> Why doesn't user-space expect what the kernel actually implements? The
+>> kernel should be defining the control naming.
+>>
+>> Which user-space are you using specifically, and which part of it
+>> expects particular naming?
+>>
+>> Perhaps this series needs to be parametrized based on a flag in DT,
+>> rather than switching the hard-coded values, so that only Venice2 can
+>> be affected?
+>
+> Specifically pulse-audio and alsa under Arch Linux.
+>
+> I was referencing 'Documentation/sound/alsa/soc/dapm.txt' with regards
+> to control names. While it is possible to add another entry into the
+> user-space configuration, I took this documentation as a definition of
+> kernel control naming schemes, and thought the driver had used a
+> non-standard naming scheme (or at least, not a consistent one).
+>
+>> On 02/03/2016 10:31 PM, Jonathan Tinkham wrote:
+>>> Update device-tree bindings to reflect the rename of the board's
+>>> headphone jack.
+>>
+>> This looks like an incompatible change to the DT. While you've fixed
+>> the DT, which will fix new installations, old DTs now won't work. This
+>> breaks DT ABI. Any DT change needs to be backwards compatible, i.e.
+>> the old name should still work and be documented as a legacy value.
+>
+> I see that now. If the inversion behavior differs between venice2 and
+> nyan, then another compatible string would need to be added anyways,
+> correct? As you mentioned above, this might need to be done anyways for
+> the rename.
+>
+> Something like:
+> - "compatible = nvidia,tegra-audio-max98090" implements old inversion
+> behavior and leaves the switch as "Headphones" to avoid breaking older DTs
+> - "compatible = nvidia,tegra-{venice2,nyan}-audio-max98090" that
+> separates the inversion behavior and also introduces the rename
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It'd be preferable to key this off an separate flag rather than the 
+compatible value. That would more directly represent the data in 
+question, and allow any future boards to be added without having to edit 
+the driver to know whether those new boards neded HP DET inversion or not.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
-> new file mode 100644
-> index 0000000..8a18d71
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/adi,axi-spi-engine.txt
-> @@ -0,0 +1,31 @@
-> +Analog Devices AXI SPI Engine controller Device Tree Bindings
-> +
-> +Required properties:
-> +- compatible		: Must be "adi,axi-spi-engine-1.00.a""
-> +- reg			: Physical base address and size of the register map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number.
-> +- clock-names		: List of input clock names - "s_axi_aclk", "spi_clk"
-> +- clocks		: Clock phandles and specifiers (See clock bindings for
-> +			  details on clock-names and clocks).
-> +- #address-cells	: Must be <1>
-> +- #size-cells		: Must be <0>
-> +
-> +Optional subnodes:
-> +	Subnodes are use to represent the SPI slave devices connected to the SPI
-> +	master. They follow the generic SPI bindings as outlined in spi-bus.txt.
-> +
-> +Example:
-> +
-> +    spi@@44a00000 {
-> +		compatible = "adi,axi-spi-engine-1.00.a";
-> +		reg = <0x44a00000 0x1000>;
-> +		interrupts = <0 56 4>;
-> +		clocks = <&clkc 15 &clkc 15>;
-> +		clock-names = "s_axi_aclk", "spi_clk";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* SPI devices */
-> +    };
-> -- 
-> 2.1.4
-> 
+However, do note that each of the 3 boards using this binding has a 
+board-specific compatible value present already:
+
+nvidia,tegra-audio-max98090-venice2
+nvidia,tegra-audio-max98090-nyan-blaze
+nvidia,tegra-audio-max98090-nyan-big
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
