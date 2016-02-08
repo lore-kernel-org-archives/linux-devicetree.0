@@ -1,86 +1,70 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH] of/irq: fix bug in computing output requester-id for
- an msi-map
-Date: Mon, 8 Feb 2016 15:47:04 -0800
-Message-ID: <56B928F8.3010104@caviumnetworks.com>
-References: <1454970623-28781-1-git-send-email-stuart.yoder@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v6 0/3] Add host controller drivers for Cavium ThunderX PCI
+Date: Mon,  8 Feb 2016 15:55:28 -0800
+Message-ID: <1454975731-13618-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454970623-28781-1-git-send-email-stuart.yoder@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Yoder <stuart.yoder@nxp.com>
-Cc: robh@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, david.daney@cavium.com, mark.rutland@arm.com
+To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2016 02:30 PM, Stuart Yoder wrote:
-> From: Stuart Yoder <stuart.yoder@nxp.com>
->
-> The binding for msi-map specifies that the output requester id
-> should be computed as: (r - rid-base + msi-base)
->
-> ...update the code accordingly.
+From: David Daney <david.daney@cavium.com>
 
-I agree there is a problem  however ...
+Some Cavium ThunderX processors require quirky access methods for the
+config space of the PCIe bridge.
 
->
-> Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
-> ---
->   drivers/of/irq.c |    4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 706e3ff..3f5e5fd 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -589,6 +589,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->   	struct device_node *msi_controller_node;
->   	struct device_node *msi_np = *np;
->   	u32 map_mask, masked_rid, rid_base, msi_base, rid_len, phandle;
-> +	u32 masked_rid_base;
->   	int msi_map_len;
->   	bool matched;
->   	u32 rid_out = rid_in;
-> @@ -654,7 +655,8 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->   	if (!matched)
->   		return rid_out;
->
-> -	rid_out = masked_rid + msi_base;
-> +	masked_rid_base = map_mask & rid_base;
+There are now three patches:
 
-... The binding document nowhere, that I see, talks about applying the 
-mask to the rid-base.
+1) Refactor code in pci-host-generic so that it can more easily be
+   used by other drivers.  This splits the driver for CAM and ECAM
+   access methods to a separate file from the common host driver code.
 
-The device tree should already contain the rid-base in the correct range.
+2) Add the ThunderX PCIe driver to external PCIe buses, which
+   leverages the code in pci-host-generic
 
-If you remove this masking step, I think it may be correct.
+3) Add ThunderX PCI driver for internel SoC buses used on early
+   ThunderX chip revisions.
 
-If you just do:
+Changes from v5: Added Acked-by Rob Herring for the device tree
+binding in 3/3.  Fixed typo and split large functions as suggested by
+Bjorn Helgaas.
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 7ee21ae..92abe01 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -654,7 +654,7 @@ static u32 __of_msi_map_rid(struct device *dev, 
-struct device_node **np,
-         if (!matched)
-                 return rid_out;
+Changes from v4: Added patch 3/3.  Stylistic changes to 2/3 suggested
+by Bjorn Helgaas.  When expanding config write width to 32-bits, mask
+out unintened writes to W1C bits, also suggested by Bjorn Helgaas.
 
--       rid_out = masked_rid + msi_base;
-+       rid_out = msi_base + (masked_rid - rid_base);
-         dev_dbg(dev,
-                 "msi-map at: %s, using mask %08x, rid-base: %08x, 
-msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
+Changes from v3: Add some Acked-by, rebased to v4.5.0-rc1
 
-It think it will be correct.
+Changes from v2: Improve device tree binding example as noted by Rob
+Herring.  Rename pcie-thunder-pem.* to pci-thunder-pem.* for better
+consistency.  Update MAINTAINERS to reflect the changes.
 
-I have tested it that way.  If you do that,
+Changes from v1: Split CAM and ECAM code from common driver code as
+suggested by Arnd Bergmann.  Fix spelling errors in
+pcie-thunder-pem.txt
 
-Acked-by: David Daney <david.daney@cavium.com>
+David Daney (3):
+  PCI: generic: Refactor code to enable reuse by other drivers.
+  pci, pci-thunder-pem: Add PCIe host driver for ThunderX processors.
+  pci, pci-thunder-ecam: Add driver for ThunderX-pass1 on-chip devices
 
-> +	rid_out = msi_base + (masked_rid - masked_rid_base);
->   	dev_dbg(dev,
->   		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
->   		dev_name(parent_dev), map_mask, rid_base, msi_base,
->
+ .../devicetree/bindings/pci/pci-thunder-ecam.txt   |  30 ++
+ .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 +++
+ MAINTAINERS                                        |   9 +
+ drivers/pci/host/Kconfig                           |  18 ++
+ drivers/pci/host/Makefile                          |   3 +
+ drivers/pci/host/pci-host-common.c                 | 194 +++++++++++
+ drivers/pci/host/pci-host-common.h                 |  47 +++
+ drivers/pci/host/pci-host-generic.c                | 181 +----------
+ drivers/pci/host/pci-thunder-ecam.c                | 358 +++++++++++++++++++++
+ drivers/pci/host/pci-thunder-pem.c                 | 347 ++++++++++++++++++++
+ 10 files changed, 1053 insertions(+), 177 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+ create mode 100644 drivers/pci/host/pci-host-common.c
+ create mode 100644 drivers/pci/host/pci-host-common.h
+ create mode 100644 drivers/pci/host/pci-thunder-ecam.c
+ create mode 100644 drivers/pci/host/pci-thunder-pem.c
+
+-- 
+1.8.3.1
