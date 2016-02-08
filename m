@@ -1,112 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 15:25:00 +0300
-Message-ID: <56B8891C.3080409@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
+Date: Mon, 8 Feb 2016 17:56:27 +0530
+Message-ID: <56B88973.6000701@codeaurora.org>
+References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
+ <56B869F4.6090507@codeaurora.org> <5060470.dfeHX20DRa@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B88098.1070309-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5060470.dfeHX20DRa@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, treding@nvidia.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/8/2016 2:48 PM, Petr Kulhavy wrote:
-
->>    And the patch is against 3.17? You should only submit patches against the
->> recent kernel. In this case, against the -next branch of Felipe's repo on
->> kernel.org.
->
-> Could you give me the full branch name please.
-
-    See the MAINTAINERS entry for drivers/usb/musb/. The branch is named just 
-'next'.
-
->>> I was wondering about a PHY driver too. However the AM1808 has no standalone
->>> PHY module like e.g. the AM335x does.  The PHY together with the USB core are
->>> integrated into a single block and there is only a little control through the
->>> SYSCFG registers.
->>
->>    The CFGCHIP2 register controls the PHY in practice. The code manipulating
->> it should be moved to a PHY driver.
->>
-> I'm not sure if I can do that at the moment. Would you accept the patch using
-> the current situation, i.e. the CFGCHIP2 being manipulated in the da8xx.c?
-
-    Felipe accepts MUSB changes, not me. I'll ACK the patch once it's in good 
-shape, w/o the PHY driver.
-
-[...]
-
->>> All the other MUSBs specify these parameters in the DT. Do you want to make an
->>> exception?
->>
->>    I'd prefer doing it that way, sure.
-
-> OK. So I will move the num_eps and ram_bits into the "compatible" structure.
-> And leave the mode, power and multipoint still configurable via DT as they
-> depend on the hardware wiring.
-
-    As for the mode and power, I agree -- they are part of the board-specific 
-platform data (there's also power-on-to-power-good delay BTW which you missed).
-
-> I believe someone still might want to set multipoint to 0 if he has a single
-> device (not a hub) hard-connected directly to the controller. Even if I don't
-> see a benefit of doing so.
-
-> Why does this parameter exist at all?
-
-    No, multipoint is a part of the 'struct musb_hdrc_config' and IIRC just 
-indicates whether the target endpoint control registers are present.
-
->>>>> @@ -527,6 +561,35 @@ static const struct platform_device_info
->>>>> da8xx_dev_info = {
->>>>>       .dma_mask    = DMA_BIT_MASK(32),
->>>>>   };
->>>>>
->>>>> +static int get_musb_port_mode(struct device_node *np)
->>>>> +{
->>>>> +    enum usb_dr_mode mode;
->>>>> +
->>>>> +    mode = of_usb_get_dr_mode(np);
->>>>> +    switch (mode) {
->>>>> +    case USB_DR_MODE_HOST:
->>>>> +        return MUSB_HOST;
->>>>> +
->>>>> +    case USB_DR_MODE_PERIPHERAL:
->>>>> +        return MUSB_PERIPHERAL;
->>>>> +
->>>>> +    case USB_DR_MODE_OTG:
->>>>> +        return MUSB_OTG;
->>>>> +
->>>>> +    default:
->>>>> +        return MUSB_UNDEFINED;
->>>>> +    }
->>>>> +}
->>>>
->>>>    This is clearly MUSB generic code.
->>>
->>> So what does it mean?
->>
->>    Define this function in musb_core.c.
->>
-> I will do. Why doesn't the musb core use directly the USB_DR_MODE_xxx literals
-> instead?
-
-    MUSB driver predates these (DT specific?) definitions IIRC...
-
-[...]
-
-> Regards
-> Petr
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwMi8wOC8yMDE2IDA0OjIyIFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBIaSBBcmNo
+aXQsCj4KPiBBbSBNb250YWcsIDguIEZlYnJ1YXIgMjAxNiwgMTU6NDI6MDQgc2NocmllYiBBcmNo
+aXQgVGFuZWphOgo+PiBPbiAwMS8wNi8yMDE2IDA5OjMzIEFNLCBDaHJpcyBaaG9uZyB3cm90ZToK
+Pj4+IFRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJ
+IGhvc3QgY29udHJvbGxlcgo+Pj4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgYSBT
+eW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPj4+IGNvbnRyb2xsZXIgRFJNIGRyaXZl
+ci4KPj4+Cj4+PiBUaGUgTUlQSSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gcmszMjg4IGV2YiBi
+b2FyZCwgYmFja3BvcnQgdGhlbSB0bwo+Pj4gY2hyb21lIG9zIGtlcm5lbCBjaHJvbWVfdjMuMTQs
+IGFuZCBpdCBjYW4gZGlzcGxheSBub3JtYWxseS4KPj4+Cj4+PiBUaGlzIHBhdGNoc2V0IGlzIGJh
+c2Ugb24gdGhlIHBhdGNoc2V0IGZyb20gWWluZy5saXVAZnJlZXNjYWxlLmNvbS4KPj4+IDxodHRw
+Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2c3NzE4MS5odG1sPgo+Pj4KPj4+
+IEFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBnZXQgcmlk
+IG9mIHRoZSBicmlkZ2UsCj4+PiBhbmQgcmVnaXN0ZXIgdGhlIGVuY29kZXIgJiBjb25uZWN0ZXIg
+aW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4+Cj4+IEkndmUgcmFpc2VkIHRoaXMgcXVl
+c3Rpb24gdG9vIGxhdGUsIGJ1dCB3aGF0IHdhcyB0aGUgcmVhc29uIHRvIG5vdAo+PiBpbXBsZW1l
+bnQgdGhlIERTSSBibG9jayBhcyBhIGJyaWRnZSBkcml2ZXI/Cj4KPiBUaGVyZSBzZWVtcyB0byBh
+bHdheXMgYmUgc29tZSBzb3J0IG9mIGNvbnRlbnRpb24gYWJvdXQgdGhvc2UgYmVpbmcgYnJpZGdl
+Cj4gZHJpdmVycyAtIEkgdGhpbmsgSSByZW1lbWJlciBUaGllcnJ5IHNwZWFraW5nIHVwIGFib3V0
+IHRoYXQuIEJ1dCBJIGRvbid0Cj4gcmVtZW1iZXIgaWYgYW55IGRpZmZlcmVudCBzb2x1dGlvbiB3
+YXMgc3VnZ2VzdGVkLgoKV2VsbCwgeWVhaCwgdGhlc2UgY2FuIGJlIGNvbnNpZGVyZWQgYXMgZW5j
+b2RlcnMgdG9vLiBJIGd1ZXNzIGl0J3MganVzdApub3QgdmVyeSBjb21tb24gdG8gaGF2ZSBlbmNv
+ZGVyIGRyaXZlcnMgb3V0c2lkZSBvZiB0aGUga21zIGRyaXZlciwgaW4KY29tcGFyaXNvbiB0byBi
+cmlkZ2VzLgoKVGhlIGFkdmFudGFnZSBvZiBoYXZpbmcgc3VjaCBzaGFyZWQgSVBzIGFzIGJyaWRn
+ZXMgaXMgdGhhdCB0aGV5IGNhbiBiZQp1c2VkIGJ5IGttcyBkcml2ZXJzIHRoYXQgYWxyZWFkeSBp
+bXBsZW1lbnQgYW4gZW5jb2RlciBpbiB0aGUgZGlzcGxheQpjaGFpbi4KCj4KPiBBbHNvIGFzIHdl
+IGhhdmUgc2VlbiB3aXRoIGN1cnJlbnQgc2hhcmVkIElQcyAoZHctaGRtaSArIGFuYWxvZ2l4LWRw
+KSB0aGVyZQo+IGFyZSBhbHdheXMgaW1wbGVtZW50YXRpb24tc3BlY2lmaWMgcGFydHMgYW5kIGRl
+Y2lkaW5nIHdoaWNoIG5lZWRzIHRvIGxhbmQKPiB3aGVyZSBpcyBkaWZmaWN1bHQgd2l0aG91dCB0
+aGUgc2Vjb25kYXJ5IHVzZXIgcHJlc2VudC4KClllYWgsIEkgY2FuIGltYWdpbmUgaXQgYmVpbmcg
+aGFyZCB0byBzZXBhcmF0ZSBvdXQgdGhlIGltcGxlbWVudGF0aW9uCnNwZWNpZmljIGFuZCBjb3Jl
+IHBhcnRzLgoKPgo+IFRoZSBmaXJzdCBpdGVyYXRpb25zIHdoZXJlIHVzaW5nIGEgYnJpZGdlLWRy
+aXZlci1iYXNlIGZvciBpdCBidXQgSSBndWVzcyBpdAo+IHdhcyB0byBtdWNoIGhhc3NsZSB3aXRo
+b3V0IHNlZWluZyBhbm90aGVyIHVzZXIgb24gdGhlIGhvcml6b24uCj4KPgo+PiBUaGUgZHJtL2hp
+c2lsaWNvbiBJUCBzZWVtcyB0byB1c2UgYSB2ZXJ5IHNpbWlsYXIgRFNJIERlc2lnbndhcmUgSVAg
+KHRoZQo+PiByZWdpc3RlciBvZmZzZXRzIHNlZW1zIHRvIGJlIHRoZSBzYW1lKS4gVGhlcmUgaXMg
+YSBnb29kIHBvdGVudGlhbCBvZgo+PiByZS11c2UgaGVyZSBieSBkaWZmZXJlbnQga21zIGRyaXZl
+cnMgaGVyZSB0aGUgd2F5IGl0J3MgYWxyZWFkeSBkb25lIGZvcgo+PiBEVyBIRE1JIGFuZCB0aGUg
+YW5hbG9naXggRFAgZHJpdmVyIHRoYXQncyBpbiByZXZpZXcgcHJvY2Vzcy4KPgo+IEkgZ3Vlc3Ms
+IHRoZSBzZWNvbmQgdXNlciBub3cgZ2V0cyB0byBkbyB0aGUgZ2VuZXJhbGl6YXRpb24gOy0pCgpJ
+ZiBub3QgdGhlIGdlbmVyYWxpemF0aW9uLCB0aGVuIGF0IGxlYXN0IGFuIGFzc2Vzc21lbnQgaWYg
+aXQncyB3b3J0aCB0aGUKZWZmb3J0IG9yIG5vdCA6KQoKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21t
+IElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAK
+Rm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
