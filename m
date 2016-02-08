@@ -1,89 +1,33 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 13:49:15 -0600
-Message-ID: <20160208194915.GA6168@rob-hp-laptop>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
+Subject: Re: [PATCH v2 2/4] regulator: lp872x: Add enable GPIO pin support
+Date: Mon, 8 Feb 2016 13:50:28 -0600
+Message-ID: <20160208195028.GA13120@rob-hp-laptop>
+References: <1454697741-8687-1-git-send-email-contact@paulk.fr>
+ <1454697741-8687-3-git-send-email-contact@paulk.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454693676-20211-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1454697741-8687-3-git-send-email-contact-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 06:34:36PM +0100, Petr Kulhavy wrote:
-> TI DA8xx MUSB driver equipped with DeviceTree support.
-> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+On Fri, Feb 05, 2016 at 07:42:19PM +0100, Paul Kocialkowski wrote:
+> LP872x regulators are made active via the EN pin, which might be hooked to a
+> GPIO. This adds support for driving the GPIO high when the driver is in use.
 > 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
->  drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
->  include/linux/platform_data/usb-davinci.h          |   3 +-
->  3 files changed, 227 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> new file mode 100644
-> index 0000000..69c0961
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -0,0 +1,63 @@
-> +TI DA8xx MUSB
-> +~~~~~~~~~~~~~
-> +
-> +Required properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> + - compatible : Should be "ti,da8xx-musb"
-> +
-> + - reg: offset and length of the usbss register sets
-> +
-> + - interrupts: USB interrupt number
-> +
-> + - interrupt-names: should be set to "mc"
+>  .../devicetree/bindings/regulator/lp872x.txt       |  1 +
 
-Kind of pointless with only one.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
-> +
-> + - mentor,power : Specifies the maximum current in milli-ampers the controller can
-> +     supply in host mode. The maximum configurable value is 510mA.
-> +
-> + - mentor,num-eps : Valid only in host mode. Specifies the number of target endpoints
-> +     supported by the controller. For DA8xx it is "5".
-
-If DA8xx is the only thing you support, then why is this needed?
-
-> + - mentor,multipoint : Valid only in host mode. Enables addressing of USB hubs,
-> +     which is normally something you want and therefore should be set to "1".
-> +     If set to "0" only point-to-point communication is enabled, i.e. only a single
-> +     device can be attached.
-
-Given 1 is a superset of 0, why ever use 0?
-
-> + - mentor,ram-bits : This 2-base logarithm value defines the RAM FIFO size of the controller.
-> +     The FIFO size is calculated in 32-bit words. E.g. if your controller has 4kiB of RAM FIFO
-> +     this value should be set to "10": 2^10 = 1024 words of 32-bits, i.e. 4096 bytes.
-> +     For the DA8xx controller this value should be set to 10.
-
-Again, if fixed for the compatible string, then don't put into the DT.
-
-> +
-> +
-> +Optional properties:
-> +
-> + - ti,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
-> +     Supported values: "0" for external pin, "1" for internal PLL.
-> +
-> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
-> +     frequency in Hz in case the clock is generated by the internal PLL.
-> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
-
-Add units suffix (-hz).
-
+>  drivers/regulator/lp872x.c                         | 34 ++++++++++++++++++++++
+>  include/linux/regulator/lp872x.h                   |  5 ++++
+>  3 files changed, 40 insertions(+)
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
