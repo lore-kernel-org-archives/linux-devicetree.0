@@ -1,155 +1,101 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Mon, 8 Feb 2016 14:23:34 -0600
-Message-ID: <56B8F946.9060301@ti.com>
-References: <1454690044-2560-1-git-send-email-nm@ti.com>
- <1454690044-2560-2-git-send-email-nm@ti.com>
- <20160208193706.GA333@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V4 2/6] of/slimbus: OF helper for SLIMbus
+Date: Mon, 8 Feb 2016 14:24:13 -0600
+Message-ID: <20160208202413.GA26297@rob-hp-laptop>
+References: <1454784265-5194-1-git-send-email-sdharia@codeaurora.org>
+ <1454784265-5194-3-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160208193706.GA333@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1454784265-5194-3-git-send-email-sdharia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Santosh Shilimkar <ssantosh@kernel.org>
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat, Feb 06, 2016 at 11:44:21AM -0700, Sagar Dharia wrote:
+> OF helper routine scans the SLIMbus DeviceTree, allocates resources,
+> and creates slim_devices according to the hierarchy.
+> 
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/slimbus/bus.txt | 54 ++++++++++++++++
+>  drivers/slimbus/slim-core.c                       | 75 +++++++++++++++++++++++
+>  2 files changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
+> new file mode 100644
+> index 0000000..71c769d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/slimbus/bus.txt
+> @@ -0,0 +1,54 @@
+> +SLIM(Serial Low Power Interchip Media Bus) bus
+> +
+> +SLIMbus is a 2-wire bus, and is used to communicate with peripheral
+> +components like audio-codec.
+> +
+> +Controller is a normal device using binding for whatever bus it is
+> +on (e.g. platform bus).
+> +Required property for SLIMbus controller node:
+> +- compatible	- name of SLIMbus controller following generic names
+> +		recommended practice.
+> +- #address-cells - should be 4 (number of cells required to define
+> +		4 fields of the enumeration address for the SLIMbus
+> +		slave device)
+> +- #size-cells	- should be 0
+> +
+> +No other properties are required in the SLIMbus controller bus node.
+> +
+> +Child nodes:
+> +Every SLIMbus controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SLIMbus slave device is
+> +uniquely determined by the enumeration address containing 4 fields:
+> +Manufacturer ID, Product code, Device index, and Instance value for
+> +the device.
+> +
+> +Required property for SLIMbus child node:
+> +- reg		- enumeration address fields of the device
+> +
+> +Optional:
+> +- compatible	- Slave devices can use compatible field to have a name.
+> +		If this field is missing, name of the device will be
+> +		determined using slave's enumeration address.
+> +		(e.g. in the example below, slave's name will be:
+> +		0x217:0x60:0x1:0x0)
 
-On 02/08/2016 01:37 PM, Rob Herring wrote:
-> On Fri, Feb 05, 2016 at 10:34:03AM -0600, Nishanth Menon wrote:
->> Message Manager is a hardware block used to communicate with various
->> processor systems within certain Texas Instrument's Keystone
->> generation SoCs.
->>
->> This hardware engine is used to transfer messages from various compute
->> entities(or processors) within the SoC. It is designed to be self
->> contained without needing software initialization for operation.
->>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>  .../bindings/mailbox/ti,message-manager.txt        | 72 ++++++++++++++++++++++
->>  1 file changed, 72 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->> new file mode 100644
->> index 000000000000..f3d73b0b3c66
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->> @@ -0,0 +1,72 @@
->> +Texas Instruments' Message Manager Driver
->> +========================================
->> +
->> +The Texas Instruments' Message Manager is a mailbox controller that has
->> +configurable queues selectable at SoC(System on Chip) integration. The Message
->> +manager is broken up into queues in different address regions that are called
->> +"proxies" - each instance is unidirectional and is instantiated at SoC
->> +integration level to indicate receive or transmit path.
->> +
->> +Message Manager Device Node:
->> +===========================
->> +
->> +Required properties:
->> +--------------------
->> +- compatible:		Shall be:
->> +				"ti,k2g-message-manager"
->> +				"ti,message-manager"
-> 
-> Given that queues are configurable at integration time, does a generic 
-> property really make sense here?
-> 
->> +- reg-names 		queue_proxy_region - Map the queue Proxy region
->> +			queue_state_debug_region - Map the queue state debug
->> +			region.
->> +- reg:			Contains the register map per reg-names
->> +- #mbox-cells		Shall be 1
-> 
-> And the value contained is what?
-> 
->> +
->> +Child Nodes:
->> +============
->> +A child node is used for representing the actual queue device that is
->> +used for the communication between the host processor and a remote processor.
->> +Each child node should have a unique node name across all the different
->> +message manager device nodes.
->> +
->> +Required Properties:
->> +--------------------
->> +- ti,queue-id:		Indicates the queue number this node represents
->> +- ti,proxy-id:		Proxy ID representing the processor in the SoC.
-> 
-> What determines these values?
-> 
->> +
->> +Optional Properties:
->> +--------------------
->> +- interrupt-names:	'rx' - indicates a receive interrupt (mandatory ONLY if
->> +			this is a receive queue)
-> 
-> Kind of pointless if there is only 1.
-> 
->> +- interrupts:		Contains the interrupt information corresponding to
->> +			interrupt-names property.
->> +
->> +Example:
->> +--------
->> +
->> +	msgmgr: msgmgr@02a00000 {
->> +		compatible = "ti,k2g-message-manager", "ti,message-manager";
->> +		#mbox-cells = <1>;
->> +		reg-names = "queue_proxy_region", "queue_state_debug_region";
->> +		reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
->> +
->> +		msgmgr_proxy_pmmc_tx_prio0: pmmc_tx_prio0 {
->> +			ti,queue-id = <0>;
->> +			ti,proxy-id = <0>;
->> +		};
->> +
->> +		msgmgr_proxy_pmmc_rx: pmmc_rx {
->> +			ti,queue-id = <5>;
->> +			ti,proxy-id = <2>;
->> +			interrupt-names = "rx";
->> +			interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>;
->> +		};
->> +	};
->> +
->> +...
->> +	pmmc {
->> +		...
->> +		mbox-names = "tx", "rx";
->> +		mboxes = <&msgmgr &msgmgr_proxy_pmmc_tx>
->> +			 <&msgmgr &msgmgr_proxy_pmmc_rx>;
-> 
-> While I guess this is valid DT, it is a bit strange having the cell 
-> values be phandles. Why not just make the queue and proxy ids be the 
-> cell values? The interrupts could be moved to the parent and the child 
-> nodes eliminated altogether.
+The compatible string should follow other discoverable buses like PCI 
+and USB and use the enumeration data for the compatible string. 
+Something like "slim<manuID>,<product code>". 
 
-The mailbox controller node (msgmgr) and its child nodes all are
-registered with the mailbox core together and the client users request a
-mailbox using the framework API that requires the controller node.
-Usually the channels are given numbers and the request is done based on
-indices, but that meant that we had to introduce a logical device id
-just for the sake of the API. Instead, we just chose to go with the
-phandles.
+> +		Note that the property is listed as optional since the
+> +		devices are discoverable when they are functional.
+> +		However, the device may need additional non-standard
+> +		way to power it up so that it can start functioning.
+> +		In that case, compatible property will be
+> +		needed for the corresponding driver to probe and
+> +		perform the required procedure to make it functional.
 
-Doing a queue and proxy id as cell values requires the mailbox
-controller node registration phase to parse through all the client nodes
-with the matching controller node. The current approach was in-line with
-how all the mailbox controller nodes are implemented today, except for
-the usage of phandle instead of an index for the cell-value.
+I think the node being present should be optional, but the compatible 
+should be required if node is present.
 
-> 
-> The alternative would be just drop msgmgr phandle and point to the child 
-> nodes. I prefer getting rid of the child nodes though.
+> +
+> +SLIMbus example for Qualcomm's slimbus manager component:
+> +
+> +	slim@28080000 {
+> +		compatible = "qcom,slim-msm";
+> +		reg = <0x28080000 0x2000>,
+> +		interrupts = <0 33 0>;
+> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +		clock-names = "iface_clk", "core_clk";
+> +
+> +		codec_slave@0217.0060.01.00 {
 
-The 'mboxes' property is a standard property supported by the mailbox
-framework core, and requires the phandle of the controller node along
-with a cell-value to lookup a channel. So, we cannot use the child nodes
-directly.
+Unique fields should be separated by commas.
 
-regards
-Suman
+Probably should just be "codec@..."
+
+> +			reg = <0x217 0x60 0x1 0x0>;
+> +		};
+> +	};
