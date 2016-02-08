@@ -1,48 +1,37 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [RFC 2/9] clk: bcm2835: add support for parent selection in DT
-Date: Mon, 8 Feb 2016 14:30:39 +0100
-Message-ID: <56B8987F.1080701@martin.sperl.org>
-References: <1453215100-2382-1-git-send-email-kernel@martin.sperl.org>
- <1453215100-2382-3-git-send-email-kernel@martin.sperl.org>
- <20160121082642.GB13237@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Mon, 08 Feb 2016 14:34:39 +0100
+Message-ID: <3891363.c4LyE0WYpe@wuerfel>
+References: <1454693676-20211-1-git-send-email-petr@barix.com> <364593765.PbysHF8iXJ@wuerfel> <56B89256.9050708@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160121082642.GB13237@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B89256.9050708-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 08 February 2016 14:04:22 Petr Kulhavy wrote:
+> Hello Arndt,
+> 
+> On 05.02.2016 23:22, Arnd Bergmann wrote:
+> > Please make this
+> >
+> >       Should be one of "ti,da850-musb" or "ti,da830-musb"
+> >
+> > We don't use wildcards in compatible strings,
+> 
+> I'm seeing something different though:
+> 
+> $ grep -r "compatible.*xx" Documentation/devicetree/bindings/ |wc -l
+> 44
 
+They are all either really old, or were never reviewed properly.
 
-On 21.01.2016 09:26, Sascha Hauer wrote:
-> Martin,
->
-> On Tue, Jan 19, 2016 at 02:51:33PM +0000, kernel@martin.sperl.org wrote:
->> From: Martin Sperl <kernel@martin.sperl.org>
->>
->> Allow for a per clock custom selection of clocks in the device tree.
->>
->> Basic setup in dt looks like this:
->>    clock@BCM2835_CLOCK_PCM {
->>      reg = <BCM2835_CLOCK_PCM>;
->>      parent-clock-names = "xosc", "plld_per", "plla_per", "pll_aux_per";
->>    };
->
-> Isn't this the same as the already existing assigned-clock-parents property?
-> If yes, that should be used.
-It is not 100% identical, as the parent-clock-names do provide ordering
-of clocks to be selected, which - under some circumstances may be
-beneficial - e.g: when having a parent clock with 500MHz and 1000MHz,
-then the higher clock could get given preference by switching ordering...
-
-Also when using:
-assigned-clock-parents = <&clk_osc 0>, <&clocks BCM2835_PLLD_PER>;
-
-I get strange indexes passed when calling set_parent - so this would
-need to get rewritten to support assigned-clock-parents correctly -
-calculating the index on the fly...
-
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
