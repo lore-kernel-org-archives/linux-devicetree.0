@@ -1,58 +1,33 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
-Date: Mon, 08 Feb 2016 11:52:21 +0100
-Message-ID: <5060470.dfeHX20DRa@phil>
-References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
- <56B869F4.6090507@codeaurora.org>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Mon, 8 Feb 2016 10:57:01 +0000
+Message-ID: <alpine.DEB.2.02.1602081054350.27008@kaball.uk.xensource.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
+ <1454641552-12576-2-git-send-email-zhaoshenglong@huawei.com>
+ <CAJZ5v0id-035AtyQ_SccPuCxD7+pa6GCgj3WBAojM+rFqssGQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56B869F4.6090507@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, treding@nvidia.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJZ5v0id-035AtyQ_SccPuCxD7+pa6GCgj3WBAojM+rFqssGQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKQW0gTW9udGFnLCA4LiBGZWJydWFyIDIwMTYsIDE1OjQyOjA0IHNjaHJpZWIg
-QXJjaGl0IFRhbmVqYToKPiBPbiAwMS8wNi8yMDE2IDA5OjMzIEFNLCBDaHJpcyBaaG9uZyB3cm90
-ZToKPiA+IFRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkg
-RFNJIGhvc3QgY29udHJvbGxlcgo+ID4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3Ig
-YSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPiA+IGNvbnRyb2xsZXIgRFJNIGRy
-aXZlci4KPiA+IAo+ID4gVGhlIE1JUEkgRFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBl
-dmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPiA+IGNocm9tZSBvcyBrZXJuZWwgY2hyb21lX3Yz
-LjE0LCBhbmQgaXQgY2FuIGRpc3BsYXkgbm9ybWFsbHkuCj4gPiAKPiA+IFRoaXMgcGF0Y2hzZXQg
-aXMgYmFzZSBvbiB0aGUgcGF0Y2hzZXQgZnJvbSBZaW5nLmxpdUBmcmVlc2NhbGUuY29tLgo+ID4g
-PGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzc3MTgxLmh0bWw+Cj4g
-PiAKPiA+IEFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBn
-ZXQgcmlkIG9mIHRoZSBicmlkZ2UsCj4gPiBhbmQgcmVnaXN0ZXIgdGhlIGVuY29kZXIgJiBjb25u
-ZWN0ZXIgaW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4gCj4gSSd2ZSByYWlzZWQgdGhp
-cyBxdWVzdGlvbiB0b28gbGF0ZSwgYnV0IHdoYXQgd2FzIHRoZSByZWFzb24gdG8gbm90Cj4gaW1w
-bGVtZW50IHRoZSBEU0kgYmxvY2sgYXMgYSBicmlkZ2UgZHJpdmVyPwoKVGhlcmUgc2VlbXMgdG8g
-YWx3YXlzIGJlIHNvbWUgc29ydCBvZiBjb250ZW50aW9uIGFib3V0IHRob3NlIGJlaW5nIGJyaWRn
-ZSAKZHJpdmVycyAtIEkgdGhpbmsgSSByZW1lbWJlciBUaGllcnJ5IHNwZWFraW5nIHVwIGFib3V0
-IHRoYXQuIEJ1dCBJIGRvbid0IApyZW1lbWJlciBpZiBhbnkgZGlmZmVyZW50IHNvbHV0aW9uIHdh
-cyBzdWdnZXN0ZWQuCgpBbHNvIGFzIHdlIGhhdmUgc2VlbiB3aXRoIGN1cnJlbnQgc2hhcmVkIElQ
-cyAoZHctaGRtaSArIGFuYWxvZ2l4LWRwKSB0aGVyZSAKYXJlIGFsd2F5cyBpbXBsZW1lbnRhdGlv
-bi1zcGVjaWZpYyBwYXJ0cyBhbmQgZGVjaWRpbmcgd2hpY2ggbmVlZHMgdG8gbGFuZCAKd2hlcmUg
-aXMgZGlmZmljdWx0IHdpdGhvdXQgdGhlIHNlY29uZGFyeSB1c2VyIHByZXNlbnQuCgpUaGUgZmly
-c3QgaXRlcmF0aW9ucyB3aGVyZSB1c2luZyBhIGJyaWRnZS1kcml2ZXItYmFzZSBmb3IgaXQgYnV0
-IEkgZ3Vlc3MgaXQgCndhcyB0byBtdWNoIGhhc3NsZSB3aXRob3V0IHNlZWluZyBhbm90aGVyIHVz
-ZXIgb24gdGhlIGhvcml6b24uCgoKPiBUaGUgZHJtL2hpc2lsaWNvbiBJUCBzZWVtcyB0byB1c2Ug
-YSB2ZXJ5IHNpbWlsYXIgRFNJIERlc2lnbndhcmUgSVAgKHRoZQo+IHJlZ2lzdGVyIG9mZnNldHMg
-c2VlbXMgdG8gYmUgdGhlIHNhbWUpLiBUaGVyZSBpcyBhIGdvb2QgcG90ZW50aWFsIG9mCj4gcmUt
-dXNlIGhlcmUgYnkgZGlmZmVyZW50IGttcyBkcml2ZXJzIGhlcmUgdGhlIHdheSBpdCdzIGFscmVh
-ZHkgZG9uZSBmb3IKPiBEVyBIRE1JIGFuZCB0aGUgYW5hbG9naXggRFAgZHJpdmVyIHRoYXQncyBp
-biByZXZpZXcgcHJvY2Vzcy4KCkkgZ3Vlc3MsIHRoZSBzZWNvbmQgdXNlciBub3cgZ2V0cyB0byBk
-byB0aGUgZ2VuZXJhbGl6YXRpb24gOy0pCgoKSGVpa28KCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+> On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > UART is used by Xen. So here it hides UART from Dom0.
+> >
+> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> 
+> Well, this doesn't look right to me.
+> 
+> We need to find a nicer way to achieve what you want.
+
+I take that you are talking about how to honor the STAO table in Linux.
+Do you have any concrete suggestions?
