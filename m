@@ -1,53 +1,67 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] mtd: denali: fix property name for Denali DT binding
-Date: Mon, 8 Feb 2016 17:41:33 +0900
-Message-ID: <CAK7LNAS2r=_RL6dmj1xhCzGtvMP=emC=_bW4Ot5SMe6ij-WpBQ@mail.gmail.com>
-References: <1454916702-20982-1-git-send-email-yamada.masahiro@socionext.com>
-	<5298318.0qJ9fLYbSx@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] arm64: dts: r8a7795: Add L2 cache-controller nodes
+Date: Mon, 8 Feb 2016 09:42:55 +0100
+Message-ID: <CAMuHMdVRhwGh2bvfNSguX0XnMW0eEgLRTCt3Y3-+KfV0Jy9WHw@mail.gmail.com>
+References: <1452953856-5146-1-git-send-email-dirk.behme@gmail.com>
+	<56B2370D.2010102@gmail.com>
+	<20160205095758.GE16556@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5298318.0qJ9fLYbSx@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mtd@lists.infradead.org, Dinh Nguyen <dinguyen@altera.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160205095758.GE16556@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Dirk,
 
-
-2016-02-08 17:29 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Monday 08 February 2016 16:31:42 Masahiro Yamada wrote:
->> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> index b04d03a..785b825 100644
->> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> @@ -5,7 +5,7 @@ Required properties:
->>    - reg : should contain registers location and length for data and reg.
->>    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
->>    - interrupts : The interrupt number.
->> -  - dm-mask : DMA bit mask
->> +  - dma-mask : DMA bit mask
->>
->>  The device tree may optionally contain sub-nodes describing partitions of the
->>  address space. See partition.txt for more detail.
->>
+On Fri, Feb 5, 2016 at 10:57 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Feb 03, 2016 at 06:21:17PM +0100, Dirk Behme wrote:
+>> On 16.01.2016 15:17, Dirk Behme wrote:
+>> >From: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >
+>> >Add device nodes for the L2 caches, and link the CPU node to its L2
+>> >cache node.
+>> >
+>> >The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
+>> >128 KiB x 16 ways).
+>> >
+>> >Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
 >
-> It looks like this binding is wrong in multiple ways, and it doesn't seem to
-> be used in any .dts files. Is this actually being shipped anywhere or
-> could we try to fix the binding properly?
+> [snip]
 >
+>> Any further comments to this? If not, could this be applied?
+>
+> Sorry for the delay.
+>
+> This looks good; I have queued it up.
+>
+> It should appear in the next (and devel) branches of my renesas tree soon.
+> And in linux-next whenever it includes my updated next branch.
 
-Looks like it is locally used in Altera's Rocketboard tree now.
+So you not only dropped the (controversial) timing related properties, but
+in addition:
 
-See this:
++               cache-unified;
++               cache-level = <2>;
 
-https://github.com/altera-opensource/linux-socfpga/blob/socfpga-4.3/arch/arm/boot/dts/socfpga.dtsi
+At least the "cache-level" property is marked as required in ePAPR.
+For "cache-unified", the wording is not that strict in ePAPR, but that property
+depends on being a unified cache in the first place.
 
+So I think these two properties should be re-added.
 
-I hope Dinh can comment on the status.
+Sorry for not noticing before.
 
+Gr{oetje,eeting}s,
 
--- 
-Best Regards
-Masahiro Yamada
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
