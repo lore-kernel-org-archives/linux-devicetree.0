@@ -1,50 +1,62 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 05/12] arm64: add mvebu architecture entry
-Date: Mon,  8 Feb 2016 18:14:13 +0100
-Message-ID: <1454951660-13289-6-git-send-email-gregory.clement@free-electrons.com>
-References: <1454951660-13289-1-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 09/10] Input: synaptics-rmi4: Add device tree support
+ to the SPI transport driver
+Date: Mon, 8 Feb 2016 11:24:02 -0600
+Message-ID: <20160208172402.GA25420@rob-hp-laptop>
+References: <1454463965-4370-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1454951660-13289-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Lior Amsalem <alior@marvell.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454463965-4370-1-git-send-email-aduggan@synaptics.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andrew Duggan <aduggan@synaptics.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Armada 3700 is an mvebu ARM64 SoC using one or two Cortex-A53 cores
-depending of the variant.
+On Tue, Feb 02, 2016 at 05:46:05PM -0800, Andrew Duggan wrote:
+> Add devicetree binding for SPI devices.
+> 
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+> ---
+>  .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
+>  drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
+>  2 files changed, 100 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+> new file mode 100644
+> index 0000000..367b310
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+> @@ -0,0 +1,57 @@
+> +Synaptics RMI4 SPI Device Binding
+> +
+> +The Synaptics RMI4 core is able to support RMI4 devices using different
+> +transports and different functions. This file describes the device tree
+> +bindings for devices using the SPI transport driver. Complete documentation
+> +for other transports and functions can be found in
+> +Documentation/devicetree/bindings/input/rmi4.
+> +
+> +Required Properties:
+> +- compatible: syna,rmi4-spi
+> +- reg: Chip select address for the device
+> +- #address-cells: Set to 1 to indicate that the function child nodes
+> +		    consist of only on uint32 value.
+> +- #size-cells: Set to 0 to indicate that the function child nodes do not
+> +		have a size property.
+> +
+> +Optional Properties:
+> +- interrupts: interrupt which the rmi device is connected to.
+> +- interrupt-parent: The interrupt controller.
+> +See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +- syna,spi-rx-delay-usec: microsecond delay after a read transfer.
+> +- syna,spi-tx-delay-usec: microsecond delay after a write transfer.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- arch/arm64/Kconfig.platforms | 6 ++++++
- 1 file changed, 6 insertions(+)
+s/usec/us/
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 21074f674bde..c621e69ed170 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -1,5 +1,11 @@
- menu "Platform selection"
- 
-+config ARCH_MVEBU
-+	bool "Marvell EBU SoC Family"
-+	help
-+	  This enables support for Marvell EBU family such as the
-+	  Armada 3700 SoC family.
-+
- config ARCH_BCM_IPROC
- 	bool "Broadcom iProc SoC Family"
- 	help
--- 
-2.5.0
+These could perhaps be common SPI properties instead. Davinci at least 
+has a similar property.
+
+Rob
