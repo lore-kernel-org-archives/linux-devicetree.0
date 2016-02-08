@@ -1,37 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: ad5755: Add full DT binding documentation
-Date: Mon, 8 Feb 2016 11:37:27 -0600
-Message-ID: <20160208173727.GA823@rob-hp-laptop>
-References: <1454509864-32285-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1454509864-32285-2-git-send-email-sean.nyekjaer@prevas.dk>
- <1454509864-32285-3-git-send-email-sean.nyekjaer@prevas.dk>
- <1454509864-32285-4-git-send-email-sean.nyekjaer@prevas.dk>
- <56B63BAC.2040001@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7] SATA: OCTEON: support SATA on OCTEON platform
+Date: Mon, 8 Feb 2016 11:42:37 -0600
+Message-ID: <20160208174237.GA6479@rob-hp-laptop>
+References: <1454520915-27948-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56B63BAC.2040001-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1454520915-27948-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: tj@kernel.org, hdegoede@redhat.com, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 06, 2016 at 06:30:04PM +0000, Jonathan Cameron wrote:
-> On 03/02/16 14:31, Sean Nyekjaer wrote:
-> > Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> Hmm. Complex beast.  Going to want Lars to look at this in particular.
-> Also a device tree review would be good on this one.
+On Wed, Feb 03, 2016 at 05:35:15PM +0000, Zubair Lutfullah Kakakhel wrote:
+> From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
 > 
-> My personal gut feeling is not to wrap up things that are really numeric
-> with names, but rather to provide docs on the valid values for them.
-> Not sure what is the preferred by the device tree guys??
+> The OCTEON SATA controller is currently found on cn71XX devices.
+> 
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
+> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> 
+> ---
+> Changes in v7
+> - Rebase to v4.5-rc2
+> - Use #defines instead of __BITFIELD
+> - Add sign off from Zubair
+> 
+> Changes in v6
+> - Rebase to v4.5-rc1
+> - Tested on utm8 by rhino labs. CN7130
+> 
+> Changes in v5:
+> - Sparse warnings are fixed
+> - Device tree docs are improved
+> 
+> Changes in v4:
+> - The call to dma_coerce_mask_and_coherent() was removed as suggested
+>   by Arnd Bergmann dma_mask and coherent_dma_mask are actually set
+>   in the ahci_platform_init_host() (libahci_platform.c)
+> 
+> Changes in v3:
+> - Rebased to v4.0-rc2
+> - Cosmetic changes
+> 
+> Changes in v2:
+> - The driver was rewritten as a driver for the UCTL SATA controller glue.
+>   It allowed to get rid of the most changes in ahci_platform.c
+> - Documentation for the device tree bindings was fixed.
+> ---
+>  .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+>  .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  42 +++++++++
 
-Agreed. I'm not such a fan of defines in DT.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Also, if there is some possibility that bindings could be generic, I 
-prefer to see them use the native units rather than the enumerated 
-register values. The downside is adding the translation into the driver. 
-These look like they could possibly be generic DAC properties.
-
-Rob
+>  drivers/ata/Kconfig                                |   9 ++
+>  drivers/ata/Makefile                               |   1 +
+>  drivers/ata/ahci_platform.c                        |   1 +
+>  drivers/ata/sata_octeon.c                          | 105 +++++++++++++++++++++
+>  6 files changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>  create mode 100644 drivers/ata/sata_octeon.c
