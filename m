@@ -1,101 +1,32 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 7/8] [media] tvp5150: document input connectors DT
- bindings
-Date: Mon, 8 Feb 2016 15:23:20 -0300
-Message-ID: <56B8DD18.3060802@osg.samsung.com>
-References: <1454699398-8581-1-git-send-email-javier@osg.samsung.com>
- <1454699398-8581-8-git-send-email-javier@osg.samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: Add a binding for Mediatek Video
+ Processor
+Date: Mon, 8 Feb 2016 12:54:09 -0600
+Message-ID: <20160208185409.GA14017@rob-hp-laptop>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1454699398-8581-8-git-send-email-javier@osg.samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-I noticed that I missed the DT folks in the cc list so I'm adding
-them now, sorry for the noise...
-
-On 02/05/2016 04:09 PM, Javier Martinez Canillas wrote:
-> The tvp5150 decoder has different input connectors so extend the device
-> tree binding to allow device tree source files to define the connectors
-> that are available on a given board.
->
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+On Thu, Feb 04, 2016 at 07:34:56PM +0800, Tiffany Lin wrote:
+> From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> 
+> Add a DT binding documentation of Video Processor Unit for the
+> MT8173 SoC from Mediatek.
+> 
+> 
+> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 > ---
->
->   .../devicetree/bindings/media/i2c/tvp5150.txt      | 43 ++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> index 8c0fc1a26bf0..daa20e43a8e3 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> @@ -12,6 +12,32 @@ Optional Properties:
->   - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
->   - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
->
-> +Optional nodes:
-> +- connectors: The input connectors of tvp5150 have to be defined under
-> +  a subnode name "connectors" using the following format:
-> +
-> +	input-connector-name {
-> +		input connector properties
-> +	};
-> +
-> +Each input connector must contain the following properties:
-> +
-> +	- label: a name for the connector.
-> +	- input: the input connector.
-> +
-> +The possible values for the "input" property are:
-> +	0: Composite0
-> +	1: Composite1
-> +	2: S-Video
-> +
-> +and on a tvp5150am1 and tvp5151 there is another:
-> +	4: Signal generator
-> +
-> +The list of valid input connectors are defined in dt-bindings/media/tvp5150.h
-> +header file and can be included by device tree source files.
-> +
-> +Each input connector can be defined only once.
-> +
->   The device node must contain one 'port' child node for its digital output
->   video port, in accordance with the video interface bindings defined in
->   Documentation/devicetree/bindings/media/video-interfaces.txt.
-> @@ -36,6 +62,23 @@ Example:
->   		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
->   		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
->
-> +		connectors {
-> +			composite0 {
-> +				label = "Composite0";
-> +				input = <TVP5150_COMPOSITE0>;
-> +			};
-> +
-> +			composite1 {
-> +				label = "Composite1";
-> +				input = <TVP5150_COMPOSITE1>;
-> +			};
-> +
-> +			s-video {
-> +				label = "S-Video";
-> +				input = <TVP5150_SVIDEO>;
-> +			};
-> +		};
-> +
->   		port {
->   			tvp5150_1: endpoint {
->   				remote-endpoint = <&ccdc_ep>;
->
+>  .../devicetree/bindings/media/mediatek-vpu.txt     |   31 ++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Acked-by: Rob Herring <robh@kernel.org>
