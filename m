@@ -1,156 +1,95 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Mon, 8 Feb 2016 14:31:40 -0600
-Message-ID: <CAGo_u6oQ3wHB9--2sZGwhM_eQa4ixNDKDVoFaaNStWYjwO2xig@mail.gmail.com>
-References: <1454690044-2560-1-git-send-email-nm@ti.com>
-	<1454690044-2560-2-git-send-email-nm@ti.com>
-	<20160208193706.GA333@rob-hp-laptop>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v5 3/3] pci, pci-thunder-ecam: Add driver for ThunderX-pass1
+ on-chip devices
+Date: Mon, 8 Feb 2016 12:47:18 -0800
+Message-ID: <56B8FED6.1050804@caviumnetworks.com>
+References: <1454715675-17512-1-git-send-email-ddaney.cavm@gmail.com> <1454715675-17512-4-git-send-email-ddaney.cavm@gmail.com> <20160208195642.GA15103@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160208193706.GA333@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160208195642.GA15103@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Daney <ddaney.cavm@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 8, 2016 at 1:37 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-Thank you for reviewing the binding.
-
-> On Fri, Feb 05, 2016 at 10:34:03AM -0600, Nishanth Menon wrote:
->> Message Manager is a hardware block used to communicate with various
->> processor systems within certain Texas Instrument's Keystone
->> generation SoCs.
+On 02/08/2016 11:56 AM, Rob Herring wrote:
+> On Fri, Feb 05, 2016 at 03:41:15PM -0800, David Daney wrote:
+>> From: David Daney <david.daney@cavium.com>
 >>
->> This hardware engine is used to transfer messages from various compute
->> entities(or processors) within the SoC. It is designed to be self
->> contained without needing software initialization for operation.
+>> The cavium,pci-thunder-ecam devices are exactly ECAM based PCI root
+>> complexes.  These root complexes (loosely referred to as ECAM units in
+>> the hardware manuals) are used to access the Thunder on-chips devices.
+>> They are special in that all the BARs on devices behind these root
+>> complexes are at fixed addresses.  To handle this in a manner
+>> compatible with the core PCI code, we have the config access functions
+>> synthesize Enhanced Allocation (EA) capability entries for each BAR.
 >>
->> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> Since this EA synthesis is needed for exactly one chip model, we can
+>> hard code some assumptions about the device topology and the
+>> properties of specific DEVFNs in the driver.
+>>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
 >> ---
->>  .../bindings/mailbox/ti,message-manager.txt        | 72 ++++++++++++++++++++++
->>  1 file changed, 72 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+>>   .../devicetree/bindings/pci/pci-thunder-ecam.txt   |  30 ++
+>>   drivers/pci/host/Kconfig                           |   7 +
+>>   drivers/pci/host/Makefile                          |   1 +
+>>   drivers/pci/host/pci-thunder-ecam.c                | 358 +++++++++++++++++++++
+>>   4 files changed, 396 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
+>>   create mode 100644 drivers/pci/host/pci-thunder-ecam.c
 >>
->> diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+>> diff --git a/Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt b/Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
 >> new file mode 100644
->> index 000000000000..f3d73b0b3c66
+>> index 0000000..34658f2
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->> @@ -0,0 +1,72 @@
->> +Texas Instruments' Message Manager Driver
->> +========================================
+>> +++ b/Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
+>> @@ -0,0 +1,30 @@
+>> +* ThunderX PCI host controller for pass-1.x silicon
 >> +
->> +The Texas Instruments' Message Manager is a mailbox controller that has
->> +configurable queues selectable at SoC(System on Chip) integration. The Message
->> +manager is broken up into queues in different address regions that are called
->> +"proxies" - each instance is unidirectional and is instantiated at SoC
->> +integration level to indicate receive or transmit path.
+>> +Firmware-initialized PCI host controller to on-chip devices found on
+>> +some Cavium ThunderX processors.  These devices have ECAM based config
+>> +access, but the BARs are all at fixed addresses.  We handle the fixed
+>> +addresses by synthesizing Enhanced Allocation (EA) capabilities for
+>> +these devices.
 >> +
->> +Message Manager Device Node:
->> +===========================
+>> +The properties and their meanings are identical to those described in
+>> +host-generic-pci.txt except as listed below.
 >> +
->> +Required properties:
->> +--------------------
->> +- compatible:                Shall be:
->> +                             "ti,k2g-message-manager"
->> +                             "ti,message-manager"
->
-> Given that queues are configurable at integration time, does a generic
-> property really make sense here?
-
-True. I can drop the generic "ti,message-manager" binding.
-
->> +- reg-names          queue_proxy_region - Map the queue Proxy region
->> +                     queue_state_debug_region - Map the queue state debug
->> +                     region.
->> +- reg:                       Contains the register map per reg-names
->> +- #mbox-cells                Shall be 1
->
-> And the value contained is what?
-
-phandle -> I think Suman has already explained in his response.
-
+>> +Properties of the host controller node that differ from
+>> +host-generic-pci.txt:
 >> +
->> +Child Nodes:
->> +============
->> +A child node is used for representing the actual queue device that is
->> +used for the communication between the host processor and a remote processor.
->> +Each child node should have a unique node name across all the different
->> +message manager device nodes.
->> +
->> +Required Properties:
->> +--------------------
->> +- ti,queue-id:               Indicates the queue number this node represents
->> +- ti,proxy-id:               Proxy ID representing the processor in the SoC.
->
-> What determines these values?
-
-This is SoC integration dependent -> Every queue, proxy combination
-has it's own memory region allocated for it.
-
->> +
->> +Optional Properties:
->> +--------------------
->> +- interrupt-names:   'rx' - indicates a receive interrupt (mandatory ONLY if
->> +                     this is a receive queue)
->
-> Kind of pointless if there is only 1.
->
-
-This is primarily to ensure a future compatibility where we are trying
-to convince the hardware team to provide an error interrupt per queue
-as well for slave usage.
-it would probably be pointless at that time to deal with "legacy"
-binding defintions when the next hardware ip definition takes place.
-
->> +- interrupts:                Contains the interrupt information corresponding to
->> +                     interrupt-names property.
+>> +- compatible     : Must be "cavium,pci-host-thunder-ecam"
 >> +
 >> +Example:
->> +--------
 >> +
->> +     msgmgr: msgmgr@02a00000 {
->> +             compatible = "ti,k2g-message-manager", "ti,message-manager";
->> +             #mbox-cells = <1>;
->> +             reg-names = "queue_proxy_region", "queue_state_debug_region";
->> +             reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
->> +
->> +             msgmgr_proxy_pmmc_tx_prio0: pmmc_tx_prio0 {
->> +                     ti,queue-id = <0>;
->> +                     ti,proxy-id = <0>;
->> +             };
->> +
->> +             msgmgr_proxy_pmmc_rx: pmmc_rx {
->> +                     ti,queue-id = <5>;
->> +                     ti,proxy-id = <2>;
->> +                     interrupt-names = "rx";
->> +                     interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>;
->> +             };
->> +     };
->> +
->> +...
->> +     pmmc {
->> +             ...
->> +             mbox-names = "tx", "rx";
->> +             mboxes = <&msgmgr &msgmgr_proxy_pmmc_tx>
->> +                      <&msgmgr &msgmgr_proxy_pmmc_rx>;
+>> +	pci@84b0,00000000 {
 >
-> While I guess this is valid DT, it is a bit strange having the cell
-> values be phandles. Why not just make the queue and proxy ids be the
-> cell values? The interrupts could be moved to the parent and the child
-> nodes eliminated altogether.
+> Drop the comma,
+
+OK...
+
+> and the node name should be "pcie".
 >
-> The alternative would be just drop msgmgr phandle and point to the child
-> nodes. I prefer getting rid of the child nodes though.
 
-I see that Suman has already responded to this.
+Why pcie?
 
---
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are no PCIe devices or buses reachable from this type of root 
+complex.  There are however many PCI devices.
+
+> Otherwise,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>> +		compatible = "cavium,pci-host-thunder-ecam";
+>> +		device_type = "pci";
+>> +		msi-parent = <&its>;
+>> +		msi-map = <0 &its 0x30000 0x10000>;
+>> +		bus-range = <0 31>;
+>> +		#size-cells = <2>;
+>> +		#address-cells = <3>;
+>> +		#stream-id-cells = <1>;
+>> +		reg = <0x84b0 0x00000000 0 0x02000000>;  /* Configuration space */
+>> +		ranges = <0x03000000 0x8180 0x00000000 0x8180 0x00000000 0x80 0x00000000>; /* mem ranges */
+>> +	};
