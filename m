@@ -1,81 +1,88 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 11/14] dt/bindings: Add bindings for PIC32 SDHCI host controller
-Date: Mon, 8 Feb 2016 10:58:30 +0100
-Message-ID: <CAPDyKFonEs4uA2YwgpxfWN=X7FtCAWKGn-9WQ8D3Z9soSQPsUA@mail.gmail.com>
-References: <1452734299-460-1-git-send-email-joshua.henderson@microchip.com>
-	<1452734299-460-12-git-send-email-joshua.henderson@microchip.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
+Date: Mon, 8 Feb 2016 15:42:04 +0530
+Message-ID: <56B869F4.6090507@codeaurora.org>
+References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452734299-460-12-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Andrei Pistirica <andrei.pistirica@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>, heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 January 2016 at 02:15, Joshua Henderson
-<joshua.henderson@microchip.com> wrote:
-> From: Andrei Pistirica <andrei.pistirica@microchip.com>
->
-> Document the devicetree bindings for the SDHCI peripheral found on
-> Microchip PIC32 class devices.
->
-> Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
-> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-
-I have picked this up and applied it to my next branch in my mmc tree.
-
-Thanks and kind regards!
-Uffe
-
-> ---
-> Changes since v4: None
-> Changes since v3: None
-> Changes since v2: None
-> Changes since v1:
->         - Drop usage of piomode and no-1-8-v DT properties
-> ---
->  .../bindings/mmc/microchip,sdhci-pic32.txt         |   29 ++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-> new file mode 100644
-> index 0000000..71ad57e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-> @@ -0,0 +1,29 @@
-> +* Microchip PIC32 SDHCI Controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-pic32 driver.
-> +
-> +Required properties:
-> +- compatible: Should be "microchip,pic32mzda-sdhci"
-> +- interrupts: Should contain interrupt
-> +- clock-names: Should be "base_clk", "sys_clk".
-> +               See: Documentation/devicetree/bindings/resource-names.txt
-> +- clocks: Phandle to the clock.
-> +          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- pinctrl-names: A pinctrl state names "default" must be defined.
-> +- pinctrl-0: Phandle referencing pin configuration of the SDHCI controller.
-> +             See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-> +
-> +Example:
-> +
-> +       sdhci@1f8ec000 {
-> +               compatible = "microchip,pic32mzda-sdhci";
-> +               reg = <0x1f8ec000 0x100>;
-> +               interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&REFCLKO4>, <&PBCLK5>;
-> +               clock-names = "base_clk", "sys_clk";
-> +               bus-width = <4>;
-> +               cap-sd-highspeed;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_sdhc1>;
-> +       };
-> --
-> 1.7.9.5
->
+SGksCgpPbiAwMS8wNi8yMDE2IDA5OjMzIEFNLCBDaHJpcyBaaG9uZyB3cm90ZToKPgo+IFRoZSBy
+azMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29u
+dHJvbGxlcgo+IElQLiBUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGEgU3lub3BzeXMgRGVz
+aWduV2FyZSBNSVBJIERTSSBob3N0Cj4gY29udHJvbGxlciBEUk0gZHJpdmVyLgo+Cj4gVGhlIE1J
+UEkgRFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBldmIgYm9hcmQsIGJhY2twb3J0IHRo
+ZW0gdG8KPiBjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5
+IG5vcm1hbGx5Lgo+Cj4gVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9t
+IFlpbmcubGl1QGZyZWVzY2FsZS5jb20uCj4gPGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMv
+ZHJpLWRldmVsL21zZzc3MTgxLmh0bWw+Cj4KPiBBY2NvcmRpbmcgdG8gdGhlIHN1Z2dlc3Rpb24g
+ZnJvbSBUaGllcnJ5LCBJIGhhdmUgZ2V0IHJpZCBvZiB0aGUgYnJpZGdlLAo+IGFuZCByZWdpc3Rl
+ciB0aGUgZW5jb2RlciAmIGNvbm5lY3RlciBpbiBkcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYy4K
+CkkndmUgcmFpc2VkIHRoaXMgcXVlc3Rpb24gdG9vIGxhdGUsIGJ1dCB3aGF0IHdhcyB0aGUgcmVh
+c29uIHRvIG5vdAppbXBsZW1lbnQgdGhlIERTSSBibG9jayBhcyBhIGJyaWRnZSBkcml2ZXI/CgpU
+aGUgZHJtL2hpc2lsaWNvbiBJUCBzZWVtcyB0byB1c2UgYSB2ZXJ5IHNpbWlsYXIgRFNJIERlc2ln
+bndhcmUgSVAgKHRoZQpyZWdpc3RlciBvZmZzZXRzIHNlZW1zIHRvIGJlIHRoZSBzYW1lKS4gVGhl
+cmUgaXMgYSBnb29kIHBvdGVudGlhbCBvZgpyZS11c2UgaGVyZSBieSBkaWZmZXJlbnQga21zIGRy
+aXZlcnMgaGVyZSB0aGUgd2F5IGl0J3MgYWxyZWFkeSBkb25lIGZvcgpEVyBIRE1JIGFuZCB0aGUg
+YW5hbG9naXggRFAgZHJpdmVyIHRoYXQncyBpbiByZXZpZXcgcHJvY2Vzcy4KCkFyY2hpdAoKPiBB
+ZnRlciBiYWNrcG9ydCBiZWxvdyBwYXRjaGVzIGZyb20gbGludXgtbmV4dCwgSSBjYW4gbWVyZ2Ug
+dGhpcyBzZXJpYWwgaW50bwo+IERhdmUncyBkcm0tbmV4dCBicmFuY2guCj4KPiA5NGQ1ZDZhMGZi
+ZjMgY2xrOiByb2NrY2hpcDogYWRkIGFuIGlkIGZvciByazMyODggY3J5cHRvIGNsawo+IGM2ZDQ5
+ZmJjZmNjNCBjbGs6IHJvY2tjaGlwOiBhZGQgaWQgZm9yIG1pcGlkc2kgc2NsayBvbiByazMyODgK
+PiBhMmY0YzU2MGYxOGUgY2xrOiByb2NrY2hpcDogYWRkIG1pcGlkc2kgY2xvY2sgb24gcmszMjg4
+Cj4gNjljOTIzNzQzNjQwIEFSTTogZHRzOiByb2NrY2hpcDogY29ycmVjdCB0aGUgbmFtZSBvZiBS
+RUc4IGZvciByazMyODgtZXZiLWFjdDg4NDYKPiA2NjI1MTNhMTRjOWQgQVJNOiBkdHM6IHJvY2tj
+aGlwOiBhZGQgMiByZWd1bGF0b3JzIGZvciByazMyODgtZXZiLWFjdDg4NDYKPiBiMDQwNjFlNjU5
+OWIgQVJNOiBkdHM6IHJvY2tjaGlwOiBtb3ZlIHRoZSBwdWJsaWMgcGFydCB0byByazMyODgtZXZi
+IGNvbW1vbgo+Cj4KPiBDaGFuZ2VzIGluIHY3Ogo+IC0gbW9kaWZ5IHRoZSBjb25maWcgdG8gdHJp
+c3RhdGUgZm9yIG1vZHVsZXMgYnVpbGQgKE1hcmsgWWFvKQo+IC0gUGFzcyBOVUxMICduYW1lJyB0
+byBkcm1fZW5jb2Rlcl9pbml0KCkgdG8gZml4IGNvbXBpbGUgZXJyIChNYXJrIFlhbykKPiAtIE1v
+dmUgdGhlIGxjZF9lbiBjb250cm9sIHRvIGFjdDg4NDYgZHRzCj4KPiBDaGFuZ2VzIGluIHY2Ogo+
+IC0gdXBkYXRlIHRoZSBkb2N1bWVudCwgc2luY2UgdGhlIGJyaWRnZSBkZXZpY2UgaGFzIGJlZW4g
+ZGVsZXRlZC4KPiAtIG1vdmUgdGhlIG1pcGlfZW4gZ2F0ZSB0byBvY2tjaGlwX2RybV9jcnRjX21v
+ZGVfY29uZmlnCj4gLSBSZW1vdmUgdGhlIGF0b21pYyBmZWF0dXJlIGNoZWNrIChNYXJrIFlhbykK
+PiAtIEFkZCBhdG9taWMgQVBJIHN1cHBvcnQgKEhlaWtvIFN0w7xibmUpCj4gLSBEbyBub3QgdXNl
+IGJyaWRnZSBkcml2ZXIgKFRoaWVycnkgUmVkaW5nKQo+IC0gT3B0aW1pemF0aW9uIHRoZSBwaHkg
+aW5pdCBzZXF1ZW5jZQo+Cj4gQ2hhbmdlcyBpbiB2NToKPiAtIG1vZGlmeSB0aGUgY2xrIG5hbWUg
+dG8gU0NMS19NSVBJRFNJXzI0TQo+IC0gYWRkIGEgYmxhbmsgbGluZSBiZWZvciBsY2RfZW4KPgo+
+IENoYW5nZXMgaW4gdjQ6Cj4gLSB1c2UgY2xrX3JvdW5kX3JhdGUgdG8gY2hlY2sgdGhlIGNsb2Nr
+IHJhdGUgaW4gdm9wX2NydGNfbW9kZV9maXh1cAo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAtIG1vdmUg
+ZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IHRvIGJpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvCj4K
+PiBDaHJpcyBaaG9uZyAoNSk6Cj4gICAgZHJtL3JvY2tjaGlwOiByZXR1cm4gYSB0cnVlIGNsb2Nr
+IHJhdGUgdG8gYWRqdXN0ZWRfbW9kZQo+ICAgIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBB
+ZGQgYmluZGluZ3MgZm9yIHJrMzI4OCBEVyBNSVBJIERTSSBkcml2ZXIKPiAgICBkcm06IHJvY2tj
+aGlwOiBTdXBwb3J0IFN5bm9wc3lzIERXIE1JUEkgRFNJCj4gICAgQVJNOiBkdHM6IHJvY2tjaGlw
+OiBhZGQgcmszMjg4IG1pcGlfZHNpIG5vZGVzCj4gICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQg
+c3VwcG9ydCBtaXBpIHBhbmVsIHR2MDgwd3VtLW5sMAo+Cj4gICAuLi4vZGlzcGxheS9yb2NrY2hp
+cC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8ICAgNjAgKwo+ICAgYXJjaC9hcm0vYm9v
+dC9kdHMvcmszMjg4LWV2Yi1hY3Q4ODQ2LmR0cyAgICAgICAgICAgfCAgICAyICsKPiAgIGFyY2gv
+YXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgICAgICAgICAgICAgIHwgICAxMiArLQo+
+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDM5ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAg
+ICAgIHwgICAxMCArCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICB8ICAgIDEgKwo+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGkt
+ZHNpLmMgICAgICAgICAgICAgfCAxMTk2ICsrKysrKysrKysrKysrKysrKysrCj4gICBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jICAgICAgICB8ICAgIDggKwo+ICAg
+OCBmaWxlcyBjaGFuZ2VkLCAxMzI3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+CgotLSAKVGhlIFF1YWxj
+b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
+YSAKRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
