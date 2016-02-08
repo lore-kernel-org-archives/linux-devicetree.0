@@ -1,96 +1,50 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
-Date: Mon, 8 Feb 2016 15:17:11 +0000
-Message-ID: <56B8B177.2050000@synopsys.com>
-References: <cover.1454498292.git.jpinto@synopsys.com>
- <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
- <2087303.0ORDEBS3hn@wuerfel> <56B222C8.5010509@synopsys.com>
- <20160204162700.GD17587@leverpostej>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
+Date: Mon, 8 Feb 2016 16:27:57 +0100
+Message-ID: <201602081627.57666.marex@denx.de>
+References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602060842.38290.marex@denx.de> <56B879BD.2070608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160204162700.GD17587@leverpostej>
+In-Reply-To: <56B879BD.2070608-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, santosh.sy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, h.vinayak-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark and Arnd,
+On Monday, February 08, 2016 at 12:19:25 PM, Vignesh R wrote:
+> On 02/06/2016 01:12 PM, Marek Vasut wrote:
+> > On Thursday, February 04, 2016 at 06:30:27 PM, R, Vignesh wrote:
+> >> On 2/4/2016 4:55 PM, Marek Vasut wrote:
+> [...]
+> 
+> >> Yeah, there is delay(of few ns) required between writing to
+> >> INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
+> >> call). This is specific to TI K2G SoC and needs to be tied to the new
+> >> binding.
+> > 
+> > Can't you somehow poll the hardware to check whether or not it's ready
+> > instead of adding some random delay ?
+> 
+> There is no dedicated register to poll as such.
+> 
+> According to TRM:
+> "Wait for couple of cycles of QSPI_REF_CLK(functional clock of QSPI
+> @384MHz) until CQSPI_REG_INDIRECTWR[0] bit is internally synchronized by
+> the QSPI module before writing to flash".
+> 
+> So, a few ns(~6ns @384MHz) delay is needed (or accessing a QSPI module
+> register should be sufficient as it will take more than 2 clock cycles).
+> I believe this delay is specific to TI K2G SoC and maybe needs to be
+> tied to the binding.
 
-I am planning the v2 of this patch set. I have a doubt in the version
-compatibility strings... The core driver must support the UFS 2.0 controller and
-this patch set includes a patch that adds 2.0 capabilities to it. The core
-driver can get from the controller's version and with that use or not a specific
-2.0 feature.
+OK, got it. Dinh/Graham, can you check if this might be needed on SoCFPGA too 
+please?
 
-What would be the real added-value of having a compatibility string like
-"snps,ufshcd-1.1" and "snps,ufshcd-2.0" if the driver can perform as 2.0 if it
-detects a 2.0 controller? Are you saying that a user that puts "snps,ufshcd-1.1"
-in the DT compatibility string disables the UFS 2.0 in the core driver despite
-the controller is 2.0? Please clarify.
-
-Thanks,
-Joao
-
-On 2/4/2016 4:27 PM, Mark Rutland wrote:
-> On Wed, Feb 03, 2016 at 03:54:48PM +0000, Joao Pinto wrote:
->> Hi,
->>
->> On 2/3/2016 3:39 PM, Arnd Bergmann wrote:
->>> On Wednesday 03 February 2016 15:01:34 Joao Pinto wrote:
->>>>
->>>> Hi Arnd,
->>>>
->>>> On 2/3/2016 12:54 PM, Arnd Bergmann wrote:
->>>>> On Wednesday 03 February 2016 11:28:26 Joao Pinto wrote:
->>>>>>
->>>>>> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>>>
->>>>> This needs a changelog comment, like every patch.
->>>>>
->>>>>> @@ -0,0 +1,16 @@
->>>>>> +* Universal Flash Storage (UFS) DesignWare Host Controller
->>>>>> +
->>>>>> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
->>>>>> +Each UFS controller instance should have its own node.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible        : compatible list, contains "snps,ufshcd"
->>>>>
->>>>> Are there multiple versions of this controller? Usually for designware
->>>>> parts the version is known, so we should document which versions exist
->>>>
->>>> This controller recent releases was 2.0, but we released last year 1.1. The
->>>> driver works with both. The driver must work with all DWC UFS versions.
->>>
->>> Ok, then make the driver match on the "snps,ufshcd-1.1" compatible
->>> string, but document both strings in the binding document, and make
->>> it mandatory to specify the 1.1 version as a compatible fallback.
->>>
->>> If we ever need to handle a quirk for the 2.0 version then, it can
->>> easily be done.
->>
->> We need the driver to support UFS 2.0 because it is our latest release and is
->> the done that Synopsys is focused now. We could call it "snps, ufshcd-2.0" then.
->> What do you think?
-> 
-> Arnd's point was that the driver can handle only "snps,ufshcd-1.1" for
-> now, and in your DT you can have:
-> 
-> 	compatible = "snps,ufshcd-2.0", "snps,ufshcd-1.1";
-> 
-> That allows driver to handle 2.0 and 1.1 without knowing anything about
-> 2.0 for now. If in future the two need to be handled differently we can
-> update the driver to explicitly match "snps,ufshcd-2.0".
-> 
-> Regardless, both compatible string should go in the documentation, and
-> it should be explicitly mentioned that "snps,ufshcd-1.1" should be used
-> as a fallback entry.
-> 
-> Mark.
-> 
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
