@@ -1,106 +1,84 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 1/1 v2] imx6q-wandboard-revb1.dts: use unique machine name
-Date: Mon, 8 Feb 2016 01:25:15 +0100
-Message-ID: <56B7E06B.2060701@gmx.de>
-References: <1454758226-4561-1-git-send-email-xypron.glpk@gmx.de>
- <1454760419-4822-1-git-send-email-xypron.glpk@gmx.de>
- <CAOCHtYiHUgcw6Vzdp8EmD_5+d52fhpuj-oSCFwt_3J5xAncCGw@mail.gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1 v3] ARM: dts: imx6dlq-wandboard-revb1.dts: use unique
+ model id
+Date: Mon,  8 Feb 2016 01:55:08 +0100
+Message-ID: <1454892908-26975-1-git-send-email-xypron.glpk@gmx.de>
+References: <56B7E06B.2060701@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOCHtYiHUgcw6Vzdp8EmD_5+d52fhpuj-oSCFwt_3J5xAncCGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-vgrsnd+bvIE@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56B7E06B.2060701@gmx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, George Joseph <george.joseph@fairview5.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Heinrich Schuchardt <xypron.glpk@gmx.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.co>, Kumar Gala <galak@codeaurora.org>, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Downstream packages like Debian flash-kernel use
+/proc/device-tree/model
+to determine which dtb file to install.
 
+Hence each dts in the Linux kernel should provide a unique model
+identifier.
 
-On 08.02.2016 00:52, Robert Nelson wrote:
-> On Sat, Feb 6, 2016 at 6:06 AM, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org> wrote:
->> Downstream packages like Debian flash-kernel use
->> /proc/device-tree/model
->> to determine which dtb file to install.
->>
->> Hence each dts in the Linux kernel should provide a unique model identifier.
->>
->> https://lkml.org/lkml/2014/7/8/579 created the new file
->> imx6q-wandboard-revb1.dts but used the same model identifier
->> as in imx6q-wandboard.dts.
->>
->> This patch provides a unique model identifier for revision B1 of
->> the Wandboard Quad.
->>
->> v2:
->>         correct name of referenced Debian package
->>
->> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/imx6q-wandboard-revb1.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
->> index 20bf3c2..9207d80 100644
->> --- a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
->> +++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
->> @@ -13,7 +13,7 @@
->>  #include "imx6qdl-wandboard-revb1.dtsi"
->>
->>  / {
->> -       model = "Wandboard i.MX6 Quad Board";
->> +       model = "Wandboard i.MX6 Quad Board rev B1";
-> 
-> Okay, this seems a little silly....
-> 
-> The wandboard has 5 versions:
-> 
-> solo: imx6dl-wandboard-revb1.dts
-> 
-> model = "Wandboard i.MX6 Dual Lite Board";
-> 
-> dual rev b: imx6dl-wandboard-revb1.dts
-> 
-> model = "Wandboard i.MX6 Dual Lite Board";
-> 
-> dual rev c: imx6dl-wandboard.dts
-> 
-> model = "Wandboard i.MX6 Dual Lite Board";
-> 
-> quad rev b: imx6q-wandboard-revb1.dts
-> model = "Wandboard i.MX6 Quad Board"; - > model = "Wandboard i.MX6
-> Quad Board rev B1";
-> 
-> quad rev c: imx6q-wandboard.dts
-> model = "Wandboard i.MX6 Quad Board";
-> 
-> 
-> Do you guys see the issue?  Either we change them "ALL", rev b or rev c...
-> 
-> Or "flash-kernel" needs to learn to copy more then one dtb (in this
-> case 5 *.dtb's)
-> 
-> PS, u-boot already can boot on all these with the same SPL/u-boot
-> image and detect which board and load the correct device tree binary..
-> 
-> Regards,
-> 
-Hello Robert,
+Commit 8536239e371f ("ARM: dts: Restructure imx6qdl-wandboard.dtsi for new
+rev C1 board.")' created new files imx6dl-wandboard-revb1.dts and
+imx6q-wandboard-revb1.dts but used the same model identifier as in
+imx6dl-wandboard.dts and imx6q-wandboard.dts.
 
-I only see four dts files mentioned in your mail (solo using the same as
-dual rev B1).
+This patch provides unique model identifiers for revision B1 of
+the Wandboard Dual and Wandbaord Quad.
 
-We do not know if imx6dl-wandboard.dts and imx6q-wandboard.dts
-will support future revisions of the boards. So it doesn't make
-much sense to mark them as restricted to revision C1.
+The patch leaves imx6dl-wandboard.dts and imx6q-wandboard.dts unchanged
+because it is not foreseeable if the same dts will valid for future
+board revisions or not. Furthermore we should avoid unnecessary
+changes.
 
-You are right in that we should add a change to
-imx6dl-wandboard-revb1.dts to the same patch.
+v3:
+	update imx6dl-wandboard-revb1.dts
 
-Best regards
+v2:
+	correct name of referenced Debian package
 
-Heinrich Schuchardt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+---
+ arch/arm/boot/dts/imx6dl-wandboard-revb1.dts | 2 +-
+ arch/arm/boot/dts/imx6q-wandboard-revb1.dts  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts b/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
+index f607d4f..8c314ee 100644
+--- a/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
++++ b/arch/arm/boot/dts/imx6dl-wandboard-revb1.dts
+@@ -13,7 +13,7 @@
+ #include "imx6qdl-wandboard-revb1.dtsi"
+ 
+ / {
+-	model = "Wandboard i.MX6 Dual Lite Board";
++	model = "Wandboard i.MX6 Dual Lite Board rev B1";
+ 	compatible = "wand,imx6dl-wandboard", "fsl,imx6dl";
+ 
+ 	memory {
+diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+index 20bf3c2..9207d80 100644
+--- a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
++++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+@@ -13,7 +13,7 @@
+ #include "imx6qdl-wandboard-revb1.dtsi"
+ 
+ / {
+-	model = "Wandboard i.MX6 Quad Board";
++	model = "Wandboard i.MX6 Quad Board rev B1";
+ 	compatible = "wand,imx6q-wandboard", "fsl,imx6q";
+ 
+ 	memory {
+-- 
+2.7.0
