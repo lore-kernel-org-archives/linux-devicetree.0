@@ -1,51 +1,108 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm: dts: DRA7: Add IVA and DSPEVE thermal domain
- data
-Date: Mon, 8 Feb 2016 11:57:04 -0800
-Message-ID: <20160208195704.GW19432@atomide.com>
-References: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Mon, 8 Feb 2016 22:59:46 +0300
+Message-ID: <56B8F3B2.9000300@cogentembedded.com>
+References: <1454693676-20211-1-git-send-email-petr@barix.com>
+ <20160208194915.GA6168@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454922990-7501-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160208194915.GA6168@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [160208 01:19]:
-> OMAP5 has 3 thermal zones cpu, core and multimedia.
-> On the other hand DRA7 has 5 thermal zones cpu, gpu, core, dspeve
-> and iva. Currently cpu, core and multimedia are being added via dt
-> and the other 2 are getting added via kernel. Add the missing thermal
-> domains in dt so as give the correct trip numbers, type and temperatures.
-> 
-> Tested on DRA7-EVM.
+On 02/08/2016 10:49 PM, Rob Herring wrote:
 
-Are these critical fixes to have for v4.5-rc cycle or can they
-wait for v4.6 merge window?
+>> TI DA8xx MUSB driver equipped with DeviceTree support.
+>> Tested with AM1808 board and USB2.0 (OTG) in host mode.
+>>
+>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
+>>   drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
+>>   include/linux/platform_data/usb-davinci.h          |   3 +-
+>>   3 files changed, 227 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>> new file mode 100644
+>> index 0000000..69c0961
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>> @@ -0,0 +1,63 @@
+>> +TI DA8xx MUSB
+>> +~~~~~~~~~~~~~
+>> +
+>> +Required properties:
+>> +~~~~~~~~~~~~~~~~~~~~
+>> + - compatible : Should be "ti,da8xx-musb"
+>> +
+>> + - reg: offset and length of the usbss register sets
+>> +
+>> + - interrupts: USB interrupt number
+>> +
+>> + - interrupt-names: should be set to "mc"
+>
+> Kind of pointless with only one.
 
-Regards,
+    Required by the driver.
 
-Tony
+>> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
+>> +
+>> + - mentor,power : Specifies the maximum current in milli-ampers the controller can
+>> +     supply in host mode. The maximum configurable value is 510mA.
+>> +
+>> + - mentor,num-eps : Valid only in host mode. Specifies the number of target endpoints
+>> +     supported by the controller. For DA8xx it is "5".
+>
+> If DA8xx is the only thing you support, then why is this needed?
 
-> Keerthy (3):
->   arm: dts: DRA7: Add DSPEVE thermal data
->   arm: dts: DRA7: Add IVA thermal data
->   arm: dts: DRA7: Add missing IVA and DSPEVE thermal domain data
-> 
->  arch/arm/boot/dts/dra7-dspeve-thermal.dtsi | 27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra7-iva-thermal.dtsi    | 27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra7.dtsi                |  2 ++
->  3 files changed, 56 insertions(+)
->  create mode 100644 arch/arm/boot/dts/dra7-dspeve-thermal.dtsi
->  create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
-> 
-> -- 
-> 1.9.1
-> 
+    We already agreed that it should be deduced from the "compatible" prop. 
+Unfortunately, the author had bad examples in omap2430.c and musb_dsps.c... :-(
+
+>> + - mentor,multipoint : Valid only in host mode. Enables addressing of USB hubs,
+>> +     which is normally something you want and therefore should be set to "1".
+>> +     If set to "0" only point-to-point communication is enabled, i.e. only a single
+>> +     device can be attached.
+
+    This is author's fantasies, not the real meaning. :-)
+
+>
+> Given 1 is a superset of 0, why ever use 0?
+
+    Already this way in the exsiting MUSB bindings. Actually 0/1 indicates 
+that the target endpoint control regs are absent/present.
+
+>> + - mentor,ram-bits : This 2-base logarithm value defines the RAM FIFO size of the controller.
+>> +     The FIFO size is calculated in 32-bit words. E.g. if your controller has 4kiB of RAM FIFO
+>> +     this value should be set to "10": 2^10 = 1024 words of 32-bits, i.e. 4096 bytes.
+>> +     For the DA8xx controller this value should be set to 10.
+>
+> Again, if fixed for the compatible string, then don't put into the DT.
+
+    Fully agreed. Bad examples exist, though...
+
+>> +
+>> +
+>> +Optional properties:
+>> +
+>> + - ti,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
+>> +     Supported values: "0" for external pin, "1" for internal PLL.
+>> +
+>> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
+>> +     frequency in Hz in case the clock is generated by the internal PLL.
+>> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+>
+> Add units suffix (-hz).
+
+    Doesn't "frequency" alteady tell that?
+
+MBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
