@@ -1,70 +1,49 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
-Date: Mon, 8 Feb 2016 17:56:27 +0530
-Message-ID: <56B88973.6000701@codeaurora.org>
-References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
- <56B869F4.6090507@codeaurora.org> <5060470.dfeHX20DRa@phil>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v3 4/6] arm64: Enable dynamic CPU capacity initialization
+Date: Mon, 8 Feb 2016 12:28:39 +0000
+Message-ID: <56B889F7.306@arm.com>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-5-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5060470.dfeHX20DRa@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, treding@nvidia.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1454500799-18451-5-git-send-email-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8wOC8yMDE2IDA0OjIyIFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBIaSBBcmNo
-aXQsCj4KPiBBbSBNb250YWcsIDguIEZlYnJ1YXIgMjAxNiwgMTU6NDI6MDQgc2NocmllYiBBcmNo
-aXQgVGFuZWphOgo+PiBPbiAwMS8wNi8yMDE2IDA5OjMzIEFNLCBDaHJpcyBaaG9uZyB3cm90ZToK
-Pj4+IFRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJ
-IGhvc3QgY29udHJvbGxlcgo+Pj4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgYSBT
-eW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPj4+IGNvbnRyb2xsZXIgRFJNIGRyaXZl
-ci4KPj4+Cj4+PiBUaGUgTUlQSSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gcmszMjg4IGV2YiBi
-b2FyZCwgYmFja3BvcnQgdGhlbSB0bwo+Pj4gY2hyb21lIG9zIGtlcm5lbCBjaHJvbWVfdjMuMTQs
-IGFuZCBpdCBjYW4gZGlzcGxheSBub3JtYWxseS4KPj4+Cj4+PiBUaGlzIHBhdGNoc2V0IGlzIGJh
-c2Ugb24gdGhlIHBhdGNoc2V0IGZyb20gWWluZy5saXVAZnJlZXNjYWxlLmNvbS4KPj4+IDxodHRw
-Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2c3NzE4MS5odG1sPgo+Pj4KPj4+
-IEFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBnZXQgcmlk
-IG9mIHRoZSBicmlkZ2UsCj4+PiBhbmQgcmVnaXN0ZXIgdGhlIGVuY29kZXIgJiBjb25uZWN0ZXIg
-aW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4+Cj4+IEkndmUgcmFpc2VkIHRoaXMgcXVl
-c3Rpb24gdG9vIGxhdGUsIGJ1dCB3aGF0IHdhcyB0aGUgcmVhc29uIHRvIG5vdAo+PiBpbXBsZW1l
-bnQgdGhlIERTSSBibG9jayBhcyBhIGJyaWRnZSBkcml2ZXI/Cj4KPiBUaGVyZSBzZWVtcyB0byBh
-bHdheXMgYmUgc29tZSBzb3J0IG9mIGNvbnRlbnRpb24gYWJvdXQgdGhvc2UgYmVpbmcgYnJpZGdl
-Cj4gZHJpdmVycyAtIEkgdGhpbmsgSSByZW1lbWJlciBUaGllcnJ5IHNwZWFraW5nIHVwIGFib3V0
-IHRoYXQuIEJ1dCBJIGRvbid0Cj4gcmVtZW1iZXIgaWYgYW55IGRpZmZlcmVudCBzb2x1dGlvbiB3
-YXMgc3VnZ2VzdGVkLgoKV2VsbCwgeWVhaCwgdGhlc2UgY2FuIGJlIGNvbnNpZGVyZWQgYXMgZW5j
-b2RlcnMgdG9vLiBJIGd1ZXNzIGl0J3MganVzdApub3QgdmVyeSBjb21tb24gdG8gaGF2ZSBlbmNv
-ZGVyIGRyaXZlcnMgb3V0c2lkZSBvZiB0aGUga21zIGRyaXZlciwgaW4KY29tcGFyaXNvbiB0byBi
-cmlkZ2VzLgoKVGhlIGFkdmFudGFnZSBvZiBoYXZpbmcgc3VjaCBzaGFyZWQgSVBzIGFzIGJyaWRn
-ZXMgaXMgdGhhdCB0aGV5IGNhbiBiZQp1c2VkIGJ5IGttcyBkcml2ZXJzIHRoYXQgYWxyZWFkeSBp
-bXBsZW1lbnQgYW4gZW5jb2RlciBpbiB0aGUgZGlzcGxheQpjaGFpbi4KCj4KPiBBbHNvIGFzIHdl
-IGhhdmUgc2VlbiB3aXRoIGN1cnJlbnQgc2hhcmVkIElQcyAoZHctaGRtaSArIGFuYWxvZ2l4LWRw
-KSB0aGVyZQo+IGFyZSBhbHdheXMgaW1wbGVtZW50YXRpb24tc3BlY2lmaWMgcGFydHMgYW5kIGRl
-Y2lkaW5nIHdoaWNoIG5lZWRzIHRvIGxhbmQKPiB3aGVyZSBpcyBkaWZmaWN1bHQgd2l0aG91dCB0
-aGUgc2Vjb25kYXJ5IHVzZXIgcHJlc2VudC4KClllYWgsIEkgY2FuIGltYWdpbmUgaXQgYmVpbmcg
-aGFyZCB0byBzZXBhcmF0ZSBvdXQgdGhlIGltcGxlbWVudGF0aW9uCnNwZWNpZmljIGFuZCBjb3Jl
-IHBhcnRzLgoKPgo+IFRoZSBmaXJzdCBpdGVyYXRpb25zIHdoZXJlIHVzaW5nIGEgYnJpZGdlLWRy
-aXZlci1iYXNlIGZvciBpdCBidXQgSSBndWVzcyBpdAo+IHdhcyB0byBtdWNoIGhhc3NsZSB3aXRo
-b3V0IHNlZWluZyBhbm90aGVyIHVzZXIgb24gdGhlIGhvcml6b24uCj4KPgo+PiBUaGUgZHJtL2hp
-c2lsaWNvbiBJUCBzZWVtcyB0byB1c2UgYSB2ZXJ5IHNpbWlsYXIgRFNJIERlc2lnbndhcmUgSVAg
-KHRoZQo+PiByZWdpc3RlciBvZmZzZXRzIHNlZW1zIHRvIGJlIHRoZSBzYW1lKS4gVGhlcmUgaXMg
-YSBnb29kIHBvdGVudGlhbCBvZgo+PiByZS11c2UgaGVyZSBieSBkaWZmZXJlbnQga21zIGRyaXZl
-cnMgaGVyZSB0aGUgd2F5IGl0J3MgYWxyZWFkeSBkb25lIGZvcgo+PiBEVyBIRE1JIGFuZCB0aGUg
-YW5hbG9naXggRFAgZHJpdmVyIHRoYXQncyBpbiByZXZpZXcgcHJvY2Vzcy4KPgo+IEkgZ3Vlc3Ms
-IHRoZSBzZWNvbmQgdXNlciBub3cgZ2V0cyB0byBkbyB0aGUgZ2VuZXJhbGl6YXRpb24gOy0pCgpJ
-ZiBub3QgdGhlIGdlbmVyYWxpemF0aW9uLCB0aGVuIGF0IGxlYXN0IGFuIGFzc2Vzc21lbnQgaWYg
-aXQncyB3b3J0aCB0aGUKZWZmb3J0IG9yIG5vdCA6KQoKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21t
-IElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAK
-Rm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 03/02/16 11:59, Juri Lelli wrote:
+> Define arch_wants_init_cpu_capacity() to return true; so that
+> cpufreq_init_cpu_capacity() can go ahead and profile CPU capacities
+> at boot time.
+
+[...]
+
+>  
+> +bool arch_wants_init_cpu_capacity(void)
+> +{
+> +	return true;
+
+Isn't this a little bit too simple? Not every ARM/ARM64 platform is a
+heterogeneous one.
+
+You could add code to compare the cpu node 'compatible' properties
+(required) and only return true if they differ, which would let you
+detect uarch based heterogeneity.
+
+In case of max. frequency based heterogeneity (clusters consisting of
+same cpu types but running at different max. frequency), you're at the
+mercy of cpu node 'clock-frequency' properties (optional).
+We might argue that for these platforms, providing cpu node
+'clock-frequency' properties is necessary.
+The 'struct cpu_efficiency table_efficiency[]' based approach in ARM
+already faces this problem.
+
+> +}
+> +
+>  static int __init get_cpu_for_node(struct device_node *node)
+>  {
+>  	struct device_node *cpu_node;
+> 
