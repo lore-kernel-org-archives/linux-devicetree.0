@@ -1,100 +1,120 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
-Date: Mon, 8 Feb 2016 12:00:36 +0100
-Message-ID: <20160208110036.GC4117@kwain>
-References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
- <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
- <20160208105104.GA12991@leverpostej>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
+Date: Mon, 8 Feb 2016 11:02:40 +0000
+Message-ID: <20160208110239.GA9747@e106950-lin.cambridge.arm.com>
+References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com>
+ <alpine.DEB.2.11.1601262142450.3886@nanos>
+ <20160128095955.GA12884@e106950-lin.cambridge.arm.com>
+ <alpine.DEB.2.11.1601281116310.3886@nanos>
+ <20160128111041.GB12884@e106950-lin.cambridge.arm.com>
+ <alpine.DEB.2.11.1601281238110.3886@nanos>
+ <20160128122212.GC12884@e106950-lin.cambridge.arm.com>
+ <alpine.DEB.2.11.1601281355200.3886@nanos>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160208105104.GA12991@leverpostej>
+In-Reply-To: <alpine.DEB.2.11.1601281355200.3886@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rshitrit-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barak Wasserstrom <barak-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any further thoughts on this? (some comments below)
 
-Hi Mark,
+On Thu, Jan 28, 2016 at 02:37:24PM +0100, Thomas Gleixner wrote:
+>In principle I agree. The issue is that it really depends on the 
+>particular
+>hardware situation.
+>
+>If there is an explicit requirement for one driver - expressed by a trigger
+>flag - and the other driver relies on the default configuration, then this
+>might cause malfunction.
+>
+>The hassle is, that IRQF_TRIGGER_NONE has unclear semantics. It can mean "I
+>don't care" or "I rely on the hw configuration". The latter is what worries
+>me.
+>
+>first driver:
+>
+>      creates the mapping and sets the trigger type according to the DT
+>      setting.
+>
+>      driver calls request_irq() with IRQF_TRIGGER_NONE. It relies on the DT
+>      setting to be correct.
+>
+>second driver:
+>
+>      Finds an existing mapping. Now we have two cases:
+>
+>      1) flat irqdomains:
+>
+>      	 The DT setting is applied to the trigger type unconditionally.
+>
+>	 So if that setting is contrary to first drivers DT setting then we
+>	 are already in trouble.
+>
+>	 If the driver uses IRQF_TRIGGER_NONE, bad luck as nothing will notice
+>	 the issue.
+>
+>      2) hierarchical irqdomains
+>
+>      	 That code path ignores the type setting of the second driver and
+>      	 leaves the irq line in the existing state.
+>
+>	 If the driver uses IRQF_TRIGGER_NONE, bad luck as nothing will notice
+>	 the issue.
+>      	
+>So we have two problems here.
+>
+>1) We should detect the mismatch already in the mapping function.
+>
+>   But, that's hard for legacy reasons. Interrupts can be mapped at early boot
+>   with hardware default settings and we currently have no way to distinguish
+>   that. It shouldn't be hard to fix that.
+>
 
-On Mon, Feb 08, 2016 at 10:51:05AM +0000, Mark Rutland wrote:
->=20
-> > +	chosen {
-> > +		stdout-path =3D "console0:115200n8";
-> > +	};
->=20
-> There is no console0 alias, so this cannot work.
->=20
-> Did you mean serial0?
+Would you agree that this is a separate issue that should be fixed
+separately? Even with this fixed, my problem would still exist.
 
-Oops... Yes, I meant serial0. I'll fix this.
+>2) How to deal with the mismatch in request_irq()
+>
+>   Relaxing the check is not really a good decision. So what we could do is:
+>
+>   if ((new_action->flags & IRQF_TRIGGER_MASK) == IRQF_TRIGGER_NONE)
+>      	new_action->flags |= irqd_get_trigger_type(irqdata);
+>
+>   Now that has an issue as well. If the driver requests with
+>   IRQF_TRIGGER_NONE and does an explicit type setting afterwards, the
+>   action->flags still do not reflect it.
+>
 
-> [...]
->=20
-> > +	aliases {
-> > +		serial0 =3D &uart0;
-> > +		serial1 =3D &uart1;
-> > +		serial2 =3D &uart2;
-> > +		serial3 =3D &uart3;
-> > +	};
->=20
-> [...]
->=20
-> > +	psci {
-> > +		compatible =3D "arm,psci-0.2", "arm,psci";
-> > +		method =3D "smc";
-> > +		cpu_on =3D <0x84000003>;
-> > +	};
->=20
-> If you have PSCI 0.2, the cpu_on ID (and all other mandatory function
-> IDs) are implicit.
->=20
-> If you want to have "arm,psci" as a fallback, then please add the IDs
-> for functions mandatory in PSCI 0.2 which existed in the "arm,psci"
-> binding. Otherwise, drop "arm,psci" from the compatible list, along
-> with the cpu_on function ID.
+Yes, an explicit type-setting afterwards would make action->flags get
+out-of-sync, but isn't that already the case, regardless of the relaxed
+check?
 
-OK. I'll make some tests and update.
+My patch fixes a bogus error for a real use-case, and as far as I can
+see doesn't make any of the existing problems worse - so I feel like
+that's a net win.
 
-Thanks or the review!
+>The whole trigger handling versus shared interrupts needs some deep thoughts
+>and I really want to understand what that of commit 4a43d686fe336 before
+>making any decisions.
+>
 
-Antoine
+If you'd rather see a patch something like your 2) above, I can do that,
+let me know what you think.
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Many thanks,
 
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Brian
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWuHVTAAoJEFxNi8it27zYlJMP+wWbE2Jt0hnRdRw4p+TyHzXJ
-Y0PYzPhAV43lTc4huENGi5VurXsvFAXh+eraNfGZoEI/wpRljH/kP6iWjRH2H+xD
-S4Qj+W8fZCIxKU39t+QOjCsJahLk+xQ4mzmqGYOZitsQi3U8iUae/FW4HxiXPT2L
-b6c3I87amc2NcZMNneGHAo2mqUi0412rPCnO09NpbULorMoG+MYsuA8FYotaBXyK
-MEAcftiHO2xeolM4AAtF23LQaKwriTvEEsRkt+db8c8tpoHWLQs06Yu/9vG3z/iS
-ORVzaDGSj0vDnQrPuaa1KRqjMWTsF/pq7r6qfxhUkbKI0YumLqTNigAytS+DM9B7
-P609W7Rws8ngnNOxT8lNDyfSQ9X3xeprH7KeqGFLFP0CcEC9NXEjTSvopH8TApXI
-0fH4/BWnOlb8O9Un90IfVBpPzJS67/mYbUJq72d1B/UVJaaXFYcE2DP8Rw5AqqsV
-5MkFInqGx++nQ0KzsNlZmPB8pKHXILn15kVErVcZTbSerplQHoej5L3nhs1E32UL
-guM5PGz3JSdJs8R51+bCQGGw+0jYprMyOlU0yf05AU/YWCC61gE+xlqVV5uZZu/R
-lVAeoQI2F9YgprwZpewI3GIJNKI+YasQEYoKjdHSnOaaJzYWtv5LrZcdNEXf7yQ3
-+JXkJhKUP+oNG4ACadmd
-=92dd
------END PGP SIGNATURE-----
-
---xo44VMWPx7vlQ2+2--
+>Thanks,
+>
+>	tglx
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
