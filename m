@@ -1,50 +1,60 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 2/2] pinctrl: stm32: Fix compile testing selection
-Date: Mon,  8 Feb 2016 18:57:39 +0100
-Message-ID: <1454954259-4923-3-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V2 00/12] dtb: amd: Miscelleneous Updates for AMD Seattle DTS
+Date: Mon, 8 Feb 2016 11:59:05 -0600
+Message-ID: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-While selecting the driver for compile testing seemed possible,
-the driver was not compiled because the driver directory was only
-added if ARCH_STM32 was selected.
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-This patch now makes the pinctrl Makefile to add stm32 directory if
-PINCTRL_STM32 is selected.
+This patch series contains several updates for the AMD Seattle SOC DTS files.
+It also adds new board files for newer Overdrive and Linaro 96boards (Husky)
+platforms.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- drivers/pinctrl/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Suravee
 
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 8adc235..7ea62ef 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -46,7 +46,7 @@ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
- obj-$(CONFIG_PINCTRL_SAMSUNG)	+= samsung/
- obj-$(CONFIG_PINCTRL_SH_PFC)	+= sh-pfc/
- obj-$(CONFIG_PINCTRL_SPEAR)	+= spear/
--obj-$(CONFIG_ARCH_STM32)	+= stm32/
-+obj-$(CONFIG_PINCTRL_STM32)	+= stm32/
- obj-$(CONFIG_PINCTRL_SUNXI)	+= sunxi/
- obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
- obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
+Changes from V1 (https://lkml.org/lkml/2016/1/27/1251):
+  * Fix duplication in MAINTAINERS file (per Martin review comment)
+  * Remove the PCIe SMMU device tree node for now to rework
+    (based on the discussion in the thread).
+
+Brijesh Singh (2):
+  dtb: amd: Fix GICv2 hypervisor and virtual interface sizes
+  dtb: amd: Add KCS device tree node
+
+Suravee Suthikulpanit (9):
+  MAINTAINERS: Adding Maintainers for AMD Seattle Device Tree
+  dtb: amd: Fix DMA ranges in device tree
+  dtb: amd: Fix typo in SPI device nodes
+  dtb: amd: Misc changes for I2C device nodes
+  dtb: amd: Misc changes for SATA device tree nodes
+  dtb: amd: Misc changes for GPIO devices
+  dtb: amd: Add PERF CCN-504 device tree node
+  dtb: amd: Add support for new AMD Overdrive boards
+  dtb: amd: Add support for AMD/Linaro 96Boards Enterprise Edition
+    Server board
+
+Tom Lendacky (1):
+  dtb: amd: Add AMD XGBE device tree file
+
+ MAINTAINERS                                      |   8 ++
+ arch/arm64/boot/dts/amd/Makefile                 |   4 +-
+ arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts |  87 +++++++++++++++++
+ arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts |  91 ++++++++++++++++++
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi     | 105 +++++++++++++++++---
+ arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi  | 117 +++++++++++++++++++++++
+ arch/arm64/boot/dts/amd/husky.dts                |  83 ++++++++++++++++
+ 7 files changed, 481 insertions(+), 14 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
+ create mode 100644 arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
+ create mode 100644 arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi
+ create mode 100644 arch/arm64/boot/dts/amd/husky.dts
+
 -- 
-1.9.1
+2.5.0
