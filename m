@@ -1,196 +1,74 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 10:19:50 +0100
-Message-ID: <56B85DB6.9030605@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: r8a7795: pmu: switch to Cortex specific
+ device nodes
+Date: Mon, 8 Feb 2016 10:21:45 +0100
+Message-ID: <20160208092145.GA15520@verge.net.au>
+References: <1452953636-4995-1-git-send-email-dirk.behme@gmail.com>
+ <56B236F4.4090409@gmail.com>
+ <20160205095445.GD16556@verge.net.au>
+ <56B47378.3080209@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B67351.1030604-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B47378.3080209@de.bosch.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Dirk Behme <dirk.behme@gmail.com>, linux-sh@vger.kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Feb 05, 2016 at 11:03:36AM +0100, Dirk Behme wrote:
+> On 05.02.2016 10:54, Simon Horman wrote:
+> >[CC shiny new linux-renesas-soc ML]
+> 
+> 
+> Yes, thanks. I've to learn and remember this, too :)
+> 
+> 
+> >On Wed, Feb 03, 2016 at 06:20:52PM +0100, Dirk Behme wrote:
+> >>On 16.01.2016 15:13, Dirk Behme wrote:
+> >>>Instead of using the generic armv8-pmuv3 compatibility use the more
+> >>>specific Cortex A57 compatibility.
+> >>>
+> >>>Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+> >>>---
+> >>>Changes in v2: Drop the not yet merged Cortex A53 part.
+> >>>
+> >>>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
+> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>>diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> >>>index 266c5de..a82bce8 100644
+> >>>--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> >>>+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> >>>@@ -247,8 +247,8 @@
+> >>>  			power-domains = <&cpg>;
+> >>>  		};
+> >>>
+> >>>-		pmu {
+> >>>-			compatible = "arm,armv8-pmuv3";
+> >>>+		pmu_a57 {
+> >>>+			compatible = "arm,cortex-a57-pmu";
+> >>>  			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> >>>  				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> >>>  				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> >>>
+> >>
+> >>
+> >>Any further comments to this? If not, could this be applied?
+> >
+> >Hi Dirk,
+> >
+> >I apologise for loosing track of this one.
+> >
+> >Does this change work? I saw some discussion about using arm,cortex-a57-pmu
+> >not working correctly on the r8a7795 in an earlier thread.
+> 
+> Yes, the A57 PMU probe is successful.
+> 
+> What's not working with the latest Renesas BSP is the A53, because these
+> cores are disabled in the firmware coming with that BSP. But that's not a
+> PMU issue, it's just because the cores are disabled. Using an older BSP
+> firmware enabling all cores makes the A53 PMU probe fine, too.
 
-On 06.02.2016 23:27, Sergei Shtylyov wrote:
->    [Changed Felipe's address to the kernel.org one, so thta he can 
-> read this too. :-)] 
-
-He should also update the MAINTAINERS file with his new address.
-
->> TI DA8xx MUSB driver equipped with DeviceTree support.
->> Tested with AM1808 board and USB2.0 (OTG) in host mode.
->
->    Have you notices "depends on BROKEN" in Kconfig, BTW? 
-
-Honestly, I don't see any "depends on BROKEN". However I do build with 
-the 3.17 kernel.
-
-> Felipe wants the PHY specific parts moved to a PHY driver...
->
-I was wondering about a PHY driver too. However the AM1808 has no 
-standalone PHY module like e.g. the AM335x does. The PHY together with 
-the USB core are integrated into a single block and there is only a 
-little control through the SYSCFG registers.
-And that change has nothing to do with DT support - it's a structural 
-change of the da8xx USB and platform drivers.
-That's why I didn't go for that.
-
->> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
->>   drivers/usb/musb/da8xx.c                           | 162 
->> +++++++++++++++++++++
->>   include/linux/platform_data/usb-davinci.h          |   3 +-
->>   3 files changed, 227 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt 
->> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> new file mode 100644
->> index 0000000..69c0961
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> @@ -0,0 +1,63 @@
->> +TI DA8xx MUSB
->> +~~~~~~~~~~~~~
->> +
->> +Required properties:
->> +~~~~~~~~~~~~~~~~~~~~
->> + - compatible : Should be "ti,da8xx-musb"
->
->    No way. You'l probably need to select a lowest common denominator 
-> model. I don't remember offhand but I don't think DA850 (AM1808) is 
-> different from DA830 (AM170x)...
->
-I just did what the guys here on the mailing list told me. I'm getting a 
-bit confused now what is the right approach then...
->> +
->> + - interrupts: USB interrupt number
->> +
->> + - interrupt-names: should be set to "mc"
->> +
->> + - dr_mode: The USB operation mode. Should be one of "host", 
->> "peripheral" or "otg".
->> +
->> + - mentor,power : Specifies the maximum current in milli-ampers the 
->> controller can
->> +     supply in host mode. The maximum configurable value is 510mA.
->> +
->> + - mentor,num-eps : Valid only in host mode. Specifies the number of 
->> target endpoints
->> +     supported by the controller. For DA8xx it is "5".
->
->    That number should actually be deducible from the "compatible" 
-> prop. I'm not sure it's a good idea to specify this in DT... although 
-> TI have done this once already, for OMAPs...
-
-All the other MUSBs specify these parameters in the DT. Do you want to 
-make an exception?
-
->> +
->> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY 
->> reference clock input
->> +     frequency in Hz in case the clock is generated by the internal 
->> PLL.
->> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 
->> 26MHz, 38.4MHz, 40MHz, 48MHz
->
->    Ugh. At least these both are something board specific indeed...
-See above.
->
->> @@ -134,6 +139,35 @@ static inline void phy_off(void)
->>       __raw_writel(cfgchip2, CFGCHIP2);
->>   }
->>
->> +/* converts PHY refclk frequency in HZ into USB0REF_FREQ config value
->
->    It's Hz, no?
-Nope, see the spruh82a.pdf
->
-> [...]
->> @@ -527,6 +561,35 @@ static const struct platform_device_info 
->> da8xx_dev_info = {
->>       .dma_mask    = DMA_BIT_MASK(32),
->>   };
->>
->> +static int get_musb_port_mode(struct device_node *np)
->> +{
->> +    enum usb_dr_mode mode;
->> +
->> +    mode = of_usb_get_dr_mode(np);
->> +    switch (mode) {
->> +    case USB_DR_MODE_HOST:
->> +        return MUSB_HOST;
->> +
->> +    case USB_DR_MODE_PERIPHERAL:
->> +        return MUSB_PERIPHERAL;
->> +
->> +    case USB_DR_MODE_OTG:
->> +        return MUSB_OTG;
->> +
->> +    default:
->> +        return MUSB_UNDEFINED;
->> +    }
->> +}
->
->    This is clearly MUSB generic code.
-
-So what does it mean?
-
-> [...]
->> @@ -560,6 +624,95 @@ static int da8xx_probe(struct platform_device 
->> *pdev)
->>       glue->dev            = &pdev->dev;
->>       glue->clk            = clk;
->>
->> +    if (IS_ENABLED(CONFIG_OF) && np) {
->> +        struct musb_hdrc_config *config;
->> +        struct musb_hdrc_platform_data *data;
->> +        u32 phy20_refclock_freq, phy20_clkmux_cfg;
-> [...]
->> +        pdata->mode = get_musb_port_mode(np);
->> +        config->num_eps = get_int_prop(np, "mentor,num-eps");
->> +        config->ram_bits = get_int_prop(np, "mentor,ram-bits");
->> +        /* the "mentor,power" value is in milli-amps, whereas
->> +         * the mentor configuration is in 2mA units
->> +         */
->> +        pdata->power = get_int_prop(np, "mentor,power") / 2;
->> +        config->multipoint = of_property_read_bool(np,
->> +            "mentor,multipoint");
->
->    These props are MUSB generic. Parsing them in each glue separately 
-> doesn't make much sense...
-What do you suggest then?
-
->
-> [...]
->> +        /* optional parameter reference clock frequency */
->> +        if (!of_property_read_u32(np, "ti,phy20-clkmux-cfg",
->> +            &phy20_clkmux_cfg)) {
->> +            u32 cfgchip2;
->> +
->> +            /*
->> +             * Select internal reference clock for USB 2.0 PHY
->> +             * and use it as a clock source for USB 1.1 PHY
->> +             * (this is the default setting anyway).
->> +             */
->> +
->> +            cfgchip2 = __raw_readl(
->> +                DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
->
->    That's why a PHY driver is needed. DA8XX_SYSCFG2_VIRT() shouldn't 
-> be used outside arch/arm/mach-davinci/.
->
-See above.
-
-Regards
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the explanation. I have queued up this patch.
