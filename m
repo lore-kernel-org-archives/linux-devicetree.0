@@ -1,87 +1,64 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] ARM: dts: sun7i: Enable USB DRC on Olimex A20 EVB
-Date: Mon,  8 Feb 2016 16:29:47 +0100
-Message-ID: <1454945387-29424-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
+Date: Mon, 8 Feb 2016 15:30:06 +0000
+Message-ID: <20160208153005.GB12536@leverpostej>
+References: <cover.1454498292.git.jpinto@synopsys.com>
+ <2072510.CA47OHQsUN@wuerfel>
+ <56B2164E.5060007@synopsys.com>
+ <2087303.0ORDEBS3hn@wuerfel>
+ <56B222C8.5010509@synopsys.com>
+ <20160204162700.GD17587@leverpostej>
+ <56B8B177.2050000@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB3XI4K2QKGQENRC5RPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B8B177.2050000@synopsys.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Feb 08, 2016 at 03:17:11PM +0000, Joao Pinto wrote:
+> Hi Mark and Arnd,
+> 
+> I am planning the v2 of this patch set. I have a doubt in the version
+> compatibility strings... The core driver must support the UFS 2.0 controller and
+> this patch set includes a patch that adds 2.0 capabilities to it.
 
-Enable the otg/drc usb controller on the Olimex A20 EVB.
+Ok. It wasn't clear to me that this series added support for features
+specific to 2.0.
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+> The core driver can get from the controller's version and with that
+> use or not a specific 2.0 feature.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index c3c626b..93bbf26 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -198,6 +198,10 @@
- 	status = "okay";
- };
- 
-+&otg_sram {
-+	status = "okay";
-+};
-+
- &pio {
- 	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
- 		allwinner,pins = "PC3";
-@@ -219,6 +223,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
- 
- &reg_ahci_5v {
-@@ -254,6 +265,10 @@
- 	regulator-name = "avcc";
- };
- 
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
- &reg_usb1_vbus {
- 	status = "okay";
- };
-@@ -268,7 +283,16 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH04 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	usb2_vbus-supply = <&reg_usb2_vbus>;
- 	status = "okay";
--- 
-2.7.1
+It can be detected from the hardware?
+
+> What would be the real added-value of having a compatibility string like
+> "snps,ufshcd-1.1" and "snps,ufshcd-2.0" if the driver can perform as 2.0 if it
+> detects a 2.0 controller?
+
+Generally having specify strings ensure that it's possible to handle
+things in future (e.g. errata workarounds), or if we realise something
+isn't as clear-cut as we thought it was (i.e. 2.0 not being a strict
+superset of 1.1).
+
+It's difficult to predict when you need that, so we err on the side of
+requiring it. At worst it means you have a small redundant few
+characters in a DT, but that's a much better proposition than having too
+little information.
+
+> Are you saying that a user that puts "snps,ufshcd-1.1"
+> in the DT compatibility string disables the UFS 2.0 in the core driver despite
+> the controller is 2.0? Please clarify.
+
+If you can consistently and safely detect that the HW is 2.0, using 2.0
+functionality is fine.
+
+Regardless, you should have a -1.1 compatible string for the 1.1 HW, and
+a -2.0 string for the 2.0 HW, so that DTs are explicit about what the
+hardware is. If 2.0 is intended to be a superset of 1.1, you can have a
+1.1 fallback entry for the 2.0 hardware.
+
+Thanks,
+Mark.
