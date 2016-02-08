@@ -1,57 +1,50 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH 1/2] pinctrl: stm32: Remove dependency with DT bindings header files
-Date: Mon,  8 Feb 2016 18:57:38 +0100
-Message-ID: <1454954259-4923-2-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH 2/2] pinctrl: stm32: Fix compile testing selection
+Date: Mon,  8 Feb 2016 18:57:39 +0100
+Message-ID: <1454954259-4923-3-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
+Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some macros where defined in DT bindings headers, whereas only used
-in the driver.
+While selecting the driver for compile testing seemed possible,
+the driver was not compiled because the driver directory was only
+added if ARCH_STM32 was selected.
 
-This patch moves these macros to the driver side.
+This patch now makes the pinctrl Makefile to add stm32 directory if
+PINCTRL_STM32 is selected.
 
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c | 2 --
- drivers/pinctrl/stm32/pinctrl-stm32.h | 8 ++++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/pinctrl/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 9a08222..8deb566 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -23,8 +23,6 @@
- #include <linux/reset.h>
- #include <linux/slab.h>
- 
--#include <dt-bindings/pinctrl/pinctrl-stm32.h>
--
- #include "../core.h"
- #include "../pinconf.h"
- #include "../pinctrl-utils.h"
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index 1b7c369..35ebc94 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -9,6 +9,14 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinconf-generic.h>
- 
-+#define STM32_PIN_NO(x) ((x) << 8)
-+#define STM32_GET_PIN_NO(x) ((x) >> 8)
-+#define STM32_GET_PIN_FUNC(x) ((x) & 0xff)
-+
-+#define STM32_PIN_GPIO		0
-+#define STM32_PIN_AF(x)		((x) + 1)
-+#define STM32_PIN_ANALOG	(STM32_PIN_AF(15) + 1)
-+
- struct stm32_desc_function {
- 	const char *name;
- 	const unsigned char num;
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 8adc235..7ea62ef 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -46,7 +46,7 @@ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+ obj-$(CONFIG_PINCTRL_SAMSUNG)	+= samsung/
+ obj-$(CONFIG_PINCTRL_SH_PFC)	+= sh-pfc/
+ obj-$(CONFIG_PINCTRL_SPEAR)	+= spear/
+-obj-$(CONFIG_ARCH_STM32)	+= stm32/
++obj-$(CONFIG_PINCTRL_STM32)	+= stm32/
+ obj-$(CONFIG_PINCTRL_SUNXI)	+= sunxi/
+ obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
+ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
 -- 
 1.9.1
