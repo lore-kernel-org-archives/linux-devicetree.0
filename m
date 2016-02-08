@@ -1,39 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] Documentation: devicetree: rockchip: Document
- GeekBox
-Date: Mon, 8 Feb 2016 15:28:07 -0600
-Message-ID: <20160208212807.GA2247@rob-hp-laptop>
-References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
- <1454897859-7601-3-git-send-email-afaerber@suse.de>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 2/2] rng: pic32-rng: Add PIC32 RNG hardware driver
+Date: Mon, 8 Feb 2016 21:34:07 +0000
+Message-ID: <20160208213407.GA9389@wychelm.lan>
+References: <1454966283-14965-1-git-send-email-joshua.henderson@microchip.com>
+ <1454966283-14965-2-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1454897859-7601-3-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1454966283-14965-2-git-send-email-joshua.henderson@microchip.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Joshua Henderson <joshua.henderson@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purna Chandra Mandal <purna.mandal@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kieran Bingham <kieranbingham@gmail.com>, Lee Jones <lee.jones@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 03:17:31AM +0100, Andreas F=E4rber wrote:
-> Use "geekbuying,geekbox" compatible string.
-> =
+On Mon, Feb 08, 2016 at 02:17:53PM -0700, Joshua Henderson wrote:
+> Add support for the hardware true random number generator
+> peripheral found on PIC32.
+> 
+> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
 
-> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
 > ---
->  v2: New (Heiko)
->  =
+> Changes since v1:
+> 	- Reorder includes to be alphabetic.
+> 	- Drop use of PRNG and only use TRNG.
 
->  Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+Excellent!
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+
+> 	- Fix dangling clock ref in error condition.
+> 	- Remove unecessary error handling and fix other cases.
+
+
+Daniel.
