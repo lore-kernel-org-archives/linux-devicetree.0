@@ -1,83 +1,36 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/4] soc/sound: tegra_max98090: do not invert headphone
- jack
-Date: Mon, 8 Feb 2016 11:56:24 -0700
-Message-ID: <56B8E4D8.8070604@wwwdotorg.org>
-References: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
- <1454563862-1971-2-git-send-email-sctincman@gmail.com>
- <56B37E19.6010002@wwwdotorg.org> <56B3A10E.4010508@gmail.com>
- <CAEUnVG7bCgzC-f_Anaw6qayGsXi=_NrWZGRy7SSALkLVLPZnUQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] dt-bindings: Add a binding for Mediatek Video
+ Encoder
+Date: Mon, 8 Feb 2016 12:56:14 -0600
+Message-ID: <20160208185614.GA15128@rob-hp-laptop>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEUnVG7bCgzC-f_Anaw6qayGsXi=_NrWZGRy7SSALkLVLPZnUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454585703-42428-5-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2016 12:17 PM, Dylan Reid wrote:
-> On Thu, Feb 4, 2016 at 11:05 AM, Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 02/04/2016 09:36 AM, Stephen Warren wrote:
->>>
->>> On 02/03/2016 10:30 PM, Jonathan Tinkham wrote:
->>>>
->>>> The headphone jack should not be inverted
->>>
->>>
->>> Have you tested this on Venice2 as well as Nyan? I'm pretty sure Venice2
->>> was tested when this driver was written, and whoever added Nyan support to
->>> the kernel simply assumed it would work. As such, my suspicion is that this
->>> series will break Venice2 even as it fixes Nyan.
->>
->>
->> I have not tested this on Venice2, only on Nyan. That seems like a plausible
->> cause and reasonable suspicion.
->>
->>> Why doesn't user-space expect what the kernel actually implements? The
->>> kernel should be defining the control naming.
->>>
->>> Which user-space are you using specifically, and which part of it expects
->>> particular naming?
->>>
->>> Perhaps this series needs to be parametrized based on a flag in DT, rather
->>> than switching the hard-coded values, so that only Venice2 can be affected?
->>
->>
->> Specifically pulse-audio and alsa under Arch Linux.
->>
->> I was referencing 'Documentation/sound/alsa/soc/dapm.txt' with regards to
->> control names. While it is possible to add another entry into the user-space
->> configuration, I took this documentation as a definition of kernel control
->> naming schemes, and thought the driver had used a non-standard naming scheme
->> (or at least, not a consistent one).
->>
->>> On 02/03/2016 10:31 PM, Jonathan Tinkham wrote:
->>>>
->>>> Update device-tree bindings to reflect the rename of the board's
->>>> headphone jack.
->>>
->>>
->>> This looks like an incompatible change to the DT. While you've fixed the
->>> DT, which will fix new installations, old DTs now won't work. This breaks DT
->>> ABI. Any DT change needs to be backwards compatible, i.e. the old name
->>> should still work and be documented as a legacy value.
->>
->>
->> I see that now. If the inversion behavior differs between venice2 and nyan,
->> then another compatible string would need to be added anyways, correct? As
->> you mentioned above, this might need to be done anyways for the rename.
->
-> Venice2 and both nyan platforms do have different polarity of HP detect.
->
-> For some boards we have an hd-invert property in DT.
->
-> Would setting hp-det-gpio to active low in the pinmux achieve the same thing?
+On Thu, Feb 04, 2016 at 07:34:59PM +0800, Tiffany Lin wrote:
+> Add a DT binding documentation of Video Encoder for the
+> MT8173 SoC from Mediatek.
+> 
+> Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/mediatek-vcodec.txt  |   59 ++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
 
-I don't believe we have a pinmux setting for this.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-However, there's a GPIO_ACTIVE_HIGH/LOW flag that could be used in DT 
-property nvidia,hp-det-gpios's flags field to indicate the polarity. 
-That should work, but indeed you could use a separate hp-dt-invert 
-property if not.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
