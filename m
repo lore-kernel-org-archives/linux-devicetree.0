@@ -1,76 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/11] clk: sunxi: add generic allwinner,sunxi name
-Date: Mon, 8 Feb 2016 09:57:21 -0600
-Message-ID: <20160208155721.GB4677@rob-hp-laptop>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 05/11] drivers: pinctrl: add driver for Allwinner A64 SoC
+Date: Mon, 8 Feb 2016 15:58:18 +0000
+Message-ID: <56B8BB1A.8010705@arm.com>
 References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-8-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
+ <20160201182754.GA14737@excalibur.cnev.de> <56AFE0EC.8080207@arm.com>
+ <20160202100046.GM4652@lukather> <56B0DF26.10203@arm.com>
+ <20160204165151.GK4270@lukather> <20160208155405.GA4677@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454348370-3816-8-git-send-email-andre.przywara@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Jens Kuske <jenskuske@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160208155405.GA4677@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 05:39:26PM +0000, Andre Przywara wrote:
-> The only difference between the different compatible matches at the
-> end of clk-sunxi.c are the critical clocks. Two SoCs get away so far
-> without any, so there is no reason to enumerate those SoCs in here
-> explicitly, though we have to keep them in for compatibility reasons.
-> 
-> Rename the init function to highlight this generic feature and add a
-> new, generic DT compatible string which can be used as a fallback value
-> in the future should a particular SoC don't need any special treatment.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/sunxi.txt |  4 ++++
->  drivers/clk/sunxi/clk-sunxi.c                   | 14 ++++++--------
->  2 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-> index 7e79fcc..980e065 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-> @@ -14,3 +14,7 @@ using one of the following compatible strings:
->    allwinner,sun8i-a83t
->    allwinner,sun8i-h3
->    allwinner,sun9i-a80
-> +
-> +For Allwinner SoCs without any specific needs the generic fallback value of:
-> +  allwinner,sunxi
-> +can be used.
+Hi,
 
-Perhaps "fallback" implies this, but be more specific that it can be 
-used in addition to a specific string.
-
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index e460a6b..efcce85 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -1052,14 +1052,12 @@ CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
->  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
->  CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
->  
-> -static void __init sun8i_a83t_init_clocks(struct device_node *node)
-> +static void __init sunxi_generic_init_clocks(struct device_node *node)
->  {
->  	sunxi_init_clocks(NULL, 0);
->  }
-> -CLK_OF_DECLARE(sun8i_a83t_clk_init, "allwinner,sun8i-a83t", sun8i_a83t_init_clocks);
-> -
-> -static void __init sun9i_init_clocks(struct device_node *node)
-> -{
-> -	sunxi_init_clocks(NULL, 0);
-> -}
-> -CLK_OF_DECLARE(sun9i_a80_clk_init, "allwinner,sun9i-a80", sun9i_init_clocks);
-> +CLK_OF_DECLARE(sun8i_a83t_clk_init, "allwinner,sun8i-a83t",
-> +	       sunxi_generic_init_clocks);
-> +CLK_OF_DECLARE(sun9i_a80_clk_init, "allwinner,sun9i-a80",
-> +	       sunxi_generic_init_clocks);
-> +CLK_OF_DECLARE(sunxi_clk_init, "allwinner,sunxi", sunxi_generic_init_clocks);
-> -- 
-> 2.6.4
+On 08/02/16 15:54, Rob Herring wrote:
+> On Thu, Feb 04, 2016 at 05:51:51PM +0100, Maxime Ripard wrote:
+>> Hi Andre,
+>>
+>> On Tue, Feb 02, 2016 at 04:53:58PM +0000, Andre Przywara wrote:
+>>>> So, droping it in the filenames, why not. But I'd really like to keep
+>>>> the same compatible scheme.
+>>>
+>>> And I still don't get this: in the DT compatible scheme we always have a
+>>> vendor prefix, so allwinner,a64 is surely not a mysterious ARM Ltd. core
+>>> or a new Apple SoC. Instead it is the A64 from Allwinner, full stop. So
+>>> why should we add an arbitrary and confusing sun50i naming to it (when
+>>> it actually should be more like "sun8i-a64").
+>>
+>> I don't decide on their marketing names. And I know you want to start
+>> anew with the arm64 SoCs, but the truth is, you don't. Most of the
+>> compatibles in the DTSI are from earlier SoCs, and we have to keep
+>> that legacy and remain consistent with it. With all the good and bad
+>> things a legacy imply.
 > 
+> I have to agree. Unless there is some agreement to move to another 
+> naming scheme, then just follow the same pattern. If sunXi is just a 
+> made up name outside of Allwinner to provide some logical grouping of 
+> SoCs, then yes, that probably should not have been done.
+
+So I still don't like it, but will not waste my time or energy on that
+front.
+
+Maxime, do you want "allwinner,sun50i-a64" or would
+"allwinner,sunxi-a64" be OK as well?
+
+Cheers,
+Andre.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
