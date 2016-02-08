@@ -1,71 +1,58 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 04/10] ARM64: dts: rockchip: Add GMAC to GeekBox
-Date: Mon, 08 Feb 2016 11:28:22 +0100
-Message-ID: <5875277.Y7zJ7W9GkY@phil>
-References: <1454897859-7601-1-git-send-email-afaerber@suse.de> <1454897859-7601-5-git-send-email-afaerber@suse.de>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V4 1/7] clk: bcm2835: the minimum clock divider is 2
+Date: Mon, 8 Feb 2016 11:28:47 +0100
+Message-ID: <56B86DDF.7060904@martin.sperl.org>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
+ <1452867667-2447-2-git-send-email-kernel@martin.sperl.org>
+ <87oac03tuz.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454897859-7601-5-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <87oac03tuz.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-Am Montag, 8. Februar 2016, 03:17:33 schrieb Andreas F=E4rber:
-> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-
-is there some special reason that gmac, emmc, ir, etc are in separate=20
-patches? I guess I'll just fold them into the core patch otherwise.
 
 
-Heiko
+On 02.02.2016 00:15, Eric Anholt wrote:
+> kernel@martin.sperl.org writes:
+>
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>>
+>> Testing with different clock divider values has shown
+>> that (at least for the PCM clock) the clock divider
+>> has to be at least 2, otherwise the clock will not
+>> output a signal.
+>
+> For a MASH clock (PWM, PCM, SLIMBUS, but not the others), the minimum
+> integer component of the divider is:
+>
+> mash 0: 1
+> mash 1: 2
+> mash 2: 3
+> mash 3: 5
+>
 
-> ---
->  v2: New
->=20
->  arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 +++++++++++++++=
-+++++
-> 1 file changed, 20 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts index
-> bc91d39758ab..a8dcf3c2b0c1 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> @@ -56,6 +56,13 @@
->  		reg =3D <0x0 0x0 0x0 0x80000000>;
->  	};
->=20
-> +	ext_gmac: gmac-clk {
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <125000000>;
-> +		clock-output-names =3D "ext_gmac";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
->  	leds: gpio-leds {
->  		compatible =3D "gpio-leds";
->=20
-> @@ -82,6 +89,19 @@
->  	};
->  };
->=20
-> +&gmac {
-> +	status =3D "okay";
-> +	phy-supply =3D <&vcc_lan>;
-> +	phy-mode =3D "rgmii";
-> +	clock_in_out =3D "input";
-> +	assigned-clocks =3D <&cru SCLK_MAC>;
-> +	assigned-clock-parents =3D <&ext_gmac>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&rgmii_pins>;
-> +	tx_delay =3D <0x30>;
-> +	rx_delay =3D <0x10>;
-> +};
-> +
->  &i2c0 {
->  	status =3D "okay";
+I know that that is what the datasheet says - see also the errata:
+http://elinux.org/BCM2835_datasheet_errata#p105_table.
+
+Experimentation has show that a divider between 1 and 1 + 4095 / 4096
+does not provide any output PCM clock - only 2 and above does work for
+mash = 0, 1, 2 or 3.
+
+Example: Requesting 12288000Hz (=192kHz at 64bit) with the 19.2Mhz
+oscillator results in a divider of: 1 + 2304 / 4096 and this does not
+give a clock output.
+
+See the report by hiassoft here:
+https://github.com/raspberrypi/linux/issues/1231#issuecomment-171003182
+(note that it also applies to mash = 0, but there may be no comment on
+this fact in this thread)
+
+Note that there is patch 7 that implements the above "mash" limits
+for a divider and downgrades to a lower mash level if the divider
+does not qualify.
+
+Martin
