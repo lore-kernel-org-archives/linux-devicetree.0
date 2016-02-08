@@ -1,36 +1,84 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 01/10] pinctrl: sh-pfc: r8a7795: Add USB2.0 host support
-Date: Mon, 8 Feb 2016 16:58:29 +0100
-Message-ID: <CAMuHMdWn+SVTRJXRAE2sxfaV=XwFU6F60Vi8mBZqBdMHJ=3miQ@mail.gmail.com>
-References: <1454408338-4612-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1454408338-4612-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/1] ARM: kirkwood-ds112.dts: use unique machine name
+Date: Mon, 08 Feb 2016 16:58:27 +0100
+Message-ID: <87h9hj19ek.fsf@free-electrons.com>
+References: <1454870066-3353-1-git-send-email-xypron.glpk@gmx.de>
+	<20160207192632.GA28121@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1454408338-4612-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160207192632.GA28121@lunn.ch> (Andrew Lunn's message of "Sun,
+	7 Feb 2016 20:26:32 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Peddell <klightspeed@killerwolves.net>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 2, 2016 at 11:18 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Hi Heinrich,
+=20
+ On dim., f=C3=A9vr. 07 2016, Andrew Lunn <andrew@lunn.ch> wrote:
+
+> On Sun, Feb 07, 2016 at 07:34:26PM +0100, Heinrich Schuchardt wrote:
+>> Downstream packages like Debian flash-kernel use
+>> /proc/device-tree/model
+>> to determine which dtb file to install.
+>>=20
+>> Hence each dts in the Linux kernel should provide a unique model
+>> identifier.
+>>=20
+>> Commit 2d0a7addbd10 ("ARM: Kirkwood: Add support for many Synology N=
+AS
+>> devices") created the new files kirkwood-ds111.dts and kirkwood-ds11=
+2.dts
+>> using the same model identifier.
+>>=20
+>> This patch provides a unique model identifier for the
+>> Synology DiskStation DS112.
+>>=20
+>> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 >
-> This patch adds USB[0-2] (USB2.0 host) pinmux support to r8a7795 SoC.
+> Fixes: 2d0a7addbd10 ("ARM: Kirkwood: Add support for many Synology NA=
+S devices")
 >
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Thanks, will queue for next renesas-drivers and v4.6.
+Applied on mvebu/fixes with the Fixes tag and Andrew Reviewed-by tag.
 
-Gr{oetje,eeting}s,
+Thanks,
 
-                        Geert
+Gregory
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+>
+>     Thanks
+> 	Andrew	    =20
+>
+>> ---
+>>  arch/arm/boot/dts/kirkwood-ds112.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/arm/boot/dts/kirkwood-ds112.dts b/arch/arm/boot/dt=
+s/kirkwood-ds112.dts
+>> index bf4143c..b84af3d 100644
+>> --- a/arch/arm/boot/dts/kirkwood-ds112.dts
+>> +++ b/arch/arm/boot/dts/kirkwood-ds112.dts
+>> @@ -14,7 +14,7 @@
+>>  #include "kirkwood-synology.dtsi"
+>> =20
+>>  / {
+>> -	model =3D "Synology DS111";
+>> +	model =3D "Synology DS112";
+>>  	compatible =3D "synology,ds111", "marvell,kirkwood";
+>> =20
+>>  	memory {
+>> --=20
+>> 2.1.4
+>>=20
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
