@@ -1,86 +1,54 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Sun, 7 Feb 2016 19:00:39 -0500
-Message-ID: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
+From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: [PATCH 2/5] drivers/of: add EXPORT_SYMBOL to of_irq_count
+Date: Sun, 7 Feb 2016 19:00:41 -0500
+Message-ID: <1454889644-27830-3-git-send-email-paul.gortmaker@windriver.com>
+References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454889644-27830-1-git-send-email-paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In a recent patch series that aimed to remove code related to module
-unload for PCI support that was simply non modular, the discussion
-led to people wanting to keep the code and push towards taking the
-steps needed to support moving it towards tristate instead[1].
+We would like to modularize some of the PCI platform specific
+support code to keep multi platform bzImage sizes in check.
 
-Here, we take step one, which is simply making the Kconfig change
-and then dealing with any build fallout or modpost fallout.  What
-amounts to essentially a sanity build test.  To be clear, these
-have not been runtime validated; that will need to be done by those
-with access to real hardware.  However, the changes are not anything
-that should disrupt any existing built-in validation, so real world
-users should not be impacted by this change.
+However, in a couple of the files we see this:
 
-We start with a smaller family of drivers; those that actively select
-PCI_DW, as a nice self contained group to test the waters and see if
-everyone is still good with this approach before investing more time
-on a wider scale to other pci/host/ code blocks.
+$ git grep -l of_irq_count drivers/pci
+drivers/pci/host/pci-keystone.c
+drivers/pci/host/pcie-iproc-msi.c
 
-As such the drivers here share a dependency on having the same group
-of functions exported in order to successfully complete modpost.
+So, we export of_irq_count so we can make headway with the
+modularization goal.
 
-In addition, we have to stray outside drivers/pci to add exports
-in two places; once for an ARM fault handler, and once for an OF
-variable.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+---
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The pci-keystone-dw.c instance was handled separately because it
-consists of two source files that need their own group of driver
-specific exports above and beyond the "shared" ones.
-
-Then we convert the Kconfig for all remaining at once; we could have
-done it on a per driver basis for ease of revert if anyone really
-objects, but since it would be a one line change, that seemed like
-not a real concern.
-
-Build testing was done on the linux-next tree for arm allmodconfig.
-
-[1] https://lkml.kernel.org/r/20160108203102.GH5354@localhost
-
--- 
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-
-
-Paul Gortmaker (5):
-  ARM: add EXPORT_SYMBOL of hook_fault_code for PCI host modularization
-  drivers/of: add EXPORT_SYMBOL to of_irq_count
-  drivers/pci: export dw syms enabling board specific PCI code to be
-    tristate
-  drivers/pci: make host/pci-keystone-dw.c modular
-  drivers/pci: make most of the PCI_DW drivers modular
-
- arch/arm/mm/fault.c                |  3 ++-
- drivers/of/irq.c                   |  1 +
- drivers/pci/host/Kconfig           | 16 ++++++++--------
- drivers/pci/host/pci-keystone-dw.c | 16 +++++++++++++++-
- drivers/pci/host/pcie-designware.c |  7 +++++++
- 5 files changed, 33 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 7ee21ae305ae..0d714748a571 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -449,6 +449,7 @@ int of_irq_count(struct device_node *dev)
+ 
+ 	return nr;
+ }
++EXPORT_SYMBOL(of_irq_count);
+ 
+ /**
+  * of_irq_to_resource_table - Fill in resource table with node's IRQ info
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
