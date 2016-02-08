@@ -1,41 +1,123 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] serial: mps2-uart: add MPS2 UART driver
-Date: Mon, 8 Feb 2016 08:52:26 -0800
-Message-ID: <20160208165226.GA11593@kroah.com>
-References: <1454413199-26573-1-git-send-email-vladimir.murzin@arm.com>
- <1454413199-26573-5-git-send-email-vladimir.murzin@arm.com>
- <20160207071154.GA32017@kroah.com>
- <56B87928.7020803@arm.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable USB DRC on Itead Ibox
+Date: Mon, 8 Feb 2016 17:56:06 +0100
+Message-ID: <CAEKpxBkXp9hx6KWpWyRBvYBFi7Sr0FgFHrD6M0nSBuJ1bV++1A@mail.gmail.com>
+References: <1454947167-12236-1-git-send-email-codekipper@gmail.com>
+	<56B8BED7.9030704@redhat.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56B87928.7020803-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBJUR4O2QKGQEUMYDWBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <56B8BED7.9030704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 11:16:56AM +0000, Vladimir Murzin wrote:
-> On 07/02/16 07:11, Greg KH wrote:
-> >> +
-> >> +#define SERIAL_NAME "ttyS"
-> > 
-> > You can't be "ttyS", there's already a serial port named that, please
-> > use a unique name and a new major/minor number (dynamic ideally).
-> > 
-> 
-> Hi Greg,
-> 
-> I did s/ttyMPS/ttyS per your request for v1 [1]. I'm fine to change it
-> back if you prefer that, but I'd be glad to know what I've been missing?
-> 
-> [1] https://lkml.org/lkml/2015/12/13/8
-
-Yeah, I was wrong, sorry about that, my fault.
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 8 February 2016 at 17:14, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+> On 08-02-16 16:59, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Enable the otg/drc usb controller on the Itead Ibox device.
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+>
+> Same remark as with your Olimex A20 EVB board patch, please
+> also provide a vbus detect pin setting. If for some reason the
+> VBus detect is not wired up, or not working properly, please mention
+> this explicitly in the commit message.
+Hi Hans,
+I've added vbus detect and it no longer works. It's mentioned that the
+Itead Ibox is similar to the Cubieboard 2 which also doesn't include
+the detect. I can see now in the commit that it states "Note this
+board has the otg-vbus connected directly to the 5v-dcc of the board,
+so there is no vbus0 regulator, nor vbus0-det.", I will add this to
+the commit message and try and dig out a schematic to confirm.
+Thanks,
+CK
+>
+> Note that in some cases the axp209 is used for vbus detect,
+> rather then a gpio, see e.g. :
+>
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/sun7i-a20-bananapi.dts?id=dcfd8443d89f593e0c667a988ab017e716b33061
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>> ---
+>>   arch/arm/boot/dts/sun7i-a20-itead-ibox.dts     | 14 ++++++++++++++
+>>   arch/arm/boot/dts/sunxi-itead-core-common.dtsi |  9 +++++++++
+>>   2 files changed, 23 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>> b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>> index 661c21d..a512581 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>> @@ -118,8 +118,22 @@
+>>                 allwinner,drive = <SUN4I_PINCTRL_20_MA>;
+>>                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>         };
+>> +
+>> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>> +               allwinner,pins = "PH4";
+>> +               allwinner,function = "gpio_in";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +       };
+>>   };
+>>
+>>   &reg_ahci_5v {
+>>         status = "okay";
+>>   };
+>> +
+>> +&usbphy {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&usb0_id_detect_pin>;
+>> +       usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+>> +       status = "okay";
+>> +};
+>> diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>> b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>> index 2565d51..d22eea3 100644
+>> --- a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>> +++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>> @@ -88,6 +88,10 @@
+>>         status = "okay";
+>>   };
+>>
+>> +&otg_sram {
+>> +       status = "okay";
+>> +};
+>> +
+>>   #include "axp209.dtsi"
+>>
+>>   &reg_dcdc2 {
+>> @@ -129,6 +133,11 @@
+>>         status = "okay";
+>>   };
+>>
+>> +&usb_otg {
+>> +       dr_mode = "otg";
+>> +       status = "okay";
+>> +};
+>> +
+>>   &usbphy {
+>>         usb1_vbus-supply = <&reg_usb1_vbus>;
+>>         usb2_vbus-supply = <&reg_usb2_vbus>;
+>>
+>
