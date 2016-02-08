@@ -1,37 +1,37 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 08 Feb 2016 14:34:39 +0100
-Message-ID: <3891363.c4LyE0WYpe@wuerfel>
-References: <1454693676-20211-1-git-send-email-petr@barix.com> <364593765.PbysHF8iXJ@wuerfel> <56B89256.9050708@barix.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v3 4/6] arm64: Enable dynamic CPU capacity initialization
+Date: Mon, 8 Feb 2016 13:41:25 +0000
+Message-ID: <56B89B05.4090207@arm.com>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <1454500799-18451-5-git-send-email-juri.lelli@arm.com> <56B889F7.306@arm.com>
+ <20160208131320.GA7265@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B89256.9050708-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160208131320.GA7265@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 February 2016 14:04:22 Petr Kulhavy wrote:
-> Hello Arndt,
+On 08/02/16 13:13, Mark Brown wrote:
+> On Mon, Feb 08, 2016 at 12:28:39PM +0000, Dietmar Eggemann wrote:
+>> On 03/02/16 11:59, Juri Lelli wrote:
 > 
-> On 05.02.2016 23:22, Arnd Bergmann wrote:
-> > Please make this
-> >
-> >       Should be one of "ti,da850-musb" or "ti,da830-musb"
-> >
-> > We don't use wildcards in compatible strings,
+>>> +bool arch_wants_init_cpu_capacity(void)
+>>> +{
+>>> +	return true;
 > 
-> I'm seeing something different though:
+>> Isn't this a little bit too simple? Not every ARM/ARM64 platform is a
+>> heterogeneous one.
 > 
-> $ grep -r "compatible.*xx" Documentation/devicetree/bindings/ |wc -l
-> 44
+> Does it matter?  Is there any problem with doing the callibration and
+> having it say that all the CPUs performs very similarly?  My
+> understanding was that this was simply saying it was worth checking to
+> see if there was some asymmetry.
+> 
 
-They are all either really old, or were never reviewed properly.
+No, the calibration would work on any platform. I can see your point,
+you want to have this feature not depend on dt.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
