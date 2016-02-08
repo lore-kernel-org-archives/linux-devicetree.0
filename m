@@ -1,49 +1,89 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 16:32:37 +0100
-Message-ID: <56B8B515.5080106@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
+Date: Mon, 8 Feb 2016 15:36:52 +0000
+Message-ID: <56B8B614.10306@synopsys.com>
+References: <cover.1454498292.git.jpinto@synopsys.com>
+ <2072510.CA47OHQsUN@wuerfel> <56B2164E.5060007@synopsys.com>
+ <2087303.0ORDEBS3hn@wuerfel> <56B222C8.5010509@synopsys.com>
+ <20160204162700.GD17587@leverpostej> <56B8B177.2050000@synopsys.com>
+ <20160208153005.GB12536@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B8891C.3080409-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20160208153005.GB12536@leverpostej>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei,
+Hi Mark,
 
-I have prepared the patch as per you comments.
-Unfortunately I cannot use the 4.5 kernel from Felipe's repo as the 
-of_usb_get_dr_mode() has been replaced with
-of_usb_get_dr_mode_by_phy() which requires a PHY node, which does not 
-exist for DA8xx as we discussed before.
-
-What shall we do?
-
-Regards
-Petr
-
-On 08.02.2016 13:25, Sergei Shtylyov wrote:
-> On 2/8/2016 2:48 PM, Petr Kulhavy wrote:
->
->>>    And the patch is against 3.17? You should only submit patches 
->>> against the
->>> recent kernel. In this case, against the -next branch of Felipe's 
->>> repo on
->>> kernel.org.
+On 2/8/2016 3:30 PM, Mark Rutland wrote:
+> On Mon, Feb 08, 2016 at 03:17:11PM +0000, Joao Pinto wrote:
+>> Hi Mark and Arnd,
 >>
->> Could you give me the full branch name please.
->
->    See the MAINTAINERS entry for drivers/usb/musb/. The branch is 
-> named just 'next'. 
+>> I am planning the v2 of this patch set. I have a doubt in the version
+>> compatibility strings... The core driver must support the UFS 2.0 controller and
+>> this patch set includes a patch that adds 2.0 capabilities to it.
+> 
+> Ok. It wasn't clear to me that this series added support for features
+> specific to 2.0.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, the patch set contains a patch to add 2.0 to the UFS core driver.
+The cover letter:
+https://lkml.org/lkml/2016/2/3/331
+The Patch:
+https://lkml.org/lkml/2016/2/3/330
+
+> 
+>> The core driver can get from the controller's version and with that
+>> use or not a specific 2.0 feature.
+> 
+> It can be detected from the hardware?
+
+Yes, the hardware has a register that contains the version, and so if a driver
+has workarounds then it can adapt.
+
+> 
+>> What would be the real added-value of having a compatibility string like
+>> "snps,ufshcd-1.1" and "snps,ufshcd-2.0" if the driver can perform as 2.0 if it
+>> detects a 2.0 controller?
+> 
+> Generally having specify strings ensure that it's possible to handle
+> things in future (e.g. errata workarounds), or if we realise something
+> isn't as clear-cut as we thought it was (i.e. 2.0 not being a strict
+> superset of 1.1).
+> 
+
+
+
+> It's difficult to predict when you need that, so we err on the side of
+> requiring it. At worst it means you have a small redundant few
+> characters in a DT, but that's a much better proposition than having too
+> little information.
+> 
+>> Are you saying that a user that puts "snps,ufshcd-1.1"
+>> in the DT compatibility string disables the UFS 2.0 in the core driver despite
+>> the controller is 2.0? Please clarify.
+> 
+> If you can consistently and safely detect that the HW is 2.0, using 2.0
+> functionality is fine.
+> 
+> Regardless, you should have a -1.1 compatible string for the 1.1 HW, and
+> a -2.0 string for the 2.0 HW, so that DTs are explicit about what the
+> hardware is. If 2.0 is intended to be a superset of 1.1, you can have a
+> 1.1 fallback entry for the 2.0 hardware.
+> 
+
+Ok, I will include the version in the compatibility strings, but if someone
+mentions "snps,ufshcd-1.1" only and the driver detects that the HW is 2.0
+capable it will activate the 2.0 features independently of what mentioned in the
+DT, correct?
+
+> Thanks,
+> Mark.
+> 
+
+Thanks,
+Joao
