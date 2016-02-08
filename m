@@ -1,121 +1,246 @@
-From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] genirq: fix trigger flags check for shared irqs
-Date: Mon, 8 Feb 2016 11:02:40 +0000
-Message-ID: <20160208110239.GA9747@e106950-lin.cambridge.arm.com>
-References: <96c068ece0f5d01fc85bdbd9e0798f68180eebb8.1453204950.git.brian.starkey@arm.com>
- <alpine.DEB.2.11.1601262142450.3886@nanos>
- <20160128095955.GA12884@e106950-lin.cambridge.arm.com>
- <alpine.DEB.2.11.1601281116310.3886@nanos>
- <20160128111041.GB12884@e106950-lin.cambridge.arm.com>
- <alpine.DEB.2.11.1601281238110.3886@nanos>
- <20160128122212.GC12884@e106950-lin.cambridge.arm.com>
- <alpine.DEB.2.11.1601281355200.3886@nanos>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V4 5/7] clk: bcm2835: add missing 22 HW-clocks.
+Date: Mon, 8 Feb 2016 12:12:44 +0100
+Message-ID: <56B8782C.4060107@martin.sperl.org>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
+ <1452867667-2447-6-git-send-email-kernel@martin.sperl.org>
+ <87h9hr517u.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1601281355200.3886@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <87h9hr517u.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
 
-Any further thoughts on this? (some comments below)
 
-On Thu, Jan 28, 2016 at 02:37:24PM +0100, Thomas Gleixner wrote:
->In principle I agree. The issue is that it really depends on the 
->particular
->hardware situation.
+On 02.02.2016 02:51, Eric Anholt wrote:
+> kernel@martin.sperl.org writes:
 >
->If there is an explicit requirement for one driver - expressed by a trigger
->flag - and the other driver relies on the default configuration, then this
->might cause malfunction.
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>>
+>> There were 22 HW clocks missing from the clock driver.
+>>
+>> These have been included and int_bits and frac_bits
+>> have been set correctly based on information extracted
+>> from the broadcom videocore headers
+>> (http://www.broadcom.com/docs/support/videocore/Brcm_Android_ICS_Graphics_Stack.tar.gz)
+>>
+>> For an extracted view of the registers please see:
+>> https://github.com/msperl/rpi-registers/blob/master/md/Region_CM.md
+>>
+>> bcm2835_clock_per_parents has been assigned as the parent
+>> clock for all new clocks, but this may not be correct
+>> in all cases - documentation on this is not publicly
+>> available, so some modifications may be needed in the
+>> future.
 >
->The hassle is, that IRQF_TRIGGER_NONE has unclear semantics. It can mean "I
->don't care" or "I rely on the hw configuration". The latter is what worries
->me.
+> We need the parents to be correct if we're going to land the patch.
+> I'll try to update them.
 >
->first driver:
->
->      creates the mapping and sets the trigger type according to the DT
->      setting.
->
->      driver calls request_irq() with IRQF_TRIGGER_NONE. It relies on the DT
->      setting to be correct.
->
->second driver:
->
->      Finds an existing mapping. Now we have two cases:
->
->      1) flat irqdomains:
->
->      	 The DT setting is applied to the trigger type unconditionally.
->
->	 So if that setting is contrary to first drivers DT setting then we
->	 are already in trouble.
->
->	 If the driver uses IRQF_TRIGGER_NONE, bad luck as nothing will notice
->	 the issue.
->
->      2) hierarchical irqdomains
->
->      	 That code path ignores the type setting of the second driver and
->      	 leaves the irq line in the existing state.
->
->	 If the driver uses IRQF_TRIGGER_NONE, bad luck as nothing will notice
->	 the issue.
->      	
->So we have two problems here.
->
->1) We should detect the mismatch already in the mapping function.
->
->   But, that's hard for legacy reasons. Interrupts can be mapped at early boot
->   with hardware default settings and we currently have no way to distinguish
->   that. It shouldn't be hard to fix that.
->
+> I'm not a fan of this "let's just shove everything we can find in some
+> header file into the .c and hope for the best."  Most of these clocks
+> were left out intentionally.
 
-Would you agree that this is a separate issue that should be fixed
-separately? Even with this fixed, my problem would still exist.
+Well - I wanted to get them in just in case we need them later.
 
->2) How to deal with the mismatch in request_irq()
+If you have got access to documentation which states the correct
+parent mux, then please share them so that we can implement them
+correctly.
+
+Also listing all allows us then to expose the values of the registers
+via debugfs in case we need it - see separate RFC-patch 9 -  where
+we expose the raw register values as well.
+
+>> +static const struct bcm2835_clock_data bcm2835_clock_aveo_data = {
+>> +	.name = "aveo",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_AVEOCTL,
+>> +	.div_reg = CM_AVEODIV,
+>> +	.int_bits = 4,
+>> +	.frac_bits = 12,
+>> +};
 >
->   Relaxing the check is not really a good decision. So what we could do is:
+> AVEO has 0 fractional bits
+
+Correct - my issue (copy paste - I assume).
+
 >
->   if ((new_action->flags & IRQF_TRIGGER_MASK) == IRQF_TRIGGER_NONE)
->      	new_action->flags |= irqd_get_trigger_type(irqdata);
+>> +static const struct bcm2835_clock_data bcm2835_clock_ccp2_data = {
+>> +	/* this is possibly a gate */
+>> +	.name = "ccp2",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_CCP2CTL,
+>> +	.div_reg = CM_CCP2DIV,
+>> +	.int_bits = 1,
+>> +	.frac_bits = 0,
+>> +};
 >
->   Now that has an issue as well. If the driver requests with
->   IRQF_TRIGGER_NONE and does an explicit type setting afterwards, the
->   action->flags still do not reflect it.
+> CCP2 is a gate from a different clock source, so this won't work.
+See comment above: please provide parent clock mux.
+See also my comment about 3 clock that may be gates - this applies.
+
 >
-
-Yes, an explicit type-setting afterwards would make action->flags get
-out-of-sync, but isn't that already the case, regardless of the relaxed
-check?
-
-My patch fixes a bogus error for a real use-case, and as far as I can
-see doesn't make any of the existing problems worse - so I feel like
-that's a net win.
-
->The whole trigger handling versus shared interrupts needs some deep thoughts
->and I really want to understand what that of commit 4a43d686fe336 before
->making any decisions.
+>> +static const struct bcm2835_clock_data bcm2835_clock_dsi0p_data = {
+>> +	/* this is possibly a gate */
+>> +	.name = "dsi0p",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_DSI0PCTL,
+>> +	.div_reg = CM_DSI0PDIV,
+>> +	.int_bits = 1,
+>> +	.frac_bits = 0,
+>> +};
+>> +
+>> +static const struct bcm2835_clock_data bcm2835_clock_dsi1p_data = {
+>> +	/* this is possibly a gate */
+>> +	.name = "dsi1p",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_DSI1PCTL,
+>> +	.div_reg = CM_DSI1PDIV,
+>> +	.int_bits = 1,
+>> +	.frac_bits = 0,
+>> +};
 >
+> DSI0/1 pixel clocks take different clock sources and are gates off of
+> them, so these definitions don't work.
+See comment above: please provide parent clock.
+See also my comment about 3 clock that may be gates.
 
-If you'd rather see a patch something like your 2) above, I can do that,
-let me know what you think.
-
-Many thanks,
-
-Brian
-
->Thanks,
 >
->	tglx
+>> +
+>> +static const struct bcm2835_clock_data bcm2835_clock_gnric_data = {
+>> +	.name = "gnric",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_GNRICCTL,
+>> +	.div_reg = CM_GNRICDIV,
+>> +	.int_bits = 12,
+>> +	.frac_bits = 12,
+>> +};
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> GNRIC isn't an actual clock, it's just what's used for describing the
+> overall structure of clocks.
+
+Well - there is the corresponding register at 0x7e101000 which reads as:
+ctl = 0x0000636d
+div = 0x0000636d
+
+So we could remove this one if this is really the case of a dummy -
+even though I wonder why there would be space in io-space reserved for
+this "description" only.
+
+>
+>> +static const struct bcm2835_clock_data bcm2835_clock_peria_data = {
+>> +	.name = "peria",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_PERIACTL,
+>> +	.div_reg = CM_PERIADIV,
+>> +	.int_bits = 12,
+>> +	.frac_bits = 12,
+>> +};
+>
+> This register doesn't do anything, because the debug bit in the power
+> manager is not set.  We don't think we should expose a clock gate if it
+> doesn't work, I think.
+maybe we allow setting debug in the PM at a later point in time?
+
+>
+>> +static const struct bcm2835_clock_data bcm2835_clock_pulse_data = {
+>> +	.name = "pulse",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_PULSECTL,
+>> +	.div_reg = CM_PULSEDIV,
+>> +	.int_bits = 12,
+>> +	.frac_bits = 0,
+>> +};
+>
+> There's some other divider involved in this clock, won't give correct results.
+See comment above: please provide parent clock.
+
+>
+>> +static const struct bcm2835_clock_data bcm2835_clock_td0_data = {
+>> +	.name = "td0",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_TD0CTL,
+>> +	.div_reg = CM_TD0DIV,
+>> +	.int_bits = 12,
+>> +	.frac_bits = 12,
+>> +};
+>> +
+>> +static const struct bcm2835_clock_data bcm2835_clock_td1_data = {
+>> +	.name = "td1",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_TD1CTL,
+>> +	.div_reg = CM_TD1DIV,
+>> +	.int_bits = 12,
+>> +	.frac_bits = 12,
+>> +};
+>
+> These are some other clock generator, not the generic or mash ones used
+> elsewhere.  I wouldn't enable them without testing.
+
+As long as they are not referenced in the DT these only are read only
+and can get read via debugfs - these are disabled anyway:
+
+root@raspcm:/build/linux# head /sys/kernel/debug/clk/td*/clk_rate
+==> /sys/kernel/debug/clk/td0/clk_rate <==
+0
+
+==> /sys/kernel/debug/clk/td1/clk_rate <==
+0
+
+>
+>> +static const struct bcm2835_clock_data bcm2835_clock_tec_data = {
+>> +	.name = "tec",
+>> +	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
+>> +	.parents = bcm2835_clock_per_parents,
+>> +	.ctl_reg = CM_TECCTL,
+>> +	.div_reg = CM_TECDIV,
+>> +	.int_bits = 6,
+>> +	.frac_bits = 0,
+>> +};
+>
+> TEC should be osc parents.
+I will change that.
+
+>
+>> -/*
+>> - * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
+>> - * you have the debug bit set in the power manager, which we
+>> - * don't bother exposing) are individual gates off of the
+>> - * non-stop vpu clock.
+>> - */
+>>   static const struct bcm2835_gate_data bcm2835_clock_peri_image_data = {
+>>   	.name = "peri_image",
+>>   	.parent = "vpu",
+>>   	.ctl_reg = CM_PERIICTL,
+>>   };
+>>
+>> +static const struct bcm2835_gate_data bcm2835_clock_sys_data = {
+>> +	.name = "sys",
+>> +	.parent = "vpu",
+>> +	.ctl_reg = CM_SYSCTL,
+>> +};
+>
+> same concern as peria.
+maybe we allow setting debug in the PM at a later point in time?
+
+Please propose how to continue to get the clocks in.
+
+If you want some clocks left out, then that is fine and we
+can accommodate that and just leave the defines in the bindings
+header for later use...
+
+Just list them.
+
+Martin
