@@ -1,112 +1,52 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v5 3/3] pci,
- pci-thunder-ecam: Add driver for ThunderX-pass1 on-chip devices
-Date: Mon, 8 Feb 2016 14:41:41 -0800
-Message-ID: <56B919A5.5090000@caviumnetworks.com>
-References: <1454715675-17512-1-git-send-email-ddaney.cavm@gmail.com>
- <1454715675-17512-4-git-send-email-ddaney.cavm@gmail.com>
- <20160208195642.GA15103@rob-hp-laptop> <56B8FED6.1050804@caviumnetworks.com>
- <CAL_JsqJNndZ59465YhpkP=dQYaijaar+LcQG4KQEJwF5e1ryLQ@mail.gmail.com>
- <56B90B09.7090500@caviumnetworks.com> <20160208221204.GA30821@localhost>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 5/6] dts: ipq4019: Add support for IPQ4019 DK01 board
+Date: Mon, 8 Feb 2016 14:43:28 -0800
+Message-ID: <20160208224328.GB10791@codeaurora.org>
+References: <1447975173-29485-1-git-send-email-mmcclint@qca.qualcomm.com>
+ <1447975173-29485-6-git-send-email-mmcclint@qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160208221204.GA30821@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447975173-29485-6-git-send-email-mmcclint@qca.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Matthew McClintock <mmcclint@qca.qualcomm.com>
+Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Matthew McClintock <mmcclint@codeaurora.org>, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com, Senthilkumar N L <snlakshm@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2016 02:12 PM, Bjorn Helgaas wrote:
-> On Mon, Feb 08, 2016 at 01:39:21PM -0800, David Daney wrote:
->> On 02/08/2016 01:12 PM, Rob Herring wrote:
->>> On Mon, Feb 8, 2016 at 2:47 PM, David Daney <ddaney@caviumnetworks.com> wrote:
->>>> On 02/08/2016 11:56 AM, Rob Herring wrote:
->>>>> On Fri, Feb 05, 2016 at 03:41:15PM -0800, David Daney wrote:
->>>>>> From: David Daney <david.daney@cavium.com>
->>>
->>> [...]
->>>
->>>>>> +Properties of the host controller node that differ from
->>>>>> +host-generic-pci.txt:
->>>>>> +
->>>>>> +- compatible     : Must be "cavium,pci-host-thunder-ecam"
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +       pci@84b0,00000000 {
->>>>>
->>>>>
->>>>> Drop the comma,
->>>>
->>>>
->>>> OK...
->>>>
->>>>> and the node name should be "pcie".
->>>>>
->>>>
->>>> Why pcie?
->>>>
->>>> There are no PCIe devices or buses reachable from this type of root complex.
->>>> There are however many PCI devices.
->>>
->>> I thought ECAM is a PCIe thing. If not, then nevermind.
->
-> The "ECAM" confusion bites again :)
->
->> Well, Enhanced Configuration Access Mechanism (ECAM) is defined  the
->> the PCI Express(R) base Specification, but it just defines a
->> standard layout of address bits to memory map config space
->> operations.  Since the PCI config space is a sub set of the PCIe
->> config space, ECAM can also be used in PCI systems.
->>
->> Really, it is a bit of a gray area here as we don't have any bridges
->> to PCIe buses and there are multiple devices residing on each bus,
->> so from that point of view it cannot be PCIe.  There are, however,
->> devices that implement the PCI Express Capability structure, so does
->> that make it PCIe?  It is not clear what the specifications demand
->> here.
->
-> The PCI core doesn't care about the node name in the device tree.  But
-> it *does* care about some details of PCI/PCIe topology.  We consider
-> anything with a PCIe capability to be PCIe.  For example,
->
->    - pci_cfg_space_size() thinks PCIe devices have 4K of config space
->
->    - only_one_child() thinks a PCIe bus, i.e., a link, only has a
->      single device on it
->
->    - a PCIe device should have a PCIe Root Port or PCIe Downstream Port
->      upstream from it (we did remove some of these restrictions with
->      b35b1df5e6c2 ("PCI: Tolerate hierarchies with no Root Port"), but
->      it's possible we didn't get them all)
->
-> I assume your system conforms to expectations like these; I'm just
-> pointing them out because you mentioned buses with multiple devices on
-> them, which is definitely something one doesn't expect in PCIe.
->
+On 11/19, Matthew McClintock wrote:
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
+> +	compatible = "qcom,ipq4019";
+> +
+> +	clocks {
+> +                xo: xo {
+> +                        compatible = "fixed-clock";
+> +                        clock-frequency = <48000000>;
+> +                        #clock-cells = <0>;
+> +                };
+> +	};
 
-The topology we have is currently working with the kernel's core PCI 
-code.  I don't really want to get into discussing what the definition of 
-PCIe is.  We have multiple devices (more than 32) on a single bus, and 
-they have PCI Express and ARI Capabilities.  Is that PCIe?  I don't know.
+Is there a reason the xo is here and the sleep clk is in the SoC
+dtsi file? Both are board clocks so I would think they would be
+added in the same place.
 
-For the purpose of naming the device tree node, I would like to stick 
-with the name "pci@..." as it is somewhat accurate, a value contemplated 
-by the device tree specifications, ignored by the kernel code, and 
-already implemented.
+> +
+> +	soc {
+> +
+> +
+> +		timer {
+> +			compatible = "arm,armv7-timer";
+> +			interrupts = <1 2 0xf08>,
+> +				     <1 3 0xf08>,
+> +				     <1 4 0xf08>,
+> +				     <1 1 0xf08>;
+> +			clock-frequency = <48000000>;
+> +		};
 
-David Daney
+The timer shouldn't be part of the SoC node (it has no reg property).
 
-
-> Bjorn
->
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
