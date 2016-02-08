@@ -1,108 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 22:59:46 +0300
-Message-ID: <56B8F3B2.9000300@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <20160208194915.GA6168@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 01/11] drm/hisilicon: Add device tree binding for
+ hi6220 display subsystem
+Date: Mon, 8 Feb 2016 14:12:46 -0600
+Message-ID: <20160208201246.GA17459@rob-hp-laptop>
+References: <1454729098-79807-1-git-send-email-xinliang.liu@linaro.org>
+ <1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160208194915.GA6168@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2016 10:49 PM, Rob Herring wrote:
+On Sat, Feb 06, 2016 at 11:24:48AM +0800, Xinliang Liu wrote:
+> Add ADE display controller binding doc.
+> Add DesignWare DSI Host Controller v1.20a binding doc.
 
->> TI DA8xx MUSB driver equipped with DeviceTree support.
->> Tested with AM1808 board and USB2.0 (OTG) in host mode.
->>
->> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/da8xx-usb.txt          |  63 ++++++++
->>   drivers/usb/musb/da8xx.c                           | 162 +++++++++++++++++++++
->>   include/linux/platform_data/usb-davinci.h          |   3 +-
->>   3 files changed, 227 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> new file mode 100644
->> index 0000000..69c0961
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> @@ -0,0 +1,63 @@
->> +TI DA8xx MUSB
->> +~~~~~~~~~~~~~
->> +
->> +Required properties:
->> +~~~~~~~~~~~~~~~~~~~~
->> + - compatible : Should be "ti,da8xx-musb"
->> +
->> + - reg: offset and length of the usbss register sets
->> +
->> + - interrupts: USB interrupt number
->> +
->> + - interrupt-names: should be set to "mc"
->
-> Kind of pointless with only one.
+One comment, otherwise:
 
-    Required by the driver.
+Acked-by: Rob Herring <robh@kernel.org>
 
->> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
->> +
->> + - mentor,power : Specifies the maximum current in milli-ampers the controller can
->> +     supply in host mode. The maximum configurable value is 510mA.
->> +
->> + - mentor,num-eps : Valid only in host mode. Specifies the number of target endpoints
->> +     supported by the controller. For DA8xx it is "5".
->
-> If DA8xx is the only thing you support, then why is this needed?
+> +Board specific:
+> +	&dsi {
+> +		status = "ok";
+> +
+> +		ports {
+> +			/* 1 for output port */
+> +			port@1 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <1>;
+> +
+> +				/* 0 for bridge, other value for panel */
 
-    We already agreed that it should be deduced from the "compatible" prop. 
-Unfortunately, the author had bad examples in omap2430.c and musb_dsps.c... :-(
+The endpoint address would not change based on bridge or panel. So you 
+can drop the unit address here.
 
->> + - mentor,multipoint : Valid only in host mode. Enables addressing of USB hubs,
->> +     which is normally something you want and therefore should be set to "1".
->> +     If set to "0" only point-to-point communication is enabled, i.e. only a single
->> +     device can be attached.
-
-    This is author's fantasies, not the real meaning. :-)
-
->
-> Given 1 is a superset of 0, why ever use 0?
-
-    Already this way in the exsiting MUSB bindings. Actually 0/1 indicates 
-that the target endpoint control regs are absent/present.
-
->> + - mentor,ram-bits : This 2-base logarithm value defines the RAM FIFO size of the controller.
->> +     The FIFO size is calculated in 32-bit words. E.g. if your controller has 4kiB of RAM FIFO
->> +     this value should be set to "10": 2^10 = 1024 words of 32-bits, i.e. 4096 bytes.
->> +     For the DA8xx controller this value should be set to 10.
->
-> Again, if fixed for the compatible string, then don't put into the DT.
-
-    Fully agreed. Bad examples exist, though...
-
->> +
->> +
->> +Optional properties:
->> +
->> + - ti,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference clock source.
->> +     Supported values: "0" for external pin, "1" for internal PLL.
->> +
->> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
->> +     frequency in Hz in case the clock is generated by the internal PLL.
->> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
->
-> Add units suffix (-hz).
-
-    Doesn't "frequency" alteady tell that?
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +				dsi_out0: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&adv7533_in>;
+> +				};
+> +			};
+> +		};
+> +	};
