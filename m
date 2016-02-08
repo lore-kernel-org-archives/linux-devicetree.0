@@ -1,38 +1,34 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 13:49:25 +0100
-Message-ID: <56B88ED5.9000104@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 1/2] memory: omap-gpmc: Add support for AAD timings
+Date: Mon, 8 Feb 2016 14:51:24 +0200
+Message-ID: <56B88F4C.2040002@ti.com>
+References: <1451309961-7247-1-git-send-email-narmstrong@baylibre.com>
+ <1451309961-7247-2-git-send-email-narmstrong@baylibre.com>
+ <20160127185815.GW19432@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B8891C.3080409-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160127185815.GW19432@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Robert ABEL <rabel@cit-ec.uni-bielefeld.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 27/01/16 20:58, Tony Lindgren wrote:
+> * Neil Armstrong <narmstrong@baylibre.com> [151228 05:39]:
+>> In order to support extended timings parameters on hardware supporting the
+>> "AAD" mode like the AM335x or DM816x, add these entries into the GPMC driver
+>> if the hardware is capable.
+>>
+>> Tested on DM816x and AM335x.
+> 
+> Both look OK to me, assuming Roger will queue these:
+> 
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> 
 
-On 08.02.2016 13:25, Sergei Shtylyov wrote:
->
->    As for the mode and power, I agree -- they are part of the 
-> board-specific platform data (there's also power-on-to-power-good 
-> delay BTW which you missed).
->
-I've also noticed the potpgt it in the platform driver. However the musb 
-doesn't seem to use it, it's used by the ohci-da8xx driver.I will do. 
-Why doesn't the musb core use directly the USB_DR_MODE_xxx literals
->> instead?
->
->    MUSB driver predates these (DT specific?) definitions IIRC...
-Would it make sense to replace it with the newer USB_DR_MODE_xxx ?
+Thanks. Queuing both for -next.
 
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
