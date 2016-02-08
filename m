@@ -1,74 +1,29 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v5 3/3] pci, pci-thunder-ecam: Add driver for ThunderX-pass1
- on-chip devices
-Date: Mon, 8 Feb 2016 13:39:21 -0800
-Message-ID: <56B90B09.7090500@caviumnetworks.com>
-References: <1454715675-17512-1-git-send-email-ddaney.cavm@gmail.com> <1454715675-17512-4-git-send-email-ddaney.cavm@gmail.com> <20160208195642.GA15103@rob-hp-laptop> <56B8FED6.1050804@caviumnetworks.com> <CAL_JsqJNndZ59465YhpkP=dQYaijaar+LcQG4KQEJwF5e1ryLQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] net: fec: Add "phy-reset-active-low" property to DT
+Date: Mon, 08 Feb 2016 22:46:42 +0100
+Message-ID: <3171793.SonfZDNmtV@wuerfel>
+References: <1454962873-1941-1-git-send-email-bernhard@bwalle.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJNndZ59465YhpkP=dQYaijaar+LcQG4KQEJwF5e1ryLQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: David Daney <ddaney.cavm@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454962873-1941-1-git-send-email-bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bernhard Walle <bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
+Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2016 01:12 PM, Rob Herring wrote:
-> On Mon, Feb 8, 2016 at 2:47 PM, David Daney <ddaney@caviumnetworks.com> wrote:
->> On 02/08/2016 11:56 AM, Rob Herring wrote:
->>>
->>> On Fri, Feb 05, 2016 at 03:41:15PM -0800, David Daney wrote:
->>>>
->>>> From: David Daney <david.daney@cavium.com>
->
-> [...]
->
->>>> +Properties of the host controller node that differ from
->>>> +host-generic-pci.txt:
->>>> +
->>>> +- compatible     : Must be "cavium,pci-host-thunder-ecam"
->>>> +
->>>> +Example:
->>>> +
->>>> +       pci@84b0,00000000 {
->>>
->>>
->>> Drop the comma,
->>
->>
->> OK...
->>
->>> and the node name should be "pcie".
->>>
->>
->> Why pcie?
->>
->> There are no PCIe devices or buses reachable from this type of root complex.
->> There are however many PCI devices.
->
-> I thought ECAM is a PCIe thing. If not, then nevermind.
+On Monday 08 February 2016 21:21:13 Bernhard Walle wrote:
+> We need that for a custom hardware that needs the reverse reset
+> sequence.
+> 
+> Signed-off-by: Bernhard Walle <bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
+> 
 
+Why can't this be specified in the gpios property?
 
-Well, Enhanced Configuration Access Mechanism (ECAM) is defined  the the 
-PCI Express(R) base Specification, but it just defines a standard layout 
-of address bits to memory map config space operations.  Since the PCI 
-config space is a sub set of the PCIe config space, ECAM can also be 
-used in PCI systems.
-
-Really, it is a bit of a gray area here as we don't have any bridges to 
-PCIe buses and there are multiple devices residing on each bus, so from 
-that point of view it cannot be PCIe.  There are, however, devices that 
-implement the PCI Express Capability structure, so does that make it 
-PCIe?  It is not clear what the specifications demand here.
-
-I choose to call it "pci" as it lacks much of what it means to be PCIe, 
-and also you cannot plug things into it.
-
-David Daney
-
-
-
->
-> Rob
->
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
