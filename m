@@ -1,131 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6] media: spi: Add support for LMH0395
-Date: Mon, 8 Feb 2016 18:15:40 -0600
-Message-ID: <20160209001540.GA23750@rob-hp-laptop>
-References: <1454930424-6030-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: [PATCH] of/irq: fix bug in computing output requester-id for an msi-map
+Date: Mon, 8 Feb 2016 16:30:23 -0600
+Message-ID: <1454970623-28781-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454930424-6030-1-git-send-email-jean-michel.hautbois@veo-labs.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jhautbois@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jslaby@suse.com, joe@perches.com, kvalo@codeaurora.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, mchehab@osg.samsung.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+To: robh@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: marc.zyngier@arm.com, david.daney@cavium.com, mark.rutland@arm.com, Stuart Yoder <stuart.yoder@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 12:20:24PM +0100, Jean-Michel Hautbois wrote:
-> This device is a SPI based device from TI.
-> It is a 3 Gbps HD/SD SDI Dual Output Low Power
-> Extended Reach Adaptive Cable Equalizer.
-> 
-> LMH0395 enables the use of up to two outputs.
-> These can be configured using DT.
-> The name gives the spi bus, and the CS associated.
-> Example : lmh0395-1@spi2
-> LMH0395 is on bus SPI2 with CS number 1.
-> 
-> Controls should be accessible from userspace too.
-> This will have to be done later.
+From: Stuart Yoder <stuart.yoder@nxp.com>
 
-Your line wrap should be ~72 columns.
+The binding for msi-map specifies that the output requester id
+should be computed as: (r - rid-base + msi-base)
 
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
-> ---
-> v2: Add DT support
-> v3: Change the bit set/clear in output_type as disabled means 'set the bit'
-> v4: Clearer description of endpoints usage in Doc, and some init changes.
->     Add a dependency on OF and don't test CONFIG_OF anymore.
-> v5: Change port description in Documentation
->     Multiple ports : required #address-cells and #size-cells
->     Alphabetical order for include files
->     Simplify register set/clear
->     Check device ID
->     Implement log_status handler
-> v6: Take Laurent Pinchart remarks into account
->     Correct register settings
->     Use next generation MC
-> 
->  .../devicetree/bindings/media/spi/lmh0395.txt      |  51 +++
->  MAINTAINERS                                        |   6 +
->  drivers/media/Kconfig                              |   1 +
->  drivers/media/Makefile                             |   2 +-
->  drivers/media/spi/Kconfig                          |  15 +
->  drivers/media/spi/Makefile                         |   1 +
->  drivers/media/spi/lmh0395.c                        | 477 +++++++++++++++++++++
->  drivers/media/spi/lmh039x.h                        |  55 +++
->  8 files changed, 607 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/media/spi/lmh0395.txt
->  create mode 100644 drivers/media/spi/Kconfig
->  create mode 100644 drivers/media/spi/Makefile
->  create mode 100644 drivers/media/spi/lmh0395.c
->  create mode 100644 drivers/media/spi/lmh039x.h
-> 
-> diff --git a/Documentation/devicetree/bindings/media/spi/lmh0395.txt b/Documentation/devicetree/bindings/media/spi/lmh0395.txt
-> new file mode 100644
-> index 0000000..5c6ab4a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/spi/lmh0395.txt
-> @@ -0,0 +1,51 @@
-> +* Texas Instruments lmh0395 3G HD/SD SDI equalizer
-> +
-> +"The LMH0395 is an SDI equalizer designed to extend the reach of SDI signals
-> +transmitted over cable by equalizing the input signal and generating clean
-> +outputs. It has one differential input and two differential output that can be
-> +independently controlled."
-> +
-> +Required Properties :
-> +- compatible: Must be "ti,lmh0395"
+...update the code accordingly.
 
-You don't state this is a SPI device and uses standard SPI device 
-properties.
+Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
+---
+ drivers/of/irq.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> +
-> +The device node must contain one 'port' child node per device input and output
-> +port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +The LMH0395 has three ports numbered as follows.
-> +
-> +  Port			LMH0395
-> +------------------------------------------------------------
-> +  SDI (SDI input)	0
-> +  SDO0 (SDI output 0)	1
-> +  SDO1 (SDI output 1)	2
-> +
-> +Example:
-> +
-> +ecspi@02010000 {
-
-s/ecspi/spi/ and drop the leading 0.
-
-Presumbly the dts you based this on was wrong.
-
-> +	...
-> +	...
-> +
-> +	lmh0395@1 {
-> +		compatible = "ti,lmh0395";
-> +		reg = <1>;
-> +		spi-max-frequency = <20000000>;
-> +		ports {
-> +			port@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-
-These belong up one level in ports.
-
-> +				reg = <0>;
-> +				sdi0_in: endpoint {};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				sdi0_out0: endpoint {};
-> +			};
-> +			port@2 {
-> +				reg = <2>;
-> +				/* endpoint not specified, disable output */
-> +			};
-> +		};
-> +	};
-> +	...
-> +};
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 706e3ff..3f5e5fd 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -589,6 +589,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
+ 	struct device_node *msi_controller_node;
+ 	struct device_node *msi_np = *np;
+ 	u32 map_mask, masked_rid, rid_base, msi_base, rid_len, phandle;
++	u32 masked_rid_base;
+ 	int msi_map_len;
+ 	bool matched;
+ 	u32 rid_out = rid_in;
+@@ -654,7 +655,8 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
+ 	if (!matched)
+ 		return rid_out;
+ 
+-	rid_out = masked_rid + msi_base;
++	masked_rid_base = map_mask & rid_base;
++	rid_out = msi_base + (masked_rid - masked_rid_base);
+ 	dev_dbg(dev,
+ 		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
+ 		dev_name(parent_dev), map_mask, rid_base, msi_base,
+-- 
+1.7.9.5
