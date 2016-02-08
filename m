@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 06/10] ARM64: dts: rockchip: Add IR receiver to GeekBox
-Date: Mon,  8 Feb 2016 03:17:35 +0100
-Message-ID: <1454897859-7601-7-git-send-email-afaerber@suse.de>
+Subject: [PATCH v2 04/10] ARM64: dts: rockchip: Add GMAC to GeekBox
+Date: Mon,  8 Feb 2016 03:17:33 +0100
+Message-ID: <1454897859-7601-5-git-send-email-afaerber@suse.de>
 References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -18,41 +18,49 @@ Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
  v2: New
 =20
- arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 +++++++++++++++++=
++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/arm=
 64/boot/dts/rockchip/rk3368-geekbox.dts
-index e4523a74050f..e84383fd6f10 100644
+index bc91d39758ab..a8dcf3c2b0c1 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-@@ -63,6 +63,13 @@
- 		#clock-cells =3D <0>;
+@@ -56,6 +56,13 @@
+ 		reg =3D <0x0 0x0 0x0 0x80000000>;
  	};
 =20
-+	ir: ir-receiver {
-+		compatible =3D "gpio-ir-receiver";
-+		gpios =3D <&gpio3 30 GPIO_ACTIVE_LOW>;
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&ir_int>;
++	ext_gmac: gmac-clk {
++		compatible =3D "fixed-clock";
++		clock-frequency =3D <125000000>;
++		clock-output-names =3D "ext_gmac";
++		#clock-cells =3D <0>;
 +	};
 +
  	leds: gpio-leds {
  		compatible =3D "gpio-leds";
 =20
-@@ -252,6 +259,12 @@
+@@ -82,6 +89,19 @@
+ 	};
  };
 =20
- &pinctrl {
-+	ir {
-+		ir_int: ir-int {
-+			rockchip,pins =3D <3 30 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
++&gmac {
++	status =3D "okay";
++	phy-supply =3D <&vcc_lan>;
++	phy-mode =3D "rgmii";
++	clock_in_out =3D "input";
++	assigned-clocks =3D <&cru SCLK_MAC>;
++	assigned-clock-parents =3D <&ext_gmac>;
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&rgmii_pins>;
++	tx_delay =3D <0x30>;
++	rx_delay =3D <0x10>;
++};
 +
- 	pmic {
- 		pmic_sleep: pmic-sleep {
- 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
+ &i2c0 {
+ 	status =3D "okay";
+=20
 --=20
 2.6.2
 
