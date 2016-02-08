@@ -1,52 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] add support for DWC UFS Host Controller
-Date: Mon, 8 Feb 2016 16:15:30 +0000
-Message-ID: <20160208161530.GB14146@leverpostej>
-References: <cover.1454498292.git.jpinto@synopsys.com>
- <2072510.CA47OHQsUN@wuerfel>
- <56B2164E.5060007@synopsys.com>
- <2087303.0ORDEBS3hn@wuerfel>
- <56B222C8.5010509@synopsys.com>
- <20160204162700.GD17587@leverpostej>
- <56B8B177.2050000@synopsys.com>
- <20160208153005.GB12536@leverpostej>
- <56B8B614.10306@synopsys.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv9 1/4] EDAC, altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Mon, 8 Feb 2016 17:16:27 +0100
+Message-ID: <20160208161627.GH28980@pd.tnic>
+References: <1453911203-30202-1-git-send-email-tthayer@opensource.altera.com>
+ <20160208113919.GB28980@pd.tnic>
+ <56B8BE0D.8070000@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56B8B614.10306@synopsys.com>
+In-Reply-To: <56B8BE0D.8070000@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, santosh.sy@samsung.com, h.vinayak@samsung.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 03:36:52PM +0000, Joao Pinto wrote:
-> Hi Mark,
-> 
-> On 2/8/2016 3:30 PM, Mark Rutland wrote:
-> > On Mon, Feb 08, 2016 at 03:17:11PM +0000, Joao Pinto wrote:
-> >> Hi Mark and Arnd,
-> >> Are you saying that a user that puts "snps,ufshcd-1.1"
-> >> in the DT compatibility string disables the UFS 2.0 in the core driver despite
-> >> the controller is 2.0? Please clarify.
-> > 
-> > If you can consistently and safely detect that the HW is 2.0, using 2.0
-> > functionality is fine.
-> > 
-> > Regardless, you should have a -1.1 compatible string for the 1.1 HW, and
-> > a -2.0 string for the 2.0 HW, so that DTs are explicit about what the
-> > hardware is. If 2.0 is intended to be a superset of 1.1, you can have a
-> > 1.1 fallback entry for the 2.0 hardware.
-> > 
-> 
-> Ok, I will include the version in the compatibility strings, but if someone
-> mentions "snps,ufshcd-1.1" only and the driver detects that the HW is 2.0
-> capable it will activate the 2.0 features independently of what mentioned in the
-> DT, correct?
+On Mon, Feb 08, 2016 at 10:10:53AM -0600, Thor Thayer wrote:
+> Understood. I did get a conditional ACK from Rob Herring on the DT portion
+> of the patch from the last revision (as long as I made the changes he
+> suggested which I did in this patch). There may be other comments though.
 
-As above, if that can be detected safely and reliably, then I don't see
-a problem with that.
+Ah, and I wasn't precise: there are also arch/arm/mach-socfpga/ changes
+which I'm going to take through the EDAC tree *only* if ARM people ack
+them.
 
-Thanks,
-Mark.
+And by "ARM people" and from looking at get_maintainer output I mean
+Dinh and he's on CC ...
+
+> Those are the only cases of irq but it would be good to be alerted if that
+> is not the case. I will add. Thanks!
+
+Yeah, it is a "just in case" thing - it might just as well be too
+cautious and completely unnecessary so your decision.
+
+> Yes, thanks. I was using the xgene code as an example but I missed the
+> unregister (although it looks like the xgene's unregister affects sysfs
+> instead of debugfs). I'm also moving the debugfs creation to the end of the
+> probe since it is not critical and avoids an error path if creation fails.
+> 
+> I'll make the debugfs_remove_recursive() change as a separate patch in my
+> next version.
+
+Good, thanks!
+
+Also, if something's not right in drivers/edac/debugfs.c wrt usability
+and so on, feel free to propose changes. I've extracted it there because
+I didn't want every driver to reinvent the wheel.
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
