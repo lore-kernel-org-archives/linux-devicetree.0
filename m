@@ -1,34 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v4 01/14] scsi: ufs-qcom: add number of lanes per direction
-Date: Mon, 8 Feb 2016 11:53:17 -0600
-Message-ID: <20160208175317.GA12559@rob-hp-laptop>
-References: <1454582180-3823-1-git-send-email-ygardi@codeaurora.org>
- <1454582180-3823-2-git-send-email-ygardi@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Mon, 8 Feb 2016 20:55:02 +0300
+Message-ID: <56B8D676.1050809@cogentembedded.com>
+References: <1454693676-20211-1-git-send-email-petr@barix.com>
+ <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
+ <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
+ <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454582180-3823-2-git-send-email-ygardi@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yaniv Gardi <ygardi@codeaurora.org>
-Cc: robherring2@gmail.com, James.Bottomley@HansenPartnership.com, pebolle@tiscali.nl, hch@infradead.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, Gilad Broner <gbroner@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B8B515.5080106-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 12:36:07PM +0200, Yaniv Gardi wrote:
-> Different platform may have different number of lanes
-> for the UFS link.
-> Add parameter to device tree specifying how many lanes
-> should be configured for the UFS link.
-> 
-> Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
-> 
-> ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  3 ++
->  drivers/scsi/ufs/ufs-qcom.c                        | 39 ++++++++++++----------
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 19 +++++++++++
->  drivers/scsi/ufs/ufshcd.c                          |  1 +
->  drivers/scsi/ufs/ufshcd.h                          |  2 ++
->  5 files changed, 47 insertions(+), 17 deletions(-)
+On 02/08/2016 06:32 PM, Petr Kulhavy wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> I have prepared the patch as per you comments.
+> Unfortunately I cannot use the 4.5 kernel from Felipe's repo as the
+> of_usb_get_dr_mode() has been replaced with
+> of_usb_get_dr_mode_by_phy() which requires a PHY node, which does not exist
+> for DA8xx as we discussed before.
+>
+> What shall we do?
+
+    Doesn't usb_get_dr_mode() work for you?
+
+> Regards
+> Petr
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
