@@ -1,38 +1,62 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 6/7] [PATCH] MIPS: OCTEON: Add support for OCTEON III
- interrupt controller.
-Date: Mon, 8 Feb 2016 11:38:43 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1602081137460.25254@nanos>
-References: <1454632974-7686-1-git-send-email-ddaney.cavm@gmail.com> <1454632974-7686-7-git-send-email-ddaney.cavm@gmail.com> <alpine.DEB.2.11.1602050954480.25254@nanos> <56B4DA3B.40607@caviumnetworks.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V4 1/7] clk: bcm2835: the minimum clock divider is 2
+Date: Mon, 8 Feb 2016 11:39:49 +0100
+Message-ID: <56B87075.8000304@martin.sperl.org>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
+ <1452867667-2447-2-git-send-email-kernel@martin.sperl.org>
+ <87oac03tuz.fsf@eliezer.anholt.net> <87egcv5153.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B4DA3B.40607-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <87egcv5153.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Feb 2016, David Daney wrote:
-> On 02/05/2016 01:06 AM, Thomas Gleixner wrote:
-> > > +int octeon_irq_ciu3_xlat(struct irq_domain *d,
-> > 
-> > static ?
-> 
-> To be used in follow-on patch for MSI-X irq_chip driver residing in a separate
-> file.
-> 
-> The idea was to not be changing the to/from static multiple times as the new
-> patches were merged.  If you think it preferable, I can make them all static
-> and then remove the static later, when needed.
 
-Nah. It was just not clear from reading this patch. A hint in the changelog
-might be helpful.
- 
-Thanks,
 
-	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02.02.2016 02:52, Eric Anholt wrote:
+> Eric Anholt <eric@anholt.net> writes:
+>
+>> kernel@martin.sperl.org writes:
+>>
+>>> From: Martin Sperl <kernel@martin.sperl.org>
+>>>
+>>> Testing with different clock divider values has shown
+>>> that (at least for the PCM clock) the clock divider
+>>> has to be at least 2, otherwise the clock will not
+>>> output a signal.
+>>
+>> For a MASH clock (PWM, PCM, SLIMBUS, but not the others), the minimum
+>> integer component of the divider is:
+>>
+>> mash 0: 1
+>> mash 1: 2
+>> mash 2: 3
+>> mash 3: 5
+>
+> More specific MASH list:
+>
+> GP0
+> GP1
+> (*not* gp2)
+> PCM
+> PWM
+> SLIM
+>
+I got the list from the broadcom provided headers for the VC4.
+and where CM_*_DIV range does not start at 12 we have a fractional
+divider (also requires if CM_*_FRAC or CM_*_MASH is set)
+
+And if CM_*_MASH is set we got a mash enabled clock:
+CM_GNRICCTL_MASH
+CM_GP0CTL_MASH
+CM_GP1CTL_MASH
+CM_PCMCTL_MASH
+CM_PWMCTL_MASH
+CM_SLIMCTL_MASH
+
+And this is what can get implemented by configuring mash
+in the DT - otherwise only frac (a.k.a. MASH = 1) is
+used for any clock that has .frac_bits > 0.
