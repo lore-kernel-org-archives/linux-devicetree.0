@@ -1,123 +1,76 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Enable USB DRC on Itead Ibox
-Date: Mon, 8 Feb 2016 17:56:06 +0100
-Message-ID: <CAEKpxBkXp9hx6KWpWyRBvYBFi7Sr0FgFHrD6M0nSBuJ1bV++1A@mail.gmail.com>
-References: <1454947167-12236-1-git-send-email-codekipper@gmail.com>
-	<56B8BED7.9030704@redhat.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Christoffer Dall <christoffer.dall@linaro.org>
+Subject: Re: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
+Date: Mon, 8 Feb 2016 18:00:26 +0100
+Message-ID: <20160208170026.GA23324@cbox>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <20160208101432.GA1150@cbox>
+ <56B8A527.7010206@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBJUR4O2QKGQEUMYDWBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <56B8BED7.9030704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B8A527.7010206@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, vikrams@codeaurora.org, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@codeaurora.org, shankerd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 February 2016 at 17:14, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+On Mon, Feb 08, 2016 at 09:24:39AM -0500, Sinan Kaya wrote:
 > Hi,
->
-> On 08-02-16 16:59, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Enable the otg/drc usb controller on the Itead Ibox device.
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
->
-> Same remark as with your Olimex A20 EVB board patch, please
-> also provide a vbus detect pin setting. If for some reason the
-> VBus detect is not wired up, or not working properly, please mention
-> this explicitly in the commit message.
-Hi Hans,
-I've added vbus detect and it no longer works. It's mentioned that the
-Itead Ibox is similar to the Cubieboard 2 which also doesn't include
-the detect. I can see now in the commit that it states "Note this
-board has the otg-vbus connected directly to the 5v-dcc of the board,
-so there is no vbus0 regulator, nor vbus0-det.", I will add this to
-the commit message and try and dig out a schematic to confirm.
-Thanks,
-CK
->
-> Note that in some cases the axp209 is used for vbus detect,
-> rather then a gpio, see e.g. :
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/sun7i-a20-bananapi.dts?id=dcfd8443d89f593e0c667a988ab017e716b33061
->
-> Regards,
->
-> Hans
->
->
->
->
->> ---
->>   arch/arm/boot/dts/sun7i-a20-itead-ibox.dts     | 14 ++++++++++++++
->>   arch/arm/boot/dts/sunxi-itead-core-common.dtsi |  9 +++++++++
->>   2 files changed, 23 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
->> b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
->> index 661c21d..a512581 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
->> @@ -118,8 +118,22 @@
->>                 allwinner,drive = <SUN4I_PINCTRL_20_MA>;
->>                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>         };
->> +
->> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
->> +               allwinner,pins = "PH4";
->> +               allwinner,function = "gpio_in";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +       };
->>   };
->>
->>   &reg_ahci_5v {
->>         status = "okay";
->>   };
->> +
->> +&usbphy {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&usb0_id_detect_pin>;
->> +       usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
->> +       status = "okay";
->> +};
->> diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
->> b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
->> index 2565d51..d22eea3 100644
->> --- a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
->> +++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
->> @@ -88,6 +88,10 @@
->>         status = "okay";
->>   };
->>
->> +&otg_sram {
->> +       status = "okay";
->> +};
->> +
->>   #include "axp209.dtsi"
->>
->>   &reg_dcdc2 {
->> @@ -129,6 +133,11 @@
->>         status = "okay";
->>   };
->>
->> +&usb_otg {
->> +       dr_mode = "otg";
->> +       status = "okay";
->> +};
->> +
->>   &usbphy {
->>         usb1_vbus-supply = <&reg_usb1_vbus>;
->>         usb2_vbus-supply = <&reg_usb2_vbus>;
->>
->
+> 
+> On 2/8/2016 5:14 AM, Christoffer Dall wrote:
+> > Hi Sinan,
+> > 
+> > On Thu, Feb 04, 2016 at 11:34:31PM -0500, Sinan Kaya wrote:
+> >> The Qualcomm Technologies HIDMA device has been designed
+> >> to support virtualization technology. The driver has been
+> >> divided into two to follow the hardware design.
+> >>
+> >> 1. HIDMA Management driver
+> >> 2. HIDMA Channel driver
+> >>
+> >> Each HIDMA HW consists of multiple channels. These channels
+> >> share some set of common parameters. These parameters are
+> >> initialized by the management driver during power up.
+> >> Same management driver is used for monitoring the execution
+> >> of the channels. Management driver can change the performance
+> >> behavior dynamically such as bandwidth allocation and
+> >> prioritization in the future.
+> >>
+> >> The management driver is executed in host context and
+> >> is the main management entity for all channels provided by
+> >> the device.
+> > 
+> > I'm not at all familiar with this kind of hardware.
+> > 
+> 
+> Let me help. 
+> 
+> > Once an entity (userspace or VM) has a HIDAM channel assigned via VFIO,
+> > how does it use it?  
+> 
+> HIDMA is a HW accelerator for memory operations like memcpy and memset. It fits
+> into the DMA engine framework.
+> 
+> There are two classes of DMA HW. These are slave DMA and standalone DMA. Slave DMA
+> is generally related to another piece of HW that needs DMA for moving data. 
+> Standalone DMA is intended for OS/CPU consumption not HW. These can be used to offload
+> crypto operations (XOR) or other memory transactions (memcpy and memset) that are
+> lengthy. 
+> 
+> Once the HIDMA channel is assigned to the guest machine, guest operating system uses the
+> DMA channel to offload memory operations as HIDMA only supports memcpy. 
+> 
+> IOMMU HW provides the isolation from the rest of the host kernel or from other guest machines.
+> 
+> > Is it used in relation with another device to
+> > perform DMA on its behalf or is a HIDMA channel something that's useful
+> > on its own?
+> 
+> It is standalone only. The relationship you are referring to is known as slave DMA engine. 
+> HIDMA does not support slave DMA. HIDMA only supports memcpy and memset in HW and only memcpy in SW
+> as the memset support has been removed from the kernel long time ago.
+> 
+Thanks for the explanation.
+
+-Christoffer
