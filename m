@@ -1,75 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] bluetooth: btmrvl: register platform specific
- driver
-Date: Mon, 8 Feb 2016 16:05:09 -0600
-Message-ID: <20160208220509.GA20229@rob-hp-laptop>
-References: <1454927231-17662-1-git-send-email-akarwar@marvell.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH V2 01/12] MAINTAINERS: Adding Maintainers for AMD Seattle
+ Device Tree
+Date: Mon, 8 Feb 2016 13:38:58 -0800
+Message-ID: <20160208213858.GG25468@localhost>
+References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1454927231-17662-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 02:27:10AM -0800, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Mon, Feb 08, 2016 at 11:59:06AM -0600, Suravee Suthikulpanit wrote:
+> From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 > 
-> Platform device and driver provide easy way to
-> interact with device-tree-enabled system.
+> Adding maintainers for AMD Seattle device tree.
 > 
-> This patch registers platform driver and reorganise
-> existing device tree specific code.
-> 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v3: Add NULL check for 'btmrvl_plt_dev'
-> ---
->  Documentation/devicetree/bindings/btmrvl.txt |  8 ++--
+> Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-This needs to move somewhere else.
+Thanks, I've applied the series to next/dt64 now.
 
->  drivers/bluetooth/Makefile                   |  1 +
->  drivers/bluetooth/btmrvl_drv.h               | 16 ++++++++
->  drivers/bluetooth/btmrvl_main.c              |  8 +++-
->  drivers/bluetooth/btmrvl_platform.c          | 60 ++++++++++++++++++++++++++++
->  5 files changed, 88 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/bluetooth/btmrvl_platform.c
-> 
-> diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
-> index 58f964b..25b804b 100644
-> --- a/Documentation/devicetree/bindings/btmrvl.txt
-> +++ b/Documentation/devicetree/bindings/btmrvl.txt
-> @@ -3,7 +3,7 @@ btmrvl
->  
->  Required properties:
->  
-> -  - compatible : must be "btmrvl,cfgdata"
-> +  - compatible : must be "marvell,btmrvl"
 
-While the new name is less worse than the old one, I'm not inclined to 
-take any changes for this binding because it is problematic. Given you 
-don't care this is an incompatible change, then the binding can be 
-completely redone.
-
-It should reflect the actual chip name (e.g. sd8???) and be a child node 
-of its connection to the host (a UART). See UART slave discussions.
-
->  
->  Optional properties:
->  
-> @@ -15,11 +15,11 @@ Optional properties:
->  
->  Example:
->  
-> -GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
-> -in below example.
-> +GPIO pin 13 and gap 100ms are configured for host wakeup, calibration
-> +data is also available in below example.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Olof
