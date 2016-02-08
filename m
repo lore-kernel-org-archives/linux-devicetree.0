@@ -1,43 +1,57 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] dma: enable mxs-dma for imx6ul
-Date: Mon, 8 Feb 2016 08:44:03 +0530
-Message-ID: <20160208031403.GK2531@localhost>
-References: <1453294626-17608-1-git-send-email-LW@KARO-electronics.de>
- <1453294626-17608-2-git-send-email-LW@KARO-electronics.de>
- <20160125121043.GJ11130@localhost>
- <20160202062314.GD8307@tiger>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for the PIC32 SPI
+ peripheral
+Date: Mon, 8 Feb 2016 10:36:05 +0530
+Message-ID: <56B8223D.2030705@microchip.com>
+References: <1454366701-10847-1-git-send-email-joshua.henderson@microchip.com>
+ <56B08EEB.3050808@cogentembedded.com> <56B42E4C.8040201@microchip.com>
+ <56B4A457.7050807@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160202062314.GD8307@tiger>
+In-Reply-To: <56B4A457.7050807-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 02:23:16PM +0800, Shawn Guo wrote:
-> On Mon, Jan 25, 2016 at 05:40:43PM +0530, Vinod Koul wrote:
-> > On Wed, Jan 20, 2016 at 01:57:01PM +0100, Lothar Wa=DFmann wrote:
-> > > The mxs-dma unit is also available on i.MX6UL. Make it possible t=
-o
-> > > select it in Kconfig.
-> >=20
-> > It should be dmaengine:xxx
-> >=20
-> > With that
-> >=20
-> > Acked-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->=20
-> I think this can go separately via dma tree.
+On 02/05/2016 07:02 PM, Sergei Shtylyov wrote:
 
-Okay, pls resend :)
+> Hello.
+> On 2/5/2016 8:08 AM, Purna Chandra Mandal wrote:
+>>>> From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>>> Document the devicetree bindings for the SPI peripheral found
+>>>> on Microchip PIC32 class devices.
+>>>> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>>> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>>> ---
+>>>>    .../bindings/spi/microchip,spi-pic32.txt           |   44 ++++++++++++++++++++
+>>>>    1 file changed, 44 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+>>>> diff --git 
+>>>> a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt 
+>>>> b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+>>>> new file mode 100644
+>>>> index 0000000..a555618
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+>>>> @@ -0,0 +1,44 @@
+>>>> +* Microchip PIC32 SPI device
+> [...]
+>>>> +Example:
+>>>> +
+>>>> +    spi1:spi@0x1f821000 {
+>>> Please insert spaces after colon.
+>> ack
+>>
+> And please drop "0x" from the <unit-address> part of the name.
 
---=20
-~Vinod
+ack.
+
+> MBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
