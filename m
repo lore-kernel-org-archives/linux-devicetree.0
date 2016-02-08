@@ -1,90 +1,111 @@
-From: Julien Chauveau <chauveau.julien@gmail.com>
-Subject: Re: [PATCH v2 07/10] ARM64: dts: rockchip: Add power key to GeekBox
-Date: Mon, 8 Feb 2016 17:26:04 +0100
-Message-ID: <99011D31-E0AE-4F02-B769-E10617EA4F01@gmail.com>
-References: <1454897859-7601-1-git-send-email-afaerber@suse.de> <1454897859-7601-8-git-send-email-afaerber@suse.de>
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454897859-7601-8-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V2] ARM64: tegra: Add support for Google Pixel C
+Date: Mon, 8 Feb 2016 16:33:19 +0000
+Message-ID: <1454949199-27050-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Olof Johansson <olofj@chromium.org>, linux-arm-kernel@lists.infradead.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
+Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
+upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
 
-> Le 8 f=C3=A9vr. 2016 =C3=A0 03:17, Andreas F=C3=A4rber <afaerber@suse=
-=2Ede> a =C3=A9crit :
->=20
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
-> v2: New
->=20
-> arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 22 ++++++++++++++++=
-++++++
-> 1 file changed, 22 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
-rm64/boot/dts/rockchip/rk3368-geekbox.dts
-> index e84383fd6f10..fe5aa785cfda 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> @@ -70,6 +70,22 @@
-> 		pinctrl-0 =3D <&ir_int>;
-> 	};
->=20
-> +	keys: gpio-keys {
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pwr_key>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/Makefile           |  1 +
+ arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 60 +++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
 
-I think #address-cells and #size-cells are not necessary.
-
-> +
-> +		button@0 {
-> +			reg =3D <0>;
-
-reg can be removed too.
-
-> +			gpio-key,wakeup =3D <1>;
-
-You should use the new "wakeup-source =C2=BB property.
-
-> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
-> +			label =3D "GPIO Power";
-> +			linux,code =3D <116>;
-
-#include <dt-bindings/input/input.h>
-and use KEY_POWER instead of 116
-
-> +		};
-> +	};
-> +
-> 	leds: gpio-leds {
-> 		compatible =3D "gpio-leds";
->=20
-> @@ -265,6 +281,12 @@
-> 		};
-> 	};
->=20
-> +	keys {
-> +		pwr_key: pwr-key {
-> +			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_up>;
-
-Is there a reason you want to enable the internal pull-up resistor on t=
-his pin?
-
-The schematic shows there's already an external pull-up resistor so the=
- internal one should not be needed.
-
-
-> +		};
-> +	};
-> +
-> 	pmic {
-> 		pmic_sleep: pmic-sleep {
-> 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
+diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
+index a7e865da1005..0f7cdf3e05c1 100644
+--- a/arch/arm64/boot/dts/nvidia/Makefile
++++ b/arch/arm64/boot/dts/nvidia/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
++dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
+ 
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+new file mode 100644
+index 000000000000..59acdb6b4f23
+--- /dev/null
++++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+@@ -0,0 +1,60 @@
++/dts-v1/;
++
++#include "tegra210.dtsi"
++
++/ {
++	model = "Google Pixel C";
++	compatible = "google,smaug-rev8", "google,smaug-rev7",
++		     "google,smaug-rev6", "google,smaug-rev5",
++		     "google,smaug-rev4", "google,smaug-rev3",
++		     "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
++
++	aliases {
++		serial0 = &uarta;
++	};
++
++	chosen {
++		bootargs = "earlycon";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x0 0xc0000000>;
++	};
++
++	serial@0,70006000 {
++		status = "okay";
++	};
++
++	pmc@0,7000e400 {
++		nvidia,invert-interrupt;
++		nvidia,suspend-mode = <0>;
++		nvidia,cpu-pwr-good-time = <0>;
++		nvidia,cpu-pwr-off-time = <0>;
++		nvidia,core-pwr-good-time = <12000 6000>;
++		nvidia,core-pwr-off-time = <39053>;
++		nvidia,core-power-req-active-high;
++		nvidia,sys-clock-req-active-high;
++		status = "okay";
++	};
++
++	sdhci@0,700b0600 {
++		bus-width = <8>;
++		non-removable;
++		status = "okay";
++	};
++
++	clocks {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		clk32k_in: clock@0 {
++			compatible = "fixed-clock";
++			reg = <0>;
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++	};
++};
+-- 
+2.1.4
