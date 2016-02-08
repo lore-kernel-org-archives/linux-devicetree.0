@@ -1,39 +1,33 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Mon, 8 Feb 2016 20:55:02 +0300
-Message-ID: <56B8D676.1050809@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B8B515.5080106-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH 0/2] pinctrl: stm32; Fix build issue in -next and make compile-testing possible
+Date: Mon,  8 Feb 2016 18:57:37 +0100
+Message-ID: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2016 06:32 PM, Petr Kulhavy wrote:
+This two-patches series fixes two problems on stm32 pinctrl driver:
+	1 - As reported by Arnd, there is a missing dependency with DT Bindings
+headers on Linus' pinctrl/devel branch. This dependency is in fact not needed,
+so the first patch removes it.
+	2 - The driver could be selected for compile testing via menuconfig, but
+the Makefile only selected stm32 driver directory if ARCH_STM32 was selected.
+The second patch selects the stm32 driver if PINCTRL_STM32 is selected.
 
-> I have prepared the patch as per you comments.
-> Unfortunately I cannot use the 4.5 kernel from Felipe's repo as the
-> of_usb_get_dr_mode() has been replaced with
-> of_usb_get_dr_mode_by_phy() which requires a PHY node, which does not exist
-> for DA8xx as we discussed before.
->
-> What shall we do?
+Regards,
+Maxime
 
-    Doesn't usb_get_dr_mode() work for you?
+Maxime Coquelin (2):
+  pinctrl: stm32: Remove dependency with DT bindings header files
+  pinctrl: stm32: Fix compile testing selection
 
-> Regards
-> Petr
+ drivers/pinctrl/Makefile              | 2 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 2 --
+ drivers/pinctrl/stm32/pinctrl-stm32.h | 8 ++++++++
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-MBR, Sergei
+-- 
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
