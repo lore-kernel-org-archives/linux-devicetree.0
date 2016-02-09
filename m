@@ -1,95 +1,80 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Tue, 9 Feb 2016 12:10:31 -0600
-Message-ID: <20160209181031.GA23603@kahuna>
-References: <1454690044-2560-1-git-send-email-nm@ti.com>
- <1454690044-2560-2-git-send-email-nm@ti.com>
- <CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
- <56B9DC30.5040806@ti.com>
- <CABb+yY24XzsWaSGLMCE4_nvgWx0OhhQmcaP41g06FxdjQYFchg@mail.gmail.com>
- <CAGo_u6qGaQj9Qvjwrm7cD=cr2UjLN+62tcquXYPsQrRjYD=UCw@mail.gmail.com>
+From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+Date: Tue, 9 Feb 2016 18:12:24 +0000
+Message-ID: <HE1PR04MB16413597FD97D47AFB9880D78DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGo_u6qGaQj9Qvjwrm7cD=cr2UjLN+62tcquXYPsQrRjYD=UCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09:43-20160209, Nishanth Menon wrote:
-> On Tue, Feb 9, 2016 at 8:54 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-[..]
-> Let me prototype this as part of of_xlate and see if I can pull the
-> qinst data back out.. obviously one negative will be that I will
-> register *all* valid channels as part of probe.. at least based on
-> initial code i wrote today morning..
 
-OK - I believe I have it working now. How does the following look? If
-this looks fine to you, then I will post a v2 including the driver
-update.
-Changes here:
-	- dropped the generic message-manager compatible
-	- dropped child nodes
-	- moved the valid queue information to driver (no longer in dts)
-	- rx interrupts per SoC are explicitly named list in binding(and
-	  dts)
 
-Texas Instruments' Message Manager Driver
-========================================
+> -----Original Message-----
+> From: Robin Murphy [mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org]
+> Sent: Tuesday, February 09, 2016 5:05 AM
+> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org; Stuart Yoder
+> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+> 
+> The existing msi-map code is fine for shifting the entire RID space
+> upwards, but attempting finer-grained remapping reveals a bug. It turns
+> out that we are mistakenly treating the msi-base part as an offset, not
+> as a new base to remap onto, so things get squiffy when rid-base is
+> nonzero. Fix this, and at the same time add a sanity check against
+> having msi-map-mask clash with a nonzero rid-base, as that's another
+> thing one can easily get wrong.
+> 
+> CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/irq.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 7ee21ae..e7bfc17 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node
+> **np,
+>  		msi_base = be32_to_cpup(msi_map + 2);
+>  		rid_len = be32_to_cpup(msi_map + 3);
+> 
+> +		if (rid_base & ~map_mask) {
+> +			dev_err(parent_dev,
+> +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
+> base (0x%x)\n",
+> +				map_mask, rid_base);
+> +			return rid_out;
+> +		}
+> +
+>  		msi_controller_node = of_find_node_by_phandle(phandle);
+> 
+>  		matched = (masked_rid >= rid_base &&
+> @@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node
+> **np,
+>  	if (!matched)
+>  		return rid_out;
+> 
+> -	rid_out = masked_rid + msi_base;
+> +	rid_out = masked_rid - rid_base + msi_base;
+>  	dev_dbg(dev,
+>  		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length:
+> %08x, rid: %08x -> %08x\n",
+>  		dev_name(parent_dev), map_mask, rid_base, msi_base,
+> --
+> 2.7.0.25.gfc10eb5.dirty
 
-The Texas Instruments' Message Manager is a mailbox controller that has
-configurable queues selectable at SoC(System on Chip) integration. The Message
-manager is broken up into queues in different address regions that are called
-"proxies" - each instance is unidirectional and is instantiated at SoC
-integration level to indicate receive or transmit path.
-
-Message Manager Device Node:
-===========================
-Required properties:
---------------------
-- compatible:		Shall be: "ti,k2g-message-manager"
-- reg-names 		queue_proxy_region - Map the queue proxy region.
-			queue_state_debug_region - Map the queue state debug
-			region.
-- reg:			Contains the register map per reg-names.
-- #mbox-cells		Shall be 2. Contains the queue ID and proxy ID in that
-		        order referring to the transfer path.
-- interrupt-names:	Contains interrupt names matching the rx transfer path
-			for a given SoC. Receive interrupts shall be of the
-			format: "rx_<QID>_<PID>".
-			For ti,k2g-message-manager, this shall contain:
-				"rx_005_002", "rx_057_002"
-- interrupts:		Contains the interrupt information corresponding to
-			interrupt-names property.
-
-Example(K2G):
-------------
-
-	msgmgr: msgmgr@02a00000 {
-		compatible = "ti,k2g-message-manager";
-		#mbox-cells = <2>;
-		reg-names = "queue_proxy_region", "queue_state_debug_region";
-		reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
-		interrupt-names = "rx_005_002",
-				  "rx_057_002";
-		interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-			     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
-	};
-
-	pmmc: pmmc {
-		[...]
-		mbox-names = "rx", "tx";
-		# RX queue ID is 5, proxy ID is 2
-		# TX queue ID is 0, proxy ID is 0
-		mboxes= <&msgmgr 5 2>,
-			<&msgmgr 0 0>;
-		[...]
-	};
--- 
-Regards,
-Nishanth Menon
+Tested-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
