@@ -1,59 +1,60 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 0/3] arm: dts: DRA7: Add IVA and DSPEVE thermal domain
- data
-Date: Tue, 9 Feb 2016 09:07:27 +0530
-Message-ID: <56B95EF7.9080107@ti.com>
-References: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
- <20160208195704.GW19432@atomide.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
+Date: Tue, 9 Feb 2016 09:44:20 +0530
+Message-ID: <CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
+References: <1454690044-2560-1-git-send-email-nm@ti.com>
+	<1454690044-2560-2-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160208195704.GW19432@atomide.com>
+In-Reply-To: <1454690044-2560-2-git-send-email-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
-Cc: edubezval@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com
+To: Nishanth Menon <nm@ti.com>
+Cc: Suman Anna <s-anna@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 5, 2016 at 10:04 PM, Nishanth Menon <nm@ti.com> wrote:
+> +
+> +       msgmgr: msgmgr@02a00000 {
+> +               compatible = "ti,k2g-message-manager", "ti,message-manager";
+> +               #mbox-cells = <1>;
+> +               reg-names = "queue_proxy_region", "queue_state_debug_region";
+> +               reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
+> +
+> +               msgmgr_proxy_pmmc_tx_prio0: pmmc_tx_prio0 {
+> +                       ti,queue-id = <0>;
+> +                       ti,proxy-id = <0>;
+> +               };
+> +
+> +               msgmgr_proxy_pmmc_rx: pmmc_rx {
+> +                       ti,queue-id = <5>;
+> +                       ti,proxy-id = <2>;
+> +                       interrupt-names = "rx";
+> +                       interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>;
+> +               };
+> +       };
+> +
+I think we should get rid of consumer specifics from the provider node...
 
-
-On Tuesday 09 February 2016 01:27 AM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy@ti.com> [160208 01:19]:
->> OMAP5 has 3 thermal zones cpu, core and multimedia.
->> On the other hand DRA7 has 5 thermal zones cpu, gpu, core, dspeve
->> and iva. Currently cpu, core and multimedia are being added via dt
->> and the other 2 are getting added via kernel. Add the missing thermal
->> domains in dt so as give the correct trip numbers, type and temperatures.
->>
->> Tested on DRA7-EVM.
+> +...
+> +       pmmc {
+> +               ...
+> +               mbox-names = "tx", "rx";
+> +               mboxes = <&msgmgr &msgmgr_proxy_pmmc_tx>
+> +                        <&msgmgr &msgmgr_proxy_pmmc_rx>;
+> +               ...
+> +       };
 >
-> Are these critical fixes to have for v4.5-rc cycle or can they
-> wait for v4.6 merge window?
+... and have consumers like
+       pmmc {
+               ...
+               mbox-names = "tx", "rx";
+               mboxes = <&msgmgr 0 0>
+                        <&msgmgr 5 2>;
+       };
 
-Driver configures some default thresholds that are a bit higher but 
-there are some thresholds already for dspeve and iva too. So guess these 
-can wait if its already too late.
+I leave the IRQ for you to decide how to specify - a 'dummy' or
+'valid' always provided as last cell in mboxes or some other way.
+(I'll review other patches in detail later)
 
-Regards,
-Keerthy
-
->
-> Regards,
->
-> Tony
->
->> Keerthy (3):
->>    arm: dts: DRA7: Add DSPEVE thermal data
->>    arm: dts: DRA7: Add IVA thermal data
->>    arm: dts: DRA7: Add missing IVA and DSPEVE thermal domain data
->>
->>   arch/arm/boot/dts/dra7-dspeve-thermal.dtsi | 27 +++++++++++++++++++++++++++
->>   arch/arm/boot/dts/dra7-iva-thermal.dtsi    | 27 +++++++++++++++++++++++++++
->>   arch/arm/boot/dts/dra7.dtsi                |  2 ++
->>   3 files changed, 56 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/dra7-dspeve-thermal.dtsi
->>   create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
->>
->> --
->> 1.9.1
->>
+cheers.
