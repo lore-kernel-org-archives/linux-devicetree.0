@@ -1,80 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 05/11] drivers: pinctrl: add driver for
- Allwinner A64 SoC
-Date: Tue, 9 Feb 2016 18:12:15 +0100
-Message-ID: <20160209171215.GT31506@lukather>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
- <20160201182754.GA14737@excalibur.cnev.de>
- <56AFE0EC.8080207@arm.com>
- <20160202100046.GM4652@lukather>
- <56B0DF26.10203@arm.com>
- <20160204165151.GK4270@lukather>
- <20160208155405.GA4677@rob-hp-laptop>
- <56B8BB1A.8010705@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mW9eGbZzDIYYWqGs"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4F35C2QKGQEMACQKCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56B8BB1A.8010705-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] rtc: s3c: Document required clocks in the DT binding
+Date: Tue,  9 Feb 2016 14:23:52 -0300
+Message-ID: <1455038632-14545-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---mW9eGbZzDIYYWqGs
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The S3C Real Time Clock driver requires the clock and source clock to
+be defined in the device node but that requirement is not documented.
 
-On Mon, Feb 08, 2016 at 03:58:18PM +0000, Andre Przywara wrote:
-> Hi,
-> 
-> On 08/02/16 15:54, Rob Herring wrote:
-> > On Thu, Feb 04, 2016 at 05:51:51PM +0100, Maxime Ripard wrote:
-> >> Hi Andre,
-> >>
-> >> On Tue, Feb 02, 2016 at 04:53:58PM +0000, Andre Przywara wrote:
-> >>>> So, droping it in the filenames, why not. But I'd really like to keep
-> >>>> the same compatible scheme.
-> >>>
-> >>> And I still don't get this: in the DT compatible scheme we always have a
-> >>> vendor prefix, so allwinner,a64 is surely not a mysterious ARM Ltd. core
-> >>> or a new Apple SoC. Instead it is the A64 from Allwinner, full stop. So
-> >>> why should we add an arbitrary and confusing sun50i naming to it (when
-> >>> it actually should be more like "sun8i-a64").
-> >>
-> >> I don't decide on their marketing names. And I know you want to start
-> >> anew with the arm64 SoCs, but the truth is, you don't. Most of the
-> >> compatibles in the DTSI are from earlier SoCs, and we have to keep
-> >> that legacy and remain consistent with it. With all the good and bad
-> >> things a legacy imply.
-> > 
-> > I have to agree. Unless there is some agreement to move to another 
-> > naming scheme, then just follow the same pattern. If sunXi is just a 
-> > made up name outside of Allwinner to provide some logical grouping of 
-> > SoCs, then yes, that probably should not have been done.
-> 
-> So I still don't like it, but will not waste my time or energy on that
-> front.
-> 
-> Maxime, do you want "allwinner,sun50i-a64" or would
-> "allwinner,sunxi-a64" be OK as well?
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-The former will be fine.
+---
 
-Thanks!
-Maxime
+ Documentation/devicetree/bindings/rtc/s3c-rtc.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+index ac2fcd6ff4b8..1068ffce9f91 100644
+--- a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+@@ -14,6 +14,10 @@ Required properties:
+   interrupt number is the rtc alarm interrupt and second interrupt number
+   is the rtc tick interrupt. The number of cells representing a interrupt
+   depends on the parent interrupt controller.
++- clocks: Must contain a list of phandle and clock specifier for the rtc
++          and source clocks.
++- clock-names: Must contain "rtc" and "rtc_src" entries sorted in the
++               same order as the clocks property.
+ 
+ Example:
+ 
+@@ -21,4 +25,6 @@ Example:
+ 		compatible = "samsung,s3c6410-rtc";
+ 		reg = <0x10070000 0x100>;
+ 		interrupts = <44 0 45 0>;
++		clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
++		clock-names = "rtc", "rtc_src";
+ 	};
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---mW9eGbZzDIYYWqGs--
+2.5.0
