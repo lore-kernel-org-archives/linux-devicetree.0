@@ -1,58 +1,55 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Tue, 9 Feb 2016 21:05:20 +0530
-Message-ID: <CABb+yY3cUU6VAkev57sQB7vLGPAwh0YEAb3unsZ+h=Tvm5Nr2Q@mail.gmail.com>
-References: <1454690044-2560-1-git-send-email-nm@ti.com>
-	<1454690044-2560-2-git-send-email-nm@ti.com>
-	<CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
-	<56B9DC30.5040806@ti.com>
-	<CABb+yY24XzsWaSGLMCE4_nvgWx0OhhQmcaP41g06FxdjQYFchg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V7 8/8] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Tue, 9 Feb 2016 15:36:27 +0000
+Message-ID: <20160209153627.GH13270@sirena.org.uk>
+References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
+ <1454171931-27752-9-git-send-email-ldewangan@nvidia.com>
+ <56B9FF80.7010107@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY24XzsWaSGLMCE4_nvgWx0OhhQmcaP41g06FxdjQYFchg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gKijDXBCEH69PxaN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B9FF80.7010107@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 9, 2016 at 8:24 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Feb 9, 2016 at 6:01 PM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
->> On 02/08/2016 10:14 PM, Jassi Brar wrote:
->>
 
->>>> +
->>> I think we should get rid of consumer specifics from the provider node...
->>
->>
->> If I get rid of the consumer nodes, how do you propose I describe the rx
->> queue interrupt(s) in the msmgr dt node (Every Rx queue will have it's
->> own interrupt - and it cannot be reverse computed from queue ID, proxy ID)?
->>
-> One option is to have controller driver construct interrupt name from
-> queue and proxy ids like
->
-> msgmgr: msgmgr@02a00000 {
->    ....
->      interrupt-names = "irq_5_2", "irq_0_0";     /* irq_<queue-id>_<proxy-id> */
->      interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>,
->                         <GIC_SPI 325 IRQ_TYPE_EDGE_RISING>;
-> }
->
-> and have the consumer specify queue and proxy ids in mboxes property like
->  pmmc {
->        ....
->        mbox-names = "tx", "rx";
->        mboxes = <&msgmgr 0 0>
->                           <&msgmgr 5 2>;
-> };
->
-However if the queue+proxy+interrupt tuple is a hard property of a
-channel (which it seems to me now), then probably your original scheme
-of chile node phandle is just as fine.
+--gKijDXBCEH69PxaN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Feb 09, 2016 at 08:32:24PM +0530, Laxman Dewangan wrote:
+
+> I have taken care of all your previous comment on this patch.
+
+> Can you please review?
+
+I don't have this patch.  Possibly I deleted it since it was obvious
+that the series was going to get yet another resend anyway, I really
+don't know.
+
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
+
+--gKijDXBCEH69PxaN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWugd7AAoJECTWi3JdVIfQfEYH/Rugbx86UzpXzHI9b+hu27mI
+1EniidivLsJxSriEDjBsFcuAu0v4wfYrV3ij1zV/ZJsD9JBE07z4JuKHYk59gJ92
+2JrTqfQDF6tuB0zMrI9DsGQUgO1WWBuWxoqwyyW5wSkE4Ujc4kc2L3SpUJXaqzEo
+dQEycBDOQatNIB0x9Fm92gwVfxQPsmmm1cvxNEQ6o+6VaFLhBf+5QHTiio8trIIL
+9nbT37FIZQeIXowlR5zXUh5cz1o+gE6TQt/Q9g08i9bNgaa/kQXNlDONSxdOThT5
+IBwSWPHMrVVjzX1e+5/iv6x1wmL7bFSaRJmIeQMZCMwNoMJAtyi4n9CLWso0Ulg=
+=QCRn
+-----END PGP SIGNATURE-----
+
+--gKijDXBCEH69PxaN--
