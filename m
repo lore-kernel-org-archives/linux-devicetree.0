@@ -1,48 +1,57 @@
 From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] mwifiex: parse chip specific gpio from device tree
-Date: Tue, 9 Feb 2016 14:26:03 +0000
-Message-ID: <95e36f0f77cb4853be1923c112794f5e@SC-EXCH04.marvell.com>
+Subject: RE: [PATCH v3 1/3] mwifiex: register platform specific driver
+Date: Tue, 9 Feb 2016 14:27:07 +0000
+Message-ID: <f6882d2b077748eba10617d114da36f2@SC-EXCH04.marvell.com>
 References: <1454926528-17480-1-git-send-email-akarwar@marvell.com>
- <20160208214707.GA9036@rob-hp-laptop>
- <1be9cc31466a49d2b6673e09795c9497@SC-EXCH04.marvell.com>
- <73667407.d5gJFSzxQK@wuerfel>
+ <8264177.UI5sMC7XWi@wuerfel>
+ <5ef981436ee64f67beef7ca1e2470c69@SC-EXCH04.marvell.com>
+ <6131181.bluDODkWmt@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <73667407.d5gJFSzxQK@wuerfel>
+In-Reply-To: <6131181.bluDODkWmt@wuerfel>
 Content-Language: en-US
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > Please use the GPIO DT binding. Reading a number from DT is not a
-> > > > proper way to get a GPIO number, as you may have more than one
-> > > > GPIO controller in a system and it is not obvious to which
-> > > > controller this number belongs, or if you need to specify things
-> like polarity.
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: Tuesday, February 09, 2016 7:48 PM
+> To: Amitkumar Karwar
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam;
+> wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xinming Hu; Cathy Luo
+> Subject: Re: [PATCH v3 1/3] mwifiex: register platform specific driver
+> 
+> On Tuesday 09 February 2016 13:44:16 Amitkumar Karwar wrote:
+> > > > index 0000000..39b6a74
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mwifiex.txt
+> > > > @@ -0,0 +1,29 @@
+> > > > +mwifiex
+> > > > +------
+> > > > +
+> > > > +Required properties:
+> > > > +
+> > > > +  - name : must be "mwifiex"
 > > >
-> > > My read of this is it is not the host SOC gpio, but the WiFi
-> > > device's GPIO number. The host GPIO is defined in patch 3. We could
-> > > still use the GPIO binding to describe it doing something like
-> > > "marvell,<wifi gpio pin
-> > > name>-gpios". Then the assignment is based on the property name.
+> > > This is a very unusual requirement.
+> > >
+> > > Can you use one of the standard device names instead?
+> > >
+> >
+> > We will make use of marvell-sd8xxx in updated version as per Rob
+> Herring's suggestions.
+> > It includes vendor name and a chipset/device name.
 > 
-> I see.
-> 
-> > Yes. This is not host SOC gpio. It's wifi chip's gpio number.
-> > We will use GPIO binding for this in updated version.
-> 
-> No, if it doesn't refer to a number that is interpreted by the host but
-> is used internally in the device, then leave it as it is, as Rob
-> suggested.
-> 
+> I meant the node name, not the compatible string. This should be
+> something like "ethernet" or "wlan".
 
-It won't be interpreted by host. I will keep it as is and just rename from "mwifiex,chip-gpio" to "marvell,wakeup-gpios"
+Thanks for clarification. I will name the node as "wlan"
 
 Regards,
-Amitkumar Karwar.
+Amitkumar Karwar
 --
 To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
