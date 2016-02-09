@@ -1,45 +1,75 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Tue, 9 Feb 2016 13:50:19 +0300
-Message-ID: <56B9C46B.30708@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
- <56B8D676.1050809@cogentembedded.com> <56B9A3C1.4000600@barix.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 5/5] ARM: dts: r8a7794 add sound support
+Date: Tue, 9 Feb 2016 13:52:09 +0300
+Message-ID: <56B9C4D9.6020808@cogentembedded.com>
+References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
+ <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
+ <87mvraoikj.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B9A3C1.4000600-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <87mvraoikj.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/9/2016 11:30 AM, Petr Kulhavy wrote:
+On 2/9/2016 3:08 AM, Kuninori Morimoto wrote:
 
->>> I have prepared the patch as per you comments.
->>> Unfortunately I cannot use the 4.5 kernel from Felipe's repo as the
->>> of_usb_get_dr_mode() has been replaced with
->>> of_usb_get_dr_mode_by_phy() which requires a PHY node, which does not exist
->>> for DA8xx as we discussed before.
->>>
->>> What shall we do?
+>> Define the generic R8A7794 part of  the sound device node.
+>> This sound device  is a complex one and comprises the Audio Clock Generator
+>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+>> It is up  to the board file to enable the device.
 >>
->>    Doesn't usb_get_dr_mode() work for you?
+>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> (snip)
+>> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
+>> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
+>> +			 <&m2_clk>;
+>> +		clock-names = "ssi-all",
+>> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
+>> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
+>> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
+>> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
+>> +			      "clk_a", "clk_b", "clk_c", "clk_i";
 >
-> I can't really say because I can't test it. Is this the replacement for
-> of_usb_get_dr_mode() ?
+> This patch doesn't support "CTU/MIX/DVC".
 
-    Seems so. The call in musb_dsps.c was just replaced.
+    It doesn't.
 
-> Thanks
-> Petr
+> Your "clocks" includes "R8A7794_CLK_SCU_CTUx_MIXx", and "R8A7794_CLK_SCU_DVCx",
+> but "clock-names" doesn't include "ctu.x", "dvc.x".
 
-MNR, Sergei
+    Oops, thank you for noticing. Will fix.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
