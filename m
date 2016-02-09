@@ -1,102 +1,64 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v6 2/2] clk: clk-pic32: Add PIC32 clock driver
-Date: Mon, 08 Feb 2016 17:02:46 -0800
-Message-ID: <20160209010246.26445.78949@quark.deferred.io>
-References: <1454966902-15228-1-git-send-email-joshua.henderson@microchip.com>
- <1454966902-15228-2-git-send-email-joshua.henderson@microchip.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] ARM64: dts: rockchip: Add IR receiver to GeekBox
+Date: Tue, 9 Feb 2016 04:08:23 +0100
+Message-ID: <56B95827.7060204@suse.de>
+References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
+ <1454897859-7601-7-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1454966902-15228-2-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Purna Chandra Mandal <purna.mandal@microchip.com>, Joshua Henderson <joshua.henderson@microchip.com>, Ralf Baechle <ralf@linux-mips.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454897859-7601-7-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joshua,
+Am 08.02.2016 um 03:17 schrieb Andreas F=C3=A4rber:
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  v2: New
+> =20
+>  arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3368-geekbox.dts
+> index e4523a74050f..e84383fd6f10 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> @@ -63,6 +63,13 @@
+>  		#clock-cells =3D <0>;
+>  	};
+> =20
+> +	ir: ir-receiver {
+> +		compatible =3D "gpio-ir-receiver";
+> +		gpios =3D <&gpio3 30 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&ir_int>;
 
-Quoting Joshua Henderson (2016-02-08 13:28:17)
-> +static const struct of_device_id pic32_clk_match[] __initconst = {
-> +       {
-> +               .compatible = "microchip,pic32mzda-refoclk",
-> +               .data = of_refo_clk_setup,
-> +       },
-> +       {
-> +               .compatible = "microchip,pic32mzda-pbclk",
-> +               .data = of_periph_clk_setup,
-> +       },
-> +       {
-> +               .compatible = "microchip,pic32mzda-syspll",
-> +               .data = of_sys_pll_setup,
-> +       },
-> +       {
-> +               .compatible = "microchip,pic32mzda-sosc",
-> +               .data = of_sosc_clk_setup,
-> +       },
-> +       {
-> +               .compatible = "microchip,pic32mzda-frcdivclk",
-> +               .data = of_frcdiv_setup,
-> +       },
-> +       {
-> +               .compatible = "microchip,pic32mzda-sysclk-v2",
-> +               .data = of_sys_mux_setup,
-> +       },
-> +       {}
-> +};
+		status =3D "disabled";
 
-As I mentioned in my review of the DT binding, instead of having a bunch
-of compatible strings for stuff that is inside of your SoC, you should
-have clock generator nodes in DT, and put the actual clock data here in
-your driver. You might only need one node, perhaps a second for the
-USBPLL.
+Should only be enabled in the new Landingship config. Will fix.
 
-In your case this would result in static inits of struct pic32_spll,
-struct pic32_sclk, etc.
+Andreas
 
-I'm guessing you have a lot of derivative chips with slightly different
-clock trees? If so you should create a drivers/clk/pic32 directory. The
-code in this patch could be common code re-used by your derivatives and
-then you could store your clock data as a platform_driver in the same
-directory that inits the static data and uses these common clk_ops
-functions.
+P.S. See Heiko, two bugs in the new nodes already, glad I have them
+separate. :)
 
-Each chip derivative would have a new compatible string, instead of each
-clock node having a compatible string, which makes no sense.
-
-> +static void __init of_pic32_soc_clock_init(struct device_node *np)
-> +{
-> +       void (*clk_setup)(struct device_node *);
-> +       const struct of_device_id *clk_id;
-> +       struct device_node *childnp;
+> +	};
 > +
-> +       pic32_clk_regbase = of_io_request_and_map(np, 0, of_node_full_name(np));
-> +       if (IS_ERR(pic32_clk_regbase))
-> +               panic("pic32-clk: failed to map registers\n");
-> +
-> +       for_each_child_of_node(np, childnp) {
-> +               clk_id = of_match_node(pic32_clk_match, childnp);
-> +               if (!clk_id)
-> +                       continue;
-> +               clk_setup = clk_id->data;
-> +               clk_setup(childnp);
-> +       }
-> +
-> +       /* register failsafe-clock-monitor NMI */
-> +       register_nmi_notifier(&failsafe_clk_notifier);
-> +}
-> +
-> +CLK_OF_DECLARE(pic32_soc_clk, "microchip,pic32mzda-clk",
-> +              of_pic32_soc_clock_init);
+>  	leds: gpio-leds {
+>  		compatible =3D "gpio-leds";
+> =20
+[snip]
 
-I hate CLK_OF_DECLARE. Sometimes we absolutely must live with
-it, but most of the time you can create a proper platform_driver that
-gets probed and registers its clocks from within the Linux Driver Model.
-
-Please try to make this into a platform_driver. You requested an example
-in V5, so please see:
-
-drivers/clk/qcom/gcc-apq8084.c
-
-Best regards,
-Mike
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
