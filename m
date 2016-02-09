@@ -1,65 +1,80 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Tue, 9 Feb 2016 09:03:11 -0800
-Message-ID: <56BA1BCF.8080309@caviumnetworks.com>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 05/11] drivers: pinctrl: add driver for
+ Allwinner A64 SoC
+Date: Tue, 9 Feb 2016 18:12:15 +0100
+Message-ID: <20160209171215.GT31506@lukather>
+References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
+ <1454348370-3816-6-git-send-email-andre.przywara@arm.com>
+ <20160201182754.GA14737@excalibur.cnev.de>
+ <56AFE0EC.8080207@arm.com>
+ <20160202100046.GM4652@lukather>
+ <56B0DF26.10203@arm.com>
+ <20160204165151.GK4270@lukather>
+ <20160208155405.GA4677@rob-hp-laptop>
+ <56B8BB1A.8010705@arm.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, david.daney@cavium.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mW9eGbZzDIYYWqGs"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4F35C2QKGQEMACQKCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56B8BB1A.8010705-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2016 03:04 AM, Robin Murphy wrote:
-> The existing msi-map code is fine for shifting the entire RID space
-> upwards, but attempting finer-grained remapping reveals a bug. It turns
-> out that we are mistakenly treating the msi-base part as an offset, not
-> as a new base to remap onto, so things get squiffy when rid-base is
-> nonzero. Fix this, and at the same time add a sanity check against
-> having msi-map-mask clash with a nonzero rid-base, as that's another
-> thing one can easily get wrong.
->
-> CC: <stable@vger.kernel.org>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+--mW9eGbZzDIYYWqGs
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-This is equivalent to what I tested yesterday.  Thanks for fixing it...
+On Mon, Feb 08, 2016 at 03:58:18PM +0000, Andre Przywara wrote:
+> Hi,
+> 
+> On 08/02/16 15:54, Rob Herring wrote:
+> > On Thu, Feb 04, 2016 at 05:51:51PM +0100, Maxime Ripard wrote:
+> >> Hi Andre,
+> >>
+> >> On Tue, Feb 02, 2016 at 04:53:58PM +0000, Andre Przywara wrote:
+> >>>> So, droping it in the filenames, why not. But I'd really like to keep
+> >>>> the same compatible scheme.
+> >>>
+> >>> And I still don't get this: in the DT compatible scheme we always have a
+> >>> vendor prefix, so allwinner,a64 is surely not a mysterious ARM Ltd. core
+> >>> or a new Apple SoC. Instead it is the A64 from Allwinner, full stop. So
+> >>> why should we add an arbitrary and confusing sun50i naming to it (when
+> >>> it actually should be more like "sun8i-a64").
+> >>
+> >> I don't decide on their marketing names. And I know you want to start
+> >> anew with the arm64 SoCs, but the truth is, you don't. Most of the
+> >> compatibles in the DTSI are from earlier SoCs, and we have to keep
+> >> that legacy and remain consistent with it. With all the good and bad
+> >> things a legacy imply.
+> > 
+> > I have to agree. Unless there is some agreement to move to another 
+> > naming scheme, then just follow the same pattern. If sunXi is just a 
+> > made up name outside of Allwinner to provide some logical grouping of 
+> > SoCs, then yes, that probably should not have been done.
+> 
+> So I still don't like it, but will not waste my time or energy on that
+> front.
+> 
+> Maxime, do you want "allwinner,sun50i-a64" or would
+> "allwinner,sunxi-a64" be OK as well?
 
-Acked-by: David Daney <david.daney@cavium.com>
+The former will be fine.
 
+Thanks!
+Maxime
 
-
-> ---
->   drivers/of/irq.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 7ee21ae..e7bfc17 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->   		msi_base = be32_to_cpup(msi_map + 2);
->   		rid_len = be32_to_cpup(msi_map + 3);
->
-> +		if (rid_base & ~map_mask) {
-> +			dev_err(parent_dev,
-> +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-base (0x%x)\n",
-> +				map_mask, rid_base);
-> +			return rid_out;
-> +		}
-> +
->   		msi_controller_node = of_find_node_by_phandle(phandle);
->
->   		matched = (masked_rid >= rid_base &&
-> @@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->   	if (!matched)
->   		return rid_out;
->
-> -	rid_out = masked_rid + msi_base;
-> +	rid_out = masked_rid - rid_base + msi_base;
->   	dev_dbg(dev,
->   		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
->   		dev_name(parent_dev), map_mask, rid_base, msi_base,
->
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--mW9eGbZzDIYYWqGs--
