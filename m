@@ -1,42 +1,152 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH V2 01/12] MAINTAINERS: Adding Maintainers for AMD Seattle
- Device Tree
-Date: Tue, 9 Feb 2016 13:49:55 -0600
-Message-ID: <56BA42E3.7030502@amd.com>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <1454954357-8395-2-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160208213858.GG25468@localhost>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/5] ARM: dts: r8a7794 add sound support
+Date: Tue, 9 Feb 2016 20:50:54 +0100
+Message-ID: <20160209195054.GA14008@verge.net.au>
+References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
+ <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160208213858.GG25468@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 09, 2016 at 02:04:07AM +0300, Sergei Shtylyov wrote:
+> Define the generic R8A7794 part of  the sound device node.
+> This sound device  is a complex one and comprises the Audio Clock Generator
+> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+> It is up  to the board file to enable the device.
+> 
+> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm/boot/dts/r8a7794.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 171 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -1309,4 +1309,175 @@
+>  		#iommu-cells = <1>;
+>  		status = "disabled";
+>  	};
+> +
+> +	rcar_sound: sound@ec500000 {
+> +		/*
+> +		 * #sound-dai-cells is required
+> +		 *
+> +		 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
+> +		 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
+> +		 */
+> +		compatible = "renesas,rcar_sound-r8a7794",
+> +			     "renesas,rcar_sound-gen2";
+> +		reg =	<0 0xec500000 0 0x1000>, /* SCU */
+> +			<0 0xec5a0000 0 0x100>,  /* ADG */
+> +			<0 0xec540000 0 0x1000>, /* SSIU */
+> +			<0 0xec541000 0 0x280>,  /* SSI */
+> +			<0 0xec740000 0 0x200>;  /* Audio DMAC peri peri */
+> +		reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
+> +
+> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
+> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
+> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
+> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
+> +			 <&m2_clk>;
+> +		clock-names = "ssi-all",
+> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
+> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
+> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
+> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
+> +			      "clk_a", "clk_b", "clk_c", "clk_i";
+> +		power-domains = <&cpg_clocks>;
+> +
+> +		status = "disabled";
+> +		rcar_sound,src {
+> +			src0: src@0 {
+> +				interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x85>, <&audma0 0x9a>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src1: src@1 {
+> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src2: src@2 {
+> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src3: src@3 {
+> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src4: src@4 {
+> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src5: src@5 {
+> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src6: src@6 {
+> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src7: src@7 {
+> +				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x93>, <&audma0 0xb6>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src8: src@8 {
+> +				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x95>, <&audma0 0xb8>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +			src9: src@9 {
+> +				interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&audma0 0x97>, <&audma0 0xba>;
+> +				dma-names = "rx", "tx";
+> +			};
+> +		};
 
+My reading of the documentation is that src0, 7, 8 and 9 are not
+present on the r8a7794. I am referring to Figure 38.1b or r1.02 of
+the R-Car Gen2 User's Manual.
 
-On 02/08/2016 03:38 PM, Olof Johansson wrote:
-> On Mon, Feb 08, 2016 at 11:59:06AM -0600, Suravee Suthikulpanit wrote:
->> From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->>
->> Adding maintainers for AMD Seattle device tree.
->>
->> Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
->> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
->> Signed-off-by: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
->
-> Thanks, I've applied the series to next/dt64 now.
->
->
-> -Olof
->
-
-Thank you,
-Suravee
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
