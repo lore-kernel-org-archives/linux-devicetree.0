@@ -1,59 +1,96 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V7 1/8] mfd: add device-tree binding doc for PMIC max77620/max20024
-Date: Tue, 9 Feb 2016 23:26:41 +0530
-Message-ID: <56BA2859.2040605@nvidia.com>
-References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com> <1454171931-27752-2-git-send-email-ldewangan@nvidia.com> <20160209154215.GF24522@x1>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
+Date: Tue, 9 Feb 2016 12:10:31 -0600
+Message-ID: <20160209181031.GA23603@kahuna>
+References: <1454690044-2560-1-git-send-email-nm@ti.com>
+ <1454690044-2560-2-git-send-email-nm@ti.com>
+ <CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
+ <56B9DC30.5040806@ti.com>
+ <CABb+yY24XzsWaSGLMCE4_nvgWx0OhhQmcaP41g06FxdjQYFchg@mail.gmail.com>
+ <CAGo_u6qGaQj9Qvjwrm7cD=cr2UjLN+62tcquXYPsQrRjYD=UCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160209154215.GF24522@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGo_u6qGaQj9Qvjwrm7cD=cr2UjLN+62tcquXYPsQrRjYD=UCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09:43-20160209, Nishanth Menon wrote:
+> On Tue, Feb 9, 2016 at 8:54 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+[..]
+> Let me prototype this as part of of_xlate and see if I can pull the
+> qinst data back out.. obviously one negative will be that I will
+> register *all* valid channels as part of probe.. at least based on
+> initial code i wrote today morning..
 
-On Tuesday 09 February 2016 09:12 PM, Lee Jones wrote:
-> On Sat, 30 Jan 2016, Laxman Dewangan wrote:
->
-> +	Normal mode also called as active mode on which all step-down
-> +		regulators, all linear regulators, GPIOs, and the 32kHz
-> +		oscillator are in normal active mode.
-> +	sleep mode: Regulators/GPIOs/clock can go on OFF state based on
-> "can go on OFF state"?
+OK - I believe I have it working now. How does the following look? If
+this looks fine to you, then I will post a v2 including the driver
+update.
+Changes here:
+	- dropped the generic message-manager compatible
+	- dropped child nodes
+	- moved the valid queue information to driver (no longer in dts)
+	- rx interrupts per SoC are explicitly named list in binding(and
+	  dts)
 
-Regulator/GPIO has two states, enable and disable. If sleep mode is 
-configured for these resource and external signal triggers to sleep then 
-this get disabled.
->> +	Different modes of regulators/clock/GPIOs are controlled by the their
->> +FPS configurations. There is different configuration registers for each of
->> +these resources. Typical configurations per resource are:
->> +	FPS source: 	Attach the resource to required FPS source. When
->> +			resources are attached to one of FPS source then
->> +			resournce can be enable/disable when related FPS
-> Have you used spell check?  I suggest you do.
+Texas Instruments' Message Manager Driver
+========================================
 
-My bad, I did but mixed with technical ignorance. Will try best.
+The Texas Instruments' Message Manager is a mailbox controller that has
+configurable queues selectable at SoC(System on Chip) integration. The Message
+manager is broken up into queues in different address regions that are called
+"proxies" - each instance is unidirectional and is instantiated at SoC
+integration level to indicate receive or transmit path.
 
->
->> +			source gets the control signal for ON and OFF.
->> +	Power on slot: 	Slot number on which resource is ON once FPS source
->> +			get ON signal.
-> Can you find another way of explaining this please?
+Message Manager Device Node:
+===========================
+Required properties:
+--------------------
+- compatible:		Shall be: "ti,k2g-message-manager"
+- reg-names 		queue_proxy_region - Map the queue proxy region.
+			queue_state_debug_region - Map the queue state debug
+			region.
+- reg:			Contains the register map per reg-names.
+- #mbox-cells		Shall be 2. Contains the queue ID and proxy ID in that
+		        order referring to the transfer path.
+- interrupt-names:	Contains interrupt names matching the rx transfer path
+			for a given SoC. Receive interrupts shall be of the
+			format: "rx_<QID>_<PID>".
+			For ti,k2g-message-manager, this shall contain:
+				"rx_005_002", "rx_057_002"
+- interrupts:		Contains the interrupt information corresponding to
+			interrupt-names property.
 
-Hmm..
-Does it look fine:
-There is 8 slots for each FPS on which resource can get enabled. This 
-property provides the slot number on which resource gets enabled after 
-FPS sequence started.
+Example(K2G):
+------------
 
+	msgmgr: msgmgr@02a00000 {
+		compatible = "ti,k2g-message-manager";
+		#mbox-cells = <2>;
+		reg-names = "queue_proxy_region", "queue_state_debug_region";
+		reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
+		interrupt-names = "rx_005_002",
+				  "rx_057_002";
+		interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
+	};
 
->
->
-> +
-> +-maxim,enable-sleep: 		    Boolean, enable sleep state of PMIC
-> We already have bindings for sleeping.  Please use a generic one.
-
-Which property? Saw sleep property with vendor prefix.
-
+	pmmc: pmmc {
+		[...]
+		mbox-names = "rx", "tx";
+		# RX queue ID is 5, proxy ID is 2
+		# TX queue ID is 0, proxy ID is 0
+		mboxes= <&msgmgr 5 2>,
+			<&msgmgr 0 0>;
+		[...]
+	};
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
