@@ -1,161 +1,92 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH V3 5/5] Microblaze: Modifying microblaze PCI subsytem to support  generic Xilinx  AXI PCIe Host Bridge IP driver
-Date: Tue, 9 Feb 2016 16:11:58 +0530
-Message-ID: <1455014518-8708-6-git-send-email-bharatku@xilinx.com>
-References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
+Date: Tue, 9 Feb 2016 10:42:47 +0000
+Message-ID: <56B9C2A7.4040402@arm.com>
+References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
+ <56B8B45D.1020902@arm.com> <20160209085633.GA5388@kwain>
+ <20160209090131.GB5388@kwain> <56B9ACE2.1060200@arm.com>
+ <CABM=7knaepbyy4nw_GczVM7E_t6py7gG0ERs8ru_AYoVXvAQ+A@mail.gmail.com>
+ <56B9B1B5.5070106@arm.com>
+ <CABM=7k=-Y+eFB2nUMfMjd3saTSNDsEyfHyYNf-ef8qQc5jCsxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABM=7k=-Y+eFB2nUMfMjd3saTSNDsEyfHyYNf-ef8qQc5jCsxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ronen Shitrit <rshitrit-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barak Wasserstrom <barak-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch does required modifications to microblaze PCI subsystem, to
-work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
-and Zynq.
+On 09/02/16 10:13, Tsahee Zidenberg wrote:
+> On 9 February 2016 at 11:30, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>>
+>> On 09/02/16 09:14, Tsahee Zidenberg wrote:
+>>>
+>>>
+>>> On 9 February 2016 at 11:09, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org
+>>> <mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org>> wrote:
+>>>
+>>>     On 09/02/16 09:01, Antoine Tenart wrote:
+>>>     > On Tue, Feb 09, 2016 at 09:56:33AM +0100, Antoine Tenart wrote:
+>>>     >> Hi Marc,
+>>>     >>
+>>>     >> On Mon, Feb 08, 2016 at 03:29:33PM +0000, Marc Zyngier wrote:
+>>>     >>> On 08/02/16 09:11, Antoine Tenart wrote:
+>>>     >>>
+>>>     >>>> +          gic: gic@f0100000 {
+>>>     >>>> +                  compatible = "arm,gic-v3";
+>>>     >>>> +                  reg = <0x0 0xf0200000 0x0 0x10000>,     /* GIC Dist */
+>>>     >>>> +                        <0x0 0xf0280000 0x0 0x200000>,    /* GICR */
+>>>     >>>> +                        <0x0 0xf0100000 0x0 0x2000>;      /* GICC */
+>>>     >>>> +                  interrupt-controller;
+>>>     >>>> +                  #interrupt-cells = <3>;
+>>>     >>>> +          };
+>>>     >>>
+>>>     >>> Something is wrong here. Either you are missing GICH and GICV (assuming
+>>>     >>> you have legacy support), or you have an extra GICC region (which
+>>>     >>> doesn't make sense on its own).
+>>>     >>
+>>>     >> I'll add the missing regions.
+>>>     >
+>>>     > Hmm, in fact the GICC region shouldn't be there. I'll make some tests
+>>>     > and remove it.
+>>>
+>>>     If you have a GICv3 with legacy support, you will probably have GICC,
+>>>     GICH and GICV. Linux itself will only use GICD and GICR, but it needs at
+>>>     least GICV to be able to virtualize GICv2 guests. And GICV is not
+>>>     allowed to exist without GICC and GICH, so I really recommend that you
+>>>     keep GICC around.
+>>>
+>>>
+>>> We use the GIC without legacy support (we disable it in early boot
+>>> stages), so I think removing the GICC region is the better solution.
+>>
+>> Disabling legacy support doesn't mean that:
+>> - the HW isn't present
+>> - the associated regions are not useful
+>>
+> By "disabling lecgacy support in early boot" I don't just mean that
+> ARE bit will be set, but it will actually be RAO/WI. There will be no
+> way for SW to enable it and use these registers (which, sadly, means
+> that there will be no way to enable gicv2 virtualization). If you
+> insist - I will dig up the supposed location of GICV and GICH - yet it
+> will be both untested and entirely unusable.
 
-Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
----
-Changes:
-Removed pcibios_get_phb_of_node in pci-common.c, using generic version
-instead.
-Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
-Modified pcibios_align_resource in pci-common.c, as per generic
-architecuture, removed temporary variable.
-Removed pci_domain_nr in pci-common.c, instead using generic code.
-Added pcibios_add_device in pci-common.c, as per generic architecuture.
-Adding Kernel configuration in arch/microblaze as required for generic PCI
-domains.
-Added kernel configuration for driver to support Microblaze.
----
- arch/microblaze/Kconfig          |  3 +++
- arch/microblaze/pci/pci-common.c | 56 +++++++---------------------------------
- drivers/pci/host/Kconfig         |  2 +-
- 3 files changed, 14 insertions(+), 47 deletions(-)
+That's quite sad indeed. You are pointlessly breaking existing software.
+But hey, that's your choice. At that point, I can't be bothered to care.
 
-diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-index 0bce820..c3702b9 100644
---- a/arch/microblaze/Kconfig
-+++ b/arch/microblaze/Kconfig
-@@ -271,6 +271,9 @@ config PCI
- config PCI_DOMAINS
- 	def_bool PCI
- 
-+config PCI_DOMAINS_GENERIC
-+	def_bool PCI_DOMAINS
-+
- config PCI_SYSCALL
- 	def_bool PCI
- 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index ae838ed..35654be 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t address)
- }
- EXPORT_SYMBOL_GPL(pci_address_to_pio);
- 
--/*
-- * Return the domain number for this bus.
-- */
--int pci_domain_nr(struct pci_bus *bus)
--{
--	struct pci_controller *hose = pci_bus_to_host(bus);
--
--	return hose->global_number;
--}
--EXPORT_SYMBOL(pci_domain_nr);
--
- /* This routine is meant to be used early during boot, when the
-  * PCI bus numbers have not yet been assigned, and you need to
-  * issue PCI config cycles to an OF device.
-@@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus *bus)
- 
- void pcibios_fixup_bus(struct pci_bus *bus)
- {
--	/* When called from the generic PCI probe, read PCI<->PCI bridge
--	 * bases. This is -not- called when generating the PCI tree from
--	 * the OF device-tree.
--	 */
--	if (bus->self != NULL)
--		pci_read_bridge_bases(bus);
--
--	/* Now fixup the bus bus */
--	pcibios_setup_bus_self(bus);
--
--	/* Now fixup devices on that bus */
--	pcibios_setup_bus_devices(bus);
-+	/* nothing to do */
- }
- EXPORT_SYMBOL(pcibios_fixup_bus);
- 
--static int skip_isa_ioresource_align(struct pci_dev *dev)
--{
--	return 0;
--}
--
- /*
-  * We need to avoid collisions with `mirrored' VGA ports
-  * and other strange ISA hardware, so we always want the
-@@ -899,20 +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
- resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- 				resource_size_t size, resource_size_t align)
- {
--	struct pci_dev *dev = data;
--	resource_size_t start = res->start;
--
--	if (res->flags & IORESOURCE_IO) {
--		if (skip_isa_ioresource_align(dev))
--			return start;
--		if (start & 0x300)
--			start = (start + 0x3ff) & ~0x3ff;
--	}
--
--	return start;
-+	return res->start;
- }
- EXPORT_SYMBOL(pcibios_align_resource);
- 
-+int pcibios_add_device(struct pci_dev *dev)
-+{
-+	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(pcibios_add_device);
-+
- /*
-  * Reparent resource children of pr that conflict with res
-  * under res, and make res replace those children.
-@@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
- 		 (unsigned long)hose->io_base_virt - _IO_BASE);
- }
- 
--struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
--{
--	struct pci_controller *hose = bus->sysdata;
--
--	return of_node_get(hose->dn);
--}
--
- static void pcibios_scan_phb(struct pci_controller *hose)
- {
- 	LIST_HEAD(resources);
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index d5e58ba..7c56c2e 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -79,7 +79,7 @@ config PCI_KEYSTONE
- 
- config PCIE_XILINX
- 	bool "Xilinx AXI PCIe host bridge support"
--	depends on ARCH_ZYNQ
-+	depends on ARCH_ZYNQ || MICROBLAZE
- 	help
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
+> We will add an entry for the maintenance interrupt, as it really can
+> be used by future configurations.
+
+Well, at least you'll be able to run GICv3 guests, assuming everything
+else is usable.
+
+	M.
 -- 
-2.1.1
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
