@@ -1,36 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
-Date: Tue, 09 Feb 2016 15:59:17 +0100
-Message-ID: <4018438.bPuTyoUuqf@wuerfel>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com> <1454954357-8395-10-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V7 8/8] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Tue, 9 Feb 2016 20:32:24 +0530
+Message-ID: <56B9FF80.7010107@nvidia.com>
+References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com> <1454171931-27752-9-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454954357-8395-10-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1454171931-27752-9-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 February 2016 11:59:14 Suravee Suthikulpanit wrote:
-> +
-> +               ipmi_kcs: kcs@e0010000 {
-> +                       status = "disabled";
-> +                       compatible = "ipmi-kcs";
-> +                       device_type = "ipmi";
-> +                       reg = <0x0 0xe0010000 0 0x8>;
-> +                       interrupts = <0 389 4>;
-> +                       interrupt-names = "ipmi_kcs";
-> +                       reg-size = <1>;
-> +                       reg-spacing = <4>;
-> +               };
->         };
-> 
+Hi Mark,
 
-I see we don't have a binding file for this, can you add one please?
+I have taken care of all your previous comment on this patch.
+
+Can you please review?
+
+I got the macro from Lee's and spinning the V8 of this series so if 
+there is any thing, I can take care on my next version.
+
+Thanks,
+Laxman
 
 
-Why the strange name for the interrupt?
+On Saturday 30 January 2016 10:08 PM, Laxman Dewangan wrote:
+> MAXIM Semiconductor's PMIC, MAX77620 and MAX20024 have the
+> multiple DCDC and LDOs. This supplies the power to different
+> components of the system.
+> Also these rails has configuration for ramp time, flexible
+> power sequence, slew rate etc.
+>
+> Add regulator driver to access these rails via regulator APIs.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>
+> - Cleanup code based on comment received on mfd/rtc.
+> - Avoid duplication on error message.
+>
+> Changes form V2:
+> - Run coccicheck and checkpatch in strict mode for the alignment.
+> - Refactor Regulator driver to use core API for DT parsing.
+> - Update based on API changes.
+>
+> Changes from V3:
+> - Change all sys initcall to module driver.
+> - change the max77620_read argument to unisgned int from u8.
+>   
+> Changes from V4:
+> - Added DT binding document as devicetree/bindings/regulator/regulator-max77620.txt
+> - Detail out properties.
+>
+> Changes from V5:
+> - Separate out DT binding doc for regulator.
+>
+> Changes from V6:
+> - Use direct regmap APIs.
+> - Drop active-discharge configuration as it wil be move to core and through
+>    callback. Follow on patches are palnned for this.
+>
 
-	Arnd
