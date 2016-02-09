@@ -1,152 +1,135 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 5/5] ARM: dts: r8a7794 add sound support
-Date: Tue, 9 Feb 2016 20:50:54 +0100
-Message-ID: <20160209195054.GA14008@verge.net.au>
-References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
- <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun7i: Enable USB DRC on Itead Ibox
+Date: Tue, 9 Feb 2016 20:54:52 +0100
+Message-ID: <56BA440C.5030903@redhat.com>
+References: <1455010156-27754-1-git-send-email-codekipper@gmail.com>
+ <20160209183420.GW31506@lukather>
+ <CAEKpxBncN5-WYTNTw+8jfZypiMNfJt=55qEx2zTPfvZmjr9XdQ@mail.gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBE4I5G2QKGQELBN6F5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAEKpxBncN5-WYTNTw+8jfZypiMNfJt=55qEx2zTPfvZmjr9XdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 02:04:07AM +0300, Sergei Shtylyov wrote:
-> Define the generic R8A7794 part of  the sound device node.
-> This sound device  is a complex one and comprises the Audio Clock Generator
-> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
-> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
-> It is up  to the board file to enable the device.
-> 
-> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm/boot/dts/r8a7794.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 171 insertions(+)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-> @@ -1309,4 +1309,175 @@
->  		#iommu-cells = <1>;
->  		status = "disabled";
->  	};
-> +
-> +	rcar_sound: sound@ec500000 {
-> +		/*
-> +		 * #sound-dai-cells is required
-> +		 *
-> +		 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
-> +		 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
-> +		 */
-> +		compatible = "renesas,rcar_sound-r8a7794",
-> +			     "renesas,rcar_sound-gen2";
-> +		reg =	<0 0xec500000 0 0x1000>, /* SCU */
-> +			<0 0xec5a0000 0 0x100>,  /* ADG */
-> +			<0 0xec540000 0 0x1000>, /* SSIU */
-> +			<0 0xec541000 0 0x280>,  /* SSI */
-> +			<0 0xec740000 0 0x200>;  /* Audio DMAC peri peri */
-> +		reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
-> +
-> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
-> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
-> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
-> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
-> +			 <&m2_clk>;
-> +		clock-names = "ssi-all",
-> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
-> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
-> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
-> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
-> +			      "clk_a", "clk_b", "clk_c", "clk_i";
-> +		power-domains = <&cpg_clocks>;
-> +
-> +		status = "disabled";
-> +		rcar_sound,src {
-> +			src0: src@0 {
-> +				interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x85>, <&audma0 0x9a>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src1: src@1 {
-> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src2: src@2 {
-> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src3: src@3 {
-> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src4: src@4 {
-> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src5: src@5 {
-> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src6: src@6 {
-> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src7: src@7 {
-> +				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x93>, <&audma0 0xb6>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src8: src@8 {
-> +				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x95>, <&audma0 0xb8>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +			src9: src@9 {
-> +				interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
-> +				dmas = <&audma0 0x97>, <&audma0 0xba>;
-> +				dma-names = "rx", "tx";
-> +			};
-> +		};
+Hi,
 
-My reading of the documentation is that src0, 7, 8 and 9 are not
-present on the r8a7794. I am referring to Figure 38.1b or r1.02 of
-the R-Car Gen2 User's Manual.
+On 02/09/2016 08:10 PM, Code Kipper wrote:
+>
+>
+> On 9 February 2016 at 19:34, Maxime Ripard <maxime.ripard@free-electrons.=
+com <mailto:maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>> wrote:
+>  > Hi,
+>  >
+>  > On Tue, Feb 09, 2016 at 10:29:16AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <mailto=
+:codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>  >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <mailto:codekipper-Re5JQEeQqe8@public.gmane.org=
+m>>
+>  >>
+>  >> Enable the otg/drc usb controller on the Itead Ibox device.
+>  >>
+>  >> Note this board has the otg-vbus connected directly to the 5v-dcc of
+>  >> the board, so there is no vbus0 regulator, nor vbus0-det.
+>  >>
+>  >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <mailto:codekipper=
+@gmail.com>>
+>  >> ---
+>  >> Changes since v1:
+>  >> - Added comment concerning vbus0 regulator and detection to commit me=
+ssage
+>  >>
+>  >> ---
+>  >>  arch/arm/boot/dts/sun7i-a20-itead-ibox.dts     | 14 ++++++++++++++
+>  >>  arch/arm/boot/dts/sunxi-itead-core-common.dtsi |  9 +++++++++
+>  >>  2 files changed, 23 insertions(+)
+>  >>
+>  >> diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-itead-ibox.dts
+>  >> index 661c21d..a512581 100644
+>  >> --- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>  >> +++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+>  >> @@ -118,8 +118,22 @@
+>  >>               allwinner,drive =3D <SUN4I_PINCTRL_20_MA>;
+>  >>               allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>  >>       };
+>  >> +
+>  >> +     usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>  >> +             allwinner,pins =3D "PH4";
+>  >> +             allwinner,function =3D "gpio_in";
+>  >> +             allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+>  >> +             allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>  >> +     };
+>  >>  };
+>  >>
+>  >>  &reg_ahci_5v {
+>  >>       status =3D "okay";
+>  >>  };
+>  >> +
+>  >> +&usbphy {
+>  >> +     pinctrl-names =3D "default";
+>  >> +     pinctrl-0 =3D <&usb0_id_detect_pin>;
+>  >> +     usb0_id_det-gpio =3D <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+>  >> +     status =3D "okay";
+>  >> +};
+>  >> diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi b/arch/ar=
+m/boot/dts/sunxi-itead-core-common.dtsi
+>  >> index 2565d51..d22eea3 100644
+>  >> --- a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>  >> +++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+>  >> @@ -88,6 +88,10 @@
+>  >>       status =3D "okay";
+>  >>  };
+>  >>
+>  >> +&otg_sram {
+>  >> +     status =3D "okay";
+>  >> +};
+>  >> +
+>  >>  #include "axp209.dtsi"
+>  >>
+>  >>  &reg_dcdc2 {
+>  >> @@ -129,6 +133,11 @@
+>  >>       status =3D "okay";
+>  >>  };
+>  >>
+>  >> +&usb_otg {
+>  >> +     dr_mode =3D "otg";
+>  >
+>  > If VBUS is tied to 5V, without anyway to disable it, then it cannot do
+>  > OTG.
+>  >
+>  > The mode it can do is host.
+> This is the same patch as what was applied to cubieboard2 https://git.ker=
+nel.org/cgit/linux/kernel/git/next/linux-next.git/commit/arch/arm/boot/dts/=
+sun7i-a20-cubieboard2.dts?id=3Db8962f7ee700580a148e05eceb2302bcfc59ffbc whi=
+ch it looks like this hardware copies. I can power the Ibox using this USB =
+socket and when I plug in a usb2ethernet device then it is detected.
 
-[snip]
+Right, the otg port on the cubieboard can work in otg mode just fine, as lo=
+ng as either the
+otg is the only power supply, or the 5v supplied to the power barrel comes =
+from the same
+source as the otg 5v. Note that only allowing host mode does not take away =
+this limitation
+as the 2 5v pins are hardwired together, so we might just as well offer otg=
+ support.
+
+Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
