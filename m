@@ -1,69 +1,96 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Tue, 9 Feb 2016 11:19:02 +0000
-Message-ID: <alpine.DEB.2.02.1602091116240.27008@kaball.uk.xensource.com>
-References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
- <CAJZ5v0id-035AtyQ_SccPuCxD7+pa6GCgj3WBAojM+rFqssGQQ@mail.gmail.com>
- <alpine.DEB.2.02.1602081054350.27008@kaball.uk.xensource.com>
- <2213954.ztOe55fprN@vostro.rjw.lan>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [RFC v5 01/15] WIP: clk: add Atheros AR933X SoCs clock driver
+Date: Tue, 9 Feb 2016 12:05:36 +0100
+Message-ID: <201602091205.36276.marex@denx.de>
+References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com> <1455005641-7079-2-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2213954.ztOe55fprN@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, julien.grall@citrix.com, xen-devel@lists.xen.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-efi@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ian.campbell@citrix.com, Shannon Zhao <shannon.zhao@linaro.org>, peter.huangpeng@huawei.com, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455005641-7079-2-git-send-email-antonynpavlov@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: linux-mips@linux-mips.org, Wills Wang <wills.wang@live.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Alban Bedel <albeu@free.fr>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
-> On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
-> > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
-> > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong@huawei.com> wrote:
-> > > > From: Shannon Zhao <shannon.zhao@linaro.org>
-> > > >
-> > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
-> > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
-> > > > UART is used by Xen. So here it hides UART from Dom0.
-> > > >
-> > > > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> > > > Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-> > > 
-> > > Well, this doesn't look right to me.
-> > > 
-> > > We need to find a nicer way to achieve what you want.
-> > 
-> > I take that you are talking about how to honor the STAO table in Linux.
-> > Do you have any concrete suggestions?
+On Tuesday, February 09, 2016 at 09:13:47 AM, Antony Pavlov wrote:
+> This driver can be easely upgraded for other Atheros
+> SoCs (e.g. AR724X/AR913X) support.
 > 
-> I do.
-> 
-> The last hunk of the patch is likely what it needs to be, although I'm
-> not sure if the place it is added to is the right one.  That's a minor thing,
-> though.
-> 
-> The other part is problematic.  Not that as it doesn't work, but because of
-> how it works.  With these changes the device will be visible to the OS (in
-> fact to user space even), but will never be "present".  I'm not sure if
-> that's what you want?
-> 
-> It might be better to add a check to acpi_bus_type_and_status() that will
-> evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
-> way the device won't be visible at all.
 
-Something like below?  Actually your suggestion is better, thank you!
+Hi!
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 78d5f02..4778c51 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
-+	if (acpi_check_device_is_ignored(handle))
-+		return -ENODEV;
-+
- 	switch (acpi_type) {
- 	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
- 	case ACPI_TYPE_DEVICE:
+[...]
 
+> +static unsigned long
+> +ath79_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+> +{
+> +	struct ath79_clk *ath79_clk = to_ath79_clk(hw);
+> +	struct ath79_cblk *cblk = ath79_clk->cblk;
+> +	const struct ath79_clk_info *clk_info =
+> &cblk->clock_info[ath79_clk->idx]; +	const struct ath79_pll_info
+> *pll_info;
+> +	unsigned long rate;
+> +	unsigned long freq;
+> +	u32 clock_ctrl;
+> +	u32 cpu_config;
+> +	u32 t;
+> +
+> +	BUG_ON(clk_info->type != ATH79_CLK_PLL);
+> +
+> +	clock_ctrl = __raw_readl(cblk->base + AR933X_PLL_CLOCK_CTRL_REG);
+> +
+> +	if (clock_ctrl & AR933X_PLL_CLOCK_CTRL_BYPASS) {
+> +		return parent_rate;
+> +	}
+
+You can drop the {} here.
+
+> +	cpu_config = __raw_readl(cblk->base + AR933X_PLL_CPU_CONFIG_REG);
+> +
+> +	t = (cpu_config >> AR933X_PLL_CPU_CONFIG_REFDIV_SHIFT) &
+> +	    AR933X_PLL_CPU_CONFIG_REFDIV_MASK;
+> +	freq = parent_rate / t;
+> +
+> +	t = (cpu_config >> AR933X_PLL_CPU_CONFIG_NINT_SHIFT) &
+> +	    AR933X_PLL_CPU_CONFIG_NINT_MASK;
+> +	freq *= t;
+> +
+> +	t = (cpu_config >> AR933X_PLL_CPU_CONFIG_OUTDIV_SHIFT) &
+> +	    AR933X_PLL_CPU_CONFIG_OUTDIV_MASK;
+> +	if (t == 0)
+> +		t = 1;
+> +
+> +	freq >>= t;
+> +
+> +	pll_info = &clk_info->pll;
+> +
+> +	t = ((clock_ctrl >> pll_info->div_shift) & pll_info->div_mask) + 1;
+> +	rate = freq / t;
+> +
+> +	return rate;
+> +}
+
+[...]
+
+> +static void __init ar9130_init(struct device_node *np)
+> +{
+> +	int retval;
+> +	struct ath79_cblk *cblk;
+> +
+> +	cblk = ath79_cblk_new(ar9331_clocks, ARRAY_SIZE(ar9331_clocks), np);
+> +	if (!cblk) {
+> +		pr_err("%s: failed to initialise clk block\n", __func__);
+> +		return;
+> +	}
+> +
+> +	retval = ath79_cblk_register_clocks(cblk);
+> +	if (retval)
+> +		pr_err("%s: failed to register clocks\n", __func__);
+> +}
+> +CLK_OF_DECLARE(ar933x_clk, "qca,ar9330-pll", ar9130_init);
+
+Is that ar9130_init name correct? Shouldn't it be ar9330_init ?
+
+Looks good otherwise, thanks!
