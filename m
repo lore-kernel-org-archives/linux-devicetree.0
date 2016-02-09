@@ -1,13 +1,13 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v5 14/15] MIPS: ath79: add DPT-Module support
-Date: Tue,  9 Feb 2016 11:14:00 +0300
-Message-ID: <1455005641-7079-15-git-send-email-antonynpavlov@gmail.com>
+Subject: [RFC v5 12/15] MIPS: ath79: add initial support for Onion Omega
+Date: Tue,  9 Feb 2016 11:13:58 +0300
+Message-ID: <1455005641-7079-13-git-send-email-antonynpavlov@gmail.com>
 References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455005641-7079-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Daan Pape <daan-xfAQRCeQ3RHuufBYgWm87A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "L . D . Pinney" <ldpinney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boken Lin <bl-Jj7zZGp/71Y@public.gmane.org>, Jacky Huang <huangfangcheng-9Onoh4P/yGk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The following features are supported:
@@ -17,36 +17,38 @@ The following features are supported:
   * USB host;
   * GPIO keys and LEDs.
 
-Links:
-
-  * https://dptechnics.com/shop/index.php?route=product/product&path=59&product_id=50
-  * https://dptechnics.com/shop/index.php?route=product/product&path=59&product_id=63
+Please see https://onion.io/omega for details.
 
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daan Pape <daan-xfAQRCeQ3RHuufBYgWm87A@public.gmane.org>
+Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: L. D. Pinney <ldpinney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boken Lin <bl-Jj7zZGp/71Y@public.gmane.org>
+Cc: Jacky Huang <huangfangcheng-9Onoh4P/yGk@public.gmane.org>
 Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/boot/dts/qca/Makefile       |  1 +
- arch/mips/boot/dts/qca/dpt_module.dts | 77 +++++++++++++++++++++++++++++++++++
+ arch/mips/boot/dts/qca/Makefile  |  1 +
+ arch/mips/boot/dts/qca/omega.dts | 77 ++++++++++++++++++++++++++++++++++++++++
  2 files changed, 78 insertions(+)
 
 diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
-index ca2ecb8..7d4bf43 100644
+index e949cff..ca2ecb8 100644
 --- a/arch/mips/boot/dts/qca/Makefile
 +++ b/arch/mips/boot/dts/qca/Makefile
-@@ -1,5 +1,6 @@
+@@ -1,6 +1,7 @@
  # All DTBs
  dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
-+dtb-$(CONFIG_ATH79)			+= dpt_module.dtb
  dtb-$(CONFIG_ATH79)			+= dragino_ms14.dtb
- dtb-$(CONFIG_ATH79)			+= omega.dtb
++dtb-$(CONFIG_ATH79)			+= omega.dtb
  dtb-$(CONFIG_ATH79)			+= tl_mr3020.dtb
-diff --git a/arch/mips/boot/dts/qca/dpt_module.dts b/arch/mips/boot/dts/qca/dpt_module.dts
+ 
+ # Force kbuild to make empty built-in.o if necessary
+diff --git a/arch/mips/boot/dts/qca/omega.dts b/arch/mips/boot/dts/qca/omega.dts
 new file mode 100644
-index 0000000..f4ccb74
+index 0000000..f4a7ed0
 --- /dev/null
-+++ b/arch/mips/boot/dts/qca/dpt_module.dts
++++ b/arch/mips/boot/dts/qca/omega.dts
 @@ -0,0 +1,77 @@
 +/dts-v1/;
 +
@@ -56,8 +58,8 @@ index 0000000..f4ccb74
 +#include "ar9331.dtsi"
 +
 +/ {
-+	model = "DPTechnics DPT-Module";
-+	compatible = "dptechnics,dpt-module";
++	model = "Onion Omega";
++	compatible = "onion,omega";
 +
 +	aliases {
 +		serial0 = &uart;
@@ -72,7 +74,7 @@ index 0000000..f4ccb74
 +		compatible = "gpio-leds";
 +
 +		system {
-+			label = "dpt-module:green:system";
++			label = "onion:amber:system";
 +			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
 +			default-state = "off";
 +		};
@@ -87,7 +89,7 @@ index 0000000..f4ccb74
 +		button@0 {
 +			label = "reset";
 +			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
 +		};
 +	};
 +};
