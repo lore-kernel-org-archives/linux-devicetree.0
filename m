@@ -1,157 +1,50 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v5 06/15] MIPS: ath79: add initial support for TP-LINK MR3020
-Date: Tue,  9 Feb 2016 11:13:52 +0300
-Message-ID: <1455005641-7079-7-git-send-email-antonynpavlov@gmail.com>
-References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455005641-7079-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: [PATCH] arm64: dts: r8a7795: Add GIC-400 virtual interfaces
+Date: Tue, 9 Feb 2016 09:14:52 +0100
+Message-ID: <1455005692-9382-1-git-send-email-dirk.behme@de.bosch.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, horms@verge.net.au
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dirk Behme <dirk.behme@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-The following features are supported:
+Besides the distributor and the CPU interface the GIC-400 additionally
+supports the virtual interface control blocks and the virtual CPU interfaces.
 
-  * UART;
-  * SPI-flash;
-  * GPIO keys and LEDs.
+Add the physical base addresses and size for these.
 
-Links:
+See
 
-  * http://www.tp-link.com/en/products/details/?model=TL-MR3020
-  * http://wiki.openwrt.org/toh/tp-link/tl-mr3020
-  * https://wikidevi.com/wiki/TP-LINK_TL-MR3020
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/index.html
+-> 3.2. GIC-400 register map
 
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+and Linux kernel's
+
+Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+
+for more details.
+
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
 ---
- arch/mips/boot/dts/qca/Makefile      |  1 +
- arch/mips/boot/dts/qca/tl_mr3020.dts | 99 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
-index 14bd225..504c4b1 100644
---- a/arch/mips/boot/dts/qca/Makefile
-+++ b/arch/mips/boot/dts/qca/Makefile
-@@ -1,5 +1,6 @@
- # All DTBs
- dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
-+dtb-$(CONFIG_ATH79)			+= tl_mr3020.dtb
- 
- # Force kbuild to make empty built-in.o if necessary
- obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/qca/tl_mr3020.dts b/arch/mips/boot/dts/qca/tl_mr3020.dts
-new file mode 100644
-index 0000000..2a1b296
---- /dev/null
-+++ b/arch/mips/boot/dts/qca/tl_mr3020.dts
-@@ -0,0 +1,99 @@
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+#include "ar9331.dtsi"
-+
-+/ {
-+	model = "TP-Link TL-MR3020";
-+	compatible = "tplink,tl-mr3020";
-+
-+	aliases {
-+		serial0 = &uart;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x2000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		wlan {
-+			label = "tp-link:green:wlan";
-+			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		lan {
-+			label = "tp-link:green:lan";
-+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		wps {
-+			label = "tp-link:green:wps";
-+			gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led3g {
-+			label = "tp-link:green:3g";
-+			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		button@0 {
-+			label = "wps";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		button@1 {
-+			label = "sw1";
-+			linux,code = <BTN_0>;
-+			gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		button@2 {
-+			label = "sw2";
-+			linux,code = <BTN_1>;
-+			gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&ref {
-+	clock-frequency = <25000000>;
-+};
-+
-+&uart {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
-+&spi {
-+	num-chipselects = <1>;
-+	status = "okay";
-+
-+	/* Spansion S25FL032PIF SPI flash */
-+	spiflash: s25sl032p@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25sl032p", "jedec,spi-nor";
-+		spi-max-frequency = <104000000>;
-+		reg = <0>;
-+	};
-+};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 8f1ed23..0163967 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -130,7 +130,9 @@
+ 			#address-cells = <0>;
+ 			interrupt-controller;
+ 			reg = <0x0 0xf1010000 0 0x1000>,
+-			      <0x0 0xf1020000 0 0x2000>;
++			      <0x0 0xf1020000 0 0x2000>,
++			      <0x0 0xf1040000 0 0x2000>,
++			      <0x0 0xf1060000 0 0x2000>;
+ 			interrupts = <GIC_PPI 9
+ 					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
 -- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.1
