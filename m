@@ -1,43 +1,54 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/3] arm: dts: DRA7: Add IVA and DSPEVE thermal domain
- data
-Date: Tue, 9 Feb 2016 07:58:11 -0800
-Message-ID: <20160209155811.GH19432@atomide.com>
-References: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
- <20160208195704.GW19432@atomide.com>
- <56B95EF7.9080107@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
+Date: Tue, 09 Feb 2016 17:00:48 +0100
+Message-ID: <15181064.RzzsN4CWec@wuerfel>
+References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com> <4018438.bPuTyoUuqf@wuerfel> <56BA0A2B.5000705@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56B95EF7.9080107@ti.com>
+In-Reply-To: <56BA0A2B.5000705@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <a0393675@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>, edubezval@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com
+To: linux-arm-kernel@lists.infradead.org
+Cc: Brijesh Singh <brijesh.singh@amd.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, galak@codeaurora.org, thomas.lendacky@amd.com, brijeshkumar.singh@amd.com
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <a0393675@ti.com> [160208 19:38]:
-> 
-> 
-> On Tuesday 09 February 2016 01:27 AM, Tony Lindgren wrote:
-> >* Keerthy <j-keerthy@ti.com> [160208 01:19]:
-> >>OMAP5 has 3 thermal zones cpu, core and multimedia.
-> >>On the other hand DRA7 has 5 thermal zones cpu, gpu, core, dspeve
-> >>and iva. Currently cpu, core and multimedia are being added via dt
-> >>and the other 2 are getting added via kernel. Add the missing thermal
-> >>domains in dt so as give the correct trip numbers, type and temperatures.
-> >>
-> >>Tested on DRA7-EVM.
+On Tuesday 09 February 2016 09:47:55 Brijesh Singh wrote:
+> > 
+> > I see we don't have a binding file for this, can you add one please?
 > >
-> >Are these critical fixes to have for v4.5-rc cycle or can they
-> >wait for v4.6 merge window?
+> There is binding file ipmi.txt [1]. Am I missing something ?
+>  
+> [1] http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/ipmi.txt
+
+Sorry, my mistake: I was looking for "ipmi_kcs", which is not in there.
+
+> > 
+> > Why the strange name for the interrupt?
+> > 
 > 
-> Driver configures some default thresholds that are a bit higher but there
-> are some thresholds already for dspeve and iva too. So guess these can wait
-> if its already too late.
+> Now I don't remember the doc but sometime back while implementing BMC on Seattle I saw that interrupt was labeled as "ipmi_kcs"
+> hence used the same name in DT. But if you want to use different name then let me know the string and will update it.
+> 
+> Theoretically IPMI system interface supports the following interface and any of these interfaces can be used by
+> A57 to communicate with BMC:
+> 
+> * Keyboard controller style (KCS)
+> * System Management Interface (SMIC)
+> * Block transfer (BT)
+> * SMBus system interface (SSIF)
+> 
+> AMD Seattle platform supports "KCS".
+> 
 
-OK let's rather wait then.
+The important part for interrupt/reg/... names is that you must use exactly the
+names that are listed in the binding. If there is no name in there, it's better
+not to add the name property.
 
-Regards,
+The other point is that "ipmi_kcs" is a name that is picked really badly, as it
+uses a '_' character while DT properties by convention use '-' between names,
+and the name of the IRQ is the same as the device itself, which is really
+not a useful way to disambiguate multiple interrupts in the same device, if
+someone ever adds another irq line.
 
-Tony
+	Arnd
