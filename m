@@ -1,36 +1,51 @@
-From: Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
-Date: Tue, 9 Feb 2016 10:11:38 -0600
-Message-ID: <56BA0FBA.1010202@amd.com>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <4018438.bPuTyoUuqf@wuerfel> <56BA0A2B.5000705@amd.com>
- <15181064.RzzsN4CWec@wuerfel>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+Date: Tue, 9 Feb 2016 16:17:33 +0000
+Message-ID: <56BA111D.9050807@arm.com>
+References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
+ <56B9D62E.8080003@arm.com>
+ <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+ <20160209160812.GC9332@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <15181064.RzzsN4CWec@wuerfel>
+In-Reply-To: <20160209160812.GC9332@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: brijesh.singh@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, galak@codeaurora.org, thomas.lendacky@amd.com, brijeshkumar.singh@amd.com
+To: Mark Rutland <mark.rutland@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 09/02/16 16:08, Mark Rutland wrote:
+[...]
 
-On 02/09/2016 10:00 AM, Arnd Bergmann wrote:
-> 
-> The important part for interrupt/reg/... names is that you must use exactly the
-> names that are listed in the binding. If there is no name in there, it's better
-> not to add the name property.
-> 
-> The other point is that "ipmi_kcs" is a name that is picked really badly, as it
-> uses a '_' character while DT properties by convention use '-' between names,
-> and the name of the IRQ is the same as the device itself, which is really
-> not a useful way to disambiguate multiple interrupts in the same device, if
-> someone ever adds another irq line.
-> 
+>>>> having msi-map-mask clash with a nonzero rid-base, as that's another
+>>>> thing one can easily get wrong.
 
-Sure we will drop the name field. Thanks.
+[...]
 
-> 	Arnd
-> 
+>>>> +		if (rid_base & ~map_mask) {
+>>>> +			dev_err(parent_dev,
+>>>> +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
+>>> base (0x%x)\n",
+>>>> +				map_mask, rid_base);
+>>>> +			return rid_out;
+>>>> +		}
+
+[...]
+
+>>                     msi-map = <0x0100 &its 0x11 0x1>;
+>>                     msi-map-mask = <0xff>;
+>>
+>
+> I'd say that this is an inconsistent set of properties, and it's
+> probably worth warning if we encounter this. There is no possible way
+> that rid-base can be encountered.
+
+Indeed ;)
+
+Robin.
+
+> Thanks,
+> Mark.
+>
