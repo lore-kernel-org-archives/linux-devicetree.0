@@ -1,135 +1,84 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V3] ARM64: tegra: Add support for Google Pixel C
-Date: Tue, 9 Feb 2016 12:26:49 +0000
-Message-ID: <1455020809-17531-1-git-send-email-jonathanh@nvidia.com>
-References: <1454949199-27050-1-git-send-email-jonathanh@nvidia.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
+Date: Tue, 9 Feb 2016 06:31:44 -0600
+Message-ID: <56B9DC30.5040806@ti.com>
+References: <1454690044-2560-1-git-send-email-nm@ti.com>
+ <1454690044-2560-2-git-send-email-nm@ti.com>
+ <CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454949199-27050-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
-upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
+On 02/08/2016 10:14 PM, Jassi Brar wrote:
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
+Thanks for the review.
 
-Changes v2 -> v3:
-- Added PSCI information to enable all 4 CPUs on boot
+> On Fri, Feb 5, 2016 at 10:04 PM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
+>> +
+>> +       msgmgr: msgmgr@02a00000 {
+>> +               compatible = "ti,k2g-message-manager", "ti,message-manager";
+>> +               #mbox-cells = <1>;
+>> +               reg-names = "queue_proxy_region", "queue_state_debug_region";
+>> +               reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
+>> +
+>> +               msgmgr_proxy_pmmc_tx_prio0: pmmc_tx_prio0 {
+>> +                       ti,queue-id = <0>;
+>> +                       ti,proxy-id = <0>;
+>> +               };
+>> +
+>> +               msgmgr_proxy_pmmc_rx: pmmc_rx {
+>> +                       ti,queue-id = <5>;
+>> +                       ti,proxy-id = <2>;
+>> +                       interrupt-names = "rx";
+>> +                       interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>;
+>> +               };
+>> +       };
+>> +
+> I think we should get rid of consumer specifics from the provider node...
 
-Changes v1 -> v2:
-- Removed console boot parameter and added stdout-path
-- Added 32k clock for PMC
 
- arch/arm64/boot/dts/nvidia/Makefile           |  1 +
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 83 +++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
- create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+If I get rid of the consumer nodes, how do you propose I describe the rx
+queue interrupt(s) in the msmgr dt node (Every Rx queue will have it's
+own interrupt - and it cannot be reverse computed from queue ID, proxy ID)?
 
-diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
-index a7e865da1005..0f7cdf3e05c1 100644
---- a/arch/arm64/boot/dts/nvidia/Makefile
-+++ b/arch/arm64/boot/dts/nvidia/Makefile
-@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
-+dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
- 
- always		:= $(dtb-y)
- clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-new file mode 100644
-index 000000000000..750e85c45135
---- /dev/null
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-@@ -0,0 +1,83 @@
-+/dts-v1/;
-+
-+#include "tegra210.dtsi"
-+
-+/ {
-+	model = "Google Pixel C";
-+	compatible = "google,smaug-rev8", "google,smaug-rev7",
-+		     "google,smaug-rev6", "google,smaug-rev5",
-+		     "google,smaug-rev4", "google,smaug-rev3",
-+		     "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
-+
-+	aliases {
-+		serial0 = &uarta;
-+	};
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0xc0000000>;
-+	};
-+
-+	serial@0,70006000 {
-+		status = "okay";
-+	};
-+
-+	pmc@0,7000e400 {
-+		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <12000 6000>;
-+		nvidia,core-pwr-off-time = <39053>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
-+		status = "okay";
-+	};
-+
-+	sdhci@0,700b0600 {
-+		bus-width = <8>;
-+		non-removable;
-+		status = "okay";
-+	};
-+
-+	clocks {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		clk32k_in: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+		};
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+};
+
+>> +...
+>> +       pmmc {
+>> +               ...
+>> +               mbox-names = "tx", "rx";
+>> +               mboxes = <&msgmgr &msgmgr_proxy_pmmc_tx>
+>> +                        <&msgmgr &msgmgr_proxy_pmmc_rx>;
+>> +               ...
+>> +       };
+>>
+> ... and have consumers like
+>        pmmc {
+>                ...
+>                mbox-names = "tx", "rx";
+>                mboxes = <&msgmgr 0 0>
+>                         <&msgmgr 5 2>;
+>        };
+> 
+> I leave the IRQ for you to decide how to specify - a 'dummy' or
+> 'valid' always provided as last cell in mboxes or some other way.
+> (I'll review other patches in detail later)
+
+What do we do with the issues that Suman pointed out in the mailbox
+framework itself? Could you respond to that thread[1] as well?
+
+
+[1] http://marc.info/?l=devicetree&m=145496308418123&w=2
+
 -- 
-2.1.4
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
