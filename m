@@ -1,97 +1,87 @@
-From: Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
-Date: Tue, 9 Feb 2016 15:54:31 +0200
-Message-ID: <CABM=7k=5WJj_rF1fWO+rnKiF_bcr=i8Bg8E4sKGOR=ER4zjgWw@mail.gmail.com>
-References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
- <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
- <56B8B45D.1020902@arm.com> <20160209085633.GA5388@kwain> <20160209090131.GB5388@kwain>
- <56B9ACE2.1060200@arm.com> <CABM=7knaepbyy4nw_GczVM7E_t6py7gG0ERs8ru_AYoVXvAQ+A@mail.gmail.com>
- <56B9B1B5.5070106@arm.com> <CABM=7k=-Y+eFB2nUMfMjd3saTSNDsEyfHyYNf-ef8qQc5jCsxA@mail.gmail.com>
- <56B9D20A.8010709@arm.com>
+From: Robert Richter <rrichter@caviumnetworks.com>
+Subject: [PATCH v4 1/6] of/fdt: make generic early_init_dt_add_memory_arch() a
+ weak alias
+Date: Tue, 9 Feb 2016 14:53:41 +0100
+Message-ID: <1455026026-11571-2-git-send-email-rrichter@caviumnetworks.com>
+References: <1455026026-11571-1-git-send-email-rrichter@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B9D20A.8010709-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ronen Shitrit <rshitrit-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barak Wasserstrom <barak-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1455026026-11571-1-git-send-email-rrichter@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, Robert Richter <rrichter@cavium.com>, Mark Salter <msalter@redhat.com>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 February 2016 at 13:48, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 09/02/16 10:13, Tsahee Zidenberg wrote:
->> On 9 February 2016 at 11:30, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>> On 09/02/16 09:14, Tsahee Zidenberg wrote:
->>>>
->>>>
->>>> On 9 February 2016 at 11:09, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org
->>>> <mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org>> wrote:
->>>>
->>>>     On 09/02/16 09:01, Antoine Tenart wrote:
->>>>     > On Tue, Feb 09, 2016 at 09:56:33AM +0100, Antoine Tenart wrote:
->>>>     >> Hi Marc,
->>>>     >>
->>>>     >> On Mon, Feb 08, 2016 at 03:29:33PM +0000, Marc Zyngier wrote:
->>>>     >>> On 08/02/16 09:11, Antoine Tenart wrote:
->>>>     >>>
->>>>     >>>> +          gic: gic@f0100000 {
->>>>     >>>> +                  compatible = "arm,gic-v3";
->>>>     >>>> +                  reg = <0x0 0xf0200000 0x0 0x10000>,     /* GIC Dist */
->>>>     >>>> +                        <0x0 0xf0280000 0x0 0x200000>,    /* GICR */
->>>>     >>>> +                        <0x0 0xf0100000 0x0 0x2000>;      /* GICC */
->>>>     >>>> +                  interrupt-controller;
->>>>     >>>> +                  #interrupt-cells = <3>;
->>>>     >>>> +          };
->>>>     >>>
->>>>     >>> Something is wrong here. Either you are missing GICH and GICV (assuming
->>>>     >>> you have legacy support), or you have an extra GICC region (which
->>>>     >>> doesn't make sense on its own).
->>>>     >>
->>>>     >> I'll add the missing regions.
->>>>     >
->>>>     > Hmm, in fact the GICC region shouldn't be there. I'll make some tests
->>>>     > and remove it.
->>>>
->>>>     If you have a GICv3 with legacy support, you will probably have GICC,
->>>>     GICH and GICV. Linux itself will only use GICD and GICR, but it needs at
->>>>     least GICV to be able to virtualize GICv2 guests. And GICV is not
->>>>     allowed to exist without GICC and GICH, so I really recommend that you
->>>>     keep GICC around.
->>>>
->>>>
->>>> We use the GIC without legacy support (we disable it in early boot
->>>> stages), so I think removing the GICC region is the better solution.
->>>
->>> Disabling legacy support doesn't mean that:
->>> - the HW isn't present
->>> - the associated regions are not useful
->>>
->> By "disabling lecgacy support in early boot" I don't just mean that
->> ARE bit will be set, but it will actually be RAO/WI. There will be no
->> way for SW to enable it and use these registers (which, sadly, means
->> that there will be no way to enable gicv2 virtualization). If you
->> insist - I will dig up the supposed location of GICV and GICH - yet it
->> will be both untested and entirely unusable.
->
-> Just to make sure you are not missing the point: ARE==1 does *not* mean
-> that GICV is unusable. Quite the opposite. It only makes it illegal to
-> use GICC and GICH, but leaves GICV usable for a guest.
->
-> So the real question is: do you have any additional HW that would
-> actively prevent GICV from being used? If the answer to that is "no",
-> and assuming your GICv3 implementation is compliant with the
-> architecture, then GICV will be usable, and you should document all 3
-> regions.
->
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-O.K. will add to next version.
+The function early_init_dt_add_memory_arch() is defined as __weak
+so that archs can override it. However, in this override implementation,
+it may still be useful to invoke the generic implementation, so instead,
+rename the generic version to early_init_dt_add_memory() and turn the
+original definition into a weak alias. This way, the generic version can
+still be called even in the presence of an arch specific override.
 
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Message-Id: <1442881288-13962-2-git-send-email-ard.biesheuvel@linaro.org>
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ drivers/of/fdt.c       | 7 +++++--
+ include/linux/of_fdt.h | 1 +
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 655f79db7899..cba8281ab5fd 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -980,7 +980,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ #define MAX_MEMBLOCK_ADDR	((phys_addr_t)~0)
+ #endif
+ 
+-void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
++void __init early_init_dt_add_memory(u64 base, u64 size)
+ {
+ 	const u64 phys_offset = __pa(PAGE_OFFSET);
+ 
+@@ -1038,7 +1038,7 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ 	return __va(memblock_alloc(size, align));
+ }
+ #else
+-void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
++void __init early_init_dt_add_memory(u64 base, u64 size)
+ {
+ 	WARN_ON(1);
+ }
+@@ -1058,6 +1058,9 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ }
+ #endif
+ 
++__weak __alias(early_init_dt_add_memory)
++void early_init_dt_add_memory_arch(u64 base, u64 size);
++
+ bool __init early_init_dt_verify(void *params)
+ {
+ 	if (!params)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index df9ef3801812..463a06ba87ac 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -65,6 +65,7 @@ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
++extern void early_init_dt_add_memory(u64 base, u64 size);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+ extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
+ 					     bool no_map);
+-- 
+2.7.0.rc3
