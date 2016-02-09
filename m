@@ -1,90 +1,58 @@
-From: Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
-Date: Tue, 9 Feb 2016 12:13:04 +0200
-Message-ID: <CABM=7k=-Y+eFB2nUMfMjd3saTSNDsEyfHyYNf-ef8qQc5jCsxA@mail.gmail.com>
-References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
- <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
- <56B8B45D.1020902@arm.com> <20160209085633.GA5388@kwain> <20160209090131.GB5388@kwain>
- <56B9ACE2.1060200@arm.com> <CABM=7knaepbyy4nw_GczVM7E_t6py7gG0ERs8ru_AYoVXvAQ+A@mail.gmail.com>
- <56B9B1B5.5070106@arm.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 02/11] mfd: axp20x: Add bindings for AXP809 PMIC
+Date: Tue, 9 Feb 2016 10:18:39 +0000
+Message-ID: <20160209101839.GA24522@x1>
+References: <1454408864-24112-1-git-send-email-wens@csie.org>
+ <1454408864-24112-3-git-send-email-wens@csie.org>
+ <20160202224348.GA15250@rob-hp-laptop>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B9B1B5.5070106-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ronen Shitrit <rshitrit-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barak Wasserstrom <barak-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBA72422QKGQEEYWGXYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160202224348.GA15250@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 February 2016 at 11:30, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On 09/02/16 09:14, Tsahee Zidenberg wrote:
-> >
-> >
-> > On 9 February 2016 at 11:09, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org
-> > <mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org>> wrote:
-> >
-> >     On 09/02/16 09:01, Antoine Tenart wrote:
-> >     > On Tue, Feb 09, 2016 at 09:56:33AM +0100, Antoine Tenart wrote:
-> >     >> Hi Marc,
-> >     >>
-> >     >> On Mon, Feb 08, 2016 at 03:29:33PM +0000, Marc Zyngier wrote:
-> >     >>> On 08/02/16 09:11, Antoine Tenart wrote:
-> >     >>>
-> >     >>>> +          gic: gic@f0100000 {
-> >     >>>> +                  compatible = "arm,gic-v3";
-> >     >>>> +                  reg = <0x0 0xf0200000 0x0 0x10000>,     /* GIC Dist */
-> >     >>>> +                        <0x0 0xf0280000 0x0 0x200000>,    /* GICR */
-> >     >>>> +                        <0x0 0xf0100000 0x0 0x2000>;      /* GICC */
-> >     >>>> +                  interrupt-controller;
-> >     >>>> +                  #interrupt-cells = <3>;
-> >     >>>> +          };
-> >     >>>
-> >     >>> Something is wrong here. Either you are missing GICH and GICV (assuming
-> >     >>> you have legacy support), or you have an extra GICC region (which
-> >     >>> doesn't make sense on its own).
-> >     >>
-> >     >> I'll add the missing regions.
-> >     >
-> >     > Hmm, in fact the GICC region shouldn't be there. I'll make some tests
-> >     > and remove it.
-> >
-> >     If you have a GICv3 with legacy support, you will probably have GICC,
-> >     GICH and GICV. Linux itself will only use GICD and GICR, but it needs at
-> >     least GICV to be able to virtualize GICv2 guests. And GICV is not
-> >     allowed to exist without GICC and GICH, so I really recommend that you
-> >     keep GICC around.
-> >
-> >
-> > We use the GIC without legacy support (we disable it in early boot
-> > stages), so I think removing the GICC region is the better solution.
->
-> Disabling legacy support doesn't mean that:
-> - the HW isn't present
-> - the associated regions are not useful
->
-By "disabling lecgacy support in early boot" I don't just mean that
-ARE bit will be set, but it will actually be RAO/WI. There will be no
-way for SW to enable it and use these registers (which, sadly, means
-that there will be no way to enable gicv2 virtualization). If you
-insist - I will dig up the supposed location of GICV and GICH - yet it
-will be both untested and entirely unusable.
+On Tue, 02 Feb 2016, Rob Herring wrote:
 
-We will add an entry for the maintenance interrupt, as it really can
-be used by future configurations.
+> On Tue, Feb 02, 2016 at 06:27:35PM +0800, Chen-Yu Tsai wrote:
+> > This patch adds the basic and regulator bindings for the X-Powers AXP80=
+9
+> > PMIC.
+> >=20
+> > Also update the DC-DC converter operating frequency for AXP22X/AXP80X.
+> >=20
+> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/axp20x.txt | 31 ++++++++++++++++=
+++++++--
+> >  1 file changed, 29 insertions(+), 2 deletions(-)
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Here, we describe the HW, not the usage you make of it.
->
-> And unless you think that having working virtualization is completely
-> useless, I strongly suggest that you properly document the HW in the
-> device tree.
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No idea what's going on here.  Somehow I must have been in the
+Reply-To, but never actually sent the patches initially.  So I have
+people's replies, but not the original submission.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
