@@ -1,53 +1,69 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Tue,  9 Feb 2016 11:04:45 +0000
-Message-ID: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: marc.zyngier@arm.com, mark.rutland@arm.com, david.daney@cavium.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Tue, 9 Feb 2016 11:19:02 +0000
+Message-ID: <alpine.DEB.2.02.1602091116240.27008@kaball.uk.xensource.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
+ <CAJZ5v0id-035AtyQ_SccPuCxD7+pa6GCgj3WBAojM+rFqssGQQ@mail.gmail.com>
+ <alpine.DEB.2.02.1602081054350.27008@kaball.uk.xensource.com>
+ <2213954.ztOe55fprN@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2213954.ztOe55fprN@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, julien.grall@citrix.com, xen-devel@lists.xen.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-efi@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ian.campbell@citrix.com, Shannon Zhao <shannon.zhao@linaro.org>, peter.huangpeng@huawei.com, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The existing msi-map code is fine for shifting the entire RID space
-upwards, but attempting finer-grained remapping reveals a bug. It turns
-out that we are mistakenly treating the msi-base part as an offset, not
-as a new base to remap onto, so things get squiffy when rid-base is
-nonzero. Fix this, and at the same time add a sanity check against
-having msi-map-mask clash with a nonzero rid-base, as that's another
-thing one can easily get wrong.
+On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
+> On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
+> > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+> > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong@huawei.com> wrote:
+> > > > From: Shannon Zhao <shannon.zhao@linaro.org>
+> > > >
+> > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > > > UART is used by Xen. So here it hides UART from Dom0.
+> > > >
+> > > > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> > > > Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> > > 
+> > > Well, this doesn't look right to me.
+> > > 
+> > > We need to find a nicer way to achieve what you want.
+> > 
+> > I take that you are talking about how to honor the STAO table in Linux.
+> > Do you have any concrete suggestions?
+> 
+> I do.
+> 
+> The last hunk of the patch is likely what it needs to be, although I'm
+> not sure if the place it is added to is the right one.  That's a minor thing,
+> though.
+> 
+> The other part is problematic.  Not that as it doesn't work, but because of
+> how it works.  With these changes the device will be visible to the OS (in
+> fact to user space even), but will never be "present".  I'm not sure if
+> that's what you want?
+> 
+> It might be better to add a check to acpi_bus_type_and_status() that will
+> evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
+> way the device won't be visible at all.
 
-CC: <stable@vger.kernel.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/of/irq.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Something like below?  Actually your suggestion is better, thank you!
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 7ee21ae..e7bfc17 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
- 		msi_base = be32_to_cpup(msi_map + 2);
- 		rid_len = be32_to_cpup(msi_map + 3);
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 78d5f02..4778c51 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
  
-+		if (rid_base & ~map_mask) {
-+			dev_err(parent_dev,
-+				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-base (0x%x)\n",
-+				map_mask, rid_base);
-+			return rid_out;
-+		}
++	if (acpi_check_device_is_ignored(handle))
++		return -ENODEV;
 +
- 		msi_controller_node = of_find_node_by_phandle(phandle);
- 
- 		matched = (masked_rid >= rid_base &&
-@@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
- 	if (!matched)
- 		return rid_out;
- 
--	rid_out = masked_rid + msi_base;
-+	rid_out = masked_rid - rid_base + msi_base;
- 	dev_dbg(dev,
- 		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length: %08x, rid: %08x -> %08x\n",
- 		dev_name(parent_dev), map_mask, rid_base, msi_base,
--- 
-2.7.0.25.gfc10eb5.dirty
+ 	switch (acpi_type) {
+ 	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+ 	case ACPI_TYPE_DEVICE:
+
