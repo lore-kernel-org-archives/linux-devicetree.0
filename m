@@ -1,51 +1,68 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Tue, 9 Feb 2016 16:17:33 +0000
-Message-ID: <56BA111D.9050807@arm.com>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
- <56B9D62E.8080003@arm.com>
- <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
- <20160209160812.GC9332@leverpostej>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 3/3] pci, pci-thunder-ecam: Add driver for
+ ThunderX-pass1 on-chip devices
+Date: Tue, 9 Feb 2016 10:26:28 -0600
+Message-ID: <20160209162628.GA20171@localhost>
+References: <1454715675-17512-1-git-send-email-ddaney.cavm@gmail.com>
+ <56B919A5.5090000@caviumnetworks.com>
+ <20160208232430.GA1353@localhost>
+ <12842339.z2KnaZPlyO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160209160812.GC9332@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <12842339.z2KnaZPlyO@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, David Daney <ddaney@caviumnetworks.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/16 16:08, Mark Rutland wrote:
-[...]
+On Tue, Feb 09, 2016 at 10:25:33AM +0100, Arnd Bergmann wrote:
+> On Monday 08 February 2016 17:24:30 Bjorn Helgaas wrote:
+> > > >
+> > > >I assume your system conforms to expectations like these; I'm just
+> > > >pointing them out because you mentioned buses with multiple devices on
+> > > >them, which is definitely something one doesn't expect in PCIe.
+> > > 
+> > > The topology we have is currently working with the kernel's core PCI
+> > > code.  I don't really want to get into discussing what the
+> > > definition of PCIe is.  We have multiple devices (more than 32) on a
+> > > single bus, and they have PCI Express and ARI Capabilities.  Is that
+> > > PCIe?  I don't know.
+> > 
+> > I don't need to know the details of your topology.  As long as it
+> > conforms to the PCIe spec, it should be fine.  If it *doesn't* conform
+> > to the spec, but things currently seem to work, that's less fine,
+> > because a future Linux change is liable to break something for you.
+> > 
+> > I was a little concerned about your statement that "there are multiple
+> > devices residing on each bus, so from that point of view it cannot be
+> > PCIe."  That made it sound like you're doing something outside the
+> > spec.  If you're just using regular multi-function devices or ARI,
+> > then I don't see any issue (or any reason to say it can't be PCIe).
+> 
+> It doesn't conform to the PCIe port spec, because there are no external
+> ports but just integrated devices in the host bridge. 
 
->>>> having msi-map-mask clash with a nonzero rid-base, as that's another
->>>> thing one can easily get wrong.
+Is there a spec section you have in mind?  Based on sec 1.3.1, I don't
+think there's a requirement to have PCI Express Ports (is that what
+you mean by "external ports"?)
 
-[...]
+Root Complex Integrated Endpoints (sec 1.3.2.3) are clearly supported
+and they would not be behind a Root Port.  If you're using those, I
+hope they're correctly identified via the PCIe capability Device/Port
+Type (sec 7.8.2) because we rely on that type to figure out whether
+the link-related registers are implemented.
 
->>>> +		if (rid_base & ~map_mask) {
->>>> +			dev_err(parent_dev,
->>>> +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
->>> base (0x%x)\n",
->>>> +				map_mask, rid_base);
->>>> +			return rid_out;
->>>> +		}
+The spec does include rules related to peer-to-peer transactions, MPS,
+ASPM, error reporting, etc., and Linux relies on those, so I think it
+would be important to get those right.
 
-[...]
+> For this special
+> case, I don't think it matters at all from the point of view of the DT
+> binding whether we call the node name "pci" or "pcie".
 
->>                     msi-map = <0x0100 &its 0x11 0x1>;
->>                     msi-map-mask = <0xff>;
->>
->
-> I'd say that this is an inconsistent set of properties, and it's
-> probably worth warning if we encounter this. There is no possible way
-> that rid-base can be encountered.
+And the PCI core doesn't even know the node name, it doesn't matter
+there either.
 
-Indeed ;)
-
-Robin.
-
-> Thanks,
-> Mark.
->
+Bjorn
