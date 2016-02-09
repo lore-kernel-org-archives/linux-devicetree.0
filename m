@@ -1,32 +1,72 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v11 4/4] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 9 Feb 2016 11:39:26 -0600
-Message-ID: <56BA244E.1020402@codeaurora.org>
-References: <1455037240-16192-1-git-send-email-fu.wei@linaro.org>
- <1455037240-16192-5-git-send-email-fu.wei@linaro.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v3 0/6] CPUs capacity information for heterogeneous
+ systems
+Date: Tue, 9 Feb 2016 17:40:52 +0000
+Message-ID: <20160209174052.GT11415@e106622-lin>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <56B92BF4.4030405@linaro.org>
+ <20160209103748.GP11415@e106622-lin>
+ <56BA221D.1030907@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455037240-16192-5-git-send-email-fu.wei@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <56BA221D.1030907@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: fu.wei@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, Suravee.Suthikulpanit@amd.com
-Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, cov@codeaurora.org, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.com, arnd@arndb.de, leo.duran@amd.com, sudeep.holla@arm.com
+To: Steve Muckle <steve.muckle@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-fu.wei@linaro.org wrote:
+On 09/02/16 09:30, Steve Muckle wrote:
+> On 02/09/2016 02:37 AM, Juri Lelli wrote:
+> >> I'm still concerned that there's no way to obtain optimal boot time on a
+> >> > heterogeneous system. Either the dynamic benchmarking is enabled, adding
+> >> > 1 sec, or the benchmarking is skipped, and task distribution on the
+> >> > heterogeneous CPUs is determined by the platform's CPU numbering and
+> >> > chance, potentially impacting performance nondeterministically until
+> >> > userspace sets the correct capacity values via sysfs.
+> >> > 
+> >> > I believe you tested the impact on boot time of using equal capacity
+> >> > values and saw little difference. I'm wondering though, what was the CPU
+> >> > numbering on that target?
+> >> > 
+> >
+> > My targets (Juno and TC2) had big cluster on 1,2 and little on the
+> > remaining cpus. Why do you think this might matter?
+> 
+> There's a natural bias in the scheduler AFAIK towards lower-numbered
+> CPUs since they are typically scanned in numerically ascending order. So
+> when all capacities are initially defaulted to be the same I think
+> you'll be more likely to use the lower numbered CPUs.
+> 
+> I'd be curious what the performance penalty is on a b.L system where the
+> lowest numbered CPUs are small. I don't have such a target but maybe
+> it's possible to compare booting just with bigs vs just with littles, at
+> least until userspace intializes and a script can bring up the others,
+> which is the same point at which capacities could be properly set. That
+> would give something of an upper bound.
+> 
 
-> +		if (!action)
-> +			dev_warn(dev, "fall back to signle stage mode.\n");
+Yeah. I could run some tests along this line. It should give us a rough
+idea about how much we are leaving on the table.
 
-"falling back to single stage mode"
+> > Anyway, IMHO boot time performance is not what we are targeting here, so
+> > I wouldn't be too worried about this particular point.
+> 
+> It may not be the most important thing but it is a factor worth
+> considering - as mentioned earlier there are applications where boot
+> time is critical such as automotive. It seems unfortunate that actual
+> performance may be left on the table due to (IMO anyway) a tenuous
+> concern over DT semantics. But it looks like that may just be my
+> position :/ .
+> 
 
-Acked-by: Timur Tabi <timur@codeaurora.org>
+Don't get me wrong Steve. I agree with you and I tried to defend the DT
+approach as much as I could. I still think that it is the best solution
+(much more cleaner and simpler), but it seems that there is no way we
+can make it happen. Or has this discussion we are having changed things
+in the meantime? :)
 
-The whole "calculate the timeouts different if 'action' is enabled" 
-seems clunky to me, but I can't think of a better way to handle it.
+Thanks,
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+- Juri
