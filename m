@@ -1,44 +1,57 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH] rtc: s3c: Document required clocks in the DT binding
-Date: Tue,  9 Feb 2016 14:23:52 -0300
-Message-ID: <1455038632-14545-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Steve Muckle <steve.muckle@linaro.org>
+Subject: Re: [PATCH v3 0/6] CPUs capacity information for heterogeneous
+ systems
+Date: Tue, 9 Feb 2016 09:30:05 -0800
+Message-ID: <56BA221D.1030907@linaro.org>
+References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
+ <56B92BF4.4030405@linaro.org> <20160209103748.GP11415@e106622-lin>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160209103748.GP11415@e106622-lin>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The S3C Real Time Clock driver requires the clock and source clock to
-be defined in the device node but that requirement is not documented.
+On 02/09/2016 02:37 AM, Juri Lelli wrote:
+>> I'm still concerned that there's no way to obtain optimal boot time on a
+>> > heterogeneous system. Either the dynamic benchmarking is enabled, adding
+>> > 1 sec, or the benchmarking is skipped, and task distribution on the
+>> > heterogeneous CPUs is determined by the platform's CPU numbering and
+>> > chance, potentially impacting performance nondeterministically until
+>> > userspace sets the correct capacity values via sysfs.
+>> > 
+>> > I believe you tested the impact on boot time of using equal capacity
+>> > values and saw little difference. I'm wondering though, what was the CPU
+>> > numbering on that target?
+>> > 
+>
+> My targets (Juno and TC2) had big cluster on 1,2 and little on the
+> remaining cpus. Why do you think this might matter?
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+There's a natural bias in the scheduler AFAIK towards lower-numbered
+CPUs since they are typically scanned in numerically ascending order. So
+when all capacities are initially defaulted to be the same I think
+you'll be more likely to use the lower numbered CPUs.
 
----
+I'd be curious what the performance penalty is on a b.L system where the
+lowest numbered CPUs are small. I don't have such a target but maybe
+it's possible to compare booting just with bigs vs just with littles, at
+least until userspace intializes and a script can bring up the others,
+which is the same point at which capacities could be properly set. That
+would give something of an upper bound.
 
- Documentation/devicetree/bindings/rtc/s3c-rtc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+> Anyway, IMHO boot time performance is not what we are targeting here, so
+> I wouldn't be too worried about this particular point.
 
-diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-index ac2fcd6ff4b8..1068ffce9f91 100644
---- a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-@@ -14,6 +14,10 @@ Required properties:
-   interrupt number is the rtc alarm interrupt and second interrupt number
-   is the rtc tick interrupt. The number of cells representing a interrupt
-   depends on the parent interrupt controller.
-+- clocks: Must contain a list of phandle and clock specifier for the rtc
-+          and source clocks.
-+- clock-names: Must contain "rtc" and "rtc_src" entries sorted in the
-+               same order as the clocks property.
- 
- Example:
- 
-@@ -21,4 +25,6 @@ Example:
- 		compatible = "samsung,s3c6410-rtc";
- 		reg = <0x10070000 0x100>;
- 		interrupts = <44 0 45 0>;
-+		clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
-+		clock-names = "rtc", "rtc_src";
- 	};
--- 
-2.5.0
+It may not be the most important thing but it is a factor worth
+considering - as mentioned earlier there are applications where boot
+time is critical such as automotive. It seems unfortunate that actual
+performance may be left on the table due to (IMO anyway) a tenuous
+concern over DT semantics. But it looks like that may just be my
+position :/ .
+
+thanks,
+Steve
