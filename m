@@ -1,64 +1,63 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 06/10] ARM64: dts: rockchip: Add IR receiver to GeekBox
-Date: Tue, 9 Feb 2016 04:08:23 +0100
-Message-ID: <56B95827.7060204@suse.de>
-References: <1454897859-7601-1-git-send-email-afaerber@suse.de>
- <1454897859-7601-7-git-send-email-afaerber@suse.de>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/9] Fix broken DMAFLUSHP on Rockchips platform
+Date: Tue, 9 Feb 2016 08:51:05 +0530
+Message-ID: <20160209032105.GD19598@localhost>
+References: <1453460812-8498-1-git-send-email-wxt@rock-chips.com>
+ <3817335.PXCk0JfYDT@phil> <20160208131419.GA19598@localhost>
+ <2223201.4nEkyUQu1O@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454897859-7601-7-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2223201.4nEkyUQu1O@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, g@localhost
+Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 08.02.2016 um 03:17 schrieb Andreas F=C3=A4rber:
-> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v2: New
-> =20
->  arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
-rm64/boot/dts/rockchip/rk3368-geekbox.dts
-> index e4523a74050f..e84383fd6f10 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> @@ -63,6 +63,13 @@
->  		#clock-cells =3D <0>;
->  	};
-> =20
-> +	ir: ir-receiver {
-> +		compatible =3D "gpio-ir-receiver";
-> +		gpios =3D <&gpio3 30 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&ir_int>;
+On Mon, Feb 08, 2016 at 11:21:57PM +0100, Heiko Stuebner wrote:
+> Hi Vinod,
+> 
+> Am Montag, 8. Februar 2016, 18:44:19 schrieb Vinod Koul:
+> > On Mon, Feb 08, 2016 at 10:27:04AM +0100, Heiko Stuebner wrote:
+> > > Am Montag, 8. Februar 2016, 08:41:34 schrieb Vinod Koul:
+> > > > On Mon, Feb 01, 2016 at 02:56:54PM +0800, Caesar Wang wrote:
+> > > > > Hello Vinod,
+> > > > > 
+> > > > > Is there any chance apply the DMA patches?:-)
+> > > > 
+> > > > I was waiting for any ACKs on ARM patches before I merge this series.
+> > > 
+> > > I think the more regular way is for the driver maintainer to take the
+> > > driver-specific stuff and the devicetree parts going through the
+> > > specific arm- tree. But if you really want to take the whole series,
+> > > for patches 4,5,6
+> > Yes but that causes cross tree dependencies, which looking at this won't
+> > be a big problem, so I can safely merge dmaengine changes and rest can go
+> > thru ARM tree.
+> > 
+> > Typically submitter should say which tree he/she prefers, which was not
+> > provided..
+> > 
+> > So, are all okay to merge the entire series thru dmaengine tree or
+> > independent. I don't mind either
+> 
+> In general I don't mind either solution, but would prefer me taking the 3 
+> "ARM: dts: foo" patches, while the rest would go through your tree.
+> 
+> Main reason is to prevent any possible conflicts with other Rockchip 
+> devicetree additions also going into 4.6 .
 
-		status =3D "disabled";
+Sounds good, will queue them up
 
-Should only be enabled in the new Landingship config. Will fix.
-
-Andreas
-
-P.S. See Heiko, two bugs in the new nodes already, glad I have them
-separate. :)
-
-> +	};
-> +
->  	leds: gpio-leds {
->  		compatible =3D "gpio-leds";
-> =20
-[snip]
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
