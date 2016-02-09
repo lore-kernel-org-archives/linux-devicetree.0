@@ -1,72 +1,130 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH v3 0/6] CPUs capacity information for heterogeneous
- systems
-Date: Tue, 9 Feb 2016 17:40:52 +0000
-Message-ID: <20160209174052.GT11415@e106622-lin>
-References: <1454500799-18451-1-git-send-email-juri.lelli@arm.com>
- <56B92BF4.4030405@linaro.org>
- <20160209103748.GP11415@e106622-lin>
- <56BA221D.1030907@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node document
+Date: Tue, 9 Feb 2016 09:43:51 -0800
+Message-ID: <20160209174351.GC40460@dtor-ws>
+References: <1455008277-8312-1-git-send-email-raveendra.padasalagi@broadcom.com>
+ <1455008277-8312-2-git-send-email-raveendra.padasalagi@broadcom.com>
+ <2631849.GeOulu78vx@wuerfel>
+ <3b53af6b6c6735d10cb88518c8b8a0ae@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56BA221D.1030907@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Muckle <steve.muckle@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
+In-Reply-To: <3b53af6b6c6735d10cb88518c8b8a0ae-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/16 09:30, Steve Muckle wrote:
-> On 02/09/2016 02:37 AM, Juri Lelli wrote:
-> >> I'm still concerned that there's no way to obtain optimal boot time on a
-> >> > heterogeneous system. Either the dynamic benchmarking is enabled, adding
-> >> > 1 sec, or the benchmarking is skipped, and task distribution on the
-> >> > heterogeneous CPUs is determined by the platform's CPU numbering and
-> >> > chance, potentially impacting performance nondeterministically until
-> >> > userspace sets the correct capacity values via sysfs.
-> >> > 
-> >> > I believe you tested the impact on boot time of using equal capacity
-> >> > values and saw little difference. I'm wondering though, what was the CPU
-> >> > numbering on that target?
-> >> > 
+On Tue, Feb 09, 2016 at 10:25:26PM +0530, Raveendra Padasalagi wrote:
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > Sent: 09 February 2016 16:34
+> > To: Raveendra Padasalagi
+> > Cc: Dmitry Torokhov; Russell King; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> linux-arm-
+> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rob Herring;
+> Pawel
+> > Moll; Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson; Jon
+> > Mason; Florian Fainelli; Ray Jui; Scott Branden;
+> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> > Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node
+> document
 > >
-> > My targets (Juno and TC2) had big cluster on 1,2 and little on the
-> > remaining cpus. Why do you think this might matter?
+> > On Tuesday 09 February 2016 14:27:55 Raveendra Padasalagi wrote:
+> > > +
+> > > +One of the below 2 property is mandatory.
+> > > +- ts_syscon: handler of syscon node defining physical base address
+> > > +  of the controller and length of memory mapped region.
+> > > +  If this property is selected please make sure MFD_SYSCON config
+> > > +  is enabled in the defconfig file.
+> > > +or
+> > > +- reg: physical base address of the controller and length of memory
+> > > +  mapped region.
+> > > +
+> > >  - clocks:  The clock provided by the SOC to driver the tsc
+> > >  - clock-name:  name for the clock
+> > >  - interrupts: The touchscreen controller's interrupt @@ -54,12 +62,16
+> > > @@ Optional properties:
+> > >  - touchscreen-inverted-y: Y axis is inverted (boolean)
+> > >
+> > >  Example:
+> > > +       ts_adc_syscon: ts_adc_syscon@0x180a6000 {
+> > > +               compatible = "syscon";
+> > > +               reg = <0x180a6000 0xc30>;
+> > > +       };
+> > >
+> > >         touchscreen: tsc@0x180A6000 {
+> > >                 compatible = "brcm,iproc-touchscreen";
+> > >                 #address-cells = <1>;
+> > >                 #size-cells = <1>;
+> > > -               reg = <0x180A6000 0x40>;
+> > > +               syscon = <&ts_adc_syscon>;
+> > >                 clocks = <&adc_clk>;
+> > >                 clock-names = "tsc_clk";
+> > >                 interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+> >
+> > This doesn't seem right: For one thing, it's an incompatible binding
+> change which
+> > you should try to avoid.
 > 
-> There's a natural bias in the scheduler AFAIK towards lower-numbered
-> CPUs since they are typically scanned in numerically ascending order. So
-> when all capacities are initially defaulted to be the same I think
-> you'll be more likely to use the lower numbered CPUs.
+> > Worse, the syscon has a name indicating that it really has a particular
+> function,
+> > but the name is completely generic (just "syscon"). Please add a
+> specific
+> > compatible string identifying the device that owns the registers, and
+> put any
+> > other associated properties (clocks, interrupts, ...) that are for that
+> device in
+> > general rather than just the touchscreen in there.
 > 
-> I'd be curious what the performance penalty is on a b.L system where the
-> lowest numbered CPUs are small. I don't have such a target but maybe
-> it's possible to compare booting just with bigs vs just with littles, at
-> least until userspace intializes and a script can bring up the others,
-> which is the same point at which capacities could be properly set. That
-> would give something of an upper bound.
+> By mistake "syscon" name is documented in "touchscreen" label above. In
+> the
+> touchscreen driver code and .dtsi file it's named and used as "ts_syscon".
+> Please refer https://lkml.org/lkml/2016/2/9/71 for the changes.
+> Let me know if this ok. I will correct the documentation in the next
+> patch.
 > 
-
-Yeah. I could run some tests along this line. It should give us a rough
-idea about how much we are leaving on the table.
-
-> > Anyway, IMHO boot time performance is not what we are targeting here, so
-> > I wouldn't be too worried about this particular point.
+> > Your changelog text fails to describe why you do this change in the
+> first place,
+> > and why you can't do it in a backward-compatible way, so please rewrite
+> that
+> > text.
 > 
-> It may not be the most important thing but it is a factor worth
-> considering - as mentioned earlier there are applications where boot
-> time is critical such as automotive. It seems unfortunate that actual
-> performance may be left on the table due to (IMO anyway) a tenuous
-> concern over DT semantics. But it looks like that may just be my
-> position :/ .
+> Yes, I will update the change log in the next patch.
 > 
+> In Cygnus SOC, Touch screen controller registers are shared with ADC and
+> flex timer IP's.
+> Using readl/writel could lead to race condition. So this patch is
+> introduced to take care
+> mutually exclusive access of register's in such a case.
+> 
+> In the platform's where touchscreen register's are not shared normal
+> readl/writel
+> could be used.
 
-Don't get me wrong Steve. I agree with you and I tried to defend the DT
-approach as much as I could. I still think that it is the best solution
-(much more cleaner and simpler), but it seems that there is no way we
-can make it happen. Or has this discussion we are having changed things
-in the meantime? :)
+Are there currently platforms where the registers are not shared? If we
+have to use regmap to correctly update registers (and thus we need
+syscon) then I wonder if we should even attempt to support direct
+register access by the driver.
 
-Thanks,
+> 
+> Based on the dt  property entry "reg" or "ts_syscon" register accesses are
+> handled.
+> if "reg" is provided normal readl/writel API's are used to access
+> register's else if
+> "ts_syscon" is provided then syscon API's are used.
 
-- Juri
+If we decide that we still allow register access then please change the
+driver so it instantiates its own regmap instance in this case instead
+of doing checks all the time.
+
+Thanks.
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
