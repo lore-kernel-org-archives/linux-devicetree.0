@@ -1,42 +1,68 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v10 08/13] arm64: dts: mt8173: Add display subsystem
- related nodes
-Date: Tue, 9 Feb 2016 20:14:45 +0800
-Message-ID: <CAGS+omAT-HTfQQu+ds6AHceURfJBRKu0kz7hO2vcENqAiKrxxQ@mail.gmail.com>
-References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
- <1454527562-28154-9-git-send-email-p.zabel@pengutronix.de>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: zynq: Enable USB and USB PHY for ZYBO
+Date: Tue, 9 Feb 2016 13:17:13 +0100
+Message-ID: <56B9D8C9.7060000@xilinx.com>
+References: <1454503265-20605-1-git-send-email-nathan@nathanrossi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1454527562-28154-9-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454503265-20605-1-git-send-email-nathan-RujqobwCo1oIa9VG7nliCQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Rossi <nathan-RujqobwCo1oIa9VG7nliCQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIFRodSwgRmViIDQsIDIwMTYgYXQgMzoyNSBBTSwgUGhpbGlwcCBaYWJl
-bCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4gd3JvdGU6Cj4gRnJvbTogQ0sgSHUgPGNrLmh1QG1l
-ZGlhdGVrLmNvbT4KPgo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV2aWNlIG5vZGVzIGZvciB0aGUg
-RElTUCBmdW5jdGlvbiBibG9ja3MKPiBjb21wcmlzaW5nIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4K
-Pgo+IFNpZ25lZC1vZmYtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cj4gU2lnbmVkLW9m
-Zi1ieTogQ2F3YSBDaGVuZyA8Y2F3YS5jaGVuZ0BtZWRpYXRlay5jb20+Cj4gU2lnbmVkLW9mZi1i
-eTogSmllIFFpdSA8amllLnFpdUBtZWRpYXRlay5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRGFuaWVs
-IEt1cnR6IDxkamt1cnR6QGNocm9taXVtLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFph
-YmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IC0tLQo+IENoYW5nZXMgc2luY2Ugdjk6Cj4g
-IC0gcmVtb3ZlIGRwaTAgb3V0cHV0IHBvcnQgYW5kIGVuZHBvaW50IGNvbm5lY3Rpb24gaGRtaTAK
-PiAgICBhcyB0aGF0IG9ubHkgZ2V0cyBhZGRlZCBpbiBhIGxhdGVyIHBhdGNoCj4gIC0gZGlzYWJs
-ZSBkcGkwLCBkc2kwLCBhbmQgbWlwaV90eDAvMSBieSBkZWZhdWx0CgpQbGVhc2UgYWxzbyBpbmNs
-dWRlIHRoZSBjaGFuZ2VzIHJlcXVpcmVkIHRvIGVuYWJsZSB0aGUgbXQ4MTczLWV2Yi5kdHMKZGlz
-cGxheSBwaXBlcy4KClRoYW5rcyEKLURhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On 3.2.2016 13:41, Nathan Rossi wrote:
+> Setup the USB controller and configure it to operate in host mode.
+> Additionally add the USB phy node for the ZYBO, including reset gpio
+> which is connected to a external MIO pin.
+>=20
+> Signed-off-by: Nathan Rossi <nathan-RujqobwCo1oIa9VG7nliCQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/zynq-zybo.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq=
+-zybo.dts
+> index 16c9cac..8f085b3 100644
+> --- a/arch/arm/boot/dts/zynq-zybo.dts
+> +++ b/arch/arm/boot/dts/zynq-zybo.dts
+> @@ -33,6 +33,11 @@
+>  		stdout-path =3D "serial0:115200n8";
+>  	};
+> =20
+> +	usb_phy0: phy0 {
+> +		#phy-cells =3D <0>;
+> +		compatible =3D "usb-nop-xceiv";
+> +		reset-gpios =3D <&gpio0 46 1>;
+> +	};
+>  };
+> =20
+>  &clkc {
+> @@ -56,3 +61,9 @@
+>  &uart1 {
+>  	status =3D "okay";
+>  };
+> +
+> +&usb0 {
+> +	status =3D "okay";
+> +	dr_mode =3D "host";
+> +	usb-phy =3D <&usb_phy0>;
+> +};
+>=20
+
+
+Applied.
+
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
