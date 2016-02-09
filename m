@@ -1,54 +1,137 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
-Date: Tue, 09 Feb 2016 17:00:48 +0100
-Message-ID: <15181064.RzzsN4CWec@wuerfel>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com> <4018438.bPuTyoUuqf@wuerfel> <56BA0A2B.5000705@amd.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+Date: Tue, 9 Feb 2016 16:08:12 +0000
+Message-ID: <20160209160812.GC9332@leverpostej>
+References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
+ <56B9D62E.8080003@arm.com>
+ <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56BA0A2B.5000705@amd.com>
+Content-Disposition: inline
+In-Reply-To: <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Brijesh Singh <brijesh.singh@amd.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, galak@codeaurora.org, thomas.lendacky@amd.com, brijeshkumar.singh@amd.com
+To: Stuart Yoder <stuart.yoder@nxp.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 February 2016 09:47:55 Brijesh Singh wrote:
+On Tue, Feb 09, 2016 at 03:56:55PM +0000, Stuart Yoder wrote:
+> 
+> > -----Original Message-----
+> > From: Marc Zyngier [mailto:marc.zyngier@arm.com]
+> > Sent: Tuesday, February 09, 2016 6:06 AM
+> > To: Robin Murphy <robin.murphy@arm.com>; robh+dt@kernel.org; frowand.list@gmail.com;
+> > grant.likely@linaro.org; devicetree@vger.kernel.org
+> > Cc: mark.rutland@arm.com; david.daney@cavium.com; Stuart Yoder <stuart.yoder@nxp.com>;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > stable@vger.kernel.org
+> > Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
 > > 
-> > I see we don't have a binding file for this, can you add one please?
-> >
-> There is binding file ipmi.txt [1]. Am I missing something ?
->  
-> [1] http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/ipmi.txt
-
-Sorry, my mistake: I was looking for "ipmi_kcs", which is not in there.
-
+> > Hi Robin,
 > > 
-> > Why the strange name for the interrupt?
+> > On 09/02/16 11:04, Robin Murphy wrote:
+> > > The existing msi-map code is fine for shifting the entire RID space
+> > > upwards, but attempting finer-grained remapping reveals a bug. It turns
+> > > out that we are mistakenly treating the msi-base part as an offset, not
+> > > as a new base to remap onto, so things get squiffy when rid-base is
+> > > nonzero. Fix this, and at the same time add a sanity check against
+> > > having msi-map-mask clash with a nonzero rid-base, as that's another
+> > > thing one can easily get wrong.
+> > >
+> > > CC: <stable@vger.kernel.org>
+> > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > > 
+> > Looks like Stuart and you both found the same bug at the same time:
+> > https://lkml.org/lkml/2016/2/8/1066
+> > 
+> > but yours seem more correct to me (the rid_base masking in Stuart's
+> > version seems odd).
+> > 
+> > > ---
+> > >  drivers/of/irq.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > > index 7ee21ae..e7bfc17 100644
+> > > --- a/drivers/of/irq.c
+> > > +++ b/drivers/of/irq.c
+> > > @@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct
+> > device_node **np,
+> > >  		msi_base = be32_to_cpup(msi_map + 2);
+> > >  		rid_len = be32_to_cpup(msi_map + 3);
+> > >
+> > > +		if (rid_base & ~map_mask) {
+> > > +			dev_err(parent_dev,
+> > > +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
+> > base (0x%x)\n",
+> > > +				map_mask, rid_base);
+> > > +			return rid_out;
+> > > +		}
+> > > +
+> > >  		msi_controller_node = of_find_node_by_phandle(phandle);
+> > >
+> > >  		matched = (masked_rid >= rid_base &&
+> > > @@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node
+> > **np,
+> > >  	if (!matched)
+> > >  		return rid_out;
+> > >
+> > > -	rid_out = masked_rid + msi_base;
+> > > +	rid_out = masked_rid - rid_base + msi_base;
+> > >  	dev_dbg(dev,
+> > >  		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length:
+> > %08x, rid: %08x -> %08x\n",
+> > >  		dev_name(parent_dev), map_mask, rid_base, msi_base,
+> > >
 > 
-> Now I don't remember the doc but sometime back while implementing BMC on Seattle I saw that interrupt was labeled as "ipmi_kcs"
-> hence used the same name in DT. But if you want to use different name then let me know the string and will update it.
+> This computation:  masked_rid - rid_base
 > 
-> Theoretically IPMI system interface supports the following interface and any of these interfaces can be used by
-> A57 to communicate with BMC:
+> ...doesn't seem right to me.  We are taking a rid that
+> has been already masked and subtracting a rid base that has
+> not been masked.
+
+The binding only mentions that the input RID is masked, not the base, so
+that seems correct to me.
+
+> I don't see how you can combine masked and unmasked values in the same
+> calculation.
 > 
-> * Keyboard controller style (KCS)
-> * System Management Interface (SMIC)
-> * Block transfer (BT)
-> * SMBus system interface (SSIF)
+> Say I have this msi mapping:
 > 
-> AMD Seattle platform supports "KCS".
+>                    msi-map = <0x0100 &its 0x11 0x1>;
+>                    msi-map-mask = <0xff>;
 > 
 
-The important part for interrupt/reg/... names is that you must use exactly the
-names that are listed in the binding. If there is no name in there, it's better
-not to add the name property.
+I'd say that this is an inconsistent set of properties, and it's
+probably worth warning if we encounter this. There is no possible way
+that rid-base can be encountered.
 
-The other point is that "ipmi_kcs" is a name that is picked really badly, as it
-uses a '_' character while DT properties by convention use '-' between names,
-and the name of the IRQ is the same as the device itself, which is really
-not a useful way to disambiguate multiple interrupts in the same device, if
-someone ever adds another irq line.
+> masked_rid = 0x0
+> rid_base = 0x0100
+> msi_base = 0x11
+> 
+> masked_rid - rid_base is 0x0 - 0x0100...which does not
+> give the msi index/offset we want.
+> 
+> Correct final answer should be 0x11.
 
-	Arnd
+You can unambiguously describe this with:
+
+	msi-map = <0x00 &its 0x11 0x1>;
+	msi-map-mask = <0xff>;
+
+This is exactly the pattern we follow in example 2 in the binding
+document.
+
+> In my patch I masked the rid_base so it can be subtracted
+> from the masked_rid.
+> 
+> masked_rid_base = 0x00
+> 
+>    msi_base + (masked_rid - masked_rid_base) = 0x11
+
+As above, I think that this is an inconsistent DT, and we should
+warn/fail in that case.
+
+Thanks,
+Mark.
