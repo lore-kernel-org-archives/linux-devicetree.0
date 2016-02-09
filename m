@@ -1,75 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 5/5] ARM: dts: r8a7794 add sound support
-Date: Tue, 9 Feb 2016 13:52:09 +0300
-Message-ID: <56B9C4D9.6020808@cogentembedded.com>
-References: <4253511.vvGjIdOnb6@wasted.cogentembedded.com>
- <2179456.HznTXDfKhZ@wasted.cogentembedded.com>
- <87mvraoikj.wl%kuninori.morimoto.gx@renesas.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node document
+Date: Tue, 09 Feb 2016 12:04 +0100
+Message-ID: <2631849.GeOulu78vx@wuerfel>
+References: <1455008277-8312-1-git-send-email-raveendra.padasalagi@broadcom.com> <1455008277-8312-2-git-send-email-raveendra.padasalagi@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <87mvraoikj.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1455008277-8312-2-git-send-email-raveendra.padasalagi@broadcom.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 2/9/2016 3:08 AM, Kuninori Morimoto wrote:
+On Tuesday 09 February 2016 14:27:55 Raveendra Padasalagi wrote:
+> +
+> +One of the below 2 property is mandatory.
+> +- ts_syscon: handler of syscon node defining physical base address
+> +  of the controller and length of memory mapped region.
+> +  If this property is selected please make sure MFD_SYSCON config
+> +  is enabled in the defconfig file.
+> +or
+> +- reg: physical base address of the controller and length of memory
+> +  mapped region.
+> +
+>  - clocks:  The clock provided by the SOC to driver the tsc
+>  - clock-name:  name for the clock
+>  - interrupts: The touchscreen controller's interrupt
+> @@ -54,12 +62,16 @@ Optional properties:
+>  - touchscreen-inverted-y: Y axis is inverted (boolean)
+>  
+>  Example:
+> +       ts_adc_syscon: ts_adc_syscon@0x180a6000 {
+> +               compatible = "syscon";
+> +               reg = <0x180a6000 0xc30>;
+> +       };
+>  
+>         touchscreen: tsc@0x180A6000 {
+>                 compatible = "brcm,iproc-touchscreen";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> -               reg = <0x180A6000 0x40>;
+> +               syscon = <&ts_adc_syscon>;
+>                 clocks = <&adc_clk>;
+>                 clock-names = "tsc_clk";
+>                 interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
 
->> Define the generic R8A7794 part of  the sound device node.
->> This sound device  is a complex one and comprises the Audio Clock Generator
->> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
->> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
->> It is up  to the board file to enable the device.
->>
->> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> (snip)
->> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
->> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
->> +			 <&m2_clk>;
->> +		clock-names = "ssi-all",
->> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
->> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
->> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
->> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
->> +			      "clk_a", "clk_b", "clk_c", "clk_i";
->
-> This patch doesn't support "CTU/MIX/DVC".
+This doesn't seem right: For one thing, it's an incompatible binding
+change which you should try to avoid.
 
-    It doesn't.
+Worse, the syscon has a name indicating that it really has a particular
+function, but the name is completely generic (just "syscon"). Please
+add a specific compatible string identifying the device that owns
+the registers, and put any other associated properties (clocks,
+interrupts, ...) that are for that device in general rather than just
+the touchscreen in there.
 
-> Your "clocks" includes "R8A7794_CLK_SCU_CTUx_MIXx", and "R8A7794_CLK_SCU_DVCx",
-> but "clock-names" doesn't include "ctu.x", "dvc.x".
+Your changelog text fails to describe why you do this change in
+the first place, and why you can't do it in a backward-compatible
+way, so please rewrite that text.
 
-    Oops, thank you for noticing. Will fix.
-
-MBR, Sergei
+	Arnd
