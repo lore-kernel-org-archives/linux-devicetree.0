@@ -1,42 +1,64 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH 0/2] CREG clk driver for NXP LPC18xx family
-Date: Tue, 9 Feb 2016 11:19:57 +0100
-Message-ID: <CAGhQ9Vy14XR+-kgACiqPgs0SPueizD6Gd2q5kaNqM5mGna0V=g@mail.gmail.com>
-References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
-	<20160208222637.GV4848@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Tue, 9 Feb 2016 10:24:03 +0000
+Message-ID: <20160209102403.GB24522@x1>
+References: <1453736627-2634-1-git-send-email-afd@ti.com>
+ <20160128064149.GM3368@x1>
+ <20160128114026.GB6078@sirena.org.uk>
+ <20160128120423.GP3368@x1>
+ <20160128124525.GF6078@sirena.org.uk>
+ <20160128133049.GQ3368@x1>
+ <56B0C559.7060204@ti.com>
+ <56B61D84.9000709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160208222637.GV4848@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B61D84.9000709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Sat, 06 Feb 2016, Andrew F. Davis wrote:
 
-On 8 February 2016 at 23:26, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 07/11, Joachim Eastwood wrote:
->> This patch set adds a clk driver for the low power clocks found in
->> the CREG block on lpc18xx. CREG is a collection of miscellaneous
->> configuration registers that can be accessed through a syscon
->> regmap interface. The clk driver makes it possible to setup and
->> enabled these two clocks.
->>
->> This need to support peripherals like the internal RTC on the
->> lpc18xx platform.
->>
->
-> I know this is many months old, but is this driver still
-> required? I can apply it to clk-next if so.
+> On 02/02/2016 09:03 AM, Andrew F. Davis wrote:
+> >On 01/28/2016 07:30 AM, Lee Jones wrote:
+> >>On Thu, 28 Jan 2016, Mark Brown wrote:
+> >>
+> >>>On Thu, Jan 28, 2016 at 12:04:23PM +0000, Lee Jones wrote:
+> >>>>On Thu, 28 Jan 2016, Mark Brown wrote:
+> >>>
+> >>>>>Please be more specific?  What is it that you are looking for be=
+yond the
+> >>>>>review I already did for the regulator driver?
+> >>>
+> >>>>Patch 2.
+> >>>
+> >>>I reviewed that *ages* ago.
+> >>
+> >>Link or it didn't happen. ;)
+> >>
+> >
+> >Might be best to take his ack for the new regulator driver
+> >as approval to remove the old one. :)
+>=20
+> If not, is there anything I can do to help keep this from getting
+> delayed another cycle?
 
-It is still needed for the internal RTC (rtc-lpc24xx) on lpc18xx. The
-RTC uses a 1 kHz clock that is controlled in CREG (misc system regs).
+I don't normally like to assume Acks, but as Mark has been so
+insistent that he's already conducted the review, I'm happy to take
+that as one.  If there is any fall-out over this, I will be pointing
+everyone back to this thread,
 
-Note; if you apply it you will most likely get a very trivial conflict
-in drivers/clk/nxp/Makefile because clk-lpc32xx.c has been added since
-these patches was sent.
+Leave it with me.  This will go in [*].
 
+[*] When I dig myself back out of the pile of emails I have in my
+    inbox presently.
 
-regards,
-Joachim Eastwood
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
