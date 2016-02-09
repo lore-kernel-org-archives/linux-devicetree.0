@@ -1,59 +1,49 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Tue, 9 Feb 2016 18:19:50 +0000
-Message-ID: <20160209181949.GC4348@leverpostej>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
- <56B9D62E.8080003@arm.com>
- <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
- <20160209160812.GC9332@leverpostej>
- <56BA111D.9050807@arm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 0/2] CREG clk driver for NXP LPC18xx family
+Date: Tue, 9 Feb 2016 10:29:17 -0800
+Message-ID: <20160209182917.GA31947@codeaurora.org>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+ <20160208222637.GV4848@codeaurora.org>
+ <CAGhQ9Vy14XR+-kgACiqPgs0SPueizD6Gd2q5kaNqM5mGna0V=g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56BA111D.9050807@arm.com>
-Sender: stable-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Stuart Yoder <stuart.yoder@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+In-Reply-To: <CAGhQ9Vy14XR+-kgACiqPgs0SPueizD6Gd2q5kaNqM5mGna0V=g@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 04:17:33PM +0000, Robin Murphy wrote:
-> On 09/02/16 16:08, Mark Rutland wrote:
-> [...]
+On 02/09, Joachim Eastwood wrote:
+> Hi Stephen,
 > 
-> >>>>having msi-map-mask clash with a nonzero rid-base, as that's another
-> >>>>thing one can easily get wrong.
-> 
-> [...]
-> 
-> >>>>+		if (rid_base & ~map_mask) {
-> >>>>+			dev_err(parent_dev,
-> >>>>+				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
-> >>>base (0x%x)\n",
-> >>>>+				map_mask, rid_base);
-> >>>>+			return rid_out;
-> >>>>+		}
-> 
-> [...]
-> 
-> >>                    msi-map = <0x0100 &its 0x11 0x1>;
-> >>                    msi-map-mask = <0xff>;
+> On 8 February 2016 at 23:26, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > On 07/11, Joachim Eastwood wrote:
+> >> This patch set adds a clk driver for the low power clocks found in
+> >> the CREG block on lpc18xx. CREG is a collection of miscellaneous
+> >> configuration registers that can be accessed through a syscon
+> >> regmap interface. The clk driver makes it possible to setup and
+> >> enabled these two clocks.
+> >>
+> >> This need to support peripherals like the internal RTC on the
+> >> lpc18xx platform.
 > >>
 > >
-> >I'd say that this is an inconsistent set of properties, and it's
-> >probably worth warning if we encounter this. There is no possible way
-> >that rid-base can be encountered.
+> > I know this is many months old, but is this driver still
+> > required? I can apply it to clk-next if so.
 > 
-> Indeed ;)
+> It is still needed for the internal RTC (rtc-lpc24xx) on lpc18xx. The
+> RTC uses a 1 kHz clock that is controlled in CREG (misc system regs).
+> 
+> Note; if you apply it you will most likely get a very trivial conflict
+> in drivers/clk/nxp/Makefile because clk-lpc32xx.c has been added since
+> these patches was sent.
+> 
 
-Ah!
+Hm, ok. I see that Mike had some comments on the thread that look
+to be left unanswered? Care to address those first?
 
-FWIW:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Though it would be nice if we could fail the translation entirely rather
-than just logging an error and idmapping the rid.
-
-Thanks,
-Mark.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
