@@ -1,58 +1,52 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 1/3] mwifiex: register platform specific driver
-Date: Tue, 9 Feb 2016 14:27:07 +0000
-Message-ID: <f6882d2b077748eba10617d114da36f2@SC-EXCH04.marvell.com>
-References: <1454926528-17480-1-git-send-email-akarwar@marvell.com>
- <8264177.UI5sMC7XWi@wuerfel>
- <5ef981436ee64f67beef7ca1e2470c69@SC-EXCH04.marvell.com>
- <6131181.bluDODkWmt@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [rtc-linux] [PATCH V7 5/8] gpio: add DT binding doc for gpio of
+ PMIC max77620/max20024
+Date: Tue, 9 Feb 2016 14:29:03 +0000
+Message-ID: <20160209142903.GE24522@x1>
+References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
+ <1454171931-27752-6-git-send-email-ldewangan@nvidia.com>
+ <CACRpkdYNBHvefR_qdjZ7hWr=cFzhv1gEgb5jBCrqHdWzNWgV6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6131181.bluDODkWmt@wuerfel>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYNBHvefR_qdjZ7hWr=cFzhv1gEgb5jBCrqHdWzNWgV6w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski@samsung.com>, vreddytalla@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> Sent: Tuesday, February 09, 2016 7:48 PM
-> To: Amitkumar Karwar
-> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam;
-> wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xinming Hu; Cathy Luo
-> Subject: Re: [PATCH v3 1/3] mwifiex: register platform specific driver
-> 
-> On Tuesday 09 February 2016 13:44:16 Amitkumar Karwar wrote:
-> > > > index 0000000..39b6a74
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mwifiex.txt
-> > > > @@ -0,0 +1,29 @@
-> > > > +mwifiex
-> > > > +------
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > +  - name : must be "mwifiex"
-> > >
-> > > This is a very unusual requirement.
-> > >
-> > > Can you use one of the standard device names instead?
-> > >
+On Fri, 05 Feb 2016, Linus Walleij wrote:
+
+> On Sat, Jan 30, 2016 at 5:38 PM, Laxman Dewangan <ldewangan@nvidia.co=
+m> wrote:
+>=20
+> > Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
+> > which act as GPIO as well as special function mode.
 > >
-> > We will make use of marvell-sd8xxx in updated version as per Rob
-> Herring's suggestions.
-> > It includes vendor name and a chipset/device name.
-> 
-> I meant the node name, not the compatible string. This should be
-> something like "ethernet" or "wlan".
+> > Add DT binding document to support these pins in GPIO
+> > mode via GPIO framework.
+> >
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+>=20
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Lee can merge this too.
 
-Thanks for clarification. I will name the node as "wlan"
+Ths set needs a re-work anyway.
 
-Regards,
-Amitkumar Karwar
+Laxman, just apply your collected Acks and re-submit when you're
+ready.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
