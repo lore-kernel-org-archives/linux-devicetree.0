@@ -1,35 +1,59 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/9] dt/bindings: arm-pl330: add description of arm,
- pl330-broken-no-flushp
-Date: Tue, 9 Feb 2016 09:02:50 +0530
-Message-ID: <20160209033249.GF19598@localhost>
-References: <1453460812-8498-1-git-send-email-wxt@rock-chips.com>
- <1453460812-8498-3-git-send-email-wxt@rock-chips.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 0/3] arm: dts: DRA7: Add IVA and DSPEVE thermal domain
+ data
+Date: Tue, 9 Feb 2016 09:07:27 +0530
+Message-ID: <56B95EF7.9080107@ti.com>
+References: <1454922990-7501-1-git-send-email-j-keerthy@ti.com>
+ <20160208195704.GW19432@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453460812-8498-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160208195704.GW19432@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+Cc: edubezval@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 22, 2016 at 07:06:45PM +0800, Caesar Wang wrote:
-> From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> This patch adds the "arm, pl330-broken-no-flushp" for arm-pl330.
 
-Applied, thanks
 
--- 
-~Vinod
+On Tuesday 09 February 2016 01:27 AM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy@ti.com> [160208 01:19]:
+>> OMAP5 has 3 thermal zones cpu, core and multimedia.
+>> On the other hand DRA7 has 5 thermal zones cpu, gpu, core, dspeve
+>> and iva. Currently cpu, core and multimedia are being added via dt
+>> and the other 2 are getting added via kernel. Add the missing thermal
+>> domains in dt so as give the correct trip numbers, type and temperatures.
+>>
+>> Tested on DRA7-EVM.
+>
+> Are these critical fixes to have for v4.5-rc cycle or can they
+> wait for v4.6 merge window?
+
+Driver configures some default thresholds that are a bit higher but 
+there are some thresholds already for dspeve and iva too. So guess these 
+can wait if its already too late.
+
+Regards,
+Keerthy
+
+>
+> Regards,
+>
+> Tony
+>
+>> Keerthy (3):
+>>    arm: dts: DRA7: Add DSPEVE thermal data
+>>    arm: dts: DRA7: Add IVA thermal data
+>>    arm: dts: DRA7: Add missing IVA and DSPEVE thermal domain data
+>>
+>>   arch/arm/boot/dts/dra7-dspeve-thermal.dtsi | 27 +++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/dra7-iva-thermal.dtsi    | 27 +++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/dra7.dtsi                |  2 ++
+>>   3 files changed, 56 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/dra7-dspeve-thermal.dtsi
+>>   create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
+>>
+>> --
+>> 1.9.1
+>>
