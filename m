@@ -1,36 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 01/12] irqchip: armada-370-xp: add Kconfig option for the driver
-Date: Tue, 09 Feb 2016 16:14:32 +0100
-Message-ID: <7747159.T9eeT0dC65@wuerfel>
-References: <1454951660-13289-1-git-send-email-gregory.clement@free-electrons.com> <1454951660-13289-2-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V5 1/2] regulator: Add document for MT6323 regulator
+Date: Tue, 9 Feb 2016 15:17:45 +0000
+Message-ID: <20160209151745.GG13270@sirena.org.uk>
+References: <1454874037-38905-1-git-send-email-blogic@openwrt.org>
+ <20160209124133.GE13270@sirena.org.uk>
+ <56B9DF5D.2010501@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eMnpOGXCMazMAbfp"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454951660-13289-2-git-send-email-gregory.clement@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <56B9DF5D.2010501@openwrt.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
+To: John Crispin <blogic@openwrt.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, chen.zhong@mediatek.com, HenryC.Chen@mediatek.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 February 2016 18:14:09 Gregory CLEMENT wrote:
-> 
-> +config ARMADA_370_XP_IRQ
-> +       bool
-> +       default y if ARCH_MVEBU
-> +       select GENERIC_IRQ_CHIP
-> +
-> 
 
-Looks good. I wonder if we should also enable this for COMPILE_TEST, e.g.
+--eMnpOGXCMazMAbfp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-config ARMADA_370_XP_IRQ
-       bool "Marvell Armada 3xx/XP/3xxx interrupt controller" if COMPILE_TEST && !ARCH_MVEBU
-       default ARCH_MVEBU
-       select GENERIC_IRQ_CHIP
+On Tue, Feb 09, 2016 at 01:45:17PM +0100, John Crispin wrote:
 
-If we do this, it's probably something outside of your series that we should
-do for all patches, so don't worry about it here. Any opinions on the general
-question?
+> How would you like it to be. i am failing to understand that from your
+> comment.
 
-	Arnd
+Remove the compatible string, you don't have a separate device to bind
+to.
+
+--eMnpOGXCMazMAbfp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWugMZAAoJECTWi3JdVIfQj+QH/3WJ+cjkH+qzRfvNolvKp+Mj
+kk3wzVMJVgPlanYn6hV+RXTF4bL/fIAdHpatPLRir/SIqbPljZcQ0pGJPN2MJXZz
+NjnT/PBqCsRZCluF943Wmtyfr3O63qTZpCLLzN0WiNzc+0pB4wexKQplYxCeAKO8
+8gWCWP73BgztId4XSKeCyBNOExiLawB18FWtT6j34eECElN9hA2G7AOej8aluLH2
+QLH4vkb/QqyrBDoexHpS7M2r5VJUKV6zUp7zlTUxQw3owtZxyS1hT7dzpqMUlykS
+hg+zD7jiiQF1jrmzQVujk8l3pVkbayvFdHeL51d0z+oJ2D8WoVjVKxZfJcBnvls=
+=xrr2
+-----END PGP SIGNATURE-----
+
+--eMnpOGXCMazMAbfp--
