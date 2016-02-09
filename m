@@ -1,63 +1,36 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH V3 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
- driver to work on both  Zynq and Microblaze
-Date: Tue, 9 Feb 2016 08:11:34 -0800
-Message-ID: <20160209161134.GA24244@NP-P-BURTON>
-References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
- <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
+From: Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH V2 09/12] dtb: amd: Add KCS device tree node
+Date: Tue, 9 Feb 2016 10:11:38 -0600
+Message-ID: <56BA0FBA.1010202@amd.com>
+References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <4018438.bPuTyoUuqf@wuerfel> <56BA0A2B.5000705@amd.com>
+ <15181064.RzzsN4CWec@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
+In-Reply-To: <15181064.RzzsN4CWec@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: brijesh.singh@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, galak@codeaurora.org, thomas.lendacky@amd.com, brijeshkumar.singh@amd.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 04:11:56PM +0530, Bharat Kumar Gogada wrote:
-> Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
-> Zynq and Microblaze Architectures.
-> With these modifications drivers/pci/host/pcie-xilinx.c, will
-> work on both Zynq and Microblaze Architectures.
+Hi,
+
+On 02/09/2016 10:00 AM, Arnd Bergmann wrote:
 > 
-> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> ---
-> Changes:
-> Removed unneccessary architecture dependent number of MSI's.
-> Added #ifdef to pci_fixup_irqs which is ARM specific API.
-
-Hi Bharat,
-
-Why do you say pci_fixup_irqs is ARM-specific? It's declared in
-include/linux/pci.h, defined in drivers/pci/setup-irq.c & used by
-multiple architectures (alpha, arm, m68k, mips, sh, sparc, tile,
-unicore32 from a quick grep).
-
-Will you not break INTX-style interrupts by removing this?
-
-Thanks,
-    Paul
-
-> ---
->  drivers/pci/host/pcie-xilinx.c | 2 ++
->  1 file changed, 2 insertions(+)
+> The important part for interrupt/reg/... names is that you must use exactly the
+> names that are listed in the binding. If there is no name in there, it's better
+> not to add the name property.
 > 
-> diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
-> index 13fec35..6cbce34 100644
-> --- a/drivers/pci/host/pcie-xilinx.c
-> +++ b/drivers/pci/host/pcie-xilinx.c
-> @@ -704,7 +704,9 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
->  #endif
->  	pci_scan_child_bus(bus);
->  	pci_assign_unassigned_bus_resources(bus);
-> +#ifdef CONFIG_ARM
->  	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> +#endif
->  	pci_bus_add_devices(bus);
->  	platform_set_drvdata(pdev, port);
->  
-> -- 
-> 2.1.1
+> The other point is that "ipmi_kcs" is a name that is picked really badly, as it
+> uses a '_' character while DT properties by convention use '-' between names,
+> and the name of the IRQ is the same as the device itself, which is really
+> not a useful way to disambiguate multiple interrupts in the same device, if
+> someone ever adds another irq line.
+> 
+
+Sure we will drop the name field. Thanks.
+
+> 	Arnd
 > 
