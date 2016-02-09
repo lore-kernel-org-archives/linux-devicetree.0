@@ -1,42 +1,37 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Enable USB DRC on MK808C
-Date: Tue, 9 Feb 2016 19:36:45 +0100
-Message-ID: <20160209183645.GY31506@lukather>
-References: <1455009932-27616-1-git-send-email-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z8pjODCYYz+3zRe3"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSHD5C2QKGQEN3MXYIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455009932-27616-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: slemieux.tyco@gmail.com
+Subject: [PATCH 2/2] dt-bindings: clock: add lpc32xx clock frequency output
+Date: Tue,  9 Feb 2016 13:47:50 -0500
+Message-ID: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: robh+dt@kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com
+Cc: stigge@antcom.de, vz@mleia.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Z8pjODCYYz+3zRe3
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+From: Sylvain Lemieux <slemieux@tycoint.com>
 
-On Tue, Feb 09, 2016 at 10:25:32AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Enable the otg/drc usb controller on the MK808C.
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch add an optional parameter to setup the
+xtal clock frequency output.
 
-Applied, thanks!
-Maxime
+Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+---
+ Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+index 20cbca3..ce51759 100644
+--- a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
++++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+@@ -10,6 +10,9 @@ Required properties:
+ - clock-names: list of external oscillator clock names, must contain
+   "xtal_32k" and may have optional "xtal"
+ 
++Optional properties:
++- xtal,clock-output-frequency: define the "xtal" clock frequency output in Hz
++
+ Examples:
+ 
+ 	/* System Control Block */
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Z8pjODCYYz+3zRe3--
+1.8.3.1
+
