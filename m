@@ -1,8 +1,8 @@
 From: Sylvain Lemieux <slemieux.tyco@gmail.com>
 Subject: Re: [PATCH 1/2] clk: lpc32xx: add clock frequency output
  configuration
-Date: Tue, 09 Feb 2016 15:07:10 -0500
-Message-ID: <1455048430.19294.3.camel@localhost>
+Date: Tue, 09 Feb 2016 15:00:04 -0500
+Message-ID: <1455048004.19294.1.camel@localhost>
 References: <1455043670-19025-1-git-send-email-slemieux.tyco@gmail.com>
 	 <20160209185723.GC31947@codeaurora.org>
 Mime-Version: 1.0
@@ -31,5 +31,6 @@ On Tue, 2016-02-09 at 10:57 -0800, Stephen Boyd wrote:
 > 
 > We have assigned-clock-rates, can you use that instead?
 > 
-OK, I will submit a new version of the patch tomorrow.
+I will submit a version 2 with this change tomorrow.
+
 
