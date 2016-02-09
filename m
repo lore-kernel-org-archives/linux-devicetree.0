@@ -1,118 +1,30 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun7i: Enable USB DRC on Olimex
- A20 EVB
-Date: Tue, 9 Feb 2016 10:51:03 +0100
-Message-ID: <56B9B687.4070800@redhat.com>
-References: <1455010408-27896-1-git-send-email-codekipper@gmail.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: stm32: Remove dependency with DT bindings
+ header files
+Date: Tue, 9 Feb 2016 10:53:01 +0100
+Message-ID: <CACRpkdb+V8O8H1gjkWwgqSimFtgJ2rFnwdY0sCChEjFSCkOO8w@mail.gmail.com>
+References: <1454954259-4923-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1454954259-4923-2-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBDPN422QKGQEHUFXI2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1455010408-27896-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1454954259-4923-2-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Feb 8, 2016 at 6:57 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
 
-On 09-02-16 10:33, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Some macros where defined in DT bindings headers, whereas only used
+> in the driver.
 >
-> Enable the otg/drc usb controller on the Olimex A20 EVB.
+> This patch moves these macros to the driver side.
 >
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes since v1:
-> - Added vbus0 regulator and vbus0 detection to dts
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-Thanks patch looks good to me:
+Patch applied.
 
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Regards,
-
-Hans
-
-
- >
-
-
-
->
-> ---
->   arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 32 ++++++++++++++++++++++++++
->   1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-> index c3c626b..23aacce 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-> @@ -198,6 +198,10 @@
->   	status = "okay";
->   };
->
-> +&otg_sram {
-> +	status = "okay";
-> +};
-> +
->   &pio {
->   	ahci_pwr_pin_olimex_som_evb: ahci_pwr_pin@1 {
->   		allwinner,pins = "PC3";
-> @@ -219,6 +223,20 @@
->   		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->   		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->   	};
-> +
-> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +		allwinner,pins = "PH4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +
-> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-> +		allwinner,pins = "PH5";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
->   };
->
->   &reg_ahci_5v {
-> @@ -254,6 +272,10 @@
->   	regulator-name = "avcc";
->   };
->
-> +&reg_usb0_vbus {
-> +	status = "okay";
-> +};
-> +
->   &reg_usb1_vbus {
->   	status = "okay";
->   };
-> @@ -268,7 +290,17 @@
->   	status = "okay";
->   };
->
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
->   &usbphy {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> +	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH04 */
-> +	usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH05 */
-> +	usb0_vbus-supply = <&reg_usb0_vbus>;
->   	usb1_vbus-supply = <&reg_usb1_vbus>;
->   	usb2_vbus-supply = <&reg_usb2_vbus>;
->   	status = "okay";
->
+Yours,
+Linus Walleij
