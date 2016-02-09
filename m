@@ -1,87 +1,128 @@
-From: Robert Richter <rrichter@caviumnetworks.com>
-Subject: [PATCH v4 1/6] of/fdt: make generic early_init_dt_add_memory_arch() a
- weak alias
-Date: Tue, 9 Feb 2016 14:53:41 +0100
-Message-ID: <1455026026-11571-2-git-send-email-rrichter@caviumnetworks.com>
-References: <1455026026-11571-1-git-send-email-rrichter@caviumnetworks.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 1/3] mwifiex: register platform specific driver
+Date: Tue, 9 Feb 2016 14:00:04 +0000
+Message-ID: <5347bd8a22ab4fc78ccc5d5d80cbd4b0@SC-EXCH04.marvell.com>
+References: <1454926528-17480-1-git-send-email-akarwar@marvell.com>
+ <20160208215614.GB9036@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1455026026-11571-1-git-send-email-rrichter@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, Robert Richter <rrichter@cavium.com>, Mark Salter <msalter@redhat.com>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160208215614.GB9036@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Hi Rob,
 
-The function early_init_dt_add_memory_arch() is defined as __weak
-so that archs can override it. However, in this override implementation,
-it may still be useful to invoke the generic implementation, so instead,
-rename the generic version to early_init_dt_add_memory() and turn the
-original definition into a weak alias. This way, the generic version can
-still be called even in the presence of an arch specific override.
+Thanks for your review.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Message-Id: <1442881288-13962-2-git-send-email-ard.biesheuvel@linaro.org>
-Signed-off-by: Robert Richter <rrichter@cavium.com>
----
- drivers/of/fdt.c       | 7 +++++--
- include/linux/of_fdt.h | 1 +
- 2 files changed, 6 insertions(+), 2 deletions(-)
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, February 09, 2016 3:26 AM
+> To: Amitkumar Karwar
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam;
+> wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xinming Hu
+> Subject: Re: [PATCH v3 1/3] mwifiex: register platform specific driver
+> 
+> On Mon, Feb 08, 2016 at 02:15:26AM -0800, Amitkumar Karwar wrote:
+> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >
+> > Platform device and driver provides easy way to interact with
+> > device-tree-enabled system.
+> >
+> > This patch registers platform driver and reorganise existing device
+> > tree specific code.
+> > Corresponding device tree binding file is also created.
+> 
+> Wrap you lines at 72 columns.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 655f79db7899..cba8281ab5fd 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -980,7 +980,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- #define MAX_MEMBLOCK_ADDR	((phys_addr_t)~0)
- #endif
- 
--void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
-+void __init early_init_dt_add_memory(u64 base, u64 size)
- {
- 	const u64 phys_offset = __pa(PAGE_OFFSET);
- 
-@@ -1038,7 +1038,7 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
- 	return __va(memblock_alloc(size, align));
- }
- #else
--void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
-+void __init early_init_dt_add_memory(u64 base, u64 size)
- {
- 	WARN_ON(1);
- }
-@@ -1058,6 +1058,9 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
- }
- #endif
- 
-+__weak __alias(early_init_dt_add_memory)
-+void early_init_dt_add_memory_arch(u64 base, u64 size);
-+
- bool __init early_init_dt_verify(void *params)
- {
- 	if (!params)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index df9ef3801812..463a06ba87ac 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -65,6 +65,7 @@ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
-+extern void early_init_dt_add_memory(u64 base, u64 size);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
- extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
- 					     bool no_map);
--- 
-2.7.0.rc3
+Ack.
+
+> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
+> > ---
+> >  Documentation/devicetree/bindings/mwifiex.txt      | 29 +++++++++++
+> 
+> This doesn't belong at top level of bindings. bindings/net/wireless/
+> 
+> Also, mwifiex is a linux driver name. Name it after the chips.
+> marvell-sd8xxx?
+
+Sure. I will rename as marvell-sd8xxx and move it to bindings/net/wireless/
+
+> 
+> >  drivers/net/wireless/marvell/mwifiex/Makefile      |  1 +
+> >  drivers/net/wireless/marvell/mwifiex/main.c        |  2 +
+> >  drivers/net/wireless/marvell/mwifiex/main.h        | 14 +++++
+> >  .../net/wireless/marvell/mwifiex/platform_drv.c    | 59
+> ++++++++++++++++++++++
+> >  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  6 +--
+> >  drivers/net/wireless/marvell/mwifiex/sta_ioctl.c   |  2 +-
+> >  7 files changed, 109 insertions(+), 4 deletions(-)  create mode
+> > 100644 Documentation/devicetree/bindings/mwifiex.txt
+> >  create mode 100644
+> > drivers/net/wireless/marvell/mwifiex/platform_drv.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/mwifiex.txt
+> > b/Documentation/devicetree/bindings/mwifiex.txt
+> > new file mode 100644
+> > index 0000000..39b6a74
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mwifiex.txt
+> > @@ -0,0 +1,29 @@
+> > +mwifiex
+> > +------
+> > +
+> > +Required properties:
+> > +
+> > +  - name : must be "mwifiex"
+> > +  - compatible : must be "marvell,mwifiex"
+> 
+> The naming should be named after the actual chip.
+
+Ok. How about having names as below?
+
++  - name : can be "sd8897", "sd8787" or "sd8797"
++  - compatible : must be "marvell,sd8xxx"
+
+> 
+> > +
+> > +Optional properties:
+> > +
+> > +  - mwifiex,caldata* : A series of properties with marvell,caldata
+> > + prefix,
+> 
+> mwifiex is not a vendor.
+
+Got it. We will use "marvell,caldata*" here.
+
+> 
+> > +  		      represent Calibration data downloaded to the device
+> during
+> > +		      initialization. This is an array of unsigned values.
+> > +
+> > +
+> > +Example:
+> > +
+> > +Tx power limit calibration data is configured in below example.
+> > +The calibration data is an array of unsigned values, the length can
+> > +vary between hw versions.
+> > +
+> > +mwifiex {
+> 
+> These chips are SDIO devices, right? This should be a child node of the
+> SDIO controller.
+> 
+
+Yes. They are SDIO devices. We will have the node as child node of SDIO controller.
+
+Regards,
+Amitkumar Karwar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
