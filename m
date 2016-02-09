@@ -1,63 +1,97 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] ARM64: tegra: Add stdout-path for various boards
-Date: Tue, 9 Feb 2016 13:52:00 +0000
-Message-ID: <1455025920-21875-2-git-send-email-jonathanh@nvidia.com>
-References: <1455025920-21875-1-git-send-email-jonathanh@nvidia.com>
+From: Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
+Date: Tue, 9 Feb 2016 15:54:31 +0200
+Message-ID: <CABM=7k=5WJj_rF1fWO+rnKiF_bcr=i8Bg8E4sKGOR=ER4zjgWw@mail.gmail.com>
+References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
+ <56B8B45D.1020902@arm.com> <20160209085633.GA5388@kwain> <20160209090131.GB5388@kwain>
+ <56B9ACE2.1060200@arm.com> <CABM=7knaepbyy4nw_GczVM7E_t6py7gG0ERs8ru_AYoVXvAQ+A@mail.gmail.com>
+ <56B9B1B5.5070106@arm.com> <CABM=7k=-Y+eFB2nUMfMjd3saTSNDsEyfHyYNf-ef8qQc5jCsxA@mail.gmail.com>
+ <56B9D20A.8010709@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455025920-21875-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B9D20A.8010709-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ronen Shitrit <rshitrit-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barak Wasserstrom <barak-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For Tegra boards, the device-tree alias serial0 is used for the console
-and so add the stdout-path information so that the console no longer
-needs to be passed via the kernel boot parameters.
+On 9 February 2016 at 13:48, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 09/02/16 10:13, Tsahee Zidenberg wrote:
+>> On 9 February 2016 at 11:30, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>> On 09/02/16 09:14, Tsahee Zidenberg wrote:
+>>>>
+>>>>
+>>>> On 9 February 2016 at 11:09, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org
+>>>> <mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org>> wrote:
+>>>>
+>>>>     On 09/02/16 09:01, Antoine Tenart wrote:
+>>>>     > On Tue, Feb 09, 2016 at 09:56:33AM +0100, Antoine Tenart wrote:
+>>>>     >> Hi Marc,
+>>>>     >>
+>>>>     >> On Mon, Feb 08, 2016 at 03:29:33PM +0000, Marc Zyngier wrote:
+>>>>     >>> On 08/02/16 09:11, Antoine Tenart wrote:
+>>>>     >>>
+>>>>     >>>> +          gic: gic@f0100000 {
+>>>>     >>>> +                  compatible = "arm,gic-v3";
+>>>>     >>>> +                  reg = <0x0 0xf0200000 0x0 0x10000>,     /* GIC Dist */
+>>>>     >>>> +                        <0x0 0xf0280000 0x0 0x200000>,    /* GICR */
+>>>>     >>>> +                        <0x0 0xf0100000 0x0 0x2000>;      /* GICC */
+>>>>     >>>> +                  interrupt-controller;
+>>>>     >>>> +                  #interrupt-cells = <3>;
+>>>>     >>>> +          };
+>>>>     >>>
+>>>>     >>> Something is wrong here. Either you are missing GICH and GICV (assuming
+>>>>     >>> you have legacy support), or you have an extra GICC region (which
+>>>>     >>> doesn't make sense on its own).
+>>>>     >>
+>>>>     >> I'll add the missing regions.
+>>>>     >
+>>>>     > Hmm, in fact the GICC region shouldn't be there. I'll make some tests
+>>>>     > and remove it.
+>>>>
+>>>>     If you have a GICv3 with legacy support, you will probably have GICC,
+>>>>     GICH and GICV. Linux itself will only use GICD and GICR, but it needs at
+>>>>     least GICV to be able to virtualize GICv2 guests. And GICV is not
+>>>>     allowed to exist without GICC and GICH, so I really recommend that you
+>>>>     keep GICC around.
+>>>>
+>>>>
+>>>> We use the GIC without legacy support (we disable it in early boot
+>>>> stages), so I think removing the GICC region is the better solution.
+>>>
+>>> Disabling legacy support doesn't mean that:
+>>> - the HW isn't present
+>>> - the associated regions are not useful
+>>>
+>> By "disabling lecgacy support in early boot" I don't just mean that
+>> ARE bit will be set, but it will actually be RAO/WI. There will be no
+>> way for SW to enable it and use these registers (which, sadly, means
+>> that there will be no way to enable gicv2 virtualization). If you
+>> insist - I will dig up the supposed location of GICV and GICH - yet it
+>> will be both untested and entirely unusable.
+>
+> Just to make sure you are not missing the point: ARE==1 does *not* mean
+> that GICV is unusable. Quite the opposite. It only makes it illegal to
+> use GICC and GICH, but leaves GICV usable for a guest.
+>
+> So the real question is: do you have any additional HW that would
+> actively prevent GICV from being used? If the answer to that is "no",
+> and assuming your GICv3 implementation is compliant with the
+> architecture, then GICV will be usable, and you should document all 3
+> regions.
+>
 
-For tegra132-norrin the alias serial0 is not defined and so add this.
+O.K. will add to next version.
 
-This has been tested on tegra132-norrin and tegra210-p2371-0000.
-
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 5 ++++-
- arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi | 4 ++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-index 62f33fc84e3e..3c0b4d7bfa6f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-@@ -10,9 +10,12 @@
- 	aliases {
- 		rtc0 = "/i2c@0,7000d000/as3722@40";
- 		rtc1 = "/rtc@0,7000e000";
-+		serial0 = &uarta;
- 	};
- 
--	chosen { };
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- 
- 	memory {
- 		device_type = "memory";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
-index ece0dec61fae..73ba58260817 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2530.dtsi
-@@ -9,6 +9,10 @@
- 		serial0 = &uarta;
- 	};
- 
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x0 0x80000000 0x0 0xc0000000>;
--- 
-2.1.4
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
