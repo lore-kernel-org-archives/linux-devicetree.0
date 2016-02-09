@@ -1,44 +1,69 @@
-From: Lijun Pan <Lijun.Pan@freescale.com>
-Subject: [PATCH] ARM: dts: ls2080a: Add quirk for Erratum A009116
-Date: Tue, 9 Feb 2016 17:08:07 -0600
-Message-ID: <1455059287-2500-1-git-send-email-Lijun.Pan@freescale.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: replace gpio-key,
+ wakeup with wakeup-source property
+Date: Wed, 10 Feb 2016 00:32:51 +0100
+Message-ID: <48510660.EJbbczq5fX@phil>
+References: <1454968512-11956-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: shawnguo@kernel.org, rajesh.bhagat@freescale.com, Lijun Pan <Lijun.Pan@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1454968512-11956-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add "snps,quirk-frame-length-adjustment" property to
-USB3 node for erratum A009116. This property provides
-value of GFLADJ_30MHZ for post silicon frame length
-adjustment.
+Hi Sudeep,
 
-Signed-off-by: Lijun Pan <Lijun.Pan@freescale.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+Am Montag, 8. Februar 2016, 21:55:12 schrieb Sudeep Holla:
+> Keyboard driver for GPIO buttons(gpio-keys) checks for the legacy
+> "gpio-key,wakeup" boolean property to enable gpio buttons as wakeup
+> source.
+> 
+> Few dts files assign value "1" to gpio-key,wakeup and in one instance a
+> value "0" is assigned probably assuming it won't be enabled as a wakeup
+> source. Since the presence of the boolean property indicates it is
+> enabled, value of "0" have no value.
+> 
+> This patch replaces the legacy "gpio-key,wakeup" with the unified
+> "wakeup-source" property which inturn fixes the above mentioned issue.
+> 
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3066a-bqcurie2.dts          | 3 +--
+>  arch/arm/boot/dts/rk3066a-rayeager.dts          | 2 +-
+>  arch/arm/boot/dts/rk3188-radxarock.dts          | 2 +-
+>  arch/arm/boot/dts/rk3288-evb.dtsi               | 2 +-
+>  arch/arm/boot/dts/rk3288-firefly.dtsi           | 2 +-
+>  arch/arm/boot/dts/rk3288-popmetal.dts           | 2 +-
+>  arch/arm/boot/dts/rk3288-r89.dts                | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron.dtsi            | 2 +-
+>  arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi    | 2 +-
+>  arch/arm64/boot/dts/rockchip/rk3368-r88.dts     | 2 +-
+>  11 files changed, 11 insertions(+), 12 deletions(-)
+> 
+> Hi Heiko,
+> 
+> You can reviewed this, however there are couple of ARM64 dts additions.
+> Also most of the other platform/SoC maintainers preferred to take it via
+> their tree and few of these got missed during v4.5 merge window.
+> Can you take it via your tree for v4.6 ?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 6e9e033..fa506f5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -501,6 +501,7 @@
- 			reg = <0x0 0x3100000 0x0 0x10000>;
- 			interrupts = <0 80 0x4>; /* Level high type */
- 			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -509,6 +510,7 @@
- 			reg = <0x0 0x3110000 0x0 0x10000>;
- 			interrupts = <0 81 0x4>; /* Level high type */
- 			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
- 		};
- 
- 		ccn@4000000 {
--- 
-1.7.9.5
+I've split the patch in two, as the 32 and 64 bit devicetree parts go 
+through separate branches and applied both to their respective branches for 
+v4.6
+
+
+Heiko
