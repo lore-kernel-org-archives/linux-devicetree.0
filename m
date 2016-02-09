@@ -1,406 +1,413 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: adc: add support for
- ADC0831/ADC0832/ADC0834/ADC0838 chips
-Date: Tue, 9 Feb 2016 22:23:40 +0000
-Message-ID: <56BA66EC.1070303@kernel.org>
-References: <1454836456-17033-1-git-send-email-akinobu.mita@gmail.com>
+Subject: Re: [PATCH v1 2/2] iio: dac: vf610_dac: Add IIO DAC driver for Vybrid
+ SoC
+Date: Tue, 9 Feb 2016 22:44:25 +0000
+Message-ID: <56BA6BC9.1020101@kernel.org>
+References: <cover.1454939346.git.maitysanchayan@gmail.com>
+ <5a699d45c89d239f3e49fa83d16a9b467016e219.1454939346.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454836456-17033-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5a699d45c89d239f3e49fa83d16a9b467016e219.1454939346.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/16 09:14, Akinobu Mita wrote:
-> This adds ADC0831/ADC0832/ADC0834/ADC0838 8-bit ADC driver.
-> I have tested with ADC0831 and ADC0832.  The remaining ADC0834 and
-> ADC0838 are very similar to ADC0832.
+On 09/02/16 05:26, Sanchayan Maity wrote:
+> Add driver support for DAC peripheral on Vybrid SoC.
 > 
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Very nice.
-
-Applied to the togreg branch of iio.git - initially pushed out
-as testing to let the autobuilders play tennis with it.
+> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Few minor comments inline.
 
 Jonathan
 > ---
-> * v2 (Most changes are suggested by Jonathan Cameron)
-> - rename driver name from ti-adc083x to ti-adc0832
-> - simplify read_raw() by moving lock
-> - fix remove() of driver with correct unwinding
-> - enable untested chips (adc0831, adc0834, adc0838)
-> - fix adc0831_adc_conversion as a result of testing
+>  .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
+>  drivers/iio/dac/Kconfig                            |   8 +
+>  drivers/iio/dac/Makefile                           |   1 +
+>  drivers/iio/dac/vf610_dac.c                        | 302 +++++++++++++++++++++
+>  4 files changed, 331 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+>  create mode 100644 drivers/iio/dac/vf610_dac.c
 > 
->  .../devicetree/bindings/iio/adc/ti-adc0832.txt     |  19 ++
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/ti-adc0832.c                       | 288 +++++++++++++++++++++
->  4 files changed, 318 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
->  create mode 100644 drivers/iio/adc/ti-adc0832.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
+> diff --git a/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
 > new file mode 100644
-> index 0000000..d911305
+> index 0000000..97d7a40
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
-> @@ -0,0 +1,19 @@
-> +* Texas Instruments' ADC0831/ADC0832/ADC0832/ADC0838
+> +++ b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+> @@ -0,0 +1,20 @@
+> +Freescale vf610 Digital to Analog Converter bindings
+> +
+> +The devicetree bindings are for the new DAC driver written for
+> +vf610 SoCs from Freescale.
 > +
 > +Required properties:
-> + - compatible: Should be one of
-> +	* "ti,adc0831"
-> +	* "ti,adc0832"
-> +	* "ti,adc0834"
-> +	* "ti,adc0838"
-> + - reg: spi chip select number for the device
-> + - vref-supply: The regulator supply for ADC reference voltage
-> + - spi-max-frequency: Max SPI frequency to use (< 400000)
+> +- compatible: Should contain "fsl,vf610-dac"
+> +- reg: Offset and length of the register set for the device
+> +- interrupts: Should contain the interrupt for the device
+> +- clocks: The clock is needed by the DAC controller
+> +- clock-names: Must contain "dac", matching entry in the clocks property.
 > +
 > +Example:
-> +adc@0 {
-> +	compatible = "ti,adc0832";
-> +	reg = <0>;
-> +	vref-supply = <&vdd_supply>;
-> +	spi-max-frequency = <200000>;
+> +dac0: dac@400cc000 {
+> +	compatible = "fsl,vf610-dac";
+> +	reg = <0x400cc000 0x1000>;
+> +	interrupts = <55 IRQ_TYPE_LEVEL_HIGH>;
+> +	clock-names = "dac";
+> +	clocks = <&clks VF610_CLK_DAC0>;
 > +};
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index b8f5218..cc53003 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -333,6 +333,16 @@ config TI_ADC081C
->  	  This driver can also be built as a module. If so, the module will be
->  	  called ti-adc081c.
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index e701e28..8eb0502 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -196,4 +196,12 @@ config MCP4922
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called mcp4922.
 >  
-> +config TI_ADC0832
-> +	tristate "Texas Instruments ADC0831/ADC0832/ADC0834/ADC0838"
-> +	depends on SPI
+> +config VF610_DAC
+> +	tristate "Vybrid vf610 DAC driver"
 > +	help
-> +	  If you say yes here you get support for Texas Instruments ADC0831,
-> +	  ADC0832, ADC0834, ADC0838 ADC chips.
+> +	  Say yes here to support Vybrid board digital-to-analog converter.
 > +
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called ti-adc0832.
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called vf610_dac.
 > +
->  config TI_ADC128S052
->  	tristate "Texas Instruments ADC128S052/ADC122S021"
->  	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 3f63a89..706921c 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
->  obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
->  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
->  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
-> +obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
->  obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
->  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
->  obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
-> diff --git a/drivers/iio/adc/ti-adc0832.c b/drivers/iio/adc/ti-adc0832.c
+>  endmenu
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 63ae056..93feb27 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -21,3 +21,4 @@ obj-$(CONFIG_MAX517) += max517.o
+>  obj-$(CONFIG_MAX5821) += max5821.o
+>  obj-$(CONFIG_MCP4725) += mcp4725.o
+>  obj-$(CONFIG_MCP4922) += mcp4922.o
+> +obj-$(CONFIG_VF610_DAC) += vf610_dac.o
+> diff --git a/drivers/iio/dac/vf610_dac.c b/drivers/iio/dac/vf610_dac.c
 > new file mode 100644
-> index 0000000..0afeac0
+> index 0000000..775b349
 > --- /dev/null
-> +++ b/drivers/iio/adc/ti-adc0832.c
-> @@ -0,0 +1,288 @@
+> +++ b/drivers/iio/dac/vf610_dac.c
+> @@ -0,0 +1,302 @@
 > +/*
-> + * ADC0831/ADC0832/ADC0834/ADC0838 8-bit ADC driver
+> + * Freescale Vybrid vf610 DAC driver
 > + *
-> + * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright 2016 Toradex AG
 > + *
-> + * This file is subject to the terms and conditions of version 2 of
-> + * the GNU General Public License.  See the file COPYING in the main
-> + * directory of this archive for more details.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 > + *
-> + * Datasheet: http://www.ti.com/lit/ds/symlink/adc0832-n.pdf
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
 > + */
 > +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/iio/iio.h>
+> +#include <linux/platform_device.h>
 > +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
 > +
-> +enum {
-> +	adc0831,
-> +	adc0832,
-> +	adc0834,
-> +	adc0838,
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#define DRIVER_NAME "vf610-dac"
+One of my pet hates is having defines like this that add nothing.
+Just put it in where it is used (as there is only one place).
+
+> +
+> +#define VF610_DACx_STATCTRL		0x20
+> +
+> +#define VF610_DAC_DACEN			BIT(15)
+> +#define VF610_DAC_DACRFS		BIT(14)
+> +#define VF610_DAC_LPEN			BIT(11)
+> +
+> +#define VF610_DAC_DAT0(x)		((x) & 0xFFF)
+> +
+> +enum conversion_mode_sel {
+> +	VF610_DAC_CONV_HIGH_POWER,
+> +	VF610_DAC_CONV_LOW_POWER,
 > +};
 > +
-> +struct adc0832 {
-> +	struct spi_device *spi;
-> +	struct regulator *reg;
-> +	struct mutex lock;
-> +	u8 mux_bits;
-> +
-> +	u8 tx_buf[2] ____cacheline_aligned;
-> +	u8 rx_buf[2];
+> +struct vf610_dac {
+> +	struct clk *clk;
+> +	struct device *dev;
+> +	enum conversion_mode_sel conv_mode;
+> +	void __iomem *regs;
+> +	int irq;
 > +};
 > +
-> +#define ADC0832_VOLTAGE_CHANNEL(chan)					\
-> +	{								\
-> +		.type = IIO_VOLTAGE,					\
-> +		.indexed = 1,						\
-> +		.channel = chan,					\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
-> +	}
-> +
-> +#define ADC0832_VOLTAGE_CHANNEL_DIFF(chan1, chan2)			\
-> +	{								\
-> +		.type = IIO_VOLTAGE,					\
-> +		.indexed = 1,						\
-> +		.channel = (chan1),					\
-> +		.channel2 = (chan2),					\
-> +		.differential = 1,					\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
-> +	}
-> +
-> +static const struct iio_chan_spec adc0831_channels[] = {
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(0, 1),
-> +};
-> +
-> +static const struct iio_chan_spec adc0832_channels[] = {
-> +	ADC0832_VOLTAGE_CHANNEL(0),
-> +	ADC0832_VOLTAGE_CHANNEL(1),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(0, 1),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(1, 0),
-> +};
-> +
-> +static const struct iio_chan_spec adc0834_channels[] = {
-> +	ADC0832_VOLTAGE_CHANNEL(0),
-> +	ADC0832_VOLTAGE_CHANNEL(1),
-> +	ADC0832_VOLTAGE_CHANNEL(2),
-> +	ADC0832_VOLTAGE_CHANNEL(3),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(0, 1),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(1, 0),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(2, 3),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(3, 2),
-> +};
-> +
-> +static const struct iio_chan_spec adc0838_channels[] = {
-> +	ADC0832_VOLTAGE_CHANNEL(0),
-> +	ADC0832_VOLTAGE_CHANNEL(1),
-> +	ADC0832_VOLTAGE_CHANNEL(2),
-> +	ADC0832_VOLTAGE_CHANNEL(3),
-> +	ADC0832_VOLTAGE_CHANNEL(4),
-> +	ADC0832_VOLTAGE_CHANNEL(5),
-> +	ADC0832_VOLTAGE_CHANNEL(6),
-> +	ADC0832_VOLTAGE_CHANNEL(7),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(0, 1),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(1, 0),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(2, 3),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(3, 2),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(4, 5),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(5, 4),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(6, 7),
-> +	ADC0832_VOLTAGE_CHANNEL_DIFF(7, 6),
-> +};
-> +
-> +static int adc0831_adc_conversion(struct adc0832 *adc)
+> +static int vf610_dac_init(struct vf610_dac *info)
 > +{
-> +	struct spi_device *spi = adc->spi;
-> +	int ret;
+> +	int val;
 > +
-> +	ret = spi_read(spi, &adc->rx_buf, 2);
-> +	if (ret)
-> +		return ret;
+> +	info->conv_mode = VF610_DAC_CONV_LOW_POWER;
+> +	val = VF610_DAC_DACEN | VF610_DAC_DACRFS |
+> +		VF610_DAC_LPEN;
+> +	writel(val, info->regs + VF610_DACx_STATCTRL);
 > +
-> +	/*
-> +	 * Skip TRI-STATE and a leading zero
-> +	 */
-> +	return (adc->rx_buf[0] << 2 & 0xff) | (adc->rx_buf[1] >> 6);
+> +	return 0;
 > +}
 > +
-> +static int adc0832_adc_conversion(struct adc0832 *adc, int channel,
-> +				bool differential)
+> +static int vf610_set_conversion_mode(struct iio_dev *indio_dev,
+> +				const struct iio_chan_spec *chan,
+> +				unsigned int mode)
 > +{
-> +	struct spi_device *spi = adc->spi;
-> +	struct spi_transfer xfer = {
-> +		.tx_buf = adc->tx_buf,
-> +		.rx_buf = adc->rx_buf,
-> +		.len = 2,
-> +	};
-> +	int ret;
+> +	struct vf610_dac *info = iio_priv(indio_dev);
+> +	int val;
 > +
-> +	if (!adc->mux_bits)
-> +		return adc0831_adc_conversion(adc);
+> +	mutex_lock(&indio_dev->mlock);
+> +	info->conv_mode = mode;
+> +	val = readl(info->regs + VF610_DACx_STATCTRL);
+> +	if (mode)
+> +		val |= VF610_DAC_LPEN;
+> +	else
+> +		val &= ~VF610_DAC_LPEN;
+> +	writel(val, info->regs + VF610_DACx_STATCTRL);
+> +	mutex_unlock(&indio_dev->mlock);
 > +
-> +	/* start bit */
-> +	adc->tx_buf[0] = 1 << (adc->mux_bits + 1);
-> +	/* single-ended or differential */
-> +	adc->tx_buf[0] |= differential ? 0 : (1 << adc->mux_bits);
-> +	/* odd / sign */
-> +	adc->tx_buf[0] |= (channel % 2) << (adc->mux_bits - 1);
-> +	/* select */
-> +	if (adc->mux_bits > 1)
-> +		adc->tx_buf[0] |= channel / 2;
-> +
-> +	/* align Data output BIT7 (MSB) to 8-bit boundary */
-> +	adc->tx_buf[0] <<= 1;
-> +
-> +	ret = spi_sync_transfer(spi, &xfer, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return adc->rx_buf[1];
+> +	return 0;
 > +}
 > +
-> +static int adc0832_read_raw(struct iio_dev *iio,
-> +			struct iio_chan_spec const *channel, int *value,
-> +			int *shift, long mask)
+> +static int vf610_get_conversion_mode(struct iio_dev *indio_dev,
+> +				const struct iio_chan_spec *chan)
 > +{
-> +	struct adc0832 *adc = iio_priv(iio);
+> +	struct vf610_dac *info = iio_priv(indio_dev);
+> +
+> +	return info->conv_mode;
+> +}
+> +
+> +static const char * const vf610_conv_modes[] = { "high-power", "low-power"};
+> +
+> +static const struct iio_enum vf610_conversion_mode = {
+> +	.items = vf610_conv_modes,
+> +	.num_items = ARRAY_SIZE(vf610_conv_modes),
+> +	.get = vf610_get_conversion_mode,
+> +	.set = vf610_set_conversion_mode,
+> +};
+> +
+> +static const struct iio_chan_spec_ext_info vf610_ext_info[] = {
+> +	IIO_ENUM("conversion_mode", IIO_SHARED_BY_DIR,
+This will amke it called out_conversion_mode. Does it actually
+make sense, rather than IIO_SHARED_BY_ALL which would just
+be conversion_mode?  Doesn't really matter either way.
+> +		&vf610_conversion_mode),
+> +	{},
+> +};
+> +
+> +#define VF610_DAC_CHAN(_chan_type) { \
+> +	.type = (_chan_type), \
+> +	.indexed = -1, \
+> +	.output = 1, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+> +	.ext_info = vf610_ext_info, \
+> +}
+> +
+> +static const struct iio_chan_spec vf610_dac_iio_channels[] = {
+> +	VF610_DAC_CHAN(IIO_VOLTAGE),
+> +};
+> +
+> +static int vf610_read_raw(struct iio_dev *indio_dev,
+> +			struct iio_chan_spec const *chan,
+> +			int *val, int *val2,
+> +			long mask)
+> +{
+> +	struct vf610_dac *info = iio_priv(indio_dev);
 > +
 > +	switch (mask) {
 > +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&adc->lock);
-> +		*value = adc0832_adc_conversion(adc, channel->channel,
-> +						channel->differential);
-> +		mutex_unlock(&adc->lock);
-> +		if (*value < 0)
-> +			return *value;
-> +
+> +		*val = VF610_DAC_DAT0(readl(info->regs));
 > +		return IIO_VAL_INT;
 > +	case IIO_CHAN_INFO_SCALE:
-> +		*value = regulator_get_voltage(adc->reg);
-> +		if (*value < 0)
-> +			return *value;
-> +
-> +		/* convert regulator output voltage to mV */
-> +		*value /= 1000;
-> +		*shift = 8;
-> +
+> +		/*
+> +		 * DACRFS is always 1 for valid reference and typical
+> +		 * reference voltage as per Vybrid datasheet is 3.3V
+> +		 * from section 9.1.2.1 of Vybrid datasheet
+> +		 */
+> +		*val = 3300 /* mV */;
+> +		*val2 = 12;
+Looks at least superficially right to me - I'm being lazy and not reading
+the datasheet on this occasion!
 > +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	default:
+> +		break;
 > +	}
 > +
 > +	return -EINVAL;
 > +}
 > +
-> +static const struct iio_info adc0832_info = {
-> +	.read_raw = adc0832_read_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +static int adc0832_probe(struct spi_device *spi)
+> +static int vf610_write_raw(struct iio_dev *indio_dev,
+> +			struct iio_chan_spec const *chan,
+> +			int val, int val2,
+> +			long mask)
 > +{
-> +	struct iio_dev *indio_dev;
-> +	struct adc0832 *adc;
-> +	int ret;
+> +	struct vf610_dac *info = iio_priv(indio_dev);
 > +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&indio_dev->mlock);
+> +		writel(VF610_DAC_DAT0(val), info->regs);
+> +		mutex_unlock(&indio_dev->mlock);
+> +		return 0;
 > +
-> +	adc = iio_priv(indio_dev);
-> +	adc->spi = spi;
-> +	mutex_init(&adc->lock);
-> +
-> +	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->info = &adc0832_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	switch (spi_get_device_id(spi)->driver_data) {
-> +	case adc0831:
-> +		adc->mux_bits = 0;
-> +		indio_dev->channels = adc0831_channels;
-> +		indio_dev->num_channels = ARRAY_SIZE(adc0831_channels);
-> +		break;
-> +	case adc0832:
-> +		adc->mux_bits = 1;
-> +		indio_dev->channels = adc0832_channels;
-> +		indio_dev->num_channels = ARRAY_SIZE(adc0832_channels);
-> +		break;
-> +	case adc0834:
-> +		adc->mux_bits = 2;
-> +		indio_dev->channels = adc0834_channels;
-> +		indio_dev->num_channels = ARRAY_SIZE(adc0834_channels);
-> +		break;
-> +	case adc0838:
-> +		adc->mux_bits = 3;
-> +		indio_dev->channels = adc0838_channels;
-> +		indio_dev->num_channels = ARRAY_SIZE(adc0838_channels);
-> +		break;
 > +	default:
-> +		return -EINVAL;
+> +		break;
 > +	}
 > +
-> +	adc->reg = devm_regulator_get(&spi->dev, "vref");
-> +	if (IS_ERR(adc->reg))
-> +		return PTR_ERR(adc->reg);
+> +	return -EINVAL;
+> +}
 > +
-> +	ret = regulator_enable(adc->reg);
-> +	if (ret)
+> +static const struct iio_info vf610_dac_iio_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &vf610_read_raw,
+> +	.write_raw = &vf610_write_raw,
+> +};
+> +
+> +static const struct of_device_id vf610_dac_match[] = {
+> +	{ .compatible = "fsl,vf610-dac", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, vf610_dac_match);
+> +
+> +static int vf610_dac_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct vf610_dac *info;
+> +	struct resource *mem;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev,
+> +					sizeof(struct vf610_dac));
+> +	if (!indio_dev) {
+> +		dev_err(&pdev->dev, "Failed allocating iio device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	info = iio_priv(indio_dev);
+> +	info->dev = &pdev->dev;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(info->regs))
+> +		return PTR_ERR(info->regs);
+> +
+> +	info->clk = devm_clk_get(&pdev->dev, "dac");
+> +	if (IS_ERR(info->clk)) {
+> +		dev_err(&pdev->dev, "failed getting clock, err = %ld\n",
+> +			PTR_ERR(info->clk));
+> +		return PTR_ERR(info->clk);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->dev.of_node = pdev->dev.of_node;
+> +	indio_dev->info = &vf610_dac_iio_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = vf610_dac_iio_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(vf610_dac_iio_channels);
+> +
+> +	ret = clk_prepare_enable(info->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Could not prepare or enable the clock\n");
 > +		return ret;
-> +
-> +	spi_set_drvdata(spi, indio_dev);
+> +	}
 > +
 > +	ret = iio_device_register(indio_dev);
-> +	if (ret)
-> +		regulator_disable(adc->reg);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't register the device\n");
+> +		goto error_iio_device_register;
+> +	}
+> +
+> +	vf610_dac_init(info);
+Peter already pointed this out, but iio_device_register is responsible
+for exposing an IIO device to the rest of the system (userspace and
+in kernel client driverS) so it should not be called until everything is
+ready.  You might just get a read before we get to the init call here.
+> +
+> +	return 0;
+> +
+> +error_iio_device_register:
+> +	clk_disable_unprepare(info->clk);
 > +
 > +	return ret;
 > +}
 > +
-> +static int adc0832_remove(struct spi_device *spi)
+> +static int vf610_dac_remove(struct platform_device *pdev)
 > +{
-> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-> +	struct adc0832 *adc = iio_priv(indio_dev);
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct vf610_dac *info = iio_priv(indio_dev);
 > +
 > +	iio_device_unregister(indio_dev);
-> +	regulator_disable(adc->reg);
+> +	clk_disable_unprepare(info->clk);
 > +
 > +	return 0;
 > +}
 > +
-> +#ifdef CONFIG_OF
+> +#ifdef CONFIG_PM_SLEEP
+> +static int vf610_dac_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	struct vf610_dac *info = iio_priv(indio_dev);
+> +	int val;
 > +
-> +static const struct of_device_id adc0832_dt_ids[] = {
-> +	{ .compatible = "ti,adc0831", },
-> +	{ .compatible = "ti,adc0832", },
-> +	{ .compatible = "ti,adc0834", },
-> +	{ .compatible = "ti,adc0838", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, adc0832_dt_ids);
+Given this is presumably 'kind of' the oposite of the
+init below, for clear balance I'd break this out to
+a vf610_dac_exit function.
+
+Also opens up the question of whether it makes sense to make
+this same write in the remove function above.
+
+> +	val = readl(info->regs + VF610_DACx_STATCTRL);
+> +	val &= ~VF610_DAC_DACEN;
+> +	writel(val, info->regs + VF610_DACx_STATCTRL);
 > +
+> +	clk_disable_unprepare(info->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int vf610_dac_resume(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	struct vf610_dac *info = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(info->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	vf610_dac_init(info);
+> +
+> +	return 0;
+> +}
 > +#endif
 > +
-> +static const struct spi_device_id adc0832_id[] = {
-> +	{ "adc0831", adc0831 },
-> +	{ "adc0832", adc0832 },
-> +	{ "adc0834", adc0834 },
-> +	{ "adc0838", adc0838 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(spi, adc0832_id);
+> +static SIMPLE_DEV_PM_OPS(vf610_dac_pm_ops, vf610_dac_suspend, vf610_dac_resume);
 > +
-> +static struct spi_driver adc0832_driver = {
-> +	.driver = {
-> +		.name = "adc0832",
-> +		.of_match_table = of_match_ptr(adc0832_dt_ids),
+> +static struct platform_driver vf610_dac_driver = {
+> +	.probe          = vf610_dac_probe,
+> +	.remove         = vf610_dac_remove,
+> +	.driver         = {
+> +		.name   = DRIVER_NAME,
+> +		.of_match_table = vf610_dac_match,
+> +		.pm     = &vf610_dac_pm_ops,
 > +	},
-> +	.probe = adc0832_probe,
-> +	.remove = adc0832_remove,
-> +	.id_table = adc0832_id,
 > +};
-> +module_spi_driver(adc0832_driver);
+> +module_platform_driver(vf610_dac_driver);
 > +
-> +MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-> +MODULE_DESCRIPTION("ADC0831/ADC0832/ADC0834/ADC0838 driver");
+> +MODULE_AUTHOR("Sanchayan Maity <sanchayan.maity-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org");
+> +MODULE_DESCRIPTION("Freescale VF610 DAC driver");
 > +MODULE_LICENSE("GPL v2");
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
