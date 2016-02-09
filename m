@@ -1,360 +1,158 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v5 1/3] mailbox: Add support for APM X-Gene platform
- mailbox driver
-Date: Tue, 9 Feb 2016 09:40:40 -0700
-Message-ID: <CANLsYkwp4vJN+LcNm=7Xm=RppFnsPEXSAARS7=g6CZSsk5M5qw@mail.gmail.com>
-References: <CABb+yY1cE152ZdfK_aeB8ufG=WfoUVB6BN8kXPphYgMBnpH-GA@mail.gmail.com>
-	<cover.1454967957.git.dhdang@apm.com>
-	<90cb13a0b4d3817c18c11c183128c08d6458bf8d.1454967957.git.dhdang@apm.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: RE: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+Date: Tue, 9 Feb 2016 16:53:58 +0000
+Message-ID: <HE1PR04MB1641792D75BC60CA549F45A98DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
+ <56B9D62E.8080003@arm.com>
+ <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+ <20160209160812.GC9332@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <90cb13a0b4d3817c18c11c183128c08d6458bf8d.1454967957.git.dhdang@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Duc Dang <dhdang@apm.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@apm.com, Feng Kan <fkan@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20160209160812.GC9332@leverpostej>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 February 2016 at 15:04, Duc Dang <dhdang@apm.com> wrote:
-> X-Gene mailbox controller provides 8 mailbox channels, with
-> each channel has a dedicated interrupt line.
->
-> Signed-off-by: Feng Kan <fkan@apm.com>
-> Signed-off-by: Duc Dang <dhdang@apm.com>
-> ---
-> Changes since v4:
->         - Rebase over v4.5-rc1
->         - Fix section mistmatch warning by removing
->         __init in slimpro_mbox_probe declaration
->         - Correctly print channel number when
->         there is no IRQ for that channel
->
-> Changes since v3:
->         - Rebase over v4.4
->         - Remove 'id' in slimpro_mbox_chan structure
->         - Remove small functions that are only called once
->         and fold them into the other callers
->         - Remove void* pointer type cast
->         - Relax the number of mailbox IRQs condition
->         - Use subsys_initcall to guarantee mailbox driver
->         will be registered before any other dependent driver
->         is loaded.
->
->  drivers/mailbox/Kconfig                 |   9 ++
->  drivers/mailbox/Makefile                |   2 +
->  drivers/mailbox/mailbox-xgene-slimpro.c | 264 ++++++++++++++++++++++++++++++++
->  3 files changed, 275 insertions(+)
->  create mode 100644 drivers/mailbox/mailbox-xgene-slimpro.c
->
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index 546d05f..678e434 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -85,4 +85,13 @@ config MAILBOX_TEST
->           Test client to help with testing new Controller driver
->           implementations.
->
-> +config XGENE_SLIMPRO_MBOX
-> +       tristate "APM SoC X-Gene SLIMpro Mailbox Controller"
-> +       depends on ARCH_XGENE
-> +       help
-> +         An implementation of the APM X-Gene Interprocessor Communication
-> +         Mailbox (IPCM) between the ARM 64-bit cores and SLIMpro controller.
-> +         It is used to send short messages between ARM64-bit cores and
-> +         the SLIMpro Management Engine, primarily for PM. Say Y here if you
-> +         want to use the APM X-Gene SLIMpro IPCM support.
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index 92435ef..b602ef8 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -17,3 +17,5 @@ obj-$(CONFIG_ALTERA_MBOX)     += mailbox-altera.o
->  obj-$(CONFIG_BCM2835_MBOX)     += bcm2835-mailbox.o
->
->  obj-$(CONFIG_STI_MBOX)         += mailbox-sti.o
-> +
-> +obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
-> diff --git a/drivers/mailbox/mailbox-xgene-slimpro.c b/drivers/mailbox/mailbox-xgene-slimpro.c
-> new file mode 100644
-> index 0000000..0ea1eb8
-> --- /dev/null
-> +++ b/drivers/mailbox/mailbox-xgene-slimpro.c
-> @@ -0,0 +1,264 @@
-> +/*
-> + * APM X-Gene SLIMpro MailBox Driver
-> + *
-> + * Copyright (c) 2015, Applied Micro Circuits Corporation
-> + * Author: Feng Kan fkan@apm.com
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + *
-> + */
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define MBOX_CON_NAME                  "slimpro-mbox"
-> +#define MBOX_REG_SET_OFFSET            0x1000
-> +#define MBOX_CNT                       8
-> +#define MBOX_STATUS_AVAIL_MASK         BIT(16)
-> +#define MBOX_STATUS_ACK_MASK           BIT(0)
-> +
-> +/* Configuration and Status Registers */
-> +#define REG_DB_IN              0x00
-> +#define REG_DB_DIN0            0x04
-> +#define REG_DB_DIN1            0x08
-> +#define REG_DB_OUT             0x10
-> +#define REG_DB_DOUT0           0x14
-> +#define REG_DB_DOUT1           0x18
-> +#define REG_DB_STAT            0x20
-> +#define REG_DB_STATMASK                0x24
-> +
-> +struct slimpro_mbox_chan {
-> +       struct device *dev;
-> +       struct mbox_chan *chan;
-> +       void __iomem *reg;
-> +       int irq;
-> +       u32 rx_msg[3];
-> +};
-> +
-> +struct slimpro_mbox {
-> +       struct mbox_controller mb_ctrl;
-> +       struct slimpro_mbox_chan mc[MBOX_CNT];
-> +       struct mbox_chan chans[MBOX_CNT];
-> +};
 
-The above two structure declaration could use kernel style documentation.
 
-> +
-> +static void mb_chan_send_msg(struct slimpro_mbox_chan *mb_chan, u32 *msg)
-> +{
-> +       writel(msg[1], mb_chan->reg + REG_DB_DOUT0);
-> +       writel(msg[2], mb_chan->reg + REG_DB_DOUT1);
-> +       writel(msg[0], mb_chan->reg + REG_DB_OUT);
-> +}
-> +
-> +static void mb_chan_recv_msg(struct slimpro_mbox_chan *mb_chan)
-> +{
-> +       mb_chan->rx_msg[1] = readl(mb_chan->reg + REG_DB_DIN0);
-> +       mb_chan->rx_msg[2] = readl(mb_chan->reg + REG_DB_DIN1);
-> +       mb_chan->rx_msg[0] = readl(mb_chan->reg + REG_DB_IN);
-> +}
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Tuesday, February 09, 2016 10:08 AM
+> To: Stuart Yoder <stuart.yoder@nxp.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>; Robin Murphy <robin.murphy@arm.com>;
+> robh+dt@kernel.org; frowand.list@gmail.com; grant.likely@linaro.org;
+> devicetree@vger.kernel.org; david.daney@cavium.com; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; stable@vger.kernel.org
+> Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+> 
+> On Tue, Feb 09, 2016 at 03:56:55PM +0000, Stuart Yoder wrote:
+> >
+> > > -----Original Message-----
+> > > From: Marc Zyngier [mailto:marc.zyngier@arm.com]
+> > > Sent: Tuesday, February 09, 2016 6:06 AM
+> > > To: Robin Murphy <robin.murphy@arm.com>; robh+dt@kernel.org; frowand.list@gmail.com;
+> > > grant.likely@linaro.org; devicetree@vger.kernel.org
+> > > Cc: mark.rutland@arm.com; david.daney@cavium.com; Stuart Yoder
+> <stuart.yoder@nxp.com>;
+> > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > > stable@vger.kernel.org
+> > > Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
+> > >
+> > > Hi Robin,
+> > >
+> > > On 09/02/16 11:04, Robin Murphy wrote:
+> > > > The existing msi-map code is fine for shifting the entire RID space
+> > > > upwards, but attempting finer-grained remapping reveals a bug. It turns
+> > > > out that we are mistakenly treating the msi-base part as an offset, not
+> > > > as a new base to remap onto, so things get squiffy when rid-base is
+> > > > nonzero. Fix this, and at the same time add a sanity check against
+> > > > having msi-map-mask clash with a nonzero rid-base, as that's another
+> > > > thing one can easily get wrong.
+> > > >
+> > > > CC: <stable@vger.kernel.org>
+> > > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> > >
+> > > Looks like Stuart and you both found the same bug at the same time:
+> > > https://lkml.org/lkml/2016/2/8/1066
+> > >
+> > > but yours seem more correct to me (the rid_base masking in Stuart's
+> > > version seems odd).
+> > >
+> > > > ---
+> > > >  drivers/of/irq.c | 9 ++++++++-
+> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > > > index 7ee21ae..e7bfc17 100644
+> > > > --- a/drivers/of/irq.c
+> > > > +++ b/drivers/of/irq.c
+> > > > @@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct
+> > > device_node **np,
+> > > >  		msi_base = be32_to_cpup(msi_map + 2);
+> > > >  		rid_len = be32_to_cpup(msi_map + 3);
+> > > >
+> > > > +		if (rid_base & ~map_mask) {
+> > > > +			dev_err(parent_dev,
+> > > > +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores
+> rid-
+> > > base (0x%x)\n",
+> > > > +				map_mask, rid_base);
+> > > > +			return rid_out;
+> > > > +		}
+> > > > +
+> > > >  		msi_controller_node = of_find_node_by_phandle(phandle);
+> > > >
+> > > >  		matched = (masked_rid >= rid_base &&
+> > > > @@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct
+> device_node
+> > > **np,
+> > > >  	if (!matched)
+> > > >  		return rid_out;
+> > > >
+> > > > -	rid_out = masked_rid + msi_base;
+> > > > +	rid_out = masked_rid - rid_base + msi_base;
+> > > >  	dev_dbg(dev,
+> > > >  		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x,
+> length:
+> > > %08x, rid: %08x -> %08x\n",
+> > > >  		dev_name(parent_dev), map_mask, rid_base, msi_base,
+> > > >
+> >
+> > This computation:  masked_rid - rid_base
+> >
+> > ...doesn't seem right to me.  We are taking a rid that
+> > has been already masked and subtracting a rid base that has
+> > not been masked.
+> 
+> The binding only mentions that the input RID is masked, not the base, so
+> that seems correct to me.
+> 
+> > I don't see how you can combine masked and unmasked values in the same
+> > calculation.
+> >
+> > Say I have this msi mapping:
+> >
+> >                    msi-map = <0x0100 &its 0x11 0x1>;
+> >                    msi-map-mask = <0xff>;
+> >
+> 
+> I'd say that this is an inconsistent set of properties, and it's
+> probably worth warning if we encounter this. There is no possible way
+> that rid-base can be encountered.
+> 
+> > masked_rid = 0x0
+> > rid_base = 0x0100
+> > msi_base = 0x11
+> >
+> > masked_rid - rid_base is 0x0 - 0x0100...which does not
+> > give the msi index/offset we want.
+> >
+> > Correct final answer should be 0x11.
+> 
+> You can unambiguously describe this with:
+> 
+> 	msi-map = <0x00 &its 0x11 0x1>;
+> 	msi-map-mask = <0xff>;
+> 
+> This is exactly the pattern we follow in example 2 in the binding
+> document.
+> 
+> > In my patch I masked the rid_base so it can be subtracted
+> > from the masked_rid.
+> >
+> > masked_rid_base = 0x00
+> >
+> >    msi_base + (masked_rid - masked_rid_base) = 0x11
+> 
+> As above, I think that this is an inconsistent DT, and we should
+> warn/fail in that case.
 
-Is there a requirement that operations in the above two functions be
-ordered?  If not significant gains could be achieved by using
-writel/readl_relaxed().  Same comment for the rest of this driver.
+Thanks...understand now.  I'll test Robin's patch and confirm
+that it works as is for me.
 
 Thanks,
-Mathieu
-
-> +
-> +static int mb_chan_status_ack(struct slimpro_mbox_chan *mb_chan)
-> +{
-> +       u32 val = readl(mb_chan->reg + REG_DB_STAT);
-> +
-> +       if (val & MBOX_STATUS_ACK_MASK) {
-> +               writel(MBOX_STATUS_ACK_MASK, mb_chan->reg + REG_DB_STAT);
-> +               return 1;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static int mb_chan_status_avail(struct slimpro_mbox_chan *mb_chan)
-> +{
-> +       u32 val = readl(mb_chan->reg + REG_DB_STAT);
-> +
-> +       if (val & MBOX_STATUS_AVAIL_MASK) {
-> +               mb_chan_recv_msg(mb_chan);
-> +               writel(MBOX_STATUS_AVAIL_MASK, mb_chan->reg + REG_DB_STAT);
-> +               return 1;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static irqreturn_t slimpro_mbox_irq(int irq, void *id)
-> +{
-> +       struct slimpro_mbox_chan *mb_chan = id;
-> +
-> +       if (mb_chan_status_ack(mb_chan))
-> +               mbox_chan_txdone(mb_chan->chan, 0);
-> +
-> +       if (mb_chan_status_avail(mb_chan))
-> +               mbox_chan_received_data(mb_chan->chan, mb_chan->rx_msg);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int slimpro_mbox_send_data(struct mbox_chan *chan, void *msg)
-> +{
-> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
-> +
-> +       mb_chan_send_msg(mb_chan, msg);
-> +       return 0;
-> +}
-> +
-> +static int slimpro_mbox_startup(struct mbox_chan *chan)
-> +{
-> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
-> +       int rc;
-> +       u32 val;
-> +
-> +       rc = devm_request_irq(mb_chan->dev, mb_chan->irq, slimpro_mbox_irq, 0,
-> +                             MBOX_CON_NAME, mb_chan);
-> +       if (unlikely(rc)) {
-> +               dev_err(mb_chan->dev, "failed to register mailbox interrupt %d\n",
-> +                       mb_chan->irq);
-> +               return rc;
-> +       }
-> +
-> +       /* Enable HW interrupt */
-> +       writel(MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK,
-> +              mb_chan->reg + REG_DB_STAT);
-> +       /* Unmask doorbell status interrupt */
-> +       val = readl(mb_chan->reg + REG_DB_STATMASK);
-> +       val &= ~(MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK);
-> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
-> +
-> +       return 0;
-> +}
-> +
-> +static void slimpro_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +       struct slimpro_mbox_chan *mb_chan = chan->con_priv;
-> +       u32 val;
-> +
-> +       /* Mask doorbell status interrupt */
-> +       val = readl(mb_chan->reg + REG_DB_STATMASK);
-> +       val |= (MBOX_STATUS_ACK_MASK | MBOX_STATUS_AVAIL_MASK);
-> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
-> +
-> +       devm_free_irq(mb_chan->dev, mb_chan->irq, mb_chan);
-> +}
-> +
-> +static struct mbox_chan_ops slimpro_mbox_ops = {
-> +       .send_data = slimpro_mbox_send_data,
-> +       .startup = slimpro_mbox_startup,
-> +       .shutdown = slimpro_mbox_shutdown,
-> +};
-> +
-> +static int slimpro_mbox_probe(struct platform_device *pdev)
-> +{
-> +       struct slimpro_mbox *ctx;
-> +       struct resource *regs;
-> +       void __iomem *mb_base;
-> +       int rc;
-> +       int i;
-> +
-> +       ctx = devm_kzalloc(&pdev->dev, sizeof(struct slimpro_mbox), GFP_KERNEL);
-> +       if (IS_ERR(ctx))
-> +               return PTR_ERR(ctx);
-> +
-> +       platform_set_drvdata(pdev, ctx);
-> +
-> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       mb_base = devm_ioremap(&pdev->dev, regs->start, resource_size(regs));
-> +       if (IS_ERR(mb_base))
-> +               return PTR_ERR(mb_base);
-> +
-> +       /* Setup mailbox links */
-> +       for (i = 0; i < MBOX_CNT; i++) {
-> +               ctx->mc[i].irq = platform_get_irq(pdev, i);
-> +               if (ctx->mc[i].irq < 0) {
-> +                       if (i == 0) {
-> +                               dev_err(&pdev->dev, "no available IRQ\n");
-> +                               return -EINVAL;
-> +                       }
-> +                       dev_info(&pdev->dev, "no IRQ for channel %d\n", i);
-> +                       break;
-> +               }
-> +
-> +               ctx->mc[i].dev = &pdev->dev;
-> +               ctx->mc[i].reg = mb_base + i * MBOX_REG_SET_OFFSET;
-> +               ctx->mc[i].chan = &ctx->chans[i];
-> +               ctx->chans[i].con_priv = &ctx->mc[i];
-> +       }
-> +
-> +       /* Setup mailbox controller */
-> +       ctx->mb_ctrl.dev = &pdev->dev;
-> +       ctx->mb_ctrl.chans = ctx->chans;
-> +       ctx->mb_ctrl.txdone_irq = true;
-> +       ctx->mb_ctrl.ops = &slimpro_mbox_ops;
-> +       ctx->mb_ctrl.num_chans = i;
-> +
-> +       rc = mbox_controller_register(&ctx->mb_ctrl);
-> +       if (rc) {
-> +               dev_err(&pdev->dev,
-> +                       "APM X-Gene SLIMpro MailBox register failed:%d\n", rc);
-> +               return rc;
-> +       }
-> +
-> +       dev_info(&pdev->dev, "APM X-Gene SLIMpro MailBox registered\n");
-> +       return 0;
-> +}
-> +
-> +static int slimpro_mbox_remove(struct platform_device *pdev)
-> +{
-> +       struct slimpro_mbox *smb = platform_get_drvdata(pdev);
-> +
-> +       mbox_controller_unregister(&smb->mb_ctrl);
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id slimpro_of_match[] = {
-> +       {.compatible = "apm,xgene-slimpro-mbox" },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, slimpro_of_match);
-> +
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id slimpro_acpi_ids[] = {
-> +       {"APMC0D01", 0},
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, slimpro_acpi_ids);
-> +#endif
-> +
-> +static struct platform_driver slimpro_mbox_driver = {
-> +       .probe  = slimpro_mbox_probe,
-> +       .remove = slimpro_mbox_remove,
-> +       .driver = {
-> +               .name = "xgene-slimpro-mbox",
-> +               .of_match_table = of_match_ptr(slimpro_of_match),
-> +               .acpi_match_table = ACPI_PTR(slimpro_acpi_ids)
-> +       },
-> +};
-> +
-> +static int __init slimpro_mbox_init(void)
-> +{
-> +       return platform_driver_register(&slimpro_mbox_driver);
-> +}
-> +
-> +static void __exit slimpro_mbox_exit(void)
-> +{
-> +       platform_driver_unregister(&slimpro_mbox_driver);
-> +}
-> +
-> +subsys_initcall(slimpro_mbox_init);
-> +module_exit(slimpro_mbox_exit);
-> +
-> +MODULE_DESCRIPTION("APM X-Gene SLIMpro Mailbox Driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 1.9.1
->
+Stuart
