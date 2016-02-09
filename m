@@ -1,42 +1,80 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Tue, 9 Feb 2016 09:30:57 +0100
-Message-ID: <56B9A3C1.4000600@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
- <56B8D676.1050809@cogentembedded.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH 2/3] arm64: dts: add the Alpine v2 EVP
+Date: Tue, 9 Feb 2016 09:56:33 +0100
+Message-ID: <20160209085633.GA5388@kwain>
+References: <1454922699-16785-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1454922699-16785-3-git-send-email-antoine.tenart@free-electrons.com>
+ <56B8B45D.1020902@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56B8D676.1050809-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B8B45D.1020902@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, catalin.marinas@arm.com, will.deacon@arm.com, tsahee@annapurnalabs.com, linux-arm-kernel@lists.infradead.org, rshitrit@annapurnalabs.com, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Barak Wasserstrom <barak@annapurnalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08.02.2016 18:55, Sergei Shtylyov wrote:
-> On 02/08/2016 06:32 PM, Petr Kulhavy wrote:
->
->> I have prepared the patch as per you comments.
->> Unfortunately I cannot use the 4.5 kernel from Felipe's repo as the
->> of_usb_get_dr_mode() has been replaced with
->> of_usb_get_dr_mode_by_phy() which requires a PHY node, which does not 
->> exist
->> for DA8xx as we discussed before.
->>
->> What shall we do?
->
->    Doesn't usb_get_dr_mode() work for you?
 
-I can't really say because I can't test it. Is this the replacement for 
-of_usb_get_dr_mode() ?
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Marc,
+
+On Mon, Feb 08, 2016 at 03:29:33PM +0000, Marc Zyngier wrote:
+> On 08/02/16 09:11, Antoine Tenart wrote:
+>=20
+> > +		gic: gic@f0100000 {
+> > +			compatible =3D "arm,gic-v3";
+> > +			reg =3D <0x0 0xf0200000 0x0 0x10000>,	/* GIC Dist */
+> > +			      <0x0 0xf0280000 0x0 0x200000>,	/* GICR */
+> > +			      <0x0 0xf0100000 0x0 0x2000>;	/* GICC */
+> > +			interrupt-controller;
+> > +			#interrupt-cells =3D <3>;
+> > +		};
+>=20
+> Something is wrong here. Either you are missing GICH and GICV (assuming
+> you have legacy support), or you have an extra GICC region (which
+> doesn't make sense on its own).
+>=20
+> You're also missing the maintenance interrupt.
+>=20
+> Has Anapurna really built a GICv3 without an ITS?
+
+I documented myself and Annapurna's GIC really doesn't have an ITS.
+
+I'll add the missing regions.
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWuam9AAoJEFxNi8it27zYNNoP/1l9L+lsTF2o/+4Cic1xK1f/
+FdxG8KReE+poGrzMlBXUpi3LInPvYLzuGMhh2jhcA0Dc5o9t1LOg3HvTD6iLGc2P
+b8QqhLDo1J8FlV8OqTUbyqOGWBEUNV/sxWO1uKJys8I8xviPUar6juecYxWShqd4
+sVVqO4BqftCoeZAkpm0REsneLKedMYOpYPNqlgIZV2H3Cw2BMkmq8+pPYXl2O8pk
+BtTDAPL/dWJRsM9mnChUTn+SGcwKFawj1n8CNgEkbt3nMyBsr3yV9G8VoaZguDZ4
+0Ui+51tdSBO51souD4vYuOWdKE4fgNTFAgn4SUG8xo8ktYwCUHxYXuiM0o055YXo
+Vs/ZWsliqaYfDLLPzdKEcqBh7bWqIL0jTUNH8bluaqObUJM0kElIyLVM7XB0TS7w
+UhRrGSUcavAY7RMtKApuCJyNTzGt1Ru/zC6Qe4mMquyjrFGi/bkTZfbCgUfgIjGP
+/6UD2hLVw6V0gMMuT/Bx4FFL+864f4WYnbyRDzv0PHOJY6ULckF9mFWrE2aqKQpB
+qYN8gKvDE53/CTeYQGp7WKKTX1xVsld2U99Nkk6CrIv5fvFLptLHKeT2Z24+HK6L
+UycklKBICO1x4Yj1FTaXX01GSe9n0mEhVENKJ36RdvYkK1ssw+4SELL78LWgvZ+0
+csyAA9RkXuByJmKAEyyu
+=H10j
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
