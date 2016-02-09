@@ -1,24 +1,32 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 6/9] ARM: dts: add pl330-broken-no-flushp quirk for rk3036 SoCs
-Date: Tue, 09 Feb 2016 18:29:50 +0100
-Message-ID: <1488837.V2iXLjBOmC@phil>
-References: <1453460812-8498-1-git-send-email-wxt@rock-chips.com> <1453460812-8498-7-git-send-email-wxt@rock-chips.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v11 4/4] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 9 Feb 2016 11:39:26 -0600
+Message-ID: <56BA244E.1020402@codeaurora.org>
+References: <1455037240-16192-1-git-send-email-fu.wei@linaro.org>
+ <1455037240-16192-5-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453460812-8498-7-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <1455037240-16192-5-git-send-email-fu.wei@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Sonny Rao <sonnyrao@chromium.org>, shawn.lin@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: fu.wei@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, linux@roeck-us.net, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, Suravee.Suthikulpanit@amd.com
+Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-acpi@lists.linaro.org, rruigrok@codeaurora.org, harba@codeaurora.org, cov@codeaurora.org, dyoung@redhat.com, panand@redhat.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, jcm@redhat.com, arnd@arndb.de, leo.duran@amd.com, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 22. Januar 2016, 19:06:49 schrieb Caesar Wang:
-> Pl330 integrated in rk3036 platform that doesn't support
-> DMAFLUSHP function. So we add 'arm,pl330-broken-no-flushp' quirk
-> for rk3036.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+fu.wei@linaro.org wrote:
 
-applied the 3 (4/9, 5/9, 6/9) dts patches to my dts32 branch for 4.6
-(after fixing the patch subjects to match the general style-convention)
+> +		if (!action)
+> +			dev_warn(dev, "fall back to signle stage mode.\n");
+
+"falling back to single stage mode"
+
+Acked-by: Timur Tabi <timur@codeaurora.org>
+
+The whole "calculate the timeouts different if 'action' is enabled" 
+seems clunky to me, but I can't think of a better way to handle it.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
