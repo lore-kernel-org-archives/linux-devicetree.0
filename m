@@ -1,78 +1,135 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Tue,  9 Feb 2016 13:20:18 +0100
-Message-ID: <1455020418-7233-1-git-send-email-petr@barix.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3] ARM64: tegra: Add support for Google Pixel C
+Date: Tue, 9 Feb 2016 12:26:49 +0000
+Message-ID: <1455020809-17531-1-git-send-email-jonathanh@nvidia.com>
+References: <1454949199-27050-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454949199-27050-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds DT support for the TI DA830 and DA850 MUSB driver.
+Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
+upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
 
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/usb/da8xx-usb.txt          | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+Changes v2 -> v3:
+- Added PSCI information to enable all 4 CPUs on boot
+
+Changes v1 -> v2:
+- Removed console boot parameter and added stdout-path
+- Added 32k clock for PMC
+
+ arch/arm64/boot/dts/nvidia/Makefile           |  1 +
+ arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 83 +++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+
+diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
+index a7e865da1005..0f7cdf3e05c1 100644
+--- a/arch/arm64/boot/dts/nvidia/Makefile
++++ b/arch/arm64/boot/dts/nvidia/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
++dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
+ 
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
 new file mode 100644
-index 0000000..175e32b
+index 000000000000..750e85c45135
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-@@ -0,0 +1,47 @@
-+TI DA8xx MUSB
-+~~~~~~~~~~~~~
-+For DA830 and DA850 platforms.
++++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+@@ -0,0 +1,83 @@
++/dts-v1/;
 +
-+Required properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - compatible : Should be set to "ti,da830-musb".
++#include "tegra210.dtsi"
 +
-+ - reg: Offset and length of the USB controller register set.
++/ {
++	model = "Google Pixel C";
++	compatible = "google,smaug-rev8", "google,smaug-rev7",
++		     "google,smaug-rev6", "google,smaug-rev5",
++		     "google,smaug-rev4", "google,smaug-rev3",
++		     "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
 +
-+ - interrupts: The USB interrupt number.
++	aliases {
++		serial0 = &uarta;
++	};
 +
-+ - interrupt-names: Should be set to "mc".
++	chosen {
++		bootargs = "earlycon";
++		stdout-path = "serial0:115200n8";
++	};
 +
-+ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x0 0xc0000000>;
++	};
 +
-+ - mentor,power : Specifies the maximum current in milli-amperes the controller can
-+     supply in host mode.
-+
-+
-+Optional properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - ti,phy20-clkmux-pll: Boolean. Defines the USB 2.0 PHY reference clock source.
-+     If set the internal PLL is used as a clock source, otherwise the external pin is used.
-+
-+ - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
-+     frequency in Hz in case the clock is generated by the internal PLL.
-+     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
-+
-+
-+Example:
-+
-+	usb20: usb@1e00000 {
-+		compatible = "ti,da830-musb";
-+		reg =   <0x00200000 0x10000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+		interrupt-names = "mc";
-+
-+		dr_mode = "host";
-+		mentor,power = <500>;
-+
-+		ti,phy20-clkmux-pll;
-+		ti,phy20-refclock-frequency = <24000000>;
-+
++	serial@0,70006000 {
 +		status = "okay";
 +	};
++
++	pmc@0,7000e400 {
++		nvidia,invert-interrupt;
++		nvidia,suspend-mode = <0>;
++		nvidia,cpu-pwr-good-time = <0>;
++		nvidia,cpu-pwr-off-time = <0>;
++		nvidia,core-pwr-good-time = <12000 6000>;
++		nvidia,core-pwr-off-time = <39053>;
++		nvidia,core-power-req-active-high;
++		nvidia,sys-clock-req-active-high;
++		status = "okay";
++	};
++
++	sdhci@0,700b0600 {
++		bus-width = <8>;
++		non-removable;
++		status = "okay";
++	};
++
++	clocks {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		clk32k_in: clock@0 {
++			compatible = "fixed-clock";
++			reg = <0>;
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++	};
++
++	cpus {
++		cpu@0 {
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++};
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
