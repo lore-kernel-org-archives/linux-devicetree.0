@@ -1,159 +1,227 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v5 10/15] MIPS: ath79: add initial support for Dragino MS14 (Dragino 2)
-Date: Tue,  9 Feb 2016 11:13:56 +0300
-Message-ID: <1455005641-7079-11-git-send-email-antonynpavlov@gmail.com>
-References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455005641-7079-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] iio: ad5755: added full support for devicetree
+Date: Tue, 9 Feb 2016 09:22:10 +0100
+Message-ID: <56B9A1B2.6030007@prevas.dk>
+References: <1454509864-32285-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1454509864-32285-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <1454509864-32285-3-git-send-email-sean.nyekjaer@prevas.dk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454509864-32285-3-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following features are supported:
 
-  * UART;
-  * SPI-flash;
-  * USB host;
-  * GPIO keys and LEDs.
+On 2016-02-03 15:31, Sean Nyekjaer wrote:
+> Devicetree can provide platform data
+>
+> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Lars do you have time to look at this before i'm fixing the comments 
+from Jonathan and Rob :-)
 
-Links:
-
-    * http://www.dragino.com/products/mother-board/item/71-ms14-p.html
-    * https://wiki.openwrt.org/toh/dragino/ms14
-
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/mips/boot/dts/qca/Makefile         |   1 +
- arch/mips/boot/dts/qca/dragino_ms14.dts | 101 ++++++++++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
-
-diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
-index 504c4b1..e949cff 100644
---- a/arch/mips/boot/dts/qca/Makefile
-+++ b/arch/mips/boot/dts/qca/Makefile
-@@ -1,5 +1,6 @@
- # All DTBs
- dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
-+dtb-$(CONFIG_ATH79)			+= dragino_ms14.dtb
- dtb-$(CONFIG_ATH79)			+= tl_mr3020.dtb
- 
- # Force kbuild to make empty built-in.o if necessary
-diff --git a/arch/mips/boot/dts/qca/dragino_ms14.dts b/arch/mips/boot/dts/qca/dragino_ms14.dts
-new file mode 100644
-index 0000000..44abb77
---- /dev/null
-+++ b/arch/mips/boot/dts/qca/dragino_ms14.dts
-@@ -0,0 +1,101 @@
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+#include "ar9331.dtsi"
-+
-+/ {
-+	model = "Dragino MS14 (Dragino 2)";
-+	compatible = "dragino,ms14";
-+
-+	aliases {
-+		serial0 = &uart;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x4000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		wlan {
-+			label = "dragino2:red:wlan";
-+			gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		lan {
-+			label = "dragino2:red:lan";
-+			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		wan {
-+			label = "dragino2:red:wan";
-+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		system {
-+			label = "dragino2:red:system";
-+			gpios = <&gpio 28 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		button@0 {
-+			label = "jumpstart";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button@1 {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&ref {
-+	clock-frequency = <25000000>;
-+};
-+
-+&uart {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_phy {
-+	status = "okay";
-+};
-+
-+&spi {
-+	num-chipselects = <1>;
-+	status = "okay";
-+
-+	/* Winbond 25Q128BVFG SPI flash */
-+	spiflash: w25q128@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128", "jedec,spi-nor";
-+		spi-max-frequency = <104000000>;
-+		reg = <0>;
-+	};
-+};
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sean
+> ---
+> Changes since v1:
+> - this patch added
+>
+> I'm adding dt bindings header file with the same info as, the platform data as
+> the devicetree can't understand enums.
+> Please give an idea to work around this :-)
+>
+>   drivers/iio/dac/ad5755.c             | 87 +++++++++++++++++++++++++++++++++++-
+>   include/dt-bindings/iio/adi,ad5755.h | 66 +++++++++++++++++++++++++++
+>   2 files changed, 152 insertions(+), 1 deletion(-)
+>   create mode 100644 include/dt-bindings/iio/adi,ad5755.h
+>
+> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+> index e1b6e78..c1e2546 100644
+> --- a/drivers/iio/dac/ad5755.c
+> +++ b/drivers/iio/dac/ad5755.c
+> @@ -14,9 +14,11 @@
+>   #include <linux/slab.h>
+>   #include <linux/sysfs.h>
+>   #include <linux/delay.h>
+> +#include <linux/of.h>
+>   #include <linux/iio/iio.h>
+>   #include <linux/iio/sysfs.h>
+>   #include <linux/platform_data/ad5755.h>
+> +#include <dt-bindings/iio/adi,ad5755.h>
+>   
+>   #define AD5755_NUM_CHANNELS 4
+>   
+> @@ -556,6 +558,82 @@ static const struct ad5755_platform_data ad5755_default_pdata = {
+>   	},
+>   };
+>   
+> +#ifdef CONFIG_OF
+> +static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *pp;
+> +	struct ad5755_platform_data *pdata;
+> +	unsigned int tmp;
+> +	unsigned int tmparray[3];
+> +	int devnr;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	pdata->ext_dc_dc_compenstation_resistor =
+> +	       of_property_read_bool(np, "adi,ext_dc_dc_compenstation_resistor");
+> +
+> +	if (!of_property_read_u32(np, "adi,dc_dc_phase", &tmp))
+> +		pdata->dc_dc_phase = tmp;
+> +	else
+> +		pdata->dc_dc_phase = AD5755_DC_DC_PHASE_ALL_SAME_EDGE;
+> +
+> +	if (!of_property_read_u32(np, "adi,dc_dc_freq", &tmp))
+> +		pdata->dc_dc_freq = tmp;
+> +	else
+> +		pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
+> +
+> +	if (!of_property_read_u32(np, "adi,dc_dc_maxv", &tmp))
+> +		pdata->dc_dc_maxv = tmp;
+> +	else
+> +		pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
+> +
+> +	devnr = 0;
+> +	for_each_child_of_node(np, pp) {
+> +		if (devnr > AD5755_NUM_CHANNELS) {
+> +			dev_err(dev, "There is to many channels defined in DT\n");
+> +			goto error_out;
+> +		}
+> +
+> +		if (!of_property_read_u32(pp, "adi,mode", &tmp))
+> +			pdata->dac[devnr].mode = tmp;
+> +		else
+> +			pdata->dac[devnr].mode = AD5755_MODE_CURRENT_4mA_20mA;
+> +
+> +		pdata->dac[devnr].ext_current_sense_resistor =
+> +		       of_property_read_bool(pp, "adi,ext_current_sense_resistor");
+> +
+> +		pdata->dac[devnr].enable_voltage_overrange =
+> +			of_property_read_bool(pp, "adi,enable_voltage_overrange");
+> +		if (!of_property_read_u32_array(pp, "adi,slew", tmparray, 3)) {
+> +			pdata->dac[devnr].slew.enable = tmparray[0];
+> +			pdata->dac[devnr].slew.rate = tmparray[1];
+> +			pdata->dac[devnr].slew.step_size = tmparray[2];
+> +		} else {
+> +			pdata->dac[devnr].slew.enable = false;
+> +			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
+> +			pdata->dac[devnr].slew.step_size = AD5755_SLEW_STEP_SIZE_1;
+> +		}
+> +
+> +		devnr++;
+> +	}
+> +
+> +	return pdata;
+> +
+> +error_out:
+> +	devm_kfree(dev, pdata);
+> +	return NULL;
+> +}
+> +#else
+> +static
+> +struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>   static int ad5755_probe(struct spi_device *spi)
+>   {
+>   	enum ad5755_type type = spi_get_device_id(spi)->driver_data;
+> @@ -583,8 +661,15 @@ static int ad5755_probe(struct spi_device *spi)
+>   	indio_dev->modes = INDIO_DIRECT_MODE;
+>   	indio_dev->num_channels = AD5755_NUM_CHANNELS;
+>   
+> -	if (!pdata)
+> +	if (spi->dev.of_node)
+> +		pdata = ad5755_parse_dt(&spi->dev);
+> +	else
+> +		pdata = spi->dev.platform_data;
+> +
+> +	if (!pdata) {
+> +		dev_warn(&spi->dev, "no platform data? using default\n");
+>   		pdata = &ad5755_default_pdata;
+> +	}
+>   
+>   	ret = ad5755_init_channels(indio_dev, pdata);
+>   	if (ret)
+> diff --git a/include/dt-bindings/iio/adi,ad5755.h b/include/dt-bindings/iio/adi,ad5755.h
+> new file mode 100644
+> index 0000000..117466b
+> --- /dev/null
+> +++ b/include/dt-bindings/iio/adi,ad5755.h
+> @@ -0,0 +1,66 @@
+> +/*
+> + * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_AD5755_H
+> +#define _DT_BINDINGS_AD5755_H
+> +
+> +#define	AD5755_MODE_VOLTAGE_0V_5V			0
+> +#define AD5755_MODE_VOLTAGE_0V_10V			1
+> +#define AD5755_MODE_VOLTAGE_PLUSMINUS_5V		2
+> +#define AD5755_MODE_VOLTAGE_PLUSMINUS_10V		3
+> +#define AD5755_MODE_CURRENT_4mA_20mA			4
+> +#define AD5755_MODE_CURRENT_0mA_20mA			5
+> +#define AD5755_MODE_CURRENT_0mA_24mA			6
+> +
+> +#define AD5755_DC_DC_PHASE_ALL_SAME_EDGE		0
+> +#define AD5755_DC_DC_PHASE_A_B_SAME_EDGE_C_D_OPP_EDGE	1
+> +#define AD5755_DC_DC_PHASE_A_C_SAME_EDGE_B_D_OPP_EDGE	2
+> +#define AD5755_DC_DC_PHASE_90_DEGREE			3
+> +
+> +#define AD5755_DC_DC_FREQ_250kHZ			0
+> +#define AD5755_DC_DC_FREQ_410kHZ			1
+> +#define AD5755_DC_DC_FREQ_650kHZ			2
+> +
+> +#define AD5755_DC_DC_MAXV_23V				0
+> +#define AD5755_DC_DC_MAXV_24V5				1
+> +#define AD5755_DC_DC_MAXV_27V				2
+> +#define AD5755_DC_DC_MAXV_29V5				3
+> +
+> +#define AD5755_SLEW_RATE_64k				0
+> +#define AD5755_SLEW_RATE_32k				1
+> +#define AD5755_SLEW_RATE_16k				2
+> +#define AD5755_SLEW_RATE_8k				3
+> +#define AD5755_SLEW_RATE_4k				4
+> +#define AD5755_SLEW_RATE_2k				5
+> +#define AD5755_SLEW_RATE_1k				6
+> +#define AD5755_SLEW_RATE_500				7
+> +#define AD5755_SLEW_RATE_250				8
+> +#define AD5755_SLEW_RATE_125				9
+> +#define AD5755_SLEW_RATE_64				10
+> +#define AD5755_SLEW_RATE_32				11
+> +#define AD5755_SLEW_RATE_16				12
+> +#define AD5755_SLEW_RATE_8				13
+> +#define AD5755_SLEW_RATE_4				14
+> +#define AD5755_SLEW_RATE_0_5				15
+> +
+> +#define AD5755_SLEW_STEP_SIZE_1				0
+> +#define AD5755_SLEW_STEP_SIZE_2				1
+> +#define AD5755_SLEW_STEP_SIZE_4				2
+> +#define AD5755_SLEW_STEP_SIZE_8				3
+> +#define AD5755_SLEW_STEP_SIZE_16 			4
+> +#define AD5755_SLEW_STEP_SIZE_32			5
+> +#define AD5755_SLEW_STEP_SIZE_64			6
+> +#define AD5755_SLEW_STEP_SIZE_128			7
+> +#define AD5755_SLEW_STEP_SIZE_256			8
+> +
+> +#endif				/* _DT_BINDINGS_AD5755_H */
