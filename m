@@ -1,89 +1,40 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH V3 4/5] PCI: xilinx: Updating Zynq PCI binding documentation with  Microblaze node.
-Date: Tue, 9 Feb 2016 16:11:57 +0530
-Message-ID: <1455014518-8708-5-git-send-email-bharatku@xilinx.com>
-References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 0/5] PCIe Xilinx generic driver for Microblaze and
+Date: Tue, 9 Feb 2016 16:11:53 +0530
+Message-ID: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Updated Zynq PCI binding documentation with Microblaze node.
+This patch series does modifications to pcie-xilinx.c, to support common
+driver on both Zynq and Microblaze architectures.
+Microblaze pci-common.c has been modified to support generic driver.
 
-Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Bharat Kumar Gogada (5):
+  PCI: xilinx: Removing xilinx_pcie_parse_and_add_res function
+  PCI: xilinx: Removing struct hw_pci structure.
+  PCI: xilinx: Modifying AXI PCIe Host Bridge driver to     work on both
+     Zynq and Microblaze
+  PCI: xilinx: Updating Zynq PCI binding documentation     with 
+    Microblaze node.
+  Microblaze: Modifying microblaze PCI subsytem to     support  generic
+    Xilinx  AXI PCIe Host Bridge IP driver
 
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes:
-Adding Microblaze device tree node Documnetation.
-Made bus-range property optional for Microblaze.
----
- .../devicetree/bindings/pci/xilinx-pcie.txt        | 32 ++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/pci/xilinx-pcie.txt        |  32 +++-
+ arch/microblaze/Kconfig                            |   3 +
+ arch/microblaze/pci/pci-common.c                   |  56 ++----
+ drivers/pci/host/Kconfig                           |   2 +-
+ drivers/pci/host/pcie-xilinx.c                     | 191 +++------------------
+ 5 files changed, 66 insertions(+), 218 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-index 02f979a..ad7c7bf 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-@@ -17,7 +17,7 @@ Required properties:
- 	Please refer to the standard PCI bus binding document for a more
- 	detailed explanation
- 
--Optional properties:
-+Optional properties for Zynq/Microblaze:
- - bus-range: PCI bus numbers covered
- 
- Interrupt controller child node
-@@ -38,13 +38,13 @@ the four INTx interrupts in ISR and route them to this domain.
- 
- Example:
- ++++++++
--
-+Zynq:
- 	pci_express: axi-pcie@50000000 {
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		#interrupt-cells = <1>;
- 		compatible = "xlnx,axi-pcie-host-1.00.a";
--		reg = < 0x50000000 0x10000000 >;
-+		reg = < 0x50000000 0x1000000 >;
- 		device_type = "pci";
- 		interrupts = < 0 52 4 >;
- 		interrupt-map-mask = <0 0 0 7>;
-@@ -60,3 +60,29 @@ Example:
- 			#interrupt-cells = <1>;
- 		};
- 	};
-+
-+
-+Microblaze:
-+	pci_express: axi-pcie@10000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		compatible = "xlnx,axi-pcie-host-1.00.a";
-+		reg = <0x10000000 0x4000000>;
-+		device_type = "pci";
-+		interrupt-parent = <&microbalze_0_intc>;
-+		interrupts = <1 2>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie_intc 1>,
-+				<0 0 0 2 &pcie_intc 2>,
-+				<0 0 0 3 &pcie_intc 3>,
-+				<0 0 0 4 &pcie_intc 4>;
-+		ranges = <0x02000000 0x00000000 0x80000000 0x80000000 0x00000000 0x10000000>;
-+
-+		pcie_intc: interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+		};
-+
-+	};
 -- 
 2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
