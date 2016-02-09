@@ -1,137 +1,63 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Tue, 9 Feb 2016 16:08:12 +0000
-Message-ID: <20160209160812.GC9332@leverpostej>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
- <56B9D62E.8080003@arm.com>
- <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH V3 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
+ driver to work on both  Zynq and Microblaze
+Date: Tue, 9 Feb 2016 08:11:34 -0800
+Message-ID: <20160209161134.GA24244@NP-P-BURTON>
+References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
+ <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <HE1PR04MB1641AF97F637BBCBB86BA4FE8DD60@HE1PR04MB1641.eurprd04.prod.outlook.com>
+In-Reply-To: <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Yoder <stuart.yoder@nxp.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "david.daney@cavium.com" <david.daney@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 03:56:55PM +0000, Stuart Yoder wrote:
+On Tue, Feb 09, 2016 at 04:11:56PM +0530, Bharat Kumar Gogada wrote:
+> Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
+> Zynq and Microblaze Architectures.
+> With these modifications drivers/pci/host/pcie-xilinx.c, will
+> work on both Zynq and Microblaze Architectures.
 > 
-> > -----Original Message-----
-> > From: Marc Zyngier [mailto:marc.zyngier@arm.com]
-> > Sent: Tuesday, February 09, 2016 6:06 AM
-> > To: Robin Murphy <robin.murphy@arm.com>; robh+dt@kernel.org; frowand.list@gmail.com;
-> > grant.likely@linaro.org; devicetree@vger.kernel.org
-> > Cc: mark.rutland@arm.com; david.daney@cavium.com; Stuart Yoder <stuart.yoder@nxp.com>;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > stable@vger.kernel.org
-> > Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-> > 
-> > Hi Robin,
-> > 
-> > On 09/02/16 11:04, Robin Murphy wrote:
-> > > The existing msi-map code is fine for shifting the entire RID space
-> > > upwards, but attempting finer-grained remapping reveals a bug. It turns
-> > > out that we are mistakenly treating the msi-base part as an offset, not
-> > > as a new base to remap onto, so things get squiffy when rid-base is
-> > > nonzero. Fix this, and at the same time add a sanity check against
-> > > having msi-map-mask clash with a nonzero rid-base, as that's another
-> > > thing one can easily get wrong.
-> > >
-> > > CC: <stable@vger.kernel.org>
-> > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > 
-> > Looks like Stuart and you both found the same bug at the same time:
-> > https://lkml.org/lkml/2016/2/8/1066
-> > 
-> > but yours seem more correct to me (the rid_base masking in Stuart's
-> > version seems odd).
-> > 
-> > > ---
-> > >  drivers/of/irq.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > > index 7ee21ae..e7bfc17 100644
-> > > --- a/drivers/of/irq.c
-> > > +++ b/drivers/of/irq.c
-> > > @@ -635,6 +635,13 @@ static u32 __of_msi_map_rid(struct device *dev, struct
-> > device_node **np,
-> > >  		msi_base = be32_to_cpup(msi_map + 2);
-> > >  		rid_len = be32_to_cpup(msi_map + 3);
-> > >
-> > > +		if (rid_base & ~map_mask) {
-> > > +			dev_err(parent_dev,
-> > > +				"Invalid msi-map translation - msi-map-mask (0x%x) ignores rid-
-> > base (0x%x)\n",
-> > > +				map_mask, rid_base);
-> > > +			return rid_out;
-> > > +		}
-> > > +
-> > >  		msi_controller_node = of_find_node_by_phandle(phandle);
-> > >
-> > >  		matched = (masked_rid >= rid_base &&
-> > > @@ -654,7 +661,7 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node
-> > **np,
-> > >  	if (!matched)
-> > >  		return rid_out;
-> > >
-> > > -	rid_out = masked_rid + msi_base;
-> > > +	rid_out = masked_rid - rid_base + msi_base;
-> > >  	dev_dbg(dev,
-> > >  		"msi-map at: %s, using mask %08x, rid-base: %08x, msi-base: %08x, length:
-> > %08x, rid: %08x -> %08x\n",
-> > >  		dev_name(parent_dev), map_mask, rid_base, msi_base,
-> > >
-> 
-> This computation:  masked_rid - rid_base
-> 
-> ...doesn't seem right to me.  We are taking a rid that
-> has been already masked and subtracting a rid base that has
-> not been masked.
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> ---
+> Changes:
+> Removed unneccessary architecture dependent number of MSI's.
+> Added #ifdef to pci_fixup_irqs which is ARM specific API.
 
-The binding only mentions that the input RID is masked, not the base, so
-that seems correct to me.
+Hi Bharat,
 
-> I don't see how you can combine masked and unmasked values in the same
-> calculation.
-> 
-> Say I have this msi mapping:
-> 
->                    msi-map = <0x0100 &its 0x11 0x1>;
->                    msi-map-mask = <0xff>;
-> 
+Why do you say pci_fixup_irqs is ARM-specific? It's declared in
+include/linux/pci.h, defined in drivers/pci/setup-irq.c & used by
+multiple architectures (alpha, arm, m68k, mips, sh, sparc, tile,
+unicore32 from a quick grep).
 
-I'd say that this is an inconsistent set of properties, and it's
-probably worth warning if we encounter this. There is no possible way
-that rid-base can be encountered.
-
-> masked_rid = 0x0
-> rid_base = 0x0100
-> msi_base = 0x11
-> 
-> masked_rid - rid_base is 0x0 - 0x0100...which does not
-> give the msi index/offset we want.
-> 
-> Correct final answer should be 0x11.
-
-You can unambiguously describe this with:
-
-	msi-map = <0x00 &its 0x11 0x1>;
-	msi-map-mask = <0xff>;
-
-This is exactly the pattern we follow in example 2 in the binding
-document.
-
-> In my patch I masked the rid_base so it can be subtracted
-> from the masked_rid.
-> 
-> masked_rid_base = 0x00
-> 
->    msi_base + (masked_rid - masked_rid_base) = 0x11
-
-As above, I think that this is an inconsistent DT, and we should
-warn/fail in that case.
+Will you not break INTX-style interrupts by removing this?
 
 Thanks,
-Mark.
+    Paul
+
+> ---
+>  drivers/pci/host/pcie-xilinx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+> index 13fec35..6cbce34 100644
+> --- a/drivers/pci/host/pcie-xilinx.c
+> +++ b/drivers/pci/host/pcie-xilinx.c
+> @@ -704,7 +704,9 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
+>  #endif
+>  	pci_scan_child_bus(bus);
+>  	pci_assign_unassigned_bus_resources(bus);
+> +#ifdef CONFIG_ARM
+>  	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> +#endif
+>  	pci_bus_add_devices(bus);
+>  	platform_set_drvdata(pdev, port);
+>  
+> -- 
+> 2.1.1
+> 
