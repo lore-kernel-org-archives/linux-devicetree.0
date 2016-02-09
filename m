@@ -1,59 +1,63 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [RFC v5 02/15] dt-bindings: clock: qca,ath79-pll: fix
- copy-paste typos
-Date: Tue, 9 Feb 2016 22:52:54 +0100
-Message-ID: <20160209225254.1a03c2b1@tock>
-References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com>
-	<1455005641-7079-3-git-send-email-antonynpavlov@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 1/5] ARM: dts: r8a7794: add audio clocks
+Date: Wed, 10 Feb 2016 00:53:18 +0300
+Message-ID: <2889404.8PU5kSFXZ7@wasted.cogentembedded.com>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455005641-7079-3-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  9 Feb 2016 11:13:48 +0300
-Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Describe the external audio clocks (signals AUDIO_CLK[ABC]) required by
+the sound driver. Boards that provide audio clocks need to override the
+clock frequencies.
 
-> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/clock/qca,ath79-pll.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-> index e0fc2c1..ae99f22 100644
-> --- a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-> +++ b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-> @@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9XXX PLL controller
->  The PPL controller provides the 3 main clocks of the SoC: CPU, DDR and AHB.
->  
->  Required Properties:
-> -- compatible: has to be "qca,<soctype>-cpu-intc" and one of the following
-> +- compatible: has to be "qca,<soctype>-pll" and one of the following
->    fallbacks:
->    - "qca,ar7100-pll"
->    - "qca,ar7240-pll"
-> @@ -21,7 +21,7 @@ Optional properties:
->  
->  Example:
->  
-> -	memory-controller@18050000 {
-> +	pll-controller@18050000 {
->  		compatible = "qca,ar9132-ppl", "qca,ar9130-pll";
->  		reg = <0x18050000 0x20>;
->  
+This patch is based on the commit 0d3dbde84a45 ("ARM: shmobile: r8a7791:
+add  audio clock on DTSI").
 
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+ arch/arm/boot/dts/r8a7794.dtsi |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -833,6 +833,30 @@
+ 			status = "disabled";
+ 		};
+ 
++		/*
++		 * The external audio clocks are configured  as 0 Hz fixed
++		 * frequency clocks by default.  Boards that provide audio
++		 * clocks should override them.
++		 */
++		audio_clka: audio_clka {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++			clock-output-names = "audio_clka";
++		};
++		audio_clkb: audio_clkb {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++			clock-output-names = "audio_clkb";
++		};
++		audio_clkc: audio_clkc {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++			clock-output-names = "audio_clkc";
++		};
++
+ 		/* Special CPG clocks */
+ 		cpg_clocks: cpg_clocks@e6150000 {
+ 			compatible = "renesas,r8a7794-cpg-clocks",
