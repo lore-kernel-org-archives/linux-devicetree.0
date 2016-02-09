@@ -1,52 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [rtc-linux] [PATCH V7 5/8] gpio: add DT binding doc for gpio of
- PMIC max77620/max20024
-Date: Tue, 9 Feb 2016 14:29:03 +0000
-Message-ID: <20160209142903.GE24522@x1>
-References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
- <1454171931-27752-6-git-send-email-ldewangan@nvidia.com>
- <CACRpkdYNBHvefR_qdjZ7hWr=cFzhv1gEgb5jBCrqHdWzNWgV6w@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 0/5] PCIe Xilinx generic driver for Microblaze and
+Date: Tue, 09 Feb 2016 15:41:54 +0100
+Message-ID: <20578581.RaDqZvvMdm@wuerfel>
+References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYNBHvefR_qdjZ7hWr=cFzhv1gEgb5jBCrqHdWzNWgV6w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski@samsung.com>, vreddytalla@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 05 Feb 2016, Linus Walleij wrote:
+On Tuesday 09 February 2016 16:11:53 Bharat Kumar Gogada wrote:
+> This patch series does modifications to pcie-xilinx.c, to support common
+> driver on both Zynq and Microblaze architectures.
+> Microblaze pci-common.c has been modified to support generic driver.
+> 
+> Bharat Kumar Gogada (5):
+>   PCI: xilinx: Removing xilinx_pcie_parse_and_add_res function
+>   PCI: xilinx: Removing struct hw_pci structure.
+>   PCI: xilinx: Modifying AXI PCIe Host Bridge driver to     work on both
+>      Zynq and Microblaze
+>   PCI: xilinx: Updating Zynq PCI binding documentation     with 
+>     Microblaze node.
+>   Microblaze: Modifying microblaze PCI subsytem to     support  generic
+>     Xilinx  AXI PCIe Host Bridge IP driver
+> 
 
-> On Sat, Jan 30, 2016 at 5:38 PM, Laxman Dewangan <ldewangan@nvidia.co=
-m> wrote:
->=20
-> > Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
-> > which act as GPIO as well as special function mode.
-> >
-> > Add DT binding document to support these pins in GPIO
-> > mode via GPIO framework.
-> >
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
->=20
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Lee can merge this too.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Ths set needs a re-work anyway.
+I'm still not happy about needing the pci_fixup_irqs in patch 3/5, but
+I can understand that fixing this is beyond the scope of your series.
 
-Laxman, just apply your collected Acks and re-submit when you're
-ready.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
