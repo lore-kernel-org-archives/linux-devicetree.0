@@ -1,76 +1,110 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
-Date: Wed, 10 Feb 2016 21:10:43 +0300
-Message-ID: <56BB7D23.3010005@cogentembedded.com>
-References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
- <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
- <87lh6ts1o0.wl%kuninori.morimoto.gx@renesas.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Wed, 10 Feb 2016 19:25:08 +0100
+Message-ID: <CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+	<1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+	<CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+	<56BB7AF4.8040708@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <87lh6ts1o0.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BB7AF4.8040708-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2016 06:12 AM, Kuninori Morimoto wrote:
+[...]
 
->> Define the generic R8A7794 part of  the sound device node.
->> This sound device  is a complex one and comprises the Audio Clock Generator
->> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
->> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
->> It is up  to the board file to enable the device.
 >>
->> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>>  /**
+>>>   * tegra_powergate_power_on() - power on partition
+>>>   * @id: partition ID
+>>> @@ -319,35 +512,20 @@ EXPORT_SYMBOL(tegra_powergate_remove_clamping);
+>>>  int tegra_powergate_sequence_power_up(unsigned int id, struct clk *clk,
+>>>                                       struct reset_control *rst)
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> (snip)
->> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
->> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
->> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
->> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
->> +			 <&m2_clk>;
->> +		clock-names = "ssi-all",
->> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
->> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
->> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
->> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
->> +			      "ctu.0", "ctu.1",
->> +			      "mix.0", "mix.1",
->> +			      "dvc.0", "dvc.1",
->> +			      "clk_a", "clk_b", "clk_c", "clk_i";
+>> There seems to be two viable ways for a driver to control tegra powergates.
+>>
+>> 1)
+>> $Subject patch enables the use of runtime PM.
+>>
+>> 2)
+>> The current tegra_powergate_sequence_power_up() and
+>> tegra_powergate_power_off() API.
+>>
+>> It seems fragile to allow both options, but perhaps your are
+>> protecting this with some lock to prevent concurrent accesses?
 >
-> I'm sorry about my previous email. I think I made you confuse.
-> I meant you can remove CTU/MIX field if your patch doesn't care these.
+> There is a lock protecting accesses to the PMC registers which
+> ultimately control the power domain. However, may be it would be better
+> to ensure that any power-domain registered with genpd cannot be
+> controlled by the legacy APIs. I have added a bitmap to mark valid
+> power-domains to ensure that only valid power domains can be controlled
+> by these legacy APIs. I could mark the power-domain invalid after
+> registering with genpd to ensure that it cannot be accessed by the
+> legacy APIs.
 
-    No, I got your idea right.
-    But I decided to go for a more complete hardware representation, on par 
-with the other R-Car SoCs.
+That seems like a good way of making it more robust!
 
-MBR, Sergei
+>
+>> Also, I assume you need the two options in a transition phase, before
+>> you have deployed runtime PM for these drivers?
+>
+> Right and some of the legacy APIs are entrenched in some drivers. So to
+> keep the patch set manageable it seems best to get some support in place
+> then start migrating the drivers.
+
+Thanks for elaborating on this! I get and like the idea of moving forward!
+
+[...]
+
+>>> +
+>>> +static void tegra_powergate_remove(struct tegra_pmc *pmc)
+>>> +{
+>>> +       struct tegra_powergate *pg, *n;
+>>> +
+>>> +       list_for_each_entry_safe(pg, n, &pmc->powergates_list, node) {
+>>
+>> The tegra powergate driver will hold a list of nvidia powergates
+>> domains, and the generic PM domain will hold a list of all generic PM
+>> domains.
+>>
+>> Perhaps there's a way to allow the generic PM domain to control this
+>> by itself. If we for example used the struct device corresponding to
+>> the powergate driver, genpd could use it to distinguish between
+>> various instances of genpd structs..!? Maybe it would simplify the way
+>> to deal with removing domains?
+>
+> Yes, that would be ideal. However, would have require changing
+> genpd_init()? I am not sure how genpd would be able to access the device
+> struct for the powergate driver because we don't provide this via any
+> API I am aware of? And I am guessing that you don't wish to expose the
+> gpd_list to the world either.
+>
+> If there is an easy way, I am open to it, but looking at it today, I am
+> not sure I see a simple way in which we could add a new API to do this.
+> However, may be I am missing something!
+
+If we add a new __pm_genpd_init() API, that could require a struct
+device to be provided. That API will thus invoke the existing
+pm_genpd_init() but also deal with the extra things needed here.
+
+I would also allow such an API to return an error code.
+
+Correspondingly, pm_genpd_remove() could be required to be provided
+with a struct device.
+
+Existing users of pm_genpd_init() can then convert to
+__pm_genpd_init() whenever suitable.
+
+Of course, another option is just to add new member in the genpd
+struct for the struct *device. The caller of pm_genpd_init() could
+check it, but allow it to be NULL. Although, the pm_genpd_remove() API
+would require that pointer to the struct device to be set...
+
+What do you think?
+
+Kind regards
+Uffe
