@@ -1,177 +1,81 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH v5 09/10] Input: synaptics-rmi4: Add device tree support to the SPI transport driver
-Date: Wed, 10 Feb 2016 14:25:43 -0800
-Message-ID: <1455143143-10464-1-git-send-email-aduggan@synaptics.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Wed, 10 Feb 2016 23:29:31 +0100
+Message-ID: <44113385.2QnPtvxQx0@vostro.rjw.lan>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com> <2213954.ztOe55fprN@vostro.rjw.lan> <alpine.DEB.2.02.1602091116240.27008@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1602091116240.27008@kaball.uk.xensource.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ard.biesheuvel@linaro.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, julien.grall@citrix.com, xen-devel@lists.xen.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-efi@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ian.campbell@citrix.com, Shannon Zhao <shannon.zhao@linaro.org>, peter.huangpeng@huawei.com, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for SPI devices.
+On Tuesday, February 09, 2016 11:19:02 AM Stefano Stabellini wrote:
+> On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
+> > On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
+> > > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+> > > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong@huawei.com> wrote:
+> > > > > From: Shannon Zhao <shannon.zhao@linaro.org>
+> > > > >
+> > > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > > > > UART is used by Xen. So here it hides UART from Dom0.
+> > > > >
+> > > > > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> > > > > Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> > > > 
+> > > > Well, this doesn't look right to me.
+> > > > 
+> > > > We need to find a nicer way to achieve what you want.
+> > > 
+> > > I take that you are talking about how to honor the STAO table in Linux.
+> > > Do you have any concrete suggestions?
+> > 
+> > I do.
+> > 
+> > The last hunk of the patch is likely what it needs to be, although I'm
+> > not sure if the place it is added to is the right one.  That's a minor thing,
+> > though.
+> > 
+> > The other part is problematic.  Not that as it doesn't work, but because of
+> > how it works.  With these changes the device will be visible to the OS (in
+> > fact to user space even), but will never be "present".  I'm not sure if
+> > that's what you want?
+> > 
+> > It might be better to add a check to acpi_bus_type_and_status() that will
+> > evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
+> > way the device won't be visible at all.
+> 
+> Something like below?  Actually your suggestion is better, thank you!
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 78d5f02..4778c51 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>  	if (ACPI_FAILURE(status))
+>  		return -ENODEV;
+>  
+> +	if (acpi_check_device_is_ignored(handle))
+> +		return -ENODEV;
+> +
+>  	switch (acpi_type) {
+>  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+>  	case ACPI_TYPE_DEVICE:
+> 
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
- Documentation/devicetree/bindings/spi/spi-bus.txt  |  2 +
- drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
- 3 files changed, 102 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+I thought about doing that under ACPI_TYPE_DEVICE, because it shouldn't be
+applicable to the other types.  But generally, yes.
 
-diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-new file mode 100644
-index 0000000..a4ca782
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
-@@ -0,0 +1,57 @@
-+Synaptics RMI4 SPI Device Binding
-+
-+The Synaptics RMI4 core is able to support RMI4 devices using different
-+transports and different functions. This file describes the device tree
-+bindings for devices using the SPI transport driver. Complete documentation
-+for other transports and functions can be found in
-+Documentation/devicetree/bindings/input/rmi4.
-+
-+Required Properties:
-+- compatible: syna,rmi4-spi
-+- reg: Chip select address for the device
-+- #address-cells: Set to 1 to indicate that the function child nodes
-+		    consist of only on uint32 value.
-+- #size-cells: Set to 0 to indicate that the function child nodes do not
-+		have a size property.
-+
-+Optional Properties:
-+- interrupts: interrupt which the rmi device is connected to.
-+- interrupt-parent: The interrupt controller.
-+See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+- spi-rx-delay-us: microsecond delay after a read transfer.
-+- spi-tx-delay-us: microsecond delay after a write transfer.
-+
-+Function Parameters:
-+Parameters specific to RMI functions are contained in child nodes of the rmi device
-+ node. Documentation for the parameters of each function can be found in:
-+Documentation/devicetree/bindings/input/rmi4/rmi_f*.txt.
-+
-+
-+
-+Example:
-+	spi@7000d800 {
-+		rmi4-spi-dev@0 {
-+			compatible = "syna,rmi4-spi";
-+			reg = <0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			spi-max-frequency = <4000000>;
-+			spi-cpha;
-+			spi-cpol;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(K, 2) 0x2>;
-+			spi-rx-delay-us = <30>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f11@11 {
-+				reg = <0x11>;
-+				touchscreen-inverted-y;
-+				syna,sensor-type = <2>;
-+			};
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index bbaa857..42d5954 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -61,6 +61,8 @@ contain the following properties.
-                       used for MOSI. Defaults to 1 if not present.
- - spi-rx-bus-width - (optional) The bus width(number of data wires) that
-                       used for MISO. Defaults to 1 if not present.
-+- spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
-+- spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
- 
- Some SPI controllers and devices support Dual and Quad SPI transfer mode.
- It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
-diff --git a/drivers/input/rmi4/rmi_spi.c b/drivers/input/rmi4/rmi_spi.c
-index 4319c63..55bd1b3 100644
---- a/drivers/input/rmi4/rmi_spi.c
-+++ b/drivers/input/rmi4/rmi_spi.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
- #include "rmi_driver.h"
- 
- #define RMI_SPI_DEFAULT_XFER_BUF_SIZE	64
-@@ -360,6 +361,41 @@ static int rmi_spi_init_irq(struct spi_device *spi)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static int rmi_spi_of_probe(struct spi_device *spi,
-+			struct rmi_device_platform_data *pdata)
-+{
-+	struct device *dev = &spi->dev;
-+	int retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.read_delay_us,
-+			"spi-rx-delay-us", 1);
-+	if (retval)
-+		return retval;
-+
-+	retval = rmi_of_property_read_u32(dev,
-+			&pdata->spi_data.write_delay_us,
-+			"spi-tx-delay-us", 1);
-+	if (retval)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rmi_spi_of_match[] = {
-+	{ .compatible = "syna,rmi4-spi" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rmi_spi_of_match);
-+#else
-+static inline int rmi_spi_of_probe(struct spi_device *spi,
-+				struct rmi_device_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int rmi_spi_probe(struct spi_device *spi)
- {
- 	struct rmi_spi_xport *rmi_spi;
-@@ -377,8 +413,13 @@ static int rmi_spi_probe(struct spi_device *spi)
- 
- 	pdata = &rmi_spi->xport.pdata;
- 
--	if (spi_pdata)
-+	if (spi->dev.of_node) {
-+		retval = rmi_spi_of_probe(spi, pdata);
-+		if (retval)
-+			return retval;
-+	} else if (spi_pdata) {
- 		*pdata = *spi_pdata;
-+	}
- 
- 	if (pdata->spi_data.bits_per_word)
- 		spi->bits_per_word = pdata->spi_data.bits_per_word;
-@@ -532,6 +573,7 @@ static struct spi_driver rmi_spi_driver = {
- 	.driver = {
- 		.name	= "rmi4_spi",
- 		.pm	= &rmi_spi_pm,
-+		.of_match_table = of_match_ptr(rmi_spi_of_match),
- 	},
- 	.id_table	= rmi_id,
- 	.probe		= rmi_spi_probe,
--- 
-2.5.0
+Plus I'd move the table checks to acpi_scan_init(), so the UART address can
+be a static variable in scan.c.
+
+Also maybe rename acpi_check_device_is_ignored() to something like
+acpi_device_should_be_hidden().
+
+Thanks,
+Rafael
+
