@@ -1,7 +1,7 @@
 From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH 3/8] arm: add device-tree SoC bindings for Axis Artpec-6
-Date: Wed, 10 Feb 2016 13:41:52 +0100
-Message-ID: <06f7e5ffdef7ba79b5702f063512010329c40cba.1455107681.git.larper@axis.com>
+Subject: [PATCH 1/8] clk: add device tree binding for artpec-6 pll1 clock
+Date: Wed, 10 Feb 2016 13:41:50 +0100
+Message-ID: <c092f501a595032f9b76f18fc4bf093503a181c8.1455107681.git.larper@axis.com>
 References: <cover.1455107681.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,23 +25,29 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lars Persson <larper@axis.com>
 ---
- Documentation/devicetree/bindings/arm/axis.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/axis.txt
+ Documentation/devicetree/bindings/clock/artpec6.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/axis.txt b/Documentation/devicetree/bindings/arm/axis.txt
+diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
 new file mode 100644
-index 0000000..4c98701
+index 0000000..e50f7a5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/axis.txt
-@@ -0,0 +1,8 @@
-+Axis Communications AB
-+ARTPEC series SoC Device Tree Bindings
++++ b/Documentation/devicetree/bindings/clock/artpec6.txt
+@@ -0,0 +1,14 @@
++* Clock bindings for Axis ARTPEC-6 chip
 +
++Required properties:
++- compatible: Should be "axis,artpec6-pll1-clock"
++- #clock-cells: Should be <1>
 +
-+ARTPEC-6 ARM SoC
++Examples:
 +
-+Required root node properties:
-+    - compatible = "axis,artpec6-dev-board", "axis,artpec6";
++pll1_clk: pll1_clk {
++	#clock-cells = <1>;
++	compatible = "axis,artpec6-pll1-clock";
++	clocks = <&ext_clk>;
++	status = "okay";
++};
 -- 
 2.1.4
