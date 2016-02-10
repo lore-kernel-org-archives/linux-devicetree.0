@@ -1,59 +1,56 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
- strings
-Date: Wed, 10 Feb 2016 18:22:29 +0100
-Message-ID: <20160210172229.GC17671@verge.net.au>
-References: <1453093785-21067-1-git-send-email-horms+renesas@verge.net.au>
- <20160205202135.GA9594@localhost>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH V3 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
+ driver to work on both  Zynq and Microblaze
+Date: Wed, 10 Feb 2016 09:27:07 -0800
+Message-ID: <20160210172707.GA29590@NP-P-BURTON>
+References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
+ <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
+ <20160209161134.GA24244@NP-P-BURTON>
+ <8520D5D51A55D047800579B09414719825881780@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160205202135.GA9594@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <8520D5D51A55D047800579B09414719825881780@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 05, 2016 at 02:21:35PM -0600, Bjorn Helgaas wrote:
-> Hi Simon,
-> 
-> On Mon, Jan 18, 2016 at 02:09:41PM +0900, Simon Horman wrote:
-> > this short series adds fallback gen2 and SoC-specific r8a7793 compatibility
-> > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
-> > provide a complete set of compatibility strings for known Gen2 SoCs.
+On Wed, Feb 10, 2016 at 05:55:51AM +0000, Bharat Kumar Gogada wrote:
+> > On Tue, Feb 09, 2016 at 04:11:56PM +0530, Bharat Kumar Gogada wrote:
+> > > Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
+> > > Zynq and Microblaze Architectures.
+> > > With these modifications drivers/pci/host/pcie-xilinx.c, will work on
+> > > both Zynq and Microblaze Architectures.
+> > >
+> > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > > ---
+> > > Changes:
+> > > Removed unneccessary architecture dependent number of MSI's.
+> > > Added #ifdef to pci_fixup_irqs which is ARM specific API.
 > > 
-> > Bjorn, the intention of the revised changelogs for the r8a7793 is to
-> > address your concerns regarding providing an explanation of why there are
-> > no driver changes. Please consider taking this series through your tree.
+> > Hi Bharat,
 > > 
-> > Key Changes between v2 and v3:
-> > * Enhance changelog to describe why documenting the r8a7793 is necessary
-> >   and sufficient
-> > * Added acks.
+> > Why do you say pci_fixup_irqs is ARM-specific? It's declared in
+> > include/linux/pci.h, defined in drivers/pci/setup-irq.c & used by multiple
+> > architectures (alpha, arm, m68k, mips, sh, sparc, tile,
+> > unicore32 from a quick grep).
 > > 
-> > Key Changes between v1 and v2:
-> > * Include "rcar-" in generic bindings
+> > Will you not break INTX-style interrupts by removing this?
 > > 
-> > Simon Horman (4):
-> >   PCI: rcar-gen2: add gen2 fallback compatibility string
-> >   PCI: rcar-gen2: add device tree support for r8a7793
-> >   PCI: rcar: add gen2 fallback compatibility string
-> >   PCI: rcar: add device tree support for r8a7793
-> > 
-> >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
-> >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
-> >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
-> >  drivers/pci/host/pcie-rcar.c                            |  1 +
-> >  4 files changed, 23 insertions(+), 5 deletions(-)
-> 
-> Whew, it took a long time to pound that through my thick skull :)
-> 
-> I think patches 1 and 3 are already in v4.5-rc1, and I applied patches 2
-> and 4 to my for-linus branch as below.  Please double-check and make sure
-> for-linus has everything you want.  I'll ask Linus to pull that before
-> v4.5.
+> I meant to say ARM specific w.r.t Microblaze architecture, which is
+> what this patch series are for. This has been already discussed in my
+> previous patch by  Arnd Bergmann and Lorenzo Pieralisi .
+> (https://lkml.org/lkml/2016/1/12/707)
+
+Hi Bharat,
+
+Ok, so you don't need it for microblaze but do need it for zynq/ARM. We
+also need it for MIPS, where my recent patches enable this driver. So if
+#ifdef'ing this is the current way forwards could you please invert the
+condition to #ifndef CONFIG_MICROBLAZE?
 
 Thanks,
-
-I checked your for-linus branch and everything seems to be in order.
+    Paul
