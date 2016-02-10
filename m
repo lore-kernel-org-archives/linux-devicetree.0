@@ -1,48 +1,90 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 0/8] arm64: dts: apq8016 dt patches (Set2).
-Date: Wed, 10 Feb 2016 11:36:04 +0000
-Message-ID: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 2/8] arm64: dts: qcom: apq8016-sbc: add usb support
+Date: Wed, 10 Feb 2016 11:36:42 +0000
+Message-ID: <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy, 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 15 ++++++++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 35 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-Here are few more dt patches (set2) which enables usb and lpass,
-with some fixes. I have tested these patches with few changes
-to defconfig on DB410C + a usb phy fix.
-
-Thanks,
-srini
-
-Changes since v1:
- - moved usb usb2513 and usb_id nodes out of soc
- as suggested by Stephen Boyd.
- - fixed lpass node name, spotted by Stephen Boyd.
- - added new patch to enable bam dma
- - added a fix from Ivan on led mpp pins.
-
-
-Ivan T. Ivanov (1):
-  arm64: dts: qcom: Fix MPP's function used for LED control
-
-Srinivas Kandagatla (7):
-  arm64: dts: qcom: add manual pullup setting to otg.
-  arm64: dts: qcom: apq8016-sbc: add usb support
-  arm64: dts: qcom: add audio pinctrls
-  arm64: dts: qcom: add lpass node
-  arm64: dts: qcom: apq8016-sbc: enable lpass on DB410c
-  arm64: dts: qcom: fix usb digital voltage levels
-  arm64: dts: qcom: apq8016-sbc: enable bam dma node.
-
- .../arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi |   2 +-
- arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi |  15 ++
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |  43 ++++
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi         | 216 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |  29 ++-
- 5 files changed, 303 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+index cbeee0b..4a79dd9 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+@@ -10,4 +10,19 @@
+ 			output-low;
+ 		};
+ 	};
++
++	usb_id_default: usb_id_default {
++		pinmux {
++			function = "gpio";
++			pins = "gpio121";
++		};
++
++		pinconf {
++			pins = "gpio121";
++			function = "gpio";
++			drive-strength = <8>;
++			input-enable;
++			bias-pull-up;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 9a6c595..23ba95a 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -151,6 +151,41 @@
+ 			cd-gpios = <&msmgpio 38 0x1>;
+ 			status = "okay";
+ 		};
++
++		usb@78d9000 {
++			extcon = <&usb_id>, <&usb_id>;
++			status = "okay";
++		};
++
++		ehci@78d9000 {
++			status = "okay";
++		};
++
++		phy@78d9000 {
++			v1p8-supply = <&pm8916_l7>;
++			v3p3-supply = <&pm8916_l13>;
++			vddcx-supply = <&pm8916_s1>;
++			extcon = <&usb_id>, <&usb_id>;
++			dr_mode = "otg";
++			status = "okay";
++			switch-gpio = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&usb_sw_sel_pm>;
++		};
++	};
++
++	usb2513 {
++		compatible = "smsc,usb3503";
++		reset-gpios = <&pm8916_gpios 3 GPIO_ACTIVE_LOW>;
++		initial-mode = <1>;
++	};
++
++	usb_id: usb-id {
++		interrupt-parent = <&msmgpio>;
++		compatible = "linux,extcon-usb-gpio";
++		id-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_id_default>;
+ 	};
+ };
+ 
 -- 
 1.9.1
