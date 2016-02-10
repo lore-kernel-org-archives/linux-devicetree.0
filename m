@@ -1,8 +1,8 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH V3 1/4] dt-bindings: mfd: Add bindings for the MediaTek
  MT6323 PMIC
-Date: Wed, 10 Feb 2016 16:58:56 +0000
-Message-ID: <20160210165856.GS3782@x1>
+Date: Wed, 10 Feb 2016 17:01:27 +0000
+Message-ID: <20160210170127.GW3782@x1>
 References: <1453895258-44369-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -15,16 +15,21 @@ To: John Crispin <blogic@openwrt.org>
 Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jan 2016, John Crispin wrote:
+If you're submitting a set of patches like this, you really ought to
+be providing a cover-letter.
+
+Also, when submitting patches, please do so in the style expected by
+the subsystem.  I will fix these once up for now, but please bear that
+in mind in the future.
+
+`git log --oneline -- <subsystem>` works well for this.
 
 > Signed-off-by: John Crispin <blogic@openwrt.org>
 > Cc: devicetree@vger.kernel.org
 > ---
 >  Documentation/devicetree/bindings/mfd/mt6397.txt |   10 ++++++----
 >  1 file changed, 6 insertions(+), 4 deletions(-)
-
-Applied, thanks.
-
+>=20
 > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Docum=
 entation/devicetree/bindings/mfd/mt6397.txt
 > index 15043e6..949c85f 100644
