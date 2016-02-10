@@ -1,52 +1,27 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Wed, 10 Feb 2016 09:48:14 -0800
-Message-ID: <a005c107-0b15-65ec-eede-a713ee1a8bd9@broadcom.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
- <CACRpkdZZBQUc4oPTPb+67C9A2r7qRV3zXRC7uusvDpNnM=i1eg@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dts: arm64: Add EFUSE device node
+Date: Wed, 10 Feb 2016 18:48:35 +0100
+Message-ID: <56BB77F3.7030804@gmail.com>
+References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
+ <1447930014-19579-4-git-send-email-andrew-ct.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZZBQUc4oPTPb+67C9A2r7qRV3zXRC7uusvDpNnM=i1eg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Arun Ramamurthy <arun.ramamurthy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Dmitry Torokhov <dtor@google.com>, Anatol Pomazau <anatol@google.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447930014-19579-4-git-send-email-andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 2/10/2016 5:58 AM, Linus Walleij wrote:
-> On Wed, Feb 25, 2015 at 10:01 PM, Arun Ramamurthy
-> <arun.ramamurthy@broadcom.com> wrote:
+On 19/11/15 11:46, Andrew-CT Chen wrote:
+> Add Mediatek MT8173 EFUSE device node
 >
->> Added code based on linaro tree:
->> http://git.linaro.org/kernel/linux-linaro-stable.git
->> with commit id:6846e7822c4cab5a84672baace3b768c2d0db142
->> at drivers/video/amba-clcd.c. This lets the driver set
->> certain tim2 register bits after reading them from
->> device tree.
->>
->> Reviewed-by: Ray Jui <rjui@broadcom.com>
->> Reviewed-by: Scott Branden <sbranden@broadcom.com>
->> Signed-off-by: Arun Ramamurthy <arun.ramamurthy@broadcom.com>
->
-> I have now implemented this properly in this patch:
-> http://marc.info/?l=linux-fbdev&m=145459469913983&w=2
->
-> Please provide your Tested-by/Reviewed-by/Ack if you're
-> still working on this.
+> Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
 
-Could you please add me to the email thread and I can review it there (I 
-won't have time to test, but I can help to review the code and find time 
-to test later)?
-
-This may be a dumb question, is there any way for me to directly reply 
-to the thread here?
-
-http://marc.info/?l=linux-fbdev&m=145459469913983&w=2
-
->
-> Yours,
-> Linus Walleij
->
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
