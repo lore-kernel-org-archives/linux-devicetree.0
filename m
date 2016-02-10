@@ -1,129 +1,84 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
-Date: Wed, 10 Feb 2016 10:02:23 -0800
-Message-ID: <56BB7B2F.60307@caviumnetworks.com>
-References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
+Date: Wed, 10 Feb 2016 21:09:06 +0300
+Message-ID: <56BB7CC2.1060706@cogentembedded.com>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+ <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
+ <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Matt Redfearn <matt.redfearn@imgtec.com>
-Cc: linux-mmc@vger.kernel.org, david.daney@cavium.com, ulf.hansson@linaro.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2016 09:36 AM, Matt Redfearn wrote:
-> From: Aleksey Makarov<aleksey.makarov@caviumnetworks.com>
+Hello.
+
+On 02/10/2016 03:41 AM, Kuninori Morimoto wrote:
+
+> Sorry for my un-ordered response
+
+    Not sure what you mean by that. :-)
+
+>> Define the generic R8A7794 part of  the sound device node.
+>> This sound device  is a complex one and comprises the Audio Clock Generator
+>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+>> It is up  to the board file to enable the device.
+>>
+>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> (snip)
+>> +		rcar_sound,src {
+>> +			src1: src@1 {
+>> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +			src2: src@2 {
+>> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +			src3: src@3 {
+>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +			src4: src@4 {
+>> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +			src5: src@5 {
+>> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +			src6: src@6 {
+>> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+>> +				dma-names = "rx", "tx";
+>> +			};
+>> +		};
 >
-> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
-> devices.  Device parameters are configured from device tree data.
->
-> eMMC, MMC and SD devices are supported.
->
-> Tested-by: Aaro Koskinen<aaro.koskinen@iki.fi>
-> Signed-off-by: Chandrakala Chavva<cchavva@caviumnetworks.com>
-> Signed-off-by: David Daney<david.daney@cavium.com>
-> Signed-off-by: Aleksey Makarov<aleksey.makarov@auriga.com>
-> Signed-off-by: Leonid Rosenboim<lrosenboim@caviumnetworks.com>
-> Signed-off-by: Peter Swain<pswain@cavium.com>
-> Signed-off-by: Aaron Williams<aaron.williams@cavium.com>
-> Signed-off-by: Matt Redfearn<matt.redfearn@imgtec.com>
-> ---
-> v5:
-> Incoroprate comments from review
-> http://patchwork.linux-mips.org/patch/9558/
-> - Use standard <bus-width> property instead of <cavium,bus-max-width>.
-> - Use standard <max-frequency> property instead of <spi-max-frequency>.
-> - Add octeon_mmc_of_parse_legacy function to deal with the above
->    properties, since many devices have shipped with those properties
->    embedded in firmware.
-> - Allow the <vmmc-supply> binding in addition to the legacy
->    <gpios-power>.
-> - Remove the secondary driver for each slot.
-> - Use core gpio cd/wp handling
->
-[...]
+> I think this can't work correctly, because driver is assuming
+> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
 
-> +static int octeon_mmc_of_copy_legacy_u32(struct device_node *node,
-> +					  const char *legacy_name,
-> +					  const char *new_name)
-> +{
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(node, legacy_name, &value);
-> +	if (!ret) {
-> +		/* Found legacy - set generic property */
-> +		struct property *new_p;
-> +		u32 *new_v;
-> +
-> +		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
-> +			node->full_name, legacy_name);
-> +
+    At least it doesn't crash and burn. :-)
+    Playback and recording still work too.
 
-I don't like this warning message.
+> Can you adds dummy src0 with some comments ?
 
-The vast majority of people that see it will not be able to change their 
-firmware.  So it will be forever cluttering up their boot logs.
+    Don't think that's an option. We are supposed to describe the hardware, 
+not the driver's behavior.
 
-We are not ever planning on removing support for legacy firmware 
-properties, so alarming people is really all this message does.
+> or fix src.c driver ?
 
-If you insist on a message then make it something like pr_info("This is 
-working properly, but please consider using modern device tree 
-properties...")
+    Will try to look into it...
 
-> +		new_p = kzalloc(sizeof(*new_p), GFP_KERNEL);
-> +		new_v = kzalloc(sizeof(u32), GFP_KERNEL);
-> +		if (!new_p || !new_v)
-> +			return -ENOMEM;
-> +
-> +		*new_v = value;
-> +		new_p->name = kstrdup(new_name, GFP_KERNEL);
-> +		new_p->length = sizeof(u32);
-> +		new_p->value = new_v;
-> +
-> +		of_update_property(node, new_p);
-> +	}
-> +	return 0;
-> +}
-> +
-> +/*
-> + * This function parses the legacy device tree that may be found in devices
-> + * shipped before the driver was upstreamed. Future devices should not require
-> + * it as standard bindings should be used
-> + */
-> +static int octeon_mmc_of_parse_legacy(struct device *dev,
-> +				      struct device_node *node,
-> +				      struct octeon_mmc_slot *slot)
-> +{
-> +	int ret;
-> +
-> +	ret = octeon_mmc_of_copy_legacy_u32(node, "cavium,bus-max-width",
-> +					    "bus-width");
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = octeon_mmc_of_copy_legacy_u32(node, "spi-max-frequency",
-> +					    "max-frequency");
-> +	if (ret)
-> +		return ret;
-> +
-> +	slot->pwr_gpiod = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
-> +	if (!IS_ERR(slot->pwr_gpiod)) {
-> +		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
-> +			node->full_name, "gpios-power");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+MBR, Sergei
