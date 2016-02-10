@@ -1,74 +1,66 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
-Date: Wed, 10 Feb 2016 16:14:52 +0000
-Message-ID: <20160210161452.GB3782@x1>
-References: <1452655854-1528-1-git-send-email-wens@csie.org>
- <1452655854-1528-5-git-send-email-wens@csie.org>
- <20160125143957.GS3368@x1>
- <20160125152958.GO7908@lukather>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Graham Moore <grmoore@opensource.altera.com>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Wed, 10 Feb 2016 10:10:25 -0600
+Message-ID: <56BB60F1.9070306@opensource.altera.com>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+ <201602060842.38290.marex@denx.de> <56B879BD.2070608@ti.com>
+ <201602081627.57666.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBAGE5W2QKGQEMF7XWZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160125152958.GO7908@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <201602081627.57666.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>, Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jan 2016, Maxime Ripard wrote:
-> On Mon, Jan 25, 2016 at 02:39:57PM +0000, Lee Jones wrote:
-> > On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
-> >=20
-> > > When the driver was merged, the original author did not include a pro=
-per
-> > > copyright notice. This patch adds the notice, backdated to when the
-> > > driver was merged.
-> >=20
-> > This is very wordy.=20
-> >=20
-> > "Supply a backdated copyright notice."
-> >=20
-> > > Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > > ---
-> > >=20
-> > > New patch in v7.
-> > >=20
-> > > ---
-> > >  drivers/mfd/axp20x.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> >=20
-> > Patch looks fine though:
-> >=20
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> How do you want to merge these patches ?
->=20
-> AFAIK, it's mostly MFD patches that could go through your tree, so
-> feel free to apply them, I'll apply the DT parts.
+On 02/08/2016 09:27 AM, Marek Vasut wrote:
+> On Monday, February 08, 2016 at 12:19:25 PM, Vignesh R wrote:
+>> On 02/06/2016 01:12 PM, Marek Vasut wrote:
+>>> On Thursday, February 04, 2016 at 06:30:27 PM, R, Vignesh wrote:
+>>>> On 2/4/2016 4:55 PM, Marek Vasut wrote:
+>> [...]
+>>
+>>>> Yeah, there is delay(of few ns) required between writing to
+>>>> INDIRECTWR_START bit and actually writing data to flash(i.e writesl()
+>>>> call). This is specific to TI K2G SoC and needs to be tied to the new
+>>>> binding.
+>>>
+>>> Can't you somehow poll the hardware to check whether or not it's ready
+>>> instead of adding some random delay ?
+>>
+>> There is no dedicated register to poll as such.
+>>
+>> According to TRM:
+>> "Wait for couple of cycles of QSPI_REF_CLK(functional clock of QSPI
+>> @384MHz) until CQSPI_REG_INDIRECTWR[0] bit is internally synchronized by
+>> the QSPI module before writing to flash".
+>>
+>> So, a few ns(~6ns @384MHz) delay is needed (or accessing a QSPI module
+>> register should be sufficient as it will take more than 2 clock cycles).
+>> I believe this delay is specific to TI K2G SoC and maybe needs to be
+>> tied to the binding.
+>
+> OK, got it. Dinh/Graham, can you check if this might be needed on SoCFPGA too
+> please?
+>
 
-Apologies for the delay, I've been super busy.
+I don't see any such requirement in the data sheet.  It's working 
+without it.  So I think it's not needed on SoCFPGA
 
-Yes, please take the ARM patches, I'll take the rest.
+-Graham
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
