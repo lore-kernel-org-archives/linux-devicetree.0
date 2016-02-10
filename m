@@ -1,141 +1,74 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: breaking DT compatibility
-Date: Wed, 10 Feb 2016 16:14:34 +0000
-Message-ID: <56BB61EA.1030805@arm.com>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com> <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 04/10] mfd: axp20x: Add missing copyright notice
+Date: Wed, 10 Feb 2016 16:14:52 +0000
+Message-ID: <20160210161452.GB3782@x1>
+References: <1452655854-1528-1-git-send-email-wens@csie.org>
+ <1452655854-1528-5-git-send-email-wens@csie.org>
+ <20160125143957.GS3368@x1>
+ <20160125152958.GO7908@lukather>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160210143755.GE31506@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <rob.herring@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBAGE5W2QKGQEMF7XWZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160125152958.GO7908@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 25 Jan 2016, Maxime Ripard wrote:
+> On Mon, Jan 25, 2016 at 02:39:57PM +0000, Lee Jones wrote:
+> > On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
+> >=20
+> > > When the driver was merged, the original author did not include a pro=
+per
+> > > copyright notice. This patch adds the notice, backdated to when the
+> > > driver was merged.
+> >=20
+> > This is very wordy.=20
+> >=20
+> > "Supply a backdated copyright notice."
+> >=20
+> > > Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > ---
+> > >=20
+> > > New patch in v7.
+> > >=20
+> > > ---
+> > >  drivers/mfd/axp20x.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> >=20
+> > Patch looks fine though:
+> >=20
+> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> How do you want to merge these patches ?
+>=20
+> AFAIK, it's mostly MFD patches that could go through your tree, so
+> feel free to apply them, I'll apply the DT parts.
 
-On 10/02/16 14:37, Maxime Ripard wrote:
-> Hi Rob,
-> 
-> On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
->> On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.com> wrote:
->>> Hi,
->>>
->>> just a ping:
->>>
->>> Are we really OK with breaking existing DTs in 4.6? (per the code in
->>> -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
->>
->> I only warn and make sure people are aware of the issue. I leave that
->> up to platform maintainers to decide. It depends on the maturity of
->> the platform and users.
-> 
-> The impacted SoCs support is really partial. For the most supported
-> one, big things like display or sound are totally missing, and we
-> still update them on a regular basis to add support for new
-> devices. As such, users are very likely to upgrade the DT from one
-> version to another just because there's new devices available to
-> them. And the newest SoC impacted just got introduced in 4.5, and only
-> has the UART and MMC devices available.
+Apologies for the delay, I've been super busy.
 
-But I still don't see why we have to break things - can't we just
-improve support _without_ breaking compatibility? For instance keeping
-the old behaviour around? I can dig out my old x86 hat and find a
-_compatible_ solution for this, if you prefer ;-)
-Actually doesn't Jean-Francois' patch fixes the PLL8 issue without
-breaking anything?
+Yes, please take the ARM patches, I'll take the rest.
 
-Also were do you want to draw the line for "partial support"? The
-sun6i-a31.dtsi is around since 3.12, which was released more than 2
-years ago.
-If we want to wait for "stabilization", we will probably wait forever. I
-find discussions about DT stabilization going back to the very beginning
-of DT for ARM - as well as the request for moving the DT bindings out of
-the kernel (which I think we should really eventually do now).
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-Frankly I don't care so much about these particular boards, but just
-want avoid to set a bad example for the future - in particular sneaking
-this behaviour into the arm64 world, where DTs _really_ come with the
-board or are even generated by the (UEFI-)firmware.
-U-Boot already can embed a device tree, sounds like a perfect place to
-have it stored for me - as long as there is _one_ best version of it.
-
->> If people complain about it then it's their mess. For platforms
->> supported in distros such as debian or fedora, I would strongly
->> recommend against breaking compatibility.
-> 
-> None of them are officially supported:
-> https://www.debian.org/releases/stable/armhf/ch02s01.html.en
-> https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
-> 
-> Only the older one are, and they are not affected by this patch.
-> 
->> They do ship dtbs, but it's a chicken and egg problem. If dtbs were
->> stable and provided by firmware, then they wouldn't have to provide
->> them. If dtbs are unstable, then they have no choice.
-> 
-> And while it might work great on platforms that have all the needed
-> documentation, or a perfect one, which is our case. Almost each
-> release, we discover that something is not working as it was
-> documented, when it was documented in the first place.
-
-I understand that it's not an ideal situation for those Allwinner chips
-- but nevertheless I would like us to at least _try_ to comply with this
-idea. As said before: this patch is a nice rework/cleanup - but
-definitely not a good reason to break compatibility.
-
-> It also seems that even on well documented platforms, supported by the
-> vendors, the stable ABI dream is not going to happen:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm/Atmel/README#n105
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/marvell,berlin.txt#n4
-
-I find those two statements really unfortunate ...
-
-> If it makes things clearer, I can also add such a statement.
-
-and would rather see us referring solely to this document instead:
-	Documentation/devicetree/bindings/ABI.txt
-
-Cheers,
-Andre.
-
->>> Also I think one needs ACKs from DT maintainers before merging something
->>> in the respective directories, which I don't see here.
->>
->> It can go in with subsystem maintainers ack, but there are problems
->> with this one regardless of compatibility.
->>
->>> As I am somewhat blocked on that patch, I'd like to have some discussion
->>> on the list.
->>>
->>> Thanks,
->>> Andre.
->>>
->>> On 05/02/16 17:59, Andre Przywara wrote:
->>>> Hi Maxime,
->>>>
->>>> just found this while looking at your current git branch, so sorry for
->>>> the late reply.
->>>>
->>>> CC:ing DT people, since you touch both existing DTs(!) and the binding doc.
->>>>
->>>> On 01/02/16 20:20, Maxime Ripard wrote:
->>>>> Remove the fixed dividers from the PLL6 driver to be able to have a
->>>>> reusable driver that can be used across several SoCs that share the same
->>>>> controller, but don't have the same set of dividers for this clock, and to
->>>>> also be reused multiple times in the same SoC, since we're droping the
->>>>> clock name.
->>
->> Removing a compatible name or not has nothing to do with sharing code.
-> 
-> This was not about the compatible name, but the hardcoded name in our
-> structure associated to that compatible. And since we can't register
-> two clocks with the same name, we couldn't use the same compatible
-> several times.
-> 
-> Maxime
-> 
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
