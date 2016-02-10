@@ -1,37 +1,38 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 7/8] arm64: dts: qcom: apq8016-sbc: enable bam dma node.
-Date: Wed, 10 Feb 2016 11:37:17 +0000
-Message-ID: <1455104237-10771-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 8/8] arm64: dts: qcom: Fix MPP's function used for LED control
+Date: Wed, 10 Feb 2016 11:37:24 +0000
+Message-ID: <1455104244-10813-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables bam dma node, dma is used for both tx and rx on spi
-and on high speed serial.
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+The qcom-spmi-mpp driver is now using string "digital" to denote
+old "normal" functionality. Update DTS file.
+Also update the powersource.
+
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 8ab87e7..a1a39d0 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -33,6 +33,10 @@
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+index e03c11d..f881437 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+@@ -33,7 +33,7 @@
+ 	pm8916_mpps_leds: pm8916_mpps_leds {
+ 		pinconf {
+ 			pins = "mpp2", "mpp3";
+-			function = PMIC_GPIO_FUNC_NORMAL;
++			function = "digital";
+ 			output-low;
+ 		};
  	};
- 
- 	soc {
-+		dma@7884000 {
-+			status = "okay";
-+		};
-+
- 		serial@78af000 {
- 			label = "LS-UART0";
- 			status = "okay";
 -- 
 1.9.1
