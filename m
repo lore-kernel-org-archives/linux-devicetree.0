@@ -1,507 +1,412 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v11 4/4] Watchdog: introduce ARM SBSA watchdog driver
-Date: Wed, 10 Feb 2016 07:57:09 -0700
-Message-ID: <CANLsYkwjFwy_2zoU04sRsEgoj3y+wesat=TUjBCpG=iw5WweHw@mail.gmail.com>
-References: <1455037240-16192-1-git-send-email-fu.wei@linaro.org>
-	<1455037240-16192-5-git-send-email-fu.wei@linaro.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 1/3] gpio: xgene: Enable X-Gene standby GPIO as
+ interrupt controller
+Date: Wed, 10 Feb 2016 15:09:44 +0000
+Message-ID: <56BB52B8.4040501@arm.com>
+References: <1454041735-8434-1-git-send-email-qnguyen@apm.com>
+ <1454041735-8434-2-git-send-email-qnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1455037240-16192-5-git-send-email-fu.wei@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, wim@iguana.be, Guenter Roeck <linux@roeck-us.net>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, rruigrok@codeaurora.org, harba@codeaurora.org, Christopher Covington <cov@codeaurora.org>, timur@codeaurora.org, dyoung@redhat.com, panand@redhat
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1454041735-8434-2-git-send-email-qnguyen@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quan Nguyen <qnguyen@apm.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On 9 February 2016 at 10:00,  <fu.wei@linaro.org> wrote:
-> From: Fu Wei <fu.wei@linaro.org>
->
-> According to Server Base System Architecture (SBSA) specification,
-> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
-> is for alerting the system by interrupt, the second one (WS1) is a real
-> hardware reset.
-> More details about the hardware specification of this device:
-> ARM DEN0029B - Server Base System Architecture (SBSA)
->
-> This driver can operate ARM SBSA Generic Watchdog as a single stage watchdog
-> or a two stages watchdog, it's set up by the module parameter "action".
-> In the single stage mode, when the timeout is reached, your system
-> will be reset by WS1. The first signal (WS0) is ignored.
-> In the two stages mode, when the timeout is reached, the first signal (WS0)
-> will trigger panic. If the system is getting into trouble and cannot be reset
-> by panic or restart properly by the kdump kernel(if supported), then the
-> second stage (as long as the first stage) will be reached, system will be
-> reset by WS1. This function can help administrator to backup the system
-> context info by panic console output or kdump.
->
-> This driver bases on linux kernel watchdog framework, so it can get
-> timeout from module parameter and FDT at the driver init stage.
->
-> Signed-off-by: Fu Wei <fu.wei@linaro.org>
-> Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
-> Tested-by: Pratyush Anand <panand@redhat.com>
+Quan,
+
+This is getting better. Some comments below.
+
+On 29/01/16 04:28, Quan Nguyen wrote:
+> Enable X-Gene standby GPIO controller as interrupt controller to provide
+> its own resources. This avoids ambiguity where GIC interrupt resource is
+> use as X-Gene standby GPIO interrupt resource in user driver.
+> 
+> Signed-off-by: Y Vo <yvo@apm.com>
+> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
 > ---
->  drivers/watchdog/Kconfig     |  20 +++
->  drivers/watchdog/Makefile    |   1 +
->  drivers/watchdog/sbsa_gwdt.c | 403 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 424 insertions(+)
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0f6d851..ed9a5cb 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -202,6 +202,26 @@ config ARM_SP805_WATCHDOG
->           ARM Primecell SP805 Watchdog timer. This will reboot your system when
->           the timeout is reached.
->
-> +config ARM_SBSA_WATCHDOG
-> +       tristate "ARM SBSA Generic Watchdog"
-> +       depends on ARM64
-> +       depends on ARM_ARCH_TIMER
-> +       select WATCHDOG_CORE
-> +       help
-> +         ARM SBSA Generic Watchdog has two stage timeouts:
-> +         the first signal (WS0) is for alerting the system by interrupt,
-> +         the second one (WS1) is a real hardware reset.
-> +         More details: ARM DEN0029B - Server Base System Architecture (SBSA)
+>  drivers/gpio/gpio-xgene-sb.c | 275 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 243 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xgene-sb.c b/drivers/gpio/gpio-xgene-sb.c
+> index 282004d..026da90 100644
+> --- a/drivers/gpio/gpio-xgene-sb.c
+> +++ b/drivers/gpio/gpio-xgene-sb.c
+> @@ -2,8 +2,9 @@
+>   * AppliedMicro X-Gene SoC GPIO-Standby Driver
+>   *
+>   * Copyright (c) 2014, Applied Micro Circuits Corporation
+> - * Author: 	Tin Huynh <tnhuynh@apm.com>.
+> - * 		Y Vo <yvo@apm.com>.
+> + * Author:	Tin Huynh <tnhuynh@apm.com>.
+> + *		Y Vo <yvo@apm.com>.
+> + *		Quan Nguyen <qnguyen@apm.com>.
+>   *
+>   * This program is free software; you can redistribute  it and/or modify it
+>   * under  the terms of  the GNU General  Public License as published by the
+> @@ -28,9 +29,14 @@
+>  
+>  #include "gpiolib.h"
+>  
+> -#define XGENE_MAX_GPIO_DS		22
+> -#define XGENE_MAX_GPIO_DS_IRQ		6
+> +/* Common property names */
+> +#define XGENE_NIRQ_PROPERTY		"apm,nr-irqs"
+> +#define XGENE_NGPIO_PROPERTY		"apm,nr-gpios"
+> +#define XGENE_IRQ_START_PROPERTY	"apm,irq-start"
+>  
+> +#define XGENE_DFLT_MAX_NGPIO		22
+> +#define XGENE_DFLT_MAX_NIRQ		6
+> +#define XGENE_DFLT_IRQ_START_PIN	8
+>  #define GPIO_MASK(x)			(1U << ((x) % 32))
+>  
+>  #define MPA_GPIO_INT_LVL		0x0290
+> @@ -39,19 +45,32 @@
+>  #define MPA_GPIO_IN_ADDR 		0x02a4
+>  #define MPA_GPIO_SEL_LO 		0x0294
+>  
+> +#define GPIO_INT_LEVEL_H	0x000001
+> +#define GPIO_INT_LEVEL_L	0x000000
 > +
-> +         This driver can operate ARM SBSA Generic Watchdog as a single stage
-> +         or a two stages watchdog, it depends on the module parameter "action".
+>  /**
+>   * struct xgene_gpio_sb - GPIO-Standby private data structure.
+>   * @gc:				memory-mapped GPIO controllers.
+> - * @irq:			Mapping GPIO pins and interrupt number
+> - * nirq:			Number of GPIO pins that supports interrupt
+> + * @regs:			GPIO register base offset
+> + * @irq_domain:			GPIO interrupt domain
+> + * @irq_start:			GPIO pin that start support interrupt
+> + * @nirq:			Number of GPIO pins that supports interrupt
+> + * @parent_irq_base:		Start parent HWIRQ
+>   */
+>  struct xgene_gpio_sb {
+>  	struct gpio_chip	gc;
+> -	u32 *irq;
+> -	u32 nirq;
+> +	void __iomem		*regs;
+> +	struct irq_domain	*irq_domain;
+> +	u16			irq_start;
+> +	u16			nirq;
+> +	u16			parent_irq_base;
+>  };
+>  
+> -static void xgene_gpio_set_bit(struct gpio_chip *gc, void __iomem *reg, u32 gpio, int val)
+> +#define HWIRQ_TO_GPIO(priv, hwirq) ((hwirq) + (priv)->irq_start)
+> +#define GPIO_TO_HWIRQ(priv, gpio) ((gpio) - (priv)->irq_start)
 > +
-> +         Note: the maximum timeout in the two stages mode is half of that in
-> +         the single stage mode.
-> +
-> +         To compile this driver as module, choose M here: The module
-> +         will be called sbsa_gwdt.
-> +
->  config ASM9260_WATCHDOG
->         tristate "Alphascale ASM9260 watchdog"
->         depends on MACH_ASM9260
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index f566753..f9826d4 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
->
->  # ARM Architecture
->  obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
-> +obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
->  obj-$(CONFIG_ASM9260_WATCHDOG) += asm9260_wdt.o
->  obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
->  obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
-> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
-> new file mode 100644
-> index 0000000..f506762
-> --- /dev/null
-> +++ b/drivers/watchdog/sbsa_gwdt.c
-> @@ -0,0 +1,403 @@
-> +/*
-> + * SBSA(Server Base System Architecture) Generic Watchdog driver
-> + *
-> + * Copyright (c) 2015, Linaro Ltd.
-> + * Author: Fu Wei <fu.wei@linaro.org>
-> + *         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> + *         Al Stone <al.stone@linaro.org>
-> + *         Timur Tabi <timur@codeaurora.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License 2 as published
-> + * by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * ARM SBSA Generic Watchdog has two stage timeouts:
-> + * the first signal (WS0) is for alerting the system by interrupt,
-> + * the second one (WS1) is a real hardware reset.
-> + * More details about the hardware specification of this device:
-> + * ARM DEN0029B - Server Base System Architecture (SBSA)
-> + *
-> + * This driver can operate ARM SBSA Generic Watchdog as a single stage watchdog
-> + * or a two stages watchdog, it's set up by the module parameter "action".
-> + * In the single stage mode, when the timeout is reached, your system
-> + * will be reset by WS1. The first signal (WS0) is ignored.
-> + * In the two stages mode, when the timeout is reached, the first signal (WS0)
-> + * will trigger panic. If the system is getting into trouble and cannot be reset
-> + * by panic or restart properly by the kdump kernel(if supported), then the
-> + * second stage (as long as the first stage) will be reached, system will be
-> + * reset by WS1. This function can help administrator to backup the system
-> + * context info by panic console output or kdump.
-> + *
-> + * SBSA GWDT:
-> + * if action is 1 (the two stages mode):
-> + * |--------WOR-------WS0--------WOR-------WS1
-> + * |----timeout-----(panic)----timeout-----reset
-> + *
-> + * if action is 0 (the single stage mode):
-> + * |------WOR-----WS0(ignored)-----WOR------WS1
-> + * |--------------timeout-------------------reset
-> + *
-> + * Note: Since this watchdog timer has two stages, and each stage is determined
-> + * by WOR, in the single stage mode, the timeout is (WOR * 2); in the two
-> + * stages mode, the timeout is WOR. The maximum timeout in the two stages mode
-> + * is half of that in the single stage mode.
-> + *
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/watchdog.h>
-> +#include <asm/arch_timer.h>
-> +
-> +/* SBSA Generic Watchdog register definitions */
-> +/* refresh frame */
-> +#define SBSA_GWDT_WRR                          0x000
-> +
-> +/* control frame */
-> +#define SBSA_GWDT_WCS                          0x000
-> +#define SBSA_GWDT_WOR                          0x008
-> +#define SBSA_GWDT_WCV                          0x010
-> +
-> +/* refresh/control frame */
-> +#define SBSA_GWDT_W_IIDR                       0xfcc
-> +#define SBSA_GWDT_IDR                          0xfd0
-> +
-> +/* Watchdog Control and Status Register */
-> +#define SBSA_GWDT_WCS_EN                       BIT(0)
-> +#define SBSA_GWDT_WCS_WS0                      BIT(1)
-> +#define SBSA_GWDT_WCS_WS1                      BIT(2)
-> +
-> +/**
-> + * struct sbsa_gwdt - Internal representation of the SBSA GWDT
-> + * @wdd:               kernel watchdog_device structure
-> + * @clk:               store the System Counter clock frequency, in Hz.
-> + * @refresh_base:      Virtual address of the watchdog refresh frame
-> + * @control_base:      Virtual address of the watchdog control frame
-> + */
-> +struct sbsa_gwdt {
-> +       struct watchdog_device  wdd;
-> +       u32                     clk;
-> +       void __iomem            *refresh_base;
-> +       void __iomem            *control_base;
-> +};
-> +
-> +#define to_sbsa_gwdt(e) container_of(e, struct sbsa_gwdt, wdd)
-> +
-> +#define DEFAULT_TIMEOUT                10 /* seconds, the 1st + 2nd watch periods*/
-> +
-> +static unsigned int timeout;
-> +module_param(timeout, uint, 0);
-> +MODULE_PARM_DESC(timeout,
-> +                "Watchdog timeout in seconds. (>=0, default="
-> +                __MODULE_STRING(DEFAULT_TIMEOUT) ")");
-> +
-> +/*
-> + * action refers to action taken when watchdog gets WS0
-> + * 0 = skip
-> + * 1 = panic
-> + * defaults to skip (0)
-> + */
-> +static int action;
-> +module_param(action, int, 0);
-> +MODULE_PARM_DESC(action, "after watchdog gets WS0 interrupt, do: "
-> +                "0 = skip(*)  1 = panic");
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, S_IRUGO);
-> +MODULE_PARM_DESC(nowayout,
-> +                "Watchdog cannot be stopped once started (default="
-> +                __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +/*
-> + * watchdog operation functions
-> + */
-> +static int sbsa_gwdt_set_timeout(struct watchdog_device *wdd,
-> +                                unsigned int timeout)
+> +static void xgene_gpio_set_bit(struct gpio_chip *gc,
+> +				void __iomem *reg, u32 gpio, int val)
+>  {
+>  	u32 data;
+>  
+> @@ -63,23 +82,180 @@ static void xgene_gpio_set_bit(struct gpio_chip *gc, void __iomem *reg, u32 gpio
+>  	gc->write_reg(reg, data);
+>  }
+>  
+> -static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
+> +static int xgene_gpio_sb_irq_set_type(struct irq_data *d, unsigned int type)
 > +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
+> +	struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
+> +	int gpio = HWIRQ_TO_GPIO(priv, d->hwirq);
+> +	int lvl_type = GPIO_INT_LEVEL_H;
 > +
-> +       wdd->timeout = timeout;
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		lvl_type = GPIO_INT_LEVEL_H;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		lvl_type = GPIO_INT_LEVEL_L;
+> +		break;
+> +	default:
+> +		break;
+> +	}
 > +
-> +       if (action)
-> +               writel(gwdt->clk * timeout,
-> +                      gwdt->control_base + SBSA_GWDT_WOR);
-> +       else
-> +               /*
-> +                * In the single stage mode, The first signal (WS0) is ignored,
-> +                * the timeout is (WOR * 2), so the WOR should be configured
-> +                * to half value of timeout.
-> +                */
-> +               writel(gwdt->clk / 2 * timeout,
-> +                      gwdt->control_base + SBSA_GWDT_WOR);
+> +	xgene_gpio_set_bit(&priv->gc, priv->regs + MPA_GPIO_SEL_LO,
+> +			gpio * 2, 1);
+> +	xgene_gpio_set_bit(&priv->gc, priv->regs + MPA_GPIO_INT_LVL,
+> +			d->hwirq, lvl_type);
 > +
-> +       return 0;
+> +	/* Propagate IRQ type setting to parent */
+> +	if (type & IRQ_TYPE_EDGE_BOTH)
+> +		return irq_chip_set_type_parent(d, IRQ_TYPE_EDGE_RISING);
+> +	else
+> +		return irq_chip_set_type_parent(d, IRQ_TYPE_LEVEL_HIGH);
 > +}
 > +
-> +static unsigned int sbsa_gwdt_get_timeleft(struct watchdog_device *wdd)
+> +static void xgene_gpio_sb_irq_shutdown(struct irq_data *d)
 > +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +       u64 timeleft = 0;
+> +	struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
 > +
-> +       /*
-> +        * In the single stage mode, if WS0 is deasserted
-> +        * (watchdog is in the first stage),
-> +        * timeleft = WOR + (WCV - system counter)
-> +        */
-> +       if (!action &&
-> +           !(readl(gwdt->control_base + SBSA_GWDT_WCS) & SBSA_GWDT_WCS_WS0))
-> +               timeleft += readl(gwdt->control_base + SBSA_GWDT_WOR);
-> +
-> +       timeleft += readq(gwdt->control_base + SBSA_GWDT_WCV) -
-> +                   arch_counter_get_cntvct();
-> +
-> +       do_div(timeleft, gwdt->clk);
-> +
-> +       return timeleft;
+> +	gpiochip_unlock_as_irq(&priv->gc, HWIRQ_TO_GPIO(priv, d->hwirq));
 > +}
 > +
-> +static int sbsa_gwdt_keepalive(struct watchdog_device *wdd)
-> +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +       /*
-> +       * Writing WRR for an explicit watchdog refresh.
-> +       * You can write anyting (like 0).
-> +       */
-> +       writel(0, gwdt->refresh_base + SBSA_GWDT_WRR);
-> +
-> +       return 0;
-> +}
-> +
-> +static unsigned int sbsa_gwdt_status(struct watchdog_device *wdd)
-> +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +       u32 status = readl(gwdt->control_base + SBSA_GWDT_WCS);
-> +
-> +       /* is the watchdog timer running? */
-> +       return (status & SBSA_GWDT_WCS_EN) << WDOG_ACTIVE;
-> +}
-> +
-> +static int sbsa_gwdt_start(struct watchdog_device *wdd)
-> +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +       /* writing WCS will cause an explicit watchdog refresh */
-> +       writel(SBSA_GWDT_WCS_EN, gwdt->control_base + SBSA_GWDT_WCS);
-> +
-> +       return sbsa_gwdt_keepalive(wdd);
-> +}
-> +
-> +static int sbsa_gwdt_stop(struct watchdog_device *wdd)
-> +{
-> +       struct sbsa_gwdt *gwdt = to_sbsa_gwdt(wdd);
-> +
-> +       /* Simply write 0 to WCS to clean WCS_EN bit */
-> +       writel(0, gwdt->control_base + SBSA_GWDT_WCS);
-> +
-> +       return 0;
-> +}
-> +
-> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
-> +{
-> +       panic("SBSA Watchdog timeout");
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static struct watchdog_info sbsa_gwdt_info = {
-> +       .identity       = "SBSA Generic Watchdog",
-> +       .options        = WDIOF_SETTIMEOUT |
-> +                         WDIOF_KEEPALIVEPING |
-> +                         WDIOF_MAGICCLOSE |
-> +                         WDIOF_CARDRESET,
-> +};
-> +
-> +static struct watchdog_ops sbsa_gwdt_ops = {
-> +       .owner          = THIS_MODULE,
-> +       .start          = sbsa_gwdt_start,
-> +       .stop           = sbsa_gwdt_stop,
-> +       .status         = sbsa_gwdt_status,
-> +       .ping           = sbsa_gwdt_keepalive,
-> +       .set_timeout    = sbsa_gwdt_set_timeout,
-> +       .get_timeleft   = sbsa_gwdt_get_timeleft,
-> +};
-> +
-> +static int sbsa_gwdt_probe(struct platform_device *pdev)
-> +{
-> +       void __iomem *rf_base, *cf_base;
-> +       struct device *dev = &pdev->dev;
-> +       struct watchdog_device *wdd;
-> +       struct sbsa_gwdt *gwdt;
-> +       struct resource *res;
-> +       int ret, irq;
-> +       u32 status;
-> +
-> +       gwdt = devm_kzalloc(dev, sizeof(*gwdt), GFP_KERNEL);
-> +       if (!gwdt)
-> +               return -ENOMEM;
-> +       platform_set_drvdata(pdev, gwdt);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       cf_base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(cf_base))
-> +               return PTR_ERR(cf_base);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       rf_base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(rf_base))
-> +               return PTR_ERR(rf_base);
-> +
-> +       if (action) {
-> +               irq = platform_get_irq(pdev, 0);
-> +               if (irq < 0) {
-> +                       action = 0;
-> +                       dev_warn(dev, "unable to get ws0 interrupt.\n");
-> +               } else {
-> +                       if (devm_request_irq(dev, irq, sbsa_gwdt_interrupt, 0,
-> +                                            pdev->name, gwdt)) {
-> +                               action = 0;
-> +                               dev_warn(dev, "unable to request IRQ %d.\n",
-> +                                        irq);
-> +                       }
-> +               }
-> +               if (!action)
-> +                       dev_warn(dev, "fall back to signle stage mode.\n");
-> +       }
-> +
-> +       /*
-> +        * Get the frequency of system counter from the cp15 interface of ARM
-> +        * Generic timer. We don't need to check it, because if it returns "0",
-> +        * system would panic in very early stage.
-> +        */
-> +       gwdt->clk = arch_timer_get_cntfrq();
-> +       gwdt->refresh_base = rf_base;
-> +       gwdt->control_base = cf_base;
-> +
-> +       wdd = &gwdt->wdd;
-> +       wdd->parent = dev;
-> +       wdd->info = &sbsa_gwdt_info;
-> +       wdd->ops = &sbsa_gwdt_ops;
-> +       watchdog_set_drvdata(wdd, gwdt);
-> +       watchdog_set_nowayout(wdd, nowayout);
-> +
-> +       wdd->min_timeout = 1;
-> +       wdd->max_timeout = U32_MAX / gwdt->clk;
-> +       /*
-> +        * In the single stage mode, The first signal (WS0) is ignored,
-> +        * the timeout is (WOR * 2), so the maximum timeout should be double.
-> +        */
-> +       if (!action)
-> +               wdd->max_timeout *= 2;
-> +
-> +       wdd->timeout = DEFAULT_TIMEOUT;
-> +       watchdog_init_timeout(wdd, timeout, dev);
-> +
-> +       status = readl(gwdt->control_base + SBSA_GWDT_WCS);
-> +       if (status & SBSA_GWDT_WCS_WS1) {
-> +               dev_warn(dev, "System reset by WDT.\n");
-> +               wdd->bootstatus |= WDIOF_CARDRESET;
-> +       }
-> +
-> +       ret = watchdog_register_device(wdd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /*
-> +        * Update timeout to WOR.
-> +        * Because of the explicit watchdog refresh mechanism,
-> +        * it's also a ping, if watchdog is enabled.
-> +        */
-> +       sbsa_gwdt_set_timeout(wdd, wdd->timeout);
-> +
-> +       dev_info(dev, "Initialized with %ds timeout @ %u Hz, action=%d.%s\n",
-> +                wdd->timeout, gwdt->clk, action,
-> +                status & SBSA_GWDT_WCS_EN ? " [enabled]" : "");
-> +
-> +       return 0;
-> +}
-> +
-> +static void sbsa_gwdt_shutdown(struct platform_device *pdev)
-> +{
-> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
-> +
-> +       sbsa_gwdt_stop(&gwdt->wdd);
-> +}
-> +
-> +static int sbsa_gwdt_remove(struct platform_device *pdev)
-> +{
-> +       struct sbsa_gwdt *gwdt = platform_get_drvdata(pdev);
-> +
-> +       watchdog_unregister_device(&gwdt->wdd);
-> +
-> +       return 0;
-> +}
-> +
-> +/* Disable watchdog if it is active during suspend */
-> +static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
-> +{
-> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
-> +
-> +       if (watchdog_active(&gwdt->wdd))
-> +               sbsa_gwdt_stop(&gwdt->wdd);
-> +
-> +       return 0;
-> +}
-> +
-> +/* Enable watchdog and configure it if necessary */
-> +static int __maybe_unused sbsa_gwdt_resume(struct device *dev)
-> +{
-> +       struct sbsa_gwdt *gwdt = dev_get_drvdata(dev);
-> +
-> +       if (watchdog_active(&gwdt->wdd))
-> +               sbsa_gwdt_start(&gwdt->wdd);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct dev_pm_ops sbsa_gwdt_pm_ops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(sbsa_gwdt_suspend, sbsa_gwdt_resume)
-> +};
-> +
-> +static const struct of_device_id sbsa_gwdt_of_match[] = {
-> +       { .compatible = "arm,sbsa-gwdt", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, sbsa_gwdt_of_match);
-> +
-> +static const struct platform_device_id sbsa_gwdt_pdev_match[] = {
-> +       { .name = "sbsa-gwdt", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(platform, sbsa_gwdt_pdev_match);
-> +
-> +static struct platform_driver sbsa_gwdt_driver = {
-> +       .driver = {
-> +               .name = "sbsa-gwdt",
-> +               .pm = &sbsa_gwdt_pm_ops,
-> +               .of_match_table = sbsa_gwdt_of_match,
-> +       },
-> +       .probe = sbsa_gwdt_probe,
-> +       .remove = sbsa_gwdt_remove,
-> +       .shutdown = sbsa_gwdt_shutdown,
-> +       .id_table = sbsa_gwdt_pdev_match,
-> +};
-> +
-> +module_platform_driver(sbsa_gwdt_driver);
-> +
-> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
-> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
-> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
-> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
-> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.5.0
->
+> +static struct irq_chip xgene_gpio_sb_irq_chip = {
+> +	.name           = "sbgpio",
+> +	.irq_ack        = irq_chip_ack_parent,
 
-For this patch:
+There is no point calling irq_chip_ack_parent, as the GIC doesn't
+implement an irq_ack method at all.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> +	.irq_eoi	= irq_chip_eoi_parent,
+> +	.irq_mask       = irq_chip_mask_parent,
+> +	.irq_unmask     = irq_chip_unmask_parent,
+> +	.irq_set_type   = xgene_gpio_sb_irq_set_type,
+> +	.irq_shutdown   = xgene_gpio_sb_irq_shutdown,
+> +};
+> +
+> +static int xgene_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
+>  {
+>  	struct xgene_gpio_sb *priv = gpiochip_get_data(gc);
+> +	struct irq_fwspec fwspec;
+> +
+> +	if ((gpio < priv->irq_start) ||
+> +			(gpio > HWIRQ_TO_GPIO(priv, priv->nirq)))
+> +		return -ENXIO;
+> +
+> +	if (gc->parent->of_node)
+> +		fwspec.fwnode = of_node_to_fwnode(gc->parent->of_node);
+> +	else
+> +		fwspec.fwnode = gc->parent->fwnode;
+> +	fwspec.param_count = 2;
+> +	fwspec.param[0] = GPIO_TO_HWIRQ(priv, gpio);
+> +	fwspec.param[1] = IRQ_TYPE_NONE;
+> +	return irq_create_fwspec_mapping(&fwspec);
+> +}
+> +
+> +static void xgene_gpio_sb_domain_activate(struct irq_domain *d,
+> +		struct irq_data *irq_data)
+> +{
+> +	struct xgene_gpio_sb *priv = d->host_data;
+> +	u32 gpio = HWIRQ_TO_GPIO(priv, irq_data->hwirq);
+> +
+> +	if (gpiochip_lock_as_irq(&priv->gc, gpio)) {
+> +		dev_err(priv->gc.parent,
+> +		"Unable to configure XGene GPIO standby pin %d as IRQ\n",
+> +				gpio);
+> +		return;
+> +	}
+> +
+> +	xgene_gpio_set_bit(&priv->gc, priv->regs + MPA_GPIO_SEL_LO,
+> +			gpio * 2, 1);
+> +}
+> +
+> +static void xgene_gpio_sb_domain_deactivate(struct irq_domain *d,
+> +		struct irq_data *irq_data)
+> +{
+> +	struct xgene_gpio_sb *priv = d->host_data;
+> +	u32 gpio = HWIRQ_TO_GPIO(priv, irq_data->hwirq);
+> +
+> +	gpiochip_unlock_as_irq(&priv->gc, gpio);
+
+Is it right to do the unlock both in irq_shutdown and domain_deactivate?
+This seems a bit odd to me to have such an inbalance. My hunch is that
+you should either implement irq_startup, do the locking there and drop
+the unlock drop deactivate, or kill irq_shutdown.
+
+Linus, what do you think?
+
+> +	xgene_gpio_set_bit(&priv->gc, priv->regs + MPA_GPIO_SEL_LO,
+> +			gpio * 2, 0);
+> +}
+>  
+> -	if (priv->irq[gpio])
+> -		return priv->irq[gpio];
+> +static int xgene_gpio_sb_domain_translate(struct irq_domain *d,
+> +		struct irq_fwspec *fwspec,
+> +		unsigned long *hwirq,
+> +		unsigned int *type)
+> +{
+> +	struct xgene_gpio_sb *priv = d->host_data;
+> +
+> +	if ((fwspec->param_count != 2) ||
+> +		(fwspec->param[0] >= priv->nirq))
+> +		return -EINVAL;
+> +	*hwirq = fwspec->param[0];
+> +	*type = fwspec->param[1];
+> +	return 0;
+> +}
+> +
+> +static int xgene_gpio_sb_domain_alloc(struct irq_domain *domain,
+> +					unsigned int virq,
+> +					unsigned int nr_irqs, void *data)
+> +{
+> +	struct irq_fwspec *fwspec = data;
+> +	struct irq_fwspec parent_fwspec;
+> +	struct xgene_gpio_sb *priv = domain->host_data;
+> +	irq_hw_number_t hwirq;
+> +	unsigned int i;
+> +
+> +	hwirq = fwspec->param[0];
+> +	for (i = 0; i < nr_irqs; i++)
+> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
+> +				&xgene_gpio_sb_irq_chip, priv);
+> +
+> +	if (is_of_node(domain->parent->fwnode)) {
+> +		parent_fwspec.fwnode = domain->parent->fwnode;
+> +		parent_fwspec.param_count = 3;
+> +		parent_fwspec.param[0] = 0;/* SPI */
+> +		/* Skip SGIs and PPIs*/
+> +		parent_fwspec.param[1] = hwirq + priv->parent_irq_base - 32;
+> +		parent_fwspec.param[2] = fwspec->param[1];
+> +	} else if (is_fwnode_irqchip(domain->parent->fwnode)) {
+> +		parent_fwspec.fwnode = domain->parent->fwnode;
+
+nit: You can move this out of the if/else, and always assign the fwnode.
+
+> +		parent_fwspec.param_count = 2;
+> +		parent_fwspec.param[0] = hwirq + priv->parent_irq_base;
+> +		parent_fwspec.param[1] = fwspec->param[1];
+> +	} else
+> +		return -EINVAL;
+>  
+> -	return -ENXIO;
+> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
+> +			&parent_fwspec);
+>  }
+>  
+> +static void xgene_gpio_sb_domain_free(struct irq_domain *domain,
+> +		unsigned int virq,
+> +		unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		d = irq_domain_get_irq_data(domain, virq + i);
+> +		irq_domain_reset_irq_data(d);
+> +	}
+> +}
+> +
+> +static const struct irq_domain_ops xgene_gpio_sb_domain_ops = {
+> +	.translate      = xgene_gpio_sb_domain_translate,
+> +	.alloc          = xgene_gpio_sb_domain_alloc,
+> +	.free           = xgene_gpio_sb_domain_free,
+> +	.activate	= xgene_gpio_sb_domain_activate,
+> +	.deactivate	= xgene_gpio_sb_domain_deactivate,
+> +};
+> +
+>  static int xgene_gpio_sb_probe(struct platform_device *pdev)
+>  {
+>  	struct xgene_gpio_sb *priv;
+> -	u32 ret, i;
+> -	u32 default_lines[] = {0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D};
+> +	u32 ret;
+>  	struct resource *res;
+>  	void __iomem *regs;
+> +	struct irq_domain *parent_domain = NULL;
+> +	struct fwnode_handle *fwnode;
+> +	u32 val32;
+>  
+>  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> @@ -90,6 +266,18 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
+>  	if (IS_ERR(regs))
+>  		return PTR_ERR(regs);
+>  
+> +	priv->regs = regs;
+> +
+> +	ret = platform_get_irq(pdev, 0);
+> +	if (ret > 0) {
+> +		priv->parent_irq_base = irq_get_irq_data(ret)->hwirq;
+> +		parent_domain = irq_get_irq_data(ret)->domain;
+> +	}
+> +	if (!parent_domain) {
+> +		dev_err(&pdev->dev, "unable to obtain parent domain\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	ret = bgpio_init(&priv->gc, &pdev->dev, 4,
+>  			regs + MPA_GPIO_IN_ADDR,
+>  			regs + MPA_GPIO_OUT_ADDR, NULL,
+> @@ -97,30 +285,51 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
+>          if (ret)
+>                  return ret;
+>  
+> -	priv->gc.to_irq = apm_gpio_sb_to_irq;
+> -	priv->gc.ngpio = XGENE_MAX_GPIO_DS;
+> +	priv->gc.to_irq = xgene_gpio_sb_to_irq;
+>  
+> -	priv->nirq = XGENE_MAX_GPIO_DS_IRQ;
+> +	/* Retrieve start irq pin, use default if property not found */
+> +	priv->irq_start = XGENE_DFLT_IRQ_START_PIN;
+> +	if (!device_property_read_u32(&pdev->dev,
+> +					XGENE_IRQ_START_PROPERTY, &val32))
+
+Is that for ACPI as well?
+
+> +		priv->irq_start = val32;
+>  
+> -	priv->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
+> -				   GFP_KERNEL);
+> -	if (!priv->irq)
+> -		return -ENOMEM;
+> +	/* Retrieve number irqs, use default if property not found */
+> +	priv->nirq = XGENE_DFLT_MAX_NIRQ;
+> +	if (!device_property_read_u32(&pdev->dev, XGENE_NIRQ_PROPERTY, &val32))
+> +		priv->nirq = val32;
+>  
+> -	for (i = 0; i < priv->nirq; i++) {
+> -		priv->irq[default_lines[i]] = platform_get_irq(pdev, i);
+> -		xgene_gpio_set_bit(&priv->gc, regs + MPA_GPIO_SEL_LO,
+> -                                   default_lines[i] * 2, 1);
+> -		xgene_gpio_set_bit(&priv->gc, regs + MPA_GPIO_INT_LVL, i, 1);
+> -	}
+> +	/* Retrieve number gpio, use default if property not found */
+> +	priv->gc.ngpio = XGENE_DFLT_MAX_NGPIO;
+> +	if (!device_property_read_u32(&pdev->dev, XGENE_NGPIO_PROPERTY, &val32))
+> +		priv->gc.ngpio = val32;
+> +
+> +	dev_info(&pdev->dev, "Support %d gpios, %d irqs start from pin %d\n",
+> +			priv->gc.ngpio, priv->nirq, priv->irq_start);
+>  
+>  	platform_set_drvdata(pdev, priv);
+>  
+> -	ret = gpiochip_add_data(&priv->gc, priv);
+> -	if (ret)
+> -		dev_err(&pdev->dev, "failed to register X-Gene GPIO Standby driver\n");
+> +	if (pdev->dev.of_node)
+> +		fwnode = of_node_to_fwnode(pdev->dev.of_node);
+>  	else
+> -		dev_info(&pdev->dev, "X-Gene GPIO Standby driver registered\n");
+> +		fwnode = pdev->dev.fwnode;
+> +
+> +	priv->irq_domain = irq_domain_create_hierarchy(parent_domain,
+> +					0, priv->nirq, fwnode,
+> +					&xgene_gpio_sb_domain_ops, priv);
+> +	if (!priv->irq_domain)
+> +		return -ENODEV;
+> +
+> +	priv->gc.irqdomain = priv->irq_domain;
+> +
+> +	ret = gpiochip_add_data(&priv->gc, priv);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"failed to register X-Gene GPIO Standby driver\n");
+> +		irq_domain_remove(priv->irq_domain);
+> +		return ret;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "X-Gene GPIO Standby driver registered\n");
+>  
+>  	if (priv->nirq > 0) {
+>  		/* Register interrupt handlers for gpio signaled acpi events */
+> @@ -138,6 +347,8 @@ static int xgene_gpio_sb_remove(struct platform_device *pdev)
+>  		acpi_gpiochip_free_interrupts(&priv->gc);
+>  	}
+>  
+> +	irq_domain_remove(priv->irq_domain);
+> +
+>  	gpiochip_remove(&priv->gc);
+>  	return 0;
+>  }
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
