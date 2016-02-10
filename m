@@ -1,158 +1,141 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Wed, 10 Feb 2016 16:12:49 +0000
-Message-ID: <20160210161249.GA3782@x1>
-References: <1453887530-22490-1-git-send-email-wenyou.yang@atmel.com>
- <1453887530-22490-3-git-send-email-wenyou.yang@atmel.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: breaking DT compatibility
+Date: Wed, 10 Feb 2016 16:14:34 +0000
+Message-ID: <56BB61EA.1030805@arm.com>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+ <56B4E2FB.3050703@arm.com> <56BB2D79.6090402@arm.com>
+ <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
+ <20160210143755.GE31506@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453887530-22490-3-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160210143755.GE31506@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <rob.herring@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jan 2016, Wenyou Yang wrote:
+Hi,
 
-> The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-> two subdevices:
->  - Regulator
->  - Charger
->=20
-> This patch adds documentation for ACT8945A DT bindings.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->=20
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7:
->  - collect Acked-by from Lee Jones
->=20
-> Changes in v6:
->  - change the regulator name.
->=20
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
->  - fix the tabbing errors in Example.
->  - use "pmic@5b" label, not "act8945a@5b" in Example.
->  - collect Acked-by from Rob.
->=20
-> Changes in v2:
->  - use more specific label in Example.
->  - add pmic and charger nodes in Example.
->=20
->  Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++=
-++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.tx=
-t
+On 10/02/16 14:37, Maxime Ripard wrote:
+> Hi Rob,
+> 
+> On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
+>> On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.com> wrote:
+>>> Hi,
+>>>
+>>> just a ping:
+>>>
+>>> Are we really OK with breaking existing DTs in 4.6? (per the code in
+>>> -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
+>>
+>> I only warn and make sure people are aware of the issue. I leave that
+>> up to platform maintainers to decide. It depends on the maturity of
+>> the platform and users.
+> 
+> The impacted SoCs support is really partial. For the most supported
+> one, big things like display or sound are totally missing, and we
+> still update them on a regular basis to add support for new
+> devices. As such, users are very likely to upgrade the DT from one
+> version to another just because there's new devices available to
+> them. And the newest SoC impacted just got introduced in 4.5, and only
+> has the UART and MMC devices available.
 
-Applied, thanks.
+But I still don't see why we have to break things - can't we just
+improve support _without_ breaking compatibility? For instance keeping
+the old behaviour around? I can dig out my old x86 hat and find a
+_compatible_ solution for this, if you prefer ;-)
+Actually doesn't Jean-Francois' patch fixes the PLL8 issue without
+breaking anything?
 
-> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Doc=
-umentation/devicetree/bindings/mfd/act8945a.txt
-> new file mode 100644
-> index 0000000..f2a8387
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-> @@ -0,0 +1,82 @@
-> +Device-Tree bindings for Active-semi ACT8945A MFD driver
-> +
-> +Required properties:
-> + - compatible: "active-semi,act8945a".
-> + - reg: the I2C slave address for the ACT8945A chip
-> +
-> +The chip exposes two subdevices:
-> + - a regulators: see ../regulator/act8945a-regulator.txt
-> + - a charger: see ../power/act8945a-charger.txt
-> +
-> +Example:
-> +	pmic@5b {
-> +		compatible =3D "active-semi,act8945a";
-> +		reg =3D <0x5b>;
-> +		status =3D "okay";
-> +
-> +		pmic {
-> +			compatible =3D "active-semi,act8945a-regulator";
-> +			active-semi,vsel-high;
-> +
-> +			regulators {
-> +				vdd_1v35_reg: REG_DCDC1 {
-> +					regulator-name =3D "VDD_1V35";
-> +					regulator-min-microvolt =3D <1350000>;
-> +					regulator-max-microvolt =3D <1350000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_1v2_reg: REG_DCDC2 {
-> +					regulator-name =3D "VDD_1V2";
-> +					regulator-min-microvolt =3D <1100000>;
-> +					regulator-max-microvolt =3D <1300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_3v3_reg: REG_DCDC3 {
-> +					regulator-name =3D "VDD_3V3";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_fuse_reg: REG_LDO1 {
-> +					regulator-name =3D "VDD_FUSE";
-> +					regulator-min-microvolt =3D <2500000>;
-> +					regulator-max-microvolt =3D <2500000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_3v3_lp_reg: REG_LDO2 {
-> +					regulator-name =3D "VDD_3V3_LP";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_led_reg: REG_LDO3 {
-> +					regulator-name =3D "VDD_LED";
-> +					regulator-min-microvolt =3D <3300000>;
-> +					regulator-max-microvolt =3D <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				vdd_sdhc_1v8_reg: REG_LDO4 {
-> +					regulator-name =3D "VDD_SDHC_1V8";
-> +					regulator-min-microvolt =3D <1800000>;
-> +					regulator-max-microvolt =3D <1800000>;
-> +					regulator-always-on;
-> +				};
-> +			};
-> +		};
-> +
-> +		charger {
-> +			compatible =3D "active-semi,act8945a-charger";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_charger_chglev>;
-> +			active-semi,chglev-gpio =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
-> +			active-semi,input_voltage_threshold =3D <6600>;
-> +			active-semi,precondition_timeout =3D <40>;
-> +			active-semi,total_timeout =3D <3>;
-> +		};
-> +	};
+Also were do you want to draw the line for "partial support"? The
+sun6i-a31.dtsi is around since 3.12, which was released more than 2
+years ago.
+If we want to wait for "stabilization", we will probably wait forever. I
+find discussions about DT stabilization going back to the very beginning
+of DT for ARM - as well as the request for moving the DT bindings out of
+the kernel (which I think we should really eventually do now).
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frankly I don't care so much about these particular boards, but just
+want avoid to set a bad example for the future - in particular sneaking
+this behaviour into the arm64 world, where DTs _really_ come with the
+board or are even generated by the (UEFI-)firmware.
+U-Boot already can embed a device tree, sounds like a perfect place to
+have it stored for me - as long as there is _one_ best version of it.
+
+>> If people complain about it then it's their mess. For platforms
+>> supported in distros such as debian or fedora, I would strongly
+>> recommend against breaking compatibility.
+> 
+> None of them are officially supported:
+> https://www.debian.org/releases/stable/armhf/ch02s01.html.en
+> https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
+> 
+> Only the older one are, and they are not affected by this patch.
+> 
+>> They do ship dtbs, but it's a chicken and egg problem. If dtbs were
+>> stable and provided by firmware, then they wouldn't have to provide
+>> them. If dtbs are unstable, then they have no choice.
+> 
+> And while it might work great on platforms that have all the needed
+> documentation, or a perfect one, which is our case. Almost each
+> release, we discover that something is not working as it was
+> documented, when it was documented in the first place.
+
+I understand that it's not an ideal situation for those Allwinner chips
+- but nevertheless I would like us to at least _try_ to comply with this
+idea. As said before: this patch is a nice rework/cleanup - but
+definitely not a good reason to break compatibility.
+
+> It also seems that even on well documented platforms, supported by the
+> vendors, the stable ABI dream is not going to happen:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm/Atmel/README#n105
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/marvell,berlin.txt#n4
+
+I find those two statements really unfortunate ...
+
+> If it makes things clearer, I can also add such a statement.
+
+and would rather see us referring solely to this document instead:
+	Documentation/devicetree/bindings/ABI.txt
+
+Cheers,
+Andre.
+
+>>> Also I think one needs ACKs from DT maintainers before merging something
+>>> in the respective directories, which I don't see here.
+>>
+>> It can go in with subsystem maintainers ack, but there are problems
+>> with this one regardless of compatibility.
+>>
+>>> As I am somewhat blocked on that patch, I'd like to have some discussion
+>>> on the list.
+>>>
+>>> Thanks,
+>>> Andre.
+>>>
+>>> On 05/02/16 17:59, Andre Przywara wrote:
+>>>> Hi Maxime,
+>>>>
+>>>> just found this while looking at your current git branch, so sorry for
+>>>> the late reply.
+>>>>
+>>>> CC:ing DT people, since you touch both existing DTs(!) and the binding doc.
+>>>>
+>>>> On 01/02/16 20:20, Maxime Ripard wrote:
+>>>>> Remove the fixed dividers from the PLL6 driver to be able to have a
+>>>>> reusable driver that can be used across several SoCs that share the same
+>>>>> controller, but don't have the same set of dividers for this clock, and to
+>>>>> also be reused multiple times in the same SoC, since we're droping the
+>>>>> clock name.
+>>
+>> Removing a compatible name or not has nothing to do with sharing code.
+> 
+> This was not about the compatible name, but the hardcoded name in our
+> structure associated to that compatible. And since we can't register
+> two clocks with the same name, we couldn't use the same compatible
+> several times.
+> 
+> Maxime
+> 
