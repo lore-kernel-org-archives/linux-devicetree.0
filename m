@@ -1,41 +1,35 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add stdout-path for various boards
-Date: Wed, 10 Feb 2016 09:46:47 +0900
-Message-ID: <CAAVeFu+Xii9dMC448mBz8jQbFUCJGfBkJG_dvCxvNChuopDAdA@mail.gmail.com>
-References: <1455025920-21875-1-git-send-email-jonathanh@nvidia.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Devicetree support for misc/eeprom/eeprom_93xx46.
+Date: Tue, 9 Feb 2016 17:28:36 -0800
+Message-ID: <20160210012836.GA27026@kroah.com>
+References: <1452138904-24820-1-git-send-email-cory.tusar@pid1solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455025920-21875-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452138904-24820-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 9, 2016 at 10:51 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> For Tegra boards, the device-tree alias serial0 is used for the console
-> and so add the stdout-path information so that the console no longer
-> needs to be passed via the kernel boot parameters.
->
-> This has been tested on boards, tegra20-trimslice, tegra30-beaver,
-> tegra114-dalmore and tegra124-jetson-tk1.
->
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->
-> The only boards that I have not modified are tegra114-roth and
-> tegra114-tn7 because these boards have two entries for console
-> in the *.dts file. AFAICT we cannot suppport multiple consoles
-> via the stdout-path and if a console is specified by the kernel
-> boot parameters then this sets the kernel variable
-> "console_set_on_cmdline" and prevents the stdout-path console
-> being registered. If there is a better way to handle these boards
-> via device-tree let me know.
+On Wed, Jan 06, 2016 at 10:54:59PM -0500, Cory Tusar wrote:
+> This series of patches adds an initial set of devicetree bindings to the
+> eeprom_93xx46 driver which mirror the configuration options previously
+> available as a platform device.  These bindings are then extended to
+> include support for specific Atmel devices in this family and also to
+> support GPIO-based selection of the device (e.g. for use with an SPI bus
+> mux).
+> 
+> Additionally, an address aliasing issue with 16-bit read and write
+> accesses in the eeprom_93xx46 driver discovered during testing is fixed.
 
-These two boards require a hardcoded command-line in the DT anyway,
-since the bootloader's command-line cannot be overridden (due to bad
-bootloader design). So it seems ok to me to keep specifying the boot
-console there for them.
+Not all of these applied, please fix up and resend the patch that I
+couldn't apply.
+
+thanks,
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
