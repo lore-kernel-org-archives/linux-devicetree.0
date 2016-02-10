@@ -1,842 +1,107 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] add support for DWC UFS Host Controller
-Date: Wed, 10 Feb 2016 10:08:12 +0000
-Message-ID: <56BB0C0C.3000406@synopsys.com>
-References: <cover.1454957580.git.jpinto@synopsys.com>
- <a84bdc440a45995ace888213468c55a36513a9cb.1454957580.git.jpinto@synopsys.com>
- <CAC5umyhA+KQUA=U+EotY4FTGao9_qUBopNNeUswNj1Ed2eQHng@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 10/14] Documentation: DT: bindings: Add power domain
+ info for NVIDIA PMC
+Date: Wed, 10 Feb 2016 10:57:11 +0000
+Message-ID: <56BB1787.4050801@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-11-git-send-email-jonathanh@nvidia.com>
+ <20160129160625.GA21918@rob-hp-laptop> <56B1DE40.7080403@nvidia.com>
+ <CAL_JsqLcoKW2znNNvM=sYLmZ6O6ZWqn7+aXspkXoONw6-O1ygg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAC5umyhA+KQUA=U+EotY4FTGao9_qUBopNNeUswNj1Ed2eQHng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gilad Broner <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLcoKW2znNNvM=sYLmZ6O6ZWqn7+aXspkXoONw6-O1ygg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Akinobu,
+On 03/02/16 15:48, Rob Herring wrote:
+> On Wed, Feb 3, 2016 at 5:02 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>
+>> On 29/01/16 16:06, Rob Herring wrote:
+>>> On Thu, Jan 28, 2016 at 04:33:48PM +0000, Jon Hunter wrote:
+>>>> Add power-domain binding documentation for the NVIDIA PMC driver in
+>>>> order to support generic power-domains.
+>>>>
+>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 55 ++++++++++++++++++++++
+>>>>  1 file changed, 55 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>> index 53aa5496c5cf..3c77373aa826 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>> @@ -1,5 +1,7 @@
+>>>>  NVIDIA Tegra Power Management Controller (PMC)
+>>>>
+>>>> +== Power Management Controller Node ==
+>>>> +
+>>>>  The PMC block interacts with an external Power Management Unit. The PMC
+>>>>  mostly controls the entry and exit of the system from different sleep
+>>>>  modes. It provides power-gating controllers for SoC and CPU power-islands.
+>>>> @@ -70,6 +72,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
+>>>>                       Defaults to 0. Valid values are described in section 12.5.2
+>>>>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
+>>>>
+>>>> +Optional nodes:
+>>>> +- powergates : This node contains a hierarchy of power domain nodes, which
+>>>> +           should match the powergates on the Tegra SoC.
+>>>> +
+>>>>  Example:
+>>>>
+>>>>  / SoC dts including file
+>>>> @@ -115,3 +121,52 @@ pmc@7000f400 {
+>>>>      };
+>>>>      ...
+>>>>  };
+>>>> +
+>>>> +
+>>>> +== PM Domain Nodes ==
+>>>> +
+>>>> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
+>>>> +that can be power-gated by the PMC and should be named appropriately.
+>>>> +
+>>>> +Required properties:
+>>>> +  - clocks: Must contain an entry for each clock required by the PMC for
+>>>> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
+>>>> +  - resets: Must contain an entry for each reset required by the PMC for
+>>>> +    controlling a power-gate. See ../reset/reset.txt for details.
+>>>> +  - nvidia,powergate: Integer cell that contains an identifier for the PMC
+>>>> +    power-gate that is associated with the power-domain. Please refer to
+>>>> +    the Tegra TRM for more details.
+>>>
+>>> Why not make this value be the power-domain cell for consumers and the
+>>> pmc be the phandle.
+>>
+>> Is there anything wrong with using a label for the consumers? Seems
+>> simpler, if you can just say ...
+>>
+>>         adma: adma@702e2000 {
+>>                 ...
+>>                 power-domains = <&pd_audio>;
+>>                 ...
+>>         };
+> 
+> Only that is a bit unusual. It would only really matter if we had some
+> common parsing that we wanted to share. I'd look at other examples and
+> try to align. If there's no clear pattern, then it is fine.
 
-Thanks for the comments!
-I will put the internal functions static and check your notify suggestion.
-Do you know who the maintainer of UFS is?
+So I have been having a look at this and it appears to be mixed across
+the various SoCs. It seems that those SoCs that define the generic PM
+domains statically in the machine/soc code use a phandle plus a argument
+to identify the power domain. However, for those that describe the
+power-domain in the DT (listing clocks, resets, etc), they just use a
+phandle to the power-domain itself (like I have above). It looks like if
+you are describing the power domain in DT, then it is much simplier to
+do this.
 
-Thanks,
-Joao
+Given that I wish to keep the description of the power-domain in DT, it
+is much easier to stick with the same conventions that the other SoCs
+are using.
 
-On 2/9/2016 12:05 PM, Akinobu Mita wrote:
-> Hi Joao,
-> 
-> 2016-02-09 4:07 GMT+09:00 Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>:
->> diff --git a/drivers/scsi/ufs/ufshcd-dwc.c b/drivers/scsi/ufs/ufshcd-dwc.c
->> new file mode 100644
->> index 0000000..b12b1a8
->> --- /dev/null
->> +++ b/drivers/scsi/ufs/ufshcd-dwc.c
->> @@ -0,0 +1,768 @@
->> +/*
->> + * UFS Host driver for Synopsys Designware Core
->> + *
->> + * Copyright (C) 2015-2016 Synopsys, Inc. (www.synopsys.com)
->> + *
->> + * Authors: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include "ufshcd.h"
->> +#include "unipro.h"
->> +
->> +#include "ufshcd-dwc.h"
->> +#include "ufshci-dwc.h"
->> +
->> +/**
->> + * ufshcd_dwc_program_clk_div()
->> + * This function programs the clk divider value. This value is needed to
->> + * provide 1 microsecond tick to unipro layer.
->> + * @hba: Private Structure pointer
->> + * @divider_val: clock divider value to be programmed
->> + *
->> + */
->> +void ufshcd_dwc_program_clk_div(struct ufs_hba *hba, u32 divider_val)
->> +{
->> +       ufshcd_writel(hba, divider_val, DWC_UFS_REG_HCLKDIV);
->> +}
->> +EXPORT_SYMBOL(ufshcd_dwc_program_clk_div);
->> +
->> +/**
->> + * ufshcd_dwc_link_is_up()
->> + * Check if link is up
->> + * @hba: private structure poitner
->> + *
->> + * Returns 0 on success, non-zero value on failure
->> + */
->> +int ufshcd_dwc_link_is_up(struct ufs_hba *hba)
->> +{
->> +       int dme_result = 0;
->> +
->> +       ufshcd_dme_get(hba, UIC_ARG_MIB(VS_POWERSTATE), &dme_result);
->> +
->> +       if (dme_result == UFSHCD_LINK_IS_UP) {
->> +               ufshcd_set_link_active(hba);
->> +               return 0;
->> +       }
->> +
->> +       return 1;
->> +}
->> +EXPORT_SYMBOL(ufshcd_dwc_link_is_up);
->> +
->> +/**
->> + * ufshcd_dwc_connection_setup()
->> + * This function configures both the local side (host) and the peer side
->> + * (device) unipro attributes to establish the connection to application/
->> + * cport.
->> + * This function is not required if the hardware is properly configured to
->> + * have this connection setup on reset. But invoking this function does no
->> + * harm and should be fine even working with any ufs device.
->> + *
->> + * @hba: pointer to drivers private data
->> + *
->> + * Returns 0 on success non-zero value on failure
->> + */
->> +int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +       /* Local side Configuration */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +
->> +       /* Peer side Configuration */
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
->> +       if (ret)
->> +               goto out;
->> +
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_dwc_setup_20bit_rmmi_lane0()
->> + * This function configures Synopsys MPHY 20-bit RMMI Lane 0
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success or non-zero value on failure
->> + */
->> +int ufshcd_dwc_setup_20bit_rmmi_lane0(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +       /* TX Reference Clock 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_REFCLKFREQ,
->> +                                                       SELIND_LN0_TX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX Configuration Clock Frequency Val; Divider setting */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN0_TX), 0x19);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Configuration Clock Frequency Val; Divider setting */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN0_RX), 0x19);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX 20-bit RMMI Interface */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGEXTRATTR,
->> +                                                       SELIND_LN0_TX), 0x12);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX dither configuration */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(DITHERCTRL2,
->> +                                                       SELIND_LN0_TX), 0xd6);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Reference Clock 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_REFCLKFREQ,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX 20-bit RMMI Interface */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGWIDEINLN,
->> +                                                       SELIND_LN0_RX), 2);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Squelch Detector output is routed to RX hibern8 exit signal */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXCDR8,
->> +                                                       SELIND_LN0_RX), 0x80);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Direct Control 10 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(DIRECTCTRL10), 0x04);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Direct Control 19 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(DIRECTCTRL19), 0x02);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG4 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG4,
->> +                                                       SELIND_LN0_RX), 0x03);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGRXOVR8 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR8,
->> +                                                       SELIND_LN0_RX), 0x16);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXDIRECTCTRL2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXDIRECTCTRL2,
->> +                                                       SELIND_LN0_RX), 0x42);
->> +
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG3 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG3,
->> +                                                       SELIND_LN0_RX), 0xa4);
->> +
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXCALCTRL */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXCALCTRL,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG2,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGOVR4 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR4,
->> +                                                       SELIND_LN0_RX), 0x28);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXSQCTRL */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXSQCTRL,
->> +                                                       SELIND_LN0_RX), 0x1E);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGOVR6 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR6,
->> +                                                       SELIND_LN0_RX), 0x2f);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CBPRGPLL2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBPRGPLL2), 0x00);
->> +
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_dwc_setup_20bit_rmmi_lane1()
->> + * This function configures Synopsys MPHY 20-bit RMMI Lane 1
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success or non-zero value on failure
->> + */
->> +int ufshcd_dwc_setup_20bit_rmmi_lane1(struct ufs_hba *hba)
->> +{
->> +       int connected_rx_lanes = 0;
->> +       int connected_tx_lanes = 0;
->> +       int ret = 0;
->> +
->> +       /* Get the available lane count */
->> +       ufshcd_dme_get(hba, UIC_ARG_MIB(PA_CONNECTEDRXDATALANES),
->> +                       &connected_rx_lanes);
->> +       ufshcd_dme_get(hba, UIC_ARG_MIB(PA_CONNECTEDTXDATALANES),
->> +                       &connected_tx_lanes);
->> +
->> +       if (connected_tx_lanes == 2) {
->> +
->> +               /* TX Reference Clock 26MHz */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_REFCLKFREQ,
->> +                                                       SELIND_LN1_TX), 0x0d);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* TX Configuration Clock Frequency Val; Divider setting */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN1_TX), 0x19);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* TX 20-bit RMMI Interface */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGEXTRATTR,
->> +                                                       SELIND_LN1_TX), 0x12);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* TX dither configuration */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(DITHERCTRL2,
->> +                                                       SELIND_LN0_TX), 0xd6);
->> +               if (ret)
->> +                       goto out;
->> +       }
->> +
->> +       if (connected_rx_lanes == 2) {
->> +
->> +               /* RX Reference Clock 26MHz */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_REFCLKFREQ,
->> +                                                       SELIND_LN1_RX), 0x01);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RX Configuration Clock Frequency Val; Divider setting */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN1_RX), 0x19);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RX 20-bit RMMI Interface */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGWIDEINLN,
->> +                                                       SELIND_LN1_RX), 2);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RX Squelch Detector output is routed to RX hibern8 exit
->> +                * signal
->> +                */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXCDR8,
->> +                                                       SELIND_LN1_RX), 0x80);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* ENARXDIRECTCFG4 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG4,
->> +                                                       SELIND_LN1_RX), 0x03);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* CFGRXOVR8 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR8,
->> +                                                       SELIND_LN1_RX), 0x16);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RXDIRECTCTRL2 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXDIRECTCTRL2,
->> +                                                       SELIND_LN1_RX), 0x42);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* ENARXDIRECTCFG3 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG3,
->> +                                                       SELIND_LN1_RX), 0xa4);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RXCALCTRL */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXCALCTRL,
->> +                                                       SELIND_LN1_RX), 0x01);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* ENARXDIRECTCFG2 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG2,
->> +                                                       SELIND_LN1_RX), 0x01);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* CFGOVR4 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR4,
->> +                                                       SELIND_LN1_RX), 0x28);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* RXSQCTRL */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXSQCTRL,
->> +                                                       SELIND_LN1_RX), 0x1E);
->> +               if (ret)
->> +                       goto out;
->> +
->> +               /* CFGOVR6 */
->> +               ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR6,
->> +                                                       SELIND_LN1_RX), 0x2f);
->> +               if (ret)
->> +                       goto out;
->> +       }
->> +
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_dwc_setup_20bit_rmmi()
->> + * This function configures Synopsys MPHY specific atributes (20-bit RMMI)
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success or non-zero value on failure
->> + */
->> +int ufshcd_dwc_setup_20bit_rmmi(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +       /* Common block Tx Global Hibernate Exit */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(TX_GLOBALHIBERNATE), 0x00);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Reference Clock Mode 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(REFCLKMODE), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block DCO Target Frequency MAX PWM G1:9Mpbs */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CDIRECTCTRL6), 0xc0);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block TX and RX Div Factor is 4 7Mbps/20 = 350KHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBDIVFACTOR), 0x44);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block DC0 Ctrl 5*/
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBDCOCTRL5), 0x64);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block Program Tunning*/
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBPRGTUNING), 0x09);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block Real Time Observe Select - for debugging */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(RTOBSERVESELECT), 0x00);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Lane 0 configuration*/
->> +       ret = ufshcd_dwc_setup_20bit_rmmi_lane0(hba);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Lane 1 configuration*/
->> +       ret = ufshcd_dwc_setup_20bit_rmmi_lane1(hba);
->> +       if (ret)
->> +               goto out;
->> +
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_dwc_setup_40bit_rmmi()
->> + * This function configures Synopsys MPHY specific atributes (40-bit RMMI)
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success or non-zero value on failure
->> + */
->> +int ufshcd_dwc_setup_40bit_rmmi(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +       /* Common block Tx Global Hibernate Exit */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(TX_GLOBALHIBERNATE), 0x00);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Reference Clock Mode 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(REFCLKMODE), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block DCO Target Frequency MAX PWM G1:7Mpbs */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CDIRECTCTRL6), 0x80);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block TX and RX Div Factor is 4 7Mbps/40 = 175KHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBDIVFACTOR), 0x08);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block DC0 Ctrl 5*/
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBDCOCTRL5), 0x64);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block Program Tunning*/
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBPRGTUNING), 0x09);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common Block Real Time Observe Select - for debugging */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(RTOBSERVESELECT), 0x00);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Lane 0 configuration*/
->> +
->> +       /* TX Reference Clock 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_REFCLKFREQ,
->> +                                                       SELIND_LN0_TX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX Configuration Clock Frequency Val; Divider setting */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN0_TX), 0x19);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX 40-bit RMMI Interface */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGEXTRATTR,
->> +                                                       SELIND_LN0_TX), 0x14);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* TX dither configuration */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(DITHERCTRL2,
->> +                                                       SELIND_LN0_TX), 0xd6);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Reference Clock 26MHz */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_REFCLKFREQ,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Configuration Clock Frequency Val; Divider setting */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RX_CFGCLKFREQVAL,
->> +                                                       SELIND_LN0_RX), 0x19);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX 40-bit RMMI Interface */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGWIDEINLN,
->> +                                                       SELIND_LN0_RX), 4);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Squelch Detector output is routed to RX hibern8 exit signal */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXCDR8,
->> +                                                       SELIND_LN0_RX), 0x80);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Squelch Detector output is routed to RX hibern8 exit signal */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXCDR8,
->> +                                                       SELIND_LN0_RX), 0x80);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Direct Control 10 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(DIRECTCTRL10), 0x04);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* Common block Direct Control 19 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(DIRECTCTRL19), 0x02);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RX Squelch Detector output is routed to RX hibern8 exit signal */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXCDR8,
->> +                                                       SELIND_LN0_RX), 0x80);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG4 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG4,
->> +                                                       SELIND_LN0_RX), 0x03);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGRXOVR8 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR8,
->> +                                                       SELIND_LN0_RX), 0x16);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXDIRECTCTRL2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXDIRECTCTRL2,
->> +                                                       SELIND_LN0_RX), 0x42);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG3 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG3,
->> +                                                       SELIND_LN0_RX), 0xa4);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXCALCTRL */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXCALCTRL,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* ENARXDIRECTCFG2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(ENARXDIRECTCFG2,
->> +                                                       SELIND_LN0_RX), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGOVR4 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR4,
->> +                                                       SELIND_LN0_RX), 0x28);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* RXSQCTRL */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(RXSQCTRL,
->> +                                                       SELIND_LN0_RX), 0x1E);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CFGOVR6 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(CFGRXOVR6,
->> +                                                       SELIND_LN0_RX), 0x2f);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* CBPRGPLL2 */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(CBPRGPLL2), 0x00);
->> +       if (ret)
->> +               goto out;
->> +
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_dwc_setup_mphy()
->> + * This function configures Local (host) Synopsys MPHY specific attributes
->> + *
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success non-zero value on failure
->> + */
->> +int ufshcd_dwc_setup_mphy(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
->> +       dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
->> +       ret = ufshcd_dwc_setup_40bit_rmmi(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "40-bit RMMI configuration failed");
->> +               goto out;
->> +       }
->> +#else
->> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
->> +       dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
->> +       ret = ufshcd_dwc_setup_20bit_rmmi(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "20-bit RMMI configuration failed");
->> +               goto out;
->> +       }
->> +#endif
->> +#endif
->> +       /* To write Shadow register bank to effective configuration block */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_MPHYCFGUPDT), 0x01);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* To configure Debug OMC */
->> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_DEBUGOMC), 0x01);
->> +
->> +out:
->> +       return ret;
->> +}
-> 
-> These functions are only used in this file.
-> 
-> ufshcd_dwc_program_clk_div
-> ufshcd_dwc_link_is_up
-> ufshcd_dwc_connection_setup
-> ufshcd_dwc_setup_20bit_rmmi_lane0
-> ufshcd_dwc_setup_20bit_rmmi_lane1
-> ufshcd_dwc_setup_20bit_rmmi
-> ufshcd_dwc_setup_40bit_rmmi
-> ufshcd_dwc_setup_mphy
-> 
-> So you can make them static functions.
-> 
->> +/**
->> + * ufshcd_dwc_configuration()
->> + * UFS Host DWC specific configuration
->> + * @hba: private structure poitner
->> + *
->> + * Returns 0 on success, non-zero value on failure
->> + */
->> +int ufshcd_dwc_configuration(struct ufs_hba *hba)
->> +{
->> +       int ret = 0;
->> +
->> +       /* Program Clock Divider Value */
->> +       ufshcd_dwc_program_clk_div(hba, UFSHCD_CLK_DIV_125);
->> +
->> +#ifdef CONFIG_SCSI_UFS_DWC_MPHY_TC
->> +       ret = ufshcd_dwc_setup_mphy(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "MPHY configuration failed (%d)", ret);
->> +               goto out;
->> +       }
->> +#endif
->> +       ret = ufshcd_dme_link_startup(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "Link Startup command failed (%d)", ret);
->> +               goto out;
->> +       }
->> +
->> +       ret = ufshcd_dwc_link_is_up(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "Link is not up");
->> +               goto out;
->> +       }
->> +
->> +       ret = ufshcd_dwc_connection_setup(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "Connection setup failed (%d)", ret);
->> +               goto out;
->> +       }
->> +
->> +       ret = ufshcd_make_hba_operational(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "HBA kick start failed (%d)", ret);
->> +               goto out;
->> +       }
->> +
->> +       ret = ufshcd_verify_dev_init(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "Device init failed (%d)", ret);
->> +               goto out;
->> +       }
->> +
->> +       ret = ufshcd_complete_dev_init(hba);
->> +       if (ret) {
->> +               dev_err(hba->dev, "Device final init failed (%d)", ret);
->> +               goto out;
->> +       }
->> +
->> +       ufshcd_set_ufs_dev_active(hba);
->> +       hba->wlun_dev_clr_ua = false;
->> +
->> +       if (hba->ufshcd_state == UFSHCD_STATE_RESET)
->> +               scsi_unblock_requests(hba->host);
->> +
->> +       hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
->> +
->> +       scsi_scan_host(hba->host);
->> +
->> +out:
->> +       return ret;
->> +}
->> +EXPORT_SYMBOL(ufshcd_dwc_configuration);
-> 
-> Do you really need this alternative initialization by
-> adding new custom_probe_hba() in vops?  I think you only need to write
-> link_startup_notify() callback for ufs_dwc_hba_vops like below.
-> 
-> ufshcd_dwc_link_startup_notify(struct ufs_hba *hba,
->                                 enum ufs_notify_change_status status)
-> {
->         if (status == PRE_CHANGE) {
->                 ufshcd_dwc_program_clk_div();
->                 ufshcd_dwc_setup_mphy();
->         } else { /* POST_CHANGE */
->                 err = ufshcd_dwc_link_is_up(hba);
->                 if (err)
->                         return err;
->                 ufshcd_dwc_connection_setup();
->         }
-> }
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+Jon
