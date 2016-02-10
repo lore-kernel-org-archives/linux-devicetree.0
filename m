@@ -1,73 +1,63 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
-Date: Wed, 10 Feb 2016 18:14:55 +0100
-Message-ID: <20160210171455.GB17671@verge.net.au>
-References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
- <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
- <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
+From: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: add lpc32xx clock frequency
+ output
+Date: Wed, 10 Feb 2016 12:21:41 -0500
+Message-ID: <1455124901.14667.3.camel@localhost>
+References: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
+	 <56BA7EE9.8040703@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <56BA7EE9.8040703@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: robh+dt@kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 12:41:30AM +0000, Kuninori Morimoto wrote:
+On Wed, 2016-02-10 at 02:06 +0200, Vladimir Zapolskiy wrote:
+> Hi Sylvain,
 > 
-> Hi Sergei
-> 
-> Sorry for my un-ordered response
-> 
-> > Define the generic R8A7794 part of  the sound device node.
-> > This sound device  is a complex one and comprises the Audio Clock Generator
-> > (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
-> > (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
-> > It is up  to the board file to enable the device.
+> On 09.02.2016 20:47, slemieux.tyco@gmail.com wrote:
+> > From: Sylvain Lemieux <slemieux@tycoint.com>
 > > 
-> > This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+> > This patch add an optional parameter to setup the
+> > xtal clock frequency output.
 > > 
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> (snip)
-> > +		rcar_sound,src {
-> > +			src1: src@1 {
-> > +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +			src2: src@2 {
-> > +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +			src3: src@3 {
-> > +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +			src4: src@4 {
-> > +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +			src5: src@5 {
-> > +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +			src6: src@6 {
-> > +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> > +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
-> > +				dma-names = "rx", "tx";
-> > +			};
-> > +		};
+> > Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+> > ---
+> >  Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> > index 20cbca3..ce51759 100644
+> > --- a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> > +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> > @@ -10,6 +10,9 @@ Required properties:
+> >  - clock-names: list of external oscillator clock names, must contain
+> >    "xtal_32k" and may have optional "xtal"
+> >  
+> > +Optional properties:
+> > +- xtal,clock-output-frequency: define the "xtal" clock frequency output in Hz
+> > +
 > 
-> I think this can't work correctly, because driver is assuming
-> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
-> Can you adds dummy src0 with some comments ? or fix src.c driver ?
+> this one looks wrong in sense that from patch 1/2 the property configures
+> a PLL output clock rate, which is not an oscillator (xtal) clock rate.
+> 
+> I believe switching to "assigned-clock-rates" should make this change
+> obsolete.
+> 
+Agreed, this change is not needed;
 
-I would prefer the driver to be fixed (I had a similar patchset locally
-and I found it doesn't work). The reason is that DT should describe
-the hardware rather than the current state of the software.
+Sylvain
+
+> >  Examples:
+> >  
+> >  	/* System Control Block */
+> > 
+> 
+> --
+> With best wishes,
+> Vladimir
+
+
