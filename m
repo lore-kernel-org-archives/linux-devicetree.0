@@ -1,48 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3] pwm: add DT bindings for the STMPE PWM
-Date: Wed, 10 Feb 2016 09:54:26 +0100
-Message-ID: <1455094468-25521-2-git-send-email-linus.walleij@linaro.org>
-References: <1455094468-25521-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1455094468-25521-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Wed, 10 Feb 2016 09:51:32 +0000
+Message-ID: <56BB0824.2030900@arm.com>
+References: <1454968512-11956-1-git-send-email-sudeep.holla@arm.com>
+ <48510660.EJbbczq5fX@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <48510660.EJbbczq5fX@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds fairly standard device tree bindings for the STMPE
-PWM found in STMPE24xx multi-purpose expanders.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
 
-diff --git a/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt b/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-new file mode 100644
-index 000000000000..c8b53f39ae31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-@@ -0,0 +1,18 @@
-+== ST STMPE PWM controller ==
-+
-+This is a PWM block embedded in the ST Microelectronics STMPE
-+(ST Multi-Purpose Expander) chips. The PWM is registered as a
-+subdevices of the STMPE MFD device.
-+
-+Required properties:
-+- compatible: should be:
-+  - "st,stmpe-pwm"
-+- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-+  the cells format.
-+
-+Example:
-+
-+stmpe1_pwm0: stmpe_pwm {
-+	compatible = "st,stmpe-pwm";
-+	#pwm-cells = <2>;
-+};
+On 09/02/16 23:32, Heiko Stuebner wrote:
+> Hi Sudeep,
+>
+> Am Montag, 8. Februar 2016, 21:55:12 schrieb Sudeep Holla:
+
+[..]
+
+>> Hi Heiko,
+>>
+>> You can reviewed this, however there are couple of ARM64 dts additions.
+>> Also most of the other platform/SoC maintainers preferred to take it via
+>> their tree and few of these got missed during v4.5 merge window.
+>> Can you take it via your tree for v4.6 ?
+>
+> I've split the patch in two, as the 32 and 64 bit devicetree parts go
+> through separate branches and applied both to their respective branches for
+> v4.6
+
+Thanks for splitting up the patch yourself.
+
 -- 
-2.4.3
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
