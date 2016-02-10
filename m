@@ -1,7 +1,7 @@
 From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/5] mtd: atmel_nand: Support variable RB_EDGE interrupts
-Date: Wed, 10 Feb 2016 10:56:23 +0100
-Message-ID: <1455098187-9442-2-git-send-email-romain.izard.pro@gmail.com>
+Subject: [PATCH v4 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
+Date: Wed, 10 Feb 2016 10:56:25 +0100
+Message-ID: <1455098187-9442-4-git-send-email-romain.izard.pro@gmail.com>
 References: <1455098187-9442-1-git-send-email-romain.izard.pro@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455098187-9442-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,162 +10,146 @@ To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79u
 Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The NFC controller used to accelerate the NAND transfers on SAMA5 chips
-can use either RB_EDGE0 or RB_EDGE3 as its ready/busy interrupt bit.
+Starting with the SAMA5D2, there is a new revision of the Atmel PMECC
+controller that can correct 32 bits in each sector. This controller is
+not 100% compatible with the previous revision that corrected a maximum
+of 24 bits by sector, as some register addresses overlap.
 
-Use the controller's compatible string to select the correct bit.
+Using information from the device tree, we can configure the driver to
+work with both versions.
 
 For the binding:
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Reviewed-by: Wenyou Yang <Wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Tested-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-v4: collect tested-by and reviewed-by tags
-v3: constify atmel_nand_nfc_caps structures
-v2: use of_device_get_match_data
-    rename struct atmel_nand_nfc_priv as atmel_nand_nfc_caps
-    rename member rb_edge as rb_mask
-    do not create defines for unused status bits
+v4: collect tags
+v3: rebase on linux-mtd-next
+    constify the atmel_nand_caps structure
+v2: split rewording of the binding into its own patch
 
- .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
- drivers/mtd/nand/atmel_nand.c                      | 35 +++++++++++++++++-----
- drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
- 3 files changed, 30 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/mtd/atmel-nand.txt         |  5 ++++-
+ drivers/mtd/nand/atmel_nand.c                      | 23 +++++++++++++++++++++-
+ drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-index 7d4c8eb775a5..89b0db9801b0 100644
+index e68ab404d912..e1887b7d7e53 100644
 --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
 +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -34,7 +34,7 @@ Optional properties:
- - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
- - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
-   - Required properties:
--    - compatible : "atmel,sama5d3-nfc".
-+    - compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
-     - reg : should specify the address and size used for NFC command registers,
-             NFC registers and NFC Sram. NFC Sram address and size can be absent
-             if don't want to use it.
+@@ -1,7 +1,10 @@
+ Atmel NAND flash
+ 
+ Required properties:
+-- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5d4-nand".
++- compatible: The possible values are:
++	"atmel,at91rm9200-nand"
++	"atmel,sama5d2-nand"
++	"atmel,sama5d4-nand"
+ - reg : should specify localbus address and size used for the chip,
+ 	and hardware ECC controller if available.
+ 	If the hardware ECC is PMECC, it should contain address and size for
 diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index affe7a7e9ad7..600c77cb70ef 100644
+index 600c77cb70ef..00fa71045805 100644
 --- a/drivers/mtd/nand/atmel_nand.c
 +++ b/drivers/mtd/nand/atmel_nand.c
-@@ -67,6 +67,10 @@ struct atmel_nand_caps {
+@@ -65,6 +65,7 @@ module_param(on_flash_bbt, int, 0);
+ 
+ struct atmel_nand_caps {
  	bool pmecc_correct_erase_page;
++	uint8_t pmecc_max_correction;
  };
  
-+struct atmel_nand_nfc_caps {
-+	uint32_t rb_mask;
-+};
-+
- /* oob layout for large page size
-  * bad block info is on bytes 0 and 1
-  * the bytes have to be consecutives to avoid
-@@ -111,6 +115,7 @@ struct atmel_nfc {
- 	/* Point to the sram bank which include readed data via NFC */
- 	void			*data_in_sram;
- 	bool			will_write_sram;
-+	const struct atmel_nand_nfc_caps *caps;
- };
- static struct atmel_nfc	nand_nfc;
+ struct atmel_nand_nfc_caps {
+@@ -145,6 +146,7 @@ struct atmel_nand_host {
+ 	int			pmecc_cw_len;	/* Length of codeword */
  
-@@ -1675,9 +1680,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
- 		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
- 		ret = IRQ_HANDLED;
+ 	void __iomem		*pmerrloc_base;
++	void __iomem		*pmerrloc_el_base;
+ 	void __iomem		*pmecc_rom_base;
+ 
+ 	/* lookup table for alpha_to and index_of */
+@@ -818,7 +820,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 	sector_size = host->pmecc_sector_size;
+ 
+ 	while (err_nbr) {
+-		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_base, i) - 1;
++		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_el_base, i) - 1;
+ 		byte_pos = tmp / 8;
+ 		bit_pos  = tmp % 8;
+ 
+@@ -1210,6 +1212,8 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+ 		err_no = PTR_ERR(host->pmerrloc_base);
+ 		goto err;
  	}
--	if (pending & NFC_SR_RB_EDGE) {
-+	if (pending & host->nfc->caps->rb_mask) {
- 		complete(&host->nfc->comp_ready);
--		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
-+		nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->caps->rb_mask);
- 		ret = IRQ_HANDLED;
- 	}
- 	if (pending & NFC_SR_CMD_DONE) {
-@@ -1695,7 +1700,7 @@ static void nfc_prepare_interrupt(struct atmel_nand_host *host, u32 flag)
- 	if (flag & NFC_SR_XFR_DONE)
- 		init_completion(&host->nfc->comp_xfer_done);
++	host->pmerrloc_el_base = host->pmerrloc_base + ATMEL_PMERRLOC_SIGMAx +
++		(host->caps->pmecc_max_correction + 1) * 4;
  
--	if (flag & NFC_SR_RB_EDGE)
-+	if (flag & host->nfc->caps->rb_mask)
- 		init_completion(&host->nfc->comp_ready);
- 
- 	if (flag & NFC_SR_CMD_DONE)
-@@ -1713,7 +1718,7 @@ static int nfc_wait_interrupt(struct atmel_nand_host *host, u32 flag)
- 	if (flag & NFC_SR_XFR_DONE)
- 		comp[index++] = &host->nfc->comp_xfer_done;
- 
--	if (flag & NFC_SR_RB_EDGE)
-+	if (flag & host->nfc->caps->rb_mask)
- 		comp[index++] = &host->nfc->comp_ready;
- 
- 	if (flag & NFC_SR_CMD_DONE)
-@@ -1781,7 +1786,7 @@ static int nfc_device_ready(struct mtd_info *mtd)
- 		dev_err(host->dev, "Lost the interrupt flags: 0x%08x\n",
- 				mask & status);
- 
--	return status & NFC_SR_RB_EDGE;
-+	return status & host->nfc->caps->rb_mask;
- }
- 
- static void nfc_select_chip(struct mtd_info *mtd, int chip)
-@@ -1954,8 +1959,8 @@ static void nfc_nand_command(struct mtd_info *mtd, unsigned int command,
- 		}
- 		/* fall through */
- 	default:
--		nfc_prepare_interrupt(host, NFC_SR_RB_EDGE);
--		nfc_wait_interrupt(host, NFC_SR_RB_EDGE);
-+		nfc_prepare_interrupt(host, host->nfc->caps->rb_mask);
-+		nfc_wait_interrupt(host, host->nfc->caps->rb_mask);
- 	}
- }
- 
-@@ -2352,6 +2357,11 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	nfc->caps = (const struct atmel_nand_nfc_caps *)
-+		of_device_get_match_data(&pdev->dev);
-+	if (NULL == nfc->caps)
-+		return -ENODEV;
-+
- 	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
- 	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
- 
-@@ -2380,8 +2390,17 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
+ 	if (!host->has_no_lookup_table) {
+ 		regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+@@ -2307,17 +2311,34 @@ static int atmel_nand_remove(struct platform_device *pdev)
  	return 0;
  }
  
-+static const struct atmel_nand_nfc_caps sama5d3_nfc_caps = {
-+	.rb_mask = NFC_SR_RB_EDGE0,
++/*
++ * AT91RM9200 does not have PMECC or PMECC Errloc peripherals for
++ * BCH ECC. Combined with the "atmel,has-pmecc", it is used to describe
++ * devices from the SAM9 family that have those.
++ */
+ static const struct atmel_nand_caps at91rm9200_caps = {
+ 	.pmecc_correct_erase_page = false,
++	.pmecc_max_correction = 24,
+ };
+ 
+ static const struct atmel_nand_caps sama5d4_caps = {
+ 	.pmecc_correct_erase_page = true,
++	.pmecc_max_correction = 24,
 +};
 +
-+static const struct atmel_nand_nfc_caps sama5d4_nfc_caps = {
-+	.rb_mask = NFC_SR_RB_EDGE3,
-+};
-+
- static const struct of_device_id atmel_nand_nfc_match[] = {
--	{ .compatible = "atmel,sama5d3-nfc" },
-+	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_caps },
-+	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_caps },
++/*
++ * The PMECC Errloc controller starting in SAMA5D2 is not compatible,
++ * as the increased correction strength requires more registers.
++ */
++static const struct atmel_nand_caps sama5d2_caps = {
++	.pmecc_correct_erase_page = true,
++	.pmecc_max_correction = 32,
+ };
+ 
+ static const struct of_device_id atmel_nand_dt_ids[] = {
+ 	{ .compatible = "atmel,at91rm9200-nand", .data = &at91rm9200_caps },
+ 	{ .compatible = "atmel,sama5d4-nand", .data = &sama5d4_caps },
++	{ .compatible = "atmel,sama5d2-nand", .data = &sama5d2_caps },
  	{ /* sentinel */ }
  };
- MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
-diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
-index 4d5d26221a7e..0bbc1fa97dba 100644
---- a/drivers/mtd/nand/atmel_nand_nfc.h
-+++ b/drivers/mtd/nand/atmel_nand_nfc.h
-@@ -42,7 +42,8 @@
- #define		NFC_SR_UNDEF		(1 << 21)
- #define		NFC_SR_AWB		(1 << 22)
- #define		NFC_SR_ASE		(1 << 23)
--#define		NFC_SR_RB_EDGE		(1 << 24)
-+#define		NFC_SR_RB_EDGE0		(1 << 24)
-+#define		NFC_SR_RB_EDGE3		(1 << 27)
  
- #define ATMEL_HSMC_NFC_IER	0x0c
- #define ATMEL_HSMC_NFC_IDR	0x10
+diff --git a/drivers/mtd/nand/atmel_nand_ecc.h b/drivers/mtd/nand/atmel_nand_ecc.h
+index 668e7358f19b..ec964c43c932 100644
+--- a/drivers/mtd/nand/atmel_nand_ecc.h
++++ b/drivers/mtd/nand/atmel_nand_ecc.h
+@@ -108,7 +108,11 @@
+ #define		PMERRLOC_ERR_NUM_MASK		(0x1f << 8)
+ #define		PMERRLOC_CALC_DONE		(1 << 0)
+ #define ATMEL_PMERRLOC_SIGMAx		0x028	/* Error location SIGMA x */
+-#define ATMEL_PMERRLOC_ELx		0x08c	/* Error location x */
++
++/*
++ * The ATMEL_PMERRLOC_ELx register location depends from the number of
++ * bits corrected by the PMECC controller. Do not use it.
++ */
+ 
+ /* Register access macros for PMECC */
+ #define pmecc_readl_relaxed(addr, reg) \
+@@ -136,7 +140,7 @@
+ 	readl_relaxed((addr) + ATMEL_PMERRLOC_SIGMAx + ((n) * 4))
+ 
+ #define pmerrloc_readl_el_relaxed(addr, n) \
+-	readl_relaxed((addr) + ATMEL_PMERRLOC_ELx + ((n) * 4))
++	readl_relaxed((addr) + ((n) * 4))
+ 
+ /* Galois field dimension */
+ #define PMECC_GF_DIMENSION_13			13
 -- 
 2.5.0
 
