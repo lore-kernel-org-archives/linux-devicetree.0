@@ -1,53 +1,119 @@
 From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH v6 0/2] Atmel AT93C46D and GPIO 'select' support for eeprom_93xx46.
-Date: Wed, 10 Feb 2016 14:32:06 -0500
-Message-ID: <1455132728-29265-1-git-send-email-cory.tusar@pid1solutions.com>
-References: <20160210012836.GA27026@kroah.com>
+Subject: [PATCH v6 2/2] misc: eeprom_93xx46: Add support for a GPIO 'select' line.
+Date: Wed, 10 Feb 2016 14:32:08 -0500
+Message-ID: <1455132728-29265-3-git-send-email-cory.tusar@pid1solutions.com>
+References: <1455132728-29265-1-git-send-email-cory.tusar@pid1solutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455132728-29265-1-git-send-email-cory.tusar@pid1solutions.com>
 In-Reply-To: <20160210012836.GA27026@kroah.com>
+References: <20160210012836.GA27026@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: gregkh@linuxfoundation.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-This series of patches extends recently accepted devicetree bindings in the
-eeprom_93xx46 driver to include support for a specific Atmel device in this
-family, and also to support GPIO-based selection of the device (e.g. for use
-with an SPI bus mux).
+This commit adds support to the eeprom_93x46 driver allowing a GPIO line
+to function as a 'select' or 'enable' signal prior to accessing the
+EEPROM.
 
-Changes since v5:
-  - Dropped patches 1-3 which were already accepted.
-  - Rebased and re-tested atop the 'char-misc-testing' branch of
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+Tested-by: Chris Healy <chris.healy@zii.aero>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ drivers/misc/eeprom/eeprom_93xx46.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/eeprom_93xx46.h       |  3 +++
+ 2 files changed, 38 insertions(+)
 
-Changes since v4:
-  - Only forward-declare 'struct gpio_desc' in eeprom_93xx46.h.
-  - Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-
-Changes since v3:
-  - Tested-by: Chris Healy <chris.healy@zii.aero>
-    ...on a separate i.MX51 platform with Microchip 93LC46A EEPROM.
-
-Changes since v2:
-  - Changed node name to 'eeprom' in DT bindings example.
-  - Simplified several bits of return logic.
-  - Removed #ifdef CONFIG_OF.
-  - Allow compiler to handle promotion to bool return values.
-  - Reworked GPIO handling to use gpiod_* functions throughout (and
-    fixed an oversight where GPIO flags were being ignored).
-
-Changes since v1:
-  - Consolidated all Documentation/devictree additions into a single patch.
-  - Clarified compatible string shall be only one of the supported values.
-  - Renamed the 'select-gpio' binding to 'select-gpios'.
-
-Cory Tusar (2):
-  misc: eeprom_93xx46: Add quirks to support Atmel AT93C46D device.
-  misc: eeprom_93xx46: Add support for a GPIO 'select' line.
-
- drivers/misc/eeprom/eeprom_93xx46.c | 161 ++++++++++++++++++++++++++++--------
- include/linux/eeprom_93xx46.h       |   9 ++
- 2 files changed, 135 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
+index a3c3136..f62ab29 100644
+--- a/drivers/misc/eeprom/eeprom_93xx46.c
++++ b/drivers/misc/eeprom/eeprom_93xx46.c
+@@ -10,11 +10,13 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ #include <linux/sysfs.h>
+@@ -343,6 +345,20 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
+ }
+ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
+ 
++static void select_assert(void *context)
++{
++	struct eeprom_93xx46_dev *edev = context;
++
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
++}
++
++static void select_deassert(void *context)
++{
++	struct eeprom_93xx46_dev *edev = context;
++
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
++}
++
+ static const struct of_device_id eeprom_93xx46_of_table[] = {
+ 	{ .compatible = "eeprom-93xx46", },
+ 	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
+@@ -357,6 +373,8 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	struct device_node *np = spi->dev.of_node;
+ 	struct eeprom_93xx46_platform_data *pd;
+ 	u32 tmp;
++	int gpio;
++	enum of_gpio_flags of_flags;
+ 	int ret;
+ 
+ 	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
+@@ -381,6 +399,23 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	if (of_property_read_bool(np, "read-only"))
+ 		pd->flags |= EE_READONLY;
+ 
++	gpio = of_get_named_gpio_flags(np, "select-gpios", 0, &of_flags);
++	if (gpio_is_valid(gpio)) {
++		unsigned long flags =
++			of_flags == OF_GPIO_ACTIVE_LOW ? GPIOF_ACTIVE_LOW : 0;
++
++		ret = devm_gpio_request_one(&spi->dev, gpio, flags,
++					    "eeprom_93xx46_select");
++		if (ret)
++			return ret;
++
++		pd->select = gpio_to_desc(gpio);
++		pd->prepare = select_assert;
++		pd->finish = select_deassert;
++
++		gpiod_direction_output(pd->select, 0);
++	}
++
+ 	if (of_id->data) {
+ 		const struct eeprom_93xx46_devtype_data *data = of_id->data;
+ 
+diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
+index 92fa4c3..885f587 100644
+--- a/include/linux/eeprom_93xx46.h
++++ b/include/linux/eeprom_93xx46.h
+@@ -3,6 +3,8 @@
+  * platform description for 93xx46 EEPROMs.
+  */
+ 
++struct gpio_desc;
++
+ struct eeprom_93xx46_platform_data {
+ 	unsigned char	flags;
+ #define EE_ADDR8	0x01		/*  8 bit addr. cfg */
+@@ -21,4 +23,5 @@ struct eeprom_93xx46_platform_data {
+ 	 */
+ 	void (*prepare)(void *);
+ 	void (*finish)(void *);
++	struct gpio_desc *select;
+ };
 -- 
 2.4.10
