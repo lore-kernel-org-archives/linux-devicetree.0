@@ -1,100 +1,55 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: l2x0: add three special L210 aux control flags
-Date: Wed, 10 Feb 2016 21:20:18 +0100
-Message-ID: <CACRpkdYFsTbPnbAcbw2FV7MmKJS7N9B8_pQvtX2fsoSHzJkdvQ@mail.gmail.com>
-References: <1453933437-6666-1-git-send-email-linus.walleij@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver to work on both  Zynq and Microblaze
+Date: Wed, 10 Feb 2016 21:40:11 +0100
+Message-ID: <2818168.2fmZIs86hN@wuerfel>
+References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com> <8520D5D51A55D047800579B09414719825881780@XAP-PVEXMBX01.xlnx.xilinx.com> <20160210172707.GA29590@NP-P-BURTON>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1453933437-6666-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160210172707.GA29590@NP-P-BURTON>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>linu
 List-Id: devicetree@vger.kernel.org
 
-Argh, missed to cross-post this to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, I see my
-mistake now.
+On Wednesday 10 February 2016 09:27:07 Paul Burton wrote:
+> On Wed, Feb 10, 2016 at 05:55:51AM +0000, Bharat Kumar Gogada wrote:
+> > > On Tue, Feb 09, 2016 at 04:11:56PM +0530, Bharat Kumar Gogada wrote:
+> > > > Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
+> > > > Zynq and Microblaze Architectures.
+> > > > With these modifications drivers/pci/host/pcie-xilinx.c, will work on
+> > > > both Zynq and Microblaze Architectures.
+> > > >
+> > > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > > > ---
+> > > > Changes:
+> > > > Removed unneccessary architecture dependent number of MSI's.
+> > > > Added #ifdef to pci_fixup_irqs which is ARM specific API.
+> > > 
+> > > Hi Bharat,
+> > > 
+> > > Why do you say pci_fixup_irqs is ARM-specific? It's declared in
+> > > include/linux/pci.h, defined in drivers/pci/setup-irq.c & used by multiple
+> > > architectures (alpha, arm, m68k, mips, sh, sparc, tile,
+> > > unicore32 from a quick grep).
+> > > 
+> > > Will you not break INTX-style interrupts by removing this?
+> > > 
+> > I meant to say ARM specific w.r.t Microblaze architecture, which is
+> > what this patch series are for. This has been already discussed in my
+> > previous patch by  Arnd Bergmann and Lorenzo Pieralisi .
+> > (https://lkml.org/lkml/2016/1/12/707)
+> 
+> Hi Bharat,
+> 
+> Ok, so you don't need it for microblaze but do need it for zynq/ARM. We
+> also need it for MIPS, where my recent patches enable this driver. So if
+> #ifdef'ing this is the current way forwards could you please invert the
+> condition to #ifndef CONFIG_MICROBLAZE?
 
-Rob, care to take a quick look?
+I think we are getting to the point where we should try much harder
+to make sure nobody needs that hack and it all works out of the box.
 
-On Wed, Jan 27, 2016 at 11:23 PM, Linus Walleij
-<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> This adds support for setting the flag bits "wrap access disable",
-> "write allocate override" and "exclusive abort disable" to the L210
-> variant from the device tree.
->
-> The "write allocate override" bit was used on the Nomadik and
-> necessary to properly make use of the L210 cache on that machine
-> without sporadic crashes.
->
-> I took this oppportunity to add all three flags so we avoid excess
-> patching for each one.
->
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2c2x0.txt | 10 ++++++++++
->  arch/arm/mm/cache-l2x0.c                         | 18 ++++++++++++++++++
->  2 files changed, 28 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-> index fe0398c5c77b..975d1ae304d4 100644
-> --- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-> @@ -74,6 +74,16 @@ Optional properties:
->    or "write through no write allocate" (for writes).
->    On systems where this may cause DMA buffer corruption, this property must be
->    specified to indicate that such transforms are precluded.
-> +- arm,wrap-access-disable : (L210 only) if this flag is set, wrap accesses
-> +  requested on slave ports are converted to linear acesses on master ports.
-> +- arm,write-allocate-override : (L210 only) normally the L210 will use HPROT
-> +  attributes, setting this bit overrides that behaviour and cause the cache
-> +  to make all write-through and write-back accesses into read-write-allocate
-> +  accesses.
-> +- arm,exclusive-abort-disable : (L210 only) normally the cache controller sends
-> +  an ERROR response back to exclusive access in a cacheable, shared memory
-> +  region with the shared override bit set, but setting this flag disables the
-> +  abort generation and the access is instead treated as cacheable, non-shared.
->  - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
->  - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
->  - arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index 9f9d54271aad..301c3c2dc09f 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1076,6 +1076,24 @@ static void __init l2x0_of_parse(const struct device_node *np,
->                 val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
->         }
->
-> +       /* L210-specific aux control flags */
-> +       if (of_device_is_compatible(np, "arm,l210-cache")) {
-> +               if (of_property_read_bool(np, "arm,wrap-access-disable")) {
-> +                       mask &= ~L210_AUX_CTRL_WRAP_DISABLE;
-> +                       val |= L210_AUX_CTRL_WRAP_DISABLE;
-> +               }
-> +
-> +               if (of_property_read_bool(np, "arm,write-allocate-override")) {
-> +                       mask &= ~L210_AUX_CTRL_WA_OVERRIDE;
-> +                       val |= L210_AUX_CTRL_WA_OVERRIDE;
-> +               }
-> +
-> +               if (of_property_read_bool(np, "arm,exclusive-abort-disable")) {
-> +                       mask &= ~L210_AUX_CTRL_EXCLUSIVE_ABORT;
-> +                       val |= L210_AUX_CTRL_EXCLUSIVE_ABORT;
-> +               }
-> +       }
-> +
->         ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
->         if (ret)
->                 return;
-> --
-> 2.4.3
->
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
