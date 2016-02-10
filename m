@@ -1,54 +1,67 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 2/2] dt-bindings: clock: add lpc32xx clock frequency output
-Date: Wed, 10 Feb 2016 02:06:01 +0200
-Message-ID: <56BA7EE9.8040703@mleia.com>
-References: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/11] clk: lpc32xx: add clock support for NXP LPC32xx
+Date: Wed, 10 Feb 2016 02:19:03 +0200
+Message-ID: <56BA81F7.4080006@mleia.com>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com> <loom.20160209T215103-78@post.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: slemieux.tyco@gmail.com, robh+dt@kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com
-Cc: stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <loom.20160209T215103-78-eS7Uydv5nfjZ+VzJOa5vwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Sylvain,
 
-On 09.02.2016 20:47, slemieux.tyco@gmail.com wrote:
-> From: Sylvain Lemieux <slemieux@tycoint.com>
+On 09.02.2016 23:01, Sylvain Lemieux wrote:
+> Vladimir Zapolskiy <vz@...> writes:
+>>
+>> This changeset adds common clock framework driver for NXP LPC32xx
+>> boards.
 > 
-> This patch add an optional parameter to setup the
-> xtal clock frequency output.
+> Hi Vladimir,
 > 
-> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
-> ---
->  Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> Just to let you know that we did some testing using this changeset;
+> I installed patches 4 to 7, 10 & 11 on top of 4.5-rc1.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
-> index 20cbca3..ce51759 100644
-> --- a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
-> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
-> @@ -10,6 +10,9 @@ Required properties:
->  - clock-names: list of external oscillator clock names, must contain
->    "xtal_32k" and may have optional "xtal"
->  
-> +Optional properties:
-> +- xtal,clock-output-frequency: define the "xtal" clock frequency output in Hz
-> +
+> I was able to run our software (SIC1 interrupt sources disable)
+> without any problem a custom LPC32xx board.
 
-this one looks wrong in sense that from patch 1/2 the property configures
-a PLL output clock rate, which is not an oscillator (xtal) clock rate.
+this is a known issue, and I hope it will be fixed in upstream in v4.6,
+the required changes in irqchip and gpiochip drivers were sent for
+review some time ago, a bit more work is needed to 
 
-I believe switching to "assigned-clock-rates" should make this change
-obsolete.
+Also 2-3 more clean-up changes in USB host and gadget drivers are done
+locally (no more need to configure clocks out of the common clock
+framework), but not yet submitted, will do it tomorrow.
 
->  Examples:
->  
->  	/* System Control Block */
+> We did not get any problem with the clock signals we are using.
 > 
 
---
+Thank you for testing, I'm going to add your Tested-by tag (if you
+don't mind) and submit a PR to ARM maintainers shortly.
+
+>> Vladimir Zapolskiy (11):
+>>   dt-bindings: clock: add description of LPC32xx clock controller
+>>   dt-bindings: clock: add description of LPC32xx USB clock controller
+>>   dt-bindings: clock: add NXP LPC32xx clock list for consumers
+>>   arm: dts: lpc32xx: add device nodes for external oscillators
+>>   arm: dts: lpc32xx: add clock controller device node
+>>   arm: dts: lpc32xx: add clock properties to device nodes
+>>   arm: dts: lpc32xx: add USB clock controller
+>>   clk: lpc18xx: add NXP specific common clock framework selection
+>>   clk: lpc32xx: add common clock framework driver
+>>   arm: lpc32xx: switch to common clock framework
+>>   arm: dts: lpc32xx: remove clock frequency property from UART device
+>>     nodes
+> 
+> 
+
 With best wishes,
 Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
