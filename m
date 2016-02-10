@@ -1,50 +1,96 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] irqchip: lpc32xx: add LPC32xx irqchip driver
-Date: Wed, 10 Feb 2016 19:45:25 +0000 (UTC)
-Message-ID: <loom.20160210T204046-649@post.gmane.org>
-References: <1447982925-30138-1-git-send-email-vz@mleia.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Wed, 10 Feb 2016 12:07:19 -0800
+Message-ID: <56BB9877.9000305@caviumnetworks.com>
+References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com> <CAPDyKFrMgt9snP2NLbQ6EQ5X7gjQLA+e+TEfqgjzLYTuH+G1OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFrMgt9snP2NLbQ6EQ5X7gjQLA+e+TEfqgjzLYTuH+G1OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Aleksey Makarov <aleksey.makarov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Chandrakala Chavva <cchavva-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>, Leonid Rosenboim <lrosenboim-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Peter Swain <pswain-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Aaron Williams <aaron.williams-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vladimir Zapolskiy <vz@...> writes:
-> 
-> The change adds wakeup controller platform driver and irqchip driver
-> for NXP LPC32xx boards.
- 
-Hi Vladimir,
+On 02/10/2016 11:01 AM, Ulf Hansson wrote:
+> On 10 February 2016 at 18:36, Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Aleksey Makarov <aleksey.makarov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>>
+>> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+>> devices.  Device parameters are configured from device tree data.
+>>
+>> eMMC, MMC and SD devices are supported.
+>>
+>> Tested-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+>> Signed-off-by: Chandrakala Chavva <cchavva-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Leonid Rosenboim <lrosenboim-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Peter Swain <pswain-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Aaron Williams <aaron.williams-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> v5:
+>> Incoroprate comments from review
+>> http://patchwork.linux-mips.org/patch/9558/
+>> - Use standard <bus-width> property instead of <cavium,bus-max-width>.
+>> - Use standard <max-frequency> property instead of <spi-max-frequency>.
+>> - Add octeon_mmc_of_parse_legacy function to deal with the above
+>>    properties, since many devices have shipped with those properties
+>>    embedded in firmware.
+>> - Allow the <vmmc-supply> binding in addition to the legacy
+>>    <gpios-power>.
+>> - Remove the secondary driver for each slot.
+>> - Use core gpio cd/wp handling
+>
+> Seems like you decided to ignore most comments realted to the DT
+> bindings from the earlier version.
+> Although, let's discuss this one more time.
 
-Just to let you know that we did some testing using this changeset;
-I tested the change on 4.5-rc1 with patch 4 to 7, 10 & 11 from:
-http://permalink.gmane.org/gmane.linux.drivers.devicetree/144671
+I think you may have misread the patch.  The DT bindings have been
+changed based on the feedback we received on v4.
 
-I was able to run our software (I2C SIC1 interrupt enable)
-without any problem on a custom LPC32xx board.
+>
+> Therefore I recomend you to split this patch. DT documentation should
+> be a separate patch preceeding the actual mmc driver patch.
 
-I did not test the other SIC1 interrupt sources that were
-generating issue previously (i.e. breaks the kernel with
-the message "unexpected IRQ trap at vector 00").
+You may have missed it the first time it was posted, but the legacy DT
+bindings have been around for a while.
 
-We did not get any problem with the MIC interrupts we are using.
+See:
 
-> Vladimir Zapolskiy (10):
->   dt-bindings: create arm/nxp folder and move LPC32xx SoC description to it
->   dt-bindings: nxp: add description of wakeup controller on LPC32xx
->   dt-bindings: interrupt-controllers: add description of SIC1 and SIC2
->   arm: lpc32xx: add wakeup platform driver
->   arm: dts: lpc32xx: assign interrupt types
->   arm: dts: lpc32xx: add description of IC wakeup controllers
->   arm: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC
->   irqchip: add LPC32xx interrupt controller driver
->   irqchip: lpc32xx: add option to wakeup from an interrupt
->   arm: dts: lpc32xx: enable SIC1 and SIC2 by default
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-May/015482.html
 
-Sylvain Lemieux
 
+> The DT patch needs to be acked by the DT maintainers.
+
+The legacy DT has been deployed in firmware for several years now.  We
+are adding more "modern" bindings, and the DT maintainers are
+encouraged to review that portion, but the legacy is what it is and it
+isn't changing.
+
+>
+> Until we somewhat agreed on the DT parts, I am going to defer the
+> in-depth review of the driver code as I have limited bandwidth.
+>
+
+As I stated above, the legacy DT bindings are not changing and must be
+supported.  Waiting for legacy DT bindings to change is equivalent to
+infinite deferral.
+
+> Does that make sense to you?
+>
+
+I understand why you would say this.  However, I think it doesn't
+fully take into account the need to support devices that have already
+been deployed.
+
+That said, Matt really needs to get the DT maintainers reviewing the new 
+DT bindings.
+
+
+David Daney
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
