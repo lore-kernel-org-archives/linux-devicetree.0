@@ -1,97 +1,76 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2] net: fec: Add "phy-reset-active-low" property to DT
-Date: Wed, 10 Feb 2016 19:09:24 +0100
-Message-ID: <20160210180924.GH9492@lunn.ch>
-References: <1455048072-869-1-git-send-email-bernhard@bwalle.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
+Date: Wed, 10 Feb 2016 21:10:43 +0300
+Message-ID: <56BB7D23.3010005@cogentembedded.com>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+ <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
+ <87lh6ts1o0.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455048072-869-1-git-send-email-bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bernhard Walle <bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <87lh6ts1o0.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 09:01:12PM +0100, Bernhard Walle wrote:
-> We need that for a custom hardware that needs the reverse reset
-> sequence.
-> 
-> Signed-off-by: Bernhard Walle <bernhard-X9USDgGjgfuzQB+pC5nmwQ@public.gmane.org>
+On 02/10/2016 06:12 AM, Kuninori Morimoto wrote:
 
-Thanks for updating the Documentation.
+>> Define the generic R8A7794 part of  the sound device node.
+>> This sound device  is a complex one and comprises the Audio Clock Generator
+>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+>> It is up  to the board file to enable the device.
+>>
+>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> (snip)
+>> +		clocks = <&mstp10_clks R8A7794_CLK_SSI_ALL>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI9>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI8>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI7>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI6>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI5>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI4>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI3>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI2>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SSI0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC9>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC8>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC7>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC6>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC5>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC4>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC3>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC2>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_SRC0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU0_MIX0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_CTU1_MIX1>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC0>,
+>> +			 <&mstp10_clks R8A7794_CLK_SCU_DVC1>,
+>> +			 <&audio_clka>, <&audio_clkb>, <&audio_clkc>,
+>> +			 <&m2_clk>;
+>> +		clock-names = "ssi-all",
+>> +			      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
+>> +			      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
+>> +			      "src.9", "src.8", "src.7", "src.6", "src.5",
+>> +			      "src.4", "src.3", "src.2", "src.1", "src.0",
+>> +			      "ctu.0", "ctu.1",
+>> +			      "mix.0", "mix.1",
+>> +			      "dvc.0", "dvc.1",
+>> +			      "clk_a", "clk_b", "clk_c", "clk_i";
+>
+> I'm sorry about my previous email. I think I made you confuse.
+> I meant you can remove CTU/MIX field if your patch doesn't care these.
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+    No, I got your idea right.
+    But I decided to go for a more complete hardware representation, on par 
+with the other R-Car SoCs.
 
-     Andrew
-
-> ---
-> Changes compared to v1:
->  - Add documentation to 'phy-reset-gpios' that flags are ignored
->    as suggested by Andrew Lunn.
-> 
->  Documentation/devicetree/bindings/net/fsl-fec.txt | 7 ++++++-
->  drivers/net/ethernet/freescale/fec_main.c         | 8 ++++++--
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index a9eb611..0caa429 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -7,11 +7,16 @@ Required properties:
->  - phy-mode : See ethernet.txt file in the same directory
->  
->  Optional properties:
-> -- phy-reset-gpios : Should specify the gpio for phy reset
-> +- phy-reset-gpios : Should specify the gpio for phy reset. Additional
-> +  flags are ignored, see the non-standard 'phy-reset-active-low' property
-> +  instead.
->  - phy-reset-duration : Reset duration in milliseconds.  Should present
->    only if property "phy-reset-gpios" is available.  Missing the property
->    will have the duration be 1 millisecond.  Numbers greater than 1000 are
->    invalid and 1 millisecond will be used instead.
-> +- phy-reset-active-low : If present then the reset sequence using the GPIO
-> +  specified in the "phy-reset-gpios" property is reversed (H=reset state,
-> +  L=operation state).
->  - phy-supply : regulator that powers the Ethernet PHY.
->  - phy-handle : phandle to the PHY device connected to this device.
->  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index 41c81f6..98caf87 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -3229,6 +3229,7 @@ static int fec_enet_init(struct net_device *ndev)
->  static void fec_reset_phy(struct platform_device *pdev)
->  {
->  	int err, phy_reset;
-> +	bool active_low = false;
->  	int msec = 1;
->  	struct device_node *np = pdev->dev.of_node;
->  
-> @@ -3244,14 +3245,17 @@ static void fec_reset_phy(struct platform_device *pdev)
->  	if (!gpio_is_valid(phy_reset))
->  		return;
->  
-> +	active_low = of_property_read_bool(np, "phy-reset-active-low");
-> +
->  	err = devm_gpio_request_one(&pdev->dev, phy_reset,
-> -				    GPIOF_OUT_INIT_LOW, "phy-reset");
-> +			active_low ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
-> +			"phy-reset");
->  	if (err) {
->  		dev_err(&pdev->dev, "failed to get phy-reset-gpios: %d\n", err);
->  		return;
->  	}
->  	msleep(msec);
-> -	gpio_set_value_cansleep(phy_reset, 1);
-> +	gpio_set_value_cansleep(phy_reset, !active_low);
->  }
->  #else /* CONFIG_OF */
->  static void fec_reset_phy(struct platform_device *pdev)
-> -- 
-> 2.7.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
