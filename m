@@ -1,37 +1,49 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH V2 08/12] dtb: amd: Add PERF CCN-504 device tree node
-Date: Tue, 9 Feb 2016 17:35:34 -0600
-Message-ID: <56BA77C6.6020803@amd.com>
-References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <1454954357-8395-9-git-send-email-Suravee.Suthikulpanit@amd.com>
- <3090961.S0JY5ma2pB@wuerfel>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/2] clk: lpc32xx: add clock frequency output configuration
+Date: Wed, 10 Feb 2016 02:00:09 +0200
+Message-ID: <56BA7D89.7060505@mleia.com>
+References: <1455043670-19025-1-git-send-email-slemieux.tyco@gmail.com>	 <20160209185723.GC31947@codeaurora.org> <1455048430.19294.3.camel@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3090961.S0JY5ma2pB@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455048430.19294.3.camel@localhost>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: robh+dt@kernel.org, mturquette@baylibre.com, stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylvain,
 
+On 09.02.2016 22:07, Sylvain Lemieux wrote:
+> On Tue, 2016-02-09 at 10:57 -0800, Stephen Boyd wrote:
+>> On 02/09, slemieux.tyco@gmail.com wrote:
+>>> From: Sylvain Lemieux <slemieux@tycoint.com>
+>>>
+>>> This patch add the support to setup the clock frequency output
+>>> using an optional parameter from the device tree.
+>>>
+>>> The previous kernel version did not change the clock frequency
+>>> output setup by the kickstart and/or bootloader;
+>>> this version always setup the clock frequency output to 208MHz.
 
-On 02/09/2016 08:58 AM, Arnd Bergmann wrote:
-> On Monday 08 February 2016 11:59:13 Suravee Suthikulpanit wrote:
->> +               /* Perf CCN504 PMU */
->> +               ccn: ccn@0xe8000000 {
+ok, it makes perfect sense, and here I see two options, one is to recover
+the previous behaviour by removing clk_set_rate() of LPC32XX_CLK_HCLK_PLL
+completely, another one (and more preferable) is to add this clock
+to a list in include/dt-bindings/clock/lpc32xx-clock.h and set its
+rate in a board specific DTB file.
+
+>>> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+>>> ---
 >>
->
-> The address is wrong, please remove the '0x'.
->
-> 	Arnd
->
+>> We have assigned-clock-rates, can you use that instead?
+>>
+> OK, I will submit a new version of the patch tomorrow.
+> 
 
-Right, thanks for catching this.
+By the way if you have a cover letter or 2/2 patch in the series,
+please send it to linux-clk as well.
 
-Suravee
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
