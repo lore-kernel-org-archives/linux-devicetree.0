@@ -1,143 +1,131 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/2] add support for DWC UFS Host Controller
-Date: Wed, 10 Feb 2016 21:50:28 +0100
-Message-ID: <6667560.LIsUD7xT9u@wuerfel>
-References: <cover.1455120183.git.jpinto@synopsys.com> <0787e532da876f7f38b4f439ec2e16bfcbaa9cb3.1455120183.git.jpinto@synopsys.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
+Date: Wed, 10 Feb 2016 14:51:25 -0600
+Message-ID: <CAGo_u6oNKsDr3yO8KXhpdc9qQYXE7TJv4=Nu3fsmAYt+EFeNBw@mail.gmail.com>
+References: <1454690044-2560-1-git-send-email-nm@ti.com>
+	<1454690044-2560-2-git-send-email-nm@ti.com>
+	<CABb+yY3kGq_R49Xx4fK3UMqtuFiuv-pXJWvjkEFLPL9xRu5T4A@mail.gmail.com>
+	<56B9DC30.5040806@ti.com>
+	<CABb+yY24XzsWaSGLMCE4_nvgWx0OhhQmcaP41g06FxdjQYFchg@mail.gmail.com>
+	<CAGo_u6qGaQj9Qvjwrm7cD=cr2UjLN+62tcquXYPsQrRjYD=UCw@mail.gmail.com>
+	<20160209181031.GA23603@kahuna>
+	<56BB99F4.3040702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <0787e532da876f7f38b4f439ec2e16bfcbaa9cb3.1455120183.git.jpinto@synopsys.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, mark.rutland@arm.com, martin.petersen@oracle.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BB99F4.3040702-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 February 2016 16:06:13 Joao Pinto wrote:
-> This patch has the goal to add support for DesignWare UFS Controller
-> specific operations and to add specific platform and pci drivers.
-> 
-> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
->  Documentation/devicetree/bindings/ufs/ufs-dwc.txt |  17 +
->  MAINTAINERS                                       |   6 +
->  drivers/scsi/ufs/Kconfig                          |  41 ++
->  drivers/scsi/ufs/Makefile                         |   3 +
->  drivers/scsi/ufs/ufs-dwc-pci.c                    | 180 ++++++
->  drivers/scsi/ufs/ufs-dwc.c                        | 102 +++
->  drivers/scsi/ufs/ufshcd-dwc.c                     | 736 ++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd-dwc.h                     |  18 +
->  drivers/scsi/ufs/ufshcd.c                         |  50 +-
->  drivers/scsi/ufs/ufshcd.h                         |  13 +
->  drivers/scsi/ufs/ufshci-dwc.h                     |  42 ++
->  drivers/scsi/ufs/ufshci.h                         |   1 +
->  drivers/scsi/ufs/unipro.h                         |  39 ++
+On Wed, Feb 10, 2016 at 2:13 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Nishanth,
+>
+> On 02/09/2016 12:10 PM, Menon, Nishanth wrote:
+>> On 09:43-20160209, Nishanth Menon wrote:
+>>> On Tue, Feb 9, 2016 at 8:54 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> [..]
+>>> Let me prototype this as part of of_xlate and see if I can pull the
+>>> qinst data back out.. obviously one negative will be that I will
+>>> register *all* valid channels as part of probe.. at least based on
+>>> initial code i wrote today morning..
+>>
+>> OK - I believe I have it working now. How does the following look? If
+>> this looks fine to you, then I will post a v2 including the driver
+>> update.
+>> Changes here:
+>>       - dropped the generic message-manager compatible
+>>       - dropped child nodes
+>>       - moved the valid queue information to driver (no longer in dts)
+>>       - rx interrupts per SoC are explicitly named list in binding(and
+>>         dts)
+>>
+>> Texas Instruments' Message Manager Driver
+>> ========================================
+>>
+>> The Texas Instruments' Message Manager is a mailbox controller that has
+>> configurable queues selectable at SoC(System on Chip) integration. The Message
+>> manager is broken up into queues in different address regions that are called
+>> "proxies" - each instance is unidirectional and is instantiated at SoC
+>> integration level to indicate receive or transmit path.
+>>
+>> Message Manager Device Node:
+>> ===========================
+>> Required properties:
+>> --------------------
+>> - compatible:         Shall be: "ti,k2g-message-manager"
+>> - reg-names           queue_proxy_region - Map the queue proxy region.
+>>                       queue_state_debug_region - Map the queue state debug
+>>                       region.
+>> - reg:                        Contains the register map per reg-names.
+>> - #mbox-cells         Shall be 2. Contains the queue ID and proxy ID in that
+>>                       order referring to the transfer path.
+>> - interrupt-names:    Contains interrupt names matching the rx transfer path
+>>                       for a given SoC. Receive interrupts shall be of the
+>>                       format: "rx_<QID>_<PID>".
+>>                       For ti,k2g-message-manager, this shall contain:
+>>                               "rx_005_002", "rx_057_002"
+>
+> Are these the only two that will ever be supported for
+> ti,k2g-message-manager or there can be more in the future? You did
+> mention about 11 possible valid qid_pid values for the ARM, and the
+> driver match data is
+> registering all of those mboxes.
 
-Can you split this into separate patches for changes to the common code,
-the addition of the PCI driver and the addition of the platform driver?
 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufs-dwc.txt b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
-> new file mode 100644
-> index 0000000..f38a3f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
-> @@ -0,0 +1,17 @@
-> +* Universal Flash Storage (UFS) DesignWare Host Controller
-> +
-> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
-> +Each UFS controller instance should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible string ("snps,ufshcd-1.0", "snps,ufshcd-1.1"
-> +  or "snps,ufshcd-2.0")
-> +- reg               : <registers mapping>
-> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
-> +
-> +Example:
-> +	dwc_ufshcd@0xD0000000 {
+As per the internal TRM, there *only* 2 rx interrupts to the public
+world ARM on K2G. I just noticed that the public TRM conveniently
+stripped out every single useful information and replaced with
+TRM!!!!!*&^*&^&*%&^%&%&!!! Anyways, checked internal documentation to
+verify as well. we have multiple output paths to various compute
+systems, but only 2 receive paths.
 
-Please fix the node name and address in the example. I think you want "ufs@d0000000".
+Ofcourse a different SoC will have different integration, which why
+the interrupt list will have to be compatible property.
 
-> +config SCSI_UFS_DWC_MPHY_TC
-> +	bool "Support for the Synopsys MPHY Test Chip"
-> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
-> +	---help---
-> +	  This selects the support for the Synopsys MPHY Test Chip.
-> +
-> +	  Select this if you have a Synopsys MPHY Test Chip.
-> +	  If unsure, say N.
-> +
-> +config SCSI_UFS_DWC_40BIT_RMMI
-> +	bool "40-bit RMMI MPHY"
-> +	depends on SCSI_UFS_DWC_MPHY_TC
-> +	---help---
-> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
-> +
-> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
+>
+>> - interrupts:         Contains the interrupt information corresponding to
+>>                       interrupt-names property.
+>>
+>> Example(K2G):
+>> ------------
+>>
+>>       msgmgr: msgmgr@02a00000 {
+>>               compatible = "ti,k2g-message-manager";
+>>               #mbox-cells = <2>;
+>>               reg-names = "queue_proxy_region", "queue_state_debug_region";
+>>               reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
+>>               interrupt-names = "rx_005_002",
+>>                                 "rx_057_002";
+>>               interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+>>                            <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
+>>       };
+>>
+>>       pmmc: pmmc {
+>>               [...]
+>>               mbox-names = "rx", "tx";
+>>               # RX queue ID is 5, proxy ID is 2
+>>               # TX queue ID is 0, proxy ID is 0
+>>               mboxes= <&msgmgr 5 2>,
+>>                       <&msgmgr 0 0>;
+>>               [...]
+>>       };
+>
+> Yeah, this will also work. I am fine with this approach - my only
+> concern was that the probe doesn't have to go parsing all the nodes to
+> be able to register the mailbox channels with the mailbox core. Since
+> you are registering them using match data, that is not a concern anymore.
+>
+> Anyway, will let Rob give the final ACK.
 
-I don't think I understood you explanation why this has to be here,
-rather than using a proper PHY driver. Please try again.
 
-> +
-> +#ifdef CONFIG_PM
-> +/**
-> + * ufs_dw_pci_suspend - suspend power management function
-> + * @pdev: pointer to PCI device handle
-> + * @state: power state
-> + *
-> + * Returns 0 if successful
-> + * Returns non-zero otherwise
-> + */
-> +static int ufs_dw_pci_suspend(struct device *dev)
-> +{
-> +	return ufshcd_system_suspend(dev_get_drvdata(dev));
-> +}
+Thanks for the review. will wait for Rob and Jassi or post a new rev on monday.
 
-Please remove the #ifdef here.
-
-> +
-> +static const struct dev_pm_ops ufs_dw_pci_pm_ops = {
-> +	.suspend	= ufs_dw_pci_suspend,
-> +	.resume		= ufs_dw_pci_resume,
-> +	.runtime_suspend = ufs_dw_pci_runtime_suspend,
-> +	.runtime_resume  = ufs_dw_pci_runtime_resume,
-> +	.runtime_idle    = ufs_dw_pci_runtime_idle,
-> +};
-
-Instead, use the macros from include/linux/pm.h
-
-> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
-> +/**
-> + * ufshcd_dwc_setup_40bit_rmmi()
-> + * This function configures Synopsys MPHY specific atributes (40-bit RMMI)
-> + * @hba: Pointer to drivers structure
-> + *
-> + * Returns 0 on success or non-zero value on failure
-> + */
-> +static int ufshcd_dwc_setup_40bit_rmmi(struct ufs_hba *hba)
-> +{
-> +	int ret = 0;
-
-This looks like it should go into the external driver
-
-> +
-> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
-> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
-> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
-> +	if (ret) {
-> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
-> +		goto out;
-> +	}
-> +#else
-> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
-> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
-> +	if (ret) {
-> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
-> +		goto out;
-> +	}
-> +#endif
-
-In particular, the part above cannot possibly work: When a distro ships a kernel
-with CONFIG_SCSI_UFS_DWC_40BIT_RMMI set, it won't ever call the 
-ufshcd_dwc_setup_20bit_rmmi() function, regardless of what the hardware is.
-
-	Arnd
+---
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
