@@ -1,50 +1,39 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH 0/8] arm: Add Artpec-6 SoC
-Date: Wed, 10 Feb 2016 13:41:49 +0100
-Message-ID: <cover.1455107681.git.larper@axis.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
+Subject: [PATCH 7/8] arm: multi_v7_defconfig: add MACH_ARTPEC6
+Date: Wed, 10 Feb 2016 13:41:56 +0100
+Message-ID: <36d8a6a0236e08bc7286085018e2fa7a67691b39.1455107681.git.larper@axis.com>
+References: <cover.1455107681.git.larper@axis.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1455107681.git.larper-VrBV9hrLPhE@public.gmane.org>
+In-Reply-To: <cover.1455107681.git.larper-VrBV9hrLPhE@public.gmane.org>
+References: <cover.1455107681.git.larper-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Basic support for the Axis Artpec-6 ARM SoC. Timers, interrupts, UARTs and
-ethernet are wired up.
+Signed-off-by: Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+---
+ arch/arm/configs/multi_v7_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Lars Persson (8):
-  clk: add device tree binding for artpec-6 pll1 clock
-  clk: add artpec-6 pll1 clock driver
-  arm: add device-tree SoC bindings for Axis Artpec-6
-  arm: dts: add Artpec-6 soc dtsi file
-  arm: dts: add Artpec-6 development board dts
-  arm: initial machine port for artpec-6 SoC
-  arm: multi_v7_defconfig: add MACH_ARTPEC6
-  arm: mach-artpec: add entry to MAINTAINERS
-
- Documentation/devicetree/bindings/arm/axis.txt     |   8 +
- .../devicetree/bindings/clock/artpec6.txt          |  14 ++
- MAINTAINERS                                        |  10 +
- arch/arm/Kconfig                                   |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/artpec6-devboard.dts             |  57 +++++
- arch/arm/boot/dts/artpec6.dtsi                     | 238 +++++++++++++++++++++
- arch/arm/configs/multi_v7_defconfig                |   2 +
- arch/arm/mach-artpec/Kconfig                       |  22 ++
- arch/arm/mach-artpec/Makefile                      |   1 +
- arch/arm/mach-artpec/board-artpec6.c               |  66 ++++++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-artpec6.c                          |  70 ++++++
- 14 files changed, 494 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/axis.txt
- create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
- create mode 100644 arch/arm/boot/dts/artpec6-devboard.dts
- create mode 100644 arch/arm/boot/dts/artpec6.dtsi
- create mode 100644 arch/arm/mach-artpec/Kconfig
- create mode 100644 arch/arm/mach-artpec/Makefile
- create mode 100644 arch/arm/mach-artpec/board-artpec6.c
- create mode 100644 drivers/clk/clk-artpec6.c
-
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 8e8b2ac..bf3840e 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -16,6 +16,8 @@ CONFIG_ARCH_MULTI_V7=y
+ # CONFIG_ARCH_MULTI_V4 is not set
+ CONFIG_ARCH_VIRT=y
+ CONFIG_ARCH_ALPINE=y
++CONFIG_ARCH_ARTPEC=y
++CONFIG_MACH_ARTPEC6=y
+ CONFIG_ARCH_MVEBU=y
+ CONFIG_MACH_ARMADA_370=y
+ CONFIG_MACH_ARMADA_375=y
 -- 
 2.1.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
