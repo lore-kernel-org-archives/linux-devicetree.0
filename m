@@ -1,64 +1,42 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH v11 3/4] ARM64: add SBSA Generic Watchdog device node in
- amd-seattle-soc.dtsi
-Date: Thu, 11 Feb 2016 03:56:16 +0700
-Message-ID: <56BBA3F0.4010908@amd.com>
-References: <1455037240-16192-1-git-send-email-fu.wei@linaro.org>
- <1455037240-16192-4-git-send-email-fu.wei@linaro.org>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: Re: [PATCH V2 03/12] dtb: amd: Fix DMA ranges in device tree
+Date: Thu, 11 Feb 2016 04:13:50 +0700
+Message-ID: <56BBA80E.6090205@amd.com>
+References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <1454954357-8395-4-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <2845776.WTPtnQzg8d@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455037240-16192-4-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2845776.WTPtnQzg8d@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Fu Wei,
+Hi Arnd,
 
-On 2/10/16 00:00, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 2/9/16 21:57, Arnd Bergmann wrote:
+> On Monday 08 February 2016 11:59:08 Suravee Suthikulpanit wrote:
+>> From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>>
+>> Fix DMA ranges of smb0 and pcie0 nodes in AMD Seattle SOC.
+>>
+>> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>>
 >
-> This can be a example of adding SBSA Generic Watchdog device node
-> into some dts files for the Soc which contains SBSA Generic Watchdog.
+> This could use a changelog text to explain why it's broken and how the
+> fix works.
 >
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 9 +++++++++
->   1 file changed, 9 insertions(+)
+> 	Arnd
 >
-> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> index 2874d92..67eb636 100644
-> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> @@ -84,6 +84,15 @@
->   			clock-names = "uartclk", "apb_pclk";
->   		};
->
-> +		watchdog0: watchdog@e0bb0000 {
-> +			compatible = "arm,sbsa-gwdt";
-> +			reg = <0x0 0xe0bc0000 0 0x1000>,
-> +				<0x0 0xe0bb0000 0 0x1000>;
-> +			interrupts = <0 337 4>;
-> +			timeout-sec = <15>;
-> +			status = "disabled";
 
-Could you please remove this status line? I do not think it is necessary 
-for this one here anymore.
+So, I have not experience the breakage. However, IIUC, the GICv2m MSI 
+frame is also considered DMA-able. So, I think it should be included in 
+the dma-range specified here. Please let me know if my assumption is 
+incorrect. Otherwise, I will include more description in the commit log 
+in my next rev.
 
 Thanks,
 Suravee
-
-> +		};
-> +
->   		spi0: ssp@e1020000 {
->   			status = "disabled";
->   			compatible = "arm,pl022", "arm,primecell";
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
