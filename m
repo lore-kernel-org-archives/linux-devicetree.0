@@ -1,60 +1,78 @@
 From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
-Date: Wed, 10 Feb 2016 10:56:22 +0100
-Message-ID: <1455098187-9442-1-git-send-email-romain.izard.pro@gmail.com>
+Subject: [PATCH v4 5/5] ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
+Date: Wed, 10 Feb 2016 10:56:27 +0100
+Message-ID: <1455098187-9442-6-git-send-email-romain.izard.pro@gmail.com>
+References: <1455098187-9442-1-git-send-email-romain.izard.pro@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455098187-9442-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The NAND Flash controller for SAMA5D2 has small differences that make it
-impossible to use the existing driver for SAMA5D3. This patchset uses the
-device tree's compatible string to get those differences, and the code is
-slightly modified to handle them.
+Both nodes are required to access NAND Flash memory. Additional
+settings will be necessary at the board level to use it.
 
-Based on linux-mtd-next, commit ed4eeba7338bb123090f1c8b208f64d8184a896d
+Tested-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v4: collect Tested-by and Reviewed-by tags
+v3: no change
+v2: fix device address, hexadecimal with minuscules
 
-See revision 2 to apply on the Atmel Linux 4.1 branch.
+ arch/arm/boot/dts/sama5d2.dtsi | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there is no
-existing SAMA5D2 board with NAND Flash memory (yet).
-
-V4:
-- Collect Tested-by and Reviewed-By tags
-
-V3:
-- Rebase on linux-mtd-next
-- Skip patches already in the tree
-
-V2:
-- Rebase on v4.4
-- Use of_device_get_match_data
-- Split message cleanup
-- Reword a small part of the atmel_nand device tree binding
-- Use 'caps' for all private data structures
-
-V1:
-- Split the support of 32-bit ECC on SAMA5D2 in two commits
-- Fix the missing ECC strength configuration code
-
-RFC:
-- First version
-
-Romain Izard (5):
-  mtd: atmel_nand: Support variable RB_EDGE interrupts
-  dt-bindings: atmel_nand: Reword the documentation
-  mtd: atmel_nand: Support PMECC on SAMA5D2
-  mtd: atmel_nand: Support 32-bit ECC strength
-  ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
-
- .../devicetree/bindings/mtd/atmel-nand.txt         | 31 +++++----
- arch/arm/boot/dts/sama5d2.dtsi                     | 38 +++++++++++
- drivers/mtd/nand/atmel_nand.c                      | 77 ++++++++++++++++++----
- drivers/mtd/nand/atmel_nand_ecc.h                  |  9 ++-
- drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
- 5 files changed, 131 insertions(+), 27 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 3f750f6170f2..484bd8ea6602 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -263,6 +263,44 @@
+ 			cache-level = <2>;
+ 		};
+ 
++		nand0: nand@80000000 {
++			compatible = "atmel,sama5d2-nand";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			reg = < /* EBI CS3 */
++				0x80000000 0x08000000
++				/* SMC PMECC regs */
++				0xf8014070 0x00000490
++				/* SMC PMECC Error Location regs */
++				0xf8014500 0x00000200
++				/* ROM Galois tables */
++				0x00040000 0x00018000
++				>;
++			interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
++			atmel,nand-addr-offset = <21>;
++			atmel,nand-cmd-offset = <22>;
++			atmel,nand-has-dma;
++			atmel,has-pmecc;
++			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
++			status = "disabled";
++
++			nfc@c0000000 {
++				compatible = "atmel,sama5d4-nfc";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = < /* NFC Command Registers */
++					0xc0000000 0x08000000
++					/* NFC HSMC regs */
++					0xf8014000 0x00000070
++					/* NFC SRAM banks */
++					0x00100000 0x00100000
++					>;
++				clocks = <&hsmc_clk>;
++				atmel,write-by-sram;
++			};
++		};
++
+ 		sdmmc0: sdio-host@a0000000 {
+ 			compatible = "atmel,sama5d2-sdhci";
+ 			reg = <0xa0000000 0x300>;
 -- 
 2.5.0
 
