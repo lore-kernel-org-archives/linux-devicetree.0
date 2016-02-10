@@ -1,40 +1,43 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH V3 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge
- driver to work on both  Zynq and Microblaze
-Date: Wed, 10 Feb 2016 05:55:51 +0000
-Message-ID: <8520D5D51A55D047800579B09414719825881780@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1455014518-8708-1-git-send-email-bharatku@xilinx.com>
- <1455014518-8708-4-git-send-email-bharatku@xilinx.com>
- <20160209161134.GA24244@NP-P-BURTON>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160209161134.GA24244@NP-P-BURTON>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] More updates for NS2 DT
+Date: Wed, 10 Feb 2016 11:40:45 +0530
+Message-ID: <1455084651-29325-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBUdWUsIEZlYiAwOSwgMjAxNiBhdCAwNDoxMTo1NlBNICswNTMwLCBCaGFyYXQgS3VtYXIg
-R29nYWRhIHdyb3RlOg0KPiA+IE1vZGlmeWluZyBYaWxpbnggQVhJIFBDSWUgSG9zdCBCcmlkZ2Ug
-U29mdCBJUCBkcml2ZXIgdG8gd29yayBvbiBib3RoDQo+ID4gWnlucSBhbmQgTWljcm9ibGF6ZSBB
-cmNoaXRlY3R1cmVzLg0KPiA+IFdpdGggdGhlc2UgbW9kaWZpY2F0aW9ucyBkcml2ZXJzL3BjaS9o
-b3N0L3BjaWUteGlsaW54LmMsIHdpbGwgd29yayBvbg0KPiA+IGJvdGggWnlucSBhbmQgTWljcm9i
-bGF6ZSBBcmNoaXRlY3R1cmVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmhhcmF0IEt1bWFy
-IEdvZ2FkYSA8YmhhcmF0a3VAeGlsaW54LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYXZpIEtp
-cmFuIEd1bW1hbHVyaSA8cmd1bW1hbEB4aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXM6
-DQo+ID4gUmVtb3ZlZCB1bm5lY2Nlc3NhcnkgYXJjaGl0ZWN0dXJlIGRlcGVuZGVudCBudW1iZXIg
-b2YgTVNJJ3MuDQo+ID4gQWRkZWQgI2lmZGVmIHRvIHBjaV9maXh1cF9pcnFzIHdoaWNoIGlzIEFS
-TSBzcGVjaWZpYyBBUEkuDQo+IA0KPiBIaSBCaGFyYXQsDQo+IA0KPiBXaHkgZG8geW91IHNheSBw
-Y2lfZml4dXBfaXJxcyBpcyBBUk0tc3BlY2lmaWM/IEl0J3MgZGVjbGFyZWQgaW4NCj4gaW5jbHVk
-ZS9saW51eC9wY2kuaCwgZGVmaW5lZCBpbiBkcml2ZXJzL3BjaS9zZXR1cC1pcnEuYyAmIHVzZWQg
-YnkgbXVsdGlwbGUNCj4gYXJjaGl0ZWN0dXJlcyAoYWxwaGEsIGFybSwgbTY4aywgbWlwcywgc2gs
-IHNwYXJjLCB0aWxlLA0KPiB1bmljb3JlMzIgZnJvbSBhIHF1aWNrIGdyZXApLg0KPiANCj4gV2ls
-bCB5b3Ugbm90IGJyZWFrIElOVFgtc3R5bGUgaW50ZXJydXB0cyBieSByZW1vdmluZyB0aGlzPw0K
-PiANCkkgbWVhbnQgdG8gc2F5IEFSTSBzcGVjaWZpYyB3LnIudCBNaWNyb2JsYXplIGFyY2hpdGVj
-dHVyZSwgd2hpY2ggaXMgd2hhdCB0aGlzIHBhdGNoIHNlcmllcyBhcmUgZm9yLiBUaGlzIGhhcyBi
-ZWVuIGFscmVhZHkgZGlzY3Vzc2VkIGluIG15IHByZXZpb3VzIHBhdGNoIGJ5ICBBcm5kIEJlcmdt
-YW5uIGFuZCBMb3JlbnpvIFBpZXJhbGlzaSAuIChodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNi8x
-LzEyLzcwNykNCg0KQmhhcmF0DQo=
+This patchset primarily adds more DT nodes for NS2 SVK. It also does
+minor update to arch/arm64/Kconfig.platforms and adds missing DT
+bindings document for sp805 driver.
+
+The patchset is based on v4.5-rc3 tag and is available in ns2_dt2_v1
+branch of https://github.com/Broadcom/arm64-linux.git
+
+All patches have been tested on Broadcom NS2 SVK.
+
+Anup Patel (5):
+  arm64: Select COMMON_CLK_IPROC, PINCTRL and GPIOLIB for iProc SoCs
+  arm64: dts: Add SDHCI DT node for NS2
+  arm64: dts: Add ARM SP804 timer DT nodes for NS2
+  dt-bindings: watchdog: Add ARM SP805 DT bindings
+  arm64: dts: Add ARM SP805 watchdog DT node for NS2
+
+Ray Jui (1):
+  arm64: dts: Add PCIe0 and PCIe4 DT nodes for NS2
+
+ .../devicetree/bindings/watchdog/arm,sp805.txt     |  17 +++
+ arch/arm64/Kconfig.platforms                       |   3 +
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              | 140 +++++++++++++++++++++
+ 4 files changed, 172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
