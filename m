@@ -1,47 +1,38 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Wed, 10 Feb 2016 15:29:38 +0100
-Message-ID: <56BB4952.4030500@barix.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
- <56B8D676.1050809@cogentembedded.com> <56B9A3C1.4000600@barix.com>
- <56B9C46B.30708@cogentembedded.com> <56BB1E5F.4050100@barix.com>
- <56BB4418.4090403@cogentembedded.com> <56BB4553.30707@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/8] clk: add device tree binding for artpec-6 pll1 clock
+Date: Wed, 10 Feb 2016 15:36:03 +0100
+Message-ID: <12746231.crYxCXlbXY@wuerfel>
+References: <cover.1455107681.git.larper@axis.com> <c092f501a595032f9b76f18fc4bf093503a181c8.1455107681.git.larper@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56BB4553.30707-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c092f501a595032f9b76f18fc4bf093503a181c8.1455107681.git.larper@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Lars Persson <lars.persson@axis.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Lars Persson <larper@axis.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 10.02.2016 15:12, Sergei Shtylyov wrote:
-> of the patch based
->>> on Felipe's "next" branch and incorporating all you guys' feedback. 
->>> Also the
->>> binding was submitted separately.
->>
->>     I'll go find it, haven't seen yet.
->
->    I just haven't received it. Please make sure to CC at least 
-> linux-usb next time you post it.
->
+On Wednesday 10 February 2016 13:41:50 Lars Persson wrote:
+> Signed-off-by: Lars Persson <larper@axis.com>
+> ---
 
-I've just followed the instructions in 
-Documentation/devicetree/bindings/submitting-patches.txt as you hinted 
-me last time.
-It doesn't say the subsystem mailing list should be CCed as well. 
-Neither does the get_maintainer.pl print the linux-usb list.
+Always write a changelog comment.
 
-I'm sorry! :-7
-But sure, next time I'll copy the list as well.
+> +* Clock bindings for Axis ARTPEC-6 chip
+> +
+> +Required properties:
+> +- compatible: Should be "axis,artpec6-pll1-clock"
+> +- #clock-cells: Should be <1>
 
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What is the clock cell used for?
+
+> +Examples:
+> +
+> +pll1_clk: pll1_clk {
+> +	#clock-cells = <1>;
+> +	compatible = "axis,artpec6-pll1-clock";
+> +	clocks = <&ext_clk>;
+> +	status = "okay";
+> +};
+> 
