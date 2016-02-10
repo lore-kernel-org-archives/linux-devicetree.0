@@ -1,48 +1,53 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 1/2] clk: lpc32xx: add clock frequency output configuration
-Date: Wed, 10 Feb 2016 02:00:09 +0200
-Message-ID: <56BA7D89.7060505@mleia.com>
-References: <1455043670-19025-1-git-send-email-slemieux.tyco@gmail.com>	 <20160209185723.GC31947@codeaurora.org> <1455048430.19294.3.camel@localhost>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: add lpc32xx clock frequency output
+Date: Wed, 10 Feb 2016 02:06:01 +0200
+Message-ID: <56BA7EE9.8040703@mleia.com>
+References: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455048430.19294.3.camel@localhost>
+In-Reply-To: <1455043670-19025-2-git-send-email-slemieux.tyco@gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Sylvain Lemieux <slemieux.tyco@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: robh+dt@kernel.org, mturquette@baylibre.com, stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+To: slemieux.tyco@gmail.com, robh+dt@kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com
+Cc: stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Sylvain,
 
-On 09.02.2016 22:07, Sylvain Lemieux wrote:
-> On Tue, 2016-02-09 at 10:57 -0800, Stephen Boyd wrote:
->> On 02/09, slemieux.tyco@gmail.com wrote:
->>> From: Sylvain Lemieux <slemieux@tycoint.com>
->>>
->>> This patch add the support to setup the clock frequency output
->>> using an optional parameter from the device tree.
->>>
->>> The previous kernel version did not change the clock frequency
->>> output setup by the kickstart and/or bootloader;
->>> this version always setup the clock frequency output to 208MHz.
-
-ok, it makes perfect sense, and here I see two options, one is to recover
-the previous behaviour by removing clk_set_rate() of LPC32XX_CLK_HCLK_PLL
-completely, another one (and more preferable) is to add this clock
-to a list in include/dt-bindings/clock/lpc32xx-clock.h and set its
-rate in a board specific DTB file.
-
->>> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
->>> ---
->>
->> We have assigned-clock-rates, can you use that instead?
->>
-> OK, I will submit a new version of the patch tomorrow.
+On 09.02.2016 20:47, slemieux.tyco@gmail.com wrote:
+> From: Sylvain Lemieux <slemieux@tycoint.com>
 > 
+> This patch add an optional parameter to setup the
+> xtal clock frequency output.
+> 
+> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+> ---
+>  Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> index 20cbca3..ce51759 100644
+> --- a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> @@ -10,6 +10,9 @@ Required properties:
+>  - clock-names: list of external oscillator clock names, must contain
+>    "xtal_32k" and may have optional "xtal"
+>  
+> +Optional properties:
+> +- xtal,clock-output-frequency: define the "xtal" clock frequency output in Hz
+> +
 
-By the way if you have a cover letter or 2/2 patch in the series,
-please send it to linux-clk as well.
+this one looks wrong in sense that from patch 1/2 the property configures
+a PLL output clock rate, which is not an oscillator (xtal) clock rate.
+
+I believe switching to "assigned-clock-rates" should make this change
+obsolete.
+
+>  Examples:
+>  
+>  	/* System Control Block */
+> 
 
 --
 With best wishes,
