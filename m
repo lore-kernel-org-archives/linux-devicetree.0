@@ -1,71 +1,110 @@
-From: Rob Herring <rob.herring@linaro.org>
-Subject: Re: [PATCH v4] clk: sunxi: Refactor A31 PLL6 so that it can be reused
-Date: Wed, 10 Feb 2016 08:02:45 -0600
-Message-ID: <CABGGisxORFOxLVQiTZ=gEr6j2JnVcjQxTLJFPa7uG93g46CKwg@mail.gmail.com>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com> <20160210125936.GD31506@lukather>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 10/14] Documentation: DT: bindings: Add power domain
+ info for NVIDIA PMC
+Date: Wed, 10 Feb 2016 08:06:38 -0600
+Message-ID: <CAL_JsqKAFEpo=W=2w=7+QrmMR8uJ5SsXpkuEj=E1axOraCQ9ZQ@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-11-git-send-email-jonathanh@nvidia.com> <20160129160625.GA21918@rob-hp-laptop>
+ <56B1DE40.7080403@nvidia.com> <CAL_JsqLcoKW2znNNvM=sYLmZ6O6ZWqn7+aXspkXoONw6-O1ygg@mail.gmail.com>
+ <56BB1787.4050801@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160210125936.GD31506@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BB1787.4050801-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 6:59 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi,
+On Wed, Feb 10, 2016 at 4:57 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 >
-> On Fri, Feb 05, 2016 at 05:59:23PM +0000, Andre Przywara wrote:
->> Hi Maxime,
+> On 03/02/16 15:48, Rob Herring wrote:
+>> On Wed, Feb 3, 2016 at 5:02 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>
+>>> On 29/01/16 16:06, Rob Herring wrote:
+>>>> On Thu, Jan 28, 2016 at 04:33:48PM +0000, Jon Hunter wrote:
+>>>>> Add power-domain binding documentation for the NVIDIA PMC driver in
+>>>>> order to support generic power-domains.
+>>>>>
+>>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>> ---
+>>>>>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 55 ++++++++++++++++++++++
+>>>>>  1 file changed, 55 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>>> index 53aa5496c5cf..3c77373aa826 100644
+>>>>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>>> @@ -1,5 +1,7 @@
+>>>>>  NVIDIA Tegra Power Management Controller (PMC)
+>>>>>
+>>>>> +== Power Management Controller Node ==
+>>>>> +
+>>>>>  The PMC block interacts with an external Power Management Unit. The PMC
+>>>>>  mostly controls the entry and exit of the system from different sleep
+>>>>>  modes. It provides power-gating controllers for SoC and CPU power-islands.
+>>>>> @@ -70,6 +72,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
+>>>>>                       Defaults to 0. Valid values are described in section 12.5.2
+>>>>>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
+>>>>>
+>>>>> +Optional nodes:
+>>>>> +- powergates : This node contains a hierarchy of power domain nodes, which
+>>>>> +           should match the powergates on the Tegra SoC.
+>>>>> +
+>>>>>  Example:
+>>>>>
+>>>>>  / SoC dts including file
+>>>>> @@ -115,3 +121,52 @@ pmc@7000f400 {
+>>>>>      };
+>>>>>      ...
+>>>>>  };
+>>>>> +
+>>>>> +
+>>>>> +== PM Domain Nodes ==
+>>>>> +
+>>>>> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
+>>>>> +that can be power-gated by the PMC and should be named appropriately.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +  - clocks: Must contain an entry for each clock required by the PMC for
+>>>>> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
+>>>>> +  - resets: Must contain an entry for each reset required by the PMC for
+>>>>> +    controlling a power-gate. See ../reset/reset.txt for details.
+>>>>> +  - nvidia,powergate: Integer cell that contains an identifier for the PMC
+>>>>> +    power-gate that is associated with the power-domain. Please refer to
+>>>>> +    the Tegra TRM for more details.
+>>>>
+>>>> Why not make this value be the power-domain cell for consumers and the
+>>>> pmc be the phandle.
+>>>
+>>> Is there anything wrong with using a label for the consumers? Seems
+>>> simpler, if you can just say ...
+>>>
+>>>         adma: adma@702e2000 {
+>>>                 ...
+>>>                 power-domains = <&pd_audio>;
+>>>                 ...
+>>>         };
 >>
->> just found this while looking at your current git branch, so sorry for
->> the late reply.
->>
->> CC:ing DT people, since you touch both existing DTs(!) and the binding doc.
-
-[...]
-
->> So are you really breaking all those systems by changing the DT and the
->> driver in an incompatible way?
+>> Only that is a bit unusual. It would only really matter if we had some
+>> common parsing that we wanted to share. I'd look at other examples and
+>> try to align. If there's no clear pattern, then it is fine.
 >
-> Yes.
+> So I have been having a look at this and it appears to be mixed across
+> the various SoCs. It seems that those SoCs that define the generic PM
+> domains statically in the machine/soc code use a phandle plus a argument
+> to identify the power domain. However, for those that describe the
+> power-domain in the DT (listing clocks, resets, etc), they just use a
+> phandle to the power-domain itself (like I have above). It looks like if
+> you are describing the power domain in DT, then it is much simplier to
+> do this.
 >
->> Please correct me if this assessment is wrong, but to me it looks like
->> any user out there is either stuck with 4.5 at best _or_ will only be
->> able to run 4.6 and later (depending on which version of the DT she is
->> using)? And no, switching DTs along with the kernel is _not_ an option.
->
-> It is. And it is one that every other ARM platform chose. And so did
-> every distribution.
+> Given that I wish to keep the description of the power-domain in DT, it
+> is much easier to stick with the same conventions that the other SoCs
+> are using.
 
-I do leave it to platform maintainers judgement (perhaps that should
-be reconsidered), but it should still be case by case basis not an all
-out disregard for the ABI. If you decide to ignore the ABI, then there
-is no decision for the distros or other users.
+Okay.
 
->> That is not how I understand DT.
->
-> I'm sorry for that. This has never been something we said was
-> happening.
->
->> Also this totally ignores any other DT user (U-Boot, FreeBSD, you
->> name it).
->
-> Which all have their own DT copies, with their own bindings, that we
-> (ie Linux) never agreed on.
-
-That is not really true. There are some differences ATM, but they are
-largely derivatives of the kernel copy and the goal is to align them.
-If we don't maintain an ABI, that will never happen.
-
-> By further extending that argument, you're currently looking at the DT
-> from Allwinner, do you want to support theirs as well?
-
-Vendor ones we treat like vendor kernels. However, if the differences
-come down to bikeshedding, then we will take vendor bindings to
-maintain the ABI. That's generally only when the compatible string
-differs though.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Rob
