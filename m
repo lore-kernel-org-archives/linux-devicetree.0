@@ -1,198 +1,129 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
-Date: Wed, 10 Feb 2016 18:01:24 +0000
-Message-ID: <56BB7AF4.8040708@nvidia.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
- <1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
- <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Wed, 10 Feb 2016 10:02:23 -0800
+Message-ID: <56BB7B2F.60307@caviumnetworks.com>
+References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Matt Redfearn <matt.redfearn@imgtec.com>
+Cc: linux-mmc@vger.kernel.org, david.daney@cavium.com, ulf.hansson@linaro.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
+On 02/10/2016 09:36 AM, Matt Redfearn wrote:
+> From: Aleksey Makarov<aleksey.makarov@caviumnetworks.com>
+>
+> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+> devices.  Device parameters are configured from device tree data.
+>
+> eMMC, MMC and SD devices are supported.
+>
+> Tested-by: Aaro Koskinen<aaro.koskinen@iki.fi>
+> Signed-off-by: Chandrakala Chavva<cchavva@caviumnetworks.com>
+> Signed-off-by: David Daney<david.daney@cavium.com>
+> Signed-off-by: Aleksey Makarov<aleksey.makarov@auriga.com>
+> Signed-off-by: Leonid Rosenboim<lrosenboim@caviumnetworks.com>
+> Signed-off-by: Peter Swain<pswain@cavium.com>
+> Signed-off-by: Aaron Williams<aaron.williams@cavium.com>
+> Signed-off-by: Matt Redfearn<matt.redfearn@imgtec.com>
+> ---
+> v5:
+> Incoroprate comments from review
+> http://patchwork.linux-mips.org/patch/9558/
+> - Use standard <bus-width> property instead of <cavium,bus-max-width>.
+> - Use standard <max-frequency> property instead of <spi-max-frequency>.
+> - Add octeon_mmc_of_parse_legacy function to deal with the above
+>    properties, since many devices have shipped with those properties
+>    embedded in firmware.
+> - Allow the <vmmc-supply> binding in addition to the legacy
+>    <gpios-power>.
+> - Remove the secondary driver for each slot.
+> - Use core gpio cd/wp handling
+>
+[...]
 
-On 04/02/16 15:44, Ulf Hansson wrote:
-> On 28 January 2016 at 17:33, Jon Hunter <jonathanh@nvidia.com> wrote:
->> Adds generic PM support to the PMC driver where the PM domains are
->> populated from device-tree and the PM domain consumer devices are
->> bound to their relevant PM domains via device-tree as well.
->>
->> Update the tegra_powergate_sequence_power_up() API so that internally
->> it calls the same tegra_powergate_xxx functions that are used by the
->> tegra generic power domain code for consistency.
->>
->> This is based upon work by Thierry Reding <treding@nvidia.com>
->> and Vince Hsu <vinceh@nvidia.com>.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/soc/tegra/pmc.c                     | 470 ++++++++++++++++++++++++++--
->>  include/dt-bindings/power/tegra-powergate.h |  36 +++
->>  include/soc/tegra/pmc.h                     |  39 +--
-> 
-> I suggest you split the header changes into a separate patch.
-> 
-> Moreover, these new DT definitions should be documented in the patch
-> describing the new powergate DT bindings. At least a simple list
-> providing the available options.
+> +static int octeon_mmc_of_copy_legacy_u32(struct device_node *node,
+> +					  const char *legacy_name,
+> +					  const char *new_name)
+> +{
+> +	u32 value;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(node, legacy_name, &value);
+> +	if (!ret) {
+> +		/* Found legacy - set generic property */
+> +		struct property *new_p;
+> +		u32 *new_v;
+> +
+> +		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
+> +			node->full_name, legacy_name);
+> +
 
-Ok.
+I don't like this warning message.
 
-> [...]
-> 
->>
->> +static void tegra_powergate_disable_clocks(struct tegra_powergate *pg)
->> +{
->> +       unsigned int i;
->> +
->> +       for (i = 0; i < pg->num_clks; i++)
->> +               clk_disable_unprepare(pg->clks[i]);
->> +}
->> +
->> +static int tegra_powergate_enable_clocks(struct tegra_powergate *pg)
->> +{
->> +       unsigned int i;
->> +       int err;
->> +
->> +       for (i = 0; i < pg->num_clks; i++) {
->> +               err = clk_prepare_enable(pg->clks[i]);
->> +               if (err)
->> +                       goto out;
->> +       }
->> +
->> +       return 0;
->> +
->> +out:
->> +       while (i--)
->> +               clk_disable_unprepare(pg->clks[i]);
->> +
->> +       return err;
->> +}
-> 
-> I have seen similar code around in other PM domains, dealing with
-> enabling/disabling a *list* of clocks.
-> Perhaps we should invent a new clock API that helps with this to
-> prevents code duplication!?
+The vast majority of people that see it will not be able to change their 
+firmware.  So it will be forever cluttering up their boot logs.
 
-Yes, I have been thinking about that as well. I will have a look at that.
+We are not ever planning on removing support for legacy firmware 
+properties, so alarming people is really all this message does.
 
-> [...]
-> 
->>  /**
->>   * tegra_powergate_power_on() - power on partition
->>   * @id: partition ID
->> @@ -319,35 +512,20 @@ EXPORT_SYMBOL(tegra_powergate_remove_clamping);
->>  int tegra_powergate_sequence_power_up(unsigned int id, struct clk *clk,
->>                                       struct reset_control *rst)
-> 
-> There seems to be two viable ways for a driver to control tegra powergates.
-> 
-> 1)
-> $Subject patch enables the use of runtime PM.
-> 
-> 2)
-> The current tegra_powergate_sequence_power_up() and
-> tegra_powergate_power_off() API.
-> 
-> It seems fragile to allow both options, but perhaps your are
-> protecting this with some lock to prevent concurrent accesses?
+If you insist on a message then make it something like pr_info("This is 
+working properly, but please consider using modern device tree 
+properties...")
 
-There is a lock protecting accesses to the PMC registers which
-ultimately control the power domain. However, may be it would be better
-to ensure that any power-domain registered with genpd cannot be
-controlled by the legacy APIs. I have added a bitmap to mark valid
-power-domains to ensure that only valid power domains can be controlled
-by these legacy APIs. I could mark the power-domain invalid after
-registering with genpd to ensure that it cannot be accessed by the
-legacy APIs.
-
-> Also, I assume you need the two options in a transition phase, before
-> you have deployed runtime PM for these drivers?
-
-Right and some of the legacy APIs are entrenched in some drivers. So to
-keep the patch set manageable it seems best to get some support in place
-then start migrating the drivers.
-
-> [...]
-> 
->> +static int tegra_powergate_of_get_clks(struct device *dev,
->> +                                      struct tegra_powergate *pg)
->> +{
->> +       struct clk *clk;
->> +       unsigned int i;
->> +       int err;
->> +
->> +       pg->num_clks = of_count_phandle_with_args(pg->of_node, "clocks",
->> +                                                 "#clock-cells");
->> +       if (pg->num_clks == 0)
->> +               return -ENODEV;
->> +
->> +       pg->clks = devm_kcalloc(dev, pg->num_clks, sizeof(clk), GFP_KERNEL);
->> +       if (!pg->clks)
->> +               return -ENOMEM;
->> +
->> +       for (i = 0; i < pg->num_clks; i++) {
->> +               pg->clks[i] = of_clk_get(pg->of_node, i);
->> +               if (IS_ERR(pg->clks[i])) {
->> +                       err = PTR_ERR(pg->clks[i]);
->> +                       goto err;
->> +               }
->> +       }
->> +
->> +       return 0;
->> +
->> +err:
->> +       while (i--)
->> +               clk_put(pg->clks[i]);
->> +
->> +       pg->num_clks = 0;
->> +
->> +       return err;
->> +}
-> 
-> Fetching clocks like above function does, seems to be a quite common case.
-> 
-> As I suggested to add an enable/disable API for a clock list, the
-> similar can be done for creating the clock list.
-> 
-> Just an idea...
-
-Ok.
-
-> [...]
-> 
->> +
->> +static void tegra_powergate_remove(struct tegra_pmc *pmc)
->> +{
->> +       struct tegra_powergate *pg, *n;
->> +
->> +       list_for_each_entry_safe(pg, n, &pmc->powergates_list, node) {
-> 
-> The tegra powergate driver will hold a list of nvidia powergates
-> domains, and the generic PM domain will hold a list of all generic PM
-> domains.
-> 
-> Perhaps there's a way to allow the generic PM domain to control this
-> by itself. If we for example used the struct device corresponding to
-> the powergate driver, genpd could use it to distinguish between
-> various instances of genpd structs..!? Maybe it would simplify the way
-> to deal with removing domains?
-
-Yes, that would be ideal. However, would have require changing
-genpd_init()? I am not sure how genpd would be able to access the device
-struct for the powergate driver because we don't provide this via any
-API I am aware of? And I am guessing that you don't wish to expose the
-gpd_list to the world either.
-
-If there is an easy way, I am open to it, but looking at it today, I am
-not sure I see a simple way in which we could add a new API to do this.
-However, may be I am missing something!
-
-Cheers
-Jon
-
+> +		new_p = kzalloc(sizeof(*new_p), GFP_KERNEL);
+> +		new_v = kzalloc(sizeof(u32), GFP_KERNEL);
+> +		if (!new_p || !new_v)
+> +			return -ENOMEM;
+> +
+> +		*new_v = value;
+> +		new_p->name = kstrdup(new_name, GFP_KERNEL);
+> +		new_p->length = sizeof(u32);
+> +		new_p->value = new_v;
+> +
+> +		of_update_property(node, new_p);
+> +	}
+> +	return 0;
+> +}
+> +
+> +/*
+> + * This function parses the legacy device tree that may be found in devices
+> + * shipped before the driver was upstreamed. Future devices should not require
+> + * it as standard bindings should be used
+> + */
+> +static int octeon_mmc_of_parse_legacy(struct device *dev,
+> +				      struct device_node *node,
+> +				      struct octeon_mmc_slot *slot)
+> +{
+> +	int ret;
+> +
+> +	ret = octeon_mmc_of_copy_legacy_u32(node, "cavium,bus-max-width",
+> +					    "bus-width");
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = octeon_mmc_of_copy_legacy_u32(node, "spi-max-frequency",
+> +					    "max-frequency");
+> +	if (ret)
+> +		return ret;
+> +
+> +	slot->pwr_gpiod = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+> +	if (!IS_ERR(slot->pwr_gpiod)) {
+> +		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
+> +			node->full_name, "gpios-power");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
