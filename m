@@ -1,48 +1,29 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
-Date: Wed, 10 Feb 2016 17:12:35 +0300
-Message-ID: <56BB4553.30707@cogentembedded.com>
-References: <1454693676-20211-1-git-send-email-petr@barix.com>
- <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
- <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
- <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
- <56B8D676.1050809@cogentembedded.com> <56B9A3C1.4000600@barix.com>
- <56B9C46B.30708@cogentembedded.com> <56BB1E5F.4050100@barix.com>
- <56BB4418.4090403@cogentembedded.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] gpio: Add driver for SPI serializers
+Date: Wed, 10 Feb 2016 15:14:35 +0100
+Message-ID: <CACRpkda26RVBzeOYv=pePpU3z=2Tb7jBO4vdpvd6DxegTQpqcg@mail.gmail.com>
+References: <1453739851-31839-1-git-send-email-afd@ti.com>
+	<1453739851-31839-3-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56BB4418.4090403-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453739851-31839-3-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/10/2016 5:07 PM, Sergei Shtylyov wrote:
+On Mon, Jan 25, 2016 at 5:37 PM, Andrew F. Davis <afd@ti.com> wrote:
 
-[...]
-
->> Thanks, Sergei. Yesterday I submitted  the (hopefully) final version version
+> Add generic parallel-in/serial-out shift register GPIO driver.
 >
->     Hope dies last. :-)
->     There's too much cut&pasted code in your patch still...
-
->> of the patch based
->> on Felipe's "next" branch and incorporating all you guys' feedback. Also the
->> binding was submitted separately.
+> This includes SPI compatible devices like SN74165 serial-out shift
+> registers and the SN65HVS88x series of industrial serializers that can
+> be read over the SPI bus and used for GPI (General Purpose Input).
 >
->     I'll go find it, haven't seen yet.
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-    I just haven't received it. Please make sure to CC at least linux-usb next 
-time you post it.
+Patch applied, good work.
 
->> Thanks
->> Petr
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
