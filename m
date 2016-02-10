@@ -1,85 +1,73 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 1/4] dt-bindings: mfd: Add bindings for the MediaTek
- MT6323 PMIC
-Date: Wed, 10 Feb 2016 17:01:27 +0000
-Message-ID: <20160210170127.GW3782@x1>
-References: <1453895258-44369-1-git-send-email-blogic@openwrt.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
+Date: Wed, 10 Feb 2016 18:14:55 +0100
+Message-ID: <20160210171455.GB17671@verge.net.au>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+ <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
+ <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1453895258-44369-1-git-send-email-blogic@openwrt.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <blogic@openwrt.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If you're submitting a set of patches like this, you really ought to
-be providing a cover-letter.
+On Wed, Feb 10, 2016 at 12:41:30AM +0000, Kuninori Morimoto wrote:
+> 
+> Hi Sergei
+> 
+> Sorry for my un-ordered response
+> 
+> > Define the generic R8A7794 part of  the sound device node.
+> > This sound device  is a complex one and comprises the Audio Clock Generator
+> > (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+> > (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+> > It is up  to the board file to enable the device.
+> > 
+> > This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+> > 
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> (snip)
+> > +		rcar_sound,src {
+> > +			src1: src@1 {
+> > +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +			src2: src@2 {
+> > +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +			src3: src@3 {
+> > +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +			src4: src@4 {
+> > +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +			src5: src@5 {
+> > +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +			src6: src@6 {
+> > +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+> > +				dma-names = "rx", "tx";
+> > +			};
+> > +		};
+> 
+> I think this can't work correctly, because driver is assuming
+> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
+> Can you adds dummy src0 with some comments ? or fix src.c driver ?
 
-Also, when submitting patches, please do so in the style expected by
-the subsystem.  I will fix these once up for now, but please bear that
-in mind in the future.
-
-`git log --oneline -- <subsystem>` works well for this.
-
-> Signed-off-by: John Crispin <blogic@openwrt.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Docum=
-entation/devicetree/bindings/mfd/mt6397.txt
-> index 15043e6..949c85f 100644
-> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -1,6 +1,6 @@
-> -MediaTek MT6397 Multifunction Device Driver
-> +MediaTek MT6397/MT6323 Multifunction Device Driver
-> =20
-> -MT6397 is a multifunction device with the following sub modules:
-> +MT6397/MT6323 is a multifunction device with the following sub modul=
-es:
->  - Regulator
->  - RTC
->  - Audio codec
-> @@ -8,14 +8,14 @@ MT6397 is a multifunction device with the following=
- sub modules:
->  - Clock
-> =20
->  It is interfaced to host controller using SPI interface by a proprie=
-tary hardware
-> -called PMIC wrapper or pwrap. MT6397 MFD is a child device of pwrap.
-> +called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of=
- pwrap.
->  See the following for pwarp node definitions:
->  Documentation/devicetree/bindings/soc/pwrap.txt
-> =20
->  This document describes the binding for MFD device and its sub modul=
-e.
-> =20
->  Required properties:
-> -compatible: "mediatek,mt6397"
-> +compatible: "mediatek,mt6397" or "mediatek,mt6323"
-> =20
->  Optional subnodes:
-> =20
-> @@ -26,6 +26,8 @@ Optional subnodes:
->  	Required properties:
->  		- compatible: "mediatek,mt6397-regulator"
->  	see Documentation/devicetree/bindings/regulator/mt6397-regulator.tx=
-t
-> +		- compatible: "mediatek,mt6323-regulator"
-> +	see Documentation/devicetree/bindings/regulator/mt6323-regulator.tx=
-t
->  - codec
->  	Required properties:
->  		- compatible: "mediatek,mt6397-codec"
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I would prefer the driver to be fixed (I had a similar patchset locally
+and I found it doesn't work). The reason is that DT should describe
+the hardware rather than the current state of the software.
