@@ -1,41 +1,51 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v4 0/3] ata: Fixes related to edge trigger latch for the ahci_xgene_driver.
-Date: Wed, 10 Feb 2016 11:34:33 -0800
-Message-ID: <CAOHikRAW8y52u8sC+FFO9hpbCTUx=qe+O=GYUOridBj7x322Bw@mail.gmail.com>
-References: <1454738124-9351-1-git-send-email-stripathi@apm.com>
-	<20160210162547.GJ3741@mtj.duckdns.org>
-	<CAOHikRBNL2gLJwhB2SEKJXZtOpmqwBET4P9RgRrPdhyH4bn0zA@mail.gmail.com>
-	<20160210190507.GS3741@mtj.duckdns.org>
-	<CAOHikRDcChOdP9v2_0a515XAXeG3kZOaLe==mymTJTpmog-6Ow@mail.gmail.com>
-	<CAOS58YO+OOopQjHDjcO=evV=ujcwGQ66G=+TgrUx=V1FAujqxQ@mail.gmail.com>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/10] irqchip: lpc32xx: add LPC32xx irqchip driver
+Date: Wed, 10 Feb 2016 19:45:25 +0000 (UTC)
+Message-ID: <loom.20160210T204046-649@post.gmane.org>
+References: <1447982925-30138-1-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAOS58YO+OOopQjHDjcO=evV=ujcwGQ66G=+TgrUx=V1FAujqxQ@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 11:24 AM, Tejun Heo <tj@kernel.org> wrote:
-> On Wed, Feb 10, 2016 at 2:08 PM, Suman Tripathi <stripathi@apm.com> wrote:
->>> I applied them to for-4.6 but it can go through for-4.5-fixes if
->>> necessary.  Is it necessary?
->>
->> It would be nice because our vendors are using 4.5.
->
-> Sure thing.  Moving to for-4.5-fixes.
->
-> Thanks.
+Vladimir Zapolskiy <vz@...> writes:
+> 
+> The change adds wakeup controller platform driver and irqchip driver
+> for NXP LPC32xx boards.
+ 
+Hi Vladimir,
 
-Thanks a lot Tejun !!
->
-> --
-> tejun
+Just to let you know that we did some testing using this changeset;
+I tested the change on 4.5-rc1 with patch 4 to 7, 10 & 11 from:
+http://permalink.gmane.org/gmane.linux.drivers.devicetree/144671
 
+I was able to run our software (I2C SIC1 interrupt enable)
+without any problem on a custom LPC32xx board.
 
+I did not test the other SIC1 interrupt sources that were
+generating issue previously (i.e. breaks the kernel with
+the message "unexpected IRQ trap at vector 00").
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
+We did not get any problem with the MIC interrupts we are using.
+
+> Vladimir Zapolskiy (10):
+>   dt-bindings: create arm/nxp folder and move LPC32xx SoC description to it
+>   dt-bindings: nxp: add description of wakeup controller on LPC32xx
+>   dt-bindings: interrupt-controllers: add description of SIC1 and SIC2
+>   arm: lpc32xx: add wakeup platform driver
+>   arm: dts: lpc32xx: assign interrupt types
+>   arm: dts: lpc32xx: add description of IC wakeup controllers
+>   arm: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC
+>   irqchip: add LPC32xx interrupt controller driver
+>   irqchip: lpc32xx: add option to wakeup from an interrupt
+>   arm: dts: lpc32xx: enable SIC1 and SIC2 by default
+
+Sylvain Lemieux
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
