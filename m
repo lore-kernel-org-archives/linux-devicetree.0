@@ -1,76 +1,47 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/11] clk: lpc32xx: add clock support for NXP LPC32xx
-Date: Wed, 10 Feb 2016 09:25:17 -0500
-Message-ID: <1455114317.23786.11.camel@localhost>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com>
-	 <loom.20160209T215103-78@post.gmane.org>  <56BA81F7.4080006@mleia.com>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] Drivers: USB: DA8xx MUSB: added DT support
+Date: Wed, 10 Feb 2016 15:29:38 +0100
+Message-ID: <56BB4952.4030500@barix.com>
+References: <1454693676-20211-1-git-send-email-petr@barix.com>
+ <56B67351.1030604@cogentembedded.com> <56B85DB6.9030605@barix.com>
+ <56B87A07.1060103@cogentembedded.com> <56B88098.1070309@barix.com>
+ <56B8891C.3080409@cogentembedded.com> <56B8B515.5080106@barix.com>
+ <56B8D676.1050809@cogentembedded.com> <56B9A3C1.4000600@barix.com>
+ <56B9C46B.30708@cogentembedded.com> <56BB1E5F.4050100@barix.com>
+ <56BB4418.4090403@cogentembedded.com> <56BB4553.30707@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56BA81F7.4080006-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BB4553.30707-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On 10.02.2016 15:12, Sergei Shtylyov wrote:
+> of the patch based
+>>> on Felipe's "next" branch and incorporating all you guys' feedback. 
+>>> Also the
+>>> binding was submitted separately.
+>>
+>>     I'll go find it, haven't seen yet.
+>
+>    I just haven't received it. Please make sure to CC at least 
+> linux-usb next time you post it.
+>
 
-On Wed, 2016-02-10 at 02:19 +0200, Vladimir Zapolskiy wrote:
-> Hi Sylvain,
-> 
-> On 09.02.2016 23:01, Sylvain Lemieux wrote:
-> > Vladimir Zapolskiy <vz@...> writes:
-> >>
-> >> This changeset adds common clock framework driver for NXP LPC32xx
-> >> boards.
-> > 
-> > Just to let you know that we did some testing using this changeset;
-> > I installed patches 4 to 7, 10 & 11 on top of 4.5-rc1.
-> > 
-> > I was able to run our software (SIC1 interrupt sources disable)
-> > without any problem a custom LPC32xx board.
-> 
-> this is a known issue, and I hope it will be fixed in upstream in v4.6,
-> the required changes in irqchip and gpiochip drivers were sent for
-> review some time ago, a bit more work is needed to 
-> 
-I also tested the irqchip patches you sent previously;
-I will send a separate e-mail with the information.
+I've just followed the instructions in 
+Documentation/devicetree/bindings/submitting-patches.txt as you hinted 
+me last time.
+It doesn't say the subsystem mailing list should be CCed as well. 
+Neither does the get_maintainer.pl print the linux-usb list.
 
-> Also 2-3 more clean-up changes in USB host and gadget drivers are done
-> locally (no more need to configure clocks out of the common clock
-> framework), but not yet submitted, will do it tomorrow.
-> 
-> > We did not get any problem with the clock signals we are using.
-> > 
-> 
-> Thank you for testing, I'm going to add your Tested-by tag (if you
-> don't mind) and submit a PR to ARM maintainers shortly.
-> 
-You can go ahead for the tag; please use slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org
+I'm sorry! :-7
+But sure, next time I'll copy the list as well.
 
-> >> Vladimir Zapolskiy (11):
-> >>   dt-bindings: clock: add description of LPC32xx clock controller
-> >>   dt-bindings: clock: add description of LPC32xx USB clock controller
-> >>   dt-bindings: clock: add NXP LPC32xx clock list for consumers
-> >>   arm: dts: lpc32xx: add device nodes for external oscillators
-> >>   arm: dts: lpc32xx: add clock controller device node
-> >>   arm: dts: lpc32xx: add clock properties to device nodes
-> >>   arm: dts: lpc32xx: add USB clock controller
-> >>   clk: lpc18xx: add NXP specific common clock framework selection
-> >>   clk: lpc32xx: add common clock framework driver
-> >>   arm: lpc32xx: switch to common clock framework
-> >>   arm: dts: lpc32xx: remove clock frequency property from UART device
-> >>     nodes
-> > 
-> > 
-> 
-> With best wishes,
-> Vladimir
-
-
+Petr
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
