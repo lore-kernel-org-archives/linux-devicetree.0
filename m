@@ -1,47 +1,38 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Thu, 11 Feb 2016 10:10:49 -0800
-Message-ID: <56BCCEA9.4050509@gmail.com>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com> <56BC6ABA.5020605@arm.com>
-Reply-To: frowand.list@gmail.com
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Thu, 11 Feb 2016 21:35:01 +0300
+Message-ID: <56BCD455.3080805@cogentembedded.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <56BC925F.6010809@cogentembedded.com> <56BCA243.4010507@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <56BC6ABA.5020605@arm.com>
-Sender: stable-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, robh+dt@kernel.org
-Cc: Robin Murphy <robin.murphy@arm.com>, grant.likely@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com, david.daney@cavium.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BCA243.4010507-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/11/2016 3:04 AM, Marc Zyngier wrote:
-> On 09/02/16 11:04, Robin Murphy wrote:
->> The existing msi-map code is fine for shifting the entire RID space
->> upwards, but attempting finer-grained remapping reveals a bug. It turns
->> out that we are mistakenly treating the msi-base part as an offset, not
->> as a new base to remap onto, so things get squiffy when rid-base is
->> nonzero. Fix this, and at the same time add a sanity check against
->> having msi-map-mask clash with a nonzero rid-base, as that's another
->> thing one can easily get wrong.
+On 02/11/2016 06:01 PM, Petr Kulhavy wrote:
+
+>>> +        ti,phy20-clkmux-pll;
+>>> +        ti,phy20-refclock-frequency = <24000000>;
 >>
->> CC: <stable@vger.kernel.org>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> Rob, Frank,
-> 
-> Are you willing to take this one through the OF tree? Or should we route
-> it through the IRQ tree? It'd be good if it make it into 4.5.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+>>    In principle these 2 should belong to the USB PHY subnode...
+>
+> Do you mean to define a PHY subnode even if there is currently no standalone
+> PHY driver for da8xx?
 
-Just to be picky, I would like the patch to be split in two for easier
-bisecting, but if Rob is happy with a single patch I'm ok with that.
+    Actually, USB PHY shouldn't be a subnode for MUSB (different register 
+spaces), so nevermind. Sorry, just a stereotype from Ethernet where the MAC 
+often includes MDIO-related registers...
 
-Rob, will you pick this up?
+> Petr
 
-Acked-by: Frank Rowand <frank.rowand@sonymobile.com>
+MBR, Sergei
 
--Frank
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
