@@ -1,124 +1,79 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4] clk: sunxi: Refactor A31 PLL6 so that it can be reused
-Date: Thu, 11 Feb 2016 10:41:03 +0100
-Message-ID: <20160211094103.GI31506@lukather>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <20160210125936.GD31506@lukather>
- <CABGGisxORFOxLVQiTZ=gEr6j2JnVcjQxTLJFPa7uG93g46CKwg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Thu, 11 Feb 2016 10:57:30 +0100
+Message-ID: <CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+	<1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+	<CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+	<56BB7AF4.8040708@nvidia.com>
+	<CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
+	<56BC50C2.7050609@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="N+TWAKLONZJHYDBn"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABGGisxORFOxLVQiTZ=gEr6j2JnVcjQxTLJFPa7uG93g46CKwg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <rob.herring@linaro.org>
-Cc: Andre Przywara <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <56BC50C2.7050609@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11 February 2016 at 10:13, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+> On 10/02/16 18:25, Ulf Hansson wrote:
+>
+> [snip]
+>
+>>>> Perhaps there's a way to allow the generic PM domain to control this
+>>>> by itself. If we for example used the struct device corresponding to
+>>>> the powergate driver, genpd could use it to distinguish between
+>>>> various instances of genpd structs..!? Maybe it would simplify the way
+>>>> to deal with removing domains?
+>>>
+>>> Yes, that would be ideal. However, would have require changing
+>>> genpd_init()? I am not sure how genpd would be able to access the device
+>>> struct for the powergate driver because we don't provide this via any
+>>> API I am aware of? And I am guessing that you don't wish to expose the
+>>> gpd_list to the world either.
+>>>
+>>> If there is an easy way, I am open to it, but looking at it today, I am
+>>> not sure I see a simple way in which we could add a new API to do this.
+>>> However, may be I am missing something!
+>>
+>> If we add a new __pm_genpd_init() API, that could require a struct
+>> device to be provided. That API will thus invoke the existing
+>> pm_genpd_init() but also deal with the extra things needed here.
+>>
+>> I would also allow such an API to return an error code.
+>>
+>> Correspondingly, pm_genpd_remove() could be required to be provided
+>> with a struct device.
+>>
+>> Existing users of pm_genpd_init() can then convert to
+>> __pm_genpd_init() whenever suitable.
+>>
+>> Of course, another option is just to add new member in the genpd
+>> struct for the struct *device. The caller of pm_genpd_init() could
+>> check it, but allow it to be NULL. Although, the pm_genpd_remove() API
+>> would require that pointer to the struct device to be set...
+>>
+>> What do you think?
+>
+> Yes, sounds good. May be it is simpler just to add a new member and let
+> the platform genpd driver handle it.
+>
+> I am wondering if in addition to pm_genpd_remove(), we then just have a
+> function called pm_genpd_remove_tail(), which allows you to pass the
+> struct device pointer and will remove the last pm-domain from the
+> gpd_list and return the genpd pointer if successful. Internally, it will
+> call pm_genpd_remove(). It seems to me that if there are nested
+> pm-domains, then we probably want to remove them starting from the tail
+> as opposed to the head.
+>
+> How does that sound?
 
---N+TWAKLONZJHYDBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why not make pm_genpd_remove() to behave as you describe for
+pm_genpd_remove_tail()?
+That's probably the only sane way to remove genpds anyhow!?
 
-On Wed, Feb 10, 2016 at 08:02:45AM -0600, Rob Herring wrote:
-> On Wed, Feb 10, 2016 at 6:59 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Hi,
-> >
-> > On Fri, Feb 05, 2016 at 05:59:23PM +0000, Andre Przywara wrote:
-> >> Hi Maxime,
-> >>
-> >> just found this while looking at your current git branch, so sorry for
-> >> the late reply.
-> >>
-> >> CC:ing DT people, since you touch both existing DTs(!) and the binding=
- doc.
->=20
-> [...]
->=20
-> >> So are you really breaking all those systems by changing the DT and the
-> >> driver in an incompatible way?
-> >
-> > Yes.
-> >
-> >> Please correct me if this assessment is wrong, but to me it looks like
-> >> any user out there is either stuck with 4.5 at best _or_ will only be
-> >> able to run 4.6 and later (depending on which version of the DT she is
-> >> using)? And no, switching DTs along with the kernel is _not_ an option.
-> >
-> > It is. And it is one that every other ARM platform chose. And so did
-> > every distribution.
->=20
-> I do leave it to platform maintainers judgement (perhaps that should
-> be reconsidered), but it should still be case by case basis not an all
-> out disregard for the ABI. If you decide to ignore the ABI, then there
-> is no decision for the distros or other users.
->=20
-> >> That is not how I understand DT.
-> >
-> > I'm sorry for that. This has never been something we said was
-> > happening.
-> >
-> >> Also this totally ignores any other DT user (U-Boot, FreeBSD, you
-> >> name it).
-> >
-> > Which all have their own DT copies, with their own bindings, that we
-> > (ie Linux) never agreed on.
->=20
-> That is not really true. There are some differences ATM, but they are
-> largely derivatives of the kernel copy and the goal is to align them.
-> If we don't maintain an ABI, that will never happen.
-
-At least for us, this is definitely true. The SoCs impacted by this
-change are not supported by FreeBSD at all, and the one that are
-supported have bindings that do not match the one we have in the
-kernel:
-https://github.com/freebsd/freebsd/blob/master/sys/boot/fdt/dts/arm/sun4i-a=
-10.dtsi
-
-Over the 10 compatibles used there, 3 are totally different (watchdog,
-the SRAM controller and the clock hardware block) and two deviates in
-incompatible ways (timer and pinctrl) and one has property that we'd
-probably deny (UART, and its current-speed). 6 out of 10 overall.
-
-And U-boot never had any issue in the past with that policy. Tom said
-it on several occasions, and it worked for us too, with some minor
-compromises we needed, such as keeping some node pathes that U-Boot
-was using, even though it turned out to be wrong.
-
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/a=
-rm/boot/dts/sun7i-a20.dtsi#n615
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---N+TWAKLONZJHYDBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWvFcvAAoJEBx+YmzsjxAgpfEQALB/6eJ9kARSAwzTMlM8VV7F
-mbeqtYE34g2WAcbrBps43To0L9dMAnnCpM3eUmJhzVDc9rMmbfMpgAP+4tdRNLb4
-sRMkHdrK6qk2q8hktk8hD7wwCVo2YmqOWG3RTbI18p33aZhjoAGBpGJuuu9k28lf
-sg5W8V+uchSBYgrV0jdqDEaYC30TZjI1MVGaHCp+jwlVTFBQW2/0McTPqmYsTHjV
-Zdyq0teZXHpXy2r+ebQqGQzlYXDvqv6tZvEf+SOyWAYaEqB5D6b/228OXDysWy/U
-lz4KM1XT4FWwqY1S5xZJAxNZJtOtyr3k3ZeAbYZNwNv3ZbIe0V2Jd/+E+xZ0Ye3h
-4/7B8eqaOPC+TJlbl5S5IYjB2Uh2rra9wdBWYSXfOMZU/0qzotAKfxD3zw4Rltd6
-pLDPk+El4/n4UX6NnnBN2WDzufdUdwcAmDgSxq7vE64or3lDpecRSWdNSA/ufAOF
-+NwVVYoPM6n0G4JPrzo6PYe6d13IJmYyviUYGmew01JD6hczNX/zFoSpUxyoQZtt
-+wAlGt9AmHM22UfhpkLOfc2Eq0ABkFRP1wmDQLPhdutowA49GxaW1RLNhnleKnW9
-iTyxwvWo6SX92Jnm8XlAG/2SBgrIZHFsWPzijNUTKoU3I1fA2wN2xpgDPTl8GtyM
-i9daVZszLySGpmz8Addj
-=urZ+
------END PGP SIGNATURE-----
-
---N+TWAKLONZJHYDBn--
+Kind regards
+Uffe
