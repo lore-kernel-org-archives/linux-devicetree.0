@@ -1,37 +1,37 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] of/irq: Fix msi-map calculation for nonzero rid-base
-Date: Thu, 11 Feb 2016 11:04:26 +0000
-Message-ID: <56BC6ABA.5020605@arm.com>
-References: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv10 2/4] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
+ entries
+Date: Thu, 11 Feb 2016 12:27:58 +0100
+Message-ID: <20160211112758.GA5565@pd.tnic>
+References: <1455132384-17108-1-git-send-email-tthayer@opensource.altera.com>
+ <1455132384-17108-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <9f6845195d03b0e0b0d187bb510fbf7bd497e836.1455015344.git.robin.murphy@arm.com>
-Sender: stable-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, david.daney@cavium.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455132384-17108-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/16 11:04, Robin Murphy wrote:
-> The existing msi-map code is fine for shifting the entire RID space
-> upwards, but attempting finer-grained remapping reveals a bug. It turns
-> out that we are mistakenly treating the msi-base part as an offset, not
-> as a new base to remap onto, so things get squiffy when rid-base is
-> nonzero. Fix this, and at the same time add a sanity check against
-> having msi-map-mask clash with a nonzero rid-base, as that's another
-> thing one can easily get wrong.
+On Wed, Feb 10, 2016 at 01:26:22PM -0600, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> CC: <stable@vger.kernel.org>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Adding the device tree entries and bindings needed to support
+> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+> an earlier patch to declare and setup On-chip RAM properly.
+> http://www.spinics.net/lists/devicetree/msg51117.html
 
-Rob, Frank,
+For the future, please use git commit IDs and not some, probably
+unstable URLs:
 
-Are you willing to take this one through the OF tree? Or should we route
-it through the IRQ tree? It'd be good if it make it into 4.5.
+  8b907c8b62ac ("arm: dts: socfpga: Add OCRAM node")
 
-Thanks,
+I've fixed it now while applying.
 
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
