@@ -1,168 +1,115 @@
 From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v2 6/8] arm: initial machine port for artpec-6 SoC
-Date: Thu, 11 Feb 2016 15:04:40 +0100
-Message-ID: <326c3d195bd2011e08509fe8bdcc32e48df13b86.1455198819.git.larper@axis.com>
+Subject: [PATCH v2 2/8] clk: add artpec-6 pll1 clock driver
+Date: Thu, 11 Feb 2016 15:04:36 +0100
+Message-ID: <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455198819.git.larper@axis.com>
 References: <cover.1455198819.git.larper@axis.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1455198819.git.larper@axis.com>
 In-Reply-To: <cover.1455198819.git.larper@axis.com>
 References: <cover.1455198819.git.larper@axis.com>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Basic machine port for the Artpec-6 SoC from Axis
-Communications.
+The PLL1 clock is a fixed-factor clock with factors derived from boot
+mode pins. This driver is a simple wrapper to register the fixed
+factor clock according to the pin settings.
 
 Signed-off-by: Lars Persson <larper@axis.com>
 ---
- arch/arm/Kconfig                     |  2 +
- arch/arm/Makefile                    |  1 +
- arch/arm/mach-artpec/Kconfig         | 20 ++++++++++
- arch/arm/mach-artpec/Makefile        |  1 +
- arch/arm/mach-artpec/board-artpec6.c | 72 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 96 insertions(+)
- create mode 100644 arch/arm/mach-artpec/Kconfig
- create mode 100644 arch/arm/mach-artpec/Makefile
- create mode 100644 arch/arm/mach-artpec/board-artpec6.c
+ drivers/clk/Makefile      |  1 +
+ drivers/clk/clk-artpec6.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+ create mode 100644 drivers/clk/clk-artpec6.c
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 4f799e5..e1565dd 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -724,6 +724,8 @@ source "arch/arm/mach-mvebu/Kconfig"
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index b038e36..388f0cf 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -17,6 +17,7 @@ endif
  
- source "arch/arm/mach-alpine/Kconfig"
- 
-+source "arch/arm/mach-artpec/Kconfig"
-+
- source "arch/arm/mach-asm9260/Kconfig"
- 
- source "arch/arm/mach-at91/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index fe25410..4eb24c6 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -154,6 +154,7 @@ textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
- # Machine directory name.  This list is sorted alphanumerically
- # by CONFIG_* macro name.
- machine-$(CONFIG_ARCH_ALPINE)		+= alpine
-+machine-$(CONFIG_ARCH_ARTPEC)		+= artpec
- machine-$(CONFIG_ARCH_AT91)		+= at91
- machine-$(CONFIG_ARCH_AXXIA)		+= axxia
- machine-$(CONFIG_ARCH_BCM)		+= bcm
-diff --git a/arch/arm/mach-artpec/Kconfig b/arch/arm/mach-artpec/Kconfig
+ # hardware specific clock types
+ # please keep this section sorted lexicographically by file/directory path name
++obj-$(CONFIG_MACH_ARTPEC6)		+= clk-artpec6.o
+ obj-$(CONFIG_MACH_ASM9260)		+= clk-asm9260.o
+ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+= clk-axi-clkgen.o
+ obj-$(CONFIG_ARCH_AXXIA)		+= clk-axm5516.o
+diff --git a/drivers/clk/clk-artpec6.c b/drivers/clk/clk-artpec6.c
 new file mode 100644
-index 0000000..6cbe5a2
+index 0000000..3664c44
 --- /dev/null
-+++ b/arch/arm/mach-artpec/Kconfig
-@@ -0,0 +1,20 @@
-+menuconfig ARCH_ARTPEC
-+	bool "Axis Communications ARM based ARTPEC SoCs"
-+	depends on ARCH_MULTI_V7
-+
-+if ARCH_ARTPEC
-+
-+config MACH_ARTPEC6
-+	bool "Axis ARTPEC-6 ARM Cortex A9 Platform"
-+	depends on ARCH_MULTI_V7
-+	select ARM_AMBA
-+	select ARM_GIC
-+	select ARM_GLOBAL_TIMER
-+	select ARM_PSCI
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_ARM_SCU
-+	select HAVE_ARM_TWD if SMP
-+	help
-+	  Support for Axis ARTPEC-6 ARM Cortex A9 Platform
-+
-+endif
-diff --git a/arch/arm/mach-artpec/Makefile b/arch/arm/mach-artpec/Makefile
-new file mode 100644
-index 0000000..78325f0
---- /dev/null
-+++ b/arch/arm/mach-artpec/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_MACH_ARTPEC6)		:= board-artpec6.o
-diff --git a/arch/arm/mach-artpec/board-artpec6.c b/arch/arm/mach-artpec/board-artpec6.c
-new file mode 100644
-index 0000000..d486217
---- /dev/null
-+++ b/arch/arm/mach-artpec/board-artpec6.c
-@@ -0,0 +1,72 @@
++++ b/drivers/clk/clk-artpec6.c
+@@ -0,0 +1,70 @@
 +/*
-+ * ARTPEC-6 device support.
++ * ARTPEC-6 clock initialization
++ *
++ * Copyright 2015 Axis Comunications AB.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/amba/bus.h>
-+#include <linux/clocksource.h>
-+#include <linux/dma-mapping.h>
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
 +#include <linux/io.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/arm-gic.h>
-+#include <linux/of_platform.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
-+#include <linux/clk-provider.h>
-+#include <linux/smp.h>
-+#include <asm/smp_scu.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/map.h>
-+#include <asm/psci.h>
-+#include <linux/arm-smccc.h>
 +
-+#define ARTPEC6_DMACFG_UARTS_BURST 0xff
-+
-+#define SECURE_OP_L2C_WRITEREG 0xb4000001
-+
-+static void __init artpec6_init_machine(void)
++static void __init of_artpec6_pll1_setup(struct device_node *np)
 +{
-+	void __iomem *dmacfg;
-+	struct device_node *np;
++	void __iomem *devstat;
++	struct clk *clk;
++	const char *clk_name = np->name;
++	const char *parent_name;
++	u32 pll_mode, pll_m, pll_n;
 +
-+	np = of_find_compatible_node(NULL, NULL, "axis,artpec6-dmacfg");
-+	if (np) {
-+		/* Use PL011 DMA Burst Request signal instead of DMA
-+		 *  Single Request
-+		 */
-+		dmacfg = of_iomap(np, 0);
-+		BUG_ON(!dmacfg);
++	parent_name = of_clk_get_parent_name(np, 0);
 +
-+		writel(ARTPEC6_DMACFG_UARTS_BURST, dmacfg);
-+		iounmap(dmacfg);
-+		of_node_put(np);
-+	};
++	devstat = of_iomap(np, 0);
++	if (devstat == NULL) {
++		pr_err("error to ioremap DEVSTAT\n");
++		return;
++	}
 +
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	/* DEVSTAT register contains PLL settings */
++	pll_mode = (readl(devstat) >> 6) & 3;
++	iounmap(devstat);
++
++	/*
++	 * pll1 settings are designed for different DDR speeds using a fixed
++	 * 50MHz external clock. However, a different external clock could be
++	 * used on different boards.
++	 * CPU clock is half the DDR clock.
++	 */
++	switch (pll_mode) {
++	case 0: /* DDR3-2133 mode */
++		pll_m = 4;
++		pll_n = 85;
++		break;
++	case 1: /* DDR3-1866 mode */
++		pll_m = 6;
++		pll_n = 112;
++		break;
++	case 2: /* DDR3-1600 mode */
++		pll_m = 4;
++		pll_n = 64;
++		break;
++	case 3: /* DDR3-1333 mode */
++		pll_m = 8;
++		pll_n = 106;
++		break;
++	}
++	/* ext_clk is defined in device tree */
++	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
++			pll_n, pll_m);
++	if (IS_ERR(clk)) {
++		pr_err("%s not registered\n", clk_name);
++		return;
++	}
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
 +}
-+
-+static void artpec6_l2c310_write_sec(unsigned long val, unsigned reg)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(SECURE_OP_L2C_WRITEREG, reg, val, 0,
-+		      0, 0, 0, 0, &res);
-+
-+	WARN_ON(res.a0);
-+}
-+
-+static const char * const artpec6_dt_match[] = {
-+	"axis,artpec6",
-+	NULL
-+};
-+
-+DT_MACHINE_START(ARTPEC6, "Axis ARTPEC-6 Platform")
-+	.l2c_aux_val	= 0x0C000000,
-+	.l2c_aux_mask	= 0xF3FFFFFF,
-+	.l2c_write_sec  = artpec6_l2c310_write_sec,
-+	.init_machine	= artpec6_init_machine,
-+	.dt_compat	= artpec6_dt_match,
-+MACHINE_END
++CLK_OF_DECLARE(artpec6_pll1, "axis,artpec6-pll1-clock", of_artpec6_pll1_setup);
 -- 
 2.1.4
-
