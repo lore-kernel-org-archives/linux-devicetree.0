@@ -1,7 +1,7 @@
 From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH V3 04/12] dtb: amd: Fix typo in SPI device nodes
-Date: Wed, 10 Feb 2016 21:51:03 -0600
-Message-ID: <1455162671-16044-5-git-send-email-Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V3 06/12] dtb: amd: Misc changes for SATA device tree nodes
+Date: Wed, 10 Feb 2016 21:51:05 -0600
+Message-ID: <1455162671-16044-7-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,32 +14,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Remove invalid entry in the SPI device nodes.
+Add new SATA1 device node, and fix the register range size of SATA0.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 5c73117..c7c759a 100644
+index 4be36fd..9f59381 100644
 --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
 +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -91,7 +91,6 @@
- 		spi0: ssp@e1020000 {
+@@ -66,12 +66,22 @@
+ 
+ 		sata0: sata@e0300000 {
+ 			compatible = "snps,dwc-ahci";
+-			reg = <0 0xe0300000 0 0x800>;
++			reg = <0 0xe0300000 0 0xf0000>;
+ 			interrupts = <0 355 4>;
+ 			clocks = <&sataclk_333mhz>;
+ 			dma-coherent;
+ 		};
+ 
++		/* This is for Rev B only */
++		sata1: sata@e0d00000 {
++			status = "disabled";
++			compatible = "snps,dwc-ahci";
++			reg = <0 0xe0d00000 0 0xf0000>;
++			interrupts = <0 354 4>;
++			clocks = <&sataclk_333mhz>;
++			dma-coherent;
++		};
++
+ 		i2c0: i2c@e1000000 {
  			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
--			#gpio-cells = <2>;
- 			reg = <0 0xe1020000 0 0x1000>;
- 			spi-controller;
- 			interrupts = <0 330 4>;
-@@ -102,7 +101,6 @@
- 		spi1: ssp@e1030000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
--			#gpio-cells = <2>;
- 			reg = <0 0xe1030000 0 0x1000>;
- 			spi-controller;
- 			interrupts = <0 329 4>;
+ 			compatible = "snps,designware-i2c";
 -- 
 2.5.0
