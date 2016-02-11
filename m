@@ -1,143 +1,74 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
-Date: Thu, 11 Feb 2016 10:12:18 +0100
-Message-ID: <CAPDyKFq9+WwkUTBNuPai1wCCTfDfehyHqzMvfW_5yN-ogbyLYw@mail.gmail.com>
-References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
-        <CAPDyKFrMgt9snP2NLbQ6EQ5X7gjQLA+e+TEfqgjzLYTuH+G1OA@mail.gmail.com>
-        <56BB9877.9000305@caviumnetworks.com>
-        <56BC4538.20207@imgtec.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Thu, 11 Feb 2016 09:13:38 +0000
+Message-ID: <56BC50C2.7050609@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+ <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+ <56BB7AF4.8040708@nvidia.com>
+ <CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <56BC4538.20207@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Matt Redfearn <matt.redfearn@imgtec.com>
-Cc: David Daney <ddaney@caviumnetworks.com>, linux-mmc <linux-mmc@vger.kernel.org>, David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zubair.Kakakhel@imgtec.com, Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 February 2016 at 09:24, Matt Redfearn <matt.redfearn@imgtec.com> wrote:
-> Hi,
-> I will split the DT binding document into a separate patch, and move the
-> legacy FDT patch-up code to
-> arch/mips/cavium-octeon/octeon-platform.c as suggested by Florian.
->
-> Ulf, your objections to the structure of the DT and driver were the only
-> driver for the changes v4->v5.
-> I changed the DT binding and the structure of the driver to more closely
-> resemble the atmel-mci driver, which has the same concept of one controller,
-> multiple slots.
 
-I will review the driver code more closely in the next version, when
-you have separated the DT binding doc and put the legacy part in
-machine folder. Please keep me on cc on all patches.
+On 10/02/16 18:25, Ulf Hansson wrote:
 
-Regarding "multiple slot" support. Don't follow other existing
-examples in other mmc host drivers, as I find it highly unlikely that
-the core will ever support this. *If* that changes, then the mmc host
-driver may adopt this, but not until that.
+[snip]
 
-Kind regards
-Uffe
+>>> Perhaps there's a way to allow the generic PM domain to control this
+>>> by itself. If we for example used the struct device corresponding to
+>>> the powergate driver, genpd could use it to distinguish between
+>>> various instances of genpd structs..!? Maybe it would simplify the way
+>>> to deal with removing domains?
+>>
+>> Yes, that would be ideal. However, would have require changing
+>> genpd_init()? I am not sure how genpd would be able to access the device
+>> struct for the powergate driver because we don't provide this via any
+>> API I am aware of? And I am guessing that you don't wish to expose the
+>> gpd_list to the world either.
+>>
+>> If there is an easy way, I am open to it, but looking at it today, I am
+>> not sure I see a simple way in which we could add a new API to do this.
+>> However, may be I am missing something!
+> 
+> If we add a new __pm_genpd_init() API, that could require a struct
+> device to be provided. That API will thus invoke the existing
+> pm_genpd_init() but also deal with the extra things needed here.
+> 
+> I would also allow such an API to return an error code.
+> 
+> Correspondingly, pm_genpd_remove() could be required to be provided
+> with a struct device.
+> 
+> Existing users of pm_genpd_init() can then convert to
+> __pm_genpd_init() whenever suitable.
+> 
+> Of course, another option is just to add new member in the genpd
+> struct for the struct *device. The caller of pm_genpd_init() could
+> check it, but allow it to be NULL. Although, the pm_genpd_remove() API
+> would require that pointer to the struct device to be set...
+> 
+> What do you think?
 
->
-> Thanks,
-> Matt
->
->
-> On 10/02/16 20:07, David Daney wrote:
->>
->> On 02/10/2016 11:01 AM, Ulf Hansson wrote:
->>>
->>> On 10 February 2016 at 18:36, Matt Redfearn <matt.redfearn@imgtec.com>
->>> wrote:
->>>>
->>>> From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
->>>>
->>>> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
->>>> devices.  Device parameters are configured from device tree data.
->>>>
->>>> eMMC, MMC and SD devices are supported.
->>>>
->>>> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
->>>> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
->>>> Signed-off-by: David Daney <david.daney@cavium.com>
->>>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
->>>> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
->>>> Signed-off-by: Peter Swain <pswain@cavium.com>
->>>> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
->>>> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
->>>> ---
->>>> v5:
->>>> Incoroprate comments from review
->>>> http://patchwork.linux-mips.org/patch/9558/
->>>> - Use standard <bus-width> property instead of <cavium,bus-max-width>.
->>>> - Use standard <max-frequency> property instead of <spi-max-frequency>.
->>>> - Add octeon_mmc_of_parse_legacy function to deal with the above
->>>>    properties, since many devices have shipped with those properties
->>>>    embedded in firmware.
->>>> - Allow the <vmmc-supply> binding in addition to the legacy
->>>>    <gpios-power>.
->>>> - Remove the secondary driver for each slot.
->>>> - Use core gpio cd/wp handling
->>>
->>>
->>> Seems like you decided to ignore most comments realted to the DT
->>> bindings from the earlier version.
->>> Although, let's discuss this one more time.
->>
->>
->> I think you may have misread the patch.  The DT bindings have been
->> changed based on the feedback we received on v4.
->>
->>>
->>> Therefore I recomend you to split this patch. DT documentation should
->>> be a separate patch preceeding the actual mmc driver patch.
->>
->>
->> You may have missed it the first time it was posted, but the legacy DT
->> bindings have been around for a while.
->>
->> See:
->>
->> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-May/015482.html
->>
->>
->>> The DT patch needs to be acked by the DT maintainers.
->>
->>
->> The legacy DT has been deployed in firmware for several years now.  We
->> are adding more "modern" bindings, and the DT maintainers are
->> encouraged to review that portion, but the legacy is what it is and it
->> isn't changing.
->>
->>>
->>> Until we somewhat agreed on the DT parts, I am going to defer the
->>> in-depth review of the driver code as I have limited bandwidth.
->>>
->>
->> As I stated above, the legacy DT bindings are not changing and must be
->> supported.  Waiting for legacy DT bindings to change is equivalent to
->> infinite deferral.
->>
->>> Does that make sense to you?
->>>
->>
->> I understand why you would say this.  However, I think it doesn't
->> fully take into account the need to support devices that have already
->> been deployed.
->>
->> That said, Matt really needs to get the DT maintainers reviewing the new
->> DT bindings.
->>
->>
->> David Daney
->
->
+Yes, sounds good. May be it is simpler just to add a new member and let
+the platform genpd driver handle it.
+
+I am wondering if in addition to pm_genpd_remove(), we then just have a
+function called pm_genpd_remove_tail(), which allows you to pass the
+struct device pointer and will remove the last pm-domain from the
+gpd_list and return the genpd pointer if successful. Internally, it will
+call pm_genpd_remove(). It seems to me that if there are nested
+pm-domains, then we probably want to remove them starting from the tail
+as opposed to the head.
+
+How does that sound?
+
+Cheers
+Jon
