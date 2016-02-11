@@ -1,94 +1,54 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] Warn on node name unit-addresses with '0x' or leading 0s
-Date: Thu, 11 Feb 2016 14:46:59 -0600
-Message-ID: <1455223619-16052-3-git-send-email-robh@kernel.org>
-References: <1455223619-16052-1-git-send-email-robh@kernel.org>
+Subject: [PATCH 0/2] DTC unit-address checks
+Date: Thu, 11 Feb 2016 14:46:57 -0600
+Message-ID: <1455223619-16052-1-git-send-email-robh@kernel.org>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455223619-16052-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Node name unit-addresses should never begin with 0x or leading 0s
-regardless of whether they have a bus specific address (i.e. one with
-commas) or not. Add warnings to check for these cases.
+I've been much more active in reviewing bindings lately and a few things 
+are getting old repeating. One is unit-address issues. I happened to be 
+looking at the old dtc C schema today and found this old patch[1] from 
+Stephen which never got merged. It derailed into how to updated ePAPR to 
+clarify for unit-address with ranges property, but didn't seem to have 
+any other objections. So, I've refreshed Stephen's patch and skip the 
+check if non-empty ranges is present.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- checks.c                       | 10 ++++++++++
- tests/run_tests.sh             |  2 ++
- tests/unit-addr-leading-0s.dts | 10 ++++++++++
- tests/unit-addr-leading-0x.dts | 10 ++++++++++
- 4 files changed, 32 insertions(+)
+I also added a 2nd patch with checks for leading '0x' or 0s. This should 
+never be valid. Also, I think Stephen's comment about checking the 
+address value being difficult is wrong. We should be able to check that 
+as any bus specific unit addresses should contain commas.
+
+On a build of all dtbs, ARM has 36K warnings! The good news is arm64 is 
+*only* 400 or so. I've skimmed thru them and they all looked valid to 
+me.
+
+Any objections to this series will result in getting added as a DT 
+binding maintainer. :)
+
+Rob
+
+[1] https://lkml.org/lkml/2013/9/19/301
+
+Rob Herring (1):
+  Warn on node name unit-addresses with '0x' or leading 0s
+
+Stephen Warren (1):
+  Warn on node name unit-address presence/absence mismatch
+
+ checks.c                        | 38 ++++++++++++++++++++++++++++++++++++--
+ tests/reg-without-unit-addr.dts | 10 ++++++++++
+ tests/run_tests.sh              |  4 ++++
+ tests/unit-addr-leading-0s.dts  | 10 ++++++++++
+ tests/unit-addr-leading-0x.dts  | 10 ++++++++++
+ tests/unit-addr-without-reg.dts |  9 +++++++++
+ 6 files changed, 79 insertions(+), 2 deletions(-)
+ create mode 100644 tests/reg-without-unit-addr.dts
  create mode 100644 tests/unit-addr-leading-0s.dts
  create mode 100644 tests/unit-addr-leading-0x.dts
+ create mode 100644 tests/unit-addr-without-reg.dts
 
-diff --git a/checks.c b/checks.c
-index 4001b8c..300ab43 100644
---- a/checks.c
-+++ b/checks.c
-@@ -310,6 +310,16 @@ static void check_unit_address_vs_reg(struct check *c, struct node *dt,
- 		if (!unitname[0])
- 			FAIL(c, "Node %s has a reg or ranges property, but no unit name",
- 			    node->fullpath);
-+
-+		if (strstr(unitname, "0x") == unitname) {
-+			FAIL(c, "Node %s unit name should not have leading \"0x\"",
-+			    node->fullpath);
-+			/* skip over 0x for next test */
-+			unitname += 2;
-+		}
-+		if (unitname[0] == '0' && isxdigit(unitname[1]))
-+			FAIL(c, "Node %s unit name should not have leading 0s",
-+			    node->fullpath);
- 	} else {
- 		if (unitname[0])
- 			FAIL(c, "Node %s has a unit name, but no reg property",
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 4b7a131..502caa6 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -445,6 +445,8 @@ dtc_tests () {
-     check_tests obsolete-chosen-interrupt-controller.dts obsolete_chosen_interrupt_controller
-     check_tests reg-without-unit-addr.dts unit_address_vs_reg
-     check_tests unit-addr-without-reg.dts unit_address_vs_reg
-+    check_tests unit-addr-leading-0x.dts unit_address_vs_reg
-+    check_tests unit-addr-leading-0s.dts unit_address_vs_reg
-     run_sh_test dtc-checkfails.sh node_name_chars -- -I dtb -O dtb bad_node_char.dtb
-     run_sh_test dtc-checkfails.sh node_name_format -- -I dtb -O dtb bad_node_format.dtb
-     run_sh_test dtc-checkfails.sh prop_name_chars -- -I dtb -O dtb bad_prop_char.dtb
-diff --git a/tests/unit-addr-leading-0s.dts b/tests/unit-addr-leading-0s.dts
-new file mode 100644
-index 0000000..7c8e2ce
---- /dev/null
-+++ b/tests/unit-addr-leading-0s.dts
-@@ -0,0 +1,10 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	node@001 {
-+		reg = <1 0>;
-+	};
-+};
-diff --git a/tests/unit-addr-leading-0x.dts b/tests/unit-addr-leading-0x.dts
-new file mode 100644
-index 0000000..7ed7254
---- /dev/null
-+++ b/tests/unit-addr-leading-0x.dts
-@@ -0,0 +1,10 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	node@0x1 {
-+		reg = <1 0>;
-+	};
-+};
 -- 
 2.5.0
