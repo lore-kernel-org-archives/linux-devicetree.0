@@ -1,27 +1,54 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 0/4] Fix pxa dma requestor lines
-Date: Thu, 11 Feb 2016 22:23:14 +0100
-Message-ID: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH V2 03/12] dtb: amd: Fix DMA ranges in device tree
+Date: Thu, 11 Feb 2016 13:23:52 -0800
+Message-ID: <CAOesGMgOmmXY2X2bwOd-6m117o6VPpqer6BXrzNePuRPoiz_Nw@mail.gmail.com>
+References: <1454954357-8395-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+	<1454954357-8395-4-git-send-email-Suravee.Suthikulpanit@amd.com>
+	<2845776.WTPtnQzg8d@wuerfel>
+	<56BBA80E.6090205@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56BBA80E.6090205@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, brijeshkumar.singh@amd.com, Thomas Lendacky <thomas.lendacky@amd.com>, Leo Duran <leo.duran@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-This serie aims at fixing a bug which arose in the pxa_dma driver, which needs
-to know the number of requestor lines which are connected to the DMA IP.
+Hi,
 
-The current implementation of pxa_dma is limited to 32 lines, which pxa27x has
-75 lines and pxa3xx has 100 of them. As a consequence, DMA clients with a
-requestor greater that 32 are not working, namely the pxa_camera driver.
+On Wed, Feb 10, 2016 at 1:13 PM, Suravee Suthikulpanit
+<Suravee.Suthikulpanit@amd.com> wrote:
+> Hi Arnd,
+>
+>
+> On 2/9/16 21:57, Arnd Bergmann wrote:
+>>
+>> On Monday 08 February 2016 11:59:08 Suravee Suthikulpanit wrote:
+>>>
+>>> From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>>>
+>>> Fix DMA ranges of smb0 and pcie0 nodes in AMD Seattle SOC.
+>>>
+>>> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>>>
+>>
+>> This could use a changelog text to explain why it's broken and how the
+>> fix works.
+>>
+>>         Arnd
+>>
+>
+> So, I have not experience the breakage. However, IIUC, the GICv2m MSI frame
+> is also considered DMA-able. So, I think it should be included in the
+> dma-range specified here. Please let me know if my assumption is incorrect.
+> Otherwise, I will include more description in the commit log in my next rev.
 
-The proposed fix by Vinod is to make the driver aware of the number of lines,
-which is done by this patchset.
+As I replied when I did it -- I've applied the patches, so respinning
+won't work. Instead, please follow up with incremental fixes to this
+series instead.
 
-I'd like to have this reviewed and then taken through the PXA tree. For this
-I'll need :
- - Rob/Grant/Kumar/Ian ack on patch 1/4
- - Haojian's ack on patch 2/4
- - Vinod's ack on patch 4/4
 
-Thanks in advance.
+Thanks,
+
+-Olof
