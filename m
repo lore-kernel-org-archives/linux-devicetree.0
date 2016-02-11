@@ -1,67 +1,42 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 3/4] mailbox: mailbox-test: use print_hex_dump_bytes to allow dynamic printk
-Date: Thu, 11 Feb 2016 17:13:27 +0000
-Message-ID: <1455210808-29395-4-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/4] mailbox: mailbox-test: rename driver as generic test driver
+Date: Thu, 11 Feb 2016 17:13:25 +0000
+Message-ID: <1455210808-29395-2-git-send-email-sudeep.holla@arm.com>
 References: <1455210808-29395-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455210808-29395-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455210808-29395-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reduce the logging from info to debug. Also use print_hex_dump_bytes
-instead as it has support for dynamic printk providing options to
-conditionally enable/disable these logs.
+This mailbox-test driver was designed to be generic, so let's remove ST
+tag on it and make it generic.
 
-Cc: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/mailbox/mailbox-test.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/mailbox/mailbox-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/mailbox/mailbox-test.c b/drivers/mailbox/mailbox-test.c
-index 036a852b5fa1..f690f11969a1 100644
+index 684ae17dcf39..3813f6d9eba9 100644
 --- a/drivers/mailbox/mailbox-test.c
 +++ b/drivers/mailbox/mailbox-test.c
-@@ -113,15 +113,15 @@ static ssize_t mbox_test_message_write(struct file *filp,
- 	 * MMIO to subsequently pass the message through
- 	 */
- 	if (tdev->mmio && tdev->signal) {
--		print_hex_dump(KERN_INFO, "Client: Sending: Signal: ", DUMP_PREFIX_ADDRESS,
--			       MBOX_BYTES_PER_LINE, 1, tdev->signal, MBOX_MAX_SIG_LEN, true);
-+		print_hex_dump_bytes("Client: Sending: Signal: ", DUMP_PREFIX_ADDRESS,
-+				     tdev->signal, MBOX_MAX_SIG_LEN);
+@@ -348,7 +348,7 @@ static const struct of_device_id mbox_test_match[] = {
  
- 		data = tdev->signal;
- 	} else
- 		data = tdev->message;
- 
--	print_hex_dump(KERN_INFO, "Client: Sending: Message: ", DUMP_PREFIX_ADDRESS,
--		       MBOX_BYTES_PER_LINE, 1, tdev->message, MBOX_MAX_MSG_LEN, true);
-+	print_hex_dump_bytes("Client: Sending: Message: ", DUMP_PREFIX_ADDRESS,
-+			     tdev->message, MBOX_MAX_MSG_LEN);
- 
- 	ret = mbox_send_message(tdev->tx_channel, data);
- 	if (ret < 0)
-@@ -222,13 +222,11 @@ static void mbox_test_receive_message(struct mbox_client *client, void *message)
- 	spin_lock_irqsave(&tdev->lock, flags);
- 	if (tdev->mmio) {
- 		memcpy_fromio(tdev->rx_buffer, tdev->mmio, MBOX_MAX_MSG_LEN);
--		print_hex_dump(KERN_INFO, "Client: Received [MMIO]: ",
--			       DUMP_PREFIX_ADDRESS, MBOX_BYTES_PER_LINE, 1,
--			       tdev->rx_buffer, MBOX_MAX_MSG_LEN, true);
-+		print_hex_dump_bytes("Client: Received [MMIO]: ", DUMP_PREFIX_ADDRESS,
-+				     tdev->rx_buffer, MBOX_MAX_MSG_LEN);
- 	} else if (message) {
--		print_hex_dump(KERN_INFO, "Client: Received [API]: ",
--			       DUMP_PREFIX_ADDRESS, MBOX_BYTES_PER_LINE, 1,
--			       message, MBOX_MAX_MSG_LEN, true);
-+		print_hex_dump_bytes("Client: Received [API]: ", DUMP_PREFIX_ADDRESS,
-+				     message, MBOX_MAX_MSG_LEN);
- 		memcpy(tdev->rx_buffer, message, MBOX_MAX_MSG_LEN);
- 	}
- 	spin_unlock_irqrestore(&tdev->lock, flags);
+ static struct platform_driver mbox_test_driver = {
+ 	.driver = {
+-		.name = "mailbox_sti_test",
++		.name = "mailbox_test",
+ 		.of_match_table = mbox_test_match,
+ 	},
+ 	.probe  = mbox_test_probe,
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
