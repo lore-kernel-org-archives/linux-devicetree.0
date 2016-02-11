@@ -1,34 +1,51 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
-Date: Thu, 11 Feb 2016 01:49:07 +0200
-Message-ID: <20160210234907.GC1640@darkstar.musicnaut.iki.fi>
-References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
- <56BB7B2F.60307@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: vf610twr: assign Ethernet clock explicitly
+Date: Wed, 10 Feb 2016 16:02:25 -0800
+Message-ID: <1455148946-26903-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56BB7B2F.60307-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Aleksey Makarov <aleksey.makarov-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Chandrakala Chavva <cchavva-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>, Leonid Rosenboim <lrosenboim-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Peter Swain <pswain-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Aaron Williams <aaron.williams-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Assign Ethernet clock parents explicitly. The VF610 Tower Board
+uses the external Ethernet clock input which is connected to
+a 50MHz clock.
 
-On Wed, Feb 10, 2016 at 10:02:23AM -0800, David Daney wrote:
-> On 02/10/2016 09:36 AM, Matt Redfearn wrote:
-> >+		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
-> >+			node->full_name, legacy_name);
-> 
-> I don't like this warning message.
-> 
-> The vast majority of people that see it will not be able to change their
-> firmware.  So it will be forever cluttering up their boot logs.
+The Vybrid SoC has two ethernet interfaces (fec0 and fec1) which
+use the same clock source (VF610_CLK_ENET). Therefore this parent
+configuration affects multiple consumer devices and need to be
+specified in the clock provider node.
 
-Until they switch to use APPENDED_DTB. :-)
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+So far we rely on the boot loader to configure this, however it
+can be problematic e.g. for suspend/resume...
 
-A.
+--
+Stefan
+
+ arch/arm/boot/dts/vf610-twr.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 5438ee4..8419c06 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -96,6 +96,10 @@
+ &clks {
+ 	clocks = <&sxosc>, <&fxosc>, <&enet_ext>, <&audio_ext>;
+ 	clock-names = "sxosc", "fxosc", "enet_ext", "audio_ext";
++	assigned-clocks = <&clks VF610_CLK_ENET_SEL>,
++			  <&clks VF610_CLK_ENET_TS_SEL>;
++	assigned-clock-parents = <&clks VF610_CLK_ENET_EXT>,
++				 <&clks VF610_CLK_ENET_EXT>;
+ };
+ 
+ &dspi0 {
+-- 
+2.7.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
