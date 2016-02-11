@@ -1,137 +1,89 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
- Refactor A31 PLL6 so that it can be reused)
-Date: Thu, 11 Feb 2016 11:00:48 +0100
-Message-ID: <20160211100048.GK31506@lukather>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
- <20160210163001.GG2632@leverpostej>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Thu, 11 Feb 2016 10:13:52 +0000
+Message-ID: <56BC5EE0.2040804@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+ <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+ <56BB7AF4.8040708@nvidia.com>
+ <CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
+ <56BC50C2.7050609@nvidia.com>
+ <CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TBDBusIORirWKjWQ"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160210163001.GG2632@leverpostej>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <rob.herring@linaro.org>, Andre Przywara <andre.przywara@arm.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---TBDBusIORirWKjWQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/02/16 09:57, Ulf Hansson wrote:
+> On 11 February 2016 at 10:13, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>
+>> On 10/02/16 18:25, Ulf Hansson wrote:
+>>
+>> [snip]
+>>
+>>>>> Perhaps there's a way to allow the generic PM domain to control this
+>>>>> by itself. If we for example used the struct device corresponding to
+>>>>> the powergate driver, genpd could use it to distinguish between
+>>>>> various instances of genpd structs..!? Maybe it would simplify the way
+>>>>> to deal with removing domains?
+>>>>
+>>>> Yes, that would be ideal. However, would have require changing
+>>>> genpd_init()? I am not sure how genpd would be able to access the device
+>>>> struct for the powergate driver because we don't provide this via any
+>>>> API I am aware of? And I am guessing that you don't wish to expose the
+>>>> gpd_list to the world either.
+>>>>
+>>>> If there is an easy way, I am open to it, but looking at it today, I am
+>>>> not sure I see a simple way in which we could add a new API to do this.
+>>>> However, may be I am missing something!
+>>>
+>>> If we add a new __pm_genpd_init() API, that could require a struct
+>>> device to be provided. That API will thus invoke the existing
+>>> pm_genpd_init() but also deal with the extra things needed here.
+>>>
+>>> I would also allow such an API to return an error code.
+>>>
+>>> Correspondingly, pm_genpd_remove() could be required to be provided
+>>> with a struct device.
+>>>
+>>> Existing users of pm_genpd_init() can then convert to
+>>> __pm_genpd_init() whenever suitable.
+>>>
+>>> Of course, another option is just to add new member in the genpd
+>>> struct for the struct *device. The caller of pm_genpd_init() could
+>>> check it, but allow it to be NULL. Although, the pm_genpd_remove() API
+>>> would require that pointer to the struct device to be set...
+>>>
+>>> What do you think?
+>>
+>> Yes, sounds good. May be it is simpler just to add a new member and let
+>> the platform genpd driver handle it.
+>>
+>> I am wondering if in addition to pm_genpd_remove(), we then just have a
+>> function called pm_genpd_remove_tail(), which allows you to pass the
+>> struct device pointer and will remove the last pm-domain from the
+>> gpd_list and return the genpd pointer if successful. Internally, it will
+>> call pm_genpd_remove(). It seems to me that if there are nested
+>> pm-domains, then we probably want to remove them starting from the tail
+>> as opposed to the head.
+>>
+>> How does that sound?
+> 
+> Why not make pm_genpd_remove() to behave as you describe for
+> pm_genpd_remove_tail()?
+> That's probably the only sane way to remove genpds anyhow!?
 
-On Wed, Feb 10, 2016 at 04:30:01PM +0000, Mark Rutland wrote:
-> On Wed, Feb 10, 2016 at 03:37:55PM +0100, Maxime Ripard wrote:
-> > Hi Rob,
-> >=20
-> > On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
-> > > On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.c=
-om> wrote:
-> > > > Hi,
-> > > >
-> > > > just a ping:
-> > > >
-> > > > Are we really OK with breaking existing DTs in 4.6? (per the code in
-> > > > -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patc=
-h).
-> > >=20
-> > > I only warn and make sure people are aware of the issue. I leave that
-> > > up to platform maintainers to decide. It depends on the maturity of
-> > > the platform and users.
-> >=20
-> > The impacted SoCs support is really partial. For the most supported
-> > one, big things like display or sound are totally missing, and we
-> > still update them on a regular basis to add support for new
-> > devices. As such, users are very likely to upgrade the DT from one
-> > version to another just because there's new devices available to
-> > them. And the newest SoC impacted just got introduced in 4.5, and only
-> > has the UART and MMC devices available.
-> >=20
-> > > If people complain about it then it's their mess. For platforms
-> > > supported in distros such as debian or fedora, I would strongly
-> > > recommend against breaking compatibility.
-> >=20
-> > None of them are officially supported:
-> > https://www.debian.org/releases/stable/armhf/ch02s01.html.en
-> > https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
-> >=20
-> > Only the older one are, and they are not affected by this patch.
-> >=20
-> > > They do ship dtbs, but it's a chicken and egg problem. If dtbs were
-> > > stable and provided by firmware, then they wouldn't have to provide
-> > > them. If dtbs are unstable, then they have no choice.
-> >=20
-> > And while it might work great on platforms that have all the needed
-> > documentation, or a perfect one, which is our case. Almost each
-> > release, we discover that something is not working as it was
-> > documented, when it was documented in the first place.
-> >=20
-> > It also seems that even on well documented platforms, supported by the
-> > vendors, the stable ABI dream is not going to happen:
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/arm/Atmel/README#n105
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/devicetree/bindings/arm/marvell,berlin.txt#n4
->=20
-> To be quite frank, I completely disagree with that stance.
->=20
-> It seems like the only reason DT bindings aren't remaining stable is
-> because people are deliberately ignoring the requirement and reasoning
-> for doing so.
+Simply to offer flexibility. I could see that for some devices that have
+no dependencies between pm-domains and have a static list of pm-domains,
+they can simply call pm_genpd_remove() for a given pm-domain. However,
+that said, I can envision a case where a single pm-domain would be
+removed by itself and so may be there is no benefit?
 
-And for DT maintainers saying on multiple occasions that it's bad but
-ok to break it and / or that they never actually said that it was a
-stable ABI...
-
-I'm guessing it could be a stable ABI if there was bindings
-reviews. Rob actually started to review a significant amount of
-bindings lately, and that's really appreciated, but if you don't
-review all the bindings, then we're going to make mistakes.
-
-> I agree that it can be painful, and that we cannot predict the future.
-> There will always be bugs.
-
-In our case, we can't even predict the present.
-
-> Having code in mainline comes with responsibilities. One of those is to
-> keep said code working for existing users. Otherwise, why bother having
-> it in mainline at all?
-
-None of our existing users ever complained.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---TBDBusIORirWKjWQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWvFvQAAoJEBx+YmzsjxAg4jEP/0/RlbX3ytS/+WtORVHtIfYg
-SYYEc3i9hNySrpqJPHJSCpLbfe0irBp/DdikN+WYZR/1XyIw4UaGAubF6yn6BfoR
-8BuyAsUFcq9cN5+1w6eP8G758XUHa2Q9wRFokjgqQi2SEbEIceXww8D9Ipw9g/uf
-HKIqzWtDu5Eb9r3mMXlVJbQncf9145Q/Md7CGTNHNOj820vfD2mVAWuKHKIrvNhK
-vCHGbpUh8xGcjFQJEGSlormDtFMwdk6GiuNbh1f42TrSwcoq8E0YuZljTzuHGU0N
-eVxdyyPtgRSH4i+RlZ3i3Uts739LpoxRCMdU+wf0NeZ0CMTXKeJsfV11iyQ1G1WT
-3B/ltriC0yn7kPfZwetuozqXfDctushrwK5b6AJ+UkTdOvKetjEb331RUsrIMx5C
-Q1y1HVXR3LE8tx2CuJOjvKp9EeGMFF5bDWjk/Ohi4otFRBLfzl7hzOPeN0PG2xQP
-Oh2MTcPS5prB2mtFF/Enzu2QdzIJbVS8CLaBt1G4QTdS1uV2q9rdcISQ2lZTSgps
-c05qXErfx4yFZbSK+9WUiv5bb+dll0KTXbPyyPJ9R0KZwDaozSvjRnwJoaoDkeR5
-urjCjw1p5j+knjNEGeKbtvtCNAOPACsr53it5leFXllzuP9Lo0g5cK2M4OhckPTM
-LPeNVnpkfLTFJqdFBYDe
-=cHIs
------END PGP SIGNATURE-----
-
---TBDBusIORirWKjWQ--
+Cheers
+Jon
