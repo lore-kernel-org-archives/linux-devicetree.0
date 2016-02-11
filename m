@@ -1,84 +1,48 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 11/11] arm64: dts: add Pine64 support
-Date: Thu, 11 Feb 2016 11:32:30 +0100
-Message-ID: <20160211103230.GM31506@lukather>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
- <20160205090337.GB1139@lukather>
- <56B47391.1040709@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Thu, 11 Feb 2016 11:37:53 +0100
+Message-ID: <CAPDyKFrhVqrJEx2W8E8At=tTiOVc_EN33T+Ozf6Y9o__pkrxuw@mail.gmail.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+	<1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+	<CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+	<56BB7AF4.8040708@nvidia.com>
+	<CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
+	<56BC50C2.7050609@nvidia.com>
+	<CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng@mail.gmail.com>
+	<56BC5EE0.2040804@nvidia.com>
+	<56BC61ED.6000201@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="np6E2rbShIadjoVu"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQOG6G2QKGQEKPYJ36Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56B47391.1040709-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <56BC61ED.6000201@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---np6E2rbShIadjoVu
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+[...]
 
-Hi Andre,
+>>>
+>>> Why not make pm_genpd_remove() to behave as you describe for
+>>> pm_genpd_remove_tail()?
+>>> That's probably the only sane way to remove genpds anyhow!?
+>>
+>> Simply to offer flexibility. I could see that for some devices that have
+>> no dependencies between pm-domains and have a static list of pm-domains,
+>> they can simply call pm_genpd_remove() for a given pm-domain. However,
+>> that said, I can envision a case where a single pm-domain would be
+>> removed by itself and so may be there is no benefit?
+>
+> By the way, do you think that instead of passing the struct device * to
+> pm_genpd_remove(), we should just have a void *dev_id in the same way
+> the request_irq()/free_irq() work? In other words, it would allow people
+> to use the struct device or struct device_node, etc?
 
-On Fri, Feb 05, 2016 at 10:04:01AM +0000, Andre Przywara wrote:
-> >> +&uart0 {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&uart0_pins_a>;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&uart2 {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&uart2_pins>;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&uart3 {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&uart3_pins_a>;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&uart4 {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&uart4_pins>;
-> >> +	status = "okay";
-> >> +};
-> > 
-> > Our policy for boards with "open" pin headers the user can plug
-> > anything he wants is that unless the pin is explicitly dedicated to
-> > that usage, we simply leave them aside so that we don't enforce
-> > anything.
-> 
-> Makes sense, I just wonder what a user is expected to do if she wants to
-> use the serial ports?
-> Hack the DT?
-> Use U-Boot to create those nodes on the fly?
-> Use overlays?
-> Directly setup serial ports from userland? (thinking of this bloody
-> mechanism x86 (used to?) have)
+Hmm. Do you think that would make a difference for the power controller drivers?
 
-Until we have a configfs overlay interface, then yeah, we have to hack
-the DT.
+I am thinking that genpd might perhaps benefit from being able to use
+the device pointer for other purposes as well!?
+Giving a void *, will prevent that, won't it?
 
-That's not very much different than what you'd have to do if you
-wanted some other bus exposed on those pins though.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---np6E2rbShIadjoVu--
+Kind regards
+Uffe
