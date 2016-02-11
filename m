@@ -1,32 +1,33 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
- Refactor A31 PLL6 so that it can be reused)
-Date: Thu, 11 Feb 2016 15:51:58 +0100
-Message-ID: <20160211145158.GA8824@localhost.localdomain>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
- <20160210163001.GG2632@leverpostej>
- <20160211100048.GK31506@lukather>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Thu, 11 Feb 2016 16:01:23 +0100
+Message-ID: <56BCA243.4010507@barix.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <56BC925F.6010809@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160211100048.GK31506@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BC925F.6010809-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 11:00:48AM +0100, Maxime Ripard wrote:
-> None of our existing users ever complained.
 
-Note to self:
+On 11.02.2016 14:53, Sergei Shtylyov wrote:
+>
+>> +        ti,phy20-clkmux-pll;
+>> +        ti,phy20-refclock-frequency = <24000000>;
+>
+>    In principle these 2 should belong to the USB PHY subnode...
 
-   Avoid choosing this SoC for new projects.  The maintainers do not
-   care about the end users.
+Do you mean to define a PHY subnode even if there is currently no 
+standalone PHY driver for da8xx?
 
-Thanks,
-Richard
+Petr
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
