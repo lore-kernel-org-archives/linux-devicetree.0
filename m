@@ -1,100 +1,100 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v16 0/6] Device Tree support for FPGA programming
-Date: Thu, 11 Feb 2016 16:08:25 -0600
-Message-ID: <alpine.DEB.2.02.1602111548200.26384@linuxheads99>
-References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com> <alpine.DEB.2.02.1602111411460.26384@linuxheads99> <CAL_JsqJHuhFG-wtkzDcBzz4b3cM=A8hgT+8DiwSeSKRPZT-e9g@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Thu, 11 Feb 2016 23:22:29 +0100
+Message-ID: <1667812.hY9vsC2epc@vostro.rjw.lan>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com> <44113385.2QnPtvxQx0@vostro.rjw.lan> <alpine.DEB.2.02.1602111557430.27008@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJHuhFG-wtkzDcBzz4b3cM=A8hgT+8DiwSeSKRPZT-e9g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, delicious.quinoa@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1602111557430.27008-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Feb 2016, Rob Herring wrote:
-
-> On Thu, Feb 11, 2016 at 2:49 PM, atull <atull@opensource.altera.com> wrote:
-> > On Fri, 5 Feb 2016, atull@opensource.altera.com wrote:
-> >
-> >> From: Alan Tull <atull@opensource.altera.com>
-> >>
-> >> v16 Refactors the FPGA Area and FPGA Bus into single thing called an
-> >> FPGA Region and eliminates using simple-bus.  I'm using the word
-> >> "region" as it's a term is used in the literature of both the major
-> >> FPGA manufacturors.
-> >>
-> >> Changes for v16:
-> >> * Refactor the FPGA Area and FPGA Bus into a FPGA Region.
-> >> * Don't use simple-bus.
-> >> * FPGA Managers and FPGA Bridges are now specified by phandle using the
-> >>   "fpga-mgr" and "fpga-bridges" properties.  fpga-bridges can specify
-> >>   more than one bridge.
-> >> * Device Tree overlays should be targeted to a FPGA Region.
-> >> * The overlays need only contain firmware-name and the child nodes.
-> >> * To model a system containing >1 partial reconfiguration region,
-> >>   an overlay could add FPGA Regions to the base FPGA Regions.
-> >> * Child FPGA Regions inherit the parent FGPA Manager, but specify
-> >>   their own set of bridges if needes as partial reconfig regions
-> >>   will likely need their own bridges.
-> >> * All this is discussed in bindings/fpga/fpga-region.txt
-> >>
-> >> One other highlight:
-> >> The little engine that runs this thing is a reconfig notifier
-> >> in fpga-region.c.  This notifier that will program an FPGA if a
-> >> "firmware-name" property gets added to a fpga-region.  Then
-> >> it will call of_platform_populate().  The current behavior in Linux
-> >> when a DT overlay is applied is that the reconfig notifications
-> >> go out in heirarchical order: first notifications are for the
-> >> properties, then notifications for the child nodes.  So an overlay
-> >> that adds a 'firmware-name' property and some child nodes to a
-> >> fpga-region will cause FPGA programming and child node
-> >> populating in the right order.
-> >
-> > I figured out how to get rid of the reconfig notifier.
-> >
-> >>
-> >> One issue with the dynamic DT stuff:
-> >> I've tried returning and error from the notifier if FPGA programming
-> >> fails; the error is noted on the console, but the child nodes
-> >> get probed anyway.
-> >
-> > I looked into it further and now I've got a solution for this issue
-> > that I can post soon.  I can stop using the DT overlay configfs
-> > interface and add a sysfs file for applying an overlay to an FPGA
-> > region.  The FPGA region implementation will see the overlay before it
-> > becomes part of the live tree.  Then it can do the FPGA programming
-> > and see that succeed before the child nodes become part of the live
-> > tree.  If FPGA programming fails, the overlay will be rejected before
-> > it becomes part of the live tree.  By the time 'firmware-name' and the
-> > child nodes show up in the live tree, they will be post-configuration
-> > information.
+On Thursday, February 11, 2016 04:04:14 PM Stefano Stabellini wrote:
+> On Wed, 10 Feb 2016, Rafael J. Wysocki wrote:
+> > On Tuesday, February 09, 2016 11:19:02 AM Stefano Stabellini wrote:
+> > > On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
+> > > > On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
+> > > > > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+> > > > > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> > > > > > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > > >
+> > > > > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > > > > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > > > > > > UART is used by Xen. So here it hides UART from Dom0.
+> > > > > > >
+> > > > > > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> > > > > > 
+> > > > > > Well, this doesn't look right to me.
+> > > > > > 
+> > > > > > We need to find a nicer way to achieve what you want.
+> > > > > 
+> > > > > I take that you are talking about how to honor the STAO table in Linux.
+> > > > > Do you have any concrete suggestions?
+> > > > 
+> > > > I do.
+> > > > 
+> > > > The last hunk of the patch is likely what it needs to be, although I'm
+> > > > not sure if the place it is added to is the right one.  That's a minor thing,
+> > > > though.
+> > > > 
+> > > > The other part is problematic.  Not that as it doesn't work, but because of
+> > > > how it works.  With these changes the device will be visible to the OS (in
+> > > > fact to user space even), but will never be "present".  I'm not sure if
+> > > > that's what you want?
+> > > > 
+> > > > It might be better to add a check to acpi_bus_type_and_status() that will
+> > > > evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
+> > > > way the device won't be visible at all.
+> > > 
+> > > Something like below?  Actually your suggestion is better, thank you!
+> > > 
+> > > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> > > index 78d5f02..4778c51 100644
+> > > --- a/drivers/acpi/scan.c
+> > > +++ b/drivers/acpi/scan.c
+> > > @@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+> > >  	if (ACPI_FAILURE(status))
+> > >  		return -ENODEV;
+> > >  
+> > > +	if (acpi_check_device_is_ignored(handle))
+> > > +		return -ENODEV;
+> > > +
+> > >  	switch (acpi_type) {
+> > >  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+> > >  	case ACPI_TYPE_DEVICE:
+> > > 
+> > 
+> > I thought about doing that under ACPI_TYPE_DEVICE, because it shouldn't be
+> > applicable to the other types.  But generally, yes.
 > 
-> Um, no. We don't need 2 interfaces for loading overlays from
-> userspace. I could see this being a common problem and it needs to be
-> solved. But given the configfs interface is not upstream yet, perhaps
-> you should worry about that after the current series is in.
+> I was pondering about it myself. Maybe an ACPI_TYPE_PROCESSOR object
+> could theoretically be hidden with the STAO?
+
+But this patch won't check for it anyway, will it?
+
+It seems to be only checking against the UART address or have I missed
+anything?
+
+> I added the check before
+> the switch because I thought that there would be no harm in being
+> caution about it.
 > 
-> Perhaps we need a pre-add notifier and the core will only load the
-> overlay if nothing handles it. Really, a solution without notifiers
-> would be preferred. Maybe register handlers with the DT core for
-> certain paths.
 > 
-> Rob
+> > Plus I'd move the table checks to acpi_scan_init(), so the UART address can
+> > be a static variable in scan.c.
+> >
+> > Also maybe rename acpi_check_device_is_ignored() to something like
+> > acpi_device_should_be_hidden().
 > 
+> Both make sense. Shannon, are you happy to make these changes?
 
-Yes.  If any handler returns error, the overlay doesn't go into the
-main tree.  Handler type to be registed could be:
+Plus maybe make acpi_device_should_be_hidden() print a (KERN_INFO) message
+when it decides to hide something?
 
-  int pre_add_handler(struct device_node *overlay,
-                      struct device_node *target)
-
-That gives us the overlay after it's been unflattened and phandles
-resolved and the node that it was targeted to.  I was going to
-need find_target_node() to be exported, but this avoids that.
-
-Registration could by compatible string, of match, or path.  Path
-would be too rigid in my case, I'd want to register for compatible
-"fpga-region"
-
-Alan
+Thanks,
+Rafael
