@@ -1,160 +1,184 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: breaking DT compatibility
-Date: Thu, 11 Feb 2016 11:16:21 +0100
-Message-ID: <20160211101621.GL31506@lukather>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
- <56BB61EA.1030805@arm.com>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] add support for DWC UFS Host Controller
+Date: Thu, 11 Feb 2016 10:25:59 +0000
+Message-ID: <56BC61B7.2070507@synopsys.com>
+References: <cover.1455120183.git.jpinto@synopsys.com>
+ <0787e532da876f7f38b4f439ec2e16bfcbaa9cb3.1455120183.git.jpinto@synopsys.com>
+ <6667560.LIsUD7xT9u@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="USsYc9q7w7YyGvrs"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56BB61EA.1030805@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6667560.LIsUD7xT9u@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2/10/2016 8:50 PM, Arnd Bergmann wrote:
+> On Wednesday 10 February 2016 16:06:13 Joao Pinto wrote:
+>> This patch has the goal to add support for DesignWare UFS Controller
+>> specific operations and to add specific platform and pci drivers.
+>>
+>> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>  Documentation/devicetree/bindings/ufs/ufs-dwc.txt |  17 +
+>>  MAINTAINERS                                       |   6 +
+>>  drivers/scsi/ufs/Kconfig                          |  41 ++
+>>  drivers/scsi/ufs/Makefile                         |   3 +
+>>  drivers/scsi/ufs/ufs-dwc-pci.c                    | 180 ++++++
+>>  drivers/scsi/ufs/ufs-dwc.c                        | 102 +++
+>>  drivers/scsi/ufs/ufshcd-dwc.c                     | 736 ++++++++++++++++++++++
+>>  drivers/scsi/ufs/ufshcd-dwc.h                     |  18 +
+>>  drivers/scsi/ufs/ufshcd.c                         |  50 +-
+>>  drivers/scsi/ufs/ufshcd.h                         |  13 +
+>>  drivers/scsi/ufs/ufshci-dwc.h                     |  42 ++
+>>  drivers/scsi/ufs/ufshci.h                         |   1 +
+>>  drivers/scsi/ufs/unipro.h                         |  39 ++
+> 
+> Can you split this into separate patches for changes to the common code,
+> the addition of the PCI driver and the addition of the platform driver?
 
---USsYc9q7w7YyGvrs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I can split it in these parts:
+- Fix typo
+- Add UFS 2.0 support to core driver
+- Changes to core driver + dwc platform driver + dwc pci driver
 
-On Wed, Feb 10, 2016 at 04:14:34PM +0000, Andre Przywara wrote:
-> > On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
-> >> On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.co=
-m> wrote:
-> >>> Hi,
-> >>>
-> >>> just a ping:
-> >>>
-> >>> Are we really OK with breaking existing DTs in 4.6? (per the code in
-> >>> -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
-> >>
-> >> I only warn and make sure people are aware of the issue. I leave that
-> >> up to platform maintainers to decide. It depends on the maturity of
-> >> the platform and users.
-> >=20
-> > The impacted SoCs support is really partial. For the most supported
-> > one, big things like display or sound are totally missing, and we
-> > still update them on a regular basis to add support for new
-> > devices. As such, users are very likely to upgrade the DT from one
-> > version to another just because there's new devices available to
-> > them. And the newest SoC impacted just got introduced in 4.5, and only
-> > has the UART and MMC devices available.
->=20
-> But I still don't see why we have to break things - can't we just
-> improve support _without_ breaking compatibility? For instance keeping
-> the old behaviour around? I can dig out my old x86 hat and find a
-> _compatible_ solution for this, if you prefer ;-)
-> Actually doesn't Jean-Francois' patch fixes the PLL8 issue without
-> breaking anything?
+The last one cannot be split because the glue drivers depends on the changes of
+common code, including the creation of ufshcd-dwc.
 
-Are you convinced that merging code that is not going to be used or
-tested (and thus maintained) by anyone is a good idea?
+> 
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufs-dwc.txt b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+>> new file mode 100644
+>> index 0000000..f38a3f5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+>> @@ -0,0 +1,17 @@
+>> +* Universal Flash Storage (UFS) DesignWare Host Controller
+>> +
+>> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
+>> +Each UFS controller instance should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible string ("snps,ufshcd-1.0", "snps,ufshcd-1.1"
+>> +  or "snps,ufshcd-2.0")
+>> +- reg               : <registers mapping>
+>> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
+>> +
+>> +Example:
+>> +	dwc_ufshcd@0xD0000000 {
+> 
+> Please fix the node name and address in the example. I think you want "ufs@d0000000".
 
-Using X86 as an example is quite funny, since I remember on a few
-occasions having to reflash my BIOS/UEFI to fix some issues in Linux
-(and as it turns out, the last occurence was two weeks ago).
+Sure.
 
-> Also were do you want to draw the line for "partial support"? The
-> sun6i-a31.dtsi is around since 3.12, which was released more than 2
-> years ago.
-> If we want to wait for "stabilization", we will probably wait forever. I
-> find discussions about DT stabilization going back to the very beginning
-> of DT for ARM - as well as the request for moving the DT bindings out of
-> the kernel (which I think we should really eventually do now).
+> 
+>> +config SCSI_UFS_DWC_MPHY_TC
+>> +	bool "Support for the Synopsys MPHY Test Chip"
+>> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
+>> +	---help---
+>> +	  This selects the support for the Synopsys MPHY Test Chip.
+>> +
+>> +	  Select this if you have a Synopsys MPHY Test Chip.
+>> +	  If unsure, say N.
+>> +
+>> +config SCSI_UFS_DWC_40BIT_RMMI
+>> +	bool "40-bit RMMI MPHY"
+>> +	depends on SCSI_UFS_DWC_MPHY_TC
+>> +	---help---
+>> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
+>> +
+>> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
+> 
+> I don't think I understood you explanation why this has to be here,
+> rather than using a proper PHY driver. Please try again.
 
-I'd say when we have merged everything that makes it work as it was
-intented to?
+This initialization is for Synopsys Test Chip which needs only some Unipro
+attribute configuration, which needs to be close to the UFS core since it uses
+its dme set/get functions. Qcom phy driver is differente, because you are really
+managing the phy itself, here in the Synopsys Test Chip you only set some Unipro
+attributes to put controller+Test Chip working together as one.
 
-In this case, it's a multimedia SoCs. So I'd draw the line at once we
-had display, sound and VPU. Display is coming, sound seems to be
-gaining traction lately, so that doesn't sound that far off.
+> 
+>> +
+>> +#ifdef CONFIG_PM
+>> +/**
+>> + * ufs_dw_pci_suspend - suspend power management function
+>> + * @pdev: pointer to PCI device handle
+>> + * @state: power state
+>> + *
+>> + * Returns 0 if successful
+>> + * Returns non-zero otherwise
+>> + */
+>> +static int ufs_dw_pci_suspend(struct device *dev)
+>> +{
+>> +	return ufshcd_system_suspend(dev_get_drvdata(dev));
+>> +}
+> 
+> Please remove the #ifdef here.
 
-> Frankly I don't care so much about these particular boards, but just
-> want avoid to set a bad example for the future - in particular sneaking
-> this behaviour into the arm64 world, where DTs _really_ come with the
-> board or are even generated by the (UEFI-)firmware.
 
-Ok, that's a good thing to know, and we'll make sure it won't
-happen. What's the policy when the provided DT comes from a vendor in
-that case?
+> 
+>> +
+>> +static const struct dev_pm_ops ufs_dw_pci_pm_ops = {
+>> +	.suspend	= ufs_dw_pci_suspend,
+>> +	.resume		= ufs_dw_pci_resume,
+>> +	.runtime_suspend = ufs_dw_pci_runtime_suspend,
+>> +	.runtime_resume  = ufs_dw_pci_runtime_resume,
+>> +	.runtime_idle    = ufs_dw_pci_runtime_idle,
+>> +};
+> 
+> Instead, use the macros from include/linux/pm.h
 
-> U-Boot already can embed a device tree, sounds like a perfect place to
-> have it stored for me - as long as there is _one_ best version of it.
 
-So far, they've been using their own, with some custom properties that
-were rejected last time they were submitted.
+> 
+>> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+>> +/**
+>> + * ufshcd_dwc_setup_40bit_rmmi()
+>> + * This function configures Synopsys MPHY specific atributes (40-bit RMMI)
+>> + * @hba: Pointer to drivers structure
+>> + *
+>> + * Returns 0 on success or non-zero value on failure
+>> + */
+>> +static int ufshcd_dwc_setup_40bit_rmmi(struct ufs_hba *hba)
+>> +{
+>> +	int ret = 0;
+> 
+> This looks like it should go into the external driver
 
-http://lists.infradead.org/pipermail/linux-rpi-kernel/2015-August/002122.ht=
-ml
+This is common init code for platform glue driver and pci glue driver, so it
+should remain in a common spot and in my option ufshcd-dwc is the right spot.
 
-So I'm a bit pessimistic about that.
+> 
+>> +
+>> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+>> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
+>> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
+>> +		goto out;
+>> +	}
+>> +#else
+>> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
+>> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
+>> +		goto out;
+>> +	}
+>> +#endif
+> 
+> In particular, the part above cannot possibly work: When a distro ships a kernel
+> with CONFIG_SCSI_UFS_DWC_40BIT_RMMI set, it won't ever call the 
+> ufshcd_dwc_setup_20bit_rmmi() function, regardless of what the hardware is.
 
-> >> If people complain about it then it's their mess. For platforms
-> >> supported in distros such as debian or fedora, I would strongly
-> >> recommend against breaking compatibility.
-> >=20
-> > None of them are officially supported:
-> > https://www.debian.org/releases/stable/armhf/ch02s01.html.en
-> > https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
-> >=20
-> > Only the older one are, and they are not affected by this patch.
-> >=20
-> >> They do ship dtbs, but it's a chicken and egg problem. If dtbs were
-> >> stable and provided by firmware, then they wouldn't have to provide
-> >> them. If dtbs are unstable, then they have no choice.
-> >=20
-> > And while it might work great on platforms that have all the needed
-> > documentation, or a perfect one, which is our case. Almost each
-> > release, we discover that something is not working as it was
-> > documented, when it was documented in the first place.
->=20
-> I understand that it's not an ideal situation for those Allwinner
-> chips - but nevertheless I would like us to at least _try_ to comply
-> with this idea. As said before: this patch is a nice rework/cleanup
-> - but definitely not a good reason to break compatibility.
+You are right... never thought about it that way... I am going to check with the
+IP guys the best way to go.
 
-To be fair, I really want to tend to keep a DT ABI as stable as
-possible. I just don't want to commit to it. If it comes in the way of
-a nice rework/cleanup, then it shouldn't matter.
+> 
+> 	Arnd
+> 
 
-But that doesn't make me want to break everything every kernel release
-either.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---USsYc9q7w7YyGvrs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWvF91AAoJEBx+YmzsjxAgDusQAIAb/ixpeJ4SSrRZ+wH/+9UY
-+6hqaDXfBY6QcaTwP6+5B07AMnOzaJLW9hNn3CQMV6XnxASoMBuXnr3TLDvcgfEc
-3VdNsUgUAUYh8E3Q2L3A6LP5XjDTJnA3XwHzeHnswOaXAWxjYrWY/K5vut1wuX5v
-Nql3GCgTfvwXEVbEMRAjqr7aLHLnC5S9SOkuxEjFJYcwTKc5VYnaV8zrFcIkgb5U
-WMHIm31XbYY/2bQ5J9R00az8DD3brMmWhlN7dT2maDTM28/i38pApIXELMDjrk8A
-VjitA1XJkQ1yQ8QUjXFbEuqDeaiW5pRXwSDBRHlpEPskibeiOE+82WkLyLNa0+sI
-xJu6StX9CHEuplNL46BMkA8qjAVuFoqKV4d0Pxfh60BXNuUzv3c81pvGNUAeH1AW
-izwMIeGhWSc+Mo/6iMFuSVyLjmi1FBuwVPv49FnUWW8F6Kd4DdH3xKIyez3fU8nN
-EcLVsahnHCJpo2mPxxjkLmTNX57Qn5Lng08EZn/Kr5u1D1NRNuBIblLPT3g0H0Sa
-quhmq1lmXULBx+d713n70diB87ncl2cRhpSn4wwSMoT7X71dNdi20jjoZEc6QcIU
-2cD80WFiPxvr+gAc4QGnZ7fHtckR3d8heSXI5NTmR+q3T2LfbbfJ3fElrahFu4ur
-ytXP/amHtCD7mIMWM9gH
-=yUjr
------END PGP SIGNATURE-----
-
---USsYc9q7w7YyGvrs--
+Joao
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
