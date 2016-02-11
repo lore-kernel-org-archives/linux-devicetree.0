@@ -1,126 +1,124 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V7 1/8] mfd: add device-tree binding doc for PMIC
- max77620/max20024
-Date: Thu, 11 Feb 2016 09:26:04 +0000
-Message-ID: <20160211092604.GG3782@x1>
-References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com>
- <1454171931-27752-2-git-send-email-ldewangan@nvidia.com>
- <20160209154215.GF24522@x1>
- <56BA2859.2040605@nvidia.com>
- <20160210132333.GG24522@x1>
- <56BB3FB9.7050102@nvidia.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4] clk: sunxi: Refactor A31 PLL6 so that it can be reused
+Date: Thu, 11 Feb 2016 10:41:03 +0100
+Message-ID: <20160211094103.GI31506@lukather>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+ <56B4E2FB.3050703@arm.com>
+ <20160210125936.GD31506@lukather>
+ <CABGGisxORFOxLVQiTZ=gEr6j2JnVcjQxTLJFPa7uG93g46CKwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N+TWAKLONZJHYDBn"
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56BB3FB9.7050102@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
+In-Reply-To: <CABGGisxORFOxLVQiTZ=gEr6j2JnVcjQxTLJFPa7uG93g46CKwg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <rob.herring@linaro.org>
+Cc: Andre Przywara <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Feb 2016, Laxman Dewangan wrote:
 
->=20
-> On Wednesday 10 February 2016 06:53 PM, Lee Jones wrote:
-> >On Tue, 09 Feb 2016, Laxman Dewangan wrote:
+--N+TWAKLONZJHYDBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Feb 10, 2016 at 08:02:45AM -0600, Rob Herring wrote:
+> On Wed, Feb 10, 2016 at 6:59 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Hi,
 > >
-> >>On Tuesday 09 February 2016 09:12 PM, Lee Jones wrote:
-> >>>On Sat, 30 Jan 2016, Laxman Dewangan wrote:
-> >>>
-> >>>+	Normal mode also called as active mode on which all step-down
-> >>>+		regulators, all linear regulators, GPIOs, and the 32kHz
-> >>>+		oscillator are in normal active mode.
-> >>>+	sleep mode: Regulators/GPIOs/clock can go on OFF state based on
-> >>>"can go on OFF state"?
-> >>Regulator/GPIO has two states, enable and disable. If sleep mode is
-> >>configured for these resource and external signal triggers to sleep
-> >>then this get disabled.
-> >It's the English that I'm unhappy with.
+> > On Fri, Feb 05, 2016 at 05:59:23PM +0000, Andre Przywara wrote:
+> >> Hi Maxime,
+> >>
+> >> just found this while looking at your current git branch, so sorry for
+> >> the late reply.
+> >>
+> >> CC:ing DT people, since you touch both existing DTs(!) and the binding=
+ doc.
+>=20
+> [...]
+>=20
+> >> So are you really breaking all those systems by changing the DT and the
+> >> driver in an incompatible way?
 > >
-> >"can go on OFF state" doesn't sound right.
+> > Yes.
 > >
-> >>>>+			source gets the control signal for ON and OFF.
-> >>>>+	Power on slot: 	Slot number on which resource is ON once FPS so=
-urce
-> >>>>+			get ON signal.
-> >>>Can you find another way of explaining this please?
-> >>Hmm..
-> >>Does it look fine:
-> >>There is 8 slots for each FPS on which resource can get enabled.
-> >>This property provides the slot number on which resource gets
-> >>enabled after FPS sequence started.
-> >It's a bit better, yes.  Although it's still a little difficult to
-> >read.  In fact, I can't even recommend a suitable alternative, since=
- I
-> >still do not understand exactly what it is you're trying to say.
+> >> Please correct me if this assessment is wrong, but to me it looks like
+> >> any user out there is either stuck with 4.5 at best _or_ will only be
+> >> able to run 4.6 and later (depending on which version of the DT she is
+> >> using)? And no, switching DTs along with the kernel is _not_ an option.
+> >
+> > It is. And it is one that every other ARM platform chose. And so did
+> > every distribution.
 >=20
-> I am sorry if I am not able to make it clear. Better I post the
-> datasheet content so that it is easy to understand and then we can
-> have better text here.
+> I do leave it to platform maintainers judgement (perhaps that should
+> be reconsidered), but it should still be case by case basis not an all
+> out disregard for the ABI. If you decide to ignore the ABI, then there
+> is no decision for the distros or other users.
 >=20
+> >> That is not how I understand DT.
+> >
+> > I'm sorry for that. This has never been something we said was
+> > happening.
+> >
+> >> Also this totally ignores any other DT user (U-Boot, FreeBSD, you
+> >> name it).
+> >
+> > Which all have their own DT copies, with their own bindings, that we
+> > (ie Linux) never agreed on.
 >=20
-> The Flexible Power Sequencer (FPS) allows each regulator to power up
-> under hardware or software control. Additionally, each regulator can
-> power on independently or among a group of other regulators with an
-> adjustable power-up and power-down delays (sequencing). GPIO1,
-> GPIO2, and GPIO3 can be programmed to be part of a sequence allowing
-> external regulators to be sequenced along with internal regulators.
-> nRST_IO can be programmed to be part of a sequence.
->=20
-> The flexible sequencing structure consists of two hardware enable
-> inputs (EN0, EN1), and 3 master sequencing timers. Each master
-> sequencing timer is programmable through its configuration register
-> to have a hardware enable source or a software enable source
-> (CNFGFPSx). When enabled/disabled the master sequencing timer
-> generates eight sequencing events. The time period between each
-> event is programmable within the configuration register.
->=20
-> Each regulator, GPIO1, GPIO2, GPIO3, and nRST_IO has a flexible
-> power sequence slave register (FPS_x) which allows its enable source
-> to be specified as a flexible power sequencer timer or a software
-> bit. When a FPSSRCx specifies the enable source to be a flexible
-> power sequencer, the power up and power down delays are configured
-> by FPSPUx[2:0] and FPSPDx[2:0].can be specified in that regulators
-> flexible power sequencer configuration register.
+> That is not really true. There are some differences ATM, but they are
+> largely derivatives of the kernel copy and the goal is to align them.
+> If we don't maintain an ABI, that will never happen.
 
-Perfect, let's go with that.
+At least for us, this is definitely true. The SoCs impacted by this
+change are not supported by FreeBSD at all, and the one that are
+supported have bindings that do not match the one we have in the
+kernel:
+https://github.com/freebsd/freebsd/blob/master/sys/boot/fdt/dts/arm/sun4i-a=
+10.dtsi
 
-> >>>+-maxim,enable-sleep: 		    Boolean, enable sleep state of PMIC
-> >>>We already have bindings for sleeping.  Please use a generic one.
-> >>Which property? Saw sleep property with vendor prefix.
-> >I guess there are too many '.*sleep.*' properties now, each with
-> >slightly different syntax and meaning.  The situation is exacerbated
-> >by one of the key examples is using the property with cells expected
-> >i.e. non-bool.
->=20
->=20
-> My grep shows some sleep property and followig are near to which I
-> am looking.
->=20
-> st,supports-sleepmode
->=20
-> pinctrl/ste,nomadik.txt:- ste,sleep: <0/1>
->                                     0: sleep mode disable,
->                                     1: sleep mode enable.
->=20
->=20
-> Should I made this as generic like
->=20
-> sleep: <0/1>
->             0: sleep mode disable,
->             1: sleep mode enable.
+Over the 10 compatibles used there, 3 are totally different (watchdog,
+the SRAM controller and the clock hardware block) and two deviates in
+incompatible ways (timer and pinctrl) and one has property that we'd
+probably deny (UART, and its current-speed). 6 out of 10 overall.
 
-Ideally yes.  This is obviously going to be used again.
+And U-boot never had any issue in the past with that policy. Tom said
+it on several occasions, and it worked for us too, with some minor
+compromises we needed, such as keeping some node pathes that U-Boot
+was using, even though it turned out to be wrong.
 
-However;
- - My fear is that it will get confused with the 'sleep' property in
-   Documentation/devicetree/booting-without-of.txt.
- - Secondly, you would need to get Rob to Ack it.
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/a=
+rm/boot/dts/sun7i-a20.dtsi#n615
+
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--N+TWAKLONZJHYDBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWvFcvAAoJEBx+YmzsjxAgpfEQALB/6eJ9kARSAwzTMlM8VV7F
+mbeqtYE34g2WAcbrBps43To0L9dMAnnCpM3eUmJhzVDc9rMmbfMpgAP+4tdRNLb4
+sRMkHdrK6qk2q8hktk8hD7wwCVo2YmqOWG3RTbI18p33aZhjoAGBpGJuuu9k28lf
+sg5W8V+uchSBYgrV0jdqDEaYC30TZjI1MVGaHCp+jwlVTFBQW2/0McTPqmYsTHjV
+Zdyq0teZXHpXy2r+ebQqGQzlYXDvqv6tZvEf+SOyWAYaEqB5D6b/228OXDysWy/U
+lz4KM1XT4FWwqY1S5xZJAxNZJtOtyr3k3ZeAbYZNwNv3ZbIe0V2Jd/+E+xZ0Ye3h
+4/7B8eqaOPC+TJlbl5S5IYjB2Uh2rra9wdBWYSXfOMZU/0qzotAKfxD3zw4Rltd6
+pLDPk+El4/n4UX6NnnBN2WDzufdUdwcAmDgSxq7vE64or3lDpecRSWdNSA/ufAOF
++NwVVYoPM6n0G4JPrzo6PYe6d13IJmYyviUYGmew01JD6hczNX/zFoSpUxyoQZtt
++wAlGt9AmHM22UfhpkLOfc2Eq0ABkFRP1wmDQLPhdutowA49GxaW1RLNhnleKnW9
+iTyxwvWo6SX92Jnm8XlAG/2SBgrIZHFsWPzijNUTKoU3I1fA2wN2xpgDPTl8GtyM
+i9daVZszLySGpmz8Addj
+=urZ+
+-----END PGP SIGNATURE-----
+
+--N+TWAKLONZJHYDBn--
