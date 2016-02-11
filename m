@@ -1,56 +1,96 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/2] ARM: dts: vf-colibri: assign Ethernet clock explicitly
-Date: Wed, 10 Feb 2016 16:02:26 -0800
-Message-ID: <1455148946-26903-2-git-send-email-stefan@agner.ch>
-References: <1455148946-26903-1-git-send-email-stefan@agner.ch>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x/am57xx: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Wed, 10 Feb 2016 16:22:47 -0800
+Message-ID: <20160211002247.GO19432@atomide.com>
+References: <1454968553-12088-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1455148946-26903-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454968553-12088-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Assign Ethernet clock parents explicitly. The Colibri VF61
-uses the 50MHz Ethernet clock provided by PLL5.
+* Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> [160208 13:57]:
+> Commit 3efda00129bd ("ARM: dts: am335x: replace gpio-key,wakeup with
+> wakeup-source property") replaces all the legacy "gpio-key,wakeup" wi=
+th
+> the unified  "wakeup-source" property to prevent any further copy-pas=
+te
+> duplication.
+>=20
+> However couple of use of these legacy property sneaked in during the
+> merge window. This patch replaces them too.
+>=20
+> Cc: "Beno=C3=AEt Cousson" <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-shc.dts          | 4 ++--
+>  arch/arm/boot/dts/am57xx-cl-som-am57x.dts | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> Hi Tony,
+>=20
+> I see these files got introduced during v4.5 merge window and we coul=
+d
+> not stop the copy-paste from the earlier versions files from which th=
+ey
+> were copied.
 
-The Vybrid SoC has two ethernet interfaces (fec0 and fec1) which
-use the same clock source (VF610_CLK_ENET). Therefore this parent
-configuration affects multiple consumer devices and need to be
-specified in the clock provider node.
+OK thanks for checking, applying this into omap-for-v4.5/fixes.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/vf-colibri.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Regards,
 
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index c4312c4..8a889af 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -38,6 +38,13 @@
- 	status = "disabled";
- };
- 
-+&clks {
-+	assigned-clocks = <&clks VF610_CLK_ENET_SEL>,
-+			  <&clks VF610_CLK_ENET_TS_SEL>;
-+	assigned-clock-parents = <&clks VF610_CLK_ENET_50M>,
-+				 <&clks VF610_CLK_ENET_50M>;
-+};
-+
- &dspi1 {
- 	bus-num = <1>;
- 	pinctrl-names = "default";
--- 
-2.7.1
+Tony
+
+> diff --git a/arch/arm/boot/dts/am335x-shc.dts b/arch/arm/boot/dts/am3=
+35x-shc.dts
+> index 1b5b044fcd91..865de8500f1c 100644
+> --- a/arch/arm/boot/dts/am335x-shc.dts
+> +++ b/arch/arm/boot/dts/am335x-shc.dts
+> @@ -46,7 +46,7 @@
+>  			gpios =3D <&gpio1 29 GPIO_ACTIVE_HIGH>;
+>  			linux,code =3D <KEY_BACK>;
+>  			debounce-interval =3D <1000>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  		};
+> =20
+>  		front_button {
+> @@ -54,7 +54,7 @@
+>  			gpios =3D <&gpio1 25 GPIO_ACTIVE_HIGH>;
+>  			linux,code =3D <KEY_FRONT>;
+>  			debounce-interval =3D <1000>;
+> -			gpio-key,wakeup;
+> +			wakeup-source;
+>  		};
+>  	};
+> =20
+> diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boo=
+t/dts/am57xx-cl-som-am57x.dts
+> index c53882643ae9..497eb07ced19 100644
+> --- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> +++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> @@ -545,7 +545,7 @@
+>  		ti,debounce-tol =3D /bits/ 16 <10>;
+>  		ti,debounce-rep =3D /bits/ 16 <1>;
+> =20
+> -		linux,wakeup;
+> +		wakeup-source;
+>  	};
+>  };
+> =20
+> --=20
+> 1.9.1
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
