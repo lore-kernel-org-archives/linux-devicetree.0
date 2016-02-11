@@ -1,133 +1,174 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v16 0/6] Device Tree support for FPGA programming
-Date: Thu, 11 Feb 2016 14:49:28 -0600
-Message-ID: <alpine.DEB.2.02.1602111411460.26384@linuxheads99>
-References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com>
+From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v8 4/4] Documentation: tee subsystem and op-tee driver
+Date: Thu, 11 Feb 2016 13:08:30 -0800
+Message-ID: <56BCF84E.50808@infradead.org>
+References: <1455210877-15748-1-git-send-email-jens.wiklander@linaro.org>
+ <1455210877-15748-5-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1454707803-27947-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455210877-15748-5-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Feb 2016, atull@opensource.altera.com wrote:
+On 02/11/16 09:14, Jens Wiklander wrote:
+> Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/00-INDEX |   2 +
+>  Documentation/tee.txt  | 117 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  MAINTAINERS            |   1 +
+>  3 files changed, 120 insertions(+)
+>  create mode 100644 Documentation/tee.txt
 
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> v16 Refactors the FPGA Area and FPGA Bus into single thing called an
-> FPGA Region and eliminates using simple-bus.  I'm using the word
-> "region" as it's a term is used in the literature of both the major
-> FPGA manufacturors.
-> 
-> Changes for v16:
-> * Refactor the FPGA Area and FPGA Bus into a FPGA Region.
-> * Don't use simple-bus.
-> * FPGA Managers and FPGA Bridges are now specified by phandle using the 
->   "fpga-mgr" and "fpga-bridges" properties.  fpga-bridges can specify
->   more than one bridge.
-> * Device Tree overlays should be targeted to a FPGA Region.
-> * The overlays need only contain firmware-name and the child nodes.
-> * To model a system containing >1 partial reconfiguration region,
->   an overlay could add FPGA Regions to the base FPGA Regions.
-> * Child FPGA Regions inherit the parent FGPA Manager, but specify
->   their own set of bridges if needes as partial reconfig regions
->   will likely need their own bridges.
-> * All this is discussed in bindings/fpga/fpga-region.txt
-> 
-> One other highlight:
-> The little engine that runs this thing is a reconfig notifier
-> in fpga-region.c.  This notifier that will program an FPGA if a
-> "firmware-name" property gets added to a fpga-region.  Then
-> it will call of_platform_populate().  The current behavior in Linux
-> when a DT overlay is applied is that the reconfig notifications
-> go out in heirarchical order: first notifications are for the
-> properties, then notifications for the child nodes.  So an overlay
-> that adds a 'firmware-name' property and some child nodes to a
-> fpga-region will cause FPGA programming and child node
-> populating in the right order.
+> diff --git a/Documentation/tee.txt b/Documentation/tee.txt
+> new file mode 100644
+> index 0000000..4ac91d2
+> --- /dev/null
+> +++ b/Documentation/tee.txt
+> @@ -0,0 +1,117 @@
+> +TEE subsystem
+> +This document describes the TEE subsystem in Linux
 
-I figured out how to get rid of the reconfig notifier.
+                                                Linux.
 
-> 
-> One issue with the dynamic DT stuff:
-> I've tried returning and error from the notifier if FPGA programming
-> fails; the error is noted on the console, but the child nodes
-> get probed anyway.
+> +
+> +A TEE (Trusted Execution Environment) is a trusted OS running in some
+> +secure environment, for example, TrustZone on ARM CPUs, or a separate
+> +secure co-processor etc. A TEE driver handles the details needed to
+> +communicate with the TEE.
+> +
+> +This subsystem deals with:
+> +
+> +- Registration of TEE drivers
+> +
+> +- Managing shared memory between Linux and the TEE
+> +
+> +- Providing a generic API to the TEE
+> +
+> +The TEE interface
+> +=================
+> +
+> +include/uapi/linux/tee.h defines the generic interface to a TEE.
+> +
+> +User space (the client) connects to the driver by opening /dev/tee[0-9]* or
+> +/dev/teepriv[0-9]*.
+> +
+> +- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor which
+> +  user space can mmap. When user space doesn't need the file descriptor anymore
 
-I looked into it further and now I've got a solution for this issue
-that I can post soon.  I can stop using the DT overlay configfs
-interface and add a sysfs file for applying an overlay to an FPGA
-region.  The FPGA region implementation will see the overlay before it
-becomes part of the live tree.  Then it can do the FPGA programming
-and see that succeed before the child nodes become part of the live
-tree.  If FPGA programming fails, the overlay will be rejected before
-it becomes part of the live tree.  By the time 'firmware-name' and the
-child nodes show up in the live tree, they will be post-configuration
-information.
+                                                                           any more,
 
-Each fpga_region appears in sysfs and will add a file for loading the
-overlay targeted to that region.  Such as:
+> +  it should be closed. When shared memory isn't needed any longer it should be
+> +  unmapped with munmap() to allow the reuse of memory.
+> +
+> +- TEE_IOC_VERSION lets user space know which TEE this driver handles and
+> +  the its capabilities.
+> +
+> +- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application
 
-echo fpga-dt-overlay.dtb.o > \
-  /sys/class/fpga_region/region0/overlay_name
+end with '.'
 
-fpga-region.c's overlay_name attribute code will load the overlay
-file, unflatten and resolve it.  Then it will check to make sure it
-passes a few rules.  Such as: the overlay must contain a fragment that
-is targeted to the region whose sysfs it was applied.
+> +
+> +- TEE_IOC_INVOKE invokes a function in a Trusted Application
 
-If the overlay passes the rules check, the FPGA region will program
-the FPGA.  If that succeeds, then it calls of_overlay_create() and the
-overlay is added into the live tree and the children get populated.
+ditto
 
-So fpga-region.c will ensure that the FPGA is already programmed
-before the child nodes are added to the DT.
+> +
+> +- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE
 
-This solution also means that fpga-region.c no longer needs a reconfig
-notifier.
+ditto
 
-I'll have to look at the documentation to see how that changes how I
-talk about the bindings.  The documentation will have to become two
-files again since part of this is Linux specific and part is DT
-bindings.
+> +
+> +- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application
 
-Alan
+ditto
 
-> 
-> 
-> Alan Tull (6):
->   fpga: add bindings document for fpga region
->   add sysfs document for fpga bridge class
->   ARM: socfpga: add bindings document for fpga bridge drivers
->   fpga: add fpga bridge framework
->   fpga: fpga-region: device tree control for FPGA
->   ARM: socfpga: fpga bridge driver support
-> 
->  Documentation/ABI/testing/sysfs-class-fpga-bridge  |   11 +
->  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +
->  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   47 ++
->  .../devicetree/bindings/fpga/fpga-region.txt       |  348 +++++++++++++++
->  drivers/fpga/Kconfig                               |   21 +
->  drivers/fpga/Makefile                              |    7 +
->  drivers/fpga/altera-fpga2sdram.c                   |  174 ++++++++
->  drivers/fpga/altera-hps2fpga.c                     |  213 +++++++++
->  drivers/fpga/fpga-bridge.c                         |  388 +++++++++++++++++
->  drivers/fpga/fpga-region.c                         |  460 ++++++++++++++++++++
->  include/linux/fpga/fpga-bridge.h                   |   55 +++
->  11 files changed, 1739 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
->  create mode 100644 drivers/fpga/altera-fpga2sdram.c
->  create mode 100644 drivers/fpga/altera-hps2fpga.c
->  create mode 100644 drivers/fpga/fpga-bridge.c
->  create mode 100644 drivers/fpga/fpga-region.c
->  create mode 100644 include/linux/fpga/fpga-bridge.h
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
+> +
+> +There are two classes of clients, normal clients and supplicants. The latter is
+> +a helper process for the TEE to access resources in Linux, for example file
+> +system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
+> +/dev/teepriv[0-9].
+> +
+> +Much of the communication between clients and the TEE is opaque to the
+> +driver. The main job for the driver is to receive requests from the
+> +clients, forward them to the TEE and send back the results. In the case of
+> +supplicants the communication goes in the other direction, the TEE sends
+> +requests to the supplicant which then sends back the result.
+> +
+> +OP-TEE driver
+> +=============
+> +
+> +The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
+> +TrustZone based OP-TEE solution that is supported.
+> +
+> +Lowest level of communication with OP-TEE builds on ARM SMC Calling
+> +Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
+> +[3] used internally by the driver. Stacked on top of that is OP-TEE Message
+> +Protocol [4].
+> +
+> +OP-TEE SMC interface provides the basic functions required by SMCCC and some
+> +additional functions specific for OP-TEE. The most interesting functions are:
+> +
+> +- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
+> +  which is then returned by TEE_IOC_VERSION
+> +
+> +- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
+> +  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
+> +  separate secure co-processor.
+> +
+> +- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
+> +
+> +- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
+> +  range to used for shared memory between Linux and OP-TEE.
+> +
+> +The GlobalPlatform TEE Client API [5] is implemented on top of the generic
+> +TEE API.
+> +
+> +Picture of the relationship between the different components in the
+> +OP-TEE architecture.
+> +
+> +    User space                  Kernel                   Secure world
+> +    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
+> + +--------+                                             +-------------+
+> + | Client |                                             | Trusted     |
+> + +--------+                                             | Application |
+> +    /\                                                  +-------------+
+> +    || +----------+                                           /\
+> +    || |tee-      |                                           ||
+> +    || |supplicant|                                           \/
+> +    || +----------+                                     +-------------+
+> +    \/      /\                                          | TEE Internal|
+> + +-------+  ||                                          | API         |
+> + + TEE   |  ||            +--------+--------+           +-------------+
+> + | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
+> + | API   |  \/            | subsys | driver |           | Trusted OS  |
+> + +-------+----------------+----+-------+----+-----------+-------------+
+> + |      Generic TEE API        |       |     OP-TEE MSG               |
+> + |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
+> + +-----------------------------+       +------------------------------+
+> +
+> +RPC (Remote Procedure Call) are requests from secure world to kernel driver
+> +or tee-supplicant. An RPC is identified by a special range of SMCCC return
+> +values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
+> +kernel are handled by the kernel driver. Other RPC messages will be forwarded to
+> +tee-supplicant without further involvement of the driver, except switching
+> +shared memory buffer representation.
+> +
+> +References:
+> +[1] https://github.com/OP-TEE/optee_os
+> +[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
+> +[3] drivers/tee/optee/optee_smc.h
+> +[4] drivers/tee/optee/optee_msg.h
+> +[5] http://www.globalplatform.org/specificationsdevice.asp look for
+> +    "TEE Client API Specification v1.0" and click download.
+
+
+-- 
+~Randy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
