@@ -1,50 +1,42 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: [PATCH V3 01/12] MAINTAINERS: Adding Maintainers for AMD Seattle Device Tree
-Date: Wed, 10 Feb 2016 21:51:00 -0600
-Message-ID: <1455162671-16044-2-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V3 02/12] dtb: amd: Fix GICv2 hypervisor and virtual interface sizes
+Date: Wed, 10 Feb 2016 21:51:01 -0600
+Message-ID: <1455162671-16044-3-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+From: Brijesh Singh <brijeshkumar.singh@amd.com>
 
-Adding maintainers for AMD Seattle device tree.
+This patch fixes incorrect sizes of the GICv2 device tree node.
+This has triggered error message when booting Xen hypervisor.
 
-Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
+Signed-off-by: Brijesh Singh <brijeshkumar.singh@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7f1fa4f..e349a32 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -673,6 +673,13 @@ F:	drivers/gpu/drm/radeon/radeon_kfd.c
- F:	drivers/gpu/drm/radeon/radeon_kfd.h
- F:	include/uapi/linux/kfd_ioctl.h
- 
-+AMD SEATTLE DEVICE TREE SUPPORT
-+M:	Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-+M:	Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-+M:	Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
-+S:	Supported
-+F:	arch/arm64/boot/dts/amd/
-+
- AMD XGBE DRIVER
- M:	Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>
- L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index 2874d92..fdd0c96 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -18,8 +18,8 @@
+ 		#size-cells = <2>;
+ 		reg = <0x0 0xe1110000 0 0x1000>,
+ 		      <0x0 0xe112f000 0 0x2000>,
+-		      <0x0 0xe1140000 0 0x10000>,
+-		      <0x0 0xe1160000 0 0x10000>;
++		      <0x0 0xe1140000 0 0x2000>,
++		      <0x0 0xe1160000 0 0x2000>;
+ 		interrupts = <1 9 0xf04>;
+ 		ranges = <0 0 0 0xe1100000 0 0x100000>;
+ 		v2m0: v2m@e0080000 {
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
