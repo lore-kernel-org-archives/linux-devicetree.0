@@ -1,134 +1,72 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: breaking DT compatibility
-Date: Thu, 11 Feb 2016 12:29:46 +0000
-Message-ID: <56BC7EBA.9030101@arm.com>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com> <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather> <20160210163001.GG2632@leverpostej>
- <20160211100048.GK31506@lukather> <20160211114410.GA32535@leverpostej>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 01/14] pinctrl: sunxi: Add A83T R_PIO controller support
+Date: Thu, 11 Feb 2016 13:36:48 +0100
+Message-ID: <20160211123648.GN31506@lukather>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1454203266-4450-2-git-send-email-vishnupatekar0510@gmail.com>
+ <CACRpkdbCgOBQw28d=qc1fAURY3x8UdoWqiMtXMZ=uWLaQj-nbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zp3AMgPTa9Mf+MXm"
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160211114410.GA32535@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbCgOBQw28d=qc1fAURY3x8UdoWqiMtXMZ=uWLaQj-nbg@mail.gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Vishnu Patekar <vishnupatekar0510@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 11/02/16 11:44, Mark Rutland wrote:
-> On Thu, Feb 11, 2016 at 11:00:48AM +0100, Maxime Ripard wrote:
->> On Wed, Feb 10, 2016 at 04:30:01PM +0000, Mark Rutland wrote:
->>> On Wed, Feb 10, 2016 at 03:37:55PM +0100, Maxime Ripard wrote:
->>>> Hi Rob,
->>>>
->>>> On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
->>>>> On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.com> wrote:
->>>>>> Hi,
->>>>>>
->>>>>> just a ping:
->>>>>>
->>>>>> Are we really OK with breaking existing DTs in 4.6? (per the code in
->>>>>> -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
->>>>>
->>>>> I only warn and make sure people are aware of the issue. I leave that
->>>>> up to platform maintainers to decide. It depends on the maturity of
->>>>> the platform and users.
->>>>
->>>> The impacted SoCs support is really partial. For the most supported
->>>> one, big things like display or sound are totally missing, and we
->>>> still update them on a regular basis to add support for new
->>>> devices. As such, users are very likely to upgrade the DT from one
->>>> version to another just because there's new devices available to
->>>> them. And the newest SoC impacted just got introduced in 4.5, and only
->>>> has the UART and MMC devices available.
->>>>
->>>>> If people complain about it then it's their mess. For platforms
->>>>> supported in distros such as debian or fedora, I would strongly
->>>>> recommend against breaking compatibility.
->>>>
->>>> None of them are officially supported:
->>>> https://www.debian.org/releases/stable/armhf/ch02s01.html.en
->>>> https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
->>>>
->>>> Only the older one are, and they are not affected by this patch.
->>>>
->>>>> They do ship dtbs, but it's a chicken and egg problem. If dtbs were
->>>>> stable and provided by firmware, then they wouldn't have to provide
->>>>> them. If dtbs are unstable, then they have no choice.
->>>>
->>>> And while it might work great on platforms that have all the needed
->>>> documentation, or a perfect one, which is our case. Almost each
->>>> release, we discover that something is not working as it was
->>>> documented, when it was documented in the first place.
->>>>
->>>> It also seems that even on well documented platforms, supported by the
->>>> vendors, the stable ABI dream is not going to happen:
->>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm/Atmel/README#n105
->>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/marvell,berlin.txt#n4
->>>
->>> To be quite frank, I completely disagree with that stance.
->>>
->>> It seems like the only reason DT bindings aren't remaining stable is
->>> because people are deliberately ignoring the requirement and reasoning
->>> for doing so.
->>
->> And for DT maintainers saying on multiple occasions that it's bad but
->> ok to break it and / or that they never actually said that it was a
->> stable ABI...
-> 
-> Evidently there is a communication failure. Generally, the statement has
-> been that old DTBs should continue to work. That's even documented, as
-> Andre pointed out:
-> 
-> Documentation/devicetree/bindings/ABI.txt
-> 
-> There are obviously shades of grey, and _rarely_ it might be necessary
-> to deliberately break a binding. However, that should be the rare
-> last-resort case, rather than a crutch for development.
-> 
-> Saying "bad but ok" underplays the "bad" and overplays the "ok".
-> 
->> I'm guessing it could be a stable ABI if there was bindings
->> reviews. Rob actually started to review a significant amount of
->> bindings lately, and that's really appreciated, but if you don't
->> review all the bindings, then we're going to make mistakes.
-> 
-> I agree that it is unfortunate that we cannot provide the level of
-> review that we want to.
-> 
-> Mistakes will happen even with review; that doesn't necessitate removing
-> support for a binding.
-> 
->>> I agree that it can be painful, and that we cannot predict the future.
->>> There will always be bugs.
->>
->> In our case, we can't even predict the present.
->>
->>> Having code in mainline comes with responsibilities. One of those is to
->>> keep said code working for existing users. Otherwise, why bother having
->>> it in mainline at all?
->>
->> None of our existing users ever complained.
-> 
-> I believe that in this case, Andre was complaining about this particular
-> breakage, unless I have misunderstood.
-> 
-> To be clear, I'm arguing for the strategy going forward. If no-one has
-> complained about the stuff broken up to this point, let's not waste time
-> restoring that.
-> 
-> Going forward we need to keep old DTBs supported.
+--zp3AMgPTa9Mf+MXm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FWIW: I had a chat with Maxime and we exchanged ideas on how to go on
-from here, by reworking this commit to be both compatible and fixing the
-issue we are having with the current PLL6 binding. I will look at
-generating patches for this shortly.
+Hi Linus,
 
-So I guess we can move the discussion more to a code level from here on.
+On Thu, Feb 11, 2016 at 12:59:47PM +0100, Linus Walleij wrote:
+> On Sun, Jan 31, 2016 at 2:20 AM, Vishnu Patekar
+> <vishnupatekar0510@gmail.com> wrote:
+>=20
+> > The A83T has R_PIO pin controller, it's same as A23, execpt A83T
+> > interrupt bit is 6th and A83T has one extra pin PL12.
+> >
+> > Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>=20
+> Maxime, can you look at this patch?
 
-Cheers,
-Andre.
+Chen-Yu had one minor comment on it, and he's also the Allwinner
+maintainer now, so you can trust his Acked-by just like you would
+trust mine ;)
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--zp3AMgPTa9Mf+MXm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWvIBgAAoJEBx+YmzsjxAgvDoP/2cRJSsB3vNt1L4a7unZ3Q4r
+PKIQqTYjq5jMVhMciqaUX/7KWEye8oXLyEYPmKZlmN3O6he4Irfl2DtLNVOeQ3Cz
+o3dvnhyhnSEfyZtVAvlDD70F4Yj9bXESirAnekQza/e1tookMHj9t8tH+xZ3R704
+DfBNwl9EVbi1HvaqyhVUuTpEU1tu80zZogvSvIDXCTDubGXdAJ02jLjM70lY3xHE
+iLtLgoH8R1yEopaV6LPN7EqLDBjsdF6EEaThegRvEzslGPxgyKfuJGTJfhIQMoa2
+JuFDR36zPlUXzx6Oinp7VcgT1Wh1n2QApwCfPm9WsTjku8mskXpMOMPRslZRPc2T
+3RG9CDHXe6cKHQh2vNuQQSUuhZRPN+bdDlcsC5520B49fFRABSbGnfKhhnOj6ueI
+9vq2SYTOQX2ov+UNRZ46CODonbj1dtuF2bA21mhcMchhm5kmIKVMGtA2/qIsLYAx
+Eaoe/1mE6HyfDiqFlgkAHIBP+cCLR4UwS+9p/wRiSUOcBdtslOJv18Ofu2mr0Nau
+Uf73vHuWlaUfM1ft5mwzQGmcGeIBSmdgtaFG8PzL6b4dMhlhpGB+uohAYI3Weurr
+GNtbFS1tdKtEct4LB6hnxrop2sbwr42ydXNeVtUIFvc+JeLudEKT8ywdxo7iBOMJ
+ysg3zMqldUpPCoP+iY7n
+=/Hfg
+-----END PGP SIGNATURE-----
+
+--zp3AMgPTa9Mf+MXm--
