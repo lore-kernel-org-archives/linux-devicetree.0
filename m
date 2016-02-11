@@ -1,296 +1,134 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 3/3] ARM64: zynqmp: Use 64bit size cell format
-Date: Thu, 11 Feb 2016 13:26:28 +0100
-Message-ID: <36fb9c4c9b2019b854e84dc0a9a01252a6de2337.1455193571.git.michal.simek@xilinx.com>
-References: <2f160e012080d5d6de11238ade239bb0bb224f64.1455193571.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f160e012080d5d6de11238ade239bb0bb224f64.1455193571.git.michal.simek@xilinx.com>
-In-Reply-To: <2f160e012080d5d6de11238ade239bb0bb224f64.1455193571.git.michal.simek@xilinx.com>
-References: <2f160e012080d5d6de11238ade239bb0bb224f64.1455193571.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Suneel Garapati <suneel.garapati@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: breaking DT compatibility
+Date: Thu, 11 Feb 2016 12:29:46 +0000
+Message-ID: <56BC7EBA.9030101@arm.com>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+ <56B4E2FB.3050703@arm.com> <56BB2D79.6090402@arm.com>
+ <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
+ <20160210143755.GE31506@lukather> <20160210163001.GG2632@leverpostej>
+ <20160211100048.GK31506@lukather> <20160211114410.GA32535@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160211114410.GA32535@leverpostej>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Use 64bit size cell format instead of 32bit for memory
-description. Change 64bit sizes also for all others IPs.
+Hi,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On 11/02/16 11:44, Mark Rutland wrote:
+> On Thu, Feb 11, 2016 at 11:00:48AM +0100, Maxime Ripard wrote:
+>> On Wed, Feb 10, 2016 at 04:30:01PM +0000, Mark Rutland wrote:
+>>> On Wed, Feb 10, 2016 at 03:37:55PM +0100, Maxime Ripard wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
+>>>>> On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.com> wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> just a ping:
+>>>>>>
+>>>>>> Are we really OK with breaking existing DTs in 4.6? (per the code in
+>>>>>> -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
+>>>>>
+>>>>> I only warn and make sure people are aware of the issue. I leave that
+>>>>> up to platform maintainers to decide. It depends on the maturity of
+>>>>> the platform and users.
+>>>>
+>>>> The impacted SoCs support is really partial. For the most supported
+>>>> one, big things like display or sound are totally missing, and we
+>>>> still update them on a regular basis to add support for new
+>>>> devices. As such, users are very likely to upgrade the DT from one
+>>>> version to another just because there's new devices available to
+>>>> them. And the newest SoC impacted just got introduced in 4.5, and only
+>>>> has the UART and MMC devices available.
+>>>>
+>>>>> If people complain about it then it's their mess. For platforms
+>>>>> supported in distros such as debian or fedora, I would strongly
+>>>>> recommend against breaking compatibility.
+>>>>
+>>>> None of them are officially supported:
+>>>> https://www.debian.org/releases/stable/armhf/ch02s01.html.en
+>>>> https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
+>>>>
+>>>> Only the older one are, and they are not affected by this patch.
+>>>>
+>>>>> They do ship dtbs, but it's a chicken and egg problem. If dtbs were
+>>>>> stable and provided by firmware, then they wouldn't have to provide
+>>>>> them. If dtbs are unstable, then they have no choice.
+>>>>
+>>>> And while it might work great on platforms that have all the needed
+>>>> documentation, or a perfect one, which is our case. Almost each
+>>>> release, we discover that something is not working as it was
+>>>> documented, when it was documented in the first place.
+>>>>
+>>>> It also seems that even on well documented platforms, supported by the
+>>>> vendors, the stable ABI dream is not going to happen:
+>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm/Atmel/README#n105
+>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/marvell,berlin.txt#n4
+>>>
+>>> To be quite frank, I completely disagree with that stance.
+>>>
+>>> It seems like the only reason DT bindings aren't remaining stable is
+>>> because people are deliberately ignoring the requirement and reasoning
+>>> for doing so.
+>>
+>> And for DT maintainers saying on multiple occasions that it's bad but
+>> ok to break it and / or that they never actually said that it was a
+>> stable ABI...
+> 
+> Evidently there is a communication failure. Generally, the statement has
+> been that old DTBs should continue to work. That's even documented, as
+> Andre pointed out:
+> 
+> Documentation/devicetree/bindings/ABI.txt
+> 
+> There are obviously shades of grey, and _rarely_ it might be necessary
+> to deliberately break a binding. However, that should be the rare
+> last-resort case, rather than a crutch for development.
+> 
+> Saying "bad but ok" underplays the "bad" and overplays the "ok".
+> 
+>> I'm guessing it could be a stable ABI if there was bindings
+>> reviews. Rob actually started to review a significant amount of
+>> bindings lately, and that's really appreciated, but if you don't
+>> review all the bindings, then we're going to make mistakes.
+> 
+> I agree that it is unfortunate that we cannot provide the level of
+> review that we want to.
+> 
+> Mistakes will happen even with review; that doesn't necessitate removing
+> support for a binding.
+> 
+>>> I agree that it can be painful, and that we cannot predict the future.
+>>> There will always be bugs.
+>>
+>> In our case, we can't even predict the present.
+>>
+>>> Having code in mainline comes with responsibilities. One of those is to
+>>> keep said code working for existing users. Otherwise, why bother having
+>>> it in mainline at all?
+>>
+>> None of our existing users ever complained.
+> 
+> I believe that in this case, Andre was complaining about this particular
+> breakage, unless I have misunderstood.
+> 
+> To be clear, I'm arguing for the strategy going forward. If no-one has
+> complained about the stuff broken up to this point, let's not waste time
+> restoring that.
+> 
+> Going forward we need to keep old DTBs supported.
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts |  2 +-
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 63 ++++++++++++++---------------
- 2 files changed, 32 insertions(+), 33 deletions(-)
+FWIW: I had a chat with Maxime and we exchanged ideas on how to go on
+from here, by reworking this commit to be both compatible and fixing the
+issue we are having with the current PLL6 binding. I will look at
+generating patches for this shortly.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index acb0527fdc4a..358089687a69 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -29,7 +29,7 @@
- 
- 	memory {
- 		device_type = "memory";
--		reg = <0x0 0x0 0x40000000>;
-+		reg = <0x0 0x0 0x0 0x40000000>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index e595f22e7e4b..ef8fe8e6c868 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -14,7 +14,7 @@
- / {
- 	compatible = "xlnx,zynqmp";
- 	#address-cells = <2>;
--	#size-cells = <1>;
-+	#size-cells = <2>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -74,16 +74,15 @@
- 	amba_apu {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
--		#size-cells = <1>;
-+		#size-cells = <2>;
- 		ranges;
--
- 		gic: interrupt-controller@f9010000 {
- 			compatible = "arm,gic-400", "arm,cortex-a15-gic";
- 			#interrupt-cells = <3>;
--			reg = <0x0 0xf9010000 0x10000>,
--			      <0x0 0xf902f000 0x2000>,
--			      <0x0 0xf9040000 0x20000>,
--			      <0x0 0xf906f000 0x2000>;
-+			reg = <0x0 0xf9010000 0x0 0x10000>,
-+			      <0x0 0xf902f000 0x0 0x2000>,
-+			      <0x0 0xf9040000 0x0 0x20000>,
-+			      <0x0 0xf906f000 0x0 0x2000>;
- 			interrupt-controller;
- 			interrupt-parent = <&gic>;
- 			interrupts = <1 9 0xf04>;
-@@ -93,14 +92,14 @@
- 	amba: amba {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
--		#size-cells = <1>;
-+		#size-cells = <2>;
- 		ranges;
- 
- 		can0: can@ff060000 {
- 			compatible = "xlnx,zynq-can-1.0";
- 			status = "disabled";
- 			clock-names = "can_clk", "pclk";
--			reg = <0x0 0xff060000 0x1000>;
-+			reg = <0x0 0xff060000 0x0 0x1000>;
- 			interrupts = <0 23 4>;
- 			interrupt-parent = <&gic>;
- 			tx-fifo-depth = <0x40>;
-@@ -111,7 +110,7 @@
- 			compatible = "xlnx,zynq-can-1.0";
- 			status = "disabled";
- 			clock-names = "can_clk", "pclk";
--			reg = <0x0 0xff070000 0x1000>;
-+			reg = <0x0 0xff070000 0x0 0x1000>;
- 			interrupts = <0 24 4>;
- 			interrupt-parent = <&gic>;
- 			tx-fifo-depth = <0x40>;
-@@ -123,7 +122,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 57 4>, <0 57 4>;
--			reg = <0x0 0xff0b0000 0x1000>;
-+			reg = <0x0 0xff0b0000 0x0 0x1000>;
- 			clock-names = "pclk", "hclk", "tx_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -134,7 +133,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 59 4>, <0 59 4>;
--			reg = <0x0 0xff0c0000 0x1000>;
-+			reg = <0x0 0xff0c0000 0x0 0x1000>;
- 			clock-names = "pclk", "hclk", "tx_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -145,7 +144,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 61 4>, <0 61 4>;
--			reg = <0x0 0xff0d0000 0x1000>;
-+			reg = <0x0 0xff0d0000 0x0 0x1000>;
- 			clock-names = "pclk", "hclk", "tx_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -156,7 +155,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 63 4>, <0 63 4>;
--			reg = <0x0 0xff0e0000 0x1000>;
-+			reg = <0x0 0xff0e0000 0x0 0x1000>;
- 			clock-names = "pclk", "hclk", "tx_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -170,7 +169,7 @@
- 			interrupts = <0 16 4>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
--			reg = <0x0 0xff0a0000 0x1000>;
-+			reg = <0x0 0xff0a0000 0x0 0x1000>;
- 		};
- 
- 		i2c0: i2c@ff020000 {
-@@ -178,7 +177,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 17 4>;
--			reg = <0x0 0xff020000 0x1000>;
-+			reg = <0x0 0xff020000 0x0 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -188,7 +187,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 18 4>;
--			reg = <0x0 0xff030000 0x1000>;
-+			reg = <0x0 0xff030000 0x0 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-@@ -196,7 +195,7 @@
- 		sata: ahci@fd0c0000 {
- 			compatible = "ceva,ahci-1v84";
- 			status = "disabled";
--			reg = <0x0 0xfd0c0000 0x2000>;
-+			reg = <0x0 0xfd0c0000 0x0 0x2000>;
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 133 4>;
- 		};
-@@ -206,7 +205,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 48 4>;
--			reg = <0x0 0xff160000 0x1000>;
-+			reg = <0x0 0xff160000 0x0 0x1000>;
- 			clock-names = "clk_xin", "clk_ahb";
- 		};
- 
-@@ -215,13 +214,13 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 49 4>;
--			reg = <0x0 0xff170000 0x1000>;
-+			reg = <0x0 0xff170000 0x0 0x1000>;
- 			clock-names = "clk_xin", "clk_ahb";
- 		};
- 
- 		smmu: smmu@fd800000 {
- 			compatible = "arm,mmu-500";
--			reg = <0x0 0xfd800000 0x20000>;
-+			reg = <0x0 0xfd800000 0x0 0x20000>;
- 			#global-interrupts = <1>;
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 157 4>,
-@@ -236,7 +235,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 19 4>;
--			reg = <0x0 0xff040000 0x1000>;
-+			reg = <0x0 0xff040000 0x0 0x1000>;
- 			clock-names = "ref_clk", "pclk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -247,7 +246,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 20 4>;
--			reg = <0x0 0xff050000 0x1000>;
-+			reg = <0x0 0xff050000 0x0 0x1000>;
- 			clock-names = "ref_clk", "pclk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -258,7 +257,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 36 4>, <0 37 4>, <0 38 4>;
--			reg = <0x0 0xff110000 0x1000>;
-+			reg = <0x0 0xff110000 0x0 0x1000>;
- 			timer-width = <32>;
- 		};
- 
-@@ -267,7 +266,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 39 4>, <0 40 4>, <0 41 4>;
--			reg = <0x0 0xff120000 0x1000>;
-+			reg = <0x0 0xff120000 0x0 0x1000>;
- 			timer-width = <32>;
- 		};
- 
-@@ -276,7 +275,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 42 4>, <0 43 4>, <0 44 4>;
--			reg = <0x0 0xff130000 0x1000>;
-+			reg = <0x0 0xff130000 0x0 0x1000>;
- 			timer-width = <32>;
- 		};
- 
-@@ -285,7 +284,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 45 4>, <0 46 4>, <0 47 4>;
--			reg = <0x0 0xff140000 0x1000>;
-+			reg = <0x0 0xff140000 0x0 0x1000>;
- 			timer-width = <32>;
- 		};
- 
-@@ -294,7 +293,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 21 4>;
--			reg = <0x0 0xff000000 0x1000>;
-+			reg = <0x0 0xff000000 0x0 0x1000>;
- 			clock-names = "uart_clk", "pclk";
- 		};
- 
-@@ -303,7 +302,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 22 4>;
--			reg = <0x0 0xff010000 0x1000>;
-+			reg = <0x0 0xff010000 0x0 0x1000>;
- 			clock-names = "uart_clk", "pclk";
- 		};
- 
-@@ -312,7 +311,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 65 4>;
--			reg = <0x0 0xfe200000 0x40000>;
-+			reg = <0x0 0xfe200000 0x0 0x40000>;
- 			clock-names = "clk_xin", "clk_ahb";
- 		};
- 
-@@ -321,7 +320,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 70 4>;
--			reg = <0x0 0xfe300000 0x40000>;
-+			reg = <0x0 0xfe300000 0x0 0x40000>;
- 			clock-names = "clk_xin", "clk_ahb";
- 		};
- 
-@@ -330,7 +329,7 @@
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 52 1>;
--			reg = <0x0 0xfd4d0000 0x1000>;
-+			reg = <0x0 0xfd4d0000 0x0 0x1000>;
- 			timeout-sec = <10>;
- 		};
- 	};
--- 
-1.9.1
+So I guess we can move the discussion more to a code level from here on.
+
+Cheers,
+Andre.
