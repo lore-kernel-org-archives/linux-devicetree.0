@@ -1,27 +1,32 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v10 3/8] dt, numa: adding numa dt binding implementation.
-Date: Thu, 11 Feb 2016 08:50:41 -0600
-Message-ID: <CAL_JsqK5HV9yzBE+ANnTw26eVR7Dy+B8OkwQ-7WF8KDa86Fd9g@mail.gmail.com>
-References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com> <1454407763-1017-4-git-send-email-gkulkarni@caviumnetworks.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
+ Refactor A31 PLL6 so that it can be reused)
+Date: Thu, 11 Feb 2016 15:51:58 +0100
+Message-ID: <20160211145158.GA8824@localhost.localdomain>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+ <56B4E2FB.3050703@arm.com>
+ <56BB2D79.6090402@arm.com>
+ <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
+ <20160210143755.GE31506@lukather>
+ <20160210163001.GG2632@leverpostej>
+ <20160211100048.GK31506@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1454407763-1017-4-git-send-email-gkulkarni@caviumnetworks.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-ia64@vger.kernel.org, linux-metag <linux-metag@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, rfranz@cavium.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Mark Salter <msalter@redhat.com>, Steve Capper <steve.capper@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Al
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160211100048.GK31506@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 2, 2016 at 4:09 AM, Ganapatrao Kulkarni
-<gkulkarni@caviumnetworks.com> wrote:
-> dt node parsing for numa topology is done using device property
-> numa-node-id and device node distance-map.
+On Thu, Feb 11, 2016 at 11:00:48AM +0100, Maxime Ripard wrote:
+> None of our existing users ever complained.
 
-How is it that powerpc doesn't need flat DT parsing for NUMA? Both
-arches are memblock based and the binding is similar IIRC, so you
-should be able to find a way to do this with the unflattened tree.
-Ideally, there should be some common code shared as well.
+Note to self:
 
-Do you have a git tree with this series?
+   Avoid choosing this SoC for new projects.  The maintainers do not
+   care about the end users.
 
-Rob
+Thanks,
+Richard
