@@ -1,161 +1,177 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to support  generic Xilinx  AXI PCIe Host Bridge IP driver
-Date: Thu, 11 Feb 2016 21:58:11 +0530
-Message-ID: <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
-References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v6 2/3] MIPS: OCTEON: Rename legacy properties in internal
+ device trees.
+Date: Thu, 11 Feb 2016 08:32:46 -0800
+Message-ID: <56BCB7AE.2050901@gmail.com>
+References: <1455207976-2262-1-git-send-email-matt.redfearn@imgtec.com> <1455207976-2262-2-git-send-email-matt.redfearn@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1455207976-2262-2-git-send-email-matt.redfearn@imgtec.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Matt Redfearn <matt.redfearn@imgtec.com>
+Cc: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, robh@kernel.org, ralf@linux-mips.org, linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch does required modifications to microblaze PCI subsystem, to
-work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
-and Zynq.
+On 02/11/2016 08:26 AM, Matt Redfearn wrote:
+> Many OCTEON devices have been shipped in products with fixed DTBs. These
+> DTBS contain properties which are not compatible with newer kernels with
+> upstream drivers.
+> Therefore some mechanism is necessary to convert legacy naming into
+> upstream naming. In the first instance this is to support the OCTEON MMC
+> controller, which is in a later patch of this series.
+> This patch adds a octeon_handle_legacy_device_tree() function which is
+> always called from device_tree_init() to fix up the device tree so that
+> drivers need have no knowledge of the legacy naming or properties.
+>
+> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
 
-Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
----
-Changes:
-Removed pcibios_get_phb_of_node in pci-common.c, using generic version
-instead.
-Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
-Modified pcibios_align_resource in pci-common.c, as per generic
-architecuture, removed temporary variable.
-Removed pci_domain_nr in pci-common.c, instead using generic code.
-Added pcibios_add_device in pci-common.c, as per generic architecuture.
-Adding Kernel configuration in arch/microblaze as required for generic PCI
-domains.
-Added kernel configuration for driver to support Microblaze.
----
- arch/microblaze/Kconfig          |  3 +++
- arch/microblaze/pci/pci-common.c | 56 +++++++---------------------------------
- drivers/pci/host/Kconfig         |  2 +-
- 3 files changed, 14 insertions(+), 47 deletions(-)
+NAK...
 
-diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-index 0bce820..c3702b9 100644
---- a/arch/microblaze/Kconfig
-+++ b/arch/microblaze/Kconfig
-@@ -271,6 +271,9 @@ config PCI
- config PCI_DOMAINS
- 	def_bool PCI
- 
-+config PCI_DOMAINS_GENERIC
-+	def_bool PCI_DOMAINS
-+
- config PCI_SYSCALL
- 	def_bool PCI
- 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index ae838ed..35654be 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t address)
- }
- EXPORT_SYMBOL_GPL(pci_address_to_pio);
- 
--/*
-- * Return the domain number for this bus.
-- */
--int pci_domain_nr(struct pci_bus *bus)
--{
--	struct pci_controller *hose = pci_bus_to_host(bus);
--
--	return hose->global_number;
--}
--EXPORT_SYMBOL(pci_domain_nr);
--
- /* This routine is meant to be used early during boot, when the
-  * PCI bus numbers have not yet been assigned, and you need to
-  * issue PCI config cycles to an OF device.
-@@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus *bus)
- 
- void pcibios_fixup_bus(struct pci_bus *bus)
- {
--	/* When called from the generic PCI probe, read PCI<->PCI bridge
--	 * bases. This is -not- called when generating the PCI tree from
--	 * the OF device-tree.
--	 */
--	if (bus->self != NULL)
--		pci_read_bridge_bases(bus);
--
--	/* Now fixup the bus bus */
--	pcibios_setup_bus_self(bus);
--
--	/* Now fixup devices on that bus */
--	pcibios_setup_bus_devices(bus);
-+	/* nothing to do */
- }
- EXPORT_SYMBOL(pcibios_fixup_bus);
- 
--static int skip_isa_ioresource_align(struct pci_dev *dev)
--{
--	return 0;
--}
--
- /*
-  * We need to avoid collisions with `mirrored' VGA ports
-  * and other strange ISA hardware, so we always want the
-@@ -899,20 +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
- resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- 				resource_size_t size, resource_size_t align)
- {
--	struct pci_dev *dev = data;
--	resource_size_t start = res->start;
--
--	if (res->flags & IORESOURCE_IO) {
--		if (skip_isa_ioresource_align(dev))
--			return start;
--		if (start & 0x300)
--			start = (start + 0x3ff) & ~0x3ff;
--	}
--
--	return start;
-+	return res->start;
- }
- EXPORT_SYMBOL(pcibios_align_resource);
- 
-+int pcibios_add_device(struct pci_dev *dev)
-+{
-+	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(pcibios_add_device);
-+
- /*
-  * Reparent resource children of pr that conflict with res
-  * under res, and make res replace those children.
-@@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
- 		 (unsigned long)hose->io_base_virt - _IO_BASE);
- }
- 
--struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
--{
--	struct pci_controller *hose = bus->sysdata;
--
--	return of_node_get(hose->dn);
--}
--
- static void pcibios_scan_phb(struct pci_controller *hose)
- {
- 	LIST_HEAD(resources);
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index d5e58ba..7c56c2e 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -79,7 +79,7 @@ config PCI_KEYSTONE
- 
- config PCIE_XILINX
- 	bool "Xilinx AXI PCIe host bridge support"
--	depends on ARCH_ZYNQ
-+	depends on ARCH_ZYNQ || MICROBLAZE
- 	help
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
--- 
-2.1.1
+I already sent e-mail on this, but it crossed in flight.
+
+Basically, this patch is much more complex than the original code which 
+was just a few lines to check the alternate "legacy" names.
+
+Also this code is prone to breakage, see below...
+
+
+> ---
+> For reference, the legacy MMC bindings are as follows. Only the
+> spi-max-frequency and bus-width properties currently need renaming.
+>
+> mmc: mmc@1180000002000 {
+> 	compatible = "cavium,octeon-6130-mmc";
+> 	reg = <0x11800 0x00002000 0x0 0x100>,
+> 		<0x11800 0x00000168 0x0 0x20>;
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+> 	/* EMM irq, DMA irq */
+> 	interrupts = <1 19>, <0 63>;
+>
+> 	/* The board only has a single MMC slot */
+> 	mmc-slot@2 {
+> 		compatible = "cavium,octeon-6130-mmc-slot";
+> 		reg = <2>;
+> 		voltage-ranges = <3300 3300>;
+> 		spi-max-frequency = <26000000>;
+> 		/* Power on GPIO 8, active high */
+> 		/* power-gpios = <&gpio 8 0>; */
+> 		power-gpios = <&gpio 8 1>;
+>
+> 	/*      spi-max-frequency = <52000000>; */
+> 		/* bus width can be 1, 4 or 8 */
+> 		cavium,bus-max-width = <8>;
+> 	};
+> 	mmc-slot@0 {
+> 		compatible = "cavium,octeon-6130-mmc-slot";
+> 		reg = <0>;
+> 		voltage-ranges = <3300 3300>;
+> 		spi-max-frequency = <26000000>;
+> 		/* non-removable; */
+> 		bus-width = <8>;
+> 		/* bus width can be 1, 4 or 8 */
+> 		cavium,bus-max-width = <8>;
+> 	};
+> };
+> ---
+>   arch/mips/cavium-octeon/octeon-platform.c | 57 +++++++++++++++++++++++++++++++
+>   arch/mips/cavium-octeon/setup.c           |  3 ++
+>   2 files changed, 60 insertions(+)
+>
+> diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
+> index d113c8ded6e2..7933978bdfa5 100644
+> --- a/arch/mips/cavium-octeon/octeon-platform.c
+> +++ b/arch/mips/cavium-octeon/octeon-platform.c
+> @@ -980,6 +980,63 @@ end_led:
+>   	return 0;
+>   }
+>
+> +/*
+> + * Rename a DT property from legacy to upstream accepted name.
+> + * The value is copied from old legacy name to new name.
+> + */
+> +static void __init octeon_fdt_renameprop(int node, const char *old, const char *new)
+> +{
+> +	const u32 *pv;
+> +	u32 v;
+> +
+> +	pv = fdt_getprop(initial_boot_params, node, old, NULL);
+> +	if (pv) {
+> +		v = *pv;
+> +		fdt_delprop(initial_boot_params, node, old);
+> +		fdt_setprop_u32(initial_boot_params, node, new, v);
+> +	}
+> +}
+> +
+> +/*
+> + * This function is called for every machine type to replace legacy entries
+> + * in the device tree blob passed from older firmwares.
+> + * It is impractical to change the DTB in shipped devices, but to support newer
+> + * kernels with upstreamed drivers and DT bindings some massaging of the DTB
+> + * must be done.
+> + */
+> +int __init octeon_handle_legacy_device_tree(void)
+> +{
+> +	const char *alias_prop;
+> +	int aliases;
+> +
+> +	if (fdt_check_header(initial_boot_params))
+> +		panic("Corrupt Device Tree.");
+> +
+> +	aliases = fdt_path_offset(initial_boot_params, "/aliases");
+> +	if (aliases < 0) {
+> +		pr_err("Error: No /aliases node in device tree.");
+> +		return -EINVAL;
+> +	}
+> +
+
+/aliases doesn't exist on many boards, so this will likely fail.
+
+
+> +	/* MMC */
+> +	alias_prop = fdt_getprop(initial_boot_params, aliases,
+> +				 "emmc", NULL);
+> +	if (alias_prop) {
+> +		int mmc = fdt_path_offset(initial_boot_params, alias_prop);
+> +		int slot = fdt_first_subnode(initial_boot_params, mmc);
+> +
+> +		while (slot > 0) {
+> +			octeon_fdt_renameprop(slot, "cavium,bus-max-width",
+> +					      "bus-width");
+> +			octeon_fdt_renameprop(slot, "spi-max-frequency",
+> +					      "max-frequency");
+> +			slot = fdt_next_subnode(initial_boot_params, slot);
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +
+>   static int __init octeon_publish_devices(void)
+>   {
+>   	return of_platform_bus_probe(NULL, octeon_ids, NULL);
+> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+> index cd7101fb6227..f1f5191d02be 100644
+> --- a/arch/mips/cavium-octeon/setup.c
+> +++ b/arch/mips/cavium-octeon/setup.c
+> @@ -1080,6 +1080,7 @@ void __init prom_free_prom_memory(void)
+>   }
+>
+>   int octeon_prune_device_tree(void);
+> +int octeon_handle_legacy_device_tree(void);
+>
+>   extern const char __appended_dtb;
+>   extern const char __dtb_octeon_3xxx_begin;
+> @@ -1112,6 +1113,8 @@ void __init device_tree_init(void)
+>
+>   	initial_boot_params = (void *)fdt;
+>
+> +	octeon_handle_legacy_device_tree();
+> +
+>   	if (do_prune) {
+>   		octeon_prune_device_tree();
+>   		pr_info("Using internal Device Tree.\n");
+>
+
