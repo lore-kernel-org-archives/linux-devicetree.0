@@ -1,185 +1,36 @@
 From: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V4 2/5] PCI: xilinx: Removing struct hw_pci structure.
-Date: Thu, 11 Feb 2016 21:58:08 +0530
-Message-ID: <1455208091-15556-3-git-send-email-bharatku@xilinx.com>
-References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+Subject: [PATCH V4 0/5] PCIe Xilinx generic driver for Microblaze and
+Date: Thu, 11 Feb 2016 21:58:06 +0530
+Message-ID: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455208091-15556-1-git-send-email-bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Removing struct hw_pci and adding generic PCI core API's.
+This patch series does modifications to pcie-xilinx.c, to support common
+driver on both Zynq and Microblaze architectures.
+Microblaze pci-common.c has been modified to support generic driver.
 
-Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Bharat Kumar Gogada (5):
+  PCI: xilinx: Removing xilinx_pcie_parse_and_add_res function
+  PCI: xilinx: Removing struct hw_pci structure.
+  PCI: xilinx: Modifying AXI PCIe Host Bridge driver to work on both
+     Zynq and Microblaze
+  PCI: xilinx: Updating Zynq PCI binding documentation with 
+    Microblaze node.
+  Microblaze: Modifying microblaze PCI subsytem to support  generic
+    Xilinx  AXI PCIe Host Bridge IP driver
 
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-Changes:
-Removing architecure dependecy structure struct hw_pci which is ARM 32-bit
-specific structure, and adding generic PCI core API's to register to
-PCI subsytem.
-Removing funtions which are not being used with generic API's.
----
- drivers/pci/host/pcie-xilinx.c | 82 +++++++++---------------------------------
- 1 file changed, 16 insertions(+), 66 deletions(-)
+ .../devicetree/bindings/pci/xilinx-pcie.txt        |  32 +++-
+ arch/microblaze/Kconfig                            |   3 +
+ arch/microblaze/pci/pci-common.c                   |  56 ++----
+ drivers/pci/host/Kconfig                           |   2 +-
+ drivers/pci/host/pcie-xilinx.c                     | 191 +++------------------
+ 5 files changed, 66 insertions(+), 218 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
-index 627878d..13fec35 100644
---- a/drivers/pci/host/pcie-xilinx.c
-+++ b/drivers/pci/host/pcie-xilinx.c
-@@ -111,17 +111,11 @@ struct xilinx_pcie_port {
- 	u8 root_busno;
- 	struct device *dev;
- 	struct irq_domain *irq_domain;
--	struct resource bus_range;
- 	struct list_head resources;
- };
- 
- static DECLARE_BITMAP(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
- 
--static inline struct xilinx_pcie_port *sys_to_pcie(struct pci_sys_data *sys)
--{
--	return sys->private_data;
--}
--
- static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
- {
- 	return readl(port->reg_base + reg);
-@@ -163,7 +157,7 @@ static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
-  */
- static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-+	struct xilinx_pcie_port *port = bus->sysdata;
- 
- 	/* Check if link is up when trying to access downstream ports */
- 	if (bus->number != port->root_busno)
-@@ -196,7 +190,7 @@ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
- 					 unsigned int devfn, int where)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-+	struct xilinx_pcie_port *port = bus->sysdata;
- 	int relbus;
- 
- 	if (!xilinx_pcie_valid_device(bus, devfn))
-@@ -228,7 +222,7 @@ static void xilinx_pcie_destroy_msi(unsigned int irq)
- 
- 	if (!test_bit(irq, msi_irq_in_use)) {
- 		msi = irq_get_msi_desc(irq);
--		port = sys_to_pcie(msi_desc_to_pci_sysdata(msi));
-+		port = msi_desc_to_pci_sysdata(msi);
- 		dev_err(port->dev, "Trying to free unused MSI#%d\n", irq);
- 	} else {
- 		clear_bit(irq, msi_irq_in_use);
-@@ -277,7 +271,7 @@ static int xilinx_pcie_msi_setup_irq(struct msi_controller *chip,
- 				     struct pci_dev *pdev,
- 				     struct msi_desc *desc)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(pdev->bus->sysdata);
-+	struct xilinx_pcie_port *port = pdev->bus->sysdata;
- 	unsigned int irq;
- 	int hwirq;
- 	struct msi_msg msg;
-@@ -614,47 +608,6 @@ static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
- }
- 
- /**
-- * xilinx_pcie_setup - Setup memory resources
-- * @nr: Bus number
-- * @sys: Per controller structure
-- *
-- * Return: '1' on success and error value on failure
-- */
--static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
--{
--	struct xilinx_pcie_port *port = sys_to_pcie(sys);
--
--	list_splice_init(&port->resources, &sys->resources);
--
--	return 1;
--}
--
--/**
-- * xilinx_pcie_scan_bus - Scan PCIe bus for devices
-- * @nr: Bus number
-- * @sys: Per controller structure
-- *
-- * Return: Valid Bus pointer on success and NULL on failure
-- */
--static struct pci_bus *xilinx_pcie_scan_bus(int nr, struct pci_sys_data *sys)
--{
--	struct xilinx_pcie_port *port = sys_to_pcie(sys);
--	struct pci_bus *bus;
--
--	port->root_busno = sys->busnr;
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		bus = pci_scan_root_bus_msi(port->dev, sys->busnr,
--					    &xilinx_pcie_ops, sys,
--					    &sys->resources,
--					    &xilinx_pcie_msi_chip);
--	else
--		bus = pci_scan_root_bus(port->dev, sys->busnr,
--					&xilinx_pcie_ops, sys, &sys->resources);
--	return bus;
--}
--
--/**
-  * xilinx_pcie_parse_dt - Parse Device tree
-  * @port: PCIe port information
-  *
-@@ -704,8 +657,9 @@ static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
- static int xilinx_pcie_probe(struct platform_device *pdev)
- {
- 	struct xilinx_pcie_port *port;
--	struct hw_pci hw;
- 	struct device *dev = &pdev->dev;
-+	struct pci_bus *bus;
-+
- 	int err;
- 	resource_size_t iobase = 0;
- 	LIST_HEAD(res);
-@@ -739,24 +693,20 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
- 		dev_err(dev, "Getting bridge resources failed\n");
- 		return err;
- 	}
--
--	platform_set_drvdata(pdev, port);
--
--	/* Register the device */
--	memset(&hw, 0, sizeof(hw));
--	hw = (struct hw_pci) {
--		.nr_controllers	= 1,
--		.private_data	= (void **)&port,
--		.setup		= xilinx_pcie_setup,
--		.map_irq	= of_irq_parse_and_map_pci,
--		.scan		= xilinx_pcie_scan_bus,
--		.ops		= &xilinx_pcie_ops,
--	};
-+	bus = pci_create_root_bus(&pdev->dev, 0,
-+				  &xilinx_pcie_ops, port, &res);
-+	if (!bus)
-+		return -ENOMEM;
- 
- #ifdef CONFIG_PCI_MSI
- 	xilinx_pcie_msi_chip.dev = port->dev;
-+	bus->msi = &xilinx_pcie_msi_chip;
- #endif
--	pci_common_init_dev(dev, &hw);
-+	pci_scan_child_bus(bus);
-+	pci_assign_unassigned_bus_resources(bus);
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+	pci_bus_add_devices(bus);
-+	platform_set_drvdata(pdev, port);
- 
- 	return 0;
- }
 -- 
 2.1.1
 
