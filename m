@@ -1,109 +1,47 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH v2 5/8] arm: dts: add Artpec-6 development board dts
-Date: Thu, 11 Feb 2016 15:04:39 +0100
-Message-ID: <7cb2fe1c0e188ae9eb478a8ec6ee6aa226491bc6.1455198819.git.larper@axis.com>
-References: <cover.1455198819.git.larper@axis.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/3] Documentation: devicetree: add Freescale SCC bindings
+Date: Thu, 11 Feb 2016 15:04:43 +0100
+Message-ID: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1455198819.git.larper-VrBV9hrLPhE@public.gmane.org>
-In-Reply-To: <cover.1455198819.git.larper-VrBV9hrLPhE@public.gmane.org>
-References: <cover.1455198819.git.larper-VrBV9hrLPhE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
----
- arch/arm/boot/dts/Makefile             |  2 ++
- arch/arm/boot/dts/artpec6-devboard.dts | 64 ++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
- create mode 100644 arch/arm/boot/dts/artpec6-devboard.dts
+Add documentation for the Freescale Security Controller (SCC)
+found on i.MX25 SoCs.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a4a6d70..2ebe99c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -2,6 +2,8 @@ ifeq ($(CONFIG_OF),y)
- 
- dtb-$(CONFIG_ARCH_ALPINE) += \
- 	alpine-db.dtb
-+dtb-$(CONFIG_MACH_ARTPEC6) += \
-+	artpec6-devboard.dtb
- dtb-$(CONFIG_MACH_ASM9260) += \
- 	alphascale-asm9260-devkit.dtb
- # Keep at91 dtb files sorted alphabetically for each SoC
-diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../devicetree/bindings/crypto/fsl-imx-scc.txt          | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
 new file mode 100644
-index 0000000..f823ed3
+index 000000000000..9a15ab8da94f
 --- /dev/null
-+++ b/arch/arm/boot/dts/artpec6-devboard.dts
-@@ -0,0 +1,64 @@
-+/*
-+ * Axis ARTPEC-6 development board.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
++++ b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+@@ -0,0 +1,17 @@
++Freescale Security Controller (SCC)
 +
-+/dts-v1/;
-+#include "artpec6.dtsi"
++Required properties:
++- compatible : Should be "fsl,imx25-scc".
++- reg : Should contain register location and length.
++- interrupts : Should contain interrupt numbers for SCM IRQ and SMN IRQ.
 +
-+/ {
-+	model = "ARTPEC-6 development board";
-+	compatible = "axis,artpec6-dev-board", "axis,artpec6";
++Example:
 +
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
++	scc: crypto@53fac000 {
++		compatible = "fsl,imx25-scc";
++		reg = <0x53fac000 0x4000>;
++		clocks = <&clks 111>;
++		clock-names = "ipg";
++		interrupts = <49>, <50>;
++		interrupt-names = "scm", "smn";
 +	};
-+
-+	chosen {
-+		stdout-path = "serial3:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x10000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&ethernet {
-+	status = "okay";
-+
-+	phy-handle = <&phy1>;
-+	phy-mode = "gmii";
-+
-+	mdio {
-+		#address-cells = <0x1>;
-+		#size-cells = <0x0>;
-+		phy1: phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			device_type = "ethernet-phy";
-+			reg = <0x0>;
-+		};
-+	};
-+};
 -- 
-2.1.4
+2.7.0.rc3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
