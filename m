@@ -1,61 +1,72 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
-Date: Wed, 10 Feb 2016 18:55:55 -0800
-Message-ID: <56BBF83B.8020908@gmail.com>
-References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com>
- <56BB7B2F.60307@caviumnetworks.com>
- <20160210234907.GC1640@darkstar.musicnaut.iki.fi>
- <56BBD6AD.2090902@caviumnetworks.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V3 00/12] dtb: amd: Miscellaneous Updates for AMD Seattle DTS
+Date: Wed, 10 Feb 2016 21:50:59 -0600
+Message-ID: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56BBD6AD.2090902@caviumnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Matt Redfearn <matt.redfearn@imgtec.com>, linux-mmc@vger.kernel.org, david.daney@cavium.com, ulf.hansson@linaro.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
+To: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 10/02/2016 16:32, David Daney a =C3=A9crit :
-> On 02/10/2016 03:49 PM, Aaro Koskinen wrote:
->> Hi,
->>
->> On Wed, Feb 10, 2016 at 10:02:23AM -0800, David Daney wrote:
->>> On 02/10/2016 09:36 AM, Matt Redfearn wrote:
->>>> +        pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\=
-n",
->>>> +            node->full_name, legacy_name);
->>>
->>> I don't like this warning message.
->>>
->>> The vast majority of people that see it will not be able to change =
-their
->>> firmware.  So it will be forever cluttering up their boot logs.
->>
->> Until they switch to use APPENDED_DTB. :-)
->>
->=20
-> I am philosophically opposed to making the DTB an internal kernel
-> implementation detail.
->=20
-> For OCTEON boards, it is an ABI between the boot firmware and the
-> kernel, and is impractical to change.
->=20
-> One could argue that many years ago, when the decision was made (by m=
-e),
-> that we should have opted to carry in the kernel source code tree the
-> DTS files for all OCTEON boards ever made, but we did not do that.  D=
-ue
-> to the non-reversibility of time, the decision is hard to reverse.
->=20
-> In the case of this MMC driver, the only real difference is that two
-> properties have legacy names that later had differing "official" name=
-s.
->  The overhead of carrying the legacy bindings is very low.
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Since there is an existing FDT patching infrastructure in
-arch/mips/cavium-octeon/ would not that be a place where you could put
-an adaptation layer between your legacy firmware properties and the
-upstream binding?
---=20
-=46lorian
+This patch series contains several updates for the AMD Seattle SOC DTS files.
+It also adds new board files for newer Overdrive and Linaro 96boards (Husky)
+platforms.
+
+Olof,
+
+You mentioned that you have already applied the V2 of the series
+to next/dt64. Do you think we can just take the V3 instead if we don't
+have any other issues/concerns?
+
+Thanks,
+Suravee
+
+Changes from V2 (https://lkml.org/lkml/2016/2/8/692):
+  * Remove KCS interrupt name (per Arnd's suggestion)
+  * Fix ccn node address (per Arnd's suggestion)
+  * Add more description in git commit message for patch 3/12
+    (per Arnd's suggestion) 
+
+Changes from V1 (https://lkml.org/lkml/2016/1/27/1251):
+  * Fix duplication in MAINTAINERS file (per Martin review comment)
+  * Remove the PCIe SMMU device tree node for now to rework
+    (based on the discussion in the thread).
+
+Brijesh Singh (2):
+  dtb: amd: Fix GICv2 hypervisor and virtual interface sizes
+  dtb: amd: Add KCS device tree node
+
+Suravee Suthikulpanit (9):
+  MAINTAINERS: Adding Maintainers for AMD Seattle Device Tree
+  dtb: amd: Fix DMA ranges of smb0 and pcie0
+  dtb: amd: Fix typo in SPI device nodes
+  dtb: amd: Misc changes for I2C device nodes
+  dtb: amd: Misc changes for SATA device tree nodes
+  dtb: amd: Misc changes for GPIO devices
+  dtb: amd: Add PERF CCN-504 device tree node
+  dtb: amd: Add support for new AMD Overdrive boards
+  dtb: amd: Add support for AMD/Linaro 96Boards Enterprise Edition
+    Server board
+
+Tom Lendacky (1):
+  dtb: amd: Add AMD XGBE device tree file
+
+ MAINTAINERS                                      |   8 ++
+ arch/arm64/boot/dts/amd/Makefile                 |   4 +-
+ arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts |  87 +++++++++++++++++
+ arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts |  91 ++++++++++++++++++
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi     | 104 +++++++++++++++++---
+ arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi  | 117 +++++++++++++++++++++++
+ arch/arm64/boot/dts/amd/husky.dts                |  83 ++++++++++++++++
+ 7 files changed, 480 insertions(+), 14 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dts
+ create mode 100644 arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dts
+ create mode 100644 arch/arm64/boot/dts/amd/amd-seattle-xgbe-b.dtsi
+ create mode 100644 arch/arm64/boot/dts/amd/husky.dts
+
+-- 
+2.5.0
