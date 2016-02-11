@@ -1,142 +1,129 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: silk: add sound support
-Date: Thu, 11 Feb 2016 23:26:38 +0300
-Message-ID: <4246644.0ZLx3MiCIL@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] Warn on node name unit-address presence/absence mismatch
+Date: Thu, 11 Feb 2016 14:46:58 -0600
+Message-ID: <1455223619-16052-2-git-send-email-robh@kernel.org>
+References: <1455223619-16052-1-git-send-email-robh@kernel.org>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455223619-16052-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the R8A7794 sound  device node.
-Add device node for Asahi Kasei AK4643 stereo codec to the I2C1 bus.
-Add the "simple-audio-card" device node to interconnect the SoC sound
-device  and the codec.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-This patch is based on the commit 493b4da7c10c ("ARM: dts: porter: add
-sound support").
+ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
+node that has a reg property must include a unit address in its name
+with value matching the first entry in its reg property. Conversely, if
+a node does not have a reg property, the node name must not include a
+unit address. Also allow ranges property as it is deemed valid, but ePAPR
+is not clear about it.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Implement a check for this. The code doesn't validate the format of the
+unit address; ePAPR implies this may vary from (containing bus) binding
+to binding, so doing so would be much more complex.
 
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+[robh: also allow non-empty ranges]
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-This patch is against the 'renesas-devel-20160209-v4.5-rc3' tag of Simon
-Horman's 'renesas.git' repo. It depends on the 5 R8A7794 sound support patches
-in posted earlier this week  in order to build and the R8A7794 PFC driver
-patches posted yesterday in  order  for  the pins to be properly configured
-(but works without the pins  configured  too)...
+ checks.c                        | 28 ++++++++++++++++++++++++++--
+ tests/reg-without-unit-addr.dts | 10 ++++++++++
+ tests/run_tests.sh              |  2 ++
+ tests/unit-addr-without-reg.dts |  9 +++++++++
+ 4 files changed, 47 insertions(+), 2 deletions(-)
+ create mode 100644 tests/reg-without-unit-addr.dts
+ create mode 100644 tests/unit-addr-without-reg.dts
 
- arch/arm/boot/dts/r8a7794-silk.dts |   71 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -10,6 +10,17 @@
-  * kind, whether express or implied.
-  */
+diff --git a/checks.c b/checks.c
+index 0c03ac9..4001b8c 100644
+--- a/checks.c
++++ b/checks.c
+@@ -294,6 +294,30 @@ static void check_node_name_format(struct check *c, struct node *dt,
+ }
+ NODE_ERROR(node_name_format, NULL, &node_name_chars);
  
-+/*
-+ * SSI-AK4643
-+ *
-+ * SW1: 2-1: AK4643
-+ *      2-3: ADV7511
-+ *
-+ * This command is required before playback/capture:
-+ *
-+ *	amixer set "LINEOUT Mixer DACL" on
-+ */
++static void check_unit_address_vs_reg(struct check *c, struct node *dt,
++			     struct node *node)
++{
++	const char *unitname = get_unitname(node);
++	struct property *prop = get_property(node, "reg");
 +
- /dts-v1/;
- #include "r8a7794.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-@@ -119,6 +130,30 @@
- 		#clock-cells = <0>;
- 		clock-frequency = <74250000>;
- 	};
++	if (!prop) {
++		prop = get_property(node, "ranges");
++		if (prop && !prop->val.len)
++			prop = NULL;
++	}
 +
-+	x9_clk: x9-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <12288000>;
-+		clock-output-names = "audio_clock";
-+	};
++	if (prop) {
++		if (!unitname[0])
++			FAIL(c, "Node %s has a reg or ranges property, but no unit name",
++			    node->fullpath);
++	} else {
++		if (unitname[0])
++			FAIL(c, "Node %s has a unit name, but no reg property",
++			    node->fullpath);
++	}
++}
++NODE_WARNING(unit_address_vs_reg, NULL);
 +
-+	sound {
-+		compatible = "simple-audio-card";
-+
-+		simple-audio-card,format = "left_j";
-+		simple-audio-card,bitclock-master = <&soundcodec>;
-+		simple-audio-card,frame-master = <&soundcodec>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&rcar_sound>;
-+		};
-+
-+		soundcodec: simple-audio-card,codec {
-+			sound-dai = <&ak4643>;
-+			clocks = <&x9_clk>;
-+		};
-+	};
- };
+ static void check_property_name_chars(struct check *c, struct node *dt,
+ 				      struct node *node, struct property *prop)
+ {
+@@ -654,8 +678,8 @@ TREE_WARNING(obsolete_chosen_interrupt_controller, NULL);
  
- &extal_clk {
-@@ -183,6 +218,16 @@
- 		renesas,groups = "usb1";
- 		renesas,function = "usb1";
- 	};
-+
-+	ssi_pins: sound {
-+		renesas,groups = "ssi0129_ctrl", "ssi0_data", "ssi1_data";
-+		renesas,function = "ssi";
-+	};
-+
-+	audio_clk_pins: audio_clk {
-+		renesas,groups = "audio_clkc";
-+		renesas,function = "audio_clk";
-+	};
- };
+ static struct check *check_table[] = {
+ 	&duplicate_node_names, &duplicate_property_names,
+-	&node_name_chars, &node_name_format, &property_name_chars,
+-	&name_is_string, &name_properties,
++	&node_name_chars, &node_name_format, &unit_address_vs_reg,
++	&property_name_chars, &name_is_string, &name_properties,
  
- &scif2 {
-@@ -220,6 +265,12 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
+ 	&duplicate_label,
  
-+	ak4643: codec@12 {
-+		compatible = "asahi-kasei,ak4643";
-+		#sound-dai-cells = <0>;
-+		reg = <0x12>;
-+	};
+diff --git a/tests/reg-without-unit-addr.dts b/tests/reg-without-unit-addr.dts
+new file mode 100644
+index 0000000..aaf8af7
+--- /dev/null
++++ b/tests/reg-without-unit-addr.dts
+@@ -0,0 +1,10 @@
++/dts-v1/;
 +
- 	composite-in@20 {
- 		compatible = "adi,adv7180";
- 		reg = <0x20>;
-@@ -380,3 +431,23 @@
- 		};
- 	};
- };
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+&rcar_sound {
-+	pinctrl-0 = <&ssi_pins &audio_clk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	/* Single DAI */
-+	#sound-dai-cells = <0>;
-+
-+	rcar_sound,dai {
-+		dai0 {
-+			playback = <&ssi0>;
-+			capture  = <&ssi1>;
-+		};
++	node {
++		reg = <0 1>;
 +	};
 +};
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 8863c9a..4b7a131 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -443,6 +443,8 @@ dtc_tests () {
+     check_tests reg-ranges-root.dts reg_format ranges_format
+     check_tests default-addr-size.dts avoid_default_addr_size
+     check_tests obsolete-chosen-interrupt-controller.dts obsolete_chosen_interrupt_controller
++    check_tests reg-without-unit-addr.dts unit_address_vs_reg
++    check_tests unit-addr-without-reg.dts unit_address_vs_reg
+     run_sh_test dtc-checkfails.sh node_name_chars -- -I dtb -O dtb bad_node_char.dtb
+     run_sh_test dtc-checkfails.sh node_name_format -- -I dtb -O dtb bad_node_format.dtb
+     run_sh_test dtc-checkfails.sh prop_name_chars -- -I dtb -O dtb bad_prop_char.dtb
+diff --git a/tests/unit-addr-without-reg.dts b/tests/unit-addr-without-reg.dts
+new file mode 100644
+index 0000000..ac786eb
+--- /dev/null
++++ b/tests/unit-addr-without-reg.dts
+@@ -0,0 +1,9 @@
++/dts-v1/;
 +
-+&ssi1 {
-+	shared-pin;
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	node@1 {
++	};
 +};
+-- 
+2.5.0
