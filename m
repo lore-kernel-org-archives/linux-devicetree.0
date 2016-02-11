@@ -1,46 +1,59 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/3] ARM: i.MX25: add scc module to dtsi
-Date: Thu, 11 Feb 2016 15:04:44 +0100
-Message-ID: <1455199485-24458-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455199485-24458-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v2 3/8] arm: add device-tree SoC bindings for Axis Artpec-6
+Date: Thu, 11 Feb 2016 15:04:37 +0100
+Message-ID: <0f096d1ad277cf94032ca274ced0cb35cb5d967c.1455198819.git.larper@axis.com>
+References: <cover.1455198819.git.larper@axis.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1455198819.git.larper@axis.com>
+In-Reply-To: <cover.1455198819.git.larper@axis.com>
+References: <cover.1455198819.git.larper@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the Security Controller (SCC) module to the dtsi.
+This adds device tree bindings for the Artpec-6 SoC.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Lars Persson <larper@axis.com>
 ---
- arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/arm/axis.txt | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/axis.txt
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index cde329e9b9e3..73118aba4cc4 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -397,6 +397,15 @@
- 				interrupts = <41>;
- 			};
- 
-+			scc: crypto@53fac000 {
-+				compatible = "fsl,imx25-scc";
-+				reg = <0x53fac000 0x4000>;
-+				clocks = <&clks 111>;
-+				clock-names = "ipg";
-+				interrupts = <49>, <50>;
-+				interrupt-names = "scm", "smn";
-+			};
+diff --git a/Documentation/devicetree/bindings/arm/axis.txt b/Documentation/devicetree/bindings/arm/axis.txt
+new file mode 100644
+index 0000000..203a305
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/axis.txt
+@@ -0,0 +1,29 @@
++Axis Communications AB
++ARTPEC series SoC Device Tree Bindings
 +
- 			esdhc1: esdhc@53fb4000 {
- 				compatible = "fsl,imx25-esdhc";
- 				reg = <0x53fb4000 0x4000>;
++ARTPEC-6 ARM SoC
++================
++
++Required root node properties:
++- compatible = "axis,artpec6";
++
++ARTPEC-6 DMA Configuration
++--------------------------
++
++The DMA configuration unit muxes dma request lines between single and burst
++alternatives.
++
++Required properties:
++- compatible: axis,artpec6-dmacfg
++- reg: Address and length of DMACFG register.
++
++Example:
++	dmacfg {
++		compatible = "axis,artpec6-dmacfg";
++		reg = <0xf8000010 4>;
++	};
++
++ARTPEC-6 Development board:
++---------------------------
++Required root node properties:
++- compatible = "axis,artpec6-dev-board", "axis,artpec6";
 -- 
-2.7.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
