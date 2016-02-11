@@ -1,32 +1,51 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of: resolver: Add missing of_node_get and of_node_put
-Date: Thu, 11 Feb 2016 17:18:43 -0600
-Message-ID: <CAL_JsqLSHrJWNJijv2Y1ZsXVa98PVBhg2kHn+t_eoH90GDLGAA@mail.gmail.com>
-References: <20160203180901.GA27874@amitoj-Inspiron-3542>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 5/5] arm: dts: Add pinctrl/GPIO/EINT node for mt2701
+Date: Fri, 12 Feb 2016 00:27:40 +0100
+Message-ID: <56BD18EC.3090601@gmail.com>
+References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
+ <1451286546-5920-6-git-send-email-biao.huang@mediatek.com>
+ <5685104D.7070008@gmail.com>
+ <CACRpkdbc-tNaeMzzX2riwUFPp0-XjVfvjuM6knWzVVwP89ECdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160203180901.GA27874@amitoj-Inspiron-3542>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitoj Kaur Chawla <amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbc-tNaeMzzX2riwUFPp0-XjVfvjuM6knWzVVwP89ECdA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Biao Huang <biao.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 3, 2016 at 12:09 PM, Amitoj Kaur Chawla
-<amitoj1606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> In __of_find_node_by_full_name, add an of_node_get when detecting the
-> desired element, to ensure that it ends up with a reference count that is
-> one greater than on entering the function.
+
+
+On 07/01/16 11:14, Linus Walleij wrote:
+> On Thu, Dec 31, 2015 at 12:23 PM, Matthias Brugger
+> <matthias.bgg@gmail.com> wrote:
+>> On 28/12/15 08:09, Biao Huang wrote:
+>>>
+>>> Add pinctrl and GPIO node to mt2701.dtsi
+>>>
+>>> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+>>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>>> ---
+>>>    arch/arm/boot/dts/mt2701.dtsi |   19 +++++++++++++++++++
+>>>    1 file changed, 19 insertions(+)
+>>>
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>
+>> Linus, will you take this patch through your branch?
 >
-> Also in __of_find_node_by_full_name, add an of_node_put on breaking
-> out of the for_each_child_of_node loop, to ensure that the reference
-> count of the returned value is not double incremented. This change
-> was made using Coccinelle.
+> No I prefer anything in arch/arm/boot/dts/* to go in through
+> the ARM SoC tree.
+>
+> It can usually be merged orthogonally anyways.
+>
+> I take Documenation/devicetree/bindings/* and patches
+> to the driver itself in drivers/pinctrl/*
+>
+> Yours,
+> Linus Walleij
+>
 
-Pantelis, are you convinced this is correct (albeit somewhat pointless)?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
