@@ -1,79 +1,55 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [GIT PULL] Immutable branch between MFD, Input and IIO
-Date: Thu, 11 Feb 2016 15:56:33 +0000
-Message-ID: <20160211155633.GB20693@x1>
-References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 3/8] dt, numa: adding numa dt binding implementation.
+Date: Thu, 11 Feb 2016 21:28:01 +0530
+Message-ID: <CAFpQJXU+fon8DY--qhyZV=JDv9omqs=c9eSX34g1J2w2uudNKA@mail.gmail.com>
+References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1454407763-1017-4-git-send-email-gkulkarni@caviumnetworks.com>
+	<CAL_JsqK5HV9yzBE+ANnTw26eVR7Dy+B8OkwQ-7WF8KDa86Fd9g@mail.gmail.com>
+	<20160211153255.GR24726@rric.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450101234-2191-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160211153255.GR24726-vWBEXY7mpu582hYKe6nXyg@public.gmane.org>
+Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-metag <linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
+Hi Rob,
 
-The following changes since commit 36f90b0a2ddd60823fe193a85e60ff1906c2=
-a9b3:
+On Thu, Feb 11, 2016 at 9:02 PM, Robert Richter
+<robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On 11.02.16 08:50:41, Rob Herring wrote:
+>> On Tue, Feb 2, 2016 at 4:09 AM, Ganapatrao Kulkarni
+>> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+>> > dt node parsing for numa topology is done using device property
+>> > numa-node-id and device node distance-map.
+>>
+>> How is it that powerpc doesn't need flat DT parsing for NUMA? Both
+>> arches are memblock based and the binding is similar IIRC, so you
+>> should be able to find a way to do this with the unflattened tree.
+>> Ideally, there should be some common code shared as well.
 
-  Linux 4.5-rc2 (2016-01-31 18:12:16 -0800)
+powerpc has implemented numa binding using property named
+"ibm,associativity", we too started adding using the same binding[
+refer version V6]
+however had discussion/review with Mark R about mapping and we could not map to
+some of the topology like mesh and ring topology.
 
-are available in the git repository at:
+So we have defined and implemented this new binding which is simple
+and scalable.
+This binding is very much aligned to ACPI NUMA specification.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
--input-iio-v4.6
+>>
+>> Do you have a git tree with this series?
+>
+> I have pushed it here for you:
+>
+>  https://git.kernel.org/cgit/linux/kernel/git/rric/linux.git/log/?h=thunder/numa-v10
 
-for you to fetch changes up to 4f7ed234f2a5dcc26fc56a6e8324d34bbc9afe23=
-:
+thanks Robert.
+>
+> -Robert
 
-  Input: touchscreen: Add imx25 TCQ driver (2016-02-11 15:40:42 +0000)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Input and IIO due for v4.6
-
-----------------------------------------------------------------
-Markus Pargmann (6):
-      mfd: Add DT binding documentation for imx25 ADC/TSC
-      iio: Add binding documentation for imx25 GCQ
-      Input: add binding documentation for imx25 touchscreen controller
-      mfd: fsl-imx25-tsadc: Register touchscreen ADC driver
-      iio: adc: Add imx25-gcq ADC driver
-      Input: touchscreen: Add imx25 TCQ driver
-
- .../devicetree/bindings/iio/adc/fsl,imx25-gcq.txt  |  58 ++
- .../bindings/input/touchscreen/fsl-mx25-tcq.txt    |  35 ++
- .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    |  47 ++
- drivers/iio/adc/Kconfig                            |   7 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/fsl-imx25-gcq.c                    | 417 +++++++++++++=
-+
- drivers/input/touchscreen/Kconfig                  |   9 +
- drivers/input/touchscreen/Makefile                 |   1 +
- drivers/input/touchscreen/fsl-imx25-tcq.c          | 596 +++++++++++++=
-++++++++
- drivers/mfd/Kconfig                                |   9 +
- drivers/mfd/Makefile                               |   2 +
- drivers/mfd/fsl-imx25-tsadc.c                      | 203 +++++++
- include/dt-bindings/iio/adc/fsl-imx25-gcq.h        |  18 +
- include/linux/mfd/imx25-tsadc.h                    | 140 +++++
- 14 files changed, 1543 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/fsl,imx25=
--gcq.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
-/fsl-mx25-tcq.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25-tsa=
-dc.txt
- create mode 100644 drivers/iio/adc/fsl-imx25-gcq.c
- create mode 100644 drivers/input/touchscreen/fsl-imx25-tcq.c
- create mode 100644 drivers/mfd/fsl-imx25-tsadc.c
- create mode 100644 include/dt-bindings/iio/adc/fsl-imx25-gcq.h
- create mode 100644 include/linux/mfd/imx25-tsadc.h
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+thanks
+Ganapat
