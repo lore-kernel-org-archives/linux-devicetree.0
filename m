@@ -1,182 +1,98 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v6 2/2] add support for DWC UFS Host Controller
-Date: Thu, 11 Feb 2016 10:26:23 +0000
-Message-ID: <56BC61CF.3010605@synopsys.com>
-References: <cover.1455120183.git.jpinto@synopsys.com>
- <0787e532da876f7f38b4f439ec2e16bfcbaa9cb3.1455120183.git.jpinto@synopsys.com>
- <6667560.LIsUD7xT9u@wuerfel>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
+Date: Thu, 11 Feb 2016 10:26:53 +0000
+Message-ID: <56BC61ED.6000201@nvidia.com>
+References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
+ <1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
+ <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
+ <56BB7AF4.8040708@nvidia.com>
+ <CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
+ <56BC50C2.7050609@nvidia.com>
+ <CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng@mail.gmail.com>
+ <56BC5EE0.2040804@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6667560.LIsUD7xT9u@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, mark.rutland@arm.com, martin.petersen@oracle.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BC5EE0.2040804-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/10/2016 8:50 PM, Arnd Bergmann wrote:
-> On Wednesday 10 February 2016 16:06:13 Joao Pinto wrote:
->> This patch has the goal to add support for DesignWare UFS Controller
->> specific operations and to add specific platform and pci drivers.
+
+
+On 11/02/16 10:13, Jon Hunter wrote:
+> 
+> On 11/02/16 09:57, Ulf Hansson wrote:
+>> On 11 February 2016 at 10:13, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>
+>>> On 10/02/16 18:25, Ulf Hansson wrote:
+>>>
+>>> [snip]
+>>>
+>>>>>> Perhaps there's a way to allow the generic PM domain to control this
+>>>>>> by itself. If we for example used the struct device corresponding to
+>>>>>> the powergate driver, genpd could use it to distinguish between
+>>>>>> various instances of genpd structs..!? Maybe it would simplify the way
+>>>>>> to deal with removing domains?
+>>>>>
+>>>>> Yes, that would be ideal. However, would have require changing
+>>>>> genpd_init()? I am not sure how genpd would be able to access the device
+>>>>> struct for the powergate driver because we don't provide this via any
+>>>>> API I am aware of? And I am guessing that you don't wish to expose the
+>>>>> gpd_list to the world either.
+>>>>>
+>>>>> If there is an easy way, I am open to it, but looking at it today, I am
+>>>>> not sure I see a simple way in which we could add a new API to do this.
+>>>>> However, may be I am missing something!
+>>>>
+>>>> If we add a new __pm_genpd_init() API, that could require a struct
+>>>> device to be provided. That API will thus invoke the existing
+>>>> pm_genpd_init() but also deal with the extra things needed here.
+>>>>
+>>>> I would also allow such an API to return an error code.
+>>>>
+>>>> Correspondingly, pm_genpd_remove() could be required to be provided
+>>>> with a struct device.
+>>>>
+>>>> Existing users of pm_genpd_init() can then convert to
+>>>> __pm_genpd_init() whenever suitable.
+>>>>
+>>>> Of course, another option is just to add new member in the genpd
+>>>> struct for the struct *device. The caller of pm_genpd_init() could
+>>>> check it, but allow it to be NULL. Although, the pm_genpd_remove() API
+>>>> would require that pointer to the struct device to be set...
+>>>>
+>>>> What do you think?
+>>>
+>>> Yes, sounds good. May be it is simpler just to add a new member and let
+>>> the platform genpd driver handle it.
+>>>
+>>> I am wondering if in addition to pm_genpd_remove(), we then just have a
+>>> function called pm_genpd_remove_tail(), which allows you to pass the
+>>> struct device pointer and will remove the last pm-domain from the
+>>> gpd_list and return the genpd pointer if successful. Internally, it will
+>>> call pm_genpd_remove(). It seems to me that if there are nested
+>>> pm-domains, then we probably want to remove them starting from the tail
+>>> as opposed to the head.
+>>>
+>>> How does that sound?
 >>
->> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
->>  Documentation/devicetree/bindings/ufs/ufs-dwc.txt |  17 +
->>  MAINTAINERS                                       |   6 +
->>  drivers/scsi/ufs/Kconfig                          |  41 ++
->>  drivers/scsi/ufs/Makefile                         |   3 +
->>  drivers/scsi/ufs/ufs-dwc-pci.c                    | 180 ++++++
->>  drivers/scsi/ufs/ufs-dwc.c                        | 102 +++
->>  drivers/scsi/ufs/ufshcd-dwc.c                     | 736 ++++++++++++++++++++++
->>  drivers/scsi/ufs/ufshcd-dwc.h                     |  18 +
->>  drivers/scsi/ufs/ufshcd.c                         |  50 +-
->>  drivers/scsi/ufs/ufshcd.h                         |  13 +
->>  drivers/scsi/ufs/ufshci-dwc.h                     |  42 ++
->>  drivers/scsi/ufs/ufshci.h                         |   1 +
->>  drivers/scsi/ufs/unipro.h                         |  39 ++
+>> Why not make pm_genpd_remove() to behave as you describe for
+>> pm_genpd_remove_tail()?
+>> That's probably the only sane way to remove genpds anyhow!?
 > 
-> Can you split this into separate patches for changes to the common code,
-> the addition of the PCI driver and the addition of the platform driver?
+> Simply to offer flexibility. I could see that for some devices that have
+> no dependencies between pm-domains and have a static list of pm-domains,
+> they can simply call pm_genpd_remove() for a given pm-domain. However,
+> that said, I can envision a case where a single pm-domain would be
+> removed by itself and so may be there is no benefit?
 
-I can split it in these parts:
-- Fix typo
-- Add UFS 2.0 support to core driver
-- Changes to core driver + dwc platform driver + dwc pci driver
+By the way, do you think that instead of passing the struct device * to
+pm_genpd_remove(), we should just have a void *dev_id in the same way
+the request_irq()/free_irq() work? In other words, it would allow people
+to use the struct device or struct device_node, etc?
 
-The last one cannot be split because the glue drivers depends on the changes of
-common code, including the creation of ufshcd-dwc.
-
-> 
->> diff --git a/Documentation/devicetree/bindings/ufs/ufs-dwc.txt b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
->> new file mode 100644
->> index 0000000..f38a3f5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
->> @@ -0,0 +1,17 @@
->> +* Universal Flash Storage (UFS) DesignWare Host Controller
->> +
->> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
->> +Each UFS controller instance should have its own node.
->> +
->> +Required properties:
->> +- compatible        : compatible string ("snps,ufshcd-1.0", "snps,ufshcd-1.1"
->> +  or "snps,ufshcd-2.0")
->> +- reg               : <registers mapping>
->> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
->> +
->> +Example:
->> +	dwc_ufshcd@0xD0000000 {
-> 
-> Please fix the node name and address in the example. I think you want "ufs@d0000000".
-
-Sure.
-
-> 
->> +config SCSI_UFS_DWC_MPHY_TC
->> +	bool "Support for the Synopsys MPHY Test Chip"
->> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
->> +	---help---
->> +	  This selects the support for the Synopsys MPHY Test Chip.
->> +
->> +	  Select this if you have a Synopsys MPHY Test Chip.
->> +	  If unsure, say N.
->> +
->> +config SCSI_UFS_DWC_40BIT_RMMI
->> +	bool "40-bit RMMI MPHY"
->> +	depends on SCSI_UFS_DWC_MPHY_TC
->> +	---help---
->> +	  This specifies that the Synopsys MPHY supports 40-bit RMMI operations.
->> +
->> +	  Select this if you are using a 40-bit RMMI Synopsys MPHY.
-> 
-> I don't think I understood you explanation why this has to be here,
-> rather than using a proper PHY driver. Please try again.
-
-This initialization is for Synopsys Test Chip which needs only some Unipro
-attribute configuration, which needs to be close to the UFS core since it uses
-its dme set/get functions. Qcom phy driver is differente, because you are really
-managing the phy itself, here in the Synopsys Test Chip you only set some Unipro
-attributes to put controller+Test Chip working together as one.
-
-> 
->> +
->> +#ifdef CONFIG_PM
->> +/**
->> + * ufs_dw_pci_suspend - suspend power management function
->> + * @pdev: pointer to PCI device handle
->> + * @state: power state
->> + *
->> + * Returns 0 if successful
->> + * Returns non-zero otherwise
->> + */
->> +static int ufs_dw_pci_suspend(struct device *dev)
->> +{
->> +	return ufshcd_system_suspend(dev_get_drvdata(dev));
->> +}
-> 
-> Please remove the #ifdef here.
-
-I'll check it out.
-
-> 
->> +
->> +static const struct dev_pm_ops ufs_dw_pci_pm_ops = {
->> +	.suspend	= ufs_dw_pci_suspend,
->> +	.resume		= ufs_dw_pci_resume,
->> +	.runtime_suspend = ufs_dw_pci_runtime_suspend,
->> +	.runtime_resume  = ufs_dw_pci_runtime_resume,
->> +	.runtime_idle    = ufs_dw_pci_runtime_idle,
->> +};
-> 
-> Instead, use the macros from include/linux/pm.h
-
-I'll check it out.
-
-> 
->> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
->> +/**
->> + * ufshcd_dwc_setup_40bit_rmmi()
->> + * This function configures Synopsys MPHY specific atributes (40-bit RMMI)
->> + * @hba: Pointer to drivers structure
->> + *
->> + * Returns 0 on success or non-zero value on failure
->> + */
->> +static int ufshcd_dwc_setup_40bit_rmmi(struct ufs_hba *hba)
->> +{
->> +	int ret = 0;
-> 
-> This looks like it should go into the external driver
-
-This is common init code for platform glue driver and pci glue driver, so it
-should remain in a common spot and in my option ufshcd-dwc is the right spot.
-
-> 
->> +
->> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
->> +	dev_info(hba->dev, "Configuring MPHY 40-bit RMMI");
->> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
->> +	if (ret) {
->> +		dev_err(hba->dev, "40-bit RMMI configuration failed");
->> +		goto out;
->> +	}
->> +#else
->> +	dev_info(hba->dev, "Configuring MPHY 20-bit RMMI");
->> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
->> +	if (ret) {
->> +		dev_err(hba->dev, "20-bit RMMI configuration failed");
->> +		goto out;
->> +	}
->> +#endif
-> 
-> In particular, the part above cannot possibly work: When a distro ships a kernel
-> with CONFIG_SCSI_UFS_DWC_40BIT_RMMI set, it won't ever call the 
-> ufshcd_dwc_setup_20bit_rmmi() function, regardless of what the hardware is.
-
-You are right... never thought about it that way... I am going to check with the
-IP guys the best way to go.
-
-> 
-> 	Arnd
-> 
-
-Joao
+Cheers
+Jon
