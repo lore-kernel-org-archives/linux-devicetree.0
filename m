@@ -1,174 +1,110 @@
-From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v8 4/4] Documentation: tee subsystem and op-tee driver
-Date: Thu, 11 Feb 2016 13:08:30 -0800
-Message-ID: <56BCF84E.50808@infradead.org>
-References: <1455210877-15748-1-git-send-email-jens.wiklander@linaro.org>
- <1455210877-15748-5-git-send-email-jens.wiklander@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455210877-15748-5-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: [PATCH v42 3/6] clk: Provide OF helper to mark clocks as CRITICAL
+Date: Thu, 11 Feb 2016 13:19:11 -0800
+Message-ID: <1455225554-13267-4-git-send-email-mturquette@baylibre.com>
+References: <1455225554-13267-1-git-send-email-mturquette@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455225554-13267-1-git-send-email-mturquette@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: lee.jones@linaro.org, sboyd@codeaurora.org, maxime.ripard@free-electrons.com, maxime.coquelin@st.com, geert@linux-m68k.org, heiko@sntech.de, andre.przywara@arm.com, rklein@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/16 09:14, Jens Wiklander wrote:
-> Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/00-INDEX |   2 +
->  Documentation/tee.txt  | 117 +++++++++++++++++++++++++++++++++++++++++++++++++
->  MAINTAINERS            |   1 +
->  3 files changed, 120 insertions(+)
->  create mode 100644 Documentation/tee.txt
+From: Lee Jones <lee.jones@linaro.org>
 
-> diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-> new file mode 100644
-> index 0000000..4ac91d2
-> --- /dev/null
-> +++ b/Documentation/tee.txt
-> @@ -0,0 +1,117 @@
-> +TEE subsystem
-> +This document describes the TEE subsystem in Linux
+This call matches clocks which have been marked as critical in DT
+and sets the appropriate flag.  These flags can then be used to
+mark the clock core flags appropriately prior to registration.
 
-                                                Linux.
+Legacy bindings requiring this feature must add the clock-critical
+property to their binding descriptions, as it is not a part of
+common-clock binding.
 
-> +
-> +A TEE (Trusted Execution Environment) is a trusted OS running in some
-> +secure environment, for example, TrustZone on ARM CPUs, or a separate
-> +secure co-processor etc. A TEE driver handles the details needed to
-> +communicate with the TEE.
-> +
-> +This subsystem deals with:
-> +
-> +- Registration of TEE drivers
-> +
-> +- Managing shared memory between Linux and the TEE
-> +
-> +- Providing a generic API to the TEE
-> +
-> +The TEE interface
-> +=================
-> +
-> +include/uapi/linux/tee.h defines the generic interface to a TEE.
-> +
-> +User space (the client) connects to the driver by opening /dev/tee[0-9]* or
-> +/dev/teepriv[0-9]*.
-> +
-> +- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor which
-> +  user space can mmap. When user space doesn't need the file descriptor anymore
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Michael Turquette <mturquette@baylibre.com>
+---
+Changed in vWhatever:
+  * Added kerneldoc
+  * Moved to clk.c, removed static inline
+  * s/of_clk_mark_if_critical/of_clk_detect_critical/
+  * s/critical-clock/clock-critical/
 
-                                                                           any more,
+ drivers/clk/clk.c            | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/clk-provider.h |  8 +++++++-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
 
-> +  it should be closed. When shared memory isn't needed any longer it should be
-> +  unmapped with munmap() to allow the reuse of memory.
-> +
-> +- TEE_IOC_VERSION lets user space know which TEE this driver handles and
-> +  the its capabilities.
-> +
-> +- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application
-
-end with '.'
-
-> +
-> +- TEE_IOC_INVOKE invokes a function in a Trusted Application
-
-ditto
-
-> +
-> +- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE
-
-ditto
-
-> +
-> +- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application
-
-ditto
-
-> +
-> +There are two classes of clients, normal clients and supplicants. The latter is
-> +a helper process for the TEE to access resources in Linux, for example file
-> +system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
-> +/dev/teepriv[0-9].
-> +
-> +Much of the communication between clients and the TEE is opaque to the
-> +driver. The main job for the driver is to receive requests from the
-> +clients, forward them to the TEE and send back the results. In the case of
-> +supplicants the communication goes in the other direction, the TEE sends
-> +requests to the supplicant which then sends back the result.
-> +
-> +OP-TEE driver
-> +=============
-> +
-> +The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
-> +TrustZone based OP-TEE solution that is supported.
-> +
-> +Lowest level of communication with OP-TEE builds on ARM SMC Calling
-> +Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
-> +[3] used internally by the driver. Stacked on top of that is OP-TEE Message
-> +Protocol [4].
-> +
-> +OP-TEE SMC interface provides the basic functions required by SMCCC and some
-> +additional functions specific for OP-TEE. The most interesting functions are:
-> +
-> +- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
-> +  which is then returned by TEE_IOC_VERSION
-> +
-> +- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
-> +  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
-> +  separate secure co-processor.
-> +
-> +- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
-> +
-> +- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
-> +  range to used for shared memory between Linux and OP-TEE.
-> +
-> +The GlobalPlatform TEE Client API [5] is implemented on top of the generic
-> +TEE API.
-> +
-> +Picture of the relationship between the different components in the
-> +OP-TEE architecture.
-> +
-> +    User space                  Kernel                   Secure world
-> +    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
-> + +--------+                                             +-------------+
-> + | Client |                                             | Trusted     |
-> + +--------+                                             | Application |
-> +    /\                                                  +-------------+
-> +    || +----------+                                           /\
-> +    || |tee-      |                                           ||
-> +    || |supplicant|                                           \/
-> +    || +----------+                                     +-------------+
-> +    \/      /\                                          | TEE Internal|
-> + +-------+  ||                                          | API         |
-> + + TEE   |  ||            +--------+--------+           +-------------+
-> + | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
-> + | API   |  \/            | subsys | driver |           | Trusted OS  |
-> + +-------+----------------+----+-------+----+-----------+-------------+
-> + |      Generic TEE API        |       |     OP-TEE MSG               |
-> + |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
-> + +-----------------------------+       +------------------------------+
-> +
-> +RPC (Remote Procedure Call) are requests from secure world to kernel driver
-> +or tee-supplicant. An RPC is identified by a special range of SMCCC return
-> +values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
-> +kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-> +tee-supplicant without further involvement of the driver, except switching
-> +shared memory buffer representation.
-> +
-> +References:
-> +[1] https://github.com/OP-TEE/optee_os
-> +[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-> +[3] drivers/tee/optee/optee_smc.h
-> +[4] drivers/tee/optee/optee_msg.h
-> +[5] http://www.globalplatform.org/specificationsdevice.asp look for
-> +    "TEE Client API Specification v1.0" and click download.
-
-
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 39f9527..5181a15 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3202,6 +3202,41 @@ static int parent_ready(struct device_node *np)
+ }
+ 
+ /**
++ * of_clk_detect_critical() - set CLK_IS_CRITICAL flag from Device Tree
++ * @np: Device node pointer associated with clock provider
++ * @index: clock index
++ * @flags: pointer to clk_core->flags
++ *
++ * Detects if the clock-critical property exists and, if so, sets the
++ * corresponding CLK_IS_CRITICAL flag.
++ *
++ * Do not use this function. It exists only for legacy Device Tree
++ * bindings, such as the one-clock-per-node style that are outdated.
++ * Those bindings typically put all clock data into .dts and the Linux
++ * driver has no clock data, thus making it impossible to set this flag
++ * correctly from the driver. Only those drivers may call
++ * of_clk_detect_critical from their setup functions.
++ *
++ * Return: error code or zero on success
++ */
++int of_clk_mark_if_critical(struct device_node *np,
++					  int index, unsigned long *flags)
++{
++	struct property *prop;
++	const __be32 *cur;
++	uint32_t idx;
++
++	if (!np || !flags)
++		return -EINVAL;
++
++	of_property_for_each_u32(np, "clock-critical", prop, cur, idx)
++		if (index == idx)
++			*flags |= CLK_IS_CRITICAL;
++
++	return 0;
++}
++
++/**
+  * of_clk_init() - Scan and init clock providers from the DT
+  * @matches: array of compatible values and init functions for providers.
+  *
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 1d986ea..d15d3cc 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -705,7 +705,8 @@ int of_clk_get_parent_count(struct device_node *np);
+ int of_clk_parent_fill(struct device_node *np, const char **parents,
+ 		       unsigned int size);
+ const char *of_clk_get_parent_name(struct device_node *np, int index);
+-
++int of_clk_mark_if_critical(struct device_node *np, int index,
++			    unsigned long *flags);
+ void of_clk_init(const struct of_device_id *matches);
+ 
+ #else /* !CONFIG_OF */
+@@ -742,6 +743,11 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
+ {
+ 	return NULL;
+ }
++static inline int of_clk_mark_if_critical(struct device_node *np, int index,
++					  unsigned long *flags)
++{
++	return 0;
++}
+ static inline void of_clk_init(const struct of_device_id *matches) {}
+ #endif /* CONFIG_OF */
+ 
 -- 
-~Randy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
