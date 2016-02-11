@@ -1,51 +1,99 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/14] pinctrl: sunxi: Add A83T R_PIO
- controller support
-Date: Thu, 11 Feb 2016 14:47:57 +0100
-Message-ID: <CACRpkdaGZ4-S1A9zUUaBXXEazyJf_uZ4ESiBhw-CpozXMxfDHg@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
-	<1454203266-4450-2-git-send-email-vishnupatekar0510@gmail.com>
-	<CACRpkdbCgOBQw28d=qc1fAURY3x8UdoWqiMtXMZ=uWLaQj-nbg@mail.gmail.com>
-	<20160211123648.GN31506@lukather>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Thu, 11 Feb 2016 16:53:35 +0300
+Message-ID: <56BC925F.6010809@cogentembedded.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBDVC6K2QKGQER2DI4DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160211123648.GN31506@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reind
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455188466-10879-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 1:36 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Feb 11, 2016 at 12:59:47PM +0100, Linus Walleij wrote:
->> On Sun, Jan 31, 2016 at 2:20 AM, Vishnu Patekar
->> <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> > The A83T has R_PIO pin controller, it's same as A23, execpt A83T
->> > interrupt bit is 6th and A83T has one extra pin PL12.
->> >
->> > Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Maxime, can you look at this patch?
+Hello.
+
+On 2/11/2016 2:01 PM, Petr Kulhavy wrote:
+
+> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+
+    This patch describes bindings, not adds support.
+
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/da8xx-usb.txt          | 47 ++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 >
-> Chen-Yu had one minor comment on it,
+> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> new file mode 100644
+> index 0000000..62dcc51
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> @@ -0,0 +1,47 @@
+> +TI DA8xx MUSB
+> +~~~~~~~~~~~~~
+> +For DA830 and DA850 platforms.
 
-OK waiting for a new version.
+    I'd suggest "DA8xx/OMAP-L1x/AM17xx/AM18xx" again.
 
-> and he's also the Allwinner
-> maintainer now, so you can trust his Acked-by just like you would
-> trust mine ;)
+> +
+> +Required properties:
+> +~~~~~~~~~~~~~~~~~~~~
+> + - compatible : Should be set to "ti,da830-musb".
+> +
+> + - reg: Offset and length of the USB controller register set.
+> +
+> + - interrupts: The USB interrupt number.
+> +
+> + - interrupt-names: Should be set to "mc".
+> +
+> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
+> +
+> + - mentor,power : Specifies the maximum current in milliamperes the controller can
+> +     supply in host mode.
+> +
+> + - ti,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
 
-Can you guys supply a MAINTAINERS entry for the sunxi
-stuff?
+     Maybe "ti,usb2-phy-refclock-frequency"?
 
-Yours,
-Linus Walleij
+> +     frequency in Hz in case the clock is generated by the internal PLL.
+> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+> +
+> +
+> +Optional properties:
+> +~~~~~~~~~~~~~~~~~~~~
+> + - ti,phy20-clkmux-pll: Boolean. Defines the USB 2.0 PHY reference clock source.
+
+    Maybe "ti,usb2-phy-clkmux-pll"?
+
+> +     If present the internal PLL is used as a clock source, otherwise the external
+> +     USB_REFCLKIN pin is used.
+> +
+> +Example:
+> +
+> +	usb20: usb@1e00000 {
+> +		compatible = "ti,da830-musb";
+> +		reg =   <0x00200000 0x10000>;
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <58>;
+> +		interrupt-names = "mc";
+> +
+> +		dr_mode = "host";
+> +		mentor,power = <500>;
+> +
+> +		ti,phy20-clkmux-pll;
+> +		ti,phy20-refclock-frequency = <24000000>;
+
+    In principle these 2 should belong to the USB PHY subnode...
+
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
