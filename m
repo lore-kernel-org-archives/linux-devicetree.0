@@ -1,95 +1,71 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
-Date: Thu, 11 Feb 2016 11:28:19 +0100
-Message-ID: <CAPDyKFq_0t4tcvkgMBW8p8ubJDALWMjdhgGM+_Z6auRxEkSPdA@mail.gmail.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
-	<1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
-	<CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
-	<56BB7AF4.8040708@nvidia.com>
-	<CAPDyKFrZ6tWBsQC0tyWWeChiZja3h_zcbaiX25ak-Zyp4MzqVw@mail.gmail.com>
-	<56BC50C2.7050609@nvidia.com>
-	<CAPDyKFrdmufsMqNL0U7q5gPEUqsg3SrkrNChcziQjEOjvd30Ng@mail.gmail.com>
-	<56BC5EE0.2040804@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V7 1/8] mfd: add device-tree binding doc for PMIC max77620/max20024
+Date: Thu, 11 Feb 2016 15:49:52 +0530
+Message-ID: <56BC6048.7080500@nvidia.com>
+References: <1454171931-27752-1-git-send-email-ldewangan@nvidia.com> <1454171931-27752-2-git-send-email-ldewangan@nvidia.com> <20160209154215.GF24522@x1> <56BA2859.2040605@nvidia.com> <20160210132333.GG24522@x1> <56BB3FB9.7050102@nvidia.com> <20160211092604.GG3782@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <56BC5EE0.2040804@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160211092604.GG3782@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, vreddytalla@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 11 February 2016 at 11:13, Jon Hunter <jonathanh@nvidia.com> wrote:
+
+On Thursday 11 February 2016 02:56 PM, Lee Jones wrote:
+> On Wed, 10 Feb 2016, Laxman Dewangan wrote:
 >
-> On 11/02/16 09:57, Ulf Hansson wrote:
->> On 11 February 2016 at 10:13, Jon Hunter <jonathanh@nvidia.com> wrote:
->>>
->>> On 10/02/16 18:25, Ulf Hansson wrote:
->>>
->>> [snip]
->>>
->>>>>> Perhaps there's a way to allow the generic PM domain to control this
->>>>>> by itself. If we for example used the struct device corresponding to
->>>>>> the powergate driver, genpd could use it to distinguish between
->>>>>> various instances of genpd structs..!? Maybe it would simplify the way
->>>>>> to deal with removing domains?
->>>>>
->>>>> Yes, that would be ideal. However, would have require changing
->>>>> genpd_init()? I am not sure how genpd would be able to access the device
->>>>> struct for the powergate driver because we don't provide this via any
->>>>> API I am aware of? And I am guessing that you don't wish to expose the
->>>>> gpd_list to the world either.
->>>>>
->>>>> If there is an easy way, I am open to it, but looking at it today, I am
->>>>> not sure I see a simple way in which we could add a new API to do this.
->>>>> However, may be I am missing something!
->>>>
->>>> If we add a new __pm_genpd_init() API, that could require a struct
->>>> device to be provided. That API will thus invoke the existing
->>>> pm_genpd_init() but also deal with the extra things needed here.
->>>>
->>>> I would also allow such an API to return an error code.
->>>>
->>>> Correspondingly, pm_genpd_remove() could be required to be provided
->>>> with a struct device.
->>>>
->>>> Existing users of pm_genpd_init() can then convert to
->>>> __pm_genpd_init() whenever suitable.
->>>>
->>>> Of course, another option is just to add new member in the genpd
->>>> struct for the struct *device. The caller of pm_genpd_init() could
->>>> check it, but allow it to be NULL. Although, the pm_genpd_remove() API
->>>> would require that pointer to the struct device to be set...
->>>>
->>>> What do you think?
->>>
->>> Yes, sounds good. May be it is simpler just to add a new member and let
->>> the platform genpd driver handle it.
->>>
->>> I am wondering if in addition to pm_genpd_remove(), we then just have a
->>> function called pm_genpd_remove_tail(), which allows you to pass the
->>> struct device pointer and will remove the last pm-domain from the
->>> gpd_list and return the genpd pointer if successful. Internally, it will
->>> call pm_genpd_remove(). It seems to me that if there are nested
->>> pm-domains, then we probably want to remove them starting from the tail
->>> as opposed to the head.
->>>
->>> How does that sound?
 >>
->> Why not make pm_genpd_remove() to behave as you describe for
->> pm_genpd_remove_tail()?
->> That's probably the only sane way to remove genpds anyhow!?
+>> sleep: <0/1>
+>>              0: sleep mode disable,
+>>              1: sleep mode enable.
+> Ideally yes.  This is obviously going to be used again.
 >
-> Simply to offer flexibility. I could see that for some devices that have
-> no dependencies between pm-domains and have a static list of pm-domains,
-> they can simply call pm_genpd_remove() for a given pm-domain. However,
-> that said, I can envision a case where a single pm-domain would be
-> removed by itself and so may be there is no benefit?
+> However;
+>   - My fear is that it will get confused with the 'sleep' property in
+>     Documentation/devicetree/booting-without-of.txt.
+>   - Secondly, you would need to get Rob to Ack it.
+>
 
-If I understand correctly, you agree to try with the most simple
-approach first and thus without providing too much flexibility.
+Another thought, becasue this is just for enable/disable, why not we add 
+property as "enable-sleep" of boolean type instead of u32 value type?
 
-Anyway, I am looking forward to review your next version of the patchset! :-)
+It is easy to describe the behavior with enable-sleep and 
+enable-low-power-mode.
 
-Kind regards
-Uffe
+-enable-sleep:                  Boolean, when FPS event cleared
+                                         (set to LOW), resources get 
+disabled
+                                         at the sequencing event 
+corresponding
+                                         to its FPS configuration register.
+
+-enable-low-power-mode: Boolean, when FPS event cleared
+                                         (set to LOW), resources sets into
+                                         low power mode at the 
+sequencing event
+                                         corresponding to its FPS 
+configuration
+                                         register.
+
+Both property can not be together.
+
+
+Other approach is to club together
+maxim,device-state-on-disabled-event : u32, describe the PMIC state
+                                                             when FPS 
+event cleared (set to LOW)
+                                                             whether it 
+should go to sleep state or
+low-power state.
+                                                                 1 = 
+Device state is set to sleep
+                                                                 2 = 
+Device state is set to low power mode.
+Absence of this property or other value will not change device state 
+when FPS event
+         cleared.
+
+
