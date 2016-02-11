@@ -1,62 +1,55 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: DTS: am57xx-beagle-x15: Select SYS_CLK2 for audio
- clocks
-Date: Wed, 10 Feb 2016 16:25:58 -0800
-Message-ID: <20160211002558.GP19432@atomide.com>
-References: <1455018417-2608-1-git-send-email-peter.ujfalusi@ti.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v5] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Wed, 10 Feb 2016 16:32:45 -0800
+Message-ID: <56BBD6AD.2090902@caviumnetworks.com>
+References: <1455125775-7245-1-git-send-email-matt.redfearn@imgtec.com> <56BB7B2F.60307@caviumnetworks.com> <20160210234907.GC1640@darkstar.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455018417-2608-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20160210234907.GC1640@darkstar.musicnaut.iki.fi>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Matt Redfearn <matt.redfearn@imgtec.com>, linux-mmc@vger.kernel.org, david.daney@cavium.com, ulf.hansson@linaro.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Aleksey Makarov <aleksey.makarov@caviumnetworks.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160209 03:48]:
-> The tlv320aic3104 codec's master clock is coming from the SoC's CLKOUT2.
-> Select the SYS_CLK2 (via divider) as parent clock for CLKOUT2 and select
-> the same clock (SYS_CLK2) for McASP3 AHCLKX clock as well.
-> SYS_CLK2 is sourced from an external oscillator running 22.5792MHz and it
-> is coming in to the SoC via the X1_OSC1.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+On 02/10/2016 03:49 PM, Aaro Koskinen wrote:
+> Hi,
+>
+> On Wed, Feb 10, 2016 at 10:02:23AM -0800, David Daney wrote:
+>> On 02/10/2016 09:36 AM, Matt Redfearn wrote:
+>>> +		pr_warn(FW_WARN "%s: Legacy property '%s'. Please remove\n",
+>>> +			node->full_name, legacy_name);
+>>
+>> I don't like this warning message.
+>>
+>> The vast majority of people that see it will not be able to change their
+>> firmware.  So it will be forever cluttering up their boot logs.
+>
+> Until they switch to use APPENDED_DTB. :-)
+>
 
-Applying into omap-for-v4.5/fixes thanks.
+I am philosophically opposed to making the DTB an internal kernel 
+implementation detail.
 
-Tony
+For OCTEON boards, it is an ABI between the boot firmware and the 
+kernel, and is impractical to change.
 
-> ---
->  arch/arm/boot/dts/am57xx-beagle-x15.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> index c37a5193f199..592e65c3a4e0 100644
-> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> @@ -173,6 +173,8 @@
->  
->  		sound0_master: simple-audio-card,codec {
->  			sound-dai = <&tlv320aic3104>;
-> +			assigned-clocks = <&clkoutmux2_clk_mux>;
-> +			assigned-clock-parents = <&sys_clk2_dclk_div>;
->  			clocks = <&clkout2_clk>;
->  		};
->  	};
-> @@ -795,6 +797,8 @@
->  	pinctrl-names = "default", "sleep";
->  	pinctrl-0 = <&mcasp3_pins_default>;
->  	pinctrl-1 = <&mcasp3_pins_sleep>;
-> +	assigned-clocks = <&mcasp3_ahclkx_mux>;
-> +	assigned-clock-parents = <&sys_clkin2>;
->  	status = "okay";
->  
->  	op-mode = <0>;	/* MCASP_IIS_MODE */
-> -- 
-> 2.7.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One could argue that many years ago, when the decision was made (by me), 
+that we should have opted to carry in the kernel source code tree the 
+DTS files for all OCTEON boards ever made, but we did not do that.  Due 
+to the non-reversibility of time, the decision is hard to reverse.
+
+In the case of this MMC driver, the only real difference is that two 
+properties have legacy names that later had differing "official" names. 
+  The overhead of carrying the legacy bindings is very low.
+
+David.
