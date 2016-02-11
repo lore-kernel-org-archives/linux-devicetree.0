@@ -1,55 +1,116 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 3/8] dt, numa: adding numa dt binding implementation.
-Date: Thu, 11 Feb 2016 21:28:01 +0530
-Message-ID: <CAFpQJXU+fon8DY--qhyZV=JDv9omqs=c9eSX34g1J2w2uudNKA@mail.gmail.com>
-References: <1454407763-1017-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1454407763-1017-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<CAL_JsqK5HV9yzBE+ANnTw26eVR7Dy+B8OkwQ-7WF8KDa86Fd9g@mail.gmail.com>
-	<20160211153255.GR24726@rric.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160211153255.GR24726-vWBEXY7mpu582hYKe6nXyg@public.gmane.org>
-Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-metag <linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH 2/2] clk: add artpec-6 pll1 clock driver
+Date: Thu, 11 Feb 2016 17:01:04 +0100
+Message-ID: <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455206007.git.larper@axis.com>
+References: <cover.1455206007.git.larper@axis.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <cover.1455206007.git.larper@axis.com>
+In-Reply-To: <cover.1455206007.git.larper@axis.com>
+References: <cover.1455206007.git.larper@axis.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The PLL1 clock is a fixed-factor clock with factors derived from boot
+mode pins. This driver is a simple wrapper to register the fixed
+factor clock according to the pin settings.
 
-On Thu, Feb 11, 2016 at 9:02 PM, Robert Richter
-<robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> On 11.02.16 08:50:41, Rob Herring wrote:
->> On Tue, Feb 2, 2016 at 4:09 AM, Ganapatrao Kulkarni
->> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
->> > dt node parsing for numa topology is done using device property
->> > numa-node-id and device node distance-map.
->>
->> How is it that powerpc doesn't need flat DT parsing for NUMA? Both
->> arches are memblock based and the binding is similar IIRC, so you
->> should be able to find a way to do this with the unflattened tree.
->> Ideally, there should be some common code shared as well.
+Signed-off-by: Lars Persson <larper@axis.com>
+---
+ drivers/clk/Makefile      |  1 +
+ drivers/clk/clk-artpec6.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+ create mode 100644 drivers/clk/clk-artpec6.c
 
-powerpc has implemented numa binding using property named
-"ibm,associativity", we too started adding using the same binding[
-refer version V6]
-however had discussion/review with Mark R about mapping and we could not map to
-some of the topology like mesh and ring topology.
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index b038e36..388f0cf 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -17,6 +17,7 @@ endif
+ 
+ # hardware specific clock types
+ # please keep this section sorted lexicographically by file/directory path name
++obj-$(CONFIG_MACH_ARTPEC6)		+= clk-artpec6.o
+ obj-$(CONFIG_MACH_ASM9260)		+= clk-asm9260.o
+ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+= clk-axi-clkgen.o
+ obj-$(CONFIG_ARCH_AXXIA)		+= clk-axm5516.o
+diff --git a/drivers/clk/clk-artpec6.c b/drivers/clk/clk-artpec6.c
+new file mode 100644
+index 0000000..3664c44
+--- /dev/null
++++ b/drivers/clk/clk-artpec6.c
+@@ -0,0 +1,70 @@
++/*
++ * ARTPEC-6 clock initialization
++ *
++ * Copyright 2015 Axis Comunications AB.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++
++static void __init of_artpec6_pll1_setup(struct device_node *np)
++{
++	void __iomem *devstat;
++	struct clk *clk;
++	const char *clk_name = np->name;
++	const char *parent_name;
++	u32 pll_mode, pll_m, pll_n;
++
++	parent_name = of_clk_get_parent_name(np, 0);
++
++	devstat = of_iomap(np, 0);
++	if (devstat == NULL) {
++		pr_err("error to ioremap DEVSTAT\n");
++		return;
++	}
++
++	/* DEVSTAT register contains PLL settings */
++	pll_mode = (readl(devstat) >> 6) & 3;
++	iounmap(devstat);
++
++	/*
++	 * pll1 settings are designed for different DDR speeds using a fixed
++	 * 50MHz external clock. However, a different external clock could be
++	 * used on different boards.
++	 * CPU clock is half the DDR clock.
++	 */
++	switch (pll_mode) {
++	case 0: /* DDR3-2133 mode */
++		pll_m = 4;
++		pll_n = 85;
++		break;
++	case 1: /* DDR3-1866 mode */
++		pll_m = 6;
++		pll_n = 112;
++		break;
++	case 2: /* DDR3-1600 mode */
++		pll_m = 4;
++		pll_n = 64;
++		break;
++	case 3: /* DDR3-1333 mode */
++		pll_m = 8;
++		pll_n = 106;
++		break;
++	}
++	/* ext_clk is defined in device tree */
++	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
++			pll_n, pll_m);
++	if (IS_ERR(clk)) {
++		pr_err("%s not registered\n", clk_name);
++		return;
++	}
++	of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(artpec6_pll1, "axis,artpec6-pll1-clock", of_artpec6_pll1_setup);
+-- 
+2.1.4
 
-So we have defined and implemented this new binding which is simple
-and scalable.
-This binding is very much aligned to ACPI NUMA specification.
-
->>
->> Do you have a git tree with this series?
->
-> I have pushed it here for you:
->
->  https://git.kernel.org/cgit/linux/kernel/git/rric/linux.git/log/?h=thunder/numa-v10
-
-thanks Robert.
->
-> -Robert
-
-thanks
-Ganapat
