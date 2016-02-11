@@ -1,127 +1,35 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
- Refactor A31 PLL6 so that it can be reused)
-Date: Thu, 11 Feb 2016 11:44:10 +0000
-Message-ID: <20160211114410.GA32535@leverpostej>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
- <20160210163001.GG2632@leverpostej>
- <20160211100048.GK31506@lukather>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/14] pinctrl: sunxi: Add A83T R_PIO
+ controller support
+Date: Thu, 11 Feb 2016 12:59:47 +0100
+Message-ID: <CACRpkdbCgOBQw28d=qc1fAURY3x8UdoWqiMtXMZ=uWLaQj-nbg@mail.gmail.com>
+References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
+	<1454203266-4450-2-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160211100048.GK31506@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <rob.herring@linaro.org>, Andre Przywara <andre.przywara@arm.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jean-Francois Moine <moinejf@free.fr>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jens Kuske <jenskuske@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBM7P6G2QKGQE6ELJ7IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1454203266-4450-2-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-clk@v
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 11:00:48AM +0100, Maxime Ripard wrote:
-> On Wed, Feb 10, 2016 at 04:30:01PM +0000, Mark Rutland wrote:
-> > On Wed, Feb 10, 2016 at 03:37:55PM +0100, Maxime Ripard wrote:
-> > > Hi Rob,
-> > > 
-> > > On Wed, Feb 10, 2016 at 07:42:02AM -0600, Rob Herring wrote:
-> > > > On Wed, Feb 10, 2016 at 6:30 AM, Andre Przywara <andre.przywara@arm.com> wrote:
-> > > > > Hi,
-> > > > >
-> > > > > just a ping:
-> > > > >
-> > > > > Are we really OK with breaking existing DTs in 4.6? (per the code in
-> > > > > -next: f7d372ba54ea04d528a291b8dbe34716507bb60b, which is this patch).
-> > > > 
-> > > > I only warn and make sure people are aware of the issue. I leave that
-> > > > up to platform maintainers to decide. It depends on the maturity of
-> > > > the platform and users.
-> > > 
-> > > The impacted SoCs support is really partial. For the most supported
-> > > one, big things like display or sound are totally missing, and we
-> > > still update them on a regular basis to add support for new
-> > > devices. As such, users are very likely to upgrade the DT from one
-> > > version to another just because there's new devices available to
-> > > them. And the newest SoC impacted just got introduced in 4.5, and only
-> > > has the UART and MMC devices available.
-> > > 
-> > > > If people complain about it then it's their mess. For platforms
-> > > > supported in distros such as debian or fedora, I would strongly
-> > > > recommend against breaking compatibility.
-> > > 
-> > > None of them are officially supported:
-> > > https://www.debian.org/releases/stable/armhf/ch02s01.html.en
-> > > https://fedoraproject.org/wiki/Architectures/ARM#Fedora_23
-> > > 
-> > > Only the older one are, and they are not affected by this patch.
-> > > 
-> > > > They do ship dtbs, but it's a chicken and egg problem. If dtbs were
-> > > > stable and provided by firmware, then they wouldn't have to provide
-> > > > them. If dtbs are unstable, then they have no choice.
-> > > 
-> > > And while it might work great on platforms that have all the needed
-> > > documentation, or a perfect one, which is our case. Almost each
-> > > release, we discover that something is not working as it was
-> > > documented, when it was documented in the first place.
-> > > 
-> > > It also seems that even on well documented platforms, supported by the
-> > > vendors, the stable ABI dream is not going to happen:
-> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm/Atmel/README#n105
-> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/marvell,berlin.txt#n4
-> > 
-> > To be quite frank, I completely disagree with that stance.
-> > 
-> > It seems like the only reason DT bindings aren't remaining stable is
-> > because people are deliberately ignoring the requirement and reasoning
-> > for doing so.
-> 
-> And for DT maintainers saying on multiple occasions that it's bad but
-> ok to break it and / or that they never actually said that it was a
-> stable ABI...
+On Sun, Jan 31, 2016 at 2:20 AM, Vishnu Patekar
+<vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Evidently there is a communication failure. Generally, the statement has
-been that old DTBs should continue to work. That's even documented, as
-Andre pointed out:
+> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
+> interrupt bit is 6th and A83T has one extra pin PL12.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Documentation/devicetree/bindings/ABI.txt
+Maxime, can you look at this patch?
 
-There are obviously shades of grey, and _rarely_ it might be necessary
-to deliberately break a binding. However, that should be the rare
-last-resort case, rather than a crutch for development.
-
-Saying "bad but ok" underplays the "bad" and overplays the "ok".
-
-> I'm guessing it could be a stable ABI if there was bindings
-> reviews. Rob actually started to review a significant amount of
-> bindings lately, and that's really appreciated, but if you don't
-> review all the bindings, then we're going to make mistakes.
-
-I agree that it is unfortunate that we cannot provide the level of
-review that we want to.
-
-Mistakes will happen even with review; that doesn't necessitate removing
-support for a binding.
-
-> > I agree that it can be painful, and that we cannot predict the future.
-> > There will always be bugs.
-> 
-> In our case, we can't even predict the present.
-> 
-> > Having code in mainline comes with responsibilities. One of those is to
-> > keep said code working for existing users. Otherwise, why bother having
-> > it in mainline at all?
-> 
-> None of our existing users ever complained.
-
-I believe that in this case, Andre was complaining about this particular
-breakage, unless I have misunderstood.
-
-To be clear, I'm arguing for the strategy going forward. If no-one has
-complained about the stuff broken up to this point, let's not waste time
-restoring that.
-
-Going forward we need to keep old DTBs supported.
-
-Thanks,
-Mark.
+Yours,
+Linus Walleij
