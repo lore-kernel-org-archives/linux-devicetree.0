@@ -1,59 +1,59 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH v3 0/6] arm: Add Artpec-6 SoC
-Date: Thu, 11 Feb 2016 17:06:15 +0100
-Message-ID: <cover.1455205057.git.larper@axis.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v3 1/6] arm: add device-tree SoC bindings for Axis Artpec-6
+Date: Thu, 11 Feb 2016 17:06:16 +0100
+Message-ID: <0a38251ad8ad1895a1744f43a58f6b161676af09.1455205057.git.larper@axis.com>
+References: <cover.1455205057.git.larper@axis.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1455205057.git.larper@axis.com>
+In-Reply-To: <cover.1455205057.git.larper@axis.com>
+References: <cover.1455205057.git.larper@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Basic support for the Axis Artpec-6 ARM SoC. Timers, interrupts, UARTs and
-ethernet are wired up.
+This adds device tree bindings for the Artpec-6 SoC.
 
-Changes since v2:
-- Create a syscon binding for the system controller.
-- Clock patches split out to new patch series "clk: Add Artpec-6 SoC support".
-
-Changes since v1:
-- Corrected bindings for axis,artpec6-pll1-clock.
-- Moved the uart aliases to the board dts.
-- Kconfig cleanup.
-- Added a device tree binding for the dma configuration.
-- Added CONFIG_SYNOPSYS_DWC_ETH_QOS to multi_v7_defconfig.
-- Added binding documentation for axis,artpec6-dev-board.
-
-Lars Persson (6):
-  arm: add device-tree SoC bindings for Axis Artpec-6
-  arm: dts: add Artpec-6 SoC dtsi file
-  arm: dts: add Artpec-6 development board dts
-  arm: initial machine port for artpec-6 SoC
-  arm: multi_v7_defconfig: add MACH_ARTPEC6
-  arm: mach-artpec: add entry to MAINTAINERS
-
- Documentation/devicetree/bindings/arm/axis.txt |  29 +++
- MAINTAINERS                                    |  10 ++
- arch/arm/Kconfig                               |   2 +
- arch/arm/Makefile                              |   1 +
- arch/arm/boot/dts/Makefile                     |   2 +
- arch/arm/boot/dts/artpec6-devboard.dts         |  64 +++++++
- arch/arm/boot/dts/artpec6.dtsi                 | 236 +++++++++++++++++++++++++
- arch/arm/configs/multi_v7_defconfig            |   3 +
- arch/arm/mach-artpec/Kconfig                   |  20 +++
- arch/arm/mach-artpec/Makefile                  |   1 +
- arch/arm/mach-artpec/board-artpec6.c           |  72 ++++++++
- 11 files changed, 440 insertions(+)
+Signed-off-by: Lars Persson <larper@axis.com>
+---
+ Documentation/devicetree/bindings/arm/axis.txt | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/axis.txt
- create mode 100644 arch/arm/boot/dts/artpec6-devboard.dts
- create mode 100644 arch/arm/boot/dts/artpec6.dtsi
- create mode 100644 arch/arm/mach-artpec/Kconfig
- create mode 100644 arch/arm/mach-artpec/Makefile
- create mode 100644 arch/arm/mach-artpec/board-artpec6.c
 
+diff --git a/Documentation/devicetree/bindings/arm/axis.txt b/Documentation/devicetree/bindings/arm/axis.txt
+new file mode 100644
+index 0000000..ae345e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/axis.txt
+@@ -0,0 +1,29 @@
++Axis Communications AB
++ARTPEC series SoC Device Tree Bindings
++
++ARTPEC-6 ARM SoC
++================
++
++Required root node properties:
++- compatible = "axis,artpec6";
++
++ARTPEC-6 System Controller
++--------------------------
++
++The ARTPEC-6 has a system controller with mixed functions controlling DMA, PCIe
++and resets.
++
++Required properties:
++- compatible: "axis,artpec6-syscon", "syscon"
++- reg: Address and length of the register bank.
++
++Example:
++	syscon {
++		compatible = "axis,artpec6-syscon", "syscon";
++		reg = <0xf8000000 0x48>;
++	};
++
++ARTPEC-6 Development board:
++---------------------------
++Required root node properties:
++- compatible = "axis,artpec6-dev-board", "axis,artpec6";
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
