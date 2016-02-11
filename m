@@ -1,110 +1,81 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: [PATCH v42 3/6] clk: Provide OF helper to mark clocks as CRITICAL
-Date: Thu, 11 Feb 2016 13:19:11 -0800
-Message-ID: <1455225554-13267-4-git-send-email-mturquette@baylibre.com>
-References: <1455225554-13267-1-git-send-email-mturquette@baylibre.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v16 0/6] Device Tree support for FPGA programming
+Date: Thu, 11 Feb 2016 15:22:52 -0600
+Message-ID: <CAL_JsqJHuhFG-wtkzDcBzz4b3cM=A8hgT+8DiwSeSKRPZT-e9g@mail.gmail.com>
+References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com> <alpine.DEB.2.02.1602111411460.26384@linuxheads99>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455225554-13267-1-git-send-email-mturquette@baylibre.com>
+In-Reply-To: <alpine.DEB.2.02.1602111411460.26384@linuxheads99>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: lee.jones@linaro.org, sboyd@codeaurora.org, maxime.ripard@free-electrons.com, maxime.coquelin@st.com, geert@linux-m68k.org, heiko@sntech.de, andre.przywara@arm.com, rklein@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>
+To: atull <atull@opensource.altera.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, delicious.quinoa@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+On Thu, Feb 11, 2016 at 2:49 PM, atull <atull@opensource.altera.com> wrote:
+> On Fri, 5 Feb 2016, atull@opensource.altera.com wrote:
+>
+>> From: Alan Tull <atull@opensource.altera.com>
+>>
+>> v16 Refactors the FPGA Area and FPGA Bus into single thing called an
+>> FPGA Region and eliminates using simple-bus.  I'm using the word
+>> "region" as it's a term is used in the literature of both the major
+>> FPGA manufacturors.
+>>
+>> Changes for v16:
+>> * Refactor the FPGA Area and FPGA Bus into a FPGA Region.
+>> * Don't use simple-bus.
+>> * FPGA Managers and FPGA Bridges are now specified by phandle using the
+>>   "fpga-mgr" and "fpga-bridges" properties.  fpga-bridges can specify
+>>   more than one bridge.
+>> * Device Tree overlays should be targeted to a FPGA Region.
+>> * The overlays need only contain firmware-name and the child nodes.
+>> * To model a system containing >1 partial reconfiguration region,
+>>   an overlay could add FPGA Regions to the base FPGA Regions.
+>> * Child FPGA Regions inherit the parent FGPA Manager, but specify
+>>   their own set of bridges if needes as partial reconfig regions
+>>   will likely need their own bridges.
+>> * All this is discussed in bindings/fpga/fpga-region.txt
+>>
+>> One other highlight:
+>> The little engine that runs this thing is a reconfig notifier
+>> in fpga-region.c.  This notifier that will program an FPGA if a
+>> "firmware-name" property gets added to a fpga-region.  Then
+>> it will call of_platform_populate().  The current behavior in Linux
+>> when a DT overlay is applied is that the reconfig notifications
+>> go out in heirarchical order: first notifications are for the
+>> properties, then notifications for the child nodes.  So an overlay
+>> that adds a 'firmware-name' property and some child nodes to a
+>> fpga-region will cause FPGA programming and child node
+>> populating in the right order.
+>
+> I figured out how to get rid of the reconfig notifier.
+>
+>>
+>> One issue with the dynamic DT stuff:
+>> I've tried returning and error from the notifier if FPGA programming
+>> fails; the error is noted on the console, but the child nodes
+>> get probed anyway.
+>
+> I looked into it further and now I've got a solution for this issue
+> that I can post soon.  I can stop using the DT overlay configfs
+> interface and add a sysfs file for applying an overlay to an FPGA
+> region.  The FPGA region implementation will see the overlay before it
+> becomes part of the live tree.  Then it can do the FPGA programming
+> and see that succeed before the child nodes become part of the live
+> tree.  If FPGA programming fails, the overlay will be rejected before
+> it becomes part of the live tree.  By the time 'firmware-name' and the
+> child nodes show up in the live tree, they will be post-configuration
+> information.
 
-This call matches clocks which have been marked as critical in DT
-and sets the appropriate flag.  These flags can then be used to
-mark the clock core flags appropriately prior to registration.
+Um, no. We don't need 2 interfaces for loading overlays from
+userspace. I could see this being a common problem and it needs to be
+solved. But given the configfs interface is not upstream yet, perhaps
+you should worry about that after the current series is in.
 
-Legacy bindings requiring this feature must add the clock-critical
-property to their binding descriptions, as it is not a part of
-common-clock binding.
+Perhaps we need a pre-add notifier and the core will only load the
+overlay if nothing handles it. Really, a solution without notifiers
+would be preferred. Maybe register handlers with the DT core for
+certain paths.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Michael Turquette <mturquette@baylibre.com>
----
-Changed in vWhatever:
-  * Added kerneldoc
-  * Moved to clk.c, removed static inline
-  * s/of_clk_mark_if_critical/of_clk_detect_critical/
-  * s/critical-clock/clock-critical/
-
- drivers/clk/clk.c            | 35 +++++++++++++++++++++++++++++++++++
- include/linux/clk-provider.h |  8 +++++++-
- 2 files changed, 42 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 39f9527..5181a15 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3202,6 +3202,41 @@ static int parent_ready(struct device_node *np)
- }
- 
- /**
-+ * of_clk_detect_critical() - set CLK_IS_CRITICAL flag from Device Tree
-+ * @np: Device node pointer associated with clock provider
-+ * @index: clock index
-+ * @flags: pointer to clk_core->flags
-+ *
-+ * Detects if the clock-critical property exists and, if so, sets the
-+ * corresponding CLK_IS_CRITICAL flag.
-+ *
-+ * Do not use this function. It exists only for legacy Device Tree
-+ * bindings, such as the one-clock-per-node style that are outdated.
-+ * Those bindings typically put all clock data into .dts and the Linux
-+ * driver has no clock data, thus making it impossible to set this flag
-+ * correctly from the driver. Only those drivers may call
-+ * of_clk_detect_critical from their setup functions.
-+ *
-+ * Return: error code or zero on success
-+ */
-+int of_clk_mark_if_critical(struct device_node *np,
-+					  int index, unsigned long *flags)
-+{
-+	struct property *prop;
-+	const __be32 *cur;
-+	uint32_t idx;
-+
-+	if (!np || !flags)
-+		return -EINVAL;
-+
-+	of_property_for_each_u32(np, "clock-critical", prop, cur, idx)
-+		if (index == idx)
-+			*flags |= CLK_IS_CRITICAL;
-+
-+	return 0;
-+}
-+
-+/**
-  * of_clk_init() - Scan and init clock providers from the DT
-  * @matches: array of compatible values and init functions for providers.
-  *
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 1d986ea..d15d3cc 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -705,7 +705,8 @@ int of_clk_get_parent_count(struct device_node *np);
- int of_clk_parent_fill(struct device_node *np, const char **parents,
- 		       unsigned int size);
- const char *of_clk_get_parent_name(struct device_node *np, int index);
--
-+int of_clk_mark_if_critical(struct device_node *np, int index,
-+			    unsigned long *flags);
- void of_clk_init(const struct of_device_id *matches);
- 
- #else /* !CONFIG_OF */
-@@ -742,6 +743,11 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
- {
- 	return NULL;
- }
-+static inline int of_clk_mark_if_critical(struct device_node *np, int index,
-+					  unsigned long *flags)
-+{
-+	return 0;
-+}
- static inline void of_clk_init(const struct of_device_id *matches) {}
- #endif /* CONFIG_OF */
- 
--- 
-2.1.4
+Rob
