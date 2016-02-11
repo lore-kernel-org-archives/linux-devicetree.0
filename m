@@ -1,130 +1,56 @@
 From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH V3 12/12] dtb: amd: Add support for AMD/Linaro 96Boards Enterprise Edition Server board
-Date: Wed, 10 Feb 2016 21:51:11 -0600
-Message-ID: <1455162671-16044-13-git-send-email-Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH V3 05/12] dtb: amd: Misc changes for I2C device nodes
+Date: Wed, 10 Feb 2016 21:51:04 -0600
+Message-ID: <1455162671-16044-6-git-send-email-Suravee.Suthikulpanit@amd.com>
 References: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1455162671-16044-1-git-send-email-Suravee.Suthikulpanit@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: devicetree@vger.kernel.org, brijeshkumar.singh@amd.com, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org, arm@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Add device tree file for AMD/Linaro 96Boards Enterprise Edition Server
-(Husky) Board. This is based on the AMD Seattle Rev.B0 system
+Add new i2c1 device node, and fix the incorrect clock frequency.
 
-Signed-off-by: Leo Duran <leo.duran@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/arm64/boot/dts/amd/Makefile  |  3 +-
- arch/arm64/boot/dts/amd/husky.dts | 83 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 85 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/amd/husky.dts
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amd/Makefile b/arch/arm64/boot/dts/amd/Makefile
-index db03293..ba84770 100644
---- a/arch/arm64/boot/dts/amd/Makefile
-+++ b/arch/arm64/boot/dts/amd/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_SEATTLE) += amd-overdrive.dtb \
--			amd-overdrive-rev-b0.dtb amd-overdrive-rev-b1.dtb
-+			amd-overdrive-rev-b0.dtb amd-overdrive-rev-b1.dtb \
-+			husky.dtb
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index c7c759a..4be36fd 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -77,7 +77,15 @@
+ 			compatible = "snps,designware-i2c";
+ 			reg = <0 0xe1000000 0 0x1000>;
+ 			interrupts = <0 357 4>;
+-			clocks = <&uartspiclk_100mhz>;
++			clocks = <&miscclk_250mhz>;
++		};
++
++		i2c1: i2c@e0050000 {
++			status = "disabled";
++			compatible = "snps,designware-i2c";
++			reg = <0 0xe0050000 0 0x1000>;
++			interrupts = <0 340 4>;
++			clocks = <&miscclk_250mhz>;
+ 		};
  
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/amd/husky.dts b/arch/arm64/boot/dts/amd/husky.dts
-new file mode 100644
-index 0000000..1381d4b
---- /dev/null
-+++ b/arch/arm64/boot/dts/amd/husky.dts
-@@ -0,0 +1,83 @@
-+/*
-+ * DTS file for AMD/Linaro 96Boards Enterprise Edition Server (Husky) Board
-+ * Note: Based-on AMD Seattle Rev.B0
-+ *
-+ * Copyright (C) 2015 Advanced Micro Devices, Inc.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "amd-seattle-soc.dtsi"
-+
-+/ {
-+	model = "Linaro 96Boards Enterprise Edition Server (Husky) Board";
-+	compatible = "amd,seattle-overdrive", "amd,seattle";
-+
-+	chosen {
-+		stdout-path = &serial0;
-+	};
-+
-+	psci {
-+		compatible   = "arm,psci-0.2";
-+		method       = "smc";
-+	};
-+};
-+
-+&ccp0 {
-+	status = "ok";
-+	amd,zlib-support = <1>;
-+};
-+
-+/**
-+ * NOTE: In Rev.B, gpio0 is reserved.
-+ */
-+&gpio1 {
-+	status = "ok";
-+};
-+
-+&gpio2 {
-+	status = "ok";
-+};
-+
-+&gpio3 {
-+	status = "ok";
-+};
-+
-+&gpio4 {
-+	status = "ok";
-+};
-+
-+&i2c0 {
-+	status = "ok";
-+};
-+
-+&i2c1 {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+};
-+
-+&spi0 {
-+	status = "ok";
-+};
-+
-+&spi1 {
-+	status = "ok";
-+	sdcard0: sdcard@0 {
-+		compatible = "mmc-spi-slot";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+		voltage-ranges = <3200 3400>;
-+		pl022,hierarchy = <0>;
-+		pl022,interface = <0>;
-+		pl022,com-mode = <0x0>;
-+		pl022,rx-level-trig = <0>;
-+		pl022,tx-level-trig = <0>;
-+	};
-+};
-+
-+&smb0 {
-+	/include/ "amd-seattle-xgbe-b.dtsi"
-+};
+ 		serial0: serial@e1010000 {
 -- 
 2.5.0
