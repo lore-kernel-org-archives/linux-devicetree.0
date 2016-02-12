@@ -1,52 +1,51 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v5 05/10] Input: synaptics-rmi4: Add device tree support
- for 2d sensors and F11
-Date: Fri, 12 Feb 2016 09:20:46 -0800
-Message-ID: <56BE146E.7050107@synaptics.com>
-References: <1455143074-10259-1-git-send-email-aduggan@synaptics.com>
- <20160212154427.GA8795@rob-hp-laptop>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Fri, 12 Feb 2016 18:24:01 +0100
+Message-ID: <56BE1531.8060800@barix.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <20160212162110.GA21833@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160212154427.GA8795@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160212162110.GA21833@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2016 07:47 AM, Rob Herring wrote:
-> On Wed, Feb 10, 2016 at 02:24:34PM -0800, Andrew Duggan wrote:
->> 2D sensors have several parameter which can be set in the platform data.
->> This patch adds support for getting those values from devicetree.
->>
->> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
->> ---
->>   .../bindings/input/rmi4/rmi_2d_sensor.txt          |  56 +++++++++++
->>   .../bindings/input/touchscreen/touchscreen.txt     |   2 +
->>   drivers/input/rmi4/rmi_2d_sensor.c                 | 108 +++++++++++++++++++++
->>   drivers/input/rmi4/rmi_2d_sensor.h                 |   3 +
->>   drivers/input/rmi4/rmi_f11.c                       |   7 +-
->>   5 files changed, 175 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
-> [...]
->
->> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> index ac23caf..d6674de 100644
->> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> @@ -18,6 +18,8 @@ Optional properties for Touchscreens:
->>    - touchscreen-inverted-y	: Y axis is inverted (boolean)
->>    - touchscreen-swapped-x-y	: X and Y axis are swapped (boolean)
->>   				  Swapping is done after inverting the axis
->> + - touchscreen-mm-x		: horizontal length in mm of the touchscreen
->> + - touchscreen-mm-y		: vertical length in mm of the touchscreen
-> As I mentioned on v3, put the units on the end.
 
-Oh sorry! I see you did mention that in v3 and I must have missed it.
+On 12.02.2016 17:21, Rob Herring wrote:
+> On Thu, Feb 11, 2016 at 12:01:06PM +0100, Petr Kulhavy wrote:
+>> + - mentor,power : Specifies the maximum current in milliamperes the controller can
+>> +     supply in host mode.
+> Still a no for me. Looks like this just sets hcd->power_budget. This
+> property may not be a regulator, but ultimately the value depends on
+> some regulator supplying Vbus. Also, given this has nothing to do with
+> MUSB h/w, however this is described should be generic.
 
-Thanks,
-Andrew
+I understand your point that the description should be generic.
+However the USB 2.0 specification does not define any relation between 
+the bMaxPower provided by the device and the actual power control.
+As far as I understand the value just serves the purpose to raise a flag 
+to the user if the attached device would draw too much power, and not to 
+enable it at all.
+Further, the value used by the protocol is not necessarily related to 
+the real current that can be supported. The maximum current supported by 
+the protocol is 510mA.
 
-> Rob
+For instance on my development board the real maximum current is limited 
+only by the mains power-supply used.
+So it cannot even be modelled in the DT as a regulator because the 
+power-supply is not part of the HW and
+everybody can take a different one.
 
+So defining a regulator just to store this arbitrary USB 2.0 value is a 
+bit overkill for me.
+
+Regards
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
