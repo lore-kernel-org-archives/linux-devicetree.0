@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v8 08/10] regulator: axp20x: Support new AXP223 PMIC
-Date: Fri, 12 Feb 2016 10:02:45 +0800
-Message-ID: <1455242567-17880-9-git-send-email-wens@csie.org>
+Subject: [PATCH v8 06/10] mfd: axp20x: Whitespace, open
+ parenthesis alignment code style fixes
+Date: Fri, 12 Feb 2016 10:02:43 +0800
+Message-ID: <1455242567-17880-7-git-send-email-wens@csie.org>
 References: <1455242567-17880-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -19,43 +20,52 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-It is functionally identical to AXP221; only the regulator default
-voltage/status and the external host interface are different.
+This fixes some leftover code style issues in the axp20x core.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/axp20x.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index f2e1a39ce0f3..e86d1fc2d80b 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -244,6 +244,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		step = 75;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		min = 1800;
- 		max = 4050;
- 		def = 3000;
-@@ -322,6 +323,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- 		break;
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 8e569bcfe3bc..3054ea4b95e8 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -593,14 +593,14 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+ 			dev_err(dev, "Unable to match OF ID\n");
+ 			return -ENODEV;
+ 		}
+-		axp20x->variant = (long) of_id->data;
++		axp20x->variant = (long)of_id->data;
+ 	} else {
+ 		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
+ 		if (!acpi_id || !acpi_id->driver_data) {
+ 			dev_err(dev, "Unable to match ACPI ID and data\n");
+ 			return -ENODEV;
+ 		}
+-		axp20x->variant = (long) acpi_id->driver_data;
++		axp20x->variant = (long)acpi_id->driver_data;
+ 	}
  
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		if (id < AXP22X_DCDC1 || id > AXP22X_DCDC5)
- 			return -EINVAL;
+ 	switch (axp20x->variant) {
+@@ -634,7 +634,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+ 		return -EINVAL;
+ 	}
+ 	dev_info(dev, "AXP20x variant %s found\n",
+-		axp20x_model_names[axp20x->variant]);
++		 axp20x_model_names[axp20x->variant]);
  
-@@ -360,6 +362,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		nregulators = AXP20X_REG_ID_MAX;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		regulators = axp22x_regulators;
- 		nregulators = AXP22X_REG_ID_MAX;
- 		break;
+ 	return 0;
+ }
+@@ -654,7 +654,7 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+ 	}
+ 
+ 	ret = mfd_add_devices(axp20x->dev, -1, axp20x->cells,
+-			axp20x->nr_cells, NULL, 0, NULL);
++			      axp20x->nr_cells, NULL, 0, NULL);
+ 
+ 	if (ret) {
+ 		dev_err(axp20x->dev, "failed to add MFD devices: %d\n", ret);
 -- 
 2.7.0
