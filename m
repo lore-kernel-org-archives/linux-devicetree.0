@@ -1,38 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] clk: sunxi: Add support for A80 APBS clock
-Date: Fri, 12 Feb 2016 10:52:21 -0600
-Message-ID: <20160212165221.GA14697@rob-hp-laptop>
-References: <1455269475-8180-1-git-send-email-wens@csie.org>
- <1455269475-8180-2-git-send-email-wens@csie.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: Re: [PATCH v5 05/10] Input: synaptics-rmi4: Add device tree support
+ for 2d sensors and F11
+Date: Fri, 12 Feb 2016 09:20:46 -0800
+Message-ID: <56BE146E.7050107@synaptics.com>
+References: <1455143074-10259-1-git-send-email-aduggan@synaptics.com>
+ <20160212154427.GA8795@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBSM37C2QKGQEFRLQX7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455269475-8180-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160212154427.GA8795@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Chris Healy <cphealy@gmail.com>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 05:31:14PM +0800, Chen-Yu Tsai wrote:
-> A80's APBS clock is not the same as the APB0 clock on A23. The A80's
-> is a zero-based divider, while the A23's is a power-of-two divider.
-> 
-> Replace the CLK_OF_DECLARE version of sun8i-a23-apb0. This also extends
-> the common setup function to take div clk flags.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+On 02/12/2016 07:47 AM, Rob Herring wrote:
+> On Wed, Feb 10, 2016 at 02:24:34PM -0800, Andrew Duggan wrote:
+>> 2D sensors have several parameter which can be set in the platform data.
+>> This patch adds support for getting those values from devicetree.
+>>
+>> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+>> ---
+>>   .../bindings/input/rmi4/rmi_2d_sensor.txt          |  56 +++++++++++
+>>   .../bindings/input/touchscreen/touchscreen.txt     |   2 +
+>>   drivers/input/rmi4/rmi_2d_sensor.c                 | 108 +++++++++++++++++++++
+>>   drivers/input/rmi4/rmi_2d_sensor.h                 |   3 +
+>>   drivers/input/rmi4/rmi_f11.c                       |   7 +-
+>>   5 files changed, 175 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> [...]
+>
+>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> index ac23caf..d6674de 100644
+>> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> @@ -18,6 +18,8 @@ Optional properties for Touchscreens:
+>>    - touchscreen-inverted-y	: Y axis is inverted (boolean)
+>>    - touchscreen-swapped-x-y	: X and Y axis are swapped (boolean)
+>>   				  Swapping is done after inverting the axis
+>> + - touchscreen-mm-x		: horizontal length in mm of the touchscreen
+>> + - touchscreen-mm-y		: vertical length in mm of the touchscreen
+> As I mentioned on v3, put the units on the end.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Oh sorry! I see you did mention that in v3 and I must have missed it.
 
->  drivers/clk/sunxi/clk-sun8i-apb0.c                | 23 ++++++++---------------
->  2 files changed, 9 insertions(+), 15 deletions(-)
+Thanks,
+Andrew
+
+> Rob
+
