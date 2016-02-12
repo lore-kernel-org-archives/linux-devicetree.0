@@ -1,21 +1,28 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] net: fec: Add "phy-reset-active-low" property to DT
-Date: Fri, 12 Feb 2016 13:24:11 -0200
-Message-ID: <CAOMZO5CQmVf7EuOWY+e_+jWjzxXodpTcahJBnzP0x1uapO+okQ@mail.gmail.com>
-References: <1455048072-869-1-git-send-email-bernhard@bwalle.de>
-	<20160212152011.GA28563@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] pwm: add DT bindings for the STMPE PWM
+Date: Fri, 12 Feb 2016 09:24:54 -0600
+Message-ID: <20160212152454.GA31285@rob-hp-laptop>
+References: <1455094468-25521-1-git-send-email-linus.walleij@linaro.org>
+ <1455094468-25521-2-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160212152011.GA28563@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bernhard Walle <bernhard@bwalle.de>, Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455094468-25521-2-git-send-email-linus.walleij@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 1:20 PM, Rob Herring <robh@kernel.org> wrote:
+On Wed, Feb 10, 2016 at 09:54:26AM +0100, Linus Walleij wrote:
+> This adds fairly standard device tree bindings for the STMPE
+> PWM found in STMPE24xx multi-purpose expanders.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
 
-> This is what the gpio flags are for. Why can't you use that?
-
-This has already been discussed in v1:
-https://lkml.org/lkml/2016/2/8/867
+Acked-by: Rob Herring <robh@kernel.org>
