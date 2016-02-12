@@ -1,92 +1,41 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [RFC v2 12/12] ARM64: dts: Define CPU power domain for MSM8916
-Date: Fri, 12 Feb 2016 13:50:38 -0700
-Message-ID: <1455310238-8963-13-git-send-email-lina.iyer@linaro.org>
-References: <1455310238-8963-1-git-send-email-lina.iyer@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1455310238-8963-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: geert@linux-m68k.org, k.kozlowski@samsung.com, msivasub@codeaurora.org, agross@codeaurora.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, ahaslam@baylibre.com, mtitinger@baylibre.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 1/4] dma: mmp_pdma: Add the #requestors DT property documentation
+Date: Fri, 12 Feb 2016 21:55:53 +0100
+Message-ID: <87vb5t1wdi.fsf@belgarion.home>
+References: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
+	<1455225798-9510-2-git-send-email-robert.jarzmik@free.fr>
+	<2622040.i4begfCjyO@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2622040.i4begfCjyO@wuerfel> (Arnd Bergmann's message of "Thu, 11
+	Feb 2016 22:59:51 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define power domain and the power states for the domain as defined by
-the PSCI firmware. The 8916 firmware supports OS initiated method of
-powering off the CPU clusters.
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
----
-Changes since RFC v1 -
-- no cpu-map topology node
+> On Thursday 11 February 2016 22:23:15 Robert Jarzmik wrote:
+>> @@ -12,6 +12,8 @@ Required properties:
+>>  Optional properties:
+>>  - #dma-channels: Number of DMA channels supported by the controller (defaults
+>>    to 32 when not specified)
+>> +- #requestors: Number of DMA requestor lines supported by the controller
+>> +  (defaults to 0 when not specified)
+>>  
+>> 
+>
+> Most other ones use "#dma-requests" as the property name here, I think it makes
+> sense to stay with that convention.
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Most certainly, for v2.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index b7839a8..62dade8 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -63,6 +63,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&CPU_PD>;
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -71,6 +72,7 @@
- 			reg = <0x1>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&CPU_PD>;
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -79,6 +81,7 @@
- 			reg = <0x2>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&CPU_PD>;
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -87,6 +90,7 @@
- 			reg = <0x3>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&CPU_PD>;
- 		};
- 
- 		idle-states {
-@@ -101,6 +105,27 @@
- 		};
- 	};
- 
-+	CPU_PD: cpu-pd@0 {
-+		#power-domain-cells = <0>;
-+		power-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
-+	};
-+
-+	pd-power-states {
-+		CLUSTER_RET: power-state@1 {
-+			state-param = <0x1000010>;
-+			entry-latency-us = <500>;
-+			exit-latency-us = <500>;
-+			residency-us = <2000>;
-+		 };
-+
-+		CLUSTER_PWR_DWN: power-state@2 {
-+			state-param = <0x1000030>;
-+			entry-latency-us = <2000>;
-+			exit-latency-us = <2000>;
-+			residency-us = <6000>;
-+		};
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
+I'll await for a couple of days for other reviews, especially Vinod's one and
+Haojian's ack for the .h change.
+
+Cheers.
+
 -- 
-2.1.4
-
+Robert
