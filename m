@@ -1,45 +1,84 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH] ARM: bcm2835: add bcm2835-aux-uart support to DT
-Date: Fri, 12 Feb 2016 11:14:25 +0000
-Message-ID: <1455275666-15806-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v8 2/4] tee: generic TEE subsystem
+Date: Fri, 12 Feb 2016 12:30:07 +0100
+Message-ID: <20160212113006.GA30447@ermac>
+References: <1455210877-15748-1-git-send-email-jens.wiklander@linaro.org>
+ <1455210877-15748-3-git-send-email-jens.wiklander@linaro.org>
+ <20160212045159.GQ17997@ZenIV.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160212045159.GQ17997@ZenIV.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Al Viro <viro@ZenIV.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Fri, Feb 12, 2016 at 04:51:59AM +0000, Al Viro wrote:
+> On Thu, Feb 11, 2016 at 06:14:35PM +0100, Jens Wiklander wrote:
+> 
+> > +static int tee_ioctl_shm_alloc(struct tee_context *ctx,
+> > +		struct tee_ioctl_shm_alloc_data __user *udata)
+> > +{
+> > +	long ret;
+> > +	struct tee_ioctl_shm_alloc_data data;
+> > +	struct tee_shm *shm;
+> > +
+> > +	if (copy_from_user(&data, udata, sizeof(data)))
+> > +		return -EFAULT;
+> > +
+> > +	/* Currently no input flags are supported */
+> > +	if (data.flags)
+> > +		return -EINVAL;
+> > +
+> > +	data.fd = -1;
+> > +
+> > +	shm = tee_shm_alloc(ctx->teedev, data.size,
+> > +			    TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
+> > +	if (IS_ERR(shm))
+> > +		return PTR_ERR(shm);
+> > +
+> > +	data.flags = shm->flags;
+> > +	data.size = shm->size;
+> > +	data.fd = tee_shm_get_fd(shm);
+> > +	if (data.fd < 0) {
+> > +		ret = data.fd;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (copy_to_user(udata, &data, sizeof(data))) {
+> > +		ret = -EFAULT;
+> > +		goto err;
+> > +	}
+> > +	/*
+> > +	 * When user space closes the file descriptor the shared memory
+> > +	 * should be freed
+> > +	 */
+> > +	tee_shm_put(shm);
+> > +	return 0;
+> > +err:
+> > +	if (data.fd >= 0)
+> > +		tee_shm_put_fd(data.fd);
+> 
+> This is completely broken.  Don't ever use that pattern.  Once something
+> is in descriptor table, that's _it_.  You are already past the point of
+> no return and there is no way to clean up.
+> 
+> In ABIs like that (and struct containing descriptor *is* a bad ABI design)
+> solution is
+> 	* allocate a descriptor
+> 	* do everything that might fail, including copy_to_user()/put_user(),
+> etc.
+> 	* if failed, release unused descriptor and do fput(), if you already
+> have a struct file reference that needs to be released.
+> 	* FINALLY, when nothing no failures are possible, fd_install() the
+> sucker in place.
+> 
+> And yes, dma_buf_fd() encourages that kind of braindamage.  It's tolerable
+> only in one case - when we are about to return descriptor number directly
+> as return value of syscall and really can't fail anymore.  Not the case
+> here.
 
-Add bcm2835-aux-uart support to the device tree.
-
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
----
- arch/arm/boot/dts/bcm283x.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 05ff5ce..8aaf193 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -160,6 +160,14 @@
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
- 		};
- 
-+		uart1: serial@7e215040 {
-+			compatible = "brcm,bcm2835-aux-uart";
-+			reg = <0x7e215040 0x40>;
-+			interrupts = <1 29>;
-+			clocks = <&aux BCM2835_AUX_CLOCK_UART>;
-+			status = "disabled";
-+		};
-+
- 		spi1: spi@7e215080 {
- 			compatible = "brcm,bcm2835-aux-spi";
- 			reg = <0x7e215080 0x40>;
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the feedback, I'll change to return the descriptor in the
+return value instead.
