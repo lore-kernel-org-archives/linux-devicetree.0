@@ -1,78 +1,163 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/2] dt-bindings: clock: adpll: Add binding documentation for TI adpll
-Date: Fri, 12 Feb 2016 13:20:08 -0800
-Message-ID: <1455312009-808-2-git-send-email-tony@atomide.com>
-References: <1455312009-808-1-git-send-email-tony@atomide.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455312009-808-1-git-send-email-tony@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Brian Hutchinson <b.hutchman@gmail.com>, Delio Brignoli <dbrignoli@audioscience.com>, Neil Armstrong <narmstrong@baylibre.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Philipp Rosenberger <ilu@linutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: [PATCH 1/2] [media] tvp5150: replace MEDIA_ENT_F_CONN_TEST by a control
+Date: Fri, 12 Feb 2016 19:18:44 -0200
+Message-ID: <bddda7f5f133e3bafa89519e0c8bce832d19e6d9.1455311900.git.mchehab@osg.samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Let's add binding documentation for the ADPLL found on dm814x
-and dra62x. The binding uses the standard clock binding.
+MEDIA_ENT_F_CONN_TEST is not really a connector, it is actually
+a signal generator. Also, as other drivers use the
+V4L2_CID_TEST_PATTERN control for signal generators, let's change
+the driver accordingly.
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Acked-by: Michael Turquette <mturquette@baylibre.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Tested with Terratec Grabster AV350.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 ---
- .../devicetree/bindings/clock/ti/adpll.txt         | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/adpll.txt
+ drivers/media/i2c/tvp5150.c         | 45 +++++++++++++++++++++++--------------
+ include/dt-bindings/media/tvp5150.h |  3 +--
+ 2 files changed, 29 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/adpll.txt b/Documentation/devicetree/bindings/clock/ti/adpll.txt
-new file mode 100644
-index 0000000..8516bf0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/adpll.txt
-@@ -0,0 +1,43 @@
-+Binding for Texas Instruments ADPLL clock.
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index b8976028fc82..ef393f5daf2a 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1,5 +1,5 @@
+ /*
+- * tvp5150 - Texas Instruments TVP5150A/AM1 video decoder driver
++ * tvp5150 - Texas Instruments TVP5150A/AM1 and TVP5151 video decoder driver
+  *
+  * Copyright (c) 2005,2006 Mauro Carvalho Chehab (mchehab@infradead.org)
+  * This code is placed under the terms of the GNU General Public License v2
+@@ -27,7 +27,7 @@
+ #define TVP5150_MAX_CROP_TOP	127
+ #define TVP5150_CROP_SHIFT	2
+ 
+-MODULE_DESCRIPTION("Texas Instruments TVP5150A video decoder driver");
++MODULE_DESCRIPTION("Texas Instruments TVP5150A/TVP5150AM1/TVP5151 video decoder driver");
+ MODULE_AUTHOR("Mauro Carvalho Chehab");
+ MODULE_LICENSE("GPL");
+ 
+@@ -259,8 +259,12 @@ static inline void tvp5150_selmux(struct v4l2_subdev *sd)
+ 	int input = 0;
+ 	int val;
+ 
+-	if ((decoder->output & TVP5150_BLACK_SCREEN) || !decoder->enable)
+-		input = 8;
++	/* Only tvp5150am1 and tvp5151 have signal generator support */
++	if ((decoder->dev_id == 0x5150 && decoder->rom_ver == 0x0400) ||
++	    (decoder->dev_id == 0x5151 && decoder->rom_ver == 0x0100)) {
++		if (!decoder->enable)
++			input = 8;
++	}
+ 
+ 	switch (decoder->input) {
+ 	case TVP5150_COMPOSITE1:
+@@ -795,6 +799,7 @@ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+ static int tvp5150_s_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct v4l2_subdev *sd = to_sd(ctrl);
++	struct tvp5150 *decoder = to_tvp5150(sd);
+ 
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_BRIGHTNESS:
+@@ -808,6 +813,9 @@ static int tvp5150_s_ctrl(struct v4l2_ctrl *ctrl)
+ 		return 0;
+ 	case V4L2_CID_HUE:
+ 		tvp5150_write(sd, TVP5150_HUE_CTL, ctrl->val);
++	case V4L2_CID_TEST_PATTERN:
++		decoder->enable = ctrl->val ? false : true;
++		tvp5150_selmux(sd);
+ 		return 0;
+ 	}
+ 	return -EINVAL;
+@@ -1022,15 +1030,6 @@ static int tvp5150_link_setup(struct media_entity *entity,
+ 
+ 	decoder->input = i;
+ 
+-	/* Only tvp5150am1 and tvp5151 have signal generator support */
+-	if ((decoder->dev_id == 0x5150 && decoder->rom_ver == 0x0400) ||
+-	    (decoder->dev_id == 0x5151 && decoder->rom_ver == 0x0100)) {
+-		decoder->output = (i == TVP5150_GENERATOR ?
+-				   TVP5150_BLACK_SCREEN : TVP5150_NORMAL);
+-	} else {
+-		decoder->output = TVP5150_NORMAL;
+-	}
+-
+ 	tvp5150_selmux(sd);
+ #endif
+ 
+@@ -1074,6 +1073,12 @@ static int tvp5150_s_routing(struct v4l2_subdev *sd,
+ 
+ 	decoder->input = input;
+ 	decoder->output = output;
 +
-+Binding status: Unstable - ABI compatibility may be broken in the future
++	if (output == TVP5150_BLACK_SCREEN)
++		decoder->enable = false;
++	else
++		decoder->enable = true;
 +
-+This binding uses the common clock binding[1]. It assumes a
-+register-mapped ADPLL with two to three selectable input clocks
-+and three to four children.
+ 	tvp5150_selmux(sd);
+ 	return 0;
+ }
+@@ -1405,9 +1410,6 @@ static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
+ 		case TVP5150_SVIDEO:
+ 			input->function = MEDIA_ENT_F_CONN_SVIDEO;
+ 			break;
+-		case TVP5150_GENERATOR:
+-			input->function = MEDIA_ENT_F_CONN_TEST;
+-			break;
+ 		}
+ 
+ 		input->flags = MEDIA_ENT_FL_CONNECTOR;
+@@ -1431,6 +1433,11 @@ err:
+ 	return ret;
+ }
+ 
++static const char * const tvp5150_test_patterns[2] = {
++	"Disabled",
++	"Black screen"
++};
 +
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be one of "ti,dm814-adpll-s-clock" or
-+  "ti,dm814-adpll-lj-clock" depending on the type of the ADPLL
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : link phandles of parent clocks clkinp and clkinpulow, note
-+  that the adpll-s-clock also has an optional clkinphif
-+- reg : address and length of the register set for controlling the ADPLL.
-+
-+Examples:
-+	adpll_mpu_ck: adpll@40 {
-+		#clock-cells = <1>;
-+		compatible = "ti,dm814-adpll-s-clock";
-+		reg = <0x40 0x40>;
-+		clocks = <&devosc_ck &devosc_ck &devosc_ck>;
-+		clock-names = "clkinp", "clkinpulow", "clkinphif";
-+		clock-indices = <0>, <1>, <2>, <3>;
-+		clock-output-names = "481c5040.adpll.dcoclkldo",
-+				     "481c5040.adpll.clkout",
-+				     "481c5040.adpll.clkoutx2",
-+				     "481c5040.adpll.clkouthif";
-+	};
-+
-+	adpll_dsp_ck: adpll@80 {
-+		#clock-cells = <1>;
-+		compatible = "ti,dm814-adpll-lj-clock";
-+		reg = <0x80 0x30>;
-+		clocks = <&devosc_ck &devosc_ck>;
-+		clock-names = "clkinp", "clkinpulow";
-+		clock-indices = <0>, <1>, <2>;
-+		clock-output-names = "481c5080.adpll.dcoclkldo",
-+				     "481c5080.adpll.clkout",
-+				     "481c5080.adpll.clkoutldo";
-+	};
+ static int tvp5150_probe(struct i2c_client *c,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -1488,7 +1495,7 @@ static int tvp5150_probe(struct i2c_client *c,
+ 
+ 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
+ 	core->input = TVP5150_COMPOSITE1;
+-	core->enable = 1;
++	core->enable = true;
+ 
+ 	v4l2_ctrl_handler_init(&core->hdl, 5);
+ 	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
+@@ -1502,6 +1509,10 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
+ 			V4L2_CID_PIXEL_RATE, 27000000,
+ 			27000000, 1, 27000000);
++	v4l2_ctrl_new_std_menu_items(&core->hdl, &tvp5150_ctrl_ops,
++				     V4L2_CID_TEST_PATTERN,
++				     ARRAY_SIZE(tvp5150_test_patterns),
++				     0, 0, tvp5150_test_patterns);
+ 	sd->ctrl_handler = &core->hdl;
+ 	if (core->hdl.error) {
+ 		res = core->hdl.error;
+diff --git a/include/dt-bindings/media/tvp5150.h b/include/dt-bindings/media/tvp5150.h
+index d30865222082..c852a35e916e 100644
+--- a/include/dt-bindings/media/tvp5150.h
++++ b/include/dt-bindings/media/tvp5150.h
+@@ -25,9 +25,8 @@
+ #define TVP5150_COMPOSITE0 0
+ #define TVP5150_COMPOSITE1 1
+ #define TVP5150_SVIDEO     2
+-#define TVP5150_GENERATOR  3
+ 
+-#define TVP5150_INPUT_NUM  4
++#define TVP5150_INPUT_NUM  3
+ 
+ /* TVP5150 HW outputs */
+ #define TVP5150_NORMAL       0
 -- 
-2.7.0
-
+2.5.0
