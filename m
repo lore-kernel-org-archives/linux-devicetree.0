@@ -1,45 +1,57 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v7 3/3] add support for DWC UFS Host Controller
-Date: Fri, 12 Feb 2016 17:52:08 +0000
-Message-ID: <56BE1BC8.5020604@synopsys.com>
-References: <cover.1455192008.git.jpinto@synopsys.com>
- <ee97e9b0ece0d819debe403c752d233c6267e02e.1455192008.git.jpinto@synopsys.com>
- <20160212163636.GA31045@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160212163636.GA31045@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: [RFC PATCH 0/4] clk: sunxi: fix DT compatibility issues
+Date: Fri, 12 Feb 2016 17:59:56 +0000
+Message-ID: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Commit f7d372ba54ea ("clk: sunxi: Refactor A31 PLL6 so that it can be
+reused") (in -next) made the A31 PLL6 clock driver more generic, so
+that it can drive the PLL8 clock in newer SoCs too.
+However the patch broke compatibility with older DTs, which this
+series tries to fix.
+The approach chosen here is to bring back the old driver under its
+old name, while letting the new driver using a different name to be
+able to tell them apart.
+The old driver should be somewhat deprecated and not used in new DTs
+anymore.
+The slight disadvantage is that there are now two drivers and two
+compatible names for the same hardware (the PLL6 clock), I am not
+sure if this is frowned upon or can be tolerated since the new driver
+is more generic (drives PLL8 as well) and makes the old one obsolete.
+We just need to keep it for compatibility.
 
-On 2/12/2016 4:36 PM, Rob Herring wrote:
-> On Thu, Feb 11, 2016 at 12:13:06PM +0000, Joao Pinto wrote:
->> +Required properties:
->> +- compatible        : compatible string ("snps,ufshcd-1.0", "snps,ufshcd-1.1"
->> +  or "snps,ufshcd-2.0")
-> 
-> History has taught us this needs to have a vendor specific compatible 
-> string as well. Don't necessarily have to define it now, but just state 
-> a vendor string is needed too.
+The naming for both the functions and compatible names is probably
+wrong, I am relying on more sunxi - experienced people here to
+suggest better identifiers.
 
-The compatibility string already as the "snps" which is the acronym for Synopsys
-which is the HW Controller vendor. Isn't this enough?
+This is only one possible approach to fix this issues, so I am open
+to any kind of discussion.
 
-> 
->> +- reg               : <registers mapping>
->> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
->> +
->> +Example:
->> +	ufs@0xd0000000 {
->> +		compatible = "snps,ufshcd-2.0";
->> +		reg = < 0xd0000000 0x10000 >;
->> +		interrupts = < 24 >;
->> +	};
+The series is made on top of Maxime's sunxi/for-next branch, so it
+somehow reverts the change in question. I am happy to rebase it on
+any branch people tell me.
 
-Thanks,
-Joao
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+
+Andre Przywara (4):
+  clk: sunxi: rename new sun6i_a31_pll6 clock to sun6i_a31_pll clock
+  clk: sunxi: re-add old sun6i_a31_pll6 clock
+  clk: sunxi: revert .dtsi changes for DTs with a sun6i_a31_pll6 clock
+  DT: Allwinner H3: fix PLL8 clock
+
+ Documentation/devicetree/bindings/clock/sunxi.txt |  2 +-
+ arch/arm/boot/dts/sun6i-a31.dtsi                  | 36 ++++++++---------
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi              | 25 ++++--------
+ arch/arm/boot/dts/sun8i-a23.dtsi                  |  2 +-
+ arch/arm/boot/dts/sun8i-a33.dtsi                  |  4 +-
+ arch/arm/boot/dts/sun8i-h3.dtsi                   | 31 +++++---------
+ drivers/clk/sunxi/clk-sunxi.c                     | 49 ++++++++++++++++++++---
+ 7 files changed, 84 insertions(+), 65 deletions(-)
+
+-- 
+2.6.4
+
