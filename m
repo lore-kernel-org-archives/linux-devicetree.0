@@ -1,42 +1,38 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v7 04/10] mfd: axp20x: Add missing
- copyright notice
-Date: Fri, 12 Feb 2016 10:04:08 +0800
-Message-ID: <CAGb2v65pF8+XA_zS1ajBo8c__rGr207X4aZ426f920N-X9M_Cg@mail.gmail.com>
-References: <1452655854-1528-1-git-send-email-wens@csie.org>
- <1452655854-1528-5-git-send-email-wens@csie.org> <20160125143957.GS3368@x1> <20160211152418.GA20693@x1>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [RFC v5 01/15] WIP: clk: add Atheros AR933X SoCs clock driver
+Date: Thu, 11 Feb 2016 18:21:24 -0800
+Message-ID: <20160212022124.3210.30707@quark.deferred.io>
+References: <1455005641-7079-1-git-send-email-antonynpavlov@gmail.com>
+ <1455005641-7079-2-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBL736S2QKGQEUOOOQQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160211152418.GA20693@x1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455005641-7079-2-git-send-email-antonynpavlov@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Antony Pavlov <antonynpavlov@gmail.com>, linux-mips@linux-mips.org
+Cc: Marek Vasut <marex@denx.de>, Wills Wang <wills.wang@live.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Alban Bedel <albeu@free.fr>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 11:24 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, 25 Jan 2016, Lee Jones wrote:
->
->> On Wed, 13 Jan 2016, Chen-Yu Tsai wrote:
->>
->> > When the driver was merged, the original author did not include a proper
->> > copyright notice. This patch adds the notice, backdated to when the
->> > driver was merged.
->>
->> This is very wordy.
->>
->> "Supply a backdated copyright notice."
->
-> Can you re-submit this set with this fixed and the Acks you collected?
+Quoting Antony Pavlov (2016-02-09 00:13:47)
+> +static void __init ar9130_init(struct device_node *np)
+> +{
+> +       int retval;
+> +       struct ath79_cblk *cblk;
+> +
+> +       cblk = ath79_cblk_new(ar9331_clocks, ARRAY_SIZE(ar9331_clocks), np);
+> +       if (!cblk) {
+> +               pr_err("%s: failed to initialise clk block\n", __func__);
+> +               return;
+> +       }
+> +
+> +       retval = ath79_cblk_register_clocks(cblk);
+> +       if (retval)
+> +               pr_err("%s: failed to register clocks\n", __func__);
+> +}
+> +CLK_OF_DECLARE(ar933x_clk, "qca,ar9330-pll", ar9130_init);
 
-Just did. Hopefully you'll see it in your inbox, and not your spam folder.
+Is there any reason this isn't a platform_driver?
 
-Thanks
-ChenYu
+Thanks,
+Mike
