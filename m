@@ -1,67 +1,75 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] serial: earlycon: rework common framework for earlycon declarations
-Date: Sat, 13 Feb 2016 01:30:46 +0900
-Message-ID: <CAK7LNAS_vietwRRFnH3YhbWSzjRFP4U6rjftYek1KQ3ips2ZSQ@mail.gmail.com>
-References: <1455273394-27350-1-git-send-email-yamada.masahiro@socionext.com>
-	<56BDF799.1030505@hurleysoftware.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: mvebu: Add driver for the Zyxel NSA3XX hwmon MCU
+Date: Fri, 12 Feb 2016 17:35:17 +0100
+Message-ID: <87mvr5x4xm.fsf@free-electrons.com>
+References: <1455147224-6742-1-git-send-email-linux@baker-net.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <56BDF799.1030505@hurleysoftware.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: linux-serial@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arch@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455147224-6742-1-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org> (Adam
+	Baker's message of "Wed, 10 Feb 2016 23:33:41 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hi Adam,
+=20
+ On jeu., f=C3=A9vr. 11 2016, Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org> wrote=
+:
 
-
-2016-02-13 0:17 GMT+09:00 Peter Hurley <peter@hurleysoftware.com>:
-> On 02/12/2016 02:36 AM, Masahiro Yamada wrote:
->> Commit 71f50c6d9a22 ("of: drop symbols declared by _OF_DECLARE() from
->> modules") fixed the link error introduced by commit b8d20e06eaad
->> ("serial: 8250_uniphier: add earlycon support").
->>
->> After commit 2eaa790989e0 ("earlycon: Use common framework for
->> earlycon declarations") was applied, the link error came back
->> because the commit reworked OF_EARLYCON_DECLARE() to not use
->> _OF_DECLARE().
+> This patch series adds a driver to support the hardware monitoring MC=
+U
+> that is present in some models of the Zyxel NSA3xx series of NAS unit=
+s.
 >
-> What link error are you getting?
+> A patch is included to add it to the device tree for the NSA320 model=
+,
+> patches to the other device trees will be included if testers come
+> forward (I already have a possible tester for NSA325).
+>
+> There are no dependencies between the patches so I guess the first tw=
+o
+> should go via the hardware monitoring maintainers and the third via
+> the ARM mvebu maintainers.
 
-The combination of CONFIG_SERIAL_8250_CONSOLE=y
-and CONFIG_SERIAL_8250_UNIPHIER=m causes a link error.
+You are right. However the first tow patch are misnamed, they better
+should be called:
+hwmn: Define binding for the nsa3xx-hwmon driver
+hwmn: Create a driver to support the hardware monitoring chip
 
+The last patch seems OK for me, and the binding has been approved. So
+when you will get a review from the hwmon maintainer, I will apply the
+last patch in the mvebu tree.
 
+Thanks,
+
+Gregory
 
 >
->> This commit reworks OF_EARLYCON_DECLARE() again based on
->> _OF_DECLARE().  My motivations are:
->>
->>  - Fix the link error in a generic way (without patching
->>    drivers/tty/serial/8250/8250_uniphier.c)
->>
->>  - Delete struct earlycon_id.  This struct is re-inventing the wheel;
->>    the fields "name", "compatible", "setup" can be implemented in
->>    struct of_device_id as other frameworks do.
+>  [PATCH 1/3] Define a binding for the hardware monitoring chip presen=
+t
+>  [PATCH 2/3] Create a driver to support the hardware monitoring chip
+>  [PATCH 3/3] Add an entry for the hardware monitoring MCU
 >
-> This patch basically reverts the common framework.
-> What happens when not building with OF? Does it still declare the
-> earlycon table?
+>  Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt |  21 +++++++=
++
+>  arch/arm/boot/dts/kirkwood-nsa320.dts                  |  13 ++++-
+>  drivers/hwmon/Kconfig                                  |  13 +++++
+>  drivers/hwmon/Makefile                                 |   1 +
+>  drivers/hwmon/nsa3xx-hwmon.c | 223
+> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++++++
+>  5 files changed, 269 insertions(+), 2 deletions(-)
 
-Ah, I missed this.  (sigh)
-
-Earlycon must still work without OF.
-My way only works with OF.
-
-I really screwed up.  Sorry.
-
-Just disregard this patch.
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
