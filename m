@@ -1,452 +1,139 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH 3/4] clk: sunxi: revert .dtsi changes for
- DTs with a sun6i_a31_pll6 clock
-Date: Fri, 12 Feb 2016 17:59:59 +0000
-Message-ID: <1455300000-18723-4-git-send-email-andre.przywara@arm.com>
-References: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
+Date: Fri, 12 Feb 2016 19:11:23 +0100
+Message-ID: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBPV37C2QKGQE5EZ635Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1455300000-18723-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The changes made to the driver broke compatibilty with older DTs.
-For most of the boards the new driver does not bring any advantage,
-so for the sake of compatibility bring them back to the previous
-version.
-This also affects the new H3 .dtsi - at least for this patch, the
-next one will fix this.
+This allows specifying algorithm used for NAND ECC. There are two
+available values: "bch" and "hamming". It's important as having just
+ECC parameters (step, strength) isn't enough to determine algorithm,
+e.g. you can't distinct BCH-1 and Hamming.
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |  2 +-
- arch/arm/boot/dts/sun6i-a31.dtsi                  | 36 +++++++++++-----------
- arch/arm/boot/dts/sun8i-a23-a33.dtsi              | 25 +++++----------
- arch/arm/boot/dts/sun8i-a23.dtsi                  |  2 +-
- arch/arm/boot/dts/sun8i-a33.dtsi                  |  4 +--
- arch/arm/boot/dts/sun8i-h3.dtsi                   | 37 +++++++++--------------
- drivers/clk/sunxi/clk-sunxi.c                     |  8 ++++-
- 7 files changed, 51 insertions(+), 63 deletions(-)
+ Documentation/devicetree/bindings/mtd/nand.txt |  3 +++
+ drivers/of/of_mtd.c                            | 33 ++++++++++++++++++=
+++++++++
+ include/linux/mtd/nand.h                       |  5 ++++
+ include/linux/of_mtd.h                         |  6 +++++
+ 4 files changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 966dcaf..c09f59b 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -88,7 +88,7 @@ Required properties for all clocks:
- - #clock-cells : from common clock binding; shall be set to 0 except for
- 	the following compatibles where it shall be set to 1:
- 	"allwinner,*-gates-clk", "allwinner,sun4i-pll5-clk",
--	"allwinner,sun4i-pll6-clk",
-+	"allwinner,sun4i-pll6-clk", "allwinner,sun6i-a31-pll6-clk",
- 	"allwinner,*-usb-clk", "allwinner,*-mmc-clk",
- 	"allwinner,*-mmc-config-clk"
- - clock-output-names : shall be the corresponding names of the outputs.
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 7a198dc..1867af2 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -65,7 +65,7 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
--			clocks = <&pll6>;
-+			clocks = <&pll6 0>;
- 			status = "disabled";
- 		};
- 
-@@ -73,7 +73,7 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll6>;
-+			clocks = <&pll6 0>;
- 			status = "disabled";
- 		};
- 	};
-@@ -201,11 +201,11 @@
- 		};
- 
- 		pll6: clk@01c20028 {
--			#clock-cells = <0>;
-+			#clock-cells = <1>;
- 			compatible = "allwinner,sun6i-a31-pll6-clk";
- 			reg = <0x01c20028 0x4>;
- 			clocks = <&osc24M>;
--			clock-output-names = "pll6";
-+			clock-output-names = "pll6", "pll6x2";
- 		};
- 
- 		cpu: cpu@01c20050 {
-@@ -235,7 +235,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun6i-a31-ahb1-clk";
- 			reg = <0x01c20054 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
- 			clock-output-names = "ahb1";
- 
- 			/*
-@@ -244,7 +244,7 @@
- 			 * controller requires AHB1 clocked from PLL6.
- 			 */
- 			assigned-clocks = <&ahb1>;
--			assigned-clock-parents = <&pll6>;
-+			assigned-clock-parents = <&pll6 0>;
- 		};
- 
- 		ahb1_gates: clk@01c20060 {
-@@ -307,7 +307,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-apb1-clk";
- 			reg = <0x01c20058 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
- 			clock-output-names = "apb2";
- 		};
- 
-@@ -331,7 +331,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20088 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc0",
- 					     "mmc0_output",
- 					     "mmc0_sample";
-@@ -341,7 +341,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c2008c 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc1",
- 					     "mmc1_output",
- 					     "mmc1_sample";
-@@ -351,7 +351,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20090 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc2",
- 					     "mmc2_output",
- 					     "mmc2_sample";
-@@ -361,7 +361,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20094 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc3",
- 					     "mmc3_output",
- 					     "mmc3_sample";
-@@ -371,7 +371,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c2009c 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "ss";
- 		};
- 
-@@ -379,7 +379,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c200a0 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "spi0";
- 		};
- 
-@@ -387,7 +387,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c200a4 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "spi1";
- 		};
- 
-@@ -395,7 +395,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c200a8 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "spi2";
- 		};
- 
-@@ -403,7 +403,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c200ac 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "spi3";
- 		};
- 
-@@ -1052,8 +1052,8 @@
- 			ar100: ar100_clk {
- 				compatible = "allwinner,sun6i-a31-ar100-clk";
- 				#clock-cells = <0>;
--				clocks = <&osc32k>, <&osc24M>, <&pll6>,
--					 <&pll6>;
-+				clocks = <&osc32k>, <&osc24M>, <&pll6 0>,
-+					 <&pll6 0>;
- 				clock-output-names = "ar100";
- 			};
- 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 783b4b8..7e05e09 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -60,7 +60,7 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll6>;
-+			clocks = <&pll6 0>;
- 			status = "disabled";
- 		};
- 	};
-@@ -129,20 +129,11 @@
- 		};
- 
- 		pll6: clk@01c20028 {
--			#clock-cells = <0>;
-+			#clock-cells = <1>;
- 			compatible = "allwinner,sun6i-a31-pll6-clk";
- 			reg = <0x01c20028 0x4>;
- 			clocks = <&osc24M>;
--			clock-output-names = "pll6";
--		};
--
--                pll6x2: pll6x2_clk {
--			compatible = "fixed-factor-clock";
--			#clock-cells = <0>;
--			clock-div = <1>;
--			clock-mult = <2>;
--			clocks = <&pll6>;
--			clock-output-names = "pll6-2x";
-+			clock-output-names = "pll6", "pll6x2";
- 		};
- 
- 		cpu: cpu_clk@01c20050 {
-@@ -172,7 +163,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun6i-a31-ahb1-clk";
- 			reg = <0x01c20054 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
- 			clock-output-names = "ahb1";
- 		};
- 
-@@ -199,7 +190,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-apb1-clk";
- 			reg = <0x01c20058 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
- 			clock-output-names = "apb2";
- 		};
- 
-@@ -222,7 +213,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20088 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc0",
- 					     "mmc0_output",
- 					     "mmc0_sample";
-@@ -232,7 +223,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c2008c 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc1",
- 					     "mmc1_output",
- 					     "mmc1_sample";
-@@ -242,7 +233,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20090 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "mmc2",
- 					     "mmc2_output",
- 					     "mmc2_sample";
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index 5e589c1..92e6616 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -79,7 +79,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun8i-a23-mbus-clk";
- 			reg = <0x01c2015c 0x4>;
--			clocks = <&osc24M>, <&pll6x2>, <&pll5>;
-+			clocks = <&osc24M>, <&pll6 1>, <&pll5>;
- 			clock-output-names = "mbus";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index f3eb618..001d840 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -103,7 +103,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
- 			reg = <0x01c2009c 0x4>;
--			clocks = <&osc24M>, <&pll6>;
-+			clocks = <&osc24M>, <&pll6 0>;
- 			clock-output-names = "ss";
- 		};
- 
-@@ -111,7 +111,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun8i-a23-mbus-clk";
- 			reg = <0x01c2015c 0x4>;
--			clocks = <&osc24M>, <&pll6x2>, <&pll5>, <&pll11>;
-+			clocks = <&osc24M>, <&pll6 1>, <&pll5>, <&pll11>;
- 			clock-output-names = "mbus";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 6f6b4e4..1524130e 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -121,11 +121,11 @@
- 		};
- 
- 		pll6: clk@01c20028 {
--			#clock-cells = <0>;
-+			#clock-cells = <1>;
- 			compatible = "allwinner,sun6i-a31-pll6-clk";
- 			reg = <0x01c20028 0x4>;
- 			clocks = <&osc24M>;
--			clock-output-names = "pll6";
-+			clock-output-names = "pll6", "pll6x2";
- 		};
- 
- 		pll6d2: pll6d2_clk {
-@@ -133,24 +133,15 @@
- 			compatible = "fixed-factor-clock";
- 			clock-div = <2>;
- 			clock-mult = <1>;
--			clocks = <&pll6>;
--			clock-output-names = "pll6-d2";
-+			clocks = <&pll6 0>;
-+			clock-output-names = "pll6d2";
- 		};
- 
--		pll6x2: pll6x2_clk {
-+		/* dummy clock until pll6 can be reused */
-+		pll8: pll8_clk {
- 			#clock-cells = <0>;
--			compatible = "fixed-factor-clock";
--			clock-div = <1>;
--			clock-mult = <2>;
--			clocks = <&pll6>;
--			clock-output-names = "pll6-2x";
--		};
--
--		pll8: clk@01c20044 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun6i-a31-pll6-clk";
--			reg = <0x01c20044 0x4>;
--			clocks = <&osc24M>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <1>;
- 			clock-output-names = "pll8";
- 		};
- 
-@@ -174,7 +165,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun6i-a31-ahb1-clk";
- 			reg = <0x01c20054 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
- 			clock-output-names = "ahb1";
- 		};
- 
-@@ -198,7 +189,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-apb1-clk";
- 			reg = <0x01c20058 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
- 			clock-output-names = "apb2";
- 		};
- 
-@@ -252,7 +243,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20088 0x4>;
--			clocks = <&osc24M>, <&pll6>, <&pll8>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
- 			clock-output-names = "mmc0",
- 					     "mmc0_output",
- 					     "mmc0_sample";
-@@ -262,7 +253,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c2008c 0x4>;
--			clocks = <&osc24M>, <&pll6>, <&pll8>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
- 			clock-output-names = "mmc1",
- 					     "mmc1_output",
- 					     "mmc1_sample";
-@@ -272,7 +263,7 @@
- 			#clock-cells = <1>;
- 			compatible = "allwinner,sun4i-a10-mmc-clk";
- 			reg = <0x01c20090 0x4>;
--			clocks = <&osc24M>, <&pll6>, <&pll8>;
-+			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
- 			clock-output-names = "mmc2",
- 					     "mmc2_output",
- 					     "mmc2_sample";
-@@ -282,7 +273,7 @@
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun8i-a23-mbus-clk";
- 			reg = <0x01c2015c 0x4>;
--			clocks = <&osc24M>, <&pll6x2>, <&pll5>;
-+			clocks = <&osc24M>, <&pll6 1>, <&pll5>;
- 			clock-output-names = "mbus";
- 		};
- 	};
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 12131ba..0ed0a8e 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -648,7 +648,7 @@ static void __init sun6i_pll_clk_setup(struct device_node *node)
- {
- 	sunxi_factors_clk_setup(node, &sun6i_a31_pll_data);
- }
--CLK_OF_DECLARE(sun6i_pll, "allwinner,sun6i-a31-pll6-clk",
-+CLK_OF_DECLARE(sun6i_pll, "allwinner,sun6i-a31-pll-clk",
- 	       sun6i_pll_clk_setup);
- 
- static void __init sun5i_ahb_clk_setup(struct device_node *node)
-@@ -1152,3 +1152,9 @@ static void __init sun4i_pll6_clk_setup(struct device_node *node)
- CLK_OF_DECLARE(sun4i_pll6, "allwinner,sun4i-a10-pll6-clk",
- 	       sun4i_pll6_clk_setup);
- 
-+static void __init sun6i_pll6_clk_setup(struct device_node *node)
+diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documenta=
+tion/devicetree/bindings/mtd/nand.txt
+index b53f92e..a2c2df5 100644
+--- a/Documentation/devicetree/bindings/mtd/nand.txt
++++ b/Documentation/devicetree/bindings/mtd/nand.txt
+@@ -3,6 +3,9 @@
+ - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+   Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_f=
+irst",
+   "soft_bch".
++- nand-ecc-algo : string, algorithm of NAND ecc.
++		  Supported values are: "bch", "hamming". The default one is
++		  "bch".
+ - nand-bus-width : 8 or 16 bus width if not present 8
+ - nand-on-flash-bbt: boolean to enable on flash bbt option if not pres=
+ent false
+=20
+diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+index b7361ed..f2a6630 100644
+--- a/drivers/of/of_mtd.c
++++ b/drivers/of/of_mtd.c
+@@ -50,6 +50,39 @@ int of_get_nand_ecc_mode(struct device_node *np)
+ EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
+=20
+ /**
++ * It maps 'enum nand_ecc_algo' found in include/linux/mtd/nand.h into=
+ the
++ * device tree binding of 'nand-ecc-algo'.
++ */
++static const char * const nand_ecc_algos[] =3D {
++	[NAND_ECC_BCH]		=3D "bch",
++	[NAND_ECC_HAMMING]	=3D "hamming",
++};
++
++/**
++ * of_get_nand_ecc_algo - Get nand ecc algorithm for given device_node
++ * @np:	Pointer to the given device_node
++ *
++ * The function gets ecc algorithm string from property 'nand-ecc-algo=
+' and
++ * returns its index in nand_ecc_algos table, or errno in error case.
++ */
++int of_get_nand_ecc_algo(struct device_node *np)
 +{
-+	sunxi_divs_clk_setup(node, &sun6i_a31_pll6_divs_data);
++	const char *pm;
++	int err, i;
++
++	err =3D of_property_read_string(np, "nand-ecc-algo", &pm);
++	if (err < 0)
++		return err;
++
++	for (i =3D 0; i < ARRAY_SIZE(nand_ecc_algos); i++)
++		if (!strcasecmp(pm, nand_ecc_algos[i]))
++			return i;
++
++	return -ENODEV;
 +}
-+CLK_OF_DECLARE(sun6i_pll6, "allwinner,sun6i-a31-pll6-clk",
-+	       sun6i_pll6_clk_setup);
--- 
-2.6.4
++EXPORT_SYMBOL_GPL(of_get_nand_ecc_algo);
++
++/**
+  * of_get_nand_ecc_step_size - Get ECC step size associated to
+  * the required ECC strength (see below).
+  * @np:	Pointer to the given device_node
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index 7604f4b..25854d2 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -119,6 +119,11 @@ typedef enum {
+ 	NAND_ECC_SOFT_BCH,
+ } nand_ecc_modes_t;
+=20
++enum nand_ecc_algo {
++	NAND_ECC_BCH,
++	NAND_ECC_HAMMING,
++};
++
+ /*
+  * Constants for Hardware ECC
+  */
+diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+index e266caa..0f6aca5 100644
+--- a/include/linux/of_mtd.h
++++ b/include/linux/of_mtd.h
+@@ -13,6 +13,7 @@
+=20
+ #include <linux/of.h>
+ int of_get_nand_ecc_mode(struct device_node *np);
++int of_get_nand_ecc_algo(struct device_node *np);
+ int of_get_nand_ecc_step_size(struct device_node *np);
+ int of_get_nand_ecc_strength(struct device_node *np);
+ int of_get_nand_bus_width(struct device_node *np);
+@@ -25,6 +26,11 @@ static inline int of_get_nand_ecc_mode(struct device=
+_node *np)
+ 	return -ENOSYS;
+ }
+=20
++static inline int of_get_nand_ecc_algo(struct device_node *np)
++{
++	return -ENOSYS;
++}
++
+ static inline int of_get_nand_ecc_step_size(struct device_node *np)
+ {
+ 	return -ENOSYS;
+--=20
+1.8.4.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
