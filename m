@@ -1,74 +1,74 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/4] mailbox: mailbox-test: add support for separate tx/rx
- buffer with single channel
-Date: Fri, 12 Feb 2016 09:34:03 +0000
-Message-ID: <56BDA70B.70008@arm.com>
-References: <1455210808-29395-1-git-send-email-sudeep.holla@arm.com>
- <1455210808-29395-5-git-send-email-sudeep.holla@arm.com>
- <20160212091505.GS20693@x1>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
+ Refactor A31 PLL6 so that it can be reused)
+Date: Fri, 12 Feb 2016 10:40:30 +0100
+Message-ID: <1455270030.3201.71.camel@pengutronix.de>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+	 <56B4E2FB.3050703@arm.com> <56BB2D79.6090402@arm.com>
+	 <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
+	 <20160210143755.GE31506@lukather> <20160210163001.GG2632@leverpostej>
+	 <20160211100048.GK31506@lukather> <20160211114410.GA32535@leverpostej>
+	 <20160211170820.GP31506@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160212091505.GS20693@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160211170820.GP31506@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/02/16 09:15, Lee Jones wrote:
-> On Thu, 11 Feb 2016, Sudeep Holla wrote:
->
-
+Am Donnerstag, den 11.02.2016, 18:08 +0100 schrieb Maxime Ripard:
 [...]
+> > > > Having code in mainline comes with responsibilities. One of those is to
+> > > > keep said code working for existing users. Otherwise, why bother having
+> > > > it in mainline at all?
+> > > 
+> > > None of our existing users ever complained.
+> > 
+> > I believe that in this case, Andre was complaining about this particular
+> > breakage, unless I have misunderstood.
+> > 
+> > To be clear, I'm arguing for the strategy going forward. If no-one has
+> > complained about the stuff broken up to this point, let's not waste time
+> > restoring that.
+> > 
+> > Going forward we need to keep old DTBs supported.
+> 
+> I find that stand a bit dishonest.
+> 
+> You, DT maintainers, admit that you're not doing your job properly,
+> and that burden relies on the platform maintainers? Or should I take
+> it as you volunteering to maintain that code?
+> 
+> But ok. Let's do that. Make sure that the other platform maintainers
+> are aware that this is the rule too though. I surely don't want to be
+> alone in that boat.
 
->> @@ -294,9 +295,13 @@ static int mbox_test_probe(struct platform_device *pdev)
->>
->>   	/* It's okay for MMIO to be NULL */
->>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -	tdev->mmio = devm_ioremap_resource(&pdev->dev, res);
->> -	if (IS_ERR(tdev->mmio))
->> -		tdev->mmio = NULL;
->> +	tdev->tx_mmio = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(tdev->tx_mmio))
->> +		tdev->tx_mmio = NULL;
->
-> Nit: I'd prefer to see a new line separator here.
->
+FWIW: I always thought it's the platform maintainers job to enforce a
+reasonable level of DT stability. I don't see how the DT maintainers
+could provide the necessary in-depth review with every platform being
+different in many subtle ways.
 
-OK will add it
+For the i.MX platform we actually enforced a baseline of DT stability by
+shooting down patches that break DT stability for the sake of adding new
+features, or when trying to put "fixes" into the DT, that could be
+solved entirely inside the kernel.
 
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +	tdev->rx_mmio = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(tdev->rx_mmio))
->> +		tdev->rx_mmio = tdev->tx_mmio;
->>
->>   	tdev->tx_channel = mbox_test_request_channel(pdev, "tx");
->>   	tdev->rx_channel = mbox_test_request_channel(pdev, "rx");
->> @@ -304,6 +309,9 @@ static int mbox_test_probe(struct platform_device *pdev)
->>   	if (!tdev->tx_channel && !tdev->rx_channel)
->>   		return -EPROBE_DEFER;
->>
->> +	if (!tdev->rx_channel && (tdev->rx_mmio != tdev->tx_mmio))
->> +		tdev->rx_channel = tdev->tx_channel;
->> +
->>   	tdev->dev = &pdev->dev;
->>   	platform_set_drvdata(pdev, tdev);
->
-> Otherwise code looks good.  Nice extension.
->
+Yes, mistakes happen and and we can not really prevent all breakage,
+especially when the bindings were not strictly enough defined and board
+DT writers may have interpreted them differently, but it is definitely
+possible to keep DTs reasonably stable if the platform maintainers care
+about that.
 
-Thanks for the review.
+I strongly disagree with platform maintainers denying that duty, by
+claiming that DTs won't be completely stable ever, so there is no reason
+to even care.
 
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-
--- 
 Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
