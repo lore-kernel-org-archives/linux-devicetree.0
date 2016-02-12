@@ -1,57 +1,89 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: [RFC PATCH 0/4] clk: sunxi: fix DT compatibility issues
-Date: Fri, 12 Feb 2016 17:59:56 +0000
-Message-ID: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH 2/4] clk: sunxi: re-add old sun6i_a31_pll6 clock
+Date: Fri, 12 Feb 2016 17:59:58 +0000
+Message-ID: <1455300000-18723-3-git-send-email-andre.przywara@arm.com>
+References: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBPF37C2QKGQESLQC4OQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1455300000-18723-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit f7d372ba54ea ("clk: sunxi: Refactor A31 PLL6 so that it can be
-reused") (in -next) made the A31 PLL6 clock driver more generic, so
-that it can drive the PLL8 clock in newer SoCs too.
-However the patch broke compatibility with older DTs, which this
-series tries to fix.
-The approach chosen here is to bring back the old driver under its
-old name, while letting the new driver using a different name to be
-able to tell them apart.
-The old driver should be somewhat deprecated and not used in new DTs
-anymore.
-The slight disadvantage is that there are now two drivers and two
-compatible names for the same hardware (the PLL6 clock), I am not
-sure if this is frowned upon or can be tolerated since the new driver
-is more generic (drives PLL8 as well) and makes the old one obsolete.
-We just need to keep it for compatibility.
+The older version of the A31 PLL6 clock driver was used by many DTs
+which we want to stay compatible with.
+As an intermediate step bring back the code for the old driver, but
+don't instantiate it yet.
 
-The naming for both the functions and compatible names is probably
-wrong, I am relying on more sunxi - experienced people here to
-suggest better identifiers.
+Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/clk/sunxi/clk-sunxi.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-This is only one possible approach to fix this issues, so I am open
-to any kind of discussion.
-
-The series is made on top of Maxime's sunxi/for-next branch, so it
-somehow reverts the change in question. I am happy to rebase it on
-any branch people tell me.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-
-Andre Przywara (4):
-  clk: sunxi: rename new sun6i_a31_pll6 clock to sun6i_a31_pll clock
-  clk: sunxi: re-add old sun6i_a31_pll6 clock
-  clk: sunxi: revert .dtsi changes for DTs with a sun6i_a31_pll6 clock
-  DT: Allwinner H3: fix PLL8 clock
-
- Documentation/devicetree/bindings/clock/sunxi.txt |  2 +-
- arch/arm/boot/dts/sun6i-a31.dtsi                  | 36 ++++++++---------
- arch/arm/boot/dts/sun8i-a23-a33.dtsi              | 25 ++++--------
- arch/arm/boot/dts/sun8i-a23.dtsi                  |  2 +-
- arch/arm/boot/dts/sun8i-a33.dtsi                  |  4 +-
- arch/arm/boot/dts/sun8i-h3.dtsi                   | 31 +++++---------
- drivers/clk/sunxi/clk-sunxi.c                     | 49 ++++++++++++++++++++---
- 7 files changed, 84 insertions(+), 65 deletions(-)
-
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index b4ab84b..12131ba 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -248,6 +248,21 @@ static void sun6i_a31_get_pll_factors(struct factors_request *req)
+ 	req->n = DIV_ROUND_UP(div, (req->k + 1)) - 1;
+ }
+ 
++static void sun6i_a31_get_pll6_factors(struct factors_request *req)
++{
++	u8 div;
++
++	/* Normalize value to a parent_rate multiple (24M) */
++	div = req->rate / req->parent_rate;
++	req->rate = req->parent_rate * div;
++
++	req->k = div / 32;
++	if (req->k > 3)
++		req->k = 3;
++
++	req->n = DIV_ROUND_UP(div, (req->k + 1)) - 1;
++}
++
+ static void sun6i_a31_pll6_recalc(struct factors_request *req)
+ {
+ 	req->rate = req->parent_rate;
+@@ -549,6 +564,13 @@ static const struct factors_data sun6i_a31_pll_data __initconst = {
+ 	.recalc = sun6i_a31_pll6_recalc,
+ };
+ 
++static const struct factors_data sun6i_a31_pll6_data __initconst = {
++	.enable = 31,
++	.table = &sun6i_a31_pll6_config,
++	.getter = sun6i_a31_get_pll6_factors,
++	.name	= "pll6x2",
++};
++
+ static const struct factors_data sun5i_a13_ahb_data __initconst = {
+ 	.mux = 6,
+ 	.muxmask = BIT(1) | BIT(0),
+@@ -954,6 +976,15 @@ static const struct divs_data pll6_divs_data __initconst = {
+ 	}
+ };
+ 
++static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
++	.factors = &sun6i_a31_pll6_data,
++	.ndivs = 2,
++	.div = {
++		{ .fixed = 2 }, /* normal output */
++		{ .self = 1 }, /* base factor clock, 2x */
++	}
++};
++
+ /**
+  * sunxi_divs_clk_setup() - Setup function for leaf divisors on clocks
+  *
 -- 
 2.6.4
-
