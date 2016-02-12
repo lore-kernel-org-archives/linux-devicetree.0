@@ -1,104 +1,61 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Enable USB DRC on the MK8082
-Date: Fri, 12 Feb 2016 13:00:18 +0100
-Message-ID: <CAEKpxBkVmxLdm1VKosSyCtgghoV2ba-jyxxaz-TmccSpziAF9Q@mail.gmail.com>
-References: <1455278071-22339-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBU4S662QKGQEKUFLGYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1455278071-22339-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v2] ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature channel
+Date: Fri, 12 Feb 2016 17:53:00 +0530
+Message-ID: <cd32f1664a04b38b8a025414d039bd015cb9a5ff.1455278754.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-NAK...doohhh got the name of the device wrong in both subject and
-description. V2 sent.
+Add iio_hwmon node to expose the temperature channel on Vybrid as
+hardware monitor device using the iio_hwmon driver.
 
-On 12 February 2016 at 12:54,  <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Enable the otg/drc usb controller on the MK8082.
->
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun4i-a10-mk802.dts | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun4i-a10-mk802.dts b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-> index ddf0683..ee46ea8 100644
-> --- a/arch/arm/boot/dts/sun4i-a10-mk802.dts
-> +++ b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-> @@ -44,6 +44,7 @@
->  #include "sun4i-a10.dtsi"
->  #include "sunxi-common-regulators.dtsi"
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->
->  / {
->         model = "MK802";
-> @@ -84,7 +85,25 @@
->         status = "okay";
->  };
->
-> +&otg_sram {
-> +       status = "okay";
-> +};
-> +
->  &pio {
-> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +               allwinner,pins = "PH4";
-> +               allwinner,function = "gpio_in";
-> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +       };
-> +
-> +       usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-> +               allwinner,pins = "PH5";
-> +               allwinner,function = "gpio_in";
-> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +       };
-> +
->         usb2_vbus_pin_mk802: usb2_vbus_pin@0 {
->                 allwinner,pins = "PH12";
->                 allwinner,function = "gpio_out";
-> @@ -93,6 +112,10 @@
->         };
->  };
->
-> +&reg_usb0_vbus {
-> +       status = "okay";
-> +};
-> +
->  &reg_usb1_vbus {
->         status = "okay";
->  };
-> @@ -109,7 +132,17 @@
->         status = "okay";
->  };
->
-> +&usb_otg {
-> +       dr_mode = "otg";
-> +       status = "okay";
-> +};
-> +
->  &usbphy {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> +       usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> +       usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-> +       usb0_vbus-supply = <&reg_usb0_vbus>;
->         usb1_vbus-supply = <&reg_usb1_vbus>;
->         usb2_vbus-supply = <&reg_usb2_vbus>;
->         status = "okay";
-> --
-> 2.7.1
->
+Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+---
+
+Hello,
+
+The first version of the patch was send quite a while ago.
+https://lkml.org/lkml/2015/9/16/932
+
+Shawn you had requested that hyphen rather than underscore should
+be used in node name. I looked into that.
+
+The iio_hwmon driver calls hwmon_device register_with_groups inside
+hwmon.c and this
+http://lxr.free-electrons.com/source/drivers/hwmon/hwmon.c#L103
+
+does not allow hyphen in hwmon name attribute. I was not aware of
+this but while trying to test the change, the device probe failed
+with EINVAL. I think we should stick to the existing use of the
+bindings or we need to change the hwmon code as well along with the
+existing device tree files and binding documentation.
+
+Changes since v1:
+1. Expose ADC1 temperature channel as well
+2. Move the entry outside of the aips1 bus node
+
+Best Regards,
+Sanchayan Maity.
+---
+ arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index a5f07e3..8ed8e47 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -673,5 +673,10 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		iio_hwmon {
++			compatible = "iio-hwmon";
++			io-channels = <&adc0 16>, <&adc1 16>;
++		};
+ 	};
+ };
+-- 
+2.7.1
