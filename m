@@ -1,119 +1,43 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 1/2] clk: sunxi: Add support for A80 APBS clock
-Date: Fri, 12 Feb 2016 17:31:14 +0800
-Message-ID: <1455269475-8180-2-git-send-email-wens@csie.org>
-References: <1455269475-8180-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/4] mailbox: mailbox-test: use print_hex_dump_bytes to
+ allow dynamic printk
+Date: Fri, 12 Feb 2016 09:32:15 +0000
+Message-ID: <56BDA69F.5060102@arm.com>
+References: <1455210808-29395-1-git-send-email-sudeep.holla@arm.com>
+ <1455210808-29395-4-git-send-email-sudeep.holla@arm.com>
+ <20160212091218.GR20693@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZWM622QKGQEJG4ZUHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1455269475-8180-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160212091218.GR20693@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A80's APBS clock is not the same as the APB0 clock on A23. The A80's
-is a zero-based divider, while the A23's is a power-of-two divider.
 
-Replace the CLK_OF_DECLARE version of sun8i-a23-apb0. This also extends
-the common setup function to take div clk flags.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- drivers/clk/sunxi/clk-sun8i-apb0.c                | 23 ++++++++---------------
- 2 files changed, 9 insertions(+), 15 deletions(-)
+On 12/02/16 09:12, Lee Jones wrote:
+> On Thu, 11 Feb 2016, Sudeep Holla wrote:
+>
+>> Reduce the logging from info to debug. Also use print_hex_dump_bytes
+>> instead as it has support for dynamic printk providing options to
+>> conditionally enable/disable these logs.
+>
+> Printing out the data in this way is kinda the point of the driver.
+> But if you don't have a use for it, then I guess it's okay to
+> downgrade it to DEBUG, as turning debug on, or hacking the driver back
+> again are trivial actions.
+>
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 966dcaffcb9c..5206e48694d6 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -60,6 +60,7 @@ Required properties:
- 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
- 	"allwinner,sun8i-a83t-bus-gates-clk" - for the bus gates on A83T
- 	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
-+	"allwinner,sun9i-a80-apbs-clk" - for the APBS clock on A80
- 	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
- 	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
- 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
-diff --git a/drivers/clk/sunxi/clk-sun8i-apb0.c b/drivers/clk/sunxi/clk-sun8i-apb0.c
-index 7ba61103a6f5..cfe9c19a831b 100644
---- a/drivers/clk/sunxi/clk-sun8i-apb0.c
-+++ b/drivers/clk/sunxi/clk-sun8i-apb0.c
-@@ -21,7 +21,7 @@
- #include <linux/platform_device.h>
- 
- static struct clk *sun8i_a23_apb0_register(struct device_node *node,
--					   void __iomem *reg)
-+					   void __iomem *reg, u8 div_flags)
- {
- 	const char *clk_name = node->name;
- 	const char *clk_parent;
-@@ -36,7 +36,7 @@ static struct clk *sun8i_a23_apb0_register(struct device_node *node,
- 
- 	/* The A23 APB0 clock is a standard 2 bit wide divider clock */
- 	clk = clk_register_divider(NULL, clk_name, clk_parent, 0, reg,
--				   0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
-+				   0, 2, div_flags, NULL);
- 	if (IS_ERR(clk))
- 		return clk;
- 
-@@ -52,7 +52,7 @@ err_unregister:
- 	return ERR_PTR(ret);
- }
- 
--static void sun8i_a23_apb0_setup(struct device_node *node)
-+static void sun9i_a80_apbs_setup(struct device_node *node)
- {
- 	void __iomem *reg;
- 	struct resource res;
-@@ -60,18 +60,11 @@ static void sun8i_a23_apb0_setup(struct device_node *node)
- 
- 	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
- 	if (IS_ERR(reg)) {
--		/*
--		 * This happens with clk nodes instantiated through mfd,
--		 * as those do not have their resources assigned in the
--		 * device tree. Do not print an error in this case.
--		 */
--		if (PTR_ERR(reg) != -EINVAL)
--			pr_err("Could not get registers for a23-apb0-clk\n");
--
-+		pr_err("Could not get registers for a80-apbs-clk\n");
- 		return;
- 	}
- 
--	clk = sun8i_a23_apb0_register(node, reg);
-+	clk = sun8i_a23_apb0_register(node, reg, 0);
- 	if (IS_ERR(clk))
- 		goto err_unmap;
- 
-@@ -82,8 +75,8 @@ err_unmap:
- 	of_address_to_resource(node, 0, &res);
- 	release_mem_region(res.start, resource_size(&res));
- }
--CLK_OF_DECLARE(sun8i_a23_apb0, "allwinner,sun8i-a23-apb0-clk",
--	       sun8i_a23_apb0_setup);
-+CLK_OF_DECLARE(sun9i_a80_apbs, "allwinner,sun9i-a80-apbs-clk",
-+	       sun9i_a80_apbs_setup);
- 
- static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
- {
-@@ -97,7 +90,7 @@ static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
- 	if (IS_ERR(reg))
- 		return PTR_ERR(reg);
- 
--	clk = sun8i_a23_apb0_register(np, reg);
-+	clk = sun8i_a23_apb0_register(np, reg, CLK_DIVIDER_POWER_OF_TWO);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
- 
+Agreed, I wanted check the same by adding additional note but forgot.
+Sorry for missing that.
+
+One of the reasons I preferred this it's easy to switch it on or off via
+debug level or dynamic debug. It's useful when the test application
+using these sysfs also logs and ends up cluttered by kernel logs.
+
 -- 
-2.7.0
+Regards,
+Sudeep
