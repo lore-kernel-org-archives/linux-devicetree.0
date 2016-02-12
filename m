@@ -1,97 +1,97 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Fri, 12 Feb 2016 11:50:24 +0000
-Message-ID: <alpine.DEB.2.02.1602121138090.27008@kaball.uk.xensource.com>
-References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
- <44113385.2QnPtvxQx0@vostro.rjw.lan>
- <alpine.DEB.2.02.1602111557430.27008@kaball.uk.xensource.com>
- <1667812.hY9vsC2epc@vostro.rjw.lan>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: dts: sun4i: Enable USB DRC on the MK8082
+Date: Fri, 12 Feb 2016 12:54:31 +0100
+Message-ID: <1455278071-22339-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1667812.hY9vsC2epc-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB6UP662QKGQEYYBQWBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Feb 2016, Rafael J. Wysocki wrote:
-> On Thursday, February 11, 2016 04:04:14 PM Stefano Stabellini wrote:
-> > On Wed, 10 Feb 2016, Rafael J. Wysocki wrote:
-> > > On Tuesday, February 09, 2016 11:19:02 AM Stefano Stabellini wrote:
-> > > > On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
-> > > > > On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
-> > > > > > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
-> > > > > > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> > > > > > > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > > > > >
-> > > > > > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
-> > > > > > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
-> > > > > > > > UART is used by Xen. So here it hides UART from Dom0.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > > > > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-> > > > > > > 
-> > > > > > > Well, this doesn't look right to me.
-> > > > > > > 
-> > > > > > > We need to find a nicer way to achieve what you want.
-> > > > > > 
-> > > > > > I take that you are talking about how to honor the STAO table in Linux.
-> > > > > > Do you have any concrete suggestions?
-> > > > > 
-> > > > > I do.
-> > > > > 
-> > > > > The last hunk of the patch is likely what it needs to be, although I'm
-> > > > > not sure if the place it is added to is the right one.  That's a minor thing,
-> > > > > though.
-> > > > > 
-> > > > > The other part is problematic.  Not that as it doesn't work, but because of
-> > > > > how it works.  With these changes the device will be visible to the OS (in
-> > > > > fact to user space even), but will never be "present".  I'm not sure if
-> > > > > that's what you want?
-> > > > > 
-> > > > > It might be better to add a check to acpi_bus_type_and_status() that will
-> > > > > evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
-> > > > > way the device won't be visible at all.
-> > > > 
-> > > > Something like below?  Actually your suggestion is better, thank you!
-> > > > 
-> > > > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > > > index 78d5f02..4778c51 100644
-> > > > --- a/drivers/acpi/scan.c
-> > > > +++ b/drivers/acpi/scan.c
-> > > > @@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
-> > > >  	if (ACPI_FAILURE(status))
-> > > >  		return -ENODEV;
-> > > >  
-> > > > +	if (acpi_check_device_is_ignored(handle))
-> > > > +		return -ENODEV;
-> > > > +
-> > > >  	switch (acpi_type) {
-> > > >  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
-> > > >  	case ACPI_TYPE_DEVICE:
-> > > > 
-> > > 
-> > > I thought about doing that under ACPI_TYPE_DEVICE, because it shouldn't be
-> > > applicable to the other types.  But generally, yes.
-> > 
-> > I was pondering about it myself. Maybe an ACPI_TYPE_PROCESSOR object
-> > could theoretically be hidden with the STAO?
-> 
-> But this patch won't check for it anyway, will it?
-> 
-> It seems to be only checking against the UART address or have I missed
-> anything?
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-You are right, this patch only checks for the UART address, which is
-critical.
+Enable the otg/drc usb controller on the MK8082.
 
-However the STAO also has a "Name List" field with a list of paths in
-ACPI namespace to hide. If not implementing proper "Name List" support,
-at least, as part of this patch, it would be nice to check for the
-presence of the Name List field in the table, and print a warning such
-as "STAO Name List not yet supported" when the field is present.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-mk802.dts | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun4i-a10-mk802.dts b/arch/arm/boot/dts/sun4i-a10-mk802.dts
+index ddf0683..ee46ea8 100644
+--- a/arch/arm/boot/dts/sun4i-a10-mk802.dts
++++ b/arch/arm/boot/dts/sun4i-a10-mk802.dts
+@@ -44,6 +44,7 @@
+ #include "sun4i-a10.dtsi"
+ #include "sunxi-common-regulators.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+ 	model = "MK802";
+@@ -84,7 +85,25 @@
+ 	status = "okay";
+ };
+ 
++&otg_sram {
++	status = "okay";
++};
++
+ &pio {
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
++		allwinner,pins = "PH5";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
+ 	usb2_vbus_pin_mk802: usb2_vbus_pin@0 {
+ 		allwinner,pins = "PH12";
+ 		allwinner,function = "gpio_out";
+@@ -93,6 +112,10 @@
+ 	};
+ };
+ 
++&reg_usb0_vbus {
++	status = "okay";
++};
++
+ &reg_usb1_vbus {
+ 	status = "okay";
+ };
+@@ -109,7 +132,17 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
++	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
+ 	status = "okay";
+-- 
+2.7.1
