@@ -1,68 +1,78 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 01/14] mtd: spi-nor: remove micron_quad_enable()
-Date: Fri, 12 Feb 2016 13:00:55 -0800
-Message-ID: <20160212210055.GG21465@google.com>
-References: <cover.1454505161.git.cyrille.pitchen@atmel.com>
- <2904a1d704670a9ef57b09370782e198fab6b1f4.1454505161.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2904a1d704670a9ef57b09370782e198fab6b1f4.1454505161.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/2] dt-bindings: clock: adpll: Add binding documentation for TI adpll
+Date: Fri, 12 Feb 2016 13:20:08 -0800
+Message-ID: <1455312009-808-2-git-send-email-tony@atomide.com>
+References: <1455312009-808-1-git-send-email-tony@atomide.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455312009-808-1-git-send-email-tony@atomide.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
+Cc: linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Brian Hutchinson <b.hutchman@gmail.com>, Delio Brignoli <dbrignoli@audioscience.com>, Neil Armstrong <narmstrong@baylibre.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Philipp Rosenberger <ilu@linutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 03, 2016 at 02:26:46PM +0100, Cyrille Pitchen wrote:
-> This patch remove the micron_quad_enable() function which force the Quad
-> SPI mode. However, once this mode is enabled, the Micron memory expect ALL
-> commands to use the SPI 4-4-4 protocol. Hence a failure does occur when
-> calling spi_nor_wait_till_ready() right after the update of the Enhanced
-> Volatile Configuration Register (EVCR) in the micron_quad_enable() as
-> the SPI controller driver is not aware about the protocol change.
-> 
-> Since there is almost no performance increase using Fast Read 4-4-4
-> commands instead of Fast Read 1-1-4 commands, we rather keep on using the
-> Extended SPI mode than enabling the Quad SPI mode.
-> 
-> Let's take the example of the pretty standard use of 8 dummy cycles during
-> Fast Read operations on 64KB erase sectors:
-> 
-> Fast Read 1-1-4 requires 8 cycles for the command, then 24 cycles for the
-> 3byte address followed by 8 dummy clock cycles and finally 65536*2 cycles
-> for the read data; so 131112 clock cycles.
-> 
-> On the other hand the Fast Read 4-4-4 would require 2 cycles for the
-> command, then 6 cycles for the 3byte address followed by 8 dummy clock
-> cycles and finally 65536*2 cycles for the read data. So 131088 clock
-> cycles. The theorical bandwidth increase is 0.0%.
+Let's add binding documentation for the ADPLL found on dm814x
+and dra62x. The binding uses the standard clock binding.
 
-The assumption of whole-block reads is not always realistic. There are
-some controllers that might not handle that length properly, and there
-are also use cases that don't need to read that much at once.
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Acked-by: Michael Turquette <mturquette@baylibre.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ .../devicetree/bindings/clock/ti/adpll.txt         | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/adpll.txt
 
-> Now using Fast Read operations on 512byte pages:
-> Fast Read 1-1-4 needs 8+24+8+(512*2) = 1064 clock cycles whereas Fast
-> Read 4-4-4 would requires 2+6+8+(512*2) = 1040 clock cycles. Hence the
-> theorical bandwidth increase is 2.3%.
+diff --git a/Documentation/devicetree/bindings/clock/ti/adpll.txt b/Documentation/devicetree/bindings/clock/ti/adpll.txt
+new file mode 100644
+index 0000000..8516bf0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ti/adpll.txt
+@@ -0,0 +1,43 @@
++Binding for Texas Instruments ADPLL clock.
++
++Binding status: Unstable - ABI compatibility may be broken in the future
++
++This binding uses the common clock binding[1]. It assumes a
++register-mapped ADPLL with two to three selectable input clocks
++and three to four children.
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be one of "ti,dm814-adpll-s-clock" or
++  "ti,dm814-adpll-lj-clock" depending on the type of the ADPLL
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : link phandles of parent clocks clkinp and clkinpulow, note
++  that the adpll-s-clock also has an optional clkinphif
++- reg : address and length of the register set for controlling the ADPLL.
++
++Examples:
++	adpll_mpu_ck: adpll@40 {
++		#clock-cells = <1>;
++		compatible = "ti,dm814-adpll-s-clock";
++		reg = <0x40 0x40>;
++		clocks = <&devosc_ck &devosc_ck &devosc_ck>;
++		clock-names = "clkinp", "clkinpulow", "clkinphif";
++		clock-indices = <0>, <1>, <2>, <3>;
++		clock-output-names = "481c5040.adpll.dcoclkldo",
++				     "481c5040.adpll.clkout",
++				     "481c5040.adpll.clkoutx2",
++				     "481c5040.adpll.clkouthif";
++	};
++
++	adpll_dsp_ck: adpll@80 {
++		#clock-cells = <1>;
++		compatible = "ti,dm814-adpll-lj-clock";
++		reg = <0x80 0x30>;
++		clocks = <&devosc_ck &devosc_ck>;
++		clock-names = "clkinp", "clkinpulow";
++		clock-indices = <0>, <1>, <2>;
++		clock-output-names = "481c5080.adpll.dcoclkldo",
++				     "481c5080.adpll.clkout",
++				     "481c5080.adpll.clkoutldo";
++	};
+-- 
+2.7.0
 
-This computation is probably more of a reasonable comparison.
-
-> Consecutive reads for non sequential pages is not a relevant use case so
-> The Quad SPI mode is not worth it.
-
-So, I still agree with the conclusion.
-
-Applied this patch to l2-mtd.git.
-
-Brian
-
-> mtd_speedtest seems to confirm these figures.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Fixes: 548cd3ab54da ("mtd: spi-nor: Add quad I/O support for Micron SPI NOR")
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
