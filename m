@@ -1,88 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] Documentation: gpio: Update description for
- X-Gene standby GPIO controller DTS binding
-Date: Fri, 12 Feb 2016 08:36:16 -0600
-Message-ID: <20160212143616.GA1603@rob-hp-laptop>
-References: <1454041735-8434-1-git-send-email-qnguyen@apm.com>
- <1454041735-8434-3-git-send-email-qnguyen@apm.com>
- <20160201153502.GA19725@rob-hp-laptop>
- <CAFopSPQBjXQZwG-Phfc+xJ5Kn6dXPakT6Hg5qT-ByXG06p8wgg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 07/11] of: Add bindings of hw-trip-points for soctherm
+Date: Fri, 12 Feb 2016 08:42:52 -0600
+Message-ID: <CAL_JsqKwQOxkWyYPcv6sBe8ELUuPx4N+iUF94J8R63bRxsGK4g@mail.gmail.com>
+References: <1454057260-16412-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFopSPQBjXQZwG-Phfc+xJ5Kn6dXPakT6Hg5qT-ByXG06p8wgg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454057260-16412-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 08:46:25AM +0700, Quan Nguyen wrote:
-> On Mon, Feb 1, 2016 at 10:35 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Jan 29, 2016 at 11:28:54AM +0700, Quan Nguyen wrote:
-> >> Update description for X-Gene standby GPIO controller DTS binding to
-> >> support GPIO line configuration as input, output or external IRQ pin.
-> >>
-> >> Signed-off-by: Y Vo <yvo@apm.com>
-> >> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
-> >> ---
-> >>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 47 ++++++++++++++++++----
-> >>  1 file changed, 40 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> >> index dae1300..7b8b4cb 100644
-> >> --- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-> >> @@ -1,10 +1,20 @@
-> >>  APM X-Gene Standby GPIO controller bindings
-> >>
-> >> -This is a gpio controller in the standby domain.
-> >> -
-> >> -There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
-> >> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
-> >> -is currently 1-to-1 on interrupts 0x28 thru 0x2d.
-> >> +This is a gpio controller in the standby domain. It also supports interrupt in
-> >> +some particular pins which are sourced to its parent interrupt controller
-> >> +as diagram below:
-> >> +                           +-----------------+
-> >> +                           | X-Gene standby  |
-> >> +                           | GPIO controller +--------- GPIO_0
-> >> ++------------+             |                 | ...
-> >> +| Parent IRQ |             |                 +--------- GPIO_8/EXT_INT_0
-> >> +| controller |  EXT_INT_0  |                 | ...
-> >> +| (GICv2)    +-------------+                 +--------- GPIO_[N+8]/EXT_INT_N
-> >> +|            |  ...        |                 |
-> >> +|            |  EXT_INT_N  |                 +--------- GPIO_[N+9]
-> >> +|            +-------------+                 | ...
-> >> +|            |             |                 +--------- GPIO_MAX
-> >> ++------------+             +-----------------+
-> >>
-> >>  Required properties:
-> >>  - compatible: "apm,xgene-gpio-sb" for the X-Gene Standby GPIO controller
-> >> @@ -15,10 +25,18 @@ Required properties:
-> >>               0 = active high
-> >>               1 = active low
-> >>  - gpio-controller: Marks the device node as a GPIO controller.
-> >> -- interrupts: Shall contain exactly 6 interrupts.
-> >> +- interrupts: The EXT_INT_0 parent interrupt resource must be listed first.
-> >> +- interrupt-parent: Phandle of the parent interrupt controller.
-> >> +- interrupt-cells: Should be two.
-> >> +       - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
-> >> +       - second cell is used to specify flags.
-> >> +- interrupt-controller: Marks the device node as an interrupt controller.
-> >> +- apm,nr-gpios: Optional, specify number of gpios pin.
-> >> +- apm,nr-irqs: Optional, specify number of interrupt pins.
-> >
-> > When is this not 6?
-> >
-> Hi Rob,  by default, this should be 6, but I think this property can
-> help in cases:
-> + Used only 5(or less) first pin as interrupt.
-> + For similar device which has different interrupt pins (8 for example).
-> My idea is to make it a bit more generic by using this optional property.
+On Fri, Jan 29, 2016 at 2:47 AM, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Add hw-trips sub-node for soctherm, which is
+> used to describe the hardware trip points for
+> each soctherm sensors.
 
-What is similar device? Another SoC? board? Is 6 fixed in the SoC? I 
-think you need more specific compatible string with the SoC name in it 
-to determine these setting rather than trying to do something generic.
+I still don't understand why you are doing something custom here.
+What's wrong with what is defined in:
+
+Documentation/devicetree/bindings/thermal/thermal.txt
 
 Rob
