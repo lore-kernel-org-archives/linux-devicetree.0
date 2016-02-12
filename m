@@ -1,119 +1,81 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 10/14] ARM: dts: sun8i-a83t: Add PRCM related clocks and resets
-Date: Sat, 13 Feb 2016 00:43:27 +0800
-Message-ID: <CAGb2v65cfG=cJ91+9G5uS5XcUh0nx6-7ZnMr7RjSGqXPHjyxpQ@mail.gmail.com>
-References: <1454203266-4450-1-git-send-email-vishnupatekar0510@gmail.com>
- <1454203266-4450-11-git-send-email-vishnupatekar0510@gmail.com>
- <CAGb2v67iO-816KaLttWRRPL2f7hpfgJ1--p69tD_oOrewmOjCA@mail.gmail.com> <CAEzqOZtsdHC2tCgjC=Bj5q3RFip2Uyni8bFC16u03PRLCra5KA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
+Date: Fri, 12 Feb 2016 19:47:45 +0300
+Message-ID: <56BE0CB1.4070408@cogentembedded.com>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+ <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
+ <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
+ <20160210171455.GB17671@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAEzqOZtsdHC2tCgjC=Bj5q3RFip2Uyni8bFC16u03PRLCra5KA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-cl
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160210171455.GB17671@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 13, 2016 at 12:06 AM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
-> Hello Wens,
+On 02/10/2016 08:14 PM, Simon Horman wrote:
+
+>> Sorry for my un-ordered response
+>>
+>>> Define the generic R8A7794 part of  the sound device node.
+>>> This sound device  is a complex one and comprises the Audio Clock Generator
+>>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+>>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+>>> It is up  to the board file to enable the device.
+>>>
+>>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> (snip)
+>>> +		rcar_sound,src {
+>>> +			src1: src@1 {
+>>> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +			src2: src@2 {
+>>> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +			src3: src@3 {
+>>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +			src4: src@4 {
+>>> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +			src5: src@5 {
+>>> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +			src6: src@6 {
+>>> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+>>> +				dma-names = "rx", "tx";
+>>> +			};
+>>> +		};
+>>
+>> I think this can't work correctly, because driver is assuming
+>> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
+>> Can you adds dummy src0 with some comments ? or fix src.c driver ?
 >
->
-> On Tue, Feb 2, 2016 at 2:44 PM, Chen-Yu Tsai <wens@csie.org> wrote:
->> On Sun, Jan 31, 2016 at 9:21 AM, Vishnu Patekar
->> <vishnupatekar0510@gmail.com> wrote:
->>> This adds A83T PRCM related clocks, clock resets.
->>>
->>> As a83t apb0 gates clock support is added earlier, this enables it.
->>> Apart from apb0 gates, other added clocks are compatible with
->>> earlier sun8i socs.
->>>
->>> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
->>> ---
->>>  arch/arm/boot/dts/sun8i-a83t.dtsi | 44 +++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 44 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
->>> index ac96aa1..5ea20ff 100644
->>> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
->>> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
->>> @@ -268,6 +268,44 @@
->>>                                              "mmc2_output",
->>>                                              "mmc2_sample";
->>>                 };
->>> +
->>> +               cpus_clk: clk@01f01400 {
->>> +                       compatible = "allwinner,sun9i-a80-cpus-clk";
->>> +                       reg = <0x01f01400 0x4>;
->>> +                       #clock-cells = <0>;
->>> +                       clocks = <&osc16Md512>, <&osc24M>, <&pll6>, <&osc16M>;
->>> +                       clock-output-names = "cpus";
->>> +               };
->>> +
->>> +               ahb0: ahb0_clk {
->>> +                       compatible = "fixed-factor-clock";
->>> +                       #clock-cells = <0>;
->>> +                       clock-div = <1>;
->>> +                       clock-mult = <1>;
->>> +                       clocks = <&cpus_clk>;
->>> +                       clock-output-names = "ahb0";
->>> +               };
->>> +
->>> +               apb0: clk@01f0140c {
->>> +                       compatible = "allwinner,sun8i-a23-apb0-clk";
->>
->> This is actually wrong, as it is wrong in sun9i-a80.dtsi.
->> I've sent a patch series for it.
-> A83T apb0 is different from A80, and it's same as A23, so this should
-> be correct.
-> Please correct me in case I'm missing something.
+> I would prefer the driver to be fixed (I had a similar patchset locally
+> and I found it doesn't work).
 
-My user manual (v1.5.1) says A83T apb0 dividers (page. 246) are
-/1, /2, /3, /4, while the A23 is /1, /2, /4, /8.
+    You mean you had R8A7794 sound patch set too?
 
-ChenYu
+> The reason is that DT should describe
+> the hardware rather than the current state of the software.
 
->> Also the drivers for "allwinner,sun9i-a80-cpus-clk" and
->> "allwinner,sun9i-a80-apbs-clk"
->> are only compiled for CONFIG_MACH_SUN9I. Please add a patch to address this.
-> Okie.
->>
->> Regards
->> ChenYu
->>
->>> +                       reg = <0x01f0140c 0x4>;
->>> +                       #clock-cells = <0>;
->>> +                       clocks = <&ahb0>;
->>> +                       clock-output-names = "apb0";
->>> +               };
->>> +
->>> +               apb0_gates: clk@01f01428 {
->>> +                       compatible = "allwinner,sun8i-a83t-apb0-gates-clk";
->>> +                       reg = <0x01f01428 0x4>;
->>> +                       #clock-cells = <1>;
->>> +                       clocks = <&apb0>;
->>> +                       clock-indices = <0>, <1>,
->>> +                                       <2>, <3>,
->>> +                                       <4>, <6>, <7>;
->>> +                       clock-output-names = "apb0_pio", "apb0_ir",
->>> +                                       "apb0_timer", "apb0_rsb",
->>> +                                       "apb0_uart", "apb0_i2c0", "apb0_twd";
->>> +               };
->>>         };
->>>
->>>         soc {
->>> @@ -434,5 +472,11 @@
->>>                         #interrupt-cells = <3>;
->>>                         interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
->>>                 };
->>> +
->>> +               apb0_reset: reset@01f014b0 {
->>> +                       reg = <0x01f014b0 0x4>;
->>> +                       compatible = "allwinner,sun6i-a31-clock-reset";
->>> +                       #reset-cells = <1>;
->>> +               };
->>>         };
->>>  };
->>> --
->>> 1.9.1
->>>
+    Yes, of course. Just tell me do I have to fix the driver *before* this 
+patch set is accepted?
+
+MBR, Sergei
