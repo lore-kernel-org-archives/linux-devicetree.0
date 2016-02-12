@@ -1,84 +1,97 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v8 2/4] tee: generic TEE subsystem
-Date: Fri, 12 Feb 2016 12:30:07 +0100
-Message-ID: <20160212113006.GA30447@ermac>
-References: <1455210877-15748-1-git-send-email-jens.wiklander@linaro.org>
- <1455210877-15748-3-git-send-email-jens.wiklander@linaro.org>
- <20160212045159.GQ17997@ZenIV.linux.org.uk>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Fri, 12 Feb 2016 11:50:24 +0000
+Message-ID: <alpine.DEB.2.02.1602121138090.27008@kaball.uk.xensource.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com>
+ <44113385.2QnPtvxQx0@vostro.rjw.lan>
+ <alpine.DEB.2.02.1602111557430.27008@kaball.uk.xensource.com>
+ <1667812.hY9vsC2epc@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160212045159.GQ17997@ZenIV.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Viro <viro@ZenIV.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1667812.hY9vsC2epc-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 04:51:59AM +0000, Al Viro wrote:
-> On Thu, Feb 11, 2016 at 06:14:35PM +0100, Jens Wiklander wrote:
+On Thu, 11 Feb 2016, Rafael J. Wysocki wrote:
+> On Thursday, February 11, 2016 04:04:14 PM Stefano Stabellini wrote:
+> > On Wed, 10 Feb 2016, Rafael J. Wysocki wrote:
+> > > On Tuesday, February 09, 2016 11:19:02 AM Stefano Stabellini wrote:
+> > > > On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
+> > > > > On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
+> > > > > > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+> > > > > > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> > > > > > > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > > > >
+> > > > > > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > > > > > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > > > > > > > UART is used by Xen. So here it hides UART from Dom0.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > > > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> > > > > > > 
+> > > > > > > Well, this doesn't look right to me.
+> > > > > > > 
+> > > > > > > We need to find a nicer way to achieve what you want.
+> > > > > > 
+> > > > > > I take that you are talking about how to honor the STAO table in Linux.
+> > > > > > Do you have any concrete suggestions?
+> > > > > 
+> > > > > I do.
+> > > > > 
+> > > > > The last hunk of the patch is likely what it needs to be, although I'm
+> > > > > not sure if the place it is added to is the right one.  That's a minor thing,
+> > > > > though.
+> > > > > 
+> > > > > The other part is problematic.  Not that as it doesn't work, but because of
+> > > > > how it works.  With these changes the device will be visible to the OS (in
+> > > > > fact to user space even), but will never be "present".  I'm not sure if
+> > > > > that's what you want?
+> > > > > 
+> > > > > It might be better to add a check to acpi_bus_type_and_status() that will
+> > > > > evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
+> > > > > way the device won't be visible at all.
+> > > > 
+> > > > Something like below?  Actually your suggestion is better, thank you!
+> > > > 
+> > > > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> > > > index 78d5f02..4778c51 100644
+> > > > --- a/drivers/acpi/scan.c
+> > > > +++ b/drivers/acpi/scan.c
+> > > > @@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+> > > >  	if (ACPI_FAILURE(status))
+> > > >  		return -ENODEV;
+> > > >  
+> > > > +	if (acpi_check_device_is_ignored(handle))
+> > > > +		return -ENODEV;
+> > > > +
+> > > >  	switch (acpi_type) {
+> > > >  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+> > > >  	case ACPI_TYPE_DEVICE:
+> > > > 
+> > > 
+> > > I thought about doing that under ACPI_TYPE_DEVICE, because it shouldn't be
+> > > applicable to the other types.  But generally, yes.
+> > 
+> > I was pondering about it myself. Maybe an ACPI_TYPE_PROCESSOR object
+> > could theoretically be hidden with the STAO?
 > 
-> > +static int tee_ioctl_shm_alloc(struct tee_context *ctx,
-> > +		struct tee_ioctl_shm_alloc_data __user *udata)
-> > +{
-> > +	long ret;
-> > +	struct tee_ioctl_shm_alloc_data data;
-> > +	struct tee_shm *shm;
-> > +
-> > +	if (copy_from_user(&data, udata, sizeof(data)))
-> > +		return -EFAULT;
-> > +
-> > +	/* Currently no input flags are supported */
-> > +	if (data.flags)
-> > +		return -EINVAL;
-> > +
-> > +	data.fd = -1;
-> > +
-> > +	shm = tee_shm_alloc(ctx->teedev, data.size,
-> > +			    TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
-> > +	if (IS_ERR(shm))
-> > +		return PTR_ERR(shm);
-> > +
-> > +	data.flags = shm->flags;
-> > +	data.size = shm->size;
-> > +	data.fd = tee_shm_get_fd(shm);
-> > +	if (data.fd < 0) {
-> > +		ret = data.fd;
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (copy_to_user(udata, &data, sizeof(data))) {
-> > +		ret = -EFAULT;
-> > +		goto err;
-> > +	}
-> > +	/*
-> > +	 * When user space closes the file descriptor the shared memory
-> > +	 * should be freed
-> > +	 */
-> > +	tee_shm_put(shm);
-> > +	return 0;
-> > +err:
-> > +	if (data.fd >= 0)
-> > +		tee_shm_put_fd(data.fd);
+> But this patch won't check for it anyway, will it?
 > 
-> This is completely broken.  Don't ever use that pattern.  Once something
-> is in descriptor table, that's _it_.  You are already past the point of
-> no return and there is no way to clean up.
-> 
-> In ABIs like that (and struct containing descriptor *is* a bad ABI design)
-> solution is
-> 	* allocate a descriptor
-> 	* do everything that might fail, including copy_to_user()/put_user(),
-> etc.
-> 	* if failed, release unused descriptor and do fput(), if you already
-> have a struct file reference that needs to be released.
-> 	* FINALLY, when nothing no failures are possible, fd_install() the
-> sucker in place.
-> 
-> And yes, dma_buf_fd() encourages that kind of braindamage.  It's tolerable
-> only in one case - when we are about to return descriptor number directly
-> as return value of syscall and really can't fail anymore.  Not the case
-> here.
+> It seems to be only checking against the UART address or have I missed
+> anything?
 
-Thanks for the feedback, I'll change to return the descriptor in the
-return value instead.
+You are right, this patch only checks for the UART address, which is
+critical.
+
+However the STAO also has a "Name List" field with a list of paths in
+ACPI namespace to hide. If not implementing proper "Name List" support,
+at least, as part of this patch, it would be nice to check for the
+presence of the Name List field in the table, and print a warning such
+as "STAO Name List not yet supported" when the field is present.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
