@@ -1,79 +1,39 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
-Date: Fri, 12 Feb 2016 15:14:04 -0800
-Message-ID: <7hh9hdzflv.fsf@baylibre.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
-	<1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
-	<CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
-	(Ulf Hansson's message of "Thu, 4 Feb 2016 16:44:59 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH] ARM: dts: pxa: fix dma engine node to pxa3xx-nand
+Date: Sat, 13 Feb 2016 00:49:20 +0100
+Message-ID: <1455320960-10121-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
+Since the switch from mmp_pdma to pxa_dma driver for pxa architectures,
+the pxa_dma requires 2 arguments, namely the requestor line and the
+requested priority.
 
-> On 28 January 2016 at 17:33, Jon Hunter <jonathanh@nvidia.com> wrote:
->> Adds generic PM support to the PMC driver where the PM domains are
->> populated from device-tree and the PM domain consumer devices are
->> bound to their relevant PM domains via device-tree as well.
->>
->> Update the tegra_powergate_sequence_power_up() API so that internally
->> it calls the same tegra_powergate_xxx functions that are used by the
->> tegra generic power domain code for consistency.
->>
->> This is based upon work by Thierry Reding <treding@nvidia.com>
->> and Vince Hsu <vinceh@nvidia.com>.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Fix the only left device node which was still passing only one argument,
+making the pxa3xx-nand driver misbehave in a device-tree configuration,
+ie. failing all data transfers.
 
-[...]
+Fixes: c943646d1f49 ("ARM: dts: pxa: add dma engine node to pxa3xx-nand")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> +static void tegra_powergate_disable_clocks(struct tegra_powergate *pg)
->> +{
->> +       unsigned int i;
->> +
->> +       for (i = 0; i < pg->num_clks; i++)
->> +               clk_disable_unprepare(pg->clks[i]);
->> +}
->> +
->> +static int tegra_powergate_enable_clocks(struct tegra_powergate *pg)
->> +{
->> +       unsigned int i;
->> +       int err;
->> +
->> +       for (i = 0; i < pg->num_clks; i++) {
->> +               err = clk_prepare_enable(pg->clks[i]);
->> +               if (err)
->> +                       goto out;
->> +       }
->> +
->> +       return 0;
->> +
->> +out:
->> +       while (i--)
->> +               clk_disable_unprepare(pg->clks[i]);
->> +
->> +       return err;
->> +}
->
-> I have seen similar code around in other PM domains, dealing with
-> enabling/disabling a *list* of clocks.
-> Perhaps we should invent a new clock API that helps with this to
-> prevents code duplication!?
-
-What about the pm_clk_* API which was built for tracking clocks
-associated with devices for runtime PM.
-
-IOW, you could pm_clk_add(pg->pmc->dev, pg->clks[i]) and then your
-_enable_clocks() would become pm_clk_suspend() an dyour
-_disable_clocks() would become pm_clk_resume().
-
-I might not be following the mapping between PMC and PGs though so not
-sure pg->pmc->dev is the right struct device, but you get the idea.
-
-Kevin
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index bea454f50ff9..fec47bcd8292 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -31,7 +31,7 @@
+ 			reg = <0x43100000 90>;
+ 			interrupts = <45>;
+ 			clocks = <&clks CLK_NAND>;
+-			dmas = <&pdma 97>;
++			dmas = <&pdma 97 3>;
+ 			dma-names = "data";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;	
+-- 
+2.1.4
