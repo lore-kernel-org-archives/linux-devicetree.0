@@ -1,11 +1,11 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] ARM: dts: sun4i: Enable USB DRC on the MK8082
-Date: Fri, 12 Feb 2016 12:54:31 +0100
-Message-ID: <1455278071-22339-1-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v2] ARM: dts: sun4i: Enable USB DRC on the MK802
+Date: Fri, 12 Feb 2016 12:59:19 +0100
+Message-ID: <1455278359-22451-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB6UP662QKGQEYYBQWBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBGMS662QKGQE7ELD5CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,9 +19,12 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Enable the otg/drc usb controller on the MK8082.
+Enable the otg/drc usb controller on the MK802.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v1:
+- Corrected name of the device in subject & description.
 ---
  arch/arm/boot/dts/sun4i-a10-mk802.dts | 33 +++++++++++++++++++++++++++++++++
  1 file changed, 33 insertions(+)
