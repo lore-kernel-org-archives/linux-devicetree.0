@@ -1,11 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 0/2] clk: sunxi: Fix APBS clock for Allwinner A80
-Date: Fri, 12 Feb 2016 17:31:13 +0800
-Message-ID: <1455269475-8180-1-git-send-email-wens@csie.org>
+Subject: [PATCH v2 1/2] clk: sunxi: Add support for A80 APBS clock
+Date: Fri, 12 Feb 2016 17:31:14 +0800
+Message-ID: <1455269475-8180-2-git-send-email-wens@csie.org>
+References: <1455269475-8180-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sunxi+bncBCMILY6JWQBBBZWM622QKGQEJG4ZUHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1455269475-8180-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,43 +19,101 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+A80's APBS clock is not the same as the APB0 clock on A23. The A80's
+is a zero-based divider, while the A23's is a power-of-two divider.
 
-This is v2 of the A80 APBS clock fixes series.
+Replace the CLK_OF_DECLARE version of sun8i-a23-apb0. This also extends
+the common setup function to take div clk flags.
 
-When I did the A80 PRCM support, I failed to notice the A80's APBS clock
-was not the same as the A23's APB0 clock. The former is a zero-based
-divider, while the latter is a power-of-two divider. But the lowest 2
-dividers are the same.
-
-The hardware defaults to the lowest setting, or a /1 divider. Since the
-child gates do not propagate clk_set_rate up, and no consumers here do
-clk_set_rate, this actually works.
-
-I realized my mistake while reviewing the A83T's PRCM patches. The A83T
-shares the same PRCM clocks as the A80.
-
-Maxime, since this was introduced in 4.5-rc1, please apply this series
-for 4.5 so we fix it before the release.
-
-
-Changes since v1:
-
-  - Replace the CLK_OF_DECLARE version of sun8i-a23-apb0-clk with the
-    A80 APBS version, instead of writing a new driver.
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (2):
-  clk: sunxi: Add support for A80 APBS clock
-  ARM: dts: sun9i: Fix apbs clock compatible
-
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- arch/arm/boot/dts/sun9i-a80.dtsi                  |  2 +-
  drivers/clk/sunxi/clk-sun8i-apb0.c                | 23 ++++++++---------------
- 3 files changed, 10 insertions(+), 16 deletions(-)
+ 2 files changed, 9 insertions(+), 15 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 966dcaffcb9c..5206e48694d6 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -60,6 +60,7 @@ Required properties:
+ 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+ 	"allwinner,sun8i-a83t-bus-gates-clk" - for the bus gates on A83T
+ 	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
++	"allwinner,sun9i-a80-apbs-clk" - for the APBS clock on A80
+ 	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
+ 	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
+ 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+diff --git a/drivers/clk/sunxi/clk-sun8i-apb0.c b/drivers/clk/sunxi/clk-sun8i-apb0.c
+index 7ba61103a6f5..cfe9c19a831b 100644
+--- a/drivers/clk/sunxi/clk-sun8i-apb0.c
++++ b/drivers/clk/sunxi/clk-sun8i-apb0.c
+@@ -21,7 +21,7 @@
+ #include <linux/platform_device.h>
+ 
+ static struct clk *sun8i_a23_apb0_register(struct device_node *node,
+-					   void __iomem *reg)
++					   void __iomem *reg, u8 div_flags)
+ {
+ 	const char *clk_name = node->name;
+ 	const char *clk_parent;
+@@ -36,7 +36,7 @@ static struct clk *sun8i_a23_apb0_register(struct device_node *node,
+ 
+ 	/* The A23 APB0 clock is a standard 2 bit wide divider clock */
+ 	clk = clk_register_divider(NULL, clk_name, clk_parent, 0, reg,
+-				   0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
++				   0, 2, div_flags, NULL);
+ 	if (IS_ERR(clk))
+ 		return clk;
+ 
+@@ -52,7 +52,7 @@ err_unregister:
+ 	return ERR_PTR(ret);
+ }
+ 
+-static void sun8i_a23_apb0_setup(struct device_node *node)
++static void sun9i_a80_apbs_setup(struct device_node *node)
+ {
+ 	void __iomem *reg;
+ 	struct resource res;
+@@ -60,18 +60,11 @@ static void sun8i_a23_apb0_setup(struct device_node *node)
+ 
+ 	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
+ 	if (IS_ERR(reg)) {
+-		/*
+-		 * This happens with clk nodes instantiated through mfd,
+-		 * as those do not have their resources assigned in the
+-		 * device tree. Do not print an error in this case.
+-		 */
+-		if (PTR_ERR(reg) != -EINVAL)
+-			pr_err("Could not get registers for a23-apb0-clk\n");
+-
++		pr_err("Could not get registers for a80-apbs-clk\n");
+ 		return;
+ 	}
+ 
+-	clk = sun8i_a23_apb0_register(node, reg);
++	clk = sun8i_a23_apb0_register(node, reg, 0);
+ 	if (IS_ERR(clk))
+ 		goto err_unmap;
+ 
+@@ -82,8 +75,8 @@ err_unmap:
+ 	of_address_to_resource(node, 0, &res);
+ 	release_mem_region(res.start, resource_size(&res));
+ }
+-CLK_OF_DECLARE(sun8i_a23_apb0, "allwinner,sun8i-a23-apb0-clk",
+-	       sun8i_a23_apb0_setup);
++CLK_OF_DECLARE(sun9i_a80_apbs, "allwinner,sun9i-a80-apbs-clk",
++	       sun9i_a80_apbs_setup);
+ 
+ static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
+ {
+@@ -97,7 +90,7 @@ static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
+ 	if (IS_ERR(reg))
+ 		return PTR_ERR(reg);
+ 
+-	clk = sun8i_a23_apb0_register(np, reg);
++	clk = sun8i_a23_apb0_register(np, reg, CLK_DIVIDER_POWER_OF_TWO);
+ 	if (IS_ERR(clk))
+ 		return PTR_ERR(clk);
+ 
 -- 
 2.7.0
