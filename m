@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v8 10/10] ARM: dts: sun8i: q8-common: Add AXP223
- PMIC device and regulator nodes
-Date: Fri, 12 Feb 2016 10:02:47 +0800
-Message-ID: <1455242567-17880-11-git-send-email-wens@csie.org>
+Subject: [PATCH v8 02/10] mfd: axp20x: Remove second struct
+ device * parameter for axp20x_match_device()
+Date: Fri, 12 Feb 2016 10:02:39 +0800
+Message-ID: <1455242567-17880-3-git-send-email-wens@csie.org>
 References: <1455242567-17880-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBTP26S2QKGQE2XFYI6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBTH26S2QKGQEXTBAPMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1455242567-17880-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,128 +20,51 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A23/A33 Q8 tablets have an X-Powers AXP223 PMIC connected via RSB. Its
-regulators provide power to various parts of the SoC and the board.
+The first argument passed to axp20x_match_device(), struct axp20x_dev *,
+already contains a pointer to the device. By rearranging some code,
+moving the assignment of the pointer before axp20x_match_device() is
+called, we can eliminate the second parameter.
 
-Also add lcd regulator supply for simplefb and update the existing
-vmmc-supply for mmc0.
-
+Suggested-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-q8-common.dtsi | 83 +++++++++++++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 2 deletions(-)
+ drivers/mfd/axp20x.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-index 1a69231d2da5..9d2b7e2f5975 100644
---- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-@@ -56,7 +56,6 @@
- 		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
- 		default-brightness-level = <8>;
- 		enable-gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
--		/* backlight is powered by AXP223 DC1SW */
- 	};
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 9842199e2e6c..685a78614f83 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -606,8 +606,9 @@ static void axp20x_power_off(void)
+ 		     AXP20X_OFF);
+ }
  
- 	chosen {
-@@ -67,7 +66,7 @@
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
--	vmmc-supply = <&reg_vcc3v0>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
- 	cd-inverted;
-@@ -92,6 +91,82 @@
+-static int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev)
++static int axp20x_match_device(struct axp20x_dev *axp20x)
+ {
++	struct device *dev = axp20x->dev;
+ 	const struct acpi_device_id *acpi_id;
+ 	const struct of_device_id *of_id;
  
- &r_rsb {
- 	status = "okay";
-+
-+	axp22x: pmic@3a3 {
-+		compatible = "x-powers,axp223";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		eldoin-supply = <&reg_dcdc1>;
-+	};
-+};
-+
-+#include "axp22x.dtsi"
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-io";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2350000>;
-+	regulator-max-microvolt = <2650000>;
-+	regulator-name = "vdd-dll";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2700000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_dc1sw {
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-lcd";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-3v0";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
- };
+@@ -673,14 +674,14 @@ static int axp20x_i2c_probe(struct i2c_client *i2c,
+ 	if (!axp20x)
+ 		return -ENOMEM;
  
- &r_uart {
-@@ -99,3 +174,7 @@
- 	pinctrl-0 = <&r_uart_pins_a>;
- 	status = "okay";
- };
+-	ret = axp20x_match_device(axp20x, &i2c->dev);
+-	if (ret)
+-		return ret;
+-
+ 	axp20x->i2c_client = i2c;
+ 	axp20x->dev = &i2c->dev;
+ 	dev_set_drvdata(axp20x->dev, axp20x);
+ 
++	ret = axp20x_match_device(axp20x);
++	if (ret)
++		return ret;
 +
-+&simplefb_lcd {
-+	vcc-lcd-supply = <&reg_dc1sw>;
-+};
+ 	axp20x->regmap = devm_regmap_init_i2c(i2c, axp20x->regmap_cfg);
+ 	if (IS_ERR(axp20x->regmap)) {
+ 		ret = PTR_ERR(axp20x->regmap);
 -- 
 2.7.0
