@@ -1,115 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
-Date: Fri, 12 Feb 2016 22:08:54 +0300
-Message-ID: <56BE2DC6.4080802@cogentembedded.com>
-References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
- <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
- <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
- <20160210171455.GB17671@verge.net.au> <56BE0CB1.4070408@cogentembedded.com>
- <20160212184343.GA31655@verge.net.au>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH linux-next v2 01/14] mtd: spi-nor: remove
+ micron_quad_enable()
+Date: Fri, 12 Feb 2016 11:24:38 -0800
+Message-ID: <20160212192438.GD21465@google.com>
+References: <A765B125120D1346A63912DDE6D8B6310BF57A75@NTXXIAMBX02.xacn.micron.com>
+ <56B1E1A5.9060902@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160212184343.GA31655@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56B1E1A5.9060902@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Bean Huo =?utf-8?B?6ZyN5paM5paMIChiZWFuaHVvKQ==?= <beanhuo@micron.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, "marex@denx.de" <marex@denx.de>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2016 09:43 PM, Simon Horman wrote:
+On Wed, Feb 03, 2016 at 12:16:53PM +0100, Cyrille Pitchen wrote:
 
->>>> Sorry for my un-ordered response
->>>>
->>>>> Define the generic R8A7794 part of  the sound device node.
->>>>> This sound device  is a complex one and comprises the Audio Clock Generator
->>>>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
->>>>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
->>>>> It is up  to the board file to enable the device.
->>>>>
->>>>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
->>>>>
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>> (snip)
->>>>> +		rcar_sound,src {
->>>>> +			src1: src@1 {
->>>>> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +			src2: src@2 {
->>>>> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +			src3: src@3 {
->>>>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +			src4: src@4 {
->>>>> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +			src5: src@5 {
->>>>> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +			src6: src@6 {
->>>>> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
->>>>> +				dma-names = "rx", "tx";
->>>>> +			};
->>>>> +		};
->>>>
->>>> I think this can't work correctly, because driver is assuming
->>>> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
->>>> Can you adds dummy src0 with some comments ? or fix src.c driver ?
->>>
->>> I would prefer the driver to be fixed (I had a similar patchset locally
->>> and I found it doesn't work).
->>
->>     You mean you had R8A7794 sound patch set too?
->
-> Yes, I was working on it recently.
-> I suppose we should coordinate these things in future to avoid
-> duplicated effort.
+> So in its current state, micron_quad_enable() prevents us from using Micron
+> memories for Quad SPI operations. Some code is missing to make it work.
 
-    Yes, seems a good idea now. :-)
+TL;DR: the original code adding micron_quad_enable() was broken and
+should never have been merged (sorry, my bad). Next time, please test
+your changes Bean.
 
->>> The reason is that DT should describe
->>> the hardware rather than the current state of the software.
->>
->>     Yes, of course. Just tell me do I have to fix the driver *before* this
->> patch set is accepted?
+> As I said in the patch description, using the SPI 4-4-4 protocol is not
+> relevant for MTD usage. It would be worth for XIP operations but this is not the
+> purpose of the spi-nor driver.
 
-> I did not entirely get to the bottom of the problem, but I think that at
-> the very least something needs to be done about the for_each_rsnd_src()
-> loop in rsnd_src_probe.
+I'm not completely opposed to using it, if someone can support it well,
+test it, and prove it actually provides real benefits. But none of the
+above have been satisfied yet.
 
-    It's not that it replies to my question. :-)
-    So you're looking at this issue yourself?
-
-> My, obviously not satisfactory, hack around there being no src0 was as follows.
->
-> diff --git a/sound/soc/sh/rcar/src.c b/sound/soc/sh/rcar/src.c
-> index 68b439ed22d7..58a447b0785b 100644
-> --- a/sound/soc/sh/rcar/src.c
-> +++ b/sound/soc/sh/rcar/src.c
-> @@ -1072,7 +1072,7 @@ int rsnd_src_probe(struct platform_device *pdev,
->
->   	for_each_rsnd_src(src, priv, i) {
-
-    Which tree is this? The recent devel branch of renesas.git has 
-for_each_child_of_node() here...
-
->   		snprintf(name, RSND_SRC_NAME_SIZE, "%s.%d",
-> -			 SRC_NAME, i);
-> +			 SRC_NAME, i + 1);
->
->   		clk = devm_clk_get(dev, name);
->   		if (IS_ERR(clk))
-
-MBR, Sergei
+Regards,
+Brian
