@@ -1,69 +1,57 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm/tegra: Enable watchdog support for tegra114 and
- tegra124.
-Date: Fri, 12 Feb 2016 18:28:10 +0100
-Message-ID: <20160212172810.GB29081@ulmo>
-References: <564AFE51.6060601@mblankhorst.nl>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: dtx_diff - add info to error message
+Date: Fri, 12 Feb 2016 09:37:57 -0800
+Message-ID: <56BE1875.5010307@gmail.com>
+References: <56B0FD4B.8080600@gmail.com> <56BD2C6D.6000400@gmail.com> <CAL_JsqL0CpbcACqNjo1u7KYUz_rnKVWj8ZjKuyE2mefNw=Li4A@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <564AFE51.6060601-FcfepWsj2zOByvU0x3ry2g@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maarten Lankhorst <dev-FcfepWsj2zOByvU0x3ry2g@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL0CpbcACqNjo1u7KYUz_rnKVWj8ZjKuyE2mefNw=Li4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2/11/2016 5:41 PM, Rob Herring wrote:
+> On Thu, Feb 11, 2016 at 6:50 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 2/2/2016 11:02 AM, Frank Rowand wrote:
+>>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>>
+>>> If kernel config options are not properly set, "make scripts" will not
+>>> compile dtc.  Update the unable to find dtc error message to check
+>>> the kernel config and give better advice on how to create dtc.
+>>>
+>>> Reword another error message to increase clarity.
+>>>
+>>> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>
+>> < snip >
+>>
+>> Ping, no reply on original email.
+> 
+> No comment, no reply. I only reply with "applied" when I actually
+> apply stuff which tends to be at least several weeks. Otherwise, I
+> might tell you applied and then miss it. :)
+> 
+> Anyway, now applied.
+> 
+>> In the thread about the of ir msi-map patch you mentioned that you have nothing
+>> else queued for 4.5.  Is dtx_diff (and hopefully this patch) queued up for 4.6?
+>> If so, could they instead go into 4.5 since they are support tools, and do not
+>> directly impact the kernel?
+> 
+> It's not a fix either though, so no, it's queued for 4.6 and has been
+> since -rc1.
+> 
+> Rob
+> 
 
---f2QGlHpHGjS2mn6Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, thanks!
 
-On Tue, Nov 17, 2015 at 11:15:45AM +0100, Maarten Lankhorst wrote:
-> This allows the watchdog timer to work on my tegra124.
->=20
-> tegra_wdt specifies: compatible =3D "nvidia,tegra30-timer";
->=20
-> But the dtsi was only setting tegra20-timer, fix this
-> by adding tegra30-timer explicitly. This allows
-> the watchdog to work on my Jetson TK1.
->=20
-> Signed-off-by: Maarten Lankhorst <dev-FcfepWsj2zOByvU0x3ry2g@public.gmane.org>
-> ---
-> XXX: Should this be Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to add the missing device =
-on older kernels?
-
-I've applied this with a slightly reworded commit message. I haven't
-added a Cc: stable because I don't think this qualifies. There is no
-regression that this fixes, or any bugs. It enables a feature, which
-is useful, but doesn't need to go to stable in my opinion.
-
-If you or anyone else feels strongly I can be convinced to add it,
-though.
-
-Thierry
-
---f2QGlHpHGjS2mn6Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWvhYqAAoJEN0jrNd/PrOhwn0P/Rbv6joD11ozpX0xG2zYQzIl
-sgKUnwdlGv4DV8Ube0cPsOBWmn7NWwpmHPdc52Ei3XrIGCo3zXXptA0xheNh6cnp
-eP/4ncSAFjQhQQuFqmyFMpHyZoL1f00dB7D9n73wjcBqeweLlhrqsMbwLeAh3VS8
-/wnH/vCsylm1t71cTWVv4TdMKGzMcAwUaNOv1tnL7Yfo3uYuYxeyuN8e/cFsLMpu
-cTmOX2lCvZ3cwCEoih3yHMQSKH5V9Rl7K9rC0Vvc7nlPqNLgIxg/hiC5hDuRms8Z
-KTTCYtP9V5M4k2Z1mtR3YviF5NmQI98GkDYcUuLP6k9xhvE9AXMnwpU71flSeVXb
-AjBe9dBzQfgWvoJd+xzUdKpQPXyIxmRt7esMQzeFHu//+Ftrs8WIi8ivF/p2PRJL
-Fm6T6br7MUBO2yBmllDbqKCli3v+IvDi8vNQjOMavOh1kfzykK9BQIfJD+6iyHb0
-ymcrFINNOYZEXf0mr6CwwRJhDFVeTpbsUVrzY6Dwwnuc2tqek/fNWzjskZ7iCmwY
-yEYD7CnbY3AK2W5vxpOjq3nsCW2AprSPXpoxXTK6HNItbJhO/fugnn3C3F4mIhfF
-lZohsnuusC1HsYlaxeQTJa4bYw3NICsCwqCS9bYme3GI6VFHRAnaPi+nG3o0Ythh
-fdqjkYno+NFgMu8Mibu7
-=W0vs
------END PGP SIGNATURE-----
-
---f2QGlHpHGjS2mn6Y--
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
