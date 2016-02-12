@@ -1,54 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] net: fec: Add "phy-reset-active-low" property to DT
-Date: Fri, 12 Feb 2016 09:20:11 -0600
-Message-ID: <20160212152011.GA28563@rob-hp-laptop>
-References: <1455048072-869-1-git-send-email-bernhard@bwalle.de>
+Subject: Re: [PATCH 4/6] dt-bindings: watchdog: Add ARM SP805 DT bindings
+Date: Fri, 12 Feb 2016 09:23:06 -0600
+Message-ID: <20160212152306.GA29673@rob-hp-laptop>
+References: <1455084651-29325-1-git-send-email-anup.patel@broadcom.com>
+ <1455084651-29325-5-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455048072-869-1-git-send-email-bernhard@bwalle.de>
+In-Reply-To: <1455084651-29325-5-git-send-email-anup.patel@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bernhard Walle <bernhard@bwalle.de>
-Cc: fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 09:01:12PM +0100, Bernhard Walle wrote:
-> We need that for a custom hardware that needs the reverse reset
-> sequence.
+On Wed, Feb 10, 2016 at 11:40:49AM +0530, Anup Patel wrote:
+> The ARM SP805 DT node is already present in various DTS files.
+> This patch adds missing DT bindings documentation for ARM SP805.
 > 
-> Signed-off-by: Bernhard Walle <bernhard@bwalle.de>
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Vikram Prakash <vikramp@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 > ---
-> Changes compared to v1:
->  - Add documentation to 'phy-reset-gpios' that flags are ignored
->    as suggested by Andrew Lunn.
+>  .../devicetree/bindings/watchdog/arm,sp805.txt          | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
 > 
->  Documentation/devicetree/bindings/net/fsl-fec.txt | 7 ++++++-
->  drivers/net/ethernet/freescale/fec_main.c         | 8 ++++++--
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index a9eb611..0caa429 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -7,11 +7,16 @@ Required properties:
->  - phy-mode : See ethernet.txt file in the same directory
->  
->  Optional properties:
-> -- phy-reset-gpios : Should specify the gpio for phy reset
-> +- phy-reset-gpios : Should specify the gpio for phy reset. Additional
-> +  flags are ignored, see the non-standard 'phy-reset-active-low' property
-> +  instead.
->  - phy-reset-duration : Reset duration in milliseconds.  Should present
->    only if property "phy-reset-gpios" is available.  Missing the property
->    will have the duration be 1 millisecond.  Numbers greater than 1000 are
->    invalid and 1 millisecond will be used instead.
-> +- phy-reset-active-low : If present then the reset sequence using the GPIO
-> +  specified in the "phy-reset-gpios" property is reversed (H=reset state,
-> +  L=operation state).
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> new file mode 100644
+> index 0000000..6ebb77d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> @@ -0,0 +1,17 @@
+> +ARM AMBA Primecell SP805 Watchdog
+> +
+> +Required properties:
+> +- compatible: Should be "arm,sp805" & "arm,primecell"
+> +- reg: Should contain location and length for watchdog timer register.
+> +- interrupts: Should contain the list of watchdog timer interrupts.
+> +- clocks: clocks driving the watchdog timer hardware. This list should be 2
+> +	clocks. With 2 clocks, the order is wdogclk clock, apb_pclk.
+> +
+> +Example:
+> +	wdt@66090000 {
 
-This is what the gpio flags are for. Why can't you use that?
+This should be watchdog@...
 
->  - phy-supply : regulator that powers the Ethernet PHY.
->  - phy-handle : phandle to the PHY device connected to this device.
->  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+Otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
