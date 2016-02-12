@@ -1,61 +1,41 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: [PATCH] dtb: amd: Fix-up for ccn504 and kcs nodes
-Date: Fri, 12 Feb 2016 07:20:43 +0700
-Message-ID: <1455236443-23949-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: dtx_diff - add info to error message
+Date: Thu, 11 Feb 2016 16:50:53 -0800
+Message-ID: <56BD2C6D.6000400@gmail.com>
+References: <56B0FD4B.8080600@gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B0FD4B.8080600-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+On 2/2/2016 11:02 AM, Frank Rowand wrote:
+> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> 
+> If kernel config options are not properly set, "make scripts" will not
+> compile dtc.  Update the unable to find dtc error message to check
+> the kernel config and give better advice on how to create dtc.
+> 
+> Reword another error message to increase clarity.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-This is a fix-up patch based on the review comment from
-Arnd regarding:
-    * fix ccn504 address in the node name
-    * remove kcs interrupt-name
+< snip >
 
-Signed-off-by: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
+Ping, no reply on original email.
 
-Hi Olof,
+In the thread about the of ir msi-map patch you mentioned that you have nothing
+else queued for 4.5.  Is dtx_diff (and hopefully this patch) queued up for 4.6?
+If so, could they instead go into 4.5 since they are support tools, and do not
+directly impact the kernel?
 
-Here are the changes from the V3 that I sent earlier. Sorry for confusion.
-Would you please pull this into the next tree?
+Thanks,
 
-Thank you,
-Suravee
-
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index a7fc059..bd3adea 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -231,7 +231,7 @@
- 		};
- 
- 		/* Perf CCN504 PMU */
--		ccn: ccn@0xe8000000 {
-+		ccn: ccn@e8000000 {
- 			compatible = "arm,ccn-504";
- 			reg = <0x0 0xe8000000 0 0x1000000>;
- 			interrupts = <0 380 4>;
-@@ -243,7 +243,6 @@
- 			device_type = "ipmi";
- 			reg = <0x0 0xe0010000 0 0x8>;
- 			interrupts = <0 389 4>;
--			interrupt-names = "ipmi_kcs";
- 			reg-size = <1>;
- 			reg-spacing = <4>;
- 		};
--- 
-2.5.0
+Frank
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
