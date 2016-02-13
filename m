@@ -1,540 +1,90 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH net-next v2 2/4] drivers: net: xgene: Add support for RSS
-Date: Fri, 12 Feb 2016 17:37:03 -0800
-Message-ID: <1455327425-8294-3-git-send-email-isubramanian@apm.com>
-References: <1455327425-8294-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1455327425-8294-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, toanle@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Khuong Dinh <kdinh@apm.com>, Tanmay Inamdar <tinamdar@apm.com>
+From: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] soc/sound: tegra_max98090: do not invert headphone
+ jack
+Date: Fri, 12 Feb 2016 19:10:28 -0700
+Message-ID: <56BE9094.1040500@gmail.com>
+References: <1454563862-1971-1-git-send-email-sctincman@gmail.com>
+ <1454563862-1971-2-git-send-email-sctincman@gmail.com>
+ <56B37E19.6010002@wwwdotorg.org> <56B3A10E.4010508@gmail.com>
+ <56B8E5AD.8040707@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56B8E5AD.8040707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Khuong Dinh <kdinh@apm.com>
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-Tested-by: Toan Le <toanle@apm.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_cle.c | 386 +++++++++++++++++++++++-
- drivers/net/ethernet/apm/xgene/xgene_enet_cle.h |  41 +++
- 2 files changed, 422 insertions(+), 5 deletions(-)
+On 02/08/2016 11:59 AM, Stephen Warren wrote:
+> On 02/04/2016 12:05 PM, Jonathan Tinkham wrote:
+>> On 02/04/2016 09:36 AM, Stephen Warren wrote:
+>>> On 02/03/2016 10:30 PM, Jonathan Tinkham wrote:
+>>>> The headphone jack should not be inverted
+>>>
+>>> Have you tested this on Venice2 as well as Nyan? I'm pretty sure
+>>> Venice2 was tested when this driver was written, and whoever added
+>>> Nyan support to the kernel simply assumed it would work. As such, my
+>>> suspicion is that this series will break Venice2 even as it fixes Nyan.
+>>
+>> I have not tested this on Venice2, only on Nyan. That seems like a
+>> plausible cause and reasonable suspicion.
+>>
+>>> Why doesn't user-space expect what the kernel actually implements? The
+>>> kernel should be defining the control naming.
+>>>
+>>> Which user-space are you using specifically, and which part of it
+>>> expects particular naming?
+>>>
+>>> Perhaps this series needs to be parametrized based on a flag in DT,
+>>> rather than switching the hard-coded values, so that only Venice2 can
+>>> be affected?
+>>
+>> Specifically pulse-audio and alsa under Arch Linux.
+>>
+>> I was referencing 'Documentation/sound/alsa/soc/dapm.txt' with regards
+>> to control names. While it is possible to add another entry into the
+>> user-space configuration, I took this documentation as a definition of
+>> kernel control naming schemes, and thought the driver had used a
+>> non-standard naming scheme (or at least, not a consistent one).
+>>
+>>> On 02/03/2016 10:31 PM, Jonathan Tinkham wrote:
+>>>> Update device-tree bindings to reflect the rename of the board's
+>>>> headphone jack.
+>>>
+>>> This looks like an incompatible change to the DT. While you've fixed
+>>> the DT, which will fix new installations, old DTs now won't work. This
+>>> breaks DT ABI. Any DT change needs to be backwards compatible, i.e.
+>>> the old name should still work and be documented as a legacy value.
+>>
+>> I see that now. If the inversion behavior differs between venice2 and
+>> nyan, then another compatible string would need to be added anyways,
+>> correct? As you mentioned above, this might need to be done anyways for
+>> the rename.
+>>
+>> Something like:
+>> - "compatible = nvidia,tegra-audio-max98090" implements old inversion
+>> behavior and leaves the switch as "Headphones" to avoid breaking 
+>> older DTs
+>> - "compatible = nvidia,tegra-{venice2,nyan}-audio-max98090" that
+>> separates the inversion behavior and also introduces the rename
+>
+> It'd be preferable to key this off an separate flag rather than the 
+> compatible value. That would more directly represent the data in 
+> question, and allow any future boards to be added without having to 
+> edit the driver to know whether those new boards neded HP DET 
+> inversion or not.
+>
+> However, do note that each of the 3 boards using this binding has a 
+> board-specific compatible value present already:
+>
+> nvidia,tegra-audio-max98090-venice2
+> nvidia,tegra-audio-max98090-nyan-blaze
+> nvidia,tegra-audio-max98090-nyan-big
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_cle.c b/drivers/net/ethernet/apm/xgene/xgene_enet_cle.c
-index 7eea982..933eac4 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_cle.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_cle.c
-@@ -21,6 +21,25 @@
- 
- #include "xgene_enet_main.h"
- 
-+/* interfaces to convert structures to HW recognized bit formats */
-+static void xgene_cle_sband_to_hw(u8 frag, enum xgene_cle_prot_version ver,
-+				  enum xgene_cle_prot_type type, u32 len,
-+				  u32 *reg)
-+{
-+	*reg =  SET_VAL(SB_IPFRAG, frag) |
-+		SET_VAL(SB_IPPROT, type) |
-+		SET_VAL(SB_IPVER, ver) |
-+		SET_VAL(SB_HDRLEN, len);
-+}
-+
-+static void xgene_cle_idt_to_hw(u32 dstqid, u32 fpsel,
-+				u32 nfpsel, u32 *idt_reg)
-+{
-+	*idt_reg =  SET_VAL(IDT_DSTQID, dstqid) |
-+		    SET_VAL(IDT_FPSEL, fpsel) |
-+		    SET_VAL(IDT_NFPSEL, nfpsel);
-+}
-+
- static void xgene_cle_dbptr_to_hw(struct xgene_enet_pdata *pdata,
- 				  struct xgene_cle_dbptr *dbptr, u32 *buf)
- {
-@@ -258,29 +277,372 @@ static void xgene_cle_setup_def_dbptr(struct xgene_enet_pdata *pdata,
- 	}
- }
- 
-+static int xgene_cle_set_rss_sband(struct xgene_enet_cle *cle)
-+{
-+	u32 sband, reg = 0;
-+	u32 idx = CLE_PKTRAM_SIZE / sizeof(u32);
-+	u32 mac_hdr_len = 14;
-+	u32 ipv4_ihl = 5;
-+	u32 hdr_len;
-+	int ret;
-+
-+	/* Sideband: IPV4/TCP packets */
-+	hdr_len = (mac_hdr_len << 5) | ipv4_ihl;
-+	xgene_cle_sband_to_hw(0, XGENE_CLE_IPV4, XGENE_CLE_TCP, hdr_len, &reg);
-+	sband = reg;
-+
-+	/* Sideband: IPv4/UDP packets */
-+	hdr_len = (mac_hdr_len << 5) | ipv4_ihl;
-+	xgene_cle_sband_to_hw(1, XGENE_CLE_IPV4, XGENE_CLE_UDP, hdr_len, &reg);
-+	sband |= (reg << 16);
-+
-+	ret = xgene_cle_dram_wr(cle, &sband, 1, idx, PKT_RAM, CLE_CMD_WR);
-+	if (ret)
-+		return ret;
-+
-+	/* Sideband: IPv4/RAW packets */
-+	hdr_len = (mac_hdr_len << 5) | ipv4_ihl;
-+	xgene_cle_sband_to_hw(0, XGENE_CLE_IPV4, XGENE_CLE_OTHER,
-+			      hdr_len, &reg);
-+	sband = reg;
-+
-+	/* Sideband: Ethernet II/RAW packets */
-+	hdr_len = (mac_hdr_len << 5);
-+	xgene_cle_sband_to_hw(0, XGENE_CLE_IPV4, XGENE_CLE_OTHER,
-+			      hdr_len, &reg);
-+	sband |= (reg << 16);
-+
-+	ret = xgene_cle_dram_wr(cle, &sband, 1, idx + 1, PKT_RAM, CLE_CMD_WR);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int xgene_cle_set_rss_skeys(struct xgene_enet_cle *cle)
-+{
-+	int ret = 0;
-+	u32 secret_key_ipv4[4];  /* 16 Bytes*/
-+
-+	get_random_bytes(secret_key_ipv4, 16);
-+	ret = xgene_cle_dram_wr(cle, secret_key_ipv4, 4, 0,
-+				RSS_IPV4_HASH_SKEY, CLE_CMD_WR);
-+	return ret;
-+}
-+
-+static int xgene_cle_set_rss_idt(struct xgene_enet_pdata *pdata)
-+{
-+	int i, ret = 0;
-+	u32 fpsel, dstqid, nfpsel, idt_reg;
-+	u16 pool_id;
-+
-+	for (i = 0; i < XGENE_CLE_IDT_ENTRIES; i++) {
-+		pool_id = pdata->rx_ring->buf_pool->id;
-+		fpsel = xgene_enet_ring_bufnum(pool_id) - 0x20;
-+		dstqid = xgene_enet_dst_ring_num(pdata->rx_ring);
-+		nfpsel = 0;
-+		idt_reg = 0;
-+
-+		xgene_cle_idt_to_hw(dstqid, fpsel, nfpsel, &idt_reg);
-+		ret = xgene_cle_dram_wr(&pdata->cle, &idt_reg, 1, i,
-+					RSS_IDT, CLE_CMD_WR);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = xgene_cle_set_rss_skeys(&pdata->cle);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int xgene_cle_setup_rss(struct xgene_enet_pdata *pdata)
-+{
-+	struct xgene_enet_cle *cle = &pdata->cle;
-+	void __iomem *base = cle->base;
-+	u32 offset, val = 0;
-+	int i, ret = 0;
-+
-+	offset = CLE_PORT_OFFSET;
-+	for (i = 0; i < cle->parsers; i++) {
-+		if (cle->active_parser != PARSER_ALL)
-+			offset = cle->active_parser * CLE_PORT_OFFSET;
-+		else
-+			offset = i * CLE_PORT_OFFSET;
-+
-+		/* enable RSS */
-+		val = (RSS_IPV4_12B << 1) | 0x1;
-+		writel(val, base + RSS_CTRL0 + offset);
-+	}
-+
-+	/* setup sideband data */
-+	ret = xgene_cle_set_rss_sband(cle);
-+	if (ret)
-+		return ret;
-+
-+	/* setup indirection table */
-+	ret = xgene_cle_set_rss_idt(pdata);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int xgene_enet_cle_init(struct xgene_enet_pdata *pdata)
- {
- 	struct xgene_enet_cle *enet_cle = &pdata->cle;
- 	struct xgene_cle_ptree *ptree = &enet_cle->ptree;
- 	struct xgene_cle_dbptr dbptr[DB_MAX_PTRS];
- 	struct xgene_cle_ptree_kn kn;
-+	struct xgene_cle_ptree_branch *br;
- 	u32 def_qid, def_fpsel, pool_id;
-+	int ret;
- 	struct xgene_cle_ptree_ewdn ptree_dn[] = {
- 		{
- 			/* PKT_TYPE_NODE */
- 			.node_type = EWDN,
- 			.last_node = 0,
--			.hdr_len_store = 0,
-+			.hdr_len_store = 1,
- 			.hdr_extn = NO_BYTE,
- 			.byte_store = NO_BYTE,
- 			.search_byte_store = NO_BYTE,
- 			.result_pointer = DB_RES_DROP,
--			.num_branches = 1,
-+			.num_branches = 2,
- 			.branch = {
- 				{
--					/* Allow all packet type */
-+					/* IPV4 */
- 					.valid = 0,
--					.next_packet_pointer = 0,
-+					.next_packet_pointer = 22,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = PKT_PROT_NODE,
-+					.next_branch = 0,
-+					.data = 0x8,
-+					.mask = 0xffff
-+				},
-+				{
-+					.valid = 0,
-+					.next_packet_pointer = 262,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = LAST_NODE,
-+					.next_branch = 0,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				}
-+			},
-+		},
-+		{
-+			/* PKT_PROT_NODE */
-+			.node_type = EWDN,
-+			.last_node = 0,
-+			.hdr_len_store = 1,
-+			.hdr_extn = NO_BYTE,
-+			.byte_store = NO_BYTE,
-+			.search_byte_store = NO_BYTE,
-+			.result_pointer = DB_RES_DROP,
-+			.num_branches = 3,
-+			.branch = {
-+				{
-+					/* TCP */
-+					.valid = 1,
-+					.next_packet_pointer = 26,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 0,
-+					.data = 0x0600,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* UDP */
-+					.valid = 1,
-+					.next_packet_pointer = 26,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 0,
-+					.data = 0x1100,
-+					.mask = 0xffff
-+				},
-+				{
-+					.valid = 0,
-+					.next_packet_pointer = 260,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = LAST_NODE,
-+					.next_branch = 0,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				}
-+			}
-+		},
-+		{
-+			/* RSS_IPV4_TCP_NODE */
-+			.node_type = EWDN,
-+			.last_node = 0,
-+			.hdr_len_store = 1,
-+			.hdr_extn = NO_BYTE,
-+			.byte_store = NO_BYTE,
-+			.search_byte_store = BOTH_BYTES,
-+			.result_pointer = DB_RES_DROP,
-+			.num_branches = 6,
-+			.branch = {
-+				{
-+					/* SRC IPV4 B01 */
-+					.valid = 0,
-+					.next_packet_pointer = 28,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 1,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* SRC IPV4 B23 */
-+					.valid = 0,
-+					.next_packet_pointer = 30,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 2,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* DST IPV4 B01 */
-+					.valid = 0,
-+					.next_packet_pointer = 32,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 3,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* DST IPV4 B23 */
-+					.valid = 0,
-+					.next_packet_pointer = 34,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 4,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* TCP SRC Port */
-+					.valid = 0,
-+					.next_packet_pointer = 36,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_TCP_NODE,
-+					.next_branch = 5,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* TCP DST Port */
-+					.valid = 0,
-+					.next_packet_pointer = 256,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = LAST_NODE,
-+					.next_branch = 0,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				}
-+			}
-+		},
-+		{
-+			/* RSS_IPV4_UDP_NODE */
-+			.node_type = EWDN,
-+			.last_node = 0,
-+			.hdr_len_store = 1,
-+			.hdr_extn = NO_BYTE,
-+			.byte_store = NO_BYTE,
-+			.search_byte_store = BOTH_BYTES,
-+			.result_pointer = DB_RES_DROP,
-+			.num_branches = 6,
-+			.branch = {
-+				{
-+					/* SRC IPV4 B01 */
-+					.valid = 0,
-+					.next_packet_pointer = 28,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 1,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* SRC IPV4 B23 */
-+					.valid = 0,
-+					.next_packet_pointer = 30,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 2,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* DST IPV4 B01 */
-+					.valid = 0,
-+					.next_packet_pointer = 32,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 3,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* DST IPV4 B23 */
-+					.valid = 0,
-+					.next_packet_pointer = 34,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 4,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* TCP SRC Port */
-+					.valid = 0,
-+					.next_packet_pointer = 36,
-+					.jump_bw = JMP_FW,
-+					.jump_rel = JMP_ABS,
-+					.operation = EQT,
-+					.next_node = RSS_IPV4_UDP_NODE,
-+					.next_branch = 5,
-+					.data = 0x0,
-+					.mask = 0xffff
-+				},
-+				{
-+					/* TCP DST Port */
-+					.valid = 0,
-+					.next_packet_pointer = 256,
- 					.jump_bw = JMP_FW,
- 					.jump_rel = JMP_ABS,
- 					.operation = EQT,
-@@ -295,7 +657,7 @@ static int xgene_enet_cle_init(struct xgene_enet_pdata *pdata)
- 			/* LAST NODE */
- 			.node_type = EWDN,
- 			.last_node = 1,
--			.hdr_len_store = 0,
-+			.hdr_len_store = 1,
- 			.hdr_extn = NO_BYTE,
- 			.byte_store = NO_BYTE,
- 			.search_byte_store = NO_BYTE,
-@@ -318,6 +680,20 @@ static int xgene_enet_cle_init(struct xgene_enet_pdata *pdata)
- 	};
- 
- 	ptree->start_pkt = 12; /* Ethertype */
-+	if (pdata->phy_mode == PHY_INTERFACE_MODE_XGMII) {
-+		ret = xgene_cle_setup_rss(pdata);
-+		if (ret) {
-+			netdev_err(pdata->ndev, "RSS initialization failed\n");
-+			return ret;
-+		}
-+	} else {
-+		br = &ptree_dn[PKT_PROT_NODE].branch[0];
-+		br->valid = 0;
-+		br->next_packet_pointer = 260;
-+		br->next_node = LAST_NODE;
-+		br->data = 0x0000;
-+		br->mask = 0xffff;
-+	}
- 
- 	def_qid = xgene_enet_dst_ring_num(pdata->rx_ring);
- 	pool_id = pdata->rx_ring->buf_pool->id;
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_cle.h b/drivers/net/ethernet/apm/xgene/xgene_enet_cle.h
-index 1db2fd7..29a17ab 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_cle.h
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_cle.h
-@@ -34,6 +34,7 @@
- #define SPPTR0			0x0104
- #define DFCLSRESDBPTR0		0x0108
- #define DFCLSRESDB00		0x010c
-+#define RSS_CTRL0		0x0000013c
- 
- #define CLE_CMD_TO		10	/* ms */
- #define CLE_PKTRAM_SIZE		256	/* bytes */
-@@ -98,6 +99,9 @@
- 
- enum xgene_cle_ptree_nodes {
- 	PKT_TYPE_NODE,
-+	PKT_PROT_NODE,
-+	RSS_IPV4_TCP_NODE,
-+	RSS_IPV4_UDP_NODE,
- 	LAST_NODE,
- 	MAX_NODES
- };
-@@ -137,6 +141,8 @@ enum xgene_cle_parser {
- #define XGENE_CLE_DRAM(type)	(((type) & 0xf) << 28)
- enum xgene_cle_dram_type {
- 	PKT_RAM,
-+	RSS_IDT,
-+	RSS_IPV4_HASH_SKEY,
- 	PTREE_RAM = 0xc,
- 	AVL_RAM,
- 	DB_RAM
-@@ -150,6 +156,22 @@ enum xgene_cle_cmd_type {
- 	CLE_CMD_AVL_SRCH = 32
- };
- 
-+enum xgene_cle_ipv4_rss_hashtype {
-+	RSS_IPV4_8B,
-+	RSS_IPV4_12B,
-+};
-+
-+enum xgene_cle_prot_type {
-+	XGENE_CLE_TCP,
-+	XGENE_CLE_UDP,
-+	XGENE_CLE_ESP,
-+	XGENE_CLE_OTHER
-+};
-+
-+enum xgene_cle_prot_version {
-+	XGENE_CLE_IPV4,
-+};
-+
- enum xgene_cle_ptree_dbptrs {
- 	DB_RES_DROP,
- 	DB_RES_DEF,
-@@ -157,6 +179,25 @@ enum xgene_cle_ptree_dbptrs {
- 	DB_MAX_PTRS
- };
- 
-+/* RSS sideband signal info */
-+#define SB_IPFRAG_POS	0
-+#define SB_IPFRAG_LEN	1
-+#define SB_IPPROT_POS	1
-+#define SB_IPPROT_LEN	2
-+#define SB_IPVER_POS	3
-+#define SB_IPVER_LEN	1
-+#define SB_HDRLEN_POS	4
-+#define SB_HDRLEN_LEN	12
-+
-+/* RSS indirection table */
-+#define XGENE_CLE_IDT_ENTRIES	128
-+#define IDT_DSTQID_POS		0
-+#define IDT_DSTQID_LEN		12
-+#define IDT_FPSEL_POS		12
-+#define IDT_FPSEL_LEN		4
-+#define IDT_NFPSEL_POS		16
-+#define IDT_NFPSEL_LEN		4
-+
- struct xgene_cle_ptree_branch {
- 	bool valid;
- 	u16 next_packet_pointer;
--- 
-1.9.1
+Indeed, I noticed those compatible strings after I sent that message.
+
+A property seems the more ideal/desired way to go. However, to avoid 
+breaking older DTs, does that mean it must be implemented as assuming 
+inversion is default, and set nyan and other boards to "hd-invert = 0"?
