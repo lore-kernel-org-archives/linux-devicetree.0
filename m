@@ -1,7 +1,7 @@
 From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] dt-bindings: Add documentation for Broadcom Vulcan
-Date: Sun, 14 Feb 2016 00:16:33 +0530
-Message-ID: <1455389195-31870-3-git-send-email-jchandra@broadcom.com>
+Subject: [PATCH 3/4] arm64: defconfig: Add Broadcom Vulcan to defconfig
+Date: Sun, 14 Feb 2016 00:16:34 +0530
+Message-ID: <1455389195-31870-4-git-send-email-jchandra@broadcom.com>
 References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455389195-31870-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -10,43 +10,26 @@ To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon 
 Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update arm/cpus.txt to add brcm,vulcan CPU. Add documentation
-for Broadcom vulcan boards in arm/bcm/brcm,vulcan.txt
+Enable Broadcom Vulcan support in arm64 default configuration. This will
+build the device tree needed to boot on a Broadcom Vulcan board.
 
 Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt | 9 +++++++++
- Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
- 2 files changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
-new file mode 100644
-index 0000000..dac9eb5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
-@@ -0,0 +1,9 @@
-+Broadcom Vulcan device tree bindings
-+------------------------------------
-+
-+Boards with Broadcom Vulcan shall have the following properties:
-+
-+Required root node property:
-+
-+Vulcan Evaluation Board
-+compatible = "brcm,vulcan-eval", "brcm,vulcan";
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index ae9be07..bc43ad7 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -167,6 +167,7 @@ nodes to be present and contain the properties described below.
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
- 			    "brcm,brahma-b15"
-+			    "brcm,vulcan"
- 			    "cavium,thunder"
- 			    "faraday,fa526"
- 			    "intel,sa110"
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 86581f7..6c1b3a6 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -47,6 +47,7 @@ CONFIG_ARCH_SPRD=y
+ CONFIG_ARCH_THUNDER=y
+ CONFIG_ARCH_UNIPHIER=y
+ CONFIG_ARCH_VEXPRESS=y
++CONFIG_ARCH_VULCAN=y
+ CONFIG_ARCH_XGENE=y
+ CONFIG_ARCH_ZYNQMP=y
+ CONFIG_PCI=y
 -- 
 1.9.1
 
