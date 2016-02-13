@@ -1,46 +1,49 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: Re: [PATCH 3/3] drm: panel-simple: implement URT UMSH-8596MD-xT panel
- support
-Date: Sat, 13 Feb 2016 22:46:59 +0100
-Message-ID: <56BFA453.6020203@maciej.szmigiero.name>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Subject: [PATCH 1/2] dt-bindings: Add URT UMSH-8596MD-xT panel bindings
+Date: Sat, 13 Feb 2016 22:50:24 +0100
+Message-ID: <56BFA520.3090302@maciej.szmigiero.name>
 References: <5615885C.5050505@maciej.szmigiero.name> <20151008082444.GC3820@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20151008082444.GC3820@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Add DT bindings for United Radiant Technology
+UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
 
-On 08.10.2015 10:24, Thierry Reding wrote:
-> On Wed, Oct 07, 2015 at 11:02:20PM +0200, Maciej S. Szmigiero wrote:
->> This patch implements support for United Radiant Technology
->> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels in DRM panel-simple
->> driver.
->>
->> Signed-off-by: Maciej Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
->> ---
->> This replaces "drm: panel-simple: add URT UMSH-8596MD-xT panel support"
->> submission.
->>
->>  drivers/gpu/drm/panel/panel-simple.c | 54 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 54 insertions(+)
-> 
-> Looks good to me. I'll wait for Rob or anyone else to ack the vendor
-> prefix before merging this.
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
+This replaces "of: add URT UMSH-8596MD-xT panel DT bindings"
+submission.
 
-Now the vendor prefix has been acked, but because some files have moved
-since these patches were originally submitted I will update and resubmit them.
+ .../bindings/display/panel/urt,umsh-8596md.txt           | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/urt,umsh-8596md.txt
 
-> Thierry
- 
-Maciej
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/display/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/display/panel/urt,umsh-8596md.txt
+new file mode 100644
+index 000000000000..088a6cea5015
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/urt,umsh-8596md.txt
+@@ -0,0 +1,16 @@
++United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
++
++Supported are LVDS versions (-11T, -19T) and parallel ones
++(-T, -1T, -7T, -20T).
++
++Required properties:
++- compatible: should be one of:
++  "urt,umsh-8596md-t",
++  "urt,umsh-8596md-1t",
++  "urt,umsh-8596md-7t",
++  "urt,umsh-8596md-11t",
++  "urt,umsh-8596md-19t",
++  "urt,umsh-8596md-20t".
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
