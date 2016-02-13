@@ -1,51 +1,173 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] ASoC: bcm2835: move to use the clock framework
-Date: Sat, 13 Feb 2016 09:51:21 +0100
-Message-ID: <A3C029B5-816E-4EC3-823D-6755ECD4773B@martin.sperl.org>
-References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org> <1452602149-5875-2-git-send-email-kernel@martin.sperl.org> <87vb6dfjbu.fsf@eliezer.anholt.net> <56B88520.5060606@martin.sperl.org> <87bn7l3085.fsf@eliezer.anholt.net>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] add support for DWC UFS Host Controller
+Date: Sat, 13 Feb 2016 22:27:24 +0900
+Message-ID: <CAC5umyh6VGfsD+CzuimiMCum=E4UrA0rGj7pgPaRLO_aVen-gQ@mail.gmail.com>
+References: <cover.1455192008.git.jpinto@synopsys.com>
+	<ee97e9b0ece0d819debe403c752d233c6267e02e.1455192008.git.jpinto@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87bn7l3085.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+In-Reply-To: <ee97e9b0ece0d819debe403c752d233c6267e02e.1455192008.git.jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gilad Broner <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joao,
 
-> On 13.02.2016, at 01:47, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
-> 
-> Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> writes:
->> 
->> Problem is that we need the VC4 bus-address (0x7e203000),
->> which is the actual <reg> value from the device tree without any
->> mapping.
->> 
->> Not the ARM MMU visible address mappings that mem->start provides
->> (typically 0x20203000 or 0x3f203000 for bcm2836)
->> 
->> Nor the mapped address (base) available in the kernel (typically
->> 0xdc......).
-> 
-> Now that I've noticed the BCM2835_VCMMU_SHIFT removal, this makes sense,
-> but when you put unrelated changes like this together you end up slowing
-> down the review process on your patches.  Please separate it out into a
-> separate commit.
+2016-02-11 21:13 GMT+09:00 Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>:
+> +static int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
+> +{
+> +       int ret = 0;
+> +
+> +       /* Local side Configuration */
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +
+> +       /* Peer side Configuration */
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +out:
+> +       return ret;
+> +}
 
-OK - I agree: I really should have separated those, but as the
-driver was broken for both reasons and the MMU_SHIFT was the earliest
-fix I forgot about it when I got the final version for submission.
+This looks a bit redundant.  The most part of the functions in this file is
+doing ufshcd_dme_set() or ufshcd_dme_peer_set(), so should we
+introduce ufshcd_dme_set_attrs() like below?  It will also increase
+readability.
 
-Anyway: Mark has already applied this patch on January 15th into for-next:
-https://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/commit/sound/soc/bcm/bcm2835-i2s.c?h=for-next&id=517e7a1537ae4663268be5d0c0ec62c563b9fc99
-so it should go into the next release...
+struct ufshcd_dme_attr_val {
+        u32 attr_sel;
+        u32 mib_val;
+        u8 peer;
+};
 
-So unless Mark wants to revert it and have two separate patches
-instead, I guess we need to leave it like it is.
+int ufshcd_dme_set_attrs(struct ufs_hba *hba,
+                        const struct ufshcd_dme_attr_val *v, int n)
+{
+        for (i = 0; i < n; i++) {
+                int ret = ufshcd_dme_set_attr(hba, v[i].attr_sel, ...);
 
-Martin
+                if (ret)
+                        return ret;
+        }
+        return 0;
+}
 
+static int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
+{
+        const struct ufshcd_dme_attr setup_attrs[] = {
+                { UIC_ARG_MIB(T_CONNECTIONSTATE), 0, DME_LOCAL },
+                { UIC_ARG_MIB(T_DEVICEID), 0, DME_LOCAL },
+                ...
+        };
+
+        return ufshcd_dme_set_attrs(hba, setup_attrs, ARRAY_SIZE(setup_attrs));
+}
+
+> +static int ufshcd_dwc_setup_tc(struct ufs_hba *hba)
+> +{
+> +       int ret = 0;
+> +
+> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+> +       dev_info(hba->dev, "Configuring Test Chip 40-bit RMMI");
+> +       ret = ufshcd_dwc_setup_40bit_rmmi(hba);
+> +       if (ret) {
+> +               dev_err(hba->dev, "Configuration failed");
+
+Please add \n in the end of message.
+(and there are same issues in this file)
+
+> +
+> +/* Clock Divider Values: Hex equivalent of frequency in MHz */
+> +enum clk_div_values {
+> +       UFSHCD_CLK_DIV_62_5     = 0x3e,
+> +       UFSHCD_CLK_DIV_125      = 0x7d,
+> +       UFSHCD_CLK_DIV_200      = 0xc8,
+> +};
+
+This is used as register value for DWC_UFS_REG_HCLKDIV.  So should they
+have similar prefix (DWC_UFS_REG_HCLKDIV_*)?
+
+> diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+
+...
+
+> +/*Other attributes*/
+> +#define VS_MPHYCFGUPDT         0xD085
+> +#define VS_DEBUGOMC            0xD09E
+> +#define VS_POWERSTATE          0xD083
+
+Are these vendor specific attributes?  If so, please move them to
+ufshci-dwc.h.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
