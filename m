@@ -1,101 +1,52 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: [PATCH 2/2] drm/panel: simple: Add URT UMSH-8596MD-xT panels support
-Date: Sat, 13 Feb 2016 22:52:03 +0100
-Message-ID: <56BFA583.4040902@maciej.szmigiero.name>
-References: <5615885C.5050505@maciej.szmigiero.name> <20151008082444.GC3820@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 02/10] MIPS: dts: qca: ar9132: fix typo: "ppl" -> "pll"
+Date: Sun, 14 Feb 2016 00:58:09 +0300
+Message-ID: <1455400697-29898-3-git-send-email-antonynpavlov@gmail.com>
+References: <1455400697-29898-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151008082444.GC3820@ulmo>
+In-Reply-To: <1455400697-29898-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for United Radiant Technology UMSH-8596MD-xT
-7.0" WVGA TFT LCD panels in DRM panel-simple driver.
-
-Signed-off-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-This replaces "drm: panel-simple: implement URT UMSH-8596MD-xT panel support"
-submission.
+ Documentation/devicetree/bindings/clock/qca,ath79-pll.txt | 2 +-
+ arch/mips/boot/dts/qca/ar9132.dtsi                        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- drivers/gpu/drm/panel/panel-simple.c | 54 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f88a631c43ab..6530c1ffca2c 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1176,6 +1176,42 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
+diff --git a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+index ae99f22..241fb05 100644
+--- a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
++++ b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+@@ -22,7 +22,7 @@ Optional properties:
+ Example:
  
-+static const struct display_timing urt_umsh_8596md_timing = {
-+	.pixelclock = { 33260000, 33260000, 33260000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 41, 41, 41 },
-+	.hback_porch = { 216 - 128, 216 - 128, 216 - 128 },
-+	.hsync_len = { 71, 128, 128 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 10, 10, 10 },
-+	.vback_porch = { 35 - 2, 35 - 2, 35 - 2 },
-+	.vsync_len = { 2, 2, 2 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE |
-+		DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
-+};
-+
-+static const struct panel_desc urt_umsh_8596md_lvds = {
-+	.timings = &urt_umsh_8596md_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-+};
-+
-+static const struct panel_desc urt_umsh_8596md_parallel = {
-+	.timings = &urt_umsh_8596md_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+};
-+
- static const struct of_device_id platform_of_match[] = {
- 	{
- 		.compatible = "ampire,am800480r3tmqwa1h",
-@@ -1280,6 +1316,24 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "shelly,sca07010-bfn-lnn",
- 		.data = &shelly_sca07010_bfn_lnn,
- 	}, {
-+		.compatible = "urt,umsh-8596md-t",
-+		.data = &urt_umsh_8596md_parallel,
-+	}, {
-+		.compatible = "urt,umsh-8596md-1t",
-+		.data = &urt_umsh_8596md_parallel,
-+	}, {
-+		.compatible = "urt,umsh-8596md-7t",
-+		.data = &urt_umsh_8596md_parallel,
-+	}, {
-+		.compatible = "urt,umsh-8596md-11t",
-+		.data = &urt_umsh_8596md_lvds,
-+	}, {
-+		.compatible = "urt,umsh-8596md-19t",
-+		.data = &urt_umsh_8596md_lvds,
-+	}, {
-+		.compatible = "urt,umsh-8596md-20t",
-+		.data = &urt_umsh_8596md_parallel,
-+	}, {
- 		/* sentinel */
- 	}
- };
+ 	pll-controller@18050000 {
+-		compatible = "qca,ar9132-ppl", "qca,ar9130-pll";
++		compatible = "qca,ar9132-pll", "qca,ar9130-pll";
+ 		reg = <0x18050000 0x20>;
+ 
+ 		clock-names = "ref";
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+index 3ad4ba9..3c2ed9e 100644
+--- a/arch/mips/boot/dts/qca/ar9132.dtsi
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -83,7 +83,7 @@
+ 			};
+ 
+ 			pll: pll-controller@18050000 {
+-				compatible = "qca,ar9132-ppl",
++				compatible = "qca,ar9132-pll",
+ 						"qca,ar9130-pll";
+ 				reg = <0x18050000 0x20>;
+ 
+-- 
+2.7.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
