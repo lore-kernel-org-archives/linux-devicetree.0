@@ -1,53 +1,44 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 01/10] dt-bindings: clock: qca,ath79-pll: fix copy-paste typos
-Date: Sun, 14 Feb 2016 00:58:08 +0300
-Message-ID: <1455400697-29898-2-git-send-email-antonynpavlov@gmail.com>
-References: <1455400697-29898-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455400697-29898-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: dts: porter: remove enable prop from HS-USB device node
+Date: Sun, 14 Feb 2016 01:26:34 +0300
+Message-ID: <2684686.0L09MeB6pA@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In  the final versions of the Porter board (called "PORTER_C") Renesas
+decided to get rid  of the Maxim Integrated MAX3355 OTG chip and didn't
+add any other provision to differ the host/gadget mode, so we'll have to
+remove  no longer valid "renesas,enable-gpio" property from the HS-USB
+device node.  Hopefully, the earlier revisions of the board were never
+seen in the wild...
+
+Fixes: c794f6a09a25 ("ARM: shmobile: porter: add HS-USB DT support")
+Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- Documentation/devicetree/bindings/clock/qca,ath79-pll.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This patch is against the 'master' branch of Simon Horman's 'renesas.git' repo.
 
-diff --git a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-index e0fc2c1..ae99f22 100644
---- a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-+++ b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
-@@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9XXX PLL controller
- The PPL controller provides the 3 main clocks of the SoC: CPU, DDR and AHB.
- 
- Required Properties:
--- compatible: has to be "qca,<soctype>-cpu-intc" and one of the following
-+- compatible: has to be "qca,<soctype>-pll" and one of the following
-   fallbacks:
-   - "qca,ar7100-pll"
-   - "qca,ar7240-pll"
-@@ -21,7 +21,7 @@ Optional properties:
- 
- Example:
- 
--	memory-controller@18050000 {
-+	pll-controller@18050000 {
- 		compatible = "qca,ar9132-ppl", "qca,ar9130-pll";
- 		reg = <0x18050000 0x20>;
- 
--- 
-2.7.0
+ arch/arm/boot/dts/r8a7791-porter.dts |    1 -
+ 1 file changed, 1 deletion(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -283,7 +283,6 @@
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
+-	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &usbphy {
