@@ -1,44 +1,47 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: porter: remove enable prop from HS-USB device node
-Date: Sun, 14 Feb 2016 01:26:34 +0300
-Message-ID: <2684686.0L09MeB6pA@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2 v2] devicetree: Add DTS file to support the Nexus7
+ 2013 (flo) device.
+Date: Sat, 13 Feb 2016 23:32:59 +0100
+Message-ID: <CACRpkdba6j9dfVbMN_Ddj2XY_du6H6RM6oj=suC2F9CkUQC61A@mail.gmail.com>
+References: <CAL_JsqL1koD3OWM4-cqEOJUz-yuZuUeg1tmp6V39mPE0zrNPgg@mail.gmail.com>
+	<1454700065-16256-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1454700065-16256-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@codeaurora.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In  the final versions of the Porter board (called "PORTER_C") Renesas
-decided to get rid  of the Maxim Integrated MAX3355 OTG chip and didn't
-add any other provision to differ the host/gadget mode, so we'll have to
-remove  no longer valid "renesas,enable-gpio" property from the HS-USB
-device node.  Hopefully, the earlier revisions of the board were never
-seen in the wild...
+On Fri, Feb 5, 2016 at 8:21 PM, John Stultz <john.stultz@linaro.org> wrote:
 
-Fixes: c794f6a09a25 ("ARM: shmobile: porter: add HS-USB DT support")
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> This patch adds a dts file to support the Nexus7 2013
+> device. Its based off of the qcom-apq8064-ifc6410.dts
+> which is similar hardware.
+>
+> Also includes some comments and context folded in
+> from Vinay Simha BN <simhavcs@gmail.com>
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Andy Gross <agross@codeaurora.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Vinay Simha BN <simhavcs@gmail.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2: Fix dts/dtb typeo in makefile pointed out by Rob
 
----
-This patch is against the 'master' branch of Simon Horman's 'renesas.git' repo.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
- arch/arm/boot/dts/r8a7791-porter.dts |    1 -
- 1 file changed, 1 deletion(-)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -283,7 +283,6 @@
- 	pinctrl-names = "default";
- 
- 	status = "okay";
--	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
- };
- 
- &usbphy {
+Yours,
+Linus Walleij
