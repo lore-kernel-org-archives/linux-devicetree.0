@@ -1,59 +1,48 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: [PATCH v6 3/3] arm64: dts: mailbox device tree node for APM X-Gene platform.
-Date: Fri, 12 Feb 2016 19:39:28 -0800
-Message-ID: <eeac516f6daa15b22a1c448160ed40991833035a.1455333720.git.dhdang@apm.com>
-References: <cover.1455333720.git.dhdang@apm.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 2/2 v2] devicetree: Add DTS file to support the Nexus7
+ 2013 (flo) device.
+Date: Fri, 12 Feb 2016 21:16:33 -0800
+Message-ID: <CALAqxLXCy9QHriAqP1VK-7ApYhSk+91Rfp5znt=BK_4k96k2AQ@mail.gmail.com>
+References: <CAL_JsqL1koD3OWM4-cqEOJUz-yuZuUeg1tmp6V39mPE0zrNPgg@mail.gmail.com>
+	<1454700065-16256-1-git-send-email-john.stultz@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1455333720.git.dhdang@apm.com>
-In-Reply-To: <cover.1455333720.git.dhdang@apm.com>
-References: <CANLsYkxPnFCuJLyKsHnXKdbvAwNurtgQgJ-WF+bD26+8EjkfJw@mail.gmail.com> <cover.1455333720.git.dhdang@apm.com>
+In-Reply-To: <1454700065-16256-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Paul Bolle <pebolle@tiscali.nl>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, Duc Dang <dhdang@apm.com>, Feng Kan <fkan@apm.com>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Mailbox device tree node for APM X-Gene platform.
+On Fri, Feb 5, 2016 at 11:21 AM, John Stultz <john.stultz@linaro.org> wrote:
+> This patch adds a dts file to support the Nexus7 2013
+> device. Its based off of the qcom-apq8064-ifc6410.dts
+> which is similar hardware.
+>
+> Also includes some comments and context folded in
+> from Vinay Simha BN <simhavcs@gmail.com>
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Andy Gross <agross@codeaurora.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Vinay Simha BN <simhavcs@gmail.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2: Fix dts/dtb typeo in makefile pointed out by Rob
 
-Signed-off-by: Feng Kan <fkan@apm.com>
-Signed-off-by: Duc Dang <dhdang@apm.com>
----
-Changes since v5:
-	- None
 
-Changes since v4:
-        - Rebase over v4.5-rc1
-        - Change node name to mailbox@10540000
+Ping?  Is there someone I'm missing on the CC list for this? Or is
+there some special submission process?
 
-Changes since v3:
-        - Rebase over v4.4
-
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index fe30f76..d91338a 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -691,6 +691,20 @@
- 			msi-parent = <&msi>;
- 		};
- 
-+		mailbox: mailbox@10540000 {
-+			compatible = "apm,xgene-slimpro-mbox";
-+			reg = <0x0 0x10540000 0x0 0xa000>;
-+			#mbox-cells = <1>;
-+			interrupts =    <0x0 0x0 0x4>,
-+					<0x0 0x1 0x4>,
-+					<0x0 0x2 0x4>,
-+					<0x0 0x3 0x4>,
-+					<0x0 0x4 0x4>,
-+					<0x0 0x5 0x4>,
-+					<0x0 0x6 0x4>,
-+					<0x0 0x7 0x4>;
-+		};
-+
- 		serial0: serial@1c020000 {
- 			status = "disabled";
- 			device_type = "serial";
--- 
-1.9.1
+thanks
+-john
