@@ -1,79 +1,50 @@
-From: "Sricharan" <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: RE: [PATCH V7 4/6] i2c: qup: Add bam dma capabilities
-Date: Sat, 13 Feb 2016 12:28:50 +0530
-Message-ID: <002e01d1662c$0579d640$106d82c0$@codeaurora.org>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org> <1453197766-18976-5-git-send-email-sricharan@codeaurora.org> <20160212183737.GA1520@katana>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] ASoC: bcm2835: move to use the clock framework
+Date: Sat, 13 Feb 2016 09:51:21 +0100
+Message-ID: <A3C029B5-816E-4EC3-823D-6755ECD4773B@martin.sperl.org>
+References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org> <1452602149-5875-2-git-send-email-kernel@martin.sperl.org> <87vb6dfjbu.fsf@eliezer.anholt.net> <56B88520.5060606@martin.sperl.org> <87bn7l3085.fsf@eliezer.anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160212183737.GA1520@katana>
-Content-Language: en-us
+In-Reply-To: <87bn7l3085.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Wolfram Sang' <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ntelkar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
 
-> -----Original Message-----
-> From: Wolfram Sang [mailto:wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org]
-> Sent: Saturday, February 13, 2016 12:08 AM
-> To: Sricharan R
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
-> dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; ntelkar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-> Subject: Re: [PATCH V7 4/6] i2c: qup: Add bam dma capabilities
+> On 13.02.2016, at 01:47, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
 > 
-> On Tue, Jan 19, 2016 at 03:32:44PM +0530, Sricharan R wrote:
-> > QUP cores can be attached to a BAM module, which acts as a dma engine
-> > for the QUP core. When DMA with BAM is enabled, the BAM consumer
-> pipe
-> > transmitted data is written to the output FIFO and the BAM producer
-> > pipe received data is read from the input FIFO.
-> >
-> > With BAM capabilities, qup-i2c core can transfer more than
-> > 256 bytes, without a 'stop' which is not possible otherwise.
-> >
-> > Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Reviewed-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Tested-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Tested-by: Telkar Nagender <ntelkar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> writes:
+>> 
+>> Problem is that we need the VC4 bus-address (0x7e203000),
+>> which is the actual <reg> value from the device tree without any
+>> mapping.
+>> 
+>> Not the ARM MMU visible address mappings that mem->start provides
+>> (typically 0x20203000 or 0x3f203000 for bcm2836)
+>> 
+>> Nor the mapped address (base) available in the kernel (typically
+>> 0xdc......).
 > 
-> My code checkers found some issues:
-> 
->     SPARSE
-> drivers/i2c/busses/i2c-qup.c:555:6: warning: symbol 'qup_sg_set_buf' was
-> not declared. Should it be static?
-> drivers/i2c/busses/i2c-qup.c:1243:50: warning: dubious: !x & !y
->     SMATCH
-> drivers/i2c/busses/i2c-qup.c:165 qup_sg_set_buf warn: unused return: s =
-> sg_next()
-> drivers/i2c/busses/i2c-qup.c:165 qup_sg_set_buf warn: unused return: s =
-> sg_next()
-> drivers/i2c/busses/i2c-qup.c:1243 qup_i2c_xfer_v2() warn: add some
-> parenthesis here?
->     CPPCHECK
-> drivers/i2c/busses/i2c-qup.c:1243: style: Boolean result is used in
-bitwise
-> operation. Clarify expression with parentheses.
->     SPATCH
-> drivers/i2c/busses/i2c-qup.c:1380:2-13: WARNING: Assignment of bool to 0/1
-> drivers/i2c/busses/i2c-qup.c:1481:1-13: WARNING: Assignment of bool to 0/1
->   CC      drivers/i2c/busses/i2c-qup.o
-> drivers/i2c/busses/i2c-qup.c:555:6: warning: no previous prototype for
-> 'qup_sg_set_buf' [-Wmissing-prototypes]  void qup_sg_set_buf(struct
-> scatterlist *sg, void *buf, struct qup_i2c_tag *tg,
-> 
-> Can you fix them and resend??
+> Now that I've noticed the BCM2835_VCMMU_SHIFT removal, this makes sense,
+> but when you put unrelated changes like this together you end up slowing
+> down the review process on your patches.  Please separate it out into a
+> separate commit.
 
-    Sorry on this , will resend this patch.
+OK - I agree: I really should have separated those, but as the
+driver was broken for both reasons and the MMU_SHIFT was the earliest
+fix I forgot about it when I got the final version for submission.
 
-Regards,
- Sricharan
+Anyway: Mark has already applied this patch on January 15th into for-next:
+https://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/commit/sound/soc/bcm/bcm2835-i2s.c?h=for-next&id=517e7a1537ae4663268be5d0c0ec62c563b9fc99
+so it should go into the next release...
+
+So unless Mark wants to revert it and have two separate patches
+instead, I guess we need to leave it like it is.
+
+Martin
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
