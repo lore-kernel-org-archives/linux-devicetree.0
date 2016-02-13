@@ -1,7 +1,7 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 05/10] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: drop unused alias node
-Date: Sun, 14 Feb 2016 00:58:12 +0300
-Message-ID: <1455400697-29898-6-git-send-email-antonynpavlov@gmail.com>
+Subject: [PATCH 01/10] dt-bindings: clock: qca,ath79-pll: fix copy-paste typos
+Date: Sun, 14 Feb 2016 00:58:08 +0300
+Message-ID: <1455400697-29898-2-git-send-email-antonynpavlov@gmail.com>
 References: <1455400697-29898-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455400697-29898-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,44 +10,40 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The TP-LINK TL-WR1043ND board has only one serial port,
-so replacing the default of 0 with 0 does nothing useful.
-
-Moreover, the correct name for aliases node is "aliases" not "alias".
-
-An overview of the "aliases" node usage can be found
-on the device tree usage page at devicetree.org [1].
-
-Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
-
-[1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-[2] https://www.power.org/documentation/epapr-version-1-1/
-
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ Documentation/devicetree/bindings/clock/qca,ath79-pll.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index e535ee3..c3069c3 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -9,10 +9,6 @@
- 	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
- 	model = "TP-Link TL-WR1043ND Version 1";
+diff --git a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+index e0fc2c1..ae99f22 100644
+--- a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
++++ b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+@@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9XXX PLL controller
+ The PPL controller provides the 3 main clocks of the SoC: CPU, DDR and AHB.
  
--	alias {
--		serial0 = "/ahb/apb/uart@18020000";
--	};
--
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x2000000>;
+ Required Properties:
+-- compatible: has to be "qca,<soctype>-cpu-intc" and one of the following
++- compatible: has to be "qca,<soctype>-pll" and one of the following
+   fallbacks:
+   - "qca,ar7100-pll"
+   - "qca,ar7240-pll"
+@@ -21,7 +21,7 @@ Optional properties:
+ 
+ Example:
+ 
+-	memory-controller@18050000 {
++	pll-controller@18050000 {
+ 		compatible = "qca,ar9132-ppl", "qca,ar9130-pll";
+ 		reg = <0x18050000 0x20>;
+ 
 -- 
 2.7.0
 
