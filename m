@@ -1,57 +1,38 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: ls2080a: Add quirk for Erratum A009116
-Date: Sun, 14 Feb 2016 16:47:14 +0800
-Message-ID: <20160214084714.GS6756@tiger>
-References: <1455059287-2500-1-git-send-email-Lijun.Pan@freescale.com>
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/6] arm64: hip05: update
+Date: Sun, 14 Feb 2016 16:54:18 +0800
+Message-ID: <56C040BA.4010701@huawei.com>
+References: <1454056746-5048-1-git-send-email-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455059287-2500-1-git-send-email-Lijun.Pan@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lijun Pan <Lijun.Pan@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rajesh.bhagat@freescale.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454056746-5048-1-git-send-email-wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 05:08:07PM -0600, Lijun Pan wrote:
-> Add "snps,quirk-frame-length-adjustment" property to
-> USB3 node for erratum A009116. This property provides
-> value of GFLADJ_30MHZ for post silicon frame length
-> adjustment.
-> 
-> Signed-off-by: Lijun Pan <Lijun.Pan@freescale.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
+Ping, any comments, thanks.
 
-Forgot to mention that arm64 patches use a different subject prefix from
-ARM ones.  I changed the patch subject to "arm64: dts: ..." when
-applying.
+On 2016/1/29 16:39, Kefeng Wang wrote:
+> Enable more feature in hip05 d02 board.
+> 
+> Kefeng Wang (6):
+>   arm64: dts: hip05: Add L2 cache topology
+>   arm64: dts: hip05: Use Cortex specific device node for pmu
+>   arm64: dts: hip05: Append all gicv3 ITS entries
+>   arm64: dts: hip05: Append gpio nodes
+>   arm64: dts: hip05: Append power button node for D02 board
+>   arm64: defconfig: Enable DesignWare APB GPIO controller
+> 
+>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts | 18 ++++++
+>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 92 ++++++++++++++++++++++++++++-
+>  arch/arm64/configs/defconfig                |  1 +
+>  3 files changed, 109 insertions(+), 2 deletions(-)
+> 
 
-Shawn
-
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 6e9e033..fa506f5 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -501,6 +501,7 @@
->  			reg = <0x0 0x3100000 0x0 0x10000>;
->  			interrupts = <0 80 0x4>; /* Level high type */
->  			dr_mode = "host";
-> +			snps,quirk-frame-length-adjustment = <0x20>;
->  		};
->  
->  		usb1: usb3@3110000 {
-> @@ -509,6 +510,7 @@
->  			reg = <0x0 0x3110000 0x0 0x10000>;
->  			interrupts = <0 81 0x4>; /* Level high type */
->  			dr_mode = "host";
-> +			snps,quirk-frame-length-adjustment = <0x20>;
->  		};
->  
->  		ccn@4000000 {
-> -- 
-> 1.7.9.5
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
