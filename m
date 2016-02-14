@@ -1,195 +1,58 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 06/10] MIPS: dts: qca: ar9132: use short references for
- uart, usb and spi nodes
-Date: Sun, 14 Feb 2016 22:24:45 +0100
-Message-ID: <20160214222445.6eee4365@tock>
-References: <1455400697-29898-1-git-send-email-antonynpavlov@gmail.com>
-	<1455400697-29898-7-git-send-email-antonynpavlov@gmail.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH v2 2/4] regulator: lp872x: Add enable GPIO pin support
+Date: Mon, 15 Feb 2016 08:31:02 +0900
+Message-ID: <56C10E36.1030808@ti.com>
+References: <1454697741-8687-1-git-send-email-contact@paulk.fr>
+ <1454697741-8687-3-git-send-email-contact@paulk.fr> <56BD23ED.8010207@ti.com>
+ <1455301532.2760.1.camel@collins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455400697-29898-7-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455301532.2760.1.camel@collins>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Kocialkowski <contact@paulk.fr>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 14 Feb 2016 00:58:13 +0300
-Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 2/13/2016 3:25 AM, Paul Kocialkowski wrote:
+>>> > >+
+>>> > >+	/* Always set enable GPIO high. */
+>>> > >+	ret = devm_gpio_request_one(lp->dev, gpio, GPIOF_OUT_INIT_HIGH, "LP872X EN");
+>>> > >+	if (ret) {
+>>> > >+		dev_err(lp->dev, "gpio request err: %d\n", ret);
+>>> > >+		return ret;
+>>> > >+	}
+>>> > >+
+>>> > >+	/* Each chip has a different enable delay. */
+>>> > >+	if (lp->chipid == LP8720)
+>>> > >+		usleep_range(LP8720_ENABLE_DELAY, 1.5 * LP8720_ENABLE_DELAY);
+>>> > >+	else
+>>> > >+		usleep_range(LP8725_ENABLE_DELAY, 1.5 * LP8725_ENABLE_DELAY);
+>>> > >+
+>>> > >+	return 0;
+>>> > >+}
+>>> > >+
+>>> > >   static int lp872x_config(struct lp872x *lp)
+>>> > >   {
+>>> > >   	struct lp872x_platform_data *pdata = lp->pdata;
+>>> > >@@ -875,6 +903,8 @@ static struct lp872x_platform_data
+>>> > >   	of_property_read_u8(np, "ti,dvs-state", &dvs_state);
+>>> > >   	pdata->dvs->init_state = dvs_state ? DVS_HIGH : DVS_LOW;
+>>> > >
+>>> > >+	pdata->enable_gpio = of_get_named_gpio(np, "enable-gpios", 0);
+>> >
+>> >Please move this code to lp872x_populate_pdata_from_dt().
+> This already adds it in lp872x_populate_pdata_from_dt (see the context
+> around the insertion).
 
-> Here are some Sascha Hauer's arguments for using aliases in the dts
-> files:
-> 
->  - using aliases reduces the number of indentations in dts files;
-> 
->  - dts files become independent of the layout of the dtsi files
->    (it becomes possible to introduce another bus {} hierarchy between
->    a toplevel bus and the devices when you have to);
-> 
->  - less chances for typos. if &i2c2 does not exist you get an error.
->    If instead you duplicate the whole path in the dts file a typo
->    in the path will just create another node.
-> 
-> Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  arch/mips/boot/dts/qca/ar9132.dtsi               |  6 +-
->  arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 82 ++++++++++++------------
->  2 files changed, 44 insertions(+), 44 deletions(-)
-> 
-> diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-> index 3c2ed9e..511cb4d 100644
-> --- a/arch/mips/boot/dts/qca/ar9132.dtsi
-> +++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-> @@ -52,7 +52,7 @@
->  				#qca,ddr-wb-channel-cells = <1>;
->  			};
->  
-> -			uart@18020000 {
-> +			uart: uart@18020000 {
->  				compatible = "ns8250";
->  				reg = <0x18020000 0x20>;
->  				interrupts = <3>;
+Ah, sorry. Your patch is correct.
 
-Please also add a label for the watchdog, then all devices would be
-covered.
+> I don't know why the diff makes it seem like it's added in
+> lp872x_config. It's really not.
 
-> @@ -125,7 +125,7 @@
->  			};
->  		};
->  
-> -		usb@1b000100 {
-> +		usb: usb@1b000100 {
->  			compatible = "qca,ar7100-ehci", "generic-ehci";
->  			reg = <0x1b000100 0x100>;
->  
-> @@ -140,7 +140,7 @@
->  			status = "disabled";
->  		};
->  
-> -		spi@1f000000 {
-> +		spi: spi@1f000000 {
->  			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
->  			reg = <0x1f000000 0x10>;
->  
-> diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> index c3069c3..9528ebd 100644
-> --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-> @@ -22,51 +22,10 @@
->  
->  	ahb {
->  		apb {
-> -			uart@18020000 {
-> -				status = "okay";
-> -			};
-> -
->  			pll-controller@18050000 {
->  				clocks = <&extosc>;
->  			};
->  		};
+I think it was from a line break of lp872x_populate_pdata_from_dt().
+Let me add my ACK to this patch. Thank you.
 
-Better use a reference for the PLL clock too.
-
-> -
-> -		usb@1b000100 {
-> -			status = "okay";
-> -		};
-> -
-> -		spi@1f000000 {
-> -			status = "okay";
-> -			num-cs = <1>;
-> -
-> -			flash@0 {
-> -				#address-cells = <1>;
-> -				#size-cells = <1>;
-> -				compatible = "s25sl064a";
-> -				reg = <0>;
-> -				spi-max-frequency = <25000000>;
-> -
-> -				partition@0 {
-> -					label = "u-boot";
-> -					reg = <0x000000 0x020000>;
-> -				};
-> -
-> -				partition@1 {
-> -					label = "firmware";
-> -					reg = <0x020000 0x7D0000>;
-> -				};
-> -
-> -				partition@2 {
-> -					label = "art";
-> -					reg = <0x7F0000 0x010000>;
-> -					read-only;
-> -				};
-> -			};
-> -		};
-> -	};
-> -
-> -	usb-phy {
-> -		status = "okay";
->  	};
->  
->  	gpio-keys {
-> @@ -114,3 +73,44 @@
->  		};
->  	};
->  };
-> +
-> +&uart {
-> +	status = "okay";
-> +};
-> +
-> +&usb {
-> +	status = "okay";
-> +};
-> +
-> +&usb_phy {
-> +	status = "okay";
-> +};
-> +
-> +&spi {
-> +	status = "okay";
-> +	num-cs = <1>;
-> +
-> +	flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "s25sl064a";
-> +		reg = <0>;
-> +		spi-max-frequency = <25000000>;
-> +
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x000000 0x020000>;
-> +		};
-> +
-> +		partition@1 {
-> +			label = "firmware";
-> +			reg = <0x020000 0x7D0000>;
-> +		};
-> +
-> +		partition@2 {
-> +			label = "art";
-> +			reg = <0x7F0000 0x010000>;
-> +			read-only;
-> +		};
-
-Looses partitions like this are now deprecated, we could take the
-opportunity to move to the new scheme. We just have to put all the
-"partition" nodes under a "partitions" node with a proper compatible and
-#address-cells and #size-cells.
-
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Milo
