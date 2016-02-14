@@ -1,34 +1,27 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V3 1/5] clk: imx: Add clock support for imx6qp
-Date: Sun, 14 Feb 2016 11:21:03 +0800
-Message-ID: <20160214032103.GD6756@tiger>
-References: <1454407298-15545-1-git-send-email-ping.bai@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: Add dts for Uniwest evi
+Date: Sun, 14 Feb 2016 11:28:27 +0800
+Message-ID: <20160214032827.GF6756@tiger>
+References: <1454491459.3415.6.camel@pengutronix.de>
+ <1454521065-14241-1-git-send-email-stillcompiling@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454407298-15545-1-git-send-email-ping.bai@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Bai Ping <ping.bai@nxp.com>
-Cc: kernel@pengutronix.de, pawel.moll@arm.com, robh+dt@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, jacky.baip@gmail.com
+In-Reply-To: <1454521065-14241-1-git-send-email-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 02, 2016 at 06:01:34PM +0800, Bai Ping wrote:
-> most of the clock tree structures on i.MX6 Quad Plus are
-> same as on i.MX6Q. there still some differences between
-> these two SOCs. compared to the i.XM6Q, the differents of
-> clocks on i.MX6QP is mainly on:
+On Wed, Feb 03, 2016 at 09:37:45AM -0800, Joshua Clayton wrote:
+> Uniwest evi is a portable electrical eddy current non-destructive
+> testing device.
 > 
-> 1. New clock gate added to support the PRE and PRG modules
-> 2. 24MHz OSC clock option added to the UART, IPG, ECSPI, and
->    CAN clock roots.
-> 3. MMDC channel 1 clock gate is now controllable.
-> 4. clock gating added to the LDB_DIx_IPU clocks on i.MX6QP
-> 5. EMI clock root divider fix
-> 6. other updates fo CSCMRx, CSCDRx and CS2CDR registers.
-> 
-> detailed infomation, please refer to the i.MX6QP RM.
-> 
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied all, thanks.
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
