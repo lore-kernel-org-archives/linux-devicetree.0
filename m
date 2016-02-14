@@ -1,57 +1,57 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: devicetree: add Freescale SCC bindings
-Date: Sun, 14 Feb 2016 15:55:57 +0800
-Message-ID: <20160214075557.GP6756@tiger>
-References: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Lars Persson <lars.persson@axis.com>
+Subject: Re: [PATCH 1/2] clk: add device tree binding for artpec-6 pll1 clock
+Date: Sun, 14 Feb 2016 09:03:06 +0100
+Message-ID: <56C034BA.7070806@axis.com>
+References: <cover.1455206007.git.larper@axis.com> <2686b3bbb9ec1c86828b365645bd7f997a9780b4.1455206007.git.larper@axis.com> <20160212163916.GA7677@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160212163916.GA7677@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 03:04:43PM +0100, Steffen Trumtrar wrote:
-> Add documentation for the Freescale Security Controller (SCC)
-> found on i.MX25 SoCs.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> ---
->  .../devicetree/bindings/crypto/fsl-imx-scc.txt          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> new file mode 100644
-> index 000000000000..9a15ab8da94f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> @@ -0,0 +1,17 @@
-> +Freescale Security Controller (SCC)
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,imx25-scc".
-> +- reg : Should contain register location and length.
-> +- interrupts : Should contain interrupt numbers for SCM IRQ and SMN IRQ.
-> +
-> +Example:
-> +
-> +	scc: crypto@53fac000 {
-> +		compatible = "fsl,imx25-scc";
-> +		reg = <0x53fac000 0x4000>;
-> +		clocks = <&clks 111>;
-> +		clock-names = "ipg";
 
-Shouldn't these two be mentioned in properties list above too?
 
-Shawn
+On 02/12/2016 05:39 PM, Rob Herring wrote:
+> On Thu, Feb 11, 2016 at 05:01:03PM +0100, Lars Persson wrote:
+>> Add device tree documentation for the main PLL in the Artpec-6 SoC.
+> Roughly how many clocks does this SoC have?
+It will have 17 clocks declared in the device tree and three 
+SoC-specific clock drivers.
 
-> +		interrupts = <49>, <50>;
-> +		interrupt-names = "scm", "smn";
-> +	};
-> -- 
-> 2.7.0.rc3
-> 
-> 
+>
+>> Signed-off-by: Lars Persson <larper@axis.com>
+>> ---
+>>   Documentation/devicetree/bindings/clock/artpec6.txt | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
+>> new file mode 100644
+>> index 0000000..521fec8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
+>> @@ -0,0 +1,16 @@
+>> +* Clock bindings for Axis ARTPEC-6 chip
+>> +
+>> +Required properties:
+>> +- #clock-cells: Should be <0>
+>> +- compatible: Should be "axis,artpec6-pll1-clock"
+>> +- reg: Address and length of the DEVSTAT register.
+>> +- clocks: The PLL's input clock.
+>> +
+>> +Examples:
+>> +
+>> +pll1_clk: pll1_clk {
+>> +	#clock-cells = <0>;
+>> +	compatible = "axis,artpec6-pll1-clock";
+>> +	reg = <0xf8000000 4>;
+>> +	clocks = <&ext_clk>;
+>> +};
+>> -- 
+>> 2.1.4
+>>
+
