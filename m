@@ -1,48 +1,25 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1 v3] ARM: dts: imx6dlq-wandboard-revb1.dts: use unique
- model id
-Date: Sun, 14 Feb 2016 15:02:39 +0800
-Message-ID: <20160214070239.GI6756@tiger>
-References: <56B7E06B.2060701@gmx.de>
- <1454892908-26975-1-git-send-email-xypron.glpk@gmx.de>
+Subject: Re: [PATCH] ARM: dts: ls2080a: Add quirk for Erratum A009116
+Date: Sun, 14 Feb 2016 15:42:18 +0800
+Message-ID: <20160214074218.GL6756@tiger>
+References: <1455059287-2500-1-git-send-email-Lijun.Pan@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1454892908-26975-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+In-Reply-To: <1455059287-2500-1-git-send-email-Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, George Joseph <george.joseph-H+B1fhQ+CpcEVd8bySq3Wg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Fabio Estevam <fabio.estevam-vgrsnd+bvIE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lijun Pan <Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajesh.bhagat-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 01:55:08AM +0100, Heinrich Schuchardt wrote:
-> Downstream packages like Debian flash-kernel use
-> /proc/device-tree/model
-> to determine which dtb file to install.
+On Tue, Feb 09, 2016 at 05:08:07PM -0600, Lijun Pan wrote:
+> Add "snps,quirk-frame-length-adjustment" property to
+> USB3 node for erratum A009116. This property provides
+> value of GFLADJ_30MHZ for post silicon frame length
+> adjustment.
 > 
-> Hence each dts in the Linux kernel should provide a unique model
-> identifier.
-> 
-> Commit 8536239e371f ("ARM: dts: Restructure imx6qdl-wandboard.dtsi for new
-> rev C1 board.")' created new files imx6dl-wandboard-revb1.dts and
-> imx6q-wandboard-revb1.dts but used the same model identifier as in
-> imx6dl-wandboard.dts and imx6q-wandboard.dts.
-> 
-> This patch provides unique model identifiers for revision B1 of
-> the Wandboard Dual and Wandbaord Quad.
-> 
-> The patch leaves imx6dl-wandboard.dts and imx6q-wandboard.dts unchanged
-> because it is not foreseeable if the same dts will valid for future
-> board revisions or not. Furthermore we should avoid unnecessary
-> changes.
-> 
-> v3:
-> 	update imx6dl-wandboard-revb1.dts
-> 
-> v2:
-> 	correct name of referenced Debian package
-> 
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+> Signed-off-by: Lijun Pan <Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
 Applied, thanks.
 --
