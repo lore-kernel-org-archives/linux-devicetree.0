@@ -1,47 +1,23 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2 v2] devicetree: Add DTS file to support the Nexus7
- 2013 (flo) device.
-Date: Sat, 13 Feb 2016 23:32:59 +0100
-Message-ID: <CACRpkdba6j9dfVbMN_Ddj2XY_du6H6RM6oj=suC2F9CkUQC61A@mail.gmail.com>
-References: <CAL_JsqL1koD3OWM4-cqEOJUz-yuZuUeg1tmp6V39mPE0zrNPgg@mail.gmail.com>
-	<1454700065-16256-1-git-send-email-john.stultz@linaro.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 7/8] ARM: dts: imx25: Add TSC and ADC support
+Date: Sun, 14 Feb 2016 09:57:24 +0800
+Message-ID: <20160214015724.GA6756@tiger>
+References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de>
+ <1450101234-2191-8-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1454700065-16256-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, Andy Gross <agross@codeaurora.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450101234-2191-8-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 5, 2016 at 8:21 PM, John Stultz <john.stultz@linaro.org> wrote:
+On Mon, Dec 14, 2015 at 02:53:53PM +0100, Markus Pargmann wrote:
+> From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-> This patch adds a dts file to support the Nexus7 2013
-> device. Its based off of the qcom-apq8064-ifc6410.dts
-> which is similar hardware.
->
-> Also includes some comments and context folded in
-> from Vinay Simha BN <simhavcs@gmail.com>
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Andy Gross <agross@codeaurora.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Vinay Simha BN <simhavcs@gmail.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stephen Boyd <stephen.boyd@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2: Fix dts/dtb typeo in makefile pointed out by Rob
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Applied #7 and #8, thanks.
