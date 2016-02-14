@@ -1,28 +1,28 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ls2080a: Add quirk for Erratum A009116
-Date: Sun, 14 Feb 2016 15:42:18 +0800
-Message-ID: <20160214074218.GL6756@tiger>
-References: <1455059287-2500-1-git-send-email-Lijun.Pan@freescale.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: vf610twr: assign Ethernet clock explicitly
+Date: Sun, 14 Feb 2016 15:49:16 +0800
+Message-ID: <20160214074916.GN6756@tiger>
+References: <1455148946-26903-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455059287-2500-1-git-send-email-Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lijun Pan <Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajesh.bhagat-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <1455148946-26903-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 09, 2016 at 05:08:07PM -0600, Lijun Pan wrote:
-> Add "snps,quirk-frame-length-adjustment" property to
-> USB3 node for erratum A009116. This property provides
-> value of GFLADJ_30MHZ for post silicon frame length
-> adjustment.
+On Wed, Feb 10, 2016 at 04:02:25PM -0800, Stefan Agner wrote:
+> Assign Ethernet clock parents explicitly. The VF610 Tower Board
+> uses the external Ethernet clock input which is connected to
+> a 50MHz clock.
 > 
-> Signed-off-by: Lijun Pan <Lijun.Pan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> The Vybrid SoC has two ethernet interfaces (fec0 and fec1) which
+> use the same clock source (VF610_CLK_ENET). Therefore this parent
+> configuration affects multiple consumer devices and need to be
+> specified in the clock provider node.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied both, thanks.
