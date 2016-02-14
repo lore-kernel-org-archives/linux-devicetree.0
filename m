@@ -1,28 +1,57 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: vf610twr: assign Ethernet clock explicitly
-Date: Sun, 14 Feb 2016 15:49:16 +0800
-Message-ID: <20160214074916.GN6756@tiger>
-References: <1455148946-26903-1-git-send-email-stefan@agner.ch>
+Subject: Re: [PATCH 1/3] Documentation: devicetree: add Freescale SCC bindings
+Date: Sun, 14 Feb 2016 15:55:57 +0800
+Message-ID: <20160214075557.GP6756@tiger>
+References: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455148946-26903-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 04:02:25PM -0800, Stefan Agner wrote:
-> Assign Ethernet clock parents explicitly. The VF610 Tower Board
-> uses the external Ethernet clock input which is connected to
-> a 50MHz clock.
+On Thu, Feb 11, 2016 at 03:04:43PM +0100, Steffen Trumtrar wrote:
+> Add documentation for the Freescale Security Controller (SCC)
+> found on i.MX25 SoCs.
 > 
-> The Vybrid SoC has two ethernet interfaces (fec0 and fec1) which
-> use the same clock source (VF610_CLK_ENET). Therefore this parent
-> configuration affects multiple consumer devices and need to be
-> specified in the clock provider node.
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+>  .../devicetree/bindings/crypto/fsl-imx-scc.txt          | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+> new file mode 100644
+> index 000000000000..9a15ab8da94f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+> @@ -0,0 +1,17 @@
+> +Freescale Security Controller (SCC)
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx25-scc".
+> +- reg : Should contain register location and length.
+> +- interrupts : Should contain interrupt numbers for SCM IRQ and SMN IRQ.
+> +
+> +Example:
+> +
+> +	scc: crypto@53fac000 {
+> +		compatible = "fsl,imx25-scc";
+> +		reg = <0x53fac000 0x4000>;
+> +		clocks = <&clks 111>;
+> +		clock-names = "ipg";
 
-Applied both, thanks.
+Shouldn't these two be mentioned in properties list above too?
+
+Shawn
+
+> +		interrupts = <49>, <50>;
+> +		interrupt-names = "scm", "smn";
+> +	};
+> -- 
+> 2.7.0.rc3
+> 
+> 
