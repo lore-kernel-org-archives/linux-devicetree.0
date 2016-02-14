@@ -1,57 +1,82 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: Re: [PATCH 1/2] clk: add device tree binding for artpec-6 pll1 clock
-Date: Sun, 14 Feb 2016 09:03:06 +0100
-Message-ID: <56C034BA.7070806@axis.com>
-References: <cover.1455206007.git.larper@axis.com> <2686b3bbb9ec1c86828b365645bd7f997a9780b4.1455206007.git.larper@axis.com> <20160212163916.GA7677@rob-hp-laptop>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add iio_hwmon node for ADC
+ temperature channel
+Date: Sun, 14 Feb 2016 16:33:49 +0800
+Message-ID: <20160214083349.GR6756@tiger>
+References: <cd32f1664a04b38b8a025414d039bd015cb9a5ff.1455278754.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160212163916.GA7677@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cd32f1664a04b38b8a025414d039bd015cb9a5ff.1455278754.git.maitysanchayan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 12, 2016 at 05:53:00PM +0530, Sanchayan Maity wrote:
+> Add iio_hwmon node to expose the temperature channel on Vybrid as
+> hardware monitor device using the iio_hwmon driver.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+> 
+> Hello,
+> 
+> The first version of the patch was send quite a while ago.
+> https://lkml.org/lkml/2015/9/16/932
+> 
+> Shawn you had requested that hyphen rather than underscore should
+> be used in node name. I looked into that.
+> 
+> The iio_hwmon driver calls hwmon_device register_with_groups inside
+> hwmon.c and this
+> http://lxr.free-electrons.com/source/drivers/hwmon/hwmon.c#L103
+> 
+> does not allow hyphen in hwmon name attribute. I was not aware of
+> this but while trying to test the change, the device probe failed
+> with EINVAL. I think we should stick to the existing use of the
+> bindings or we need to change the hwmon code as well along with the
+> existing device tree files and binding documentation.
 
+I disagree.
 
-On 02/12/2016 05:39 PM, Rob Herring wrote:
-> On Thu, Feb 11, 2016 at 05:01:03PM +0100, Lars Persson wrote:
->> Add device tree documentation for the main PLL in the Artpec-6 SoC.
-> Roughly how many clocks does this SoC have?
-It will have 17 clocks declared in the device tree and three 
-SoC-specific clock drivers.
+If hyphen is invalid to be part of hwmon name attribute, the following
+code in iio_hwmon_probe() is plain wrong, because hyphen is very valid
+to be part of node names in device tree.
 
->
->> Signed-off-by: Lars Persson <larper@axis.com>
->> ---
->>   Documentation/devicetree/bindings/clock/artpec6.txt | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
->> new file mode 100644
->> index 0000000..521fec8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
->> @@ -0,0 +1,16 @@
->> +* Clock bindings for Axis ARTPEC-6 chip
->> +
->> +Required properties:
->> +- #clock-cells: Should be <0>
->> +- compatible: Should be "axis,artpec6-pll1-clock"
->> +- reg: Address and length of the DEVSTAT register.
->> +- clocks: The PLL's input clock.
->> +
->> +Examples:
->> +
->> +pll1_clk: pll1_clk {
->> +	#clock-cells = <0>;
->> +	compatible = "axis,artpec6-pll1-clock";
->> +	reg = <0xf8000000 4>;
->> +	clocks = <&ext_clk>;
->> +};
->> -- 
->> 2.1.4
->>
+        if (dev->of_node && dev->of_node->name)
+                name = dev->of_node->name;
 
+Shawn
+
+> 
+> Changes since v1:
+> 1. Expose ADC1 temperature channel as well
+> 2. Move the entry outside of the aips1 bus node
+> 
+> Best Regards,
+> Sanchayan Maity.
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index a5f07e3..8ed8e47 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -673,5 +673,10 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		iio_hwmon {
+> +			compatible = "iio-hwmon";
+> +			io-channels = <&adc0 16>, <&adc1 16>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.1
+> 
+> 
