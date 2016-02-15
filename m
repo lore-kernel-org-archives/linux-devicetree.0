@@ -1,57 +1,38 @@
-From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: unconditionally recurse into clk/mvebu/
-Date: Mon, 15 Feb 2016 09:33:26 +0100
-Message-ID: <CAPv3WKdnFg6AYNGexyEvMEjKmHadj4+CH5avnd=5d_HEKCTc2A@mail.gmail.com>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1455521698-7905-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 05/10] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: drop
+ unused alias node
+Date: Mon, 15 Feb 2016 09:36:01 +0100
+Message-ID: <20160215093601.1d1ae6c8@tock>
+References: <1455400697-29898-1-git-send-email-antonynpavlov@gmail.com>
+	<1455400697-29898-6-git-send-email-antonynpavlov@gmail.com>
+	<56C0851D.5090105@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455521698-7905-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <56C0851D.5090105-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Wills Wang <wills.wang-EMRzualFZlQ@public.gmane.org>, Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Sun, 14 Feb 2016 14:46:05 +0100
+Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
 
+> On 02/13/2016 10:58 PM, Antony Pavlov wrote:
+> > The TP-LINK TL-WR1043ND board has only one serial port,
+> > so replacing the default of 0 with 0 does nothing useful.
+> 
+> I'd suggest to keep the aliases node, since it can be used by other
+> non-Linux systems to access the serial port 0 . This might be useful in
+> case you add some additional UART chip(s) too.
 
+I have no strong preference, the DT people preferred to see it removed
+has it had been never used. I agree other systems might need it, but if
+you hack the board to add some stuff you will need your own DTS. So it
+make no sense to take such eventual hack in consideration here.
 
-2016-02-15 8:34 GMT+01:00 Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> The drivers/clk/mvebu directory is only being built when
-> CONFIG_PLAT_ORION=y. As we are going to support additional mvebu
-> platforms in drivers/clk/mvebu, which don't have CONFIG_PLAT_ORION=y,
-> we need to recurse into this directory regardless of the value of
-> CONFIG_PLAT_ORION.
->
-> Since all files in drivers/clk/mvebu/ are already conditionally
-> compiled depending on various Kconfig options, we can recurse
-> unconditionally into drivers/clk/mvebu without any other change.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/clk/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index b038e36..e08bb0e 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -61,7 +61,7 @@ obj-$(CONFIG_ARCH_MEDIATEK)           += mediatek/
->  ifeq ($(CONFIG_COMMON_CLK), y)
->  obj-$(CONFIG_ARCH_MMP)                 += mmp/
->  endif
-> -obj-$(CONFIG_PLAT_ORION)               += mvebu/
-> +obj-y                                  += mvebu/
-
-I know it works with obj-y, but how about using
-obj-$(CONFIG_ARCH_MVEBU)? A person editing this Kconfig in future
-wouldn't have to run git blame in order to ensure with your commit
-log, that he doesn't compile anything more than planned.
-
-Best regards,
-Marcin
+Alban
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
