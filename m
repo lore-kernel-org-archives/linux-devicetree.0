@@ -1,99 +1,108 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Mon, 15 Feb 2016 09:59:27 +0000
-Message-ID: <56C1A17F.9030206@arm.com>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <201602151735.BaFwBMOn%fengguang.wu@intel.com>
- <20160215105008.74aa7869@free-electrons.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4 2/8] [media] VPU: mediatek: support Mediatek VPU
+Date: Mon, 15 Feb 2016 11:07:41 +0100
+Message-ID: <56C1A36D.6010908@xs4all.nl>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160215105008.74aa7869-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hi Tiffany,
 
-On 15/02/16 09:50, Thomas Petazzoni wrote:
-> Marc,
+A small review comment below:
+
+On 02/04/2016 12:34 PM, Tiffany Lin wrote:
+> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
+> It is able to handle video decoding/encoding of in a range of formats.
+> The driver provides with VPU firmware download, memory management and
+> the communication interface between CPU and VPU.
+> For VPU initialization, it will create virtual memory for CPU access and
+> IOMMU address for vcodec hw device access. When a decode/encode instance
+> opens a device node, vpu driver will download vpu firmware to the device.
+> A decode/encode instant will decode/encode a frame using VPU
+> interface to interrupt vpu to handle decoding/encoding jobs.
 > 
-> This doesn't seem to be an issue introduced by my patch itself, but
-> rather a problem with the MSI subsystem itself. Is this already a known
-> issue (possibly already fixed), or should I investigate?
-
-Seems like something is selecting GENERIC_MSI_IRQ_DOMAIN on a system
-that doesn't implement the required bits.
-
-It may be that we need to implement something like
-HAS_GENERIC_MSI_IRQ_DOMAIN, and make GENERIC_MSI_IRQ_DOMAIN conditional
-on that. Or just whitelist the architectures that do implement this.
-
-Any chance you could have a closer look?
-
-Thanks,
-
-	M.
-
-> 
-> Thanks!
-> 
-> Thomas
-> 
-> On Mon, 15 Feb 2016 17:09:27 +0800, kbuild test robot wrote:
->> Hi Thomas,
->>
->> [auto build test ERROR on robh/for-next]
->> [also build test ERROR on v4.5-rc4 next-20160215]
->> [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
->>
->> url:    https://github.com/0day-ci/linux/commits/Thomas-Petazzoni/dma-mv_xor_v2-new-driver/20160215-160120
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
->> config: openrisc-allyesconfig (attached as .config)
->> reproduce:
->>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # save the attached .config to linux build tree
->>         make.cross ARCH=openrisc 
->>
->> All errors (new ones prefixed by >>):
->>
->>    In file included from kernel/irq/chip.c:14:0:
->>>> include/linux/msi.h:174:21: fatal error: asm/msi.h: No such file or directory
->>    compilation terminated.
->>
->> vim +174 include/linux/msi.h
->>
->> c2791b80 Yijing Wang    2014-11-11  168  	void (*teardown_irq)(struct msi_controller *chip, unsigned int irq);
->> 0cbdcfcf Thierry Reding 2013-08-09  169  };
->> 0cbdcfcf Thierry Reding 2013-08-09  170  
->> f3cf8bb0 Jiang Liu      2014-11-12  171  #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
->> d9109698 Jiang Liu      2014-11-15  172  
->> aeeb5965 Jiang Liu      2014-11-15  173  #include <linux/irqhandler.h>
->> d9109698 Jiang Liu      2014-11-15 @174  #include <asm/msi.h>
->> d9109698 Jiang Liu      2014-11-15  175  
->> f3cf8bb0 Jiang Liu      2014-11-12  176  struct irq_domain;
->> 552c494a Marc Zyngier   2015-11-23  177  struct irq_domain_ops;
->>
->> :::::: The code at line 174 was first introduced by commit
->> :::::: d9109698be6e7439e6082aa00d79d4556114739b genirq: Introduce msi_domain_alloc/free_irqs()
->>
->> :::::: TO: Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> :::::: CC: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->>
->> ---
->> 0-DAY kernel test infrastructure                Open Source Technology Center
->> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
-> 
+> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  drivers/media/platform/Kconfig           |    9 +
+>  drivers/media/platform/Makefile          |    2 +
+>  drivers/media/platform/mtk-vpu/Makefile  |    1 +
+>  drivers/media/platform/mtk-vpu/mtk_vpu.c |  994 ++++++++++++++++++++++++++++++
+>  drivers/media/platform/mtk-vpu/mtk_vpu.h |  167 +++++
+>  5 files changed, 1173 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
+>  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.c
+>  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
 > 
 
+<snip>
 
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+> new file mode 100644
+> index 0000000..f54fd89
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+> @@ -0,0 +1,994 @@
+
+<snip>
+
+> +static ssize_t vpu_debug_read(struct file *file, char __user *user_buf,
+> +			      size_t count, loff_t *ppos)
+> +{
+> +	char buf[256];
+> +	unsigned int len;
+> +	unsigned int running, pc, vpu_to_host, host_to_vpu, wdt;
+> +	int ret;
+> +	struct device *dev = file->private_data;
+> +	struct mtk_vpu *vpu = dev_get_drvdata(dev);
+> +
+> +	ret = vpu_clock_enable(vpu);
+> +	if (ret) {
+> +		dev_err(vpu->dev, "[VPU] enable clock failed %d\n", ret);
+> +		return 0;
+> +	}
+> +
+> +	/* vpu register status */
+> +	running = vpu_running(vpu);
+> +	pc = vpu_cfg_readl(vpu, VPU_PC_REG);
+> +	wdt = vpu_cfg_readl(vpu, VPU_WDT_REG);
+> +	host_to_vpu = vpu_cfg_readl(vpu, HOST_TO_VPU);
+> +	vpu_to_host = vpu_cfg_readl(vpu, VPU_TO_HOST);
+> +	vpu_clock_disable(vpu);
+> +
+> +	if (running) {
+> +		len = sprintf(buf, "VPU is running\n\n"
+
+Please use snprintf.
+
+> +		"FW Version: %s\n"
+> +		"PC: 0x%x\n"
+> +		"WDT: 0x%x\n"
+> +		"Host to VPU: 0x%x\n"
+> +		"VPU to Host: 0x%x\n",
+> +		vpu->run.fw_ver, pc, wdt,
+> +		host_to_vpu, vpu_to_host);
+> +	} else {
+> +		len = sprintf(buf, "VPU not running\n");
+
+Ditto.
+
+sprintf always makes me feel uncomfortable :-)
+
+> +	}
+> +
+> +	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
+> +}
+
+Regards,
+
+	Hans
