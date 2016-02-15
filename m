@@ -1,59 +1,64 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 4/4] dmaengine: pxa_dma: fix the maximum requestor line
-Date: Mon, 15 Feb 2016 19:22:36 +0100
-Message-ID: <87bn7h25qr.fsf@belgarion.home>
-References: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
-	<1455225798-9510-5-git-send-email-robert.jarzmik@free.fr>
-	<20160215163524.GI19598@localhost> <87fuwt28eu.fsf@belgarion.home>
-	<20160215173300.GN19598@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160215173300.GN19598@localhost> (Vinod Koul's message of "Mon,
-	15 Feb 2016 23:03:00 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 1/1 v2] MIPS: DTS: cavium-octeon: provide model attribute
+Date: Mon, 15 Feb 2016 19:35:41 +0100
+Message-ID: <1455561341-2071-1-git-send-email-xypron.glpk@gmx.de>
+References: <56C214EE.5050200@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C214EE.5050200-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vinod Koul <vinod.koul@intel.com> writes:
+Downstream packages like Debian flash-kernel rely on
+/proc/device-tree/model
+to determine how to install an updated kernel image.
 
-> On Mon, Feb 15, 2016 at 06:24:57PM +0100, Robert Jarzmik wrote:
->> Vinod Koul <vinod.koul@intel.com> writes:
->> 
->> > On Thu, Feb 11, 2016 at 10:23:18PM +0100, Robert Jarzmik wrote:
->> >> @@ -1399,13 +1405,17 @@ static int pxad_probe(struct platform_device *op)
->> >>  		return PTR_ERR(pdev->base);
->> >>  
->> >>  	of_id = of_match_device(pxad_dt_ids, &op->dev);
->> >> -	if (of_id)
->> >> +	if (of_id) {
->> >>  		of_property_read_u32(op->dev.of_node, "#dma-channels",
->> >>  				     &dma_channels);
->> >> -	else if (pdata && pdata->dma_channels)
->> >> +		of_property_read_u32(op->dev.of_node, "#requestors",
->> >> +				     &nb_requestors);
->> >
->> > I think we should check the return value here. This might be err in case
->> > when we have older DT on platform, but still should work with default in
->> > that case
->> 
->> Okay, but how should the code react to the err case, more specifically to
->> -EINVAL or -ENODATA ? As this property is optional as per the device-tree
->> description, the current code leaves nb_requestors = 0, as is specified in the
->> description, and fits the mmp_pdma case.
->> 
->> What do you think should be done ? A warning message ? Something else ?
->
-> Message is fine, but in order for not to regress we should set this to 32
-> (IIRC default before this, right) and not zero.
-Okay, got you.
+Most dts files provide this property.
 
-For v2 I'll implement exactly this, ie. a warning message and a default to 32.
-I'll amend the device-tree description also to match the 32 (and not the 0 I
-wrote earlier).
+This patch adds a model attribute Octeon CPUs.
 
-Cheers.
+v2:
+	Use vendor prefix defined in vendor-prefixes.txt.
+	Separate model from vendor by comma.
+	Avoid wildcards.
 
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+---
+ arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts | 1 +
+ arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+index 9c48e05..f70cd58 100644
+--- a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
++++ b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+@@ -8,6 +8,7 @@
+  */
+ / {
+ 	compatible = "cavium,octeon-3860";
++	model = "cavium,Octeon 3860";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&ciu>;
+diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+index 79b46fc..0b40899 100644
+--- a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
++++ b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+@@ -8,6 +8,7 @@
+  */
+ / {
+ 	compatible = "cavium,octeon-6880";
++	model = "cavium,Octeon 6880";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&ciu2>;
 -- 
-Robert
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
