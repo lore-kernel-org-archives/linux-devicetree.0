@@ -1,44 +1,55 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: fix the incorrect otp-out pin on rk3368
-Date: Mon, 15 Feb 2016 11:30:58 +0800
-Message-ID: <1455507058-10824-1-git-send-email-wxt@rock-chips.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] ARM: at91: pm: add ULP1 mode support
+Date: Mon, 15 Feb 2016 11:40:26 +0800
+Message-ID: <1455507630-29592-1-git-send-email-wenyou.yang@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the incorrect Over-temperature protection pin.
-since the rk3368 io list said the otp pin is gpio0a3.
+The ULP1 (Ultra Low-power mode 1) is introduced by SAMA5D2.
 
-Anyway, that should be fixed in here.
+In order to achieve the lowest power consumption, in the ULP1 mode,
+all the clocks are shut off, inclusive the embedded 12MHz RC oscillator.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+The fast startup signal is used as a wake up source for ULP1 mode.
+As soon as the wake up event is asserted, the embedded 12MHz RC
+oscillator restarts automatically, which fast startup signal
+to trigger the PMC to wake up the system from the ULP1 mode can be
+configured via DT.
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It is based on the following patch set:
+	http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390954.html
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 49d1191..3949163 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -926,11 +926,11 @@
- 
- 		tsadc {
- 			otp_gpio: otp-gpio {
--				rockchip,pins = <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-+				rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
- 			};
- 
- 			otp_out: otp-out {
--				rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <0 3 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
- 
+Changes in v3:
+ - use 0 and 1, not string, to define the trigger active polarity.
+ - update the property description.
+
+Changes in v2:
+ - fix label pm_exit to ulp_exit.
+ - shorten the pmc-fast-startup property's name.
+ - use the value property, instead of bool property for high
+   or low triggered.
+ - change the property name and property description.
+
+Wenyou Yang (4):
+  ARM: at91: pm: create a separate procedure for the ULP0 mode
+  ARM: at91: pm: add ULP1 mode support
+  ARM: at91: pm: configure PMC fast startup signals
+  Documentation: atmel-pmc: add DT bindings for fast startup
+
+ .../devicetree/bindings/arm/atmel-pmc.txt          |   63 ++++++++
+ arch/arm/mach-at91/pm.c                            |  130 +++++++++++++++-
+ arch/arm/mach-at91/pm.h                            |    7 +
+ arch/arm/mach-at91/pm_suspend.S                    |  158 +++++++++++++++++---
+ include/linux/clk/at91_pmc.h                       |   36 +++++
+ 5 files changed, 369 insertions(+), 25 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
