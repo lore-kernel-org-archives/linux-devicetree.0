@@ -1,122 +1,36 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 2/7] ARM: dts: r8a7790: Add L2 cache-controller nodes
-Date: Mon, 15 Feb 2016 21:38:30 +0100
-Message-ID: <1455568715-20880-3-git-send-email-geert+renesas@glider.be>
-References: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] regulator: axp20x: support AXP809 variant
+Date: Mon, 15 Feb 2016 20:04:39 +0000
+Message-ID: <20160215200439.GC18327@sirena.org.uk>
+References: <1455532288-30870-1-git-send-email-wens@csie.org>
+ <1455532288-30870-6-git-send-email-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBF7WRC3AKGQEN36LT3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455532288-30870-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the L2 caches, and link the CPU nodes to them.
+--uXxzq0nDebZQVNAZ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The L2 cache for the Cortex-A15 CPU cores is 2 MiB large (organized as
-128 KiB x 16 ways).
+On Mon, Feb 15, 2016 at 06:31:23PM +0800, Chen-Yu Tsai wrote:
+> The X-Powers AXP809 PMIC has a similar set of regulators as the AXP221,
+> though a few LDOs were removed, and a new switch output added. Like the
+> AXP221, AXP809 also has DC1SW and DC5LDO, which are internally chained
+> to DCDC1 and DCDC5, respectively.
 
-The L2 cache for the Cortex-A7 CPU cores is 512 KiB large (organized as
-64 KiB x 8 ways).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-  - Drop "arm,data-latency" and "arm,tag-latency" properties, as they
-    may not be valid when using virtualization,
-  - Change one-line summary prefix to match current arm-soc practices,
-
-v2:
-  - Drop (incorrect) optional cache-{size,sets,{block,line}-size}
-    properties, as this information is auto-detected,
-  - Integrate linking CPUs to L2 caches into this patch,
-  - Extracted from series "[PATCH/RFC 00/15] ARM: shmobile: R-Car: Add
-    SYSC PM Domain DT Support".
----
- arch/arm/boot/dts/r8a7790.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 76ddf5c6cca79c3c..e40aa6585831c520 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -52,6 +52,7 @@
- 			voltage-tolerance = <1>; /* 1% */
- 			clocks = <&cpg_clocks R8A7790_CLK_Z>;
- 			clock-latency = <300000>; /* 300 us */
-+			next-level-cache = <&L2_CA15>;
- 
- 			/* kHz - uV - OPPs unknown yet */
- 			operating-points = <1400000 1000000>,
-@@ -67,6 +68,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <1>;
- 			clock-frequency = <1300000000>;
-+			next-level-cache = <&L2_CA15>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -74,6 +76,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <2>;
- 			clock-frequency = <1300000000>;
-+			next-level-cache = <&L2_CA15>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -81,6 +84,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <3>;
- 			clock-frequency = <1300000000>;
-+			next-level-cache = <&L2_CA15>;
- 		};
- 
- 		cpu4: cpu@4 {
-@@ -88,6 +92,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x100>;
- 			clock-frequency = <780000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
- 
- 		cpu5: cpu@5 {
-@@ -95,6 +100,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x101>;
- 			clock-frequency = <780000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
- 
- 		cpu6: cpu@6 {
-@@ -102,6 +108,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x102>;
- 			clock-frequency = <780000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
- 
- 		cpu7: cpu@7 {
-@@ -109,9 +116,22 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x103>;
- 			clock-frequency = <780000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
- 	};
- 
-+	L2_CA15: cache-controller@0 {
-+		compatible = "cache";
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
-+	L2_CA7: cache-controller@1 {
-+		compatible = "cache";
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
- 	gic: interrupt-controller@f1001000 {
- 		compatible = "arm,gic-400";
- 		#interrupt-cells = <3>;
--- 
-1.9.1
+This doesn't apply against current code, please check and resend.
+--uXxzq0nDebZQVNAZ--
