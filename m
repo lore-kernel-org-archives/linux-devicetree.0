@@ -1,195 +1,194 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v14 13/17] drm: bridge: analogix/dp: try force hpd after plug in lookup failed
-Date: Mon, 15 Feb 2016 19:11:15 +0800
-Message-ID: <1455534675-2066-1-git-send-email-ykk@rock-chips.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] add support for DWC UFS Host Controller
+Date: Mon, 15 Feb 2016 11:16:26 +0000
+Message-ID: <56C1B38A.6070901@synopsys.com>
+References: <cover.1455192008.git.jpinto@synopsys.com>
+ <ee97e9b0ece0d819debe403c752d233c6267e02e.1455192008.git.jpinto@synopsys.com>
+ <CAC5umyh6VGfsD+CzuimiMCum=E4UrA0rGj7pgPaRLO_aVen-gQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAC5umyh6VGfsD+CzuimiMCum=E4UrA0rGj7pgPaRLO_aVen-gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gilad Broner <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some edp screen do not have hpd signal, so we can't just return
-failed when hpd plug in detect failed.
+Hi Akinobu,
 
-This is an hardware property, so we need add a devicetree property
-"analogix,need-force-hpd" to indicate this sutiation.
+On 2/13/2016 1:27 PM, Akinobu Mita wrote:
+> Hi Joao,
+> 
+> 2016-02-11 21:13 GMT+09:00 Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>:
+>> +static int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       /* Local side Configuration */
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +
+>> +       /* Peer side Configuration */
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(N_DEVICEID_VALID), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERDEVICEID), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_PEERCPORTID), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_TRAFFICCLASS), 0);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTFLAGS), 0x6);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CPORTMODE), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       ret = ufshcd_dme_peer_set(hba, UIC_ARG_MIB(T_CONNECTIONSTATE), 1);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +out:
+>> +       return ret;
+>> +}
+> 
+> This looks a bit redundant.  The most part of the functions in this file is
+> doing ufshcd_dme_set() or ufshcd_dme_peer_set(), so should we
+> introduce ufshcd_dme_set_attrs() like below?  It will also increase
+> readability.
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11:
-- Rename the "analogix,need-force-hpd" to common 'force-hpd' (Rob)
-- Add the ack from Rob Herring
+We can do that, it would make the function body lighter and more easy to read I
+agree with you!
 
-Changes in v10: None
-Changes in v9: None
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-- Add "analogix,need-force-hpd" to indicate whether driver need foce
-  hpd when hpd detect failed.
+> 
+> struct ufshcd_dme_attr_val {
+>         u32 attr_sel;
+>         u32 mib_val;
+>         u8 peer;
+> };
+> 
+> int ufshcd_dme_set_attrs(struct ufs_hba *hba,
+>                         const struct ufshcd_dme_attr_val *v, int n)
+> {
+>         for (i = 0; i < n; i++) {
+>                 int ret = ufshcd_dme_set_attr(hba, v[i].attr_sel, ...);
+> 
+>                 if (ret)
+>                         return ret;
+>         }
+>         return 0;
+> }
+> 
+> static int ufshcd_dwc_connection_setup(struct ufs_hba *hba)
+> {
+>         const struct ufshcd_dme_attr setup_attrs[] = {
+>                 { UIC_ARG_MIB(T_CONNECTIONSTATE), 0, DME_LOCAL },
+>                 { UIC_ARG_MIB(T_DEVICEID), 0, DME_LOCAL },
+>                 ...
+>         };
+> 
+>         return ufshcd_dme_set_attrs(hba, setup_attrs, ARRAY_SIZE(setup_attrs));
+> }
+> 
+>> +static int ufshcd_dwc_setup_tc(struct ufs_hba *hba)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
+>> +       dev_info(hba->dev, "Configuring Test Chip 40-bit RMMI");
+>> +       ret = ufshcd_dwc_setup_40bit_rmmi(hba);
+>> +       if (ret) {
+>> +               dev_err(hba->dev, "Configuration failed");
+> 
+> Please add \n in the end of message.
+> (and there are same issues in this file)
+> 
+>> +
+>> +/* Clock Divider Values: Hex equivalent of frequency in MHz */
+>> +enum clk_div_values {
+>> +       UFSHCD_CLK_DIV_62_5     = 0x3e,
+>> +       UFSHCD_CLK_DIV_125      = 0x7d,
+>> +       UFSHCD_CLK_DIV_200      = 0xc8,
+>> +};
+> 
+> This is used as register value for DWC_UFS_REG_HCLKDIV.  So should they
+> have similar prefix (DWC_UFS_REG_HCLKDIV_*)?
 
-Changes in v2: None
+I agree with you, they should have since they are DWC specific.
 
- .../bindings/display/bridge/analogix_dp.txt        |  4 ++-
- .../bindings/display/exynos/exynos_dp.txt          |  1 +
- .../display/rockchip/analogix_dp-rockchip.txt      |  1 +
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 35 ++++++++++++++++++----
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  2 ++
- drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  |  9 ++++++
- 6 files changed, 46 insertions(+), 6 deletions(-)
+> 
+>> diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+> 
+> ...
+> 
+>> +/*Other attributes*/
+>> +#define VS_MPHYCFGUPDT         0xD085
+>> +#define VS_DEBUGOMC            0xD09E
+>> +#define VS_POWERSTATE          0xD083
+> 
+> Are these vendor specific attributes?  If so, please move them to
+> ufshci-dwc.h.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-index 7659a7a..4f2ba8c 100644
---- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-@@ -22,6 +22,9 @@ Required properties for dp-controller:
- 		from general PHY binding: Should be "dp".
- 
- Optional properties for dp-controller:
-+	-force-hpd:
-+		Indicate driver need force hpd when hpd detect failed, this
-+		is used for some eDP screen which don't have hpd signal.
- 	-hpd-gpios:
- 		Hotplug detect GPIO.
- 		Indicates which GPIO should be used for hotplug detection
-@@ -31,7 +34,6 @@ Optional properties for dp-controller:
- 		* Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
- 		* Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
- 
--
- [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
- -------------------------------------------------------------------------------
- 
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-index 4fa8aca..ade5d8e 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
-@@ -56,6 +56,7 @@ For the below properties, please refer to Analogix DP binding document:
- 	-phys (required)
- 	-phy-names (required)
- 	-hpd-gpios (optional)
-+	 force-hpd (optional)
- 
- Deprecated properties for DisplayPort:
- -interlaced:            deprecated prop that can parsed from drm_display_mode.
-diff --git a/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-index 04d99e3..e832ff9 100644
---- a/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-@@ -32,6 +32,7 @@ For the below properties, please refer to Analogix DP binding document:
- - phys (required)
- - phy-names (required)
- - hpd-gpios (optional)
-+- force-hpd (optional)
- -------------------------------------------------------------------------------
- 
- Example:
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index a62e8d0..13986b7 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -62,15 +62,38 @@ static int analogix_dp_detect_hpd(struct analogix_dp_device *dp)
- {
- 	int timeout_loop = 0;
- 
--	while (analogix_dp_get_plug_in_status(dp) != 0) {
-+	while (timeout_loop < DP_TIMEOUT_LOOP_COUNT) {
-+		if (analogix_dp_get_plug_in_status(dp) == 0)
-+			return 0;
-+
- 		timeout_loop++;
--		if (timeout_loop > DP_TIMEOUT_LOOP_COUNT) {
--			dev_err(dp->dev, "failed to get hpd plug status\n");
--			return -ETIMEDOUT;
--		}
- 		usleep_range(10, 11);
- 	}
- 
-+	/*
-+	 * Some edp screen do not have hpd signal, so we can't just
-+	 * return failed when hpd plug in detect failed, DT property
-+	 * "force-hpd" would indicate whether driver need this.
-+	 */
-+	if (!dp->force_hpd)
-+		return -ETIMEDOUT;
-+
-+	/*
-+	 * The eDP TRM indicate that if HPD_STATUS(RO) is 0, AUX CH
-+	 * will not work, so we need to give a force hpd action to
-+	 * set HPD_STATUS manually.
-+	 */
-+	dev_dbg(dp->dev, "failed to get hpd plug status, try to force hpd\n");
-+
-+	analogix_dp_force_hpd(dp);
-+
-+	if (analogix_dp_get_plug_in_status(dp) != 0) {
-+		dev_err(dp->dev, "failed to get hpd plug in status\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dp->dev, "success to get plug in status after force hpd\n");
-+
- 	return 0;
- }
- 
-@@ -1291,6 +1314,8 @@ int analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
- 	if (IS_ERR(dp->reg_base))
- 		return PTR_ERR(dp->reg_base);
- 
-+	dp->force_hpd = of_property_read_bool(dev->of_node, "force-hpd");
-+
- 	dp->hpd_gpio = of_get_named_gpio(dev->of_node, "hpd-gpios", 0);
- 	if (!gpio_is_valid(dp->hpd_gpio))
- 		dp->hpd_gpio = of_get_named_gpio(dev->of_node,
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-index 02c0ecf..22aff07 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-@@ -154,6 +154,7 @@ struct analogix_dp_device {
- 	struct phy		*phy;
- 	int			dpms_mode;
- 	int			hpd_gpio;
-+	bool                    force_hpd;
- 
- 	struct analogix_dp_plat_data *plat_data;
- };
-@@ -174,6 +175,7 @@ void analogix_dp_set_analog_power_down(struct analogix_dp_device *dp,
- 				       bool enable);
- void analogix_dp_init_analog_func(struct analogix_dp_device *dp);
- void analogix_dp_init_hpd(struct analogix_dp_device *dp);
-+void analogix_dp_force_hpd(struct analogix_dp_device *dp);
- enum dp_irq_type analogix_dp_get_irq_type(struct analogix_dp_device *dp);
- void analogix_dp_clear_hotplug_interrupts(struct analogix_dp_device *dp);
- void analogix_dp_reset_aux(struct analogix_dp_device *dp);
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-index 1e24b37..cba3ffd 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-@@ -365,6 +365,15 @@ void analogix_dp_init_hpd(struct analogix_dp_device *dp)
- 	writel(reg, dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
- }
- 
-+void analogix_dp_force_hpd(struct analogix_dp_device *dp)
-+{
-+	u32 reg;
-+
-+	reg = readl(dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
-+	reg = (F_HPD | HPD_CTRL);
-+	writel(reg, dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
-+}
-+
- enum dp_irq_type analogix_dp_get_irq_type(struct analogix_dp_device *dp)
- {
- 	u32 reg;
--- 
-1.9.1
+These are not DWC specific, that's why I added them to the common unipro.h
+
+> 
+
+Thanks.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
