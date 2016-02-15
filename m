@@ -1,38 +1,155 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
-Date: Mon, 15 Feb 2016 14:25:15 +0100
-Message-ID: <CACRpkdaaHGC3cUvL=7O2OGUzGdbmHke+O7+cHActwR4twK9CDw@mail.gmail.com>
-References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
-	<CACRpkdZZBQUc4oPTPb+67C9A2r7qRV3zXRC7uusvDpNnM=i1eg@mail.gmail.com>
-	<a005c107-0b15-65ec-eede-a713ee1a8bd9@broadcom.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: Move syscon reboot/poweroff to common dtsi for
+ Exynos
+Date: Mon, 15 Feb 2016 10:38:25 -0300
+Message-ID: <56C1D4D1.2050108@osg.samsung.com>
+References: <1455042606-10075-1-git-send-email-javier@osg.samsung.com>
+ <56C02265.40103@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a005c107-0b15-65ec-eede-a713ee1a8bd9-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56C02265.40103@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
+Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 6:48 PM, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+Hello Krzysztof,
 
-> Could you please add me to the email thread and I can review it there (I
-> won't have time to test, but I can help to review the code and find time to
-> test later)?
+On 02/14/2016 03:44 AM, Krzysztof Kozlowski wrote:
+> W dniu 10.02.2016 o 03:30, Javier Martinez Canillas pisze:
+>> All Exynos SoCs have the same syscon reboot and poweroff device nodes so
+>> there is no need to duplicate the same on each SoC dtsi and can be moved
+>> to a common dtsi that can be included by all the SoCs dtsi files.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>
+>> ---
+>> Hello,
+>>
+>> The patch was tested on an Exynos5800 Peach Pi Chromebook and an
+>> Exynos5422 Odroid XU4 board. Reboot and poweroff worked for both.
+>>
+>> But testing on Exynos3 and Exynos4 will be highly appreciated.
+>
+> Would you be so kind and add my suggested-by (since it comes from
+> https://wiki.tizen.org/wiki/Exynos_Mainline_Kernel_TODO :) )
+>
 
-OK I will add you to subsequent postings, if any.
+Right, sorry for missing that.
+  
+> I'll test it on Exynos4 at work and then apply... but few comments below:
+>
+>>
+>> Best regards,
+>> Javier
+>>
+>>   arch/arm/boot/dts/exynos-syscon-restart.dtsi | 23 +++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos3250.dtsi            | 15 +--------------
+>>   arch/arm/boot/dts/exynos4.dtsi               | 15 +--------------
+>>   arch/arm/boot/dts/exynos5.dtsi               | 15 +--------------
+>>   arch/arm/boot/dts/exynos5410.dtsi            | 15 +--------------
+>>   5 files changed, 27 insertions(+), 56 deletions(-)
+>>   create mode 100644 arch/arm/boot/dts/exynos-syscon-restart.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+>> new file mode 100644
+>> index 000000000000..2b8acf554881
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+>> @@ -0,0 +1,23 @@
+>> +/*
+>> + * Samsung's Exynos SoC syscon reboot/poweroff nodes common definition.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/ {
+>
+> In some of the DTSI this was under "soc" node, not at top-level.
+> Unfortunately we do not have consistency here - some DTSI have "soc",
 
-> This may be a dumb question, is there any way for me to directly reply to
-> the thread here?
+Yes, I noticed this but as you said not all DTSI have a soc node
+and that's why I made it top level in the DTSI.
 
-Not easily, I guess it is possible to conjure an SMTP mail
-with the right in-reply-to message ID but that is so complex
-hacking that I have no clue how to do it, just ever reached
-the limit of "a little knowledge is dangerous".
+> some not. Anyway I think we should move to "soc" version.
+>
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not sure I'm following, did you mean to do it as a follow up or
+to add a soc node for the missing DTSI as a part of this series?
+
+>> +	poweroff: syscon-poweroff {
+>> +		compatible = "syscon-poweroff";
+>> +		regmap = <&pmu_system_controller>;
+>> +		offset = <0x330C>; /* PS_HOLD_CONTROL */
+>> +		mask = <0x5200>; /* reset value */
+>> +	};
+>> +
+>> +	reboot: syscon-reboot {
+>> +		compatible = "syscon-reboot";
+>> +		regmap = <&pmu_system_controller>;
+>> +		offset = <0x0400>; /* SWRESET */
+>> +		mask = <0x1>;
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+>> index 18e3deffbf48..d9c221517935 100644
+>> --- a/arch/arm/boot/dts/exynos3250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+>> @@ -19,6 +19,7 @@
+>>
+>>   #include "skeleton.dtsi"
+>>   #include "exynos4-cpu-thermal.dtsi"
+>> +#include "exynos-syscon-restart.dtsi"
+>>   #include <dt-bindings/clock/exynos3250.h>
+>>
+>>   / {
+>> @@ -152,20 +153,6 @@
+>>   			interrupt-parent = <&gic>;
+>>   		};
+>>
+>> -		poweroff: syscon-poweroff {
+>> -			compatible = "syscon-poweroff";
+>> -			regmap = <&pmu_system_controller>;
+>> -			offset = <0x330C>; /* PS_HOLD_CONTROL */
+>> -			mask = <0x5200>; /* Reset value */
+>> -		};
+>> -
+>> -		reboot: syscon-reboot {
+>> -			compatible = "syscon-reboot";
+>> -			regmap = <&pmu_system_controller>;
+>> -			offset = <0x0400>; /* SWRESET */
+>> -			mask = <0x1>;
+>> -		};
+>> -
+>>   		mipi_phy: video-phy@10020710 {
+>>   			compatible = "samsung,s5pv210-mipi-video-phy";
+>>   			#phy-cells = <1>;
+>> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+>> index ca621a92319e..e6f6939ccdfa 100644
+>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>> @@ -21,6 +21,7 @@
+>>
+>>   #include <dt-bindings/clock/exynos4.h>
+>>   #include <dt-bindings/clock/exynos-audss-clk.h>
+>> +#include "exynos-syscon-restart.dtsi"
+>
+> Just to keep it consistent and logic - include after skeleton.
+>
+
+Ok, for include I usually try to keep alphabetically sorted but
+I'll move it after skeleton if you prefer to keep it consistent.
+  
+> Best regards,
+> Krzysztof
+>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
