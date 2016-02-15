@@ -1,163 +1,88 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: (Still) breaking DT compatibility (was: [RFC PATCH 0/4] clk: sunxi:
- fix DT compatibility issues)
-Date: Mon, 15 Feb 2016 10:16:48 +0000
-Message-ID: <56C1A590.6030500@arm.com>
-References: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
- <56BE29A1.3060107@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56BE29A1.3060107@redhat.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 00/10] mfd: axp20x: Add support for AXP809 PMIC
+Date: Mon, 15 Feb 2016 18:31:18 +0800
+Message-ID: <1455532288-30870-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/16 18:51, Hans de Goede wrote:
-> Hi,
-> 
-> So far I've stayed out of this discussion, but now I feel I have to
-> weigh in:
-> 
-> There is no need for this series, device-tree compatibility for
-> sunxi devices is a non issue. No devices ship with dtb files as
-> part of the bootloader / firmware (the vendor kernels do not
-> use dtb at all).
+Hi everyone,
 
-I think you are barking in the wrong thread here.
-I deliberately sent some code to bring this discussion back to a more
-technical level.
+This is v2 of the AXP809 PMIC support series. This adds support for
+X-Powers' AXP809 PMIC. This is the primary PMIC accompanying Allwinner's
+A80 SoC. For now, only the power button (PEK) and regulators are
+supported. These are supported using existing axp20x drivers. This is
+based on the AXP223 series v8, as well as 2 patches from v1 that are
+already in regulator/topic/axp20x.
 
-But anyway...
+Changes since v1:
 
-> So we always are using a dtb from the kernel tree, and both Fedora
-> and Debian (AFAIK), the 2 distros which ship with more or less official
-> sunxi support package things
+  - Added patch 4, changing default regulator names to lowercase.
+  - Dropped regulator nodes from axp809.dtsi.
 
-Actually I am trying to help that it doesn't need to stay this way. I
-don't see a real reason why a distribution should support a particular
-platform, they certainly don't for x86, for instance.
-I think a stable DT would help to overcome this limited support that we
-see here and would allow distributions to not need to care about sunxi
-in particular.
+Patch 1 adds a MAINTAINERS entry for the X-Powers AXP PMICs. I list
+myself as the maintainer.
 
-There should be one good DT for all kernels - it may be updated
-(especially if new features get supported), but should never break.
-Also please note that the DT is not only for Linux, BSDs for instance
-use it too - for instance FreeBSD on ARM64.
+Patch 2 adds AXP809 to the axp20x bindings.
 
-> so that each kernel version uses the dtb
-> files compiled from the dts shipped with that exact kernel version,
-> (through the ftddir directive in extlinux.conf, which is per menu
-> entry / kernel version) even if multiple kernel versions are installed.
+Patch 3 adds AXP809 support to the axp20x mfd driver.
 
-That there are technical ways to mitigate the problem doesn't count as
-an excuse to break DT.
+Patch 4 changes the in-kernel default regulator names from uppercase to
+lowercase, making it easier on the eye.
 
-To make this clear: The original PLL6 clock _binding_ is actually fine:
-it describes the clock as per the manual with two clock outputs.
-It's just the driver that is ignoring the clock-output-names that causes
-the issue.
-So we can happily keep the binding, fix the driver and re-use that very
-binding for PLL8, as well.
-This fix series here was the easiest approach in terms of changed code.
-I can make some patches that implement the proper solution - if you
-promise to not shoot down 0/x again easily.
+Patch 5 adds AXP809 support to the axp20x regulator driver. This patch
+depends on patch 3, and patches already in regulator/topic/axp20x.
 
-I see that good DT bindings are not easy to come up with. Yes, we are
-not perfect and especially for sunxi with it's bad original
-documentation we won't create perfect DTs from the beginning.
-But I think we should at least _try_ to make a DT what's is meant:
-describing the hardware, part of the firmware and OS agnostic - which
-implies compatibility.
+Patch 6 adds a dtsi file for AXP809.
 
-> So there is no reason, no reason at all to worry too much about dtb
-> compatibility for sunxi devices.
+Patch 7 enables AXP809 support on the A80 Optimus board.
 
-I think this argument has been discussed quite a bit in the
-other thread.
-What I am really worried about is that this now creeps into the arm64 world.
-Yes, I see your point that it was a no-brainer so far, but that doesn't
-mean that it has to stay this way. For the A64 for instance there are
-more devices with eMMC in the pipe (Remix Mini PC and the Olimex board),
-so we can just put our firmware bits and the boot loader on there and
-distributions don't need to ship those.
+Patch 8 enables AXP809 support on the Cubieboard 4.
 
-> As for compatibility with u-boot, u-boot ships with its own embedded
-> dtb copy, which is based on dts files from the kernel (the u-boot copies
-> get synced regularly), and even if this dtb were to somehow be replaced
-> by a new "incompatible" dtb from a newer kernel there would still not
-> be a problem as u-boot does not (currently) use the clk definitions
-> from the dtb. Note I'm the u-boot sunxi custodian and I'm fine with
-> the proposed changes.
-> 
-> TL;DR: NACK for this series.
+Patch 9 disables the dummy regulators from sunxi-common-regulators.dtsi
+on the A80 Optimus board. These aren't used in the board DTS anymore.
 
-Seriously?
+Patch 10 disables the dummy regulators from sunxi-common-regulators.dtsi,
+on the Cubieboard4. These aren't used in the board DTS anymore.
 
-I would prefer if you would save your NACKs for patches that break
-something instead.
 
-If you are concerned that this fix is too involved, that's mostly due to
-the reason that I couldn't revert the original patch easily due to
-conflicts in subsequent patches, so I did a bit more for the rollback.
-The actual core fix is pretty easy.
+Regards
+ChenYu
 
-So I hope we can come to a conclusion about this one before I prepare
-the next set of patches.
+Chen-Yu Tsai (10):
+  MAINTAINERS: Add entry for X-Powers AXP family PMIC drivers
+  mfd: axp20x: Add bindings for AXP809 PMIC
+  mfd: axp20x: Add support for AXP809 PMIC
+  regulator: axp20x: Use of_match name as default regulator name
+  regulator: axp20x: support AXP809 variant
+  ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
+  ARM: dts: sun9i: a80-optimus: Add AXP809 PMIC device node and
+    regulators
+  ARM: dts: sun9i: cubieboard4: Add AXP809 PMIC device node and
+    regulators
+  ARM: dts: sun9i: a80-optimus: Disable dummy regulators vcc3v0, vcc3v3,
+    vcc5v0
+  ARM: dts: sun9i: cubieboard4: Disable dummy regulators vcc3v0, vcc3v3,
+    vcc5v0
 
-Cheers,
-Andre.
+ Documentation/devicetree/bindings/mfd/axp20x.txt   |  31 ++++-
+ MAINTAINERS                                        |   6 +
+ .../dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} |  98 ++------------
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        | 143 ++++++++++++++++++++-
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            | 143 ++++++++++++++++++++-
+ drivers/mfd/axp20x-rsb.c                           |   1 +
+ drivers/mfd/axp20x.c                               |  79 ++++++++++++
+ drivers/regulator/axp20x-regulator.c               | 129 ++++++++++++++-----
+ include/linux/mfd/axp20x.h                         |  59 +++++++++
+ 9 files changed, 559 insertions(+), 130 deletions(-)
+ copy arch/arm/boot/dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} (52%)
 
-> 
-> On 12-02-16 18:59, Andre Przywara wrote:
->> Commit f7d372ba54ea ("clk: sunxi: Refactor A31 PLL6 so that it can be
->> reused") (in -next) made the A31 PLL6 clock driver more generic, so
->> that it can drive the PLL8 clock in newer SoCs too.
->> However the patch broke compatibility with older DTs, which this
->> series tries to fix.
->> The approach chosen here is to bring back the old driver under its
->> old name, while letting the new driver using a different name to be
->> able to tell them apart.
->> The old driver should be somewhat deprecated and not used in new DTs
->> anymore.
->> The slight disadvantage is that there are now two drivers and two
->> compatible names for the same hardware (the PLL6 clock), I am not
->> sure if this is frowned upon or can be tolerated since the new driver
->> is more generic (drives PLL8 as well) and makes the old one obsolete.
->> We just need to keep it for compatibility.
->>
->> The naming for both the functions and compatible names is probably
->> wrong, I am relying on more sunxi - experienced people here to
->> suggest better identifiers.
->>
->> This is only one possible approach to fix this issues, so I am open
->> to any kind of discussion.
->>
->> The series is made on top of Maxime's sunxi/for-next branch, so it
->> somehow reverts the change in question. I am happy to rebase it on
->> any branch people tell me.
->>
->> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>
->> Andre Przywara (4):
->>    clk: sunxi: rename new sun6i_a31_pll6 clock to sun6i_a31_pll clock
->>    clk: sunxi: re-add old sun6i_a31_pll6 clock
->>    clk: sunxi: revert .dtsi changes for DTs with a sun6i_a31_pll6 clock
->>    DT: Allwinner H3: fix PLL8 clock
->>
->>   Documentation/devicetree/bindings/clock/sunxi.txt |  2 +-
->>   arch/arm/boot/dts/sun6i-a31.dtsi                  | 36
->> ++++++++---------
->>   arch/arm/boot/dts/sun8i-a23-a33.dtsi              | 25 ++++--------
->>   arch/arm/boot/dts/sun8i-a23.dtsi                  |  2 +-
->>   arch/arm/boot/dts/sun8i-a33.dtsi                  |  4 +-
->>   arch/arm/boot/dts/sun8i-h3.dtsi                   | 31 +++++---------
->>   drivers/clk/sunxi/clk-sunxi.c                     | 49
->> ++++++++++++++++++++---
->>   7 files changed, 84 insertions(+), 65 deletions(-)
->>
-> 
+-- 
+2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
