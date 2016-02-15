@@ -1,117 +1,59 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/1] MIPS: DTS: cavium-octeon: provide model attribute
-Date: Mon, 15 Feb 2016 21:11:58 +0300
-Message-ID: <56C214EE.5050200@cogentembedded.com>
-References: <1455513977-934-1-git-send-email-xypron.glpk@gmx.de>
- <56C1B3A0.4090301@cogentembedded.com> <56C21054.4070702@gmx.de>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 4/4] dmaengine: pxa_dma: fix the maximum requestor line
+Date: Mon, 15 Feb 2016 19:22:36 +0100
+Message-ID: <87bn7h25qr.fsf@belgarion.home>
+References: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
+	<1455225798-9510-5-git-send-email-robert.jarzmik@free.fr>
+	<20160215163524.GI19598@localhost> <87fuwt28eu.fsf@belgarion.home>
+	<20160215173300.GN19598@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-        format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <56C21054.4070702@gmx.de>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160215173300.GN19598@localhost> (Vinod Koul's message of "Mon,
+	15 Feb 2016 23:03:00 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/15/2016 08:52 PM, Heinrich Schuchardt wrote:
+Vinod Koul <vinod.koul@intel.com> writes:
 
->>> Downstream packages like Debian flash-kernel rely on
->>> /proc/device-tree/model
->>> to determine how to install an updated kernel image.
->>>
->>> Most dts files provide this property.
->>> It is suggested by IEEE Std 1275-1994.
->>>
->>> This patch adds a model attribute for Octeon CPUs.
->>>
->>> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
->>> ---
->>>    arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts | 1 +
->>>    arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts | 1 +
->>>    2 files changed, 2 insertions(+)
->>>
->>> diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
->>> b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
->>> index 9c48e05..a746678 100644
->>> --- a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
->>> +++ b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
->>> @@ -8,6 +8,7 @@
->>>     */
->>>    / {
->>>        compatible =3D "cavium,octeon-3860";
->>> +    model =3D "Cavium Octeon 3XXX";
->>>        #address-cells =3D <2>;
->>>        #size-cells =3D <2>;
->>>        interrupt-parent =3D <&ciu>;
->>> diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
->>> b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
->>> index 79b46fc..c8a292a 100644
->>> --- a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
->>> +++ b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
->>> @@ -8,6 +8,7 @@
->>>     */
->>>    / {
->>>        compatible =3D "cavium,octeon-6880";
->>> +    model =3D "Cavium Octeon 68XX";
->>>        #address-cells =3D <2>;
->>>        #size-cells =3D <2>;
->>>        interrupt-parent =3D <&ciu2>;
->>
->>      The ePAPR 1.1 standard says:
->>
->> 2.3.2 model
->>
->> Property: model
->> Value type: <string>
->> Description:
->>      The model property value is a <string> that specifies the
->>       manufacturer=92s model number of the device.
->>
->>      The recommended format is: =93manufacturer,model=94, where manu=
-facturer
->>      is a string describing the name of the manufacturer (such as a =
-stock
->>      ticker symbol), and model specifies the model number.
->>
->> Example:
->>      model =3D =93fsl,MPC8349EMITX=94;
-[...]
+> On Mon, Feb 15, 2016 at 06:24:57PM +0100, Robert Jarzmik wrote:
+>> Vinod Koul <vinod.koul@intel.com> writes:
+>> 
+>> > On Thu, Feb 11, 2016 at 10:23:18PM +0100, Robert Jarzmik wrote:
+>> >> @@ -1399,13 +1405,17 @@ static int pxad_probe(struct platform_device *op)
+>> >>  		return PTR_ERR(pdev->base);
+>> >>  
+>> >>  	of_id = of_match_device(pxad_dt_ids, &op->dev);
+>> >> -	if (of_id)
+>> >> +	if (of_id) {
+>> >>  		of_property_read_u32(op->dev.of_node, "#dma-channels",
+>> >>  				     &dma_channels);
+>> >> -	else if (pdata && pdata->dma_channels)
+>> >> +		of_property_read_u32(op->dev.of_node, "#requestors",
+>> >> +				     &nb_requestors);
+>> >
+>> > I think we should check the return value here. This might be err in case
+>> > when we have older DT on platform, but still should work with default in
+>> > that case
+>> 
+>> Okay, but how should the code react to the err case, more specifically to
+>> -EINVAL or -ENODATA ? As this property is optional as per the device-tree
+>> description, the current code leaves nb_requestors = 0, as is specified in the
+>> description, and fits the mmp_pdma case.
+>> 
+>> What do you think should be done ? A warning message ? Something else ?
+>
+> Message is fine, but in order for not to regress we should set this to 32
+> (IIRC default before this, right) and not zero.
+Okay, got you.
 
-> Hello Sergei, hello Arnd,
->
-> thank you for reviewing.
->
-> IEEE Std 1275-1994 says stock symbols should be in upper case.
->
-> I guess international standards should have precedence over papers va=
-lid
-> for a single architecture (power.org).
->
-> Would you support a patch having the following strings?
->
-> model =3D "CAVM, Octeon 3860";
-> model =3D "CAVM, Octeon 6880";
->
-> Otherwise, please, make a suggestion.
+For v2 I'll implement exactly this, ie. a warning message and a default to 32.
+I'll amend the device-tree description also to match the 32 (and not the 0 I
+wrote earlier).
 
-    Documentation/devicetree/bindings/vendor-prefixes.txt already has t=
-he=20
-vendor prefix for Cavium, and it's (surprise!) "cavium".
-    Otherwise, the names look much better -- just remove space after co=
-mma please.
+Cheers.
 
-> Best regards
->
-> Heinrich Schuchardt
-
-MBR, Sergei
+-- 
+Robert
