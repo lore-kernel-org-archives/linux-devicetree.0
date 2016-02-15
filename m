@@ -1,90 +1,36 @@
-From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH v2] auxdisplay: ht16k33: Driver for LED controller.
-Date: Mon, 15 Feb 2016 10:35:29 +0100
-Message-ID: <20160215103529.69002c3b@erd979>
-References: <1455017468-4431-1-git-send-email-robin@protonic.nl>
-	<20160212151243.GA21022@rob-hp-laptop>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dma: mv_xor_v2: new driver
+Date: Mon, 15 Feb 2016 17:34:20 +0800
+Message-ID: <201602151750.ChNRB1qR%fengguang.wu@intel.com>
+References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160212151243.GA21022@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1455523083-25506-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Feb 2016 09:12:43 -0600
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Hi Thomas,
 
-> On Tue, Feb 09, 2016 at 12:31:08PM +0100, Robin van der Gracht wrote:
-> > This is a driver for the Holtek HT16K33 LED controller with keyscan.
-> > 
-> > Signed-off-by: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-> > ---
-> > Changes in v2:
-> >   - Fixed build error reported by kbuild test robot by including
-> > mm.h
-> > 
-> >  .../devicetree/bindings/display/ht16k33.txt        |  42 ++
-> >  drivers/auxdisplay/Kconfig                         |   9 +
-> >  drivers/auxdisplay/Makefile                        |   1 +
-> >  drivers/auxdisplay/ht16k33.c                       | 573
-> > +++++++++++++++++++++ 4 files changed, 625 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/ht16k33.txt create mode
-> > 100644 drivers/auxdisplay/ht16k33.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/ht16k33.txt
-> > b/Documentation/devicetree/bindings/display/ht16k33.txt new file
-> > mode 100644 index 0000000..45fbabb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/ht16k33.txt
-> > @@ -0,0 +1,42 @@
-> > +Holtek ht16k33 RAM mapping 16*8 LED controller driver with keyscan
-> > +-------------------------------------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible:			"ht,ht16k33"
-> > +- reg:					I2C slave address of
-> > the chip. +- interrupt-parent: 	A phandle pointing to the
-> > interrupt controller
-> > +						serving the
-> > interrupt for this chip. +- interrupts:
-> > Interrupt specification for the key pressed interrupt. +-
-> > refresh-rate:			Display update interval in HZ.
-> 
-> Add units: "-hz"
-> 
-> > +- debounce-delay-ms:	Debouncing interval time in
-> > microseconds. +- linux,keymap:			The keymap
-> > for keys as described in the binding
-> > +						document
-> > (devicetree/bindings/input/matrix-keymap.txt).
-> 
-> The alignment of the descriptions here seem to be random. Please line 
-> them up.
-> 
-> > +
-> > +Optional properties:
-> > +- linux,no-autorepeat:	Disable keyrepeat.
-> > +- default-brightness:	Initial brightness setting [0-15] (15
-> > if not set).
-> 
-> default-brightness-level seem a bit more common.
-> 
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.5-rc4 next-20160215]
+[if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
 
-Thanks for reviewing Rob. I'll take your comments into account and
-resend an adjusted patch.
+url:    https://github.com/0day-ci/linux/commits/Thomas-Petazzoni/dma-mv_xor_v2-new-driver/20160215-160120
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
 
-Best regards,
 
--- 
-Robin van der Gracht
-Protonic Holland
-tel.: +31 (0) 229 212928
-fax.: +31 (0) 229 210930
-Factorij 36 / 1689 AL Zwaag
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/dma/mv_xor_v2.c:870:3-8: No need to set .owner here. The core will do it.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
