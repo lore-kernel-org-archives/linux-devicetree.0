@@ -1,33 +1,106 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix the incorrect otp-out pin on rk3368
-Date: Mon, 15 Feb 2016 22:12:50 +0100
-Message-ID: <1884614.IJaL3hhOqa@phil>
-References: <1455507058-10824-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455507058-10824-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v2 06/11] ARM: dts: r8a7779: Add SYSC PM domains
+Date: Mon, 15 Feb 2016 22:16:55 +0100
+Message-ID: <1455571020-18968-7-git-send-email-geert+renesas@glider.be>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+Add a device node for the System Controller, with subnodes that
+represent the hardware power area hierarchy.
+Hook up ARM CPU cores 1-3 to their respective PM domains.
+Note that ARM CPU core 0 cannot be shut off.
 
-Am Montag, 15. Februar 2016, 11:30:58 schrieb Caesar Wang:
-> This patch fixes the incorrect Over-temperature protection pin.
-> since the rk3368 io list said the otp pin is gpio0a3.
-> 
-> Anyway, that should be fixed in here.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Correct sysc "reg" property (#address/size-cells = 1, not 2),
+  - Change one-line summary prefix to match current arm-soc practices,
+  - Update compatible values.
+---
+ arch/arm/boot/dts/r8a7779.dtsi | 48 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-applied to my dts branch for 4.6
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index a0cc08e6295b0396..14b28c225bb3587c 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -34,18 +34,21 @@
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+ 			clock-frequency = <1000000000>;
++			power-domains = <&pd_arm1>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
+ 			clock-frequency = <1000000000>;
++			power-domains = <&pd_arm2>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
+ 			clock-frequency = <1000000000>;
++			power-domains = <&pd_arm3>;
+ 		};
+ 	};
+ 
+@@ -591,4 +594,49 @@
+ 				"mmc1", "mmc0";
+ 		};
+ 	};
++
++	sysc: system-controller@ffd85000 {
++		compatible = "renesas,r8a7779-sysc";
++		reg = <0xffd85000 0x0200>;
++
++		pm-domains {
++			#address-cells = <2>;
++			#size-cells = <0>;
++
++			pd_arm1: cpu@1 {
++				reg = <1 0x41>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_arm2: cpu@2 {
++				reg = <2 0x42>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_arm3: cpu@3 {
++				reg = <3 0x43>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_sh: sh@16 {
++				reg = <16 0x80>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_sgx: sgx@20 {
++				reg = <20 0xc0>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_vdp: vdp@21 {
++				reg = <21 0x100>;
++				#power-domain-cells = <0>;
++			};
++
++			pd_imp: imp@24 {
++				reg = <24 0x140>;
++				#power-domain-cells = <0>;
++			};
++		};
++	};
+ };
+-- 
+1.9.1
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
