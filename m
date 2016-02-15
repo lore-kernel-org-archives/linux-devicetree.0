@@ -1,64 +1,36 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 1/1 v2] MIPS: DTS: cavium-octeon: provide model attribute
-Date: Mon, 15 Feb 2016 19:35:41 +0100
-Message-ID: <1455561341-2071-1-git-send-email-xypron.glpk@gmx.de>
-References: <56C214EE.5050200@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C214EE.5050200-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 1/1] MIPS: DTS: cavium-octeon: provide model attribute
+Date: Mon, 15 Feb 2016 20:38:39 +0200
+Message-ID: <20160215183838.GD1640@darkstar.musicnaut.iki.fi>
+References: <1455513977-934-1-git-send-email-xypron.glpk@gmx.de>
+ <56C1B3A0.4090301@cogentembedded.com>
+ <56C21054.4070702@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56C21054.4070702@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Downstream packages like Debian flash-kernel rely on
-/proc/device-tree/model
-to determine how to install an updated kernel image.
+Hi,
 
-Most dts files provide this property.
+On Mon, Feb 15, 2016 at 06:52:20PM +0100, Heinrich Schuchardt wrote:
+> On 02/15/2016 12:16 PM, Sergei Shtylyov wrote:
+> > On 2/15/2016 8:26 AM, Heinrich Schuchardt wrote:
+> >> Downstream packages like Debian flash-kernel rely on
+> >> /proc/device-tree/model
+> >> to determine how to install an updated kernel image.
+> 
+> Would you support a patch having the following strings?
+> 
+> model = "CAVM, Octeon 3860";
+> model = "CAVM, Octeon 6880";
 
-This patch adds a model attribute Octeon CPUs.
+The built-in DTBs are shared by multiple completely different boards
+(from multiple different manufacturers). How would those strings help
+for cases like flash-kernel?
 
-v2:
-	Use vendor prefix defined in vendor-prefixes.txt.
-	Separate model from vendor by comma.
-	Avoid wildcards.
-
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
----
- arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts | 1 +
- arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-index 9c48e05..f70cd58 100644
---- a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-+++ b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-@@ -8,6 +8,7 @@
-  */
- / {
- 	compatible = "cavium,octeon-3860";
-+	model = "cavium,Octeon 3860";
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 	interrupt-parent = <&ciu>;
-diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-index 79b46fc..0b40899 100644
---- a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-+++ b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-@@ -8,6 +8,7 @@
-  */
- / {
- 	compatible = "cavium,octeon-6880";
-+	model = "cavium,Octeon 6880";
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 	interrupt-parent = <&ciu2>;
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A.
