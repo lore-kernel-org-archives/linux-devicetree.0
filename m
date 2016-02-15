@@ -1,96 +1,60 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v7 RESEND 0/4] mailbox: hisilicon: add Hi6220 mailbox
- driver
-Date: Mon, 15 Feb 2016 21:54:26 +0800
-Message-ID: <20160215135426.GA10532@leoy-linaro>
-References: <1455544226-10094-1-git-send-email-leo.yan@linaro.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] rtc: s3c: Document in binding that only s3c6410 needs a
+ src clk
+Date: Mon, 15 Feb 2016 10:58:34 -0300
+Message-ID: <56C1D98A.8040408@osg.samsung.com>
+References: <1455542202-13977-1-git-send-email-javier@osg.samsung.com>
+ <20160215134535.GB15219@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455544226-10094-1-git-send-email-leo.yan@linaro.org>
+In-Reply-To: <20160215134535.GB15219@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Tyler Baker <tyler.baker@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>, Bintian Wang <bintian.wang@huawei.com>, Chen Feng <puck.chen@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wei Xu <xuwei5@hisilicon.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 09:50:22PM +0800, Leo Yan wrote:
-> Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
-> with a maximum message size of 8 words. I/O is performed using register
-> access (there is no DMA) and the cell raises an interrupt when messages
-> are received.
-> 
-> This patch series is to implement Hi6220 mailbox driver. It registers
-> two channels into framework for communication with MCU, one is tx channel
-> and another is rx channel. Now mailbox driver is used to send message to
-> MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
-> 
-> Changes from v6:
-> * Fix to use lowercase for hexadecimal value in DT binding document
+Hello Alexandre,
 
-Hi Jassi,
+On 02/15/2016 10:45 AM, Alexandre Belloni wrote:
+> On 15/02/2016 at 10:16:42 -0300, Javier Martinez Canillas wrote :
+>> Commit 43f3408261a2 ("rtc: s3c: Document required clocks in the DT
+>
+> I'm pretty sure you shouldn't refer to a commit that is in linux-next.
+>
 
-Per your request, I have rebased patches over mailbox-for-next.
+The commit comes from Rob's dt/linus branch that uses Linux 4.5-rc3 as
+a base. I'm not a git expert but I thought that if the branch is not
+rebased and used for the pull request then the resulting commit in
+mainline would end with the same sha-1.
 
-Hi Wei,
+But I can remove the mention to the commit and "Fixes:" tag since the
+commit is not yet in mainline, that should be more safe indeed.
+  
+>> binding") added to the S3C binding doc the required clocks needed
+>> by the Real Time Clock but the S3C driver supports different HW IP
+>> and only the s3c6410 needs a source clock.
+>>
+>> Fix the DT binding explaning that the second clock is only needed
+>            explaining ^
 
-Could you help merge patch 3/4 for Hi6220's DTS?
+Ok, I'll fix that typo.
 
-Thanks,
-Leo Yan
+>> by this IP block and not for the others.
+>>
+>> Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> Fixes: 43f3408261a2 ("rtc: s3c: Document required clocks in the DT binding")
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>
+>
+> Anyway, I'm fine with it, feel free to add my ack.
+>
 
-> 
-> Changes from v5:
-> * Refine to use mailbox three specifiers for client driver, so add xlate
->   callback function in mailbox driver to support these specifiers
-> * Refine document for property "hi6220,mbox-tx-noirq"
-> 
-> Changes from v4:
-> * According to Jassi's suggestion, using DT binding to register channels
-> * Change to use operating-points-v2 to register operating points
-> 
-> Changes from v3:
-> * The patch series for enabling idle state for Hi6220 has reserved memory
->   regions, so this series will not include it anymore
-> * Refined mailbox driver according to Jassi's suggestion;
->   Removed kfifo from mailbox driver;
->   Removed spinlock for ipc registers accessing, due every channel has its
->   own dedicated bit in ipc register and readl/writel will introduce memory
->   barrier, so don't need spinlock to protect ipc registers accessing
-> * After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
->   stub clock driver; finally can enable CPUFreq driver for CPU frequency
->   scaling
-> 
-> Changes from v2:
-> * Get rid of unused memory regions from memory node in DT, and don't use
->   reserved-memory node according to Mark and Leif's suggestion; Haojian also
->   has updated UEFI for efi memory info
-> 
-> Changes from v1:
-> * Correct lock usage for SMP scenario
-> 
-> Changes from RFC:
-> * According to Jassi's review, totally remove the abstract common driver
->   layer and only commit driver dedicated for Hi6220
-> * According to Paul Bolle's review, fix typo issue for Kconfig and remove
->   unnecessary dependency with OF and fix minor for mailbox driver
-> * Refine a little for dts nodes
-> 
-> 
-> Leo Yan (4):
->   dt-bindings: mailbox: Document Hi6220 mailbox driver
->   mailbox: Hi6220: add mailbox driver
->   arm64: dts: add mailbox node for Hi6220
->   arm64: dts: add Hi6220's stub clock node
-> 
->  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  74 ++++
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
->  drivers/mailbox/Kconfig                            |   8 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/hi6220-mailbox.c                   | 395 +++++++++++++++++++++
->  5 files changed, 543 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
->  create mode 100644 drivers/mailbox/hi6220-mailbox.c
-> 
-> -- 
-> 1.9.1
-> 
+Thanks, I'll add it in v2.
+  
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
