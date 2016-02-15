@@ -1,54 +1,38 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH] rtc: s3c: Document in binding that only s3c6410 needs a src clk
-Date: Mon, 15 Feb 2016 10:16:42 -0300
-Message-ID: <1455542202-13977-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] video: ARM CLCD: Added dt support to set tim2 register
+Date: Mon, 15 Feb 2016 14:25:15 +0100
+Message-ID: <CACRpkdaaHGC3cUvL=7O2OGUzGdbmHke+O7+cHActwR4twK9CDw@mail.gmail.com>
+References: <1424898082-1522-1-git-send-email-arun.ramamurthy@broadcom.com>
+	<CACRpkdZZBQUc4oPTPb+67C9A2r7qRV3zXRC7uusvDpNnM=i1eg@mail.gmail.com>
+	<a005c107-0b15-65ec-eede-a713ee1a8bd9@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a005c107-0b15-65ec-eede-a713ee1a8bd9-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 43f3408261a2 ("rtc: s3c: Document required clocks in the DT
-binding") added to the S3C binding doc the required clocks needed
-by the Real Time Clock but the S3C driver supports different HW IP
-and only the s3c6410 needs a source clock.
+On Wed, Feb 10, 2016 at 6:48 PM, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
 
-Fix the DT binding explaning that the second clock is only needed
-by this IP block and not for the others.
+> Could you please add me to the email thread and I can review it there (I
+> won't have time to test, but I can help to review the code and find time to
+> test later)?
 
-Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Fixes: 43f3408261a2 ("rtc: s3c: Document required clocks in the DT binding")
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+OK I will add you to subsequent postings, if any.
 
----
-Hello,
+> This may be a dumb question, is there any way for me to directly reply to
+> the thread here?
 
-The mentioned commit was picked by Rob Herring so this one has to go
-through his tree again and not through the RTC tree to avoid conflicts.
+Not easily, I guess it is possible to conjure an SMTP mail
+with the right in-reply-to message ID but that is so complex
+hacking that I have no clue how to do it, just ever reached
+the limit of "a little knowledge is dangerous".
 
-Best regards,
-Javier
-
- Documentation/devicetree/bindings/rtc/s3c-rtc.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-index 1068ffce9f91..fdde63a5419c 100644
---- a/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.txt
-@@ -15,9 +15,10 @@ Required properties:
-   is the rtc tick interrupt. The number of cells representing a interrupt
-   depends on the parent interrupt controller.
- - clocks: Must contain a list of phandle and clock specifier for the rtc
--          and source clocks.
--- clock-names: Must contain "rtc" and "rtc_src" entries sorted in the
--               same order as the clocks property.
-+          clock and in the case of a s3c6410 compatible controller, also
-+          a source clock.
-+- clock-names: Must contain "rtc" and for a s3c6410 compatible controller,
-+               a "rtc_src" sorted in the same order as the clocks property.
- 
- Example:
- 
--- 
-2.5.0
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
