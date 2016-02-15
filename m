@@ -1,59 +1,163 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v4 01/11] drm/hisilicon: Add device tree binding for
- hi6220 display subsystem
-Date: Mon, 15 Feb 2016 15:30:10 +0800
-Message-ID: <CAGd==07aNFtr6yEgULxg+7WLbqq7GAAWng4GV=oohSnM5fP45A@mail.gmail.com>
-References: <1454729098-79807-1-git-send-email-xinliang.liu@linaro.org>
-	<1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
-	<20160208201246.GA17459@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160208201246.GA17459@rob-hp-laptop>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@hu
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 3/3] clk: mvebu: add AP806 ring clock driver
+Date: Mon, 15 Feb 2016 08:34:58 +0100
+Message-ID: <1455521698-7905-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9 February 2016 at 04:12, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Feb 06, 2016 at 11:24:48AM +0800, Xinliang Liu wrote:
->> Add ADE display controller binding doc.
->> Add DesignWare DSI Host Controller v1.20a binding doc.
->
-> One comment, otherwise:
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->> +Board specific:
->> +     &dsi {
->> +             status = "ok";
->> +
->> +             ports {
->> +                     /* 1 for output port */
->> +                     port@1 {
->> +                             #address-cells = <1>;
->> +                             #size-cells = <0>;
->> +                             reg = <1>;
->> +
->> +                             /* 0 for bridge, other value for panel */
->
-> The endpoint address would not change based on bridge or panel. So you
-> can drop the unit address here.
+This commit adds a new driver to handle the ring clocks found in the
+AP806 HW block, which is the core block of all Armada 7K and 8K
+Marvell 64-bits processors. Those ring clocks are derived from the
+core ring clock handled by the AP806 core clock driver. The ring
+clocks are used by various peripherals inside the AP806.
 
-yes, I can drop the unit address, since it only support bridge in the
-DSI code currently, right?
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ .../clock/mvebu-armada-ap806-ring-clock.txt        | 32 +++++++++++
+ drivers/clk/mvebu/Kconfig                          |  3 +
+ drivers/clk/mvebu/Makefile                         |  1 +
+ drivers/clk/mvebu/ap806-ring.c                     | 65 ++++++++++++++++++++++
+ 4 files changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
+ create mode 100644 drivers/clk/mvebu/ap806-ring.c
 
-One question: How to distinguish panel and bridge endpoint?  I am
-thinking to support panel now.
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
+new file mode 100644
+index 0000000..5602bdc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
+@@ -0,0 +1,32 @@
++* Clock bindings for Marvell MVEBU AP806 Ring clocks
++
++The Marvell MVEBU Armada 7K/8K SoCs contain a block called AP806,
++hosting the CPU and other core components of the CPU. This Device Tree
++binding allows to describe the ring clocks of the AP806, which are
++derived from the Ring Core clock, after a dividing factor.
++
++The following is a list of provided IDs and clock names on Armada
++AP806 RING dividers:
++
++ 0 = Ring 0
++ 1 = Ring 2
++ 2 = Ring 3
++ 3 = Ring 4
++ 4 = Ring 5
++
++Required properties:
++- compatible: must be one of the following:
++	"marvell,armada-ap806-ring-clock"
++- reg: must be the register holding the divider values for ring clocks
++- #clock-cells : from common clock binding; shall be set to 1
++- clock-output-names: name of the output clocks
++
++Example:
++
++	ringclk: clk@0x6F8250 {
++		compatible = "marvell,armada-ap806-ring-clock";
++		reg = <0x6F8250 0x04>;
++		#clock-cells = <1>;
++		clock-output-names = "ring-0", "ring-2", "ring-3", "ring-4", "ring-5";
++		clocks = <&coreclk 1>;
++	};
+diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+index fd84172..5d30aac 100644
+--- a/drivers/clk/mvebu/Kconfig
++++ b/drivers/clk/mvebu/Kconfig
+@@ -45,3 +45,6 @@ config ORION_CLK
+ 
+ config ARMADA_AP806_CORE_CLK
+ 	bool
++
++config ARMADA_AP806_RING_CLK
++	bool
+diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
+index db5c28c..48ca2d3 100644
+--- a/drivers/clk/mvebu/Makefile
++++ b/drivers/clk/mvebu/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
+ obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
+ obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
+ obj-$(CONFIG_ARMADA_AP806_CORE_CLK) += ap806-core.o
++obj-$(CONFIG_ARMADA_AP806_RING_CLK) += ap806-ring.o
+ obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
+ obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
+ obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
+diff --git a/drivers/clk/mvebu/ap806-ring.c b/drivers/clk/mvebu/ap806-ring.c
+new file mode 100644
+index 0000000..154ee55
+--- /dev/null
++++ b/drivers/clk/mvebu/ap806-ring.c
+@@ -0,0 +1,65 @@
++/*
++ * Marvell Armada AP806 ring clocks
++ *
++ * Copyright (C) 2016 Marvell
++ *
++ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/kernel.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++
++#define AP806_RING_DIV_NUM	5
++
++static struct clk *ap806_ring_clks[AP806_RING_DIV_NUM];
++
++static struct clk_onecell_data ap806_ring_clk_data = {
++	.clks = ap806_ring_clks,
++	.clk_num = AP806_RING_DIV_NUM,
++};
++
++static void __init ap806_ring_clk_init(struct device_node *np)
++{
++	void __iomem *base;
++	const char *parent;
++	u32 reg;
++	int i;
++
++	base = of_iomap(np, 0);
++	if (WARN_ON(!base))
++		return;
++
++	reg = readl(base);
++
++	iounmap(base);
++
++	parent = of_clk_get_parent_name(np, 0);
++
++	for (i = 0; i < AP806_RING_DIV_NUM; i++) {
++		unsigned long divider;
++		const char *name;
++
++		/* Each clock is represented by 6 bits */
++		divider = (reg >> (6 * i)) & 0x3f;
++
++		of_property_read_string_index(np, "clock-output-names",
++					      i, &name);
++
++		ap806_ring_clks[i] =
++			clk_register_fixed_factor(NULL, name, parent,
++						  0, 1, divider);
++	}
++
++	of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_ring_clk_data);
++}
++
++CLK_OF_DECLARE(ap806_ring_clk, "marvell,armada-ap806-ring-clock",
++	       ap806_ring_clk_init);
+-- 
+2.6.4
 
-Thanks,
--xinliang
-
->
->> +                             dsi_out0: endpoint@0 {
->> +                                     reg = <0>;
->> +                                     remote-endpoint = <&adv7533_in>;
->> +                             };
->> +                     };
->> +             };
->> +     };
