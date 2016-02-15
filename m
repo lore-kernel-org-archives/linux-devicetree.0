@@ -1,117 +1,53 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [linux-sunxi] Allwinner A64 MMC support
-Date: Mon, 15 Feb 2016 15:22:43 +0000
-Message-ID: <56C1ED43.6010504@arm.com>
-References: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
- <56BE29A1.3060107@redhat.com> <56C1A590.6030500@arm.com>
- <56C1C7BB.1040602@redhat.com> <56C1D9C0.6020601@arm.com>
- <CAGb2v65E54mnLEcPzLyycEBSHbvn6tp9JpS+S8gdbDg_e7qFyQ@mail.gmail.com>
- <56C1E250.9070301@arm.com>
- <CAGb2v67apAN0H_Nz2kQ4oYjtRwRfaM0L3KTv6uXLfp7m7DpnbA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67apAN0H_Nz2kQ4oYjtRwRfaM0L3KTv6uXLfp7m7DpnbA@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 0/3] add support for DWC UFS Controller
+Date: Mon, 15 Feb 2016 15:25:10 +0000
+Message-ID: <cover.1455549221.git.jpinto@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The work consisted of:
+- Fixed typo in ufshcd-pltfrm.c
+- Tweak ufshcd.c for UFS 2.0 support
+- Implement ufshcd-dwc which contains all DWC HW specific code
+- Unipro attributes were added and new registers were added to the driver
+- Implement a ufs-dwc glue platform driver
+- Implement a ufs-dwc-pci glue pci driver
+- Documentation update
 
-On 15/02/16 14:58, Chen-Yu Tsai wrote:
-> On Mon, Feb 15, 2016 at 10:36 PM, Andre Przywara <andre.przywara@arm.com> wrote:
->> Hi Chen-Yu,
->>
->> On 15/02/16 14:23, Chen-Yu Tsai wrote:
->>> On Mon, Feb 15, 2016 at 9:59 PM, Andre Przywara <andre.przywara@arm.com> wrote:
->>>> Hi Hans,
->>>>
->>>> ....
->>>>
->>>>>
->>>>> p.s.
->>>>>
->>>>> I love the work you've been doing on the A64, I've not had a chance
->>>>> to try it out yet though. Have you made any progress with getting
->>>>> the mmc slot to work ?  If not maybe I can make some time I've
->>>>> prior experience in bringing up the mmc slot on other Allwinner SoCs
->>>>
->>>> Thanks for that!
->>>>
->>>> So we made some progress on the weekend (with the help of #linux-sunxi):
->>>> 1) The regulator node was stupidly put by me into a separate child node
->>>> without putting address and size cells into. So I just moved it into
->>>> /soc directly now and that seems to fixed the missing regulator.
->>>> 2) The reset node is a allwinner,sun6i-a31-ahb1-reset, which does not
->>>> get registered automatically, but by an explicit call from mach-sunxi/.
->>>> I wonder why we do this (yes, I saw that comment, but still...) and if
->>>> it would work with a normal MODULE_DEVICE_TABLE() declaration.
->>>> There is and will be no equivalent to the mach- directory on arm64.
->>>
->>> On sun6i, we supported the high resolution timer, which had a reset control.
->>> Timers (or clocksources) are registered before device model kicks in, so the
->>> reset had to be explicitly registered before the timer, or the system would
->>> hang. I think we phased that out though. Maxime should know.
->>
->> Ah, thanks for that insight!
->> So that sounds like we would get away with a normal registration for the
->> A64 - and actually many other SoCs as well?
->> Shall we guard the explicit sun6i_reset_init with MACH_SUN6I or
->> something and do the normal registration otherwise?
->> Or do I miss something here?
-> 
-> You'll notice 2 reset control compatibles, one is
-> "allwinner,sun6i-a31-ahb1-reset",
-> while the other is "allwinner,sun6i-a31-clock-reset". The latter is a
-> proper device
-> model driver. We also don't have the hstimer device node for later
-> SoCs. For A23, it
-> was because the hardware had only 1 timer, while the driver needed 2,
-> and I didn't
-> want to deal with it at the time.
+Joao Pinto (3):
+  fixed typo in ufshcd-pltfrm
+  added UFS 2.0 capabilities
+  add support for DWC UFS Host Controller
 
-Oooh, now I see that those are actually the same driver, just the
-initialization part is separate. Thanks for the hint!
+ Documentation/devicetree/bindings/ufs/ufs-dwc.txt  |  19 +
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |   4 +-
+ MAINTAINERS                                        |   6 +
+ drivers/scsi/ufs/Kconfig                           |  51 +++
+ drivers/scsi/ufs/Makefile                          |   3 +
+ drivers/scsi/ufs/ufs-dwc-pci.c                     | 172 ++++++++
+ drivers/scsi/ufs/ufs-dwc.c                         |  96 +++++
+ drivers/scsi/ufs/ufshcd-dwc.c                      | 431 +++++++++++++++++++++
+ drivers/scsi/ufs/ufshcd-dwc.h                      |  18 +
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   |   2 +-
+ drivers/scsi/ufs/ufshcd.c                          |  29 +-
+ drivers/scsi/ufs/ufshci-dwc.h                      |  42 ++
+ drivers/scsi/ufs/ufshci.h                          |   1 +
+ drivers/scsi/ufs/unipro.h                          |  39 ++
+ 14 files changed, 906 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+ create mode 100644 drivers/scsi/ufs/ufs-dwc-pci.c
+ create mode 100644 drivers/scsi/ufs/ufs-dwc.c
+ create mode 100644 drivers/scsi/ufs/ufshcd-dwc.c
+ create mode 100644 drivers/scsi/ufs/ufshcd-dwc.h
+ create mode 100644 drivers/scsi/ufs/ufshci-dwc.h
 
-> As long as you use "allwinner,sun6i-a31-clock-reset", no special code is needed.
+-- 
+1.8.1.5
 
-Yeah, great, I will just replace the string in the DT.
-
-Cheers,
-Andre.
-
->> Cheers,
->> Andre
->>
->>>> 3) As Jens pointed out, the MMC IP block isn't really compatible.
->>>> Changing the clocks is easy (done already), but we need to come up with
->>>> code to cover the new phase setting registers in the A64 MMC register block.
->>>>
->>>> Interestingly somehow hacking this (pretending it is compatible) seems
->>>> to work, though I got reports from people about mysterious kernel
->>>> crashes, so I'm inclined to leave MMC out of the first patch series.
->>>>
->>>> So if you could take a look at the new registers (starting at offset
->>>> 0x140) and work out what we actually need to do here, that would be
->>>> great. I have no real clue about what they actually do and how they
->>>> relate to the current output and sample clock phase.
->>>> To me it looks like we might get away with just triggering the automatic
->>>> calibration and the hardware does the rest for us - keep your fingers
->>>> crossed ;-)
->>>>
->>>> Cheers,
->>>> Andre.
->>>>
->>>> --
->>>> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
->>>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
->>>> For more options, visit https://groups.google.com/d/optout.
->>>
->>
->> --
->> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
->> For more options, visit https://groups.google.com/d/optout.
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
