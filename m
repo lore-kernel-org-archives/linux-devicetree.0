@@ -1,65 +1,80 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v3 1/6] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
-Date: Sun, 14 Feb 2016 16:41:12 -0800
-Message-ID: <CAJAp7Oib4xJEHoxiwwGhOhcD3WG4AfdCGGVNqmit+Y6LGnkgoA@mail.gmail.com>
-References: <1447975173-29485-1-git-send-email-mmcclint@qca.qualcomm.com>
-	<1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
+Date: Mon, 15 Feb 2016 10:45:27 +0900
+Message-ID: <20160215014527.GE12997@verge.net.au>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+ <4506196.xOgpYRO52t@wasted.cogentembedded.com>
+ <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <56ABCB69.1070800@cogentembedded.com>
+ <56ABD066.7020804@cogentembedded.com>
+ <SG2PR06MB0919361DC5805AE3F5B74041D8DE0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <56AF9BE8.4020002@cogentembedded.com>
+ <56AFAB67.20404@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew McClintock <mmcclint@qca.qualcomm.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Varadarajan Narayanan <varada@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56AFAB67.20404@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 3:19 PM, Matthew McClintock
-<mmcclint@qca.qualcomm.com> wrote:
-> From: Varadarajan Narayanan <varada@codeaurora.org>
->
-> Add pinctrl driver support for IPQ4019 platform
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
-> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
-> ---
+On Mon, Feb 01, 2016 at 10:00:55PM +0300, Sergei Shtylyov wrote:
+> On 02/01/2016 08:54 PM, Sergei Shtylyov wrote:
+> 
+> >>>>>>From: linux-renesas-soc-owner@vger.kernel.org
+> >>>>>>[mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Sergei
+> >>>>>>Shtylyov
+> >>>>>>Sent: Wednesday, January 27, 2016 7:14 AM
+> >>>>>>
+> >>>>>>Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
+> >>>>>>are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
+> >>>>>>can add  MAX3355 device node to  the Porter device tree and properly refer
+> >>>>>>to it from the USBHS node instead of using  "renesas,enable-gpio" property
+> >>>>>>which only allowed checking the USB ID pin  at the driver probe time;  now
+> >>>>>>this  pin's  state can be monitored dynamically!
+> >>>>>>
+> >>>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>>>>
+> >>>>>I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
+> >>>>>even if I connected/disconnected a usb convert cable (usb micro-ab to A).
+> >>>>>Remarks: I confirmed that the usb convert cable worked correctly on other
+> >>>>>board.
+> >>>>
+> >>>>     I guess I have the same cable
+> >>>
+> >>>     No, I have mini-AB connector here and hence my cable is mini-AB to A.
+> >>
+> >>I checked Porter specification and then I found 2 specifications exist...
+> >
+> >    I've looked thru my schematics files and found 3: Rev. 1.1 Update Version
+> >2, "PORTER_2" Rev. 3.0 Preliminary, and "PORTER_C" Rev. 3.0 Release version!
+> >I'm not sure which of the last 2 should be considered final...
+> 
+>    Now I've found 5 versions of the Porter schematics... :-)
+> 
+> >>  Porter "B" : mini AB connecter and Max3355 is on the board.
+> >>  Porter "C" : micro AB connect and Max3355 is not on the board. (Select
+> >>host/peripheral by a jumper.)
+> >
+> >    Yeah, seeing JP13 in the PORTER_C schematics.
+> >
+> >>I guess that your current target is "B".
+> >
+> >    If not earlier. It actually has "Henninger B REV2" printed on it and
+> >"Porter PCB 1 R3" on a pasted sticker.
+> >
+> >>If so, I think this patch is acceptable.
+> >
+> >    I'm not so sure now...
+> 
+>    My boss told me PORTER_C is a final version, so this patch isn't needed.
+> But then another patch is needed instead: to remove "renesas,enable-gpio"
+> prop from the HS-USB device node...
 
-I was asked to review this, to make sure that Linus wasn't waiting for
-my ack or anything. But now I see that you have not added him as a
-recipient. Please make sure to run ./scripts/get_maintainer.pl and
-pick appropriate recipients in the future.
+I am marking this patch as "Rejected" in patchwork.
+If changes are required in this area please either
+resubmit this patch or post a different one.
 
->
-> v3
-> - update example with actual values from dts
-> - add missing pins 71-99
-> - drop many functions and stick to basic functionality
->
-
-I hope to see a patch later on adding all those functions back, but
-that's fine with me.
-
-[..]
-
-> +static struct platform_driver ipq4019_pinctrl_driver = {
-> +       .driver = {
-> +               .name = "ipq4019-pinctrl",
-> +               .owner = THIS_MODULE,
-
-platform_drivers do get their .owner assigned by platform_drive_register().
-
-> +               .of_match_table = ipq4019_pinctrl_of_match,
-> +       },
-> +       .probe = ipq4019_pinctrl_probe,
-> +       .remove = msm_pinctrl_remove,
-> +};
-
-Part of the .owner above you have my
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-@Linus, this still applies and builds cleanly on linux-next.
-Would you be okay dropping the owner assignment while applying this patch?
-
-Regards,
-Bjorn
+Thanks.
