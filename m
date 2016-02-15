@@ -1,38 +1,123 @@
-From: Quan Nguyen <qnguyen@apm.com>
-Subject: [PATCH v6 3/3] arm64: dts: Update X-Gene standby GPIO controller DTS entries
-Date: Mon, 15 Feb 2016 11:57:43 +0700
-Message-ID: <1455512263-18183-4-git-send-email-qnguyen@apm.com>
-References: <1455512263-18183-1-git-send-email-qnguyen@apm.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1455512263-18183-1-git-send-email-qnguyen@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com, Quan Nguyen <qnguyen@apm.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add iio_hwmon node for ADC
+ temperature channel
+Date: Sun, 14 Feb 2016 21:14:06 -0800
+Message-ID: <56C15E9E.3070802@roeck-us.net>
+References: <cd32f1664a04b38b8a025414d039bd015cb9a5ff.1455278754.git.maitysanchayan@gmail.com>
+ <20160214083349.GR6756@tiger>
+ <20160215044214.GA5545@Sanchayan-Arch.toradex.int>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160215044214.GA5545-2b/appYahYAQpivJYWJ5AnfHJb42ZiuNiBNltiLz+yw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: stefan-XLVq0VzYD2Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update APM X-Gene standby GPIO controller DTS entries to enable it
-as interrupt controller.
+On 02/14/2016 08:42 PM, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> Hello Shawn,
+>
+> On 16-02-14 16:33:49, Shawn Guo wrote:
+>> On Fri, Feb 12, 2016 at 05:53:00PM +0530, Sanchayan Maity wrote:
+>>> Add iio_hwmon node to expose the temperature channel on Vybrid as
+>>> hardware monitor device using the iio_hwmon driver.
+>>>
+>>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>
+>>> Hello,
+>>>
+>>> The first version of the patch was send quite a while ago.
+>>> https://lkml.org/lkml/2015/9/16/932
+>>>
+>>> Shawn you had requested that hyphen rather than underscore should
+>>> be used in node name. I looked into that.
+>>>
+>>> The iio_hwmon driver calls hwmon_device register_with_groups inside
+>>> hwmon.c and this
+>>> http://lxr.free-electrons.com/source/drivers/hwmon/hwmon.c#L103
+>>>
+>>> does not allow hyphen in hwmon name attribute. I was not aware of
+>>> this but while trying to test the change, the device probe failed
+>>> with EINVAL. I think we should stick to the existing use of the
+>>> bindings or we need to change the hwmon code as well along with the
+>>> existing device tree files and binding documentation.
+>>
+>> I disagree.
+>>
+>> If hyphen is invalid to be part of hwmon name attribute, the following
+>> code in iio_hwmon_probe() is plain wrong, because hyphen is very valid
+>> to be part of node names in device tree.
+>>
+>>          if (dev->of_node && dev->of_node->name)
+>>                  name = dev->of_node->name;
+>
+> @Shawn
+> I agree with what you state here, however as you can see the hwmon_device_
+> register_with_groups does check for hypen with strpbrk and returns EINVAL.
+> Changing to hyphen instead of currently present underscore in iio_hwmon
+> node name causes probe failure.
+>
+> If the node name needs to have hyphen, then the check for hyphen as an invalid
+> character in hwmon name attribute needs to be changed. I am CC'ing the hwmon
+> subsystem maintainers Jean Delvare ands Guenter Roeck as well as hwmon list to
+> check.
+>
+> @Jean & Guenter
+> Can you please comment if the change to hwmon_device_register_with_groups
+> to accept hyphen as a valid character in hwmon name attribute will be acceptable?
 
-Signed-off-by: Y Vo <yvo@apm.com>
-Signed-off-by: Quan Nguyen <qnguyen@apm.com>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+User space would not like the '-' and get confused.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index fe30f76..0f733da 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -883,6 +883,9 @@
- 					<0x0 0x2b 0x1>,
- 					<0x0 0x2c 0x1>,
- 					<0x0 0x2d 0x1>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
- 		};
- 
- 		rtc: rtc@10510000 {
--- 
-1.7.12.4
+We'll have to change the above code and replace '-' with '_' in the name if/when
+it is seen. Sorry, I didn't realize the problem when I wrote that code.
 
+Guenter
+
+> Sorry if this is sudden andfor bringing you late into the discussion Jean and
+> Guenter.
+>
+> Thanks & Regards,
+> Sanchayan.
+>
+>>
+>> Shawn
+>>
+>>>
+>>> Changes since v1:
+>>> 1. Expose ADC1 temperature channel as well
+>>> 2. Move the entry outside of the aips1 bus node
+>>>
+>>> Best Regards,
+>>> Sanchayan Maity.
+>>> ---
+>>>   arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+>>> index a5f07e3..8ed8e47 100644
+>>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+>>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+>>> @@ -673,5 +673,10 @@
+>>>   				status = "disabled";
+>>>   			};
+>>>   		};
+>>> +
+>>> +		iio_hwmon {
+>>> +			compatible = "iio-hwmon";
+>>> +			io-channels = <&adc0 16>, <&adc1 16>;
+>>> +		};
+>>>   	};
+>>>   };
+>>> --
+>>> 2.7.1
+>>>
+>>>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
