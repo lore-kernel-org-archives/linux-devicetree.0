@@ -1,80 +1,85 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
-Date: Mon, 15 Feb 2016 10:45:27 +0900
-Message-ID: <20160215014527.GE12997@verge.net.au>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <4506196.xOgpYRO52t@wasted.cogentembedded.com>
- <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56ABCB69.1070800@cogentembedded.com>
- <56ABD066.7020804@cogentembedded.com>
- <SG2PR06MB0919361DC5805AE3F5B74041D8DE0@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56AF9BE8.4020002@cogentembedded.com>
- <56AFAB67.20404@cogentembedded.com>
+Subject: Re: [PATCH v2 0/6] ARM/arm64 : shmobile/renesas: Add L2
+ cache-controller nodes
+Date: Mon, 15 Feb 2016 10:58:49 +0900
+Message-ID: <20160215015848.GD14034@verge.net.au>
+References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56AFAB67.20404@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 10:00:55PM +0300, Sergei Shtylyov wrote:
-> On 02/01/2016 08:54 PM, Sergei Shtylyov wrote:
-> 
-> >>>>>>From: linux-renesas-soc-owner@vger.kernel.org
-> >>>>>>[mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Sergei
-> >>>>>>Shtylyov
-> >>>>>>Sent: Wednesday, January 27, 2016 7:14 AM
-> >>>>>>
-> >>>>>>Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
-> >>>>>>are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
-> >>>>>>can add  MAX3355 device node to  the Porter device tree and properly refer
-> >>>>>>to it from the USBHS node instead of using  "renesas,enable-gpio" property
-> >>>>>>which only allowed checking the USB ID pin  at the driver probe time;  now
-> >>>>>>this  pin's  state can be monitored dynamically!
-> >>>>>>
-> >>>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>>>>
-> >>>>>I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
-> >>>>>even if I connected/disconnected a usb convert cable (usb micro-ab to A).
-> >>>>>Remarks: I confirmed that the usb convert cable worked correctly on other
-> >>>>>board.
-> >>>>
-> >>>>     I guess I have the same cable
-> >>>
-> >>>     No, I have mini-AB connector here and hence my cable is mini-AB to A.
-> >>
-> >>I checked Porter specification and then I found 2 specifications exist...
-> >
-> >    I've looked thru my schematics files and found 3: Rev. 1.1 Update Version
-> >2, "PORTER_2" Rev. 3.0 Preliminary, and "PORTER_C" Rev. 3.0 Release version!
-> >I'm not sure which of the last 2 should be considered final...
-> 
->    Now I've found 5 versions of the Porter schematics... :-)
-> 
-> >>  Porter "B" : mini AB connecter and Max3355 is on the board.
-> >>  Porter "C" : micro AB connect and Max3355 is not on the board. (Select
-> >>host/peripheral by a jumper.)
-> >
-> >    Yeah, seeing JP13 in the PORTER_C schematics.
-> >
-> >>I guess that your current target is "B".
-> >
-> >    If not earlier. It actually has "Henninger B REV2" printed on it and
-> >"Porter PCB 1 R3" on a pasted sticker.
-> >
-> >>If so, I think this patch is acceptable.
-> >
-> >    I'm not so sure now...
-> 
->    My boss told me PORTER_C is a final version, so this patch isn't needed.
-> But then another patch is needed instead: to remove "renesas,enable-gpio"
-> prop from the HS-USB device node...
+Hi Geert,
 
-I am marking this patch as "Rejected" in patchwork.
-If changes are required in this area please either
-resubmit this patch or post a different one.
+On Mon, Dec 07, 2015 at 07:24:13PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
+> 
+> This patch series adds the missing L2 cache-controller nodes to the
+> DTSes for various Renesas ARM-based SoCs, and links the CPU nodes to
+> them.
+> 
+> For R-Mobile APE6 (r8a73a4), the L2 cache-controllers are also linked to
+> the respective (already existing) SYSC Power Domains. Fortunately these
+> Power Domains were never powered down, as they are parents of the Power
+> Domains containing CPU cores. This may change in the future.
+> 
+> For R-Car Gen2 and Gen3 (r8a779x), this serves as a preparatory step for
+> adding SYSC Power Domain support later.
+> 
+> Question for the ARM/DT people: What are the DT bindings for
+> Cortex-A15/A7/A57/A53 L2 cache controllers?
+> Everybody just seems to use "cache" for the compatible values...
+> 
+> Patches 2-5 were extracted from series "[PATCH/RFC 00/15]
+> ARM: shmobile: R-Car: Add SYSC PM Domain DT Support",
+> (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348742.html)
+> and received some fixes. You can find more detailed changelogs in the
+> individual patches).
+> 
+> This has been tested on r8a73a4/ape6evm, r8a7791/koelsch, and
+> r8a7795/salvator-x.
 
-Thanks.
+Sorry for loosing track of this until now.
+
+It seems to me that the Gen-2 changes could be applied, is that correct?
+It also seems to me that there was inconclusive discussion regarding
+the r8a7795 change, is that also correct.
+
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (6):
+>   ARM: shmobile: r8a73a4 dtsi: Add L2 cache-controller nodes
+>   ARM: shmobile: r8a7790 dtsi: Add L2 cache-controller nodes
+>   ARM: shmobile: r8a7791 dtsi: Add L2 cache-controller node
+>   ARM: shmobile: r8a7793 dtsi: Add L2 cache-controller node
+>   ARM: shmobile: r8a7794 dtsi: Add L2 cache-controller node
+>   arm64: renesas: r8a7795: Add L2 cache-controller nodes
+> 
+>  arch/arm/boot/dts/r8a73a4.dtsi           | 19 +++++++++++++++++++
+>  arch/arm/boot/dts/r8a7790.dtsi           | 22 ++++++++++++++++++++++
+>  arch/arm/boot/dts/r8a7791.dtsi           | 10 ++++++++++
+>  arch/arm/boot/dts/r8a7793.dtsi           |  9 +++++++++
+>  arch/arm/boot/dts/r8a7794.dtsi           |  8 ++++++++
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 15 +++++++++++++++
+>  6 files changed, 83 insertions(+)
+> 
+> -- 
+> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
