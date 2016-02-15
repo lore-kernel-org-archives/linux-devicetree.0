@@ -1,56 +1,52 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/3] power: bq24735-charger: chromebook fixes
-Date: Mon, 15 Feb 2016 06:58:04 +0100
-Message-ID: <20160215055803.GF28626@earth>
-References: <1454479426-6437-1-git-send-email-sctincman@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z0eOaCaDLjvTGF2l"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1454479426-6437-1-git-send-email-sctincman@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jonathan Tinkham <sctincman@gmail.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] ARM: dts: vfxxx: Add DAC node for Vybrid SoC
+Date: Mon, 15 Feb 2016 12:12:32 +0530
+Message-ID: <cb23ab53250603e96eb4725c266d01e5376f8a68.1455516083.git.maitysanchayan@gmail.com>
+References: <cover.1455516083.git.maitysanchayan@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add a device tree node entry for DAC peripheral on Vybrid SoC.
 
---z0eOaCaDLjvTGF2l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/vfxxx.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Hi,
-
-On Tue, Feb 02, 2016 at 11:03:43PM -0700, Jonathan Tinkham wrote:
-> On Acer Chromebook 13 (CB5-311) this module fails to load if the charger
-> is not inserted, and will error when it is removed.
->=20
-> These fixes are adapted from Acer's downstream kernel.
-
-Thanks, queued for 4.6.
-
--- Sebastian
-
---z0eOaCaDLjvTGF2l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWwWjrAAoJENju1/PIO/qanXcQAKYaqEnfe7kCttdz4mF1ugTC
-1FFkyudrUyHo5tjSVF6s3YA8nQn41adZj7hME1InCKMXgvG8Ada1tqHdtk9L4KVQ
-ltH/3AD64Kgro9xqb/N7zChp1L13DRFtmSxnTQjM4wtlgoG0v5zT+qfZ2g8Rrgvl
-t6TsBwX9gFa7iKMK8JTJqP8uqP7bMm8yuxEcg5t01yZXv86L1YLXudKVyA8PubbV
-uf+S1CM4Tq/MompngtzfTgwm8tEmC1es0mohPeqWYTpC8KzMs0ZN20+10DZpObDT
-ngj9LI/2gP3zhst/ztrYbQcjCVMTc5K9/bRSNMi+V8Q63HDJmnmBv4EnxHXu3JST
-pJo2EF/SOrXQOuGhbBzi56iTGOYi5wfwe21ZuDfk8PkqjzjxjUBgHIB8/Tkxje1l
-n/0miPc6VpfueT4LVe8bnDtp/4v7T5kXHTqwVQ4tn0Cr/albMphHwtOrIeehEOw9
-9Zsr/uqY68Ic4dsb+d4CzkmmAYa7eZPANTigHSyub1UXuq7McG+EqgJOiCIAKyaj
-IlS7saC6XpRwmdqO533TSe5hJAumHBQDDFElkSXUrExgWHo68EwCuF8VPF+HcGYB
-Ey4vkjt3EP6trffWGqIyOGa4z9Mv5wxle6wLVeV63YmgcsCgJiur52+CD1YRzwOY
-Whey4hipawZbq2f+v0Vs
-=uD/y
------END PGP SIGNATURE-----
-
---z0eOaCaDLjvTGF2l--
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index a5f07e3..8238069 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -602,6 +602,24 @@
+ 				status = "disabled";
+ 			};
+ 
++			dac0: dac@400cc000 {
++				compatible = "fsl,vf610-dac";
++				reg = <0x400cc000 1000>;
++				interrupts = <55 IRQ_TYPE_LEVEL_HIGH>;
++				clock-names = "dac";
++				clocks = <&clks VF610_CLK_DAC0>;
++				status = "disabled";
++			};
++
++			dac1: dac@400cd000 {
++				compatible = "fsl,vf610-dac";
++				reg = <0x400cd000 1000>;
++				interrupts = <56 IRQ_TYPE_LEVEL_HIGH>;
++				clock-names = "dac";
++				clocks = <&clks VF610_CLK_DAC1>;
++				status = "disabled";
++			};
++
+ 			fec0: ethernet@400d0000 {
+ 				compatible = "fsl,mvf600-fec";
+ 				reg = <0x400d0000 0x1000>;
+-- 
+2.7.1
