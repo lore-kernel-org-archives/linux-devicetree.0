@@ -1,404 +1,81 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC
-Date: Mon, 15 Feb 2016 12:12:33 +0530
-Message-ID: <597b39da08c4c1416984cf7e873f56e19975b80e.1455516083.git.maitysanchayan@gmail.com>
-References: <cover.1455516083.git.maitysanchayan@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1455516083.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
+Date: Mon, 15 Feb 2016 12:23:26 +0530
+Message-ID: <1455519206-12939-14-git-send-email-architt@codeaurora.org>
+References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robdclark@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver support for DAC peripheral on Vybrid SoC.
-
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
- .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
- drivers/iio/dac/Kconfig                            |   8 +
- drivers/iio/dac/Makefile                           |   1 +
- drivers/iio/dac/vf610_dac.c                        | 298 +++++++++++++++++++++
- 5 files changed, 336 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
- create mode 100644 drivers/iio/dac/vf610_dac.c
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-vf610 b/Documentation/ABI/testing/sysfs-bus-iio-vf610
-index ecbc1f4..5ea809c 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-vf610
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-vf610
-@@ -5,3 +5,12 @@ Description:
- 		Specifies the hardware conversion mode used. The three
- 		available modes are "normal", "high-speed" and "low-power",
- 		where the last is the default mode.
-+
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/out_conversion_mode
-+KernelVersion:	4.6
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Specifies the hardware conversion mode used within DAC.
-+		The two available modes are "high-power" and "low-power",
-+		where "low-power" mode is the default mode.
-\ No newline at end of file
-diff --git a/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
-new file mode 100644
-index 0000000..20c6c7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
-@@ -0,0 +1,20 @@
-+Freescale vf610 Digital to Analog Converter bindings
-+
-+The devicetree bindings are for the new DAC driver written for
-+vf610 SoCs from Freescale.
-+
-+Required properties:
-+- compatible: Should contain "fsl,vf610-dac"
-+- reg: Offset and length of the register set for the device
-+- interrupts: Should contain the interrupt for the device
-+- clocks: The clock is needed by the DAC controller
-+- clock-names: Must contain "dac" matching entry in the clocks property.
-+
-+Example:
-+dac0: dac@400cc000 {
-+	compatible = "fsl,vf610-dac";
-+	reg = <0x400cc000 0x1000>;
-+	interrupts = <55 IRQ_TYPE_LEVEL_HIGH>;
-+	clock-names = "dac";
-+	clocks = <&clks VF610_CLK_DAC0>;
-+};
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index e701e28..8eb0502 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -196,4 +196,12 @@ config MCP4922
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called mcp4922.
- 
-+config VF610_DAC
-+	tristate "Vybrid vf610 DAC driver"
-+	help
-+	  Say yes here to support Vybrid board digital-to-analog converter.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called vf610_dac.
-+
- endmenu
-diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
-index 63ae056..93feb27 100644
---- a/drivers/iio/dac/Makefile
-+++ b/drivers/iio/dac/Makefile
-@@ -21,3 +21,4 @@ obj-$(CONFIG_MAX517) += max517.o
- obj-$(CONFIG_MAX5821) += max5821.o
- obj-$(CONFIG_MCP4725) += mcp4725.o
- obj-$(CONFIG_MCP4922) += mcp4922.o
-+obj-$(CONFIG_VF610_DAC) += vf610_dac.o
-diff --git a/drivers/iio/dac/vf610_dac.c b/drivers/iio/dac/vf610_dac.c
-new file mode 100644
-index 0000000..3f70f96
---- /dev/null
-+++ b/drivers/iio/dac/vf610_dac.c
-@@ -0,0 +1,298 @@
-+/*
-+ * Freescale Vybrid vf610 DAC driver
-+ *
-+ * Copyright 2016 Toradex AG
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define VF610_DACx_STATCTRL		0x20
-+
-+#define VF610_DAC_DACEN			BIT(15)
-+#define VF610_DAC_DACRFS		BIT(14)
-+#define VF610_DAC_LPEN			BIT(11)
-+
-+#define VF610_DAC_DAT0(x)		((x) & 0xFFF)
-+
-+enum vf610_conversion_mode_sel {
-+	VF610_DAC_CONV_HIGH_POWER,
-+	VF610_DAC_CONV_LOW_POWER,
-+};
-+
-+struct vf610_dac {
-+	struct clk *clk;
-+	struct device *dev;
-+	enum vf610_conversion_mode_sel conv_mode;
-+	void __iomem *regs;
-+};
-+
-+static void vf610_dac_init(struct vf610_dac *info)
-+{
-+	int val;
-+
-+	info->conv_mode = VF610_DAC_CONV_LOW_POWER;
-+	val = VF610_DAC_DACEN | VF610_DAC_DACRFS |
-+		VF610_DAC_LPEN;
-+	writel(val, info->regs + VF610_DACx_STATCTRL);
-+}
-+
-+static void vf610_dac_exit(struct vf610_dac *info)
-+{
-+	int val;
-+
-+	val = readl(info->regs + VF610_DACx_STATCTRL);
-+	val &= ~VF610_DAC_DACEN;
-+	writel(val, info->regs + VF610_DACx_STATCTRL);
-+}
-+
-+static int vf610_set_conversion_mode(struct iio_dev *indio_dev,
-+				const struct iio_chan_spec *chan,
-+				unsigned int mode)
-+{
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+	int val;
-+
-+	mutex_lock(&indio_dev->mlock);
-+	info->conv_mode = mode;
-+	val = readl(info->regs + VF610_DACx_STATCTRL);
-+	if (mode)
-+		val |= VF610_DAC_LPEN;
-+	else
-+		val &= ~VF610_DAC_LPEN;
-+	writel(val, info->regs + VF610_DACx_STATCTRL);
-+	mutex_unlock(&indio_dev->mlock);
-+
-+	return 0;
-+}
-+
-+static int vf610_get_conversion_mode(struct iio_dev *indio_dev,
-+				const struct iio_chan_spec *chan)
-+{
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+
-+	return info->conv_mode;
-+}
-+
-+static const char * const vf610_conv_modes[] = { "high-power", "low-power" };
-+
-+static const struct iio_enum vf610_conversion_mode = {
-+	.items = vf610_conv_modes,
-+	.num_items = ARRAY_SIZE(vf610_conv_modes),
-+	.get = vf610_get_conversion_mode,
-+	.set = vf610_set_conversion_mode,
-+};
-+
-+static const struct iio_chan_spec_ext_info vf610_ext_info[] = {
-+	IIO_ENUM("conversion_mode", IIO_SHARED_BY_DIR,
-+		&vf610_conversion_mode),
-+	{},
-+};
-+
-+#define VF610_DAC_CHAN(_chan_type) { \
-+	.type = (_chan_type), \
-+	.output = 1, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+	.ext_info = vf610_ext_info, \
-+}
-+
-+static const struct iio_chan_spec vf610_dac_iio_channels[] = {
-+	VF610_DAC_CHAN(IIO_VOLTAGE),
-+};
-+
-+static int vf610_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2,
-+			long mask)
-+{
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		*val = VF610_DAC_DAT0(readl(info->regs));
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		/*
-+		 * DACRFS is always 1 for valid reference and typical
-+		 * reference voltage as per Vybrid datasheet is 3.3V
-+		 * from section 9.1.2.1 of Vybrid datasheet
-+		 */
-+		*val = 3300 /* mV */;
-+		*val2 = 12;
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int vf610_write_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int val, int val2,
-+			long mask)
-+{
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&indio_dev->mlock);
-+		writel(VF610_DAC_DAT0(val), info->regs);
-+		mutex_unlock(&indio_dev->mlock);
-+		return 0;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vf610_dac_iio_info = {
-+	.driver_module = THIS_MODULE,
-+	.read_raw = &vf610_read_raw,
-+	.write_raw = &vf610_write_raw,
-+};
-+
-+static const struct of_device_id vf610_dac_match[] = {
-+	{ .compatible = "fsl,vf610-dac", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, vf610_dac_match);
-+
-+static int vf610_dac_probe(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev;
-+	struct vf610_dac *info;
-+	struct resource *mem;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev,
-+					sizeof(struct vf610_dac));
-+	if (!indio_dev) {
-+		dev_err(&pdev->dev, "Failed allocating iio device\n");
-+		return -ENOMEM;
-+	}
-+
-+	info = iio_priv(indio_dev);
-+	info->dev = &pdev->dev;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	info->regs = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(info->regs))
-+		return PTR_ERR(info->regs);
-+
-+	info->clk = devm_clk_get(&pdev->dev, "dac");
-+	if (IS_ERR(info->clk)) {
-+		dev_err(&pdev->dev, "Failed getting clock, err = %ld\n",
-+			PTR_ERR(info->clk));
-+		return PTR_ERR(info->clk);
-+	}
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->dev.of_node = pdev->dev.of_node;
-+	indio_dev->info = &vf610_dac_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = vf610_dac_iio_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vf610_dac_iio_channels);
-+
-+	ret = clk_prepare_enable(info->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Could not prepare or enable the clock\n");
-+		return ret;
-+	}
-+
-+	vf610_dac_init(info);
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Couldn't register the device\n");
-+		goto error_iio_device_register;
-+	}
-+
-+	return 0;
-+
-+error_iio_device_register:
-+	clk_disable_unprepare(info->clk);
-+
-+	return ret;
-+}
-+
-+static int vf610_dac_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+
-+	vf610_dac_exit(info);
-+	iio_device_unregister(indio_dev);
-+	clk_disable_unprepare(info->clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int vf610_dac_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+
-+	vf610_dac_exit(info);
-+	clk_disable_unprepare(info->clk);
-+
-+	return 0;
-+}
-+
-+static int vf610_dac_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct vf610_dac *info = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(info->clk);
-+	if (ret)
-+		return ret;
-+
-+	vf610_dac_init(info);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(vf610_dac_pm_ops, vf610_dac_suspend, vf610_dac_resume);
-+
-+static struct platform_driver vf610_dac_driver = {
-+	.probe          = vf610_dac_probe,
-+	.remove         = vf610_dac_remove,
-+	.driver         = {
-+		.name   = "vf610-dac",
-+		.of_match_table = vf610_dac_match,
-+		.pm     = &vf610_dac_pm_ops,
-+	},
-+};
-+module_platform_driver(vf610_dac_driver);
-+
-+MODULE_AUTHOR("Sanchayan Maity <sanchayan.maity-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org");
-+MODULE_DESCRIPTION("Freescale VF610 DAC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.1
+QWRkIEhETUkgUEhZIGJpbmRpbmdzLiBVcGRhdGUgdGhlIGV4YW1wbGUgdG8gdXNlIEhETUkgUEhZ
+LgoKQWRkIGEgbWlzc2luZyBwb3dlci1kb21haW5zIHByb3BlcnR5IGluIHRoZSBIRE1JIGNvcmUg
+YmluZGluZ3MuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+CgpTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
+QGNvZGVhdXJvcmEub3JnPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2hkbWkudHh0ICAgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5n
+ZWQsIDM4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKaW5kZXggMzc5
+ZWUyZS4uNGQ3MTkxMCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dApAQCAtMTEsNiArMTEsNyBAQCBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgogLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRo
+ZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzCiAtIHJlZy1uYW1lczogImNvcmVfcGh5c2ljYWwiCiAt
+IGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGhkbWkgYmxvY2suCist
+IHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KIC0gY2xvY2tzOiBk
+ZXZpY2UgY2xvY2tzCiAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRh
+aWxzLgogLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgpAQCAtMTgsNiAr
+MTksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBxY29tLGhkbWktdHgtaHBkLWdwaW86IGhw
+ZCBwaW4KIC0gY29yZS12ZGRhLXN1cHBseTogcGhhbmRsZSB0byBzdXBwbHkgcmVndWxhdG9yCiAt
+IGhkbWktbXV4LXN1cHBseTogcGhhbmRsZSB0byBtdXggcmVndWxhdG9yCistIHFjb20saGRtaS1w
+aHk6IHBoYW5kbGUgdG8gSERNSSBQSFkgZGV2aWNlIG5vZGUKIAogT3B0aW9uYWwgcHJvcGVydGll
+czoKIC0gcWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCkBAIC0y
+Nyw2ICsyOSwyNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwaW5jdHJsLTA6IHRoZSBkZWZh
+dWx0IHBpbmN0cmwgc3RhdGUgKGFjdGl2ZSkKIC0gcGluY3RybC0xOiB0aGUgInNsZWVwIiBwaW5j
+dHJsIHN0YXRlCiAKK0hETUkgUEhZOgorUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJs
+ZTogQ291bGQgYmUgdGhlIGZvbGxvd2luZworICAqICJxY29tLGhkbWktcGh5LTh4NjAiCisgICog
+InFjb20saGRtaS1waHktODk2MCIKKyAgKiAicWNvbSxoZG1pLXBoeS04eDc0IgorICAqICJxY29t
+LGhkbWktcGh5LTg5OTYiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
+b2YgdGhlIHJlZ2lzdGVycyBvZiB0aGUgUEhZIHN1YiBibG9ja3MuCistIHJlZy1uYW1lczogVGhl
+IG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVnaW9ucyBhcmUgcmVx
+dWlyZWQ6CisgICogImhkbWlfcGxsIgorICAqICJoZG1pX3BoeSIKKyAgRm9yIEhETUkgUEhZIG9u
+IG1zbTg5OTYsIHRoZXNlIGFkZGl0aW9uYWwgcmVnaXN0ZXIgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6
+CisgICAgKiAiaGRtaV90eF9sMCIKKyAgICAqICJoZG1pX3R4X2wxIgorICAgICogImhkbWlfdHhf
+bDMiCisgICAgKiAiaGRtaV90eF9sNCIKKy0gcG93ZXItZG9tYWluczogU2hvdWxkIGJlIDwmbW1j
+YyBNRFNTX0dEU0M+LgorLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKKyAgU2VlIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRh
+aWxzLgorLSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmlj
+ZSBub2RlCisKIEV4YW1wbGU6CiAKIC8gewpAQCAtMzUsNyArNTgsNyBAQCBFeGFtcGxlOgogCWhk
+bWk6IHFjb20saGRtaS10eC04OTYwQDRhMDAwMDAgewogCQljb21wYXRpYmxlID0gInFjb20saGRt
+aS10eC04OTYwIjsKIAkJcmVnLW5hbWVzID0gImNvcmVfcGh5c2ljYWwiOwotCQlyZWcgPSA8MHgw
+NGEwMDAwMCAweDEwMDA+OworCQlyZWcgPSA8MHgwNGEwMDAwMCAweDJmMD47CiAJCWludGVycnVw
+dHMgPSA8R0lDX1NQSSA3OSAwPjsKIAkJcG93ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+
+OwogCQljbG9jay1uYW1lcyA9CkBAIC01NCw1ICs3NywxOSBAQCBFeGFtcGxlOgogCQlwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOwogCQlwaW5jdHJsLTAgPSA8JmhwZF9hY3RpdmUg
+ICZkZGNfYWN0aXZlICAmY2VjX2FjdGl2ZT47CiAJCXBpbmN0cmwtMSA9IDwmaHBkX3N1c3BlbmQg
+JmRkY19zdXNwZW5kICZjZWNfc3VzcGVuZD47CisKKwkJcWNvbSxoZG1pLXBoeSA9IDwmaGRtaV9w
+aHk+OworCX07CisKKwloZG1pX3BoeTogcWNvbSxoZG1pLXBoeS04OTYwQDRhMDA0MDAgeworCQlj
+b21wYXRpYmxlID0gInFjb20saGRtaS1waHktODk2MCI7CisJCXJlZy1uYW1lcyA9ICJoZG1pX3Bo
+eSIsCisJCQkgICAgImhkbWlfcGxsIjsKKwkJcmVnID0gPDB4NGEwMDQwMCAweDYwPiwKKwkJICAg
+ICAgPDB4NGEwMDUwMCAweDEwMD47CisJCXBvd2VyLWRvbWFpbnMgPSA8Jm1tY2MgTURTU19HRFND
+PjsKKwkJY2xvY2stbmFtZXMgPSAic2xhdmVfaWZhY2VfY2xrIjsKKwkJY2xvY2tzID0gPCZtbWNj
+IEhETUlfU19BSEJfQ0xLPjsKKwkJY29yZS12ZGRhLXN1cHBseSA9IDwmcG04OTIxX2hkbWlfbXZz
+PjsKIAl9OwogfTsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
+IG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmhvc3RlZCBieSBUaGUgTGludXggRm91
+bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
