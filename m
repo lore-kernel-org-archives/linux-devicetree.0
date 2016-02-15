@@ -1,67 +1,37 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH 1/1] MIPS: DTS: cavium-octeon: provide model attribute
-Date: Mon, 15 Feb 2016 21:59:48 +0200
-Message-ID: <20160215195948.GF1640@darkstar.musicnaut.iki.fi>
-References: <1455513977-934-1-git-send-email-xypron.glpk@gmx.de>
- <56C1B3A0.4090301@cogentembedded.com>
- <56C21054.4070702@gmx.de>
- <20160215183838.GD1640@darkstar.musicnaut.iki.fi>
- <56C2253D.50101@gmx.de>
- <20160215194056.GE1640@darkstar.musicnaut.iki.fi>
- <56C22C18.5090608@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56C22C18.5090608-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v2 1/4] dma: mmp_pdma: Add the #dma-requests DT property documentation
+Date: Mon, 15 Feb 2016 21:27:44 +0100
+Message-ID: <1455568067-20203-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Vinod Koul <vinod.koul@intel.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+For pxa based platforms, the number of requestor lines should be
+specified, so that the driver can check if the flow control should be
+activated (when a requestor line is asked for) or not.
 
-On Mon, Feb 15, 2016 at 08:50:48PM +0100, Heinrich Schuchardt wrote:
-> On 02/15/2016 08:40 PM, Aaro Koskinen wrote:
-> > On Mon, Feb 15, 2016 at 08:21:33PM +0100, Heinrich Schuchardt wrote:
-> >> flash-kernel has a database /usr/share/flash-kernel/db/all.db with
-> >> entries like:
-> >>
-> >> Machine: LeMaker Banana Pi
-> >> Kernel-Flavors: armmp armmp-lpae
-> >> Boot-Script-Path: /boot/boot.scr
-> >> DTB-Id: sun7i-a20-bananapi.dtb
-> >> U-Boot-Script-Name: bootscr.sunxi
-> >> Required-Packages: u-boot-tools
-> >>
-> >> Machine refers to the value of /proc/device-tree/model.
-> >> DTB-Id is the dtb to be installed.
-> >>
-> >> So what flash-kernel does is:
-> >> - look up value of /proc/device-tree/model
-> >> - retrieve correlated dtb file name from database
-> >> - install dtb with this name
-> >> - create symbolic links for the dtb
-> >>
-> >> If multiple boards use the the same dtb that is fine with flash-kernel
-> >> as long as the value of model is unique per dtb.
-> > 
-> > OCTEON does not work like this. The file you are modifying
-> > (octeon_3xxx.dts) is compiled into the kernel, and there is no external
-> > DTB file. So the model string will be always the same regardless on
-> > which board you have booted the kernel.
-> 
-> you are right DTBs are built in for MIPS systems.
-> 
-> Still it would be useful to be able to use the same property 'model' to
-> determine which u-boot script (boot.scr) to install.
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+Since v1: rename of property to #dma-requests
+      	  modify default value to 32 as suggested by Vinod
+---
+ Documentation/devicetree/bindings/dma/mmp-dma.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-But that cannot be solved by adding a static model string to
-octeon_3xxx.dts, because different OCTEON boards need different u-boot
-commands (some boot from flash, some from mmc, some from USB, etc.).
-
-A.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/dma/mmp-dma.txt b/Documentation/devicetree/bindings/dma/mmp-dma.txt
+index 7a802f64e5bd..8f7364a7b349 100644
+--- a/Documentation/devicetree/bindings/dma/mmp-dma.txt
++++ b/Documentation/devicetree/bindings/dma/mmp-dma.txt
+@@ -12,6 +12,8 @@ Required properties:
+ Optional properties:
+ - #dma-channels: Number of DMA channels supported by the controller (defaults
+   to 32 when not specified)
++- #dma-requests: Number of DMA requestor lines supported by the controller
++  (defaults to 32 when not specified)
+ 
+ "marvell,pdma-1.0"
+ Used platforms: pxa25x, pxa27x, pxa3xx, pxa93x, pxa168, pxa910, pxa688.
+-- 
+2.1.4
