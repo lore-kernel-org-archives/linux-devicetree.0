@@ -1,56 +1,111 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH] rtc: s3c: Document required clocks in the DT
- binding
-Date: Mon, 15 Feb 2016 09:49:34 -0300
-Message-ID: <56C1C95E.7030002@osg.samsung.com>
-References: <1455038632-14545-1-git-send-email-javier@osg.samsung.com>
- <56C01FDD.9050204@samsung.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v6 2/3] Documentation: gpio: Update description for X-Gene
+ standby GPIO controller DTS binding
+Date: Mon, 15 Feb 2016 12:54:06 +0000
+Message-ID: <56C1CA6E.1060606@arm.com>
+References: <1455512263-18183-1-git-send-email-qnguyen@apm.com>
+ <1455512263-18183-3-git-send-email-qnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C01FDD.9050204-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: k.kozlowski.k-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1455512263-18183-3-git-send-email-qnguyen@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quan Nguyen <qnguyen@apm.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On 15/02/16 04:57, Quan Nguyen wrote:
+> Update description for X-Gene standby GPIO controller DTS binding to
+> support GPIO line configuration as input, output or external IRQ pin.
+> 
+> Signed-off-by: Y Vo <yvo@apm.com>
+> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 47 ++++++++++++++++++----
+>  1 file changed, 40 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+> index dae1300..7b8b4cb 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+> @@ -1,10 +1,20 @@
+>  APM X-Gene Standby GPIO controller bindings
+>  
+> -This is a gpio controller in the standby domain.
+> -
+> -There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
+> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
+> -is currently 1-to-1 on interrupts 0x28 thru 0x2d.
+> +This is a gpio controller in the standby domain. It also supports interrupt in
+> +some particular pins which are sourced to its parent interrupt controller
+> +as diagram below:
+> +                           +-----------------+
+> +                           | X-Gene standby  |
+> +                           | GPIO controller +--------- GPIO_0
+> ++------------+             |                 | ...
+> +| Parent IRQ |             |                 +--------- GPIO_8/EXT_INT_0
+> +| controller |  EXT_INT_0  |                 | ...
+> +| (GICv2)    +-------------+                 +--------- GPIO_[N+8]/EXT_INT_N
+> +|            |  ...        |                 |
+> +|            |  EXT_INT_N  |                 +--------- GPIO_[N+9]
+> +|            +-------------+                 | ...
+> +|            |             |                 +--------- GPIO_MAX
+> ++------------+             +-----------------+
+>  
+>  Required properties:
+>  - compatible: "apm,xgene-gpio-sb" for the X-Gene Standby GPIO controller
+> @@ -15,10 +25,18 @@ Required properties:
+>  		0 = active high
+>  		1 = active low
+>  - gpio-controller: Marks the device node as a GPIO controller.
+> -- interrupts: Shall contain exactly 6 interrupts.
+> +- interrupts: The EXT_INT_0 parent interrupt resource must be listed first.
+> +- interrupt-parent: Phandle of the parent interrupt controller.
+> +- interrupt-cells: Should be two.
+> +       - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
+> +       - second cell is used to specify flags.
+> +- interrupt-controller: Marks the device node as an interrupt controller.
+> +- apm,nr-gpios: Optional, specify number of gpios pin.
+> +- apm,nr-irqs: Optional, specify number of interrupt pins.
+> +- apm,irq-start: Optional, specify lowest gpio pin support interrupt.
 
-Thanks a lot for your feedback.
+This is quite ambiguous. Is that relative to the GIC? Assuming this is
+the case, you should then document it, specify the type of interrupt
+(SPI?), and whether this is 0- or 32-based (the code seems to indicate
+that is is 0-based).
 
-On 02/14/2016 03:34 AM, Krzysztof Kozlowski wrote:
-> W dniu 10.02.2016 o 02:23, Javier Martinez Canillas pisze:
->> The S3C Real Time Clock driver requires the clock and source clock to
->> be defined in the device node but that requirement is not documented.
->
-> +Cc: Alessandro Zummo
->
+>  
+>  Example:
+> -	sbgpio: sbgpio@17001000 {
+> +	sbgpio: gpio@17001000{
+>  		compatible = "apm,xgene-gpio-sb";
+>  		reg = <0x0 0x17001000 0x0 0x400>;
+>  		#gpio-cells = <2>;
+> @@ -29,4 +47,19 @@ Example:
+>  				<0x0 0x2b 0x1>,
+>  				<0x0 0x2c 0x1>,
+>  				<0x0 0x2d 0x1>;
+> +		interrupt-parent = <&gic>;
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		apm,nr-gpios = <22>;
+> +		apm,nr-irqs = <6>;
+> +		apm,irq-start = <8>;
+> +	};
+> +
+> +	testuser {
+> +		compatible = "example,testuser";
+> +		/* Use the GPIO_13/EXT_INT_5 line as an active high triggered
+> +		 * level interrupt
+> +		 */
+> +		interrupts = <5 4>;
+> +		interrupt-parent = <&sbgpio>;
+>  	};
+> 
 
-I didn't add Alessandro to cc deliberately since Alexandre is the one
-maintaining the RTC subsystem lately and before that, the RTC patches
-were picked by Andrew Morton since Alessandro didn't even answer the
-emails.
-  
-> No, not entirely. The samsung,s3c6410-rtc needs rtc and rtc_src clocks
-> but rest of compatible devices need only rtc clock.
->
+Thanks,
 
-Right, sorry for missing that. I noticed that this patch has already
-been picked by Rob Herring (I thought it would be picked by Alexandre
-though) so I will post a follow up patch explaining that rtc_src is
-only for the s3c6410-rtc compatible.
-
-> Best regards,
-> Krzysztof
->
-
-Best regards,
+	M.
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jazz is not dead. It just smells funny...
