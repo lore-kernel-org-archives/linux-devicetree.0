@@ -1,123 +1,51 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add iio_hwmon node for ADC
- temperature channel
-Date: Sun, 14 Feb 2016 21:14:06 -0800
-Message-ID: <56C15E9E.3070802@roeck-us.net>
-References: <cd32f1664a04b38b8a025414d039bd015cb9a5ff.1455278754.git.maitysanchayan@gmail.com>
- <20160214083349.GR6756@tiger>
- <20160215044214.GA5545@Sanchayan-Arch.toradex.int>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160215044214.GA5545-2b/appYahYAQpivJYWJ5AnfHJb42ZiuNiBNltiLz+yw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: stefan-XLVq0VzYD2Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] MIPS: DTS: cavium-octeon: provide model attribute
+Date: Mon, 15 Feb 2016 06:26:17 +0100
+Message-ID: <1455513977-934-1-git-send-email-xypron.glpk@gmx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Andrew Bresticker <abrestic@chromium.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2016 08:42 PM, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> Hello Shawn,
->
-> On 16-02-14 16:33:49, Shawn Guo wrote:
->> On Fri, Feb 12, 2016 at 05:53:00PM +0530, Sanchayan Maity wrote:
->>> Add iio_hwmon node to expose the temperature channel on Vybrid as
->>> hardware monitor device using the iio_hwmon driver.
->>>
->>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>
->>> Hello,
->>>
->>> The first version of the patch was send quite a while ago.
->>> https://lkml.org/lkml/2015/9/16/932
->>>
->>> Shawn you had requested that hyphen rather than underscore should
->>> be used in node name. I looked into that.
->>>
->>> The iio_hwmon driver calls hwmon_device register_with_groups inside
->>> hwmon.c and this
->>> http://lxr.free-electrons.com/source/drivers/hwmon/hwmon.c#L103
->>>
->>> does not allow hyphen in hwmon name attribute. I was not aware of
->>> this but while trying to test the change, the device probe failed
->>> with EINVAL. I think we should stick to the existing use of the
->>> bindings or we need to change the hwmon code as well along with the
->>> existing device tree files and binding documentation.
->>
->> I disagree.
->>
->> If hyphen is invalid to be part of hwmon name attribute, the following
->> code in iio_hwmon_probe() is plain wrong, because hyphen is very valid
->> to be part of node names in device tree.
->>
->>          if (dev->of_node && dev->of_node->name)
->>                  name = dev->of_node->name;
->
-> @Shawn
-> I agree with what you state here, however as you can see the hwmon_device_
-> register_with_groups does check for hypen with strpbrk and returns EINVAL.
-> Changing to hyphen instead of currently present underscore in iio_hwmon
-> node name causes probe failure.
->
-> If the node name needs to have hyphen, then the check for hyphen as an invalid
-> character in hwmon name attribute needs to be changed. I am CC'ing the hwmon
-> subsystem maintainers Jean Delvare ands Guenter Roeck as well as hwmon list to
-> check.
->
-> @Jean & Guenter
-> Can you please comment if the change to hwmon_device_register_with_groups
-> to accept hyphen as a valid character in hwmon name attribute will be acceptable?
+Downstream packages like Debian flash-kernel rely on
+/proc/device-tree/model
+to determine how to install an updated kernel image.
 
-User space would not like the '-' and get confused.
+Most dts files provide this property.
+It is suggested by IEEE Std 1275-1994.
 
-We'll have to change the above code and replace '-' with '_' in the name if/when
-it is seen. Sorry, I didn't realize the problem when I wrote that code.
+This patch adds a model attribute for Octeon CPUs.
 
-Guenter
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+---
+ arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts | 1 +
+ arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts | 1 +
+ 2 files changed, 2 insertions(+)
 
-> Sorry if this is sudden andfor bringing you late into the discussion Jean and
-> Guenter.
->
-> Thanks & Regards,
-> Sanchayan.
->
->>
->> Shawn
->>
->>>
->>> Changes since v1:
->>> 1. Expose ADC1 temperature channel as well
->>> 2. Move the entry outside of the aips1 bus node
->>>
->>> Best Regards,
->>> Sanchayan Maity.
->>> ---
->>>   arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
->>>   1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->>> index a5f07e3..8ed8e47 100644
->>> --- a/arch/arm/boot/dts/vfxxx.dtsi
->>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
->>> @@ -673,5 +673,10 @@
->>>   				status = "disabled";
->>>   			};
->>>   		};
->>> +
->>> +		iio_hwmon {
->>> +			compatible = "iio-hwmon";
->>> +			io-channels = <&adc0 16>, <&adc1 16>;
->>> +		};
->>>   	};
->>>   };
->>> --
->>> 2.7.1
->>>
->>>
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+index 9c48e05..a746678 100644
+--- a/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
++++ b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+@@ -8,6 +8,7 @@
+  */
+ / {
+ 	compatible = "cavium,octeon-3860";
++	model = "Cavium Octeon 3XXX";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&ciu>;
+diff --git a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+index 79b46fc..c8a292a 100644
+--- a/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
++++ b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+@@ -8,6 +8,7 @@
+  */
+ / {
+ 	compatible = "cavium,octeon-6880";
++	model = "Cavium Octeon 68XX";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&ciu2>;
+-- 
+2.1.4
