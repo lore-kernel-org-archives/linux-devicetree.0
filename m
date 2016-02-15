@@ -1,46 +1,77 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Mon, 15 Feb 2016 11:58:34 +0100
-Message-ID: <20160215115834.60f4e559@free-electrons.com>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<201602151735.BaFwBMOn%fengguang.wu@intel.com>
-	<20160215105008.74aa7869@free-electrons.com>
-	<56C1A17F.9030206@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: porter: add MAX3355 support
+Date: Mon, 15 Feb 2016 13:59:38 +0300
+Message-ID: <56C1AF9A.5070401@cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+ <4506196.xOgpYRO52t@wasted.cogentembedded.com>
+ <SG2PR06MB0919D09C1146EAC0681EE109D8DA0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <56ABCB69.1070800@cogentembedded.com> <56ABD066.7020804@cogentembedded.com>
+ <SG2PR06MB0919361DC5805AE3F5B74041D8DE0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <56AF9BE8.4020002@cogentembedded.com> <56AFAB67.20404@cogentembedded.com>
+ <20160215014527.GE12997@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C1A17F.9030206-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160215014527.GE12997@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 2/15/2016 4:45 AM, Simon Horman wrote:
 
-On Mon, 15 Feb 2016 09:59:27 +0000, Marc Zyngier wrote:
+>>>>>>>> Now that Maxim Integrated MAX3355 'extcon' driver and device tree bindings
+>>>>>>>> are upstream along with the 'extcon' hook  in the Renesas USBHS driver, we
+>>>>>>>> can add  MAX3355 device node to  the Porter device tree and properly refer
+>>>>>>>> to it from the USBHS node instead of using  "renesas,enable-gpio" property
+>>>>>>>> which only allowed checking the USB ID pin  at the driver probe time;  now
+>>>>>>>> this  pin's  state can be monitored dynamically!
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>>>>
+>>>>>>> I tested this patch on Porter, but interrupt of "usb-otg" didn't happened
+>>>>>>> even if I connected/disconnected a usb convert cable (usb micro-ab to A).
+>>>>>>> Remarks: I confirmed that the usb convert cable worked correctly on other
+>>>>>>> board.
+>>>>>>
+>>>>>>      I guess I have the same cable
+>>>>>
+>>>>>      No, I have mini-AB connector here and hence my cable is mini-AB to A.
+>>>>
+>>>> I checked Porter specification and then I found 2 specifications exist...
+>>>
+>>>     I've looked thru my schematics files and found 3: Rev. 1.1 Update Version
+>>> 2, "PORTER_2" Rev. 3.0 Preliminary, and "PORTER_C" Rev. 3.0 Release version!
+>>> I'm not sure which of the last 2 should be considered final...
+>>
+>>     Now I've found 5 versions of the Porter schematics... :-)
+>>
+>>>>   Porter "B" : mini AB connecter and Max3355 is on the board.
+>>>>   Porter "C" : micro AB connect and Max3355 is not on the board. (Select
+>>>> host/peripheral by a jumper.)
+>>>
+>>>     Yeah, seeing JP13 in the PORTER_C schematics.
+>>>
+>>>> I guess that your current target is "B".
+>>>
+>>>     If not earlier. It actually has "Henninger B REV2" printed on it and
+>>> "Porter PCB 1 R3" on a pasted sticker.
+>>>
+>>>> If so, I think this patch is acceptable.
+>>>
+>>>     I'm not so sure now...
+>>
+>>     My boss told me PORTER_C is a final version, so this patch isn't needed.
+>> But then another patch is needed instead: to remove "renesas,enable-gpio"
+>> prop from the HS-USB device node...
+>
+> I am marking this patch as "Rejected" in patchwork.
+> If changes are required in this area please either
+> resubmit this patch or post a different one.
 
-> Seems like something is selecting GENERIC_MSI_IRQ_DOMAIN on a system
-> that doesn't implement the required bits.
-> 
-> It may be that we need to implement something like
-> HAS_GENERIC_MSI_IRQ_DOMAIN, and make GENERIC_MSI_IRQ_DOMAIN conditional
-> on that. Or just whitelist the architectures that do implement this.
-> 
-> Any chance you could have a closer look?
+    Posted a different one on Saturday.
 
-I'll have a look. However, in the mean time, I will probably make this
-new driver depend on ARM64 so that it does not depend on other patches
-touching the MSI mechanism.
+> Thanks.
 
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
