@@ -1,79 +1,79 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: add document for rockchip dp phy
-Date: Mon, 15 Feb 2016 19:01:43 +0800
-Message-ID: <1455534103-31333-1-git-send-email-ykk@rock-chips.com>
-References: <1455534071-31230-1-git-send-email-ykk@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455534071-31230-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/3] clk: unconditionally recurse into clk/mvebu/
+Date: Mon, 15 Feb 2016 12:06:34 +0100
+Message-ID: <87si0uutad.fsf@free-electrons.com>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1455521698-7905-2-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CAPv3WKdnFg6AYNGexyEvMEjKmHadj4+CH5avnd=5d_HEKCTc2A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAPv3WKdnFg6AYNGexyEvMEjKmHadj4+CH5avnd=5d_HEKCTc2A@mail.gmail.com>
+	(Marcin Wojtas's message of "Mon, 15 Feb 2016 09:33:26 +0100")
+Sender: linux-clk-owner@vger.kernel.org
+To: Marcin Wojtas <mw@semihalf.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding documentation for rockchip display port PHY.
+Hi Marcin,
+=20
+ On lun., f=C3=A9vr. 15 2016, Marcin Wojtas <mw@semihalf.com> wrote:
 
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-Changes in v12: None
-Changes in v11:
-- Correct the title of this rockchip dp phy document(Rob)
-- Add the ack from Rob Herring
+> Hi Thomas,
+>
+>
+>
+> 2016-02-15 8:34 GMT+01:00 Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com>:
+>> The drivers/clk/mvebu directory is only being built when
+>> CONFIG_PLAT_ORION=3Dy. As we are going to support additional mvebu
+>> platforms in drivers/clk/mvebu, which don't have CONFIG_PLAT_ORION=3D=
+y,
+>> we need to recurse into this directory regardless of the value of
+>> CONFIG_PLAT_ORION.
+>>
+>> Since all files in drivers/clk/mvebu/ are already conditionally
+>> compiled depending on various Kconfig options, we can recurse
+>> unconditionally into drivers/clk/mvebu without any other change.
+>>
+>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com=
+>
+>> ---
+>>  drivers/clk/Makefile | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>> index b038e36..e08bb0e 100644
+>> --- a/drivers/clk/Makefile
+>> +++ b/drivers/clk/Makefile
+>> @@ -61,7 +61,7 @@ obj-$(CONFIG_ARCH_MEDIATEK)           +=3D mediate=
+k/
+>>  ifeq ($(CONFIG_COMMON_CLK), y)
+>>  obj-$(CONFIG_ARCH_MMP)                 +=3D mmp/
+>>  endif
+>> -obj-$(CONFIG_PLAT_ORION)               +=3D mvebu/
+>> +obj-y                                  +=3D mvebu/
+>
+> I know it works with obj-y, but how about using
+> obj-$(CONFIG_ARCH_MVEBU)? A person editing this Kconfig in future
+> wouldn't have to run git blame in order to ensure with your commit
+> log, that he doesn't compile anything more than planned.
 
-Changes in v10: None
-Changes in v9: None
-Changes in v8:
-- Remove the specific address in the example node name. (Heiko)
+I think it is still possible to have CONFIG_PLAT_ORION selected without
+having CONFIG_ARCH_MVEBU. So for your concern, adding a comment would b=
+e
+enough.
 
-Changes in v7:
-- Simplify the commit message. (Kishon)
-
-Changes in v5:
-- Split binding doc's from driver changes. (Rob)
-- Update the rockchip,grf explain in document, and correct the clock required
-  elemets in document. (Rob & Heiko)
-
-Changes in v4: None
-Changes in v3: None
-
- .../devicetree/bindings/phy/rockchip-dp-phy.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-new file mode 100644
-index 0000000..50c4f9b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-@@ -0,0 +1,22 @@
-+Rockchip specific extensions to the Analogix Display Port PHY
-+------------------------------------
-+
-+Required properties:
-+- compatible : should be one of the following supported values:
-+	 - "rockchip.rk3288-dp-phy"
-+- clocks: from common clock binding: handle to dp clock.
-+	of memory mapped region.
-+- clock-names: from common clock binding:
-+	Required elements: "24m"
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+- #phy-cells : from the generic PHY bindings, must be 0;
-+
-+Example:
-+
-+edp_phy: edp-phy {
-+	compatible = "rockchip,rk3288-dp-phy";
-+	rockchip,grf = <&grf>;
-+	clocks = <&cru SCLK_EDP_24M>;
-+	clock-names = "24m";
-+	#phy-cells = <0>;
-+};
--- 
-1.9.1
+Gregory
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Best regards,
+> Marcin
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
