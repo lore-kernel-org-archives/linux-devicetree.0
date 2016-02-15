@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 5/7] ARM: dts: r8a7794: Add L2 cache-controller node
-Date: Mon, 15 Feb 2016 21:38:33 +0100
-Message-ID: <1455568715-20880-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 6/7] arm64: dts: r8a7795: Add missing properties to CA57 L2 cache node
+Date: Mon, 15 Feb 2016 21:38:34 +0100
+Message-ID: <1455568715-20880-7-git-send-email-geert+renesas@glider.be>
 References: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
@@ -10,54 +10,31 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Dirk Behme <dirk.behme@de.bosch.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the L2 cache, and link the CPU nodes to it.
-
-The L2 cache for the Cortex-A7 CPU cores is 512 KiB large (organized as
-64 KiB x 8 ways).
+Add the missing "cache-unified" and "cache-level" properties to the
+Cortex-A57 cache-controller node.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
-  - Change one-line summary prefix to match current arm-soc practices,
-
-v2:
-  - Drop (incorrect) optional cache-{size,sets,{block,line}-size}
-    properties, as this information is auto-detected,
-  - Integrate linking CPUs to L2 cache into this patch,
-  - Extracted from series "[PATCH/RFC 00/15] ARM: shmobile: R-Car: Add
-    SYSC PM Domain DT Support".
+  - Remaining part of "[PATCH v2 6/6] arm64: renesas: r8a7795: Add L2
+    cache-controller nodes", after dropping the "arm,data-latency" and
+    "arm,tag-latency" properties.
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index df0861e84a4b81eb..21a02df3609b24aa 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -40,6 +40,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0>;
- 			clock-frequency = <1000000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index b5e46e4ff72ad003..c07f4e83b988ba42 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -68,6 +68,8 @@
  
- 		cpu1: cpu@1 {
-@@ -47,9 +48,16 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <1>;
- 			clock-frequency = <1000000000>;
-+			next-level-cache = <&L2_CA7>;
- 		};
- 	};
- 
-+	L2_CA7: cache-controller@1 {
-+		compatible = "cache";
+ 	L2_CA57: cache-controller@0 {
+ 		compatible = "cache";
 +		cache-unified;
 +		cache-level = <2>;
-+	};
-+
- 	gic: interrupt-controller@f1001000 {
- 		compatible = "arm,gic-400";
- 		#interrupt-cells = <3>;
+ 	};
+ 
+ 	extal_clk: extal {
 -- 
 1.9.1
