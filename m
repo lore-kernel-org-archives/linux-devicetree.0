@@ -1,34 +1,89 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V8 5/8] gpio: add DT binding doc for gpio of PMIC max77620/max20024
-Date: Tue, 16 Feb 2016 00:15:45 +0100
-Message-ID: <CACRpkdYkYU+W=5RF5g9Lrvfjpt3zWw6c9ZTzRT=_gj0PvT53HQ@mail.gmail.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
-	<1455191794-6065-6-git-send-email-ldewangan@nvidia.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v10 10/13] clk: mediatek: make dpi0_sel propagate rate
+ changes
+Date: Mon, 15 Feb 2016 15:14:04 -0800
+Message-ID: <20160215231404.2278.31008@quark.deferred.io>
+References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
+ <1454527562-28154-11-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455191794-6065-6-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1454527562-28154-11-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 12:56 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-
-> Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
-> which act as GPIO as well as special function mode.
->
-> Add DT binding document to support these pins in GPIO
-> mode via GPIO framework.
->
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UXVvdGluZyBQaGlsaXBwIFphYmVsICgyMDE2LTAyLTAzIDExOjI1OjU5KQo+IFRoaXMgbXV4IGlz
+IHN1cHBvc2VkIHRvIHNlbGVjdCBhIGZpdHRpbmcgZGl2aWRlciBhZnRlciB0aGUgUExMCj4gaXMg
+YWxyZWFkeSBzZXQgdG8gdGhlIGNvcnJlY3QgcmF0ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGls
+aXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IEFja2VkLWJ5OiBKYW1lcyBMaWFv
+IDxqYW1lc2pqLmxpYW9AbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRl
+ay9jbGstbXQ4MTczLmMgfCAyICstCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdGsuaCAg
+ICB8IDcgKysrKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
+dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3
+My5jIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jCj4gaW5kZXggMjI3ZTM1Ni4u
+NjgyYjI3NSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTczLmMK
+PiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTczLmMKPiBAQCAtNTU4LDcgKzU1
+OCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2NvbXBvc2l0ZSB0b3BfbXV4ZXNbXSBfX2lu
+aXRjb25zdCA9IHsKPiAgICAgICAgIE1VWF9HQVRFKENMS19UT1BfQVRCX1NFTCwgImF0Yl9zZWwi
+LCBhdGJfcGFyZW50cywgMHgwMDkwLCAxNiwgMiwgMjMpLAo+ICAgICAgICAgTVVYX0dBVEUoQ0xL
+X1RPUF9WRU5DX0xUX1NFTCwgInZlbmNsdF9zZWwiLCB2ZW5jX2x0X3BhcmVudHMsIDB4MDA5MCwg
+MjQsIDQsIDMxKSwKPiAgICAgICAgIC8qIENMS19DRkdfNiAqLwo+IC0gICAgICAgTVVYX0dBVEUo
+Q0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2VsIiwgZHBpMF9wYXJlbnRzLCAweDAwYTAsIDAsIDMs
+IDcpLAo+ICsgICAgICAgTVVYX0dBVEVfRkxBR1MoQ0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2Vs
+IiwgZHBpMF9wYXJlbnRzLCAweDAwYTAsIDAsIDMsIDcsIDApLAoKU28gdGhlIG9ubHkgaW5zdGFu
+Y2Ugb2YgTVVYX0dBVEUgdGhhdCBzaG91bGQgbm90IHByb3BhZ2F0ZSBpdCdzIHJlcXVlc3QKdXAg
+dG8gdGhlIHBhcmVudCBpcyBkcGkwX3NlbD8gQXJlIHlvdSBzdXJlPyBJIGhvcGUgc28gYmVjYXVz
+ZSB0aGlzIHBhdGNoCmNoYW5nZXMgYWxsIE1VWF9HQVRFIGNsa3MgdG8gcHJvcGFnYXRlIHRoZWly
+IHJlcXVlc3RzIHVwIHRvIHRoZWlyCnBhcmVudHMsIHdoaWNoIGlzIHNvcnQgb2YgYSBiaWcgY2hh
+bmdlLgoKQWxzbywgdGhlIG5hbWUgZ2FtZSBpcyBhIGJpdCBjb25mdXNpbmcuIEkgY2FuIHNlZSB0
+aGF0IHlvdSdyZSB0cnlpbmcgdG8KcHJldmVudCBoYXZpbmcgYSBodWdlIHBhdGNoIHRoYXQgdG91
+Y2hlcyBldmVyeSBNVVhfR0FURSBpbml0aWFsaXphdGlvbi4KSG93ZXZlciBpdCBpc24ndCBvYnZp
+b3VzIGZyb20gdGhlIG5hbWUgIk1VWF9HQVRFKCkiIHRoYXQgdGhlIG1hY3JvIHdpbGwKZW5hYmxl
+IENMS19TRVRfUkFURV9QQVJFTlQgZnVuY3Rpb25hbGl0eS4gTWF5YmUgcHV0IGEgY29tbWVudCBh
+Ym92ZSBpdApqdXN0IHRvIG1ha2UgaXQgZXh0cmEgY2xlYXI/CgpSZWdhcmRzLApNaWtlCgo+ICAg
+ICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9JUkRBX1NFTCwgImlyZGFfc2VsIiwgaXJkYV9wYXJlbnRz
+LCAweDAwYTAsIDgsIDIsIDE1KSwKPiAgICAgICAgIE1VWF9HQVRFKENMS19UT1BfQ0NJNDAwX1NF
+TCwgImNjaTQwMF9zZWwiLCBjY2k0MDBfcGFyZW50cywgMHgwMGEwLCAxNiwgMywgMjMpLAo+ICAg
+ICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9BVURfMV9TRUwsICJhdWRfMV9zZWwiLCBhdWRfMV9wYXJl
+bnRzLCAweDAwYTAsIDI0LCAyLCAzMSksCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlh
+dGVrL2Nsay1tdGsuaCBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdGsuaAo+IGluZGV4IDMy
+ZDJlNDUuLmI2MDc5OTYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10
+ay5oCj4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oCj4gQEAgLTgzLDcgKzgz
+LDcgQEAgc3RydWN0IG10a19jb21wb3NpdGUgewo+ICAgICAgICAgc2lnbmVkIGNoYXIgbnVtX3Bh
+cmVudHM7Cj4gIH07Cj4gIAo+IC0jZGVmaW5lIE1VWF9HQVRFKF9pZCwgX25hbWUsIF9wYXJlbnRz
+LCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUpIHsgIFwKPiArI2RlZmluZSBNVVhfR0FURV9G
+TEFHUyhfaWQsIF9uYW1lLCBfcGFyZW50cywgX3JlZywgX3NoaWZ0LCBfd2lkdGgsIF9nYXRlLCBf
+ZmxhZ3MpIHsgICAgXAo+ICAgICAgICAgICAgICAgICAuaWQgPSBfaWQsICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAgICAgICAgICAgICAgICAgLm5hbWUg
+PSBfbmFtZSwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4gICAg
+ICAgICAgICAgICAgIC5tdXhfcmVnID0gX3JlZywgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgXAo+IEBAIC05NCw5ICs5NCwxMiBAQCBzdHJ1Y3QgbXRrX2NvbXBvc2l0ZSB7
+Cj4gICAgICAgICAgICAgICAgIC5kaXZpZGVyX3NoaWZ0ID0gLTEsICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAgICAucGFyZW50X25hbWVzID0gX3Bh
+cmVudHMsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAgICAgICAgICAgICAgICAg
+Lm51bV9wYXJlbnRzID0gQVJSQVlfU0laRShfcGFyZW50cyksICAgICAgICAgICAgICAgICAgICBc
+Cj4gLSAgICAgICAgICAgICAgIC5mbGFncyA9IENMS19TRVRfUkFURV9QQVJFTlQsICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAo+ICsgICAgICAgICAgICAgICAuZmxhZ3MgPSBfZmxhZ3MsICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAgICAgICAgIH0KPiAgCj4g
+KyNkZWZpbmUgTVVYX0dBVEUoX2lkLCBfbmFtZSwgX3BhcmVudHMsIF9yZWcsIF9zaGlmdCwgX3dp
+ZHRoLCBfZ2F0ZSkgICAgXAo+ICsgICAgICAgTVVYX0dBVEVfRkxBR1MoX2lkLCBfbmFtZSwgX3Bh
+cmVudHMsIF9yZWcsIF9zaGlmdCwgX3dpZHRoLCBfZ2F0ZSwgQ0xLX1NFVF9SQVRFX1BBUkVOVCkK
+PiArCj4gICNkZWZpbmUgTVVYKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93
+aWR0aCkgeyAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAgICAuaWQgPSBfaWQsICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAgICAgICAgICAgICAg
+ICAgLm5hbWUgPSBfbmFtZSwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBcCj4gLS0gCj4gMi43LjAucmMzCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
