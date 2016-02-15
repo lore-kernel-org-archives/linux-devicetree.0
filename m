@@ -1,64 +1,59 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH V5 07/11] of: Add bindings of hw-trip-points for soctherm
-Date: Mon, 15 Feb 2016 15:19:27 +0800
-Message-ID: <56C17BFF.3040104@nvidia.com>
-References: <1454057260-16412-1-git-send-email-wni@nvidia.com> <CAL_JsqKwQOxkWyYPcv6sBe8ELUuPx4N+iUF94J8R63bRxsGK4g@mail.gmail.com> <56C17AFD.8050203@nvidia.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v4 01/11] drm/hisilicon: Add device tree binding for
+ hi6220 display subsystem
+Date: Mon, 15 Feb 2016 15:30:10 +0800
+Message-ID: <CAGd==07aNFtr6yEgULxg+7WLbqq7GAAWng4GV=oohSnM5fP45A@mail.gmail.com>
+References: <1454729098-79807-1-git-send-email-xinliang.liu@linaro.org>
+	<1454729098-79807-2-git-send-email-xinliang.liu@linaro.org>
+	<20160208201246.GA17459@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56C17AFD.8050203@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>, MLongnecker@nvidia.com, Stephen Warren <swarren@wwwdotorg.org>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160208201246.GA17459@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@hu
 List-Id: devicetree@vger.kernel.org
 
+On 9 February 2016 at 04:12, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Feb 06, 2016 at 11:24:48AM +0800, Xinliang Liu wrote:
+>> Add ADE display controller binding doc.
+>> Add DesignWare DSI Host Controller v1.20a binding doc.
+>
+> One comment, otherwise:
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>> +Board specific:
+>> +     &dsi {
+>> +             status = "ok";
+>> +
+>> +             ports {
+>> +                     /* 1 for output port */
+>> +                     port@1 {
+>> +                             #address-cells = <1>;
+>> +                             #size-cells = <0>;
+>> +                             reg = <1>;
+>> +
+>> +                             /* 0 for bridge, other value for panel */
+>
+> The endpoint address would not change based on bridge or panel. So you
+> can drop the unit address here.
 
+yes, I can drop the unit address, since it only support bridge in the
+DSI code currently, right?
 
-On 2016=E5=B9=B402=E6=9C=8815=E6=97=A5 15:15, Wei Ni wrote:
-> Hi, Rob
->=20
-> On 2016=E5=B9=B402=E6=9C=8812=E6=97=A5 22:42, Rob Herring wrote:
->> On Fri, Jan 29, 2016 at 2:47 AM, Wei Ni <wni@nvidia.com> wrote:
->>> Add hw-trips sub-node for soctherm, which is
->>> used to describe the hardware trip points for
->>> each soctherm sensors.
->>
->> I still don't understand why you are doing something custom here.
->> What's wrong with what is defined in:
->>
->> Documentation/devicetree/bindings/thermal/thermal.txt
->=20
-> In current thermal framework, it support to set trip points for the t=
-hermal
-> zones, but this trip point is handled by SW, doesn't have callbacks t=
-o program
-> the hardware.
-> There had patches:
-> [PATCH 12/16] thermal: thermal: Add support for hardware-tracked trip=
- points,
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000866.h=
-tml,
-> which can support to program hardware to set trip points, but it seem=
-s this
-> series didn't be taken.
-> So I add this hw-trip-points sub-node for soctherm.
->=20
-> Hi, Sascha Hauer
+One question: How to distinguish panel and bridge endpoint?  I am
+thinking to support panel now.
 
-Hi, Sasha
-Sorry, I forgot to type messages in previous mail.
+Thanks,
+-xinliang
 
-I noticed that you submitted "[PATCH 12/16] thermal: thermal: Add suppo=
-rt for
-hardware-tracked trip points" long time ago, I think it's very useful, =
-do you
-know why it didn't be taken?
-
->=20
-> Thanks.
-> Wei.
->=20
->>
->> Rob
->>
+>
+>> +                             dsi_out0: endpoint@0 {
+>> +                                     reg = <0>;
+>> +                                     remote-endpoint = <&adv7533_in>;
+>> +                             };
+>> +                     };
+>> +             };
+>> +     };
