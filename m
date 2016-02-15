@@ -1,74 +1,99 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Allwinner A64 MMC support
-Date: Mon, 15 Feb 2016 16:52:38 +0100
-Message-ID: <56C1F446.9020801@redhat.com>
-References: <1455300000-18723-1-git-send-email-andre.przywara@arm.com>
- <56BE29A1.3060107@redhat.com> <56C1A590.6030500@arm.com>
- <56C1C7BB.1040602@redhat.com> <56C1D9C0.6020601@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56C1D9C0.6020601@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 3/3] ARM: zynq: Use earlycon instead of earlyprintk
+Date: Mon, 15 Feb 2016 17:05:19 +0100
+Message-ID: <8cd6d86437baf0a7a443f4d288a9c6a9df66ffc3.1455552315.git.michal.simek@xilinx.com>
+References: <67c9013fc61f53515934b54847a05df8b8e1504a.1455552315.git.michal.simek@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <67c9013fc61f53515934b54847a05df8b8e1504a.1455552315.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <67c9013fc61f53515934b54847a05df8b8e1504a.1455552315.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+References: <67c9013fc61f53515934b54847a05df8b8e1504a.1455552315.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Use early console instead of earlyprintk which is supposed to use for
+very early debugging (DEBUG_LL).
 
-On 15-02-16 14:59, Andre Przywara wrote:
-> Hi Hans,
->
-> ....
->
->>
->> p.s.
->>
->> I love the work you've been doing on the A64, I've not had a chance
->> to try it out yet though. Have you made any progress with getting
->> the mmc slot to work ?  If not maybe I can make some time I've
->> prior experience in bringing up the mmc slot on other Allwinner SoCs
->
-> Thanks for that!
->
-> So we made some progress on the weekend (with the help of #linux-sunxi):
-> 1) The regulator node was stupidly put by me into a separate child node
-> without putting address and size cells into. So I just moved it into
-> /soc directly now and that seems to fixed the missing regulator.
-> 2) The reset node is a allwinner,sun6i-a31-ahb1-reset, which does not
-> get registered automatically, but by an explicit call from mach-sunxi/.
-> I wonder why we do this (yes, I saw that comment, but still...) and if
-> it would work with a normal MODULE_DEVICE_TABLE() declaration.
-> There is and will be no equivalent to the mach- directory on arm64.
-> 3) As Jens pointed out, the MMC IP block isn't really compatible.
-> Changing the clocks is easy (done already), but we need to come up with
-> code to cover the new phase setting registers in the A64 MMC register block.
->
-> Interestingly somehow hacking this (pretending it is compatible) seems
-> to work, though I got reports from people about mysterious kernel
-> crashes, so I'm inclined to leave MMC out of the first patch series.
->
-> So if you could take a look at the new registers (starting at offset
-> 0x140) and work out what we actually need to do here, that would be
-> great. I have no real clue about what they actually do and how they
-> relate to the current output and sample clock phase.
-> To me it looks like we might get away with just triggering the automatic
-> calibration and the hardware does the rest for us - keep your fingers
-> crossed ;-)
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
 
-Just triggering the automatic calibration sounds good, this likely will
-result in better values then the magic values we are currently using for
-older SoCs.
+ arch/arm/boot/dts/zynq-parallella.dts | 2 +-
+ arch/arm/boot/dts/zynq-zc702.dts      | 2 +-
+ arch/arm/boot/dts/zynq-zc706.dts      | 2 +-
+ arch/arm/boot/dts/zynq-zed.dts        | 2 +-
+ arch/arm/boot/dts/zynq-zybo.dts       | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-As for the meaning of those registers, what we've been doing with the phase
-registers so far pretty much boils down to look at what Allwinner BSP kernel
-sources do, and then do the same in u-boot / the mainline driver since
-the mmc controller documentation is very limited.
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
+index 9efd16cb2859..307ed201d658 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -34,7 +34,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
++		bootargs = "earlycon root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index cb64209bca08..e96959b2e67a 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -30,7 +30,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlyprintk";
++		bootargs = "earlycon";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index abf5d238ae04..be6a986bbbd8 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -30,7 +30,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlyprintk";
++		bootargs = "earlycon";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+index b9f2522012e8..7250c1eac7f9 100644
+--- a/arch/arm/boot/dts/zynq-zed.dts
++++ b/arch/arm/boot/dts/zynq-zed.dts
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlyprintk";
++		bootargs = "earlycon";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
+index 16c9cacd668d..bd992e036aa9 100644
+--- a/arch/arm/boot/dts/zynq-zybo.dts
++++ b/arch/arm/boot/dts/zynq-zybo.dts
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlyprintk";
++		bootargs = "earlycon";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-- 
+1.9.1
 
-Do you have a git tree with your wip mmc support somewhere ? Then I or
-maybe Chen-Yu can take a look when we've time.
-
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
