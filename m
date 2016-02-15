@@ -1,107 +1,105 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: ARM GIC DT binding reg block mismatch? (Re: [PATCH v11 1/8] arm64:
- renesas: r8a7795: Add Renesas R8A7795 SoC support)
-Date: Mon, 15 Feb 2016 09:16:14 +0100
-Message-ID: <CAMuHMdU-q++XEgthKG=XOgnaq7TY899EsgMFHuWu4Skr5woLZg@mail.gmail.com>
+From: Matt Redfearn <matt.redfearn@imgtec.com>
+Subject: Re: [PATCH v6 2/3] MIPS: OCTEON: Rename legacy properties in internal
+ device trees.
+Date: Mon, 15 Feb 2016 08:17:59 +0000
+Message-ID: <56C189B7.5020504@imgtec.com>
+References: <1455207976-2262-1-git-send-email-matt.redfearn@imgtec.com>
+ <1455207976-2262-2-git-send-email-matt.redfearn@imgtec.com>
+ <56BCB7AE.2050901@gmail.com> <56BCBC90.6090805@imgtec.com>
+ <56BCC64A.5040902@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marc Zyngier <Marc.Zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <56BCC64A.5040902@caviumnetworks.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, robh@kernel.org, ralf@linux-mips.org, linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc Marz Zyngier
-Cc Dirk Behme
-Cc devicetree
-Cc linux-renesas-soc
-Drop linux-sh
+Hi David,
 
-On Wed, Dec 9, 2015 at 9:23 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Nov 3, 2015 at 3:28 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> On Wed, Oct 21, 2015 at 03:34:39PM +0200, Geert Uytterhoeven wrote:
->>> On Thu, Oct 15, 2015 at 12:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->>> >> > +           gic: interrupt-controller@0xf1010000 {
->>> >> +                     compatible = "arm,gic-400";
->>> >> +                     #interrupt-cells = <3>;
->>> >> +                     #address-cells = <0>;
->>> >> +                     interrupt-controller;
->>> >> +                     reg = <0x0 0xf1010000 0 0x1000>,
->>> >> +                           <0x0 0xf1020000 0 0x2000>;
->>> >> +                     interrupts = <GIC_PPI 9
->>> >> +                                     (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
->>> >> +             };
->>> >
->>> > No GICH and GICV?
->>>
->>> These seem to be defined in the "arm,gic-v3" DT bindings only, while this is
->>> an "arm,gic-400" (GICD_IIDR 0x0200043b)?
+On 11/02/16 17:35, David Daney wrote:
+> On 02/11/2016 08:53 AM, Matt Redfearn wrote:
+>> Hi David,
 >>
->> See the "GIC virtualization extensions (VGIC)" section in
->> Documentation/devicetree/bindings/arm/gic.txt
+>> On 11/02/16 16:32, David Daney wrote:
+>>> On 02/11/2016 08:26 AM, Matt Redfearn wrote:
+>>>> Many OCTEON devices have been shipped in products with fixed DTBs. 
+>>>> These
+>>>> DTBS contain properties which are not compatible with newer kernels 
+>>>> with
+>>>> upstream drivers.
+>>>> Therefore some mechanism is necessary to convert legacy naming into
+>>>> upstream naming. In the first instance this is to support the 
+>>>> OCTEON MMC
+>>>> controller, which is in a later patch of this series.
+>>>> This patch adds a octeon_handle_legacy_device_tree() function which is
+>>>> always called from device_tree_init() to fix up the device tree so 
+>>>> that
+>>>> drivers need have no knowledge of the legacy naming or properties.
+>>>>
+>>>> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
+>>>
+>>> NAK...
+>>>
+>>> I already sent e-mail on this, but it crossed in flight.
+>>
+>> Yeah, unfortunate timing.
+>>
+>>>
+>>> Basically, this patch is much more complex than the original code
+>>> which was just a few lines to check the alternate "legacy" names.
+>>
+>> This code is functionally equivalent to the previous version, just
+>> located in platform code rather than the driver itself.
 >
-> DDI0471B_gic400_r0p1_trm.pdf says:
->
->     Address range GIC-400 functional block
->     A. 0x0000 - 0x0FFF Reserved
->     B. 0x1000 - 0x1FFF Distributor
->     C. 0x2000 - 0x3FFF CPU interfaces
->     D. 0x4000 - 0x4FFF Virtual interface control block, for the processor that
->                        is performing the access
->     E. 0x5000 - 0x5FFF Virtual interface control block, for the processor
->                        selected by address bits [11:9]
->     F. 0x6000 - 0x7FFF Virtual CPU interfaces
->
-> The DT binding document says:
->   1. The  first region is the GIC distributor register base and size.
->   2. The 2nd region is the GIC cpu interface register base and size.
->   3. The first additional region is the GIC virtual interface control register
->      base and size.
->   4. The 2nd additional region is the GIC virtual cpu interface register base
->      and size.
->
-> Matching with the example:
->
->         interrupt-controller@2c001000 {
->                 compatible = "arm,cortex-a15-gic";
->                 #interrupt-cells = <3>;
->                 interrupt-controller;
->                 reg = <0x2c001000 0x1000>,
->                       <0x2c002000 0x1000>,
->                       <0x2c004000 0x2000>,
->                       <0x2c006000 0x2000>;
->                 interrupts = <1 9 0xf04>;
->         };
->
-> This means:
->   - reg entry 1. covers address range B,
->   - reg entry 2. covers address range C,
->   - reg entry 3. covers address ranges D _and_ E,
->   - reg entry 4. covers address range F.
->
-> On R-Car Gen3, the base addresses are:
->
->     Distributor             : 0xF101_0000
->     CPU interfaces          : 0xF102_0000
->     Virtual interfaces      : 0xF104_0000
->     Virtual interfaces      : 0xF105_0000
->     Virtual CPU interfaces  : 0xF106_0000
->
-> Note the additional multiplication factor of 16 in the offsets relative to
-> the base address 0xf1000000 (e.g. 0x50000 instead of 0x5000).
->
-> As address ranges D and E are merged in a single reg entry, how is the GIC
-> driver supposed to know about this multiplication factor?
->
-> Thanks!
+> I know, one thing I really don't like about it, is that we are 
+> modifying the kernel's view of the device that was passed in.  How 
+> does that effect what is seen in /sys/firmware ?
 
-Gr{oetje,eeting}s,
+Yes, that's true. The tree as visible in /sys/firmware is the modified 
+version, because the modifications are performed on the DTB before it is 
+unflattened and copied. This is what can be seen with the update:
 
-                        Geert
+# ls /sys/firmware/devicetree/base/soc\@0/mmc\@1180000002000/mmc-slot\@0/
+bus-width  compatible  max-frequency  name  reg  voltage-ranges
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> I would rather see code that calls mmc_of_parse(), and then, if the 
+> two properties in question (bus-width, and max-frequency) have not 
+> been filled in, attempt to read them with the legacy names using 
+> of_property_read_u32()
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+OK, well we can go back to that...
+
+>
+> The implementation of mmc_of_parse() already contains support for 
+> parsing legacy properties, so we could also add a couple more there, 
+> which would be the simplest change of all.
+
+Best to keep the support in the driver, I think.
+
+>
+>
+>> In terms of LOC
+>> it's not much different. Doing it this was does allow future flexibility
+>> to change other bindings that are fixed in firmware without having to
+>> support each set in the individual drivers.
+>
+> I think the controversy is limited to the MMC driver.  As far as I 
+> know, we are in good shape with the bindings for the other drivers.
+OK cool, well let's go back to that version, then.
+
+Thanks,
+Matt
+>
+>
+>> Leaving this patch out will mean having to get any legacy bindings
+>> accepted into each driver via their maintainer.
+>> But for the moment we're just talking about the MMC driver - if this
+>> patch is not accepted then the only way to support legacy devices is
+>> with Ulf's signoff of handling both binding versions in the driver.
+>>
+> [...]
+
