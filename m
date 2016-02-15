@@ -1,44 +1,46 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 4/4] dmaengine: pxa_dma: fix the maximum requestor line
-Date: Mon, 15 Feb 2016 18:24:57 +0100
-Message-ID: <87fuwt28eu.fsf@belgarion.home>
-References: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
-	<1455225798-9510-5-git-send-email-robert.jarzmik@free.fr>
-	<20160215163524.GI19598@localhost>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] arm: dts: AM57XX: Correct the thermal thresholds
+Date: Mon, 15 Feb 2016 11:25:38 -0600
+Message-ID: <56C20A12.8080305@ti.com>
+References: <1454924705-8382-1-git-send-email-j-keerthy@ti.com>
+ <20160209220901.GC28102@localhost.localdomain> <56BA6530.4030102@ti.com>
+ <20160212222347.GO19432@atomide.com>
+ <CAGo_u6r8-LJBWWrew0fV50Q+JnCxDj9PD57+9NoDm5TqCWL=jw@mail.gmail.com>
+ <20160212224129.GP19432@atomide.com> <56C153A3.3030508@ti.com>
+ <56C1F3A1.4080709@ti.com> <56C1F92A.1020803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160215163524.GI19598@localhost> (Vinod Koul's message of "Mon,
-	15 Feb 2016 22:05:24 +0530")
+In-Reply-To: <56C1F92A.1020803@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+To: Keerthy <a0393675@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>, Dmitry Lifshitz <lifshitz@compulab.co.il>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Vinod Koul <vinod.koul@intel.com> writes:
+On 02/15/2016 10:13 AM, Keerthy wrote:
+[...]
+>>
+>> This data is in the AM572x datasheet:
+>> http://www.ti.com/lit/ds/symlink/am5728.pdf
+>>
+>> Table 5-3 in the current version contains the maximum junction
+>> temperatures.
+>>
+>> this indicates that there are "Commercial" and "extended" -> we may
+>> need to introduce just 2 dtsis -> am57xx-commercial and
+>> am57xx-extended and reuse those based on the part on the board. just a
+>> suggestion..
+> 
+> Or use the minimum of the 2 to be on the safer side if we have to deal 
+> with one dtsi?
 
-> On Thu, Feb 11, 2016 at 10:23:18PM +0100, Robert Jarzmik wrote:
->> @@ -1399,13 +1405,17 @@ static int pxad_probe(struct platform_device *op)
->>  		return PTR_ERR(pdev->base);
->>  
->>  	of_id = of_match_device(pxad_dt_ids, &op->dev);
->> -	if (of_id)
->> +	if (of_id) {
->>  		of_property_read_u32(op->dev.of_node, "#dma-channels",
->>  				     &dma_channels);
->> -	else if (pdata && pdata->dma_channels)
->> +		of_property_read_u32(op->dev.of_node, "#requestors",
->> +				     &nb_requestors);
->
-> I think we should check the return value here. This might be err in case
-> when we have older DT on platform, but still should work with default in
-> that case
+Why would we want to throttle earlier on customer platforms or other
+boards using extended? at the very least -> if all upstream boards
+have only commercial grade, then just introduce
+am57xx-commercial-thermal.dtsi ..
 
-Okay, but how should the code react to the err case, more specifically to
--EINVAL or -ENODATA ? As this property is optional as per the device-tree
-description, the current code leaves nb_requestors = 0, as is specified in the
-description, and fits the mmp_pdma case.
 
-What do you think should be done ? A warning message ? Something else ?
-
-Cheers.
+-- 
+Regards,
+Nishanth Menon
