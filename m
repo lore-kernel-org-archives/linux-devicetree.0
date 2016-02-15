@@ -1,71 +1,95 @@
 From: Michael Turquette <mturquette@baylibre.com>
 Subject: Re: [PATCH 0/3] clk: mvebu: initial support for AP806 clocks
-Date: Mon, 15 Feb 2016 15:31:02 -0800
-Message-ID: <20160215233102.2278.88855@quark.deferred.io>
+Date: Mon, 15 Feb 2016 15:36:49 -0800
+Message-ID: <CAEG3pNCRa_CQx70aPHfQpG+7jEZ_=_-FxBWDkXVYbgH=j=1rmA@mail.gmail.com>
 References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160215233102.2278.88855@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+In-Reply-To: <20160215233102.2278.88855@quark.deferred.io>
 Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
+	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Thomas,
 
-Quoting Thomas Petazzoni (2016-02-14 23:34:55)
-> Hello,
-> 
-> The following set of patches add initial support for the main clocks
-> found in the AP806 hardware block, which is the central block used in
-> the newest Marvell 7K and 8K 64-bits processors.
-> 
-> Two new drivers are added, one for the so-called "core" clocks and one
-> for the "ring" clocks. The latter are child clocks from one of the
-> core clocks. The "core" clocks are fixed rate clocks, but their rate
-> is calculated from values in the Sample At Reset register.
-> 
-> The support for the Marvell 7K/8K platform (Device Tree, etc.) will be
-> submitted as a separate patch series.
+On Mon, Feb 15, 2016 at 3:31 PM, Michael Turquette
+<mturquette@baylibre.com> wrote:
+> Hi Thomas,
+>
+> Quoting Thomas Petazzoni (2016-02-14 23:34:55)
+>> Hello,
+>>
+>> The following set of patches add initial support for the main clocks
+>> found in the AP806 hardware block, which is the central block used in
+>> the newest Marvell 7K and 8K 64-bits processors.
+>>
+>> Two new drivers are added, one for the so-called "core" clocks and one
+>> for the "ring" clocks. The latter are child clocks from one of the
+>> core clocks. The "core" clocks are fixed rate clocks, but their rate
+>> is calculated from values in the Sample At Reset register.
+>>
+>> The support for the Marvell 7K/8K platform (Device Tree, etc.) will be
+>> submitted as a separate patch series.
+>
+> Yay, new SoC! Just FYI, we worked out an agreement in December[0] that
+> the clk git tree can take DT bindings and headers, and we'll always host
+> them in an immutable branch by default in case arm-soc (or anyone else)
+> needs them. Stephen and I are doing this now.
 
-Yay, new SoC! Just FYI, we worked out an agreement in December[0] that
-the clk git tree can take DT bindings and headers, and we'll always host
-them in an immutable branch by default in case arm-soc (or anyone else)
-needs them. Stephen and I are doing this now.
+Oops, I misunderstood your point (and I should have looked at the
+patches before replying). The patches in this series do indeed have
+the clk DT binding descriptions.
 
-It's nice for us to review those bindings at the same time that we
-review the driver.
+Pardon the noise, nothing to see here, move along ;-)
 
-[0] http://lkml.kernel.org/r/<20151231001859.19557.99512@quark.deferred.io>
-
-Best regards,
+Regards,
 Mike
 
-> 
-> Thanks!
-> 
-> Thomas
-> 
-> Thomas Petazzoni (3):
->   clk: unconditionally recurse into clk/mvebu/
->   clk: mvebu: add AP806 core clock driver
->   clk: mvebu: add AP806 ring clock driver
-> 
->  .../clock/mvebu-armada-ap806-core-clock.txt        |  33 ++++++
->  .../clock/mvebu-armada-ap806-ring-clock.txt        |  32 ++++++
->  drivers/clk/Makefile                               |   2 +-
->  drivers/clk/mvebu/Kconfig                          |   6 ++
->  drivers/clk/mvebu/Makefile                         |   3 +-
->  drivers/clk/mvebu/ap806-core.c                     | 112 +++++++++++++++++++++
->  drivers/clk/mvebu/ap806-ring.c                     |  65 ++++++++++++
->  7 files changed, 251 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-core-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
->  create mode 100644 drivers/clk/mvebu/ap806-core.c
->  create mode 100644 drivers/clk/mvebu/ap806-ring.c
-> 
-> -- 
-> 2.6.4
-> 
+>
+> It's nice for us to review those bindings at the same time that we
+> review the driver.
+>
+> [0] http://lkml.kernel.org/r/<20151231001859.19557.99512@quark.deferred.io>
+>
+> Best regards,
+> Mike
+>
+>>
+>> Thanks!
+>>
+>> Thomas
+>>
+>> Thomas Petazzoni (3):
+>>   clk: unconditionally recurse into clk/mvebu/
+>>   clk: mvebu: add AP806 core clock driver
+>>   clk: mvebu: add AP806 ring clock driver
+>>
+>>  .../clock/mvebu-armada-ap806-core-clock.txt        |  33 ++++++
+>>  .../clock/mvebu-armada-ap806-ring-clock.txt        |  32 ++++++
+>>  drivers/clk/Makefile                               |   2 +-
+>>  drivers/clk/mvebu/Kconfig                          |   6 ++
+>>  drivers/clk/mvebu/Makefile                         |   3 +-
+>>  drivers/clk/mvebu/ap806-core.c                     | 112 +++++++++++++++++++++
+>>  drivers/clk/mvebu/ap806-ring.c                     |  65 ++++++++++++
+>>  7 files changed, 251 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-core-clock.txt
+>>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
+>>  create mode 100644 drivers/clk/mvebu/ap806-core.c
+>>  create mode 100644 drivers/clk/mvebu/ap806-ring.c
+>>
+>> --
+>> 2.6.4
+>>
+
+
+
+-- 
+Michael Turquette
+CEO
+BayLibre - At the Heart of Embedded Linux
+http://baylibre.com/
