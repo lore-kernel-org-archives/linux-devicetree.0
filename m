@@ -1,48 +1,44 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH] ARM: dts: imx6qdl-microsom.dtsi: avoid boot-time UHS warning
-Date: Mon, 15 Feb 2016 17:12:06 +0000
-Message-ID: <E1aVMgw-0001wE-5w@rmk-PC.arm.linux.org.uk>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 4/4] dmaengine: pxa_dma: fix the maximum requestor line
+Date: Mon, 15 Feb 2016 18:24:57 +0100
+Message-ID: <87fuwt28eu.fsf@belgarion.home>
+References: <1455225798-9510-1-git-send-email-robert.jarzmik@free.fr>
+	<1455225798-9510-5-git-send-email-robert.jarzmik@free.fr>
+	<20160215163524.GI19598@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160215163524.GI19598@localhost> (Vinod Koul's message of "Mon,
+	15 Feb 2016 22:05:24 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Avoid the following warning:
+Vinod Koul <vinod.koul@intel.com> writes:
 
-sdhci-esdhc-imx 2190000.usdhc: could not get ultra high speed state, work on normal mode
+> On Thu, Feb 11, 2016 at 10:23:18PM +0100, Robert Jarzmik wrote:
+>> @@ -1399,13 +1405,17 @@ static int pxad_probe(struct platform_device *op)
+>>  		return PTR_ERR(pdev->base);
+>>  
+>>  	of_id = of_match_device(pxad_dt_ids, &op->dev);
+>> -	if (of_id)
+>> +	if (of_id) {
+>>  		of_property_read_u32(op->dev.of_node, "#dma-channels",
+>>  				     &dma_channels);
+>> -	else if (pdata && pdata->dma_channels)
+>> +		of_property_read_u32(op->dev.of_node, "#requestors",
+>> +				     &nb_requestors);
+>
+> I think we should check the return value here. This might be err in case
+> when we have older DT on platform, but still should work with default in
+> that case
 
-which occurs at boot each time the SDHCI interface for the Broadcom
-WiFi is probed.
+Okay, but how should the code react to the err case, more specifically to
+-EINVAL or -ENODATA ? As this property is optional as per the device-tree
+description, the current code leaves nb_requestors = 0, as is specified in the
+description, and fits the mmp_pdma case.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- arch/arm/boot/dts/imx6qdl-microsom.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+What do you think should be done ? A warning message ? Something else ?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-index 6d4069cc9419..86460e46d055 100644
---- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-@@ -154,6 +154,7 @@
- 	bus-width = <4>;
- 	mmc-pwrseq = <&usdhc1_pwrseq>;
- 	keep-power-in-suspend;
-+	no-1-8-v;
- 	non-removable;
- 	vmmc-supply = <&reg_brcm>;
- 	status = "okay";
--- 
-2.1.0
+Cheers.
