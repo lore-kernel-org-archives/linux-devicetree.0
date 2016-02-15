@@ -1,55 +1,40 @@
-From: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Subject: [PATCH v2 1/3] hwmon: Define binding for the nsa320-hwmon driver
-Date: Mon, 15 Feb 2016 23:25:02 +0000
-Message-ID: <1455578705-10531-2-git-send-email-linux@baker-net.org.uk>
-References: <1455578705-10531-1-git-send-email-linux@baker-net.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455578705-10531-1-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/3] gpio: xgene: Enable X-Gene standby GPIO as
+ interrupt controller
+Date: Tue, 16 Feb 2016 00:26:37 +0100
+Message-ID: <CACRpkdYg+Z1Y_MSFxaGbJiMiAPjX5EF4_dnWO6q5LCd0m0Fv_A@mail.gmail.com>
+References: <1454041735-8434-1-git-send-email-qnguyen@apm.com>
+	<1454041735-8434-2-git-send-email-qnguyen@apm.com>
+	<56BB52B8.4040501@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56BB52B8.4040501@arm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Quan Nguyen <qnguyen@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Define a binding for the hardware monitoring chip present in the Zyxel
-NSA-320 and some of the other Zyxel NAS devices.
+On Wed, Feb 10, 2016 at 4:09 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 29/01/16 04:28, Quan Nguyen wrote:
 
-Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
----
- .../devicetree/bindings/hwmon/nsa320-mcu.txt        | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
+>> +static void xgene_gpio_sb_domain_deactivate(struct irq_domain *d,
+>> +             struct irq_data *irq_data)
+>> +{
+>> +     struct xgene_gpio_sb *priv = d->host_data;
+>> +     u32 gpio = HWIRQ_TO_GPIO(priv, irq_data->hwirq);
+>> +
+>> +     gpiochip_unlock_as_irq(&priv->gc, gpio);
+>
+> Is it right to do the unlock both in irq_shutdown and domain_deactivate?
+> This seems a bit odd to me to have such an inbalance. My hunch is that
+> you should either implement irq_startup, do the locking there and drop
+> the unlock drop deactivate, or kill irq_shutdown.
+>
+> Linus, what do you think?
 
-diff --git a/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
-new file mode 100644
-index 0000000..7b346d4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
-@@ -0,0 +1,21 @@
-+Bindings for the fan / temperature monitor microcontroller used on
-+the Zyxel NSA 320 and several subsequent models.
-+
-+Required properties:
-+- compatible	: "zyxel,nsa320-mcu"
-+- data-gpios	: The GPIO pin connected to the data line on the MCU
-+- clk-gpios	: The GPIO pin connected to the clock line on the MCU
-+- act-gpios	: The GPIO pin connected to the active line on the MCU
-+
-+Example:
-+
-+	hwmon {
-+		compatible = "zyxel,nsa320-mcu";
-+		pinctrl-0 = <&pmx_mcu_data &pmx_mcu_clk &pmx_mcu_act>;
-+		pinctrl-names = "default";
-+
-+		data-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+		clk-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+		act-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
-+	};
-+
--- 
-2.1.4
+Those functions should be called in .irq_alloc/release_resources(), that is
+why Gleixner added those callbacks in the first place.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
