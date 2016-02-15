@@ -1,38 +1,172 @@
 From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v2 1/4] dma: mmp_pdma: Add the #dma-requests DT property documentation
-Date: Mon, 15 Feb 2016 21:57:45 +0100
-Message-ID: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v2 4/4] dmaengine: pxa_dma: fix the maximum requestor line
+Date: Mon, 15 Feb 2016 21:57:48 +0100
+Message-ID: <1455569868-25017-4-git-send-email-robert.jarzmik@free.fr>
+References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455569868-25017-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For pxa based platforms, the number of requestor lines should be
-specified, so that the driver can check if the flow control should be
-activated (when a requestor line is asked for) or not.
+The current number of requestor lines is limited to 31. This was an
+error of a previous commit, as this number is platform dependent, and is
+actually :
+ - for pxa25x: 40 requestor lines
+ - for pxa27x: 75 requestor lines
+ - for pxa3xx: 100 requestor lines
 
+The previous testing did not reveal the faulty constant as on pxa[23]xx
+platforms, only camera, MSL and USB are above requestor 32, and in these
+only the camera has a driver using dma.
+
+Fixes: e87ffbdf0697 ("dmaengine: pxa_dma: fix the no-requestor case")
 Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
-Since v1: rename of property to #dma-requests
-      	  modify default value to 32 as suggested by Vinod
+Since v1: change to #dma-requests the of property name
+      	  default to 32 requestors and warn as suggested by Vinod
 ---
- Documentation/devicetree/bindings/dma/mmp-dma.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/pxa_dma.c | 39 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/mmp-dma.txt b/Documentation/devicetree/bindings/dma/mmp-dma.txt
-index 7a802f64e5bd..8f7364a7b349 100644
---- a/Documentation/devicetree/bindings/dma/mmp-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/mmp-dma.txt
-@@ -12,6 +12,8 @@ Required properties:
- Optional properties:
- - #dma-channels: Number of DMA channels supported by the controller (defaults
-   to 32 when not specified)
-+- #dma-requests: Number of DMA requestor lines supported by the controller
-+  (defaults to 32 when not specified)
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index ca6c088edc8a..8b333601687f 100644
+--- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -122,6 +122,7 @@ struct pxad_chan {
+ struct pxad_device {
+ 	struct dma_device		slave;
+ 	int				nr_chans;
++	int				nr_requestors;
+ 	void __iomem			*base;
+ 	struct pxad_phy			*phys;
+ 	spinlock_t			phy_lock;	/* Phy association */
+@@ -473,7 +474,7 @@ static void pxad_free_phy(struct pxad_chan *chan)
+ 		return;
  
- "marvell,pdma-1.0"
- Used platforms: pxa25x, pxa27x, pxa3xx, pxa93x, pxa168, pxa910, pxa688.
+ 	/* clear the channel mapping in DRCMR */
+-	if (chan->drcmr <= DRCMR_CHLNUM) {
++	if (chan->drcmr <= pdev->nr_requestors) {
+ 		reg = pxad_drcmr(chan->drcmr);
+ 		writel_relaxed(0, chan->phy->base + reg);
+ 	}
+@@ -509,6 +510,7 @@ static bool is_running_chan_misaligned(struct pxad_chan *chan)
+ 
+ static void phy_enable(struct pxad_phy *phy, bool misaligned)
+ {
++	struct pxad_device *pdev;
+ 	u32 reg, dalgn;
+ 
+ 	if (!phy->vchan)
+@@ -518,7 +520,8 @@ static void phy_enable(struct pxad_phy *phy, bool misaligned)
+ 		"%s(); phy=%p(%d) misaligned=%d\n", __func__,
+ 		phy, phy->idx, misaligned);
+ 
+-	if (phy->vchan->drcmr <= DRCMR_CHLNUM) {
++	pdev = to_pxad_dev(phy->vchan->vc.chan.device);
++	if (phy->vchan->drcmr <= pdev->nr_requestors) {
+ 		reg = pxad_drcmr(phy->vchan->drcmr);
+ 		writel_relaxed(DRCMR_MAPVLD | phy->idx, phy->base + reg);
+ 	}
+@@ -914,6 +917,7 @@ static void pxad_get_config(struct pxad_chan *chan,
+ {
+ 	u32 maxburst = 0, dev_addr = 0;
+ 	enum dma_slave_buswidth width = DMA_SLAVE_BUSWIDTH_UNDEFINED;
++	struct pxad_device *pdev = to_pxad_dev(chan->vc.chan.device);
+ 
+ 	*dcmd = 0;
+ 	if (dir == DMA_DEV_TO_MEM) {
+@@ -922,7 +926,7 @@ static void pxad_get_config(struct pxad_chan *chan,
+ 		dev_addr = chan->cfg.src_addr;
+ 		*dev_src = dev_addr;
+ 		*dcmd |= PXA_DCMD_INCTRGADDR;
+-		if (chan->drcmr <= DRCMR_CHLNUM)
++		if (chan->drcmr <= pdev->nr_requestors)
+ 			*dcmd |= PXA_DCMD_FLOWSRC;
+ 	}
+ 	if (dir == DMA_MEM_TO_DEV) {
+@@ -931,7 +935,7 @@ static void pxad_get_config(struct pxad_chan *chan,
+ 		dev_addr = chan->cfg.dst_addr;
+ 		*dev_dst = dev_addr;
+ 		*dcmd |= PXA_DCMD_INCSRCADDR;
+-		if (chan->drcmr <= DRCMR_CHLNUM)
++		if (chan->drcmr <= pdev->nr_requestors)
+ 			*dcmd |= PXA_DCMD_FLOWTRG;
+ 	}
+ 	if (dir == DMA_MEM_TO_MEM)
+@@ -1341,13 +1345,15 @@ static struct dma_chan *pxad_dma_xlate(struct of_phandle_args *dma_spec,
+ 
+ static int pxad_init_dmadev(struct platform_device *op,
+ 			    struct pxad_device *pdev,
+-			    unsigned int nr_phy_chans)
++			    unsigned int nr_phy_chans,
++			    unsigned int nr_requestors)
+ {
+ 	int ret;
+ 	unsigned int i;
+ 	struct pxad_chan *c;
+ 
+ 	pdev->nr_chans = nr_phy_chans;
++	pdev->nr_requestors = nr_requestors;
+ 	INIT_LIST_HEAD(&pdev->slave.channels);
+ 	pdev->slave.device_alloc_chan_resources = pxad_alloc_chan_resources;
+ 	pdev->slave.device_free_chan_resources = pxad_free_chan_resources;
+@@ -1382,7 +1388,7 @@ static int pxad_probe(struct platform_device *op)
+ 	const struct of_device_id *of_id;
+ 	struct mmp_dma_platdata *pdata = dev_get_platdata(&op->dev);
+ 	struct resource *iores;
+-	int ret, dma_channels = 0;
++	int ret, dma_channels = 0, nb_requestors = 0;
+ 	const enum dma_slave_buswidth widths =
+ 		DMA_SLAVE_BUSWIDTH_1_BYTE   | DMA_SLAVE_BUSWIDTH_2_BYTES |
+ 		DMA_SLAVE_BUSWIDTH_4_BYTES;
+@@ -1399,13 +1405,23 @@ static int pxad_probe(struct platform_device *op)
+ 		return PTR_ERR(pdev->base);
+ 
+ 	of_id = of_match_device(pxad_dt_ids, &op->dev);
+-	if (of_id)
++	if (of_id) {
+ 		of_property_read_u32(op->dev.of_node, "#dma-channels",
+ 				     &dma_channels);
+-	else if (pdata && pdata->dma_channels)
++		ret = of_property_read_u32(op->dev.of_node, "#dma-requests",
++					   &nb_requestors);
++		if (ret) {
++			dev_warn(pdev->slave.dev,
++				 "#dma-requests set to default 32 as missing in OF: %d",
++				 ret);
++			nb_requestors = 32;
++		};
++	} else if (pdata && pdata->dma_channels) {
+ 		dma_channels = pdata->dma_channels;
+-	else
++		nb_requestors = pdata->nb_requestors;
++	} else {
+ 		dma_channels = 32;	/* default 32 channel */
++	}
+ 
+ 	dma_cap_set(DMA_SLAVE, pdev->slave.cap_mask);
+ 	dma_cap_set(DMA_MEMCPY, pdev->slave.cap_mask);
+@@ -1423,7 +1439,7 @@ static int pxad_probe(struct platform_device *op)
+ 	pdev->slave.descriptor_reuse = true;
+ 
+ 	pdev->slave.dev = &op->dev;
+-	ret = pxad_init_dmadev(op, pdev, dma_channels);
++	ret = pxad_init_dmadev(op, pdev, dma_channels, nb_requestors);
+ 	if (ret) {
+ 		dev_err(pdev->slave.dev, "unable to register\n");
+ 		return ret;
+@@ -1442,7 +1458,8 @@ static int pxad_probe(struct platform_device *op)
+ 
+ 	platform_set_drvdata(op, pdev);
+ 	pxad_init_debugfs(pdev);
+-	dev_info(pdev->slave.dev, "initialized %d channels\n", dma_channels);
++	dev_info(pdev->slave.dev, "initialized %d channels on %d requestors\n",
++		 dma_channels, nb_requestors);
+ 	return 0;
+ }
+ 
 -- 
 2.1.4
 
