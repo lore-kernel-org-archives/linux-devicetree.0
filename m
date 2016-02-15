@@ -1,52 +1,52 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/4] mailbox: mailbox-test: support single channel with
- separate Tx and Rx buffer
-Date: Mon, 15 Feb 2016 12:38:30 +0000
-Message-ID: <56C1C6C6.6060108@arm.com>
-References: <1455210808-29395-1-git-send-email-sudeep.holla@arm.com>
- <56C1C1DA.5000207@arm.com>
- <CABb+yY20VRzHa540c6guAJS-U3Y5XFCbAYAWwSLT3ugOJRYmfw@mail.gmail.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Add GIC-400 virtual interfaces
+Date: Mon, 15 Feb 2016 13:40:18 +0100
+Message-ID: <56C1C732.4050505@de.bosch.com>
+References: <1455005692-9382-1-git-send-email-dirk.behme@de.bosch.com>
+ <87povyh6lq.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY20VRzHa540c6guAJS-U3Y5XFCbAYAWwSLT3ugOJRYmfw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Lee Jones <lee.jones@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <87povyh6lq.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 15/02/16 12:31, Jassi Brar wrote:
-> On Mon, Feb 15, 2016 at 5:47 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Hi Jassi,
->>
->> On 11/02/16 17:13, Sudeep Holla wrote:
->>>
->>> Hi Lee, Jassi,
->>>
->>> Assuming mailbox-test was designed to be generic, I am trying to extend
->>> it to support single channel with separate Tx and Rx buffer. With these
->>> changes I am able to test arm_mhu driver. However I couldn't understand
->>> the intention of converting buffer to ASCII hex dump in read method.
->>> I have a local change to remove that so that it can deal with any data
->>> in any format(e.g. some protocol format) and userspace can deal with the
->>> actual interpretation of the data. Let me know your thoughts on that.
->>>
->>
->> Can you review this ? It would be good to get this in for v4.6
->>
-> Seems simple enough. So once you and Lee are in sync...
+On 15.02.2016 06:46, Kuninori Morimoto wrote:
 >
+> Hi Dirk
+> Cc Geert
+>
+>> Besides the distributor and the CPU interface the GIC-400 additionally
+>> supports the virtual interface control blocks and the virtual CPU interfaces.
+>>
+>> Add the physical base addresses and size for these.
+>>
+>> See
+>>
+>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/index.html
+>> -> 3.2. GIC-400 register map
+>>
+>> and Linux kernel's
+>>
+>> Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+>>
+>> for more details.
+>>
+>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>> ---
+>
+> Our R-Car chip is out-of-mapping.
+> Geert had indicated it in
+> http://thread.gmane.org/gmane.linux.ports.sh.devel/49751/focus=51544
+> And we have no answer about it I think
 
-That was quick :). Anyways IIUC Lee agrees with most of the changes.
 
-The question I am asking is not part of this series, I didn't make the
-change to remove hexdump yet, I am trying to understand the reasoning
-for doing that and also explaining my requirement as why I want to
-remove it.
+Could you point us to the code where you think our out-of-mapping 
+doesn't work?
 
--- 
-Regards,
-Sudeep
+Best regards
+
+Dirk
