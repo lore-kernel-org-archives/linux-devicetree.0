@@ -1,37 +1,135 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 2/4] dmaengine: mmp-pdma: add number of requestors
-Date: Mon, 15 Feb 2016 21:57:46 +0100
-Message-ID: <1455569868-25017-2-git-send-email-robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2 3/4] ARM: pxa: add the number of DMA requestor lines
+Date: Mon, 15 Feb 2016 21:57:47 +0100
+Message-ID: <1455569868-25017-3-git-send-email-robert.jarzmik@free.fr>
 References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455569868-25017-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The DMA chip has a fixed number of requestor lines used for flow
-control. This number is platform dependent. The pxa_dma dma driver will
-use this value to activate or not the flow control.
+Declare the number of DMA requestor lines per platform :
+ - for pxa25x: 40 requestor lines
+ - for pxa27x: 75 requestor lines
+ - for pxa3xx: 100 requestor lines
 
-There won't be any impact on mmp_pdma driver.
+This information will be used to activate the DMA flow control or not.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 ---
- include/linux/platform_data/mmp_dma.h | 1 +
- 1 file changed, 1 insertion(+)
+Since v1: rename of property to #dma-requests
+---
+ arch/arm/boot/dts/pxa27x.dtsi        | 1 +
+ arch/arm/boot/dts/pxa3xx.dtsi        | 1 +
+ arch/arm/mach-pxa/devices.c          | 3 ++-
+ arch/arm/mach-pxa/pxa25x.c           | 2 +-
+ arch/arm/mach-pxa/pxa27x.c           | 2 +-
+ arch/arm/mach-pxa/pxa3xx.c           | 2 +-
+ arch/arm/plat-pxa/include/plat/dma.h | 2 +-
+ 7 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/platform_data/mmp_dma.h b/include/linux/platform_data/mmp_dma.h
-index 2a330ec9e2af..d1397c8ed94e 100644
---- a/include/linux/platform_data/mmp_dma.h
-+++ b/include/linux/platform_data/mmp_dma.h
-@@ -14,6 +14,7 @@
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index ef366b204c89..aab08a48dbca 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -13,6 +13,7 @@
+ 			interrupts = <25>;
+ 			#dma-channels = <32>;
+ 			#dma-cells = <2>;
++			#dma-requests = <75>;
+ 			status = "okay";
+ 		};
  
- struct mmp_dma_platdata {
- 	int dma_channels;
-+	int nb_requestors;
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index cf6998a0804d..bea454f50ff9 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -12,6 +12,7 @@
+ 			interrupts = <25>;
+ 			#dma-channels = <32>;
+ 			#dma-cells = <2>;
++			#dma-requests = <100>;
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm/mach-pxa/devices.c b/arch/arm/mach-pxa/devices.c
+index 6e12c162506f..d9ff6e4dd854 100644
+--- a/arch/arm/mach-pxa/devices.c
++++ b/arch/arm/mach-pxa/devices.c
+@@ -1233,6 +1233,7 @@ void __init pxa2xx_set_spi_info(unsigned id, struct pxa2xx_spi_master *info)
+ 
+ static struct mmp_dma_platdata pxa_dma_pdata = {
+ 	.dma_channels	= 0,
++	.nb_requestors	= 0,
  };
  
- #endif /* MMP_DMA_H */
+ static struct resource pxa_dma_resource[] = {
+@@ -1261,7 +1262,7 @@ static struct platform_device pxa2xx_pxa_dma = {
+ 	.resource	= pxa_dma_resource,
+ };
+ 
+-void __init pxa2xx_set_dmac_info(int nb_channels)
++void __init pxa2xx_set_dmac_info(int nb_channels, int nb_requestors)
+ {
+ 	pxa_dma_pdata.dma_channels = nb_channels;
+ 	pxa_register_device(&pxa2xx_pxa_dma, &pxa_dma_pdata);
+diff --git a/arch/arm/mach-pxa/pxa25x.c b/arch/arm/mach-pxa/pxa25x.c
+index a177bf45feef..823504f48f80 100644
+--- a/arch/arm/mach-pxa/pxa25x.c
++++ b/arch/arm/mach-pxa/pxa25x.c
+@@ -206,7 +206,7 @@ static int __init pxa25x_init(void)
+ 		register_syscore_ops(&pxa_irq_syscore_ops);
+ 		register_syscore_ops(&pxa2xx_mfp_syscore_ops);
+ 
+-		pxa2xx_set_dmac_info(16);
++		pxa2xx_set_dmac_info(16, 40);
+ 		pxa_register_device(&pxa25x_device_gpio, &pxa25x_gpio_info);
+ 		ret = platform_add_devices(pxa25x_devices,
+ 					   ARRAY_SIZE(pxa25x_devices));
+diff --git a/arch/arm/mach-pxa/pxa27x.c b/arch/arm/mach-pxa/pxa27x.c
+index 73e96270dc53..d84239c89639 100644
+--- a/arch/arm/mach-pxa/pxa27x.c
++++ b/arch/arm/mach-pxa/pxa27x.c
+@@ -310,7 +310,7 @@ static int __init pxa27x_init(void)
+ 		if (!of_have_populated_dt()) {
+ 			pxa_register_device(&pxa27x_device_gpio,
+ 					    &pxa27x_gpio_info);
+-			pxa2xx_set_dmac_info(32);
++			pxa2xx_set_dmac_info(32, 75);
+ 			ret = platform_add_devices(devices,
+ 						   ARRAY_SIZE(devices));
+ 		}
+diff --git a/arch/arm/mach-pxa/pxa3xx.c b/arch/arm/mach-pxa/pxa3xx.c
+index a1c4c888f246..fb0adb669124 100644
+--- a/arch/arm/mach-pxa/pxa3xx.c
++++ b/arch/arm/mach-pxa/pxa3xx.c
+@@ -450,7 +450,7 @@ static int __init pxa3xx_init(void)
+ 		if (of_have_populated_dt())
+ 			return 0;
+ 
+-		pxa2xx_set_dmac_info(32);
++		pxa2xx_set_dmac_info(32, 100);
+ 		ret = platform_add_devices(devices, ARRAY_SIZE(devices));
+ 		if (ret)
+ 			return ret;
+diff --git a/arch/arm/plat-pxa/include/plat/dma.h b/arch/arm/plat-pxa/include/plat/dma.h
+index 28848b344e2d..ceba3e4184fc 100644
+--- a/arch/arm/plat-pxa/include/plat/dma.h
++++ b/arch/arm/plat-pxa/include/plat/dma.h
+@@ -95,6 +95,6 @@ static inline int pxad_toggle_reserved_channel(int legacy_channel)
+ }
+ #endif
+ 
+-extern void __init pxa2xx_set_dmac_info(int nb_channels);
++extern void __init pxa2xx_set_dmac_info(int nb_channels, int nb_requestors);
+ 
+ #endif /* __PLAT_DMA_H */
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
