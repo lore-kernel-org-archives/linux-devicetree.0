@@ -1,123 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v6 2/3] Documentation: gpio: Update description for X-Gene
- standby GPIO controller DTS binding
-Date: Mon, 15 Feb 2016 16:08:12 +0000
-Message-ID: <56C1F7EC.3020701@arm.com>
-References: <1455512263-18183-1-git-send-email-qnguyen@apm.com>
- <1455512263-18183-3-git-send-email-qnguyen@apm.com>
- <56C1CA6E.1060606@arm.com>
- <CAFopSPRwd8cHnH8efegYVv52hPVTyk=VW9OrZZtSCj6Szj-K4Q@mail.gmail.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH] arm: dts: AM57XX: Correct the thermal thresholds
+Date: Mon, 15 Feb 2016 21:43:30 +0530
+Message-ID: <56C1F92A.1020803@ti.com>
+References: <1454924705-8382-1-git-send-email-j-keerthy@ti.com>
+ <20160209220901.GC28102@localhost.localdomain> <56BA6530.4030102@ti.com>
+ <20160212222347.GO19432@atomide.com>
+ <CAGo_u6r8-LJBWWrew0fV50Q+JnCxDj9PD57+9NoDm5TqCWL=jw@mail.gmail.com>
+ <20160212224129.GP19432@atomide.com> <56C153A3.3030508@ti.com>
+ <56C1F3A1.4080709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAFopSPRwd8cHnH8efegYVv52hPVTyk=VW9OrZZtSCj6Szj-K4Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56C1F3A1.4080709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>, Dmitry Lifshitz <lifshitz@compulab.co.il>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/16 15:31, Quan Nguyen wrote:
-> On Mon, Feb 15, 2016 at 7:54 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->> On 15/02/16 04:57, Quan Nguyen wrote:
->>> Update description for X-Gene standby GPIO controller DTS binding to
->>> support GPIO line configuration as input, output or external IRQ pin.
->>>
->>> Signed-off-by: Y Vo <yvo@apm.com>
->>> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
->>> ---
->>>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 47 ++++++++++++++++++----
->>>  1 file changed, 40 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->>> index dae1300..7b8b4cb 100644
->>> --- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->>> @@ -1,10 +1,20 @@
->>>  APM X-Gene Standby GPIO controller bindings
->>>
->>> -This is a gpio controller in the standby domain.
->>> -
->>> -There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
->>> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
->>> -is currently 1-to-1 on interrupts 0x28 thru 0x2d.
->>> +This is a gpio controller in the standby domain. It also supports interrupt in
->>> +some particular pins which are sourced to its parent interrupt controller
->>> +as diagram below:
->>> +                           +-----------------+
->>> +                           | X-Gene standby  |
->>> +                           | GPIO controller +--------- GPIO_0
->>> ++------------+             |                 | ...
->>> +| Parent IRQ |             |                 +--------- GPIO_8/EXT_INT_0
->>> +| controller |  EXT_INT_0  |                 | ...
->>> +| (GICv2)    +-------------+                 +--------- GPIO_[N+8]/EXT_INT_N
->>> +|            |  ...        |                 |
->>> +|            |  EXT_INT_N  |                 +--------- GPIO_[N+9]
->>> +|            +-------------+                 | ...
->>> +|            |             |                 +--------- GPIO_MAX
->>> ++------------+             +-----------------+
->>>
->>>  Required properties:
->>>  - compatible: "apm,xgene-gpio-sb" for the X-Gene Standby GPIO controller
->>> @@ -15,10 +25,18 @@ Required properties:
->>>               0 = active high
->>>               1 = active low
->>>  - gpio-controller: Marks the device node as a GPIO controller.
->>> -- interrupts: Shall contain exactly 6 interrupts.
->>> +- interrupts: The EXT_INT_0 parent interrupt resource must be listed first.
->>> +- interrupt-parent: Phandle of the parent interrupt controller.
->>> +- interrupt-cells: Should be two.
->>> +       - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
->>> +       - second cell is used to specify flags.
->>> +- interrupt-controller: Marks the device node as an interrupt controller.
->>> +- apm,nr-gpios: Optional, specify number of gpios pin.
->>> +- apm,nr-irqs: Optional, specify number of interrupt pins.
->>> +- apm,irq-start: Optional, specify lowest gpio pin support interrupt.
+
+
+On Monday 15 February 2016 09:19 PM, Nishanth Menon wrote:
+> On 02/14/2016 10:27 PM, Keerthy wrote:
 >>
->> This is quite ambiguous. Is that relative to the GIC? Assuming this is
->> the case, you should then document it, specify the type of interrupt
->> (SPI?), and whether this is 0- or 32-based (the code seems to indicate
->> that is is 0-based).
 >>
-> 
-> Hi Marc, Let me explain by diagram below.
-> As you can also see in diagram above, the lowest gpio pin that
-> supports interrupt is GPIO_8 (EXT_INT_0),
-> and hence, apm,irq-start=<8> as default.
-> 
->                                            +-----------------+
->                                            | X-Gene standby  |
->                                            | GPIO controller +--------- GPIO_0
-> +------------+                             |                 | ...
-> | Parent IRQ |                             |
-> +--------- GPIO_[apm,irq-start]/EXT_INT_0
-> | controller |  EXT_INT_0                  |                 | ...
-> | (GICv2)    +-----------------------------+
-> +--------- GPIO_[apm,nr-irqs + apm,irq-start - 1]/EXT_INT_[apm,nr-irqs
-> - 1]
-> |            |  ...                        |                 |
-> |            |  EXT_INT_[apm,nr-irqs - 1]  |
-> +--------- GPIO_[apm,nr-irqs + apm,irq-start]
-> |            +-----------------------------+                 | ...
-> |            |                             |                 +--------- GPIO_MAX
-> +------------+                             +-----------------+
-> 
-> To fix this ambiguity, I'm thinking to change it to:
-> "apm,irq-start: Optional, specify index of first gpio pin
-> corresponding to EXT_INT_0, default is 8."
+>> On Saturday 13 February 2016 04:11 AM, Tony Lindgren wrote:
+>>> * Nishanth Menon <nm@ti.com> [160212 14:32]:
+>>>> On Fri, Feb 12, 2016 at 4:23 PM, Tony Lindgren <tony@atomide.com> wrote:
+>>>>> * Nishanth Menon <nm@ti.com> [160209 14:17]:
+>>>>>> On 02/09/2016 04:09 PM, Eduardo Valentin wrote:
+>>>>>>> On Mon, Feb 08, 2016 at 03:15:05PM +0530, Keerthy wrote:
+>>>>>>>> The thermal threholds for am57xx are different from that of dra7.
+>>>>>>>> Correcting the thresholds for the same.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>>>>>>> ---
+>>>>>>>>
+>>>>>>>> Depends on: https://lkml.org/lkml/2016/2/8/90
+>>>>>>>>
+>>>>>>>>    arch/arm/boot/dts/am57xx-beagle-x15.dts | 24 ++++++++++++++++++++++++
+>>>>>>>>    1 file changed, 24 insertions(+)
+>>>>>>>>
+>>>>>>>> Index: linux/arch/arm/boot/dts/am57xx-beagle-x15.dts
+>>>>>>>> ===================================================================
+>>>>>>>> --- linux.orig/arch/arm/boot/dts/am57xx-beagle-x15.dts     2016-02-08 14:57:05.514959101 +0530
+>>>>>>>> +++ linux/arch/arm/boot/dts/am57xx-beagle-x15.dts  2016-02-08 14:57:05.510959168 +0530
+>>>>>>>
+>>>>>>> Sorry, did not bother to check, but is this the only user of am57xx?
+>>>>>>
+>>>>>> we will have AM57xx-IDK as well coming down the line. we already have
+>>>>>> arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+>>>>>> arch/arm/boot/dts/am57xx-sbc-am57x.dts - not really sure what grade of
+>>>>>> silicon are used in cl-SOM and sbc boards.
+>>>>>
+>>>>> Hmm can this one wait for v4.6 or is it critical for v4.5-rc
+>>>>> cycle?
+>>>>
+>>>> personally, I'd like to NAK this patch -> lack of reference
+>>>> documentation, and guidance for various AM57xx boards in a generic
+>>>> patch should probably be followed IMHO.
+>>>
+>>> OK let's wait for that then.
+>>
+>> OK. I will send a v2 with better documentation.
+>
+>
+>
+> This data is in the AM572x datasheet:
+> http://www.ti.com/lit/ds/symlink/am5728.pdf
+>
+> Table 5-3 in the current version contains the maximum junction
+> temperatures.
+>
+> this indicates that there are "Commercial" and "extended" -> we may
+> need to introduce just 2 dtsis -> am57xx-commercial and
+> am57xx-extended and reuse those based on the part on the board. just a
+> suggestion..
 
-I think you are missing the point I'm trying to make. There are two ways
-to refer to an SPI: either by its absolute number (INT32 for example) or
-by its relative number (SPI0). SPI0 and INT32 are the same interrupt.
-Just with a different base.
+Or use the minimum of the 2 to be on the safer side if we have to deal 
+with one dtsi?
 
-My question is: which base are you using? By looking at the code, I
-think you're using the absolute version (INTx). And as your controller
-seems to be very GIC specific, you should add a pointer to the GIC
-documentation.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+Keerthy
+>
+>
