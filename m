@@ -1,54 +1,76 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: cputype info for Broadcom Vulcan
-Date: Mon, 15 Feb 2016 10:12:35 +0000
-Message-ID: <20160215101235.GA1748@arm.com>
-References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
- <1455389195-31870-5-git-send-email-jchandra@broadcom.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4 2/8] [media] VPU: mediatek: support Mediatek VPU
+Date: Mon, 15 Feb 2016 11:13:26 +0100
+Message-ID: <56C1A4C6.7040601@xs4all.nl>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455389195-31870-5-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 14, 2016 at 12:16:35AM +0530, Jayachandran C wrote:
-> Add Broadcom Vulcan implementor ID and part ID in cputype.h. This is
-> to document the values.
+On 02/04/2016 12:34 PM, Tiffany Lin wrote:
+> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
+> It is able to handle video decoding/encoding of in a range of formats.
+> The driver provides with VPU firmware download, memory management and
+> the communication interface between CPU and VPU.
+> For VPU initialization, it will create virtual memory for CPU access and
+> IOMMU address for vcodec hw device access. When a decode/encode instance
+> opens a device node, vpu driver will download vpu firmware to the device.
+> A decode/encode instant will decode/encode a frame using VPU
+> interface to interrupt vpu to handle decoding/encoding jobs.
 > 
-> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 > ---
->  arch/arm64/include/asm/cputype.h | 2 ++
->  1 file changed, 2 insertions(+)
-
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-
-> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-> index 1a59493..3725d59 100644
-> --- a/arch/arm64/include/asm/cputype.h
-> +++ b/arch/arm64/include/asm/cputype.h
-> @@ -65,6 +65,7 @@
->  #define ARM_CPU_IMP_ARM			0x41
->  #define ARM_CPU_IMP_APM			0x50
->  #define ARM_CPU_IMP_CAVIUM		0x43
-> +#define ARM_CPU_IMP_BRCM		0x42
->  
->  #define ARM_CPU_PART_AEM_V8		0xD0F
->  #define ARM_CPU_PART_FOUNDATION		0xD00
-> @@ -74,6 +75,7 @@
->  #define APM_CPU_PART_POTENZA		0x000
->  
->  #define CAVIUM_CPU_PART_THUNDERX	0x0A1
-> +#define BRCM_CPU_PART_VULCAN		0x516
->  
->  #ifndef __ASSEMBLY__
->  
-> -- 
-> 1.9.1
+>  drivers/media/platform/Kconfig           |    9 +
+>  drivers/media/platform/Makefile          |    2 +
+>  drivers/media/platform/mtk-vpu/Makefile  |    1 +
+>  drivers/media/platform/mtk-vpu/mtk_vpu.c |  994 ++++++++++++++++++++++++++++++
+>  drivers/media/platform/mtk-vpu/mtk_vpu.h |  167 +++++
+>  5 files changed, 1173 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
+>  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.c
+>  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index ccbc974..ba812d6 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -148,6 +148,15 @@ config VIDEO_CODA
+>  	   Coda is a range of video codec IPs that supports
+>  	   H.264, MPEG-4, and other video formats.
+>  
+> +config VIDEO_MEDIATEK_VPU
+> +	tristate "Mediatek Video Processor Unit"
+> +	depends on VIDEO_DEV && VIDEO_V4L2 && ARCH_MEDIATEK
+> +	---help---
+> +	    This driver provides downloading VPU firmware and
+> +	    communicating with VPU. This driver for hw video
+> +	    codec embedded in new Mediatek's SOCs. It is able
+> +	    to handle video decoding/encoding in a range of formats.
+
+Can you be more specific in this text and mention for which Mediatek SoCs
+this driver is for? Just like you did in the commit log.
+
+Also add something like this:
+
+          To compile this driver as a module, choose M here: the module
+          will be called mtk-vpu.
+
+I always find it useful if the Kconfig text mentions the module name.
+
+Regards,
+
+	Hans
+
+> +
+>  config VIDEO_MEM2MEM_DEINTERLACE
+>  	tristate "Deinterlace support"
+>  	depends on VIDEO_DEV && VIDEO_V4L2 && DMA_ENGINE
