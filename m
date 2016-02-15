@@ -1,76 +1,75 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 2/8] [media] VPU: mediatek: support Mediatek VPU
-Date: Mon, 15 Feb 2016 11:13:26 +0100
-Message-ID: <56C1A4C6.7040601@xs4all.nl>
-References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/6] ARM/arm64 : shmobile/renesas: Add L2
+ cache-controller nodes
+Date: Mon, 15 Feb 2016 11:15:16 +0100
+Message-ID: <CAMuHMdVRTJ9nXFNQSz+WGSuUGWho3x08WMNZwPS=B-Q8sdzd4w@mail.gmail.com>
+References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
+	<20160215015848.GD14034@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160215015848.GD14034@verge.net.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2016 12:34 PM, Tiffany Lin wrote:
-> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> It is able to handle video decoding/encoding of in a range of formats.
-> The driver provides with VPU firmware download, memory management and
-> the communication interface between CPU and VPU.
-> For VPU initialization, it will create virtual memory for CPU access and
-> IOMMU address for vcodec hw device access. When a decode/encode instance
-> opens a device node, vpu driver will download vpu firmware to the device.
-> A decode/encode instant will decode/encode a frame using VPU
-> interface to interrupt vpu to handle decoding/encoding jobs.
-> 
-> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> ---
->  drivers/media/platform/Kconfig           |    9 +
->  drivers/media/platform/Makefile          |    2 +
->  drivers/media/platform/mtk-vpu/Makefile  |    1 +
->  drivers/media/platform/mtk-vpu/mtk_vpu.c |  994 ++++++++++++++++++++++++++++++
->  drivers/media/platform/mtk-vpu/mtk_vpu.h |  167 +++++
->  5 files changed, 1173 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
->  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.c
->  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
-> 
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index ccbc974..ba812d6 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -148,6 +148,15 @@ config VIDEO_CODA
->  	   Coda is a range of video codec IPs that supports
->  	   H.264, MPEG-4, and other video formats.
->  
-> +config VIDEO_MEDIATEK_VPU
-> +	tristate "Mediatek Video Processor Unit"
-> +	depends on VIDEO_DEV && VIDEO_V4L2 && ARCH_MEDIATEK
-> +	---help---
-> +	    This driver provides downloading VPU firmware and
-> +	    communicating with VPU. This driver for hw video
-> +	    codec embedded in new Mediatek's SOCs. It is able
-> +	    to handle video decoding/encoding in a range of formats.
+Hi Simon,
 
-Can you be more specific in this text and mention for which Mediatek SoCs
-this driver is for? Just like you did in the commit log.
+On Mon, Feb 15, 2016 at 2:58 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Mon, Dec 07, 2015 at 07:24:13PM +0100, Geert Uytterhoeven wrote:
+>> This patch series adds the missing L2 cache-controller nodes to the
+>> DTSes for various Renesas ARM-based SoCs, and links the CPU nodes to
+>> them.
+>>
+>> For R-Mobile APE6 (r8a73a4), the L2 cache-controllers are also linked to
+>> the respective (already existing) SYSC Power Domains. Fortunately these
+>> Power Domains were never powered down, as they are parents of the Power
+>> Domains containing CPU cores. This may change in the future.
+>>
+>> For R-Car Gen2 and Gen3 (r8a779x), this serves as a preparatory step for
+>> adding SYSC Power Domain support later.
+>>
+>> Question for the ARM/DT people: What are the DT bindings for
+>> Cortex-A15/A7/A57/A53 L2 cache controllers?
+>> Everybody just seems to use "cache" for the compatible values...
+>>
+>> Patches 2-5 were extracted from series "[PATCH/RFC 00/15]
+>> ARM: shmobile: R-Car: Add SYSC PM Domain DT Support",
+>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348742.html)
+>> and received some fixes. You can find more detailed changelogs in the
+>> individual patches).
+>>
+>> This has been tested on r8a73a4/ape6evm, r8a7791/koelsch, and
+>> r8a7795/salvator-x.
+>
+> Sorry for loosing track of this until now.
+>
+> It seems to me that the Gen-2 changes could be applied, is that correct?
 
-Also add something like this:
+And APE6 :-)
 
-          To compile this driver as a module, choose M here: the module
-          will be called mtk-vpu.
+> It also seems to me that there was inconclusive discussion regarding
+> the r8a7795 change, is that also correct.
 
-I always find it useful if the Kconfig text mentions the module name.
+There was discussion (for all SoCs) about the presence of the arm,data-latency
+and arm,tag-latency properties. Given the mess^H^H^H^H presence or
+absence of virtualization they may or may not be valid...
 
-Regards,
+I think the way forward (keeping the dependency for SYSC PM Domains in mind) is
+to apply the series, after removing the controversial latency properties.
 
-	Hans
+Should I resend, or can/will you handle that?
 
-> +
->  config VIDEO_MEM2MEM_DEINTERLACE
->  	tristate "Deinterlace support"
->  	depends on VIDEO_DEV && VIDEO_V4L2 && DMA_ENGINE
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
