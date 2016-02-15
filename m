@@ -1,81 +1,51 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
-Date: Mon, 15 Feb 2016 12:23:26 +0530
-Message-ID: <1455519206-12939-14-git-send-email-architt@codeaurora.org>
-References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 07/11] of: Add bindings of hw-trip-points for soctherm
+Date: Mon, 15 Feb 2016 15:15:09 +0800
+Message-ID: <56C17AFD.8050203@nvidia.com>
+References: <1454057260-16412-1-git-send-email-wni@nvidia.com> <CAL_JsqKwQOxkWyYPcv6sBe8ELUuPx4N+iUF94J8R63bRxsGK4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robdclark@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKwQOxkWyYPcv6sBe8ELUuPx4N+iUF94J8R63bRxsGK4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIEhETUkgUEhZIGJpbmRpbmdzLiBVcGRhdGUgdGhlIGV4YW1wbGUgdG8gdXNlIEhETUkgUEhZ
-LgoKQWRkIGEgbWlzc2luZyBwb3dlci1kb21haW5zIHByb3BlcnR5IGluIHRoZSBIRE1JIGNvcmUg
-YmluZGluZ3MuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+CgpTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
-QGNvZGVhdXJvcmEub3JnPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
-L2hkbWkudHh0ICAgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5n
-ZWQsIDM4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKaW5kZXggMzc5
-ZWUyZS4uNGQ3MTkxMCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dApAQCAtMTEsNiArMTEsNyBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgogLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRo
-ZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzCiAtIHJlZy1uYW1lczogImNvcmVfcGh5c2ljYWwiCiAt
-IGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGhkbWkgYmxvY2suCist
-IHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KIC0gY2xvY2tzOiBk
-ZXZpY2UgY2xvY2tzCiAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRh
-aWxzLgogLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgpAQCAtMTgsNiAr
-MTksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBxY29tLGhkbWktdHgtaHBkLWdwaW86IGhw
-ZCBwaW4KIC0gY29yZS12ZGRhLXN1cHBseTogcGhhbmRsZSB0byBzdXBwbHkgcmVndWxhdG9yCiAt
-IGhkbWktbXV4LXN1cHBseTogcGhhbmRsZSB0byBtdXggcmVndWxhdG9yCistIHFjb20saGRtaS1w
-aHk6IHBoYW5kbGUgdG8gSERNSSBQSFkgZGV2aWNlIG5vZGUKIAogT3B0aW9uYWwgcHJvcGVydGll
-czoKIC0gcWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCkBAIC0y
-Nyw2ICsyOSwyNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwaW5jdHJsLTA6IHRoZSBkZWZh
-dWx0IHBpbmN0cmwgc3RhdGUgKGFjdGl2ZSkKIC0gcGluY3RybC0xOiB0aGUgInNsZWVwIiBwaW5j
-dHJsIHN0YXRlCiAKK0hETUkgUEhZOgorUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJs
-ZTogQ291bGQgYmUgdGhlIGZvbGxvd2luZworICAqICJxY29tLGhkbWktcGh5LTh4NjAiCisgICog
-InFjb20saGRtaS1waHktODk2MCIKKyAgKiAicWNvbSxoZG1pLXBoeS04eDc0IgorICAqICJxY29t
-LGhkbWktcGh5LTg5OTYiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgg
-b2YgdGhlIHJlZ2lzdGVycyBvZiB0aGUgUEhZIHN1YiBibG9ja3MuCistIHJlZy1uYW1lczogVGhl
-IG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVnaW9ucyBhcmUgcmVx
-dWlyZWQ6CisgICogImhkbWlfcGxsIgorICAqICJoZG1pX3BoeSIKKyAgRm9yIEhETUkgUEhZIG9u
-IG1zbTg5OTYsIHRoZXNlIGFkZGl0aW9uYWwgcmVnaXN0ZXIgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6
-CisgICAgKiAiaGRtaV90eF9sMCIKKyAgICAqICJoZG1pX3R4X2wxIgorICAgICogImhkbWlfdHhf
-bDMiCisgICAgKiAiaGRtaV90eF9sNCIKKy0gcG93ZXItZG9tYWluczogU2hvdWxkIGJlIDwmbW1j
-YyBNRFNTX0dEU0M+LgorLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKKyAgU2VlIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRh
-aWxzLgorLSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmlj
-ZSBub2RlCisKIEV4YW1wbGU6CiAKIC8gewpAQCAtMzUsNyArNTgsNyBAQCBFeGFtcGxlOgogCWhk
-bWk6IHFjb20saGRtaS10eC04OTYwQDRhMDAwMDAgewogCQljb21wYXRpYmxlID0gInFjb20saGRt
-aS10eC04OTYwIjsKIAkJcmVnLW5hbWVzID0gImNvcmVfcGh5c2ljYWwiOwotCQlyZWcgPSA8MHgw
-NGEwMDAwMCAweDEwMDA+OworCQlyZWcgPSA8MHgwNGEwMDAwMCAweDJmMD47CiAJCWludGVycnVw
-dHMgPSA8R0lDX1NQSSA3OSAwPjsKIAkJcG93ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+
-OwogCQljbG9jay1uYW1lcyA9CkBAIC01NCw1ICs3NywxOSBAQCBFeGFtcGxlOgogCQlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOwogCQlwaW5jdHJsLTAgPSA8JmhwZF9hY3RpdmUg
-ICZkZGNfYWN0aXZlICAmY2VjX2FjdGl2ZT47CiAJCXBpbmN0cmwtMSA9IDwmaHBkX3N1c3BlbmQg
-JmRkY19zdXNwZW5kICZjZWNfc3VzcGVuZD47CisKKwkJcWNvbSxoZG1pLXBoeSA9IDwmaGRtaV9w
-aHk+OworCX07CisKKwloZG1pX3BoeTogcWNvbSxoZG1pLXBoeS04OTYwQDRhMDA0MDAgeworCQlj
-b21wYXRpYmxlID0gInFjb20saGRtaS1waHktODk2MCI7CisJCXJlZy1uYW1lcyA9ICJoZG1pX3Bo
-eSIsCisJCQkgICAgImhkbWlfcGxsIjsKKwkJcmVnID0gPDB4NGEwMDQwMCAweDYwPiwKKwkJICAg
-ICAgPDB4NGEwMDUwMCAweDEwMD47CisJCXBvd2VyLWRvbWFpbnMgPSA8Jm1tY2MgTURTU19HRFND
-PjsKKwkJY2xvY2stbmFtZXMgPSAic2xhdmVfaWZhY2VfY2xrIjsKKwkJY2xvY2tzID0gPCZtbWNj
-IEhETUlfU19BSEJfQ0xLPjsKKwkJY29yZS12ZGRhLXN1cHBseSA9IDwmcG04OTIxX2hkbWlfbXZz
-PjsKIAl9OwogfTsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmhvc3RlZCBieSBUaGUgTGludXggRm91
-bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi, Rob
+
+On 2016=E5=B9=B402=E6=9C=8812=E6=97=A5 22:42, Rob Herring wrote:
+> On Fri, Jan 29, 2016 at 2:47 AM, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add hw-trips sub-node for soctherm, which is
+>> used to describe the hardware trip points for
+>> each soctherm sensors.
+>=20
+> I still don't understand why you are doing something custom here.
+> What's wrong with what is defined in:
+>=20
+> Documentation/devicetree/bindings/thermal/thermal.txt
+
+In current thermal framework, it support to set trip points for the the=
+rmal
+zones, but this trip point is handled by SW, doesn't have callbacks to =
+program
+the hardware.
+There had patches:
+[PATCH 12/16] thermal: thermal: Add support for hardware-tracked trip p=
+oints,
+http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000866.htm=
+l,
+which can support to program hardware to set trip points, but it seems =
+this
+series didn't be taken.
+So I add this hw-trip-points sub-node for soctherm.
+
+Hi, Sascha Hauer
+
+Thanks.
+Wei.
+
+>=20
+> Rob
+>=20
