@@ -1,97 +1,55 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC v2 09/11] ARM: dts: r8a7793: Add SYSC PM domains
-Date: Mon, 15 Feb 2016 22:16:58 +0100
-Message-ID: <1455571020-18968-10-git-send-email-geert+renesas@glider.be>
-References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+From: Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] mtd: brcmnand: fix check for Hamming algorithm
+Date: Mon, 15 Feb 2016 16:30:27 -0500
+Message-ID: <CAC=U0a2ZeJrxHwCQZ5U3QvO7+W4Y9m4LRbULvOJGgMG9rutDng@mail.gmail.com>
+References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
+	<1455300685-27009-3-git-send-email-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455571020-18968-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1455300685-27009-3-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the System Controller, with subnodes that
-represent the hardware power area hierarchy.
-Hook up the first Cortex-A15 CPU core and the Cortex-A15 L2 cache/SCU to
-their respective PM domains.
+On Fri, Feb 12, 2016 at 1:11 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.=
+com> wrote:
+> So far we were treating ECC strength 1 as Hamming algorithm. It didn'=
+t
+> supporting some less common devices with BCH-1 (e.g. D-Link DIR-885L)=
+=2E
+>
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v2:
-  - Change one-line summary prefix to match current arm-soc practices,
-  - Update compatible values.
----
- arch/arm/boot/dts/r8a7793.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Reviewed-by: Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index 9a30f650aa515b80..843fd3306f35ebb0 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -43,6 +43,7 @@
- 			voltage-tolerance = <1>; /* 1% */
- 			clocks = <&cpg_clocks R8A7793_CLK_Z>;
- 			clock-latency = <300000>; /* 300 us */
-+			power-domains = <&pd_ca15_cpu0>;
- 
- 			/* kHz - uV - OPPs unknown yet */
- 			operating-points = <1500000 1000000>,
-@@ -57,6 +58,7 @@
- 
- 	L2_CA15: cache-controller@0 {
- 		compatible = "cache";
-+		power-domains = <&pd_ca15_scu>;
- 		cache-unified;
- 		cache-level = <2>;
- 	};
-@@ -1144,6 +1146,43 @@
- 		};
- 	};
- 
-+	sysc: system-controller@e6180000 {
-+		compatible = "renesas,r8a7793-sysc", "renesas,rcar-gen2-sysc";
-+		reg = <0 0xe6180000 0 0x0200>;
-+
-+		pm-domains {
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+
-+			pd_ca15_scu: scu@12 {
-+				reg = <12 0x180>;
-+				#address-cells = <2>;
-+				#size-cells = <0>;
-+				#power-domain-cells = <0>;
-+
-+				pd_ca15_cpu0: cpu@0 {
-+					reg = <0 0x40>;
-+					#power-domain-cells = <0>;
-+				};
-+
-+				pd_ca15_cpu1: cpu@1 {
-+					reg = <1 0x41>;
-+					#power-domain-cells = <0>;
-+				};
-+			};
-+
-+			pd_sh: sh@16 {
-+				reg = <16 0x80>;
-+				#power-domain-cells = <0>;
-+			};
-+
-+			pd_sgx: sgx@20 {
-+				reg = <20 0xc0>;
-+				#power-domain-cells = <0>;
-+			};
-+		};
-+	};
-+
- 	ipmmu_sy0: mmu@e6280000 {
- 		compatible = "renesas,ipmmu-r8a7793", "renesas,ipmmu-vmsa";
- 		reg = <0 0xe6280000 0 0x1000>;
--- 
-1.9.1
-
+Thanks Rafal
+> ---
+>  drivers/mtd/nand/brcmnand/brcmnand.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/=
+brcmnand/brcmnand.c
+> index 844fc07..b8055da 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -1842,7 +1842,7 @@ static int brcmnand_setup_dev(struct brcmnand_h=
+ost *host)
+>
+>         switch (chip->ecc.size) {
+>         case 512:
+> -               if (chip->ecc.strength =3D=3D 1) /* Hamming */
+> +               if (chip->ecc.algo =3D=3D NAND_ECC_HAMMING)
+>                         cfg->ecc_level =3D 15;
+>                 else
+>                         cfg->ecc_level =3D chip->ecc.strength;
+> --
+> 1.8.4.5
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
