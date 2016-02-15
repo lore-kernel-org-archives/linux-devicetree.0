@@ -1,105 +1,58 @@
-From: Matt Redfearn <matt.redfearn@imgtec.com>
-Subject: Re: [PATCH v6 2/3] MIPS: OCTEON: Rename legacy properties in internal
- device trees.
-Date: Mon, 15 Feb 2016 08:17:59 +0000
-Message-ID: <56C189B7.5020504@imgtec.com>
-References: <1455207976-2262-1-git-send-email-matt.redfearn@imgtec.com>
- <1455207976-2262-2-git-send-email-matt.redfearn@imgtec.com>
- <56BCB7AE.2050901@gmail.com> <56BCBC90.6090805@imgtec.com>
- <56BCC64A.5040902@caviumnetworks.com>
+From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: unconditionally recurse into clk/mvebu/
+Date: Mon, 15 Feb 2016 09:33:26 +0100
+Message-ID: <CAPv3WKdnFg6AYNGexyEvMEjKmHadj4+CH5avnd=5d_HEKCTc2A@mail.gmail.com>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1455521698-7905-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <56BCC64A.5040902@caviumnetworks.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, robh@kernel.org, ralf@linux-mips.org, linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455521698-7905-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hi Thomas,
 
-On 11/02/16 17:35, David Daney wrote:
-> On 02/11/2016 08:53 AM, Matt Redfearn wrote:
->> Hi David,
->>
->> On 11/02/16 16:32, David Daney wrote:
->>> On 02/11/2016 08:26 AM, Matt Redfearn wrote:
->>>> Many OCTEON devices have been shipped in products with fixed DTBs. 
->>>> These
->>>> DTBS contain properties which are not compatible with newer kernels 
->>>> with
->>>> upstream drivers.
->>>> Therefore some mechanism is necessary to convert legacy naming into
->>>> upstream naming. In the first instance this is to support the 
->>>> OCTEON MMC
->>>> controller, which is in a later patch of this series.
->>>> This patch adds a octeon_handle_legacy_device_tree() function which is
->>>> always called from device_tree_init() to fix up the device tree so 
->>>> that
->>>> drivers need have no knowledge of the legacy naming or properties.
->>>>
->>>> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
->>>
->>> NAK...
->>>
->>> I already sent e-mail on this, but it crossed in flight.
->>
->> Yeah, unfortunate timing.
->>
->>>
->>> Basically, this patch is much more complex than the original code
->>> which was just a few lines to check the alternate "legacy" names.
->>
->> This code is functionally equivalent to the previous version, just
->> located in platform code rather than the driver itself.
+
+
+2016-02-15 8:34 GMT+01:00 Thomas Petazzoni
+<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> The drivers/clk/mvebu directory is only being built when
+> CONFIG_PLAT_ORION=y. As we are going to support additional mvebu
+> platforms in drivers/clk/mvebu, which don't have CONFIG_PLAT_ORION=y,
+> we need to recurse into this directory regardless of the value of
+> CONFIG_PLAT_ORION.
 >
-> I know, one thing I really don't like about it, is that we are 
-> modifying the kernel's view of the device that was passed in.  How 
-> does that effect what is seen in /sys/firmware ?
-
-Yes, that's true. The tree as visible in /sys/firmware is the modified 
-version, because the modifications are performed on the DTB before it is 
-unflattened and copied. This is what can be seen with the update:
-
-# ls /sys/firmware/devicetree/base/soc\@0/mmc\@1180000002000/mmc-slot\@0/
-bus-width  compatible  max-frequency  name  reg  voltage-ranges
-
+> Since all files in drivers/clk/mvebu/ are already conditionally
+> compiled depending on various Kconfig options, we can recurse
+> unconditionally into drivers/clk/mvebu without any other change.
 >
-> I would rather see code that calls mmc_of_parse(), and then, if the 
-> two properties in question (bus-width, and max-frequency) have not 
-> been filled in, attempt to read them with the legacy names using 
-> of_property_read_u32()
-
-OK, well we can go back to that...
-
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/clk/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> The implementation of mmc_of_parse() already contains support for 
-> parsing legacy properties, so we could also add a couple more there, 
-> which would be the simplest change of all.
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index b038e36..e08bb0e 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -61,7 +61,7 @@ obj-$(CONFIG_ARCH_MEDIATEK)           += mediatek/
+>  ifeq ($(CONFIG_COMMON_CLK), y)
+>  obj-$(CONFIG_ARCH_MMP)                 += mmp/
+>  endif
+> -obj-$(CONFIG_PLAT_ORION)               += mvebu/
+> +obj-y                                  += mvebu/
 
-Best to keep the support in the driver, I think.
+I know it works with obj-y, but how about using
+obj-$(CONFIG_ARCH_MVEBU)? A person editing this Kconfig in future
+wouldn't have to run git blame in order to ensure with your commit
+log, that he doesn't compile anything more than planned.
 
->
->
->> In terms of LOC
->> it's not much different. Doing it this was does allow future flexibility
->> to change other bindings that are fixed in firmware without having to
->> support each set in the individual drivers.
->
-> I think the controversy is limited to the MMC driver.  As far as I 
-> know, we are in good shape with the bindings for the other drivers.
-OK cool, well let's go back to that version, then.
-
-Thanks,
-Matt
->
->
->> Leaving this patch out will mean having to get any legacy bindings
->> accepted into each driver via their maintainer.
->> But for the moment we're just talking about the MMC driver - if this
->> patch is not accepted then the only way to support legacy devices is
->> with Ulf's signoff of handling both binding versions in the driver.
->>
-> [...]
-
+Best regards,
+Marcin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
