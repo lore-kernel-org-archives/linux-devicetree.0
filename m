@@ -1,44 +1,39 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v3 3/3] ARM: dts: vfxxx: Add iio_hwmon node for ADC
- temperature channel
-Date: Tue, 16 Feb 2016 09:50:08 -0800
-Message-ID: <06aa0e2a7958c81fb6d3ab9c23164156@agner.ch>
-References: <cover.1455597464.git.maitysanchayan@gmail.com>
- <88b677c3ab62d965b70846618fe566523f95c9bb.1455597464.git.maitysanchayan@gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 02/12] irqchip: armada-370-xp: do not enable it by
+ default when ARCH_MVEBU is selected
+Date: Tue, 16 Feb 2016 18:16:58 +0000
+Message-ID: <20160216181658.GH5183@io.lakedaemon.net>
+References: <1454951660-13289-1-git-send-email-gregory.clement@free-electrons.com>
+ <1454951660-13289-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <88b677c3ab62d965b70846618fe566523f95c9bb.1455597464.git.maitysanchayan@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1454951660-13289-3-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: linux@roeck-us.net, shawnguo@kernel.org, jdelvare@suse.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-02-15 21:00, Sanchayan Maity wrote:
-> Add iio-hwmon node to expose the temperature channel on Vybrid as
-> hardware monitor device using the iio_hwmon driver.
+Hey Gregory,
+
+On Mon, Feb 08, 2016 at 06:14:10PM +0100, Gregory CLEMENT wrote:
+> The irq-armada-370-xp driver can only be built for ARM 32 bits. The mvebu
+> family had grown with a new ARM64 SoC which will also select the
+> ARCH_MEVBU configuration. Since "ARM: mvebu: use the ARMADA_370_XP_IRQ
+> option", the ARM32 mvebu SoC directly select this new option. Selecting
+> it by default when ARCH_MEVBU is selected is no more needed.
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-
-Acked-by: Stefan Agner <stefan@agner.ch>
-
+> This patch removes this dependency, thanks to this, a kernel for ARM64
+> mvebu SoC can be built without error due this driver.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
->  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index a5f07e3..24ac5b1 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -673,5 +673,10 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		iio-hwmon {
-> +			compatible = "iio-hwmon";
-> +			io-channels = <&adc0 16>, <&adc1 16>;
-> +		};
->  	};
->  };
+>  drivers/irqchip/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+
+Applied to irqchip/mvebu
+
+thx,
+
+Jason.
