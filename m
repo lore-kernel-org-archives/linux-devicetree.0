@@ -1,54 +1,38 @@
-From: Will Deacon <will.deacon@arm.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
-Date: Tue, 16 Feb 2016 16:20:00 +0000
-Message-ID: <20160216162000.GI14509@arm.com>
+Date: Tue, 16 Feb 2016 17:26:41 +0100
+Message-ID: <20160216162641.GY18805@8bytes.org>
 References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
  <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
  <56ADE959.2050309@gmail.com>
  <20160216141059.GT18805@8bytes.org>
  <56C340FB.1050607@arm.com>
  <20160216161009.GW18805@8bytes.org>
+ <20160216162000.GI14509@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160216161009.GW18805@8bytes.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, youhua.li@mediatek.com, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, kendrick.hsu@mediatek.com, Sasha Hauer <kernel@pengutronix.de>, arnd@arndb.de, Tomasz Figa <tfiga@google.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, pebolle@tiscali.nl, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Daniel Kurtz <djkurtz@google.com>, p.zabel@pengutronix.de, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <20160216162000.GI14509-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 05:10:09PM +0100, Joerg Roedel wrote:
-> On Tue, Feb 16, 2016 at 03:32:11PM +0000, Robin Murphy wrote:
-> > On 16/02/16 14:11, Joerg Roedel wrote:
-> > >On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
-> > >>On 26/01/16 05:12, Yong Wu wrote:
-> > >>>This patch add SMI(Smart Multimedia Interface) driver. This driver
-> > >>>is responsible to enable/disable iommu and control the power domain
-> > >>>and clocks of each local arbiter.
-> > >>>
-> > >>>Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > >>>Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > >>>---
-> > >>
-> > >>Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > >>
-> > >>Joerg would you mind to take this through your branch?
-> > >
-> > >Hmm, I somehow missed the patch-set, at least I can't find the v8
-> > >patches in my inbox.
-> > >
-> > >Yong, can you please re-send with all Acks and other tags added?
-> > 
-> > Just to note patch 4 of this series also depends on the v3
-> > io-pgtable short-descriptor series posted separately[1] - is that on
-> > your radar already or would you like that resent as well?
-> 
-> No, that was not on my radar, I somehow expected Will to handle this
-> series :)
+On Tue, Feb 16, 2016 at 04:20:00PM +0000, Will Deacon wrote:
+> I'm more than happy to bake a branch containing all the page table stuff,
+> but Yong's stuff depends on it so I'll work with whatever is easiest for
+> you.
 
-I'm more than happy to bake a branch containing all the page table stuff,
-but Yong's stuff depends on it so I'll work with whatever is easiest for
-you.
+Okay, to the best is if you would collect all the page table patches and
+send me a pull-request. I pull that into my tree then and put Yong's
+stuff on-top.
 
-Will
+
+
+	Joerg
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
