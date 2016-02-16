@@ -1,41 +1,49 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
-Date: Tue, 16 Feb 2016 16:28:02 +0000
-Message-ID: <20160216162801.GJ14509@arm.com>
-References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
- <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
- <56ADE959.2050309@gmail.com>
- <20160216141059.GT18805@8bytes.org>
- <56C340FB.1050607@arm.com>
- <20160216161009.GW18805@8bytes.org>
- <20160216162000.GI14509@arm.com>
- <20160216162641.GY18805@8bytes.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160216162641.GY18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Matthew McClintock <mmcclint@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
+Date: Tue, 16 Feb 2016 10:31:15 -0600
+Message-ID: <B4F61534-3D9E-4474-81AD-3C048E048846@codeaurora.org>
+References: <1447975173-29485-1-git-send-email-mmcclint@qca.qualcomm.com> <1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com> <CACRpkdZQTN+X=kWS7-5tzts=AGem2W+Od_ap1oy04Fm5i0y4fg@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZQTN+X=kWS7-5tzts=AGem2W+Od_ap1oy04Fm5i0y4fg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matthew McClintock <mmcclint@qca.qualcomm.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Varadarajan Narayanan <varada@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 05:26:41PM +0100, Joerg Roedel wrote:
-> On Tue, Feb 16, 2016 at 04:20:00PM +0000, Will Deacon wrote:
-> > I'm more than happy to bake a branch containing all the page table stuff,
-> > but Yong's stuff depends on it so I'll work with whatever is easiest for
-> > you.
-> 
-> Okay, to the best is if you would collect all the page table patches and
-> send me a pull-request. I pull that into my tree then and put Yong's
-> stuff on-top.
 
-Okey doke, I'll put something together this week.
+> On Feb 16, 2016, at 8:54 AM, Linus Walleij <linus.walleij@linaro.org>=
+ wrote:
+>=20
+> On Fri, Nov 20, 2015 at 12:19 AM, Matthew McClintock
+> <mmcclint@qca.qualcomm.com> wrote:
+>=20
+>> From: Varadarajan Narayanan <varada@codeaurora.org>
+>>=20
+>> Add pinctrl driver support for IPQ4019 platform
+>>=20
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+>> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+>> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+>> ---
+>>=20
+>> v3
+>> - update example with actual values from dts
+>> - add missing pins 71-99
+>> - drop many functions and stick to basic functionality
+>=20
+> Patch applied with all the ACKs and stuff, and dropped the .owner
+> assignment as indicated by Bj=C3=B6rn in the process.
+
+Thanks folks, do plan to add more pinctrl bits once things are validate=
+d!
 
 Cheers,
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-M--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
