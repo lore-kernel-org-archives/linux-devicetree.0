@@ -1,42 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
- for v4.6
-Date: Tue, 16 Feb 2016 15:12:04 +0100
-Message-ID: <CACRpkdaHDUxU-1Mf++C3baJH4FRn_=uW+-BVDUFLA09615tChQ@mail.gmail.com>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
-	<20160211165451.GC20693@x1>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH net-next] net: macb: make magic-packet property generic
+Date: Tue, 16 Feb 2016 17:23:47 +0300
+Message-ID: <56C330F3.3090400@cogentembedded.com>
+References: <1455581638-27771-1-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160211165451.GC20693@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455581638-27771-1-git-send-email-sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 11, 2016 at 5:54 PM, Lee Jones <lee.jones@linaro.org> wrote:
+Hello.
 
-> Enjoy!
+On 2/16/2016 3:13 AM, Sergio Prado wrote:
+
+> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+> ---
+> As requested by Rob Herring on patch
+> https://patchwork.ozlabs.org/patch/580862/
+> ---
+>   Documentation/devicetree/bindings/net/macb.txt | 2 +-
+>   drivers/net/ethernet/cadence/macb.c            | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> The following changes since commit 36f90b0a2ddd60823fe193a85e60ff1906c2a9b3:
+> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+> index c6b1cb5ffa87..b5a42df4c928 100644
+> --- a/Documentation/devicetree/bindings/net/macb.txt
+> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> @@ -25,7 +25,7 @@ Required properties:
 >
->   Linux 4.5-rc2 (2016-01-31 18:12:16 -0800)
+>   Optional properties for PHY child node:
+>   - reset-gpios : Should specify the gpio for phy reset
+> -- cdns,magic-packet : If present, indicates that the hardware supports waking
+> +- magic-packet : If present, indicates that the hardware supports waking
+>     up via magic packet.
 >
-> are available in the git repository at:
+>   Examples:
+> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+> index 69af049e55a8..7ccf2298a5fa 100644
+> --- a/drivers/net/ethernet/cadence/macb.c
+> +++ b/drivers/net/ethernet/cadence/macb.c
+> @@ -2929,7 +2929,7 @@ static int macb_probe(struct platform_device *pdev)
+>   		bp->jumbo_max_len = macb_config->jumbo_max_len;
 >
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-regulator-gpio-v4.5
+>   	bp->wol = 0;
+> -	if (of_get_property(np, "cdns,magic-packet", NULL))
+> +	if (of_get_property(np, "magic-packet", NULL))
 
-It's named v4.5...
+    Could as well use of_property_read_bool().
 
-> Immutable branch between MFD, GPIO and Regulator due for v4.6
+[...]
 
-But targeted for v4.6...
+MBR, Sergei
 
-But no problem really :)
-
-I tested to merge it into my devel branch and it was supersmooth, so will
-not merge this unless I run into some problem. Nice for testers though,
-I think it'll fold in just fine in linux-next.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
