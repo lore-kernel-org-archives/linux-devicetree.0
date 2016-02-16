@@ -1,72 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
- for v4.6
-Date: Tue, 16 Feb 2016 14:41:57 +0000
-Message-ID: <20160216144157.GA4263@x1>
-References: <1453736627-2634-1-git-send-email-afd@ti.com>
- <20160211165451.GC20693@x1>
- <CACRpkdaHDUxU-1Mf++C3baJH4FRn_=uW+-BVDUFLA09615tChQ@mail.gmail.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: Re: [PATCH v3 08/10] ARM: configs: add MPS2 defconfig
+Date: Tue, 16 Feb 2016 14:51:59 +0000
+Message-ID: <56C3378F.2010008@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <1455617295-23736-9-git-send-email-vladimir.murzin@arm.com> <2680417.bULLX3O66Y@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaHDUxU-1Mf++C3baJH4FRn_=uW+-BVDUFLA09615tChQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2680417.bULLX3O66Y@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, andy.shevchenko@gmail.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Feb 2016, Linus Walleij wrote:
+On 16/02/16 10:58, Arnd Bergmann wrote:
+> On Tuesday 16 February 2016 10:08:13 Vladimir Murzin wrote:
+>> This patch adds a new config for MPS2 platform.
+>>
+>> Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+>> ---
+>>  arch/arm/configs/mps2_defconfig |  112 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 112 insertions(+)
+>>  create mode 100644 arch/arm/configs/mps2_defconfig
+>>
+>> diff --git a/arch/arm/configs/mps2_defconfig b/arch/arm/configs/mps2_defconfig
+>> new file mode 100644
+>> index 0000000..c36c519
+>> --- /dev/null
+>> +++ b/arch/arm/configs/mps2_defconfig
+>> @@ -0,0 +1,112 @@
+>> +# CONFIG_USELIB is not set
+>> +CONFIG_NO_HZ_IDLE=y
+>> +CONFIG_HIGH_RES_TIMERS=y
+>> +CONFIG_LOG_BUF_SHIFT=16
+>> +CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+>> +# CONFIG_UID16 is not set
+>> +# CONFIG_BASE_FULL is not set
+>> +# CONFIG_FUTEX is not set
+>> +# CONFIG_EPOLL is not set
+>> +# CONFIG_SIGNALFD is not set
+>> +# CONFIG_EVENTFD is not set
+>> +# CONFIG_AIO is not set
+>> +CONFIG_EMBEDDED=y
+> 
+> Why CONFIG_EMBEDDED? You probably mean CONFIG_EXPERT, but then what do
+> you need that for?
 
-> On Thu, Feb 11, 2016 at 5:54 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
->=20
-> > Enjoy!
-> >
-> > The following changes since commit 36f90b0a2ddd60823fe193a85e60ff19=
-06c2a9b3:
-> >
-> >   Linux 4.5-rc2 (2016-01-31 18:12:16 -0800)
-> >
-> > are available in the git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib=
--mfd-regulator-gpio-v4.5
->=20
-> It's named v4.5...
->=20
-> > Immutable branch between MFD, GPIO and Regulator due for v4.6
->=20
-> But targeted for v4.6...
->=20
-> But no problem really :)
+TBH, I have no special requirement for this option to be set and now,
+looking at Kconfig entry for this option, I think that I got it here
+because I stated configuration with allnoconfig.
 
-I noticed just after I'd sent this pull-request.
+OTOH, I don't see how harmful it can be since description says:
 
-If it makes you feel any better you can also pull one of:
+          This option should be enabled if compiling the kernel for
+          an embedded system so certain expert options are available
+          for configuration
 
-  refs/tags/ib-mfd-regulator-gpio-v4.6
-  refs/heads/ib-mfd-regulator-gpio-4.6
+yes, it selects CONFIG_EXPERT and that had side effect that, for
+example, CONFIG_NAMESPACE could be compiled out.
 
-=2E.. which I followed up with.
+Have I missed something around it?
 
-> I tested to merge it into my devel branch and it was supersmooth, so =
-will
-> not merge this unless I run into some problem. Nice for testers thoug=
-h,
-> I think it'll fold in just fine in linux-next.
->=20
-> Yours,
-> Linus Walleij
+Thanks
+Vladimir
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 	Arnd
+> 
+> 
+> 
