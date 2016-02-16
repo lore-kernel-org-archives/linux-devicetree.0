@@ -1,106 +1,66 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] Add Rockchip Inno-HDMI driver
-Date: Tue, 16 Feb 2016 08:44:41 +0800
-Message-ID: <56C270F9.9030707@rock-chips.com>
-References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] hwmon: Define binding for the nsa320-hwmon driver
+Date: Mon, 15 Feb 2016 17:48:26 -0800
+Message-ID: <56C27FEA.1090806@roeck-us.net>
+References: <1455578705-10531-1-git-send-email-linux@baker-net.org.uk>
+ <1455578705-10531-2-git-send-email-linux@baker-net.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454049768-30872-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1455578705-10531-2-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On 02/15/2016 03:25 PM, Adam Baker wrote:
+> Define a binding for the hardware monitoring chip present in the Zyxel
+> NSA-320 and some of the other Zyxel NAS devices.
+>
+> Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 
-Ping, it seems inno hdmi driver is ready, So I'd like to merge it into=20
-drm/rockchip if there is no doubt these days.
+Rob sent you an Ack for this patch. Since you did not change the patch
+since v1, I would expect to see it here (instead of having to look it up).
 
-Thanks.
-Mark
-On 2016=E5=B9=B401=E6=9C=8829=E6=97=A5 14:42, Yakir Yang wrote:
-> Here are a brief introduction to Innosilicon HDMI IP:
->    - Support HDMI 1.4a, HDCP 1.2 and DVI 1.0 standard compliant trans=
-mitter
->    - Support HDMI1.4 a/b 3D function defined in HDMI 1.4 a/b spec
->    - Digital video interface supports a pixel size of 24, 30, 36, 48b=
-its color depth in RGB
->    - S/PDIF output supports PCM, Dolby Digital, DTS digital audio tra=
-nsmission
->      (32-192kHz Fs) using IEC60958 and IEC 61937
->    - The EDID and CEC function are also supported by Innosilicon HDMI=
- Transmitter Controlle
+Thanks,
+Guenter
+
+> ---
+>   .../devicetree/bindings/hwmon/nsa320-mcu.txt        | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
 >
-> Changes in v8:
-> - Don't check whether encoder output format is RGB colorspace, cause =
-driver
->    default configure the output colorspace to RGB. (ZhengYang)
-> - Correct the check condition in inno_hdmi_config_video_csc() (ZhengY=
-ang)
->      - if (data->enc_out_format =3D=3D data->enc_out_format) {
->      + if (data->enc_in_format =3D=3D data->enc_out_format) {
->
-> Changes in v7:
-> - Correct the module licnese statement (Paul)
->       - MODULE_LICENSE("GPL");
->       + MODULE_LICENSE("GPLv2");
-> - Start indentation with tabs and fix the misspell in Kconfig (Paul)
-> - Carry the lost device-binding document (Heiko)
->
-> Changes in v6:
-> - Rebase the Makefile/Kconfig files which add by Chris's rockchip-mip=
-i driver (Caeser)
->
-> Changes in v5:
-> - Use hdmi_infoframe helper functions to packed the infoframe (Russel=
-l)
-> - Remove the unused double wait_for_completion_timeout for ddc transf=
-er (Russell)
-> - Remove the unused local variable in "inno_hdmi_i2c_write()" functio=
-n (Russell)
->
-> Changes in v4:
-> - Modify the commit title "drm/rockchip: hdmi: ..." (Mark)
-> - Correct the "DKMS" to "DPMS" (Mark)
-> - Fix over 80 characters problems (Mark)
-> - Remove encoder .prepare/.commit helper functions, and move the vop =
-mode
-> configure function into encoder .enable helper functions. (Mark)
->
-> Changes in v3:
-> - Use encoder enable/disable function, and remove the encoder DPMS fu=
-nction
-> - Keep HDMI PLL power on in standby mode
->
-> Changes in v2:
-> - Using DRM atomic helper functions for connector init (Mark)
-> - Remove "hdmi->connector.encoder =3D encoder;" (Mark)
-> - Add the Acked-by tags from Rob
-> - Correct the misspell "rk3036-dw-hdmi" (Heiko)
->
-> Yakir Yang (2):
->    drm/rockchip: hdmi: add Innosilicon HDMI support
->    dt-bindings: add document for Innosilicon HDMI on Rockchip platfor=
-m
->
->   .../display/rockchip/inno_hdmi-rockchip.txt        |  50 ++
->   drivers/gpu/drm/rockchip/Kconfig                   |   8 +
->   drivers/gpu/drm/rockchip/Makefile                  |   1 +
->   drivers/gpu/drm/rockchip/inno_hdmi.c               | 939 ++++++++++=
-+++++++++++
->   drivers/gpu/drm/rockchip/inno_hdmi.h               | 362 ++++++++
->   5 files changed, 1360 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/display/rockch=
-ip/inno_hdmi-rockchip.txt
->   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.c
->   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
+> diff --git a/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
+> new file mode 100644
+> index 0000000..7b346d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
+> @@ -0,0 +1,21 @@
+> +Bindings for the fan / temperature monitor microcontroller used on
+> +the Zyxel NSA 320 and several subsequent models.
+> +
+> +Required properties:
+> +- compatible	: "zyxel,nsa320-mcu"
+> +- data-gpios	: The GPIO pin connected to the data line on the MCU
+> +- clk-gpios	: The GPIO pin connected to the clock line on the MCU
+> +- act-gpios	: The GPIO pin connected to the active line on the MCU
+> +
+> +Example:
+> +
+> +	hwmon {
+> +		compatible = "zyxel,nsa320-mcu";
+> +		pinctrl-0 = <&pmx_mcu_data &pmx_mcu_clk &pmx_mcu_act>;
+> +		pinctrl-names = "default";
+> +
+> +		data-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		clk-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+> +		act-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+> +	};
+> +
 >
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
