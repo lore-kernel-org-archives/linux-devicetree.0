@@ -1,37 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 00/10] Support for Cortex-M Prototyping System
-Date: Tue, 16 Feb 2016 12:05:37 +0100
-Message-ID: <22011981.Gqc7zXAZ81@wuerfel>
-References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] mwifiex: register platform specific driver
+Date: Tue, 16 Feb 2016 12:28:44 +0100
+Message-ID: <4893138.FlpGGi4f54@wuerfel>
+References: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Murzin <vladimir.murzin@arm.com>
-Cc: linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, andy.shevchenko@gmail.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455614079-4263-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 16 February 2016 10:08:05 Vladimir Murzin wrote:
-> Hi,
+On Tuesday 16 February 2016 01:14:37 Amitkumar Karwar wrote:
+> +  - compatible : must be "marvell,sd8xxx"
 > 
-> This patch series provide the basic support for running ucLinux on V2M-MPS2
-> platform.
-> 
-> With these patches applied ucLinux can be run on both HW and FVP models
-> with Cortex-M3/M4/M7 configurations.
 
-Looks very nice overall now. I have mentioned a few details that I noticed
-but no show-stoppers.
+I think we mentioned it before, but a compatible string must not contain
+wildcards of any kind, as it is very possible that there are some future
+sd8xxx devices that are slightly incompatible with the first one.
 
-Most important question for me is how this is going to be maintained
-in the long run. Can you add a patch to list the added files in
-MAINTAINERS?
-
-My preference from the arm-soc perspective would be to get pull requests for
-this together with vexpress and juno through the existing maintainers
-(Liviu, Sudeep, Lorenzo), and have you send your patches to them. Does
-that work for you all?
+Please use a specfic model name here, or a list of multiple models
+if they are actually different.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
