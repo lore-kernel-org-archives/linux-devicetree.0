@@ -1,324 +1,130 @@
-Return-Path: <karsten@excalibur.cnev.de>
-Date: Mon, 1 Feb 2016 20:22:57 +0100
-From: Karsten Merker <merker@debian.org>
-Subject: Re: [linux-sunxi] [PATCH 11/11] arm64: dts: add Pine64 support
-Message-ID: <20160201192257.GD14737@excalibur.cnev.de>
-References: <1454348370-3816-1-git-send-email-andre.przywara@arm.com>
- <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1454348370-3816-12-git-send-email-andre.przywara@arm.com>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <20160216194004.2278.85138@quark.deferred.io>
+References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
+	<56BB2D79.6090402@arm.com>
+	<CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
+	<20160210143755.GE31506@lukather>
+	<20160210163001.GG2632@leverpostej>
+	<20160211100048.GK31506@lukather>
+	<20160211114410.GA32535@leverpostej>
+	<20160211170820.GP31506@lukather>
+	<1455270030.3201.71.camel@pengutronix.de>
+	<20160216084448.GE4344@lukather>
+	<20160216194004.2278.85138@quark.deferred.io>
+Date: Tue, 16 Feb 2016 15:11:39 -0600
+Message-ID: <CAL_JsqL8w=L1eoU7ZPDdmiDwp=Vbgw7nbaAKaoAOa02+hjRaJg@mail.gmail.com>
+Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
+ Refactor A31 PLL6 so that it can be reused)
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 01, 2016 at 05:39:30PM +0000, Andre Przywara wrote:
-> The Pine64 is a cost-efficient development board based on the
-> Allwinner A64 SoC.
-> There are three models: the basic version with Fast Ethernet and
-> 512 MB of DRAM (Pine64) and two Pine64+ versions, which both
-> feature Gigabit Ethernet and additional connectors for touchscreens
-> and a camera. Or as my son put it: "Those are smaller and these are
-> missing." ;-)
-> The two Pine64+ models just differ in the amount of DRAM
-> (1GB vs. 2GB). Since U-Boot will figure out the right size for us and
-> patches the DT accordingly we just need to provide one DT for the
-> Pine64+.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm64/boot/dts/Makefile                       |  1 +
->  arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
->  arch/arm64/boot/dts/allwinner/pine64.dts           | 58 +++++++++++++++++
->  arch/arm64/boot/dts/allwinner/pine64_common.dtsi   | 76 ++++++++++++++++++++++
->  arch/arm64/boot/dts/allwinner/pine64_plus.dts      | 59 +++++++++++++++++
->  6 files changed, 200 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
->  create mode 100644 arch/arm64/boot/dts/allwinner/pine64.dts
->  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_common.dtsi
->  create mode 100644 arch/arm64/boot/dts/allwinner/pine64_plus.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 72e2c5a..0c22fa9 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -175,6 +175,7 @@ parade	Parade Technologies Inc.
->  pericom	Pericom Technology Inc.
->  phytec	PHYTEC Messtechnik GmbH
->  picochip	Picochip Ltd
-> +pine64	Pine64
->  plathome	Plat'Home Co., Ltd.
->  plda	PLDA
->  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index f832b8a..3b7428a 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -1,3 +1,4 @@
-> +dts-dirs += allwinner
->  dts-dirs += altera
->  dts-dirs += amd
->  dts-dirs += apm
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> new file mode 100644
-> index 0000000..65f4e24
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -0,0 +1,5 @@
-> +dtb-$(CONFIG_ARCH_SUNXI) += pine64_plus.dtb pine64.dtb
-> +
-> +always		:= $(dtb-y)
-> +subdir-y	:= $(dts-dirs)
-> +clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/pine64.dts b/arch/arm64/boot/dts/allwinner/pine64.dts
+On Tue, Feb 16, 2016 at 1:40 PM, Michael Turquette <mturquette@baylibre.com=
+> wrote:
+> Quoting Maxime Ripard (2016-02-16 00:44:48)
+>> On Fri, Feb 12, 2016 at 10:40:30AM +0100, Lucas Stach wrote:
+>> > Am Donnerstag, den 11.02.2016, 18:08 +0100 schrieb Maxime Ripard:
+>> > [...]
+>> > > > > > Having code in mainline comes with responsibilities. One of th=
+ose is to
+>> > > > > > keep said code working for existing users. Otherwise, why both=
+er having
+>> > > > > > it in mainline at all?
+>> > > > >
+>> > > > > None of our existing users ever complained.
+>> > > >
+>> > > > I believe that in this case, Andre was complaining about this part=
+icular
+>> > > > breakage, unless I have misunderstood.
+>> > > >
+>> > > > To be clear, I'm arguing for the strategy going forward. If no-one=
+ has
+>> > > > complained about the stuff broken up to this point, let's not wast=
+e time
+>> > > > restoring that.
+>> > > >
+>> > > > Going forward we need to keep old DTBs supported.
+>> > >
+>> > > I find that stand a bit dishonest.
+>> > >
+>> > > You, DT maintainers, admit that you're not doing your job properly,
+>> > > and that burden relies on the platform maintainers? Or should I take
+>> > > it as you volunteering to maintain that code?
+>> > >
+>> > > But ok. Let's do that. Make sure that the other platform maintainers
+>> > > are aware that this is the rule too though. I surely don't want to b=
+e
+>> > > alone in that boat.
+>> >
+>> > FWIW: I always thought it's the platform maintainers job to enforce a
+>> > reasonable level of DT stability. I don't see how the DT maintainers
+>> > could provide the necessary in-depth review with every platform being
+>> > different in many subtle ways.
+>> >
+>> > For the i.MX platform we actually enforced a baseline of DT stability =
+by
+>> > shooting down patches that break DT stability for the sake of adding n=
+ew
+>> > features, or when trying to put "fixes" into the DT, that could be
+>> > solved entirely inside the kernel.
+>> >
+>> > Yes, mistakes happen and and we can not really prevent all breakage,
+>> > especially when the bindings were not strictly enough defined and boar=
+d
+>> > DT writers may have interpreted them differently, but it is definitely
+>> > possible to keep DTs reasonably stable if the platform maintainers car=
+e
+>> > about that.
+>> >
+>> > I strongly disagree with platform maintainers denying that duty, by
+>> > claiming that DTs won't be completely stable ever, so there is no reas=
+on
+>> > to even care.
+>>
+>> A DT is either stable or not. If it is "reasonably" stable, then it's
+>> not.
+>
+> Hi all,
+>
+> I thought I'd pour some gasoline on this fire.
+>
+> I'm happy for the one-node-per-clock bindings to be fully converted to a
+> clock-controller style binding, which is a clear compatibility break. In
+> other words, clock-cells =3D 0 bindings converted to clock-cells >=3D 1.
 
-Please see my followups to patch No. 5 and patch No. 10 in this series.
-s/pine64.dts/sun50i-pine64.dts/ ?
+In general I agree unless the platform is stable (e.g. highbank).
 
-> new file mode 100644
-> index 0000000..ebea5dd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/pine64.dts
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "pine64_common.dtsi"
+> We really didn't have a clue about good DT bindings for a while, and
+> everyone keeps talking about being reasonable, etc. So with that in
+> mind, I propose that any clock binding written before 2015 should be
+> given amnesty to make these incompatible changes, so long as the
+> platform maintainers consent. Those stakeholders for sunxi are Maxime
+> Ripard, Chen-Yu Tsai and Emilio L=C3=B3pez.
+>
+> /me puts on flame retardant suit.
+>
+> To be clear, I'm not in the business of telling SoCs to break
+> compatibility. That is thankfully not my choice to make and any platform
+> maintainer should have a long, difficult struggle when making that
+> decision. But I am supportive of merging those changes for clock
+> provider drivers if the platform maintainer decides to do so.
 
-see above
-
-Also a minor spelling nitpick: the other *common* dts/dtsi files
-use dashes instead of underscores, so with regard to naming
-consistency I would like to propose doing it the same way here.
-
-> +
-> +/ {
-> +	model = "Pine64";
-> +	compatible = "pine64,pine64", "allwinner,a64", "allwinner,sunxi";
-
-see above
-
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x40000000 0x20000000>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/pine64_common.dtsi b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
-
-see above
-
-> new file mode 100644
-> index 0000000..d968d76
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/pine64_common.dtsi
-> @@ -0,0 +1,76 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "a64.dtsi"
-
-see above
-
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	cd-gpios = <&pio 5 6 0>;
-> +	cd-inverted;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart3_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/pine64_plus.dts b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
-> new file mode 100644
-> index 0000000..344752e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/pine64_plus.dts
-
-see above
-
-> @@ -0,0 +1,59 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "pine64_common.dtsi"
-
-see above
-
-> +
-> +/ {
-> +	model = "Pine64+";
-> +	compatible = "pine64,pine64_plus", "allwinner,a64", "allwinner,sunxi";
-
-see above
-
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	/* There is a model with 2GB of DRAM, but U-Boot fixes this for us. */
-> +	memory {
-> +		reg = <0x40000000 0x40000000>;
-> +	};
-> +};
-> -- 
-> 2.6.4
-
-Regards,
-Karsten
--- 
-Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
-sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
-Werbung sowie der Markt- oder Meinungsforschung.
+The long difficult struggl
+>
+> Regards,
+> Mike
+>
+>>
+>> Maxime
+>>
+>> --
+>> Maxime Ripard, Free Electrons
+>> Embedded Linux, Kernel and Android engineering
+>> http://free-electrons.com
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
