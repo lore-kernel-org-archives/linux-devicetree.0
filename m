@@ -1,53 +1,72 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 06/10] ARM: mps2: introduce MPS2 platform
-Date: Tue, 16 Feb 2016 15:39:12 +0100
-Message-ID: <2949036.dUgqHWXoSe@wuerfel>
-References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <29457600.xRDuy0uVjW@wuerfel> <56C333BF.1020108@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
+ for v4.6
+Date: Tue, 16 Feb 2016 14:41:57 +0000
+Message-ID: <20160216144157.GA4263@x1>
+References: <1453736627-2634-1-git-send-email-afd@ti.com>
+ <20160211165451.GC20693@x1>
+ <CACRpkdaHDUxU-1Mf++C3baJH4FRn_=uW+-BVDUFLA09615tChQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C333BF.1020108-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaHDUxU-1Mf++C3baJH4FRn_=uW+-BVDUFLA09615tChQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 16 February 2016 14:35:43 Vladimir Murzin wrote:
-> On 16/02/16 10:56, Arnd Bergmann wrote:
-> > On Tuesday 16 February 2016 10:08:11 Vladimir Murzin wrote:
-> >> The Cortex-M Prototyping System (or V2M-MPS2) is designed for
-> >> prototyping and evaluation Cortex-M family of processors including the
-> >> latest Cortex-M7
-> >>
-> >> It comes with a range of useful peripherals including 8MB single cycle
-> >> SRAM, 16MB PSRAM, Ethernet, QSVGA touch screen panel, 4bit RGB VGA
-> >> connector, Audio, SPI and GPIO.
-> >>
-> >> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-> >> ---
-> >>  arch/arm/Kconfig                 |    8 ++++++++
-> >>  arch/arm/Makefile                |    1 +
-> >>  arch/arm/mach-mps2/Makefile      |    1 +
-> >>  arch/arm/mach-mps2/Makefile.boot |    3 +++
-> >>  arch/arm/mach-mps2/dtmachine.c   |   21 +++++++++++++++++++++
-> >>
-> > 
-> > We are in the (slow) process of consolidating the ARM reference platforms
-> > (versatile, integrator, realview, vexpress) into one place.
-> > 
-> 
-> Thanks for information! Sometime ago I saw on a list you had some
-> thoughts on consolidating M-class platforms since most of them follow
-> quite the same pattern (I'm looking at efm32 and stm32). So, shouldn't
-> this platform consider that way?
-> 
+On Tue, 16 Feb 2016, Linus Walleij wrote:
 
-Right, that would be another option. vf610 is in the same category as this
-one I think, it's currently in mach-imx, and we can probably leave it there.
+> On Thu, Feb 11, 2016 at 5:54 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+>=20
+> > Enjoy!
+> >
+> > The following changes since commit 36f90b0a2ddd60823fe193a85e60ff19=
+06c2a9b3:
+> >
+> >   Linux 4.5-rc2 (2016-01-31 18:12:16 -0800)
+> >
+> > are available in the git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib=
+-mfd-regulator-gpio-v4.5
+>=20
+> It's named v4.5...
+>=20
+> > Immutable branch between MFD, GPIO and Regulator due for v4.6
+>=20
+> But targeted for v4.6...
+>=20
+> But no problem really :)
 
-Unless someone is going to do the patch to consolidate the cortex-m
-platforms, I'd stay with mach-vexpress here, but I don't have a strong
-opinion.
+I noticed just after I'd sent this pull-request.
 
-	Arnd
+If it makes you feel any better you can also pull one of:
+
+  refs/tags/ib-mfd-regulator-gpio-v4.6
+  refs/heads/ib-mfd-regulator-gpio-4.6
+
+=2E.. which I followed up with.
+
+> I tested to merge it into my devel branch and it was supersmooth, so =
+will
+> not merge this unless I run into some problem. Nice for testers thoug=
+h,
+> I think it'll fold in just fine in linux-next.
+>=20
+> Yours,
+> Linus Walleij
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
