@@ -1,36 +1,86 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 05/10] regulator: axp20x: support AXP809 variant
-Date: Tue, 16 Feb 2016 11:47:19 +0800
-Message-ID: <CAGb2v671L47bCKowPF7BcjZWGbewLKzg-r+FtFYt3J11YE4KjA@mail.gmail.com>
-References: <1455532288-30870-1-git-send-email-wens@csie.org>
- <1455532288-30870-6-git-send-email-wens@csie.org> <20160215200439.GC18327@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Subject: RE: [PATCH 1/3] input: cygnus-update touchscreen dt node document
+Date: Tue, 16 Feb 2016 09:54:56 +0530
+Message-ID: <766ebcaceac5e04307b48527eaeefb90@mail.gmail.com>
+References: <1455008277-8312-1-git-send-email-raveendra.padasalagi@broadcom.com>
+ <1455008277-8312-2-git-send-email-raveendra.padasalagi@broadcom.com>
+ <2631849.GeOulu78vx@wuerfel> <3b53af6b6c6735d10cb88518c8b8a0ae@mail.gmail.com>
+ <20160209174351.GC40460@dtor-ws> <979fb4dc5fba643a6780759d2a13530a@mail.gmail.com>
+ <20160212150430.GA15049@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBXVXRK3AKGQEDDRLBIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160215200439.GC18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160212150430.GA15049@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 4:04 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Feb 15, 2016 at 06:31:23PM +0800, Chen-Yu Tsai wrote:
->> The X-Powers AXP809 PMIC has a similar set of regulators as the AXP221,
->> though a few LDOs were removed, and a new switch output added. Like the
->> AXP221, AXP809 also has DC1SW and DC5LDO, which are internally chained
->> to DCDC1 and DCDC5, respectively.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: 12 February 2016 20:35
+> To: Raveendra Padasalagi
+> Cc: Dmitry Torokhov; Arnd Bergmann; Russell King;
+devicetree@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-input@vger.kernel.org; Pawel
+Moll;
+> Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson; Jon Mason;
+> Florian Fainelli; Ray Jui; Scott Branden; linux-kernel@vger.kernel.org;
+bcm-
+> kernel-feedback-list@broadcom.com
+> Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node
+document
 >
-> This doesn't apply against current code, please check and resend.
+> Your mailer is not handling wrapping correctly. Generally, Outlook does
+not
+> work for maillists.
+>
+> On Wed, Feb 10, 2016 at 10:24:43AM +0530, Raveendra Padasalagi wrote:
+> > > -----Original Message-----
+> > > From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
+> > > Sent: 09 February 2016 23:14
+> > > To: Raveendra Padasalagi
+> > > Cc: Arnd Bergmann; Russell King; devicetree@vger.kernel.org;
+> > > linux-arm- kernel@lists.infradead.org; linux-input@vger.kernel.org;
+> > > Rob Herring;
+> > Pawel
+> > > Moll; Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson;
+> > > Jon Mason; Florian Fainelli; Ray Jui; Scott Branden;
+> > linux-kernel@vger.kernel.org;
+> > > bcm-kernel-feedback-list@broadcom.com
+> > > Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node
+> > document
+>
+> And Outlook's reply header is non-standard.
+>
+> [...]
+>
+> > > > In Cygnus SOC, Touch screen controller registers are shared with
+> > > > ADC and flex timer IP's.
+> > > > Using readl/writel could lead to race condition. So this patch is
+> > > > introduced to take care mutually exclusive access of register's in
+> > > > such a case.
+> > > >
+> > > > In the platform's where touchscreen register's are not shared
+> > > > normal readl/writel could be used.
+> > >
+> > > Are there currently platforms where the registers are not shared? If
+> > > we
+> > have to
+> > > use regmap to correctly update registers (and thus we need
+> > > syscon) then I wonder if we should even attempt to support direct
+> > register
+> > > access by the driver.
+> >
+> > Currently there are no platforms without register sharing, but we
+> > would like to keep the driver generic enough to take care of future
+> > SOC's if comes with dedicated registers and same touchscreen IP being
+> > re-used.
+>
+> These future SoCs will have a different compatible string and you should
+use that
+> to determine whether reg or syscon is used.
 
-This requires mfd/ib-mfd-regulator-4.6 from Lee's tree to apply cleanly,
-and "mfd: axp20x: Add support for AXP809 PMIC", which isn't merged yet,
-to compile.
+Thanks Rob. I will address this in the next patch.
 
-ChenYu
+> Rob
