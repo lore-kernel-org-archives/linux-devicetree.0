@@ -1,60 +1,67 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
-Date: Tue, 16 Feb 2016 15:32:11 +0000
-Message-ID: <56C340FB.1050607@arm.com>
-References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
- <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
- <56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: Re: [PATCH v3 09/10] ARM: dts: introduce MPS2 AN385/AN386
+Date: Tue, 16 Feb 2016 15:37:31 +0000
+Message-ID: <56C3423B.5070307@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>	<1455617295-23736-10-git-send-email-vladimir.murzin@arm.com> <CACRpkdafDhT=1uJssVNAW+g05eXbRC1xUL+O0+SxcpdczUX0vQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160216141059.GT18805@8bytes.org>
+In-Reply-To: <CACRpkdafDhT=1uJssVNAW+g05eXbRC1xUL+O0+SxcpdczUX0vQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, youhua.li@mediatek.com, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, kendrick.hsu@mediatek.com, Sasha Hauer <kernel@pengutronix.de>, arnd@arndb.de, Tomasz Figa <tfiga@google.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, pebolle@tiscali.nl, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Daniel Kurtz <djkurtz@google.com>, p.zabel@pengutronix.de, Lucas Stach <l.stach@pengutronix.de>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg KH <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
-
-On 16/02/16 14:11, Joerg Roedel wrote:
-> On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
+On 16/02/16 15:17, Linus Walleij wrote:
+> On Tue, Feb 16, 2016 at 11:08 AM, Vladimir Murzin
+> <vladimir.murzin@arm.com> wrote:
+> 
+>> Application Notes 385 and 386 shares the same memory map and features
+>> except the CPU is used. AN385 is supplied with Cortex-M3 CPU and AN386
+>> is supplied with Cortex-M4.
 >>
->>
->> On 26/01/16 05:12, Yong Wu wrote:
->>> This patch add SMI(Smart Multimedia Interface) driver. This driver
->>> is responsible to enable/disable iommu and control the power domain
->>> and clocks of each local arbiter.
->>>
->>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->>> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
->>> ---
->>
->> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>
->> Joerg would you mind to take this through your branch?
->
-> Hmm, I somehow missed the patch-set, at least I can't find the v8
-> patches in my inbox.
->
-> Yong, can you please re-send with all Acks and other tags added?
+>> Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+> (...)
+>> +               fpgaio {
+>> +                       compatible = "syscon", "simple-mfd";
+>> +                       reg = <0x40028000 0x10>;
+>> +
+>> +                       led@0 {
+>> +                               compatible = "register-bit-led";
+>> +                               offset = <0x0>;
+>> +                               mask = <0x01>;
+>> +                               label = "userled:0";
+>> +                               linux,default-trigger = "heartbeat";
+>> +                               default-state = "on";
+>> +                       };
+>> +
+>> +                       led@1 {
+>> +                               compatible = "register-bit-led";
+>> +                               offset = <0x0>;
+>> +                               mask = <0x02>;
+>> +                               label = "userled:1";
+>> +                               linux,default-trigger = "usr";
+>> +                               default-state = "off";
+>> +                       };
+>> +               };
+> 
+> Thanks for using this. I worked hard to massage this into the
+> core.
+> 
 
-Just to note patch 4 of this series also depends on the v3 io-pgtable 
-short-descriptor series posted separately[1] - is that on your radar 
-already or would you like that resent as well?
+Thank you for pushing it, it cost me couple of minutes to make these
+tiny leds alive :)
 
-Robin.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
 
-[1]:http://thread.gmane.org/gmane.linux.kernel.iommu/12007
+Cheers!
 
->
->
-> Thanks,
->
-> 	Joerg
->
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
->
+Vladimir
+
+> Yours,
+> Linus Walleij
+> 
+> 
+> 
