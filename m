@@ -1,40 +1,36 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A RTS/CTS pins
-Date: Tue, 16 Feb 2016 09:16:01 +0530
-Message-ID: <1455594361-5870-1-git-send-email-bhuvanchandra.dv@toradex.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] regulator: axp20x: support AXP809 variant
+Date: Tue, 16 Feb 2016 11:47:19 +0800
+Message-ID: <CAGb2v671L47bCKowPF7BcjZWGbewLKzg-r+FtFYt3J11YE4KjA@mail.gmail.com>
+References: <1455532288-30870-1-git-send-email-wens@csie.org>
+ <1455532288-30870-6-git-send-email-wens@csie.org> <20160215200439.GC18327@sirena.org.uk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBXVXRK3AKGQEDDRLBIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160215200439.GC18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux for UART_A RTS, CTS pin's.
+On Tue, Feb 16, 2016 at 4:04 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Feb 15, 2016 at 06:31:23PM +0800, Chen-Yu Tsai wrote:
+>> The X-Powers AXP809 PMIC has a similar set of regulators as the AXP221,
+>> though a few LDOs were removed, and a new switch output added. Like the
+>> AXP221, AXP809 also has DC1SW and DC5LDO, which are internally chained
+>> to DCDC1 and DCDC5, respectively.
+>
+> This doesn't apply against current code, please check and resend.
 
-Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- arch/arm/boot/dts/vf-colibri.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+This requires mfd/ib-mfd-regulator-4.6 from Lee's tree to apply cleanly,
+and "mfd: axp20x: Add support for AXP809 PMIC", which isn't merged yet,
+to compile.
 
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index e5949b9..700840f 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -213,6 +213,8 @@
- 			fsl,pins = <
- 				VF610_PAD_PTB10__UART0_TX		0x21a2
- 				VF610_PAD_PTB11__UART0_RX		0x21a1
-+				VF610_PAD_PTB12__UART0_RTS		0x21a2
-+				VF610_PAD_PTB13__UART0_CTS		0x21a1
- 			>;
- 		};
-
---
-2.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
