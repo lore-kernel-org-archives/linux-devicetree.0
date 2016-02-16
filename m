@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v3 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
-Date: Tue, 16 Feb 2016 16:17:50 +0900
-Message-ID: <20160216071750.25461.48942.sendpatchset@little-apple>
+Subject: [PATCH v3 04/06] devicetree: bindings: Deprecate property, update example
+Date: Tue, 16 Feb 2016 16:17:59 +0900
+Message-ID: <20160216071759.25461.53185.sendpatchset@little-apple>
 References: <20160216071722.25461.61862.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160216071722.25461.61862.sendpatchset@little-apple>
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Update SoC-specific bindings for r8a73a4 and R-Car Gen2 CMT0 and CMT1.
+Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -28,44 +28,47 @@ Acked-by: Rob Herring <robh@kernel.org>
  - Added Acked-by and Tested-by from Geert
  - Added Acked-by from Laurent
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   26 ++++++++-------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   24 ++++++++++-----
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
---- 0005/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:31:02.650513000 +0900
-@@ -36,20 +36,24 @@ Required Properties:
- 		(CMT1 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-48-* entries.
+--- 0009/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:39:47.080513000 +0900
+@@ -60,21 +60,31 @@ Required Properties:
+     in clock-names.
+   - clock-names: must contain "fck" for the functional clock.
  
-+    - "renesas,cmt0-r8a73a4" for the 32-bit CMT0 device included in r8a73a4.
-+    - "renesas,cmt1-r8a73a4" for the 48-bit CMT1 device included in r8a73a4.
-+    - "renesas,cmt0-r8a7790" for the 32-bit CMT0 device included in r8a7790.
-+    - "renesas,cmt1-r8a7790" for the 48-bit CMT1 device included in r8a7790.
-+    - "renesas,cmt0-r8a7791" for the 32-bit CMT0 device included in r8a7791.
-+    - "renesas,cmt1-r8a7791" for the 48-bit CMT1 device included in r8a7791.
-+    - "renesas,cmt0-r8a7793" for the 32-bit CMT0 device included in r8a7793.
-+    - "renesas,cmt1-r8a7793" for the 48-bit CMT1 device included in r8a7793.
-+    - "renesas,cmt0-r8a7794" for the 32-bit CMT0 device included in r8a7794.
-+    - "renesas,cmt1-r8a7794" for the 48-bit CMT1 device included in r8a7794.
-+
-     - "renesas,cmt0-rcar-gen2" for 32-bit CMT0 devices included in R-Car Gen2.
-     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
-+		These are fallbacks for r8a73a4 and all the R-Car Gen2
-+		entries	listed above.
+-  - renesas,channels-mask: bitmask of the available channels.
++  - renesas,channels-mask: <deprecated>, information kept in device driver.
  
--    - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-r8a7790" for the r8a7790 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-r8a7791" for the r8a7791 48-bit CMT
--		(CMT[01])
--    - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
--		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
--		This is a fallback for the renesas,cmt-48-r8a73a4,
--		renesas,cmt-48-r8a7790 and renesas,cmt-48-r8a7791 entries.
+ 
+-Example: R8A7790 (R-Car H2) CMT0 node
 -
-+    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
-+    
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
-   - clocks: a list of phandle + clock-specifier pairs, one for each entry
+-	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
+-	them channels 0 and 1 in the documentation.
++Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+ 		clock-names = "fck";
++	};
+ 
+-		renesas,channels-mask = <0x60>;
++	cmt1: timer@e6130000 {
++		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
++		reg = <0 0xe6130000 0 0x1004>;
++		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
++		clock-names = "fck";
+ 	};
