@@ -1,75 +1,81 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 7/7] arm64: dts: r8a7795: Add CA53 L2 cache-controller node
-Date: Tue, 16 Feb 2016 08:12:22 +0100
-Message-ID: <CAMuHMdX=Kgb-i+QpP=yNO2e6nw7sXuCutXPoK0U9NwK-OyANFA@mail.gmail.com>
-References: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
-	<1455568715-20880-8-git-send-email-geert+renesas@glider.be>
-	<56C2C534.30704@de.bosch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56C2C534.30704@de.bosch.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v3 00/06] clocksource: sh_cmt: DT binding rework V3
+Date: Tue, 16 Feb 2016 16:17:22 +0900
+Message-ID: <20160216071722.25461.61862.sendpatchset@little-apple>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+clocksource: sh_cmt: DT binding rework V3
 
-On Tue, Feb 16, 2016 at 7:44 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
-> On 15.02.2016 21:38, Geert Uytterhoeven wrote:
->> Add a device node for the Cortex-A53 L2 cache-controller.
->>
->> The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
->> 32 KiB x 16 ways).
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v3:
->>    - Remaining part of "[PATCH v2 6/6] arm64: renesas: r8a7795: Add L2
->>      cache-controller nodes".
->> ---
->>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> index c07f4e83b988ba42..c572527afec3403a 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> @@ -72,6 +72,12 @@
->>                 cache-level = <2>;
->>         };
->>
->> +       L2_CA53: cache-controller@1 {
->> +               compatible = "cache";
->> +               cache-unified;
->> +               cache-level = <2>;
->> +       };
->> +
->
-> As we don't have any CA53 in the device tree yet, and it was rejected to add
-> it, I'd think that we don't want these unused entries at the moment.
+[PATCH v3 01/06] devicetree: bindings: Remove sh7372 CMT binding
+[PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
+[PATCH v3 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
+[PATCH v3 04/06] devicetree: bindings: Deprecate property, update example
+[PATCH v3 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
+[PATCH v3 06/06] devicetree: bindings: Remove deprecated properties
 
-This is a preparatory step for adding the SYSC PM Domains.
+Here are 6 patches that update the CMT DT bindings. All patches have
+acks and are ready to be picked up and merged. Other changes such
+as driver modification and SoC DTS bits depend on this series.
 
-> I'd propose to add the CA53 entries, first. And then add their L2 cache
-> entries.
->
-> Based on the outcome of the discussion for the CA57 we have to see if we
-> want to add the unused cache-unified and cache-level, then, too.
+In short, this series reworks the CMT DT bindings to deal with the following:
+- R-Car Gen2 CMT0 and CMT1 hardware instances are not identical
+- The property renesas,channels-mask is not enough to describe the difference
+- DT should describe the hardware, not the software implementation
+- Not all documented DT bindings are actually used
 
-These are specified by ePAPR, as I said before.
-Remember, DT describes the hardware, not what Linux (or any other OS) is
-using.
+Without these patches the binding "renesas,cmt-48-gen2" is used for both
+CMT0 and CMT1 on R-Car Gen2 SoCs. CMT0 and CMT1 are currently seen by the
+Linux device driver as compatible hardware, and the device-specific property
+"renesas,channels-mask" is used to point out some of the hardware configuration
+differences. Since the driver is not feature complete only some differences are
+described and when diving into the data sheet we can see that:
 
-Gr{oetje,eeting}s,
+1) CMT0 is not 48-bit at all, instead it only supports 32-bit counters.
+2) Some channels of CMT1 are 48-bit, some 32-bit.
+3) A couple of CMT1 channels have even more features.
 
-                        Geert
+It turns out that none of the above differences are described in our current
+DT files. And since we use the same compat string for CMT0 and CMT1 the driver
+itself cannot enable features specific only to CMT1 without first updating
+the DTS. So this series is ground work for future feature patches.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+It seems that we have two choices if we want to support CMT1 features:
+A) Keep existing DT bindings, add more properties for CMT1
+B) Rework the compatible strings and keep configuration in the driver
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Judging by above it seems that DT update is inevitable. In my mind it is
+rather painful to update the DT so I'd like to minimize the number of
+updates and let the majority of the changes only happen in the driver.
+And since we should really describe hardware in DT but driver features tend
+to be implemented incrementally then B) seems like a good fit to me.
+
+I wouldn't mind going with A) but to be honest I must say that the existing
+compat string "renesas,cmt-48-gen2" is just too confusing with "48"
+(when CMT0 is 32bit-only) and also "gen2" (used without product line R-Car).
+
+Because of that I've gone with B) and reworked the bindings to separate
+CMT0 from CMT1 and keep channel configuration in the device driver.
+
+While at it I've deprecated "renesas,channels-mask" and the old DT compat
+strings. Per-SoC compat strings have also been reworked, but are not left
+around documented as deprecated since they were never used by the driver.
+
+V3 patch series drops everything but DT binding documentation patches
+and also adds acks from Rob Herring. Actual patches are unchanged.
+
+Many thanks to Geert, Laurent and Rob for their feedback!
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> (For patch 1-3)
+Acked-by: Rob Herring <robh@kernel.org>
+---
+
+ Written against renesas-drivers-2016-02-09-v4.5-rc3
+
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   85 ++++++---------
+ 1 file changed, 38 insertions(+), 47 deletions(-)
