@@ -1,33 +1,53 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] spi/rockchip: Add dt-binding for Rockchip rk3399 spi
-Date: Tue, 16 Feb 2016 15:37:02 +0100
-Message-ID: <1730751.NYv1NxJVuB@phil>
-References: <1455614538-4415-1-git-send-email-jay.xu@rock-chips.com> <20160216132223.GM18327@sirena.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] ARM: mps2: introduce MPS2 platform
+Date: Tue, 16 Feb 2016 15:39:12 +0100
+Message-ID: <2949036.dUgqHWXoSe@wuerfel>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <29457600.xRDuy0uVjW@wuerfel> <56C333BF.1020108@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160216132223.GM18327@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "jianqun.xu" <jay.xu@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C333BF.1020108-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 16. Februar 2016, 13:22:23 schrieb Mark Brown:
-> On Tue, Feb 16, 2016 at 05:22:18PM +0800, jianqun.xu wrote:
-> >  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
-> >  1 file changed, 1 insertion(+)
+On Tuesday 16 February 2016 14:35:43 Vladimir Murzin wrote:
+> On 16/02/16 10:56, Arnd Bergmann wrote:
+> > On Tuesday 16 February 2016 10:08:11 Vladimir Murzin wrote:
+> >> The Cortex-M Prototyping System (or V2M-MPS2) is designed for
+> >> prototyping and evaluation Cortex-M family of processors including the
+> >> latest Cortex-M7
+> >>
+> >> It comes with a range of useful peripherals including 8MB single cycle
+> >> SRAM, 16MB PSRAM, Ethernet, QSVGA touch screen panel, 4bit RGB VGA
+> >> connector, Audio, SPI and GPIO.
+> >>
+> >> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+> >> ---
+> >>  arch/arm/Kconfig                 |    8 ++++++++
+> >>  arch/arm/Makefile                |    1 +
+> >>  arch/arm/mach-mps2/Makefile      |    1 +
+> >>  arch/arm/mach-mps2/Makefile.boot |    3 +++
+> >>  arch/arm/mach-mps2/dtmachine.c   |   21 +++++++++++++++++++++
+> >>
+> > 
+> > We are in the (slow) process of consolidating the ARM reference platforms
+> > (versatile, integrator, realview, vexpress) into one place.
+> > 
 > 
-> I'd expect this to be added to both the driver and the binding document
-> not just the document.
+> Thanks for information! Sometime ago I saw on a list you had some
+> thoughts on consolidating M-class platforms since most of them follow
+> quite the same pattern (I'm looking at efm32 and stm32). So, shouldn't
+> this platform consider that way?
+> 
 
-It seems the driver can still use the rk3066-variant - aka nobody has found 
-specific issues in the rk3399 IP implementation.
+Right, that would be another option. vf610 is in the same category as this
+one I think, it's currently in mach-imx, and we can probably leave it there.
 
-Having the more specific IP names already in the dts before actually using 
-them was suggested by devicetree people to not have to exchange everything 
-once specific issues were found. 
+Unless someone is going to do the patch to consolidate the cortex-m
+platforms, I'd stay with mach-vexpress here, but I don't have a strong
+opinion.
 
-So right now it's using the fallback-mechanism of binding to the rk3066 
-name, but if some obstacle appears it will only take adding the binding in 
-the driver to make it work (even with old devicetrees).
+	Arnd
