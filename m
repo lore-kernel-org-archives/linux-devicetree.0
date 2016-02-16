@@ -1,227 +1,99 @@
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] of/overlay: of overlay callbacks
-Date: Tue, 16 Feb 2016 12:37:41 -0600
-Message-ID: <1455647861-31973-2-git-send-email-atull@opensource.altera.com>
-References: <1455647861-31973-1-git-send-email-atull@opensource.altera.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Tue, 16 Feb 2016 13:53:26 -0600
+Message-ID: <CAL_JsqJi9NswYjFF1-hVp6QQNM0MCm7wyvfec+9iFZHzSJ+r3Q@mail.gmail.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <20160212162110.GA21833@rob-hp-laptop> <56BE15D8.3020303@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455647861-31973-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56BE15D8.3020303-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add overlay callback functionality.
+On Fri, Feb 12, 2016 at 11:26 AM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Hello.
+>
+>
+> On 02/12/2016 07:21 PM, Rob Herring wrote:
+>
+>>> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+>>>
+>>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/usb/da8xx-usb.txt          | 47
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 47 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> new file mode 100644
+>>> index 0000000..62dcc51
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> @@ -0,0 +1,47 @@
+>>> +TI DA8xx MUSB
+>>> +~~~~~~~~~~~~~
+>>> +For DA830 and DA850 platforms.
+>>> +
+>>> +Required properties:
+>>> +~~~~~~~~~~~~~~~~~~~~
+>>> + - compatible : Should be set to "ti,da830-musb".
+>>> +
+>>> + - reg: Offset and length of the USB controller register set.
+>>> +
+>>> + - interrupts: The USB interrupt number.
+>>> +
+>>> + - interrupt-names: Should be set to "mc".
+>>> +
+>>> + - dr_mode: The USB operation mode. Should be one of "host",
+>>> "peripheral" or "otg".
+>>> +
+>>> + - mentor,power : Specifies the maximum current in milliamperes the
+>>> controller can
+>>> +     supply in host mode.
+>>
+>>
+>> Still a no for me.
+>
+>
+>    Note that it's been used twice already, for musb_dsps.c and omap2430.c
+> glues (in the latter case the prop was called just "power"). The
+> corresponding field is a part of the 'struct musb_hdrc_platform_data'.
 
-When DT overlays are being added, some drivers/subsystems
-will want to know about the changes before they go into the
-live tree.  Similarly there is a need for post-remove
-callbacks.
+Copied from platform_data is exactly what is wrong with this binding
+and you already said those were bad examples.
 
-Each handler is registered with a of_device_id.  When
-an overlay target matches a handler's id, the handler
-gets called.
+>> Looks like this just sets hcd->power_budget. This
+>> property may not be a regulator, but ultimately the value depends on
+>> some regulator supplying Vbus.
+>
+>
+>    Yes.
+>
+>> Also, given this has nothing to do with MUSB h/w,
+>
+>
+>    This regulator is controlled by the DRVVBUS signal from MUSB h/w!
 
-The following 4 cases are handled: pre-apply, post-apply,
-pre-remove, and post-remove.
+How does a single signal control amount of current? What I should say
+is the max current has nothing to do with the MUSB controller. It is a
+property of some regulator.
 
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- drivers/of/overlay.c |   90 +++++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/of.h   |   31 +++++++++++++++++
- 2 files changed, 120 insertions(+), 1 deletion(-)
+>> however this is described should be generic.
+>
+>
+>    You mean just "power", w/o the vendor prefix?
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 8225081..ee88e4e 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -20,9 +20,13 @@
- #include <linux/slab.h>
- #include <linux/err.h>
- #include <linux/idr.h>
-+#include <linux/list.h>
- 
- #include "of_private.h"
- 
-+static DEFINE_SPINLOCK(of_overlay_handler_lock);
-+static LIST_HEAD(of_overlay_handler_list);
-+
- /**
-  * struct of_overlay_info - Holds a single overlay info
-  * @target:	target of the overlay operation
-@@ -56,6 +60,80 @@ struct of_overlay {
- static int of_overlay_apply_one(struct of_overlay *ov,
- 		struct device_node *target, const struct device_node *overlay);
- 
-+/*
-+ * Send overlay callbacks to handlers that match.  This call is blocking.  In
-+ * the case OF_OVERLAY_PRE_APPLY, return error for the first handler that fails.
-+ * Otherwise, notify all the matching handlers and return success.
-+ */
-+static int send_overlay_callbacks(struct of_overlay *ov, int type)
-+{
-+	int i, ret;
-+
-+	spin_lock(&of_overlay_handler_lock);
-+
-+	for (i = 0; i < ov->count; i++) {
-+		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
-+		struct of_overlay_handler *handler;
-+		int (*callback)(struct of_overlay_msg *msg);
-+		struct of_overlay_msg msg_data;
-+
-+		msg_data.target = ovinfo->target;
-+		msg_data.overlay = ovinfo->overlay;
-+
-+		list_for_each_entry(handler, &of_overlay_handler_list, node) {
-+			msg_data.priv = handler->priv;
-+			switch (type) {
-+			case OF_OVERLAY_PRE_APPLY:
-+				callback = handler->pre_apply_callback;
-+				break;
-+			case OF_OVERLAY_POST_APPLY:
-+				callback = handler->post_apply_callback;
-+				break;
-+			case OF_OVERLAY_PRE_REMOVE:
-+				callback = handler->pre_remove_callback;
-+				break;
-+			case OF_OVERLAY_POST_REMOVE:
-+				callback = handler->post_remove_callback;
-+				break;
-+			default:
-+				continue;
-+			};
-+			if (!callback)
-+				continue;
-+			if (of_match_node(handler->of_match, ovinfo->target)) {
-+				ret = callback(&msg_data);
-+				if ((ret < 0) && (type == OF_OVERLAY_PRE_APPLY)) {
-+					spin_unlock(&of_overlay_handler_lock);
-+					return ret;
-+				}
-+				continue;
-+			}
-+		}
-+	}
-+
-+	spin_unlock(&of_overlay_handler_lock);
-+
-+	return 0;
-+}
-+
-+int of_overlay_handler_register(struct of_overlay_handler *handler)
-+{
-+	spin_lock(&of_overlay_handler_lock);
-+	list_add_tail(&handler->node, &of_overlay_handler_list);
-+	spin_unlock(&of_overlay_handler_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_handler_register);
-+
-+void of_overlay_handler_unregister(struct of_overlay_handler *handler)
-+{
-+	spin_lock(&of_overlay_handler_lock);
-+	list_del(&handler->node);
-+	spin_unlock(&of_overlay_handler_lock);
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_handler_unregister);
-+
- static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		struct device_node *target, struct property *prop)
- {
-@@ -370,6 +448,13 @@ int of_overlay_create(struct device_node *tree)
- 		goto err_free_idr;
- 	}
- 
-+	err = send_overlay_callbacks(ov, OF_OVERLAY_PRE_APPLY);
-+	if (err < 0) {
-+		pr_err("%s: Pre apply handler failed (err=%d)\n",
-+		       __func__, err);
-+		goto err_free_idr;
-+	}
-+
- 	/* apply the overlay */
- 	err = of_overlay_apply(ov);
- 	if (err) {
-@@ -389,6 +474,8 @@ int of_overlay_create(struct device_node *tree)
- 	/* add to the tail of the overlay list */
- 	list_add_tail(&ov->node, &ov_list);
- 
-+	send_overlay_callbacks(ov, OF_OVERLAY_POST_APPLY);
-+
- 	mutex_unlock(&of_mutex);
- 
- 	return id;
-@@ -509,9 +596,10 @@ int of_overlay_destroy(int id)
- 		goto out;
- 	}
- 
--
-+	send_overlay_callbacks(ov, OF_OVERLAY_PRE_REMOVE);
- 	list_del(&ov->node);
- 	__of_changeset_revert(&ov->cset);
-+	send_overlay_callbacks(ov, OF_OVERLAY_POST_REMOVE);
- 	of_free_overlay_info(ov);
- 	idr_remove(&ov_idr, id);
- 	of_changeset_destroy(&ov->cset);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index dc6e396..def9481 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -101,9 +101,33 @@ static inline int of_node_is_attached(struct device_node *node)
- 	return node && node->kobj.state_in_sysfs;
- }
- 
-+/* Callback types */
-+#define OF_OVERLAY_PRE_APPLY	(0)
-+#define OF_OVERLAY_POST_APPLY	(1)
-+#define OF_OVERLAY_PRE_REMOVE	(2)
-+#define OF_OVERLAY_POST_REMOVE	(3)
-+
-+struct of_overlay_msg {
-+	struct device_node *overlay;
-+	struct device_node *target;
-+	void *priv;
-+};
-+
-+struct of_overlay_handler {
-+	int (*pre_apply_callback)(struct of_overlay_msg *msg);
-+	int (*post_apply_callback)(struct of_overlay_msg *msg);
-+	int (*pre_remove_callback)(struct of_overlay_msg *msg);
-+	int (*post_remove_callback)(struct of_overlay_msg *msg);
-+	const struct of_device_id *of_match;
-+	struct list_head node;
-+	void *priv;
-+};
-+
- #ifdef CONFIG_OF_DYNAMIC
- extern struct device_node *of_node_get(struct device_node *node);
- extern void of_node_put(struct device_node *node);
-+extern int of_overlay_handler_register(struct of_overlay_handler *handler);
-+extern void of_overlay_handler_unregister(struct of_overlay_handler *handler);
- #else /* CONFIG_OF_DYNAMIC */
- /* Dummy ref counting routines - to be implemented later */
- static inline struct device_node *of_node_get(struct device_node *node)
-@@ -111,6 +135,13 @@ static inline struct device_node *of_node_get(struct device_node *node)
- 	return node;
- }
- static inline void of_node_put(struct device_node *node) { }
-+static int of_overlay_handler_register(struct of_overlay_handler *handler)
-+{
-+	return -EINVAL;
-+}
-+static void of_overlay_handler_unregister(struct of_overlay_handler *handler)
-+{
-+}
- #endif /* !CONFIG_OF_DYNAMIC */
- 
- /* Pointer for first entry in chain of all nodes. */
--- 
-1.7.9.5
+No. I mean generic in the sense of common for all USB host bindings,
+not generic as in a meaningless, unclear name.
 
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
