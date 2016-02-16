@@ -1,56 +1,65 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
-Date: Tue, 16 Feb 2016 17:00:30 +0100
-Message-ID: <20160216160029.GC11400@ulmo.nvidia.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
+Date: Tue, 16 Feb 2016 17:10:09 +0100
+Message-ID: <20160216161009.GW18805@8bytes.org>
+References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
+	<1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
+	<56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
+	<56C340FB.1050607@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
+In-Reply-To: <56C340FB.1050607-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---t0UkRYy7tHLRMCai
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Feb 16, 2016 at 03:32:11PM +0000, Robin Murphy wrote:
+> Hi Joerg,
+> 
+> On 16/02/16 14:11, Joerg Roedel wrote:
+> >On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
+> >>
+> >>
+> >>On 26/01/16 05:12, Yong Wu wrote:
+> >>>This patch add SMI(Smart Multimedia Interface) driver. This driver
+> >>>is responsible to enable/disable iommu and control the power domain
+> >>>and clocks of each local arbiter.
+> >>>
+> >>>Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>>---
+> >>
+> >>Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >>Joerg would you mind to take this through your branch?
+> >
+> >Hmm, I somehow missed the patch-set, at least I can't find the v8
+> >patches in my inbox.
+> >
+> >Yong, can you please re-send with all Acks and other tags added?
+> 
+> Just to note patch 4 of this series also depends on the v3
+> io-pgtable short-descriptor series posted separately[1] - is that on
+> your radar already or would you like that resent as well?
 
-On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
-> Add SW support for MAXIM Semiconductor's Power Management
-> IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
-> RTC, watchdog, clocks etc.
+No, that was not on my radar, I somehow expected Will to handle this
+series :)
 
-Hi Laxman,
+So please resend that as well.
 
-This series is starting to look pretty good. Do you have patches in the
-works to add the corresponding DT content for the various boards that we
-support? I think the Jetson TX1 patch would be most interesting since
-that's what people can get their hands on.
 
-Thierry
+Thanks,
 
---t0UkRYy7tHLRMCai
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWw0eZAAoJEN0jrNd/PrOhF3MQALprc3PjZZEoo34c9CwlzmeU
-C6Wu6BahoOfYkxlodpfMQv4CxBj2R8kG+DIta8BWRmyEftz+B/CU9Ogc19R8U6oW
-hrn2d9u0aZF2bK7j8O3F3CLNnC/PQ19V/3aYWviPE+QEZX1u7quW/L1XCeleYLLy
-xcDX4fIjO3PtYziw0j4m7wCnTG+41dQNV4y59D6dJlZBAX6Xg6nATIKlwG/A0lQK
-tecOYFZFVVlTBZ0n9HoXK3ZfhRrjb7xEuMenGXyUkSHCnKh6hF1GXPGSHs/GR8Vw
-pslrkHwg9oeXzXYo591aj1S8tGd8DyMalntG7FkHQFVdEgIsjyQs9JnBqSv1+vWx
-EQ3U090gY3crcW5iXo6HKgS0wNIMb5hxfSHnnGqtpnqQbV1aZz4Kq2Vooj/+35lS
-iiu78M/OFtYR77DI6G5O8XnXVQ+s5YEGabHpTQOkTAP9feilCN1SXxe01b2ZspI+
-4p+PP9wSwpzgCcdmAw4tReFpEpiaMd3Py9sdWiLKYvNpdGBe6NndpmPOmd/LuwUt
-PJdE8nMXAmGHNEN3y1pI8fRG/xUPRUWfomxizMegn9UFeiux5rDnDIxucawtnD37
-8j1y29u14T5EGfHUfeUvrr0lK5qDZx7bf/F7HXf6Jkz/tHkDMzFr7y26G+hZjkRa
-63RXGyQxuIm0RqKWV+Tz
-=7nt0
------END PGP SIGNATURE-----
-
---t0UkRYy7tHLRMCai--
+	Joerg
