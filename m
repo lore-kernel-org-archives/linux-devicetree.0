@@ -1,66 +1,133 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] hwmon: Define binding for the nsa320-hwmon driver
-Date: Mon, 15 Feb 2016 17:48:26 -0800
-Message-ID: <56C27FEA.1090806@roeck-us.net>
-References: <1455578705-10531-1-git-send-email-linux@baker-net.org.uk>
- <1455578705-10531-2-git-send-email-linux@baker-net.org.uk>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v4 4/8] dt-bindings: Add a binding for Mediatek Video
+ Encoder
+Date: Tue, 16 Feb 2016 10:09:28 +0800
+Message-ID: <1455588568.19396.51.camel@mtksdaap41>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
+	 <CAGS+omDQW+yqhixCWPfQb9eaHeufgiEDscrvXGwBTc05+eDGCQ@mail.gmail.com>
+	 <CAGS+omAkM97TOnJX-ahEMeN8zO1R2RO43LWqeFFRDuj7gM5CzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455578705-10531-2-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omAkM97TOnJX-ahEMeN8zO1R2RO43LWqeFFRDuj7gM5CzA@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Lin PoChun <PoChun.Lin@mediatek.com>, Tomasz Figa <tfiga@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/15/2016 03:25 PM, Adam Baker wrote:
-> Define a binding for the hardware monitoring chip present in the Zyxel
-> NSA-320 and some of the other Zyxel NAS devices.
->
-> Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Hi Daniel,
 
-Rob sent you an Ack for this patch. Since you did not change the patch
-since v1, I would expect to see it here (instead of having to look it up).
+On Mon, 2016-02-15 at 18:42 +0800, Daniel Kurtz wrote:
+> On Tue, Feb 9, 2016 at 7:29 PM, Daniel Kurtz <djkurtz@chromium.org> wrote:
+> > Hi Tiffany,
+> >
+> > On Thu, Feb 4, 2016 at 7:34 PM, Tiffany Lin <tiffany.lin@mediatek.com> wrote:
+> >> Add a DT binding documentation of Video Encoder for the
+> >> MT8173 SoC from Mediatek.
+> >>
+> >> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> >> ---
+> >>  .../devicetree/bindings/media/mediatek-vcodec.txt  |   59 ++++++++++++++++++++
+> >>  1 file changed, 59 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> >> new file mode 100644
+> >> index 0000000..572bfdd
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> >> @@ -0,0 +1,59 @@
+> >> +Mediatek Video Codec
+> >> +
+> >> +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
+> >> +supports high resolution encoding functionalities.
+> >> +
+> >> +Required properties:
+> >> +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
+> >> +- reg : Physical base address of the video codec registers and length of
+> >> +  memory mapped region.
+> >> +- interrupts : interrupt number to the cpu.
+> >> +- mediatek,larb : must contain the local arbiters in the current Socs.
+> >> +- clocks : list of clock specifiers, corresponding to entries in
+> >> +  the clock-names property.
+> >> +- clock-names: encoder must contain "vencpll_d2", "venc_sel", "univpll1_d2",
+> >> +  "venc_lt_sel".
+> >> +- iommus : should point to the respective IOMMU block with master port as
+> >> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> >> +  for details.
+> >> +- mediatek,vpu : the node of video processor unit
+> >> +
+> >> +Example:
+> >> +vcodec_enc: vcodec@0x18002000 {
+> >> +    compatible = "mediatek,mt8173-vcodec-enc";
+> >> +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
+> >> +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
+> >
+> > This really looks like two encoder devices combined into a single
+> > device tree node.
+> > There are two register sets, two irqs, two sets of iommus, and two
+> > sets of clocks.
+> >
+> > If possible, please split this node into two, one for each encoder.
+> 
+> I chatted offline with Mediatek.  They explained that there really is
+> just one encoder hardware, that happens to support multiple formats.
+> The encoder cannot encode with both formats at the same time.  The
+> Mediatek HW designers added a new format to an existing encoder by
+> adding a second interface (register set, irq, iommus, clocks) without
+> modifying the original interface.  However in the hardware itself
+> there is really just one encoder device.
+> 
+> So, although this node looks like it is for two encoder devices (one
+> for each format), really there is just one device that supports each
+> format through its large interface.
+> 
+> So, I'm fine with this being a single device node.
+> 
+> >> +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
+> >> +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
+> >> +    mediatek,larb = <&larb3>,
+> >> +                   <&larb5>;
+> >> +    iommus = <&iommu M4U_PORT_VENC_RCPU>,
+> >> +             <&iommu M4U_PORT_VENC_REC>,
+> >> +             <&iommu M4U_PORT_VENC_BSDMA>,
+> >> +             <&iommu M4U_PORT_VENC_SV_COMV>,
+> >> +             <&iommu M4U_PORT_VENC_RD_COMV>,
+> >> +             <&iommu M4U_PORT_VENC_CUR_LUMA>,
+> >> +             <&iommu M4U_PORT_VENC_CUR_CHROMA>,
+> >> +             <&iommu M4U_PORT_VENC_REF_LUMA>,
+> >> +             <&iommu M4U_PORT_VENC_REF_CHROMA>,
+> >> +             <&iommu M4U_PORT_VENC_NBM_RDMA>,
+> >> +             <&iommu M4U_PORT_VENC_NBM_WDMA>,
+> >> +             <&iommu M4U_PORT_VENC_RCPU_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_REC_FRM_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_BSDMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_SV_COMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_RD_COMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_CUR_LUMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_CUR_CHROMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_REF_LUMA_SET2>,
+> >> +             <&iommu M4U_PORT_VENC_REC_CHROMA_SET2>;
+> >> +    mediatek,vpu = <&vpu>;
+> >> +    clocks = <&topckgen CLK_TOP_VENCPLL_D2>,
+> >> +             <&topckgen CLK_TOP_VENC_SEL>,
+> >> +             <&topckgen CLK_TOP_UNIVPLL1_D2>,
+> >> +             <&topckgen CLK_TOP_VENC_LT_SEL>;
+> >> +    clock-names = "vencpll_d2",
+> >> +                  "venc_sel",
+> >> +                  "univpll1_d2",
+> >> +                  "venc_lt_sel";
+> >
+> > The names of these clocks should be from the perspective of the
+> > encoder, not the clock provider.
+> 
+> I still think these clock names should be updated, however.
+> 
+Got it. We will fix this in next version.
 
-Thanks,
-Guenter
-
-> ---
->   .../devicetree/bindings/hwmon/nsa320-mcu.txt        | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
-> new file mode 100644
-> index 0000000..7b346d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt
-> @@ -0,0 +1,21 @@
-> +Bindings for the fan / temperature monitor microcontroller used on
-> +the Zyxel NSA 320 and several subsequent models.
-> +
-> +Required properties:
-> +- compatible	: "zyxel,nsa320-mcu"
-> +- data-gpios	: The GPIO pin connected to the data line on the MCU
-> +- clk-gpios	: The GPIO pin connected to the clock line on the MCU
-> +- act-gpios	: The GPIO pin connected to the active line on the MCU
-> +
-> +Example:
-> +
-> +	hwmon {
-> +		compatible = "zyxel,nsa320-mcu";
-> +		pinctrl-0 = <&pmx_mcu_data &pmx_mcu_clk &pmx_mcu_act>;
-> +		pinctrl-names = "default";
-> +
-> +		data-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +		clk-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-> +		act-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
-> +	};
-> +
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -Dan
