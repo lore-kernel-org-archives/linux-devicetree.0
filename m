@@ -1,96 +1,64 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Tue, 16 Feb 2016 13:53:26 -0600
-Message-ID: <CAL_JsqJi9NswYjFF1-hVp6QQNM0MCm7wyvfec+9iFZHzSJ+r3Q@mail.gmail.com>
+Date: Tue, 16 Feb 2016 14:05:25 -0600
+Message-ID: <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com>
 References: <1455188466-10879-1-git-send-email-petr@barix.com>
- <20160212162110.GA21833@rob-hp-laptop> <56BE15D8.3020303@cogentembedded.com>
+ <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56BE15D8.3020303-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <56BE1531.8060800-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 11:26 AM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Hello.
+On Fri, Feb 12, 2016 at 11:24 AM, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> wrote:
 >
->
-> On 02/12/2016 07:21 PM, Rob Herring wrote:
->
->>> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+> On 12.02.2016 17:21, Rob Herring wrote:
+>>
+>> On Thu, Feb 11, 2016 at 12:01:06PM +0100, Petr Kulhavy wrote:
 >>>
->>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/usb/da8xx-usb.txt          | 47
->>> ++++++++++++++++++++++
->>>   1 file changed, 47 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> new file mode 100644
->>> index 0000000..62dcc51
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> @@ -0,0 +1,47 @@
->>> +TI DA8xx MUSB
->>> +~~~~~~~~~~~~~
->>> +For DA830 and DA850 platforms.
->>> +
->>> +Required properties:
->>> +~~~~~~~~~~~~~~~~~~~~
->>> + - compatible : Should be set to "ti,da830-musb".
->>> +
->>> + - reg: Offset and length of the USB controller register set.
->>> +
->>> + - interrupts: The USB interrupt number.
->>> +
->>> + - interrupt-names: Should be set to "mc".
->>> +
->>> + - dr_mode: The USB operation mode. Should be one of "host",
->>> "peripheral" or "otg".
->>> +
 >>> + - mentor,power : Specifies the maximum current in milliamperes the
 >>> controller can
 >>> +     supply in host mode.
 >>
->>
->> Still a no for me.
->
->
->    Note that it's been used twice already, for musb_dsps.c and omap2430.c
-> glues (in the latter case the prop was called just "power"). The
-> corresponding field is a part of the 'struct musb_hdrc_platform_data'.
-
-Copied from platform_data is exactly what is wrong with this binding
-and you already said those were bad examples.
-
->> Looks like this just sets hcd->power_budget. This
+>> Still a no for me. Looks like this just sets hcd->power_budget. This
 >> property may not be a regulator, but ultimately the value depends on
->> some regulator supplying Vbus.
+>> some regulator supplying Vbus. Also, given this has nothing to do with
+>> MUSB h/w, however this is described should be generic.
 >
 >
->    Yes.
->
->> Also, given this has nothing to do with MUSB h/w,
->
->
->    This regulator is controlled by the DRVVBUS signal from MUSB h/w!
+> I understand your point that the description should be generic.
+> However the USB 2.0 specification does not define any relation between the
+> bMaxPower provided by the device and the actual power control.
+> As far as I understand the value just serves the purpose to raise a flag to
+> the user if the attached device would draw too much power, and not to enable
+> it at all.
 
-How does a single signal control amount of current? What I should say
-is the max current has nothing to do with the MUSB controller. It is a
-property of some regulator.
+That won't really work given devices lie. My bus powered USB disk
+enclosure reports something like 10mA. That's pretty good considering
+I have a 5W drive in it.
 
->> however this is described should be generic.
+> Further, the value used by the protocol is not necessarily related to the
+> real current that can be supported. The maximum current supported by the
+> protocol is 510mA.
 >
->
->    You mean just "power", w/o the vendor prefix?
+> For instance on my development board the real maximum current is limited
+> only by the mains power-supply used.
+> So it cannot even be modelled in the DT as a regulator because the
+> power-supply is not part of the HW and
+> everybody can take a different one.
 
-No. I mean generic in the sense of common for all USB host bindings,
-not generic as in a meaningless, unclear name.
+Not part of which h/w? Different for everyone is exactly why Vbus
+supply should be described in DT.
+
+> So defining a regulator just to store this arbitrary USB 2.0 value is a bit
+> overkill for me.
+
+If it is just arbitrary, then put it into the driver. I would do 500mA
+and be done with it. I'd guess there is nothing real behind the
+current default of 250mA.
 
 Rob
 --
