@@ -1,51 +1,78 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: Move syscon reboot/poweroff to common dtsi for
- Exynos
-Date: Tue, 16 Feb 2016 10:58:20 -0300
-Message-ID: <56C32AFC.6030905@osg.samsung.com>
-References: <1455042606-10075-1-git-send-email-javier@osg.samsung.com>
- <56C02265.40103@samsung.com> <56C1D4D1.2050108@osg.samsung.com>
- <56C25982.4020301@samsung.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] serial: mps2-uart: add support for early console
+Date: Tue, 16 Feb 2016 16:00:20 +0200
+Message-ID: <CAHp75VecjR3sBcGmRHFwZPwUjXhPwV-2z4hYYJ7Y+iCOxi8_EA@mail.gmail.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>
+	<1455617295-23736-6-git-send-email-vladimir.murzin@arm.com>
+	<CAHp75VdugAq0WnzLHmd9CJHCjBOdBwPqCmC3ARSaVF5XMYGoMw@mail.gmail.com>
+	<56C31F9F.10000@arm.com>
+	<CAHp75Vf_4MgdWunQy5hBMH5GGei+OkktFPYY-ZprY0qOEnD=wA@mail.gmail.com>
+	<56C32641.4020201@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <56C25982.4020301@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
-Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C32641.4020201-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Tue, Feb 16, 2016 at 3:38 PM, Vladimir Murzin
+<vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 16/02/16 13:13, Andy Shevchenko wrote:
+>> On Tue, Feb 16, 2016 at 3:09 PM, Vladimir Murzin
+>> <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On 16/02/16 10:36, Andy Shevchenko wrote:
+>>>> On Tue, Feb 16, 2016 at 12:08 PM, Vladimir Murzin
+>>>> <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
 
-On 02/15/2016 08:04 PM, Krzysztof Kozlowski wrote:
-> On 15.02.2016 22:38, Javier Martinez Canillas wrote:
+>>>>> +static void mps2_early_putchar(struct uart_port *port, int ch)
+>>>>> +{
+>>>>> +
+>>>>> +       while (readb(port->membase + UARTn_STATE) & UARTn_STATE_T=
+X_FULL)
+>>>>> +               cpu_relax();
+>>>>
+>>>> Infinite busy loop?
 >>>
->>> In some of the DTSI this was under "soc" node, not at top-level.
->>> Unfortunately we do not have consistency here - some DTSI have "soc",
+>>> In case of broken hw, yes, but I'm quite unsure how we can help to =
+fix
+>>> it. Do you have something in mind?
 >>
->> Yes, I noticed this but as you said not all DTSI have a soc node
->> and that's why I made it top level in the DTSI.
+>> Set sane amount of loops like
 >>
->>> some not. Anyway I think we should move to "soc" version.
->>>
+>> int count =3D 100;
+>> =E2=80=A6
+>> while (=E2=80=A6 && --count)
 >>
->> Not sure I'm following, did you mean to do it as a follow up or
->> to add a soc node for the missing DTSI as a part of this series?
+>> Though I have no idea what to do if count =3D=3D 0. Perhaps it's a T=
+X overrun state.
 >
-> I meant to send a v2 with this under "soc" node even though on some DTS
-> we do not have the "soc". Optional follow up would be to make DTS
-> consistent and move nodes under "soc"... but that would be also a lot of
-> churn.
+> I thought about counter too, like some of drivers do, but had no idea
+> what to do next after counter reaches zero. In case of TX overrun we
+> could get it either because of broken hw or because we entered Linux
+> with that state already set. In both cases, it looks handy to me to
+> attach a debugger and see that we are spinning in this putchar loop.
 >
+> If you do insist to have a counter I'll add one, but if you are not
+> strong about it I'd prefer to leave it as is.
 
-Thanks for the clarification. I'll post a v2 then moving under a soc node.
-  
-> Best regards,
-> Krzysztof
+I would wait for Peter Hurley, Alan, or other experienced guys to talk.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+>> You may try to recover by flushing TX queue in HW (fifo and / or Tx
+>> shift register) if HW supports it.
+>>
+>
+> I'm afraid this is not supported.
+
+Maybe soft reset? Anyway, see above.
+
+--=20
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
