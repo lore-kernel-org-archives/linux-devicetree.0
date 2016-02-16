@@ -1,67 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v5 1/3] clk: samsung: Enable COMPILE_TEST for Samsung clocks
-Date: Tue, 16 Feb 2016 15:20:30 +0900
-Message-ID: <1455603632-11158-2-git-send-email-k.kozlowski@samsung.com>
-References: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5] Add SATA3 support for Broadcom NS2 SVK
+Date: Tue, 16 Feb 2016 12:03:35 +0530
+Message-ID: <1455604420-11300-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the COMPILE_TEST to get build coverage of some of Samsung clock
-controller drivers. Still some of them will be built only if
-appropriate SoC is chosen (like SOC_EXYNOS4415 or ARCH_S3C64XX).
+The Broadcom NS2 SoC has a AHCI compliant SATA3 controller with
+two ports.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+This patchset adds common Broadcom SATA3 PHY driver and related
+DT bindings document. It also adds appropriate DT nodes for NS2 DT.
 
----
+The patchset is based on v4.5-rc3 tag and is available in branch
+ns2_sata3_v1 of https://github.com/Broadcom/arm64-linux.git
 
-Changes since v4:
-1. Rebase on current clk tree which already contains patch moving
-   Samsung clock drivers into the COMMON_CLK section.
-   (b9e65ebc654, "clk: Move vendor's Kconfig into CCF menu section")
+All patches have been tested on Broadcom NS2 SVK.
 
-Changes since v3:
-1. Rebase on next-20160127 (s3c64xx became multiplatform)
+Anup Patel (5):
+  phy: Rename phy-brcmstb-sata driver to phy-brcm-sata driver
+  phy: Add support for NS2 SATA3 PHY in Broadcom SATA3 PHY driver
+  dt-bindings: phy: bindings document for common Broadcom SATA3 PHY
+    driver
+  dt-bindings: ata: add compatible string for iProc AHCI controller
+  arm64: dts: Add SATA3 AHCI and SATA3 PHY DT nodes for NS2
 
-Changes since v2:
-1. New patch.
----
- drivers/clk/samsung/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+ ...brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} |  15 +-
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  43 +++
+ drivers/phy/Kconfig                                |  18 +-
+ drivers/phy/Makefile                               |   2 +-
+ drivers/phy/phy-brcm-sata.c                        | 412 +++++++++++++++++++++
+ drivers/phy/phy-brcmstb-sata.c                     | 250 -------------
+ 8 files changed, 487 insertions(+), 266 deletions(-)
+ rename Documentation/devicetree/bindings/phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} (69%)
+ create mode 100644 drivers/phy/phy-brcm-sata.c
+ delete mode 100644 drivers/phy/phy-brcmstb-sata.c
 
-diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
-index b3fe5cb01afe..dd6093a33f84 100644
---- a/drivers/clk/samsung/Kconfig
-+++ b/drivers/clk/samsung/Kconfig
-@@ -1,8 +1,8 @@
- config COMMON_CLK_SAMSUNG
--	bool
-+	bool "Samsung Exynos clock controller support" if COMPILE_TEST
- 
- config S3C2410_COMMON_CLK
--	bool
-+	bool "Samsung S3C2410 clock controller support" if COMPILE_TEST
- 	select COMMON_CLK_SAMSUNG
- 	help
- 	  Build the s3c2410 clock driver based on the common clock framework.
-@@ -16,10 +16,10 @@ config S3C2410_COMMON_DCLK
- 	  framework.
- 
- config S3C2412_COMMON_CLK
--	bool
-+	bool "Samsung S3C2412 clock controller support" if COMPILE_TEST
- 	select COMMON_CLK_SAMSUNG
- 
- config S3C2443_COMMON_CLK
--	bool
-+	bool "Samsung S3C2443 clock controller support" if COMPILE_TEST
- 	select COMMON_CLK_SAMSUNG
- 
 -- 
-2.5.0
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
