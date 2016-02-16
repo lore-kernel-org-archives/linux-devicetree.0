@@ -1,56 +1,42 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] mtd: devices: m25p80: add support for mmap read
- request
-Date: Tue, 16 Feb 2016 13:30:49 +0530
-Message-ID: <56C2D731.6050306@ti.com>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
- <1449807000-6457-4-git-send-email-vigneshr@ti.com>
- <20160209193616.GN13270@sirena.org.uk> <56BC1D3E.5020203@ti.com>
- <20160212223711.GD18988@sirena.org.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v2 05/11] soc: renesas: rcar: Handle clock domain devices in SYSC PM domains
+Date: Tue, 16 Feb 2016 10:02:36 +0200
+Message-ID: <2269681.nQFpo1ggiB@avalon>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be> <2087210.c20JsV3rp3@avalon> <CAMuHMdUs1cJMZaO8-UkOcBYTy1nd9oR3kLo4q3Z4wxU_t4SDbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160212223711.GD18988-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUs1cJMZaO8-UkOcBYTy1nd9oR3kLo4q3Z4wxU_t4SDbw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
+On Tuesday 16 February 2016 08:30:03 Geert Uytterhoeven wrote:
+> On Mon, Feb 15, 2016 at 11:08 PM, Laurent Pinchart wrote:
+> > On Monday 15 February 2016 22:16:54 Geert Uytterhoeven wrote:
+> >> R-Car H3 contains some hardware modules (e.g. VSP and FCP_V) that are
+> >> not only located in a power area controlled by the SYSC system
+> >> controller, but that are also part of the generic CPG/MSSR clock domain.
+> >> Make sure both are handled by enabling module clock PM when the device
+> >> for such a hardware module is attached to the SYSC PM Domain.
+> > 
+> > Can't we specify both power domains in the DT power-domains attribute
+> > instead ?
+> 
+> While the DT property is called "power-domains" (plural), only the first
+> entry is parsed by genpd_dev_pm_attach(). Which makes sense for power areas
+> (if there are multiple, they are nested), but indeed can cause problems
+> when mixed with clock domains.
+> 
+> For R-Mobile, I fixed it in a similar way.
 
-On 02/13/2016 04:07 AM, Mark Brown wrote:
-> On Thu, Feb 11, 2016 at 11:03:50AM +0530, Vignesh R wrote:
->> On 02/10/2016 01:06 AM, Mark Brown wrote:
->>> On Fri, Dec 11, 2015 at 09:39:58AM +0530, Vignesh R wrote:
-> 
->>>> +	if (spi_flash_read_supported(spi)) {
->>>> +		struct spi_flash_read_message msg;
->>>> +		int ret;
-> 
->>> Looking at this I can't help but think that spi_flash_read() ought to
->>> have the stub in rather than the caller.  But given that we're pretty
->>> much only ever expecting one user I'm not 100% sure it actually matters.
-> 
->> Well, my initial patch set passed long list of arguments to
->> spi_flash_read(), but Brian suggested to use struct[1] in order to avoid
->> unnecessary churn when things need changed in the API.
-> 
-> I don't see what that has to do with my point?
-> 
-
-AFAIU, your previous comment was to move initialization of
-spi_flash_read_message struct to spi_flash_read(). This would mean
-sending long list of arguments to spi_flash_read() which needs to be
-updated whenever an argument needs to be added/deleted (in future).
-Instead passing around a struct would be much easier in case of
-adding/removing parameters.
-Please correct me if I misunderstood your comment?
+Still, shouldn't it be fixed in genpd ?
 
 -- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Laurent Pinchart
