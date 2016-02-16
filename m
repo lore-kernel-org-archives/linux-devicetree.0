@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v3 04/06] devicetree: bindings: Deprecate property, update example
-Date: Tue, 16 Feb 2016 16:17:59 +0900
-Message-ID: <20160216071759.25461.53185.sendpatchset@little-apple>
+Subject: [PATCH v3 06/06] devicetree: bindings: Remove deprecated properties
+Date: Tue, 16 Feb 2016 16:18:19 +0900
+Message-ID: <20160216071819.25461.83168.sendpatchset@little-apple>
 References: <20160216071722.25461.61862.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160216071722.25461.61862.sendpatchset@little-apple>
@@ -12,63 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
+The deprecated DT properties are part of the GIT history,
+no need to keep them around any longer.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 
  Changes since V2:
  - Added Acked-by from Rob
- - Removed Tested-by tag from DT binding patch - duh!
+ - Fixed properties typo - Thanks Geert
+ - Added Acked-by from Geert
 
  Changes since V1:
- - Added Acked-by and Tested-by from Geert
- - Added Acked-by from Laurent
+ - New patch
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   24 ++++++++++-----
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- 0009/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:39:47.080513000 +0900
-@@ -60,21 +60,31 @@ Required Properties:
+--- 0011/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:08:17.000513000 +0900
+@@ -35,8 +35,6 @@ Required Properties:
+     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
+ 		These are fallbacks for r8a73a4 and all the R-Car Gen2
+ 		entries	listed above.
+-
+-    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
+     
+   - reg: base address and length of the registers block for the timer module.
+   - interrupts: interrupt-specifier for the timer, one per channel.
+@@ -44,8 +42,6 @@ Required Properties:
      in clock-names.
    - clock-names: must contain "fck" for the functional clock.
  
--  - renesas,channels-mask: bitmask of the available channels.
-+  - renesas,channels-mask: <deprecated>, information kept in device driver.
- 
- 
--Example: R8A7790 (R-Car H2) CMT0 node
+-  - renesas,channels-mask: <deprecated>, information kept in device driver.
 -
--	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
--	them channels 0 and 1 in the documentation.
-+Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
  
- 	cmt0: timer@ffca0000 {
--		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
-+		compatible = "renesas,cmt0-r8a7790", "renesas,cmt0-rcar-gen2";
- 		reg = <0 0xffca0000 0 0x1004>;
- 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
- 		clock-names = "fck";
-+	};
+ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
  
--		renesas,channels-mask = <0x60>;
-+	cmt1: timer@e6130000 {
-+		compatible = "renesas,cmt1-r8a7790", "renesas,cmt1-rcar-gen2";
-+		reg = <0 0xe6130000 0 0x1004>;
-+		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
-+		clock-names = "fck";
- 	};
