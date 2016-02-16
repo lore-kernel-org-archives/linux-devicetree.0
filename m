@@ -1,54 +1,76 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] arm64: dts: r8a7795: Add CA53 L2 cache-controller
- node
-Date: Tue, 16 Feb 2016 09:46:11 +0000
-Message-ID: <56C2EFE3.6010900@arm.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v3 6/7] arm64: dts: r8a7795: Add missing properties to
+ CA57 L2 cache node
+Date: Tue, 16 Feb 2016 10:55:19 +0100
+Message-ID: <56C2F207.2080703@de.bosch.com>
 References: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
- <1455568715-20880-8-git-send-email-geert+renesas@glider.be>
- <56C2C534.30704@de.bosch.com>
- <CAMuHMdX=Kgb-i+QpP=yNO2e6nw7sXuCutXPoK0U9NwK-OyANFA@mail.gmail.com>
+ <1455568715-20880-7-git-send-email-geert+renesas@glider.be>
+ <56C2C471.80000@de.bosch.com> <56C2EF47.4080809@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdX=Kgb-i+QpP=yNO2e6nw7sXuCutXPoK0U9NwK-OyANFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <56C2EF47.4080809@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 16/02/16 07:12, Geert Uytterhoeven wrote:
-> Hi Dirk,
+On 16.02.2016 10:43, Sudeep Holla wrote:
 >
-> On Tue, Feb 16, 2016 at 7:44 AM, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org> wrote:
-
-[...]
-
+>
+> On 16/02/16 06:40, Dirk Behme wrote:
+>> On 15.02.2016 21:38, Geert Uytterhoeven wrote:
+>>> Add the missing "cache-unified" and "cache-level" properties to the
+>>> Cortex-A57 cache-controller node.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>> ---
+>>> v3:
+>>>    - Remaining part of "[PATCH v2 6/6] arm64: renesas: r8a7795: Add L2
+>>>      cache-controller nodes", after dropping the "arm,data-latency" and
+>>>      "arm,tag-latency" properties.
+>>> ---
+>>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> index b5e46e4ff72ad003..c07f4e83b988ba42 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> @@ -68,6 +68,8 @@
+>>>
+>>>       L2_CA57: cache-controller@0 {
+>>>           compatible = "cache";
+>>> +        cache-unified;
+>>> +        cache-level = <2>;
 >>
->> As we don't have any CA53 in the device tree yet, and it was rejected to add
->> it, I'd think that we don't want these unused entries at the moment.
->
-> This is a preparatory step for adding the SYSC PM Domains.
->
->> I'd propose to add the CA53 entries, first. And then add their L2 cache
->> entries.
 >>
->> Based on the outcome of the discussion for the CA57 we have to see if we
->> want to add the unused cache-unified and cache-level, then, too.
+>> As this is completely unused on ARMv8 I don't think that we want to have
+>> these unused entries in the DT.
+>>
+>> Sudeep: What do you think?
+>>
 >
-> These are specified by ePAPR, as I said before.
-> Remember, DT describes the hardware, not what Linux (or any other OS) is
-> using.
+> I am fine with that, I don't see any issue having them as they are
+> static values and highly unlikely to change and hence no threat to
+> backward compatibility.
 >
+> The main concern I had with latency values is that it's currently not
+> used anywhere but if we decide to use say in secure software, having the
+> untested/early values in DT might cause compatibility issues in future
+> as they were added much before the actual understanding of it's usage.
+> So I prefer to defer them until then.
 
-I completely agree and I mentioned the same in the other email.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fine with me, thanks! :)
+
+With this clarification:
+
+Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
+
+
+Thanks again and best regards
+
+Dirk
