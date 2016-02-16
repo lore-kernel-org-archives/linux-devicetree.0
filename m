@@ -1,95 +1,52 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 0/3] clk: mvebu: initial support for AP806 clocks
-Date: Mon, 15 Feb 2016 15:36:49 -0800
-Message-ID: <CAEG3pNCRa_CQx70aPHfQpG+7jEZ_=_-FxBWDkXVYbgH=j=1rmA@mail.gmail.com>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20160215233102.2278.88855@quark.deferred.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160215233102.2278.88855@quark.deferred.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
-	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
-	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>
+From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Subject: [PATCH net-next] net: macb: make magic-packet property generic
+Date: Mon, 15 Feb 2016 22:13:58 -0200
+Message-ID: <1455581638-27771-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas,
+Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+---
+As requested by Rob Herring on patch
+https://patchwork.ozlabs.org/patch/580862/
+---
+ Documentation/devicetree/bindings/net/macb.txt | 2 +-
+ drivers/net/ethernet/cadence/macb.c            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Feb 15, 2016 at 3:31 PM, Michael Turquette
-<mturquette@baylibre.com> wrote:
-> Hi Thomas,
->
-> Quoting Thomas Petazzoni (2016-02-14 23:34:55)
->> Hello,
->>
->> The following set of patches add initial support for the main clocks
->> found in the AP806 hardware block, which is the central block used in
->> the newest Marvell 7K and 8K 64-bits processors.
->>
->> Two new drivers are added, one for the so-called "core" clocks and one
->> for the "ring" clocks. The latter are child clocks from one of the
->> core clocks. The "core" clocks are fixed rate clocks, but their rate
->> is calculated from values in the Sample At Reset register.
->>
->> The support for the Marvell 7K/8K platform (Device Tree, etc.) will be
->> submitted as a separate patch series.
->
-> Yay, new SoC! Just FYI, we worked out an agreement in December[0] that
-> the clk git tree can take DT bindings and headers, and we'll always host
-> them in an immutable branch by default in case arm-soc (or anyone else)
-> needs them. Stephen and I are doing this now.
-
-Oops, I misunderstood your point (and I should have looked at the
-patches before replying). The patches in this series do indeed have
-the clk DT binding descriptions.
-
-Pardon the noise, nothing to see here, move along ;-)
-
-Regards,
-Mike
-
->
-> It's nice for us to review those bindings at the same time that we
-> review the driver.
->
-> [0] http://lkml.kernel.org/r/<20151231001859.19557.99512@quark.deferred.io>
->
-> Best regards,
-> Mike
->
->>
->> Thanks!
->>
->> Thomas
->>
->> Thomas Petazzoni (3):
->>   clk: unconditionally recurse into clk/mvebu/
->>   clk: mvebu: add AP806 core clock driver
->>   clk: mvebu: add AP806 ring clock driver
->>
->>  .../clock/mvebu-armada-ap806-core-clock.txt        |  33 ++++++
->>  .../clock/mvebu-armada-ap806-ring-clock.txt        |  32 ++++++
->>  drivers/clk/Makefile                               |   2 +-
->>  drivers/clk/mvebu/Kconfig                          |   6 ++
->>  drivers/clk/mvebu/Makefile                         |   3 +-
->>  drivers/clk/mvebu/ap806-core.c                     | 112 +++++++++++++++++++++
->>  drivers/clk/mvebu/ap806-ring.c                     |  65 ++++++++++++
->>  7 files changed, 251 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-core-clock.txt
->>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
->>  create mode 100644 drivers/clk/mvebu/ap806-core.c
->>  create mode 100644 drivers/clk/mvebu/ap806-ring.c
->>
->> --
->> 2.6.4
->>
-
-
-
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index c6b1cb5ffa87..b5a42df4c928 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -25,7 +25,7 @@ Required properties:
+ 
+ Optional properties for PHY child node:
+ - reset-gpios : Should specify the gpio for phy reset
+-- cdns,magic-packet : If present, indicates that the hardware supports waking
++- magic-packet : If present, indicates that the hardware supports waking
+   up via magic packet.
+ 
+ Examples:
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 69af049e55a8..7ccf2298a5fa 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -2929,7 +2929,7 @@ static int macb_probe(struct platform_device *pdev)
+ 		bp->jumbo_max_len = macb_config->jumbo_max_len;
+ 
+ 	bp->wol = 0;
+-	if (of_get_property(np, "cdns,magic-packet", NULL))
++	if (of_get_property(np, "magic-packet", NULL))
+ 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
+ 	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
+ 
 -- 
-Michael Turquette
-CEO
-BayLibre - At the Heart of Embedded Linux
-http://baylibre.com/
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
