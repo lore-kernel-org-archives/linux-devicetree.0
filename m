@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v3 01/06] devicetree: bindings: Remove sh7372 CMT binding
-Date: Tue, 16 Feb 2016 16:17:31 +0900
-Message-ID: <20160216071731.25461.77388.sendpatchset@little-apple>
+Subject: [PATCH v3 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
+Date: Tue, 16 Feb 2016 16:17:50 +0900
+Message-ID: <20160216071750.25461.48942.sendpatchset@little-apple>
 References: <20160216071722.25461.61862.sendpatchset@little-apple>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160216071722.25461.61862.sendpatchset@little-apple>
@@ -12,12 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Remove the sh7372 CMT compat string to reduce maintenance burden.
-
-It should be fine to break DT compatibility because:
-1) The sh7372 SoC support has been removed from upstream
-2) The sh7372 CMT DT binding was never part of upstream DTS
-3) The CMT driver never matches on the sh7372 binding
+Update SoC-specific bindings for r8a73a4 and R-Car Gen2 CMT0 and CMT1.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -30,48 +25,47 @@ Acked-by: Rob Herring <robh@kernel.org>
  - Removed Tested-by tag from DT binding patch - duh!
 
  Changes since V1:
- - Removed all references to sh7372
  - Added Acked-by and Tested-by from Geert
  - Added Acked-by from Laurent
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   26 ++++++++-------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
---- 0001/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:22:52.420513000 +0900
-@@ -14,32 +14,26 @@ Required Properties:
-   - compatible: must contain one or more of the following:
-     - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
- 		(CMT0)
--    - "renesas,cmt-32-sh7372" for the sh7372 32-bit CMT
--		(CMT0)
-     - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
- 		(CMT0)
-     - "renesas,cmt-32" for all 32-bit CMT without fast clock support
--		(CMT0 on sh7372, sh73a0 and r8a7740)
-+		(CMT0 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-* entries.
- 
-     - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
- 		clock support (CMT[234])
--    - "renesas,cmt-32-fast-sh7372" for the sh7372 32-bit CMT with fast
--		clock support (CMT[234])
-     - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
- 		clock support (CMT[234])
-     - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
--		(CMT[234] on sh7372, sh73a0 and r8a7740)
-+		(CMT[234] on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-fast-* entries.
- 
--    - "renesas,cmt-48-sh7372" for the sh7372 48-bit CMT
--		(CMT1)
-     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48" for all non-second generation 48-bit CMT
--		(CMT1 on sh7372, sh73a0 and r8a7740)
-+		(CMT1 on sh73a0 and r8a7740)
+--- 0005/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 17:31:02.650513000 +0900
+@@ -36,20 +36,24 @@ Required Properties:
+ 		(CMT1 on sh73a0 and r8a7740)
  		This is a fallback for the above renesas,cmt-48-* entries.
  
-     - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
++    - "renesas,cmt0-r8a73a4" for the 32-bit CMT0 device included in r8a73a4.
++    - "renesas,cmt1-r8a73a4" for the 48-bit CMT1 device included in r8a73a4.
++    - "renesas,cmt0-r8a7790" for the 32-bit CMT0 device included in r8a7790.
++    - "renesas,cmt1-r8a7790" for the 48-bit CMT1 device included in r8a7790.
++    - "renesas,cmt0-r8a7791" for the 32-bit CMT0 device included in r8a7791.
++    - "renesas,cmt1-r8a7791" for the 48-bit CMT1 device included in r8a7791.
++    - "renesas,cmt0-r8a7793" for the 32-bit CMT0 device included in r8a7793.
++    - "renesas,cmt1-r8a7793" for the 48-bit CMT1 device included in r8a7793.
++    - "renesas,cmt0-r8a7794" for the 32-bit CMT0 device included in r8a7794.
++    - "renesas,cmt1-r8a7794" for the 48-bit CMT1 device included in r8a7794.
++
+     - "renesas,cmt0-rcar-gen2" for 32-bit CMT0 devices included in R-Car Gen2.
+     - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
++		These are fallbacks for r8a73a4 and all the R-Car Gen2
++		entries	listed above.
+ 
+-    - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
+-		(CMT[01])
+-    - "renesas,cmt-48-r8a7790" for the r8a7790 48-bit CMT
+-		(CMT[01])
+-    - "renesas,cmt-48-r8a7791" for the r8a7791 48-bit CMT
+-		(CMT[01])
+-    - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
+-		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
+-		This is a fallback for the renesas,cmt-48-r8a73a4,
+-		renesas,cmt-48-r8a7790 and renesas,cmt-48-r8a7791 entries.
+-
++    - "renesas,cmt-48-gen2" is <deprecated>, use "renesas,cmt[01]-*" instead.
++    
+   - reg: base address and length of the registers block for the timer module.
+   - interrupts: interrupt-specifier for the timer, one per channel.
+   - clocks: a list of phandle + clock-specifier pairs, one for each entry
