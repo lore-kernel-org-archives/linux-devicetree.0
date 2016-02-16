@@ -1,89 +1,51 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCH v4 5/8] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
- Encoder Driver
-Date: Tue, 16 Feb 2016 14:48:31 +0100
-Message-ID: <56C328AF.5030604@cisco.com>
-References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
- <1454585703-42428-6-git-send-email-tiffany.lin@mediatek.com>
- <56C1B4AF.1030207@xs4all.nl> <1455604653.19396.68.camel@mtksdaap41>
- <56C2D371.9090805@xs4all.nl> <1455628805.19396.82.camel@mtksdaap41>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: Move syscon reboot/poweroff to common dtsi for
+ Exynos
+Date: Tue, 16 Feb 2016 10:58:20 -0300
+Message-ID: <56C32AFC.6030905@osg.samsung.com>
+References: <1455042606-10075-1-git-send-email-javier@osg.samsung.com>
+ <56C02265.40103@samsung.com> <56C1D4D1.2050108@osg.samsung.com>
+ <56C25982.4020301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455628805.19396.82.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiffany lin <tiffany.lin@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56C25982.4020301@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
+Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tiffany,
+Hello Krzysztof,
 
->>>>> +int mtk_vcodec_enc_queue_init(void *priv, struct vb2_queue *src_vq,
->>>>> +			   struct vb2_queue *dst_vq)
->>>>> +{
->>>>> +	struct mtk_vcodec_ctx *ctx = priv;
->>>>> +	int ret;
->>>>> +
->>>>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
->>>>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
->>>>
->>>> I recomment dropping VB2_USERPTR. That only makes sense for scatter-gather dma,
->>>> and you use physically contiguous DMA.
->>>>
->>> Now our userspace app use VB2_USERPTR. I need to check if we could drop
->>> VB2_USERPTR.
->>> We use src_vq->mem_ops = &vb2_dma_contig_memops;
->>> And there are
->>> 	.get_userptr	= vb2_dc_get_userptr,
->>> 	.put_userptr	= vb2_dc_put_userptr,
->>> I was confused why it only make sense for scatter-gather.
->>> Could you kindly explain more?
+On 02/15/2016 08:04 PM, Krzysztof Kozlowski wrote:
+> On 15.02.2016 22:38, Javier Martinez Canillas wrote:
+>>>
+>>> In some of the DTSI this was under "soc" node, not at top-level.
+>>> Unfortunately we do not have consistency here - some DTSI have "soc",
 >>
->> VB2_USERPTR indicates that the application can use malloc to allocate buffers
->> and pass those to the driver. Since malloc uses virtual memory the physical
->> memory is scattered all over. And the first page typically does not start at
->> the beginning of the page but at a random offset.
+>> Yes, I noticed this but as you said not all DTSI have a soc node
+>> and that's why I made it top level in the DTSI.
 >>
->> To support that the DMA generally has to be able to do scatter-gather.
+>>> some not. Anyway I think we should move to "soc" version.
+>>>
 >>
->> Now, where things get ugly is that a hack was added to the USERPTR support where
->> apps could pass a pointer to physically contiguous memory as a user pointer. This
->> was a hack for embedded systems that preallocated a pool of buffers and needed to
->> pass those pointers around somehow. So the dma-contig USERPTR support is for that
->> 'feature'. If you try to pass a malloc()ed buffer to a dma-contig driver it will
->> reject it. One big problem is that this specific hack isn't signaled anywhere, so
->> applications have no way of knowing if the USERPTR support is the proper version
->> or the hack where physically contiguous memory is expected.
->>
->> This hack has been replaced with DMABUF which is the proper way of passing buffers
->> around.
->>
->> New dma-contig drivers should not use that old hack anymore. Use dmabuf to pass
->> external buffers around.
->>
->> How do you use it in your app? With malloc()ed buffers? Or with 'special' pointers
->> to physically contiguous buffers?
->>
-> Understood now. Thanks for your explanation.
-> Now our app use malloc()ed buffers and we hook vb2_dma_contig_memops. 
-> I don't know why that dma-contig driver do not reject it.
-> I will try to figure it out.
+>> Not sure I'm following, did you mean to do it as a follow up or
+>> to add a soc node for the missing DTSI as a part of this series?
+>
+> I meant to send a v2 with this under "soc" node even though on some DTS
+> we do not have the "soc". Optional follow up would be to make DTS
+> consistent and move nodes under "soc"... but that would be also a lot of
+> churn.
+>
 
-Is there an iommu involved that turns the scatter-gather list into what looks like
-contiguous memory for the DMA?
+Thanks for the clarification. I'll post a v2 then moving under a soc node.
+  
+> Best regards,
+> Krzysztof
 
-At the end of vb2_dc_get_userptr() in videobuf2-dma-contig.c there is a check
-'if (contig_size < size)' that verifies that the sg DMA is contiguous. This would
-work if there is an iommu involved (if I understand it correctly).
-
-If that's the case, then it's OK to keep VB2_USERPTR because you have real sg
-support (although not via the DMA engine, but via iommu mappings).
-
-Regards,
-
-	Hans
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
