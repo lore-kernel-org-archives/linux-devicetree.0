@@ -1,69 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v2 01/11] PM / Domains: Add DT bindings for the R-Car
- System Controller
-Date: Tue, 16 Feb 2016 08:15:40 +0100
-Message-ID: <CAMuHMdXJYjde1cqWyqzDL9Cgb-3cWSvJmrG61H6Jf6EOu0-=Fw@mail.gmail.com>
-References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
-	<1455571020-18968-2-git-send-email-geert+renesas@glider.be>
-	<1720075.YOPnCQ3mE1@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1720075.YOPnCQ3mE1@avalon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v3 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
+Date: Tue, 16 Feb 2016 16:18:09 +0900
+Message-ID: <20160216071809.25461.92875.sendpatchset@little-apple>
+References: <20160216071722.25461.61862.sendpatchset@little-apple>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160216071722.25461.61862.sendpatchset@little-apple>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+From: Magnus Damm <damm+renesas@opensource.se>
 
-On Tue, Feb 16, 2016 at 12:08 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/renesas,sysc-rcar.txt
->> @@ -0,0 +1,87 @@
->> +DT bindings for the Renesas R-Car System Controller
->> +
->> +== System Controller Node ==
->> +
->> +The R-Car System Controller provides power management for the CPU cores and
->> +various coprocessors.
->> +
->> +Required properties:
->> +  - compatible: Must contain one or more of the following:
->> +      - "renesas,r8a7779-sysc" (R-Car H1)
->> +      - "renesas,r8a7790-sysc" (R-Car H2)
->> +      - "renesas,r8a7791-sysc" (R-Car M2-W)
->> +      - "renesas,r8a7792-sysc" (R-Car V2H)
->> +      - "renesas,r8a7793-sysc" (R-Car M2-N)
->> +      - "renesas,r8a7794-sysc" (R-Car E2)
->> +      - "renesas,r8a7795-sysc" (R-Car H3)
->> +      - "renesas,rcar-gen2-sysc" (Generic R-Car Gen2)
->> +      - "renesas,rcar-gen3-sysc" (Generic R-Car Gen3)
->> +    When compatible with the generic version, nodes must list the
->> SoC-specific
->> +    version corresponding to the platform first, followed by the generic
->> +    version.
->> +  - reg: Address start and address range for the device.
+Remove the 32-bit CMT compat strings to reduce maintenance burden.
 
-You're quoting the description of the "reg" property for the SYSC device node...
+It should be fine to break DT compatibility because the 32-bit
+32-bit CMT DT binding was never part of any upstream DTS file.
 
-> This isn't correct. I'll refrain from saying we abuse the reg property, as
-> using the first cell as a power domain number should be fine (the second cell
-> feels a bit more of an abuse to me though, but I won't complain too much), but
-> the bindings document should describe what the reg cells contain.
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
 
-... while the two cell format is for the PM domain nodes, not for the
-SYSC device
-node. Please check the other "reg" description.
+ Changes since V2:
+ - Added Acked-by from Rob
+ - Added Acked-by from Geert
 
-Gr{oetje,eeting}s,
+ Changes since V1:
+ - New patch
 
-                        Geert
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |   16 ---------------
+ 1 file changed, 16 deletions(-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--- 0008/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2015-09-17 18:04:35.060513000 +0900
+@@ -12,22 +12,6 @@ datasheets.
+ Required Properties:
+ 
+   - compatible: must contain one or more of the following:
+-    - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
+-		(CMT0)
+-    - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
+-		(CMT0)
+-    - "renesas,cmt-32" for all 32-bit CMT without fast clock support
+-		(CMT0 on sh73a0 and r8a7740)
+-		This is a fallback for the above renesas,cmt-32-* entries.
+-
+-    - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
+-		clock support (CMT[234])
+-    - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
+-		clock support (CMT[234])
+-    - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
+-		(CMT[234] on sh73a0 and r8a7740)
+-		This is a fallback for the above renesas,cmt-32-fast-* entries.
+-
+     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
+ 		(CMT1)
+     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
