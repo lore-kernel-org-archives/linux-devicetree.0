@@ -1,48 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v2 05/11] soc: renesas: rcar: Handle clock domain
- devices in SYSC PM domains
-Date: Tue, 16 Feb 2016 08:30:03 +0100
-Message-ID: <CAMuHMdUs1cJMZaO8-UkOcBYTy1nd9oR3kLo4q3Z4wxU_t4SDbw@mail.gmail.com>
-References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
-	<1455571020-18968-6-git-send-email-geert+renesas@glider.be>
-	<2087210.c20JsV3rp3@avalon>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 0/3] Input: rotary_encoder - Fixups for Dmitry's
+ rework and support for >2 gpios
+Date: Tue, 16 Feb 2016 08:33:27 +0100
+Message-ID: <20160216073327.GL12289@pengutronix.de>
+References: <1454674101-1194-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2087210.c20JsV3rp3@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1454674101-1194-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello Dmitry,
 
-On Mon, Feb 15, 2016 at 11:08 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Monday 15 February 2016 22:16:54 Geert Uytterhoeven wrote:
->> R-Car H3 contains some hardware modules (e.g. VSP and FCP_V) that are
->> not only located in a power area controlled by the SYSC system
->> controller, but that are also part of the generic CPG/MSSR clock domain.
->> Make sure both are handled by enabling module clock PM when the device
->> for such a hardware module is attached to the SYSC PM Domain.
->
-> Can't we specify both power domains in the DT power-domains attribute instead
-> ?
+On Fri, Feb 05, 2016 at 01:08:18PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> This bases on top of
+>=20
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input rotary-enco=
+der
+>=20
+> (currently at 557a30f2f046).
+>=20
+> Dmitry, I assume you will squash the two fixups accordingly, otherwis=
+e
+> just tell me, then I create proper patches.
+>=20
+> Also let me note that with threaded irqs I'm able to rotate my device
+> quicker than irq handling happens. So a quick counterclockwise rotati=
+on
+> might be detected as single step clockwise rotation.
 
-While the DT property is called "power-domains" (plural), only the first entry
-is parsed by genpd_dev_pm_attach(). Which makes sense for power areas
-(if there are multiple, they are nested), but indeed can cause problems when
-mixed with clock domains.
+gentle ping!
 
-For R-Mobile, I fixed it in a similar way.
+Uwe
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
