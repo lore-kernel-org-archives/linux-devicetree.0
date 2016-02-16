@@ -1,56 +1,95 @@
-From: =?UTF-8?q?Andreas=20Irest=C3=A5l?= <andreas.irestal@axis.com>
-Subject: [PATCH v2 3/5] ASoC: adau17x1: Add adau17x1 bindings document
-Date: Tue, 16 Feb 2016 13:56:43 +0100
-Message-ID: <1455627405-18155-4-git-send-email-andire@axis.com>
-References: <1455627405-18155-1-git-send-email-andire@axis.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] devicetree/bindings: add reset-gpios and
+ vcc-supply for panel-dpi
+Date: Tue, 16 Feb 2016 15:06:33 +0200
+Message-ID: <56C31ED9.7070405@ti.com>
+References: <1450610002-10531-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1450610002-10531-2-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20151229205458.GA31241@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455627405-18155-1-git-send-email-andire@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20Irest=C3=A5l?= <andire@axis.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="OoO5RHFw32qrgCIbrW4iaMWw92d7TRTLb"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151229205458.GA31241@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andreas Irest=C3=A5l <andire@axis.com>
----
- .../devicetree/bindings/sound/adi,adau17x1.txt     | 24 ++++++++++++++=
-++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,adau17x=
-1.txt
+--OoO5RHFw32qrgCIbrW4iaMWw92d7TRTLb
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,adau17x1.txt b=
-/Documentation/devicetree/bindings/sound/adi,adau17x1.txt
-new file mode 100644
-index 0000000..8dbce0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,adau17x1.txt
-@@ -0,0 +1,24 @@
-+Analog Devices ADAU1361/ADAU1461/ADAU1761/ADAU1961/ADAU1381/ADAU1781
-+
-+Required properties:
-+
-+ - compatible:		Should contain one of the following:
-+			"adi,adau1361"
-+			"adi,adau1461"
-+			"adi,adau1761"
-+			"adi,adau1961"
-+			"adi,adau1381"
-+			"adi,adau1781"
-+
-+ - reg:			The i2c address. Value depends on the state of ADDR0
-+			and ADDR1, as wired in hardware.
-+
-+Examples:
-+#include <dt-bindings/sound/adau17x1.h>
-+
-+	i2c_bus {
-+		adau1361@38 {
-+			compatible =3D "adi,adau1761";
-+			reg =3D <0x38>;
-+		};
-+	};
---=20
-2.1.4
+
+
+On 29/12/15 22:54, Rob Herring wrote:
+> On Sun, Dec 20, 2015 at 12:13:20PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+>> Some displays have a reset input and/or need a regulator to function
+>> properly. Allow to specify them for panel-dpi devices.
+>>
+>> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/display/panel/panel-dpi.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi=
+=2Etxt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+>> index 216c894d4f99..b52ac52757df 100644
+>> --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+>> +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+>> @@ -7,6 +7,8 @@ Required properties:
+>>  Optional properties:
+>>  - label: a symbolic name for the panel
+>>  - enable-gpios: panel enable gpio
+>> +- reset-gpios: GPIO to control the RESET pin
+>=20
+> The problem with this in a generic binding is what if the panel has=20
+> ordering requirements like enable gpio has to be inactive when reset=20
+> is deasserted?
+>=20
+>> +- vcc-supply: phandle of regulator that will be used to enable power =
+to the display
+>=20
+> What if there are 2 supplies?
+
+Yes, I think it's an impossible task to create a really generic driver
+wrt. gpios and supplies. There may be a bunch of them, and a particular
+sequence to enable/disable needed, and even particular delays required
+in between.
+
+So I think the best we can do is to support (hopefully) most of the
+panels by defining one sequence panel-dpi uses. If a particular panel
+falls outside that, a separate driver is needed.
+
+ Tomi
+
+
+--OoO5RHFw32qrgCIbrW4iaMWw92d7TRTLb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWwx7ZAAoJEPo9qoy8lh71p/kP/2h+X1M1ph11MrlYMJepjbG2
+m2G940at+2EqSOzXm+NgJUCLOb+GYipPpAY8gx0IP17nEFzD8JJkjZ8YH6oT12NF
+AyxVGge2270CdRjqBrRCzSk4FEI0rE/GEgSKqFF+KDRevTvGpvYgGLacjeHAWKT9
+nleeGjiO3dD0CD2nI+jy5mneasz28dgzYMG7d2FgRl6MOmGfpPPu/M0GmXpN+xg6
+LBOSmJ3QTxwwHgrdcj3DmLvCu0frDykl0xH9HDYNeeP2nUglSJkzZksfKqxKVY2K
+GCGEWFQGIkmN/dWLb0vRIy+ZpkDiYRGappn58qEobK3fMvXwZvvVLsVJe2oWhp6+
+ClvoFIbCA84MmeZC8qfwkJoz4ZRu5Nh5cnvtVPpQlk402VJddt9DU5K1ps212gcc
+FhWVfm8Z6qupnvhm+GelASWdngZowl3ZLWfhjWkCj30uPz1Mk/i3e9PNCytCr4WE
+BdMefbhUSe4cGBWb60FIHMmKDP26DeOhRrpB4qpmPvhUG25cxKtWo8hwRgui8lDK
+1OgR005E1/ETfTCZT+8IoHEGk75XuLKYbZcE9W4f89pV5VXftpjFVRf6Ki0FrgnF
+0nAL9gT1lDbyCmIHjuEultLaMqjf74VeVAuStcjPYp8iLVCJygmiTU4qE5PCyyLb
+v/9s8/mVYpRXSv/JgMwQ
+=BP+Y
+-----END PGP SIGNATURE-----
+
+--OoO5RHFw32qrgCIbrW4iaMWw92d7TRTLb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
