@@ -1,77 +1,189 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: Add GIC-400 virtual interfaces
-Date: Tue, 16 Feb 2016 10:55:37 +0100
-Message-ID: <CAMuHMdVP4wA4eXK-fkENndNs=zS2vuUeDww2ZZbXvocfFiOgWQ@mail.gmail.com>
-References: <1455615802-9083-1-git-send-email-dirk.behme@de.bosch.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 2/2] bluetooth: btmrvl: parse host wakeup configuration from device tree
+Date: Tue, 16 Feb 2016 01:55:55 -0800
+Message-ID: <1455616555-4729-2-git-send-email-akarwar@marvell.com>
+References: <1455616555-4729-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1455615802-9083-1-git-send-email-dirk.behme@de.bosch.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+Content-Type: text/plain
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455616555-4729-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC Marc
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-On Tue, Feb 16, 2016 at 10:43 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
-> Besides the distributor and the CPU interface the GIC-400 additionally
-> supports the virtual interface control blocks and the virtual CPU interfaces.
->
-> Add the physical base addresses and size for these.
->
-> See
->
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/index.html
-> -> 3.2. GIC-400 register map
->
-> and Linux kernel's
->
-> Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->
-> for more details.
->
-> For the at GICH Virtual interface control blocks at 0xf1040000 cover the
-> whole 128kB (0x20000) range. This is done based on the advice from Marc
-> Zyngier http://www.spinics.net/lists/arm-kernel/msg483139.html
->
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+This patch implements a framework for board specific wakeup.
+driver parse irq/gpio number from device tree, corresponding
+resources will be allocated, and used for host suspend/resume.
+Device tree binding file is also updated in the patch.
 
-Thanks!
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+v2: Fixed build error reported by kbuild test robot
+drivers/bluetooth/btmrvl_platform.c:141:22: error:
+'btmrvl_plt_pm_ops' undeclared here (not in a function)
+---
+ .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 17 +++-
+ drivers/bluetooth/btmrvl_platform.c                | 91 ++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 2 deletions(-)
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> ---
-> Changes in v2: Extend the GICH size to 128kB.
->
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 8f1ed23..65f9cc8 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -130,7 +130,9 @@
->                         #address-cells = <0>;
->                         interrupt-controller;
->                         reg = <0x0 0xf1010000 0 0x1000>,
-> -                             <0x0 0xf1020000 0 0x2000>;
-> +                             <0x0 0xf1020000 0 0x2000>,
-> +                             <0x0 0xf1040000 0 0x20000>,
-> +                             <0x0 0xf1060000 0 0x2000>;
->                         interrupts = <GIC_PPI 9
->                                         (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->                 };
-> --
-> 2.5.1
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+index 516b636..fdc87c4 100644
+--- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
++++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+@@ -12,11 +12,19 @@ Optional properties:
+ 
+   - btmrvl,gpio-gap : gpio and gap (in msecs) combination to be
+ 		      configured.
++  - interrupt-parent: phandle of the parent interrupt controller
++  - interrupts : interrupt number to the cpu
++  - gpios: specify GPIO respectively. gpio here is board specific pin.
++	   while above gpio-gap represents the device side pin used to
++	   wakeup host.
++  - pinctrl-names : a pinctrl state named "default" must be defined
++  - pinctrl-0 : pin control group to be used for this controller
+ 
+ Example:
+ 
+-GPIO pin 13 and gap 100ms are configured for host wakeup, calibration
+-data is also available in below example.
++GPIO pin 119 and gap 100ms are configured for host wakeup,
++pin 13 is configured so that firmware can wakeup host using this device side
++pin, calibration data is also available in below example.
+ 
+ bluetooth {
+ 	compatible = "marvell,bt-sd8xxx";
+@@ -26,4 +34,9 @@ bluetooth {
+ 		0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+ 		0x00 0x00 0xf0 0x00>;
+ 	btmrvl,gpio-gap = <0x0d64>;
++	interrupt-parent = <&pio>;
++	interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
++	gpios = <&pio 119 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&wake_pins>;
+ };
+diff --git a/drivers/bluetooth/btmrvl_platform.c b/drivers/bluetooth/btmrvl_platform.c
+index d2305dd..c9a353c 100644
+--- a/drivers/bluetooth/btmrvl_platform.c
++++ b/drivers/bluetooth/btmrvl_platform.c
+@@ -19,9 +19,63 @@
+ 
+ struct platform_device *btmrvl_plt_dev;
+ 
++struct btmrvl_wake_dev {
++	struct device	*dev;
++	int		irq_bt;
++	bool		wake_by_bt;
++};
++
++static irqreturn_t btmrvl_wake_irq_bt(int irq, void *priv)
++{
++	struct btmrvl_wake_dev *ctx = priv;
++
++	if (ctx->irq_bt >= 0) {
++		ctx->wake_by_bt = true;
++		disable_irq_nosync(ctx->irq_bt);
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static int btmrvl_plt_probe(struct platform_device *pdev)
+ {
++	int ret;
++	struct btmrvl_wake_dev *ctx;
++	int gpio;
++
+ 	btmrvl_plt_dev = pdev;
++
++	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->dev = &pdev->dev;
++	ctx->irq_bt = platform_get_irq(pdev, 0);
++	if (ctx->irq_bt < 0)
++		dev_err(&pdev->dev, "Failed to get irq_bt\n");
++
++	gpio = of_get_gpio(pdev->dev.of_node, 0);
++	if (gpio_is_valid(gpio))
++		gpio_direction_input(gpio);
++	else
++		dev_err(&pdev->dev, "gpio bt is invalid\n");
++
++	if (ctx->irq_bt >= 0) {
++		ret = devm_request_irq(&pdev->dev, ctx->irq_bt,
++				       btmrvl_wake_irq_bt,
++				       IRQF_TRIGGER_LOW,
++				       "bt_wake", ctx);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Failed to request irq_bt %d (%d)\n",
++				ctx->irq_bt, ret);
++			return -EINVAL;
++		}
++		disable_irq(ctx->irq_bt);
++	}
++
++	platform_set_drvdata(pdev, ctx);
++
+ 	return 0;
+ }
+ 
+@@ -31,6 +85,42 @@ static int btmrvl_plt_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int __maybe_unused btmrvl_plt_suspend(struct device *dev)
++{
++	struct btmrvl_wake_dev *ctx = dev_get_drvdata(dev);
++	int ret;
++
++	if (ctx->irq_bt >= 0) {
++		ctx->wake_by_bt = false;
++		enable_irq(ctx->irq_bt);
++		ret = enable_irq_wake(ctx->irq_bt);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int __maybe_unused btmrvl_plt_resume(struct device *dev)
++{
++	struct btmrvl_wake_dev *ctx = dev_get_drvdata(dev);
++	int ret;
++
++	if (ctx->irq_bt >= 0) {
++		ret = disable_irq_wake(ctx->irq_bt);
++		if (!ctx->wake_by_bt)
++			disable_irq(ctx->irq_bt);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops btmrvl_plt_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(btmrvl_plt_suspend, btmrvl_plt_resume)
++};
++
+ static const struct of_device_id btmrvl_dt_match[] = {
+ 	{
+ 		.compatible = "marvell,bt-sd8xxx",
+@@ -46,6 +136,7 @@ static struct platform_driver btmrvl_platform_driver = {
+ 	.driver = {
+ 		.name	= "btmrvl_plt",
+ 		.of_match_table = btmrvl_dt_match,
++		.pm             = &btmrvl_plt_pm_ops,
+ 	}
+ };
+ 
+-- 
+1.8.1.4
