@@ -1,86 +1,46 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: RE: [PATCH 1/3] input: cygnus-update touchscreen dt node document
-Date: Tue, 16 Feb 2016 09:54:56 +0530
-Message-ID: <766ebcaceac5e04307b48527eaeefb90@mail.gmail.com>
-References: <1455008277-8312-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1455008277-8312-2-git-send-email-raveendra.padasalagi@broadcom.com>
- <2631849.GeOulu78vx@wuerfel> <3b53af6b6c6735d10cb88518c8b8a0ae@mail.gmail.com>
- <20160209174351.GC40460@dtor-ws> <979fb4dc5fba643a6780759d2a13530a@mail.gmail.com>
- <20160212150430.GA15049@rob-hp-laptop>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2] clk: Move vendor's Kconfig into CCF menu section
+Date: Tue, 16 Feb 2016 13:59:14 +0900
+Message-ID: <CAJKOXPdA1VeGUmgAtObueXbY5S_X0acrF5m_QnEygzaMOeWPUw@mail.gmail.com>
+References: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160212150430.GA15049@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1453971537-5510-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: 12 February 2016 20:35
-> To: Raveendra Padasalagi
-> Cc: Dmitry Torokhov; Arnd Bergmann; Russell King;
-devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-input@vger.kernel.org; Pawel
-Moll;
-> Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson; Jon Mason;
-> Florian Fainelli; Ray Jui; Scott Branden; linux-kernel@vger.kernel.org;
-bcm-
-> kernel-feedback-list@broadcom.com
-> Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node
-document
+2016-01-28 17:58 GMT+09:00 James Liao <jamesjj.liao@mediatek.com>:
+> Move all vendor's Kconfig into CCF menu section to prevent
+> new drivers putting their Kconfig files in a wrong place.
 >
-> Your mailer is not handling wrapping correctly. Generally, Outlook does
-not
-> work for maillists.
+> Some Kconigs need to modify at the same time to avoid build
+> warnings.
 >
-> On Wed, Feb 10, 2016 at 10:24:43AM +0530, Raveendra Padasalagi wrote:
-> > > -----Original Message-----
-> > > From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> > > Sent: 09 February 2016 23:14
-> > > To: Raveendra Padasalagi
-> > > Cc: Arnd Bergmann; Russell King; devicetree@vger.kernel.org;
-> > > linux-arm- kernel@lists.infradead.org; linux-input@vger.kernel.org;
-> > > Rob Herring;
-> > Pawel
-> > > Moll; Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson;
-> > > Jon Mason; Florian Fainelli; Ray Jui; Scott Branden;
-> > linux-kernel@vger.kernel.org;
-> > > bcm-kernel-feedback-list@broadcom.com
-> > > Subject: Re: [PATCH 1/3] input: cygnus-update touchscreen dt node
-> > document
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> ---
+> This patch is based on v4.5-rc1.
 >
-> And Outlook's reply header is non-standard.
+> changes since v1:
+> - Modify s3c24xx and samsung's Kconfig to avoid build warngings.
 >
-> [...]
+>  arch/arm/mach-s3c24xx/Kconfig | 1 +
+>  drivers/clk/Kconfig           | 8 +++-----
+>  drivers/clk/samsung/Kconfig   | 1 -
+>  3 files changed, 4 insertions(+), 6 deletions(-)
 >
-> > > > In Cygnus SOC, Touch screen controller registers are shared with
-> > > > ADC and flex timer IP's.
-> > > > Using readl/writel could lead to race condition. So this patch is
-> > > > introduced to take care mutually exclusive access of register's in
-> > > > such a case.
-> > > >
-> > > > In the platform's where touchscreen register's are not shared
-> > > > normal readl/writel could be used.
-> > >
-> > > Are there currently platforms where the registers are not shared? If
-> > > we
-> > have to
-> > > use regmap to correctly update registers (and thus we need
-> > > syscon) then I wonder if we should even attempt to support direct
-> > register
-> > > access by the driver.
-> >
-> > Currently there are no platforms without register sharing, but we
-> > would like to keep the driver generic enough to take care of future
-> > SOC's if comes with dedicated registers and same touchscreen IP being
-> > re-used.
->
-> These future SoCs will have a different compatible string and you should
-use that
-> to determine whether reg or syscon is used.
 
-Thanks Rob. I will address this in the next patch.
+I wish you had used scripts/get_maintainer.pl to get list of people to CC...
+Kukjin Kim <kgene@kernel.org> (maintainer:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES)
+Krzysztof Kozlowski <k.kozlowski@samsung.com> (maintainer:ARM/SAMSUNG
+EXYNOS ARM ARCHITECTURES)
+linux-samsung-soc@vger.kernel.org (moderated list:ARM/SAMSUNG EXYNOS
+ARM ARCHITECTURES)
 
-> Rob
+Beside the fact that it is just nice and welcomed... it would help me
+to avoid some of duplicated work...
+
+Best regards,
+Krzysztof
