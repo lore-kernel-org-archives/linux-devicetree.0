@@ -1,70 +1,40 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/2] ARM: dts: vf-colibri: add supply regulators
-Date: Mon, 15 Feb 2016 18:14:14 -0800
-Message-ID: <1455588854-6996-2-git-send-email-stefan@agner.ch>
-References: <1455588854-6996-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455588854-6996-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A RTS/CTS pins
+Date: Tue, 16 Feb 2016 09:16:01 +0530
+Message-ID: <1455594361-5870-1-git-send-email-bhuvanchandra.dv@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Colibri modules need to be powered using the power pins 3V3 and
-AVDD. Add fixed regulators which represent this power rails.
-Potentially, those power rails could be switched on a carrier
-board. A carrier board device tree could add a own regulator with
-a GPIO, and reference that regulator in a vin-supply property of
-those new module level system regulators.
+Add pinmux for UART_A RTS, CTS pin's.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- arch/arm/boot/dts/vf-colibri.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/vf-colibri.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index ff6f58e..191506a 100644
+index e5949b9..700840f 100644
 --- a/arch/arm/boot/dts/vf-colibri.dtsi
 +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -48,14 +48,31 @@
- 		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
- 		status = "disabled";
- 	};
-+
-+	reg_sys_3v3: regulator-sys-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_sys_3v3_avdd: regulator-sys-3v3-avdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "AVDD";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &adc0 {
- 	status = "okay";
-+	vref-supply = <&reg_sys_3v3_avdd>;
- };
- 
- &adc1 {
- 	status = "okay";
-+	vref-supply = <&reg_sys_3v3_avdd>;
- };
- 
- &can0 {
-@@ -96,6 +113,7 @@
- 
- &fec1 {
- 	phy-mode = "rmii";
-+	phy-supply = <&reg_sys_3v3>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_fec1>;
- };
--- 
+@@ -213,6 +213,8 @@
+ 			fsl,pins = <
+ 				VF610_PAD_PTB10__UART0_TX		0x21a2
+ 				VF610_PAD_PTB11__UART0_RX		0x21a1
++				VF610_PAD_PTB12__UART0_RTS		0x21a2
++				VF610_PAD_PTB13__UART0_CTS		0x21a1
+ 			>;
+ 		};
+
+--
 2.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
