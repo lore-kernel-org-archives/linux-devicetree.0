@@ -1,118 +1,56 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v12 4/4] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 16 Feb 2016 23:54:04 +0800
-Message-ID: <CADyBb7vDuZjjy92WkV_jML2Ji13LvtuqkKszAetzvoM47CaY7Q@mail.gmail.com>
-References: <1455611785-2407-1-git-send-email-fu.wei@linaro.org>
-	<1455611785-2407-5-git-send-email-fu.wei@linaro.org>
-	<56C34076.1020206@roeck-us.net>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Tue, 16 Feb 2016 17:00:30 +0100
+Message-ID: <20160216160029.GC11400@ulmo.nvidia.com>
+References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56C34076.1020206@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
+Content-Disposition: inline
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 16 February 2016 at 23:29, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 02/16/2016 12:36 AM, fu.wei@linaro.org wrote:
->>
->> From: Fu Wei <fu.wei@linaro.org>
->>
->> According to Server Base System Architecture (SBSA) specification,
->> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
->> is for alerting the system by interrupt, the second one (WS1) is a real
->> hardware reset.
->> More details about the hardware specification of this device:
->> ARM DEN0029B - Server Base System Architecture (SBSA)
->>
->> This driver can operate ARM SBSA Generic Watchdog as a single stage
->> watchdog
->> or a two stages watchdog, it's set up by the module parameter "action".
->> In the single stage mode, when the timeout is reached, your system
->> will be reset by WS1. The first signal (WS0) is ignored.
->> In the two stages mode, when the timeout is reached, the first signal
->> (WS0)
->> will trigger panic. If the system is getting into trouble and cannot be
->> reset
->> by panic or restart properly by the kdump kernel(if supported), then the
->> second stage (as long as the first stage) will be reached, system will be
->> reset by WS1. This function can help administrator to backup the system
->> context info by panic console output or kdump.
->>
->> This driver bases on linux kernel watchdog framework, so it can get
->> timeout from module parameter and FDT at the driver init stage.
->>
->> Signed-off-by: Fu Wei <fu.wei@linaro.org>
->> Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
->> Tested-by: Pratyush Anand <panand@redhat.com>
->> Acked-by: Timur Tabi <timur@codeaurora.org>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> ---
->>   drivers/watchdog/Kconfig     |  20 +++
->>   drivers/watchdog/Makefile    |   1 +
->>   drivers/watchdog/sbsa_gwdt.c | 403
->> +++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 424 insertions(+)
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 0f6d851..ed9a5cb 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->
->
-> [ ... ]
->
->> +
->> +static int sbsa_gwdt_probe(struct platform_device *pdev)
->> +{
->
->
-> [ ... ]
->
->> +               if (!action)
->> +                       dev_warn(dev, "falling back to signle stage
->> mode.\n");
->
->
-> Still:
->
-> s/signle/single/
+--t0UkRYy7tHLRMCai
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-sorry, my bad, will fix it
+On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
+> Add SW support for MAXIM Semiconductor's Power Management
+> IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+> RTC, watchdog, clocks etc.
 
->
-> [ ... ]
->
->> +
->> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
->> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
->> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
->> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
->> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
->> +MODULE_LICENSE("GPL v2");
->>
-> Do you need a MODULE_ALIAS ?
+Hi Laxman,
 
-For now, I thinks we don't need it, Hope I didn't miss something :-)
-Because this module can be mounted automatically with dtb or ACPI(if
-apply my GTDT patch).
-Do you have any suggestion or concern? :-)
+This series is starting to look pretty good. Do you have patches in the
+works to add the corresponding DT content for the various boards that we
+support? I think the Jetson TX1 patch would be most interesting since
+that's what people can get their hands on.
 
->
-> Guenter
->
+Thierry
 
+--t0UkRYy7tHLRMCai
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-Best regards,
+iQIcBAABCAAGBQJWw0eZAAoJEN0jrNd/PrOhF3MQALprc3PjZZEoo34c9CwlzmeU
+C6Wu6BahoOfYkxlodpfMQv4CxBj2R8kG+DIta8BWRmyEftz+B/CU9Ogc19R8U6oW
+hrn2d9u0aZF2bK7j8O3F3CLNnC/PQ19V/3aYWviPE+QEZX1u7quW/L1XCeleYLLy
+xcDX4fIjO3PtYziw0j4m7wCnTG+41dQNV4y59D6dJlZBAX6Xg6nATIKlwG/A0lQK
+tecOYFZFVVlTBZ0n9HoXK3ZfhRrjb7xEuMenGXyUkSHCnKh6hF1GXPGSHs/GR8Vw
+pslrkHwg9oeXzXYo591aj1S8tGd8DyMalntG7FkHQFVdEgIsjyQs9JnBqSv1+vWx
+EQ3U090gY3crcW5iXo6HKgS0wNIMb5hxfSHnnGqtpnqQbV1aZz4Kq2Vooj/+35lS
+iiu78M/OFtYR77DI6G5O8XnXVQ+s5YEGabHpTQOkTAP9feilCN1SXxe01b2ZspI+
+4p+PP9wSwpzgCcdmAw4tReFpEpiaMd3Py9sdWiLKYvNpdGBe6NndpmPOmd/LuwUt
+PJdE8nMXAmGHNEN3y1pI8fRG/xUPRUWfomxizMegn9UFeiux5rDnDIxucawtnD37
+8j1y29u14T5EGfHUfeUvrr0lK5qDZx7bf/F7HXf6Jkz/tHkDMzFr7y26G+hZjkRa
+63RXGyQxuIm0RqKWV+Tz
+=7nt0
+-----END PGP SIGNATURE-----
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+--t0UkRYy7tHLRMCai--
