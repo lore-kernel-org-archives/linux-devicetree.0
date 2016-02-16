@@ -1,90 +1,34 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: breaking DT compatibility (was: Re: [PATCH v4] clk: sunxi:
- Refactor A31 PLL6 so that it can be reused)
-Date: Tue, 16 Feb 2016 09:44:48 +0100
-Message-ID: <20160216084448.GE4344@lukather>
-References: <1454358000-13594-1-git-send-email-maxime.ripard@free-electrons.com>
- <56B4E2FB.3050703@arm.com>
- <56BB2D79.6090402@arm.com>
- <CABGGiswOKztmRT40w4t_7BD729WgM8ueLtOD-UF_wgMbmcg4cg@mail.gmail.com>
- <20160210143755.GE31506@lukather>
- <20160210163001.GG2632@leverpostej>
- <20160211100048.GK31506@lukather>
- <20160211114410.GA32535@leverpostej>
- <20160211170820.GP31506@lukather>
- <1455270030.3201.71.camel@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi][PATCH v2] ARM: dts: sun4i: Enable USB DRC on the
+ MK802
+Date: Tue, 16 Feb 2016 09:45:34 +0100
+Message-ID: <20160216084534.GF4344@lukather>
+References: <1455278359-22451-1-git-send-email-codekipper@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wchHw8dVAp53YPj8"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="z0eOaCaDLjvTGF2l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1455270030.3201.71.camel@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1455278359-22451-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---wchHw8dVAp53YPj8
+--z0eOaCaDLjvTGF2l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 12, 2016 at 10:40:30AM +0100, Lucas Stach wrote:
-> Am Donnerstag, den 11.02.2016, 18:08 +0100 schrieb Maxime Ripard:
-> [...]
-> > > > > Having code in mainline comes with responsibilities. One of those=
- is to
-> > > > > keep said code working for existing users. Otherwise, why bother =
-having
-> > > > > it in mainline at all?
-> > > >=20
-> > > > None of our existing users ever complained.
-> > >=20
-> > > I believe that in this case, Andre was complaining about this particu=
-lar
-> > > breakage, unless I have misunderstood.
-> > >=20
-> > > To be clear, I'm arguing for the strategy going forward. If no-one has
-> > > complained about the stuff broken up to this point, let's not waste t=
-ime
-> > > restoring that.
-> > >=20
-> > > Going forward we need to keep old DTBs supported.
-> >=20
-> > I find that stand a bit dishonest.
-> >=20
-> > You, DT maintainers, admit that you're not doing your job properly,
-> > and that burden relies on the platform maintainers? Or should I take
-> > it as you volunteering to maintain that code?
-> >=20
-> > But ok. Let's do that. Make sure that the other platform maintainers
-> > are aware that this is the rule too though. I surely don't want to be
-> > alone in that boat.
+On Fri, Feb 12, 2016 at 12:59:19PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >=20
-> FWIW: I always thought it's the platform maintainers job to enforce a
-> reasonable level of DT stability. I don't see how the DT maintainers
-> could provide the necessary in-depth review with every platform being
-> different in many subtle ways.
+> Enable the otg/drc usb controller on the MK802.
 >=20
-> For the i.MX platform we actually enforced a baseline of DT stability by
-> shooting down patches that break DT stability for the sake of adding new
-> features, or when trying to put "fixes" into the DT, that could be
-> solved entirely inside the kernel.
->=20
-> Yes, mistakes happen and and we can not really prevent all breakage,
-> especially when the bindings were not strictly enough defined and board
-> DT writers may have interpreted them differently, but it is definitely
-> possible to keep DTs reasonably stable if the platform maintainers care
-> about that.
->=20
-> I strongly disagree with platform maintainers denying that duty, by
-> claiming that DTs won't be completely stable ever, so there is no reason
-> to even care.
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-A DT is either stable or not. If it is "reasonably" stable, then it's
-not.
-
+Applied, thanks!
 Maxime
 
 --=20
@@ -92,26 +36,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---wchHw8dVAp53YPj8
+--z0eOaCaDLjvTGF2l
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWwuGAAAoJEBx+YmzsjxAgpKQP/RbUORVZICS38GpFghNeFp+l
-o9Vc1yNi0GD1SdoVE2bm+eXDuEZDnqU0dm6HinDzd981/s2AzT86aoYSwRiOJSAM
-0BBosumT52wz7o9TEUq0Gk7keHBAH9UgOB39PELtR8655ay21pVFeHpoGRF7QoyZ
-5cmB6ZD10FLV/bHqsEbdrNfMNYZAG4dXitklZF7UokZAiVIKs+o/nc3/cGI1WuFh
-cvDz58K0BlWJ/fcB7J28T4HmWfj4nrAj2pa8J9PQTs2AUlygA4sNEyZmf7BVEjoF
-4hk6CXloUkVAoMkUGhDyAO9yXp03PJWMKFo5bhtcMrbrG/FpwGDnjJyqGrtKL72H
-pXrPAtmasf7UFBRR/vP7UcRBdfmqnhUazfVZMQ0/4Jqokr1G8JOomjDG4rdJ3kHD
-c0QYzU8FMpEmvX7AlSiJhy1OJhHK2LKmgseNC9ZDZ+Dpg3pGThLyrIT1LiDABM6k
-e9ixSjgQfeNxagCwEPEQfZRALVpsfrZXjhgoa4ViJBC+/uyiM9sBFz/9pqQCY74c
-a1fiDP2X8mJ9GHa8wdA1N026SUDuMOTveF9j4eo+RMkPxozfnNDINSvAVv5WGMsl
-ysKk5sHL3J+5ZhwoAeiwPNIMpe00Y3UOp+2XCzPq5sYYdoKDUvCtcR0xh+JJ6Shs
-Y2bZFeKwtBKJ8BiPcU0W
-=u8sV
+iQIcBAEBAgAGBQJWwuGuAAoJEBx+YmzsjxAguZYP/1DPcjoSJKXNOMgNuxAbloh8
+q0foVg4/d008rHw0fUiSWqEwGiV2Ln90sEKArsCzgS8BSiLZskrxlU0NS6sDkmhB
+LYrjrmUyJ7tQQt/+13cHzfb9cgbxxQB01dqvDwWweYw8owjHBh3nz49P6CLKWOSW
+NUeGL3MYwXK6H6aUvdk5m8Ld9czHEGqz94WrXmwI0u+zP6UGTXIvqEStKhlgLpn6
+ghSOSGDct6ga8moO9eyE01bHrfgMACgxBaNkPt2gvMyFdxEov5wYxUs6SIt3aKIF
+TKsIg5OYuSmVgp4KWpz7WFQh7iPnE5FsCxrCoXB09VgpQR4/XiJOmorIhFV9kt/I
+4HZTr8r+IqbZOzizRCqDXayiDwIqDWjL18Iaky3Te0ZPP9BezpFjYsXnQjg83IOG
+BpAW47JmP6ChJc+TM3W/Qycdk7BOftX0aN13h0lTgEfm6xAu08jrHnOvo4W+miak
+ArQLrsO1StkyV97nxGFz+hXVrEIk4P6p8bh7EJCfvWuQXPUk7434qK6MbR3WFlX8
+yC19LSPk9zyL0yP6Nsq71orpnFJQc9G9bUjAs2ytW/ws+nZWApSz+mMBUeJHAwzk
+nPiOVWnhtdzHT9h78iV3DaGNDAYOXjRYEtdSQU11tJv0XkgyOQM8bvwaL04kBORo
+4MJeaQLECUbQEALRqjPl
+=qlgQ
 -----END PGP SIGNATURE-----
 
---wchHw8dVAp53YPj8--
+--z0eOaCaDLjvTGF2l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
