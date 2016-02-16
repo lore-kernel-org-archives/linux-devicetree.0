@@ -1,49 +1,140 @@
-From: Matthew McClintock <mmcclint@codeaurora.org>
-Subject: Re: [PATCH v3 1/6] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
-Date: Tue, 16 Feb 2016 10:31:15 -0600
-Message-ID: <B4F61534-3D9E-4474-81AD-3C048E048846@codeaurora.org>
-References: <1447975173-29485-1-git-send-email-mmcclint@qca.qualcomm.com> <1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com> <CACRpkdZQTN+X=kWS7-5tzts=AGem2W+Od_ap1oy04Fm5i0y4fg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZQTN+X=kWS7-5tzts=AGem2W+Od_ap1oy04Fm5i0y4fg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matthew McClintock <mmcclint@qca.qualcomm.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Varadarajan Narayanan <varada@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v12 4/4] Watchdog: introduce ARM SBSA watchdog driver
+Date: Wed, 17 Feb 2016 00:33:24 +0800
+Message-ID: <CADyBb7s0mf9MLxXeR54wBCPnTBSC7hiNw08C-5vc9EhkORGZww@mail.gmail.com>
+References: <1455611785-2407-1-git-send-email-fu.wei@linaro.org>
+	<1455611785-2407-5-git-send-email-fu.wei@linaro.org>
+	<56C34076.1020206@roeck-us.net>
+	<CADyBb7vDuZjjy92WkV_jML2Ji13LvtuqkKszAetzvoM47CaY7Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7vDuZjjy92WkV_jML2Ji13LvtuqkKszAetzvoM47CaY7Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@>
 List-Id: devicetree@vger.kernel.org
 
+On 16 February 2016 at 23:54, Fu Wei <fu.wei@linaro.org> wrote:
+> On 16 February 2016 at 23:29, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On 02/16/2016 12:36 AM, fu.wei@linaro.org wrote:
+>>>
+>>> From: Fu Wei <fu.wei@linaro.org>
+>>>
+>>> According to Server Base System Architecture (SBSA) specification,
+>>> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
+>>> is for alerting the system by interrupt, the second one (WS1) is a real
+>>> hardware reset.
+>>> More details about the hardware specification of this device:
+>>> ARM DEN0029B - Server Base System Architecture (SBSA)
+>>>
+>>> This driver can operate ARM SBSA Generic Watchdog as a single stage
+>>> watchdog
+>>> or a two stages watchdog, it's set up by the module parameter "action".
+>>> In the single stage mode, when the timeout is reached, your system
+>>> will be reset by WS1. The first signal (WS0) is ignored.
+>>> In the two stages mode, when the timeout is reached, the first signal
+>>> (WS0)
+>>> will trigger panic. If the system is getting into trouble and cannot be
+>>> reset
+>>> by panic or restart properly by the kdump kernel(if supported), then the
+>>> second stage (as long as the first stage) will be reached, system will be
+>>> reset by WS1. This function can help administrator to backup the system
+>>> context info by panic console output or kdump.
+>>>
+>>> This driver bases on linux kernel watchdog framework, so it can get
+>>> timeout from module parameter and FDT at the driver init stage.
+>>>
+>>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+>>> Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
+>>> Tested-by: Pratyush Anand <panand@redhat.com>
+>>> Acked-by: Timur Tabi <timur@codeaurora.org>
+>>> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> ---
+>>>   drivers/watchdog/Kconfig     |  20 +++
+>>>   drivers/watchdog/Makefile    |   1 +
+>>>   drivers/watchdog/sbsa_gwdt.c | 403
+>>> +++++++++++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 424 insertions(+)
+>>>
+>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>> index 0f6d851..ed9a5cb 100644
+>>> --- a/drivers/watchdog/Kconfig
+>>> +++ b/drivers/watchdog/Kconfig
+>>
+>>
+>> [ ... ]
+>>
+>>> +
+>>> +static int sbsa_gwdt_probe(struct platform_device *pdev)
+>>> +{
+>>
+>>
+>> [ ... ]
+>>
+>>> +               if (!action)
+>>> +                       dev_warn(dev, "falling back to signle stage
+>>> mode.\n");
+>>
+>>
+>> Still:
+>>
+>> s/signle/single/
+>
+> sorry, my bad, will fix it
+>
+>>
+>> [ ... ]
+>>
+>>> +
+>>> +MODULE_DESCRIPTION("SBSA Generic Watchdog Driver");
+>>> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
+>>> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
+>>> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
+>>> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>> Do you need a MODULE_ALIAS ?
+>
+> For now, I thinks we don't need it, Hope I didn't miss something :-)
+> Because this module can be mounted automatically with dtb or ACPI(if
+> apply my GTDT patch).
+> Do you have any suggestion or concern? :-)
 
-> On Feb 16, 2016, at 8:54 AM, Linus Walleij <linus.walleij@linaro.org>=
- wrote:
->=20
-> On Fri, Nov 20, 2015 at 12:19 AM, Matthew McClintock
-> <mmcclint@qca.qualcomm.com> wrote:
->=20
->> From: Varadarajan Narayanan <varada@codeaurora.org>
->>=20
->> Add pinctrl driver support for IPQ4019 platform
->>=20
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
->> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
->> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
->> ---
->>=20
->> v3
->> - update example with actual values from dts
->> - add missing pins 71-99
->> - drop many functions and stick to basic functionality
->=20
-> Patch applied with all the ACKs and stuff, and dropped the .owner
-> assignment as indicated by Bj=C3=B6rn in the process.
+re-think  about that , will add
+MODULE_ALIAS("platform:sbsa-gwdt");
 
-Thanks folks, do plan to add more pinctrl bits once things are validate=
-d!
+Do you agree ?  :-)
 
-Cheers,
--M--
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>>
+>> Guenter
+>>
+>
+>
+>
+> --
+> Best regards,
+>
+> Fu Wei
+> Software Engineer
+> Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+> Ph: +86 21 61221326(direct)
+> Ph: +86 186 2020 4684 (mobile)
+> Room 1512, Regus One Corporate Avenue,Level 15,
+> One Corporate Avenue,222 Hubin Road,Huangpu District,
+> Shanghai,China 200021
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
