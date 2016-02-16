@@ -1,83 +1,54 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v5 0/3] arm64/clk: EXYNOS: Consolidate Exynos7 symbol
-Date: Tue, 16 Feb 2016 14:31:58 -0800
-Message-ID: <20160216223158.2278.48998@quark.deferred.io>
-References: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>Krzysztof Kozlowski <k.kozlowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH net-next,V2] net: macb: make magic-packet property generic
+Date: Tue, 16 Feb 2016 21:10:45 -0200
+Message-ID: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nicolas.ferre@atmel.com, davem@davemloft.net, gregory.clement@free-electrons.com, narmstrong@baylibre.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Krzysztof Kozlowski (2016-02-15 22:20:29)
-> Hi,
-> 
-> Patchset attempts to remove the ARCH_EXYNOS7 symbol.
-> 
-> I rebased this on top of James':
->  - clk: Move vendor's Kconfig into CCF menu section
->    http://www.spinics.net/lists/devicetree/msg111953.html
-> 
-> The third patch depends on previous ones so one way of merging this
-> would be to prepare a tag from clk tree with first two patches
-> and the dependency. The last third patch would go through arm-soc.
+As requested by Rob Herring on patch
+https://patchwork.ozlabs.org/patch/580862/.
 
-I've done this locally and things look good. I'm just waiting for Acks
-to patch #2 and I'll merge patches #1 and #2 and provide a stable tag
-named clk-samsung-kconfig, based on v4.5-rc1.
+This is a new property that it's still in net-next and has never been
+used in production, so we are not breaking anything with the
+incompatible binding change.
 
-These patches were not based on -rc1, but the fixups were trivial so I'm
-fine with them.
+Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+---
+Changes v1 -> v2: add changelog comment to clarify that the existing
+property has never been used in production.
+---
+ Documentation/devicetree/bindings/net/macb.txt | 2 +-
+ drivers/net/ethernet/cadence/macb.c            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Regards,
-Mike
-
-> 
-> Changes since v4:
-> =================
-> 1. Rebased on "clk: Move vendor's Kconfig into CCF menu section"
->    existing in clock tree.
-> 2. Re-work patch 2/3 (see specific changelog).
-> 
-> Changes since v3:
-> =================
-> 1. Rebase on next-20160127 (s3c64xx became multiplatform).
-> 
-> Changes since v2:
-> =================
-> 1. Follow Arnd's advice about not enabling silently the newly added
->    EXYNOS_ARM64_COMMON_CLK, when COMPILE_TEST is enabled. This was
->    also a trigger for some changes in placement of Samsung clocks
->    Kconfig entries...
-> 2. ... which lead to introducing patch 1.
-> 
-> 
-> Rationale:
-> ==========
-> We don't need ARCH_EXYNOS7 symbol because all ARMv8 platforms should
-> fall under generic ARCH_EXYNOS. In the same time there is no sense
-> in building clocks for these ARMv8 SoCs on ARMv7 builds.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-> Krzysztof Kozlowski (3):
->   clk: samsung: Enable COMPILE_TEST for Samsung clocks
->   clk: samsung: Don't build ARMv8 clock drivers on ARMv7
->   arm64: EXYNOS: Consolidate ARCH_EXYNOS7 symbol into ARCH_EXYNOS
-> 
->  arch/arm64/Kconfig.platforms        | 11 ++---------
->  arch/arm64/boot/dts/exynos/Makefile |  2 +-
->  arch/arm64/configs/defconfig        |  2 +-
->  drivers/clk/samsung/Kconfig         | 18 +++++++++++++-----
->  drivers/clk/samsung/Makefile        |  4 ++--
->  5 files changed, 19 insertions(+), 18 deletions(-)
-> 
-> -- 
-> 2.5.0
-> 
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index c6b1cb5ffa87..b5a42df4c928 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -25,7 +25,7 @@ Required properties:
+ 
+ Optional properties for PHY child node:
+ - reset-gpios : Should specify the gpio for phy reset
+-- cdns,magic-packet : If present, indicates that the hardware supports waking
++- magic-packet : If present, indicates that the hardware supports waking
+   up via magic packet.
+ 
+ Examples:
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 69af049e55a8..7ccf2298a5fa 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -2929,7 +2929,7 @@ static int macb_probe(struct platform_device *pdev)
+ 		bp->jumbo_max_len = macb_config->jumbo_max_len;
+ 
+ 	bp->wol = 0;
+-	if (of_get_property(np, "cdns,magic-packet", NULL))
++	if (of_get_property(np, "magic-packet", NULL))
+ 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
+ 	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
+ 
+-- 
+1.9.1
