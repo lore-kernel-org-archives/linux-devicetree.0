@@ -1,42 +1,80 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v12 4/4] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 16 Feb 2016 16:09:38 -0800
-Message-ID: <20160217000938.GA19355@roeck-us.net>
-References: <1455611785-2407-1-git-send-email-fu.wei@linaro.org>
- <1455611785-2407-5-git-send-email-fu.wei@linaro.org>
- <56C34076.1020206@roeck-us.net>
- <CADyBb7vDuZjjy92WkV_jML2Ji13LvtuqkKszAetzvoM47CaY7Q@mail.gmail.com>
- <CADyBb7s0mf9MLxXeR54wBCPnTBSC7hiNw08C-5vc9EhkORGZww@mail.gmail.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 1/2] clk: add device tree binding for artpec-6 pll1 clock
+Date: Tue, 16 Feb 2016 15:59:27 -0800
+Message-ID: <20160216235927.2278.40353@quark.deferred.io>
+References: <cover.1455206007.git.larper@axis.com>
+ <2686b3bbb9ec1c86828b365645bd7f997a9780b4.1455206007.git.larper@axis.com>
+ <20160212163916.GA7677@rob-hp-laptop> <56C034BA.7070806@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CADyBb7s0mf9MLxXeR54wBCPnTBSC7hiNw08C-5vc9EhkORGZww@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@li>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56C034BA.7070806@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 12:33:24AM +0800, Fu Wei wrote:
-[ ... ]
-> >>> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
-> >>> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
-> >>> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
-> >>> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
-> >>> +MODULE_LICENSE("GPL v2");
-> >>>
-> >> Do you need a MODULE_ALIAS ?
-> >
-> > For now, I thinks we don't need it, Hope I didn't miss something :-)
-> > Because this module can be mounted automatically with dtb or ACPI(if
-> > apply my GTDT patch).
-> > Do you have any suggestion or concern? :-)
+Quoting Lars Persson (2016-02-14 00:03:06)
 > 
-> re-think  about that , will add
-> MODULE_ALIAS("platform:sbsa-gwdt");
 > 
-> Do you agree ?  :-)
-> 
-Sure.
+> On 02/12/2016 05:39 PM, Rob Herring wrote:
+> > On Thu, Feb 11, 2016 at 05:01:03PM +0100, Lars Persson wrote:
+> >> Add device tree documentation for the main PLL in the Artpec-6 SoC.
+> > Roughly how many clocks does this SoC have?
+> It will have 17 clocks declared in the device tree and three 
+> SoC-specific clock drivers.
 
-Guenter
+Are all of those clks going to individual DT nodes with clock-cells = 0?
+
+If so, I wonder if you should be targeting a clock-controller style
+binding description, with a node that represents the clock-controller IP
+block, with clock-cells >= 1. It really comes down to whether or not
+these clock controls exist in the same IP block.
+
+You mentioned three distinct clock drivers. So possibly three clock
+controller nodes in DT then?
+
+Is there a reference manual/register map available for this SoC?
+
+> 
+> >
+> >> Signed-off-by: Lars Persson <larper@axis.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/clock/artpec6.txt | 16 ++++++++++++++++
+> >>   1 file changed, 16 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
+> >> new file mode 100644
+> >> index 0000000..521fec8
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
+> >> @@ -0,0 +1,16 @@
+> >> +* Clock bindings for Axis ARTPEC-6 chip
+
+Please specify that this is based on the clock provider binding in
+Documentation/devicetree/bindings/clock/clock-bindings.txt
+
+Regards,
+Mike
+
+> >> +
+> >> +Required properties:
+> >> +- #clock-cells: Should be <0>
+> >> +- compatible: Should be "axis,artpec6-pll1-clock"
+> >> +- reg: Address and length of the DEVSTAT register.
+> >> +- clocks: The PLL's input clock.
+> >> +
+> >> +Examples:
+> >> +
+> >> +pll1_clk: pll1_clk {
+> >> +    #clock-cells = <0>;
+> >> +    compatible = "axis,artpec6-pll1-clock";
+> >> +    reg = <0xf8000000 4>;
+> >> +    clocks = <&ext_clk>;
+> >> +};
+> >> -- 
+> >> 2.1.4
+> >>
+> 
