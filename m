@@ -1,49 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi/rockchip: Add dt-binding for Rockchip rk3399 spi
-Date: Tue, 16 Feb 2016 13:22:23 +0000
-Message-ID: <20160216132223.GM18327@sirena.org.uk>
-References: <1455614538-4415-1-git-send-email-jay.xu@rock-chips.com>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] serial: mps2-uart: add support for early console
+Date: Tue, 16 Feb 2016 13:38:09 +0000
+Message-ID: <56C32641.4020201@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>	<1455617295-23736-6-git-send-email-vladimir.murzin@arm.com>	<CAHp75VdugAq0WnzLHmd9CJHCjBOdBwPqCmC3ARSaVF5XMYGoMw@mail.gmail.com>	<56C31F9F.10000@arm.com> <CAHp75Vf_4MgdWunQy5hBMH5GGei+OkktFPYY-ZprY0qOEnD=wA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S66JdqtemGhvbcZP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455614538-4415-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vf_4MgdWunQy5hBMH5GGei+OkktFPYY-ZprY0qOEnD=wA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16/02/16 13:13, Andy Shevchenko wrote:
+> On Tue, Feb 16, 2016 at 3:09 PM, Vladimir Murzin
+> <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 16/02/16 10:36, Andy Shevchenko wrote:
+>>> On Tue, Feb 16, 2016 at 12:08 PM, Vladimir Murzin
+>>> <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>> This adds support early console for MPS2 UART which can be enabled=
+ via
+>>>> earlycon=3Dmps2,0x40004000
+>=20
+>>>> +static void mps2_early_putchar(struct uart_port *port, int ch)
+>>>> +{
+>>>> +
+>>>> +       while (readb(port->membase + UARTn_STATE) & UARTn_STATE_TX=
+_FULL)
+>>>> +               cpu_relax();
+>>>
+>>> Infinite busy loop?
+>>
+>> In case of broken hw, yes, but I'm quite unsure how we can help to f=
+ix
+>> it. Do you have something in mind?
+>=20
+> Set sane amount of loops like
+>=20
+> int count =3D 100;
+> =E2=80=A6
+> while (=E2=80=A6 && --count)
+>=20
+> Though I have no idea what to do if count =3D=3D 0. Perhaps it's a TX=
+ overrun state.
 
---S66JdqtemGhvbcZP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I thought about counter too, like some of drivers do, but had no idea
+what to do next after counter reaches zero. In case of TX overrun we
+could get it either because of broken hw or because we entered Linux
+with that state already set. In both cases, it looks handy to me to
+attach a debugger and see that we are spinning in this putchar loop.
 
-On Tue, Feb 16, 2016 at 05:22:18PM +0800, jianqun.xu wrote:
+If you do insist to have a counter I'll add one, but if you are not
+strong about it I'd prefer to leave it as is.
 
->  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
->  1 file changed, 1 insertion(+)
+>=20
+> You may try to recover by flushing TX queue in HW (fifo and / or Tx
+> shift register) if HW supports it.
+>=20
 
-I'd expect this to be added to both the driver and the binding document
-not just the document.
+I'm afraid this is not supported.
 
---S66JdqtemGhvbcZP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWwyKBAAoJECTWi3JdVIfQoIIH/j/sFv004jY3w5Ck017sM/y0
-sPGRISR6P7RbH7M6WumZp0qtgB8pQzor224ZZOJvMkp2vlky2QUIhJBEORjutid8
-iJeMbhbBqK0xnZ22b73QWuit65gU9LVlum62+K8PTJpMQQKAqfqLXrSJ2HGbhsbi
-8gFovTJ2mnH9gn3lZPLxZgzrBdRimD/Yj7cGSE6o7yEr0Yey1WRw5JtAtmOeB8u1
-qalirlw/PGZ0QnkDulXXTn2LaVe5ZWGz8IuNtNb9N8JEcRRkOSFaAG3wbG3qlIYu
-9fgpfnfOjAEasuisNyhMRzrpVvl3dKNPJWB4VYTisVcy8GmPqovkKm+IFOu1NDU=
-=2sp1
------END PGP SIGNATURE-----
-
---S66JdqtemGhvbcZP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Vladimir
