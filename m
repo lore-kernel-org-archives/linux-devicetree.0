@@ -1,32 +1,56 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v8 0/2] Add Rockchip Inno-HDMI driver
-Date: Tue, 16 Feb 2016 15:35:07 +0100
-Message-ID: <1519836.S7OnrkT0mU@phil>
-References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
- <56C270F9.9030707@rock-chips.com>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] ARM: mps2: introduce MPS2 platform
+Date: Tue, 16 Feb 2016 14:35:43 +0000
+Message-ID: <56C333BF.1020108@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <1455617295-23736-7-git-send-email-vladimir.murzin@arm.com> <29457600.xRDuy0uVjW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56C270F9.9030707@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark yao <mark.yao@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zheng Yang <zhengyang@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <29457600.xRDuy0uVjW@wuerfel>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCkFtIERpZW5zdGFnLCAxNi4gRmVicnVhciAyMDE2LCAwODo0NDo0MSBzY2hyaWVi
-IE1hcmsgeWFvOgo+IFBpbmcsIGl0IHNlZW1zIGlubm8gaGRtaSBkcml2ZXIgaXMgcmVhZHksIFNv
-IEknZCBsaWtlIHRvIG1lcmdlIGl0IGludG8KPiBkcm0vcm9ja2NoaXAgaWYgdGhlcmUgaXMgbm8g
-ZG91YnQgdGhlc2UgZGF5cy4KCkkgdGhpbmsgeW91IGNhbiBqdXN0IGdvIGFoZWFkICB3aXRoIHBp
-Y2tpbmcgdGhlbSB1cCwgSSB0aGluayB0aGV5IGhhdmUgCnJpcGVuZWQgZW5vdWdoIDotKQoKCkhl
-aWtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 16/02/16 10:56, Arnd Bergmann wrote:
+> On Tuesday 16 February 2016 10:08:11 Vladimir Murzin wrote:
+>> The Cortex-M Prototyping System (or V2M-MPS2) is designed for
+>> prototyping and evaluation Cortex-M family of processors including the
+>> latest Cortex-M7
+>>
+>> It comes with a range of useful peripherals including 8MB single cycle
+>> SRAM, 16MB PSRAM, Ethernet, QSVGA touch screen panel, 4bit RGB VGA
+>> connector, Audio, SPI and GPIO.
+>>
+>> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  arch/arm/Kconfig                 |    8 ++++++++
+>>  arch/arm/Makefile                |    1 +
+>>  arch/arm/mach-mps2/Makefile      |    1 +
+>>  arch/arm/mach-mps2/Makefile.boot |    3 +++
+>>  arch/arm/mach-mps2/dtmachine.c   |   21 +++++++++++++++++++++
+>>
+> 
+> We are in the (slow) process of consolidating the ARM reference platforms
+> (versatile, integrator, realview, vexpress) into one place.
+> 
+
+Thanks for information! Sometime ago I saw on a list you had some
+thoughts on consolidating M-class platforms since most of them follow
+quite the same pattern (I'm looking at efm32 and stm32). So, shouldn't
+this platform consider that way?
+
+> I'd suggest adding all this to the mach-vexpress directory rather than
+> a new directory, so we don't have another one to consolidate.
+> 
+
+I'm fine with either way.
+
+Thanks
+Vladimir
+
+> 	Arnd
+> 
+> 
+> 
