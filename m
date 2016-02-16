@@ -1,75 +1,44 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 05/12] arm64: add mvebu architecture entry
-Date: Tue, 16 Feb 2016 18:03:14 +0100
-Message-ID: <87a8n0twod.fsf@free-electrons.com>
-References: <1454951660-13289-1-git-send-email-gregory.clement@free-electrons.com>
-	<1454951660-13289-6-git-send-email-gregory.clement@free-electrons.com>
-	<20160216141212.00f037e5@xhacker>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 3/3] ARM: dts: vfxxx: Add iio_hwmon node for ADC
+ temperature channel
+Date: Tue, 16 Feb 2016 09:50:08 -0800
+Message-ID: <06aa0e2a7958c81fb6d3ab9c23164156@agner.ch>
+References: <cover.1455597464.git.maitysanchayan@gmail.com>
+ <88b677c3ab62d965b70846618fe566523f95c9bb.1455597464.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160216141212.00f037e5@xhacker> (Jisheng Zhang's message of
-	"Tue, 16 Feb 2016 14:12:12 +0800")
+In-Reply-To: <88b677c3ab62d965b70846618fe566523f95c9bb.1455597464.git.maitysanchayan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Hans de Goede <hdegoede@redhat.com>, Lior Amsalem <alior@marvell.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: linux@roeck-us.net, shawnguo@kernel.org, jdelvare@suse.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jisheng,
-=20
- On mar., f=C3=A9vr. 16 2016, Jisheng Zhang <jszhang@marvell.com> wrote=
-:
+On 2016-02-15 21:00, Sanchayan Maity wrote:
+> Add iio-hwmon node to expose the temperature channel on Vybrid as
+> hardware monitor device using the iio_hwmon driver.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
 
-> Dear Gregory,
->
-> On Mon, 8 Feb 2016 18:14:13 +0100 Gregory CLEMENT wrote:
->
->> The Armada 3700 is an mvebu ARM64 SoC using one or two Cortex-A53 co=
-res
->> depending of the variant.
->>=20
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> ---
->>  arch/arm64/Kconfig.platforms | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>=20
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platf=
-orms
->> index 21074f674bde..c621e69ed170 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -1,5 +1,11 @@
->>  menu "Platform selection"
->> =20
->> +config ARCH_MVEBU
->
-> it's better to keep ARCH_YYZZ sorted in alphabetic order
+Acked-by: Stefan Agner <stefan@agner.ch>
 
-
-Yes I should have move the entry when I renamed it.
-
-I will sent a v4 soon for this point.
-
-Gregory
-
->
-> Thanks,
-> Jisheng
->
->> +	bool "Marvell EBU SoC Family"
->> +	help
->> +	  This enables support for Marvell EBU family such as the
->> +	  Armada 3700 SoC family.
->> +
->>  config ARCH_BCM_IPROC
->>  	bool "Broadcom iProc SoC Family"
->>  	help
->
-
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index a5f07e3..24ac5b1 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -673,5 +673,10 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		iio-hwmon {
+> +			compatible = "iio-hwmon";
+> +			io-channels = <&adc0 16>, <&adc1 16>;
+> +		};
+>  	};
+>  };
