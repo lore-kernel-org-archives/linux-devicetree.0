@@ -1,13 +1,12 @@
 From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 2/8] drivers: pinctrl: add driver for
- Allwinner A64 SoC
-Date: Wed, 17 Feb 2016 11:43:54 +0000
-Message-ID: <1455709440-8668-3-git-send-email-andre.przywara@arm.com>
+Subject: [PATCH v2 5/8] arm64: dts: add Allwinner A64 SoC .dtsi
+Date: Wed, 17 Feb 2016 11:43:57 +0000
+Message-ID: <1455709440-8668-6-git-send-email-andre.przywara@arm.com>
 References: <1455709440-8668-1-git-send-email-andre.przywara@arm.com>
 Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBDV2SG3AKGQEU5OWIDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBFV2SG3AKGQEZXVLTJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1455709440-8668-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,686 +16,695 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on the Allwinner A64 user manual and on the previous sunxi
-pinctrl drivers this introduces the pin multiplex assignments for
-the ARMv8 Allwinner A64 SoC.
-Port A is apparently used for the fixed function DRAM controller, so
-the ports start at B here (the manual mentions "n from 1 to 7", so
-not starting at 0).
+The Allwinner A64 SoC is a low-cost chip with 4 ARM Cortex-A53 cores
+and the typical tablet / TV box peripherals.
+The SoC is based on the (32-bit) Allwinner H3 chip, sharing most of
+the peripherals and the memory map.
+Although the cores are proper 64-bit ones, the whole SoC is actually
+limited to 4GB (including all the supported DRAM), so we use 32-bit
+address and size cells. This has the nice feature of us being able to
+reuse the DT for 32-bit kernels as well.
+This .dtsi lists the hardware that we support so far.
 
 Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 ---
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
- arch/arm64/Kconfig.platforms                       |   1 +
- drivers/pinctrl/sunxi/Kconfig                      |   4 +
- drivers/pinctrl/sunxi/Makefile                     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c         | 606 +++++++++++++++++++++
- 5 files changed, 613 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c
+ Documentation/devicetree/bindings/arm/sunxi.txt   |   1 +
+ Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi     | 642 ++++++++++++++++++++++
+ 3 files changed, 644 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index 9213b27..08b2361 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -21,6 +21,7 @@ Required properties:
-   "allwinner,sun9i-a80-r-pinctrl"
-   "allwinner,sun8i-a83t-pinctrl"
-   "allwinner,sun8i-h3-pinctrl"
-+  "allwinner,sun50i-a64-pinctrl"
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+index 7e79fcc..7e59d8b 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.txt
++++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+@@ -14,3 +14,4 @@ using one of the following compatible strings:
+   allwinner,sun8i-a83t
+   allwinner,sun8i-h3
+   allwinner,sun9i-a80
++  allwinner,sun50i-a64
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 323af8e..b7bd40d 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -80,6 +80,7 @@ Required properties:
+ 	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+ 	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
+ 	"allwinner,sunxi-multi-bus-gates-clk" - for the multi-parent bus gates
++	"allwinner,sun50i-a64-bus-gates-clk" - for the bus gates on A64
  
- - reg: Should contain the register physical address and length for the
-   pin controller.
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 2f7f69b..d15c532 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -2,6 +2,7 @@ menu "Platform selection"
- 
- config ARCH_SUNXI
- 	bool "Allwinner sunxi 64-bit SoC Family"
-+	select PINCTRL_SUN50I_A64
- 	help
- 	  This enables support for Allwinner sunxi based SoCs like the A64.
- 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 1868b82..aaf075b 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -68,4 +68,8 @@ config PINCTRL_SUN9I_A80_R
- 	depends on RESET_CONTROLLER
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN50I_A64
-+	bool
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index f22de0e..2d8b64e 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PINCTRL_SUN7I_A20)		+= pinctrl-sun7i-a20.o
- obj-$(CONFIG_PINCTRL_SUN8I_A23)		+= pinctrl-sun8i-a23.o
- obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
-+obj-$(CONFIG_PINCTRL_SUN50I_A64)	+= pinctrl-sun50i-a64.o
- obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c
+ Required properties for all clocks:
+ - reg : shall be the control register address for the clock.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 new file mode 100644
-index 0000000..20bd15b
+index 0000000..b99f17a
 --- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c
-@@ -0,0 +1,606 @@
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -0,0 +1,642 @@
 +/*
-+ * Allwinner A64 SoCs pinctrl driver.
++ * Copyright (C) 2016 ARM Ltd.
++ * based on the Allwinner H3 dtsi:
++ *    Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
-+ * Copyright (C) 2016 - ARM Ltd.
-+ * Author: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ * Based on pinctrl-sun7i-a20.c, which is:
-+ * Copyright (C) 2014 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
 + *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
 +
-+#include "pinctrl-sunxi.h"
++/ {
++	interrupt-parent = <&gic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+static const struct sunxi_desc_pin a64_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart2"),		/* TX */
-+		  SUNXI_FUNCTION(0x4, "jtag"),		/* MS0 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart2"),		/* RX */
-+		  SUNXI_FUNCTION(0x4, "jtag"),		/* CK0 */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* VCCEN */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),		/* EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart2"),		/* RTS */
-+		  SUNXI_FUNCTION(0x4, "jtag"),		/* DO0 */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* VPPEN */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),		/* EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart2"),		/* CTS */
-+		  SUNXI_FUNCTION(0x3, "i2s0"),		/* MCLK */
-+		  SUNXI_FUNCTION(0x4, "jtag"),		/* DI0 */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* VPPPP */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),		/* EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif2"),		/* SYNC */
-+		  SUNXI_FUNCTION(0x3, "i2s0"),		/* SYNC */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* CLK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),		/* EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif2"),		/* BCLK */
-+		  SUNXI_FUNCTION(0x3, "i2s0"),		/* BCLK */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* DATA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),		/* EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif2"),		/* DOUT */
-+		  SUNXI_FUNCTION(0x3, "i2s0"),		/* DOUT */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* RST */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),		/* EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif2"),		/* DIN */
-+		  SUNXI_FUNCTION(0x3, "i2s0"),		/* DIN */
-+		  SUNXI_FUNCTION(0x5, "sim"),		/* DET */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),		/* EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x4, "uart0"),		/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),		/* EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x4, "uart0"),		/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),		/* EINT9 */
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NWE */
-+		  SUNXI_FUNCTION(0x4, "spi0")),		/* MOSI */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NALE */
-+		  SUNXI_FUNCTION(0x3, "mmc2"),		/* DS */
-+		  SUNXI_FUNCTION(0x4, "spi0")),		/* MISO */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NCLE */
-+		  SUNXI_FUNCTION(0x4, "spi0")),		/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NCE1 */
-+		  SUNXI_FUNCTION(0x4, "spi0")),		/* CS */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0")),	/* NCE0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NRE# */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* CLK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NRB0 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* CMD */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0")),	/* NRB1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ0 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ1 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ2 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ3 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ4 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 13),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ5 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 14),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ6 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 15),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQ7 */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* D7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 16),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "nand0"),		/* NDQS */
-+		  SUNXI_FUNCTION(0x3, "mmc2")),		/* RST */
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D2 */
-+		  SUNXI_FUNCTION(0x3, "uart3"),		/* TX */
-+		  SUNXI_FUNCTION(0x4, "spi1"),		/* CS */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* CLK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D3 */
-+		  SUNXI_FUNCTION(0x3, "uart3"),		/* RX */
-+		  SUNXI_FUNCTION(0x4, "spi1"),		/* CLK */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* DE */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D4 */
-+		  SUNXI_FUNCTION(0x3, "uart4"),		/* TX */
-+		  SUNXI_FUNCTION(0x4, "spi1"),		/* MOSI */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* HSYNC */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D5 */
-+		  SUNXI_FUNCTION(0x3, "uart4"),		/* RX */
-+		  SUNXI_FUNCTION(0x4, "spi1"),		/* MISO */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* VSYNC */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D6 */
-+		  SUNXI_FUNCTION(0x3, "uart4"),		/* RTS */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D7 */
-+		  SUNXI_FUNCTION(0x3, "uart4"),		/* CTS */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D10 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D11 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D12 */
-+		  SUNXI_FUNCTION(0x4, "emac"),		/* ERXD3 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D13 */
-+		  SUNXI_FUNCTION(0x4, "emac"),		/* ERXD2 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D14 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ERXD1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D15 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ERXD0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D18 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VP0 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ERXCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 13),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D19 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VN0 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ERXCTL */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 14),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D20 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VP1 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ENULL */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 15),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D21 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VN1 */
-+		  SUNXI_FUNCTION(0x4, "emac"),		/* ETXD3 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 16),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D22 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VP2 */
-+		  SUNXI_FUNCTION(0x4, "emac"),		/* ETXD2 */
-+		  SUNXI_FUNCTION(0x5, "ccir")),		/* D7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 17),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* D23 */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VN2 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ETXD1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 18),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* CLK */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VPC */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ETXD0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 19),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* DE */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VNC */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ETXCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 20),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* HSYNC */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VP3 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ETXCTL */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 21),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "lcd0"),		/* VSYNC */
-+		  SUNXI_FUNCTION(0x3, "lvds0"),		/* VN3 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* ECLKIN */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 22),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "pwm"),		/* PWM0 */
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* EMDC */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 23),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x4, "emac")),		/* EMDIO */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 24),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* PCK */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* CLK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* CK */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* ERR */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* HSYNC */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* SYNC */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* VSYNC */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* DVLD */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D0 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D1 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D2 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D3 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D4 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D5 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D6 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0"),		/* D7 */
-+		  SUNXI_FUNCTION(0x4, "ts0")),		/* D7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0")),		/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 13),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "csi0")),		/* SDA */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 14),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "pll"),		/* LOCK_DBG */
-+		  SUNXI_FUNCTION(0x3, "i2c2")),		/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 15),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "i2c2")),		/* SDA */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 16),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 17),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D1 */
-+		  SUNXI_FUNCTION(0x3, "jtag")),		/* MSI */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D0 */
-+		  SUNXI_FUNCTION(0x3, "jtag")),		/* DI1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* CLK */
-+		  SUNXI_FUNCTION(0x3, "uart0")),	/* TX */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* CMD */
-+		  SUNXI_FUNCTION(0x3, "jtag")),		/* DO1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D3 */
-+		  SUNXI_FUNCTION(0x4, "uart0")),	/* RX */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D2 */
-+		  SUNXI_FUNCTION(0x3, "jtag")),		/* CK1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* CLK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 0)),	/* EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* CMD */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 1)),	/* EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D0 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 2)),	/* EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D1 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 3)),	/* EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D2 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),	/* EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D3 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),	/* EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart1"),		/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 6)),	/* EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart1"),		/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 7)),	/* EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart1"),		/* RTS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 8)),	/* EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart1"),		/* CTS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 9)),	/* EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif3"),		/* SYNC */
-+		  SUNXI_FUNCTION(0x3, "i2s1"),		/* SYNC */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 10)),	/* EINT10 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif3"),		/* BCLK */
-+		  SUNXI_FUNCTION(0x3, "i2s1"),		/* BCLK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 11)),	/* EINT11 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif3"),		/* DOUT */
-+		  SUNXI_FUNCTION(0x3, "i2s1"),		/* DOUT */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 12)),	/* EINT12 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 13),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "aif3"),		/* DIN */
-+		  SUNXI_FUNCTION(0x3, "i2s1"),		/* DIN */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 13)),	/* EINT13 */
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 0)),	/* EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 1)),	/* EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 2)),	/* EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 3)),	/* EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart3"),		/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 4)),	/* EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart3"),		/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 5)),	/* EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart3"),		/* RTS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 6)),	/* EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "uart3"),		/* CTS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 7)),	/* EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "owa"),		/* OUT */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 8)),	/* EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 9)),	/* EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mic"),		/* CLK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 10)),	/* EINT10 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "mic"),		/* DATA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 11)),	/* EINT11 */
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0>;
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <1>;
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <2>;
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <3>;
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x40000000 0>;
++	};
++
++	gic: interrupt-controller@01c81000 {
++		compatible = "arm,gic-400";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		#address-cells = <0>;
++
++		reg = <0x01c81000 0x1000>,
++		      <0x01c82000 0x2000>,
++		      <0x01c84000 0x2000>,
++		      <0x01c86000 0x2000>;
++		interrupts = <GIC_PPI 9
++		      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		osc24M: osc24M_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "osc24M";
++		};
++
++		osc32k: osc32k_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++			clock-output-names = "osc32k";
++		};
++
++		pll1: pll1_clk@01c20000 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a23-pll1-clk";
++			reg = <0x01c20000 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll1";
++		};
++
++		pll6: pll6_clk@01c20028 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-pll6-clk";
++			reg = <0x01c20028 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll6";
++		};
++
++		pll6x2: pll6x2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-mult = <2>;
++			clock-div = <1>;
++			clocks = <&pll6>;
++			clock-output-names = "pll6x2";
++		};
++
++		pll6d2: pll6d2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <2>;
++			clock-mult = <1>;
++			clocks = <&pll6>;
++			clock-output-names = "pll6d2";
++		};
++
++		pll8: pll8_clk@01c2002c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-pll6-clk";
++			reg = <0x01c2002c 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll8";
++		};
++
++		pll8x2: pll8x2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-mult = <2>;
++			clock-div = <1>;
++			clocks = <&pll8>;
++			clock-output-names = "pll8x2";
++		};
++
++		cpu: cpu_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-cpu-clk";
++			reg = <0x01c20050 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
++			clock-output-names = "cpu";
++			critical-clocks = <0>;
++		};
++
++		axi: axi_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-axi-clk";
++			reg = <0x01c20050 0x4>;
++			clocks = <&cpu>;
++			clock-output-names = "axi";
++		};
++
++		ahb1: ahb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-ahb1-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
++			clock-output-names = "ahb1";
++		};
++
++		ahb2: ahb2_clk@01c2005c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-h3-ahb2-clk";
++			reg = <0x01c2005c 0x4>;
++			clocks = <&ahb1>, <&pll6d2>;
++			clock-output-names = "ahb2";
++		};
++
++		apb1: apb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb0-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&ahb1>;
++			clock-output-names = "apb1";
++		};
++
++		apb2: apb2_clk@01c20058 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb1-clk";
++			reg = <0x01c20058 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&pll6x2>, <&pll6x2>;
++			clock-output-names = "apb2";
++		};
++
++		bus_gates: bus_gates_clk@01c20060 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun50i-a64-bus-gates-clk",
++				     "allwinner,sunxi-multi-bus-gates-clk";
++			reg = <0x01c20060 0x14>;
++			ahb1_parent {
++				clocks = <&ahb1>;
++				clock-indices = <1>, <5>,
++						<6>, <8>,
++						<9>, <10>,
++						<13>, <14>,
++						<18>, <19>,
++						<20>, <21>,
++						<23>, <24>,
++						<25>, <28>,
++						<32>, <35>,
++						<36>, <37>,
++						<40>, <43>,
++						<44>, <52>,
++						<53>, <54>,
++						<135>;
++				clock-output-names = "bus_mipidsi", "bus_ce",
++						"bus_dma", "bus_mmc0",
++						"bus_mmc1", "bus_mmc2",
++						"bus_nand", "bus_sdram",
++						"bus_ts", "bus_hstimer",
++						"bus_spi0", "bus_spi1",
++						"bus_otg", "bus_otg_ehci0",
++						"bus_ehci0", "bus_otg_ohci0",
++						"bus_ve", "bus_lcd0",
++						"bus_lcd1", "bus_deint",
++						"bus_csi", "bus_hdmi",
++						"bus_de", "bus_gpu",
++						"bus_msgbox", "bus_spinlock",
++						"bus_dbg";
++			};
++			ahb2_parent {
++				clocks = <&ahb2>;
++				clock-indices = <17>, <29>;
++				clock-output-names = "bus_gmac", "bus_ohci0";
++			};
++			apb1_parent {
++				clocks = <&apb1>;
++				clock-indices = <64>, <65>,
++						<69>, <72>,
++						<76>, <77>,
++						<78>;
++				clock-output-names = "bus_codec", "bus_spdif",
++						"bus_pio", "bus_ths",
++						"bus_i2s0", "bus_i2s1",
++						"bus_i2s2";
++			};
++			abp2_parent {
++				clocks = <&apb2>;
++				clock-indices = <96>, <97>,
++						<98>, <101>,
++						<112>, <113>,
++						<114>, <115>,
++						<116>;
++				clock-output-names = "bus_i2c0", "bus_i2c1",
++						"bus_i2c2", "bus_scr",
++						"bus_uart0", "bus_uart1",
++						"bus_uart2", "bus_uart3",
++						"bus_uart4";
++			};
++		};
++
++		mmc0_clk: mmc0_clk@01c20088 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			reg = <0x01c20088 0x4>;
++			clocks = <&osc24M>, <&pll6x2>, <&pll8x2>;
++			clock-output-names = "mmc0";
++                };
++
++		mmc1_clk: mmc1_clk@01c2008c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			reg = <0x01c2008c 0x4>;
++			clocks = <&osc24M>, <&pll6x2>, <&pll8x2>;
++			clock-output-names = "mmc1";
++		};
++
++		mmc2_clk: mmc2_clk@01c20090 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			reg = <0x01c20090 0x4>;
++			clocks = <&osc24M>, <&pll6x2>, <&pll8x2>;
++			clock-output-names = "mmc2";
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		mmc0: mmc@01c0f000 {
++			compatible = "allwinner,sun50i-a64-mmc",
++				     "allwinner,sun5i-a13-mmc";
++			reg = <0x01c0f000 0x1000>;
++			clocks = <&bus_gates 8>, <&mmc0_clk>,
++				 <&mmc0_clk>, <&mmc0_clk>;
++			clock-names = "ahb", "mmc",
++				      "output", "sample";
++			resets = <&ahb_rst 8>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc1: mmc@01c10000 {
++			compatible = "allwinner,sun50i-a64-mmc",
++				     "allwinner,sun5i-a13-mmc";
++			reg = <0x01c10000 0x1000>;
++			clocks = <&bus_gates 9>, <&mmc1_clk>,
++				 <&mmc1_clk>, <&mmc1_clk>;
++			clock-names = "ahb", "mmc",
++				      "output", "sample";
++			resets = <&ahb_rst 9>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc2: mmc@01c11000 {
++			compatible = "allwinner,sun50i-a64-mmc",
++				     "allwinner,sun5i-a13-mmc";
++			reg = <0x01c11000 0x1000>;
++			clocks = <&bus_gates 10>, <&mmc2_clk>,
++				 <&mmc2_clk>, <&mmc2_clk>;
++			clock-names = "ahb", "mmc",
++				      "output", "sample";
++			resets = <&ahb_rst 10>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		pio: pinctrl@01c20800 {
++			compatible = "allwinner,sun50i-a64-pinctrl";
++			reg = <0x01c20800 0x400>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 69>;
++			gpio-controller;
++			#gpio-cells = <3>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			uart0_pins_a: uart0@0 {
++				allwinner,pins = "PB8", "PB9";
++				allwinner,function = "uart0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart0_pins_b: uart0@1 {
++				allwinner,pins = "PF2", "PF3";
++				allwinner,function = "uart0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart1_2pins: uart1_2@0 {
++				allwinner,pins = "PG6", "PG7";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart1_4pins: uart1_4@0 {
++				allwinner,pins = "PG6", "PG7", "PG8", "PG9";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart2_2pins: uart2_2@0 {
++				allwinner,pins = "PB0", "PB1";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart2_4pins: uart2_4@0 {
++				allwinner,pins = "PB0", "PB1", "PB2", "PB3";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_pins_a: uart3@0 {
++				allwinner,pins = "PD0", "PD1";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_2pins_b: uart3_2@1 {
++				allwinner,pins = "PH4", "PH5";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_4pins_b: uart3_4@1 {
++				allwinner,pins = "PH4", "PH5", "PH6", "PH7";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart4_2pins: uart4_2@0 {
++				allwinner,pins = "PD2", "PD3";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart4_4pins: uart4_4@0 {
++				allwinner,pins = "PD2", "PD3", "PD4", "PD5";
++				allwinner,function = "uart4";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc0_pins: mmc0@0 {
++				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
++						 "PF4", "PF5";
++				allwinner,function = "mmc0";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc0_default_cd_pin: mmc0_cd_pin@0 {
++				allwinner,pins = "PF6";
++				allwinner,function = "gpio_in";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++			};
++
++			mmc1_pins: mmc1@0 {
++				allwinner,pins = "PG0", "PG1", "PG2", "PG3",
++						 "PG4", "PG5";
++				allwinner,function = "mmc1";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc2_pins: mmc2@0 {
++				allwinner,pins = "PC1", "PC5", "PC6", "PC8",
++						 "PC9", "PC10";
++				allwinner,function = "mmc2";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c0_pins: i2c0_pins {
++				allwinner,pins = "PH0", "PH1";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c1_pins: i2c1_pins {
++				allwinner,pins = "PH2", "PH3";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c2_pins: i2c2_pins {
++				allwinner,pins = "PE14", "PE15";
++				allwinner,function = "i2c2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++		};
++
++		ahb_rst: reset@01c202c0 {
++			#reset-cells = <1>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			reg = <0x01c202c0 0xc>;
++		};
++
++		apb1_rst: reset@01c202d0 {
++			#reset-cells = <1>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			reg = <0x01c202d0 0x4>;
++		};
++
++		apb2_rst: reset@01c202d8 {
++			#reset-cells = <1>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			reg = <0x01c202d8 0x4>;
++		};
++
++		uart0: serial@01c28000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28000 0x400>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 112>;
++			resets = <&apb2_rst 16>;
++			status = "disabled";
++		};
++
++		uart1: serial@01c28400 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28400 0x400>;
++			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 113>;
++			resets = <&apb2_rst 17>;
++			status = "disabled";
++		};
++
++		uart2: serial@01c28800 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28800 0x400>;
++			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 114>;
++			resets = <&apb2_rst 18>;
++			status = "disabled";
++		};
++
++		uart3: serial@01c28c00 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28c00 0x400>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 115>;
++			resets = <&apb2_rst 19>;
++			status = "disabled";
++		};
++
++		uart4: serial@01c29000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c29000 0x400>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 116>;
++			resets = <&apb2_rst 20>;
++			status = "disabled";
++		};
++
++		rtc: rtc@01f00000 {
++			compatible = "allwinner,sun6i-a31-rtc";
++			reg = <0x01f00000 0x54>;
++			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		i2c0: i2c@01c2ac00 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2ac00 0x400>;
++			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 96>;
++			resets = <&apb2_rst 0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c1: i2c@01c2b000 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2b000 0x400>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 97>;
++			resets = <&apb2_rst 1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2: i2c@01c2b400 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2b400 0x400>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 98>;
++			resets = <&apb2_rst 2>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
 +};
-+
-+static const struct sunxi_pinctrl_desc a64_pinctrl_data = {
-+	.pins = a64_pins,
-+	.npins = ARRAY_SIZE(a64_pins),
-+	.irq_banks = 3,
-+};
-+
-+static int a64_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_init(pdev,
-+				  &a64_pinctrl_data);
-+}
-+
-+static const struct of_device_id a64_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-a64-pinctrl", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, a64_pinctrl_match);
-+
-+static struct platform_driver a64_pinctrl_driver = {
-+	.probe	= a64_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-a64-pinctrl",
-+		.of_match_table	= a64_pinctrl_match,
-+	},
-+};
-+module_platform_driver(a64_pinctrl_driver);
-+
-+MODULE_AUTHOR("Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>");
-+MODULE_DESCRIPTION("Allwinner A64 pinctrl driver");
-+MODULE_LICENSE("GPL");
 -- 
 2.6.4
