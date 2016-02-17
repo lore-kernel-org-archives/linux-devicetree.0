@@ -1,94 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sun4i: Enable USB DRC on
- Hyundai-a7hd
-Date: Wed, 17 Feb 2016 14:59:48 +0100
-Message-ID: <56C47CD4.3080402@redhat.com>
-References: <1455656404-31191-1-git-send-email-peter@korsgaard.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] DeviceTree fixes for 4.5-rc
+Date: Wed, 17 Feb 2016 08:14:32 -0600
+Message-ID: <CAL_JsqKujuURgiQfVayYvMO3A9zcL_XNaPyGoDB8wEhRb=6-+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455656404-31191-1-git-send-email-peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <Robin.Murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 16-02-16 22:00, Peter Korsgaard wrote:
-> Enable the OTG USB controller on the A7HD.
->
-> Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+A few more DT fixes for 4.5. Hopefully, this should be the last of it.
 
-Looks good to me:
+Rob
 
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+The following changes since commit 388f7b1d6e8ca06762e2454d28d6c3c55ad0fe95:
 
-Regards,
+  Linux 4.5-rc3 (2016-02-07 15:38:30 -0800)
 
-Hans
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.5-2
 
-> ---
->   arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts | 34 ++++++++++++++++++++++++++++
->   1 file changed, 34 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-> index 43f58fb..9103864 100644
-> --- a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-> +++ b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-> @@ -87,6 +87,30 @@
->   	status = "okay";
->   };
->
-> +&otg_sram {
-> +	status = "okay";
-> +};
-> +
-> +&pio {
-> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +		allwinner,pins = "PH4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +
-> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-> +		allwinner,pins = "PH5";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-> +	};
-> +};
-> +
-> +&reg_usb0_vbus {
-> +	status = "okay";
-> +};
-> +
->   &reg_usb2_vbus {
->   	gpio = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
->   	status = "okay";
-> @@ -102,7 +126,17 @@
->   	allwinner,pins = "PH6";
->   };
->
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
->   &usbphy {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-> +	usb0_vbus-supply = <&reg_usb0_vbus>;
->   	usb2_vbus-supply = <&reg_usb2_vbus>;
->   	status = "okay";
->   };
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+for you to fetch changes up to 43f3408261a2fd5054ada359efa15f0b78faf0a7:
+
+  rtc: s3c: Document required clocks in the DT binding (2016-02-12
+16:16:31 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.5-rc5:
+
+- Fix irq msi-map calculation for nonzero rid-base.
+
+- Binding doc updates for GICv3, fsl-imx-uart, and S3C RTC.
+
+----------------------------------------------------------------
+Fabio Estevam (1):
+      serial: fsl-imx-uart: Fix typo in fsl,dte-mode description
+
+Javier Martinez Canillas (1):
+      rtc: s3c: Document required clocks in the DT binding
+
+Robin Murphy (1):
+      of/irq: Fix msi-map calculation for nonzero rid-base
+
+Will Deacon (1):
+      dt-bindings: arm, gic-v3: require that reserved cells are always 0
+
+ .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt      | 5 ++---
+ Documentation/devicetree/bindings/rtc/s3c-rtc.txt                | 6 ++++++
+ Documentation/devicetree/bindings/serial/fsl-imx-uart.txt        | 2 +-
+ drivers/of/irq.c                                                 | 9 ++++++++-
+ 4 files changed, 17 insertions(+), 5 deletions(-)
