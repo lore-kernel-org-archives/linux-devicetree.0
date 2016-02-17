@@ -1,33 +1,94 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 3/3] ARM: DTS: da850: add DT node for tps6507x-ts
-Date: Wed, 17 Feb 2016 18:56:07 +0530
-Message-ID: <56C474EF.5040006@ti.com>
-References: <1454308130-12452-1-git-send-email-sushaanth.s@ti.com>
- <1454308130-12452-5-git-send-email-sushaanth.s@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sun4i: Enable USB DRC on
+ Hyundai-a7hd
+Date: Wed, 17 Feb 2016 14:59:48 +0100
+Message-ID: <56C47CD4.3080402@redhat.com>
+References: <1455656404-31191-1-git-send-email-peter@korsgaard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1454308130-12452-5-git-send-email-sushaanth.s@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sushaanth Srirangapathi <sushaanth.s@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Joe Perches <joe@perches.com>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455656404-31191-1-git-send-email-peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 01 February 2016 11:58 AM, Sushaanth Srirangapathi wrote:
-> add tps6507x touchscreen device tree node information to
-> DA850 EVM
-> 
-> Signed-off-by: Sushaanth Srirangapathi <sushaanth.s@ti.com>
+Hi,
 
-Acked-by: Sekhar Nori <nsekhar@ti.com>
+On 16-02-16 22:00, Peter Korsgaard wrote:
+> Enable the OTG USB controller on the A7HD.
+>
+> Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
 
-I can queue 3/3 once driver changes are accepted (let me know about that
-because I am not copied on this series).
+Looks good to me:
 
-If Dmitry wants to queue the whole series once he has had a look, thats
-fine too. I have nothing that will clash with this.
+Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
 Regards,
-Sekhar
 
+Hans
+
+
+> ---
+>   arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts | 34 ++++++++++++++++++++++++++++
+>   1 file changed, 34 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
+> index 43f58fb..9103864 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
+> @@ -87,6 +87,30 @@
+>   	status = "okay";
+>   };
+>
+> +&otg_sram {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+> +		allwinner,pins = "PH4";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +	};
+> +
+> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+> +		allwinner,pins = "PH5";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
+> +	};
+> +};
+> +
+> +&reg_usb0_vbus {
+> +	status = "okay";
+> +};
+> +
+>   &reg_usb2_vbus {
+>   	gpio = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
+>   	status = "okay";
+> @@ -102,7 +126,17 @@
+>   	allwinner,pins = "PH6";
+>   };
+>
+> +&usb_otg {
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+>   &usbphy {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+> +	usb0_vbus-supply = <&reg_usb0_vbus>;
+>   	usb2_vbus-supply = <&reg_usb2_vbus>;
+>   	status = "okay";
+>   };
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
