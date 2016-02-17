@@ -1,60 +1,130 @@
-From: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] mtd: devices: m25p80: add support for mmap read
- request
-Date: Wed, 17 Feb 2016 21:41:10 +0530
-Message-ID: <56C49B9E.8060506@ti.com>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
- <1449807000-6457-4-git-send-email-vigneshr@ti.com>
- <20160209193616.GN13270@sirena.org.uk> <56BC1D3E.5020203@ti.com>
- <20160212223711.GD18988@sirena.org.uk> <56C2D731.6050306@ti.com>
- <20160216123854.GJ18327@sirena.org.uk>
+From: Matt Redfearn <matt.redfearn@imgtec.com>
+Subject: [PATCH v7 1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC controller
+Date: Wed, 17 Feb 2016 16:12:53 +0000
+Message-ID: <1455725574-9947-1-git-send-email-matt.redfearn@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160216123854.GJ18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, robh@kernel.org
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>, Matt Redfearn <matt.redfearn@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
 
+Add Device Tree binding document for Octeon MMC controller. The driver
+is in a following patch.
 
-On 02/16/2016 06:08 PM, Mark Brown wrote:
-> On Tue, Feb 16, 2016 at 01:30:49PM +0530, Vignesh R wrote:
->> On 02/13/2016 04:07 AM, Mark Brown wrote:
->>> On Thu, Feb 11, 2016 at 11:03:50AM +0530, Vignesh R wrote:
->>>> On 02/10/2016 01:06 AM, Mark Brown wrote:
-> 
->>>>> Looking at this I can't help but think that spi_flash_read() ought to
->>>>> have the stub in rather than the caller.  But given that we're pretty
->>>>> much only ever expecting one user I'm not 100% sure it actually matters.
-> 
->>>> Well, my initial patch set passed long list of arguments to
->>>> spi_flash_read(), but Brian suggested to use struct[1] in order to avoid
->>>> unnecessary churn when things need changed in the API.
-> 
->>> I don't see what that has to do with my point?
-> 
->> AFAIU, your previous comment was to move initialization of
->> spi_flash_read_message struct to spi_flash_read(). This would mean
-> 
-> No, not at all.  I'm talking about how we handle the case where we don't
-> have hardware support for this and need to implement it in software -
-> currently that's in a separate place to the place where we call the
-> driver.
-> 
+The MMC controller can be connected to up to 4 "slots" which may be
+eMMC, MMC or SD card devices. As there is a single controller, each
+available slot is represented as a child node of the controller.
 
-Yeah, but AFAIK, hardware accelerated read support is applicable for
-m25p80 flashes only, I doubt whether spi_flash_read() will be used by
-other types. I felt keeping the software implementation in m25p80_read()
-will be consistent with m25p80_write().
+This is a similar concept to the atmel-mci driver.
 
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
+Signed-off-by: Peter Swain <pswain@cavium.com>
+Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
+---
+v7: No changes
 
+v6:
+- Split up patch
+- Moved device tree fixup to platform code
+---
+ .../devicetree/bindings/mmc/octeon-mmc.txt         | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+new file mode 100644
+index 000000000000..d2c576d9ad65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+@@ -0,0 +1,79 @@
++* OCTEON SD/MMC Host Controller
++
++This controller is present on some members of the Cavium OCTEON SoC
++family, provide an interface for eMMC, MMC and SD devices.  There is a
++single controller that may have several "slots" connected.  These
++slots appear as children of the main controller node.
++The DMA engine is an integral part of the controller block.
++
++1) MMC node
++
++Required properties:
++- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
++- reg : Two entries:
++	1) The base address of the MMC controller register bank.
++	2) The base address of the MMC DMA engine register bank.
++- interrupts :
++	For "cavium,octeon-6130-mmc": two entries:
++	1) The MMC controller interrupt line.
++	2) The MMC DMA engine interrupt line.
++	For "cavium,octeon-7890-mmc": nine entries:
++	1) The next block transfer of a multiblock transfer has completed (BUF_DONE)
++	2) Operation completed successfully (CMD_DONE).
++	3) DMA transfer completed successfully (DMA_DONE).
++	4) Operation encountered an error (CMD_ERR).
++	5) DMA transfer encountered an error (DMA_ERR).
++	6) Switch operation completed successfully (SWITCH_DONE).
++	7) Switch operation encountered an error (SWITCH_ERR).
++	8) Internal DMA engine request completion interrupt (DONE).
++	9) Internal DMA FIFO underflow (FIFO).
++- #address-cells : Must be <1>
++- #size-cells : Must be <0>
++
++The node contains child nodes for each slot that the platform uses.
++
++Example:
++mmc@1180000002000 {
++	compatible = "cavium,octeon-6130-mmc";
++	reg = <0x11800 0x00002000 0x0 0x100>,
++		<0x11800 0x00000168 0x0 0x20>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	/* EMM irq, DMA irq */
++	interrupts = <1 19>, <0 63>;
++
++	[ child node definitions...]
++};
++
++
++2) Slot nodes
++Properties in mmc.txt apply to each slot node that the platform uses.
++
++Required properties:
++- reg : The slot number.
++
++Optional properties:
++- cavium,cmd-clk-skew : the amount of delay (in pS) past the clock edge
++	to sample the command pin.
++- cavium,dat-clk-skew : the amount of delay (in pS) past the clock edge
++	to sample the data pin.
++
++Example:
++	mmc@1180000002000 {
++		compatible = "cavium,octeon-6130-mmc";
++		reg = <0x11800 0x00002000 0x0 0x100>,
++		      <0x11800 0x00000168 0x0 0x20>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		/* EMM irq, DMA irq */
++		interrupts = <1 19>, <0 63>;
++
++		mmc-slot@0 {
++			reg = <0>;
++			max-frequency = <20000000>;
++			bus-width = <8>;
++			vmmc-supply = <&reg_vmmc3>;
++			cd-gpios = <&gpio 9 0>;
++			wp-gpios = <&gpio 10 0>;
++		};
++	};
 -- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
+
