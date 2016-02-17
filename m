@@ -1,7 +1,7 @@
 From: "jianqun.xu" <jay.xu@rock-chips.com>
-Subject: [PATCH 3/6] ASoC: rockchip: add bindings for rk3399 i2s
-Date: Wed, 17 Feb 2016 09:53:09 +0800
-Message-ID: <1455673992-16469-4-git-send-email-jay.xu@rock-chips.com>
+Subject: [PATCH 4/6] pinctrl: rockchip: add bindings for rk3399 pinctrl
+Date: Wed, 17 Feb 2016 09:53:10 +0800
+Message-ID: <1455673992-16469-5-git-send-email-jay.xu@rock-chips.com>
 References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
 Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -13,25 +13,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Xu Jianqun <jay.xu@rock-chips.com>
 
-Add devicetree bindings for i2s controller found on rk3399
+Add devicetree bindings for pinctrl found on rk3399
 processors from rockchip.
 
 Signed-off-by: Xu Jianqun <jay.xu@rock-chips.com>
 ---
- Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-index b7f3a93..6e86d8a 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-@@ -9,6 +9,7 @@ Required properties:
-    - "rockchip,rk3066-i2s": for rk3066
-    - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
-    - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
-+   - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: should contain the I2S interrupt.
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 0cd701b..c68b955 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -22,7 +22,7 @@ Required properties for iomux controller:
+   - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
+ 		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
+ 		       "rockchip,rk3228-pinctrl", "rockchip,rk3288-pinctrl"
+-		       "rockchip,rk3368-pinctrl"
++		       "rockchip,rk3368-pinctrl", "rockchip,rk3399-pinctrl"
+   - rockchip,grf: phandle referencing a syscon providing the
+ 	 "general register files"
+ 
 -- 
 1.9.1
