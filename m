@@ -1,44 +1,60 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] irqchip: add support for Sigma Designs
- SMP86xx/SMP87xx interrupt controller
-Date: Thu, 18 Feb 2016 01:34:05 +0000
-Message-ID: <20160218013405.GN5183@io.lakedaemon.net>
-References: <1453313237-18570-1-git-send-email-mans@mansr.com>
- <1453313237-18570-2-git-send-email-mans@mansr.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
+Date: Thu, 18 Feb 2016 01:52:15 +0800
+Message-ID: <1455731535.10704.8.camel@mhfsdcap03>
+References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
+	 <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
+	 <56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453313237-18570-2-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160216141059.GT18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mans,
-
-On Wed, Jan 20, 2016 at 06:07:17PM +0000, Mans Rullgard wrote:
-> This adds support for the secondary interrupt controller used in Sigma
-> Designs SMP86xx and SMP87xx chips.
+On Tue, 2016-02-16 at 15:11 +0100, Joerg Roedel wrote:
+> On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
+> > 
+> > 
+> > On 26/01/16 05:12, Yong Wu wrote:
+> > >This patch add SMI(Smart Multimedia Interface) driver. This driver
+> > >is responsible to enable/disable iommu and control the power domain
+> > >and clocks of each local arbiter.
+> > >
+> > >Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >---
+> > 
+> > Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > Joerg would you mind to take this through your branch?
 > 
-> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes from v3:
-> - use of_address_to_resource() rather accessing "reg" property directly
+> Hmm, I somehow missed the patch-set, at least I can't find the v8
+> patches in my inbox.
 > 
-> Boot tested on SMP8643 (tango3) and SMP8759 (tango4)
-> ---
->  drivers/irqchip/Kconfig     |   5 +
->  drivers/irqchip/Makefile    |   1 +
->  drivers/irqchip/irq-tango.c | 232 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 238 insertions(+)
->  create mode 100644 drivers/irqchip/irq-tango.c
+> Yong, can you please re-send with all Acks and other tags added?
 
-Applied to irqchip/tango with Marc's Acked-by.
+Hi Joerg,
+  
+     I have re-sent v9[1] which has added all the tags yesterday.
 
-thx,
+     Could you find them in your inbox? If not again, please tell me.
 
-Jason.
+     Thanks.
+
+[1]:http://lists.linuxfoundation.org/pipermail/iommu/2016-February/015713.html
+
+> 
+> 
+> Thanks,
+> 
+> 	Joerg
+> 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
