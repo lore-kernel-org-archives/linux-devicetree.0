@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 32/45] powerpc/pci: Update bridge windows on PCI plug
-Date: Wed, 17 Feb 2016 14:44:15 +1100
-Message-ID: <1455680668-23298-33-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 26/45] powerpc/pci: Move pci_find_bus_by_node() around
+Date: Wed, 17 Feb 2016 14:44:09 +1100
+Message-ID: <1455680668-23298-27-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,38 +10,103 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On the PCI plugging event, PCI slot's subordinate devices are
-scanned and their (IO and MMIO) resources are assigned. Platform
-dependent resources (PE#, IO/MMIO/DMA windows) are allocated or
-created on updating windows of the slot's upstream bridge.
+This moves pci_find_bus_by_node() from arch/powerpc/platforms/
+pseries/pci_dlpar.c to arch/powerpc/kernel/pci-hotplug.c so that
+the function can be used by pSeries and PowerNV platform at the
+same time. Also, below cleanup applied. No functional changes
+introduced.
 
-This updates the windows of the hot plugged slot's upstream bridge
-in pcibios_finish_adding_to_bus() so that the platform resources
-(PE#, IO/MMIO/DMA segments) are allocated or created accordingly.
+   * Remove variable "busdn" in find_bus_among_children()
+   * Use PCI_DN() to convert device node to pci_dn
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- arch/powerpc/kernel/pci-common.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/pci-hotplug.c          | 29 ++++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 31 ------------------------------
+ 2 files changed, 29 insertions(+), 31 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 40df3a5..be9e515 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -1444,8 +1444,12 @@ void pcibios_finish_adding_to_bus(struct pci_bus *bus)
- 	/* Allocate bus and devices resources */
- 	pcibios_allocate_bus_resources(bus);
- 	pcibios_claim_one_bus(bus);
--	if (!pci_has_flag(PCI_PROBE_ONLY))
--		pci_assign_unassigned_bus_resources(bus);
-+	if (!pci_has_flag(PCI_PROBE_ONLY)) {
-+		if (bus->self)
-+			pci_assign_unassigned_bridge_resources(bus->self);
-+		else
-+			pci_assign_unassigned_bus_resources(bus);
-+	}
+diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+index 78bf2a1..7929a1c 100644
+--- a/arch/powerpc/kernel/pci-hotplug.c
++++ b/arch/powerpc/kernel/pci-hotplug.c
+@@ -21,6 +21,35 @@
+ #include <asm/firmware.h>
+ #include <asm/eeh.h>
  
- 	/* Fixup EEH */
- 	eeh_add_device_tree_late(bus);
++static struct pci_bus *find_bus_among_children(struct pci_bus *bus,
++					       struct device_node *dn)
++{
++	struct pci_bus *child = NULL;
++	struct pci_bus *tmp;
++
++	if (pci_bus_to_OF_node(bus) == dn)
++		return bus;
++
++	list_for_each_entry(tmp, &bus->children, node) {
++		child = find_bus_among_children(tmp, dn);
++		if (child)
++			break;
++	}
++
++	return child;
++}
++
++struct pci_bus *pci_find_bus_by_node(struct device_node *dn)
++{
++	struct pci_dn *pdn = PCI_DN(dn);
++
++	if (!pdn  || !pdn->phb || !pdn->phb->bus)
++		return NULL;
++
++	return find_bus_among_children(pdn->phb->bus, dn);
++}
++EXPORT_SYMBOL_GPL(pci_find_bus_by_node);
++
+ /**
+  * pcibios_release_device - release PCI device
+  * @dev: PCI device
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index aee22b4..906dbaa 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -34,37 +34,6 @@
+ 
+ #include "pseries.h"
+ 
+-static struct pci_bus *
+-find_bus_among_children(struct pci_bus *bus,
+-                        struct device_node *dn)
+-{
+-	struct pci_bus *child = NULL;
+-	struct pci_bus *tmp;
+-	struct device_node *busdn;
+-
+-	busdn = pci_bus_to_OF_node(bus);
+-	if (busdn == dn)
+-		return bus;
+-
+-	list_for_each_entry(tmp, &bus->children, node) {
+-		child = find_bus_among_children(tmp, dn);
+-		if (child)
+-			break;
+-	};
+-	return child;
+-}
+-
+-struct pci_bus *pci_find_bus_by_node(struct device_node *dn)
+-{
+-	struct pci_dn *pdn = dn->data;
+-
+-	if (!pdn  || !pdn->phb || !pdn->phb->bus)
+-		return NULL;
+-
+-	return find_bus_among_children(pdn->phb->bus, dn);
+-}
+-EXPORT_SYMBOL_GPL(pci_find_bus_by_node);
+-
+ struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ {
+ 	struct pci_controller *phb;
 -- 
 2.1.0
