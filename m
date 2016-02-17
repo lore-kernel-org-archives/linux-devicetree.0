@@ -1,62 +1,91 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 3/3] ARM: dts: vf-colibri: add carrier boards 3.3V supply
-Date: Wed, 17 Feb 2016 15:41:00 -0800
-Message-ID: <1455752460-2770-3-git-send-email-stefan@agner.ch>
-References: <1455752460-2770-1-git-send-email-stefan@agner.ch>
+Subject: [PATCH v3 1/3] ARM: dts: vf-colibri: remove regulator container node
+Date: Wed, 17 Feb 2016 15:40:58 -0800
+Message-ID: <1455752460-2770-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455752460-2770-1-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, kernel@pengutronix.de
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, marcel@ziswiler.com, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add the carrier boards 3.3V supply as fixed regulator. This allows
-to specify the power supply for nodes like backlight.
+Drop the fake simple-bus container 'regulators' and put the
+regulators directly under the root node. This also makes the
+artificial 'reg' properties superfluous. While at it, remove
+the unnecessary regulator-always-on property and name the
+regulators according to schematics.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
 Changes since v2:
 - remove regulator-always-on
 
- arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Changes since v1:
+- rename regulators according to schematics
+- drop sys prefix
+
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 42 ++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 26 deletions(-)
 
 diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-index 291e939..4d8b7f6 100644
+index b494673..291e939 100644
 --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
 +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-@@ -50,6 +50,13 @@
+@@ -50,32 +50,22 @@
  		clock-frequency = <16000000>;
  	};
  
-+	reg_3v3: regulator-3v3 {
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		sys_5v0_reg: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "5v0";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			regulator-always-on;
+-		};
++	reg_5v0: regulator-5v0 {
 +		compatible = "regulator-fixed";
-+		regulator-name = "3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
++		regulator-name = "5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
 +	};
-+
- 	reg_5v0: regulator-5v0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "5V";
-@@ -72,6 +79,7 @@
- &bl {
- 	brightness-levels = <0 4 8 16 32 64 128 255>;
- 	default-brightness-level = <6>;
-+	power-supply = <&reg_3v3>;
- 	status  = "okay";
+ 
+-		/* USBH_PEN */
+-		usbh_vbus_reg: regulator@1 {
+-			compatible = "regulator-fixed";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_usbh1_reg>;
+-			reg = <1>;
+-			regulator-name = "usbh_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			gpio = <&gpio2 19 GPIO_ACTIVE_LOW>;
+-			vin-supply = <&sys_5v0_reg>;
+-		};
++	reg_usbh_vbus: regulator-usbh-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbh1_reg>;
++		regulator-name = "VCC_USB[1-4]";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio2 19 GPIO_ACTIVE_LOW>; /* USBH_PEN resp. USBH_P_EN */
++		vin-supply = <&reg_5v0>;
+ 	};
  };
  
-@@ -122,6 +130,10 @@
- 	status = "okay";
+@@ -145,7 +135,7 @@
  };
  
-+&reg_module_3v3 {
-+	vin-supply = <&reg_3v3>;
-+};
-+
- &uart0 {
- 	status = "okay";
+ &usbh1 {
+-	vbus-supply = <&usbh_vbus_reg>;
++	vbus-supply = <&reg_usbh_vbus>;
  };
+ 
+ &iomuxc {
 -- 
 2.7.1
