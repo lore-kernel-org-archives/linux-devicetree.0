@@ -1,99 +1,129 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v10 10/13] clk: mediatek: make dpi0_sel propagate rate
- changes
-Date: Wed, 17 Feb 2016 10:19:26 +0100
-Message-ID: <1455700766.3336.11.camel@pengutronix.de>
-References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
- <1454527562-28154-11-git-send-email-p.zabel@pengutronix.de>
- <20160215231404.2278.31008@quark.deferred.io>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 5/8] [Media] vcodec: mediatek: Add Mediatek V4L2
+ Video Encoder Driver
+Date: Wed, 17 Feb 2016 17:23:09 +0800
+Message-ID: <1455700989.3782.7.camel@mtksdaap41>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
+	 <1454585703-42428-6-git-send-email-tiffany.lin@mediatek.com>
+	 <56C1B4AF.1030207@xs4all.nl> <1455604653.19396.68.camel@mtksdaap41>
+	 <56C2D371.9090805@xs4all.nl> <1455628805.19396.82.camel@mtksdaap41>
+	 <56C328AF.5030604@cisco.com> <1455696068.26202.4.camel@mtksdaap41>
+	 <56C42FE3.8000105@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160215231404.2278.31008@quark.deferred.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C42FE3.8000105-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWljaGFlbCwKCnRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnRzLgoKQW0gTW9udGFnLCBkZW4g
-MTUuMDIuMjAxNiwgMTU6MTQgLTA4MDAgc2NocmllYiBNaWNoYWVsIFR1cnF1ZXR0ZToKPiBRdW90
-aW5nIFBoaWxpcHAgWmFiZWwgKDIwMTYtMDItMDMgMTE6MjU6NTkpCj4gPiBUaGlzIG11eCBpcyBz
-dXBwb3NlZCB0byBzZWxlY3QgYSBmaXR0aW5nIGRpdmlkZXIgYWZ0ZXIgdGhlIFBMTAo+ID4gaXMg
-YWxyZWFkeSBzZXQgdG8gdGhlIGNvcnJlY3QgcmF0ZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTog
-UGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KPiA+IEFja2VkLWJ5OiBKYW1l
-cyBMaWFvIDxqYW1lc2pqLmxpYW9AbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9j
-bGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jIHwgMiArLQo+ID4gIGRyaXZlcnMvY2xrL21lZGlhdGVr
-L2Nsay1tdGsuaCAgICB8IDcgKysrKystLQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRp
-b25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsv
-bWVkaWF0ZWsvY2xrLW10ODE3My5jIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5j
-Cj4gPiBpbmRleCAyMjdlMzU2Li42ODJiMjc1IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jbGsv
-bWVkaWF0ZWsvY2xrLW10ODE3My5jCj4gPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGst
-bXQ4MTczLmMKPiA+IEBAIC01NTgsNyArNTU4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
-Y29tcG9zaXRlIHRvcF9tdXhlc1tdIF9faW5pdGNvbnN0ID0gewo+ID4gICAgICAgICBNVVhfR0FU
-RShDTEtfVE9QX0FUQl9TRUwsICJhdGJfc2VsIiwgYXRiX3BhcmVudHMsIDB4MDA5MCwgMTYsIDIs
-IDIzKSwKPiA+ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9WRU5DX0xUX1NFTCwgInZlbmNsdF9z
-ZWwiLCB2ZW5jX2x0X3BhcmVudHMsIDB4MDA5MCwgMjQsIDQsIDMxKSwKPiA+ICAgICAgICAgLyog
-Q0xLX0NGR182ICovCj4gPiAtICAgICAgIE1VWF9HQVRFKENMS19UT1BfRFBJMF9TRUwsICJkcGkw
-X3NlbCIsIGRwaTBfcGFyZW50cywgMHgwMGEwLCAwLCAzLCA3KSwKPiA+ICsgICAgICAgTVVYX0dB
-VEVfRkxBR1MoQ0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2VsIiwgZHBpMF9wYXJlbnRzLCAweDAw
-YTAsIDAsIDMsIDcsIDApLAo+IAo+IFNvIHRoZSBvbmx5IGluc3RhbmNlIG9mIE1VWF9HQVRFIHRo
-YXQgc2hvdWxkIG5vdCBwcm9wYWdhdGUgaXQncyByZXF1ZXN0Cj4gdXAgdG8gdGhlIHBhcmVudCBp
-cyBkcGkwX3NlbD8gQXJlIHlvdSBzdXJlPwoKVGhlIG90aGVyIHdheSBhcm91bmQuIFRoaXMgaXMg
-dGhlIG9ubHkgY2xvY2sgSSdtIHN1cmUgb2YgdGhhdCBpdApzaG91bGRuJ3QgcHJvcGFnYXRlLiBG
-b3IgdGhlIG90aGVycyBJIGRvbid0IGtub3csIHNvIEkgd2FudCB0byBsZWF2ZQp0aGVtIGFzIHRo
-ZXkgYXJlLgoKPiBJIGhvcGUgc28gYmVjYXVzZSB0aGlzIHBhdGNoIGNoYW5nZXMgYWxsIE1VWF9H
-QVRFIGNsa3MgdG8gcHJvcGFnYXRlCj4gdGhlaXIgcmVxdWVzdHMgdXAgdG8gdGhlaXIgcGFyZW50
-cywgd2hpY2ggaXMgc29ydCBvZiBhIGJpZyBjaGFuZ2UuCgpUaGUgTVVYX0dBVEUgbWFjcm8gcHJl
-dmlvdXNseSB1bmNvbmRpdGlvbmFsbHkgc2V0IHRoZQpDTEtfU0VUX1JBVEVfUEFSRU5ULCBzbyBu
-b3RoaW5nIHNob3VsZCBoYXZlIGNoYW5nZWQgdGhlcmUuIFNlZSAod2F5KQpiZWxvdy4KCj4gQWxz
-bywgdGhlIG5hbWUgZ2FtZSBpcyBhIGJpdCBjb25mdXNpbmcuIEkgY2FuIHNlZSB0aGF0IHlvdSdy
-ZSB0cnlpbmcgdG8KPiBwcmV2ZW50IGhhdmluZyBhIGh1Z2UgcGF0Y2ggdGhhdCB0b3VjaGVzIGV2
-ZXJ5IE1VWF9HQVRFIGluaXRpYWxpemF0aW9uLgo+IEhvd2V2ZXIgaXQgaXNuJ3Qgb2J2aW91cyBm
-cm9tIHRoZSBuYW1lICJNVVhfR0FURSgpIiB0aGF0IHRoZSBtYWNybyB3aWxsCj4gZW5hYmxlIENM
-S19TRVRfUkFURV9QQVJFTlQgZnVuY3Rpb25hbGl0eS4gTWF5YmUgcHV0IGEgY29tbWVudCBhYm92
-ZSBpdAo+IGp1c3QgdG8gbWFrZSBpdCBleHRyYSBjbGVhcj8KCkkgY2FuIGRvIHRoYXQuCgo+ID4g
-ICAgICAgICBNVVhfR0FURShDTEtfVE9QX0lSREFfU0VMLCAiaXJkYV9zZWwiLCBpcmRhX3BhcmVu
-dHMsIDB4MDBhMCwgOCwgMiwgMTUpLAo+ID4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0NDSTQw
-MF9TRUwsICJjY2k0MDBfc2VsIiwgY2NpNDAwX3BhcmVudHMsIDB4MDBhMCwgMTYsIDMsIDIzKSwK
-PiA+ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9BVURfMV9TRUwsICJhdWRfMV9zZWwiLCBhdWRf
-MV9wYXJlbnRzLCAweDAwYTAsIDI0LCAyLCAzMSksCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9j
-bGsvbWVkaWF0ZWsvY2xrLW10ay5oIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oCj4g
-PiBpbmRleCAzMmQyZTQ1Li5iNjA3OTk2IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jbGsvbWVk
-aWF0ZWsvY2xrLW10ay5oCj4gPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXRrLmgK
-PiA+IEBAIC04Myw3ICs4Myw3IEBAIHN0cnVjdCBtdGtfY29tcG9zaXRlIHsKPiA+ICAgICAgICAg
-c2lnbmVkIGNoYXIgbnVtX3BhcmVudHM7Cj4gPiAgfTsKPiA+ICAKPiA+IC0jZGVmaW5lIE1VWF9H
-QVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUpIHsg
-IFwKPiA+ICsjZGVmaW5lIE1VWF9HQVRFX0ZMQUdTKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVn
-LCBfc2hpZnQsIF93aWR0aCwgX2dhdGUsIF9mbGFncykgeyAgICBcCj4gPiAgICAgICAgICAgICAg
-ICAgLmlkID0gX2lkLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBcCj4gPiAgICAgICAgICAgICAgICAgLm5hbWUgPSBfbmFtZSwgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBcCj4gPiAgICAgICAgICAgICAgICAgLm11eF9yZWcgPSBf
-cmVnLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4gPiBAQCAtOTQs
-OSArOTQsMTIgQEAgc3RydWN0IG10a19jb21wb3NpdGUgewo+ID4gICAgICAgICAgICAgICAgIC5k
-aXZpZGVyX3NoaWZ0ID0gLTEsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+
-ID4gICAgICAgICAgICAgICAgIC5wYXJlbnRfbmFtZXMgPSBfcGFyZW50cywgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgXAo+ID4gICAgICAgICAgICAgICAgIC5udW1fcGFyZW50cyA9IEFS
-UkFZX1NJWkUoX3BhcmVudHMpLCAgICAgICAgICAgICAgICAgICAgXAo+ID4gLSAgICAgICAgICAg
-ICAgIC5mbGFncyA9IENMS19TRVRfUkFURV9QQVJFTlQsICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgXAo+ID4gKyAgICAgICAgICAgICAgIC5mbGFncyA9IF9mbGFncywgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgXAoKVGhpcy4KCj4gPiAgICAgICAgIH0KPiA+ICAKPiA+
-ICsjZGVmaW5lIE1VWF9HQVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93
-aWR0aCwgX2dhdGUpICAgIFwKPiA+ICsgICAgICAgTVVYX0dBVEVfRkxBR1MoX2lkLCBfbmFtZSwg
-X3BhcmVudHMsIF9yZWcsIF9zaGlmdCwgX3dpZHRoLCBfZ2F0ZSwgQ0xLX1NFVF9SQVRFX1BBUkVO
-VCkKPiA+ICsKPiA+ICAjZGVmaW5lIE1VWChfaWQsIF9uYW1lLCBfcGFyZW50cywgX3JlZywgX3No
-aWZ0LCBfd2lkdGgpIHsgICAgICAgICAgICAgIFwKPiA+ICAgICAgICAgICAgICAgICAuaWQgPSBf
-aWQsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiA+ICAg
-ICAgICAgICAgICAgICAubmFtZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIFwKPiA+IC0tIAo+ID4gMi43LjAucmMzCgpiZXN0IHJlZ2FyZHMKUGhpbGlw
-cAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, 2016-02-17 at 09:31 +0100, Hans Verkuil wrote:
+> On 02/17/16 09:01, tiffany lin wrote:
+> > On Tue, 2016-02-16 at 14:48 +0100, Hans Verkuil wrote:
+> >> Hi Tiffany,
+> >>
+> >>>>>>> +int mtk_vcodec_enc_queue_init(void *priv, struct vb2_queue *src_vq,
+> >>>>>>> +			   struct vb2_queue *dst_vq)
+> >>>>>>> +{
+> >>>>>>> +	struct mtk_vcodec_ctx *ctx = priv;
+> >>>>>>> +	int ret;
+> >>>>>>> +
+> >>>>>>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> >>>>>>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
+> >>>>>>
+> >>>>>> I recomment dropping VB2_USERPTR. That only makes sense for scatter-gather dma,
+> >>>>>> and you use physically contiguous DMA.
+> >>>>>>
+> >>>>> Now our userspace app use VB2_USERPTR. I need to check if we could drop
+> >>>>> VB2_USERPTR.
+> >>>>> We use src_vq->mem_ops = &vb2_dma_contig_memops;
+> >>>>> And there are
+> >>>>> 	.get_userptr	= vb2_dc_get_userptr,
+> >>>>> 	.put_userptr	= vb2_dc_put_userptr,
+> >>>>> I was confused why it only make sense for scatter-gather.
+> >>>>> Could you kindly explain more?
+> >>>>
+> >>>> VB2_USERPTR indicates that the application can use malloc to allocate buffers
+> >>>> and pass those to the driver. Since malloc uses virtual memory the physical
+> >>>> memory is scattered all over. And the first page typically does not start at
+> >>>> the beginning of the page but at a random offset.
+> >>>>
+> >>>> To support that the DMA generally has to be able to do scatter-gather.
+> >>>>
+> >>>> Now, where things get ugly is that a hack was added to the USERPTR support where
+> >>>> apps could pass a pointer to physically contiguous memory as a user pointer. This
+> >>>> was a hack for embedded systems that preallocated a pool of buffers and needed to
+> >>>> pass those pointers around somehow. So the dma-contig USERPTR support is for that
+> >>>> 'feature'. If you try to pass a malloc()ed buffer to a dma-contig driver it will
+> >>>> reject it. One big problem is that this specific hack isn't signaled anywhere, so
+> >>>> applications have no way of knowing if the USERPTR support is the proper version
+> >>>> or the hack where physically contiguous memory is expected.
+> >>>>
+> >>>> This hack has been replaced with DMABUF which is the proper way of passing buffers
+> >>>> around.
+> >>>>
+> >>>> New dma-contig drivers should not use that old hack anymore. Use dmabuf to pass
+> >>>> external buffers around.
+> >>>>
+> >>>> How do you use it in your app? With malloc()ed buffers? Or with 'special' pointers
+> >>>> to physically contiguous buffers?
+> >>>>
+> >>> Understood now. Thanks for your explanation.
+> >>> Now our app use malloc()ed buffers and we hook vb2_dma_contig_memops. 
+> >>> I don't know why that dma-contig driver do not reject it.
+> >>> I will try to figure it out.
+> >>
+> >> Is there an iommu involved that turns the scatter-gather list into what looks like
+> >> contiguous memory for the DMA?
+> >>
+> > Yes, We have iommu that could make scatter-gather list looks like
+> > contiguous memory.
+> > 
+> >> At the end of vb2_dc_get_userptr() in videobuf2-dma-contig.c there is a check
+> >> 'if (contig_size < size)' that verifies that the sg DMA is contiguous. This would
+> >> work if there is an iommu involved (if I understand it correctly).
+> >>
+> > I see. We saw this error before we add iommu support.
+> > 
+> >> If that's the case, then it's OK to keep VB2_USERPTR because you have real sg
+> >> support (although not via the DMA engine, but via iommu mappings).
+> >>
+> > Got it. We will keep VB2_USERPTR.
+> 
+> Can you add a comment here mentioning that VB2_USERPTR works with dma-contig because
+> there is an iommu? That should clarify this.
+> 
+Got it. I will add comment before this line.
+src_vq->io_modes = VB2_DMABUF | VB2_MMAP | VB2_USERPTR;.
+
+I will also add out IOMMU patches information in cover letter, like:
+The following patches are needed to support VB2_USERPTR works with
+dma-contig.
+https://patchwork.kernel.org/patch/8335461/
+https://patchwork.kernel.org/patch/8335471/
+https://patchwork.kernel.org/patch/8335481/
+https://patchwork.kernel.org/patch/8335491/
+https://patchwork.kernel.org/patch/8335501/
+https://patchwork.kernel.org/patch/7596181/
+
+
+best regards,
+Tiffany
+
+
+
+> Regards,
+> 
+> 	Hans
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
