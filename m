@@ -1,53 +1,322 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v13 4/4] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 16 Feb 2016 19:42:56 -0800
-Message-ID: <56C3EC40.6080500@roeck-us.net>
-References: <1455642530-19103-1-git-send-email-fu.wei@linaro.org>
- <1455642530-19103-5-git-send-email-fu.wei@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455642530-19103-5-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
+Date: Wed, 17 Feb 2016 14:43:43 +1100
+Message-ID: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2016 09:08 AM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> According to Server Base System Architecture (SBSA) specification,
-> the SBSA Generic Watchdog has two stage timeouts: the first signal (WS0)
-> is for alerting the system by interrupt, the second one (WS1) is a real
-> hardware reset.
-> More details about the hardware specification of this device:
-> ARM DEN0029B - Server Base System Architecture (SBSA)
->
-> This driver can operate ARM SBSA Generic Watchdog as a single stage watchdog
-> or a two stages watchdog, it's set up by the module parameter "action".
-> In the single stage mode, when the timeout is reached, your system
-> will be reset by WS1. The first signal (WS0) is ignored.
-> In the two stages mode, when the timeout is reached, the first signal (WS0)
-> will trigger panic. If the system is getting into trouble and cannot be reset
-> by panic or restart properly by the kdump kernel(if supported), then the
-> second stage (as long as the first stage) will be reached, system will be
-> reset by WS1. This function can help administrator to backup the system
-> context info by panic console output or kdump.
->
-> This driver bases on linux kernel watchdog framework, so it can get
-> timeout from module parameter and FDT at the driver init stage.
->
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+This series of patches rebases on powerpc/next branch, plus below additional
+patches:
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+   <This series of patches>
+   <Followup 3 patches from Gavin on SRIOV EEH, which aren't posted>
+   https://patchwork.ozlabs.org/patch/581315/	(PATCH[1/9] Richard's SRIOV EEH)
+   https://patchwork.ozlabs.org/patch/582639/	(PATCH[1/1] Gavin's EEH fix)
+   https://patchwork.ozlabs.org/patch/582093/	(PATCH[1/1] Gavin's EEH fix)
+   https://patchwork.ozlabs.org/patch/580626/	(PATCH[1/4] Gavin's PCI fix)
+   https://patchwork.ozlabs.org/patch/580153/	(PATCH[1/1] Andrew's EEH minor fix)
+   https://patchwork.ozlabs.org/patch/566827/	(PATCH[1/1] Russell's P5IOC2 removal)
+   https://patchwork.ozlabs.org/patch/534154/	(PATCH[1/7] Richard's SRIOV rework)
+   commit 388f7b1 ("Linux 4.5-rc3")
+   
+The series of patches intend to support PCI slot for PowerPC PowerNV platform,
+which is running on top of skiboot firmware. The patchset requires corresponding
+changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
+for review. The PCI slots are exposed by skiboot with device node properties,
+and kernel utilizes those properties to populated PCI slots accordingly.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The original PCI infrastructure on PowerNV platform can't support hotplug
+because the PE is assigned during PHB fixup time, which is called for once
+during system boot time. For this, the PCI infrastructure on PowerNV platform
+has been reworked for a lot. After that, the PE and its corresponding resources
+(IODT, M32DT, M64 segments, DMA32 and bypass window) are assigned upon updating
+PCI bridge's resources, which might decide PE# assigned to the PE (e.g. M64
+resources, on P8 strictly speaking). Each PE will maintain a reference count,
+which is (number of child PCI devices + 1). That indicates when last child PCI
+device leaves the PE, the PE and its included resources will be relased and put
+back into free pool again. With this design, the PE will be released when EEH PE
+is released. PATCH[1 - 23] are related to this part.
+
+>From skiboot perspective, PCI slot is providing (hot/fundamental/complete)
+resets to EEH. The kernel gets to know if skiboot supports various reset on one
+particular PCI slot through device-tree node. If it does, EEH will utilize the
+functionality provided by skiboot. Besides, the device-tree nodes have to change
+in order to support PCI hotplug. For example, when one PCI adapter inserted to
+one slot, its device-tree node should be added to the system dynamically. Conversely,
+the device-tree node should be removed from the system when the PCI adapter is going
+to be offline. Since pci_dn and eeh_dev have same life cyle as PCI device nodes,
+they should be added/removed accordingly during PCI hotplug. PATCH[24 - 39] are
+doing the related work.
+
+The OF driver is changed to support unflattening FDT blob for sub-stree, which
+is covered by PATCH[40 - 44].
+
+The last one, PATCH[45], is the standalone PCI hotplug driver for PowerPC PowerNV
+platform.
+
+=======
+Testing
+=======
+1. Unplug adapters behind non-empty slot, then plug them.
+
+   1.1 Check status
+   # cat /sys/bus/pci/slots/C10/address 
+   0003:09:00
+   # cat /sys/bus/pci/slots/C10/adapter 
+   1
+   # cat /sys/bus/pci/slots/C10/power 
+   1
+   # lspci
+   0003:09:00.0 Ethernet controller: \
+   Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+   0003:09:00.1 Ethernet controller: \
+   Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+   0003:09:00.2 Ethernet controller: \
+   Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+   0003:09:00.3 Ethernet controller: \
+   Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+   # lspci -t
+   # lspci -t
+   -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
+    |                                           +-08.0-[04-08]--
+    |                                           +-09.0-[09]--+-00.0
+    |                                           |            +-00.1
+    |                                           |            +-00.2
+    |                                           |            \-00.3
+    |                                           +-10.0-[0a-0e]--
+    |                                           \-11.0-[0f-13]--
+
+   1.2 Unplug adapter 0003:09.00.x
+   # echo 0 > /sys/bus/pci/slots/C10/power 
+   # lspci -t
+   -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
+    |                                           +-08.0-[04-08]--
+    |                                           +-09.0-[09]--
+    |                                           +-10.0-[0a-0e]--
+    |                                           \-11.0-[0f-13]--
+
+   1.3 Plug adapter 0003:09.00.x
+   # echo 1 > /sys/bus/pci/slots/C10/power 
+   # lspci -t
+   -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
+    |                                           +-08.0-[04-08]--
+    |                                           +-09.0-[09]--+-00.0
+    |                                           |            +-00.1
+    |                                           |            +-00.2
+    |                                           |            \-00.3
+    |                                           +-10.0-[0a-0e]--
+    |                                           \-11.0-[0f-13]--
+ 
+
+   1.4 Inject EEH error to adapter 0003:09:00.x, which is recovered.
+   # cat /sys/bus/pci/devices/0003:09:00.0/eeh_pe_config_addr 
+   0x1
+   # echo 1:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0003/err_injct
+   # lspci -ns 0003:09:00.0
+   # dmesg | grep EEH
+   EEH: Frozen PHB#3-PE#1 detected
+   EEH: PE location: U78C9.001.WZS00CF-P1-C10, PHB location: N/A
+   EEH: Detected PCI bus error on PHB#3-PE#1
+   EEH: This PCI device has failed 1 times in the last hour
+   EEH: Notify device drivers to shutdown
+   EEH: Collect temporary log
+   EEH: Reset without hotplug activity
+   EEH: Notify device drivers the completion of reset
+   EEH: Notify device driver to resume
+
+2. Plug adapter and then unplug it. This requires hack in skiboot
+   to skip probing the adapters behind the target (C12 in the
+   testing) for once.
+
+   2.1 Check status
+   # cat /sys/bus/pci/slots/C12/address 
+   0001:06
+   # cat /sys/bus/pci/slots/C12/power 
+   0
+   # cat /sys/bus/pci/slots/C12/adapter 
+   1
+   # lspci -t
+   +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
+                                               +-08.0-[05]----00.0
+                                               \-09.0-[06-0a]--
+
+   2.2 Plug adapter 0001:06:00.x
+   # echo 1 > /sys/bus/pci/slots/C12/power
+   # lspci -t
+   +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
+                                               +-08.0-[05]----00.0
+                                               \-09.0-[06-0a]--+-00.0
+                                                               \-00.1
+   # lspci
+   0001:06:00.0 Ethernet controller: \
+   Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
+   0001:06:00.1 Ethernet controller: \
+   Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
+
+   2.3 Inject EEH error to adapter 0001:06:00.x, which is recovered
+   # cat /sys/bus/pci/devices/0001:06:00.0/eeh_pe_config_addr 
+   0x2
+   # echo 2:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0001/err_injct
+   # dmesg | grep EEH
+   EEH: Frozen PHB#1-PE#2 detected
+   EEH: PE location: U78C9.001.WZS00CF-P1-C12, PHB location: N/A
+   EEH: Detected PCI bus error on PHB#1-PE#2
+   EEH: This PCI device has failed 1 times in the last hour
+   EEH: Notify device drivers to shutdown
+   EEH: Collect temporary log
+   EEH: Reset without hotplug activity
+   EEH: Notify device drivers the completion of reset
+   EEH: Notify device driver to resume
+
+   2.4 Unplug adapter 0001:06:00.x
+   # echo 0 > /sys/bus/pci/slots/C12/power
+   # lspci -t
+   +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
+                                               +-08.0-[05]----00.0
+                                               \-09.0-[06-0a]--
+
+=========
+Changelog
+=========
+v8:
+   * Rebased to linux-powerpc next branch.
+   * Resolve comments from Alexey and Daniel on PCI part
+   * Resolve comments from Rob on fdt.c
+   * Retested (refer to the "Testing section")
+v7:
+   * Reworked revision to some extent.
+   * Rebased to powerpc/next repository.
+   * Reorder/split/merge/drop according - Alexey.
+   * Defined macros and use array to track IO/M32/M64/DMA32 segments - Alexey.
+   * Merged 3 files to one for the hotplug driver - Alexey.
+   * As part of OPAL API, defined macros for PCI slot power state, hotplug
+     message type. Defined macros for PCI slot power confirmed state in
+     hotplug driver.
+   * Misc comments from Alexey.
+   * Reworked unflatten_dt_node() to avoid recursive function calls.
+   * Use EXPORT_SYMBOL_GPL() and document function's input/output - Rob/Frank.
+v6:
+   * Patch reorder, split, squash - Alexey.
+   * Minor coding style - Alexey.
+   * Better function names for pcibios_{add,remove}_pci_devices - Bjorn
+   * Replace pr_warn() with dev_warn() in PowerNV hotplug driver - Bjorn
+   * Concurrent depth as parameter passed to __unflatten_dt_node() - Grant / Alexey
+   * Replace overlay with of_changeset - Grant
+v5:
+   * Rebased to 4.1.rc6 and some unmerged patches as below:
+     Alexey's DDW patchset (v11);
+     Gavin's EEH error injection support (in mpe's next branch);
+     Richard's EEH cleanup patches (in mpe's next branch);
+     Richard's EEH support for VF (v7);
+     Gavin's misc EEH fixes for 4.2;
+   * The revision bases on skiboot corresponding patches (v7):
+     https://patchwork.ozlabs.org/patch/480437/
+   * Utilize OF overlay to update device-tree with help of newly introduced
+     OPAL API opal_get_overlay_dt().
+   * Split patches for easy review according to aik's comments.
+   * Fix coding style from checkpatchc.pl as pointed by aik.
+   * Code cleanup and misc fixup according to aik's input.
+v4:
+   * Rebased to 4.1.RC1
+   * Added API to unflatten FDT blob to device node sub-tree, which is attached
+     the indicated parent device node. The original mechanism based on formatted
+     string stream has been dropped.
+   * The PATCH[v3 09/21] ("powerpc/eeh: Delay probing EEH device during hotplug")
+     was picked up sent to linux-ppc@ separately for review as Richard's "VF EEH
+     Support" depends on that.
+v3:
+   * Rebased to 4.1.RC0
+   * PowerNV PCI infrasturcture is total refactored in order to support PCI
+     hotplug. The PowerNV hotplug driver is also reworked a lot because of
+     the changes in skiboot in order to support PCI hotplug.
+
+Gavin Shan (45):
+  PCI: Add pcibios_setup_bridge()
+  powerpc/pci: Override pcibios_setup_bridge()
+  powerpc/pci: Cleanup on struct pci_controller_ops
+  powerpc/powernv: Cleanup on pci_controller_ops instances
+  powerpc/powernv: Drop phb->bdfn_to_pe()
+  powerpc/powernv: Reorder fields in struct pnv_phb
+  powerpc/powernv: Rename PE# fields in struct pnv_phb
+  powerpc/powernv: Fix initial IO and M32 segmap
+  powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
+  powerpc/powernv: IO and M32 mapping based on PCI device resources
+  powerpc/powernv: Track M64 segment consumption
+  powerpc/powernv: Rename M64 related functions
+  powerpc/powernv/ioda1: M64 support on P7IOC
+  powerpc/powernv/ioda1: Rename pnv_pci_ioda_setup_dma_pe()
+  powerpc/powernv/ioda1: Introduce PNV_IODA1_DMA32_SEGSIZE
+  powerpc/powernv: Remove DMA32 PE list
+  powerpc/powernv/ioda1: Improve DMA32 segment track
+  powerpc/powernv: Increase PE# capacity
+  powerpc/powernv: Use PE instead of number during setup and release
+  powerpc/powernv: Allocate PE# in reverse order
+  powerpc/powernv: Create PEs at PCI hot plugging time
+  powerpc/powernv/ioda1: Support releasing IODA1 TCE table
+  powerpc/powernv: Dynamically release PEs
+  powerpc/pci: Rename pcibios_{add,remove}_pci_devices()
+  powerpc/pci: Rename pcibios_find_pci_bus()
+  powerpc/pci: Move pci_find_bus_by_node() around
+  powerpc/pci: Export pci_add_device_node_info()
+  powerpc/pci: Introduce pci_remove_device_node_info()
+  powerpc/pci: Export pci_traverse_device_nodes()
+  powerpc/pci: Delay populating pdn
+  powerpc/pci: Don't scan empty slot
+  powerpc/pci: Update bridge windows on PCI plug
+  powerpc/powernv: Simplify pnv_eeh_reset()
+  powerpc/powernv: Exclude root bus in pnv_pci_reset_secondary_bus()
+  powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
+  powerpc/powernv: Support PCI slot ID
+  powerpc/powernv: Use firmware PCI slot reset infrastructure
+  powerpc/powernv: Functions to get/set PCI slot status
+  powerpc/powernv: Select OF_DYNAMIC
+  drivers/of: Split unflatten_dt_node()
+  drivers/of: Avoid recursively calling unflatten_dt_node()
+  drivers/of: Rename unflatten_dt_node()
+  drivers/of: Specify parent node in of_fdt_unflatten_tree()
+  drivers/of: Return allocated memory from of_fdt_unflatten_tree()
+  PCI/hotplug: PowerPC PowerNV PCI hotplug driver
+
+ arch/powerpc/include/asm/eeh.h                 |    2 +-
+ arch/powerpc/include/asm/opal-api.h            |   17 +-
+ arch/powerpc/include/asm/opal.h                |    8 +-
+ arch/powerpc/include/asm/pci-bridge.h          |   25 +-
+ arch/powerpc/include/asm/pnv-pci.h             |    7 +
+ arch/powerpc/include/asm/ppc-pci.h             |    8 +-
+ arch/powerpc/kernel/eeh_dev.c                  |   17 +-
+ arch/powerpc/kernel/eeh_driver.c               |   12 +-
+ arch/powerpc/kernel/pci-common.c               |   16 +-
+ arch/powerpc/kernel/pci-hotplug.c              |   47 +-
+ arch/powerpc/kernel/pci_dn.c                   |   89 +-
+ arch/powerpc/platforms/maple/pci.c             |   34 +-
+ arch/powerpc/platforms/pasemi/pci.c            |    3 -
+ arch/powerpc/platforms/powermac/pci.c          |   38 +-
+ arch/powerpc/platforms/powernv/Kconfig         |    1 +
+ arch/powerpc/platforms/powernv/eeh-powernv.c   |  179 ++--
+ arch/powerpc/platforms/powernv/opal-wrappers.S |    4 +
+ arch/powerpc/platforms/powernv/pci-ioda.c      | 1243 +++++++++++++++---------
+ arch/powerpc/platforms/powernv/pci.c           |   92 +-
+ arch/powerpc/platforms/powernv/pci.h           |   60 +-
+ arch/powerpc/platforms/pseries/msi.c           |    4 +-
+ arch/powerpc/platforms/pseries/pci_dlpar.c     |   32 -
+ arch/powerpc/platforms/pseries/setup.c         |    8 +-
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c   |    2 +-
+ drivers/of/fdt.c                               |  372 ++++---
+ drivers/of/unittest.c                          |    2 +-
+ drivers/pci/hotplug/Kconfig                    |   12 +
+ drivers/pci/hotplug/Makefile                   |    3 +
+ drivers/pci/hotplug/pnv_php.c                  |  870 +++++++++++++++++
+ drivers/pci/hotplug/rpadlpar_core.c            |    8 +-
+ drivers/pci/hotplug/rpaphp_core.c              |    4 +-
+ drivers/pci/hotplug/rpaphp_pci.c               |    4 +-
+ drivers/pci/setup-bus.c                        |    5 +
+ include/linux/of_fdt.h                         |    5 +-
+ include/linux/pci.h                            |    1 +
+ 35 files changed, 2360 insertions(+), 874 deletions(-)
+ create mode 100644 drivers/pci/hotplug/pnv_php.c
+
+-- 
+2.1.0
