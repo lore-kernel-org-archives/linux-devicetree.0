@@ -1,51 +1,60 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 00/12] Add support for the Armada 3700 SoC an mvebu ARM64 based
-Date: Wed, 17 Feb 2016 17:03:15 +0100
-Message-ID: <87a8mzs4sc.fsf@free-electrons.com>
-References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
-	<2699923.cugyhCaCQy@wuerfel>
+From: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] mtd: devices: m25p80: add support for mmap read
+ request
+Date: Wed, 17 Feb 2016 21:41:10 +0530
+Message-ID: <56C49B9E.8060506@ti.com>
+References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+ <1449807000-6457-4-git-send-email-vigneshr@ti.com>
+ <20160209193616.GN13270@sirena.org.uk> <56BC1D3E.5020203@ti.com>
+ <20160212223711.GD18988@sirena.org.uk> <56C2D731.6050306@ti.com>
+ <20160216123854.GJ18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <2699923.cugyhCaCQy@wuerfel> (Arnd Bergmann's message of "Tue, 16
-	Feb 2016 22:22:11 +0100")
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160216123854.GJ18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-=20
- On mar., f=C3=A9vr. 16 2016, Arnd Bergmann <arnd@arndb.de> wrote:
 
-> On Tuesday 16 February 2016 19:14:50 Gregory CLEMENT wrote:
->> This series introduce the support of the Armada 3700 family: it is t=
-he
->> first ARM64 SoC of the mvebu family submitted to the mainline!
->>=20
->> Currently there are two members of the Armada 3700 family, the only
->> difference is the number of core: the Armada 3710 comes with one
->> Cortex-A53 whereas the Armada 3720 comes with 2 Cortex-A53. In this
->> series we enabled only the minimum to boot, pinctrl and clock tree
->> will come soon.
->>=20
->
-> Whole series
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Great!
+On 02/16/2016 06:08 PM, Mark Brown wrote:
+> On Tue, Feb 16, 2016 at 01:30:49PM +0530, Vignesh R wrote:
+>> On 02/13/2016 04:07 AM, Mark Brown wrote:
+>>> On Thu, Feb 11, 2016 at 11:03:50AM +0530, Vignesh R wrote:
+>>>> On 02/10/2016 01:06 AM, Mark Brown wrote:
+> 
+>>>>> Looking at this I can't help but think that spi_flash_read() ought to
+>>>>> have the stub in rather than the caller.  But given that we're pretty
+>>>>> much only ever expecting one user I'm not 100% sure it actually matters.
+> 
+>>>> Well, my initial patch set passed long list of arguments to
+>>>> spi_flash_read(), but Brian suggested to use struct[1] in order to avoid
+>>>> unnecessary churn when things need changed in the API.
+> 
+>>> I don't see what that has to do with my point?
+> 
+>> AFAIU, your previous comment was to move initialization of
+>> spi_flash_read_message struct to spi_flash_read(). This would mean
+> 
+> No, not at all.  I'm talking about how we handle the case where we don't
+> have hardware support for this and need to implement it in software -
+> currently that's in a separate place to the place where we call the
+> driver.
+> 
 
-I am going to do a first pull requests for the mvebu arm64. Let me know
-if I do it correctly.
+Yeah, but AFAIK, hardware accelerated read support is applicable for
+m25p80 flashes only, I doubt whether spi_flash_read() will be used by
+other types. I felt keeping the software implementation in m25p80_read()
+will be consistent with m25p80_write().
 
-Thanks,
 
-Gregory
-
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+-- 
+Regards
+Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
