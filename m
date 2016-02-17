@@ -1,61 +1,246 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH RFC v5 8/8] ARM: dts: am335x-boneblack: Add HDMI audio
- support
-Date: Wed, 17 Feb 2016 13:36:34 -0600
-Message-ID: <CAOCHtYjHeToKyxtOkiJn53is+uUj4OwCqutTGk=crq8rrge0Rw@mail.gmail.com>
-References: <cover.1455720381.git.jsarha@ti.com>
- <f7d580388c35a161b086b22fc513a39851fa997b.1455720381.git.jsarha@ti.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V4 5/7] clk: bcm2835: add missing 22 HW-clocks.
+Date: Wed, 17 Feb 2016 21:01:52 +0100 (CET)
+Message-ID: <704229577.519481.7acc7698-e68b-4f4b-8da5-f03a550266a8.open-xchange@email.1und1.de>
+References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
+ <1452867667-2447-6-git-send-email-kernel@martin.sperl.org>
+ <87h9hr517u.fsf@eliezer.anholt.net> <56B8782C.4060107@martin.sperl.org>
+ <A977D3F2-1F64-41C8-B8ED-EB9F0B3554B9@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f7d580388c35a161b086b22fc513a39851fa997b.1455720381.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, arnaud.pouliquen@st.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Benoit Cousson <bcousson@baylibre.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <A977D3F2-1F64-41C8-B8ED-EB9F0B3554B9@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lee Jones <lee@kernel.org>, linux-clk@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMTcsIDIwMTYgYXQgODo0OSBBTSwgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
-bT4gd3JvdGU6Cj4gQWRkIEhETUkgYXVkaW8gc3VwcG9ydC4gQWRkcyBtY2FzcDBfcGlucywgY2xr
-X21jYXNwMF9maXhlZCwKPiBjbGtfbWNhc3AwLCBtY2FzcDAsIHNvdW5kIG5vZGUsIGFuZCB1cGRh
-dGVzIHRoZSB0ZGExOTk4OCBub2RlIHRvCj4gZm9sbG93IHRoZSBuZXcgYmluZGluZy4KPgo+IFNp
-Z25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRzIHwgOTAgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
-dGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJs
-YWNrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRzCj4gaW5kZXgg
-ZWFkYmJhMy4uMDUzNDdkYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgt
-Ym9uZWJsYWNrLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2su
-ZHRzCj4gQEAgLTY0LDYgKzY0LDE2IEBACj4gICAgICAgICAgICAgICAgICAgICAgICAgMHgxYjAg
-MHgwMyAgICAgIC8qIHhkbWFfZXZlbnRfaW50cjAsIE9NQVBfTVVYX01PREUzIHwgQU0zM1hYX1BJ
-Tl9PVVRQVVQgKi8KPiAgICAgICAgICAgICAgICAgPjsKPiAgICAgICAgIH07Cj4gKwo+ICsgICAg
-ICAgbWNhc3AwX3BpbnM6IG1jYXNwMF9waW5zIHsKPiArICAgICAgICAgICAgICAgcGluY3RybC1z
-aW5nbGUscGlucyA9IDwKPiArICAgICAgICAgICAgICAgICAgICAgICAweDFhYyAoUElOX0lOUFVU
-X1BVTExVUCB8IE1VWF9NT0RFMCkgICAgLyogbWNhc3AwX2FoY2xreC5tY2FzcDBfYWhjbGt4ICov
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgMHgxOWMgKFBJTl9PVVRQVVRfUFVMTERPV04gfCBN
-VVhfTU9ERTIpIC8qIG1jYXNwMF9haGNsa3IubWNhc3AwX2F4cjIgKi8KPiArICAgICAgICAgICAg
-ICAgICAgICAgICAweDE5NCAoUElOX09VVFBVVF9QVUxMVVAgfCBNVVhfTU9ERTApICAgLyogbWNh
-c3AwX2ZzeC5tY2FzcDBfZnN4ICovCj4gKyAgICAgICAgICAgICAgICAgICAgICAgMHgxOTAgKFBJ
-Tl9PVVRQVVRfUFVMTERPV04gfCBNVVhfTU9ERTApIC8qIG1jYXNwMF9hY2xreC5tY2FzcDBfYWNs
-a3ggKi8KPiArICAgICAgICAgICAgICAgICAgICAgICAweDA2YyAoUElOX09VVFBVVF9QVUxMRE9X
-TiB8IE1VWF9NT0RFNykgLyogZ3BtY19hMTEuR1BJTzFfMjcgKi8KCkhpIEp5cmksCgpXZSd2ZSBz
-d2l0Y2hlZCB0byBBTTMzWFhfSU9QQUQsICBwbGVhc2Ugc3F1YXNoIHRoaXMgaW4gaGVyZToKCkFN
-MzNYWF9JT1BBRCgweDlhYywgUElOX0lOUFVUX1BVTExVUCB8IE1VWF9NT0RFMCkgLyoKbWNhc3Aw
-X2FoY2tseC5tY2FzcDBfYWhjbGt4ICovCkFNMzNYWF9JT1BBRCgweDk5YywgUElOX09VVFBVVF9Q
-VUxMRE9XTiB8IE1VWF9NT0RFMikgLyoKbWNhc3AwX2FoY2xrci5tY2FzcDBfYXhyMiovCkFNMzNY
-WF9JT1BBRCgweDk5NCwgUElOX09VVFBVVF9QVUxMVVAgfCBNVVhfTU9ERTApIC8qIG1jYXNwMF9m
-c3gubWNhc3AwX2ZzeCAqLwpBTTMzWFhfSU9QQUQoMHg5OTAsIFBJTl9PVVRQVVRfUFVMTERPV04g
-fCBNVVhfTU9ERTApIC8qCm1jYXNwMF9hY2xreC5tY2FzcDBfYWNsa3ggKi8KQU0zM1hYX0lPUEFE
-KDB4ODZjLCBQSU5fT1VUUFVUX1BVTExET1dOIHwgTVVYX01PREU3KSAvKiBncG1jX2ExMS5HUElP
-MV8yNyAqLwoKUmVnYXJkcywKCi0tIApSb2JlcnQgTmVsc29uCmh0dHBzOi8vcmNuLWVlLmNvbS8K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+> Martin Sperl <kernel@martin.sperl.org> hat am 17. Februar 2016 um 19:=
+25
+> geschrieben:
+>
+> As I am trying to complete the list of clocks here my =E2=80=9Cbest=E2=
+=80=9D summary
+> so far of the clock tree for the bcm2835 taken from various sources:
+> * Datasheet
+> * broadcom provided VC4 headers (via https://github.com/msperl/rpi-re=
+gisters)
+> * mailing list
+>
+> And I have come up with the following description that
+> you can put in graphviz or http://www.webgraphviz.com/
+>
+> --- cut here ---
+> digraph clocks {
+> graph [ordering=3D"out"];
+>
+> subgraph cluster_osc {
+> label =3D "Oscillators";
+>
+> "GND";
+> "OSC";
+> "testdebug0";
+> "testdebug1";
+> }
+>
+> subgraph cluster_pll {
+> label =3D "PLLs";
+>
+> subgraph cluster_plla {
+> label =3D "PLLA";
+>
+> OSC -> PLLA;
+>
+> PLLA -> PLLA_core;
+> PLLA -> PLLA_per;
+> PLLA -> PLLA_dsi0;
+> PLLA -> PLLA_ccp2;
+> }
+>
+> subgraph cluster_pllb {
+> label =3D "PLLB";
+>
+> OSC -> PLLB;
+>
+> PLLB -> PLLB_ARM;
+> PLLB -> PLLB_SP0;
+> PLLB -> PLLB_SP1;
+> PLLB -> PLLB_SP2;
+> }
+>
+> subgraph cluster_pllc {
+> label =3D "PLLC";
+>
+> OSC -> PLLC;
+>
+> PLLC -> PLLC_core0;
+> PLLC -> PLLC_core1;
+> PLLC -> PLLC_core2;
+> PLLC -> PLLC_per;
+> }
+>
+> subgraph cluster_plld {
+> label =3D "PLLD";
+>
+> OSC -> PLLD;
+>
+> PLLD -> PLLD_core;
+> PLLD -> PLLD_per;
+> PLLD -> PLLD_dsi0;
+> PLLD -> PLLD_dsi1;
+> }
+>
+> subgraph cluster_pllh {
+> label =3D "PLLH";
+>
+> OSC -> PLLH;
+>
+> PLLH -> PLLH_aux;
+> PLLH -> PLLH_pix;
+> PLLH -> PLLH_rcal;
+> }
+> }
+>
+> subgraph cluster_mux {
+> label =3D "clocks";
+>
+> subgraph cluster_vpu_clocks {
+> label =3D "VPU-clocks";
+>
+> subgraph cluster_vpu_mux {
+> label =3D "VPU-mux";
+>
+> vGND [label=3D"0: GND"];
+> vOSC [label=3D"1: OSC"];
+> vtestdebug0 [label=3D"2: testdebug0"];
+> vtestdebug1 [label=3D"3: testdebug1"];
+> vPLLA_core [label=3D"4: PLLA_core"];
+> vPLLC_core0 [label=3D"5: PLLC_core0"];
+> vPLLD_core [label=3D"6: PLLD_core"];
+> vPLLH_aux [label=3D"7: PLLH_aux"];
+> vPLLC_core1 [label=3D"8: PLLC_core1"];
+> vPLLC_core2 [label=3D"9: PLLC_core2"];
+>
+> GND -> vGND -> vpu_mux;
+> OSC -> vOSC -> vpu_mux;
+> testdebug0 -> vtestdebug0 -> vpu_mux;
+> testdebug1 -> vtestdebug1 -> vpu_mux;
+> PLLA_core -> vPLLA_core -> vpu_mux;
+> PLLC_core0 -> vPLLC_core1 -> vpu_mux;
+> PLLD_core -> vPLLD_core -> vpu_mux;
+> PLLH_aux -> vPLLH_aux -> vpu_mux;
+> PLLC_core1 -> vPLLC_core1 -> vpu_mux;
+> PLLC_core2 -> vPLLC_core2 -> vpu_mux;
+> }
+>
+> vpu_mux -> vpu;
+> vpu_mux -> v3d;
+> vpu_mux -> isp;
+> vpu_mux -> h264;
+> vpu_mux -> sdram;
+> }
+>
+> subgraph cluster_per_clocks {
+> label =3D "Periperial-clocks";
+>
+> subgraph cluster_per_mux {
+> label =3D "Periperal-mux";
+>
+> pGND [label=3D"0: GND"];
+> pOSC [label=3D"1: OSC"];
+> ptestdebug0 [label=3D"2: testdebug0"];
+> ptestdebug1 [label=3D"3: testdebug1"];
+> pPLLA_per [label=3D"4: PLLA_per"];
+> pPLLC_per [label=3D"5: PLLC_per"];
+> pPLLD_per [label=3D"5: PLLD_per"];
+> pPLLH_aux [label=3D"5: PLLH_aux"];
+>
+> GND -> pGND -> per_mux;
+> OSC -> pOSC -> per_mux;
+> testdebug0 -> ptestdebug0 -> per_mux;
+> testdebug1 -> ptestdebug1 -> per_mux;
+> PLLA_per -> pPLLA_per -> per_mux;
+> PLLC_per -> pPLLC_per -> per_mux;
+> PLLD_per -> pPLLD_per -> per_mux;
+> PLLH_aux -> pPLLH_aux -> per_mux;
+> }
+>
+> per_mux -> vec;
+> per_mux -> uart;
+> per_mux -> hsm;
+> per_mux -> emmc;
+> per_mux -> pwm;
+> per_mux -> pcm;
+> per_mux -> aveo;
+> per_mux -> cam0;
+> per_mux -> cam1;
+> per_mux -> dft;
+> per_mux -> dpi;
+> per_mux -> dsi0e;
+> per_mux -> dsi1e;
+> per_mux -> gp0;
+> per_mux -> gp1;
+> per_mux -> gp2;
+> per_mux -> slim;
+> per_mux -> smi;
+> }
+>
+> subgraph cluster_osc_clocks {
+> label =3D "osc-clocks";
+>
+> subgraph cluster_osc_mux {
+> label =3D "osc-mux";
+>
+> oGND [label=3D"0: GND"];
+> oOSC [label=3D"1: OSC"];
+> otestdebug0 [label=3D"2: testdebug0"];
+> otestdebug1 [label=3D"3: testdebug1"];
+>
+> GND -> oGND -> osc_mux;
+> OSC -> oOSC -> osc_mux;
+> testdebug0 -> otestdebug0 -> osc_mux;
+> testdebug1 -> otestdebug1 -> osc_mux;
+> }
+>
+> osc_mux -> tsens;
+> osc_mux -> tec;
+> osc_mux -> otp;
+> }
+>
+> subgraph cluster_unknown_mux_clocks {
+> label =3D "unknown-parent-mux-clocks";
+>
+> ukn_mux -> ccp2;
+> ukn_mux -> dsi0pix;
+> ukn_mux -> dsi1pix;
+> ukn_mux -> pulse;
+> ukn_mux -> td0;
+> ukn_mux -> td1;
+> }
+>
+> subgraph cluster_debug_clocks {
+> label =3D "debug-clocks";
+>
+> debug_mux -> peria;
+> debug_mux -> sys;
+> }
+> }
+>
+> subgraph cluster_aux {
+> label =3D =E2=80=9Cauxiliar-clocks";
+>
+> vpu -> spi1;
+> vpu -> spi2;
+> vpu -> uart1;
+> }
+> }
+> --- cut here ---
+>
+> I have no idea where we could put this information
+> in the kernel tree - maybe this would help.
+>
+
+Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt should =
+be a good
+place.
