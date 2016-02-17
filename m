@@ -1,44 +1,29 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: RE: [PATCH v2 1/3] input: cygnus-update touchscreen dt node document
-Date: Wed, 17 Feb 2016 15:23:49 +0530
-Message-ID: <b2adbdb45d34485fbe8a29f580ab0c61@mail.gmail.com>
-References: <1455702226-20599-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1455702226-20599-2-git-send-email-raveendra.padasalagi@broadcom.com> <13357929.DDBX61jLXt@wuerfel>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 2/3] clk: samsung: Don't build ARMv8 clock drivers on
+ ARMv7
+Date: Wed, 17 Feb 2016 11:03:36 +0100
+Message-ID: <56C44578.5010009@samsung.com>
+References: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
+ <1455603632-11158-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13357929.DDBX61jLXt@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <1455603632-11158-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: 17 February 2016 15:16
-> To: Raveendra Padasalagi
-> Cc: Dmitry Torokhov; Russell King; Rob Herring;
-devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-input@vger.kernel.org; Pawel
-Moll;
-> Mark Rutland; Ian Campbell; Kumar Gala; Jonathan Richardson; Jon Mason;
-> Florian Fainelli; Anup Patel; Ray Jui; Scott Branden; linux-
-> kernel@vger.kernel.org; bcm-kernel-feedback-list@broadcom.com
-> Subject: Re: [PATCH v2 1/3] input: cygnus-update touchscreen dt node
-> document
->
-> On Wednesday 17 February 2016 15:13:44 Raveendra Padasalagi wrote:
-> > +
-> > +       ts_adc_syscon: ts_adc_syscon@0x180a6000 {
-> > +               compatible = "syscon";
-> > +               reg = <0x180a6000 0xc30>;
-> > +       };
-> >
->
-> This should have a more specific compatible string in addition to the
-generic
-> "syscon" one.
+On 16/02/16 07:20, Krzysztof Kozlowski wrote:
+> Currently the Exynos5433 (ARMv8 SoC) clock driver depends on ARCH_EXYNOS
+> so it is built also on ARMv7. This does not bring any kind of benefit.
+> There won't be a single kernel image for ARMv7 and ARMv8 SoCs (like
+> multi_v7 for ARMv7).
+> 
+> Instead build clock drivers only for respective SoC's architecture.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Ok, Thanks Arnd. I will address this in the next patch.
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-> 	Arnd
