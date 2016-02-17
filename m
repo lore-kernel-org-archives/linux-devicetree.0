@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 20/45] powerpc/powernv: Allocate PE# in reverse order
-Date: Wed, 17 Feb 2016 14:44:03 +1100
-Message-ID: <1455680668-23298-21-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 37/45] powerpc/powernv: Use firmware PCI slot reset infrastructure
+Date: Wed, 17 Feb 2016 14:44:20 +1100
+Message-ID: <1455680668-23298-38-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,52 +10,76 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-PE number for one particular PE can be allocated dynamically or
-reserved according to the consumed M64 (64-bits prefetchable)
-segments of the PE. The M64 resources, and hence their segments
-and PE number are assigned/reserved in ascending order. The PE
-numbers are allocated dynamically in ascending order as well.
-It's not a problem as the PE numbers are reserved and then
-allocated all at once in fine order. However, it will introduce
-conflicts when PCI hotplug is supported: the PE number to be
-reserved for newly added PE might have been assigned.
+The skiboot firmware might provide the PCI slot reset capability
+which is identified by property "ibm,reset-by-firmware" on the
+PCI slot associated device node.
 
-To resolve above conflicts, this forces the PE number to be
-allocated dynamically in reverse order. With this patch applied,
-the PE numbers are reserved in ascending order, but allocated
-dynamically in reverse order.
+This checks the property. If it exists, the reset request is routed
+to firmware. Otherwise, the reset is done by kernel as before.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 41 +++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index f182ca7..565725b 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -144,16 +144,14 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
- 
- static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
- {
--	unsigned long pe;
-+	unsigned long pe = phb->ioda.total_pe_num - 1;
- 
--	do {
--		pe = find_next_zero_bit(phb->ioda.pe_alloc,
--					phb->ioda.total_pe_num, 0);
--		if (pe >= phb->ioda.total_pe_num)
--			return NULL;
--	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
-+	for (pe = phb->ioda.total_pe_num - 1; pe >= 0; pe--) {
-+		if (!test_and_set_bit(pe, phb->ioda.pe_alloc))
-+			return pnv_ioda_init_pe(phb, pe);
-+	}
- 
--	return pnv_ioda_init_pe(phb, pe);
-+	return NULL;
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index e23b063..c8a5217 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -789,7 +789,7 @@ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+ 	return ret;
  }
  
- static void pnv_ioda_free_pe(struct pnv_ioda_pe *pe)
+-static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
++static int __pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+ {
+ 	struct pci_dn *pdn = pci_get_pdn_by_devfn(dev->bus, dev->devfn);
+ 	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
+@@ -840,6 +840,45 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+ 	return 0;
+ }
+ 
++static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
++{
++	struct pci_controller *hose;
++	struct pnv_phb *phb;
++	struct device_node *dn = pdev ? pci_device_to_OF_node(pdev) : NULL;
++	uint64_t id = (0x1ul << 60);
++	uint8_t scope;
++	int64_t rc;
++
++	/*
++	 * If the firmware can't handle it, we will issue hot reset
++	 * on the secondary bus despite the requested reset type.
++	 */
++	if (!dn || !of_get_property(dn, "ibm,reset-by-firmware", NULL))
++		return __pnv_eeh_bridge_reset(pdev, option);
++
++	/* The firmware can handle the request */
++	switch (option) {
++	case EEH_RESET_HOT:
++		scope = OPAL_RESET_PCI_HOT;
++		break;
++	case EEH_RESET_FUNDAMENTAL:
++		scope = OPAL_RESET_PCI_FUNDAMENTAL;
++		break;
++	case EEH_RESET_DEACTIVATE:
++		return 0;
++	default:
++		dev_warn(&pdev->dev, "%s: Unsupported reset %d\n",
++			 __func__, option);
++		return -EINVAL;
++	}
++
++	hose = pci_bus_to_host(pdev->bus);
++	phb = hose->private_data;
++	id |= (pdev->bus->number << 24) | (pdev->devfn << 16) | phb->opal_id;
++	rc = opal_pci_reset(id, scope, OPAL_ASSERT_RESET);
++	return pnv_pci_poll(id, rc, NULL);
++}
++
+ static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
+ {
+ 	int *freset = data;
 -- 
 2.1.0
