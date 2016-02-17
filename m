@@ -1,87 +1,66 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 12/45] powerpc/powernv: Rename M64 related functions
-Date: Wed, 17 Feb 2016 14:43:55 +1100
-Message-ID: <1455680668-23298-13-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 05/45] powerpc/powernv: Drop phb->bdfn_to_pe()
+Date: Wed, 17 Feb 2016 14:43:48 +1100
+Message-ID: <1455680668-23298-6-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455680668-23298-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This renames those functions picking PE number based on consumed
-M64 segments, mapping M64 segments to PEs as those functions are
-going to be shared by IODA1/IODA2 in next patch. No logical changes
-introduced.
+This drops struct pnv_phb::bdfn_to_pe() as nobody uses it.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 9 ---------
+ arch/powerpc/platforms/powernv/pci.h      | 1 -
+ 2 files changed, 10 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index fc0374a..1dc663a 100644
+index 524c9c7..10ecd97 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -219,7 +219,7 @@ fail:
- 	return -EIO;
+@@ -3195,12 +3195,6 @@ static bool pnv_pci_enable_device_hook(struct pci_dev *dev)
+ 	return true;
  }
  
--static void pnv_ioda2_reserve_dev_m64_pe(struct pci_dev *pdev,
-+static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
- 					 unsigned long *pe_bitmap)
+-static u32 pnv_ioda_bdfn_to_pe(struct pnv_phb *phb, struct pci_bus *bus,
+-			       u32 devfn)
+-{
+-	return phb->ioda.pe_rmap[(bus->number << 8) | devfn];
+-}
+-
+ static void pnv_pci_ioda_shutdown(struct pci_controller *hose)
  {
- 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-@@ -246,22 +246,22 @@ static void pnv_ioda2_reserve_dev_m64_pe(struct pci_dev *pdev,
- 	}
- }
- 
--static void pnv_ioda2_reserve_m64_pe(struct pci_bus *bus,
--				     unsigned long *pe_bitmap,
--				     bool all)
-+static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
-+				    unsigned long *pe_bitmap,
-+				    bool all)
- {
- 	struct pci_dev *pdev;
- 
- 	list_for_each_entry(pdev, &bus->devices, bus_list) {
--		pnv_ioda2_reserve_dev_m64_pe(pdev, pe_bitmap);
-+		pnv_ioda_reserve_dev_m64_pe(pdev, pe_bitmap);
- 
- 		if (all && pdev->subordinate)
--			pnv_ioda2_reserve_m64_pe(pdev->subordinate,
--						 pe_bitmap, all);
-+			pnv_ioda_reserve_m64_pe(pdev->subordinate,
-+						pe_bitmap, all);
- 	}
- }
- 
--static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus, bool all)
-+static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- {
- 	struct pci_controller *hose = pci_bus_to_host(bus);
  	struct pnv_phb *phb = hose->private_data;
-@@ -283,7 +283,7 @@ static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus, bool all)
- 	}
+@@ -3377,9 +3371,6 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	phb->freeze_pe = pnv_ioda_freeze_pe;
+ 	phb->unfreeze_pe = pnv_ioda_unfreeze_pe;
  
- 	/* Figure out reserved PE numbers by the PE */
--	pnv_ioda2_reserve_m64_pe(bus, pe_alloc, all);
-+	pnv_ioda_reserve_m64_pe(bus, pe_alloc, all);
+-	/* Setup RID -> PE mapping function */
+-	phb->bdfn_to_pe = pnv_ioda_bdfn_to_pe;
+-
+ 	/* Setup TCEs */
+ 	phb->dma_dev_setup = pnv_pci_ioda_dma_dev_setup;
  
- 	/*
- 	 * the current bus might not own M64 window and that's all
-@@ -365,8 +365,8 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
- 	/* Use last M64 BAR to cover M64 window */
- 	phb->ioda.m64_bar_idx = 15;
- 	phb->init_m64 = pnv_ioda2_init_m64;
--	phb->reserve_m64_pe = pnv_ioda2_reserve_m64_pe;
--	phb->pick_m64_pe = pnv_ioda2_pick_m64_pe;
-+	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
-+	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
- }
- 
- static void pnv_ioda_freeze_pe(struct pnv_phb *phb, int pe_no)
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 3f814f3..78f035e 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -110,7 +110,6 @@ struct pnv_phb {
+ 			 unsigned int is_64, struct msi_msg *msg);
+ 	void (*dma_dev_setup)(struct pnv_phb *phb, struct pci_dev *pdev);
+ 	void (*fixup_phb)(struct pci_controller *hose);
+-	u32 (*bdfn_to_pe)(struct pnv_phb *phb, struct pci_bus *bus, u32 devfn);
+ 	int (*init_m64)(struct pnv_phb *phb);
+ 	void (*reserve_m64_pe)(struct pci_bus *bus,
+ 			       unsigned long *pe_bitmap, bool all);
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
