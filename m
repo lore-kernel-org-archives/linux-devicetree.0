@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 37/45] powerpc/powernv: Use firmware PCI slot reset infrastructure
-Date: Wed, 17 Feb 2016 14:44:20 +1100
-Message-ID: <1455680668-23298-38-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 33/45] powerpc/powernv: Simplify pnv_eeh_reset()
+Date: Wed, 17 Feb 2016 14:44:16 +1100
+Message-ID: <1455680668-23298-34-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,76 +10,104 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The skiboot firmware might provide the PCI slot reset capability
-which is identified by property "ibm,reset-by-firmware" on the
-PCI slot associated device node.
-
-This checks the property. If it exists, the reset request is routed
-to firmware. Otherwise, the reset is done by kernel as before.
+This drops unnecessary nested if statements in pnv_eeh_reset() to
+improve the code readability. After the changes, the unused local
+variable "ret" is dropped as well. No logical changes introduced.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/eeh-powernv.c | 41 +++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 67 +++++++++++++---------------
+ 1 file changed, 31 insertions(+), 36 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index e23b063..c8a5217 100644
+index 69e41ce..9226df1 100644
 --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
 +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -789,7 +789,7 @@ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
- 	return ret;
- }
- 
--static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
-+static int __pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+@@ -1009,8 +1009,9 @@ static int pnv_eeh_reset_vf_pe(struct eeh_pe *pe, int option)
+ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
  {
- 	struct pci_dn *pdn = pci_get_pdn_by_devfn(dev->bus, dev->devfn);
- 	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
-@@ -840,6 +840,45 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
- 	return 0;
- }
- 
-+static int pnv_eeh_bridge_reset(struct pci_dev *pdev, int option)
-+{
-+	struct pci_controller *hose;
+ 	struct pci_controller *hose = pe->phb;
 +	struct pnv_phb *phb;
-+	struct device_node *dn = pdev ? pci_device_to_OF_node(pdev) : NULL;
-+	uint64_t id = (0x1ul << 60);
-+	uint8_t scope;
+ 	struct pci_bus *bus;
+-	int ret;
 +	int64_t rc;
-+
+ 
+ 	/*
+ 	 * For PHB reset, we always have complete reset. For those PEs whose
+@@ -1026,45 +1027,39 @@ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
+ 	 * reset. The side effect is that EEH core has to clear the frozen
+ 	 * state explicitly after BAR restore.
+ 	 */
+-	if (pe->type & EEH_PE_PHB) {
+-		ret = pnv_eeh_phb_reset(hose, option);
+-	} else {
+-		struct pnv_phb *phb;
+-		s64 rc;
++	if (pe->type & EEH_PE_PHB)
++		return pnv_eeh_phb_reset(hose, option);
+ 
+-		/*
+-		 * The frozen PE might be caused by PAPR error injection
+-		 * registers, which are expected to be cleared after hitting
+-		 * frozen PE as stated in the hardware spec. Unfortunately,
+-		 * that's not true on P7IOC. So we have to clear it manually
+-		 * to avoid recursive EEH errors during recovery.
+-		 */
+-		phb = hose->private_data;
+-		if (phb->model == PNV_PHB_MODEL_P7IOC &&
+-		    (option == EEH_RESET_HOT ||
+-		    option == EEH_RESET_FUNDAMENTAL)) {
+-			rc = opal_pci_reset(phb->opal_id,
+-					    OPAL_RESET_PHB_ERROR,
+-					    OPAL_ASSERT_RESET);
+-			if (rc != OPAL_SUCCESS) {
+-				pr_warn("%s: Failure %lld clearing "
+-					"error injection registers\n",
+-					__func__, rc);
+-				return -EIO;
+-			}
 +	/*
-+	 * If the firmware can't handle it, we will issue hot reset
-+	 * on the secondary bus despite the requested reset type.
++	 * The frozen PE might be caused by PAPR error injection
++	 * registers, which are expected to be cleared after hitting
++	 * frozen PE as stated in the hardware spec. Unfortunately,
++	 * that's not true on P7IOC. So we have to clear it manually
++	 * to avoid recursive EEH errors during recovery.
 +	 */
-+	if (!dn || !of_get_property(dn, "ibm,reset-by-firmware", NULL))
-+		return __pnv_eeh_bridge_reset(pdev, option);
-+
-+	/* The firmware can handle the request */
-+	switch (option) {
-+	case EEH_RESET_HOT:
-+		scope = OPAL_RESET_PCI_HOT;
-+		break;
-+	case EEH_RESET_FUNDAMENTAL:
-+		scope = OPAL_RESET_PCI_FUNDAMENTAL;
-+		break;
-+	case EEH_RESET_DEACTIVATE:
-+		return 0;
-+	default:
-+		dev_warn(&pdev->dev, "%s: Unsupported reset %d\n",
-+			 __func__, option);
-+		return -EINVAL;
-+	}
-+
-+	hose = pci_bus_to_host(pdev->bus);
 +	phb = hose->private_data;
-+	id |= (pdev->bus->number << 24) | (pdev->devfn << 16) | phb->opal_id;
-+	rc = opal_pci_reset(id, scope, OPAL_ASSERT_RESET);
-+	return pnv_pci_poll(id, rc, NULL);
-+}
++	if (phb->model == PNV_PHB_MODEL_P7IOC &&
++	    (option == EEH_RESET_HOT ||
++	     option == EEH_RESET_FUNDAMENTAL)) {
++		rc = opal_pci_reset(phb->opal_id,
++				    OPAL_RESET_PHB_ERROR,
++				    OPAL_ASSERT_RESET);
++		if (rc != OPAL_SUCCESS) {
++			pr_warn("%s: Failure %lld clearing error injection registers\n",
++				__func__, rc);
++			return -EIO;
+ 		}
+-
+-		bus = eeh_pe_bus_get(pe);
+-		if (pe->type & EEH_PE_VF)
+-			ret = pnv_eeh_reset_vf_pe(pe, option);
+-		else if (pci_is_root_bus(bus) ||
+-			pci_is_root_bus(bus->parent))
+-			ret = pnv_eeh_root_reset(hose, option);
+-		else
+-			ret = pnv_eeh_bridge_reset(bus->self, option);
+ 	}
+ 
+-	return ret;
++	bus = eeh_pe_bus_get(pe);
++	if (pe->type & EEH_PE_VF)
++		return pnv_eeh_reset_vf_pe(pe, option);
 +
- static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
- {
- 	int *freset = data;
++	if (pci_is_root_bus(bus) ||
++	    pci_is_root_bus(bus->parent))
++		return pnv_eeh_root_reset(hose, option);
++
++	return pnv_eeh_bridge_reset(bus->self, option);
+ }
+ 
+ /**
 -- 
 2.1.0
