@@ -1,30 +1,119 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] Adding support to show SoC revision in /proc/cpuinfo
-Date: Wed, 17 Feb 2016 18:28:32 +0100
-Message-ID: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Wed, 17 Feb 2016 20:29:02 +0300
+Message-ID: <56C4ADDE.50708@cogentembedded.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <20160212162110.GA21833@rob-hp-laptop> <56BE15D8.3020303@cogentembedded.com>
+ <CAL_JsqJi9NswYjFF1-hVp6QQNM0MCm7wyvfec+9iFZHzSJ+r3Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJi9NswYjFF1-hVp6QQNM0MCm7wyvfec+9iFZHzSJ+r3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This serie adds support to retrieve the SoC serial and revision of the current
-Meson8 platform. Basically, in the first patch I register a soc_device and retrieve
-information from a syscon register, then I populate system_rev and system_serial.
-In the second patch I add the device_node to the devicetree.
+Hello.
 
-Romain Perier (2):
-  ARM: meson: Adding support to retrieve serial and SoC revision
-  ARM: dts: meson: Adding hwrev syscon node
+On 02/16/2016 10:53 PM, Rob Herring wrote:
 
- arch/arm/boot/dts/meson8b.dtsi |  5 ++++
- arch/arm/mach-meson/meson.c    | 55 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+>>>> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+>>>>
+>>>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/usb/da8xx-usb.txt          | 47
+>>>> ++++++++++++++++++++++
+>>>>    1 file changed, 47 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>> new file mode 100644
+>>>> index 0000000..62dcc51
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>> @@ -0,0 +1,47 @@
+>>>> +TI DA8xx MUSB
+>>>> +~~~~~~~~~~~~~
+>>>> +For DA830 and DA850 platforms.
+>>>> +
+>>>> +Required properties:
+>>>> +~~~~~~~~~~~~~~~~~~~~
+>>>> + - compatible : Should be set to "ti,da830-musb".
+>>>> +
+>>>> + - reg: Offset and length of the USB controller register set.
+>>>> +
+>>>> + - interrupts: The USB interrupt number.
+>>>> +
+>>>> + - interrupt-names: Should be set to "mc".
+>>>> +
+>>>> + - dr_mode: The USB operation mode. Should be one of "host",
+>>>> "peripheral" or "otg".
+>>>> +
+>>>> + - mentor,power : Specifies the maximum current in milliamperes the
+>>>> controller can
+>>>> +     supply in host mode.
+>>>
+>>> Still a no for me.
+>>
+>>     Note that it's been used twice already, for musb_dsps.c and omap2430.c
+>> glues (in the latter case the prop was called just "power"). The
+>> corresponding field is a part of the 'struct musb_hdrc_platform_data'.
+>
+> Copied from platform_data is exactly what is wrong with this binding
 
--- 
-2.5.0
+    Why? This is a usual way for the platform device to DT migration, no?..
+
+> and you already said those were bad examples.
+
+    No, I said that about the members of 'struct musb_hdrc_config' (referenced 
+from the MUSB platform data) that describes the MUSB hardware config. and 
+should have been filled based on the "compatible" prop instead of being 
+represented in the device tree props. I didn't complain about the "true" 
+platform data IIRC...
+
+>>> Looks like this just sets hcd->power_budget. This
+>>> property may not be a regulator, but ultimately the value depends on
+>>> some regulator supplying Vbus.
+>>
+>>     Yes.
+>>
+>>> Also, given this has nothing to do with MUSB h/w,
+>>
+>>     This regulator is controlled by the DRVVBUS signal from MUSB h/w!
+>
+> How does a single signal control amount of current? What I should say
+
+    It controls the VBUS voltage (0/+5 V), not the current. The amount of 
+current that can be sourced by the bus seems to be an inherent feature of the 
+regualtor as far as I remember the corresponding chip datasheets...
+
+> is the max current has nothing to do with the MUSB controller. It is a
+> property of some regulator.
+
+    But it's not the current regulator...
+
+>>> however this is described should be generic.
+>>
+>>     You mean just "power", w/o the vendor prefix?
+>
+> No. I mean generic in the sense of common for all USB host bindings,
+
+    OK, it's just that currently it's conveyed to the USB stack by each host 
+driver's individual platform data, not only MUSB's but also Chipidea's, etc.
+
+> not generic as in a meaningless, unclear name.
+
+    I'm seeing the generically named "hub-power-budget" prop parsed by the 
+FHCI driver though, maybe we should stick to that.
+
+> Rob
+
+MBR, Sergei
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
