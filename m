@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 03/45] powerpc/pci: Cleanup on struct pci_controller_ops
-Date: Wed, 17 Feb 2016 14:43:46 +1100
-Message-ID: <1455680668-23298-4-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 14/45] powerpc/powernv/ioda1: Rename pnv_pci_ioda_setup_dma_pe()
+Date: Wed, 17 Feb 2016 14:43:57 +1100
+Message-ID: <1455680668-23298-15-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,57 +10,41 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Each PHB has one instance of "struct pci_controller_ops", which
-includes various callbacks called by PCI subsystem. In the definition
-of this struct, some callbacks have explicit names for its arguments,
-but the left don't have.
-
-This adds all explicit names of the arguments to the callbacks in
-"struct pci_controller_ops" so that the code looks consistent.
+This renames pnv_pci_ioda_setup_dma_pe() to pnv_pci_ioda1_setup_dma_pe()
+as it's the counter-part of IODA2's pnv_pci_ioda2_setup_dma_pe().
+No logical changes introduced.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Reviewed-by: Daniel Axtens <dja@axtens.net>
 ---
- arch/powerpc/include/asm/pci-bridge.h | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index b688d04..4dd6ef4 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -21,18 +21,19 @@ struct pci_controller_ops {
- 	void		(*dma_dev_setup)(struct pci_dev *dev);
- 	void		(*dma_bus_setup)(struct pci_bus *bus);
- 
--	int		(*probe_mode)(struct pci_bus *);
-+	int		(*probe_mode)(struct pci_bus *bus);
- 
- 	/* Called when pci_enable_device() is called. Returns true to
- 	 * allow assignment/enabling of the device. */
--	bool		(*enable_device_hook)(struct pci_dev *);
-+	bool		(*enable_device_hook)(struct pci_dev *dev);
- 
--	void		(*disable_device)(struct pci_dev *);
-+	void		(*disable_device)(struct pci_dev *dev);
- 
--	void		(*release_device)(struct pci_dev *);
-+	void		(*release_device)(struct pci_dev *dev);
- 
- 	/* Called during PCI resource reassignment */
--	resource_size_t (*window_alignment)(struct pci_bus *, unsigned long type);
-+	resource_size_t (*window_alignment)(struct pci_bus *bus,
-+					    unsigned long type);
- 	void		(*setup_bridge)(struct pci_bus *bus,
- 					unsigned long type);
- 	void		(*reset_secondary_bus)(struct pci_dev *dev);
-@@ -46,7 +47,7 @@ struct pci_controller_ops {
- 	int             (*dma_set_mask)(struct pci_dev *dev, u64 dma_mask);
- 	u64		(*dma_get_required_mask)(struct pci_dev *dev);
- 
--	void		(*shutdown)(struct pci_controller *);
-+	void		(*shutdown)(struct pci_controller *hose);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 8488238..d18b95e 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2026,9 +2026,10 @@ static struct iommu_table_ops pnv_ioda2_iommu_ops = {
+ 	.free = pnv_ioda2_table_free,
  };
  
- /*
+-static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
+-				      struct pnv_ioda_pe *pe, unsigned int base,
+-				      unsigned int segs)
++static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
++				       struct pnv_ioda_pe *pe,
++				       unsigned int base,
++				       unsigned int segs)
+ {
+ 
+ 	struct page *tce_mem = NULL;
+@@ -2616,7 +2617,7 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+ 		if (phb->type == PNV_PHB_IODA1) {
+ 			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
+ 				pe->dma_weight, segs);
+-			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
++			pnv_pci_ioda1_setup_dma_pe(phb, pe, base, segs);
+ 		} else if (phb->type == PNV_PHB_IODA2) {
+ 			pe_info(pe, "Assign DMA32 space\n");
+ 			segs = 0;
 -- 
 2.1.0
