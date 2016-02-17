@@ -1,104 +1,117 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM64: dts: rockchip: add core dtsi file for rk3399
-Date: Wed, 17 Feb 2016 11:27:43 +0000
-Message-ID: <56C4592F.4080608@arm.com>
-References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
- <1455674476-16655-1-git-send-email-jay.xu@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v11 05/14] dt-bindings: drm/mediatek: Add Mediatek HDMI dts
+ binding
+Date: Wed, 17 Feb 2016 12:28:45 +0100
+Message-ID: <1455708534-20274-6-git-send-email-p.zabel@pengutronix.de>
+References: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455674476-16655-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Xu,
-
-On 17/02/16 02:01, jianqun.xu wrote:
-> From: Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Add dtsi file for Rockchip rk3399 SoCs, which includes some
-> general nodes such as cpu, pmu, cru, gic, amba and so on.
-> 
-> Change-Id: Ie3b824e8ead967d4cb119d73222b7a198478c29c
-> Signed-off-by: Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 989 +++++++++++++++++++++++++++++++
->  1 file changed, 989 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> new file mode 100644
-> index 0000000..eb671f6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-
-[...]
-
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts =
-> +			<GIC_PPI 13
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			<GIC_PPI 14
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			<GIC_PPI 11
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			<GIC_PPI 10
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-
-Please drop these GIC_CPU_MASK_SIMPLE from the interrupt specifiers,
-they do not mean anything with GICv3.
-
-> +		clock-frequency = <24000000>;
-
-Are you sure you do need this? Can't your firmware be fixed to correctly
-program CNTFRQ_EL0?
-
-> +	};
-> +
-> +	xin24m: xin24m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "xin24m";
-> +	};
-> +
-> +	gic: interrupt-controller@fee00000 {
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		interrupt-controller;
-> +
-> +		reg = <0x0 0xfee00000 0 0x10000>, /* GICD */
-> +		      <0x0 0xfef00000 0 0xc0000>, /* GICR */
-> +		      <0x0 0xfff00000 0 0x10000>, /* GICC */
-> +		      <0x0 0xfff10000 0 0x10000>, /* GICH */
-> +		      <0x0 0xfff20000 0 0x10000>; /* GICV */
-> +		interrupts =
-> +			<GIC_PPI 9
-> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-
-Same remark about the mask.
-
-> +		its: interrupt-controller@fee20000 {
-> +			compatible = "arm,gic-v3-its";
-> +			msi-controller;
-> +			reg = <0x0 0xfee20000 0x0 0x20000>;
-> +		};
-
-Looks nice. Is there any peripheral capable of generating MSIs on this SoC?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIE1lZGlhdGVrIEhE
+TUksCkhETUkgUEhZIGFuZCBIRE1JIEREQyBkZXZpY2VzLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlw
+cCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0
+ZWssaGRtaS50eHQgICAgfCAxNDggKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMTQ4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxoZG1pLnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlh
+dGVrL21lZGlhdGVrLGhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMC4uN2IxMjQyNAotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGhkbWkudHh0CkBA
+IC0wLDAgKzEsMTQ4IEBACitNZWRpYXRlayBIRE1JIEVuY29kZXIKKz09PT09PT09PT09PT09PT09
+PT09PQorCitUaGUgTWVkaWF0ZWsgSERNSSBlbmNvZGVyIGNhbiBnZW5lcmF0ZSBIRE1JIDEuNGEg
+b3IgTUhMIDIuMCBzaWduYWxzIGZyb20KK2l0cyBwYXJhbGxlbCBpbnB1dC4KKworUmVxdWlyZWQg
+cHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayw8Y2hpcD4taGRt
+aSIuCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRy
+b2xsZXIncyByZWdpc3RlcnMKKy0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBzaWduYWwgZnJv
+bSB0aGUgZnVuY3Rpb24gYmxvY2suCistIGNsb2NrczogZGV2aWNlIGNsb2NrcworICBTZWUgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dCBm
+b3IgZGV0YWlscy4KKy0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGl4ZWwiLCAicGxsIiwg
+ImJjbGsiLCBhbmQgInNwZGlmIi4KKy0gcGh5czogcGhhbmRsZSBsaW5rIHRvIHRoZSBIRE1JIFBI
+WSBub2RlLgorICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHkt
+YmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgorLSBwaHktbmFtZXM6IG11c3QgY29udGFpbiAiaGRt
+aSIKKy0gbWVkaWF0ZWssc3lzY29uLWhkbWk6IHBoYW5kbGUgbGluayBhbmQgcmVnaXN0ZXIgb2Zm
+c2V0IHRvIHRoZSBzeXN0ZW0KKyAgY29uZmlndXJhdGlvbiByZWdpc3RlcnMuIEZvciBtdDgxNzMg
+dGhpcyBtdXN0IGJlIG9mZnNldCAweDkwMCBpbnRvIHRoZQorICBNTVNZU19DT05GSUcgcmVnaW9u
+OiA8Jm1tc3lzIDB4OTAwPi4KKy0gcG9ydHM6IEEgbm9kZSBjb250YWluaW5nIGlucHV0IGFuZCBv
+dXRwdXQgcG9ydCBub2RlcyB3aXRoIGVuZHBvaW50CisgIGRlZmluaXRpb25zIGFzIGRvY3VtZW50
+ZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKy0gcG9y
+dEAwOiBUaGUgaW5wdXQgcG9ydCBpbiB0aGUgcG9ydHMgbm9kZSBzaG91bGQgYmUgY29ubmVjdGVk
+IHRvIGEgRFBJIG91dHB1dAorICBwb3J0LgorLSBwb3J0QDE6IFRoZSBvdXRwdXQgcG9ydCBpbiB0
+aGUgcG9ydHMgbm9kZSBzaG91bGQgYmUgY29ubmVjdGVkIHRvIHRoZSBpbnB1dAorICBwb3J0IG9m
+IGEgY29ubmVjdG9yIG5vZGUgdGhhdCBjb250YWlucyBhIGRkYy1pMmMtYnVzIHByb3BlcnR5LCBv
+ciB0byB0aGUKKyAgaW5wdXQgcG9ydCBvZiBhbiBhdHRhY2hlZCBicmlkZ2UgY2hpcCwgc3VjaCBh
+cyBhIFNsaW1Qb3J0IHRyYW5zbWl0dGVyLgorCitIRE1JIENFQworPT09PT09PT0KKworVGhlIEhE
+TUkgQ0VDIGNvbnRyb2xsZXIgaGFuZGxlcyBob3RwbHVnIGRldGVjdGlvbiBhbmQgQ0VDIGNvbW11
+bmljYXRpb24uCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IFNob3VsZCBi
+ZSAibWVkaWF0ZWssPGNoaXA+LWNlYyIKKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5k
+IGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycworLSBpbnRlcnJ1cHRzOiBUaGUg
+aW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlvbiBibG9jay4KKy0gY2xvY2tzOiBkZXZp
+Y2UgY2xvY2sKKworSERNSSBEREMKKz09PT09PT09CisKK1RoZSBIRE1JIEREQyBpMmMgY29udHJv
+bGxlciBpcyB1c2VkIHRvIGludGVyZmFjZSB3aXRoIHRoZSBIRE1JIEREQyBwaW5zLgorVGhlIE1l
+ZGlhdGVrJ3MgSTJDIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBpbnRlcmZhY2Ugd2l0aCBJMkMgZGV2
+aWNlcy4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJt
+ZWRpYXRlayw8Y2hpcD4taGRtaS1kZGMiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
+ZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMKKy0gY2xvY2tzOiBkZXZpY2Ug
+Y2xvY2sKKy0gY2xvY2stbmFtZXM6IFNob3VsZCBiZSAiZGRjLWkyYyIuCisKK0hETUkgUEhZCis9
+PT09PT09PQorCitUaGUgSERNSSBQSFkgc2VyaWFsaXplcyB0aGUgSERNSSBlbmNvZGVyJ3MgdGhy
+ZWUgY2hhbm5lbCAxMC1iaXQgcGFyYWxsZWwKK291dHB1dCBhbmQgZHJpdmVzIHRoZSBIRE1JIHBh
+ZHMuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6ICJtZWRpYXRlayw8Y2hp
+cD4taGRtaS1waHkiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2Yg
+dGhlIG1vZHVsZSdzIHJlZ2lzdGVycworLSBjbG9ja3M6IFBMTCByZWZlcmVuY2UgY2xvY2sKKy0g
+Y2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGxsX3JlZiIKKy0gY2xvY2stb3V0cHV0LW5hbWVz
+OiBtdXN0IGJlICJoZG1pdHhfZGlnX2N0cyIgb24gbXQ4MTczCistICNwaHktY2VsbHM6IG11c3Qg
+YmUgPDA+CistICNjbG9jay1jZWxsczogbXVzdCBiZSA8MD4KKworT3B0aW9uYWwgcHJvcGVydGll
+czoKKy0gbWVkaWF0ZWssaWJpYXM6IFRYIERSViBiaWFzIGN1cnJlbnQgZm9yIDwxLjY1R2Jwcywg
+ZGVmYXVsdHMgdG8gMHhhCistIG1lZGlhdGVrLGliaWFzX3VwOiBUWCBEUlYgYmlhcyBjdXJyZW50
+IGZvciA+MS42NUdicHMsIGRlZmF1bHRzIHRvIDB4MWMKKworRXhhbXBsZToKKworY2VjOiBjZWNA
+MTAwMTMwMDAgeworCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWNlYyI7CisJcmVnID0g
+PDAgMHgxMDAxMzAwMCAwIDB4YmM+OworCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNjcgSVJRX1RZ
+UEVfTEVWRUxfTE9XPjsKKwljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19JTkZSQV9DRUM+OworfTsK
+KworaGRtaV9waHk6IGhkbWktcGh5QDEwMjA5MTAwIHsKKwljb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10ODE3My1oZG1pLXBoeSI7CisJcmVnID0gPDAgMHgxMDIwOTEwMCAwIDB4MjQ+OworCWNsb2Nr
+cyA9IDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9IRE1JX1JFRj47CisJY2xvY2stbmFtZXMgPSAi
+cGxsX3JlZiI7CisJY2xvY2stb3V0cHV0LW5hbWVzID0gImhkbWl0eF9kaWdfY3RzIjsKKwltZWRp
+YXRlayxpYmlhcyA9IDwweGE+OworCW1lZGlhdGVrLGliaWFzX3VwID0gPDB4MWM+OworCSNjbG9j
+ay1jZWxscyA9IDwwPjsKKwkjcGh5LWNlbGxzID0gPDA+OworfTsKKworaGRtaV9kZGMwOiBpMmNA
+MTEwMTIwMDAgeworCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWhkbWktZGRjIjsKKwly
+ZWcgPSA8MCAweDExMDEyMDAwIDAgMHgxYz47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgxIElS
+UV9UWVBFX0xFVkVMX0xPVz47CisJY2xvY2tzID0gPCZwZXJpY2ZnIENMS19QRVJJX0kyQzU+Owor
+CWNsb2NrLW5hbWVzID0gImRkYy1pMmMiOworfTsKKworaGRtaTA6IGhkbWlAMTQwMjUwMDAgewor
+CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWhkbWkiOworCXJlZyA9IDwwIDB4MTQwMjUw
+MDAgMCAweDQwMD47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIwNiBJUlFfVFlQRV9MRVZFTF9M
+T1c+OworCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0hETUlfUElYRUw+LAorCQkgPCZtbXN5cyBD
+TEtfTU1fSERNSV9QTExDSz4sCisJCSA8Jm1tc3lzIENMS19NTV9IRE1JX0FVRElPPiwKKwkJIDwm
+bW1zeXMgQ0xLX01NX0hETUlfU1BESUY+OworCWNsb2NrLW5hbWVzID0gInBpeGVsIiwgInBsbCIs
+ICJiY2xrIiwgInNwZGlmIjsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCXBpbmN0cmwt
+MCA9IDwmaGRtaV9waW4+OworCXBoeXMgPSA8JmhkbWlfcGh5PjsKKwlwaHktbmFtZXMgPSAiaGRt
+aSI7CisJbWVkaWF0ZWssc3lzY29uLWhkbWkgPSA8Jm1tc3lzIDB4OTAwPjsKKwlhc3NpZ25lZC1j
+bG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfSERNSV9TRUw+OworCWFzc2lnbmVkLWNsb2NrLXBh
+cmVudHMgPSA8JmhkbWlfcGh5PjsKKworCXBvcnRzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXBvcnRAMCB7CisJCQlyZWcgPSA8MD47CisKKwkJ
+CWhkbWkwX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcGkwX291dD47
+CisJCQl9OworCQl9OworCisJCXBvcnRAMSB7CisJCQlyZWcgPSA8MT47CisKKwkJCWhkbWkwX291
+dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25faW4+OworCQkJ
+fTsKKwkJfTsKKwl9OworfTsKKworY29ubmVjdG9yIHsKKwljb21wYXRpYmxlID0gImhkbWktY29u
+bmVjdG9yIjsKKwl0eXBlID0gImEiOworCWRkYy1pMmMtYnVzID0gPCZoZG1pZGRjMD47CisKKwlw
+b3J0IHsKKwkJaGRtaV9jb25faW46IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+aGRtaTBfb3V0PjsKKwkJfTsKKwl9OworfTsKLS0gCjIuNy4wCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
