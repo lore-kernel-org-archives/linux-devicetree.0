@@ -1,289 +1,142 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v2 7/8] arm64: dts: add Pine64 support
-Date: Wed, 17 Feb 2016 15:22:39 +0000
-Message-ID: <56C4903F.7050509@arm.com>
-References: <1455709440-8668-1-git-send-email-andre.przywara@arm.com>
- <1455709440-8668-8-git-send-email-andre.przywara@arm.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v8 43/45] drivers/of: Specify parent node in
+ of_fdt_unflatten_tree()
+Date: Wed, 17 Feb 2016 17:58:14 +0200
+Message-ID: <56C49896.3090109@ti.com>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-44-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455709440-8668-8-git-send-email-andre.przywara@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-44-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Again the changelog was missing:
-
-On 17/02/16 11:43, Andre Przywara wrote:
-> The Pine64 is a cost-efficient development board based on the
-> Allwinner A64 SoC.
-> There are three models: the basic version with Fast Ethernet and
-> 512 MB of DRAM (Pine64) and two Pine64+ versions, which both
-> feature Gigabit Ethernet and additional connectors for touchscreens
-> and a camera. Or as my son put it: "Those are smaller and these are
-> missing." ;-)
-> The two Pine64+ models just differ in the amount of DRAM
-> (1GB vs. 2GB). Since U-Boot will figure out the right size for us and
-> patches the DT accordingly we just need to provide one DT for the
-> Pine64+.
-
-Changelog v1 .. v2:
-- move aliases node into the common board DT file
-- move fixed MMC regulator into the common board DT file
-- drop UARTs 1-4 nodes from the default DT
-- add I2C node (pins seem to be dedicated to I2C)
-
-Cheers,
-Andre.
-
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On 02/17/16 05:44, Gavin Shan wrote:
+> This adds one more argument to of_fdt_unflatten_tree() to specify
+> the parent node of the FDT blob that is going to be unflattened.
+> In the result, the function can be used to unflatten FDT blob that
+> represents device sub-tree in PowerNV PCI hotplug driver.
+>
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 > ---
->  arch/arm64/boot/dts/Makefile                       |  1 +
->  arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
->  .../dts/allwinner/sun50i-a64-pine64-common.dtsi    | 80 ++++++++++++++++++++++
->  .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  | 59 ++++++++++++++++
->  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 58 ++++++++++++++++
->  5 files changed, 203 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-common.dtsi
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> 
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index f832b8a..3b7428a 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -1,3 +1,4 @@
-> +dts-dirs += allwinner
->  dts-dirs += altera
->  dts-dirs += amd
->  dts-dirs += apm
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> new file mode 100644
-> index 0000000..1e29a5a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -0,0 +1,5 @@
-> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
-> +
-> +always		:= $(dtb-y)
-> +subdir-y	:= $(dts-dirs)
-> +clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-common.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-common.dtsi
-> new file mode 100644
-> index 0000000..d5a7249
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-common.dtsi
-> @@ -0,0 +1,80 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "sun50i-a64.dtsi"
-> +
-> +/ {
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	soc {
-> +		reg_vcc3v3: vcc3v3 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "vcc3v3";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +		};
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	cd-gpios = <&pio 5 6 0>;
-> +	cd-inverted;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-> new file mode 100644
-> index 0000000..549dc15
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-> @@ -0,0 +1,59 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-a64-pine64-common.dtsi"
-> +
-> +/ {
-> +	model = "Pine64+";
-> +	compatible = "pine64,pine64-plus", "allwinner,sun50i-a64";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	/* There is a model with 2GB of DRAM, but U-Boot fixes this for us. */
-> +	memory {
-> +		reg = <0x40000000 0x40000000>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> new file mode 100644
-> index 0000000..ebe029e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Copyright (c) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-a64-pine64-common.dtsi"
-> +
-> +/ {
-> +	model = "Pine64";
-> +	compatible = "pine64,pine64", "allwinner,sun50i-a64";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x40000000 0x20000000>;
-> +	};
-> +};
-> 
+>   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  2 +-
+
+Acked-by: Jyri Sarha <jsarha@ti.com>
+
+>   drivers/of/fdt.c                             | 14 ++++++++++----
+>   drivers/of/unittest.c                        |  2 +-
+>   include/linux/of_fdt.h                       |  1 +
+>   4 files changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> index 106679b..f9c79da 100644
+> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> @@ -157,7 +157,7 @@ struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
+>   	if (!overlay_data || kfree_table_add(kft, overlay_data))
+>   		return NULL;
+>
+> -	of_fdt_unflatten_tree(overlay_data, &overlay);
+> +	of_fdt_unflatten_tree(overlay_data, NULL, &overlay);
+>   	if (!overlay) {
+>   		pr_warn("%s: Unfattening overlay tree failed\n", __func__);
+>   		return NULL;
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 3fc9a30..16a1ba5 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -450,11 +450,13 @@ static int unflatten_dt_nodes(const void *blob,
+>    * pointers of the nodes so the normal device-tree walking functions
+>    * can be used.
+>    * @blob: The blob to expand
+> + * @dad: Parent device node
+>    * @mynodes: The device_node tree created by the call
+>    * @dt_alloc: An allocator that provides a virtual address to memory
+>    * for the resulting tree
+>    */
+>   static void __unflatten_device_tree(const void *blob,
+> +			     struct device_node *dad,
+>   			     struct device_node **mynodes,
+>   			     void * (*dt_alloc)(u64 size, u64 align))
+>   {
+> @@ -479,7 +481,7 @@ static void __unflatten_device_tree(const void *blob,
+>   	}
+>
+>   	/* First pass, scan for size */
+> -	size = unflatten_dt_nodes(blob, NULL, NULL, NULL);
+> +	size = unflatten_dt_nodes(blob, NULL, dad, NULL);
+>   	if (size < 0)
+>   		return;
+>
+> @@ -495,7 +497,7 @@ static void __unflatten_device_tree(const void *blob,
+>   	pr_debug("  unflattening %p...\n", mem);
+>
+>   	/* Second pass, do actual unflattening */
+> -	unflatten_dt_nodes(blob, mem, NULL, mynodes);
+> +	unflatten_dt_nodes(blob, mem, dad, mynodes);
+>   	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+>   		pr_warning("End of tree marker overwritten: %08x\n",
+>   			   be32_to_cpup(mem + size));
+> @@ -512,6 +514,9 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
+>
+>   /**
+>    * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
+> + * @blob: Flat device tree blob
+> + * @dad: Parent device node
+> + * @mynodes: The device tree created by the call
+>    *
+>    * unflattens the device-tree passed by the firmware, creating the
+>    * tree of struct device_node. It also fills the "name" and "type"
+> @@ -519,10 +524,11 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
+>    * can be used.
+>    */
+>   void of_fdt_unflatten_tree(const unsigned long *blob,
+> +			struct device_node *dad,
+>   			struct device_node **mynodes)
+>   {
+>   	mutex_lock(&of_fdt_unflatten_mutex);
+> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
+> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+>   	mutex_unlock(&of_fdt_unflatten_mutex);
+>   }
+>   EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+> @@ -1180,7 +1186,7 @@ bool __init early_init_dt_scan(void *params)
+>    */
+>   void __init unflatten_device_tree(void)
+>   {
+> -	__unflatten_device_tree(initial_boot_params, &of_root,
+> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+>   				early_init_dt_alloc_memory_arch);
+>
+>   	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 979b6e4..ec36f93 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -921,7 +921,7 @@ static int __init unittest_data_add(void)
+>   			"not running tests\n", __func__);
+>   		return -ENOMEM;
+>   	}
+> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
+> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+>   	if (!unittest_data_node) {
+>   		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+>   		return -ENODATA;
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index df9ef38..3644960 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
+>   extern int of_fdt_match(const void *blob, unsigned long node,
+>   			const char *const *compat);
+>   extern void of_fdt_unflatten_tree(const unsigned long *blob,
+> +			       struct device_node *dad,
+>   			       struct device_node **mynodes);
+>
+>   /* TBD: Temporary export of fdt globals - remove when code fully merged */
+>
