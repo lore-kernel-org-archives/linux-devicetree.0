@@ -1,134 +1,67 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
-Date: Wed, 17 Feb 2016 14:38:48 +0900
-Message-ID: <20160217053848.GC11534@verge.net.au>
-References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
- <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
- <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
- <20160210171455.GB17671@verge.net.au>
- <56BE0CB1.4070408@cogentembedded.com>
- <20160212184343.GA31655@verge.net.au>
- <56BE2DC6.4080802@cogentembedded.com>
- <20160212193347.GB23472@verge.net.au>
- <56BE3912.9000601@cogentembedded.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: at91: sama5/dts: move hsmc_clk out of nfc node
+Date: Wed, 17 Feb 2016 13:42:21 +0800
+Message-ID: <1455687741-9625-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56BE3912.9000601@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 10:57:06PM +0300, Sergei Shtylyov wrote:
-> On 02/12/2016 10:33 PM, Simon Horman wrote:
-> 
-> >>>>>>Sorry for my un-ordered response
-> >>>>>>
-> >>>>>>>Define the generic R8A7794 part of  the sound device node.
-> >>>>>>>This sound device  is a complex one and comprises the Audio Clock Generator
-> >>>>>>>(ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
-> >>>>>>>(SSI[U]), and Audio DMAC-Peripheral-Peripheral.
-> >>>>>>>It is up  to the board file to enable the device.
-> >>>>>>>
-> >>>>>>>This patch is based on the R8A7791 sound work by Kuninori Morimoto.
-> >>>>>>>
-> >>>>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>>>>>(snip)
-> >>>>>>>+		rcar_sound,src {
-> >>>>>>>+			src1: src@1 {
-> >>>>>>>+				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x87>, <&audma0 0x9c>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+			src2: src@2 {
-> >>>>>>>+				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x89>, <&audma0 0x9e>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+			src3: src@3 {
-> >>>>>>>+				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+			src4: src@4 {
-> >>>>>>>+				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+			src5: src@5 {
-> >>>>>>>+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+			src6: src@6 {
-> >>>>>>>+				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>>+				dmas = <&audma0 0x91>, <&audma0 0xb4>;
-> >>>>>>>+				dma-names = "rx", "tx";
-> >>>>>>>+			};
-> >>>>>>>+		};
-> >>>>>>
-> >>>>>>I think this can't work correctly, because driver is assuming
-> >>>>>>DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
-> >>>>>>Can you adds dummy src0 with some comments ? or fix src.c driver ?
-> >>>>>
-> >>>>>I would prefer the driver to be fixed (I had a similar patchset locally
-> >>>>>and I found it doesn't work).
-> >>>>
-> >>>>    You mean you had R8A7794 sound patch set too?
-> >>>
-> >>>Yes, I was working on it recently.
-> >>>I suppose we should coordinate these things in future to avoid
-> >>>duplicated effort.
-> >>
-> >>    Yes, seems a good idea now. :-)
-> >>
-> >>>>>The reason is that DT should describe
-> >>>>>the hardware rather than the current state of the software.
-> >>>>
-> >>>>    Yes, of course. Just tell me do I have to fix the driver *before* this
-> >>>>patch set is accepted?
-> >>
-> >>>I did not entirely get to the bottom of the problem, but I think that at
-> >>>the very least something needs to be done about the for_each_rsnd_src()
-> >>>loop in rsnd_src_probe.
-> >>
-> >>    It's not that it replies to my question. :-)
-> >>    So you're looking at this issue yourself?
-> >
-> >I have not got very far, as you can see, but I was planning to look into it.
-> >I don't mind if you want to do so.
-> 
->    After consultation with the management, I'm going to look into this issue
-> myself. :-)
+From: Josh Wu <josh.wu@atmel.com>
 
-Excellent.
+In sama5d3, sama5d4 chips, pmecc will use the hsmc clock. As pmecc is
+part of HSMC. So move out hsmc_clk from nfc node to nand node.
 
-FWIW, I can test anything you come up with for the r8a7794 an alt board
-or post patches for it once you have r8a7794/silk sorted out.
+Signed-off-by: Josh Wu <rainyfeeling@outlook.com>
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
 
-> >>>My, obviously not satisfactory, hack around there being no src0 was as follows.
-> >>>
-> >>>diff --git a/sound/soc/sh/rcar/src.c b/sound/soc/sh/rcar/src.c
-> >>>index 68b439ed22d7..58a447b0785b 100644
-> >>>--- a/sound/soc/sh/rcar/src.c
-> >>>+++ b/sound/soc/sh/rcar/src.c
-> >>>@@ -1072,7 +1072,7 @@ int rsnd_src_probe(struct platform_device *pdev,
-> >>>
-> >>>  	for_each_rsnd_src(src, priv, i) {
-> >>
-> >>    Which tree is this? The recent devel branch of renesas.git has
-> >>for_each_child_of_node() here...
-> >
-> >renesas-devel-20160118-v4.4
-> 
->    Ah! :-)
-> 
-> >I guess the code in question updated in v4.5-rcX.
-> 
->    Probably...
-> 
-> [...]
-> 
-> MBR, Sergei
+ arch/arm/boot/dts/sama5d3.dtsi |    2 +-
+ arch/arm/boot/dts/sama5d4.dtsi |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index a532791..a242d27 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -1474,6 +1474,7 @@
+ 			atmel,nand-has-dma;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
++			clocks = <&hsmc_clk>;
+ 			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
+ 			status = "disabled";
+ 
+@@ -1486,7 +1487,6 @@
+ 					0xffffc000 0x00000070	/* NFC HSMC regs */
+ 					0x00200000 0x00100000	/* NFC SRAM banks */
+ 					>;
+-				clocks = <&hsmc_clk>;
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index b8032bc..1499b33 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -295,6 +295,7 @@
+ 			atmel,nand-has-dma;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
++			clocks = <&hsmc_clk>;
+ 			status = "disabled";
+ 
+ 			nfc@90000000 {
+@@ -306,7 +307,6 @@
+ 					0xfc05c000 0x00000070	/* NFC HSMC regs */
+ 					0x00100000 0x00100000	/* NFC SRAM banks */
+                                          >;
+-				clocks = <&hsmc_clk>;
+ 				atmel,write-by-sram;
+ 			};
+ 		};
+-- 
+1.7.9.5
