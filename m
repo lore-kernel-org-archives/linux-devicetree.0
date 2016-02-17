@@ -1,73 +1,48 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH v2] serial: earlycon: rework common framework for earlycon
- declarations
-Date: Tue, 16 Feb 2016 17:31:48 -0800
-Message-ID: <56C3CD84.9000504@hurleysoftware.com>
-References: <1455273394-27350-1-git-send-email-yamada.masahiro@socionext.com>
- <56BDF799.1030505@hurleysoftware.com>
- <CAK7LNAS_vietwRRFnH3YhbWSzjRFP4U6rjftYek1KQ3ips2ZSQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAS_vietwRRFnH3YhbWSzjRFP4U6rjftYek1KQ3ips2ZSQ@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-serial@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arch@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/6] Add core dtsi for rk3399 from Rockchip
+Date: Wed, 17 Feb 2016 09:53:06 +0800
+Message-ID: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2016 08:30 AM, Masahiro Yamada wrote:
-> Hi Peter,
-> 
-> 
-> 2016-02-13 0:17 GMT+09:00 Peter Hurley <peter@hurleysoftware.com>:
->> On 02/12/2016 02:36 AM, Masahiro Yamada wrote:
->>> Commit 71f50c6d9a22 ("of: drop symbols declared by _OF_DECLARE() from
->>> modules") fixed the link error introduced by commit b8d20e06eaad
->>> ("serial: 8250_uniphier: add earlycon support").
->>>
->>> After commit 2eaa790989e0 ("earlycon: Use common framework for
->>> earlycon declarations") was applied, the link error came back
->>> because the commit reworked OF_EARLYCON_DECLARE() to not use
->>> _OF_DECLARE().
->>
->> What link error are you getting?
-> 
-> The combination of CONFIG_SERIAL_8250_CONSOLE=y
-> and CONFIG_SERIAL_8250_UNIPHIER=m causes a link error.
-> 
-> 
-> 
->>
->>> This commit reworks OF_EARLYCON_DECLARE() again based on
->>> _OF_DECLARE().  My motivations are:
->>>
->>>  - Fix the link error in a generic way (without patching
->>>    drivers/tty/serial/8250/8250_uniphier.c)
->>>
->>>  - Delete struct earlycon_id.  This struct is re-inventing the wheel;
->>>    the fields "name", "compatible", "setup" can be implemented in
->>>    struct of_device_id as other frameworks do.
->>
->> This patch basically reverts the common framework.
->> What happens when not building with OF? Does it still declare the
->> earlycon table?
-> 
-> Ah, I missed this.  (sigh)
-> 
-> Earlycon must still work without OF.
-> My way only works with OF.
-> 
-> I really screwed up.  Sorry.
+From: Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Hi Masahiro,
+There is the new SoCs from Rockchip which named rk3399, the
+patches are added to support them.
 
-No big deal.
+Two patch of cru from Xing are quoted, but the cru driver will
+be pushed by Xing near later.
 
-We need to come up with a better way to enable earlycon builds and
-opt-in by driver than the current method. Breaking builds with earlycon
-support has happened several times in the last couple of years so
-it's not just you.
+Xing Zheng (2):
+  clk: rockchip: add dt-binding header for rk3399
+  dt-bindings: add documentation of rk3399 clock controller
 
-Regards,
-Peter Hurley
+Xu Jianqun (4):
+  spi: rockchip: add bindings for rk3399 spi
+  ASoC: rockchip: add bindings for rk3399 i2s
+  pinctrl: rockchip: add bindings for rk3399 pinctrl
+  ARM64: dts: rockchip: add core dtsi file for rk3399
+
+ .../bindings/clock/rockchip,rk3399-cru.txt         |  82 ++
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |   2 +-
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |   1 +
+ .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 989 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3399-cru.h             | 610 +++++++++++++
+ 6 files changed, 1684 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
