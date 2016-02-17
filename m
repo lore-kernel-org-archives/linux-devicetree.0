@@ -1,547 +1,109 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH V4 5/7] clk: bcm2835: add missing 22 HW-clocks.
-Date: Wed, 17 Feb 2016 19:25:45 +0100
-Message-ID: <A977D3F2-1F64-41C8-B8ED-EB9F0B3554B9@martin.sperl.org>
-References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org> <1452867667-2447-6-git-send-email-kernel@martin.sperl.org> <87h9hr517u.fsf@eliezer.anholt.net> <56B8782C.4060107@martin.sperl.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56B8782C.4060107@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Remi Pommarel <repk@triplefau.lt>, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Wed, 17 Feb 2016 12:51:34 -0600
+Message-ID: <CAL_JsqK4gmzBTxFNs93aT3XUqMp-6eyyL-GEUtrGm-snSeTQ7w@mail.gmail.com>
+References: <1455188466-10879-1-git-send-email-petr@barix.com>
+ <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
+ <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com> <56C4B870.2070707@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C4B870.2070707-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 17, 2016 at 12:14 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> On 02/16/2016 11:05 PM, Rob Herring wrote:
+>
+>>>>> + - mentor,power : Specifies the maximum current in milliamperes the
+>>>>> controller can
+>>>>> +     supply in host mode.
+>>>>
+>>>>
+>>>> Still a no for me. Looks like this just sets hcd->power_budget. This
+>>>> property may not be a regulator, but ultimately the value depends on
+>>>> some regulator supplying Vbus. Also, given this has nothing to do with
+>>>> MUSB h/w, however this is described should be generic.
+>>>
+>>>
+>>>
+>>> I understand your point that the description should be generic.
+>>> However the USB 2.0 specification does not define any relation between
+>>> the
+>>> bMaxPower provided by the device and the actual power control.
+>>> As far as I understand the value just serves the purpose to raise a flag
+>>> to
+>>> the user if the attached device would draw too much power, and not to
+>>> enable
+>>> it at all.
+>>
+>>
+>> That won't really work given devices lie. My bus powered USB disk
+>> enclosure reports something like 10mA. That's pretty good considering
+>> I have a 5W drive in it.
+>
+>
+>>> Further, the value used by the protocol is not necessarily related to the
+>>> real current that can be supported. The maximum current supported by the
+>>> protocol is 510mA.
+>>>
+>>> For instance on my development board the real maximum current is limited
+>>> only by the mains power-supply used.
+>>> So it cannot even be modelled in the DT as a regulator because the
+>>> power-supply is not part of the HW and
+>>> everybody can take a different one.
+>>
+>>
+>> Not part of which h/w? Different for everyone is exactly why Vbus
+>> supply should be described in DT.
+>
+>
+>    I'm afraid you're misunderstanding the nature of VBUS regulator still.
+> It's a voltage regulator with some maximum value of the current that can be
+> sourced from it when it's powered (+5 V). The power chip can typically
+> detect and report the over-current condition inj which case VBUS will be
+> turned off).
 
-> On 08.02.2016, at 12:12, Martin Sperl <kernel@martin.sperl.org> wrote=
-:
->=20
->=20
->=20
-> On 02.02.2016 02:51, Eric Anholt wrote:
->> kernel@martin.sperl.org writes:
->>=20
->>> From: Martin Sperl <kernel@martin.sperl.org>
->>>=20
->>> There were 22 HW clocks missing from the clock driver.
->>>=20
->>> These have been included and int_bits and frac_bits
->>> have been set correctly based on information extracted
->>> from the broadcom videocore headers
->>> (http://www.broadcom.com/docs/support/videocore/Brcm_Android_ICS_Gr=
-aphics_Stack.tar.gz)
->>>=20
->>> For an extracted view of the registers please see:
->>> https://github.com/msperl/rpi-registers/blob/master/md/Region_CM.md
->>>=20
->>> bcm2835_clock_per_parents has been assigned as the parent
->>> clock for all new clocks, but this may not be correct
->>> in all cases - documentation on this is not publicly
->>> available, so some modifications may be needed in the
->>> future.
->>=20
->> We need the parents to be correct if we're going to land the patch.
->> I'll try to update them.
->>=20
->> I'm not a fan of this "let's just shove everything we can find in so=
-me
->> header file into the .c and hope for the best."  Most of these clock=
-s
->> were left out intentionally.
->=20
-> Well - I wanted to get them in just in case we need them later.
->=20
-> If you have got access to documentation which states the correct
-> parent mux, then please share them so that we can implement them
-> correctly.
->=20
-> Also listing all allows us then to expose the values of the registers
-> via debugfs in case we need it - see separate RFC-patch 9 -  where
-> we expose the raw register values as well.
->=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_aveo_data =3D=
- {
->>> +	.name =3D "aveo",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_AVEOCTL,
->>> +	.div_reg =3D CM_AVEODIV,
->>> +	.int_bits =3D 4,
->>> +	.frac_bits =3D 12,
->>> +};
->>=20
->> AVEO has 0 fractional bits
->=20
-> Correct - my issue (copy paste - I assume).
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_ccp2_data =3D=
- {
->>> +	/* this is possibly a gate */
->>> +	.name =3D "ccp2",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_CCP2CTL,
->>> +	.div_reg =3D CM_CCP2DIV,
->>> +	.int_bits =3D 1,
->>> +	.frac_bits =3D 0,
->>> +};
->>=20
->> CCP2 is a gate from a different clock source, so this won't work.
-> See comment above: please provide parent clock mux.
-> See also my comment about 3 clock that may be gates - this applies.
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_dsi0p_data =3D=
- {
->>> +	/* this is possibly a gate */
->>> +	.name =3D "dsi0p",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_DSI0PCTL,
->>> +	.div_reg =3D CM_DSI0PDIV,
->>> +	.int_bits =3D 1,
->>> +	.frac_bits =3D 0,
->>> +};
->>> +
->>> +static const struct bcm2835_clock_data bcm2835_clock_dsi1p_data =3D=
- {
->>> +	/* this is possibly a gate */
->>> +	.name =3D "dsi1p",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_DSI1PCTL,
->>> +	.div_reg =3D CM_DSI1PDIV,
->>> +	.int_bits =3D 1,
->>> +	.frac_bits =3D 0,
->>> +};
->>=20
->> DSI0/1 pixel clocks take different clock sources and are gates off o=
-f
->> them, so these definitions don't work.
-> See comment above: please provide parent clock.
-> See also my comment about 3 clock that may be gates.
->=20
->>=20
->>> +
->>> +static const struct bcm2835_clock_data bcm2835_clock_gnric_data =3D=
- {
->>> +	.name =3D "gnric",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_GNRICCTL,
->>> +	.div_reg =3D CM_GNRICDIV,
->>> +	.int_bits =3D 12,
->>> +	.frac_bits =3D 12,
->>> +};
->>=20
->> GNRIC isn't an actual clock, it's just what's used for describing th=
-e
->> overall structure of clocks.
->=20
-> Well - there is the corresponding register at 0x7e101000 which reads =
-as:
-> ctl =3D 0x0000636d
-> div =3D 0x0000636d
->=20
-> So we could remove this one if this is really the case of a dummy -
-> even though I wonder why there would be space in io-space reserved fo=
-r
-> this "description" only.
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_peria_data =3D=
- {
->>> +	.name =3D "peria",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_PERIACTL,
->>> +	.div_reg =3D CM_PERIADIV,
->>> +	.int_bits =3D 12,
->>> +	.frac_bits =3D 12,
->>> +};
->>=20
->> This register doesn't do anything, because the debug bit in the powe=
-r
->> manager is not set.  We don't think we should expose a clock gate if=
- it
->> doesn't work, I think.
-> maybe we allow setting debug in the PM at a later point in time?
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_pulse_data =3D=
- {
->>> +	.name =3D "pulse",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_PULSECTL,
->>> +	.div_reg =3D CM_PULSEDIV,
->>> +	.int_bits =3D 12,
->>> +	.frac_bits =3D 0,
->>> +};
->>=20
->> There's some other divider involved in this clock, won't give correc=
-t results.
-> See comment above: please provide parent clock.
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_td0_data =3D =
-{
->>> +	.name =3D "td0",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_TD0CTL,
->>> +	.div_reg =3D CM_TD0DIV,
->>> +	.int_bits =3D 12,
->>> +	.frac_bits =3D 12,
->>> +};
->>> +
->>> +static const struct bcm2835_clock_data bcm2835_clock_td1_data =3D =
-{
->>> +	.name =3D "td1",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_TD1CTL,
->>> +	.div_reg =3D CM_TD1DIV,
->>> +	.int_bits =3D 12,
->>> +	.frac_bits =3D 12,
->>> +};
->>=20
->> These are some other clock generator, not the generic or mash ones u=
-sed
->> elsewhere.  I wouldn't enable them without testing.
->=20
-> As long as they are not referenced in the DT these only are read only
-> and can get read via debugfs - these are disabled anyway:
->=20
-> root@raspcm:/build/linux# head /sys/kernel/debug/clk/td*/clk_rate
-> =3D=3D> /sys/kernel/debug/clk/td0/clk_rate <=3D=3D
-> 0
->=20
-> =3D=3D> /sys/kernel/debug/clk/td1/clk_rate <=3D=3D
-> 0
->=20
->>=20
->>> +static const struct bcm2835_clock_data bcm2835_clock_tec_data =3D =
-{
->>> +	.name =3D "tec",
->>> +	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
->>> +	.parents =3D bcm2835_clock_per_parents,
->>> +	.ctl_reg =3D CM_TECCTL,
->>> +	.div_reg =3D CM_TECDIV,
->>> +	.int_bits =3D 6,
->>> +	.frac_bits =3D 0,
->>> +};
->>=20
->> TEC should be osc parents.
-> I will change that.
->=20
->>=20
->>> -/*
->>> - * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
->>> - * you have the debug bit set in the power manager, which we
->>> - * don't bother exposing) are individual gates off of the
->>> - * non-stop vpu clock.
->>> - */
->>>  static const struct bcm2835_gate_data bcm2835_clock_peri_image_dat=
-a =3D {
->>>  	.name =3D "peri_image",
->>>  	.parent =3D "vpu",
->>>  	.ctl_reg =3D CM_PERIICTL,
->>>  };
->>>=20
->>> +static const struct bcm2835_gate_data bcm2835_clock_sys_data =3D {
->>> +	.name =3D "sys",
->>> +	.parent =3D "vpu",
->>> +	.ctl_reg =3D CM_SYSCTL,
->>> +};
->>=20
->> same concern as peria.
-> maybe we allow setting debug in the PM at a later point in time?
->=20
-> Please propose how to continue to get the clocks in.
->=20
-> If you want some clocks left out, then that is fine and we
-> can accommodate that and just leave the defines in the bindings
-> header for later use...
->=20
-> Just list them.
->=20
+Yes, I understand that exactly. I've seen and reviewed a USB circuit
+or two.  You're describing a regulator, I'm saying describe the
+regulator in DT and Petr is saying that's too complex.
 
+>>> So defining a regulator just to store this arbitrary USB 2.0 value is a
+>>> bit
+>>> overkill for me.
+>>
+>>
+>> If it is just arbitrary, then put it into the driver. I would do 500mA
+>
+>
+>    You clearly misunderstand things. The regulator used depends on the board
+> design, the driver (or glue in this case) doesn't, it's just SoC specific.
+> That's why this power budget thing ended up in the platform data in the
+> first place...
 
-As I am trying to complete the list of clocks here my =93best=94 summar=
-y
-so far of the clock tree for the bcm2835 taken from various sources:
-* Datasheet
-* broadcom provided VC4 headers (via https://github.com/msperl/rpi-regi=
-sters)
-* mailing list
+The driver needs to be able to query the supply and get the current
+limit. We have the technology.
 
-And I have come up with the following description that
-you can put in graphviz or http://www.webgraphviz.com/
+>
+>> and be done with it. I'd guess there is nothing real behind the
+>> current default of 250mA.
+>
+>
+>    500 mA actually, it's multiplied by 2.
 
---- cut here ---
-digraph clocks {
-	graph [ordering=3D"out"];
+Ok. For 2 ports?
 
-	subgraph cluster_osc {
-		label =3D "Oscillators";
+In any case, if there is effectively no limit (Vbus comes from the
+wall), then yes a regulator is probably an overkill. So make the case
+with no Vbus regulator (or regulator with no limit set) in DT be the
+max current. However, if the controller has a signal to turn on/off
+Vbus, then that should be modeled as a regulator.
 
-                "GND";
-                "OSC";
-                "testdebug0";
-                "testdebug1";
-	}
-
-	subgraph cluster_pll {
-		label =3D "PLLs";
-
-		subgraph cluster_plla {
-			label =3D "PLLA";
-
-			OSC -> PLLA;
-
-			PLLA -> PLLA_core;
-			PLLA -> PLLA_per;
-			PLLA -> PLLA_dsi0;
-			PLLA -> PLLA_ccp2;
-		}
-
-		subgraph cluster_pllb {
-			label =3D "PLLB";
-
-			OSC -> PLLB;
-
-			PLLB -> PLLB_ARM;
-			PLLB -> PLLB_SP0;
-			PLLB -> PLLB_SP1;
-			PLLB -> PLLB_SP2;
-		}
-
-		subgraph cluster_pllc {
-			label =3D "PLLC";
-
-			OSC -> PLLC;
-
-			PLLC -> PLLC_core0;
-			PLLC -> PLLC_core1;
-			PLLC -> PLLC_core2;
-			PLLC -> PLLC_per;
-		}
-
-		subgraph cluster_plld {
-			label =3D "PLLD";
-
-			OSC -> PLLD;
-
-			PLLD -> PLLD_core;
-			PLLD -> PLLD_per;
-			PLLD -> PLLD_dsi0;
-			PLLD -> PLLD_dsi1;
-		}
-
-		subgraph cluster_pllh {
-			label =3D "PLLH";
-
-			OSC -> PLLH;
-
-			PLLH -> PLLH_aux;
-			PLLH -> PLLH_pix;
-			PLLH -> PLLH_rcal;
-		}
-	}
-
-	subgraph cluster_mux {
-		label =3D "clocks";
-
-		subgraph cluster_vpu_clocks {
-			label =3D "VPU-clocks";
-
-			subgraph cluster_vpu_mux {
-				label =3D "VPU-mux";
-
-				vGND        [label=3D"0: GND"];
-				vOSC        [label=3D"1: OSC"];
-				vtestdebug0 [label=3D"2: testdebug0"];
-				vtestdebug1 [label=3D"3: testdebug1"];
-				vPLLA_core  [label=3D"4: PLLA_core"];
-				vPLLC_core0 [label=3D"5: PLLC_core0"];
-				vPLLD_core  [label=3D"6: PLLD_core"];
-				vPLLH_aux   [label=3D"7: PLLH_aux"];
-				vPLLC_core1 [label=3D"8: PLLC_core1"];
-				vPLLC_core2 [label=3D"9: PLLC_core2"];
-
-				GND        -> vGND        -> vpu_mux;
-				OSC        -> vOSC        -> vpu_mux;
-				testdebug0 -> vtestdebug0 -> vpu_mux;
-				testdebug1 -> vtestdebug1 -> vpu_mux;
-				PLLA_core  -> vPLLA_core  -> vpu_mux;
-				PLLC_core0 -> vPLLC_core1 -> vpu_mux;
-				PLLD_core  -> vPLLD_core  -> vpu_mux;
-				PLLH_aux   -> vPLLH_aux   -> vpu_mux;
-				PLLC_core1 -> vPLLC_core1 -> vpu_mux;
-				PLLC_core2 -> vPLLC_core2 -> vpu_mux;
-			}
-
-			vpu_mux -> vpu;
-			vpu_mux -> v3d;
-			vpu_mux -> isp;
-			vpu_mux -> h264;
-			vpu_mux -> sdram;
-		}
-
-		subgraph cluster_per_clocks {
-			label =3D "Periperial-clocks";
-
-			subgraph cluster_per_mux {
-				label =3D "Periperal-mux";
-
-				pGND        [label=3D"0: GND"];
-				pOSC        [label=3D"1: OSC"];
-				ptestdebug0 [label=3D"2: testdebug0"];
-				ptestdebug1 [label=3D"3: testdebug1"];
-				pPLLA_per   [label=3D"4: PLLA_per"];
-				pPLLC_per   [label=3D"5: PLLC_per"];
-				pPLLD_per   [label=3D"5: PLLD_per"];
-				pPLLH_aux   [label=3D"5: PLLH_aux"];
-
-				GND        -> pGND        -> per_mux;
-				OSC        -> pOSC        -> per_mux;
-				testdebug0 -> ptestdebug0 -> per_mux;
-				testdebug1 -> ptestdebug1 -> per_mux;
-				PLLA_per   -> pPLLA_per   -> per_mux;
-				PLLC_per   -> pPLLC_per   -> per_mux;
-				PLLD_per   -> pPLLD_per   -> per_mux;
-				PLLH_aux   -> pPLLH_aux   -> per_mux;
-			}
-
-			per_mux -> vec;
-			per_mux -> uart;
-			per_mux -> hsm;
-			per_mux -> emmc;
-			per_mux -> pwm;
-			per_mux -> pcm;
-			per_mux -> aveo;
-			per_mux -> cam0;
-			per_mux -> cam1;
-			per_mux -> dft;
-			per_mux -> dpi;
-			per_mux -> dsi0e;
-			per_mux -> dsi1e;
-			per_mux -> gp0;
-			per_mux -> gp1;
-			per_mux -> gp2;
-			per_mux -> slim;
-			per_mux -> smi;
-		}
-
-		subgraph cluster_osc_clocks {
-			label =3D "osc-clocks";
-
-			subgraph cluster_osc_mux {
-				label =3D "osc-mux";
-
-				oGND        [label=3D"0: GND"];
-				oOSC        [label=3D"1: OSC"];
-				otestdebug0 [label=3D"2: testdebug0"];
-				otestdebug1 [label=3D"3: testdebug1"];
-
-				GND        -> oGND        -> osc_mux;
-				OSC        -> oOSC        -> osc_mux;
-				testdebug0 -> otestdebug0 -> osc_mux;
-				testdebug1 -> otestdebug1 -> osc_mux;
-			}
-
-			osc_mux -> tsens;
-			osc_mux -> tec;
-			osc_mux -> otp;
-		}
-
-		subgraph cluster_unknown_mux_clocks {
-			label =3D "unknown-parent-mux-clocks";
-
-			ukn_mux -> ccp2;
-			ukn_mux -> dsi0pix;
-			ukn_mux -> dsi1pix;
-			ukn_mux -> pulse;
-			ukn_mux -> td0;
-			ukn_mux -> td1;
-		}
-
-		subgraph cluster_debug_clocks {
-			label =3D "debug-clocks";
-
-			debug_mux -> peria;
-			debug_mux -> sys;
-		}
-	}
-
-	subgraph cluster_aux {
-		label =3D =93auxiliar-clocks";
-
-		vpu -> spi1;
-		vpu -> spi2;
-		vpu -> uart1;
-	}
-}
---- cut here ---
-
-I have no idea where we could put this information
-in the kernel tree - maybe this would help.
-
-=46rom this you can see that we have:
-* PLL that is not configured now:
-  * PLLB
-* a few more PLL-dividers that are not configured:
-  * PLLB_ARM
-  * PLLB_SP0
-  * PLLB_SP1
-  * PLLB_SP2
-  * PLLD_dsi0
-  * PLLD_dsi1
-  * PLLH_rcal
-* a few clocks which Eric has said are wrong and where
-  the corresponding parents need to get found:
-  * ccp2 (gate)
-  * dsi0pix (gate - maybe PLLD_dis0?)
-  * dis1pix (gate - maybe PLLD_dis1)
-  * pulse (gate)
-  * td0
-  * td1
-* debug clocks that require a running debug power domain:
-  * peria
-  * sys
-* missing clocks in the current driver:
-  * aveo
-  * cam0
-  * cam1
-  * ccp2 (see note above)
-  * dtf
-  * dpi
-  * dsi0e   (maybe this also uses a different parent clock mux?)
-  * dsi0pix (maybe this also uses a different parent clock mux?)
-  * dsi1e   (maybe this also uses a different parent clock mux?)
-  * dsi1pix (maybe this also uses a different parent clock mux?)
-  * gp0
-  * gp1
-  * gp2
-  * peria (see note above)
-  * pulse (see note above)
-  * slim
-  * smi
-  * td0 (see note above)
-  * td1 (see note above)
-  * td2 (see note above)
-  * tec
-  * sys (see note above)
-* generic clock that is supposedly not in use
-
-I can create a new patch that will include all those
-missing clocks that are undisputed in their settings
-(hence without any comments/notes) - I hope this is acceptable.
-
-If someone has any ideas about those clocks where we=20
-miss the correct parents/mux, then please add your
-wisdom.
-
-
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
