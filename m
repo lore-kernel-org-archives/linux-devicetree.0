@@ -1,206 +1,112 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v8 38/45] powerpc/powernv: Functions to get/set PCI slot status
-Date: Wed, 17 Feb 2016 14:44:21 +1100
-Message-ID: <1455680668-23298-39-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 22/45] powerpc/powernv/ioda1: Support releasing IODA1 TCE table
+Date: Wed, 17 Feb 2016 14:44:05 +1100
+Message-ID: <1455680668-23298-23-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455680668-23298-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This exports 4 functins, which base on the corresponding OPAL
-APIs to get/set PCI slot status. Those functions are going to
-be used by PowerNV PCI hotplug driver:
+pnv_pci_ioda_table_free_pages() can be reused to release the IODA1
+TCE table when releasing IODA1 PE in subsequent patches.
 
-   pnv_pci_get_device_tree()    opal_get_device_tree()
-   pnv_pci_get_presence_state() opal_pci_get_presence_state()
-   pnv_pci_get_power_state()    opal_pci_get_power_state()
-   pnv_pci_set_power_state()    opal_pci_set_power_state()
+This renames the following functions to support releasing IODA1 TCE
+table: pnv_pci_ioda2_table_free_pages() to pnv_pci_ioda_table_free_pages(),
+pnv_pci_ioda2_table_do_free_pages() to pnv_pci_ioda_table_do_free_pages().
+No logical changes introduced.
 
-Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
-unregister}() to allow registration and unregistration of PCI hotplug
-notifier, which will be used to receive PCI hotplug message from
-skiboot firmware in PowerNV PCI hotplug driver.
-
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/opal-api.h            | 17 ++++++-
- arch/powerpc/include/asm/opal.h                |  4 ++
- arch/powerpc/include/asm/pnv-pci.h             |  7 +++
- arch/powerpc/platforms/powernv/opal-wrappers.S |  4 ++
- arch/powerpc/platforms/powernv/pci.c           | 66 ++++++++++++++++++++++++++
- 5 files changed, 97 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index f8faaae..a6af338 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -158,7 +158,11 @@
- #define OPAL_LEDS_SET_INDICATOR			115
- #define OPAL_CEC_REBOOT2			116
- #define OPAL_CONSOLE_FLUSH			117
--#define OPAL_LAST				117
-+#define OPAL_GET_DEVICE_TREE			118
-+#define OPAL_PCI_GET_PRESENCE_STATE		119
-+#define OPAL_PCI_GET_POWER_STATE		120
-+#define OPAL_PCI_SET_POWER_STATE		121
-+#define OPAL_LAST				121
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index d360607..077f9db 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -51,7 +51,7 @@
+ #define POWERNV_IOMMU_DEFAULT_LEVELS	1
+ #define POWERNV_IOMMU_MAX_LEVELS	5
  
- /* Device tree flags */
+-static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl);
++static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl);
  
-@@ -344,6 +348,16 @@ enum OpalPciResetState {
- 	OPAL_ASSERT_RESET   = 1
- };
- 
-+enum OpalPciSlotPresentenceState {
-+	OPAL_PCI_SLOT_EMPTY	= 0,
-+	OPAL_PCI_SLOT_PRESENT	= 1
-+};
-+
-+enum OpalPciSlotPowerState {
-+	OPAL_PCI_SLOT_POWER_OFF	= 0,
-+	OPAL_PCI_SLOT_POWER_ON	= 1
-+};
-+
- enum OpalSlotLedType {
- 	OPAL_SLOT_LED_TYPE_ID = 0,	/* IDENTIFY LED */
- 	OPAL_SLOT_LED_TYPE_FAULT = 1,	/* FAULT LED */
-@@ -378,6 +392,7 @@ enum opal_msg_type {
- 	OPAL_MSG_DPO,
- 	OPAL_MSG_PRD,
- 	OPAL_MSG_OCC,
-+	OPAL_MSG_PCI_HOTPLUG,
- 	OPAL_MSG_TYPE_MAX,
- };
- 
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9e0039f..899bcb941 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -209,6 +209,10 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, uint64_t buf,
- 		uint64_t size, uint64_t token);
- int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
- 		uint64_t token);
-+int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
-+int64_t opal_pci_get_presence_state(uint64_t id, uint8_t *state);
-+int64_t opal_pci_get_power_state(uint64_t id, uint8_t *state);
-+int64_t opal_pci_set_power_state(uint64_t id, uint8_t state);
- 
- /* Internal functions */
- extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
-diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
-index 6f77f71..d9d095b 100644
---- a/arch/powerpc/include/asm/pnv-pci.h
-+++ b/arch/powerpc/include/asm/pnv-pci.h
-@@ -13,6 +13,13 @@
- #include <linux/pci.h>
- #include <misc/cxl-base.h>
- 
-+extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len);
-+extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
-+extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
-+extern int pnv_pci_set_power_state(uint64_t id, uint8_t state);
-+extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
-+extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
-+
- int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
- int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
- 			   unsigned int virq);
-diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S b/arch/powerpc/platforms/powernv/opal-wrappers.S
-index e45b88a..3ea1a855 100644
---- a/arch/powerpc/platforms/powernv/opal-wrappers.S
-+++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
-@@ -302,3 +302,7 @@ OPAL_CALL(opal_prd_msg,				OPAL_PRD_MSG);
- OPAL_CALL(opal_leds_get_ind,			OPAL_LEDS_GET_INDICATOR);
- OPAL_CALL(opal_leds_set_ind,			OPAL_LEDS_SET_INDICATOR);
- OPAL_CALL(opal_console_flush,			OPAL_CONSOLE_FLUSH);
-+OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
-+OPAL_CALL(opal_pci_get_presence_state,		OPAL_PCI_GET_PRESENCE_STATE);
-+OPAL_CALL(opal_pci_get_power_state,		OPAL_PCI_GET_POWER_STATE);
-+OPAL_CALL(opal_pci_set_power_state,		OPAL_PCI_SET_POWER_STATE);
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index a458703..206385f 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -63,6 +63,72 @@ int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state)
- 	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
+ static void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+ 			    const char *fmt, ...)
+@@ -1352,7 +1352,7 @@ static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev, struct pnv_ioda_pe
+ 		iommu_group_put(pe->table_group.group);
+ 		BUG_ON(pe->table_group.group);
+ 	}
+-	pnv_pci_ioda2_table_free_pages(tbl);
++	pnv_pci_ioda_table_free_pages(tbl);
+ 	iommu_free_table(tbl, of_node_full_name(dev->dev.of_node));
  }
  
-+int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
-+		return -ENXIO;
-+
-+	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
-+	if (rc != OPAL_SUCCESS)
-+		return -EIO;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
-+
-+int pnv_pci_get_presence_state(uint64_t id, uint8_t *state)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATE))
-+		return -ENXIO;
-+
-+	rc = opal_pci_get_presence_state(id, state);
-+	if (rc != OPAL_SUCCESS)
-+		return -EIO;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_presence_state);
-+
-+int pnv_pci_get_power_state(uint64_t id, uint8_t *state)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_GET_POWER_STATE))
-+		return -ENXIO;
-+
-+	rc = opal_pci_get_power_state(id, state);
-+	return pnv_pci_poll(id, rc, state);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_get_power_state);
-+
-+int pnv_pci_set_power_state(uint64_t id, uint8_t state)
-+{
-+	int64_t rc;
-+
-+	if (!opal_check_token(OPAL_PCI_SET_POWER_STATE))
-+		return -ENXIO;
-+
-+	rc = opal_pci_set_power_state(id, state);
-+	return pnv_pci_poll(id, rc, NULL);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_set_power_state);
-+
-+int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
-+{
-+	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
-+
-+int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
-+{
-+	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
-+}
-+EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
-+
- #ifdef CONFIG_PCI_MSI
- int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+@@ -1946,7 +1946,7 @@ static void pnv_ioda2_tce_free(struct iommu_table *tbl, long index,
+ 
+ static void pnv_ioda2_table_free(struct iommu_table *tbl)
  {
+-	pnv_pci_ioda2_table_free_pages(tbl);
++	pnv_pci_ioda_table_free_pages(tbl);
+ 	iommu_free_table(tbl, "pnv");
+ }
+ 
+@@ -2448,7 +2448,7 @@ static __be64 *pnv_pci_ioda2_table_do_alloc_pages(int nid, unsigned shift,
+ 	return addr;
+ }
+ 
+-static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
++static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
+ 		unsigned long size, unsigned level);
+ 
+ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+@@ -2487,7 +2487,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+ 	 * release partially allocated table.
+ 	 */
+ 	if (offset < tce_table_size) {
+-		pnv_pci_ioda2_table_do_free_pages(addr,
++		pnv_pci_ioda_table_do_free_pages(addr,
+ 				1ULL << (level_shift - 3), levels - 1);
+ 		return -ENOMEM;
+ 	}
+@@ -2505,7 +2505,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+ 	return 0;
+ }
+ 
+-static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
++static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
+ 		unsigned long size, unsigned level)
+ {
+ 	const unsigned long addr_ul = (unsigned long) addr &
+@@ -2521,7 +2521,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+ 			if (!(hpa & (TCE_PCI_READ | TCE_PCI_WRITE)))
+ 				continue;
+ 
+-			pnv_pci_ioda2_table_do_free_pages(__va(hpa), size,
++			pnv_pci_ioda_table_do_free_pages(__va(hpa), size,
+ 					level - 1);
+ 		}
+ 	}
+@@ -2529,7 +2529,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+ 	free_pages(addr_ul, get_order(size << 3));
+ }
+ 
+-static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
++static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl)
+ {
+ 	const unsigned long size = tbl->it_indirect_levels ?
+ 			tbl->it_level_size : tbl->it_size;
+@@ -2537,7 +2537,7 @@ static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
+ 	if (!tbl->it_size)
+ 		return;
+ 
+-	pnv_pci_ioda2_table_do_free_pages((__be64 *)tbl->it_base, size,
++	pnv_pci_ioda_table_do_free_pages((__be64 *)tbl->it_base, size,
+ 			tbl->it_indirect_levels);
+ }
+ 
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
