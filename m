@@ -1,69 +1,61 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 4/6] pinctrl: rockchip: add bindings for rk3399 pinctrl
-Date: Wed, 17 Feb 2016 15:23:14 +0800
-Message-ID: <56C41FE2.8020800@rock-chips.com>
-References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
- <1455673992-16469-5-git-send-email-jay.xu@rock-chips.com>
- <19942952.P4nUQKPo3g@phil>
+From: Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: cputype info for Broadcom Vulcan
+Date: Tue, 16 Feb 2016 23:32:57 -0800
+Message-ID: <CAMDttNc-L0_zg_skNg9CyVT8mGgyZQZTLgCdMMGExxwqhSSPDQ@mail.gmail.com>
+References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
+	<1455389195-31870-5-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <19942952.P4nUQKPo3g@phil>
+In-Reply-To: <1455389195-31870-5-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Feb 13, 2016 at 10:46 AM, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Add Broadcom Vulcan implementor ID and part ID in cputype.h. This is
+> to document the values.
+>
+> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/include/asm/cputype.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+> index 1a59493..3725d59 100644
+> --- a/arch/arm64/include/asm/cputype.h
+> +++ b/arch/arm64/include/asm/cputype.h
+> @@ -65,6 +65,7 @@
+>  #define ARM_CPU_IMP_ARM                        0x41
+>  #define ARM_CPU_IMP_APM                        0x50
+>  #define ARM_CPU_IMP_CAVIUM             0x43
+> +#define ARM_CPU_IMP_BRCM               0x42
 
+It's probably not a big deal... guessing this list is chronologically
+ordered and should remain so?
 
-=D4=DA 17/02/2016 14:47, Heiko Stuebner =D0=B4=B5=C0:
-> Hi Jianqun,
 >
-> Am Mittwoch, 17. Februar 2016, 09:53:10 schrieb jianqun.xu:
->> From: Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Add devicetree bindings for pinctrl found on rk3399
->> processors from rockchip.
->>
->> Signed-off-by: Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 2=
- +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
->> b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt ind=
-ex
->> 0cd701b..c68b955 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
->> @@ -22,7 +22,7 @@ Required properties for iomux controller:
->>     - compatible: one of "rockchip,rk2928-pinctrl",
->> "rockchip,rk3066a-pinctrl" "rockchip,rk3066b-pinctrl",
->> "rockchip,rk3188-pinctrl"
->>   		       "rockchip,rk3228-pinctrl", "rockchip,rk3288-pinctrl"
->> -		       "rockchip,rk3368-pinctrl"
->> +		       "rockchip,rk3368-pinctrl", "rockchip,rk3399-pinctrl"
->>     - rockchip,grf: phandle referencing a syscon providing the
->>   	 "general register files"
+>  #define ARM_CPU_PART_AEM_V8            0xD0F
+>  #define ARM_CPU_PART_FOUNDATION                0xD00
+> @@ -74,6 +75,7 @@
+>  #define APM_CPU_PART_POTENZA           0x000
 >
-> that is already contained in David's core pinctrl patch that already =
-got
-> applied to the pinctrl tree.
+>  #define CAVIUM_CPU_PART_THUNDERX       0x0A1
+> +#define BRCM_CPU_PART_VULCAN           0x516
 >
-Sorry very much, I forgot it after a long time of spring holiday
-thanks
+>  #ifndef __ASSEMBLY__
 >
-> Heiko
+> --
+> 1.9.1
 >
 >
->
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
