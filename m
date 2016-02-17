@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 06/45] powerpc/powernv: Reorder fields in struct pnv_phb
-Date: Wed, 17 Feb 2016 14:43:49 +1100
-Message-ID: <1455680668-23298-7-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 28/45] powerpc/pci: Introduce pci_remove_device_node_info()
+Date: Wed, 17 Feb 2016 14:44:11 +1100
+Message-ID: <1455680668-23298-29-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,36 +10,62 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This moves those fields in struct pnv_phb that are related to PE
-allocation around. No logical change.
+This implements and exports pci_remove_device_node_info(). It's
+used to remove the pdn (struct pci_dn) for the indicated device
+node. The function is going to be used by PowerNV PCI hotplug
+driver.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h |  1 +
+ arch/powerpc/kernel/pci_dn.c          | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 78f035e..f2a1452 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -140,15 +140,14 @@ struct pnv_phb {
- 		unsigned int		io_segsize;
- 		unsigned int		io_pci_base;
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 72a9d4e..c6310e2 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -240,6 +240,7 @@ extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
+ extern void remove_dev_pci_data(struct pci_dev *pdev);
+ extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
+ 					       struct device_node *dn);
++extern void pci_remove_device_node_info(struct device_node *dn);
  
--		/* PE allocation bitmap */
--		unsigned long		*pe_alloc;
--		/* PE allocation mutex */
-+		/* PE allocation */
- 		struct mutex		pe_alloc_mutex;
-+		unsigned long		*pe_alloc;
-+		struct pnv_ioda_pe	*pe_array;
+ static inline int pci_device_from_OF_node(struct device_node *np,
+ 					  u8 *bus, u8 *devfn)
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index 0a249ff..ce10281 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -331,6 +331,29 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
+ }
+ EXPORT_SYMBOL_GPL(pci_add_device_node_info);
  
- 		/* M32 & IO segment maps */
- 		unsigned int		*m32_segmap;
- 		unsigned int		*io_segmap;
--		struct pnv_ioda_pe	*pe_array;
- 
- 		/* IRQ chip */
- 		int			irq_chip_init;
++void pci_remove_device_node_info(struct device_node *dn)
++{
++	struct pci_dn *pdn = dn ? PCI_DN(dn) : NULL;
++#ifdef CONFIG_EEH
++	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
++
++	if (edev)
++		edev->pdn = NULL;
++#endif
++
++	if (!pdn)
++		return;
++
++	WARN_ON(!list_empty(&pdn->child_list));
++	list_del(&pdn->list);
++	if (pdn->parent)
++		of_node_put(pdn->parent->node);
++
++	dn->data = NULL;
++	kfree(pdn);
++}
++EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
++
+ /*
+  * Traverse a device tree stopping each PCI device in the tree.
+  * This is done depth first.  As each node is processed, a "pre"
 -- 
 2.1.0
