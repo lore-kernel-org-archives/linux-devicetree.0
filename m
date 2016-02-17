@@ -1,42 +1,52 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: cputype info for Broadcom Vulcan
-Date: Wed, 17 Feb 2016 17:26:00 +0000
-Message-ID: <20160217172600.GA26514@e104818-lin.cambridge.arm.com>
-References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
- <1455389195-31870-5-git-send-email-jchandra@broadcom.com>
- <20160215101235.GA1748@arm.com>
- <56C3C9D4.4020506@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: adpll: Add binding documentation
+ for TI adpll
+Date: Wed, 17 Feb 2016 09:28:36 -0800
+Message-ID: <20160217172836.GA21202@atomide.com>
+References: <1455312009-808-1-git-send-email-tony@atomide.com>
+ <1455312009-808-2-git-send-email-tony@atomide.com>
+ <20160217010440.2278.62327@quark.deferred.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56C3C9D4.4020506-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160217010440.2278.62327@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Brian Hutchinson <b.hutchman@gmail.com>, Delio Brignoli <dbrignoli@audioscience.com>, Neil Armstrong <narmstrong@baylibre.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Philipp Rosenberger <ilu@linutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 05:16:04PM -0800, Florian Fainelli wrote:
-> On 15/02/16 02:12, Will Deacon wrote:
-> > On Sun, Feb 14, 2016 at 12:16:35AM +0530, Jayachandran C wrote:
-> >> Add Broadcom Vulcan implementor ID and part ID in cputype.h. This is
-> >> to document the values.
-> >>
-> >> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  arch/arm64/include/asm/cputype.h | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> > 
-> > Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+* Michael Turquette <mturquette@baylibre.com> [160216 17:17]:
+> Quoting Tony Lindgren (2016-02-12 13:20:08)
+> > +Required properties:
+> > +- compatible : shall be one of "ti,dm814-adpll-s-clock" or
+> > +  "ti,dm814-adpll-lj-clock" depending on the type of the ADPLL
+> > +- #clock-cells : from common clock binding; shall be set to 0.
 > 
-> Would this be picked by Calatin, or should this be sent along with the
-> ARM/ARM64 SoC changes pull requests (just wondering?), thanks!
+> Thanks for the patch.
+> 
+> clock-cells = 1 in both of the examples below (which looks right).
 
-It can go via the arm-soc tree together with the other patches. If you
-need another ack:
+Oops thanks, will update to 1.
 
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- clocks : link phandles of parent clocks clkinp and clkinpulow, note
+> > +  that the adpll-s-clock also has an optional clkinphif
+> > +- reg : address and length of the register set for controlling the ADPLL.
+> > +
+> > +Examples:
+> > +       adpll_mpu_ck: adpll@40 {
+> > +               #clock-cells = <1>;
+> > +               compatible = "ti,dm814-adpll-s-clock";
+> > +               reg = <0x40 0x40>;
+> > +               clocks = <&devosc_ck &devosc_ck &devosc_ck>;
+> > +               clock-names = "clkinp", "clkinpulow", "clkinphif";
+> > +               clock-indices = <0>, <1>, <2>, <3>;
+> 
+> Why is clock-indices necessary?
+
+Hmm yeah I don't think it's needed, so will drop.
+
+Regards,
+
+Tony
+
