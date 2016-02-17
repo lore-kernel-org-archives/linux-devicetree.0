@@ -1,52 +1,43 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: adpll: Add binding documentation
- for TI adpll
-Date: Wed, 17 Feb 2016 09:28:36 -0800
-Message-ID: <20160217172836.GA21202@atomide.com>
-References: <1455312009-808-1-git-send-email-tony@atomide.com>
- <1455312009-808-2-git-send-email-tony@atomide.com>
- <20160217010440.2278.62327@quark.deferred.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160217010440.2278.62327@quark.deferred.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Brian Hutchinson <b.hutchman@gmail.com>, Delio Brignoli <dbrignoli@audioscience.com>, Neil Armstrong <narmstrong@baylibre.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Philipp Rosenberger <ilu@linutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Wed, 17 Feb 2016 18:28:34 +0100
+Message-ID: <1455730114-2547-3-git-send-email-romain.perier@gmail.com>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455730114-2547-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Michael Turquette <mturquette@baylibre.com> [160216 17:17]:
-> Quoting Tony Lindgren (2016-02-12 13:20:08)
-> > +Required properties:
-> > +- compatible : shall be one of "ti,dm814-adpll-s-clock" or
-> > +  "ti,dm814-adpll-lj-clock" depending on the type of the ADPLL
-> > +- #clock-cells : from common clock binding; shall be set to 0.
-> 
-> Thanks for the patch.
-> 
-> clock-cells = 1 in both of the examples below (which looks right).
+These are the CBUS registers used to retrieve the revision and the
+identifier of the SoC on Meson8.
 
-Oops thanks, will update to 1.
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> > +- clocks : link phandles of parent clocks clkinp and clkinpulow, note
-> > +  that the adpll-s-clock also has an optional clkinphif
-> > +- reg : address and length of the register set for controlling the ADPLL.
-> > +
-> > +Examples:
-> > +       adpll_mpu_ck: adpll@40 {
-> > +               #clock-cells = <1>;
-> > +               compatible = "ti,dm814-adpll-s-clock";
-> > +               reg = <0x40 0x40>;
-> > +               clocks = <&devosc_ck &devosc_ck &devosc_ck>;
-> > +               clock-names = "clkinp", "clkinpulow", "clkinphif";
-> > +               clock-indices = <0>, <1>, <2>, <3>;
-> 
-> Why is clock-indices necessary?
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 0477a81..71009dc 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -99,6 +99,11 @@
+ 		};
+ 	};
+ 
++	hwrev@c1107d4c {
++		compatible = "amlogic,meson8b-hwrev", "syscon";
++		reg = <0xc1107d4c 0x460>;
++	};
++
+ 	sram: sram@d9000000 {
+ 		compatible = "mmio-sram";
+ 		reg = <0xd9000000 0x20000>;
+-- 
+2.5.0
 
-Hmm yeah I don't think it's needed, so will drop.
-
-Regards,
-
-Tony
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
