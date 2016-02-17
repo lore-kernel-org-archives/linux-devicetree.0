@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 10/45] powerpc/powernv: IO and M32 mapping based on PCI device resources
-Date: Wed, 17 Feb 2016 14:43:53 +1100
-Message-ID: <1455680668-23298-11-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 25/45] powerpc/pci: Rename pcibios_find_pci_bus()
+Date: Wed, 17 Feb 2016 14:44:08 +1100
+Message-ID: <1455680668-23298-26-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,175 +10,97 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the IO and M32 segments are mapped to the corresponding
-PE based on the windows of the parent bridge of PE's primary bus.
-It's not going to work when the windows of root port or upstream
-port of the PCIe switch behind root port are extended to PHB's
-apertures in order to support hotplug in subsequent patch.
-
-This fixes the issue by mapping IO and M32 segments based on the
-resources of the PCI devices included in the PE, instead of the
-windows of the parent bridge of the PE's primary bus.
+This renames pcibios_find_pci_bus() to pci_find_bus_by_node() to
+avoid conflicts with those PCI subsystem weak function names, which
+have prefix "pcibios". No logical changes introduced.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 127 +++++++++++++++++-------------
- 1 file changed, 71 insertions(+), 56 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h      | 2 +-
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 5 ++---
+ drivers/pci/hotplug/rpadlpar_core.c        | 6 +++---
+ drivers/pci/hotplug/rpaphp_pci.c           | 2 +-
+ 4 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index fd7d382..7330a73 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2929,71 +2929,86 @@ truncate_iov:
- }
- #endif /* CONFIG_PCI_IOV */
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index c817f38..03f4ee7 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -260,7 +260,7 @@ static inline struct eeh_dev *pdn_to_eeh_dev(struct pci_dn *pdn)
+ #endif
  
--/*
-- * This function is supposed to be called on basis of PE from top
-- * to bottom style. So the the I/O or MMIO segment assigned to
-- * parent PE could be overrided by its child PEs if necessary.
-- */
--static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
--				  struct pnv_ioda_pe *pe)
-+static void pnv_ioda_setup_one_res(struct pnv_ioda_pe *pe,
-+				   struct resource *res)
+ /** Find the bus corresponding to the indicated device node */
+-extern struct pci_bus *pcibios_find_pci_bus(struct device_node *dn);
++extern struct pci_bus *pci_find_bus_by_node(struct device_node *dn);
+ 
+ /** Remove all of the PCI devices under this bus */
+ extern void pci_remove_pci_devices(struct pci_bus *bus);
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 5d4a3df..aee22b4 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -54,8 +54,7 @@ find_bus_among_children(struct pci_bus *bus,
+ 	return child;
+ }
+ 
+-struct pci_bus *
+-pcibios_find_pci_bus(struct device_node *dn)
++struct pci_bus *pci_find_bus_by_node(struct device_node *dn)
  {
--	struct pnv_phb *phb = hose->private_data;
-+	struct pnv_phb *phb = pe->phb;
- 	struct pci_bus_region region;
--	struct resource *res;
--	unsigned int segsize;
--	int *segmap, index, i;
-+	unsigned int index, segsize;
-+	int *segmap;
- 	uint16_t win;
- 	int64_t rc;
+ 	struct pci_dn *pdn = dn->data;
  
--	/*
--	 * NOTE: We only care PCI bus based PE for now. For PCI
--	 * device based PE, for example SRIOV sensitive VF should
--	 * be figured out later.
--	 */
--	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-+	if (!res->parent || !res->flags  || res->start > res->end)
-+		return;
-+	if (!(res->flags & (IORESOURCE_IO | IORESOURCE_MEM)) ||
-+	    pnv_pci_is_mem_pref_64(res->flags))
-+		return;
+@@ -64,7 +63,7 @@ pcibios_find_pci_bus(struct device_node *dn)
  
--	pci_bus_for_each_resource(pe->pbus, res, i) {
--		if (!res || !res->flags ||
--		    res->start > res->end)
--			continue;
-+	if (res->flags & IORESOURCE_IO) {
-+		region.start = res->start - phb->ioda.io_pci_base;
-+		region.end   = res->end - phb->ioda.io_pci_base;
-+		segsize      = phb->ioda.io_segsize;
-+		segmap       = phb->ioda.io_segmap;
-+		win          = OPAL_IO_WINDOW_TYPE;
-+	} else {
-+		region.start = res->start -
-+			       phb->hose->mem_offset[0] -
-+			       phb->ioda.m32_pci_base;
-+		region.end   = res->end -
-+			       phb->hose->mem_offset[0] -
-+			       phb->ioda.m32_pci_base;
-+		segsize      = phb->ioda.m32_segsize;
-+		segmap       = phb->ioda.m32_segmap;
-+		win          = OPAL_M32_WINDOW_TYPE;
-+	}
-+
-+	region.start = _ALIGN_DOWN(region.start, segsize);
-+	region.end   = _ALIGN_UP(region.end, segsize);
-+	index = region.start / segsize;
-+	while (index < phb->ioda.total_pe_num && region.start < region.end) {
-+		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
-+				pe->pe_number, win, 0, index);
-+		if (rc != OPAL_SUCCESS) {
-+			pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
-+				__func__, rc, win, index,
-+				phb->hose->global_number,
-+				pe->pe_number);
-+			return;
-+		}
- 
--		if (res->flags & IORESOURCE_IO) {
--			region.start = res->start - phb->ioda.io_pci_base;
--			region.end   = res->end - phb->ioda.io_pci_base;
--			segsize      = phb->ioda.io_segsize;
--			segmap       = phb->ioda.io_segmap;
--			win          = OPAL_IO_WINDOW_TYPE;
--		} else if ((res->flags & IORESOURCE_MEM) &&
--			   !pnv_pci_is_mem_pref_64(res->flags)) {
--			region.start = res->start -
--				       hose->mem_offset[0] -
--				       phb->ioda.m32_pci_base;
--			region.end   = res->end -
--				       hose->mem_offset[0] -
--				       phb->ioda.m32_pci_base;
--			segsize      = phb->ioda.m32_segsize;
--			segmap       = phb->ioda.m32_segmap;
--			win          = OPAL_M32_WINDOW_TYPE;
--		} else {
--			continue;
-+		segmap[index] = pe->pe_number;
-+		region.start += segsize;
-+		index++;
-+	}
-+}
-+
-+static void pnv_ioda_setup_pe_seg(struct pnv_ioda_pe *pe)
-+{
-+	struct pci_dev *pdev;
-+	struct resource *res;
-+	int i;
-+
-+	/* This function only works for bus dependent PE */
-+	WARN_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-+
-+	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
-+		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
-+			res = &pdev->resource[i];
-+			pnv_ioda_setup_one_res(pe, res);
- 		}
- 
--		index = region.start / segsize;
--		while (index < phb->ioda.total_pe_num &&
--		       region.start <= region.end) {
--			segmap[index] = pe->pe_number;
--			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
--					pe->pe_number, win, 0, index);
--			if (rc != OPAL_SUCCESS) {
--				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
--					__func__, rc, win, index,
--					pe->phb->hose->global_number,
--					pe->pe_number);
--				break;
--			}
-+		/*
-+		 * If the PE contains all subordinate PCI buses, the
-+		 * windows of the child bridges should be mapped to
-+		 * the PE as well.
-+		 */
-+		if (!(pe->flags & PNV_IODA_PE_BUS_ALL && pci_is_bridge(pdev)))
-+			continue;
- 
--			region.start += segsize;
--			index++;
-+		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
-+			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
-+			pnv_ioda_setup_one_res(pe, res);
- 		}
- 	}
+ 	return find_bus_among_children(pdn->phb->bus, dn);
  }
-@@ -3012,7 +3027,7 @@ static void pnv_pci_ioda_setup_seg(void)
- 			continue;
+-EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
++EXPORT_SYMBOL_GPL(pci_find_bus_by_node);
  
- 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
--			pnv_ioda_setup_pe_seg(hose, pe);
-+			pnv_ioda_setup_pe_seg(pe);
- 		}
- 	}
- }
+ struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ {
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index 730982b..acbf041 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -175,7 +175,7 @@ static int dlpar_add_pci_slot(char *drc_name, struct device_node *dn)
+ 	struct pci_dev *dev;
+ 	struct pci_controller *phb;
+ 
+-	if (pcibios_find_pci_bus(dn))
++	if (pci_find_bus_by_node(dn))
+ 		return -EINVAL;
+ 
+ 	/* Add pci bus */
+@@ -212,7 +212,7 @@ static int dlpar_remove_phb(char *drc_name, struct device_node *dn)
+ 	struct pci_dn *pdn;
+ 	int rc = 0;
+ 
+-	if (!pcibios_find_pci_bus(dn))
++	if (!pci_find_bus_by_node(dn))
+ 		return -EINVAL;
+ 
+ 	/* If pci slot is hotpluggable, use hotplug to remove it */
+@@ -356,7 +356,7 @@ int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
+ 
+ 	pci_lock_rescan_remove();
+ 
+-	bus = pcibios_find_pci_bus(dn);
++	bus = pci_find_bus_by_node(dn);
+ 	if (!bus) {
+ 		ret = -EINVAL;
+ 		goto out;
+diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
+index 1099b38..a9180bb 100644
+--- a/drivers/pci/hotplug/rpaphp_pci.c
++++ b/drivers/pci/hotplug/rpaphp_pci.c
+@@ -93,7 +93,7 @@ int rpaphp_enable_slot(struct slot *slot)
+ 	if (rc)
+ 		return rc;
+ 
+-	bus = pcibios_find_pci_bus(slot->dn);
++	bus = pci_find_bus_by_node(slot->dn);
+ 	if (!bus) {
+ 		err("%s: no pci_bus for dn %s\n", __func__, slot->dn->full_name);
+ 		return -EINVAL;
 -- 
 2.1.0
