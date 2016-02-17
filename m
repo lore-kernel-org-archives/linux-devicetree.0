@@ -1,74 +1,46 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v11 07/14] drm/mediatek: enable hdmi output control bit
-Date: Wed, 17 Feb 2016 12:28:47 +0100
-Message-ID: <1455708534-20274-8-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v11 14/14] arm64: dts: mt8173-evb: enable HDMI output
+Date: Wed, 17 Feb 2016 12:28:54 +0100
+Message-ID: <1455708534-20274-15-git-send-email-p.zabel@pengutronix.de>
 References: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455708534-20274-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel@>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-MT8173 HDMI hardware has a output control bit to enable/disable HDMI
-output. Because of security reason, so this bit can ONLY be controlled
-in ARM supervisor mode. Now the only way to enter ARM supervisor is the
-ARM trusted firmware. So atf provides a API for HDMI driver to call to
-setup this HDMI control bit to enable HDMI output in supervisor mode.
-
-Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi_hw.c   | 12 ++++++++++++
- drivers/gpu/drm/mediatek/mtk_hdmi_regs.h |  1 +
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c b/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-index 99c7ffc..ea4e35f 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-@@ -15,6 +15,7 @@
- #include "mtk_hdmi_regs.h"
- #include "mtk_hdmi.h"
- 
-+#include <linux/arm-smccc.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/hdmi.h>
-@@ -50,6 +51,17 @@ void mtk_hdmi_hw_vid_black(struct mtk_hdmi *hdmi,
- 
- void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- {
-+	struct arm_smccc_res res;
-+
-+	/*
-+	 * MT8173 HDMI hardware has an output control bit to enable/disable HDMI
-+	 * output. This bit can only be controlled in ARM supervisor mode.
-+	 * The ARM trusted firmware provides an API for the HDMI driver to set
-+	 * this control bit to enable HDMI output in supervisor mode.
-+	 */
-+	arm_smccc_smc(MTK_SIP_SET_AUTHORIZED_SECURE_REG, 0x14000904, 0x80000000,
-+		      0, 0, 0, 0, 0, &res);
-+
- 	regmap_update_bits(hdmi->sys_regmap, hdmi->sys_offset + HDMI_SYS_CFG20,
- 			   HDMI_PCLK_FREE_RUN, enable ? HDMI_PCLK_FREE_RUN : 0);
- 	regmap_update_bits(hdmi->sys_regmap, hdmi->sys_offset + HDMI_SYS_CFG1C,
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h b/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-index 8c1d318..d88279f 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-@@ -218,4 +218,5 @@
- #define MHL_SYNC_AUTO_EN		BIT(30)
- #define HDMI_PCLK_FREE_RUN		BIT(31)
- 
-+#define MTK_SIP_SET_AUTHORIZED_SECURE_REG 0x82000001
- #endif
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIGFuIEhETUkgY29ubmVjdG9yIG5vZGUgYW5kIGVuYWJsZSB0aGUgZGV2aWNlcyB0aGF0IGFy
+ZSBwYXJ0IG9mIHRoZQpIRE1JIGRpc3BsYXkgcGF0aDogY2VjLCBkcGkwLCBoZG1pX3BoeSwgYW5k
+IGhkbWkwLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25p
+eC5kZT4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1ldmIuZHRzIHwg
+MzggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNl
+cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
+NzMtZXZiLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLWV2Yi5kdHMK
+aW5kZXggZTQyN2YwNC4uNWVlN2YyNCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9t
+ZWRpYXRlay9tdDgxNzMtZXZiLmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L210ODE3My1ldmIuZHRzCkBAIC00Miw2ICs0Miw0NCBAQAogCQlncGlvID0gPCZwaW8gMTMwIEdQ
+SU9fQUNUSVZFX0hJR0g+OwogCQllbmFibGUtYWN0aXZlLWhpZ2g7CiAJfTsKKworCWNvbm5lY3Rv
+ciB7CisJCWNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0b3IiOworCQlsYWJlbCA9ICJoZG1pIjsK
+KwkJdHlwZSA9ICJkIjsKKworCQlwb3J0IHsKKwkJCWhkbWlfY29ubmVjdG9yX2luOiBlbmRwb2lu
+dCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pMF9vdXQ+OworCQkJfTsKKwkJfTsKKwl9
+OworfTsKKworJmNlYyB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJmRwaTAgeworCXN0YXR1
+cyA9ICJva2F5IjsKK307CisKKyZoZG1pX3BoeSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKwor
+JmhkbWkwIHsKKwlzdGF0dXMgPSAib2theSI7CisKKwlwb3J0cyB7CisJCXBvcnRAMSB7CisJCQly
+ZWcgPSA8MT47CisKKwkJCWhkbWkwX291dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2lu
+dCA9IDwmaGRtaV9jb25uZWN0b3JfaW4+OworCQkJfTsKKwkJfTsKKwl9OwogfTsKIAogJmkyYzEg
+ewotLSAKMi43LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
