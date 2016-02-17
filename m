@@ -1,68 +1,35 @@
-From: Matt Longnecker <mlongnecker@nvidia.com>
-Subject: Re: [PATCH V5 07/11] of: Add bindings of hw-trip-points for soctherm
-Date: Wed, 17 Feb 2016 12:52:32 -0800
-Message-ID: <56C4DD90.3080506@nvidia.com>
-References: <1454057260-16412-1-git-send-email-wni@nvidia.com>
- <CAL_JsqKwQOxkWyYPcv6sBe8ELUuPx4N+iUF94J8R63bRxsGK4g@mail.gmail.com>
- <56C17AFD.8050203@nvidia.com> <56C4417D.2030409@nvidia.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v8.1 1/2] drm/rockchip: hdmi: add Innosilicon HDMI support
+Date: Wed, 17 Feb 2016 22:00:17 +0100
+Message-ID: <3883951.Go5JsyhPRt@phil>
+References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com> <1454492697-7837-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56C4417D.2030409@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>, Rob Herring <robh@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454492697-7837-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(cc +=3D linux-pm)
+Am Mittwoch, 3. Februar 2016, 17:44:57 schrieb Yakir Yang:
+> The Innosilicon HDMI is a low power HDMI 1.4 transmitter
+> IP, and it have been integrated on some rockchip CPUs
+> (like RK3036, RK312x).
+> 
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Rob,
+On a Kylin board against 4.5-rc
+Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-The Linux thermal framework makes a sharp distinction between "thermal=20
-zones" and "cooling devices". thermal_zones are aware of temperatures=20
-and have trip points. cooling_devices are unaware of temperatures --=20
-they just have a state variable. The thermal framework binds thermal=20
-zones at particular temperatures to particular cooling devices. It does=
-=20
-so *in software*
+@Mark: While testing I noticed a black box around my cursor. It moves with 
+the cursor, so seems to be the plane itself - the hdmi driver is of course 
+innocent. May there exist an issue with plane transparency?
 
-The SOC_THERM IP block doesn't fit neatly in that paradigm. Yes, it=20
-provides the ability to read temperatures and raise interrupts at=20
-temperatures. However, it also has the ability to take cooling action=20
-_in hardware_ at particular temperatures. It can throttle the CPU & GPU=
-=20
-clock and it can shut down the SOC. Neither of those are graceful=20
-actions, but they are valuable in practice.
 
-In previous incarnations of this driver we have implemented an unholy=20
-mash-up of a cooling device and a thermal zone for configuring the=20
-hardware thermal actions. It was a mess. This patchset from Wei takes a=
-=20
-simpler approach -- allow the thermal hardware cooling actions to be=20
-configured directly via DT. It's simple but it's good enough in=20
-practice. I like it.
-
--Matt
-
-On 02/17/2016 01:46 AM, Wei Ni wrote:
-> On 2016=E5=B9=B402=E6=9C=8815=E6=97=A5 15:15, Wei Ni wrote:
->> >Hi, Rob
->> >
->> >On 2016=E5=B9=B402=E6=9C=8812=E6=97=A5 22:42, Rob Herring wrote:
->>> >>On Fri, Jan 29, 2016 at 2:47 AM, Wei Ni<wni@nvidia.com>  wrote:
->>>> >>>Add hw-trips sub-node for soctherm, which is
->>>> >>>used to describe the hardware trip points for
->>>> >>>each soctherm sensors.
->>> >>
->>> >>I still don't understand why you are doing something custom here.
->>> >>What's wrong with what is defined in:
->>> >>
->>> >>Documentation/devicetree/bindings/thermal/thermal.txt
-> I think it's better to add a .set_trip_temp for of-thermal's
-> thermal_zone_of_device_ops{}, so that we can set trip points on hardw=
-are. I'm
-> preparing patches, and will send out next version.
-> Thanks for your comments.
->
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
