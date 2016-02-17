@@ -1,83 +1,99 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed, 17 Feb 2016 10:18:49 +0100
-Message-ID: <56C43AF9.3030906@barix.com>
-References: <1455188466-10879-1-git-send-email-petr@barix.com>
- <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
- <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v10 10/13] clk: mediatek: make dpi0_sel propagate rate
+ changes
+Date: Wed, 17 Feb 2016 10:19:26 +0100
+Message-ID: <1455700766.3336.11.camel@pengutronix.de>
+References: <1454527562-28154-1-git-send-email-p.zabel@pengutronix.de>
+ <1454527562-28154-11-git-send-email-p.zabel@pengutronix.de>
+ <20160215231404.2278.31008@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160215231404.2278.31008@quark.deferred.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-
-On 16.02.2016 21:05, Rob Herring wrote:
-> On Fri, Feb 12, 2016 at 11:24 AM, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> wrote:
->> I understand your point that the description should be generic.
->> However the USB 2.0 specification does not define any relation between the
->> bMaxPower provided by the device and the actual power control.
->> As far as I understand the value just serves the purpose to raise a flag to
->> the user if the attached device would draw too much power, and not to enable
->> it at all.
-> That won't really work given devices lie. My bus powered USB disk
-> enclosure reports something like 10mA. That's pretty good considering
-> I have a 5W drive in it.
-Yes, that's exactly what's happening. The USB 2.0 is in that matter 
-naive and assumes that the devices don't lie :-)
-But at the same time gives them the possibility to lie by not binding 
-this value to the physical current.
->> For instance on my development board the real maximum current is limited
->> only by the mains power-supply used.
->> So it cannot even be modelled in the DT as a regulator because the
->> power-supply is not part of the HW and
->> everybody can take a different one.
-> Not part of which h/w? Different for everyone is exactly why Vbus
-> supply should be described in DT.
-I mean the regulator is in the AC power supply, which is standalone and 
-can be changed. Therefore not described in the DT.
-The DT describes only the board.
-
->> So defining a regulator just to store this arbitrary USB 2.0 value is a bit
->> overkill for me.
-> If it is just arbitrary, then put it into the driver. I would do 500mA
-> and be done with it. I'd guess there is nothing real behind the
-> current default of 250mA.
-Still there is some sense behind. The power_budget is used to possibly 
-print a warning message and/or
-disable a self powered device that announces too much power. So I would 
-leave it configurable.
-
-What would be your proposal then? Something like this?
-
-     usb_reg: fixedregulator@0 {
-         compatible = "regulator-fixed";
-         regulator-name = "USB Vbus";
-         regulator-always-on;
-         regulator-max-microamp = <500000>;    /* 500mA */
-     };
-
-or a real regulator if there is one. And then reference it as:
-
-     usb20: ... {
-         ...
-         vbus-supply = <&usb_reg>;
-     }
-
-As I said for me it's an overkill, knowing that this monster needs to be 
-set-up and reside in memory just to write the power_budget variable for 
-devices which anyway may lie.
-But if you prefer that and Sergei and the guys from USB agree to it I 
-don't really mind.--
-
-Regards
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWljaGFlbCwKCnRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnRzLgoKQW0gTW9udGFnLCBkZW4g
+MTUuMDIuMjAxNiwgMTU6MTQgLTA4MDAgc2NocmllYiBNaWNoYWVsIFR1cnF1ZXR0ZToKPiBRdW90
+aW5nIFBoaWxpcHAgWmFiZWwgKDIwMTYtMDItMDMgMTE6MjU6NTkpCj4gPiBUaGlzIG11eCBpcyBz
+dXBwb3NlZCB0byBzZWxlY3QgYSBmaXR0aW5nIGRpdmlkZXIgYWZ0ZXIgdGhlIFBMTAo+ID4gaXMg
+YWxyZWFkeSBzZXQgdG8gdGhlIGNvcnJlY3QgcmF0ZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTog
+UGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KPiA+IEFja2VkLWJ5OiBKYW1l
+cyBMaWFvIDxqYW1lc2pqLmxpYW9AbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9j
+bGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jIHwgMiArLQo+ID4gIGRyaXZlcnMvY2xrL21lZGlhdGVr
+L2Nsay1tdGsuaCAgICB8IDcgKysrKystLQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRp
+b25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE3My5jIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5j
+Cj4gPiBpbmRleCAyMjdlMzU2Li42ODJiMjc1IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE3My5jCj4gPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGst
+bXQ4MTczLmMKPiA+IEBAIC01NTgsNyArNTU4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
+Y29tcG9zaXRlIHRvcF9tdXhlc1tdIF9faW5pdGNvbnN0ID0gewo+ID4gICAgICAgICBNVVhfR0FU
+RShDTEtfVE9QX0FUQl9TRUwsICJhdGJfc2VsIiwgYXRiX3BhcmVudHMsIDB4MDA5MCwgMTYsIDIs
+IDIzKSwKPiA+ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9WRU5DX0xUX1NFTCwgInZlbmNsdF9z
+ZWwiLCB2ZW5jX2x0X3BhcmVudHMsIDB4MDA5MCwgMjQsIDQsIDMxKSwKPiA+ICAgICAgICAgLyog
+Q0xLX0NGR182ICovCj4gPiAtICAgICAgIE1VWF9HQVRFKENMS19UT1BfRFBJMF9TRUwsICJkcGkw
+X3NlbCIsIGRwaTBfcGFyZW50cywgMHgwMGEwLCAwLCAzLCA3KSwKPiA+ICsgICAgICAgTVVYX0dB
+VEVfRkxBR1MoQ0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2VsIiwgZHBpMF9wYXJlbnRzLCAweDAw
+YTAsIDAsIDMsIDcsIDApLAo+IAo+IFNvIHRoZSBvbmx5IGluc3RhbmNlIG9mIE1VWF9HQVRFIHRo
+YXQgc2hvdWxkIG5vdCBwcm9wYWdhdGUgaXQncyByZXF1ZXN0Cj4gdXAgdG8gdGhlIHBhcmVudCBp
+cyBkcGkwX3NlbD8gQXJlIHlvdSBzdXJlPwoKVGhlIG90aGVyIHdheSBhcm91bmQuIFRoaXMgaXMg
+dGhlIG9ubHkgY2xvY2sgSSdtIHN1cmUgb2YgdGhhdCBpdApzaG91bGRuJ3QgcHJvcGFnYXRlLiBG
+b3IgdGhlIG90aGVycyBJIGRvbid0IGtub3csIHNvIEkgd2FudCB0byBsZWF2ZQp0aGVtIGFzIHRo
+ZXkgYXJlLgoKPiBJIGhvcGUgc28gYmVjYXVzZSB0aGlzIHBhdGNoIGNoYW5nZXMgYWxsIE1VWF9H
+QVRFIGNsa3MgdG8gcHJvcGFnYXRlCj4gdGhlaXIgcmVxdWVzdHMgdXAgdG8gdGhlaXIgcGFyZW50
+cywgd2hpY2ggaXMgc29ydCBvZiBhIGJpZyBjaGFuZ2UuCgpUaGUgTVVYX0dBVEUgbWFjcm8gcHJl
+dmlvdXNseSB1bmNvbmRpdGlvbmFsbHkgc2V0IHRoZQpDTEtfU0VUX1JBVEVfUEFSRU5ULCBzbyBu
+b3RoaW5nIHNob3VsZCBoYXZlIGNoYW5nZWQgdGhlcmUuIFNlZSAod2F5KQpiZWxvdy4KCj4gQWxz
+bywgdGhlIG5hbWUgZ2FtZSBpcyBhIGJpdCBjb25mdXNpbmcuIEkgY2FuIHNlZSB0aGF0IHlvdSdy
+ZSB0cnlpbmcgdG8KPiBwcmV2ZW50IGhhdmluZyBhIGh1Z2UgcGF0Y2ggdGhhdCB0b3VjaGVzIGV2
+ZXJ5IE1VWF9HQVRFIGluaXRpYWxpemF0aW9uLgo+IEhvd2V2ZXIgaXQgaXNuJ3Qgb2J2aW91cyBm
+cm9tIHRoZSBuYW1lICJNVVhfR0FURSgpIiB0aGF0IHRoZSBtYWNybyB3aWxsCj4gZW5hYmxlIENM
+S19TRVRfUkFURV9QQVJFTlQgZnVuY3Rpb25hbGl0eS4gTWF5YmUgcHV0IGEgY29tbWVudCBhYm92
+ZSBpdAo+IGp1c3QgdG8gbWFrZSBpdCBleHRyYSBjbGVhcj8KCkkgY2FuIGRvIHRoYXQuCgo+ID4g
+ICAgICAgICBNVVhfR0FURShDTEtfVE9QX0lSREFfU0VMLCAiaXJkYV9zZWwiLCBpcmRhX3BhcmVu
+dHMsIDB4MDBhMCwgOCwgMiwgMTUpLAo+ID4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0NDSTQw
+MF9TRUwsICJjY2k0MDBfc2VsIiwgY2NpNDAwX3BhcmVudHMsIDB4MDBhMCwgMTYsIDMsIDIzKSwK
+PiA+ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9BVURfMV9TRUwsICJhdWRfMV9zZWwiLCBhdWRf
+MV9wYXJlbnRzLCAweDAwYTAsIDI0LCAyLCAzMSksCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9j
+bGsvbWVkaWF0ZWsvY2xrLW10ay5oIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oCj4g
+PiBpbmRleCAzMmQyZTQ1Li5iNjA3OTk2IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jbGsvbWVk
+aWF0ZWsvY2xrLW10ay5oCj4gPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXRrLmgK
+PiA+IEBAIC04Myw3ICs4Myw3IEBAIHN0cnVjdCBtdGtfY29tcG9zaXRlIHsKPiA+ICAgICAgICAg
+c2lnbmVkIGNoYXIgbnVtX3BhcmVudHM7Cj4gPiAgfTsKPiA+ICAKPiA+IC0jZGVmaW5lIE1VWF9H
+QVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUpIHsg
+IFwKPiA+ICsjZGVmaW5lIE1VWF9HQVRFX0ZMQUdTKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVn
+LCBfc2hpZnQsIF93aWR0aCwgX2dhdGUsIF9mbGFncykgeyAgICBcCj4gPiAgICAgICAgICAgICAg
+ICAgLmlkID0gX2lkLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBcCj4gPiAgICAgICAgICAgICAgICAgLm5hbWUgPSBfbmFtZSwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBcCj4gPiAgICAgICAgICAgICAgICAgLm11eF9yZWcgPSBf
+cmVnLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4gPiBAQCAtOTQs
+OSArOTQsMTIgQEAgc3RydWN0IG10a19jb21wb3NpdGUgewo+ID4gICAgICAgICAgICAgICAgIC5k
+aXZpZGVyX3NoaWZ0ID0gLTEsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+
+ID4gICAgICAgICAgICAgICAgIC5wYXJlbnRfbmFtZXMgPSBfcGFyZW50cywgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAo+ID4gICAgICAgICAgICAgICAgIC5udW1fcGFyZW50cyA9IEFS
+UkFZX1NJWkUoX3BhcmVudHMpLCAgICAgICAgICAgICAgICAgICAgXAo+ID4gLSAgICAgICAgICAg
+ICAgIC5mbGFncyA9IENMS19TRVRfUkFURV9QQVJFTlQsICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgXAo+ID4gKyAgICAgICAgICAgICAgIC5mbGFncyA9IF9mbGFncywgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXAoKVGhpcy4KCj4gPiAgICAgICAgIH0KPiA+ICAKPiA+
+ICsjZGVmaW5lIE1VWF9HQVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93
+aWR0aCwgX2dhdGUpICAgIFwKPiA+ICsgICAgICAgTVVYX0dBVEVfRkxBR1MoX2lkLCBfbmFtZSwg
+X3BhcmVudHMsIF9yZWcsIF9zaGlmdCwgX3dpZHRoLCBfZ2F0ZSwgQ0xLX1NFVF9SQVRFX1BBUkVO
+VCkKPiA+ICsKPiA+ICAjZGVmaW5lIE1VWChfaWQsIF9uYW1lLCBfcGFyZW50cywgX3JlZywgX3No
+aWZ0LCBfd2lkdGgpIHsgICAgICAgICAgICAgIFwKPiA+ICAgICAgICAgICAgICAgICAuaWQgPSBf
+aWQsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiA+ICAg
+ICAgICAgICAgICAgICAubmFtZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFwKPiA+IC0tIAo+ID4gMi43LjAucmMzCgpiZXN0IHJlZ2FyZHMKUGhpbGlw
+cAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
