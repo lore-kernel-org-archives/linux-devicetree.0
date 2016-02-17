@@ -1,153 +1,68 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v9 5/5] dts: mt8173: Add iommu/smi nodes for mt8173
-Date: Wed, 17 Feb 2016 08:46:14 +0800
-Message-ID: <1455669974-1527-6-git-send-email-yong.wu@mediatek.com>
-References: <1455669974-1527-1-git-send-email-yong.wu@mediatek.com>
+From: Andreas =?iso-8859-1?Q?Irest=E5l?= <andreas.irestal-VrBV9hrLPhE@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] ASoC: adau17x1: Support platform data via DT
+Date: Wed, 17 Feb 2016 09:58:29 +0100
+Message-ID: <20160217085829.GC2137@lnxandire1.se.axis.com>
+References: <1455627405-18155-1-git-send-email-andire@axis.com>
+ <1455627405-18155-6-git-send-email-andire@axis.com>
+ <4053162.T8NAULHXMt@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455669974-1527-1-git-send-email-yong.wu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, p.zabel@pengutronix.de, youhua.li@mediatek.com, kendrick.hsu@mediatek.com, Yong Wu <yong.wu@mediatek.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4053162.T8NAULHXMt@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andreas =?iso-8859-1?Q?Irest=E5l?= <andire-VrBV9hrLPhE@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the iommu/larbs nodes for mt8173
+On Tue, Feb 16, 2016 at 02:42:02PM +0100, Arnd Bergmann wrote:
+> On Tuesday 16 February 2016 13:56:45 Andreas Irest=E5l wrote:
+> > Currently, it is only possible to configure HW-specific options to =
+the
+> > adau17x1 codecs by providing a platform data struct. With this patc=
+h,
+> > it is possible to provide the same data via DT instead.
+> >=20
+> > Signed-off-by: Andreas Irest=E5l <andire-VrBV9hrLPhE@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/sound/adi,adau17x1.txt     |  31 +++++
+> >  include/dt-bindings/sound/adau17x1.h               |  14 +++
+> >  sound/soc/codecs/adau1761.c                        | 127 +++++++++=
+++++++++++++
+> >  sound/soc/codecs/adau1781.c                        |  48 ++++++++
+> >  4 files changed, 220 insertions(+)
+> >  create mode 100644 include/dt-bindings/sound/adau17x1.h
+>=20
+> > +		of_pdata =3D devm_kzalloc(dev, sizeof(*of_pdata), GFP_KERNEL);
+> > +		if (!of_pdata)
+> > +			return -ENOMEM;
+> > +		adau1781_pdata_from_of(dev, of_pdata);
+> > +		dev->platform_data =3D of_pdata;
+>=20
+> and here I'd try to avoid the dynamic allocation and just add the fie=
+lds to the
+> driver private structure. You can copy the information from the platf=
+orm
+> data in the 'else' path.
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 81 ++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+Since the driver private structure is shared between two different
+codecs, the platform_data struct can be of 2 different types, but I
+guess it should be OK to have two fields or a
+union in the private struct.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index ec135ea..8048811 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/clock/mt8173-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/memory/mt8173-larb-port.h>
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/power/mt8173-power.h>
- #include <dt-bindings/reset/mt8173-resets.h>
-@@ -277,6 +278,17 @@
- 			reg = <0 0x10200620 0 0x20>;
- 		};
- 
-+		iommu: iommu@10205000 {
-+			compatible = "mediatek,mt8173-m4u";
-+			reg = <0 0x10205000 0 0x1000>;
-+			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_M4U>;
-+			clock-names = "bclk";
-+			mediatek,larbs = <&larb0 &larb1 &larb2
-+					  &larb3 &larb4 &larb5>;
-+			#iommu-cells = <1>;
-+		};
-+
- 		apmixedsys: clock-controller@10209000 {
- 			compatible = "mediatek,mt8173-apmixedsys";
- 			reg = <0 0x10209000 0 0x1000>;
-@@ -589,29 +601,98 @@
- 			status = "disabled";
- 		};
- 
-+		larb0: larb@14021000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x14021000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+				 <&mmsys CLK_MM_SMI_LARB0>;
-+			clock-names = "apb", "smi";
-+		};
-+
-+		smi_common: smi@14022000 {
-+			compatible = "mediatek,mt8173-smi-common";
-+			reg = <0 0x14022000 0 0x1000>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			clocks = <&mmsys CLK_MM_SMI_COMMON>,
-+				 <&mmsys CLK_MM_SMI_COMMON>;
-+			clock-names = "apb", "smi";
-+		};
-+
-+		larb4: larb@14027000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x14027000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			clocks = <&mmsys CLK_MM_SMI_LARB4>,
-+				 <&mmsys CLK_MM_SMI_LARB4>;
-+			clock-names = "apb", "smi";
-+		};
-+
- 		imgsys: clock-controller@15000000 {
- 			compatible = "mediatek,mt8173-imgsys", "syscon";
- 			reg = <0 0x15000000 0 0x1000>;
- 			#clock-cells = <1>;
- 		};
- 
-+		larb2: larb@15001000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x15001000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_ISP>;
-+			clocks = <&imgsys CLK_IMG_LARB2_SMI>,
-+				 <&imgsys CLK_IMG_LARB2_SMI>;
-+			clock-names = "apb", "smi";
-+		};
-+
- 		vdecsys: clock-controller@16000000 {
- 			compatible = "mediatek,mt8173-vdecsys", "syscon";
- 			reg = <0 0x16000000 0 0x1000>;
- 			#clock-cells = <1>;
- 		};
- 
-+		larb1: larb@16010000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x16010000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
-+			clocks = <&vdecsys CLK_VDEC_CKEN>,
-+				 <&vdecsys CLK_VDEC_LARB_CKEN>;
-+			clock-names = "apb", "smi";
-+		};
-+
- 		vencsys: clock-controller@18000000 {
- 			compatible = "mediatek,mt8173-vencsys", "syscon";
- 			reg = <0 0x18000000 0 0x1000>;
- 			#clock-cells = <1>;
- 		};
- 
-+		larb3: larb@18001000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x18001000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
-+			clocks = <&vencsys CLK_VENC_CKE1>,
-+				 <&vencsys CLK_VENC_CKE0>;
-+			clock-names = "apb", "smi";
-+		};
-+
- 		vencltsys: clock-controller@19000000 {
- 			compatible = "mediatek,mt8173-vencltsys", "syscon";
- 			reg = <0 0x19000000 0 0x1000>;
- 			#clock-cells = <1>;
- 		};
-+
-+		larb5: larb@19001000 {
-+			compatible = "mediatek,mt8173-smi-larb";
-+			reg = <0 0x19001000 0 0x1000>;
-+			mediatek,smi = <&smi_common>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC_LT>;
-+			clocks = <&vencltsys CLK_VENCLT_CKE1>,
-+				 <&vencltsys CLK_VENCLT_CKE0>;
-+			clock-names = "apb", "smi";
-+		};
- 	};
- };
- 
--- 
-1.8.1.1.dirty
+I was thinking about this too but chose the approach above since provid=
+ing
+platform_data is optional. However, I could add some default values and
+submit again.
+
+Thanks a lot for the feedback.
+/Andreas
+
+>=20
+> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
