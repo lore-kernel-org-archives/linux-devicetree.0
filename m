@@ -1,134 +1,206 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 43/45] drivers/of: Specify parent node in of_fdt_unflatten_tree()
-Date: Wed, 17 Feb 2016 14:44:26 +1100
-Message-ID: <1455680668-23298-44-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 38/45] powerpc/powernv: Functions to get/set PCI slot status
+Date: Wed, 17 Feb 2016 14:44:21 +1100
+Message-ID: <1455680668-23298-39-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, Jyri Sarha <jsarha@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455680668-23298-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds one more argument to of_fdt_unflatten_tree() to specify
-the parent node of the FDT blob that is going to be unflattened.
-In the result, the function can be used to unflatten FDT blob that
-represents device sub-tree in PowerNV PCI hotplug driver.
+This exports 4 functins, which base on the corresponding OPAL
+APIs to get/set PCI slot status. Those functions are going to
+be used by PowerNV PCI hotplug driver:
 
-Cc: Jyri Sarha <jsarha@ti.com>
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+   pnv_pci_get_device_tree()    opal_get_device_tree()
+   pnv_pci_get_presence_state() opal_pci_get_presence_state()
+   pnv_pci_get_power_state()    opal_pci_get_power_state()
+   pnv_pci_set_power_state()    opal_pci_set_power_state()
+
+Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
+unregister}() to allow registration and unregistration of PCI hotplug
+notifier, which will be used to receive PCI hotplug message from
+skiboot firmware in PowerNV PCI hotplug driver.
+
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  2 +-
- drivers/of/fdt.c                             | 14 ++++++++++----
- drivers/of/unittest.c                        |  2 +-
- include/linux/of_fdt.h                       |  1 +
- 4 files changed, 13 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/opal-api.h            | 17 ++++++-
+ arch/powerpc/include/asm/opal.h                |  4 ++
+ arch/powerpc/include/asm/pnv-pci.h             |  7 +++
+ arch/powerpc/platforms/powernv/opal-wrappers.S |  4 ++
+ arch/powerpc/platforms/powernv/pci.c           | 66 ++++++++++++++++++++++++++
+ 5 files changed, 97 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-index 106679b..f9c79da 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-@@ -157,7 +157,7 @@ struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
- 	if (!overlay_data || kfree_table_add(kft, overlay_data))
- 		return NULL;
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index f8faaae..a6af338 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -158,7 +158,11 @@
+ #define OPAL_LEDS_SET_INDICATOR			115
+ #define OPAL_CEC_REBOOT2			116
+ #define OPAL_CONSOLE_FLUSH			117
+-#define OPAL_LAST				117
++#define OPAL_GET_DEVICE_TREE			118
++#define OPAL_PCI_GET_PRESENCE_STATE		119
++#define OPAL_PCI_GET_POWER_STATE		120
++#define OPAL_PCI_SET_POWER_STATE		121
++#define OPAL_LAST				121
  
--	of_fdt_unflatten_tree(overlay_data, &overlay);
-+	of_fdt_unflatten_tree(overlay_data, NULL, &overlay);
- 	if (!overlay) {
- 		pr_warn("%s: Unfattening overlay tree failed\n", __func__);
- 		return NULL;
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3fc9a30..16a1ba5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -450,11 +450,13 @@ static int unflatten_dt_nodes(const void *blob,
-  * pointers of the nodes so the normal device-tree walking functions
-  * can be used.
-  * @blob: The blob to expand
-+ * @dad: Parent device node
-  * @mynodes: The device_node tree created by the call
-  * @dt_alloc: An allocator that provides a virtual address to memory
-  * for the resulting tree
-  */
- static void __unflatten_device_tree(const void *blob,
-+			     struct device_node *dad,
- 			     struct device_node **mynodes,
- 			     void * (*dt_alloc)(u64 size, u64 align))
- {
-@@ -479,7 +481,7 @@ static void __unflatten_device_tree(const void *blob,
- 	}
+ /* Device tree flags */
  
- 	/* First pass, scan for size */
--	size = unflatten_dt_nodes(blob, NULL, NULL, NULL);
-+	size = unflatten_dt_nodes(blob, NULL, dad, NULL);
- 	if (size < 0)
- 		return;
+@@ -344,6 +348,16 @@ enum OpalPciResetState {
+ 	OPAL_ASSERT_RESET   = 1
+ };
  
-@@ -495,7 +497,7 @@ static void __unflatten_device_tree(const void *blob,
- 	pr_debug("  unflattening %p...\n", mem);
++enum OpalPciSlotPresentenceState {
++	OPAL_PCI_SLOT_EMPTY	= 0,
++	OPAL_PCI_SLOT_PRESENT	= 1
++};
++
++enum OpalPciSlotPowerState {
++	OPAL_PCI_SLOT_POWER_OFF	= 0,
++	OPAL_PCI_SLOT_POWER_ON	= 1
++};
++
+ enum OpalSlotLedType {
+ 	OPAL_SLOT_LED_TYPE_ID = 0,	/* IDENTIFY LED */
+ 	OPAL_SLOT_LED_TYPE_FAULT = 1,	/* FAULT LED */
+@@ -378,6 +392,7 @@ enum opal_msg_type {
+ 	OPAL_MSG_DPO,
+ 	OPAL_MSG_PRD,
+ 	OPAL_MSG_OCC,
++	OPAL_MSG_PCI_HOTPLUG,
+ 	OPAL_MSG_TYPE_MAX,
+ };
  
- 	/* Second pass, do actual unflattening */
--	unflatten_dt_nodes(blob, mem, NULL, mynodes);
-+	unflatten_dt_nodes(blob, mem, dad, mynodes);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-@@ -512,6 +514,9 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 9e0039f..899bcb941 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -209,6 +209,10 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, uint64_t buf,
+ 		uint64_t size, uint64_t token);
+ int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
+ 		uint64_t token);
++int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
++int64_t opal_pci_get_presence_state(uint64_t id, uint8_t *state);
++int64_t opal_pci_get_power_state(uint64_t id, uint8_t *state);
++int64_t opal_pci_set_power_state(uint64_t id, uint8_t state);
  
- /**
-  * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
-+ * @blob: Flat device tree blob
-+ * @dad: Parent device node
-+ * @mynodes: The device tree created by the call
-  *
-  * unflattens the device-tree passed by the firmware, creating the
-  * tree of struct device_node. It also fills the "name" and "type"
-@@ -519,10 +524,11 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
-  * can be used.
-  */
- void of_fdt_unflatten_tree(const unsigned long *blob,
-+			struct device_node *dad,
- 			struct device_node **mynodes)
- {
- 	mutex_lock(&of_fdt_unflatten_mutex);
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
- 	mutex_unlock(&of_fdt_unflatten_mutex);
+ /* Internal functions */
+ extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
+diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
+index 6f77f71..d9d095b 100644
+--- a/arch/powerpc/include/asm/pnv-pci.h
++++ b/arch/powerpc/include/asm/pnv-pci.h
+@@ -13,6 +13,13 @@
+ #include <linux/pci.h>
+ #include <misc/cxl-base.h>
+ 
++extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len);
++extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
++extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
++extern int pnv_pci_set_power_state(uint64_t id, uint8_t state);
++extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
++extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
++
+ int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
+ int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
+ 			   unsigned int virq);
+diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S b/arch/powerpc/platforms/powernv/opal-wrappers.S
+index e45b88a..3ea1a855 100644
+--- a/arch/powerpc/platforms/powernv/opal-wrappers.S
++++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+@@ -302,3 +302,7 @@ OPAL_CALL(opal_prd_msg,				OPAL_PRD_MSG);
+ OPAL_CALL(opal_leds_get_ind,			OPAL_LEDS_GET_INDICATOR);
+ OPAL_CALL(opal_leds_set_ind,			OPAL_LEDS_SET_INDICATOR);
+ OPAL_CALL(opal_console_flush,			OPAL_CONSOLE_FLUSH);
++OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
++OPAL_CALL(opal_pci_get_presence_state,		OPAL_PCI_GET_PRESENCE_STATE);
++OPAL_CALL(opal_pci_get_power_state,		OPAL_PCI_GET_POWER_STATE);
++OPAL_CALL(opal_pci_set_power_state,		OPAL_PCI_SET_POWER_STATE);
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index a458703..206385f 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -63,6 +63,72 @@ int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state)
+ 	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
  }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
-@@ -1180,7 +1186,7 @@ bool __init early_init_dt_scan(void *params)
-  */
- void __init unflatten_device_tree(void)
+ 
++int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
++		return -ENXIO;
++
++	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
++
++int pnv_pci_get_presence_state(uint64_t id, uint8_t *state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_get_presence_state(id, state);
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_presence_state);
++
++int pnv_pci_get_power_state(uint64_t id, uint8_t *state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_POWER_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_get_power_state(id, state);
++	return pnv_pci_poll(id, rc, state);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_power_state);
++
++int pnv_pci_set_power_state(uint64_t id, uint8_t state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_SET_POWER_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_set_power_state(id, state);
++	return pnv_pci_poll(id, rc, NULL);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_set_power_state);
++
++int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
++{
++	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
++
++int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
++{
++	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
++
+ #ifdef CONFIG_PCI_MSI
+ int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
  {
--	__unflatten_device_tree(initial_boot_params, &of_root,
-+	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
- 				early_init_dt_alloc_memory_arch);
- 
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 979b6e4..ec36f93 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -921,7 +921,7 @@ static int __init unittest_data_add(void)
- 			"not running tests\n", __func__);
- 		return -ENOMEM;
- 	}
--	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-+	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
- 		return -ENODATA;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index df9ef38..3644960 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
- extern void of_fdt_unflatten_tree(const unsigned long *blob,
-+			       struct device_node *dad,
- 			       struct device_node **mynodes);
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
