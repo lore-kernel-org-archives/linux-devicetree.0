@@ -1,73 +1,93 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Add documentation for Broadcom Vulcan
-Date: Wed, 17 Feb 2016 17:17:01 +0000
-Message-ID: <20160217171700.GI32647@leverpostej>
-References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
- <1455389195-31870-3-git-send-email-jchandra@broadcom.com>
+From: Han Xu <xhnjupt@gmail.com>
+Subject: Re: [PATCH v4 2/7] mtd: spi-nor: fsl-quadspi: add support for ls1021a
+Date: Thu, 18 Feb 2016 01:14:36 +0800
+Message-ID: <20160217171436.GC16812@shlinux2>
+References: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
+ <1453793041-35868-2-git-send-email-yao.yuan@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455389195-31870-3-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1453793041-35868-2-git-send-email-yao.yuan@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuan Yao <yao.yuan@freescale.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, han.xu@freescale.com, robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yao.yuan@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 14, 2016 at 12:16:33AM +0530, Jayachandran C wrote:
-> Update arm/cpus.txt to add brcm,vulcan CPU. Add documentation
-> for Broadcom vulcan boards in arm/bcm/brcm,vulcan.txt
+On Tue, Jan 26, 2016 at 03:23:56PM +0800, Yuan Yao wrote:
+> LS1021a also support Freescale Quad SPI controller.
+> Add fsl-quadspi support for ls1021a chip and make SPI_FSL_QUADSPI
+> selectable for LS1021A SOC hardwares.
 > 
-> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+> Acked-by: Han xu <han.xu@freescale.com>
 > ---
->  Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt | 9 +++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
->  2 files changed, 10 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
+> Changed in v4:
+> No changes.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
-> new file mode 100644
-> index 0000000..dac9eb5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan.txt
-> @@ -0,0 +1,9 @@
-> +Broadcom Vulcan device tree bindings
-> +------------------------------------
+> Changed in v3:
+> No changes.
+> 
+> Changed in v2:
+> Update my email to <yao.yuan@nxp.com>
+> ---
+>  drivers/mtd/spi-nor/Kconfig       |  2 +-
+>  drivers/mtd/spi-nor/fsl-quadspi.c | 10 ++++++++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 0dc9275..a28c278 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -30,7 +30,7 @@ config MTD_SPI_NOR_USE_4K_SECTORS
+>  
+>  config SPI_FSL_QUADSPI
+>  	tristate "Freescale Quad SPI controller"
+> -	depends on ARCH_MXC || COMPILE_TEST
+> +	depends on ARCH_MXC || SOC_LS1021A || COMPILE_TEST
+>  	depends on HAS_IOMEM
+>  	help
+>  	  This enables support for the Quad SPI controller in master mode.
+> diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c b/drivers/mtd/spi-nor/fsl-quadspi.c
+> index 04e8a93..9ab2b51 100644
+> --- a/drivers/mtd/spi-nor/fsl-quadspi.c
+> +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
+> @@ -213,6 +213,7 @@ enum fsl_qspi_devtype {
+>  	FSL_QUADSPI_IMX6SX,
+>  	FSL_QUADSPI_IMX7D,
+>  	FSL_QUADSPI_IMX6UL,
+> +	FSL_QUADSPI_LS1021A,
+>  };
+>  
+>  struct fsl_qspi_devtype_data {
+> @@ -258,6 +259,14 @@ static struct fsl_qspi_devtype_data imx6ul_data = {
+>  		       | QUADSPI_QUIRK_4X_INT_CLK,
+>  };
+>  
+> +static struct fsl_qspi_devtype_data ls1021a_data = {
+> +	.devtype = FSL_QUADSPI_LS1021A,
+> +	.rxfifo = 128,
+> +	.txfifo = 64,
+> +	.ahb_buf_size = 1024,
+> +	.driver_data = 0,
+> +};
 > +
-> +Boards with Broadcom Vulcan shall have the following properties:
-> +
-> +Required root node property:
-> +
-> +Vulcan Evaluation Board
-> +compatible = "brcm,vulcan-eval", "brcm,vulcan";
-
-You can't use "brcm,vulcan" as both a board and CPU string.
-
-Please come up with different strings.
-
-Mark.
-
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index ae9be07..bc43ad7 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -167,6 +167,7 @@ nodes to be present and contain the properties described below.
->  			    "arm,cortex-r5"
->  			    "arm,cortex-r7"
->  			    "brcm,brahma-b15"
-> +			    "brcm,vulcan"
->  			    "cavium,thunder"
->  			    "faraday,fa526"
->  			    "intel,sa110"
+>  #define FSL_QSPI_MAX_CHIP	4
+>  struct fsl_qspi {
+>  	struct spi_nor nor[FSL_QSPI_MAX_CHIP];
+> @@ -812,6 +821,7 @@ static const struct of_device_id fsl_qspi_dt_ids[] = {
+>  	{ .compatible = "fsl,imx6sx-qspi", .data = (void *)&imx6sx_data, },
+>  	{ .compatible = "fsl,imx7d-qspi", .data = (void *)&imx7d_data, },
+>  	{ .compatible = "fsl,imx6ul-qspi", .data = (void *)&imx6ul_data, },
+> +	{ .compatible = "fsl,ls1021a-qspi", .data = (void *)&ls1021a_data, },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_qspi_dt_ids);
 > -- 
-> 1.9.1
+> 2.1.0.27.g96db324
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Han xu <han.xu@nxp.com>
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
