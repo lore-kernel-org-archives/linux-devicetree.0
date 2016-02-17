@@ -1,57 +1,41 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/7] ARM/arm64: dts: renesas: Add/complete L2
- cache-controller nodes
-Date: Wed, 17 Feb 2016 14:53:41 +0900
-Message-ID: <20160217055340.GD11534@verge.net.au>
-References: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/06] devicetree: bindings: Remove sh7372 CMT binding
+Date: Wed, 17 Feb 2016 14:58:54 +0900
+Message-ID: <20160217055854.GG11534@verge.net.au>
+References: <20160216071722.25461.61862.sendpatchset@little-apple>
+ <20160216071731.25461.77388.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1455568715-20880-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Dirk Behme <dirk.behme@de.bosch.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20160216071731.25461.77388.sendpatchset@little-apple>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 09:38:28PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
+On Tue, Feb 16, 2016 at 04:17:31PM +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 > 
-> This patch series adds the missing L2 cache-controller nodes to the
-> DTSes for various Renesas ARM-based SoCs, or completes the existing
-> nodes, and links the CPU nodes to them.
+> Remove the sh7372 CMT compat string to reduce maintenance burden.
 > 
-> For R-Mobile APE6 (r8a73a4), the L2 cache-controllers are also linked to
-> the respective (already existing) SYSC Power Domains. Fortunately these
-> Power Domains were never powered down, as they are parents of the Power
-> Domains containing CPU cores. This may change in the future.
-> 
-> For R-Car Gen2 and Gen3 (r8a779x), this serves as a preparatory step for
-> adding SYSC Power Domain support later.
-> 
-> Changes compared to v2:
->   - Dropped "arm,data-latency" and "arm,tag-latency" properties, as they
->     may not be valid when using virtualization,
->   - Dropped already applied parts of "[PATCH v2 6/6] arm64: renesas:
->     r8a7795: Add L2 cache-controller nodes",
->   - Changed one-line summary prefix to match current arm-soc practices.
-> 
-> This series is against renesas-devel-20160215-v4.5-rc4.
-> It has been tested on r8a73a4/ape6evm, r8a7791/koelsch, r8a7794/alt, and
-> r8a7795/salvator-x.
-> 
-> For your convenience, I've also pushed this series to
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#topic/l2-cache-v3
-> 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (7):
->   ARM: dts: r8a73a4: Add L2 cache-controller nodes
->   ARM: dts: r8a7790: Add L2 cache-controller nodes
->   ARM: dts: r8a7791: Add L2 cache-controller node
->   ARM: dts: r8a7793: Add L2 cache-controller node
->   ARM: dts: r8a7794: Add L2 cache-controller node
->   arm64: dts: r8a7795: Add missing properties to CA57 L2 cache node
->   arm64: dts: r8a7795: Add CA53 L2 cache-controller node
+> It should be fine to break DT compatibility because:
+> 1) The sh7372 SoC support has been removed from upstream
+> 2) The sh7372 CMT DT binding was never part of upstream DTS
+> 3) The CMT driver never matches on the sh7372 binding
 
-Thanks, I have queued these up for v4.6.
+A trifecta!
+
+> 
+> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+I'd like to join this Ack-party!
+
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
