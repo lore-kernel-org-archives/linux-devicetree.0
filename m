@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 27/45] powerpc/pci: Export pci_add_device_node_info()
-Date: Wed, 17 Feb 2016 14:44:10 +1100
-Message-ID: <1455680668-23298-28-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 04/45] powerpc/powernv: Cleanup on pci_controller_ops instances
+Date: Wed, 17 Feb 2016 14:43:47 +1100
+Message-ID: <1455680668-23298-5-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,124 +10,72 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This renames update_dn_pci_info() to pci_add_device_node_info()
-with corresponding adjustment on the parameter type and exports it.
-The function is used to create pdn (struct pci_dn) for the indicated
-device node. Another function add_pdn(), almost wrapper of
-pci_add_device_node_info(), to be used in traverse_pci_devices(). No
-logical changes introduced.
+This cleans up on below data struct instances to use tab instead of
+space indent of statement to avoid complains from scripts/checkpatch.pl.
+No logical changes introduced.
+
+  @pnv_pci_ioda_controller_ops
+  @pnv_npu_ioda_controller_ops
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Reviewed-by: Daniel Axtens <dja@axtens.net>
 ---
- arch/powerpc/include/asm/pci-bridge.h  |  3 ++-
- arch/powerpc/kernel/pci_dn.c           | 30 +++++++++++++++++++-----------
- arch/powerpc/platforms/pseries/setup.c |  2 +-
- 3 files changed, 22 insertions(+), 13 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 36 +++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 03f4ee7..72a9d4e 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -238,7 +238,8 @@ extern struct pci_dn *pci_get_pdn_by_devfn(struct pci_bus *bus,
- extern struct pci_dn *pci_get_pdn(struct pci_dev *pdev);
- extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
- extern void remove_dev_pci_data(struct pci_dev *pdev);
--extern void *update_dn_pci_info(struct device_node *dn, void *data);
-+extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
-+					       struct device_node *dn);
- 
- static inline int pci_device_from_OF_node(struct device_node *np,
- 					  u8 *bus, u8 *devfn)
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 38102cb..0a249ff 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -282,13 +282,9 @@ void remove_dev_pci_data(struct pci_dev *pdev)
- #endif /* CONFIG_PCI_IOV */
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index c5baaf3..524c9c7 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -3210,31 +3210,31 @@ static void pnv_pci_ioda_shutdown(struct pci_controller *hose)
  }
  
--/*
-- * Traverse_func that inits the PCI fields of the device node.
-- * NOTE: this *must* be done before read/write config to the device.
-- */
--void *update_dn_pci_info(struct device_node *dn, void *data)
-+struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
-+					struct device_node *dn)
- {
--	struct pci_controller *phb = data;
- 	const __be32 *type = of_get_property(dn, "ibm,pci-config-space-type", NULL);
- 	const __be32 *regs;
- 	struct device_node *parent;
-@@ -299,7 +295,7 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 		return NULL;
- 	dn->data = pdn;
- 	pdn->node = dn;
--	pdn->phb = phb;
-+	pdn->phb = hose;
- #ifdef CONFIG_PPC_POWERNV
- 	pdn->pe_number = IODA_INVALID_PE;
+ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
+-       .dma_dev_setup = pnv_pci_dma_dev_setup,
+-       .dma_bus_setup = pnv_pci_dma_bus_setup,
++	.dma_dev_setup		= pnv_pci_dma_dev_setup,
++	.dma_bus_setup		= pnv_pci_dma_bus_setup,
+ #ifdef CONFIG_PCI_MSI
+-       .setup_msi_irqs = pnv_setup_msi_irqs,
+-       .teardown_msi_irqs = pnv_teardown_msi_irqs,
++	.setup_msi_irqs		= pnv_setup_msi_irqs,
++	.teardown_msi_irqs	= pnv_teardown_msi_irqs,
  #endif
-@@ -331,8 +327,9 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 	if (pdn->parent)
- 		list_add_tail(&pdn->list, &pdn->parent->child_list);
+-       .enable_device_hook = pnv_pci_enable_device_hook,
+-       .window_alignment = pnv_pci_window_alignment,
+-       .reset_secondary_bus = pnv_pci_reset_secondary_bus,
+-       .dma_set_mask = pnv_pci_ioda_dma_set_mask,
+-       .dma_get_required_mask = pnv_pci_ioda_dma_get_required_mask,
+-       .shutdown = pnv_pci_ioda_shutdown,
++	.enable_device_hook	= pnv_pci_enable_device_hook,
++	.window_alignment	= pnv_pci_window_alignment,
++	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
++	.dma_set_mask		= pnv_pci_ioda_dma_set_mask,
++	.dma_get_required_mask	= pnv_pci_ioda_dma_get_required_mask,
++	.shutdown		= pnv_pci_ioda_shutdown,
+ };
  
--	return NULL;
-+	return pdn;
- }
-+EXPORT_SYMBOL_GPL(pci_add_device_node_info);
+ static const struct pci_controller_ops pnv_npu_ioda_controller_ops = {
+-	.dma_dev_setup = pnv_pci_dma_dev_setup,
++	.dma_dev_setup		= pnv_pci_dma_dev_setup,
+ #ifdef CONFIG_PCI_MSI
+-	.setup_msi_irqs = pnv_setup_msi_irqs,
+-	.teardown_msi_irqs = pnv_teardown_msi_irqs,
++	.setup_msi_irqs		= pnv_setup_msi_irqs,
++	.teardown_msi_irqs	= pnv_teardown_msi_irqs,
+ #endif
+-	.enable_device_hook = pnv_pci_enable_device_hook,
+-	.window_alignment = pnv_pci_window_alignment,
+-	.reset_secondary_bus = pnv_pci_reset_secondary_bus,
+-	.dma_set_mask = pnv_npu_dma_set_mask,
+-	.shutdown = pnv_pci_ioda_shutdown,
++	.enable_device_hook	= pnv_pci_enable_device_hook,
++	.window_alignment	= pnv_pci_window_alignment,
++	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
++	.dma_set_mask		= pnv_npu_dma_set_mask,
++	.shutdown		= pnv_pci_ioda_shutdown,
+ };
  
- /*
-  * Traverse a device tree stopping each PCI device in the tree.
-@@ -432,6 +429,18 @@ void *traverse_pci_dn(struct pci_dn *root,
- 	return NULL;
- }
- 
-+static void *add_pdn(struct device_node *dn, void *data)
-+{
-+	struct pci_controller *hose = data;
-+	struct pci_dn *pdn;
-+
-+	pdn = pci_add_device_node_info(hose, dn);
-+	if (!pdn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	return NULL;
-+}
-+
- /** 
-  * pci_devs_phb_init_dynamic - setup pci devices under this PHB
-  * phb: pci-to-host bridge (top-level bridge connecting to cpu)
-@@ -446,8 +455,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
- 	struct pci_dn *pdn;
- 
- 	/* PHB nodes themselves must not match */
--	update_dn_pci_info(dn, phb);
--	pdn = dn->data;
-+	pdn = pci_add_device_node_info(phb, dn);
- 	if (pdn) {
- 		pdn->devfn = pdn->busno = -1;
- 		pdn->vendor_id = pdn->device_id = pdn->class_code = 0;
-@@ -456,7 +464,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
- 	}
- 
- 	/* Update dn->phb ptrs for new phb and children devices */
--	traverse_pci_devices(dn, update_dn_pci_info, phb);
-+	traverse_pci_devices(dn, add_pdn, phb);
- }
- 
- /** 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 36df46e..6f8d020 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -265,7 +265,7 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
- 		pdn = parent ? PCI_DN(parent) : NULL;
- 		if (pdn) {
- 			/* Create pdn and EEH device */
--			update_dn_pci_info(np, pdn->phb);
-+			pci_add_device_node_info(pdn->phb, np);
- 			eeh_dev_init(PCI_DN(np), pdn->phb);
- 		}
- 
+ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
 -- 
 2.1.0
