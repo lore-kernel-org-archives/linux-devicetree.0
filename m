@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 08/45] powerpc/powernv: Fix initial IO and M32 segmap
-Date: Wed, 17 Feb 2016 14:43:51 +1100
-Message-ID: <1455680668-23298-9-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 44/45] drivers/of: Return allocated memory from of_fdt_unflatten_tree()
+Date: Wed, 17 Feb 2016 14:44:27 +1100
+Message-ID: <1455680668-23298-45-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,66 +10,115 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-There are two arrays for IO and M32 segment maps on every PHB.
-The index of the arrays are segment number and the value stored
-in the corresponding element is PE number, indicating the segment
-is assigned to the PE. Initially, all elements in those two arrays
-are zeroes, meaning all segments are assigned to PE#0. It's wrong.
-
-This fixes the initial values in the elements of those two arrays
-to IODA_INVALID_PE, meaning all segments aren't assigned to any
-PE. In order to use IODA_INVALID_PE (-1) to represent invalid PE
-number, the types of those two arrays are changed from "unsigned int"
-to "int".
+This returns the allocate memory chunk, storing the unflattened device
+tree, from of_fdt_unflatten_tree() so that memory chunk can be released
+on demand in PowerNV PCI hotplug driver.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 9 +++++++--
- arch/powerpc/platforms/powernv/pci.h      | 4 ++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/of/fdt.c       | 33 ++++++++++++++++++++++-----------
+ include/linux/of_fdt.h |  6 +++---
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 1d2514f..44cc5f3 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -3239,7 +3239,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
- 	const __be64 *prop64;
- 	const __be32 *prop32;
--	int len;
-+	int i, len;
- 	u64 phb_id;
- 	void *aux;
- 	long rc;
-@@ -3334,8 +3334,13 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	aux = memblock_virt_alloc(size, 0);
- 	phb->ioda.pe_alloc = aux;
- 	phb->ioda.m32_segmap = aux + m32map_off;
--	if (phb->type == PNV_PHB_IODA1)
-+	for (i = 0; i < phb->ioda.total_pe_num; i++)
-+		phb->ioda.m32_segmap[i] = IODA_INVALID_PE;
-+	if (phb->type == PNV_PHB_IODA1) {
- 		phb->ioda.io_segmap = aux + iomap_off;
-+		for (i = 0; i < phb->ioda.total_pe_num; i++)
-+			phb->ioda.io_segmap[i] = IODA_INVALID_PE;
-+	}
- 	phb->ioda.pe_array = aux + pemap_off;
- 	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 16a1ba5..47ec278 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -454,11 +454,14 @@ static int unflatten_dt_nodes(const void *blob,
+  * @mynodes: The device_node tree created by the call
+  * @dt_alloc: An allocator that provides a virtual address to memory
+  * for the resulting tree
++ *
++ * Returns NULL on failure or the memory chunk containing the unflattened
++ * device tree on success.
+  */
+-static void __unflatten_device_tree(const void *blob,
+-			     struct device_node *dad,
+-			     struct device_node **mynodes,
+-			     void * (*dt_alloc)(u64 size, u64 align))
++static void *__unflatten_device_tree(const void *blob,
++				     struct device_node *dad,
++				     struct device_node **mynodes,
++				     void *(*dt_alloc)(u64 size, u64 align))
+ {
+ 	int size;
+ 	void *mem;
+@@ -467,7 +470,7 @@ static void __unflatten_device_tree(const void *blob,
  
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 784882a..36c4965 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -146,8 +146,8 @@ struct pnv_phb {
- 		struct pnv_ioda_pe	*pe_array;
+ 	if (!blob) {
+ 		pr_debug("No device tree pointer\n");
+-		return;
++		return NULL;
+ 	}
  
- 		/* M32 & IO segment maps */
--		unsigned int		*m32_segmap;
--		unsigned int		*io_segmap;
-+		int			*m32_segmap;
-+		int			*io_segmap;
+ 	pr_debug("Unflattening device tree:\n");
+@@ -477,13 +480,13 @@ static void __unflatten_device_tree(const void *blob,
  
- 		/* IRQ chip */
- 		int			irq_chip_init;
+ 	if (fdt_check_header(blob)) {
+ 		pr_err("Invalid device tree blob header\n");
+-		return;
++		return NULL;
+ 	}
+ 
+ 	/* First pass, scan for size */
+ 	size = unflatten_dt_nodes(blob, NULL, dad, NULL);
+ 	if (size < 0)
+-		return;
++		return NULL;
+ 
+ 	size = ALIGN(size, 4);
+ 	pr_debug("  size is %d, allocating...\n", size);
+@@ -503,6 +506,7 @@ static void __unflatten_device_tree(const void *blob,
+ 			   be32_to_cpup(mem + size));
+ 
+ 	pr_debug(" <- unflatten_device_tree()\n");
++	return mem;
+ }
+ 
+ static void *kernel_tree_alloc(u64 size, u64 align)
+@@ -522,14 +526,21 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
+  * tree of struct device_node. It also fills the "name" and "type"
+  * pointers of the nodes so the normal device-tree walking functions
+  * can be used.
++ *
++ * Returns NULL on failure or the memory chunk containing the unflattened
++ * device tree on success.
+  */
+-void of_fdt_unflatten_tree(const unsigned long *blob,
+-			struct device_node *dad,
+-			struct device_node **mynodes)
++void *of_fdt_unflatten_tree(const unsigned long *blob,
++			    struct device_node *dad,
++			    struct device_node **mynodes)
+ {
++	void *mem;
++
+ 	mutex_lock(&of_fdt_unflatten_mutex);
+-	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
++	mem = __unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+ 	mutex_unlock(&of_fdt_unflatten_mutex);
++
++	return mem;
+ }
+ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+ 
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 3644960..b87b26a7 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -37,9 +37,9 @@ extern bool of_fdt_is_big_endian(const void *blob,
+ 				 unsigned long node);
+ extern int of_fdt_match(const void *blob, unsigned long node,
+ 			const char *const *compat);
+-extern void of_fdt_unflatten_tree(const unsigned long *blob,
+-			       struct device_node *dad,
+-			       struct device_node **mynodes);
++extern void *of_fdt_unflatten_tree(const unsigned long *blob,
++				   struct device_node *dad,
++				   struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ extern int __initdata dt_root_addr_cells;
 -- 
 2.1.0
