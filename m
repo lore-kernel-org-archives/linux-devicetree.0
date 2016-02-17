@@ -1,80 +1,96 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: Move syscon reboot/poweroff to common dtsi
- for Exynos
-Date: Tue, 16 Feb 2016 23:23:24 -0300
-Message-ID: <56C3D99C.3090403@osg.samsung.com>
-References: <1455636348-14277-1-git-send-email-javier@osg.samsung.com>
- <56C3D745.7050904@samsung.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
+Date: Wed, 17 Feb 2016 11:33:27 +0900
+Message-ID: <CANqRtoQg--gnv+ZkopO3PR3Pt7i5quiKvaPDyeJVOnahJGgdmg@mail.gmail.com>
+References: <20160216071722.25461.61862.sendpatchset@little-apple>
+	<20160216071741.25461.54191.sendpatchset@little-apple>
+	<CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C3D745.7050904-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi Geert,
 
-On 02/16/2016 11:13 PM, Krzysztof Kozlowski wrote:
-
-[snip]
-
->> diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
->> new file mode 100644
->> index 000000000000..09a2040054ed
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
->> @@ -0,0 +1,27 @@
->> +/*
->> + * Samsung's Exynos SoC syscon reboot/poweroff nodes common definition.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +/ {
->> +	soc {
->> +		compatible = "simple-bus";
+On Tue, Feb 16, 2016 at 10:11 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Tue, Feb 16, 2016 at 8:17 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+>>
+>> Add documentation for new separate CMT0 and CMT1 DT compatible strings
+>> for R-Car Gen2. These compat strings allow us to enable CMT1-specific
+>> features in the driver. The old compat strings will be deprecated in
+>> the not so distant future.
+>>
+>> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+>> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>
+>>  Changes since V2:
+>>  - Added Acked-by from Rob
+>>  - Removed Tested-by tag from DT binding patch - duh!
+>>
+>>  Changes since V1:
+>>  - Added Acked-by and Tested-by from Geert
+>>  - Added Acked-by from Laurent
+>>
+>>  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> --- 0002/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt        2015-09-17 17:26:57.440513000 +0900
+>> @@ -36,6 +36,9 @@ Required Properties:
+>>                 (CMT1 on sh73a0 and r8a7740)
+>>                 This is a fallback for the above renesas,cmt-48-* entries.
+>>
+>> +    - "renesas,cmt0-rcar-gen2" for 32-bit CMT0 devices included in R-Car Gen2.
+>> +    - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
 >
-> The exynos4 does not have soc node. I wonder whether we should provide
-> here also address and size:
->                  #address-cells = <1>;
->                  #size-cells = <1>;
-> 		ranges;
->
-> Without this it works fine but that does not look correct enough.
->
-> A minor effect of this patch on Exynos4 is that syscon-poweroff/reboot
-> are now the only children of "soc" simple-bus (rest of platform devices
-> is not)... but this is not a problem.
->
-> Works fine so only the question about cells/ranges remains. Any comments?
->
+> (advancing a few months always means more comments ;-)
 
-I in fact had the #address-cells and #size-cells at the beginning but then
-realized that both the syscon-poweroff and syscon-reboot nodes didn't have
-a reg property so it felt strange to me to have those.
+Indeed!
 
-Also, I thought that maybe a SoC dtsi may need a different #address-cells
-and #size-cells for the other child nodes so having those in this dtsi
-could override the values in the SoC dtsi depending where is included.
+> I'm wondering whether we should use e.g. "renesas,rcar-gen2-cmt0" instead?
 
-So I thought it could do more harm than good but I've no strong opinion
-and can add those if you prefer.
+I have no strong feelings one way or the other, but I agree that
+aiming to make things more consistent must be good.
 
-> Best regards,
-> Krzysztof
->
->
+Your proposal makes the fallback match with what we do for a bunch
+other devices on R-Car Gen2 like:
+"rcar-gen2-cpg-clocks"
+"rcar-gen2-scif"
+But we also seem to have:
+"pci-rcar-gen2"
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+On R-Car Gen3 we seem to have the following per-SoC compat strings:
+"dmac-r8a7795"
+"etheravb-r8a7795"
+"gpio-r8a7795"
+"scif-r8a7795"
+But we also have:
+"r8a7795-cpg-mssr"
+
+My only feeling is that it looks a tad odd if we follow
+"<vendor>,<family-generation>-<device>" for fallback strings but
+"<vendor>,<device>-<part-number>" for the per-soc binding. Why not
+using the same order? Maybe this is specified in some document
+somewhere?
+
+I guess your take with "r8a7795-cpg-mssr" above is to follow the same
+order as for the fallback case? This seems sane to me, and if so then
+perhaps the per-soc compat strings for the CMT should also be updated?
+Same for other devices too then, like the recently added
+"dmac-r8a7795"?
+
+Cheers,
+
+/ magnus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
