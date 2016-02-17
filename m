@@ -1,142 +1,51 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v8 43/45] drivers/of: Specify parent node in
- of_fdt_unflatten_tree()
-Date: Wed, 17 Feb 2016 17:58:14 +0200
-Message-ID: <56C49896.3090109@ti.com>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-44-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 00/12] Add support for the Armada 3700 SoC an mvebu ARM64 based
+Date: Wed, 17 Feb 2016 17:03:15 +0100
+Message-ID: <87a8mzs4sc.fsf@free-electrons.com>
+References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
+	<2699923.cugyhCaCQy@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-44-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <2699923.cugyhCaCQy@wuerfel> (Arnd Bergmann's message of "Tue, 16
+	Feb 2016 22:22:11 +0100")
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/16 05:44, Gavin Shan wrote:
-> This adds one more argument to of_fdt_unflatten_tree() to specify
-> the parent node of the FDT blob that is going to be unflattened.
-> In the result, the function can be used to unflatten FDT blob that
-> represents device sub-tree in PowerNV PCI hotplug driver.
->
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  2 +-
+Hi Arnd,
+=20
+ On mar., f=C3=A9vr. 16 2016, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Acked-by: Jyri Sarha <jsarha@ti.com>
+> On Tuesday 16 February 2016 19:14:50 Gregory CLEMENT wrote:
+>> This series introduce the support of the Armada 3700 family: it is t=
+he
+>> first ARM64 SoC of the mvebu family submitted to the mainline!
+>>=20
+>> Currently there are two members of the Armada 3700 family, the only
+>> difference is the number of core: the Armada 3710 comes with one
+>> Cortex-A53 whereas the Armada 3720 comes with 2 Cortex-A53. In this
+>> series we enabled only the minimum to boot, pinctrl and clock tree
+>> will come soon.
+>>=20
+>
+> Whole series
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
->   drivers/of/fdt.c                             | 14 ++++++++++----
->   drivers/of/unittest.c                        |  2 +-
->   include/linux/of_fdt.h                       |  1 +
->   4 files changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> index 106679b..f9c79da 100644
-> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> @@ -157,7 +157,7 @@ struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
->   	if (!overlay_data || kfree_table_add(kft, overlay_data))
->   		return NULL;
->
-> -	of_fdt_unflatten_tree(overlay_data, &overlay);
-> +	of_fdt_unflatten_tree(overlay_data, NULL, &overlay);
->   	if (!overlay) {
->   		pr_warn("%s: Unfattening overlay tree failed\n", __func__);
->   		return NULL;
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 3fc9a30..16a1ba5 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -450,11 +450,13 @@ static int unflatten_dt_nodes(const void *blob,
->    * pointers of the nodes so the normal device-tree walking functions
->    * can be used.
->    * @blob: The blob to expand
-> + * @dad: Parent device node
->    * @mynodes: The device_node tree created by the call
->    * @dt_alloc: An allocator that provides a virtual address to memory
->    * for the resulting tree
->    */
->   static void __unflatten_device_tree(const void *blob,
-> +			     struct device_node *dad,
->   			     struct device_node **mynodes,
->   			     void * (*dt_alloc)(u64 size, u64 align))
->   {
-> @@ -479,7 +481,7 @@ static void __unflatten_device_tree(const void *blob,
->   	}
->
->   	/* First pass, scan for size */
-> -	size = unflatten_dt_nodes(blob, NULL, NULL, NULL);
-> +	size = unflatten_dt_nodes(blob, NULL, dad, NULL);
->   	if (size < 0)
->   		return;
->
-> @@ -495,7 +497,7 @@ static void __unflatten_device_tree(const void *blob,
->   	pr_debug("  unflattening %p...\n", mem);
->
->   	/* Second pass, do actual unflattening */
-> -	unflatten_dt_nodes(blob, mem, NULL, mynodes);
-> +	unflatten_dt_nodes(blob, mem, dad, mynodes);
->   	if (be32_to_cpup(mem + size) != 0xdeadbeef)
->   		pr_warning("End of tree marker overwritten: %08x\n",
->   			   be32_to_cpup(mem + size));
-> @@ -512,6 +514,9 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
->
->   /**
->    * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
-> + * @blob: Flat device tree blob
-> + * @dad: Parent device node
-> + * @mynodes: The device tree created by the call
->    *
->    * unflattens the device-tree passed by the firmware, creating the
->    * tree of struct device_node. It also fills the "name" and "type"
-> @@ -519,10 +524,11 @@ static DEFINE_MUTEX(of_fdt_unflatten_mutex);
->    * can be used.
->    */
->   void of_fdt_unflatten_tree(const unsigned long *blob,
-> +			struct device_node *dad,
->   			struct device_node **mynodes)
->   {
->   	mutex_lock(&of_fdt_unflatten_mutex);
-> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
->   	mutex_unlock(&of_fdt_unflatten_mutex);
->   }
->   EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
-> @@ -1180,7 +1186,7 @@ bool __init early_init_dt_scan(void *params)
->    */
->   void __init unflatten_device_tree(void)
->   {
-> -	__unflatten_device_tree(initial_boot_params, &of_root,
-> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
->   				early_init_dt_alloc_memory_arch);
->
->   	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 979b6e4..ec36f93 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -921,7 +921,7 @@ static int __init unittest_data_add(void)
->   			"not running tests\n", __func__);
->   		return -ENOMEM;
->   	}
-> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
->   	if (!unittest_data_node) {
->   		pr_warn("%s: No tree to attach; not running tests\n", __func__);
->   		return -ENODATA;
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index df9ef38..3644960 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
->   extern int of_fdt_match(const void *blob, unsigned long node,
->   			const char *const *compat);
->   extern void of_fdt_unflatten_tree(const unsigned long *blob,
-> +			       struct device_node *dad,
->   			       struct device_node **mynodes);
->
->   /* TBD: Temporary export of fdt globals - remove when code fully merged */
->
+Great!
+
+I am going to do a first pull requests for the mvebu arm64. Let me know
+if I do it correctly.
+
+Thanks,
+
+Gregory
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
