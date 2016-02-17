@@ -1,61 +1,62 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH net-next v3 4/4] dtb: xgene: Add irqs to support multi queue
-Date: Wed, 17 Feb 2016 15:00:42 -0800
-Message-ID: <1455750042-1521-5-git-send-email-isubramanian@apm.com>
-References: <1455750042-1521-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1455750042-1521-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, toanle@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Khuong Dinh <kdinh@apm.com>, Tanmay Inamdar <tinamdar@apm.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 3/3] ARM: dts: vf-colibri: add carrier boards 3.3V supply
+Date: Wed, 17 Feb 2016 15:41:00 -0800
+Message-ID: <1455752460-2770-3-git-send-email-stefan@agner.ch>
+References: <1455752460-2770-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455752460-2770-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, marcel@ziswiler.com, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Khuong Dinh <kdinh@apm.com>
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-Tested-by: Toan Le <toanle@apm.com>
----
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 8 +++++++-
- arch/arm64/boot/dts/apm/apm-storm.dtsi     | 8 +++++++-
- 2 files changed, 14 insertions(+), 2 deletions(-)
+Add the carrier boards 3.3V supply as fixed regulator. This allows
+to specify the power supply for nodes like backlight.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index 5d87a3d..278f106 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -621,7 +621,13 @@
- 			      <0x0 0x1f600000 0x0 0Xd100>,
- 			      <0x0 0x20000000 0x0 0X220000>;
- 			interrupts = <0 108 4>,
--				     <0 109 4>;
-+				     <0 109 4>,
-+				     <0 110 4>,
-+				     <0 111 4>,
-+				     <0 112 4>,
-+				     <0 113 4>,
-+				     <0 114 4>,
-+				     <0 115 4>;
- 			port-id = <1>;
- 			dma-coherent;
- 			clocks = <&xge1clk 0>;
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index fe30f76..cafb2c2 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -958,7 +958,13 @@
- 			      <0x0 0x18000000 0x0 0X200>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
- 			interrupts = <0x0 0x60 0x4>,
--				     <0x0 0x61 0x4>;
-+				     <0x0 0x61 0x4>,
-+				     <0x0 0x62 0x4>,
-+				     <0x0 0x63 0x4>,
-+				     <0x0 0x64 0x4>,
-+				     <0x0 0x65 0x4>,
-+				     <0x0 0x66 0x4>,
-+				     <0x0 0x67 0x4>;
- 			dma-coherent;
- 			clocks = <&xge0clk 0>;
- 			/* mac address will be overwritten by the bootloader */
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Changes since v2:
+- remove regulator-always-on
+
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+index 291e939..4d8b7f6 100644
+--- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+@@ -50,6 +50,13 @@
+ 		clock-frequency = <16000000>;
+ 	};
+ 
++	reg_3v3: regulator-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	reg_5v0: regulator-5v0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "5V";
+@@ -72,6 +79,7 @@
+ &bl {
+ 	brightness-levels = <0 4 8 16 32 64 128 255>;
+ 	default-brightness-level = <6>;
++	power-supply = <&reg_3v3>;
+ 	status  = "okay";
+ };
+ 
+@@ -122,6 +130,10 @@
+ 	status = "okay";
+ };
+ 
++&reg_module_3v3 {
++	vin-supply = <&reg_3v3>;
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
 -- 
-1.9.1
+2.7.1
