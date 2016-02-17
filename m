@@ -1,96 +1,52 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-Date: Wed, 17 Feb 2016 11:33:27 +0900
-Message-ID: <CANqRtoQg--gnv+ZkopO3PR3Pt7i5quiKvaPDyeJVOnahJGgdmg@mail.gmail.com>
-References: <20160216071722.25461.61862.sendpatchset@little-apple>
-	<20160216071741.25461.54191.sendpatchset@little-apple>
-	<CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg@mail.gmail.com>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v8 1/6] clk: hisilicon: add CRG driver for hi3519
+ soc
+Date: Wed, 17 Feb 2016 11:08:19 +0800
+Message-ID: <56C3E423.5080801@huawei.com>
+References: <1454639472-17373-1-git-send-email-xuejiancheng@huawei.com>
+ <1454639472-17373-2-git-send-email-xuejiancheng@huawei.com>
+ <20160217004648.2278.64006@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160217004648.2278.64006-/Ffx6e7uQFNsG52AEeRyZ2GXanvQGlWp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Mike,
+   Thank you very much for your comments.
 
-On Tue, Feb 16, 2016 at 10:11 PM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Tue, Feb 16, 2016 at 8:17 AM, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->>
->> Add documentation for new separate CMT0 and CMT1 DT compatible strings
->> for R-Car Gen2. These compat strings allow us to enable CMT1-specific
->> features in the driver. The old compat strings will be deprecated in
->> the not so distant future.
->>
->> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>
->>  Changes since V2:
->>  - Added Acked-by from Rob
->>  - Removed Tested-by tag from DT binding patch - duh!
->>
->>  Changes since V1:
->>  - Added Acked-by and Tested-by from Geert
->>  - Added Acked-by from Laurent
->>
->>  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    3 +++
->>  1 file changed, 3 insertions(+)
->>
->> --- 0002/Documentation/devicetree/bindings/timer/renesas,cmt.txt
->> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt        2015-09-17 17:26:57.440513000 +0900
->> @@ -36,6 +36,9 @@ Required Properties:
->>                 (CMT1 on sh73a0 and r8a7740)
->>                 This is a fallback for the above renesas,cmt-48-* entries.
->>
->> +    - "renesas,cmt0-rcar-gen2" for 32-bit CMT0 devices included in R-Car Gen2.
->> +    - "renesas,cmt1-rcar-gen2" for 48-bit CMT1 devices included in R-Car Gen2.
->
-> (advancing a few months always means more comments ;-)
+On 2016/2/17 8:46, Michael Turquette wrote:
+> Hello Jiancheng Xue,
+> 
+> Quoting Jiancheng Xue (2016-02-04 18:31:07)
+>> diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
+>> index 74dba31..3f57b09 100644
+>> --- a/drivers/clk/hisilicon/Makefile
+>> +++ b/drivers/clk/hisilicon/Makefile
+>> @@ -4,8 +4,10 @@
+>>  
+>>  obj-y  += clk.o clkgate-separated.o clkdivider-hi6220.o
+>>  
+>> +obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+> 
+> Do you really want to build reset.o for all hisi SoCs?
+> 
 
-Indeed!
+This reset controller driver will be just used in some of hisilicon SOCs.
+I'll add a specific config item for it like CONFIG_RESET_HISI. The config
+item will be selected by default in SOCs needing this driver.
 
-> I'm wondering whether we should use e.g. "renesas,rcar-gen2-cmt0" instead?
+I'll also fix other issues in next version. Thank you!
 
-I have no strong feelings one way or the other, but I agree that
-aiming to make things more consistent must be good.
+Regards,
+Jiancheng.
 
-Your proposal makes the fallback match with what we do for a bunch
-other devices on R-Car Gen2 like:
-"rcar-gen2-cpg-clocks"
-"rcar-gen2-scif"
-But we also seem to have:
-"pci-rcar-gen2"
 
-On R-Car Gen3 we seem to have the following per-SoC compat strings:
-"dmac-r8a7795"
-"etheravb-r8a7795"
-"gpio-r8a7795"
-"scif-r8a7795"
-But we also have:
-"r8a7795-cpg-mssr"
 
-My only feeling is that it looks a tad odd if we follow
-"<vendor>,<family-generation>-<device>" for fallback strings but
-"<vendor>,<device>-<part-number>" for the per-soc binding. Why not
-using the same order? Maybe this is specified in some document
-somewhere?
-
-I guess your take with "r8a7795-cpg-mssr" above is to follow the same
-order as for the fallback case? This seems sane to me, and if so then
-perhaps the per-soc compat strings for the CMT should also be updated?
-Same for other devices too then, like the recently added
-"dmac-r8a7795"?
-
-Cheers,
-
-/ magnus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
