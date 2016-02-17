@@ -1,55 +1,54 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 0/3] clk: mvebu: initial support for AP806 clocks
-Date: Wed, 17 Feb 2016 15:23:33 +0100
-Message-ID: <20160217152333.6718d8fc@free-electrons.com>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160215233102.2278.88855@quark.deferred.io>
-	<CAEG3pNCRa_CQx70aPHfQpG+7jEZ_=_-FxBWDkXVYbgH=j=1rmA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8 40/45] drivers/of: Split unflatten_dt_node()
+Date: Wed, 17 Feb 2016 08:30:42 -0600
+Message-ID: <CAL_Jsq++L-D=RD6ZYK=CPnhqcZbhEbxsKk3xT-vK2R=Qe9Z_pg@mail.gmail.com>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com> <1455680668-23298-41-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAEG3pNCRa_CQx70aPHfQpG+7jEZ_=_-FxBWDkXVYbgH=j=1rmA@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
-	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
-	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-41-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Michael,
+On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+> The function unflatten_dt_node() is called recursively to unflatten
+> device nodes and properties in the FDT blob. It looks complicated
+> and hard to be understood.
+>
+> This splits the function into 3 functions: populate_properties(),
+> populate_node() and unflatten_dt_node(). populate_properties(),
+> which is called by populate_node(), creates properties for the
+> indicated device node. The later one creates the device nodes
+> from FDT blob. populate_node() gets the offset in FDT blob for
+> next device nodes and then calls populate_node(). No logical
+> changes introduced.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>  drivers/of/fdt.c | 249 ++++++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 147 insertions(+), 102 deletions(-)
 
-On Mon, 15 Feb 2016 15:36:49 -0800, Michael Turquette wrote:
+One nit, otherwise:
 
-> > Yay, new SoC! Just FYI, we worked out an agreement in December[0] that
-> > the clk git tree can take DT bindings and headers, and we'll always host
-> > them in an immutable branch by default in case arm-soc (or anyone else)
-> > needs them. Stephen and I are doing this now.
-> 
-> Oops, I misunderstood your point (and I should have looked at the
-> patches before replying). The patches in this series do indeed have
-> the clk DT binding descriptions.
-> 
-> Pardon the noise, nothing to see here, move along ;-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-Yes, each driver comes with its DT binding documentation in the same
-patch. Unfortunately, some maintainers prefer to have the DT binding
-documentation as separate patches from the driver itself, while some
-other maintainers prefer to have both in the same patch. And I never
-remember which maintainer has which preference.
+[...]
 
-So, let me know if you're fine with having both in the same patches. If
-not, I can respin by splitting the DT binding documentation in its own
-patches.
+> +               /* And we process the "ibm,phandle" property
+> +                * used in pSeries dynamic device tree
+> +                * stuff
+> +                */
+> +               if (!strcmp(pname, "ibm,phandle"))
+> +                       np->phandle = be32_to_cpup(val);
+> +
+> +               pp->name   = (char *)pname;
+> +               pp->length = sz;
+> +               pp->value  = (__be32 *)val;
 
-Other than that, any comments on the drivers themselves? Since they are
-quite trivial, I would ideally like to see them in 4.6, if at all
-possible.
+This cast should not be needed.
 
-Thanks a lot!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +               *pprev     = pp;
+> +               pprev      = &pp->next;
+> +       }
