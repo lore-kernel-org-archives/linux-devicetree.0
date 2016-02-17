@@ -1,117 +1,61 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
-Date: Wed, 17 Feb 2016 22:07:50 +0300
-Message-ID: <56C4C506.8040803@cogentembedded.com>
-References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
- <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
- <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
- <20160210171455.GB17671@verge.net.au> <56BE0CB1.4070408@cogentembedded.com>
- <20160212184343.GA31655@verge.net.au> <56BE2DC6.4080802@cogentembedded.com>
- <20160212193347.GB23472@verge.net.au> <56BE3912.9000601@cogentembedded.com>
- <20160217053848.GC11534@verge.net.au>
+From: Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH RFC v5 8/8] ARM: dts: am335x-boneblack: Add HDMI audio
+ support
+Date: Wed, 17 Feb 2016 13:36:34 -0600
+Message-ID: <CAOCHtYjHeToKyxtOkiJn53is+uUj4OwCqutTGk=crq8rrge0Rw@mail.gmail.com>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <f7d580388c35a161b086b22fc513a39851fa997b.1455720381.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160217053848.GC11534@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f7d580388c35a161b086b22fc513a39851fa997b.1455720381.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, arnaud.pouliquen@st.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Benoit Cousson <bcousson@baylibre.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 08:38 AM, Simon Horman wrote:
-
->>>>>>>>> Define the generic R8A7794 part of  the sound device node.
->>>>>>>>> This sound device  is a complex one and comprises the Audio Clock Generator
->>>>>>>>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
->>>>>>>>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
->>>>>>>>> It is up  to the board file to enable the device.
->>>>>>>>>
->>>>>>>>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>>>> (snip)
->>>>>>>>> +		rcar_sound,src {
->>>>>>>>> +			src1: src@1 {
->>>>>>>>> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +			src2: src@2 {
->>>>>>>>> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +			src3: src@3 {
->>>>>>>>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +			src4: src@4 {
->>>>>>>>> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +			src5: src@5 {
->>>>>>>>> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +			src6: src@6 {
->>>>>>>>> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>>>> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
->>>>>>>>> +				dma-names = "rx", "tx";
->>>>>>>>> +			};
->>>>>>>>> +		};
->>>>>>>>
->>>>>>>> I think this can't work correctly, because driver is assuming
->>>>>>>> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
->>>>>>>> Can you adds dummy src0 with some comments ? or fix src.c driver ?
->>>>>>>
->>>>>>> I would prefer the driver to be fixed (I had a similar patchset locally
->>>>>>> and I found it doesn't work).
->>>>>>
->>>>>>     You mean you had R8A7794 sound patch set too?
->>>>>
->>>>> Yes, I was working on it recently.
->>>>> I suppose we should coordinate these things in future to avoid
->>>>> duplicated effort.
->>>>
->>>>     Yes, seems a good idea now. :-)
->>>>
->>>>>>> The reason is that DT should describe
->>>>>>> the hardware rather than the current state of the software.
->>>>>>
->>>>>>     Yes, of course. Just tell me do I have to fix the driver *before* this
->>>>>> patch set is accepted?
->>>>
->>>>> I did not entirely get to the bottom of the problem, but I think that at
->>>>> the very least something needs to be done about the for_each_rsnd_src()
->>>>> loop in rsnd_src_probe.
->>>>
->>>>     It's not that it replies to my question. :-)
->>>>     So you're looking at this issue yourself?
->>>
->>> I have not got very far, as you can see, but I was planning to look into it.
->>> I don't mind if you want to do so.
->>
->>     After consultation with the management, I'm going to look into this issue
->> myself. :-)
->
-> Excellent.
-
-    But not immediately. I have some other things to look at before that (DU 
-and AVB), they'll going to take some (significant) time... :-(
-
-> FWIW, I can test anything you come up with for the r8a7794 an alt board
-
-    I have remote access to Alt now, in fact using it currently for the AVB work.
-
-> or post patches for it once you have r8a7794/silk sorted out.
-
-    I already have audio on these working. Or you're going to wait until I fix 
-the SRC issue?
-
-[...]
-
-MBR, Sergei
+T24gV2VkLCBGZWIgMTcsIDIwMTYgYXQgODo0OSBBTSwgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
+bT4gd3JvdGU6Cj4gQWRkIEhETUkgYXVkaW8gc3VwcG9ydC4gQWRkcyBtY2FzcDBfcGlucywgY2xr
+X21jYXNwMF9maXhlZCwKPiBjbGtfbWNhc3AwLCBtY2FzcDAsIHNvdW5kIG5vZGUsIGFuZCB1cGRh
+dGVzIHRoZSB0ZGExOTk4OCBub2RlIHRvCj4gZm9sbG93IHRoZSBuZXcgYmluZGluZy4KPgo+IFNp
+Z25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJt
+L2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRzIHwgOTAgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
+dGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJs
+YWNrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2suZHRzCj4gaW5kZXgg
+ZWFkYmJhMy4uMDUzNDdkYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgt
+Ym9uZWJsYWNrLmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ib25lYmxhY2su
+ZHRzCj4gQEAgLTY0LDYgKzY0LDE2IEBACj4gICAgICAgICAgICAgICAgICAgICAgICAgMHgxYjAg
+MHgwMyAgICAgIC8qIHhkbWFfZXZlbnRfaW50cjAsIE9NQVBfTVVYX01PREUzIHwgQU0zM1hYX1BJ
+Tl9PVVRQVVQgKi8KPiAgICAgICAgICAgICAgICAgPjsKPiAgICAgICAgIH07Cj4gKwo+ICsgICAg
+ICAgbWNhc3AwX3BpbnM6IG1jYXNwMF9waW5zIHsKPiArICAgICAgICAgICAgICAgcGluY3RybC1z
+aW5nbGUscGlucyA9IDwKPiArICAgICAgICAgICAgICAgICAgICAgICAweDFhYyAoUElOX0lOUFVU
+X1BVTExVUCB8IE1VWF9NT0RFMCkgICAgLyogbWNhc3AwX2FoY2xreC5tY2FzcDBfYWhjbGt4ICov
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgMHgxOWMgKFBJTl9PVVRQVVRfUFVMTERPV04gfCBN
+VVhfTU9ERTIpIC8qIG1jYXNwMF9haGNsa3IubWNhc3AwX2F4cjIgKi8KPiArICAgICAgICAgICAg
+ICAgICAgICAgICAweDE5NCAoUElOX09VVFBVVF9QVUxMVVAgfCBNVVhfTU9ERTApICAgLyogbWNh
+c3AwX2ZzeC5tY2FzcDBfZnN4ICovCj4gKyAgICAgICAgICAgICAgICAgICAgICAgMHgxOTAgKFBJ
+Tl9PVVRQVVRfUFVMTERPV04gfCBNVVhfTU9ERTApIC8qIG1jYXNwMF9hY2xreC5tY2FzcDBfYWNs
+a3ggKi8KPiArICAgICAgICAgICAgICAgICAgICAgICAweDA2YyAoUElOX09VVFBVVF9QVUxMRE9X
+TiB8IE1VWF9NT0RFNykgLyogZ3BtY19hMTEuR1BJTzFfMjcgKi8KCkhpIEp5cmksCgpXZSd2ZSBz
+d2l0Y2hlZCB0byBBTTMzWFhfSU9QQUQsICBwbGVhc2Ugc3F1YXNoIHRoaXMgaW4gaGVyZToKCkFN
+MzNYWF9JT1BBRCgweDlhYywgUElOX0lOUFVUX1BVTExVUCB8IE1VWF9NT0RFMCkgLyoKbWNhc3Aw
+X2FoY2tseC5tY2FzcDBfYWhjbGt4ICovCkFNMzNYWF9JT1BBRCgweDk5YywgUElOX09VVFBVVF9Q
+VUxMRE9XTiB8IE1VWF9NT0RFMikgLyoKbWNhc3AwX2FoY2xrci5tY2FzcDBfYXhyMiovCkFNMzNY
+WF9JT1BBRCgweDk5NCwgUElOX09VVFBVVF9QVUxMVVAgfCBNVVhfTU9ERTApIC8qIG1jYXNwMF9m
+c3gubWNhc3AwX2ZzeCAqLwpBTTMzWFhfSU9QQUQoMHg5OTAsIFBJTl9PVVRQVVRfUFVMTERPV04g
+fCBNVVhfTU9ERTApIC8qCm1jYXNwMF9hY2xreC5tY2FzcDBfYWNsa3ggKi8KQU0zM1hYX0lPUEFE
+KDB4ODZjLCBQSU5fT1VUUFVUX1BVTExET1dOIHwgTVVYX01PREU3KSAvKiBncG1jX2ExMS5HUElP
+MV8yNyAqLwoKUmVnYXJkcywKCi0tIApSb2JlcnQgTmVsc29uCmh0dHBzOi8vcmNuLWVlLmNvbS8K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
