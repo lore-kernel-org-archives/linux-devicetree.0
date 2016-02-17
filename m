@@ -1,54 +1,42 @@
-From: Sergio Prado <sergio.prado@e-labworks.com>
-Subject: [PATCH net-next,V2] net: macb: make magic-packet property generic
-Date: Tue, 16 Feb 2016 21:10:45 -0200
-Message-ID: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nicolas.ferre@atmel.com, davem@davemloft.net, gregory.clement@free-electrons.com, narmstrong@baylibre.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc: Sergio Prado <sergio.prado@e-labworks.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v12 4/4] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 16 Feb 2016 16:09:38 -0800
+Message-ID: <20160217000938.GA19355@roeck-us.net>
+References: <1455611785-2407-1-git-send-email-fu.wei@linaro.org>
+ <1455611785-2407-5-git-send-email-fu.wei@linaro.org>
+ <56C34076.1020206@roeck-us.net>
+ <CADyBb7vDuZjjy92WkV_jML2Ji13LvtuqkKszAetzvoM47CaY7Q@mail.gmail.com>
+ <CADyBb7s0mf9MLxXeR54wBCPnTBSC7hiNw08C-5vc9EhkORGZww@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CADyBb7s0mf9MLxXeR54wBCPnTBSC7hiNw08C-5vc9EhkORGZww@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@li>
 List-Id: devicetree@vger.kernel.org
 
-As requested by Rob Herring on patch
-https://patchwork.ozlabs.org/patch/580862/.
+On Wed, Feb 17, 2016 at 12:33:24AM +0800, Fu Wei wrote:
+[ ... ]
+> >>> +MODULE_AUTHOR("Fu Wei <fu.wei@linaro.org>");
+> >>> +MODULE_AUTHOR("Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>");
+> >>> +MODULE_AUTHOR("Al Stone <al.stone@linaro.org>");
+> >>> +MODULE_AUTHOR("Timur Tabi <timur@codeaurora.org>");
+> >>> +MODULE_LICENSE("GPL v2");
+> >>>
+> >> Do you need a MODULE_ALIAS ?
+> >
+> > For now, I thinks we don't need it, Hope I didn't miss something :-)
+> > Because this module can be mounted automatically with dtb or ACPI(if
+> > apply my GTDT patch).
+> > Do you have any suggestion or concern? :-)
+> 
+> re-think  about that , will add
+> MODULE_ALIAS("platform:sbsa-gwdt");
+> 
+> Do you agree ?  :-)
+> 
+Sure.
 
-This is a new property that it's still in net-next and has never been
-used in production, so we are not breaking anything with the
-incompatible binding change.
-
-Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
----
-Changes v1 -> v2: add changelog comment to clarify that the existing
-property has never been used in production.
----
- Documentation/devicetree/bindings/net/macb.txt | 2 +-
- drivers/net/ethernet/cadence/macb.c            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index c6b1cb5ffa87..b5a42df4c928 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -25,7 +25,7 @@ Required properties:
- 
- Optional properties for PHY child node:
- - reset-gpios : Should specify the gpio for phy reset
--- cdns,magic-packet : If present, indicates that the hardware supports waking
-+- magic-packet : If present, indicates that the hardware supports waking
-   up via magic packet.
- 
- Examples:
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 69af049e55a8..7ccf2298a5fa 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -2929,7 +2929,7 @@ static int macb_probe(struct platform_device *pdev)
- 		bp->jumbo_max_len = macb_config->jumbo_max_len;
- 
- 	bp->wol = 0;
--	if (of_get_property(np, "cdns,magic-packet", NULL))
-+	if (of_get_property(np, "magic-packet", NULL))
- 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
- 	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
- 
--- 
-1.9.1
+Guenter
