@@ -1,74 +1,113 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
-Date: Wed, 17 Feb 2016 14:44:25 +1100
-Message-ID: <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v8 09/45] powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
+Date: Wed, 17 Feb 2016 14:43:52 +1100
+Message-ID: <1455680668-23298-10-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455680668-23298-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This renames unflatten_dt_node() to unflatten_dt_nodes() as it
-populates multiple device nodes from FDT blob. No logical changes
-introduced.
+The original implementation of pnv_ioda_setup_pe_seg() configures
+IO and M32 segments by separate logics, which can be merged by
+by caching @segmap, @seg_size, @win in advance. This shouldn't
+cause any behavioural changes.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- drivers/of/fdt.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 62 ++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 667a5b2..3fc9a30 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -381,7 +381,7 @@ static void reverse_nodes(struct device_node *parent)
- }
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 44cc5f3..fd7d382 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2940,8 +2940,10 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+ 	struct pnv_phb *phb = hose->private_data;
+ 	struct pci_bus_region region;
+ 	struct resource *res;
+-	int i, index;
+-	int rc;
++	unsigned int segsize;
++	int *segmap, index, i;
++	uint16_t win;
++	int64_t rc;
  
- /**
-- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
-+ * unflatten_dt_nodes - Alloc and populate a device_node from the flat tree
-  * @blob: The parent device tree blob
-  * @mem: Memory chunk to use for allocating device nodes and properties
-  * @dad: Parent struct device_node
-@@ -389,10 +389,10 @@ static void reverse_nodes(struct device_node *parent)
-  *
-  * It returns the size of unflattened device tree or error code
-  */
--static int unflatten_dt_node(const void *blob,
--			     void *mem,
--			     struct device_node *dad,
--			     struct device_node **nodepp)
-+static int unflatten_dt_nodes(const void *blob,
-+			      void *mem,
-+			      struct device_node *dad,
-+			      struct device_node **nodepp)
- {
- 	struct device_node *root;
- 	int offset = 0, depth = 0;
-@@ -479,7 +479,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	/*
+ 	 * NOTE: We only care PCI bus based PE for now. For PCI
+@@ -2958,23 +2960,9 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+ 		if (res->flags & IORESOURCE_IO) {
+ 			region.start = res->start - phb->ioda.io_pci_base;
+ 			region.end   = res->end - phb->ioda.io_pci_base;
+-			index = region.start / phb->ioda.io_segsize;
+-
+-			while (index < phb->ioda.total_pe_num &&
+-			       region.start <= region.end) {
+-				phb->ioda.io_segmap[index] = pe->pe_number;
+-				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+-					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
+-				if (rc != OPAL_SUCCESS) {
+-					pr_err("%s: OPAL error %d when mapping IO "
+-					       "segment #%d to PE#%d\n",
+-					       __func__, rc, index, pe->pe_number);
+-					break;
+-				}
+-
+-				region.start += phb->ioda.io_segsize;
+-				index++;
+-			}
++			segsize      = phb->ioda.io_segsize;
++			segmap       = phb->ioda.io_segmap;
++			win          = OPAL_IO_WINDOW_TYPE;
+ 		} else if ((res->flags & IORESOURCE_MEM) &&
+ 			   !pnv_pci_is_mem_pref_64(res->flags)) {
+ 			region.start = res->start -
+@@ -2983,23 +2971,29 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+ 			region.end   = res->end -
+ 				       hose->mem_offset[0] -
+ 				       phb->ioda.m32_pci_base;
+-			index = region.start / phb->ioda.m32_segsize;
+-
+-			while (index < phb->ioda.total_pe_num &&
+-			       region.start <= region.end) {
+-				phb->ioda.m32_segmap[index] = pe->pe_number;
+-				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+-					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
+-				if (rc != OPAL_SUCCESS) {
+-					pr_err("%s: OPAL error %d when mapping M32 "
+-					       "segment#%d to PE#%d",
+-					       __func__, rc, index, pe->pe_number);
+-					break;
+-				}
++			segsize      = phb->ioda.m32_segsize;
++			segmap       = phb->ioda.m32_segmap;
++			win          = OPAL_M32_WINDOW_TYPE;
++		} else {
++			continue;
++		}
+ 
+-				region.start += phb->ioda.m32_segsize;
+-				index++;
++		index = region.start / segsize;
++		while (index < phb->ioda.total_pe_num &&
++		       region.start <= region.end) {
++			segmap[index] = pe->pe_number;
++			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
++					pe->pe_number, win, 0, index);
++			if (rc != OPAL_SUCCESS) {
++				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
++					__func__, rc, win, index,
++					pe->phb->hose->global_number,
++					pe->pe_number);
++				break;
+ 			}
++
++			region.start += segsize;
++			index++;
+ 		}
  	}
- 
- 	/* First pass, scan for size */
--	size = unflatten_dt_node(blob, NULL, NULL, NULL);
-+	size = unflatten_dt_nodes(blob, NULL, NULL, NULL);
- 	if (size < 0)
- 		return;
- 
-@@ -495,7 +495,7 @@ static void __unflatten_device_tree(const void *blob,
- 	pr_debug("  unflattening %p...\n", mem);
- 
- 	/* Second pass, do actual unflattening */
--	unflatten_dt_node(blob, mem, NULL, mynodes);
-+	unflatten_dt_nodes(blob, mem, NULL, mynodes);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
+ }
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
