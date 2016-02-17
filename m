@@ -1,33 +1,57 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 1/4] drivers: net: xgene: Add support for
- Classifier engine
-Date: Wed, 17 Feb 2016 12:05:17 -0500 (EST)
-Message-ID: <20160217.120517.1874370262056055172.davem@davemloft.net>
-References: <1455327425-8294-1-git-send-email-isubramanian@apm.com>
-	<1455327425-8294-2-git-send-email-isubramanian@apm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm64: Broadcom Vulcan support
+Date: Wed, 17 Feb 2016 17:16:17 +0000
+Message-ID: <20160217171616.GH32647@leverpostej>
+References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
+ <1455389195-31870-2-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1455327425-8294-2-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: isubramanian@apm.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, toanle@apm.com, kdinh@apm.com, tinamdar@apm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455389195-31870-2-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Iyappan Subramanian <isubramanian@apm.com>
-Date: Fri, 12 Feb 2016 17:37:02 -0800
+Hi,
 
-> +static void xgene_cle_dn_to_hw(struct xgene_cle_ptree_ewdn *dn,
-> +			       u32 *buf, u32 jb)
-> +{
-> +	u32 i, j = 0;
-> +	u32 npp;
-> +	struct xgene_cle_ptree_branch *br;
+On Sun, Feb 14, 2016 at 12:16:32AM +0530, Jayachandran C wrote:
+> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Please order local variables from longest to shortest line (reverse christmas
-tree format).
+> +	compatible = "brcm,vulcan-eval", "brcm,vulcan";
 
-Please address this for your entire submission.
+You use "brcm,vulcan" as the compatible string for both the platform and
+the CPU nodes. You need different strings.
 
-Thank you.
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
+> +		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
+> +	};
+
+> +/memreserve/ 0x80000000 0x00010000;
+
+What is this for?
+
+> +
+> +/ {
+> +	model = "Broadcom Vulcan";
+> +	compatible = "brcm,vulcan";
+
+As above, it doesn't make sense to have the same compatible string for
+both the platform as a whole and the CPU.
+
+> +			device_type = "cpu";
+> +			compatible = "brcm,vulcan", "arm,armv8";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +		};
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
