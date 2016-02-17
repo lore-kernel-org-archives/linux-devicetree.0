@@ -1,71 +1,140 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v8 28/45] powerpc/pci: Introduce pci_remove_device_node_info()
-Date: Wed, 17 Feb 2016 14:44:11 +1100
-Message-ID: <1455680668-23298-29-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 15/45] powerpc/powernv/ioda1: Introduce PNV_IODA1_DMA32_SEGSIZE
+Date: Wed, 17 Feb 2016 14:43:58 +1100
+Message-ID: <1455680668-23298-16-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455680668-23298-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This implements and exports pci_remove_device_node_info(). It's
-used to remove the pdn (struct pci_dn) for the indicated device
-node. The function is going to be used by PowerNV PCI hotplug
-driver.
+Currently, there is one macro (TCE32_TABLE_SIZE) representing the
+TCE table size for one DMA32 segment. The constant representing
+the DMA32 segment size (1 << 28) is still used in the code.
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+This defines PNV_IODA1_DMA32_SEGSIZE representing one DMA32
+segment size. the TCE table size can be calcualted when the page
+has fixed 4KB size. So all the related calculation depends on one
+macro (PNV_IODA1_DMA32_SEGSIZE). No logical changes introduced.
+
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/include/asm/pci-bridge.h |  1 +
- arch/powerpc/kernel/pci_dn.c          | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 30 +++++++++++++++++-------------
+ arch/powerpc/platforms/powernv/pci.h      |  1 +
+ 2 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 72a9d4e..c6310e2 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -240,6 +240,7 @@ extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
- extern void remove_dev_pci_data(struct pci_dev *pdev);
- extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- 					       struct device_node *dn);
-+extern void pci_remove_device_node_info(struct device_node *dn);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index d18b95e..e60cff6 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -48,9 +48,6 @@
+ #include "powernv.h"
+ #include "pci.h"
  
- static inline int pci_device_from_OF_node(struct device_node *np,
- 					  u8 *bus, u8 *devfn)
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 0a249ff..ce10281 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -331,6 +331,29 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- }
- EXPORT_SYMBOL_GPL(pci_add_device_node_info);
+-/* 256M DMA window, 4K TCE pages, 8 bytes TCE */
+-#define TCE32_TABLE_SIZE	((0x10000000 / 0x1000) * 8)
+-
+ #define POWERNV_IOMMU_DEFAULT_LEVELS	1
+ #define POWERNV_IOMMU_MAX_LEVELS	5
  
-+void pci_remove_device_node_info(struct device_node *dn)
-+{
-+	struct pci_dn *pdn = dn ? PCI_DN(dn) : NULL;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
-+
-+	if (edev)
-+		edev->pdn = NULL;
-+#endif
-+
-+	if (!pdn)
-+		return;
-+
-+	WARN_ON(!list_empty(&pdn->child_list));
-+	list_del(&pdn->list);
-+	if (pdn->parent)
-+		of_node_put(pdn->parent->node);
-+
-+	dn->data = NULL;
-+	kfree(pdn);
-+}
-+EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
-+
- /*
-  * Traverse a device tree stopping each PCI device in the tree.
-  * This is done depth first.  As each node is processed, a "pre"
+@@ -2034,7 +2031,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 
+ 	struct page *tce_mem = NULL;
+ 	struct iommu_table *tbl;
+-	unsigned int i;
++	unsigned int tce32_segsz, i;
+ 	int64_t rc;
+ 	void *addr;
+ 
+@@ -2054,29 +2051,34 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 	/* Grab a 32-bit TCE table */
+ 	pe->tce32_seg = base;
+ 	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
+-		(base << 28), ((base + segs) << 28) - 1);
++		base * PNV_IODA1_DMA32_SEGSIZE,
++		(base + segs) * PNV_IODA1_DMA32_SEGSIZE - 1);
+ 
+ 	/* XXX Currently, we allocate one big contiguous table for the
+ 	 * TCEs. We only really need one chunk per 256M of TCE space
+ 	 * (ie per segment) but that's an optimization for later, it
+ 	 * requires some added smarts with our get/put_tce implementation
++	 *
++	 * Each TCE page is 4KB in size and each TCE entry occupies 8
++	 * bytes
+ 	 */
++	tce32_segsz = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K - 3);
+ 	tce_mem = alloc_pages_node(phb->hose->node, GFP_KERNEL,
+-				   get_order(TCE32_TABLE_SIZE * segs));
++				   get_order(tce32_segsz * segs));
+ 	if (!tce_mem) {
+ 		pe_err(pe, " Failed to allocate a 32-bit TCE memory\n");
+ 		goto fail;
+ 	}
+ 	addr = page_address(tce_mem);
+-	memset(addr, 0, TCE32_TABLE_SIZE * segs);
++	memset(addr, 0, tce32_segsz * segs);
+ 
+ 	/* Configure HW */
+ 	for (i = 0; i < segs; i++) {
+ 		rc = opal_pci_map_pe_dma_window(phb->opal_id,
+ 					      pe->pe_number,
+ 					      base + i, 1,
+-					      __pa(addr) + TCE32_TABLE_SIZE * i,
+-					      TCE32_TABLE_SIZE, 0x1000);
++					      __pa(addr) + tce32_segsz * i,
++					      tce32_segsz, 0x1000);
+ 		if (rc) {
+ 			pe_err(pe, " Failed to configure 32-bit TCE table,"
+ 			       " err %ld\n", rc);
+@@ -2085,8 +2087,9 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 	}
+ 
+ 	/* Setup linux iommu table */
+-	pnv_pci_setup_iommu_table(tbl, addr, TCE32_TABLE_SIZE * segs,
+-				  base << 28, IOMMU_PAGE_SHIFT_4K);
++	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
++				  base * PNV_IODA1_DMA32_SEGSIZE,
++				  IOMMU_PAGE_SHIFT_4K);
+ 
+ 	/* OPAL variant of P7IOC SW invalidated TCEs */
+ 	if (phb->ioda.tce_inval_reg)
+@@ -2116,7 +2119,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 	if (pe->tce32_seg >= 0)
+ 		pe->tce32_seg = -1;
+ 	if (tce_mem)
+-		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
++		__free_pages(tce_mem, get_order(tce32_segsz * segs));
+ 	if (tbl) {
+ 		pnv_pci_unlink_table_and_group(tbl, &pe->table_group);
+ 		iommu_free_table(tbl, "pnv");
+@@ -3445,7 +3448,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	mutex_init(&phb->ioda.pe_list_mutex);
+ 
+ 	/* Calculate how many 32-bit TCE segments we have */
+-	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
++	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
++				PNV_IODA1_DMA32_SEGSIZE;
+ 
+ #if 0 /* We should really do that ... */
+ 	rc = opal_pci_set_phb_mem_window(opal->phb_id,
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 00539ff..1d8e775 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -84,6 +84,7 @@ struct pnv_ioda_pe {
+ 
+ #define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+ #define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
++#define PNV_IODA1_DMA32_SEGSIZE	0x10000000
+ 
+ #define PNV_PHB_FLAG_EEH	(1 << 0)
+ 
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
