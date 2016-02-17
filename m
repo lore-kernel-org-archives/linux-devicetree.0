@@ -1,80 +1,134 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 1/2] clk: add device tree binding for artpec-6 pll1 clock
-Date: Tue, 16 Feb 2016 15:59:27 -0800
-Message-ID: <20160216235927.2278.40353@quark.deferred.io>
+Subject: Re: [PATCH 2/2] clk: add artpec-6 pll1 clock driver
+Date: Tue, 16 Feb 2016 16:02:20 -0800
+Message-ID: <20160217000220.2278.30045@quark.deferred.io>
 References: <cover.1455206007.git.larper@axis.com>
- <2686b3bbb9ec1c86828b365645bd7f997a9780b4.1455206007.git.larper@axis.com>
- <20160212163916.GA7677@rob-hp-laptop> <56C034BA.7070806@axis.com>
+ <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455206007.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56C034BA.7070806@axis.com>
+In-Reply-To: <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455206007.git.larper@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lars Persson (2016-02-14 00:03:06)
+Hi Lars,
+
+Quoting Lars Persson (2016-02-11 08:01:04)
+> The PLL1 clock is a fixed-factor clock with factors derived from boot
+> mode pins. This driver is a simple wrapper to register the fixed
+> factor clock according to the pin settings.
 > 
+> Signed-off-by: Lars Persson <larper@axis.com>
+> ---
+>  drivers/clk/Makefile      |  1 +
+>  drivers/clk/clk-artpec6.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 drivers/clk/clk-artpec6.c
 > 
-> On 02/12/2016 05:39 PM, Rob Herring wrote:
-> > On Thu, Feb 11, 2016 at 05:01:03PM +0100, Lars Persson wrote:
-> >> Add device tree documentation for the main PLL in the Artpec-6 SoC.
-> > Roughly how many clocks does this SoC have?
-> It will have 17 clocks declared in the device tree and three 
-> SoC-specific clock drivers.
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index b038e36..388f0cf 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -17,6 +17,7 @@ endif
+>  
+>  # hardware specific clock types
+>  # please keep this section sorted lexicographically by file/directory path name
+> +obj-$(CONFIG_MACH_ARTPEC6)             += clk-artpec6.o
+>  obj-$(CONFIG_MACH_ASM9260)             += clk-asm9260.o
+>  obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)    += clk-axi-clkgen.o
+>  obj-$(CONFIG_ARCH_AXXIA)               += clk-axm5516.o
+> diff --git a/drivers/clk/clk-artpec6.c b/drivers/clk/clk-artpec6.c
+> new file mode 100644
+> index 0000000..3664c44
+> --- /dev/null
+> +++ b/drivers/clk/clk-artpec6.c
 
-Are all of those clks going to individual DT nodes with clock-cells = 0?
+You mentioned having three drivers. Maybe consider putting this in
+drivers/clk/axis?
 
-If so, I wonder if you should be targeting a clock-controller style
-binding description, with a node that represents the clock-controller IP
-block, with clock-cells >= 1. It really comes down to whether or not
-these clock controls exist in the same IP block.
+Continuing my questions from patch #1, should this clock be coupled with
+other artpec6 clocks sharing the same clock controller?
 
-You mentioned three distinct clock drivers. So possibly three clock
-controller nodes in DT then?
+> @@ -0,0 +1,70 @@
+> +/*
+> + * ARTPEC-6 clock initialization
+> + *
+> + * Copyright 2015 Axis Comunications AB.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +
+> +static void __init of_artpec6_pll1_setup(struct device_node *np)
+> +{
+> +       void __iomem *devstat;
+> +       struct clk *clk;
+> +       const char *clk_name = np->name;
+> +       const char *parent_name;
+> +       u32 pll_mode, pll_m, pll_n;
+> +
+> +       parent_name = of_clk_get_parent_name(np, 0);
+> +
+> +       devstat = of_iomap(np, 0);
+> +       if (devstat == NULL) {
+> +               pr_err("error to ioremap DEVSTAT\n");
+> +               return;
+> +       }
+> +
+> +       /* DEVSTAT register contains PLL settings */
+> +       pll_mode = (readl(devstat) >> 6) & 3;
+> +       iounmap(devstat);
+> +
+> +       /*
+> +        * pll1 settings are designed for different DDR speeds using a fixed
+> +        * 50MHz external clock. However, a different external clock could be
+> +        * used on different boards.
+> +        * CPU clock is half the DDR clock.
+> +        */
+> +       switch (pll_mode) {
+> +       case 0: /* DDR3-2133 mode */
+> +               pll_m = 4;
+> +               pll_n = 85;
+> +               break;
+> +       case 1: /* DDR3-1866 mode */
+> +               pll_m = 6;
+> +               pll_n = 112;
+> +               break;
+> +       case 2: /* DDR3-1600 mode */
+> +               pll_m = 4;
+> +               pll_n = 64;
+> +               break;
+> +       case 3: /* DDR3-1333 mode */
+> +               pll_m = 8;
+> +               pll_n = 106;
+> +               break;
+> +       }
+> +       /* ext_clk is defined in device tree */
+> +       clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
+> +                       pll_n, pll_m);
+> +       if (IS_ERR(clk)) {
+> +               pr_err("%s not registered\n", clk_name);
+> +               return;
+> +       }
+> +       of_clk_add_provider(np, of_clk_src_simple_get, clk);
+> +}
+> +CLK_OF_DECLARE(artpec6_pll1, "axis,artpec6-pll1-clock", of_artpec6_pll1_setup);
 
-Is there a reference manual/register map available for this SoC?
+Instead of using CLK_OF_DECLARE can you make this a platform_driver?
 
-> 
-> >
-> >> Signed-off-by: Lars Persson <larper@axis.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/clock/artpec6.txt | 16 ++++++++++++++++
-> >>   1 file changed, 16 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
-> >> new file mode 100644
-> >> index 0000000..521fec8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
-> >> @@ -0,0 +1,16 @@
-> >> +* Clock bindings for Axis ARTPEC-6 chip
-
-Please specify that this is based on the clock provider binding in
-Documentation/devicetree/bindings/clock/clock-bindings.txt
-
-Regards,
+Best regards,
 Mike
 
-> >> +
-> >> +Required properties:
-> >> +- #clock-cells: Should be <0>
-> >> +- compatible: Should be "axis,artpec6-pll1-clock"
-> >> +- reg: Address and length of the DEVSTAT register.
-> >> +- clocks: The PLL's input clock.
-> >> +
-> >> +Examples:
-> >> +
-> >> +pll1_clk: pll1_clk {
-> >> +    #clock-cells = <0>;
-> >> +    compatible = "axis,artpec6-pll1-clock";
-> >> +    reg = <0xf8000000 4>;
-> >> +    clocks = <&ext_clk>;
-> >> +};
-> >> -- 
-> >> 2.1.4
-> >>
+> -- 
+> 2.1.4
 > 
