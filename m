@@ -1,109 +1,117 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed, 17 Feb 2016 12:51:34 -0600
-Message-ID: <CAL_JsqK4gmzBTxFNs93aT3XUqMp-6eyyL-GEUtrGm-snSeTQ7w@mail.gmail.com>
-References: <1455188466-10879-1-git-send-email-petr@barix.com>
- <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
- <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com> <56C4B870.2070707@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: r8a7794: add sound support
+Date: Wed, 17 Feb 2016 22:07:50 +0300
+Message-ID: <56C4C506.8040803@cogentembedded.com>
+References: <12033353.rt0nolnBmD@wasted.cogentembedded.com>
+ <2543047.yYrDdYb9v5@wasted.cogentembedded.com>
+ <874mdhtn7d.wl%kuninori.morimoto.gx@renesas.com>
+ <20160210171455.GB17671@verge.net.au> <56BE0CB1.4070408@cogentembedded.com>
+ <20160212184343.GA31655@verge.net.au> <56BE2DC6.4080802@cogentembedded.com>
+ <20160212193347.GB23472@verge.net.au> <56BE3912.9000601@cogentembedded.com>
+ <20160217053848.GC11534@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C4B870.2070707-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160217053848.GC11534@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 12:14 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> On 02/16/2016 11:05 PM, Rob Herring wrote:
->
->>>>> + - mentor,power : Specifies the maximum current in milliamperes the
->>>>> controller can
->>>>> +     supply in host mode.
+On 02/17/2016 08:38 AM, Simon Horman wrote:
+
+>>>>>>>>> Define the generic R8A7794 part of  the sound device node.
+>>>>>>>>> This sound device  is a complex one and comprises the Audio Clock Generator
+>>>>>>>>> (ADG), Sampling Rate Converter Unit (SCU), Serial Sound Interface [Unit]
+>>>>>>>>> (SSI[U]), and Audio DMAC-Peripheral-Peripheral.
+>>>>>>>>> It is up  to the board file to enable the device.
+>>>>>>>>>
+>>>>>>>>> This patch is based on the R8A7791 sound work by Kuninori Morimoto.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>>>>> (snip)
+>>>>>>>>> +		rcar_sound,src {
+>>>>>>>>> +			src1: src@1 {
+>>>>>>>>> +				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x87>, <&audma0 0x9c>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +			src2: src@2 {
+>>>>>>>>> +				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x89>, <&audma0 0x9e>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +			src3: src@3 {
+>>>>>>>>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x8b>, <&audma0 0xa0>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +			src4: src@4 {
+>>>>>>>>> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x8d>, <&audma0 0xb0>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +			src5: src@5 {
+>>>>>>>>> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x8f>, <&audma0 0xb2>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +			src6: src@6 {
+>>>>>>>>> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>>> +				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+>>>>>>>>> +				dma-names = "rx", "tx";
+>>>>>>>>> +			};
+>>>>>>>>> +		};
+>>>>>>>>
+>>>>>>>> I think this can't work correctly, because driver is assuming
+>>>>>>>> DT has all channles (from 0). (see linux/sound/soc/sh/rcar/src.c :: rsnd_src_probe)
+>>>>>>>> Can you adds dummy src0 with some comments ? or fix src.c driver ?
+>>>>>>>
+>>>>>>> I would prefer the driver to be fixed (I had a similar patchset locally
+>>>>>>> and I found it doesn't work).
+>>>>>>
+>>>>>>     You mean you had R8A7794 sound patch set too?
+>>>>>
+>>>>> Yes, I was working on it recently.
+>>>>> I suppose we should coordinate these things in future to avoid
+>>>>> duplicated effort.
 >>>>
+>>>>     Yes, seems a good idea now. :-)
 >>>>
->>>> Still a no for me. Looks like this just sets hcd->power_budget. This
->>>> property may not be a regulator, but ultimately the value depends on
->>>> some regulator supplying Vbus. Also, given this has nothing to do with
->>>> MUSB h/w, however this is described should be generic.
+>>>>>>> The reason is that DT should describe
+>>>>>>> the hardware rather than the current state of the software.
+>>>>>>
+>>>>>>     Yes, of course. Just tell me do I have to fix the driver *before* this
+>>>>>> patch set is accepted?
+>>>>
+>>>>> I did not entirely get to the bottom of the problem, but I think that at
+>>>>> the very least something needs to be done about the for_each_rsnd_src()
+>>>>> loop in rsnd_src_probe.
+>>>>
+>>>>     It's not that it replies to my question. :-)
+>>>>     So you're looking at this issue yourself?
 >>>
->>>
->>>
->>> I understand your point that the description should be generic.
->>> However the USB 2.0 specification does not define any relation between
->>> the
->>> bMaxPower provided by the device and the actual power control.
->>> As far as I understand the value just serves the purpose to raise a flag
->>> to
->>> the user if the attached device would draw too much power, and not to
->>> enable
->>> it at all.
+>>> I have not got very far, as you can see, but I was planning to look into it.
+>>> I don't mind if you want to do so.
 >>
->>
->> That won't really work given devices lie. My bus powered USB disk
->> enclosure reports something like 10mA. That's pretty good considering
->> I have a 5W drive in it.
+>>     After consultation with the management, I'm going to look into this issue
+>> myself. :-)
 >
->
->>> Further, the value used by the protocol is not necessarily related to the
->>> real current that can be supported. The maximum current supported by the
->>> protocol is 510mA.
->>>
->>> For instance on my development board the real maximum current is limited
->>> only by the mains power-supply used.
->>> So it cannot even be modelled in the DT as a regulator because the
->>> power-supply is not part of the HW and
->>> everybody can take a different one.
->>
->>
->> Not part of which h/w? Different for everyone is exactly why Vbus
->> supply should be described in DT.
->
->
->    I'm afraid you're misunderstanding the nature of VBUS regulator still.
-> It's a voltage regulator with some maximum value of the current that can be
-> sourced from it when it's powered (+5 V). The power chip can typically
-> detect and report the over-current condition inj which case VBUS will be
-> turned off).
+> Excellent.
 
-Yes, I understand that exactly. I've seen and reviewed a USB circuit
-or two.  You're describing a regulator, I'm saying describe the
-regulator in DT and Petr is saying that's too complex.
+    But not immediately. I have some other things to look at before that (DU 
+and AVB), they'll going to take some (significant) time... :-(
 
->>> So defining a regulator just to store this arbitrary USB 2.0 value is a
->>> bit
->>> overkill for me.
->>
->>
->> If it is just arbitrary, then put it into the driver. I would do 500mA
->
->
->    You clearly misunderstand things. The regulator used depends on the board
-> design, the driver (or glue in this case) doesn't, it's just SoC specific.
-> That's why this power budget thing ended up in the platform data in the
-> first place...
+> FWIW, I can test anything you come up with for the r8a7794 an alt board
 
-The driver needs to be able to query the supply and get the current
-limit. We have the technology.
+    I have remote access to Alt now, in fact using it currently for the AVB work.
 
->
->> and be done with it. I'd guess there is nothing real behind the
->> current default of 250mA.
->
->
->    500 mA actually, it's multiplied by 2.
+> or post patches for it once you have r8a7794/silk sorted out.
 
-Ok. For 2 ports?
+    I already have audio on these working. Or you're going to wait until I fix 
+the SRC issue?
 
-In any case, if there is effectively no limit (Vbus comes from the
-wall), then yes a regulator is probably an overkill. So make the case
-with no Vbus regulator (or regulator with no limit set) in DT be the
-max current. However, if the controller has a signal to turn on/off
-Vbus, then that should be modeled as a regulator.
+[...]
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
