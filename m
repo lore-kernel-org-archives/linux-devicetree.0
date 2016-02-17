@@ -1,134 +1,88 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 2/2] clk: add artpec-6 pll1 clock driver
-Date: Tue, 16 Feb 2016 16:02:20 -0800
-Message-ID: <20160217000220.2278.30045@quark.deferred.io>
-References: <cover.1455206007.git.larper@axis.com>
- <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455206007.git.larper@axis.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 1/3] ARM: dts: vf-colibri: remove regulator container node
+Date: Tue, 16 Feb 2016 16:18:35 -0800
+Message-ID: <1455668317-15728-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6d47cfe5ab7596e91a7fcc5647c5907cc12a4d83.1455206007.git.larper@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, marcel@ziswiler.com, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+Drop the fake simple-bus container 'regulators' and put the
+regulators directly under the root node. This also makes the
+artificial 'reg' properties superfluous. While at it, name
+the regulators according to schematics.
 
-Quoting Lars Persson (2016-02-11 08:01:04)
-> The PLL1 clock is a fixed-factor clock with factors derived from boot
-> mode pins. This driver is a simple wrapper to register the fixed
-> factor clock according to the pin settings.
-> 
-> Signed-off-by: Lars Persson <larper@axis.com>
-> ---
->  drivers/clk/Makefile      |  1 +
->  drivers/clk/clk-artpec6.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 71 insertions(+)
->  create mode 100644 drivers/clk/clk-artpec6.c
-> 
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index b038e36..388f0cf 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -17,6 +17,7 @@ endif
->  
->  # hardware specific clock types
->  # please keep this section sorted lexicographically by file/directory path name
-> +obj-$(CONFIG_MACH_ARTPEC6)             += clk-artpec6.o
->  obj-$(CONFIG_MACH_ASM9260)             += clk-asm9260.o
->  obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)    += clk-axi-clkgen.o
->  obj-$(CONFIG_ARCH_AXXIA)               += clk-axm5516.o
-> diff --git a/drivers/clk/clk-artpec6.c b/drivers/clk/clk-artpec6.c
-> new file mode 100644
-> index 0000000..3664c44
-> --- /dev/null
-> +++ b/drivers/clk/clk-artpec6.c
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+Changes since v1:
+- Rename regulators according to schematics
+- Drop sys prefix
 
-You mentioned having three drivers. Maybe consider putting this in
-drivers/clk/axis?
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 43 ++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 26 deletions(-)
 
-Continuing my questions from patch #1, should this clock be coupled with
-other artpec6 clocks sharing the same clock controller?
-
-> @@ -0,0 +1,70 @@
-> +/*
-> + * ARTPEC-6 clock initialization
-> + *
-> + * Copyright 2015 Axis Comunications AB.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +
-> +static void __init of_artpec6_pll1_setup(struct device_node *np)
-> +{
-> +       void __iomem *devstat;
-> +       struct clk *clk;
-> +       const char *clk_name = np->name;
-> +       const char *parent_name;
-> +       u32 pll_mode, pll_m, pll_n;
-> +
-> +       parent_name = of_clk_get_parent_name(np, 0);
-> +
-> +       devstat = of_iomap(np, 0);
-> +       if (devstat == NULL) {
-> +               pr_err("error to ioremap DEVSTAT\n");
-> +               return;
-> +       }
-> +
-> +       /* DEVSTAT register contains PLL settings */
-> +       pll_mode = (readl(devstat) >> 6) & 3;
-> +       iounmap(devstat);
-> +
-> +       /*
-> +        * pll1 settings are designed for different DDR speeds using a fixed
-> +        * 50MHz external clock. However, a different external clock could be
-> +        * used on different boards.
-> +        * CPU clock is half the DDR clock.
-> +        */
-> +       switch (pll_mode) {
-> +       case 0: /* DDR3-2133 mode */
-> +               pll_m = 4;
-> +               pll_n = 85;
-> +               break;
-> +       case 1: /* DDR3-1866 mode */
-> +               pll_m = 6;
-> +               pll_n = 112;
-> +               break;
-> +       case 2: /* DDR3-1600 mode */
-> +               pll_m = 4;
-> +               pll_n = 64;
-> +               break;
-> +       case 3: /* DDR3-1333 mode */
-> +               pll_m = 8;
-> +               pll_n = 106;
-> +               break;
-> +       }
-> +       /* ext_clk is defined in device tree */
-> +       clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
-> +                       pll_n, pll_m);
-> +       if (IS_ERR(clk)) {
-> +               pr_err("%s not registered\n", clk_name);
-> +               return;
-> +       }
-> +       of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(artpec6_pll1, "axis,artpec6-pll1-clock", of_artpec6_pll1_setup);
-
-Instead of using CLK_OF_DECLARE can you make this a platform_driver?
-
-Best regards,
-Mike
-
-> -- 
-> 2.1.4
-> 
+diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+index b494673..ca061c9 100644
+--- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+@@ -50,32 +50,23 @@
+ 		clock-frequency = <16000000>;
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		sys_5v0_reg: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "5v0";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			regulator-always-on;
+-		};
++	reg_5v0: regulator-5v0 {
++		compatible = "regulator-fixed";
++		regulator-name = "5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
+ 
+-		/* USBH_PEN */
+-		usbh_vbus_reg: regulator@1 {
+-			compatible = "regulator-fixed";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_usbh1_reg>;
+-			reg = <1>;
+-			regulator-name = "usbh_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			gpio = <&gpio2 19 GPIO_ACTIVE_LOW>;
+-			vin-supply = <&sys_5v0_reg>;
+-		};
++	reg_usbh_vbus: regulator-usbh-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbh1_reg>;
++		regulator-name = "VCC_USB[1-4]";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio2 19 GPIO_ACTIVE_LOW>; /* USBH_PEN resp. USBH_P_EN */
++		vin-supply = <&reg_5v0>;
+ 	};
+ };
+ 
+@@ -145,7 +136,7 @@
+ };
+ 
+ &usbh1 {
+-	vbus-supply = <&usbh_vbus_reg>;
++	vbus-supply = <&reg_usbh_vbus>;
+ };
+ 
+ &iomuxc {
+-- 
+2.7.1
