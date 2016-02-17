@@ -1,81 +1,115 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed, 17 Feb 2016 21:14:08 +0300
-Message-ID: <56C4B870.2070707@cogentembedded.com>
-References: <1455188466-10879-1-git-send-email-petr@barix.com>
- <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
- <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH 1/2] clk: add lpc18xx creg clk driver
+Date: Wed, 17 Feb 2016 19:24:12 +0100
+Message-ID: <CAGhQ9VzB_WgB8b4_c3Z17W+K2MC7Fq7SD9zEvZUN_UJVGDZ3Wg@mail.gmail.com>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+	<1436651307-24098-2-git-send-email-manabian@gmail.com>
+	<20150811204127.31346.16729@quantum>
+	<CAGhQ9VwZaM_iWTkQYVTuTiyb6gCG2y6s8WFVySCHt7YHE1qbcA@mail.gmail.com>
+	<20150818002604.31346.18322@quantum>
+	<CAGhQ9VzOYbHsFZQxM8823OiWpGB6vLEwX8LfvjC=DnL1iqK_qQ@mail.gmail.com>
+	<20160217005629.2278.90197@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160217005629.2278.90197@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2016 11:05 PM, Rob Herring wrote:
-
->>>> + - mentor,power : Specifies the maximum current in milliamperes the
->>>> controller can
->>>> +     supply in host mode.
->>>
->>> Still a no for me. Looks like this just sets hcd->power_budget. This
->>> property may not be a regulator, but ultimately the value depends on
->>> some regulator supplying Vbus. Also, given this has nothing to do with
->>> MUSB h/w, however this is described should be generic.
+On 17 February 2016 at 01:56, Michael Turquette <mturquette@baylibre.com> wrote:
+> Quoting Joachim Eastwood (2016-02-13 06:38:45)
+>> Hi Mike,
+>>
+>> Seems your reply got lost in my mailbox and I didn't notice it before
+>> Stephen replied on the cover letter. Sorry about that.
+>>
+>> On 18 August 2015 at 02:26, Michael Turquette <mturquette@baylibre.com> wrote:
+>> > Quoting Joachim Eastwood (2015-08-13 13:43:11)
+>> >> On 11 August 2015 at 22:41, Michael Turquette <mturquette@baylibre.com> wrote:
+>> >> > Hi Joachim,
+>> >> >
+>> >> > Quoting Joachim Eastwood (2015-07-11 14:48:26)
+>> >> >> +static void __init lpc18xx_creg_clk_init(struct device_node *np)
+>> >> >> +{
+>> >> >> +       const char *clk_32khz_parent;
+>> >> >> +       struct regmap *syscon;
+>> >> >> +
+>> >> >> +       syscon = syscon_node_to_regmap(np->parent);
+>> >> >> +       if (IS_ERR(syscon)) {
+>> >> >> +               pr_err("%s: syscon lookup failed\n", __func__);
+>> >> >> +               return;
+>> >> >> +       }
+>> >> >> +
+>> >> >> +       clk_32khz_parent = of_clk_get_parent_name(np, 0);
+>> >> >> +
+>> >> >> +       clk_creg[CREG_CLK_32KHZ] =
+>> >> >> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
+>> >> >> +                                     &clk_32khz_parent, syscon);
+>> >> >> +
+>> >> >> +       clk_creg[CREG_CLK_1KHZ] =
+>> >> >> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
+>> >> >> +                                     &clk_creg_clocks[CREG_CLK_32KHZ].name,
+>> >> >> +                                     syscon);
+>> >> >> +
+>> >> >> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
+>> >> >> +}
+>> >> >> +CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
+>> >> >
+>> >> > I'll ask the same question that Stephen asked in your CCU/CGU driver
+>> >> > series: is it necessary to use CLK_OF_DECLARE here or can you use the
+>> >> > platform device model?
+>> >>
+>> >> The 32 kHz clock from the CREG block is a clock parent to the CGU
+>> >> block so it's possible that it will required early. This is all
+>> >> depends on how the boot loader initially configures the CGU.
+>> >>
+>> >> Currently in the DTS for lpc18xx cgu it has:
+>> >> clocks = <&xtal>, <&xtal32>, <...>;
+>> >> xtal32 is just a temporary placeholder until the CREG clock is in place.
+>> >
+>> > Well that seems wrong. Is it just a matter of probe order where you try
+>> > to probe the cgu driver before the creg driver?
+>>
+>> The ideal probe order for the clk drivers on the lpc18xx platform
+>> would be; creg-clk, cgu and ccu.
+>> If the 32k clk is used by any of timers we need creg-clk to enable the
+>> 32k clock and determine the rate.
+>>
+>> Note that the cgu and ccu driver is using CLK_OF_DECLARE now.
 >>
 >>
->> I understand your point that the description should be generic.
->> However the USB 2.0 specification does not define any relation between the
->> bMaxPower provided by the device and the actual power control.
->> As far as I understand the value just serves the purpose to raise a flag to
->> the user if the attached device would draw too much power, and not to enable
->> it at all.
+>> I have tired to create an overview of the lpc18xx clock system here:
+>> https://github.com/manabian/linux-lpc/wiki/LPC18xx-LPC43xx-clocks
 >
-> That won't really work given devices lie. My bus powered USB disk
-> enclosure reports something like 10mA. That's pretty good considering
-> I have a 5W drive in it.
-
->> Further, the value used by the protocol is not necessarily related to the
->> real current that can be supported. The maximum current supported by the
->> protocol is 510mA.
->>
->> For instance on my development board the real maximum current is limited
->> only by the mains power-supply used.
->> So it cannot even be modelled in the DT as a regulator because the
->> power-supply is not part of the HW and
->> everybody can take a different one.
+> That's great, thanks a lot for the link and the nice documentation.
 >
-> Not part of which h/w? Different for everyone is exactly why Vbus
-> supply should be described in DT.
+> It's been a while since I've looked at this thread. Do any of the
+> creg-clk, cgu or ccu clock drivers need to use CLK_OF_DECLARE? If they
+> were platform_drivers then you could use -EPROBE_DEFER to solve your
+> ordering issue.
 
-    I'm afraid you're misunderstanding the nature of VBUS regulator still.
-It's a voltage regulator with some maximum value of the current that can be 
-sourced from it when it's powered (+5 V). The power chip can typically detect 
-and report the over-current condition inj which case VBUS will be turned off).
+The clock for the clocksource/timer
+(drivers/clocksource/time-lpc32xx.c) comes from cgu/ccu and can also
+come from creg-clk. So afaik they must use CLK_OF_DECLARE. Or is there
+something I am missing?
+Isn't true that most SoC system clock drivers must use CLK_OF_DECLARE
+because the system timer require clocks early? I thought this was the
+whole point.
 
->> So defining a regulator just to store this arbitrary USB 2.0 value is a bit
->> overkill for me.
->
-> If it is just arbitrary, then put it into the driver. I would do 500mA
+Since it is possible that the 32k clock from creg-clk can be use as a
+parent clock for the timer doesn't this mean it also must use
+CLK_OF_DECLARE?
+If it wasn't possible for creg-clk to be used as a parent clock for
+the timer it could have been a platform device.
 
-    You clearly misunderstand things. The regulator used depends on the board 
-design, the driver (or glue in this case) doesn't, it's just SoC specific. 
-That's why this power budget thing ended up in the platform data in the first 
-place...
 
-> and be done with it. I'd guess there is nothing real behind the
-> current default of 250mA.
+The lpc18xx clock configuration that require creg-clk early would be:
+32k - > PLL0 -> BASE_M3/M4_CLK -> CLK_M3/M4_TIMER0. See second figure
+on the webpage. Note that this is probably not a common configuration,
+but it is a valid one. (PLL0 accepts input down to 14 kHz)
 
-    500 mA actually, it's multiplied by 2.
 
-> Rob
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Joachim Eastwood
