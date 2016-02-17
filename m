@@ -1,246 +1,154 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V4 5/7] clk: bcm2835: add missing 22 HW-clocks.
-Date: Wed, 17 Feb 2016 21:01:52 +0100 (CET)
-Message-ID: <704229577.519481.7acc7698-e68b-4f4b-8da5-f03a550266a8.open-xchange@email.1und1.de>
-References: <1452867667-2447-1-git-send-email-kernel@martin.sperl.org>
- <1452867667-2447-6-git-send-email-kernel@martin.sperl.org>
- <87h9hr517u.fsf@eliezer.anholt.net> <56B8782C.4060107@martin.sperl.org>
- <A977D3F2-1F64-41C8-B8ED-EB9F0B3554B9@martin.sperl.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: meson: Adding support to retrieve serial and SoC revision
+Date: Wed, 17 Feb 2016 21:34:52 +0100
+Message-ID: <CAOQ7t2b8N+w33zKMfedtQqJ+-u1=kGn0pK4cBXhXB8LGx6qrtQ@mail.gmail.com>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
+	<1455730114-2547-2-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <A977D3F2-1F64-41C8-B8ED-EB9F0B3554B9@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee@kernel.org>, linux-clk@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455730114-2547-2-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 17, 2016 at 6:28 PM, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This path adds support to get the revision and the serial of the running
+> SoC, on Meson8. On these plaforms, these informations can be found into
 
-> Martin Sperl <kernel@martin.sperl.org> hat am 17. Februar 2016 um 19:=
-25
-> geschrieben:
->
-> As I am trying to complete the list of clocks here my =E2=80=9Cbest=E2=
-=80=9D summary
-> so far of the clock tree for the bcm2835 taken from various sources:
-> * Datasheet
-> * broadcom provided VC4 headers (via https://github.com/msperl/rpi-re=
-gisters)
-> * mailing list
->
-> And I have come up with the following description that
-> you can put in graphviz or http://www.webgraphviz.com/
->
-> --- cut here ---
-> digraph clocks {
-> graph [ordering=3D"out"];
->
-> subgraph cluster_osc {
-> label =3D "Oscillators";
->
-> "GND";
-> "OSC";
-> "testdebug0";
-> "testdebug1";
-> }
->
-> subgraph cluster_pll {
-> label =3D "PLLs";
->
-> subgraph cluster_plla {
-> label =3D "PLLA";
->
-> OSC -> PLLA;
->
-> PLLA -> PLLA_core;
-> PLLA -> PLLA_per;
-> PLLA -> PLLA_dsi0;
-> PLLA -> PLLA_ccp2;
-> }
->
-> subgraph cluster_pllb {
-> label =3D "PLLB";
->
-> OSC -> PLLB;
->
-> PLLB -> PLLB_ARM;
-> PLLB -> PLLB_SP0;
-> PLLB -> PLLB_SP1;
-> PLLB -> PLLB_SP2;
-> }
->
-> subgraph cluster_pllc {
-> label =3D "PLLC";
->
-> OSC -> PLLC;
->
-> PLLC -> PLLC_core0;
-> PLLC -> PLLC_core1;
-> PLLC -> PLLC_core2;
-> PLLC -> PLLC_per;
-> }
->
-> subgraph cluster_plld {
-> label =3D "PLLD";
->
-> OSC -> PLLD;
->
-> PLLD -> PLLD_core;
-> PLLD -> PLLD_per;
-> PLLD -> PLLD_dsi0;
-> PLLD -> PLLD_dsi1;
-> }
->
-> subgraph cluster_pllh {
-> label =3D "PLLH";
->
-> OSC -> PLLH;
->
-> PLLH -> PLLH_aux;
-> PLLH -> PLLH_pix;
-> PLLH -> PLLH_rcal;
-> }
-> }
->
-> subgraph cluster_mux {
-> label =3D "clocks";
->
-> subgraph cluster_vpu_clocks {
-> label =3D "VPU-clocks";
->
-> subgraph cluster_vpu_mux {
-> label =3D "VPU-mux";
->
-> vGND [label=3D"0: GND"];
-> vOSC [label=3D"1: OSC"];
-> vtestdebug0 [label=3D"2: testdebug0"];
-> vtestdebug1 [label=3D"3: testdebug1"];
-> vPLLA_core [label=3D"4: PLLA_core"];
-> vPLLC_core0 [label=3D"5: PLLC_core0"];
-> vPLLD_core [label=3D"6: PLLD_core"];
-> vPLLH_aux [label=3D"7: PLLH_aux"];
-> vPLLC_core1 [label=3D"8: PLLC_core1"];
-> vPLLC_core2 [label=3D"9: PLLC_core2"];
->
-> GND -> vGND -> vpu_mux;
-> OSC -> vOSC -> vpu_mux;
-> testdebug0 -> vtestdebug0 -> vpu_mux;
-> testdebug1 -> vtestdebug1 -> vpu_mux;
-> PLLA_core -> vPLLA_core -> vpu_mux;
-> PLLC_core0 -> vPLLC_core1 -> vpu_mux;
-> PLLD_core -> vPLLD_core -> vpu_mux;
-> PLLH_aux -> vPLLH_aux -> vpu_mux;
-> PLLC_core1 -> vPLLC_core1 -> vpu_mux;
-> PLLC_core2 -> vPLLC_core2 -> vpu_mux;
-> }
->
-> vpu_mux -> vpu;
-> vpu_mux -> v3d;
-> vpu_mux -> isp;
-> vpu_mux -> h264;
-> vpu_mux -> sdram;
-> }
->
-> subgraph cluster_per_clocks {
-> label =3D "Periperial-clocks";
->
-> subgraph cluster_per_mux {
-> label =3D "Periperal-mux";
->
-> pGND [label=3D"0: GND"];
-> pOSC [label=3D"1: OSC"];
-> ptestdebug0 [label=3D"2: testdebug0"];
-> ptestdebug1 [label=3D"3: testdebug1"];
-> pPLLA_per [label=3D"4: PLLA_per"];
-> pPLLC_per [label=3D"5: PLLC_per"];
-> pPLLD_per [label=3D"5: PLLD_per"];
-> pPLLH_aux [label=3D"5: PLLH_aux"];
->
-> GND -> pGND -> per_mux;
-> OSC -> pOSC -> per_mux;
-> testdebug0 -> ptestdebug0 -> per_mux;
-> testdebug1 -> ptestdebug1 -> per_mux;
-> PLLA_per -> pPLLA_per -> per_mux;
-> PLLC_per -> pPLLC_per -> per_mux;
-> PLLD_per -> pPLLD_per -> per_mux;
-> PLLH_aux -> pPLLH_aux -> per_mux;
-> }
->
-> per_mux -> vec;
-> per_mux -> uart;
-> per_mux -> hsm;
-> per_mux -> emmc;
-> per_mux -> pwm;
-> per_mux -> pcm;
-> per_mux -> aveo;
-> per_mux -> cam0;
-> per_mux -> cam1;
-> per_mux -> dft;
-> per_mux -> dpi;
-> per_mux -> dsi0e;
-> per_mux -> dsi1e;
-> per_mux -> gp0;
-> per_mux -> gp1;
-> per_mux -> gp2;
-> per_mux -> slim;
-> per_mux -> smi;
-> }
->
-> subgraph cluster_osc_clocks {
-> label =3D "osc-clocks";
->
-> subgraph cluster_osc_mux {
-> label =3D "osc-mux";
->
-> oGND [label=3D"0: GND"];
-> oOSC [label=3D"1: OSC"];
-> otestdebug0 [label=3D"2: testdebug0"];
-> otestdebug1 [label=3D"3: testdebug1"];
->
-> GND -> oGND -> osc_mux;
-> OSC -> oOSC -> osc_mux;
-> testdebug0 -> otestdebug0 -> osc_mux;
-> testdebug1 -> otestdebug1 -> osc_mux;
-> }
->
-> osc_mux -> tsens;
-> osc_mux -> tec;
-> osc_mux -> otp;
-> }
->
-> subgraph cluster_unknown_mux_clocks {
-> label =3D "unknown-parent-mux-clocks";
->
-> ukn_mux -> ccp2;
-> ukn_mux -> dsi0pix;
-> ukn_mux -> dsi1pix;
-> ukn_mux -> pulse;
-> ukn_mux -> td0;
-> ukn_mux -> td1;
-> }
->
-> subgraph cluster_debug_clocks {
-> label =3D "debug-clocks";
->
-> debug_mux -> peria;
-> debug_mux -> sys;
-> }
-> }
->
-> subgraph cluster_aux {
-> label =3D =E2=80=9Cauxiliar-clocks";
->
-> vpu -> spi1;
-> vpu -> spi2;
-> vpu -> uart1;
-> }
-> }
-> --- cut here ---
->
-> I have no idea where we could put this information
-> in the kernel tree - maybe this would help.
->
+no Meson8b or Meson6?
 
-Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt should =
-be a good
-place.
+> CBUS registers. To do so, we instanciate a syscon register, then create
+
+What you mean with syscon register?
+
+> a soc_device, and finally we expose everything to the system.
+>
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/mach-meson/meson.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>
+> diff --git a/arch/arm/mach-meson/meson.c b/arch/arm/mach-meson/meson.c
+> index 4e23571..2816e30 100644
+> --- a/arch/arm/mach-meson/meson.c
+> +++ b/arch/arm/mach-meson/meson.c
+> @@ -13,8 +13,16 @@
+>   *
+>   */
+>
+> +#include <linux/of_address.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/sys_soc.h>
+>  #include <asm/mach/arch.h>
+> +#include <asm/system_info.h>
+> +
+> +#define MESON_REVISION_REG (0x45c)
+>
+>  static const char * const meson_common_board_compat[] = {
+>         "amlogic,meson6",
+> @@ -23,7 +31,54 @@ static const char * const meson_common_board_compat[] = {
+>         NULL,
+>  };
+>
+> +static void __init meson_init_machine(void)
+> +{
+> +       struct soc_device_attribute *soc_dev_attr;
+> +       struct soc_device *soc_dev;
+> +       struct regmap *hwrev;
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       hwrev = syscon_regmap_lookup_by_compatible("amlogic,meson8b-hwrev");
+
+Is this specific only for Meson8b?
+
+> +       if (IS_ERR(hwrev)) {
+> +               pr_err("hwrev node not found\n");
+> +               return;
+> +       }
+> +
+> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +       if (!soc_dev_attr)
+> +               return;
+
+Missing blank line
+
+> +       ret = regmap_read(hwrev, 0, &val);
+> +       if (ret < 0) {
+> +               pr_err("Could not get SoC id\n");
+
+kfree(soc_dev_attr)
+
+> +               return;
+> +       }
+> +       system_serial_high = val << 24;
+> +
+> +       ret = regmap_read(hwrev, MESON_REVISION_REG, &val);
+> +       if (ret < 0) {
+> +               pr_err("Could not get SoC revision\n");
+
+ditto
+
+> +               return;
+> +       }
+> +       system_rev = val == 0x11111111 ? 0xA : 0xB;
+> +
+> +       soc_dev_attr->family = "Amlogic Meson";
+> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "0x%x", system_rev);
+> +       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "0x%x", system_serial_high);
+> +
+> +       soc_dev = soc_device_register(soc_dev_attr);
+> +       if (IS_ERR(soc_dev)) {
+> +               pr_err("Could not register soc device\n");
+> +               kfree(soc_dev_attr);
+
+leaking soc_dev_attr->revision and  soc_dev_attr->soc_id also any
+reason why you are not kasprintf-ing also family?
+
+> +               return;
+> +       }
+> +
+> +       pr_info("Amlogic Meson SoC Rev%X (%X:%X)\n", system_rev, system_serial_high, system_rev);
+> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, soc_dev);
+
+Compiling I got:
+
+  CC      arch/arm/mach-meson/meson.o
+arch/arm/mach-meson/meson.c: In function 'meson_init_machine':
+arch/arm/mach-meson/meson.c:77:63: warning: passing argument 4 of
+'of_platform_populate' from incompatible pointer type
+  of_platform_populate(NULL, of_default_bus_match_table, NULL, soc_dev);
+                                                               ^
+In file included from arch/arm/mach-meson/meson.c:17:0:
+include/linux/of_platform.h:71:12: note: expected 'struct device *'
+but argument is of type 'struct soc_device *'
+ extern int of_platform_populate(struct device_node *root,
+            ^
+
+> +}
+> +
+>  DT_MACHINE_START(MESON, "Amlogic Meson platform")
+> +       .init_machine   = meson_init_machine,
+
+Uhm, you are assuming that this code is valid for Meson8, Meson8b and
+also Meson6. Are you sure about that?
+
+>         .dt_compat      = meson_common_board_compat,
+>         .l2c_aux_val    = 0,
+>         .l2c_aux_mask   = ~0,
+> --
+> 2.5.0
+
+Thanks for working on this!
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
