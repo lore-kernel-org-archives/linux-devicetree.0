@@ -1,49 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7794: add EtherAVB support
-Date: Wed, 17 Feb 2016 23:45:10 +0300
-Message-ID: <3612334.eXmTxlrOol@wasted.cogentembedded.com>
-References: <1926986.gmrsfKE5A2@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Wed, 17 Feb 2016 21:50:44 +0100
+Message-ID: <9529888.YxErSS5PS8@wuerfel>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <1455730114-2547-3-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1926986.gmrsfKE5A2@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455730114-2547-3-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7794 part of the EtherAVB device node.
+On Wednesday 17 February 2016 18:28:34 Romain Perier wrote:
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index 0477a81..71009dc 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -99,6 +99,11 @@
+>                 };
+>         };
+>  
+> +       hwrev@c1107d4c {
+> +               compatible = "amlogic,meson8b-hwrev", "syscon";
+> +               reg = <0xc1107d4c 0x460>;
+> +       };
+> 
 
-Based on the commit 46ece349aa54 ("ARM: shmobile: r8a7791: add EtherAVB DT
-support").
+That is a very odd address. Are you sure this is not part of a larger
+block of registers?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm/boot/dts/r8a7794.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -572,6 +572,18 @@
- 		status = "disabled";
- 	};
- 
-+	avb: ethernet@e6800000 {
-+		compatible = "renesas,etheravb-r8a7794",
-+			     "renesas,etheravb-rcar-gen2";
-+		reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+		interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp8_clks R8A7794_CLK_ETHERAVB>;
-+		power-domains = <&cpg_clocks>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	/* The memory map in the User's Manual maps the cores to bus numbers */
- 	i2c0: i2c@e6508000 {
- 		compatible = "renesas,i2c-r8a7794";
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
