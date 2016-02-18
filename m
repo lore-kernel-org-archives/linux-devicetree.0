@@ -1,93 +1,61 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH V6 1/2] regulator: Add document for MT6323 regulator
-Date: Thu, 18 Feb 2016 15:50:10 +0100
-Message-ID: <56C5DA22.9080008@openwrt.org>
-References: <1455709056-50510-1-git-send-email-blogic@openwrt.org>
- <20160218143610.GG9654@rob-hp-laptop>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] ASoC: rockchip: add bindings for rk3399 i2s
+Date: Thu, 18 Feb 2016 14:59:54 +0000
+Message-ID: <20160218145954.GI7129@sirena.org.uk>
+References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
+ <1455673992-16469-4-git-send-email-jay.xu@rock-chips.com>
+ <20160217110306.GJ7544@sirena.org.uk>
+ <20160218143702.GN9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160218143610.GG9654@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fmvA4kSBHQVZhkR6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160218143702.GN9654@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--fmvA4kSBHQVZhkR6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 18/02/2016 15:36, Rob Herring wrote:
-> On Wed, Feb 17, 2016 at 12:37:35PM +0100, John Crispin wrote:
->> Signed-off-by: John Crispin <blogic@openwrt.org>
->> Cc: devicetree@vger.kernel.org
->>
->> ---
->> Changes in V6
->> * remove the compatible string
->>
->> Changes in V5
->> * regulator vs regulators
->>
->> Changes in V4
->> * regulator is a subnode and not a property
->>
->>  .../bindings/regulator/mt6323-regulator.txt        |  241 ++++++++++++++++++++
->>  1 file changed, 241 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
->> new file mode 100644
->> index 0000000..67c0780
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
->> @@ -0,0 +1,241 @@
->> +Mediatek MT6323 Regulator Driver
->> +
->> +All voltage regulators are defined as subnodes of the regulators node. A list
->> +of regulators provided by this controller are defined as subnodes of the
->> +drivers node. Each regulator is named according to its regulator type,
-> 
-> s/drivers/PMIC's/
-> 
->> +buck_<name> and ldo_<name>. The definition for each of these nodes is defined
->> +using the standard binding for regulators at
->> +Documentation/devicetree/bindings/regulator/regulator.txt.
->> +
->> +The valid names for regulators are::
->> +BUCK:
->> +  buck_vproc, buck_vsys, buck_vpa
->> +LDO:
->> +  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
->> +  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
->> +  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
->> +  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
->> +
->> +Example:
->> +
->> +	pmic: mt6323 {
->> +		compatible = "mediatek,mt6323";
->> +
->> +		mt6323regulator: regulators {
->> +			compatible = "mediatek,mt6323-regulator";
-> 
-> Still have the compatible here...
-> 
-> Otherwise:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+On Thu, Feb 18, 2016 at 08:37:02AM -0600, Rob Herring wrote:
+> On Wed, Feb 17, 2016 at 11:03:06AM +0000, Mark Brown wrote:
 
-grml, i only removed one of the compat strings and did not notice there
-are two. do you want me to send a fixup that you can fold into the one
-you already merged or do you want me to resend just this one patch with
-the fix applied ?
+> > As with the other patch I'd expect to see a matching driver update if
+> > only for documentation purposes.
 
-	John
+> Why? They match on the prior chip's compatible until there is some=20
+> difference the driver needs to handle.
 
+That then requires anyone using a compatible string to also know the
+full set of other compatible strings that can be used for this device
+and that they have to list the others too in the correct order which
+isn't something the binding document tells them.  It also feels better
+to record in the code how we think we should support the device when we
+know it, seems more helpful.
 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
+--fmvA4kSBHQVZhkR6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWxdxpAAoJECTWi3JdVIfQTZ8H/Rjp3ZsLuV8tscbYsfZBaxZ9
+w8ejqlpglE0pAj7mJnkk72Ks2xztRicIrXc7vN836RbmPE0WN9chmUJaKQu6gXPU
+n6aOqmHrHO3o8UXjEmAnDdLOZsK0wJAg2UL5rvqHuRUs/lAqHU6UCovzlEyi2pYf
+679B3oouwjQLcvyF7ylxSt5DHFM2h9TBDc5wqXQmzXg6sLeaLypDl2MnZHgAdlDy
+A3UHuvL4vK9lBL8BjP7vzA0DFJX+zIIfUYGk+P7AQdYl4BPEtar5uyNwgRnS0wOm
+3QPf48sig4Ige892dVzxswEzfwXB/+JaxkONE93S4kr0Jbob+7Jl6FipwU0Di5Q=
+=3r2U
+-----END PGP SIGNATURE-----
+
+--fmvA4kSBHQVZhkR6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
