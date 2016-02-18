@@ -1,52 +1,93 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC
- variants
-Date: Thu, 18 Feb 2016 14:47:13 +0000
-Message-ID: <56C5D971.6060005@arm.com>
-References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org>
- <56C5D304.5010708@arm.com> <5028476.WAQS3ylXOd@wuerfel>
+From: John Crispin <blogic@openwrt.org>
+Subject: Re: [PATCH V6 1/2] regulator: Add document for MT6323 regulator
+Date: Thu, 18 Feb 2016 15:50:10 +0100
+Message-ID: <56C5DA22.9080008@openwrt.org>
+References: <1455709056-50510-1-git-send-email-blogic@openwrt.org>
+ <20160218143610.GG9654@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5028476.WAQS3ylXOd@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160218143610.GG9654@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/16 14:40, Arnd Bergmann wrote:
-> On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
->> On 18/02/16 13:46, Linus Walleij wrote:
->>> In the add-on file for the GIC dealing with the RealView family
->>> we currently only handle the PB11MPCore, let's extend this to
->>> manage the RealView EB ARM11MPCore as well. The Revision B of the
->>> ARM11MPCore core tile is a bit special and needs special handling
->>> as it moves a system control register around at random.
+
+
+On 18/02/2016 15:36, Rob Herring wrote:
+> On Wed, Feb 17, 2016 at 12:37:35PM +0100, John Crispin wrote:
+>> Signed-off-by: John Crispin <blogic@openwrt.org>
+>> Cc: devicetree@vger.kernel.org
 >>
->> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
->> cupboard, and failed. Oh well...
+>> ---
+>> Changes in V6
+>> * remove the compatible string
+>>
+>> Changes in V5
+>> * regulator vs regulators
+>>
+>> Changes in V4
+>> * regulator is a subnode and not a property
+>>
+>>  .../bindings/regulator/mt6323-regulator.txt        |  241 ++++++++++++++++++++
+>>  1 file changed, 241 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+>> new file mode 100644
+>> index 0000000..67c0780
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+>> @@ -0,0 +1,241 @@
+>> +Mediatek MT6323 Regulator Driver
+>> +
+>> +All voltage regulators are defined as subnodes of the regulators node. A list
+>> +of regulators provided by this controller are defined as subnodes of the
+>> +drivers node. Each regulator is named according to its regulator type,
 > 
-> What surprised me though is that it's enabled by default:
+> s/drivers/PMIC's/
 > 
-> $ grep REVB arch/arm/configs/realview*
-> arch/arm/configs/realview_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
-> arch/arm/configs/realview-smp_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
+>> +buck_<name> and ldo_<name>. The definition for each of these nodes is defined
+>> +using the standard binding for regulators at
+>> +Documentation/devicetree/bindings/regulator/regulator.txt.
+>> +
+>> +The valid names for regulators are::
+>> +BUCK:
+>> +  buck_vproc, buck_vsys, buck_vpa
+>> +LDO:
+>> +  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
+>> +  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
+>> +  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
+>> +  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
+>> +
+>> +Example:
+>> +
+>> +	pmic: mt6323 {
+>> +		compatible = "mediatek,mt6323";
+>> +
+>> +		mt6323regulator: regulators {
+>> +			compatible = "mediatek,mt6323-regulator";
 > 
-> With that option set, the defconfig kernel should not be able
-> to boot on RevC machines. Do you have a RevC machine that works
-> with the defconfig?
+> Still have the compatible here...
+> 
+> Otherwise:
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-No, it looks like someone helped themselves to *all* of the EB-11MPs - I
-have a bunch of empty baseboards, and no tile to slap on. I also have a
-box of unsoldered 11MPs, but that a different story... ;-)
+grml, i only removed one of the compat strings and did not notice there
+are two. do you want me to send a fixup that you can fold into the one
+you already merged or do you want me to resend just this one patch with
+the fix applied ?
 
-I guess I should plan for another dumpster diving session.
+	John
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
