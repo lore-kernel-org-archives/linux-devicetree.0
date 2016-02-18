@@ -1,121 +1,87 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC variants
-Date: Thu, 18 Feb 2016 14:46:12 +0100
-Message-ID: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2.1 2/4] spi: rockchip: add bindings for rk3399 spi
+Date: Thu, 18 Feb 2016 13:57:51 +0000
+Message-ID: <20160218135751.GE7129@sirena.org.uk>
+References: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
+ <1455762983-29980-3-git-send-email-jay.xu@rock-chips.com>
+ <20160218094108.GA7129@sirena.org.uk> <2327512.KAqs6H56Km@phil>
+ <56C5959D.3030806@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8626422643958836163=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56C5959D.3030806-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the add-on file for the GIC dealing with the RealView family
-we currently only handle the PB11MPCore, let's extend this to
-manage the RealView EB ARM11MPCore as well. The Revision B of the
-ARM11MPCore core tile is a bit special and needs special handling
-as it moves a system control register around at random.
 
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-This can be applied in isolation from the other patches so Marc
-one you're happy with it, please take it into the IRQchip tree.
+--===============8626422643958836163==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vv4Sf/kQfcwinyKX"
+Content-Disposition: inline
 
-There are two compatible strings getting added to the device tree
-bindings so CC to the DT list. No biggie though, just figures out
-exactly what ARM custom GIC flavor it is.
----
- .../bindings/interrupt-controller/arm,gic.txt      |  2 ++
- drivers/irqchip/irq-gic-realview.c                 | 35 ++++++++++++++++++----
- 2 files changed, 32 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-index 5a1cb4bc3dfe..0c80e6870645 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-@@ -16,6 +16,8 @@ Main node required properties:
- 	"arm,cortex-a15-gic"
- 	"arm,cortex-a7-gic"
- 	"arm,cortex-a9-gic"
-+	"arm,eb11mp-gic"
-+	"arm,eb11mp-revb-gic"
- 	"arm,gic-400"
- 	"arm,pl390"
- 	"arm,tc11mp-gic"
-diff --git a/drivers/irqchip/irq-gic-realview.c b/drivers/irqchip/irq-gic-realview.c
-index aa46eb280a7f..224e83d5c056 100644
---- a/drivers/irqchip/irq-gic-realview.c
-+++ b/drivers/irqchip/irq-gic-realview.c
-@@ -10,7 +10,8 @@
- #include <linux/irqchip/arm-gic.h>
- 
- #define REALVIEW_SYS_LOCK_OFFSET	0x20
--#define REALVIEW_PB11MP_SYS_PLD_CTRL1	0x74
-+#define REALVIEW_SYS_PLD_CTRL1		0x74
-+#define REALVIEW_EB_REVB_SYS_PLD_CTRL1	0xD8
- #define VERSATILE_LOCK_VAL		0xA05F
- #define PLD_INTMODE_MASK		BIT(22)|BIT(23)|BIT(24)
- #define PLD_INTMODE_LEGACY		0x0
-@@ -18,26 +19,50 @@
- #define PLD_INTMODE_NEW_NO_DCC		BIT(23)
- #define PLD_INTMODE_FIQ_ENABLE		BIT(24)
- 
-+static const struct of_device_id syscon_pldset_of_match[] = {
-+	{
-+		.compatible = "arm,realview-eb-syscon",
-+	},
-+	{
-+		.compatible = "arm,realview-pb11mp-syscon",
-+	},
-+	{},
-+};
-+
- static int __init
- realview_gic_of_init(struct device_node *node, struct device_node *parent)
- {
- 	static struct regmap *map;
-+	struct device_node *np;
-+	struct pld_setting *pldset;
-+	u32 pld1_ctrl = REALVIEW_SYS_PLD_CTRL1;
-+
-+	np = of_find_matching_node_and_match(NULL, syscon_pldset_of_match,
-+					     (void *)&pldset);
-+	if (!np)
-+		return -ENODEV;
-+
-+	/* For some reason RealView EB Rev B moved this register */
-+	if (of_device_is_compatible(np, "arm,eb11mp-revb-gic"))
-+		pld1_ctrl = REALVIEW_EB_REVB_SYS_PLD_CTRL1;
- 
- 	/* The PB11MPCore GIC needs to be configured in the syscon */
--	map = syscon_regmap_lookup_by_compatible("arm,realview-pb11mp-syscon");
-+	map = syscon_node_to_regmap(np);
- 	if (!IS_ERR(map)) {
- 		/* new irq mode with no DCC */
- 		regmap_write(map, REALVIEW_SYS_LOCK_OFFSET,
- 			     VERSATILE_LOCK_VAL);
--		regmap_update_bits(map, REALVIEW_PB11MP_SYS_PLD_CTRL1,
-+		regmap_update_bits(map, pld1_ctrl,
- 				   PLD_INTMODE_NEW_NO_DCC,
- 				   PLD_INTMODE_MASK);
- 		regmap_write(map, REALVIEW_SYS_LOCK_OFFSET, 0x0000);
--		pr_info("TC11MP GIC: set up interrupt controller to NEW mode, no DCC\n");
-+		pr_info("RealView GIC: set up interrupt controller to NEW mode, no DCC\n");
- 	} else {
--		pr_err("TC11MP GIC setup: could not find syscon\n");
-+		pr_err("RealView GIC setup: could not find syscon\n");
- 		return -ENXIO;
- 	}
- 	return gic_of_init(node, parent);
- }
- IRQCHIP_DECLARE(armtc11mp_gic, "arm,tc11mp-gic", realview_gic_of_init);
-+IRQCHIP_DECLARE(armeb11mp_gic, "arm,eb11mp-gic", realview_gic_of_init);
-+IRQCHIP_DECLARE(armeb11mp_revb_gic, "arm,eb11mp-revb-gic", realview_gic_of_init);
--- 
-2.4.3
+--vv4Sf/kQfcwinyKX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Feb 18, 2016 at 05:57:49PM +0800, Jianqun Xu wrote:
+
+> I'm a little confuse, I have upstreamed rockchip-i2s, and the i2s driver set
+> the compatible like:
+> - compatible: should be one of the followings
+>    - "rockchip,rk3066-i2s": for rk3066
+>    - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
+>    - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
+>    - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
+> and the driver only has
+> static const struct of_device_id rockchip_i2s_match[] = {
+> 	{ .compatible = "rockchip,rk3066-i2s", },
+> 	{},
+> };
+
+> The spi of rk3399 as same as rk3066, rk3188, rk3288, like i2s, if they are
+> keep different rules ?
+
+No, that's just something that got missed in review and which should be
+fixed.
+
+--vv4Sf/kQfcwinyKX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWxc3eAAoJECTWi3JdVIfQPn0H/1pS4pSP4GUrIc3s5JcMgdb8
+A1r+80mR2QyxZ2sjmslLv63Q4zSbMJSqRMC/RVxpPFZ4LirQgduYB+ihu+nFwL6S
+i7lANd9ruQZlOek9z7J9WzvhLeu4VMVdo2xI2TdgmQz+98BBUJYno5FdtIWiooWB
+csR5iGR3B7fJ9tV6wRI/2/a6sTchYGKK9TTGDPJuY0NNJeLmMhFB9+AWRM+P9a3T
+BUtaeKx2dWfd/ze9fh54H7wAlt2LncLMYZgvPbfhmCui++z6PrASjxIcx85rlpPb
+TckG56n+Xhx5CkxR9iT+6QxpFDSnmTLw6kD+Umz/cJ2NLshD40xqXiIbWF8tuNk=
+=r/QX
+-----END PGP SIGNATURE-----
+
+--vv4Sf/kQfcwinyKX--
+
+
+--===============8626422643958836163==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============8626422643958836163==--
