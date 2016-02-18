@@ -1,58 +1,46 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
-Date: Thu, 18 Feb 2016 01:52:15 +0800
-Message-ID: <1455731535.10704.8.camel@mhfsdcap03>
-References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
-	 <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
-	 <56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/4] Add core dtsi for rk3399 from Rockchip
+Date: Thu, 18 Feb 2016 10:36:19 +0800
+Message-ID: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160216141059.GT18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-02-16 at 15:11 +0100, Joerg Roedel wrote:
-> On Sun, Jan 31, 2016 at 12:00:41PM +0100, Matthias Brugger wrote:
-> > 
-> > 
-> > On 26/01/16 05:12, Yong Wu wrote:
-> > >This patch add SMI(Smart Multimedia Interface) driver. This driver
-> > >is responsible to enable/disable iommu and control the power domain
-> > >and clocks of each local arbiter.
-> > >
-> > >Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > >Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >---
-> > 
-> > Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > Joerg would you mind to take this through your branch?
-> 
-> Hmm, I somehow missed the patch-set, at least I can't find the v8
-> patches in my inbox.
-> 
-> Yong, can you please re-send with all Acks and other tags added?
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Hi Joerg,
-  
-     I have re-sent v9[1] which has added all the tags yesterday.
+There is the new SoCs from Rockchip which named rk3399, the
+patches are added to support them.
 
-     Could you find them in your inbox? If not again, please tell me.
+Xing Zheng (2):
+  clk: rockchip: add dt-binding header for rk3399
+  dt-bindings: add documentation of rk3399 clock controller
 
-     Thanks.
+Xu Jianqun (2):
+  spi: rockchip: add bindings for rk3399 spi
+  ARM64: dts: rockchip: add core dtsi file for rk3399
 
-[1]:http://lists.linuxfoundation.org/pipermail/iommu/2016-February/015713.html
+ .../bindings/clock/rockchip,rk3399-cru.txt         |  82 ++
+ .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 949 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3399-cru.h             | 609 +++++++++++++
+ 4 files changed, 1641 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
 
-> 
-> 
-> Thanks,
-> 
-> 	Joerg
-> 
+-- 
+changes in v2:
+- remove changeID (Heiko, Mark)
+- drop pmu and psci temporary (Mark)
+- drop applied patch (Heiko)
+- drop GIC_CPU_MASK_SIMPLE from the interrupt specifiers (Marc, Heiko)
+- drop clock-frequency of timer (Marc, Mark)
+- remove double defination for SCLK_SPI5
+
+1.9.1
 
 
 --
