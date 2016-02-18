@@ -1,60 +1,62 @@
-From: Romain Izard <romain.izard.pro@gmail.com>
-Subject: Device probing proceeds even when the default pinctrl state is invalid
-Date: Thu, 18 Feb 2016 11:37:08 +0100
-Message-ID: <CAGkQfmOHgOoFrVyKtB+vpmwqs5s2DnLay9zjaksFj5Rbn+4h0g@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 09/10] ARM: dts: introduce MPS2 AN385/AN386
+Date: Thu, 18 Feb 2016 11:45:12 +0100
+Message-ID: <7245560.jfhuhtPsB8@wuerfel>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <7272921.u1gphgWzUn@wuerfel> <56C598D9.3030001@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linux GPIO List <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56C598D9.3030001@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com, galak@codeaurora.org, linux-serial@vger.kernel.org, u.kleine-koenig@pengutronix.de, tglx@linutronix.de, linux-api@vger.kernel.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
+On Thursday 18 February 2016 10:11:37 Vladimir Murzin wrote:
+> 
+> Right, I thought in a wrong way, in opposite it makes more sense now.
+> 
+> .dtsi
+> 
+> /* below the soc/ */
+> smb {
+>         compatible = "simple-bus";
+>         #address-cells = <2>;
+>         #size-cells = <1>;
+>         ranges = <0 0 0x40200000 0x10000>,
+>                  <1 0 0xa0000000 0x10000>;
+> };
 
-The current code for device probing tries to map the default pinctrl
-state (in pinctrl_bind_pins), but is returning 0 or -EDEFER. If there
-is an other error, it is not reported. This means that devices that do
-not have any specified pinctrl state can be probed, which is a correct
-behaviour that should be conserved, but it can also be an issue, as it
-will fail to report any other issue with the specified pinctrl state.
+That looks good, yes.
 
-Did I miss something that would explain why all other errors are ignored ?
+Is 0x10000 the correct maximum addressable size of the external bus
+in both cases?
 
-This also leads to a larger problem, as currently the device tree for
-existing boards may specify invalid pinctrl configurations, but the
-boards look like they work correctly, as long as nothing else tries to
-use the same pins. Correcting the issue may require a new
-'strict-mapping' property in the pinctrl node in the device tree,
-otherwise this correction would be an ABI regression.
+Intuitively, I would guess that the 0xa0000000 range might
+be much wider.
 
-Is this pattern really a good one ? We're moving away from describing
-hardware in here.
+> .dts
+> 
+> smb {
+>         ethernet@0,0 {
+>                 compatible = "smsc,lan9220", "smsc,lan9115";
+>                 reg = <0 0x0 0x10000>;
+>                 interrupts = <13>;
+>                 interrupt-parent = <&nvic>;
+>                 smsc,irq-active-high;
+> };
+> 
+> 
+> and looking again at .dtsi it seems to me that fpgaio should be moved
+> below the soc/ under separate bus interface which would hosts audio and
+> spi too or I keep missing things around device-tree?
+> 
 
-For an existing example, in the device tree for Atmel's
-SAMA5D2_Xplained board, the mapping for the Ethernet transceiver's IRQ
-line was missing it bias configuration, and thus the pins were not
-reserved for the Ethernet use. I've just send a patch to correct it,
-but breaking Ethernet on kernel upgrade for the boards using the
-previous revisions would be an issue.
+I don't see the audio and spi nodes, so I'm not sure where exactly
+you would put them.
 
-I encountered this problem because I wanted to model in device tree a
-system where the main SoC running Linux is connected to a secondary
-chip, using two different protocols on the same pins. Using the
-SAMA5D2's pin muxing, the secondary chip can be accessed either by a
-serial port in normal use, or by bitbanging on the multiplexed GPIOs
-when programming it. I created two devices with conflicting pinctrl
-configurations, expecting only one of them to be successfully probed,
-and to use the "bind" and "unbind" sysfs files to select the correct
-driver. Choosing which device to probe first on startup is an other
-issue in this case, that remains to be addressed.
+Ideally those things should be visible from a block diagram in the
+datasheet.
 
-In the current state of things, both devices are probed successfully
-as conflicting pin sets are not recognized as an issue, which means
-that my use case does not work.
-
-Is the direction I'm taking something correct ?
-
-Best regards,
--- 
-Romain Izard
+	Arnd
