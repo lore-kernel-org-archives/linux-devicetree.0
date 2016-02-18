@@ -1,50 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] mwifiex: parse chip specific gpio from device tree
-Date: Thu, 18 Feb 2016 08:37:57 -0600
-Message-ID: <20160218143757.GW9654@rob-hp-laptop>
-References: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
- <1455614079-4263-2-git-send-email-akarwar@marvell.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC variants
+Date: Thu, 18 Feb 2016 15:40:34 +0100
+Message-ID: <5028476.WAQS3ylXOd@wuerfel>
+References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org> <56C5D304.5010708@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455614079-4263-2-git-send-email-akarwar@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amitkumar Karwar <akarwar@marvell.com>
-Cc: linux-bluetooth@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, wnhuang@chromium.com, devicetree@vger.kernel.org, Cathy Luo <cluo@marvell.com>, linux-kernel@vger.kernel.org, Xinming Hu <huxm@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C5D304.5010708-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 01:14:38AM -0800, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm@marvell.com>
+On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
+> On 18/02/16 13:46, Linus Walleij wrote:
+> > In the add-on file for the GIC dealing with the RealView family
+> > we currently only handle the PB11MPCore, let's extend this to
+> > manage the RealView EB ARM11MPCore as well. The Revision B of the
+> > ARM11MPCore core tile is a bit special and needs special handling
+> > as it moves a system control register around at random.
 > 
-> This patch parse chip specific gpio parameter from device
-> tree. Corresponding binding file is also updated.
-> 
-> Signed-off-by: Xinming Hu <huxm@marvell.com>
-> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
-> ---
-> v4: Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
->     Arnd Bergmann)
-> ---
->  .../devicetree/bindings/net/wireless/marvell-sd8xxx.txt          | 6 ++++--
+> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
+> cupboard, and failed. Oh well...
 
-Combine this with the DT change in the next patch.
+What surprised me though is that it's enabled by default:
 
->  drivers/net/wireless/marvell/mwifiex/sta_cmd.c                   | 9 +++++++++
->  2 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> index f7671ae..c337fab 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> @@ -11,7 +11,9 @@ Optional properties:
->    - marvell,caldata* : A series of properties with marvell,caldata prefix,
->    		      represent Calibration data downloaded to the device during
->  		      initialization. This is an array of unsigned values.
-> -
-> +  - marvell,wakeup-gpios : Chip's wakeup gpio pin number. This needs to be downloaded
-> +			to to firmware. Chip notifies wifi wakeup signal to SOC
-> +			through this pin.
+$ grep REVB arch/arm/configs/realview*
+arch/arm/configs/realview_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
+arch/arm/configs/realview-smp_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
 
-This is still confusing that it is not a GPIO from the host. I'd suggest 
-"marvell,wakeup-pin"
+With that option set, the defconfig kernel should not be able
+to boot on RevC machines. Do you have a RevC machine that works
+with the defconfig?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
