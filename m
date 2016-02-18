@@ -1,36 +1,51 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v4 04/12] ata: ahci_mvebu: add support for Armada 3700
- variant
-Date: Thu, 18 Feb 2016 12:41:56 -0500
-Message-ID: <20160218174156.GF13177@mtj.duckdns.org>
-References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
- <1455646502-23834-5-git-send-email-gregory.clement@free-electrons.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v2 1/3] ARM: dts: Add cooling levels for CPUs on exynos5420
+Date: Thu, 18 Feb 2016 17:58:09 +0000
+Message-ID: <87h9h599zi.fsf@e105922-lin.cambridge.arm.com>
+References: <1455772383-20598-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455646502-23834-5-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
+Content-Type: text/plain
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1455772383-20598-1-git-send-email-k.kozlowski@samsung.com>
+	(Krzysztof Kozlowski's message of "Thu, 18 Feb 2016 14:13:01 +0900")
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 07:14:54PM +0100, Gregory CLEMENT wrote:
-> From: Lior Amsalem <alior@marvell.com>
-> 
-> The main difference in the new Armada 3700 is that no address
-> decoding needs to take place in the driver probe.
-> 
-> [gregory.clement@free-electrons.com: reformulate the commit log]
-> 
-> Signed-off-by: Lior Amsalem <alior@marvell.com>
-> Reviewed-by: Nadav Haklai <nadavh@marvell.com>
-> Tested-by: Nadav Haklai <nadavh@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Hi Krzysztof,
 
-Applied to libata/for-4.6.
+Krzysztof Kozlowski <k.kozlowski@samsung.com> writes:
 
-Thanks.
+> On Exynos5420 we support 8 cpufreq steps (600-1300 MHz) for LITTLE and
+> 12 steps for big core (700-1800 MHz). Add respective cooling cells.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>
+> ---
+>
+> Changes since v1:
+> 1. Add cooling properties to all CPUs (suggested by Viresh).
+> ---
+>  arch/arm/boot/dts/exynos5420-cpus.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> index 261d25173f61..5c052d7ff554 100644
+> --- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> @@ -33,6 +33,9 @@
+>  			clock-frequency = <1800000000>;
+>  			cci-control-port = <&cci_control1>;
+>  			operating-points-v2 = <&cluster_a15_opp_table>;
+> +			cooling-min-level = <0>;
+> +			cooling-max-level = <11>;
 
--- 
-tejun
+Although the above two properties are defined they aren't parsed in the
+kernel.
+
+Setting min / max extents for cooling devices via cooling maps does work
+though.
+
+
+[...]
