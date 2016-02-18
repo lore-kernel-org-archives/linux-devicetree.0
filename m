@@ -1,28 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/5] dt-bindings: ata: add compatible string for iProc
- AHCI controller
-Date: Thu, 18 Feb 2016 08:38:19 -0600
-Message-ID: <20160218143819.GA9654@rob-hp-laptop>
-References: <1455604420-11300-1-git-send-email-anup.patel@broadcom.com>
- <1455604420-11300-5-git-send-email-anup.patel@broadcom.com>
+Subject: Re: [PATCH v2] rtc: s3c: Document in binding that only s3c6410 needs
+ a src clk
+Date: Thu, 18 Feb 2016 08:38:53 -0600
+Message-ID: <20160218143853.GF9654@rob-hp-laptop>
+References: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455604420-11300-5-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+In-Reply-To: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 12:03:39PM +0530, Anup Patel wrote:
-> The Broadcom iProc SoCs have AHCI compliant SATA controller. This
-> patch adds common compatible string for AHCI SATA controller on
-> iProc SoCs.
+On Mon, Feb 15, 2016 at 11:11:06AM -0300, Javier Martinez Canillas wrote:
+> The S3C binding doc says that the RTC and RTC source clocks are required
+> but the S3C driver supports different HW IP and only the s3c6410 needs a
+> source clock.
 > 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Fix the binding explaining that the source clock is only needed for the
+> s3c6410-rtc compatible controller.
+> 
+> Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> 
 > ---
->  Documentation/devicetree/bindings/ata/ahci-platform.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Hello,
+> 
+> This patch depends on a previous one that was picked by Rob Herring so
+> this one has to go through his tree again and not through the RTC tree
+> to avoid conflicts.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Ugg, sent pull request today. It should be in Linus' tree now.
+
+This can go thru rtc tree if you prefer. Otherwise, I'll queue it up for 
+4.6.
+
+> 
