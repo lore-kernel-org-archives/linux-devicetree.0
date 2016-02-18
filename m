@@ -1,52 +1,92 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v2 6/7] T104xRDB: Add qe node to t104xrdb
-Date: Thu, 18 Feb 2016 09:06:11 +0800
-Message-ID: <1455757572-44955-6-git-send-email-qiang.zhao@nxp.com>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
+From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree bindings.
+Date: Thu, 18 Feb 2016 09:06:06 +0800
+Message-ID: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, oss@buserror.net, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-YWRkIHFlIG5vZGUgdG8gdDEwNHhyZGIuZHRzaQoKU2lnbmVkLW9mZi1ieTogWmhhbyBRaWFuZyA8
-cWlhbmcuemhhb0BueHAuY29tPgotLS0KQ2hhbmdlcyBmb3IgdjIKCS0gcmViYXNlCgogYXJjaC9w
-b3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0eHJkYi5kdHNpIHwgNDAgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
-LWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNHhyZGIuZHRzaSBiL2FyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvdDEwNHhyZGIuZHRzaQppbmRleCA4MzBlYTQ4Li4zYjA4NjAxIDEw
-MDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDR4cmRiLmR0c2kKKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTA0eHJkYi5kdHNpCkBAIC0xODYsNCArMTg2LDQ0
-IEBACiAJCQkJICAwIDB4MDAwMTAwMDA+OwogCQl9OwogCX07CisKKwlxZTogcWVAZmZlMTQwMDAw
-IHsKKwkJcmFuZ2VzID0gPDB4MCAweGYgMHhmZTE0MDAwMCAweDQwMDAwPjsKKwkJcmVnID0gPDB4
-ZiAweGZlMTQwMDAwIDAgMHg0ODA+OworCQlicmctZnJlcXVlbmN5ID0gPDA+OworCQlidXMtZnJl
-cXVlbmN5ID0gPDA+OworCisJCXNpMTogc2lANzAwIHsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLHFl
-LXNpIjsKKwkJCXJlZyA9IDwweDcwMCAweDgwPjsKKwkJfTsKKworCQlzaXJhbTE6IHNpcmFtQDEw
-MDAgeworCQkJY29tcGF0aWJsZSA9ICJmc2wscWUtc2lyYW0iOworCQkJcmVnID0gPDB4MTAwMCAw
-eDgwMD47CisJCX07CisKKwkJdWNjX2hkbGM6IHVjY0AyMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAi
-ZnNsLHVjYy1oZGxjIjsKKwkJCXJ4LWNsb2NrLW5hbWUgPSAiY2xrOCI7CisJCQl0eC1jbG9jay1u
-YW1lID0gImNsazkiOworCQkJZnNsLHJ4LXN5bmMtY2xvY2sgPSAicnN5bmNfcGluIjsKKwkJCWZz
-bCx0eC1zeW5jLWNsb2NrID0gInRzeW5jX3BpbiI7CisJCQlmc2wsdHgtdGltZXNsb3QgPSA8MHhm
-ZmZmZmZmZT47CisJCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCQlmc2wsdGRt
-LWZyYW1lci10eXBlID0gImUxIjsKKwkJCWZzbCx0ZG0tbW9kZSA9ICJub3JtYWwiOworCQkJZnNs
-LHRkbS1pZCA9IDwwPjsKKwkJCWZzbCxzaXJhbS1lbnRyeS1pZCA9IDwwPjsKKwkJCWZzbCx0ZG0t
-aW50ZXJmYWNlOworCQl9OworCisJCXVjY19zZXJpYWw6IHVjY0AyMjAwIHsKKwkJCWRldmljZV90
-eXBlID0gInNlcmlhbCI7CisJCQljb21wYXRpYmxlID0gInVjY191YXJ0IjsKKwkJCXBvcnQtbnVt
-YmVyID0gPDE+OworCQkJcngtY2xvY2stbmFtZSA9ICJicmcyIjsKKwkJCXR4LWNsb2NrLW5hbWUg
-PSAiYnJnMiI7CisJCX07CisJfTsKIH07Ci0tIAoyLjEuMC4yNy5nOTZkYjMyNAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxp
-bmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+Add IC, SI and SIRAM document of QE to
+Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+
+Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2
+	- Add interrupt-controller in Required properties
+	- delete address-cells and size-cells for qe-si and qe-siram
+
+ .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+index 4f89302..84052a7 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+@@ -69,6 +69,56 @@ Example:
+ 	};
+      };
+ 
++* Interrupt Controller (IC)
++
++Required properties:
++- compatible : should be "fsl,qe-ic".
++- reg : Address range of IC register set.
++- interrupts : interrupts generated by the device.
++- interrupt-controller : this device is a interrupt controller.
++
++Example:
++
++	qeic: interrupt-controller@80 {
++		interrupt-controller;
++		compatible = "fsl,qe-ic";
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		reg = <0x80 0x80>;
++		interrupts = <95 2 0 0  94 2 0 0>; //high:79 low:78
++	};
++
++* Serial Interface Block (SI)
++
++The SI manages the routing of eight TDM lines to the QE block serial drivers
++, the MCC and the UCCs, for receive and transmit.
++
++Required properties:
++- compatible : should be "fsl,qe-si".
++- reg : Address range of SI register set.
++
++Example:
++
++	si1: si@700 {
++		compatible = "fsl,qe-si";
++		reg = <0x700 0x80>;
++	};
++
++* Serial Interface Block RAM(SIRAM)
++
++store the routing entries of SI
++
++Required properties:
++- compatible : should be "fsl,qe-siram".
++- reg : Address range of SI RAM.
++
++Example:
++
++	siram1: siram@1000 {
++		compatible = "fsl,qe-siram";
++		reg = <0x1000 0x800>;
++	};
++
+ * QE Firmware Node
+ 
+ This node defines a firmware binary that is embedded in the device tree, for
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
