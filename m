@@ -1,46 +1,60 @@
 From: Romain Izard <romain.izard.pro@gmail.com>
-Subject: [PATCH] ARM: dts: at91: sama5d2 Xplained: Correct the macb irq pinctrl node
-Date: Thu, 18 Feb 2016 11:21:06 +0100
-Message-ID: <1455790866-13301-1-git-send-email-romain.izard.pro@gmail.com>
+Subject: Device probing proceeds even when the default pinctrl state is invalid
+Date: Thu, 18 Feb 2016 11:37:08 +0100
+Message-ID: <CAGkQfmOHgOoFrVyKtB+vpmwqs5s2DnLay9zjaksFj5Rbn+4h0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Linux GPIO List <linux-gpio@vger.kernel.org>, Romain Izard <romain.izard.pro@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linux GPIO List <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-All pinctrl nodes for the Atmel pinctrl controller need to have their
-bias configuration explicitly defined. Otherwise, the pinctrl mapping
-is not valid.
+Hello Linus,
 
-It works for now as the pinctrl driver proceeds even with invalid
-mappings, but this can become an issue, if the pinctrl driver starts
-to require valid mappings. Additionally, the pin is not protected from
-being remapped later by an other driver.
+The current code for device probing tries to map the default pinctrl
+state (in pinctrl_bind_pins), but is returning 0 or -EDEFER. If there
+is an other error, it is not reported. This means that devices that do
+not have any specified pinctrl state can be probed, which is a correct
+behaviour that should be conserved, but it can also be an issue, as it
+will fail to report any other issue with the specified pinctrl state.
 
-There is an external 1k=E2=84=A6 pull-up to 3.3V, so no bias is require=
-d on
-the Ethernet PHY's interrupt line.
+Did I miss something that would explain why all other errors are ignored ?
 
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 1 +
- 1 file changed, 1 insertion(+)
+This also leads to a larger problem, as currently the device tree for
+existing boards may specify invalid pinctrl configurations, but the
+boards look like they work correctly, as long as nothing else tries to
+use the same pins. Correcting the issue may require a new
+'strict-mapping' property in the pinctrl node in the device tree,
+otherwise this correction would be an ABI regression.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boo=
-t/dts/at91-sama5d2_xplained.dts
-index e683856c507c..75341eec2dfd 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -308,6 +308,7 @@
-=20
- 				pinctrl_macb0_phy_irq: macb0_phy_irq {
- 					pinmux =3D <PIN_PC9__GPIO>;
-+					bias-disable;
- 				};
-=20
- 				pinctrl_pdmic_default: pdmic_default {
---=20
-2.5.0
+Is this pattern really a good one ? We're moving away from describing
+hardware in here.
+
+For an existing example, in the device tree for Atmel's
+SAMA5D2_Xplained board, the mapping for the Ethernet transceiver's IRQ
+line was missing it bias configuration, and thus the pins were not
+reserved for the Ethernet use. I've just send a patch to correct it,
+but breaking Ethernet on kernel upgrade for the boards using the
+previous revisions would be an issue.
+
+I encountered this problem because I wanted to model in device tree a
+system where the main SoC running Linux is connected to a secondary
+chip, using two different protocols on the same pins. Using the
+SAMA5D2's pin muxing, the secondary chip can be accessed either by a
+serial port in normal use, or by bitbanging on the multiplexed GPIOs
+when programming it. I created two devices with conflicting pinctrl
+configurations, expecting only one of them to be successfully probed,
+and to use the "bind" and "unbind" sysfs files to select the correct
+driver. Choosing which device to probe first on startup is an other
+issue in this case, that remains to be addressed.
+
+In the current state of things, both devices are probed successfully
+as conflicting pin sets are not recognized as an issue, which means
+that my use case does not work.
+
+Is the direction I'm taking something correct ?
+
+Best regards,
+-- 
+Romain Izard
