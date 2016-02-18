@@ -1,89 +1,110 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 2/2] ARM: AM43XX: HWMOD: Add rtc hwmod
-Date: Thu, 18 Feb 2016 13:15:25 +0530
-Message-ID: <56C57695.3010300@ti.com>
-References: <1455773381-11839-1-git-send-email-j-keerthy@ti.com>
- <1455773381-11839-3-git-send-email-j-keerthy@ti.com>
- <alpine.DEB.2.02.1602180634120.4792@utopia.booyaka.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v8 0/2] Add Rockchip Inno-HDMI driver
+Date: Thu, 18 Feb 2016 15:55:00 +0800
+Message-ID: <56C578D4.30108@rock-chips.com>
+References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com>
+ <56C560B2.6020208@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1602180634120.4792@utopia.booyaka.com>
+In-Reply-To: <56C560B2.6020208@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, Keerthy <j-keerthy@ti.com>
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+To: Mark yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: David Airlie <airlied@linux.ie>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Ken Mixte <kmixter@google.com>, Ben Chan <benchan@google.com>, Zheng Yang <zhengyang@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Mark,
 
-On Thursday 18 February 2016 12:12 PM, Paul Walmsley wrote:
-> Hi Keerthy
->
-> On Thu, 18 Feb 2016, Keerthy wrote:
->
->> The patch adds rtc hwmod. RTC module The RTC module is physically
->> present on the AM438x SoC used on AM43X-EPOS-EVM, but it is permanently
->> disabled. A secure RTC is used instead on these devices, where needed.
->> . Hence adding it selectively using a seprate list to get RTC Module
->> functional on the other am43x SoCs used on am437x-gp-evm and
->> am437x-sk-evm.
+Thanks for your apply ;)
+
+- Yakir
+
+On 02/18/2016 02:12 PM, Mark yao wrote:
+> On 2016=E5=B9=B401=E6=9C=8829=E6=97=A5 14:42, Yakir Yang wrote:
+>> Here are a brief introduction to Innosilicon HDMI IP:
+>>    - Support HDMI 1.4a, HDCP 1.2 and DVI 1.0 standard compliant=20
+>> transmitter
+>>    - Support HDMI1.4 a/b 3D function defined in HDMI 1.4 a/b spec
+>>    - Digital video interface supports a pixel size of 24, 30, 36,=20
+>> 48bits color depth in RGB
+>>    - S/PDIF output supports PCM, Dolby Digital, DTS digital audio=20
+>> transmission
+>>      (32-192kHz Fs) using IEC60958 and IEC 61937
+>>    - The EDID and CEC function are also supported by Innosilicon HDM=
+I=20
+>> Transmitter Controlle
 >>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
+>> Changes in v8:
+>> - Don't check whether encoder output format is RGB colorspace, cause=
+=20
+>> driver
+>>    default configure the output colorspace to RGB. (ZhengYang)
+>> - Correct the check condition in inno_hdmi_config_video_csc()=20
+>> (ZhengYang)
+>>      - if (data->enc_out_format =3D=3D data->enc_out_format) {
+>>      + if (data->enc_in_format =3D=3D data->enc_out_format) {
 >>
->> No Public TRM is available for AM438x SoC as of now.
+>> Changes in v7:
+>> - Correct the module licnese statement (Paul)
+>>       - MODULE_LICENSE("GPL");
+>>       + MODULE_LICENSE("GPLv2");
+>> - Start indentation with tabs and fix the misspell in Kconfig (Paul)
+>> - Carry the lost device-binding document (Heiko)
 >>
->>   arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 14 +++++++++++++-
->>   1 file changed, 13 insertions(+), 1 deletion(-)
+>> Changes in v6:
+>> - Rebase the Makefile/Kconfig files which add by Chris's=20
+>> rockchip-mipi driver (Caeser)
 >>
->> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
->> index e97a894..fcffaf8 100644
->> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
->> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
->> @@ -1020,9 +1020,21 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
->>   	NULL,
->>   };
+>> Changes in v5:
+>> - Use hdmi_infoframe helper functions to packed the infoframe (Russe=
+ll)
+>> - Remove the unused double wait_for_completion_timeout for ddc=20
+>> transfer (Russell)
+>> - Remove the unused local variable in "inno_hdmi_i2c_write()"=20
+>> function (Russell)
 >>
->> +static struct omap_hwmod_ocp_if *am43xx_rtc_hwmod_ocp_ifs[] __initdata = {
->> +	&am33xx_l4_wkup__rtc,
->> +	NULL,
->> +};
->> +
->>   int __init am43xx_hwmod_init(void)
->>   {
->> +	int ret;
->> +
->>   	omap_hwmod_am43xx_reg();
->>   	omap_hwmod_init();
->> -	return omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
->> +	ret = omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
->> +
->> +	if (!(of_machine_is_compatible("ti,am438x")))
->> +		ret = omap_hwmod_register_links(am43xx_rtc_hwmod_ocp_ifs);
->> +
->> +	return ret;
->>   }
+>> Changes in v4:
+>> - Modify the commit title "drm/rockchip: hdmi: ..." (Mark)
+>> - Correct the "DKMS" to "DPMS" (Mark)
+>> - Fix over 80 characters problems (Mark)
+>> - Remove encoder .prepare/.commit helper functions, and move the vop=
+=20
+>> mode
+>> configure function into encoder .enable helper functions. (Mark)
+>>
+>> Changes in v3:
+>> - Use encoder enable/disable function, and remove the encoder DPMS=20
+>> function
+>> - Keep HDMI PLL power on in standby mode
+>>
+>> Changes in v2:
+>> - Using DRM atomic helper functions for connector init (Mark)
+>> - Remove "hdmi->connector.encoder =3D encoder;" (Mark)
+>> - Add the Acked-by tags from Rob
+>> - Correct the misspell "rk3036-dw-hdmi" (Heiko)
+>>
+>> Yakir Yang (2):
+>>    drm/rockchip: hdmi: add Innosilicon HDMI support
+>>    dt-bindings: add document for Innosilicon HDMI on Rockchip platfo=
+rm
+>>
+>>   .../display/rockchip/inno_hdmi-rockchip.txt        |  50 ++
+>>   drivers/gpu/drm/rockchip/Kconfig                   |   8 +
+>>   drivers/gpu/drm/rockchip/Makefile                  |   1 +
+>>   drivers/gpu/drm/rockchip/inno_hdmi.c               | 939=20
+>> +++++++++++++++++++++
+>>   drivers/gpu/drm/rockchip/inno_hdmi.h               | 362 ++++++++
+>>   5 files changed, 1360 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/display/rockchip/inno_hdmi-rockchi=
+p.txt
+>>   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.c
+>>   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.h
+>>
 >
-> Could you please invert the test of this case such that the RTC hwmod is
-> only registered on AM43xx SoCs where it is specifically known to be
-> enabled?
+> Applied to my branch :-) .
 >
-> That way, if another AM43xx SoC comes out that doesn't have the RTC
-> module, it won't inadvertently be registered.  This seems like a safer
-> approach.
-
-I get your point but currently only am438x SoC has RTC disabled forever.
-So i checked negating am438x. I can add a check with am4372 here and 
-register for only those SoCs.
-
-I will resend a v2 in a while.
-
-Thanks for the quick response.
-
-Best Regards,
-Keerthy
-
->
-> - Paul
+> Thanks.
 >
