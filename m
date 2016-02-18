@@ -1,87 +1,54 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph
- of ports
-Date: Thu, 18 Feb 2016 16:18:23 +0100
-Message-ID: <20160218161823.fc54c61bd0c5cee75ab59578@free.fr>
-References: <cover.1455720381.git.jsarha@ti.com>
- <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
- <20160218143530.GB9654@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: colibri-vf: Add pinmux for UART_0 aka UART_A
+ RTS/CTS pins
+Date: Thu, 18 Feb 2016 23:18:18 +0800
+Message-ID: <20160218151818.GF6756@tiger>
+References: <1455594361-5870-1-git-send-email-bhuvanchandra.dv@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160218143530.GB9654@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455594361-5870-1-git-send-email-bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAxOCBGZWIgMjAxNiAwODozNTozMCAtMDYwMApSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPiB3cm90ZToKCj4gT24gV2VkLCBGZWIgMTcsIDIwMTYgYXQgMDQ6NDk6MDVQTSArMDIw
-MCwgSnlyaSBTYXJoYSB3cm90ZToKPiA+IEZyb206IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5l
-amZAZnJlZS5mcj4KPiA+IAo+ID4gVHdvIGtpbmRzIG9mIHBvcnRzIG1heSBiZSBkZWNsYXJlZCBp
-biBhIERUIGdyYXBoIG9mIHBvcnRzOiB2aWRlbyBhbmQgYXVkaW8uCj4gPiBUaGlzIHBhdGNoIGFj
-Y2VwdHMgdGhlIHBvcnQgdmFsdWUgZnJvbSBhIHZpZGVvIHBvcnQgYXMgYW4gYWx0ZXJuYXRpdmUK
-PiA+IHRvIHRoZSB2aWRlby1wb3J0cyBwcm9wZXJ0eS4KPiA+IEl0IGFsc28gYWNjZXB0cyBhdWRp
-byBwb3J0cyBpbiB0aGUgY2FzZSB0aGUgdHJhbnNtaXR0ZXIgaXMgbm90IHVzZWQgYXMKPiA+IGEg
-c2xhdmUgZW5jb2Rlci4KPiA+IFRoZSBuZXcgZmlsZSBpbmNsdWRlL3NvdW5kL3RkYTk5OHguaCBw
-cmVwYXJlcyB0byB0aGUgZGVmaW5pdGlvbiBvZgo+ID4gYSB0ZGE5OTh4IENPREVDLgo+ID4gCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBKZWFuLUZyYW5jb2lzIE1vaW5lIDxtb2luZWpmQGZyZWUuZnI+Cj4g
-PiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+ID4gLS0tCj4gPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGRhOTk4eC50eHQgfCA1MSAr
-KysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vaTJjL3RkYTk5OHhfZHJ2LmMgICAgICAg
-ICAgICAgICAgICB8IDkwICsrKysrKysrKysrKysrKysrKystLS0KPiA+ICBpbmNsdWRlL3NvdW5k
-L3RkYTk5OHguaCAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA4ICsrCj4gPiAgMyBmaWxl
-cyBjaGFuZ2VkLCAxNDAgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgaW5jbHVkZS9zb3VuZC90ZGE5OTh4LmgKPiA+IAo+ID4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90ZGE5OTh4
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
-ZGE5OTh4LnR4dAo+ID4gaW5kZXggZTllNGJjZS4uMzVmNmE4MCAxMDA2NDQKPiA+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90ZGE5OTh4LnR4
-dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3RkYTk5OHgudHh0Cj4gPiBAQCAtMTYsNiArMTYsMzUgQEAgT3B0aW9uYWwgcHJvcGVydGll
-czoKPiA+ICAKPiA+ICAgIC0gdmlkZW8tcG9ydHM6IDI0IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5l
-cyBob3cgdGhlIHZpZGVvIGNvbnRyb2xsZXIKPiA+ICAJb3V0cHV0IGlzIHdpcmVkIHRvIHRoZSBU
-REE5OTh4IGlucHV0IC0gZGVmYXVsdDogPDB4MjMwMTQ1Pgo+ID4gKwlUaGlzIHByb3BlcnR5IGlz
-IG5vdCB1c2VkIHdoZW4gcG9ydHMgYXJlIGRlZmluZWQuCj4gPiArCj4gPiArT3B0aW9uYWwgbm9k
-ZXM6Cj4gPiArCj4gPiArICAtIHBvcnQ6IHVwIHRvIHRocmVlIHBvcnRzLgo+ID4gKwlUaGUgcG9y
-dHMgYXJlIGRlZmluZWQgYWNjb3JkaW5nIHRvIFsxXS4KPiA+ICsKPiA+ICsgICAgVmlkZW8gcG9y
-dC4KPiA+ICsJVGhlcmUgbWF5IGJlIG9ubHkgb25lIHZpZGVvIHBvcnQuCj4gPiArCVRoaXMgb25l
-IG11c3QgY29udGFpbiB0aGUgZm9sbG93aW5nIHByb3BlcnR5Ogo+ID4gKwo+ID4gKwktIHBvcnQt
-dHlwZTogbXVzdCBiZSAicmdiIgo+IAo+IFRoaXMgc2hvdWxkIGJlIGltcGxpZWQgZnJvbSB0aGUg
-cG9ydCB1bml0IGFkZHJlc3MuIEluIG90aGVyIHdvcmRzLCAKPiBwb3J0QDAgaXMgZGVmaW5lZCB0
-byBiZSB0aGUgcmdiIHBvcnQuIE5vdywgaWYgdGhpcyBpcyBvbmUgb2Ygc2V2ZXJhbCAKPiBtb2Rl
-cyBmb3IgdGhlIHZpZGVvIHBvcnQsIHRoZW4gdGhhdCBpcyBhIGRpZmZlcmVudCBzdG9yeS4KPiAK
-PiA+ICsJYW5kIG1heSBjb250YWluIHRoZSBvcHRpb25hbCBwcm9wZXJ0eToKPiA+ICsKPiA+ICsJ
-LSByZWc6IDI0IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5lcyBob3cgdGhlIHZpZGVvIGNvbnRyb2xs
-ZXIKPiA+ICsJCW91dHB1dCBpcyB3aXJlZCB0byB0aGUgVERBOTk4eCBpbnB1dCAodmlkZW8gcGlu
-cykKPiA+ICsJCVdoZW4gYWJzZW50LCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyA8MHgyMzAxNDU+Lgo+
-IAo+IFRoaXMgaXMgbm90IHJlYWxseSBob3cgcmVnIGlzIGludGVuZGVkIHRvIGJlIHVzZWQuIENh
-biB5b3UgZXhwbGFpbiBob3cgCj4gdGhpcyB2YWx1ZSBpcyBkZXRlcm1pbmVkPwo+IAo+ID4gKyAg
-ICBBdWRpbyBwb3J0cy4KPiA+ICsJVGhlcmUgbWF5IGJlIG9uZSBvciB0d28gYXVkaW8gcG9ydHMu
-Cj4gPiArCVRoZXNlIG9uZXMgbXVzdCBjb250YWluIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoK
-PiA+ICsKPiA+ICsJLSBwb3J0LXR5cGU6IG11c3QgYmUgImkycyIgb3IgInNwZGlmIgo+ID4gKwo+
-ID4gKwktIHJlZzogOCBiaXRzIHZhbHVlIHdoaWNoIGRlZmluZXMgaG93IHRoZSBhdWRpbyBjb250
-cm9sbGVyCj4gPiArCQlvdXRwdXQgaXMgd2lyZWQgdG8gdGhlIFREQTk5OHggaW5wdXQgKGF1ZGlv
-IHBpbnMpCj4gCj4gU2FtZSBoZXJlLgoKSGkgUm9iLAoKVGhlc2UgYXVkaW8vdmlkZW8gcG9ydCBk
-ZWZpbml0aW9ucyB3ZXJlIGRpc2N1c3NlZCBpbiB0aGUgdGhyZWFkCmh0dHA6Ly9tYWlsbWFuLmFs
-c2EtcHJvamVjdC5vcmcvcGlwZXJtYWlsL2Fsc2EtZGV2ZWwvMjAxNS1BdWd1c3QvMDk1ODM2Lmh0
-bWwKYnV0LCB5b3UgYXJlIHJpZ2h0LCBhbmQgYXMgeW91IGFscmVhZHkgc2FpZCBpbiB0aGUgdGhy
-ZWFkIApodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAx
-NS1TZXB0ZW1iZXIvMDkwNTQ0Lmh0bWwKJ3JlZycgc2hvdWxkIG5vdCBiZSB1c2VkIGhlcmUuCgpJ
-IHdvdWxkIGhhdmUgY2hhbmdlZCB0byAncG9ydC12YWx1ZScsIGJ1dCBhcyBJIHdpbGwgbm90IHVw
-ZGF0ZSB0aGUKa2VybmVsIG9mIG15IERvdmUgQ3Vib3ggYW55bW9yZSwgSSB3aWxsIG5vdCBwcm9w
-b3NlIGEgbmV3IHZlcnNpb24gb2YKdGhpcyBwYXRjaCAoYW5kLCBzb3JyeSBKeXJpLCBJIHdpbGwg
-bm90IHRlc3QgeW91ciBwYXRjaCBzZXJpZXMpLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAg
-ICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVl
-LmZyLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Feb 16, 2016 at 09:16:01AM +0530, Bhuvanchandra DV wrote:
+> Add pinmux for UART_A RTS, CTS pin's.
+> 
+> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+Applied, thanks.
+
+Please copy linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org instead of
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org when submit such patches in the future.
+
+Shawn
+
+> ---
+>  arch/arm/boot/dts/vf-colibri.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+> index e5949b9..700840f 100644
+> --- a/arch/arm/boot/dts/vf-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
+> @@ -213,6 +213,8 @@
+>  			fsl,pins = <
+>  				VF610_PAD_PTB10__UART0_TX		0x21a2
+>  				VF610_PAD_PTB11__UART0_RX		0x21a1
+> +				VF610_PAD_PTB12__UART0_RTS		0x21a2
+> +				VF610_PAD_PTB13__UART0_CTS		0x21a1
+>  			>;
+>  		};
+> 
+> --
+> 2.7.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
