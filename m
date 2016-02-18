@@ -1,67 +1,129 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V5 11/14] soc: tegra: pmc: Add generic PM domain support
-Date: Thu, 18 Feb 2016 16:31:22 +0000
-Message-ID: <56C5F1DA.2060705@nvidia.com>
-References: <1453998832-27383-1-git-send-email-jonathanh@nvidia.com>
- <1453998832-27383-12-git-send-email-jonathanh@nvidia.com>
- <CAPDyKFpnUJA2pLSUOw8rkjyXLY6b__TM=38jsvYAZVhe+DS=zg@mail.gmail.com>
- <7hh9hdzflv.fsf@baylibre.com> <56C1B62B.5060708@nvidia.com>
- <CAPDyKFoPrFoMOFxC37zXX4L3VdLKknaw_LUTw7ycr9mfa_=7_A@mail.gmail.com>
+From: Matt Redfearn <matt.redfearn@imgtec.com>
+Subject: Re: [PATCH v7 1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC
+ controller
+Date: Thu, 18 Feb 2016 16:48:00 +0000
+Message-ID: <56C5F5C0.7010008@imgtec.com>
+References: <1455725574-9947-1-git-send-email-matt.redfearn@imgtec.com>
+ <20160218143516.GA9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFoPrFoMOFxC37zXX4L3VdLKknaw_LUTw7ycr9mfa_=7_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160218143516.GA9654@rob-hp-laptop>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On 18/02/16 16:00, Ulf Hansson wrote:
-> [...]
-> 
->>>
->>> What about the pm_clk_* API which was built for tracking clocks
->>> associated with devices for runtime PM.
->>>
->>> IOW, you could pm_clk_add(pg->pmc->dev, pg->clks[i]) and then your
->>> _enable_clocks() would become pm_clk_suspend() an dyour
->>> _disable_clocks() would become pm_clk_resume().
->>
->> Very interesting, I was not aware of this.
->>
->>> I might not be following the mapping between PMC and PGs though so not
->>> sure pg->pmc->dev is the right struct device, but you get the idea.
->>
->> Yes, so this will not work here as-is, because the pmc->dev is common to
->> all pm-domains (it is the device that creates all the pm-domains). So to
->> make this work, I would need to create a device for each pm-domain and
->> add the clocks to that.
->>
->> I see that this works very well for normal drivers, but it does not feel
->> so natural for pm-domains where we don't have a device struct today. By
->> the way, the rockchip pm-domains implementation is very much in the same
->> boat as tegra, where there are multiple clocks per pm-domain and it is
->> handled by a simple list. So I am not sure if you think that we should
->> be turning all pm-domains registered by pm_genpd_init() into a device
->> and then we can make use of these pm_clk_XXXX() APIs?
->>
->> I have implemented the generic clk APIs that Ulf and I discussed for
->> handling multiple clocks, but if we think that this is a better way,
->> then I will hold off for now.
-> 
-> I think Kevin has a point that we already have PM clocks to build upon.
-> Could we perhaps try to extend that API instead to suite this needs as well?
 
-We certainly could and I am not against it, however, it means that we
-need to create a device structure for each pm-domain. If you and Kevin
-are ok with me adding this to pm_genpd_init(), then I can give it a try.
+On 18/02/16 14:35, Rob Herring wrote:
+> On Wed, Feb 17, 2016 at 04:12:53PM +0000, Matt Redfearn wrote:
+>> From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
+>>
+>> Add Device Tree binding document for Octeon MMC controller. The driver
+>> is in a following patch.
+>>
+>> The MMC controller can be connected to up to 4 "slots" which may be
+>> eMMC, MMC or SD card devices. As there is a single controller, each
+>> available slot is represented as a child node of the controller.
+>>
+>> This is a similar concept to the atmel-mci driver.
+>>
+>> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+>> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
+>> Signed-off-by: Peter Swain <pswain@cavium.com>
+>> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
+>> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
+>> ---
+>> v7: No changes
+>>
+>> v6:
+>> - Split up patch
+>> - Moved device tree fixup to platform code
+>> ---
+>>   .../devicetree/bindings/mmc/octeon-mmc.txt         | 79 ++++++++++++++++++++++
+>>   1 file changed, 79 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> new file mode 100644
+>> index 000000000000..d2c576d9ad65
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> @@ -0,0 +1,79 @@
+>> +* OCTEON SD/MMC Host Controller
+>> +
+>> +This controller is present on some members of the Cavium OCTEON SoC
+>> +family, provide an interface for eMMC, MMC and SD devices.  There is a
+>> +single controller that may have several "slots" connected.  These
+>> +slots appear as children of the main controller node.
+>> +The DMA engine is an integral part of the controller block.
+>> +
+>> +1) MMC node
+>> +
+>> +Required properties:
+>> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
+>> +- reg : Two entries:
+>> +	1) The base address of the MMC controller register bank.
+>> +	2) The base address of the MMC DMA engine register bank.
+>> +- interrupts :
+>> +	For "cavium,octeon-6130-mmc": two entries:
+>> +	1) The MMC controller interrupt line.
+>> +	2) The MMC DMA engine interrupt line.
+>> +	For "cavium,octeon-7890-mmc": nine entries:
+>> +	1) The next block transfer of a multiblock transfer has completed (BUF_DONE)
+>> +	2) Operation completed successfully (CMD_DONE).
+>> +	3) DMA transfer completed successfully (DMA_DONE).
+>> +	4) Operation encountered an error (CMD_ERR).
+>> +	5) DMA transfer encountered an error (DMA_ERR).
+>> +	6) Switch operation completed successfully (SWITCH_DONE).
+>> +	7) Switch operation encountered an error (SWITCH_ERR).
+>> +	8) Internal DMA engine request completion interrupt (DONE).
+>> +	9) Internal DMA FIFO underflow (FIFO).
+>> +- #address-cells : Must be <1>
+>> +- #size-cells : Must be <0>
+>> +
+>> +The node contains child nodes for each slot that the platform uses.
+>> +
+>> +Example:
+>> +mmc@1180000002000 {
+>> +	compatible = "cavium,octeon-6130-mmc";
+>> +	reg = <0x11800 0x00002000 0x0 0x100>,
+>> +		<0x11800 0x00000168 0x0 0x20>;
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	/* EMM irq, DMA irq */
+>> +	interrupts = <1 19>, <0 63>;
+>> +
+>> +	[ child node definitions...]
+>> +};
+>> +
+>> +
+>> +2) Slot nodes
+>> +Properties in mmc.txt apply to each slot node that the platform uses.
+>> +
+>> +Required properties:
+>> +- reg : The slot number.
+>> +
+>> +Optional properties:
+>> +- cavium,cmd-clk-skew : the amount of delay (in pS) past the clock edge
+>> +	to sample the command pin.
+>> +- cavium,dat-clk-skew : the amount of delay (in pS) past the clock edge
+>> +	to sample the data pin.
+> I thought you were okay with adding -ps? Either way:
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+Thanks Rob.
+Adding the -ps to the binding creates quite a bit of extra code in the 
+driver, as we have to support the legacy version (without -ps) which is 
+already in shipped devices. Depending how many revisions the driver 
+itself goes through and how that code ends up being structured I may add 
+them back in.
 
-> I do realize that it will make this patchset more complicated. As I
-> stated earlier, this was just an idea I had, so to be clear I won't
-> hold back an ack for this patchset, if you decide to deal with this in
-> separate "improvement" step.
-
-Thanks
-Jon
+Thanks,
+Matt
