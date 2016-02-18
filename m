@@ -1,121 +1,84 @@
-From: "jianqun.xu" <jay.xu@rock-chips.com>
-Subject: [PATCH v3 3/4] dt-bindings: add documentation of rk3399 clock controller
-Date: Thu, 18 Feb 2016 19:16:32 +0800
-Message-ID: <1455794193-4497-4-git-send-email-jay.xu@rock-chips.com>
-References: <1455794193-4497-1-git-send-email-jay.xu@rock-chips.com>
-Content-Type: text/plain; charset="utf-8"
+From: "Sricharan" <sricharan@codeaurora.org>
+Subject: RE: [PATCH v2 2/4] iommu/arm-smmu: Invoke DT probe from arm_smmu_of_setup()
+Date: Thu, 18 Feb 2016 17:30:08 +0530
+Message-ID: <001f01d16a43$ef47d3b0$cdd77b10$@codeaurora.org>
+References: <1454908652-15317-1-git-send-email-anup.patel@broadcom.com> <1454908652-15317-3-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455794193-4497-1-git-send-email-jay.xu@rock-chips.com>
+In-Reply-To: <1454908652-15317-3-git-send-email-anup.patel@broadcom.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, broonie@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk
-Cc: huangtao@rock-chips.com, jay.xu@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>
+To: 'Anup Patel' <anup.patel@broadcom.com>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Joerg Roedel' <joro@8bytes.org>, 'Will Deacon' <will.deacon@arm.com>, 'Robin Murphy' <Robin.Murphy@arm.com>, 'Linux IOMMU' <iommu@lists.linux-foundation.org>, 'Linux ARM Kernel' <linux-arm-kernel@lists.infradead.org>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Device Tree' <devicetree@vger.kernel.org>, 'Scott Branden' <sbranden@broadcom.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Ray Jui' <rjui@broadcom.com>, 'Linux Kernel' <linux-kernel@vger.kernel.org>, 'Vikram Prakash' <vikramp@broadcom.com>, 'Rob Herring' <robh+dt@kernel.org>, 'BCM Kernel Feedback' <bcm-kernel-feedback-list@broadcom.com>, 'Kumar Gala' <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xing Zheng <zhengxing@rock-chips.com>
+Hi,
 
-Add the devicetree binding for the cru on the rk3399 which quite
-similar structured as previous clock controllers.
+> -----Original Message-----
+> From: linux-arm-kernel [mailto:linux-arm-kernel-
+> bounces@lists.infradead.org] On Behalf Of Anup Patel
+> Sent: Monday, February 08, 2016 10:48 AM
+> To: Catalin Marinas; Joerg Roedel; Will Deacon; Robin Murphy; Sricharan R;
+> Linux IOMMU; Linux ARM Kernel
+> Cc: Mark Rutland; Device Tree; Scott Branden; Pawel Moll; Ian Campbell;
+Ray
+> Jui; Linux Kernel; Vikram Prakash; Rob Herring; BCM Kernel Feedback; Kumar
+> Gala; Anup Patel
+> Subject: [PATCH v2 2/4] iommu/arm-smmu: Invoke DT probe from
+> arm_smmu_of_setup()
+> 
+> The SMMUv1/SMMUv2 driver is initialized very early using the
+> IOMMU_OF_DECLARE() but the actual platform device is probed via normal
+> DT probing.
+> 
+> This patch uses of_platform_device_create() from arm_smmu_of_setup() to
+> ensure that SMMU platform device is probed immediately.
+> 
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> ---
+>  drivers/iommu/arm-smmu.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
+> 2c8f871..02cd67d 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_iommu.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> @@ -1956,10 +1957,15 @@ static int __init arm_smmu_init(void)
+> 
+>  static int __init arm_smmu_of_setup(struct device_node *np)  {
+> +	struct platform_device *pdev;
+> 
+>  	if (!init_done)
+>  		arm_smmu_init();
+> 
+> +	pdev = of_platform_device_create(np, NULL, NULL);
+> +	if (IS_ERR(pdev))
+> +		return PTR_ERR(pdev);
+> +
+>  	of_iommu_set_ops(np, &arm_smmu_ops);
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
-changes in v3:
-- none
+ A question here is,  There was a probe deferral series [1], to take care of
+deferred
+ probing of devices behind iommus. With that this sort of early device
+probing during setup
+ should not be required and also it clears other dependencies of iommus on
+clocks, etc, if any.
+ My intention was to check whats the right way to do this  ? (or) point me
+to any updates 
+ on the probe deferral series that I miss ?
 
-changes in v2:
-- none
-
- .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-new file mode 100644
-index 0000000..07bcc6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-@@ -0,0 +1,82 @@
-+* Rockchip RK3399 Clock and Reset Unit
-+
-+The RK3399 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
-+- compatible: CRU should be "rockchip,rk3399-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing, pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "ext_i2s" - external I2S clock - optional,
-+ - "ext_gmac" - external GMAC clock - optional
-+ - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_isp" - external ISP clock - optional,
-+ - "ext_jtag" - external JTAG clock - optional
-+ - "ext_vip" - external VIP clock - optional,
-+ - "usbotg_out" - output clock of the pll in the otg phy
-+
-+Example: General Register Files
-+
-+	pmugrf: syscon@ff320000 {
-+		compatible = "rockchip,rk3399-pmugrf", "syscon";
-+		reg = <0x0 0xff320000 0x0 0x1000>;
-+	};
-+
-+	grf: syscon@ff770000 {
-+		compatible = "rockchip,rk3399-grf", "syscon";
-+		reg = <0x0 0xff770000 0x0 0x10000>;
-+	};
-+
-+Example: Clock controller node:
-+
-+	pmucru: pmu-clock-controller@ff750000 {
-+		compatible = "rockchip,rk3399-pmucru";
-+		reg = <0x0 0xff750000 0x0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	cru: clock-controller@ff760000 {
-+		compatible = "rockchip,rk3399-cru";
-+		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff1a0000 {
-+		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
-+		reg = <0x0 0xff180000 0x0 0x100>;
-+		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+		clock-names = "baudclk", "apb_pclk";
-+		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
--- 
-1.9.1
+[1]  http://lkml.iu.edu/hypermail/linux/kernel/1505.3/03280.html
+ 
+Regards,
+ Sricharan
