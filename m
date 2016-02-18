@@ -1,46 +1,35 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC variants
-Date: Thu, 18 Feb 2016 19:30:27 +0100
-Message-ID: <CACRpkdZD_qg0p8spr9HnFBSzXidi59J_kR8XBo-s8z-tSqKs5g@mail.gmail.com>
-References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org>
-	<56C5D304.5010708@arm.com>
-	<5028476.WAQS3ylXOd@wuerfel>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v5 1/1] USB: core: let USB device know device node
+Date: Thu, 18 Feb 2016 13:46:23 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1602181345570.1280-100000@iolanthe.rowland.org>
+References: <1455612172-2081-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5028476.WAQS3ylXOd@wuerfel>
+In-Reply-To: <1455612172-2081-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 3:40 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
->> On 18/02/16 13:46, Linus Walleij wrote:
->> > In the add-on file for the GIC dealing with the RealView family
->> > we currently only handle the PB11MPCore, let's extend this to
->> > manage the RealView EB ARM11MPCore as well. The Revision B of the
->> > ARM11MPCore core tile is a bit special and needs special handling
->> > as it moves a system control register around at random.
->>
->> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
->> cupboard, and failed. Oh well...
->
-> What surprised me though is that it's enabled by default:
+On Tue, 16 Feb 2016, Peter Chen wrote:
 
-Looks like my fault according to git-blame...
+> From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Although most of USB devices are hot-plug's, there are still some devices
+> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> If these kinds of USB devices are multiple functions, and they can supply
+> other interfaces like i2c, gpios for other devices, we may need to
+> describe these at device tree.
+> 
+> In this commit, it uses "reg" in dts as physical port number to match
+> the phyiscal port number decided by USB core, if they are the same,
+> then the device node is for the device we are creating for USB core.
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I think this happened when making cover-all defconfigs for
-multiplatform. I think I just turned everything on... not realizing
-that turning on RevB disabled RevA+RevC.
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
-However since it is the *only* version that works with QEMU
-it actually makes some kind of weird sense to have it enabled
-since the QEMU version is probably more common than
-RevA+RevC...
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
