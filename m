@@ -1,33 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next,V2] net: macb: make magic-packet property generic
-Date: Thu, 18 Feb 2016 08:37:20 -0600
-Message-ID: <20160218143720.GP9654@rob-hp-laptop>
-References: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC
+ variants
+Date: Thu, 18 Feb 2016 14:47:13 +0000
+Message-ID: <56C5D971.6060005@arm.com>
+References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org>
+ <56C5D304.5010708@arm.com> <5028476.WAQS3ylXOd@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergio Prado <sergio.prado@e-labworks.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nicolas.ferre@atmel.com, davem@davemloft.net, gregory.clement@free-electrons.com, narmstrong@baylibre.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5028476.WAQS3ylXOd@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 09:10:45PM -0200, Sergio Prado wrote:
-> As requested by Rob Herring on patch
-> https://patchwork.ozlabs.org/patch/580862/.
+On 18/02/16 14:40, Arnd Bergmann wrote:
+> On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
+>> On 18/02/16 13:46, Linus Walleij wrote:
+>>> In the add-on file for the GIC dealing with the RealView family
+>>> we currently only handle the PB11MPCore, let's extend this to
+>>> manage the RealView EB ARM11MPCore as well. The Revision B of the
+>>> ARM11MPCore core tile is a bit special and needs special handling
+>>> as it moves a system control register around at random.
+>>
+>> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
+>> cupboard, and failed. Oh well...
 > 
-> This is a new property that it's still in net-next and has never been
-> used in production, so we are not breaking anything with the
-> incompatible binding change.
+> What surprised me though is that it's enabled by default:
 > 
-> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
-> ---
-> Changes v1 -> v2: add changelog comment to clarify that the existing
-> property has never been used in production.
-> ---
->  Documentation/devicetree/bindings/net/macb.txt | 2 +-
->  drivers/net/ethernet/cadence/macb.c            | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> $ grep REVB arch/arm/configs/realview*
+> arch/arm/configs/realview_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
+> arch/arm/configs/realview-smp_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
+> 
+> With that option set, the defconfig kernel should not be able
+> to boot on RevC machines. Do you have a RevC machine that works
+> with the defconfig?
 
-Acked-by: Rob Herring <robh@kernel.org>
+No, it looks like someone helped themselves to *all* of the EB-11MPs - I
+have a bunch of empty baseboards, and no tile to slap on. I also have a
+box of unsoldered 11MPs, but that a different story... ;-)
+
+I guess I should plan for another dumpster diving session.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
