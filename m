@@ -1,118 +1,54 @@
-From: "jianqun.xu" <jay.xu@rock-chips.com>
-Subject: [PATCH v2 3/4] dt-bindings: add documentation of rk3399 clock controller
-Date: Thu, 18 Feb 2016 10:36:22 +0800
-Message-ID: <1455762983-29980-4-git-send-email-jay.xu@rock-chips.com>
-References: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, broonie@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk
-Cc: huangtao@rock-chips.com, jay.xu@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v8.1 1/2] drm/rockchip: hdmi: add Innosilicon HDMI support
+Date: Thu, 18 Feb 2016 10:54:02 +0800
+Message-ID: <56C5324A.5080009@rock-chips.com>
+References: <1454049768-30872-1-git-send-email-ykk@rock-chips.com> <1454492697-7837-1-git-send-email-ykk@rock-chips.com> <3883951.Go5JsyhPRt@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3883951.Go5JsyhPRt@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ken Mixte <kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ben Chan <benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xing Zheng <zhengxing@rock-chips.com>
+On 2016=E5=B9=B402=E6=9C=8818=E6=97=A5 05:00, Heiko Stuebner wrote:
+> Am Mittwoch, 3. Februar 2016, 17:44:57 schrieb Yakir Yang:
+>> The Innosilicon HDMI is a low power HDMI 1.4 transmitter
+>> IP, and it have been integrated on some rockchip CPUs
+>> (like RK3036, RK312x).
+>>
+>> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> On a Kylin board against 4.5-rc
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-Add the devicetree binding for the cru on the rk3399 which quite
-similar structured as previous clock controllers.
+Good, Thanks your Tested-by.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
-changes in v2:
-- none
+> @Mark: While testing I noticed a black box around my cursor. It moves=
+ with
+> the cursor, so seems to be the plane itself - the hdmi driver is of c=
+ourse
+> innocent. May there exist an issue with plane transparency?
 
- .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+Oh, yes, it's my problem, forget to add transparency for rk3036 plane, =
+I=20
+will do it later soon.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-new file mode 100644
-index 0000000..07bcc6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-@@ -0,0 +1,82 @@
-+* Rockchip RK3399 Clock and Reset Unit
-+
-+The RK3399 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
-+- compatible: CRU should be "rockchip,rk3399-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing, pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "ext_i2s" - external I2S clock - optional,
-+ - "ext_gmac" - external GMAC clock - optional
-+ - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_isp" - external ISP clock - optional,
-+ - "ext_jtag" - external JTAG clock - optional
-+ - "ext_vip" - external VIP clock - optional,
-+ - "usbotg_out" - output clock of the pll in the otg phy
-+
-+Example: General Register Files
-+
-+	pmugrf: syscon@ff320000 {
-+		compatible = "rockchip,rk3399-pmugrf", "syscon";
-+		reg = <0x0 0xff320000 0x0 0x1000>;
-+	};
-+
-+	grf: syscon@ff770000 {
-+		compatible = "rockchip,rk3399-grf", "syscon";
-+		reg = <0x0 0xff770000 0x0 0x10000>;
-+	};
-+
-+Example: Clock controller node:
-+
-+	pmucru: pmu-clock-controller@ff750000 {
-+		compatible = "rockchip,rk3399-pmucru";
-+		reg = <0x0 0xff750000 0x0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	cru: clock-controller@ff760000 {
-+		compatible = "rockchip,rk3399-cru";
-+		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff1a0000 {
-+		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
-+		reg = <0x0 0xff180000 0x0 0x100>;
-+		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+		clock-names = "baudclk", "apb_pclk";
-+		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
--- 
-1.9.1
+>
+>
+> Heiko
+>
+>
+>
+
+--=20
+=EF=BC=ADark Yao
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
