@@ -1,129 +1,42 @@
-From: Matt Redfearn <matt.redfearn@imgtec.com>
-Subject: Re: [PATCH v7 1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC
- controller
-Date: Thu, 18 Feb 2016 16:48:00 +0000
-Message-ID: <56C5F5C0.7010008@imgtec.com>
-References: <1455725574-9947-1-git-send-email-matt.redfearn@imgtec.com>
- <20160218143516.GA9654@rob-hp-laptop>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
+Date: Thu, 18 Feb 2016 17:50:51 +0100
+Message-ID: <1455814251.3937.27.camel@pengutronix.de>
+References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
+	 <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
+	 <56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
+	 <56C340FB.1050607@arm.com> <20160216161009.GW18805@8bytes.org>
+	 <20160216162000.GI14509@arm.com> <20160216162641.GY18805@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160218143516.GA9654@rob-hp-laptop>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160216162641.GY18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joerg,
 
+Am Dienstag, den 16.02.2016, 17:26 +0100 schrieb Joerg Roedel:
+> On Tue, Feb 16, 2016 at 04:20:00PM +0000, Will Deacon wrote:
+> > I'm more than happy to bake a branch containing all the page table stuff,
+> > but Yong's stuff depends on it so I'll work with whatever is easiest for
+> > you.
+> 
+> Okay, to the best is if you would collect all the page table patches and
+> send me a pull-request. I pull that into my tree then and put Yong's
+> stuff on-top.
 
-On 18/02/16 14:35, Rob Herring wrote:
-> On Wed, Feb 17, 2016 at 04:12:53PM +0000, Matt Redfearn wrote:
->> From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
->>
->> Add Device Tree binding document for Octeon MMC controller. The driver
->> is in a following patch.
->>
->> The MMC controller can be connected to up to 4 "slots" which may be
->> eMMC, MMC or SD card devices. As there is a single controller, each
->> available slot is represented as a child node of the controller.
->>
->> This is a similar concept to the atmel-mci driver.
->>
->> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
->> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
->> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
->> Signed-off-by: Peter Swain <pswain@cavium.com>
->> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
->> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
->> ---
->> v7: No changes
->>
->> v6:
->> - Split up patch
->> - Moved device tree fixup to platform code
->> ---
->>   .../devicetree/bindings/mmc/octeon-mmc.txt         | 79 ++++++++++++++++++++++
->>   1 file changed, 79 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
->> new file mode 100644
->> index 000000000000..d2c576d9ad65
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
->> @@ -0,0 +1,79 @@
->> +* OCTEON SD/MMC Host Controller
->> +
->> +This controller is present on some members of the Cavium OCTEON SoC
->> +family, provide an interface for eMMC, MMC and SD devices.  There is a
->> +single controller that may have several "slots" connected.  These
->> +slots appear as children of the main controller node.
->> +The DMA engine is an integral part of the controller block.
->> +
->> +1) MMC node
->> +
->> +Required properties:
->> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
->> +- reg : Two entries:
->> +	1) The base address of the MMC controller register bank.
->> +	2) The base address of the MMC DMA engine register bank.
->> +- interrupts :
->> +	For "cavium,octeon-6130-mmc": two entries:
->> +	1) The MMC controller interrupt line.
->> +	2) The MMC DMA engine interrupt line.
->> +	For "cavium,octeon-7890-mmc": nine entries:
->> +	1) The next block transfer of a multiblock transfer has completed (BUF_DONE)
->> +	2) Operation completed successfully (CMD_DONE).
->> +	3) DMA transfer completed successfully (DMA_DONE).
->> +	4) Operation encountered an error (CMD_ERR).
->> +	5) DMA transfer encountered an error (DMA_ERR).
->> +	6) Switch operation completed successfully (SWITCH_DONE).
->> +	7) Switch operation encountered an error (SWITCH_ERR).
->> +	8) Internal DMA engine request completion interrupt (DONE).
->> +	9) Internal DMA FIFO underflow (FIFO).
->> +- #address-cells : Must be <1>
->> +- #size-cells : Must be <0>
->> +
->> +The node contains child nodes for each slot that the platform uses.
->> +
->> +Example:
->> +mmc@1180000002000 {
->> +	compatible = "cavium,octeon-6130-mmc";
->> +	reg = <0x11800 0x00002000 0x0 0x100>,
->> +		<0x11800 0x00000168 0x0 0x20>;
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	/* EMM irq, DMA irq */
->> +	interrupts = <1 19>, <0 63>;
->> +
->> +	[ child node definitions...]
->> +};
->> +
->> +
->> +2) Slot nodes
->> +Properties in mmc.txt apply to each slot node that the platform uses.
->> +
->> +Required properties:
->> +- reg : The slot number.
->> +
->> +Optional properties:
->> +- cavium,cmd-clk-skew : the amount of delay (in pS) past the clock edge
->> +	to sample the command pin.
->> +- cavium,dat-clk-skew : the amount of delay (in pS) past the clock edge
->> +	to sample the data pin.
-> I thought you were okay with adding -ps? Either way:
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
-Thanks Rob.
-Adding the -ps to the binding creates quite a bit of extra code in the 
-driver, as we have to support the legacy version (without -ps) which is 
-already in shipped devices. Depending how many revisions the driver 
-itself goes through and how that code ends up being structured I may add 
-them back in.
+could you provide a branch that I may then pull in, stack the
+mediatek-drm driver patches (that depend on the SMI driver) on top and
+have them merged via drm-next?
 
-Thanks,
-Matt
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
