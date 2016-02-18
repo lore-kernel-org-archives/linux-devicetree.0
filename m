@@ -1,84 +1,51 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH v2 2/4] iommu/arm-smmu: Invoke DT probe from arm_smmu_of_setup()
-Date: Thu, 18 Feb 2016 17:30:08 +0530
-Message-ID: <001f01d16a43$ef47d3b0$cdd77b10$@codeaurora.org>
-References: <1454908652-15317-1-git-send-email-anup.patel@broadcom.com> <1454908652-15317-3-git-send-email-anup.patel@broadcom.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 09/10] ARM: dts: introduce MPS2 AN385/AN386
+Date: Thu, 18 Feb 2016 13:16:28 +0100
+Message-ID: <5567140.dIBhKTnriP@wuerfel>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <7245560.jfhuhtPsB8@wuerfel> <56C5A742.8010304@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454908652-15317-3-git-send-email-anup.patel@broadcom.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Anup Patel' <anup.patel@broadcom.com>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Joerg Roedel' <joro@8bytes.org>, 'Will Deacon' <will.deacon@arm.com>, 'Robin Murphy' <Robin.Murphy@arm.com>, 'Linux IOMMU' <iommu@lists.linux-foundation.org>, 'Linux ARM Kernel' <linux-arm-kernel@lists.infradead.org>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Device Tree' <devicetree@vger.kernel.org>, 'Scott Branden' <sbranden@broadcom.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Ray Jui' <rjui@broadcom.com>, 'Linux Kernel' <linux-kernel@vger.kernel.org>, 'Vikram Prakash' <vikramp@broadcom.com>, 'Rob Herring' <robh+dt@kernel.org>, 'BCM Kernel Feedback' <bcm-kernel-feedback-list@broadcom.com>, 'Kumar Gala' <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C5A742.8010304-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday 18 February 2016 11:13:06 Vladimir Murzin wrote:
+> On 18/02/16 10:45, Arnd Bergmann wrote:
+> > On Thursday 18 February 2016 10:11:37 Vladimir Murzin wrote:
+> >>
+> >> Right, I thought in a wrong way, in opposite it makes more sense now.
+> >>
+> >> .dtsi
+> >>
+> >> /* below the soc/ */
+> >> smb {
+> >>         compatible = "simple-bus";
+> >>         #address-cells = <2>;
+> >>         #size-cells = <1>;
+> >>         ranges = <0 0 0x40200000 0x10000>,
+> >>                  <1 0 0xa0000000 0x10000>;
+> >> };
+> > 
+> > That looks good, yes.
+> > 
+> > Is 0x10000 the correct maximum addressable size of the external bus
+> > in both cases?
+> > 
+> > Intuitively, I would guess that the 0xa0000000 range might
+> > be much wider.
+> 
+> There is only Ethernet connected to this bus (apart from PSRAM), so it
+> might be wider, but there is no indication of this in documentation.
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-
-> bounces@lists.infradead.org] On Behalf Of Anup Patel
-> Sent: Monday, February 08, 2016 10:48 AM
-> To: Catalin Marinas; Joerg Roedel; Will Deacon; Robin Murphy; Sricharan R;
-> Linux IOMMU; Linux ARM Kernel
-> Cc: Mark Rutland; Device Tree; Scott Branden; Pawel Moll; Ian Campbell;
-Ray
-> Jui; Linux Kernel; Vikram Prakash; Rob Herring; BCM Kernel Feedback; Kumar
-> Gala; Anup Patel
-> Subject: [PATCH v2 2/4] iommu/arm-smmu: Invoke DT probe from
-> arm_smmu_of_setup()
-> 
-> The SMMUv1/SMMUv2 driver is initialized very early using the
-> IOMMU_OF_DECLARE() but the actual platform device is probed via normal
-> DT probing.
-> 
-> This patch uses of_platform_device_create() from arm_smmu_of_setup() to
-> ensure that SMMU platform device is probed immediately.
-> 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> ---
->  drivers/iommu/arm-smmu.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
-> 2c8f871..02cd67d 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -40,6 +40,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_iommu.h>
-> +#include <linux/of_platform.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> @@ -1956,10 +1957,15 @@ static int __init arm_smmu_init(void)
-> 
->  static int __init arm_smmu_of_setup(struct device_node *np)  {
-> +	struct platform_device *pdev;
-> 
->  	if (!init_done)
->  		arm_smmu_init();
-> 
-> +	pdev = of_platform_device_create(np, NULL, NULL);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
-> +
->  	of_iommu_set_ops(np, &arm_smmu_ops);
+I see this called "ahb_to_extmem16" in the documentation, which indicates
+that it might be use 16 bits of address space, which would match
+the 64K you listed.
 
- A question here is,  There was a probe deferral series [1], to take care of
-deferred
- probing of devices behind iommus. With that this sort of early device
-probing during setup
- should not be required and also it clears other dependencies of iommus on
-clocks, etc, if any.
- My intention was to check whats the right way to do this  ? (or) point me
-to any updates 
- on the probe deferral series that I miss ?
+For SSRAM1 / SSRAM2 / SSRAM3, a 8 MB address space is mentioned
+and 16 MB for external PSRAM at 0x21000000.
 
-[1]  http://lkml.iu.edu/hypermail/linux/kernel/1505.3/03280.html
- 
-Regards,
- Sricharan
+	Arnd
