@@ -1,129 +1,39 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v2 5/7] T104xD4RDB: Add qe node to t104xd4rdb
-Date: Thu, 18 Feb 2016 09:06:10 +0800
-Message-ID: <1455757572-44955-5-git-send-email-qiang.zhao@nxp.com>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] devicetree: add binding for Sigma Designs SMP86xx
+ interrupt controller
+Date: Thu, 18 Feb 2016 01:33:02 +0000
+Message-ID: <20160218013302.GM5183@io.lakedaemon.net>
+References: <1453313237-18570-1-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: oss@buserror.net, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1453313237-18570-1-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xd4rdb.dtsi and t1040si-post.dtsi.
+On Wed, Jan 20, 2016 at 06:07:16PM +0000, Mans Rullgard wrote:
+> This adds a binding for the secondary interrupt controller in
+> Sigma Designs SMP86xx and SMP87xx chips.
+> 
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes:
+> - not included in v3
+> ---
+>  .../interrupt-controller/sigma,smp8642-intc.txt    | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
 
-Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
----
-Changes for v2
-	- rebase
+Applied to irqchip/tango with Rob's Ack.  Converted to
+'interrupt-controller@XXX' as requested by Rob.
 
- arch/powerpc/boot/dts/fsl/t1040si-post.dtsi | 45 +++++++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi   | 40 +++++++++++++++++++++++++
- 2 files changed, 85 insertions(+)
+thx,
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-index e0f4da5..012f813 100644
---- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-@@ -673,3 +673,48 @@
- 		};
- 	};
- };
-+
-+&qe {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	device_type = "qe";
-+	compatible = "fsl,qe";
-+	fsl,qe-num-riscs = <1>;
-+	fsl,qe-num-snums = <28>;
-+
-+	qeic: interrupt-controller@80 {
-+		interrupt-controller;
-+		compatible = "fsl,qe-ic";
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		reg = <0x80 0x80>;
-+		interrupts = <95 2 0 0  94 2 0 0>; //high:79 low:78
-+	};
-+
-+	ucc@2000 {
-+		cell-index = <1>;
-+		reg = <0x2000 0x200>;
-+		interrupts = <32>;
-+		interrupt-parent = <&qeic>;
-+	};
-+
-+	ucc@2200 {
-+		cell-index = <3>;
-+		reg = <0x2200 0x200>;
-+		interrupts = <34>;
-+		interrupt-parent = <&qeic>;
-+	};
-+
-+	muram@10000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "fsl,qe-muram", "fsl,cpm-muram";
-+		ranges = <0x0 0x10000 0x6000>;
-+
-+		data-only@0 {
-+			compatible = "fsl,qe-muram-data",
-+			"fsl,cpm-muram-data";
-+			reg = <0x0 0x6000>;
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-index 3f6d7c6..2e24322 100644
---- a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-@@ -212,4 +212,44 @@
- 				  0 0x00010000>;
- 		};
- 	};
-+
-+	qe: qe@ffe140000 {
-+		ranges = <0x0 0xf 0xfe140000 0x40000>;
-+		reg = <0xf 0xfe140000 0 0x480>;
-+		brg-frequency = <0>;
-+		bus-frequency = <0>;
-+
-+		si1: si@700 {
-+			compatible = "fsl,qe-si";
-+			reg = <0x700 0x80>;
-+		};
-+
-+		siram1: siram@1000 {
-+			compatible = "fsl,qe-siram";
-+			reg = <0x1000 0x800>;
-+		};
-+
-+		ucc_hdlc: ucc@2000 {
-+			compatible = "fsl,ucc-hdlc";
-+			rx-clock-name = "clk8";
-+			tx-clock-name = "clk9";
-+			fsl,rx-sync-clock = "rsync_pin";
-+			fsl,tx-sync-clock = "tsync_pin";
-+			fsl,tx-timeslot = <0xfffffffe>;
-+			fsl,rx-timeslot = <0xfffffffe>;
-+			fsl,tdm-framer-type = "e1";
-+			fsl,tdm-mode = "normal";
-+			fsl,tdm-id = <0>;
-+			fsl,siram-entry-id = <0>;
-+			fsl,tdm-interface;
-+		};
-+
-+		ucc_serial: ucc@2200 {
-+			device_type = "serial";
-+			compatible = "ucc_uart";
-+			port-number = <1>;
-+			rx-clock-name = "brg2";
-+			tx-clock-name = "brg2";
-+		};
-+	};
- };
--- 
-2.1.0.27.g96db324
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
