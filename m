@@ -1,79 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: phy: bindings document for common
- Broadcom SATA3 PHY driver
-Date: Thu, 18 Feb 2016 08:38:15 -0600
-Message-ID: <20160218143815.GZ9654@rob-hp-laptop>
-References: <1455604420-11300-1-git-send-email-anup.patel@broadcom.com>
- <1455604420-11300-4-git-send-email-anup.patel@broadcom.com>
+Subject: Re: [PATCH v8 3/3] add support for DWC UFS Host Controller
+Date: Thu, 18 Feb 2016 08:38:42 -0600
+Message-ID: <20160218143842.GE9654@rob-hp-laptop>
+References: <cover.1455549221.git.jpinto@synopsys.com>
+ <5c806ca29340923831e05a729bbb6557d7ce83cb.1455549222.git.jpinto@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455604420-11300-4-git-send-email-anup.patel@broadcom.com>
+In-Reply-To: <5c806ca29340923831e05a729bbb6557d7ce83cb.1455549222.git.jpinto@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 12:03:38PM +0530, Anup Patel wrote:
-> This patch:
-> 1. Renames DT bindings document of Broadcom STB SATA3 PHY driver to
-> common Broadcom SATA3 PHY driver bindings document
-> 2. Adds bindings info for NS2 SATA3 PHY
+On Mon, Feb 15, 2016 at 03:25:13PM +0000, Joao Pinto wrote:
+> This patch has the goal to add support for DesignWare UFS Controller
+> specific operations and to add specific platform and pci drivers.
 > 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
 > ---
->  .../phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt}  | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} (69%)
+> Changes v7->v8 (Akinobu Mita):
+> - DME sets were simplified for easier reading
+> - CLK DIV default values definitions names were changed to match the
+>  register's name
+> - New line added to dev_err and dev_info statements
+> Changes v6->v7 (Arnd Bergmann):
+> - Changed DT node name (to ufs only) and the memory address (to 0xd000000)
+> - Removed CONFIG_PM from the PCI glue driver (pm.h already does this)
+> - No other changes are necessary in ufshcd.c because of the link up notify
+>  function usage (it is simpler now)
+> - Removed the PHY mentioning since the Test Chip is not a real PHY for real
+>  world usage, since it is a test chip for prototyping with a very specific
+>  usage
+> - Added again the Test Chip 20-bit option
+> Changes v5->v6:
+> - Patch bad format fixed
+> Changes v4->v5 (Akinobu Mita):
+> - All functions used only locally in ufshcd-dwc are now declared as static
+> - ufshcd_dwc_configuration() was removed in ufshcd-dwc and a notify
+>  function (ufshcd_dwc_link_startup_notify) was created to deal with the
+>  DWC specific init routines
+> - 20-bit RMMI option was removed from Kconfig. Now if MPHY TC is selected
+>  and 40-bit is not then it assumes a 20-bit config
+> Changes v3->v4 (Arnd Bergmann and Mark Rutland):
+> - SCSI_UFS_DWC_HOOKS is now silent and selected by the SCSI_UFS_DWC_PLAT
+>  or SCSI_UFS_DWC_PCI
+> - Compatibility string has the ufs core version for info purposes since
+>  the driver is capable of getting the controller version from its 
+>  registers
+> - Created ufs-dwc-pci glue driver with specific DWC data
+> - MPHY configuration remains in the ufshcd-dwc since it is unipro
+>  attribute writting only not following the a linux phy framework logic
+> Changes v2->v3 (Julian Calaby):
+> - Implement a common DWC code to be used by the platform and pci glue
+>  drivers
+> - Synopsys ID & Class added to the existing pci driver and specific DWC
+>  was also added to the pci driver
+> Changes v1->v2 (Akinobu Mita):
+> - Implement a platform driver that uses the existing UFS core driver
+> - Add DWC specific code to the existing UFS core driver
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-> similarity index 69%
-> rename from Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
-> rename to Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-> index d87ab7c..d023120 100644
-> --- a/Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-> @@ -1,14 +1,17 @@
-> -* Broadcom SATA3 PHY for STB
-> +* Broadcom SATA3 PHY
->  
->  Required properties:
->  - compatible: should be one or more of
->       "brcm,bcm7425-sata-phy"
->       "brcm,bcm7445-sata-phy"
-> +     "brcm,iproc-ns2-sata-phy"
->       "brcm,phy-sata3"
->  - address-cells: should be 1
->  - size-cells: should be 0
-> -- reg: register range for the PHY PCB interface
-> -- reg-names: should be "phy"
-> +- reg: register ranges for the PHY PCB interface
-> +- reg-names: should be "phy" and "phy-ctrl"
-> +     The "phy-ctrl" registers are only required for
-> +     "brcm,iproc-ns2-sata-phy".
->  
->  Sub-nodes:
->    Each port's PHY should be represented as a sub-node.
-> @@ -16,12 +19,12 @@ Sub-nodes:
->  Sub-nodes required properties:
->  - reg: the PHY number
->  - phy-cells: generic PHY binding; must be 0
-> -Optional:
-> -- brcm,enable-ssc: use spread spectrum clocking (SSC) on this port
->  
-> +Sub-nodes optional properties:
-> +- brcm,enable-ssc: use spread spectrum clocking (SSC) on this port
-> +     This property is not applicable for "brcm,iproc-ns2-sata-phy".
+>  Documentation/devicetree/bindings/ufs/ufs-dwc.txt |  19 +
+>  MAINTAINERS                                       |   6 +
+>  drivers/scsi/ufs/Kconfig                          |  51 +++
+>  drivers/scsi/ufs/Makefile                         |   3 +
+>  drivers/scsi/ufs/ufs-dwc-pci.c                    | 172 +++++++++
+>  drivers/scsi/ufs/ufs-dwc.c                        |  96 +++++
+>  drivers/scsi/ufs/ufshcd-dwc.c                     | 431 ++++++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd-dwc.h                     |  18 +
+>  drivers/scsi/ufs/ufshci-dwc.h                     |  42 +++
+>  drivers/scsi/ufs/unipro.h                         |  39 ++
+>  10 files changed, 877 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+>  create mode 100644 drivers/scsi/ufs/ufs-dwc-pci.c
+>  create mode 100644 drivers/scsi/ufs/ufs-dwc.c
+>  create mode 100644 drivers/scsi/ufs/ufshcd-dwc.c
+>  create mode 100644 drivers/scsi/ufs/ufshcd-dwc.h
+>  create mode 100644 drivers/scsi/ufs/ufshci-dwc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufs-dwc.txt b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+> new file mode 100644
+> index 0000000..59e9822
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+> @@ -0,0 +1,19 @@
+> +* Universal Flash Storage (UFS) DesignWare Host Controller
+> +
+> +DWC_UFSHC nodes are defined to describe on-chip UFS host controllers.
+> +Each UFS controller instance should have its own node.
+> +
+> +Required properties:
+> +- compatible        : compatible list must contain "snps,ufshcd-dwc" and should
+> +		      also contain the JEDEC version of the controller:
+> +			"jedec,ufs-1.1"
+> +			"jedec,ufs-2.0"
 
-My understanding of SSC is it is required for hosts and optional for 
-drives to support (from first hand experience of a host not enabling). 
-Not setting this is would not be compliant. The polarity on this is 
-somewhat backwards too as the common case should be no property.
+As I said before, this needs to mention also requiring an SoC specific 
+compatible.
 
-Anyway, that's all besides the point of your change. I assume it doesn't 
-apply here for you because it is always enabled. 
+> +- reg               : <registers mapping>
+> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
+> +
+> +Example:
+> +	ufs@0xd0000000 {
 
-Acked-by: Rob Herring <robh@kernel.org>
+Drop '0x'
 
-Rob
+> +		compatible = "jedec,ufs-2.0", "snps,dwc-ufshcd";
+
+This should be reversed. Most specific first.
+
+> +		reg = < 0xd0000000 0x10000 >;
+> +		interrupts = < 24 >;
+> +	};
