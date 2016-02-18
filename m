@@ -1,101 +1,73 @@
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: meson: Adding support to retrieve serial and SoC revision
-Date: Thu, 18 Feb 2016 13:24:09 +0100
-Message-ID: <CAL9uMOHLDtQa7dMJm+7VpVJSRJJ+xoG_-Nx1VpJ7S1sL8TS5bw@mail.gmail.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Thu, 18 Feb 2016 13:33:04 +0100
+Message-ID: <CABgxDo+oGe47hvxiCOAUWz8zfSeVONf=3pFm+=PbNsCbr_jTpg@mail.gmail.com>
 References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-	<1455730114-2547-2-git-send-email-romain.perier@gmail.com>
-	<CAOQ7t2b8N+w33zKMfedtQqJ+-u1=kGn0pK4cBXhXB8LGx6qrtQ@mail.gmail.com>
-	<CABgxDoKOUd_k4kmrcswnUCaKAN8KQ11f8dUTMXDisySp_SVcMA@mail.gmail.com>
+	<1455730114-2547-3-git-send-email-romain.perier@gmail.com>
+	<CAOQ7t2add21t4hFtTeUBFe9aW0EtNvSi5KS4JMb6qVC60Fj-tA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABgxDoKOUd_k4kmrcswnUCaKAN8KQ11f8dUTMXDisySp_SVcMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOQ7t2add21t4hFtTeUBFe9aW0EtNvSi5KS4JMb6qVC60Fj-tA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 1:20 PM, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi all,
+Hi,
 
-[cut]
-
->>> +static void __init meson_init_machine(void)
->>> +{
->>> +       struct soc_device_attribute *soc_dev_attr;
->>> +       struct soc_device *soc_dev;
->>> +       struct regmap *hwrev;
->>> +       unsigned int val;
->>> +       int ret;
->>> +
->>> +       hwrev = syscon_regmap_lookup_by_compatible("amlogic,meson8b-hwrev");
+2016-02-17 21:36 GMT+01:00 Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>:
+> On Wed, Feb 17, 2016 at 6:28 PM, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> These are the CBUS registers used to retrieve the revision and the
+>> identifier of the SoC on Meson8.
 >>
->> Is this specific only for Meson8b?
+>> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/meson8b.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+>> index 0477a81..71009dc 100644
+>> --- a/arch/arm/boot/dts/meson8b.dtsi
+>> +++ b/arch/arm/boot/dts/meson8b.dtsi
+>> @@ -99,6 +99,11 @@
+>>                 };
+>>         };
+>>
+>> +       hwrev@c1107d4c {
+>> +               compatible = "amlogic,meson8b-hwrev", "syscon";
+>> +               reg = <0xc1107d4c 0x460>;
 >
+> Interesting. Where did you get 0x460?
+
+Carlo, Arnd.
+
+Well, what I did is the following :
+- CBUS_PHY_BASE is 0xc1100000   (CBUS is a larger block of registers,
+like slcr on zynq)
+- the serial is at CBUS_PHY_BASE + 0x7d4c
+- the revision is at CBUS_PHY_BASE + 0x81a8
+
+So I decided to create a device_node for hw revision at 0xc1107d4c, in
+this case the lenght is 0x460...
+Am I wrong ?
+
+
 >
-> For now, yes. However, As I said, I can to do something generic. What
-> do you think ?
-
-my guess is that it works fine for meson8 and meson8b. Not sure about
-meson6. You should take a look to the Amlogic SDK to confirm that or
-just exclude meson6.
-I was actually referring to the name of the compatible that seems a
-bit too specific to me.
-
->>
->>> +               return;
->>> +       }
->>> +       system_rev = val == 0x11111111 ? 0xA : 0xB;
->>> +
->>> +       soc_dev_attr->family = "Amlogic Meson";
->>> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "0x%x", system_rev);
->>> +       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "0x%x", system_serial_high);
->>> +
->>> +       soc_dev = soc_device_register(soc_dev_attr);
->>> +       if (IS_ERR(soc_dev)) {
->>> +               pr_err("Could not register soc device\n");
->>> +               kfree(soc_dev_attr);
->>
->> leaking soc_dev_attr->revision and  soc_dev_attr->soc_id also any
->> reason why you are not kasprintf-ing also family?
->>
+>> +       };
+>> +
+>>         sram: sram@d9000000 {
+>>                 compatible = "mmio-sram";
+>>                 reg = <0xd9000000 0x20000>;
 >
-> My problem is that I cannot use a devm allocation there, right ? I
-> mean I have no device... Well, I will think about it.
+> This patch fails to apply on the current master. Probably because you
+> have based this patch on a repo containing (as I can see) also my WiP
+> patches on SMP.
 
-I mean: you are kfree-ing soc_dev_attr but not soc_dev_attr->revision
-and soc_dev_attr->soc_id
+I used linux-next with your patches on top of it yes... I will rebase it
 
->>> +               return;
->>> +       }
->>> +
->>> +       pr_info("Amlogic Meson SoC Rev%X (%X:%X)\n", system_rev, system_serial_high, system_rev);
->>> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, soc_dev);
->>
->> Compiling I got:
->>
->>   CC      arch/arm/mach-meson/meson.o
->> arch/arm/mach-meson/meson.c: In function 'meson_init_machine':
->> arch/arm/mach-meson/meson.c:77:63: warning: passing argument 4 of
->> 'of_platform_populate' from incompatible pointer type
->>   of_platform_populate(NULL, of_default_bus_match_table, NULL, soc_dev);
->>                                                                ^
->> In file included from arch/arm/mach-meson/meson.c:17:0:
->> include/linux/of_platform.h:71:12: note: expected 'struct device *'
->> but argument is of type 'struct soc_device *'
->>  extern int of_platform_populate(struct device_node *root,
->>             ^
->>
->
-> Ah, good catch ! I build everything using yocto, so I did not see
-> these warnings ^^
-
-Please, do not use yocto for this ;)
-
-Cheers,
-
--- 
-Carlo Caione  |  +39.340.80.30.096  |  Endless
+Thanks,
+Romain
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
