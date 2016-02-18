@@ -1,57 +1,87 @@
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/panel: Add support for LG lp120up1 panel
-Date: Thu, 18 Feb 2016 16:12:45 +0100
-Message-ID: <20160218151244.GB5571@ulmo.nvidia.com>
-References: <1455691839-2410-1-git-send-email-jitao.shi@mediatek.com>
- <1455691839-2410-2-git-send-email-jitao.shi@mediatek.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph
+ of ports
+Date: Thu, 18 Feb 2016 16:18:23 +0100
+Message-ID: <20160218161823.fc54c61bd0c5cee75ab59578@free.fr>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
+ <20160218143530.GB9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455691839-2410-2-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160218143530.GB9654@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---dc+cDN39EJAMEtIO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 17, 2016 at 02:50:39PM +0800, Jitao Shi wrote:
-> The LG lp120up1 panel is a 12.0" 1920x1280 panel,
-> which can be supported by the simple panel driver
-
-It'd be nice to mention the type of interface of the panel here. While
-at it, please rewrite the commit message to make use of what width you
-have (i.e. any line after the subject can be 72 characters wide).
-
-Thierry
-
---dc+cDN39EJAMEtIO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWxd9pAAoJEN0jrNd/PrOhC2sP/iJ76PJs1A10Dt0DAh6X7LEl
-2UxlXucTq7oNLVhYiM/qpVs/7308SiHoCG5xYtMS9OWqDHprdvdisTOJ7GgZ9Xql
-iEDaNxso05HG2INh5gIBG3XAD6nnGMzSJWrA4hHSonNTt2WmHe+qclQ6koKW0AE2
-iTIvJRVq2zf78i9+xF0edsubInyW2elpU1TLNIsyLrrCP9YENPqTCz241LHLcWC3
-2+I+2abshFto/YOIw2n0VmTy78Xo9iZ71xCeoN15sxPpE/Y7NkLYMMNk7JGwXvxc
-+HxtJTKKZVYw4WcxXrTHwsYufp0jV7nHBc0SmIi3rh1BCZ7GGeIb6RCVA3TfhvLH
-WfrMhCHua+WqtBSwrPO0uXJavuhUxDzNxvtpSfpCmahc3wVs402mPLPpyMcraGwr
-KHuvBtaJlyl8pT+7wbOK5fb0IR0CItOFwwbL4ShL712WbVcEaZpVmP+z006Heswb
-tt7dz0hoJSrvNfxG11uTWwC+OiEvfDeXwo4vrkj51tyfqS3eND/jyp5UNO/7Lt34
-EQyR0ccTON+PdicQgfiWuu9GTAgCELPCJmS6HXeE8/21ZHZkE4VuvupycFmIJY/V
-Lkw53THyTFbiWVjks6gVLAUvmljcwgM360qyxK4G3PA4GrY2kp1bKpAWCA6LPXUk
-8CjCL8GWp/Z21mYQLSXX
-=mYfP
------END PGP SIGNATURE-----
-
---dc+cDN39EJAMEtIO--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAxOCBGZWIgMjAxNiAwODozNTozMCAtMDYwMApSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPiB3cm90ZToKCj4gT24gV2VkLCBGZWIgMTcsIDIwMTYgYXQgMDQ6NDk6MDVQTSArMDIw
+MCwgSnlyaSBTYXJoYSB3cm90ZToKPiA+IEZyb206IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5l
+amZAZnJlZS5mcj4KPiA+IAo+ID4gVHdvIGtpbmRzIG9mIHBvcnRzIG1heSBiZSBkZWNsYXJlZCBp
+biBhIERUIGdyYXBoIG9mIHBvcnRzOiB2aWRlbyBhbmQgYXVkaW8uCj4gPiBUaGlzIHBhdGNoIGFj
+Y2VwdHMgdGhlIHBvcnQgdmFsdWUgZnJvbSBhIHZpZGVvIHBvcnQgYXMgYW4gYWx0ZXJuYXRpdmUK
+PiA+IHRvIHRoZSB2aWRlby1wb3J0cyBwcm9wZXJ0eS4KPiA+IEl0IGFsc28gYWNjZXB0cyBhdWRp
+byBwb3J0cyBpbiB0aGUgY2FzZSB0aGUgdHJhbnNtaXR0ZXIgaXMgbm90IHVzZWQgYXMKPiA+IGEg
+c2xhdmUgZW5jb2Rlci4KPiA+IFRoZSBuZXcgZmlsZSBpbmNsdWRlL3NvdW5kL3RkYTk5OHguaCBw
+cmVwYXJlcyB0byB0aGUgZGVmaW5pdGlvbiBvZgo+ID4gYSB0ZGE5OTh4IENPREVDLgo+ID4gCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBKZWFuLUZyYW5jb2lzIE1vaW5lIDxtb2luZWpmQGZyZWUuZnI+Cj4g
+PiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+ID4gLS0tCj4gPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGRhOTk4eC50eHQgfCA1MSAr
+KysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vaTJjL3RkYTk5OHhfZHJ2LmMgICAgICAg
+ICAgICAgICAgICB8IDkwICsrKysrKysrKysrKysrKysrKystLS0KPiA+ICBpbmNsdWRlL3NvdW5k
+L3RkYTk5OHguaCAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA4ICsrCj4gPiAgMyBmaWxl
+cyBjaGFuZ2VkLCAxNDAgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgaW5jbHVkZS9zb3VuZC90ZGE5OTh4LmgKPiA+IAo+ID4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90ZGE5OTh4
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+ZGE5OTh4LnR4dAo+ID4gaW5kZXggZTllNGJjZS4uMzVmNmE4MCAxMDA2NDQKPiA+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90ZGE5OTh4LnR4
+dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3RkYTk5OHgudHh0Cj4gPiBAQCAtMTYsNiArMTYsMzUgQEAgT3B0aW9uYWwgcHJvcGVydGll
+czoKPiA+ICAKPiA+ICAgIC0gdmlkZW8tcG9ydHM6IDI0IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5l
+cyBob3cgdGhlIHZpZGVvIGNvbnRyb2xsZXIKPiA+ICAJb3V0cHV0IGlzIHdpcmVkIHRvIHRoZSBU
+REE5OTh4IGlucHV0IC0gZGVmYXVsdDogPDB4MjMwMTQ1Pgo+ID4gKwlUaGlzIHByb3BlcnR5IGlz
+IG5vdCB1c2VkIHdoZW4gcG9ydHMgYXJlIGRlZmluZWQuCj4gPiArCj4gPiArT3B0aW9uYWwgbm9k
+ZXM6Cj4gPiArCj4gPiArICAtIHBvcnQ6IHVwIHRvIHRocmVlIHBvcnRzLgo+ID4gKwlUaGUgcG9y
+dHMgYXJlIGRlZmluZWQgYWNjb3JkaW5nIHRvIFsxXS4KPiA+ICsKPiA+ICsgICAgVmlkZW8gcG9y
+dC4KPiA+ICsJVGhlcmUgbWF5IGJlIG9ubHkgb25lIHZpZGVvIHBvcnQuCj4gPiArCVRoaXMgb25l
+IG11c3QgY29udGFpbiB0aGUgZm9sbG93aW5nIHByb3BlcnR5Ogo+ID4gKwo+ID4gKwktIHBvcnQt
+dHlwZTogbXVzdCBiZSAicmdiIgo+IAo+IFRoaXMgc2hvdWxkIGJlIGltcGxpZWQgZnJvbSB0aGUg
+cG9ydCB1bml0IGFkZHJlc3MuIEluIG90aGVyIHdvcmRzLCAKPiBwb3J0QDAgaXMgZGVmaW5lZCB0
+byBiZSB0aGUgcmdiIHBvcnQuIE5vdywgaWYgdGhpcyBpcyBvbmUgb2Ygc2V2ZXJhbCAKPiBtb2Rl
+cyBmb3IgdGhlIHZpZGVvIHBvcnQsIHRoZW4gdGhhdCBpcyBhIGRpZmZlcmVudCBzdG9yeS4KPiAK
+PiA+ICsJYW5kIG1heSBjb250YWluIHRoZSBvcHRpb25hbCBwcm9wZXJ0eToKPiA+ICsKPiA+ICsJ
+LSByZWc6IDI0IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5lcyBob3cgdGhlIHZpZGVvIGNvbnRyb2xs
+ZXIKPiA+ICsJCW91dHB1dCBpcyB3aXJlZCB0byB0aGUgVERBOTk4eCBpbnB1dCAodmlkZW8gcGlu
+cykKPiA+ICsJCVdoZW4gYWJzZW50LCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyA8MHgyMzAxNDU+Lgo+
+IAo+IFRoaXMgaXMgbm90IHJlYWxseSBob3cgcmVnIGlzIGludGVuZGVkIHRvIGJlIHVzZWQuIENh
+biB5b3UgZXhwbGFpbiBob3cgCj4gdGhpcyB2YWx1ZSBpcyBkZXRlcm1pbmVkPwo+IAo+ID4gKyAg
+ICBBdWRpbyBwb3J0cy4KPiA+ICsJVGhlcmUgbWF5IGJlIG9uZSBvciB0d28gYXVkaW8gcG9ydHMu
+Cj4gPiArCVRoZXNlIG9uZXMgbXVzdCBjb250YWluIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoK
+PiA+ICsKPiA+ICsJLSBwb3J0LXR5cGU6IG11c3QgYmUgImkycyIgb3IgInNwZGlmIgo+ID4gKwo+
+ID4gKwktIHJlZzogOCBiaXRzIHZhbHVlIHdoaWNoIGRlZmluZXMgaG93IHRoZSBhdWRpbyBjb250
+cm9sbGVyCj4gPiArCQlvdXRwdXQgaXMgd2lyZWQgdG8gdGhlIFREQTk5OHggaW5wdXQgKGF1ZGlv
+IHBpbnMpCj4gCj4gU2FtZSBoZXJlLgoKSGkgUm9iLAoKVGhlc2UgYXVkaW8vdmlkZW8gcG9ydCBk
+ZWZpbml0aW9ucyB3ZXJlIGRpc2N1c3NlZCBpbiB0aGUgdGhyZWFkCmh0dHA6Ly9tYWlsbWFuLmFs
+c2EtcHJvamVjdC5vcmcvcGlwZXJtYWlsL2Fsc2EtZGV2ZWwvMjAxNS1BdWd1c3QvMDk1ODM2Lmh0
+bWwKYnV0LCB5b3UgYXJlIHJpZ2h0LCBhbmQgYXMgeW91IGFscmVhZHkgc2FpZCBpbiB0aGUgdGhy
+ZWFkIApodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAx
+NS1TZXB0ZW1iZXIvMDkwNTQ0Lmh0bWwKJ3JlZycgc2hvdWxkIG5vdCBiZSB1c2VkIGhlcmUuCgpJ
+IHdvdWxkIGhhdmUgY2hhbmdlZCB0byAncG9ydC12YWx1ZScsIGJ1dCBhcyBJIHdpbGwgbm90IHVw
+ZGF0ZSB0aGUKa2VybmVsIG9mIG15IERvdmUgQ3Vib3ggYW55bW9yZSwgSSB3aWxsIG5vdCBwcm9w
+b3NlIGEgbmV3IHZlcnNpb24gb2YKdGhpcyBwYXRjaCAoYW5kLCBzb3JyeSBKeXJpLCBJIHdpbGwg
+bm90IHRlc3QgeW91ciBwYXRjaCBzZXJpZXMpLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAg
+ICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVl
+LmZyLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
