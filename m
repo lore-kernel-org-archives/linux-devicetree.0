@@ -1,26 +1,89 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] Add R8A7794 EtherAVB DT support
-Date: Thu, 18 Feb 2016 09:00:31 +0900
-Message-ID: <20160218000031.GB6886@verge.net.au>
-References: <1926986.gmrsfKE5A2@wasted.cogentembedded.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v11 10/14] clk: mediatek: make dpi0_sel propagate rate
+ changes
+Date: Wed, 17 Feb 2016 16:15:40 -0800
+Message-ID: <20160218001540.2278.93143@quark.deferred.io>
+References: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
+ <1455708534-20274-11-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1926986.gmrsfKE5A2@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1455708534-20274-11-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 11:41:57PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
->    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20160217v2-v4.5-rc4' tag plus the R8A7794 audio patches posted
-> last week. Here we add the EtherAVB device tree support for the R8A7794 SoC.
-> 
-> [1/2] ARM: dts: r8a7794: add EtherAVB clock
-> [2/2] ARM: dts: r8a7794: add EtherAVB support
-
-Thanks, I have queued these up for v4.6.
+UXVvdGluZyBQaGlsaXBwIFphYmVsICgyMDE2LTAyLTE3IDAzOjI4OjUwKQo+IFRoaXMgbXV4IGlz
+IHN1cHBvc2VkIHRvIHNlbGVjdCBhIGZpdHRpbmcgZGl2aWRlciBhZnRlciB0aGUgUExMCj4gaXMg
+YWxyZWFkeSBzZXQgdG8gdGhlIGNvcnJlY3QgcmF0ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGls
+aXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IEFja2VkLWJ5OiBKYW1lcyBMaWFv
+IDxqYW1lc2pqLmxpYW9AbWVkaWF0ZWsuY29tPgoKTG9va3MgZ29vZCB0byBtZS4KClJlZ2FyZHMs
+Ck1pa2UKCj4gLS0tCj4gQ2hhbmdlcyBzaW5jZSB2MTA6Cj4gIC0gQWRkIGNvbW1lbnRzIGFib3V0
+IE1VWF9HQVRFIHJhdGUgY2hhbmdlIHByb3BhZ2F0aW9uCj4gLS0tCj4gIGRyaXZlcnMvY2xrL21l
+ZGlhdGVrL2Nsay1tdDgxNzMuYyB8ICA2ICsrKysrLQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9j
+bGstbXRrLmggICAgfCAxNSArKysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxOCBp
+bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Ns
+ay9tZWRpYXRlay9jbGstbXQ4MTczLmMgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTcz
+LmMKPiBpbmRleCAyMjdlMzU2Li44NWMwYmZjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL21l
+ZGlhdGVrL2Nsay1tdDgxNzMuYwo+ICsrKyBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgx
+NzMuYwo+IEBAIC01NTgsNyArNTU4LDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2NvbXBv
+c2l0ZSB0b3BfbXV4ZXNbXSBfX2luaXRjb25zdCA9IHsKPiAgICAgICAgIE1VWF9HQVRFKENMS19U
+T1BfQVRCX1NFTCwgImF0Yl9zZWwiLCBhdGJfcGFyZW50cywgMHgwMDkwLCAxNiwgMiwgMjMpLAo+
+ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9WRU5DX0xUX1NFTCwgInZlbmNsdF9zZWwiLCB2ZW5j
+X2x0X3BhcmVudHMsIDB4MDA5MCwgMjQsIDQsIDMxKSwKPiAgICAgICAgIC8qIENMS19DRkdfNiAq
+Lwo+IC0gICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2VsIiwgZHBpMF9w
+YXJlbnRzLCAweDAwYTAsIDAsIDMsIDcpLAo+ICsgICAgICAgLyoKPiArICAgICAgICAqIFRoZSBk
+cGkwX3NlbCBjbG9jayBzaG91bGQgbm90IHByb3BhZ2F0ZSByYXRlIGNoYW5nZXMgdG8gaXRzIHBh
+cmVudAo+ICsgICAgICAgICogY2xvY2sgc28gdGhlIGRwaSBkcml2ZXIgY2FuIGhhdmUgZnVsbCBj
+b250cm9sIG92ZXIgUExMIGFuZCBkaXZpZGVyLgo+ICsgICAgICAgICovCj4gKyAgICAgICBNVVhf
+R0FURV9GTEFHUyhDTEtfVE9QX0RQSTBfU0VMLCAiZHBpMF9zZWwiLCBkcGkwX3BhcmVudHMsIDB4
+MDBhMCwgMCwgMywgNywgMCksCj4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0lSREFfU0VMLCAi
+aXJkYV9zZWwiLCBpcmRhX3BhcmVudHMsIDB4MDBhMCwgOCwgMiwgMTUpLAo+ICAgICAgICAgTVVY
+X0dBVEUoQ0xLX1RPUF9DQ0k0MDBfU0VMLCAiY2NpNDAwX3NlbCIsIGNjaTQwMF9wYXJlbnRzLCAw
+eDAwYTAsIDE2LCAzLCAyMyksCj4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0FVRF8xX1NFTCwg
+ImF1ZF8xX3NlbCIsIGF1ZF8xX3BhcmVudHMsIDB4MDBhMCwgMjQsIDIsIDMxKSwKPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oIGIvZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10ay5oCj4gaW5kZXggMzJkMmU0NS4uOWYyNGZjZiAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2Nsay9tZWRpYXRlay9jbGstbXRrLmgKPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9j
+bGstbXRrLmgKPiBAQCAtODMsNyArODMsMTEgQEAgc3RydWN0IG10a19jb21wb3NpdGUgewo+ICAg
+ICAgICAgc2lnbmVkIGNoYXIgbnVtX3BhcmVudHM7Cj4gIH07Cj4gIAo+IC0jZGVmaW5lIE1VWF9H
+QVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUpIHsg
+IFwKPiArLyoKPiArICogSW4gY2FzZSB0aGUgcmF0ZSBjaGFuZ2UgcHJvcGFnYXRpb24gdG8gcGFy
+ZW50IGNsb2NrcyBpcyB1bmRlc2lyYWJsZSwKPiArICogdGhpcyBtYWNybyBhbGxvd3MgdG8gc3Bl
+Y2lmeSB0aGUgY2xvY2sgZmxhZ3MgbWFudWFsbHkuCj4gKyAqLwo+ICsjZGVmaW5lIE1VWF9HQVRF
+X0ZMQUdTKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUs
+IF9mbGFncykgeyAgICBcCj4gICAgICAgICAgICAgICAgIC5pZCA9IF9pZCwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAgICAubmFt
+ZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAg
+ICAgICAgICAgICAgICAgLm11eF9yZWcgPSBfcmVnLCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBcCj4gQEAgLTk0LDkgKzk4LDE2IEBAIHN0cnVjdCBtdGtfY29tcG9zaXRl
+IHsKPiAgICAgICAgICAgICAgICAgLmRpdmlkZXJfc2hpZnQgPSAtMSwgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBcCj4gICAgICAgICAgICAgICAgIC5wYXJlbnRfbmFtZXMgPSBf
+cGFyZW50cywgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAg
+ICAubnVtX3BhcmVudHMgPSBBUlJBWV9TSVpFKF9wYXJlbnRzKSwgICAgICAgICAgICAgICAgICAg
+IFwKPiAtICAgICAgICAgICAgICAgLmZsYWdzID0gQ0xLX1NFVF9SQVRFX1BBUkVOVCwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBcCj4gKyAgICAgICAgICAgICAgIC5mbGFncyA9IF9mbGFncywg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgfQo+ICAK
+PiArLyoKPiArICogVW5sZXNzIG5lY2Vzc2FyeSwgYWxsIE1VWF9HQVRFIGNsb2NrcyBwcm9wYWdh
+dGUgcmF0ZSBjaGFuZ2VzIHRvIHRoZWlyCj4gKyAqIHBhcmVudCBjbG9jayBieSBkZWZhdWx0Lgo+
+ICsgKi8KPiArI2RlZmluZSBNVVhfR0FURShfaWQsIF9uYW1lLCBfcGFyZW50cywgX3JlZywgX3No
+aWZ0LCBfd2lkdGgsIF9nYXRlKSAgICBcCj4gKyAgICAgICBNVVhfR0FURV9GTEFHUyhfaWQsIF9u
+YW1lLCBfcGFyZW50cywgX3JlZywgX3NoaWZ0LCBfd2lkdGgsIF9nYXRlLCBDTEtfU0VUX1JBVEVf
+UEFSRU5UKQo+ICsKPiAgI2RlZmluZSBNVVgoX2lkLCBfbmFtZSwgX3BhcmVudHMsIF9yZWcsIF9z
+aGlmdCwgX3dpZHRoKSB7ICAgICAgICAgICAgICBcCj4gICAgICAgICAgICAgICAgIC5pZCA9IF9p
+ZCwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAg
+ICAgICAgICAgICAubmFtZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIFwKPiAtLSAKPiAyLjcuMAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
