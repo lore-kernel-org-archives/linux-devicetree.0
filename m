@@ -1,44 +1,47 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 0/3] thermal: exynos: Fixes for vtmu-supply regulator handling
-Date: Thu, 18 Feb 2016 15:19:08 -0300
-Message-ID: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC variants
+Date: Thu, 18 Feb 2016 19:30:27 +0100
+Message-ID: <CACRpkdZD_qg0p8spr9HnFBSzXidi59J_kR8XBo-s8z-tSqKs5g@mail.gmail.com>
+References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org>
+	<56C5D304.5010708@arm.com>
+	<5028476.WAQS3ylXOd@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5028476.WAQS3ylXOd@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Feb 18, 2016 at 3:40 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
+>> On 18/02/16 13:46, Linus Walleij wrote:
+>> > In the add-on file for the GIC dealing with the RealView family
+>> > we currently only handle the PB11MPCore, let's extend this to
+>> > manage the RealView EB ARM11MPCore as well. The Revision B of the
+>> > ARM11MPCore core tile is a bit special and needs special handling
+>> > as it moves a system control register around at random.
+>>
+>> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
+>> cupboard, and failed. Oh well...
+>
+> What surprised me though is that it's enabled by default:
 
-On a recent patch series to build a PMIC chip as a module [0], Krzysztof
-asked me to check if all the consumer drivers, using the resources that
-this PMIC provides, already support probe deferral.
+Looks like my fault according to git-blame...
 
-While investigating that, I noticed that the Exynos TMU didn't do it so
-this series fix that bug and other two minor issues that I noticed while
-reviewing the driver and its DT binding.
+I think this happened when making cover-all defconfigs for
+multiplatform. I think I just turned everything on... not realizing
+that turning on RevB disabled RevA+RevC.
 
-The series are on top of Krzysztof's patches [1,2,3] not because there's
-a dependency but to avoid merge conflicts with in-flight patches. Please
-let me know if you prefer to use a different base instead.
+However since it is the *only* version that works with QEMU
+it actually makes some kind of weird sense to have it enabled
+since the QEMU version is probably more common than
+RevA+RevC...
 
-[0]: https://lkml.org/lkml/2016/2/11/857
-[1]: https://patchwork.kernel.org/patch/8345791/
-[2]: https://patchwork.kernel.org/patch/8345741/
-[3]: https://patchwork.kernel.org/patch/8345701/
-
-Best regards,
-Javier
-
-
-Javier Martinez Canillas (3):
-  thermal: exynos: List vtmu-supply as optional property in DT binding
-  thermal: exynos: Use devm_regulator_get_optional() for vtmu
-  thermal: exynos: Defer probe if vtmu is present but not registered
-
- Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
- drivers/thermal/samsung/exynos_tmu.c                         | 4 +++-
- 2 files changed, 9 insertions(+), 4 deletions(-)
-
--- 
-2.5.0
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
