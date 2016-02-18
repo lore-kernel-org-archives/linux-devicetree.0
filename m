@@ -1,85 +1,137 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH v2.1 2/4] spi: rockchip: add bindings for rk3399 spi
-Date: Thu, 18 Feb 2016 17:57:49 +0800
-Message-ID: <56C5959D.3030806@rock-chips.com>
-References: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
- <1455762983-29980-3-git-send-email-jay.xu@rock-chips.com>
- <20160218094108.GA7129@sirena.org.uk> <2327512.KAqs6H56Km@phil>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: Re: [PATCH v3 09/10] ARM: dts: introduce MPS2 AN385/AN386
+Date: Thu, 18 Feb 2016 10:11:37 +0000
+Message-ID: <56C598D9.3030001@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>
+ <56C349E6.2000002@arm.com> <56C4A46C.50506@arm.com>
+ <7272921.u1gphgWzUn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2327512.KAqs6H56Km@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7272921.u1gphgWzUn@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, galak@codeaurora.org, u.kleine-koenig@pengutronix.de, tglx@linutronix.de, linux-api@vger.kernel.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko
+On 17/02/16 16:58, Arnd Bergmann wrote:
+> On Wednesday 17 February 2016 16:48:44 Vladimir Murzin wrote:
+>> On 16/02/16 16:10, Vladimir Murzin wrote:
+>>> On 16/02/16 11:01, Arnd Bergmann wrote:
+>>>> On Tuesday 16 February 2016 10:08:14 Vladimir Murzin wrote:
+>>>>> +
+>>>>> +       ethernet@40200000 {
+>>>>> +               compatible = "smsc,lan9220", "smsc,lan9115";
+>>>>> +               reg = <0x40200000 0x10000>;
+>>>>> +               interrupts = <13>;
+>>>>> +               interrupt-parent = <&nvic>;
+>>>>> +               smsc,irq-active-high;
+>>>>> +       };
+>>>>> +};
+>>>>> +
+>>>>>
+>>>>
+>>>> This node seems slightly misplaced. Is there some external bus interface
+>>>> that this is connected to? The address suggests that it should be somewhere
+>>>> below the /soc node, and you probably want to list the external bus
+>>>> interface with a "ranges" property that identifies the addresses visibile
+>>>> there, and put the external chip under there.
+>>>>
+>>>
+>>> I might messed it up since the MAC/PHY connects to the same 16-bit
+>>> interface as the 16MB PSRAM external memory and both connected via AHB.
+>>>
+>>> Not sure how it should be expressed, so some help form DT camp would be
+>>> appreciated.
+>>
+>> Does following fixup address your point on where/how ethernet node
+>> should be placed?
+> 
+> 
+> 
+>> diff --git a/arch/arm/boot/dts/mps2-an385.dts b/arch/arm/boot/dts/an385.dts
+>> index 976f86d..50c8d24 100644
+>> --- a/arch/arm/boot/dts/mps2-an385.dts
+>> +++ b/arch/arm/boot/dts/mps2-an385.dts
+>> @@ -63,14 +63,10 @@
+>>  		device_type = "memory";
+>>  		reg = <0x21000000 0x1000000>;
+>>  	};
+>> +};
+>>
+>> -	ethernet@40200000 {
+>> -		compatible = "smsc,lan9220", "smsc,lan9115";
+>> -		reg = <0x40200000 0x10000>;
+>> -		interrupts = <13>;
+>> -		interrupt-parent = <&nvic>;
+>> -		smsc,irq-active-high;
+>> -	};
+>> +&mb {
+>> +	ranges = <0 0x40200000 0x10000>;
+>>  };
+> 
+> How is the range being set here? The way I read this is:
+> 
+> "There is an external bus controller whose single CPU physical
+> address for MMIO is configurable. The chip always connects
+> a lan9220 device to it (as that is in the dtsi file) and
+> nothing else is possible, and the bootloader in this
+> version of the machine has configured the window to be
+> at address 0x40200000."
+> 
+> Is that what the hardware does?
+> 
+> I would have expected the opposite, with the external bus
+> interface being hardwired to one or more physical addresses
+> (more than one if you have multiple chip-selects), and
+> then allow to connect different devices, which are in the
+> .dts file, while the bus controller is defined in the
+> .dtsi file.
+> 
 
-Thank you for you kindly explain, now I got your comments.
+Right, I thought in a wrong way, in opposite it makes more sense now.
 
-=D4=DA 18/02/2016 17:47, Heiko Stuebner =D0=B4=B5=C0:
-> From: Xu Jianqun <jay.xu@rock-chips.com>
->
-> Add devicetree bindings for Rockchip rk3399 spi which found on
-> Rockchip rk3399 SoCs.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-> Hi Jianqun,
-> what Mark means is the following.
->
->   Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
->   drivers/spi/spi-rockchip.c                             | 1 +
->   2 files changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b=
-/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-> index 0c491bd..1b14d69 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-> @@ -9,6 +9,7 @@ Required Properties:
->       "rockchip,rk3066-spi" for rk3066.
->       "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
->       "rockchip,rk3288-spi", "rockchip,rk3066-spi" for rk3288.
-> +    "rockchip,rk3399-spi", "rockchip,rk3066-spi" for rk3399.
->   - reg: physical base address of the controller and length of memory=
- mapped
->          region.
->   - interrupts: The interrupt number to the cpu. The interrupt specif=
-ier format
-> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-> index 79a8bc4..345fefd 100644
-> --- a/drivers/spi/spi-rockchip.c
-> +++ b/drivers/spi/spi-rockchip.c
-> @@ -868,6 +868,7 @@ static const struct of_device_id rockchip_spi_dt_=
-match[] =3D {
->   	{ .compatible =3D "rockchip,rk3066-spi", },
->   	{ .compatible =3D "rockchip,rk3188-spi", },
->   	{ .compatible =3D "rockchip,rk3288-spi", },
-> +	{ .compatible =3D "rockchip,rk3399-spi", },
-I'm a little confuse, I have upstreamed rockchip-i2s, and the i2s drive=
-r=20
-set the compatible like:
-- compatible: should be one of the followings
-    - "rockchip,rk3066-i2s": for rk3066
-    - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
-    - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
-    - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
-and the driver only has
-static const struct of_device_id rockchip_i2s_match[] =3D {
-	{ .compatible =3D "rockchip,rk3066-i2s", },
-	{},
+.dtsi
+
+/* below the soc/ */
+smb {
+	compatible = "simple-bus";
+	#address-cells = <2>;
+	#size-cells = <1>;
+	ranges = <0 0 0x40200000 0x10000>,
+		 <1 0 0xa0000000 0x10000>;
 };
 
-The spi of rk3399 as same as rk3066, rk3188, rk3288, like i2s, if they=20
-are keep different rules ?
+.dts
+
+smb {
+	ethernet@0,0 {
+		compatible = "smsc,lan9220", "smsc,lan9115";
+		reg = <0 0x0 0x10000>;
+		interrupts = <13>;
+		interrupt-parent = <&nvic>;
+		smsc,irq-active-high;
+};
 
 
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
->
+and looking again at .dtsi it seems to me that fpgaio should be moved
+below the soc/ under separate bus interface which would hosts audio and
+spi too or I keep missing things around device-tree?
+
+I appreciate your help on this, thanks!
+
+Vladimir
+
+> 	Arnd
+> 
+> 
+> 
