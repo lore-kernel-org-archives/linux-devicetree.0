@@ -1,41 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: gic/realview: support more RealView DCC variants
-Date: Thu, 18 Feb 2016 15:40:34 +0100
-Message-ID: <5028476.WAQS3ylXOd@wuerfel>
-References: <1455803172-22747-1-git-send-email-linus.walleij@linaro.org> <56C5D304.5010708@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/5] ASoC: adau17x1: Add adau17x1 bindings document
+Date: Thu, 18 Feb 2016 08:37:31 -0600
+Message-ID: <20160218143731.GR9654@rob-hp-laptop>
+References: <1455627405-18155-1-git-send-email-andire@axis.com>
+ <1455627405-18155-4-git-send-email-andire@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C5D304.5010708-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455627405-18155-4-git-send-email-andire@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?Irest=E5l?= <andreas.irestal@axis.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Andreas =?iso-8859-1?Q?Irest=E5l?= <andire@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 February 2016 14:19:48 Marc Zyngier wrote:
-> On 18/02/16 13:46, Linus Walleij wrote:
-> > In the add-on file for the GIC dealing with the RealView family
-> > we currently only handle the PB11MPCore, let's extend this to
-> > manage the RealView EB ARM11MPCore as well. The Revision B of the
-> > ARM11MPCore core tile is a bit special and needs special handling
-> > as it moves a system control register around at random.
-> 
-> Ah, 11MPCore RevB. That thing. Tried to locate one in the magic
-> cupboard, and failed. Oh well...
+On Tue, Feb 16, 2016 at 01:56:43PM +0100, Andreas Irest=E5l wrote:
+> Signed-off-by: Andreas Irest=E5l <andire@axis.com>
+> ---
+>  .../devicetree/bindings/sound/adi,adau17x1.txt     | 24 ++++++++++++=
+++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/adi,adau1=
+7x1.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/sound/adi,adau17x1.txt=
+ b/Documentation/devicetree/bindings/sound/adi,adau17x1.txt
+> new file mode 100644
+> index 0000000..8dbce0e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/adi,adau17x1.txt
+> @@ -0,0 +1,24 @@
+> +Analog Devices ADAU1361/ADAU1461/ADAU1761/ADAU1961/ADAU1381/ADAU1781
+> +
+> +Required properties:
+> +
+> + - compatible:		Should contain one of the following:
+> +			"adi,adau1361"
+> +			"adi,adau1461"
+> +			"adi,adau1761"
+> +			"adi,adau1961"
+> +			"adi,adau1381"
+> +			"adi,adau1781"
+> +
+> + - reg:			The i2c address. Value depends on the state of ADDR0
+> +			and ADDR1, as wired in hardware.
+> +
+> +Examples:
+> +#include <dt-bindings/sound/adau17x1.h>
+> +
+> +	i2c_bus {
+> +		adau1361@38 {
 
-What surprised me though is that it's enabled by default:
+codec@38
 
-$ grep REVB arch/arm/configs/realview*
-arch/arm/configs/realview_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
-arch/arm/configs/realview-smp_defconfig:CONFIG_REALVIEW_EB_ARM11MP_REVB=y
+Otherwise:
 
-With that option set, the defconfig kernel should not be able
-to boot on RevC machines. Do you have a RevC machine that works
-with the defconfig?
+Acked-by: Rob Herring <robh@kernel.org>
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +			compatible =3D "adi,adau1761";
+> +			reg =3D <0x38>;
+> +		};
+> +	};
+> --=20
+> 2.1.4
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
