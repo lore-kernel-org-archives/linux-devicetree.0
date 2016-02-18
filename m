@@ -1,49 +1,51 @@
-From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [1/4] arm64: Broadcom Vulcan support
-Date: Thu, 18 Feb 2016 10:15:11 -0800
-Message-ID: <0c75ddd6-d353-bb73-62e4-bae0ff95a3b0@broadcom.com>
-References: <1455389195-31870-2-git-send-email-jchandra@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455389195-31870-2-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jayachandran C." <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional property in DT binding
+Date: Thu, 18 Feb 2016 15:19:09 -0300
+Message-ID: <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-+ bcm-kernel-feedback-list mailing list
+The Exynos Thermal Management Unit binding says that the vtmu-supply
+is optional but is listed in the required properties section. Add an
+optional properties section and move the regulator property there.
 
-On 2/13/2016 10:46 AM, Jayachandran C. wrote:
-> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> Add a configuration option and a device tree for Broadcom's Vulcan
-> ARM64 processor. brcm-vulcan.dtsi has the on-chip blocks like the
-> PCIe controller, GICv3 with ITS, PMU, system timer and pl011 UART.
-> brcm-vulcan-eval.dts has definitions for a basic evaluation board.
-> The firmware supports PSCI 0.2 for cpu wakeup.
->
-> Signed-off-by: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> [ updated and split dts - jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org ]
-> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> ---
-> arch/arm64/Kconfig.platforms                      |   5 +
->  arch/arm64/boot/dts/broadcom/Makefile             |   1 +
->  arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts |  33 +++++
->  arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi     | 146 ++++++++++++++++++++++
->  4 files changed, 185 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts
->  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
-Could you please name the files "vulcan.dtsi" and "vulcan-eval.dts" so 
-it's consistent with the rest of files in the same directory?
+ Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Thanks,
-
-Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+index faa62059b5c5..70b4c16c7ed8 100644
+--- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+@@ -41,9 +41,6 @@
+ 		for current TMU channel
+ 	-- "tmu_sclk" clock for functional operation of the current TMU
+ 		channel
+-- vtmu-supply: This entry is optional and provides the regulator node supplying
+-		voltage to TMU. If needed this entry can be placed inside
+-		board/platform specific dts file.
+ 
+ The Exynos TMU supports generating interrupts when reaching given
+ temperature thresholds. Number of supported thermal trip points depends
+@@ -65,6 +62,12 @@ Following properties are mandatory (depending on SoC):
+ - samsung,tmu_default_temp_offset: Default temperature offset
+ - samsung,tmu_cal_type: Callibration type
+ 
++** Optional properties:
++
++- vtmu-supply: This entry is optional and provides the regulator node supplying
++		voltage to TMU. If needed this entry can be placed inside
++		board/platform specific dts file.
++
+ Example 1):
+ 
+ 	tmu@100C0000 {
+-- 
+2.5.0
