@@ -1,34 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 2/3] added UFS 2.0 capabilities
-Date: Thu, 18 Feb 2016 08:38:37 -0600
-Message-ID: <20160218143837.GD9654@rob-hp-laptop>
-References: <cover.1455549221.git.jpinto@synopsys.com>
- <4e48beb48bc4c67c335de45218e2b49aa51dd4d9.1455549222.git.jpinto@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] ASoC: rockchip: add bindings for rk3399 i2s
+Date: Thu, 18 Feb 2016 08:37:02 -0600
+Message-ID: <20160218143702.GN9654@rob-hp-laptop>
+References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
+ <1455673992-16469-4-git-send-email-jay.xu@rock-chips.com>
+ <20160217110306.GJ7544@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4e48beb48bc4c67c335de45218e2b49aa51dd4d9.1455549222.git.jpinto@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160217110306.GJ7544-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 03:25:12PM +0000, Joao Pinto wrote:
-> Adding UFS 2.0 support to the UFS core driver.
+On Wed, Feb 17, 2016 at 11:03:06AM +0000, Mark Brown wrote:
+> On Wed, Feb 17, 2016 at 09:53:09AM +0800, jianqun.xu wrote:
 > 
-> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
-> ---
-> Changes v7->v8:
-> - Added "jedec, ufs-2.0" to the ufschd-platform compatibility strings
-> Changes v0->v7:
-> - Nothing changed (just to keep up with patch set version).
+> > ---
+> >  Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 > 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 +--
+> As with the other patch I'd expect to see a matching driver update if
+> only for documentation purposes.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why? They match on the prior chip's compatible until there is some 
+difference the driver needs to handle.
 
->  drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++++++---
->  drivers/scsi/ufs/ufshci.h                          |  1 +
->  3 files changed, 28 insertions(+), 6 deletions(-)
-> 
+Rob
