@@ -1,31 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dma: mmp_pdma: Add the #dma-requests DT property
- documentation
-Date: Thu, 18 Feb 2016 08:38:31 -0600
-Message-ID: <20160218143831.GC9654@rob-hp-laptop>
-References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
+Subject: Re: [PATCH v4 2/3] mwifiex: parse chip specific gpio from device tree
+Date: Thu, 18 Feb 2016 08:37:57 -0600
+Message-ID: <20160218143757.GW9654@rob-hp-laptop>
+References: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
+ <1455614079-4263-2-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
+In-Reply-To: <1455614079-4263-2-git-send-email-akarwar@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, wnhuang@chromium.com, devicetree@vger.kernel.org, Cathy Luo <cluo@marvell.com>, linux-kernel@vger.kernel.org, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 09:57:45PM +0100, Robert Jarzmik wrote:
-> For pxa based platforms, the number of requestor lines should be
-> specified, so that the driver can check if the flow control should be
-> activated (when a requestor line is asked for) or not.
+On Tue, Feb 16, 2016 at 01:14:38AM -0800, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm@marvell.com>
 > 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
-> Since v1: rename of property to #dma-requests
->       	  modify default value to 32 as suggested by Vinod
-> ---
->  Documentation/devicetree/bindings/dma/mmp-dma.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> This patch parse chip specific gpio parameter from device
+> tree. Corresponding binding file is also updated.
 > 
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+> ---
+> v4: Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
+>     Arnd Bergmann)
+> ---
+>  .../devicetree/bindings/net/wireless/marvell-sd8xxx.txt          | 6 ++++--
 
-Acked-by: Rob Herring <robh@kernel.org>
+Combine this with the DT change in the next patch.
+
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c                   | 9 +++++++++
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> index f7671ae..c337fab 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> @@ -11,7 +11,9 @@ Optional properties:
+>    - marvell,caldata* : A series of properties with marvell,caldata prefix,
+>    		      represent Calibration data downloaded to the device during
+>  		      initialization. This is an array of unsigned values.
+> -
+> +  - marvell,wakeup-gpios : Chip's wakeup gpio pin number. This needs to be downloaded
+> +			to to firmware. Chip notifies wifi wakeup signal to SOC
+> +			through this pin.
+
+This is still confusing that it is not a GPIO from the host. I'd suggest 
+"marvell,wakeup-pin"
