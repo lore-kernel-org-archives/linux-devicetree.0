@@ -1,34 +1,109 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 0/4] Add support for Classifier and RSS
-Date: Wed, 17 Feb 2016 22:08:58 -0500 (EST)
-Message-ID: <20160217.220858.1360154606807063304.davem@davemloft.net>
-References: <1455750042-1521-1-git-send-email-isubramanian@apm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1455750042-1521-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: isubramanian@apm.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, toanle@apm.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 1/3] ARM: dts: Add cooling levels for CPUs on exynos5420
+Date: Thu, 18 Feb 2016 14:13:01 +0900
+Message-ID: <1455772383-20598-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Iyappan Subramanian <isubramanian@apm.com>
-Date: Wed, 17 Feb 2016 15:00:38 -0800
+On Exynos5420 we support 8 cpufreq steps (600-1300 MHz) for LITTLE and
+12 steps for big core (700-1800 MHz). Add respective cooling cells.
 
-> This patch set enables,
-> 
-> (i) Classifier engine that is used for parsing
-> through the packet and extracting a search string that is then used
-> to search a database to find associative data.
-> 
-> (ii) Receive Side Scaling (RSS) that does dynamic load
-> balancing of the CPUs by controlling the number of messages enqueued
-> per CPU though the help of Toeplitz Hash function of 4-tuple of
-> source TCP/UDP port, destination TCP/UDP port, source IPV4 address and
-> destination IPV4 address.
-> 
-> (iii) Multi queue, to make advantage of RSS
- ...
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Series applied, thanks.
+---
+
+Changes since v1:
+1. Add cooling properties to all CPUs (suggested by Viresh).
+---
+ arch/arm/boot/dts/exynos5420-cpus.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+index 261d25173f61..5c052d7ff554 100644
+--- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+@@ -33,6 +33,9 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <11>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -42,6 +45,9 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <11>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -51,6 +57,9 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <11>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -60,6 +69,9 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <11>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu4: cpu@100 {
+@@ -70,6 +82,9 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu5: cpu@101 {
+@@ -79,6 +94,9 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu6: cpu@102 {
+@@ -88,6 +106,9 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu7: cpu@103 {
+@@ -97,6 +118,9 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 	};
+ };
+-- 
+2.5.0
