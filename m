@@ -1,66 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: devicetree: add Freescale SCC bindings
-Date: Thu, 18 Feb 2016 21:11:40 +0800
-Message-ID: <20160218131140.GV6756@tiger>
-References: <1455199485-24458-1-git-send-email-s.trumtrar@pengutronix.de>
- <20160214075557.GP6756@tiger>
- <73fuwtdp3m.fsf@unicorn.hi.pengutronix.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-microsom.dtsi: avoid boot-time UHS
+ warning
+Date: Thu, 18 Feb 2016 21:35:39 +0800
+Message-ID: <20160218133539.GW6756@tiger>
+References: <E1aVMgw-0001wE-5w@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <73fuwtdp3m.fsf@unicorn.hi.pengutronix.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <E1aVMgw-0001wE-5w-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 09:41:17AM +0100, Steffen Trumtrar wrote:
+On Mon, Feb 15, 2016 at 05:12:06PM +0000, Russell King wrote:
+> Avoid the following warning:
 > 
-> Hi!
+> sdhci-esdhc-imx 2190000.usdhc: could not get ultra high speed state, work on normal mode
 > 
-> Shawn Guo writes:
+> which occurs at boot each time the SDHCI interface for the Broadcom
+> WiFi is probed.
 > 
-> > On Thu, Feb 11, 2016 at 03:04:43PM +0100, Steffen Trumtrar wrote:
-> >> Add documentation for the Freescale Security Controller (SCC)
-> >> found on i.MX25 SoCs.
-> >> 
-> >> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> >> ---
-> >>  .../devicetree/bindings/crypto/fsl-imx-scc.txt          | 17 +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> >> new file mode 100644
-> >> index 000000000000..9a15ab8da94f
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
-> >> @@ -0,0 +1,17 @@
-> >> +Freescale Security Controller (SCC)
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "fsl,imx25-scc".
-> >> +- reg : Should contain register location and length.
-> >> +- interrupts : Should contain interrupt numbers for SCM IRQ and SMN IRQ.
-> >> +
-> >> +Example:
-> >> +
-> >> +	scc: crypto@53fac000 {
-> >> +		compatible = "fsl,imx25-scc";
-> >> +		reg = <0x53fac000 0x4000>;
-> >> +		clocks = <&clks 111>;
-> >> +		clock-names = "ipg";
-> >
-> > Shouldn't these two be mentioned in properties list above too?
-> >
-> 
-> What is the current policy on clocks in bindings? There are some with
-> and some without.
-> 
-> Of course I can add them to the required properties if necessary.
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 
-I think any required properties should be listed in "Required
-properties:" section.
+Not sure why you resend, but I already applied the following series you
+sent on Jan. 27 [1].
+
+[PATCH 1/3] ARM: dts: imx6qdl-microsom.dtsi: avoid boot-time UHS warning
+[PATCH 2/3] ARM: dts: imx6*-hummingboard: use proper gpio flags definitions
+[PATCH 3/3] ARM: dts: imx6*-hummingboard: fix pcie reset GPIO specification
 
 Shawn
+
+[1] http://permalink.gmane.org/gmane.linux.drivers.devicetree/154097
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
