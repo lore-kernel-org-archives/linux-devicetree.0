@@ -1,71 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC v2 01/11] PM / Domains: Add DT bindings for the R-Car
- System Controller
-Date: Thu, 18 Feb 2016 08:38:26 -0600
-Message-ID: <20160218143826.GB9654@rob-hp-laptop>
-References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
- <1455571020-18968-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH 3/5] dt-bindings: phy: bindings document for common
+ Broadcom SATA3 PHY driver
+Date: Thu, 18 Feb 2016 08:38:15 -0600
+Message-ID: <20160218143815.GZ9654@rob-hp-laptop>
+References: <1455604420-11300-1-git-send-email-anup.patel@broadcom.com>
+ <1455604420-11300-4-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455571020-18968-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1455604420-11300-4-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 10:16:50PM +0100, Geert Uytterhoeven wrote:
-> The Renesas R-Car System Controller provides power management for the
-> CPU cores and various coprocessors, following the generic PM domain
-> bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+On Tue, Feb 16, 2016 at 12:03:38PM +0530, Anup Patel wrote:
+> This patch:
+> 1. Renames DT bindings document of Broadcom STB SATA3 PHY driver to
+> common Broadcom SATA3 PHY driver bindings document
+> 2. Adds bindings info for NS2 SATA3 PHY
 > 
-> This supports R-Car Gen1, Gen2, and Gen3.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
 > ---
-> Alternatives I considered:
+>  .../phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt}  | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>  rename Documentation/devicetree/bindings/phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} (69%)
 > 
->   - Using a single node per power register block, even if it contains
->     multiple domains, e.g.:
-> 
-> 	    pd_ca15_scu: ca15_scu@180 {
-> 		    reg = <0x180 0x20>;
-> 		    #address-cells = <1>;
-> 		    #size-cells = <0>;
-> 		    #power-domain-cells = <0>;
-> 		    renesas,interrupt-bits = <12>;
-> 
-> 		    pd_ca15_cpu: ca15_cpu@40 {
-> 			    reg = <0x40 0x20>;
-> 			    #power-domain-cells = <1>;
-> 			    renesas,pm-domain-indices = <0 1>;
-> 			    renesas,pm-domain-names =
-> 				    "ca15_cpu0", "ca15_cpu1";
-> 			    renesas,interrupt-bits = <0 1>;
-> 		    };
-> 	    };
-> 
->     Notes:
->       - You cannot just have a property with the number of domains, as
-> 	index 0 is not used on R-Car H1. Hence the need for
-> 	"renesas,pm-domain-indices" and "renesas,interrupt-bits",
->       - "#power-domain-cells = <1>" for nodes with multiple domains,
-> 	which allows typos in "power-domains = <&pd_ca15_cpu n>", using
-> 	an invalid value of "n".
-> 
->   - Using a linear description in DT:
->       - Needs parent links for subdomains,
->       - More complicated to parse (lesson learned from R-Mobile PM
-> 	Domain support).
-> 
->   - Keeping the power register block offset and the bit number as separate
->     "reg" cells, increasing "#address-cells" from 2 to 3,
-> 
->   - Merging the interrupt bit (which needs only 5 bits) in the other "reg"
->     cell, decreasing "#address-cells" from 2 to 1.
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+> similarity index 69%
+> rename from Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
+> rename to Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+> index d87ab7c..d023120 100644
+> --- a/Documentation/devicetree/bindings/phy/brcm,brcmstb-sata-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+> @@ -1,14 +1,17 @@
+> -* Broadcom SATA3 PHY for STB
+> +* Broadcom SATA3 PHY
+>  
+>  Required properties:
+>  - compatible: should be one or more of
+>       "brcm,bcm7425-sata-phy"
+>       "brcm,bcm7445-sata-phy"
+> +     "brcm,iproc-ns2-sata-phy"
+>       "brcm,phy-sata3"
+>  - address-cells: should be 1
+>  - size-cells: should be 0
+> -- reg: register range for the PHY PCB interface
+> -- reg-names: should be "phy"
+> +- reg: register ranges for the PHY PCB interface
+> +- reg-names: should be "phy" and "phy-ctrl"
+> +     The "phy-ctrl" registers are only required for
+> +     "brcm,iproc-ns2-sata-phy".
+>  
+>  Sub-nodes:
+>    Each port's PHY should be represented as a sub-node.
+> @@ -16,12 +19,12 @@ Sub-nodes:
+>  Sub-nodes required properties:
+>  - reg: the PHY number
+>  - phy-cells: generic PHY binding; must be 0
+> -Optional:
+> -- brcm,enable-ssc: use spread spectrum clocking (SSC) on this port
+>  
+> +Sub-nodes optional properties:
+> +- brcm,enable-ssc: use spread spectrum clocking (SSC) on this port
+> +     This property is not applicable for "brcm,iproc-ns2-sata-phy".
 
-I think I'd move to not encoding mulitple things into reg. This seems 
-like a bit of abuse of reg. Otherwise, I don't have much to comment on.
+My understanding of SSC is it is required for hosts and optional for 
+drives to support (from first hand experience of a host not enabling). 
+Not setting this is would not be compliant. The polarity on this is 
+somewhat backwards too as the common case should be no property.
+
+Anyway, that's all besides the point of your change. I assume it doesn't 
+apply here for you because it is always enabled. 
+
+Acked-by: Rob Herring <robh@kernel.org>
 
 Rob
