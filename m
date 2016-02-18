@@ -1,78 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Device probing proceeds even when the default pinctrl state is invalid
-Date: Thu, 18 Feb 2016 21:07:57 +0100
-Message-ID: <CACRpkdamPh3pLetWs_S6b_BFWKDgZwiyTaOTQCJsm3cC=ZzLAA@mail.gmail.com>
-References: <CAGkQfmOHgOoFrVyKtB+vpmwqs5s2DnLay9zjaksFj5Rbn+4h0g@mail.gmail.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Thu, 18 Feb 2016 22:04:41 +0100
+Message-ID: <CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
+	<4158343.mkrTsd5B4G@wuerfel>
+	<CAOQ7t2byFoW657-1xnsBpeyPkB6K25R=_pPmRDmT32Sjef=kUw@mail.gmail.com>
+	<4136837.fyWFbJqZfO@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGkQfmOHgOoFrVyKtB+vpmwqs5s2DnLay9zjaksFj5Rbn+4h0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Izard <romain.izard.pro@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Linux GPIO List <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4136837.fyWFbJqZfO@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 11:37 AM, Romain Izard
-<romain.izard.pro@gmail.com> wrote:
-
-> The current code for device probing tries to map the default pinctrl
-> state (in pinctrl_bind_pins), but is returning 0 or -EDEFER. If there
-> is an other error, it is not reported. This means that devices that do
-> not have any specified pinctrl state can be probed, which is a correct
-> behaviour that should be conserved, but it can also be an issue, as it
-> will fail to report any other issue with the specified pinctrl state.
+On Thu, Feb 18, 2016 at 3:22 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 18 February 2016 15:14:45 Carlo Caione wrote:
+>> >
+>> > Yes, you should describe the device that is actually there, which would be
+>> > something like
+>> >
+>> >         cbus@c1100000 {
+>> >                 compatible = "amlogic,meson8b-cbus", "syscon";
+>> >                 reg = <0xc1100000 0x10000>; /* no idea what the length is, fix it */
+>> >         };
+>> >
+>> > Don't just make things up because you happen to access them in a particular
+>> > way, but try to stay as close as you can to describing the actual hardware.
+>>
+>> Arnd,
+>> in the cbus region are mapped a lot of different devices, do you think
+>> that it is a good idea mapping the whole region as a single syscon
+>> device?
 >
-> Did I miss something that would explain why all other errors are ignored ?
-
-Yeah we should probably respect a few errors and let some
-pass. Please make a patch!
-
-> This also leads to a larger problem, as currently the device tree for
-> existing boards may specify invalid pinctrl configurations, but the
-> boards look like they work correctly, as long as nothing else tries to
-> use the same pins.
-
-Well I guess if you look in the debugfs files it looks crazy does
-it not? That is how I verify that the pins get bound right.
-Especially in the file pinmux-pins
-
-> Correcting the issue may require a new
-> 'strict-mapping' property in the pinctrl node in the device tree,
-> otherwise this correction would be an ABI regression.
-
-Bah if the device tree is wrong it is wrong, we certainly do not
-expect erroneous device trees that just "happen to work" to
-keep working.
-
-> Is this pattern really a good one ? We're moving away from describing
-> hardware in here.
-
-I don't understand.
-
-> For an existing example, in the device tree for Atmel's
-> SAMA5D2_Xplained board,
-
-Where is this device tree, so I can look at it?
-
-> the mapping for the Ethernet transceiver's IRQ
-> line was missing it bias configuration, and thus the pins were not
-> reserved for the Ethernet use. I've just send a patch to correct it,
-> but breaking Ethernet on kernel upgrade for the boards using the
-> previous revisions would be an issue.
-
-Hm, ask the Atmel DT maintainers what to do about this...
-Nicolas: how real is this ABI issue?
-
-We have patches bigger issues than this one before though.
-
-> In the current state of things, both devices are probed successfully
-> as conflicting pin sets are not recognized as an issue, which means
-> that my use case does not work.
+> It really depends on what those other devices do with the registers:
 >
-> Is the direction I'm taking something correct ?
+> If each device just uses a couple of random registers from the cbus,
+> they should probably all be changed to go through syscon.
 
-I think so. The device trees should be correct, errors should be
-handled.
+In our case each device (pinmux, GPIO IRQ, clock controller, ...) uses
+a consistent and contiguous set of registers inside cbus.
+But in the same cbus sometimes we have also some registers that are
+used for something different or peculiar like in this case. Usually
+it's matter of one or two registers though, that's why I was a bit
+curious about such a huge size 0x460.
 
-Yours,
-Linus Walleij
+> However, if some or all of the other devices actually are entirely
+> made up of register ranges within cbus, that would indicate that
+> cbus itself is not just a collection of random registers but something
+> that could be considered a bus of itself in hardware, and then
+> we could represent the other devices as children of this bus.
+
+I think that this is exactly the case. We are missing this cbus in the
+DTS because (for lacking of proper documentation) we are not sure
+about start / end / size.
+
+> Usually once you have a list of all the register locations, you can
+> identify the hardware structure to a certain degree from that, even
+> if you don't have access to a data sheet that would clarify this
+> better.
+
+Yes, in general for each single device the registers of interest are
+contiguous inside cbus.
+
+Thanks,
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
