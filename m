@@ -1,51 +1,49 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: Add cooling levels for CPUs on exynos5420
-Date: Thu, 18 Feb 2016 17:58:09 +0000
-Message-ID: <87h9h599zi.fsf@e105922-lin.cambridge.arm.com>
-References: <1455772383-20598-1-git-send-email-k.kozlowski@samsung.com>
+From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [1/4] arm64: Broadcom Vulcan support
+Date: Thu, 18 Feb 2016 10:15:11 -0800
+Message-ID: <0c75ddd6-d353-bb73-62e4-bae0ff95a3b0@broadcom.com>
+References: <1455389195-31870-2-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1455772383-20598-1-git-send-email-k.kozlowski@samsung.com>
-	(Krzysztof Kozlowski's message of "Thu, 18 Feb 2016 14:13:01 +0900")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455389195-31870-2-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Jayachandran C." <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
++ bcm-kernel-feedback-list mailing list
 
-Krzysztof Kozlowski <k.kozlowski@samsung.com> writes:
-
-> On Exynos5420 we support 8 cpufreq steps (600-1300 MHz) for LITTLE and
-> 12 steps for big core (700-1800 MHz). Add respective cooling cells.
+On 2/13/2016 10:46 AM, Jayachandran C. wrote:
+> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Add a configuration option and a device tree for Broadcom's Vulcan
+> ARM64 processor. brcm-vulcan.dtsi has the on-chip blocks like the
+> PCIe controller, GICv3 with ITS, PMU, system timer and pl011 UART.
+> brcm-vulcan-eval.dts has definitions for a basic evaluation board.
+> The firmware supports PSCI 0.2 for cpu wakeup.
+>
+> Signed-off-by: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> [ updated and split dts - jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org ]
+> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >
 > ---
->
-> Changes since v1:
-> 1. Add cooling properties to all CPUs (suggested by Viresh).
-> ---
->  arch/arm/boot/dts/exynos5420-cpus.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> index 261d25173f61..5c052d7ff554 100644
-> --- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> @@ -33,6 +33,9 @@
->  			clock-frequency = <1800000000>;
->  			cci-control-port = <&cci_control1>;
->  			operating-points-v2 = <&cluster_a15_opp_table>;
-> +			cooling-min-level = <0>;
-> +			cooling-max-level = <11>;
+> arch/arm64/Kconfig.platforms                      |   5 +
+>  arch/arm64/boot/dts/broadcom/Makefile             |   1 +
+>  arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts |  33 +++++
+>  arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi     | 146 ++++++++++++++++++++++
+>  4 files changed, 185 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts
+>  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi
 
-Although the above two properties are defined they aren't parsed in the
-kernel.
+Could you please name the files "vulcan.dtsi" and "vulcan-eval.dts" so 
+it's consistent with the rest of files in the same directory?
 
-Setting min / max extents for cooling devices via cooling maps does work
-though.
+Thanks,
 
-
-[...]
+Ray
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
