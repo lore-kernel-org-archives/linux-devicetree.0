@@ -1,89 +1,128 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v11 10/14] clk: mediatek: make dpi0_sel propagate rate
- changes
-Date: Wed, 17 Feb 2016 16:15:40 -0800
-Message-ID: <20160218001540.2278.93143@quark.deferred.io>
-References: <1455708534-20274-1-git-send-email-p.zabel@pengutronix.de>
- <1455708534-20274-11-git-send-email-p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] clk: add device tree binding for artpec-6 pll1 clock
+Date: Wed, 17 Feb 2016 16:35:00 -0800
+Message-ID: <20160218003500.2278.81753@quark.deferred.io>
+References: <cover.1455206007.git.larper@axis.com>
+ <2686b3bbb9ec1c86828b365645bd7f997a9780b4.1455206007.git.larper@axis.com>
+ <20160212163916.GA7677@rob-hp-laptop> <56C034BA.7070806@axis.com>
+ <20160216235927.2278.40353@quark.deferred.io> <56C44B7A.7030600@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1455708534-20274-11-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <56C44B7A.7030600@axis.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>, Lars Persson <larper@axis.com>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBQaGlsaXBwIFphYmVsICgyMDE2LTAyLTE3IDAzOjI4OjUwKQo+IFRoaXMgbXV4IGlz
-IHN1cHBvc2VkIHRvIHNlbGVjdCBhIGZpdHRpbmcgZGl2aWRlciBhZnRlciB0aGUgUExMCj4gaXMg
-YWxyZWFkeSBzZXQgdG8gdGhlIGNvcnJlY3QgcmF0ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGls
-aXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IEFja2VkLWJ5OiBKYW1lcyBMaWFv
-IDxqYW1lc2pqLmxpYW9AbWVkaWF0ZWsuY29tPgoKTG9va3MgZ29vZCB0byBtZS4KClJlZ2FyZHMs
-Ck1pa2UKCj4gLS0tCj4gQ2hhbmdlcyBzaW5jZSB2MTA6Cj4gIC0gQWRkIGNvbW1lbnRzIGFib3V0
-IE1VWF9HQVRFIHJhdGUgY2hhbmdlIHByb3BhZ2F0aW9uCj4gLS0tCj4gIGRyaXZlcnMvY2xrL21l
-ZGlhdGVrL2Nsay1tdDgxNzMuYyB8ICA2ICsrKysrLQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9j
-bGstbXRrLmggICAgfCAxNSArKysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxOCBp
-bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Ns
-ay9tZWRpYXRlay9jbGstbXQ4MTczLmMgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTcz
-LmMKPiBpbmRleCAyMjdlMzU2Li44NWMwYmZjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL21l
-ZGlhdGVrL2Nsay1tdDgxNzMuYwo+ICsrKyBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgx
-NzMuYwo+IEBAIC01NTgsNyArNTU4LDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2NvbXBv
-c2l0ZSB0b3BfbXV4ZXNbXSBfX2luaXRjb25zdCA9IHsKPiAgICAgICAgIE1VWF9HQVRFKENMS19U
-T1BfQVRCX1NFTCwgImF0Yl9zZWwiLCBhdGJfcGFyZW50cywgMHgwMDkwLCAxNiwgMiwgMjMpLAo+
-ICAgICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9WRU5DX0xUX1NFTCwgInZlbmNsdF9zZWwiLCB2ZW5j
-X2x0X3BhcmVudHMsIDB4MDA5MCwgMjQsIDQsIDMxKSwKPiAgICAgICAgIC8qIENMS19DRkdfNiAq
-Lwo+IC0gICAgICAgTVVYX0dBVEUoQ0xLX1RPUF9EUEkwX1NFTCwgImRwaTBfc2VsIiwgZHBpMF9w
-YXJlbnRzLCAweDAwYTAsIDAsIDMsIDcpLAo+ICsgICAgICAgLyoKPiArICAgICAgICAqIFRoZSBk
-cGkwX3NlbCBjbG9jayBzaG91bGQgbm90IHByb3BhZ2F0ZSByYXRlIGNoYW5nZXMgdG8gaXRzIHBh
-cmVudAo+ICsgICAgICAgICogY2xvY2sgc28gdGhlIGRwaSBkcml2ZXIgY2FuIGhhdmUgZnVsbCBj
-b250cm9sIG92ZXIgUExMIGFuZCBkaXZpZGVyLgo+ICsgICAgICAgICovCj4gKyAgICAgICBNVVhf
-R0FURV9GTEFHUyhDTEtfVE9QX0RQSTBfU0VMLCAiZHBpMF9zZWwiLCBkcGkwX3BhcmVudHMsIDB4
-MDBhMCwgMCwgMywgNywgMCksCj4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0lSREFfU0VMLCAi
-aXJkYV9zZWwiLCBpcmRhX3BhcmVudHMsIDB4MDBhMCwgOCwgMiwgMTUpLAo+ICAgICAgICAgTVVY
-X0dBVEUoQ0xLX1RPUF9DQ0k0MDBfU0VMLCAiY2NpNDAwX3NlbCIsIGNjaTQwMF9wYXJlbnRzLCAw
-eDAwYTAsIDE2LCAzLCAyMyksCj4gICAgICAgICBNVVhfR0FURShDTEtfVE9QX0FVRF8xX1NFTCwg
-ImF1ZF8xX3NlbCIsIGF1ZF8xX3BhcmVudHMsIDB4MDBhMCwgMjQsIDIsIDMxKSwKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oIGIvZHJpdmVycy9jbGsvbWVkaWF0
-ZWsvY2xrLW10ay5oCj4gaW5kZXggMzJkMmU0NS4uOWYyNGZjZiAxMDA2NDQKPiAtLS0gYS9kcml2
-ZXJzL2Nsay9tZWRpYXRlay9jbGstbXRrLmgKPiArKysgYi9kcml2ZXJzL2Nsay9tZWRpYXRlay9j
-bGstbXRrLmgKPiBAQCAtODMsNyArODMsMTEgQEAgc3RydWN0IG10a19jb21wb3NpdGUgewo+ICAg
-ICAgICAgc2lnbmVkIGNoYXIgbnVtX3BhcmVudHM7Cj4gIH07Cj4gIAo+IC0jZGVmaW5lIE1VWF9H
-QVRFKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUpIHsg
-IFwKPiArLyoKPiArICogSW4gY2FzZSB0aGUgcmF0ZSBjaGFuZ2UgcHJvcGFnYXRpb24gdG8gcGFy
-ZW50IGNsb2NrcyBpcyB1bmRlc2lyYWJsZSwKPiArICogdGhpcyBtYWNybyBhbGxvd3MgdG8gc3Bl
-Y2lmeSB0aGUgY2xvY2sgZmxhZ3MgbWFudWFsbHkuCj4gKyAqLwo+ICsjZGVmaW5lIE1VWF9HQVRF
-X0ZMQUdTKF9pZCwgX25hbWUsIF9wYXJlbnRzLCBfcmVnLCBfc2hpZnQsIF93aWR0aCwgX2dhdGUs
-IF9mbGFncykgeyAgICBcCj4gICAgICAgICAgICAgICAgIC5pZCA9IF9pZCwgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAgICAubmFt
-ZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPiAg
-ICAgICAgICAgICAgICAgLm11eF9yZWcgPSBfcmVnLCAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBcCj4gQEAgLTk0LDkgKzk4LDE2IEBAIHN0cnVjdCBtdGtfY29tcG9zaXRl
-IHsKPiAgICAgICAgICAgICAgICAgLmRpdmlkZXJfc2hpZnQgPSAtMSwgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBcCj4gICAgICAgICAgICAgICAgIC5wYXJlbnRfbmFtZXMgPSBf
-cGFyZW50cywgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgICAgICAg
-ICAubnVtX3BhcmVudHMgPSBBUlJBWV9TSVpFKF9wYXJlbnRzKSwgICAgICAgICAgICAgICAgICAg
-IFwKPiAtICAgICAgICAgICAgICAgLmZsYWdzID0gQ0xLX1NFVF9SQVRFX1BBUkVOVCwgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBcCj4gKyAgICAgICAgICAgICAgIC5mbGFncyA9IF9mbGFncywg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAgICAgfQo+ICAK
-PiArLyoKPiArICogVW5sZXNzIG5lY2Vzc2FyeSwgYWxsIE1VWF9HQVRFIGNsb2NrcyBwcm9wYWdh
-dGUgcmF0ZSBjaGFuZ2VzIHRvIHRoZWlyCj4gKyAqIHBhcmVudCBjbG9jayBieSBkZWZhdWx0Lgo+
-ICsgKi8KPiArI2RlZmluZSBNVVhfR0FURShfaWQsIF9uYW1lLCBfcGFyZW50cywgX3JlZywgX3No
-aWZ0LCBfd2lkdGgsIF9nYXRlKSAgICBcCj4gKyAgICAgICBNVVhfR0FURV9GTEFHUyhfaWQsIF9u
-YW1lLCBfcGFyZW50cywgX3JlZywgX3NoaWZ0LCBfd2lkdGgsIF9nYXRlLCBDTEtfU0VUX1JBVEVf
-UEFSRU5UKQo+ICsKPiAgI2RlZmluZSBNVVgoX2lkLCBfbmFtZSwgX3BhcmVudHMsIF9yZWcsIF9z
-aGlmdCwgX3dpZHRoKSB7ICAgICAgICAgICAgICBcCj4gICAgICAgICAgICAgICAgIC5pZCA9IF9p
-ZCwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAo+ICAgICAg
-ICAgICAgICAgICAubmFtZSA9IF9uYW1lLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFwKPiAtLSAKPiAyLjcuMAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Hi Lars,
+
+Quoting Lars Persson (2016-02-17 02:29:14)
+> 
+> 
+> On 02/17/2016 12:59 AM, Michael Turquette wrote:
+> > Quoting Lars Persson (2016-02-14 00:03:06)
+> >>
+> >> On 02/12/2016 05:39 PM, Rob Herring wrote:
+> >>> On Thu, Feb 11, 2016 at 05:01:03PM +0100, Lars Persson wrote:
+> >>>> Add device tree documentation for the main PLL in the Artpec-6 SoC.
+> >>> Roughly how many clocks does this SoC have?
+> >> It will have 17 clocks declared in the device tree and three
+> >> SoC-specific clock drivers.
+> > Are all of those clks going to individual DT nodes with clock-cells = 0?
+> >
+> > If so, I wonder if you should be targeting a clock-controller style
+> > binding description, with a node that represents the clock-controller IP
+> > block, with clock-cells >= 1. It really comes down to whether or not
+> > these clock controls exist in the same IP block.
+> 
+> Indeed most clocks come from the same clock controller IP. However there 
+> was nothing to control there because this clock tree is completely 
+> static. This is why we chose to describe it in the device tree using the 
+> standard clock components.
+
+Those components are there for board-level clocks, such as a fixed rate
+crystal feeding into a more complex IC. They are not substitutes for
+writing a proper clock controller driver.
+
+> 
+> The two audio related clock drivers that we will submit for a later 
+> merge window will have control knobs. There will be one mux belonging to 
+> the common clock controller and fractional dividers as separate IPs.
+
+So the mux belongs to the same clock controller IP block as the pll?
+Then the DT binding description should definitely not be a
+one-clock-per-node style.
+
+> 
+> I guess we could create a clock controller that outputs the pll1 clock 
+> and in the future also the muxed audio clock. Then describe the rest of 
+> the clock tree with standard components in the DT.
+> 
+> >
+> > You mentioned three distinct clock drivers. So possibly three clock
+> > controller nodes in DT then?
+> We still prefer to fully describe the static parts of the the clock tree 
+> in the DT. Will you accept this ?
+
+No, description of the clock tree in DT should not be your goal. I know
+it sounds nice from a data-driven point of view but in practice it is a
+bad idea.
+
+(Note that all of the above references the clock tree internal to an
+SoC, and doesn't cover off-chip clocks, like a fixed-rate xtal that
+varies from board to board.)
+
+What you should do is model each clock generator/controller as a DT
+node; this fits nicely in line with the Linux device model. Any leaf
+clocks that are consumed by other devices are exposed as offsets from
+the phandle. Clocks internal to the clock controller/generator block,
+such as intermediate dividers, should not be exposed in device tree as
+they are not direct inputs to downstream devices.
+
+Regards,
+Mike
+
+> >
+> > Is there a reference manual/register map available for this SoC?
+> No.
+> >>>> Signed-off-by: Lars Persson <larper@axis.com>
+> >>>> ---
+> >>>>    Documentation/devicetree/bindings/clock/artpec6.txt | 16 ++++++++++++++++
+> >>>>    1 file changed, 16 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..521fec8
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
+> >>>> @@ -0,0 +1,16 @@
+> >>>> +* Clock bindings for Axis ARTPEC-6 chip
+> > Please specify that this is based on the clock provider binding in
+> > Documentation/devicetree/bindings/clock/clock-bindings.txt
+> Will be fixed in v2.
+> >
+> > Regards,
+> > Mike
+> >
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- #clock-cells: Should be <0>
+> >>>> +- compatible: Should be "axis,artpec6-pll1-clock"
+> >>>> +- reg: Address and length of the DEVSTAT register.
+> >>>> +- clocks: The PLL's input clock.
+> >>>> +
+> >>>> +Examples:
+> >>>> +
+> >>>> +pll1_clk: pll1_clk {
+> >>>> +    #clock-cells = <0>;
+> >>>> +    compatible = "axis,artpec6-pll1-clock";
+> >>>> +    reg = <0xf8000000 4>;
+> >>>> +    clocks = <&ext_clk>;
+> >>>> +};
+> >>>> -- 
+> >>>> 2.1.4
+> >>>>
+> 
