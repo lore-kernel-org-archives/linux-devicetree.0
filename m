@@ -1,42 +1,120 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] memory: mediatek: Add SMI driver
-Date: Thu, 18 Feb 2016 17:50:51 +0100
-Message-ID: <1455814251.3937.27.camel@pengutronix.de>
-References: <1453781562-23556-1-git-send-email-yong.wu@mediatek.com>
-	 <1453781562-23556-4-git-send-email-yong.wu@mediatek.com>
-	 <56ADE959.2050309@gmail.com> <20160216141059.GT18805@8bytes.org>
-	 <56C340FB.1050607@arm.com> <20160216161009.GW18805@8bytes.org>
-	 <20160216162000.GI14509@arm.com> <20160216162641.GY18805@8bytes.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v2 01/11] PM / Domains: Add DT bindings for the R-Car
+ System Controller
+Date: Thu, 18 Feb 2016 18:18:56 +0100
+Message-ID: <CAMuHMdXqVL6_P6Lnea6z8jFtR2v4NFnzn=ibZVyauZ8-ODb6dg@mail.gmail.com>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+	<1455571020-18968-2-git-send-email-geert+renesas@glider.be>
+	<20160218143826.GB9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160216162641.GY18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160218143826.GB9654@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
+Hi Rob,
 
-Am Dienstag, den 16.02.2016, 17:26 +0100 schrieb Joerg Roedel:
-> On Tue, Feb 16, 2016 at 04:20:00PM +0000, Will Deacon wrote:
-> > I'm more than happy to bake a branch containing all the page table stuff,
-> > but Yong's stuff depends on it so I'll work with whatever is easiest for
-> > you.
-> 
-> Okay, to the best is if you would collect all the page table patches and
-> send me a pull-request. I pull that into my tree then and put Yong's
-> stuff on-top.
+On Thu, Feb 18, 2016 at 3:38 PM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Feb 15, 2016 at 10:16:50PM +0100, Geert Uytterhoeven wrote:
+>> The Renesas R-Car System Controller provides power management for the
+>> CPU cores and various coprocessors, following the generic PM domain
+>> bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+>>
+>> This supports R-Car Gen1, Gen2, and Gen3.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> Alternatives I considered:
+>>
+>>   - Using a single node per power register block, even if it contains
+>>     multiple domains, e.g.:
+>>
+>>           pd_ca15_scu: ca15_scu@180 {
+>>                   reg = <0x180 0x20>;
+>>                   #address-cells = <1>;
+>>                   #size-cells = <0>;
+>>                   #power-domain-cells = <0>;
+>>                   renesas,interrupt-bits = <12>;
+>>
+>>                   pd_ca15_cpu: ca15_cpu@40 {
+>>                           reg = <0x40 0x20>;
+>>                           #power-domain-cells = <1>;
+>>                           renesas,pm-domain-indices = <0 1>;
+>>                           renesas,pm-domain-names =
+>>                                   "ca15_cpu0", "ca15_cpu1";
+>>                           renesas,interrupt-bits = <0 1>;
+>>                   };
+>>           };
+>>
+>>     Notes:
+>>       - You cannot just have a property with the number of domains, as
+>>       index 0 is not used on R-Car H1. Hence the need for
+>>       "renesas,pm-domain-indices" and "renesas,interrupt-bits",
+>>       - "#power-domain-cells = <1>" for nodes with multiple domains,
+>>       which allows typos in "power-domains = <&pd_ca15_cpu n>", using
+>>       an invalid value of "n".
+>>
+>>   - Using a linear description in DT:
+>>       - Needs parent links for subdomains,
+>>       - More complicated to parse (lesson learned from R-Mobile PM
+>>       Domain support).
+>>
+>>   - Keeping the power register block offset and the bit number as separate
+>>     "reg" cells, increasing "#address-cells" from 2 to 3,
+>>
+>>   - Merging the interrupt bit (which needs only 5 bits) in the other "reg"
+>>     cell, decreasing "#address-cells" from 2 to 1.
+>
+> I think I'd move to not encoding mulitple things into reg. This seems
+> like a bit of abuse of reg. Otherwise, I don't have much to comment on.
 
-could you provide a branch that I may then pull in, stack the
-mediatek-drm driver patches (that depend on the SMI driver) on top and
-have them merged via drm-next?
+Thanks!
 
-regards
-Philipp
+(quoting the encoding of the reg properties)
+> +== PM Domain Nodes ==
+> +
+> +Each of the PM domain nodes represents a PM domain, as documented by the
+> +generic PM domain bindings in
+> +Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Required properties:
+> +  - #power-domain-cells: Must be 0.
+> +  - reg: This property must contain 2 values:
+> +          - The first value is the number of the interrupt bit representing
+> +            the power area in the various Interrupt Registers (e.g. SYSCISR,
+> +            Interrupt Status Register),
+> +          - The second value encodes the power register block offset (which is
+> +            a multiple of 64), and the number of the bit representing the
+> +            power area in the various Power Control Registers (e.g. PWROFFSR,
+> +            Power Shutoff Status Register). This value is created by ORing
+> +            these two numbers.
+
+Not encoding multiple things into reg means adding more properties to provide
+that information, iff we want to describe the PM Domain Nodes in DT.
+I considered the reg property a two-dimensional address space.
+
+Taking the lessons from CCF and the new CPG/MSSR bindings into account
+(which was BTW designed after the SYSC DT bindings), perhaps the PM Domain
+hierarchy should be moved from DT to C, in the driver, too?
+
+That would mean we have in DT:
+  1) "#power-domain-cells = <1>"
+  2) defines for the various domains, e.g. "#define R8A7791_PD_CA15_SCU      12"
+  3) e.g. "power-domains = <&sysc R8A7791_PD_CA15_SCU>"
+  4) and we can get rid of the fallback compatibility strings again.
+
+Thoughts?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
