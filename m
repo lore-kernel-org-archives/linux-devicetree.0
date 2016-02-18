@@ -1,83 +1,54 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: Re: [PATCH v3 09/10] ARM: dts: introduce MPS2 AN385/AN386
-Date: Thu, 18 Feb 2016 11:13:06 +0000
-Message-ID: <56C5A742.8010304@arm.com>
-References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com> <7272921.u1gphgWzUn@wuerfel> <56C598D9.3030001@arm.com> <7245560.jfhuhtPsB8@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: "jianqun.xu" <jay.xu@rock-chips.com>
+Subject: [PATCH v3 2/4] spi: rockchip: add bindings for rk3399 spi
+Date: Thu, 18 Feb 2016 19:16:31 +0800
+Message-ID: <1455794193-4497-3-git-send-email-jay.xu@rock-chips.com>
+References: <1455794193-4497-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7245560.jfhuhtPsB8@wuerfel>
+In-Reply-To: <1455794193-4497-1-git-send-email-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com, galak@codeaurora.org, linux-serial@vger.kernel.org, u.kleine-koenig@pengutronix.de, tglx@linutronix.de, linux-api@vger.kernel.org, jslaby@suse.cz, linux-arm-kernel@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, broonie@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk
+Cc: huangtao@rock-chips.com, jay.xu@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/16 10:45, Arnd Bergmann wrote:
-> On Thursday 18 February 2016 10:11:37 Vladimir Murzin wrote:
->>
->> Right, I thought in a wrong way, in opposite it makes more sense now.
->>
->> .dtsi
->>
->> /* below the soc/ */
->> smb {
->>         compatible = "simple-bus";
->>         #address-cells = <2>;
->>         #size-cells = <1>;
->>         ranges = <0 0 0x40200000 0x10000>,
->>                  <1 0 0xa0000000 0x10000>;
->> };
-> 
-> That looks good, yes.
-> 
-> Is 0x10000 the correct maximum addressable size of the external bus
-> in both cases?
-> 
-> Intuitively, I would guess that the 0xa0000000 range might
-> be much wider.
+From: Xu Jianqun <jay.xu@rock-chips.com>
 
-There is only Ethernet connected to this bus (apart from PSRAM), so it
-might be wider, but there is no indication of this in documentation.
+Add devicetree bindings for Rockchip rk3399 spi which found on
+Rockchip rk3399 SoCs.
 
-> 
->> .dts
->>
->> smb {
->>         ethernet@0,0 {
->>                 compatible = "smsc,lan9220", "smsc,lan9115";
->>                 reg = <0 0x0 0x10000>;
->>                 interrupts = <13>;
->>                 interrupt-parent = <&nvic>;
->>                 smsc,irq-active-high;
->> };
->>
->>
->> and looking again at .dtsi it seems to me that fpgaio should be moved
->> below the soc/ under separate bus interface which would hosts audio and
->> spi too or I keep missing things around device-tree?
->>
-> 
-> I don't see the audio and spi nodes, so I'm not sure where exactly
-> you would put them.
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+changes in v3:
+- add compatible for rk3399 spi (Mark, Heiko)
 
-I just keep things simple ;)
+ Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
+ drivers/spi/spi-rockchip.c                             | 1 +
+ 2 files changed, 2 insertions(+)
 
-> 
-> Ideally those things should be visible from a block diagram in the
-> datasheet.
-
-Indeed, block diagram indicates all them as a "FPGA APB subsystem" and
-clearly draws a line indicating a bus those devices are connected to.
-After your point about lan9220, it looks clearer to me to express that
-subsystem outside of soc/ node indicating bus interface, so it would
-match to those drawings closely.
-
-Cheers
-Vladimir
-
-> 
-> 	Arnd
-> 
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+index 0c491bd..1b14d69 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+@@ -9,6 +9,7 @@ Required Properties:
+     "rockchip,rk3066-spi" for rk3066.
+     "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
+     "rockchip,rk3288-spi", "rockchip,rk3066-spi" for rk3288.
++    "rockchip,rk3399-spi", "rockchip,rk3066-spi" for rk3399.
+ - reg: physical base address of the controller and length of memory mapped
+        region.
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 79a8bc4..345fefd 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -868,6 +868,7 @@ static const struct of_device_id rockchip_spi_dt_match[] = {
+ 	{ .compatible = "rockchip,rk3066-spi", },
+ 	{ .compatible = "rockchip,rk3188-spi", },
+ 	{ .compatible = "rockchip,rk3288-spi", },
++	{ .compatible = "rockchip,rk3399-spi", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
+-- 
+1.9.1
