@@ -1,36 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/8] drivers: pinctrl: add driver for Allwinner A64 SoC
-Date: Thu, 18 Feb 2016 08:35:43 -0600
-Message-ID: <20160218143543.GC9654@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/8] DT: clk: sunxi: add binding doc for
+ the multi-bus-gates clock
+Date: Thu, 18 Feb 2016 08:35:48 -0600
+Message-ID: <20160218143548.GD9654@rob-hp-laptop>
 References: <1455709440-8668-1-git-send-email-andre.przywara@arm.com>
- <1455709440-8668-3-git-send-email-andre.przywara@arm.com>
+ <1455709440-8668-4-git-send-email-andre.przywara@arm.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBSNNS63AKGQEMCC3HYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1455709440-8668-3-git-send-email-andre.przywara@arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-gpio@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <1455709440-8668-4-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 11:43:54AM +0000, Andre Przywara wrote:
-> Based on the Allwinner A64 user manual and on the previous sunxi
-> pinctrl drivers this introduces the pin multiplex assignments for
-> the ARMv8 Allwinner A64 SoC.
-> Port A is apparently used for the fixed function DRAM controller, so
-> the ports start at B here (the manual mentions "n from 1 to 7", so
-> not starting at 0).
+On Wed, Feb 17, 2016 at 11:43:55AM +0000, Andre Przywara wrote:
+> Recent Allwinner SoCs introduced a bus gates clock which can have
+> different parents for individual gates.
+> For the time being we encoded this relation in the driver.
+> This commit specifies a new binding which allows to encode this in
+> the DT by using a child node for each parent clock used. This allows
+> to specify any kind of relation efficiently and also keeps the very
+> same kernel driver for all SoCs at the same time.
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+>  Documentation/devicetree/bindings/clock/sunxi.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Whether this makes sense or not for sunxi, I don't know. But for the 
+binding:
 
->  arch/arm64/Kconfig.platforms                       |   1 +
->  drivers/pinctrl/sunxi/Kconfig                      |   4 +
->  drivers/pinctrl/sunxi/Makefile                     |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c         | 606 +++++++++++++++++++++
->  5 files changed, 613 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
