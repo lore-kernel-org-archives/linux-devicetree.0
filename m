@@ -1,40 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] ASoC: rockchip: add bindings for rk3399 i2s
-Date: Thu, 18 Feb 2016 08:37:02 -0600
-Message-ID: <20160218143702.GN9654@rob-hp-laptop>
-References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
- <1455673992-16469-4-git-send-email-jay.xu@rock-chips.com>
- <20160217110306.GJ7544@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dma: mmp_pdma: Add the #dma-requests DT property
+ documentation
+Date: Thu, 18 Feb 2016 08:38:31 -0600
+Message-ID: <20160218143831.GC9654@rob-hp-laptop>
+References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160217110306.GJ7544-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 11:03:06AM +0000, Mark Brown wrote:
-> On Wed, Feb 17, 2016 at 09:53:09AM +0800, jianqun.xu wrote:
+On Mon, Feb 15, 2016 at 09:57:45PM +0100, Robert Jarzmik wrote:
+> For pxa based platforms, the number of requestor lines should be
+> specified, so that the driver can check if the flow control should be
+> activated (when a requestor line is asked for) or not.
 > 
-> > ---
-> >  Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 1 +
-> >  1 file changed, 1 insertion(+)
+> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> ---
+> Since v1: rename of property to #dma-requests
+>       	  modify default value to 32 as suggested by Vinod
+> ---
+>  Documentation/devicetree/bindings/dma/mmp-dma.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> As with the other patch I'd expect to see a matching driver update if
-> only for documentation purposes.
 
-Why? They match on the prior chip's compatible until there is some 
-difference the driver needs to handle.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
