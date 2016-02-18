@@ -1,80 +1,88 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/1] USB: core: let USB device know device node
-Date: Thu, 18 Feb 2016 08:38:08 -0600
-Message-ID: <20160218143808.GY9654@rob-hp-laptop>
-References: <1455612172-2081-1-git-send-email-peter.chen@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] mwifiex: register platform specific driver
+Date: Thu, 18 Feb 2016 08:38:03 -0600
+Message-ID: <20160218143803.GX9654@rob-hp-laptop>
+References: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455612172-2081-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, wnhuang@chromium.com, devicetree@vger.kernel.org, Cathy Luo <cluo@marvell.com>, linux-kernel@vger.kernel.org, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 04:42:52PM +0800, Peter Chen wrote:
-> From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Feb 16, 2016 at 01:14:37AM -0800, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm@marvell.com>
 > 
-> Although most of USB devices are hot-plug's, there are still some devices
-> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> If these kinds of USB devices are multiple functions, and they can supply
-> other interfaces like i2c, gpios for other devices, we may need to
-> describe these at device tree.
+> Platform device and driver provides easy way to interact with
+> device-tree-enabled system.
 > 
-> In this commit, it uses "reg" in dts as physical port number to match
-> the phyiscal port number decided by USB core, if they are the same,
-> then the device node is for the device we are creating for USB core.
+> This patch registers platform driver and reorganise existing device
+> tree specific code. Corresponding device tree binding file is also
+> created.
 > 
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
 > ---
-> Changes for v5:
-> - Refine the code how to get the device node at usb_alloc_dev according
->   to Alan's comment.
-> - Point out "usbVID,PID" is the recommented compatible, and others
->   compatibles at binding doc could also be used.
-> 
-> Changes for v4:
-> - The range of "reg" should be 1-31, changing device node address
->   style as in lower case hexadecimal with leading zeroes suppressed
->   [binding doc, usb-device.txt]
-> - Improve the example at binding doc, it describes node from the top
->   (the controller)
-> - Delete the struct of_node * within struct usb_device
-> - Using usb_hcd_find_raw_port_number to get raw port number under root
->   hub port
-> 
-> Changes for v3:
-> - typo: s/descirbe/describe/
-> 
-> Changes for v2:
-> - Fix build error reported by kbuild robot, lack of "static" for
->   inline usb_of_get_child_node
-> - Fix typo, "devcie_node" -> "device_node"
-> - Add kernel-doc for of_node at struct usb_device
-> 
-> Changes from RFC:
-> - Fix the error address for binding doc, and add compatible for binding doc
-> - Change get child node API from "usb_of_find_node" to
->   "usb_of_get_child_node"
-> - Delete unecessary header files
-> - One typo
-> 
->  .../devicetree/bindings/usb/usb-device.txt         | 26 ++++++++++++
+> v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
+> v4: Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
+>     Herring)
+>     Patch description wraped in 72 columns(Rob Herring)
+>     Moved DT binding file to bindings/net/wireless/(Rob Herring)
+> ---
+>  .../bindings/net/wireless/marvell-sd8xxx.txt       | 29 +++++++++++
 
-Looks good to me. Thanks for driving this to completion.
+Again, one patch for all the binding changes.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/usb/core/Makefile                          |  2 +-
->  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
->  drivers/usb/core/usb.c                             | 10 +++++
->  include/linux/usb/of.h                             |  7 ++++
->  5 files changed, 91 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
->  create mode 100644 drivers/usb/core/of.c
+>  drivers/net/wireless/marvell/mwifiex/Makefile      |  1 +
+>  drivers/net/wireless/marvell/mwifiex/main.c        |  2 +
+>  drivers/net/wireless/marvell/mwifiex/main.h        | 14 +++++
+>  .../net/wireless/marvell/mwifiex/platform_drv.c    | 59 ++++++++++++++++++++++
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  4 +-
+>  6 files changed, 107 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>  create mode 100644 drivers/net/wireless/marvell/mwifiex/platform_drv.c
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> new file mode 100644
+> index 0000000..f7671ae
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> @@ -0,0 +1,29 @@
+> +Marvell Sd8xxx Wireless devices
+> +------
+> +
+> +Required properties:
+> +
+> +  - name : must be "wlan"
+> +  - compatible : must be "marvell,sd8xxx"
+
+No wildcards as Arnd mentioned.
+
+> +
+> +Optional properties:
+> +
+> +  - marvell,caldata* : A series of properties with marvell,caldata prefix,
+> +  		      represent Calibration data downloaded to the device during
+> +		      initialization. This is an array of unsigned values.
+> +
+> +
+> +Example:
+> +
+> +Tx power limit calibration data is configured in below example.
+> +The calibration data is an array of unsigned values, the length
+> +can vary between hw versions.
+> +
+> +wlan {
+
+This also needs to be specified as a subnode of the SDIO controller.
+
+> +	compatible = "marvell,sd8xxx";
+> +
+> +	marvell,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
+> +0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01 ...>;
+> +
+> +};
+> +
