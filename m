@@ -1,54 +1,117 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Thu, 18 Feb 2016 15:22:29 +0100
-Message-ID: <4136837.fyWFbJqZfO@wuerfel>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <4158343.mkrTsd5B4G@wuerfel> <CAOQ7t2byFoW657-1xnsBpeyPkB6K25R=_pPmRDmT32Sjef=kUw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC
+ controller
+Date: Thu, 18 Feb 2016 08:35:16 -0600
+Message-ID: <20160218143516.GA9654@rob-hp-laptop>
+References: <1455725574-9947-1-git-send-email-matt.redfearn@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2byFoW657-1xnsBpeyPkB6K25R=_pPmRDmT32Sjef=kUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455725574-9947-1-git-send-email-matt.redfearn@imgtec.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Matt Redfearn <matt.redfearn@imgtec.com>
+Cc: david.daney@cavium.com, aleksey.makarov@caviumnetworks.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Chandrakala Chavva <cchavva@caviumnetworks.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 February 2016 15:14:45 Carlo Caione wrote:
-> >
-> > Yes, you should describe the device that is actually there, which would be
-> > something like
-> >
-> >         cbus@c1100000 {
-> >                 compatible = "amlogic,meson8b-cbus", "syscon";
-> >                 reg = <0xc1100000 0x10000>; /* no idea what the length is, fix it */
-> >         };
-> >
-> > Don't just make things up because you happen to access them in a particular
-> > way, but try to stay as close as you can to describing the actual hardware.
+On Wed, Feb 17, 2016 at 04:12:53PM +0000, Matt Redfearn wrote:
+> From: Aleksey Makarov <aleksey.makarov@caviumnetworks.com>
 > 
-> Arnd,
-> in the cbus region are mapped a lot of different devices, do you think
-> that it is a good idea mapping the whole region as a single syscon
-> device?
+> Add Device Tree binding document for Octeon MMC controller. The driver
+> is in a following patch.
+> 
+> The MMC controller can be connected to up to 4 "slots" which may be
+> eMMC, MMC or SD card devices. As there is a single controller, each
+> available slot is represented as a child node of the controller.
+> 
+> This is a similar concept to the atmel-mci driver.
+> 
+> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
+> Signed-off-by: Peter Swain <pswain@cavium.com>
+> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
+> Signed-off-by: Matt Redfearn <matt.redfearn@imgtec.com>
+> ---
+> v7: No changes
+> 
+> v6:
+> - Split up patch
+> - Moved device tree fixup to platform code
+> ---
+>  .../devicetree/bindings/mmc/octeon-mmc.txt         | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> new file mode 100644
+> index 000000000000..d2c576d9ad65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> @@ -0,0 +1,79 @@
+> +* OCTEON SD/MMC Host Controller
+> +
+> +This controller is present on some members of the Cavium OCTEON SoC
+> +family, provide an interface for eMMC, MMC and SD devices.  There is a
+> +single controller that may have several "slots" connected.  These
+> +slots appear as children of the main controller node.
+> +The DMA engine is an integral part of the controller block.
+> +
+> +1) MMC node
+> +
+> +Required properties:
+> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
+> +- reg : Two entries:
+> +	1) The base address of the MMC controller register bank.
+> +	2) The base address of the MMC DMA engine register bank.
+> +- interrupts :
+> +	For "cavium,octeon-6130-mmc": two entries:
+> +	1) The MMC controller interrupt line.
+> +	2) The MMC DMA engine interrupt line.
+> +	For "cavium,octeon-7890-mmc": nine entries:
+> +	1) The next block transfer of a multiblock transfer has completed (BUF_DONE)
+> +	2) Operation completed successfully (CMD_DONE).
+> +	3) DMA transfer completed successfully (DMA_DONE).
+> +	4) Operation encountered an error (CMD_ERR).
+> +	5) DMA transfer encountered an error (DMA_ERR).
+> +	6) Switch operation completed successfully (SWITCH_DONE).
+> +	7) Switch operation encountered an error (SWITCH_ERR).
+> +	8) Internal DMA engine request completion interrupt (DONE).
+> +	9) Internal DMA FIFO underflow (FIFO).
+> +- #address-cells : Must be <1>
+> +- #size-cells : Must be <0>
+> +
+> +The node contains child nodes for each slot that the platform uses.
+> +
+> +Example:
+> +mmc@1180000002000 {
+> +	compatible = "cavium,octeon-6130-mmc";
+> +	reg = <0x11800 0x00002000 0x0 0x100>,
+> +		<0x11800 0x00000168 0x0 0x20>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	/* EMM irq, DMA irq */
+> +	interrupts = <1 19>, <0 63>;
+> +
+> +	[ child node definitions...]
+> +};
+> +
+> +
+> +2) Slot nodes
+> +Properties in mmc.txt apply to each slot node that the platform uses.
+> +
+> +Required properties:
+> +- reg : The slot number.
+> +
+> +Optional properties:
+> +- cavium,cmd-clk-skew : the amount of delay (in pS) past the clock edge
+> +	to sample the command pin.
+> +- cavium,dat-clk-skew : the amount of delay (in pS) past the clock edge
+> +	to sample the data pin.
 
-It really depends on what those other devices do with the registers:
+I thought you were okay with adding -ps? Either way:
 
-If each device just uses a couple of random registers from the cbus,
-they should probably all be changed to go through syscon.
+Acked-by: Rob Herring <robh@kernel.org>
 
-However, if some or all of the other devices actually are entirely
-made up of register ranges within cbus, that would indicate that
-cbus itself is not just a collection of random registers but something
-that could be considered a bus of itself in hardware, and then
-we could represent the other devices as children of this bus.
-
-Usually once you have a list of all the register locations, you can
-identify the hardware structure to a certain degree from that, even
-if you don't have access to a data sheet that would clarify this
-better.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
