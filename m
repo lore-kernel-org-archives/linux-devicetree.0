@@ -1,41 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] rtc: s3c: Document in binding that only s3c6410 needs
- a src clk
-Date: Thu, 18 Feb 2016 08:38:53 -0600
-Message-ID: <20160218143853.GF9654@rob-hp-laptop>
-References: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
+Subject: Re: [PATCH v8 2/3] added UFS 2.0 capabilities
+Date: Thu, 18 Feb 2016 08:38:37 -0600
+Message-ID: <20160218143837.GD9654@rob-hp-laptop>
+References: <cover.1455549221.git.jpinto@synopsys.com>
+ <4e48beb48bc4c67c335de45218e2b49aa51dd4d9.1455549222.git.jpinto@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
+In-Reply-To: <4e48beb48bc4c67c335de45218e2b49aa51dd4d9.1455549222.git.jpinto@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 11:11:06AM -0300, Javier Martinez Canillas wrote:
-> The S3C binding doc says that the RTC and RTC source clocks are required
-> but the S3C driver supports different HW IP and only the s3c6410 needs a
-> source clock.
+On Mon, Feb 15, 2016 at 03:25:12PM +0000, Joao Pinto wrote:
+> Adding UFS 2.0 support to the UFS core driver.
 > 
-> Fix the binding explaining that the source clock is only needed for the
-> s3c6410-rtc compatible controller.
-> 
-> Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> 
+> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
 > ---
-> Hello,
+> Changes v7->v8:
+> - Added "jedec, ufs-2.0" to the ufschd-platform compatibility strings
+> Changes v0->v7:
+> - Nothing changed (just to keep up with patch set version).
 > 
-> This patch depends on a previous one that was picked by Rob Herring so
-> this one has to go through his tree again and not through the RTC tree
-> to avoid conflicts.
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 +--
 
-Ugg, sent pull request today. It should be in Linus' tree now.
+Acked-by: Rob Herring <robh@kernel.org>
 
-This can go thru rtc tree if you prefer. Otherwise, I'll queue it up for 
-4.6.
-
+>  drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++++++---
+>  drivers/scsi/ufs/ufshci.h                          |  1 +
+>  3 files changed, 28 insertions(+), 6 deletions(-)
 > 
