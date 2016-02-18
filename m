@@ -1,87 +1,85 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCHv2 1/2] devicetree: Add UCS1002 USB Port Power Controller binding
-Date: Thu, 18 Feb 2016 10:52:50 +0100
-Message-ID: <1455789171-5093-2-git-send-email-enric.balletbo@collabora.com>
-References: <1455789171-5093-1-git-send-email-enric.balletbo@collabora.com>
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH v2.1 2/4] spi: rockchip: add bindings for rk3399 spi
+Date: Thu, 18 Feb 2016 17:57:49 +0800
+Message-ID: <56C5959D.3030806@rock-chips.com>
+References: <1455762983-29980-1-git-send-email-jay.xu@rock-chips.com>
+ <1455762983-29980-3-git-send-email-jay.xu@rock-chips.com>
+ <20160218094108.GA7129@sirena.org.uk> <2327512.KAqs6H56Km@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455789171-5093-1-git-send-email-enric.balletbo@collabora.com>
+In-Reply-To: <2327512.KAqs6H56Km@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
+To: Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jwerner@chromium.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The UCS1002-2 provides a USB port power switch for precise control of up
-to 2.5 amperes continuous current.
+Hi Heiko
 
-You can add support to your board with current binding.
+Thank you for you kindly explain, now I got your comments.
 
-Example:
+=D4=DA 18/02/2016 17:47, Heiko Stuebner =D0=B4=B5=C0:
+> From: Xu Jianqun <jay.xu@rock-chips.com>
+>
+> Add devicetree bindings for Rockchip rk3399 spi which found on
+> Rockchip rk3399 SoCs.
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> Hi Jianqun,
+> what Mark means is the following.
+>
+>   Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
+>   drivers/spi/spi-rockchip.c                             | 1 +
+>   2 files changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b=
+/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> index 0c491bd..1b14d69 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>       "rockchip,rk3066-spi" for rk3066.
+>       "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
+>       "rockchip,rk3288-spi", "rockchip,rk3066-spi" for rk3288.
+> +    "rockchip,rk3399-spi", "rockchip,rk3066-spi" for rk3399.
+>   - reg: physical base address of the controller and length of memory=
+ mapped
+>          region.
+>   - interrupts: The interrupt number to the cpu. The interrupt specif=
+ier format
+> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+> index 79a8bc4..345fefd 100644
+> --- a/drivers/spi/spi-rockchip.c
+> +++ b/drivers/spi/spi-rockchip.c
+> @@ -868,6 +868,7 @@ static const struct of_device_id rockchip_spi_dt_=
+match[] =3D {
+>   	{ .compatible =3D "rockchip,rk3066-spi", },
+>   	{ .compatible =3D "rockchip,rk3188-spi", },
+>   	{ .compatible =3D "rockchip,rk3288-spi", },
+> +	{ .compatible =3D "rockchip,rk3399-spi", },
+I'm a little confuse, I have upstreamed rockchip-i2s, and the i2s drive=
+r=20
+set the compatible like:
+- compatible: should be one of the followings
+    - "rockchip,rk3066-i2s": for rk3066
+    - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
+    - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
+    - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
+and the driver only has
+static const struct of_device_id rockchip_i2s_match[] =3D {
+	{ .compatible =3D "rockchip,rk3066-i2s", },
+	{},
+};
 
-    ucs1002: ucs1002@57 {
-             compatible = "microchip,ucs1002";
-             reg = <0x57>;
-    };
+The spi of rk3399 as same as rk3066, rk3188, rk3288, like i2s, if they=20
+are keep different rules ?
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
 
-Changes since v1:
- - Fix units, are microamps (Rob Herring)
- - Remove microchip,pin-ignore as is implied by absence of gpio properties (Rob
-   Herring)
- - Group control gpios instead of use separate gpios. All control gpios must be
-   set together (Enric Balletbo)
-
- .../devicetree/bindings/power/ucs1002.txt          | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
-
-diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
-new file mode 100644
-index 0000000..bb2f91e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/ucs1002.txt
-@@ -0,0 +1,41 @@
-+UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
-+
-+Required properties:
-+- compatible: "microchip,ucs1002"
-+- reg: integer, the I2C address of the device.
-+
-+Optional properties:
-+- interrupt-parent: the phandle of the interrupt controller that services
-+    interrupts for this device.
-+- interrupts: interrupt specifiers for two interrupt sources.
-+    - First interrupt specifier is for A_DET interrupt.
-+    - Second interrupt specifier is for ALERT interrupt.
-+- microchip,current-limit: integer, maximum current in microamps. Note that the
-+    default value is based on the resistor on the COMM_SEL/ILIM pin and this
-+    value cannot be changed to be higher than hardware set value. Accepted
-+    values are: 500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000 and
-+    2500000 (microamps).
-+- control-gpios = list of gpios used as pin states when determining the active mode
-+    selection and power state. Must provide EM_EN, M1, M2 and PWR_EN gpio mapping.
-+    If this property is not set it uses I2C for configuration.
-+
-+Example (polling):
-+
-+	ucs1002: ucs1002@57 {
-+		compatible = "microchip,ucs1002";
-+		reg = <0x57>;
-+		microchip,current-limit = <2000000>;
-+	};
-+
-+Example (interrupts + control gpios):
-+
-+	ucs1002: ucs1002@57 {
-+		compatible = "microchip,ucs1002";
-+		reg = <0x57>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <30 0>, <31 0>;
-+		control-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>,	/* EM_EN */
-+				<&gpio0 3 GPIO_ACTIVE_HIGH>,	/* M1 */
-+				<&gpio1 17 GPIO_ACTIVE_HIGH>,	/* M2 */
-+				<&gpio1 19 0>;			/* PWR_EN */
-+	};
--- 
-2.1.0
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
+>
