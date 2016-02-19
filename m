@@ -1,58 +1,42 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: Re: [RFC PATCH 4/5] PM / AVS: thermal: MT8173: Introduce support
- for SVS engine
-Date: Fri, 19 Feb 2016 13:08:02 +0800
-Message-ID: <1455858482.17104.13.camel@mtksdaap41>
-References: <1453452029-20843-1-git-send-email-pi-cheng.chen@linaro.org>
-	 <1453452029-20843-5-git-send-email-pi-cheng.chen@linaro.org>
-	 <CAGS+omAYPhJ80kHG=bW4AjFsQzhwUfC6C+nAXa=Ny5UyoCid=w@mail.gmail.com>
-	 <20160218030049.GA8780@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160218030049.GA8780@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, dawei.chien@mediatek.com, Nishanth Menon <nm@ti.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] add DTS for hi6220 and HiKey
+Date: Fri, 19 Feb 2016 13:19:03 +0800
+Message-ID: <1455859148-29098-1-git-send-email-guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset include more dts changes for hi6220 SoC and HiKey board.
 
-On Thu, 2016-02-18 at 11:00 +0800, Pi-Cheng Chen wrote:
+Patch 1 adds pinctrl to uart ports in SoC and enables them for HiKey board.
+Patch 2 adds gpio LEDs device nodes.
+Patch 3 adds dwmmc nodes description for hi6220. It refers to two LDO's
+which are defined in regulator patchsets which pending on review:
+[PATCH v8 5/5] arm64: dts: hisilicon: Add hi655x pmic dts node
+http://thread.gmane.org/gmane.linux.kernel/2151688
 
-> > > +               vboot = regulator_get_voltage(svs->reg) / 1000;
-> > > +               if (mvolt_to_config(vboot) !=
-> > > +                   mvolt_to_config(svs_bank_cfgs[i].vboot)) {
-> > > +                       dev_err(svs->dev, "Vboot value mismatch!\n");
-> > > +                       ret = -EINVAL;
-> > > +                       break;
-> > > +               }
-> > > +
-> > > +               ret = regulator_set_mode(svs->reg, REGULATOR_MODE_FAST);
-> > > +               if (ret) {
-> > > +                       dev_err(svs->dev,
-> > > +                               "Failed to set regulator in PWM mode\n");
-> > > +                       ret = -EINVAL;
-> > > +                       break;
-> > > +               }
-> > 
-> > Shouldn't this be best effort?
-> > If we can't set the regulator to fast mode, can we continue anyway?
-> > 
-> 
-> AFAIK, we need to set the regulator to fast mode to get stable voltage as
-> possible. I am sure about the details.
-> 
-> @Henry,
-> Would you please comment it?
+Patch 4 adds resets property into dwmmc nodes.
+Patch 5 adds wifi device nodes (TI's wl1835) for HiKey board.
 
-Hi,
+Guodong Xu (4):
+  arm64: dts: hi6220: add pinctrl for uarts and enable them
+  arm64: dts: add LED nodes for hi6220-hikey
+  arm64: dts: hi6220: add resets property into dwmmc nodes
+  arm64: dts: add wifi nodes support for hi6220-hikey
 
-Yes, as you said, PTPOD need the more precisely voltage as possible when
-driver initialize, there has two mode in mt6397: pwm/auto mode, the pwm
-mode which can get the more stable Vout than auto mode.
+Xinwei Kong (1):
+  arm64: dts: add dwmmc nodes for hi6220
 
-Thanks,
-Henry
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 81 ++++++++++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 66 +++++++++++++++++++++
+ 2 files changed, 147 insertions(+)
 
+-- 
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
