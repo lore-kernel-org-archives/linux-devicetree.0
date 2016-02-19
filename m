@@ -1,49 +1,33 @@
-From: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Thu, 18 Feb 2016 15:27:06 -0600
-Message-ID: <CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-	<4158343.mkrTsd5B4G@wuerfel>
-	<CAOQ7t2byFoW657-1xnsBpeyPkB6K25R=_pPmRDmT32Sjef=kUw@mail.gmail.com>
-	<4136837.fyWFbJqZfO@wuerfel>
-	<CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional property
+ in DT binding
+Date: Fri, 19 Feb 2016 09:26:48 +0900
+Message-ID: <56C66148.5060006@samsung.com>
+References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+ <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 3:04 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
->> However, if some or all of the other devices actually are entirely
->> made up of register ranges within cbus, that would indicate that
->> cbus itself is not just a collection of random registers but something
->> that could be considered a bus of itself in hardware, and then
->> we could represent the other devices as children of this bus.
->
-> I think that this is exactly the case. We are missing this cbus in the
-> DTS because (for lacking of proper documentation) we are not sure
-> about start / end / size.
+On 19.02.2016 03:19, Javier Martinez Canillas wrote:
+> The Exynos Thermal Management Unit binding says that the vtmu-supply
+> is optional but is listed in the required properties section. Add an
+> optional properties section and move the regulator property there.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
 
-Here's a hint from the vendor kernel
-https://github.com/endlessm/linux-meson/blob/master/arch/arm/mach-meson8b/iomapping.c#L87
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Having a cbus bus node with child devices does sound like it would
-reflect this particular view of the hardware design. How would we then
-represent the hwrev registers under that?
-
-I am also curious if this is the common practice. We were working with
-Exynos devices before, and even though many of the components are on
-the AXI bus there, there is no AXI bus representation in the DT. But
-now that I go digging, I see other SoCs that do have a DT bus
-representation very similar to what's being described, such as the apb
-and axi busses in mmp2.dtsi. Is one approach preferred over the other
-for new SoC support?
-
-Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
