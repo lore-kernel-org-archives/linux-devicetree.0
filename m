@@ -1,97 +1,70 @@
-From: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] ARC: axs10x: Update defconfigs so that audio is enabled
-Date: Fri, 19 Feb 2016 09:39:57 +0000
-Message-ID: <478afb116422fcd40ab5817daf053680bd32d24e.1455872448.git.palminha@synopsys.com>
-References: <cover.1455872448.git.palminha@synopsys.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 2/2] ARM: dts: imx35.dtsi: change the clock information for usb
+Date: Fri, 19 Feb 2016 17:35:04 +0800
+Message-ID: <1455874504-28993-2-git-send-email-peter.chen@nxp.com>
+References: <1455874504-28993-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1455872448.git.palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1455874504-28993-1-git-send-email-peter.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, robh+dt@kernel.org, Peter Chen <peter.chen@freescale.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Peter Chen <peter.chen@freescale.com>
 
-The defconfigs for the AXS boards were updated so that
-ALSA SoC is enabled and also the audio for the ADV7511
-HDMI transmitter.
+For imx35, it needs three clocks to let the controller work,
+the old code is wrong, and the usbmisc does not include
+clock handling code any more.
 
-Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+Acked-by: Shawn Guo <shawnguo@kernel.org>
 ---
- arch/arc/configs/axs101_defconfig     | 3 +++
- arch/arc/configs/axs103_defconfig     | 5 +++++
- arch/arc/configs/axs103_smp_defconfig | 5 +++++
- 3 files changed, 13 insertions(+)
+ arch/arm/boot/dts/imx35.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arc/configs/axs101_defconfig b/arch/arc/configs/axs101_defconfig
-index e359099..7c22163 100644
---- a/arch/arc/configs/axs101_defconfig
-+++ b/arch/arc/configs/axs101_defconfig
-@@ -113,3 +113,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
-diff --git a/arch/arc/configs/axs103_defconfig b/arch/arc/configs/axs103_defconfig
-index 323486d..d63aef0 100644
---- a/arch/arc/configs/axs103_defconfig
-+++ b/arch/arc/configs/axs103_defconfig
-@@ -76,12 +76,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_DRM=y
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- # CONFIG_VGA_CONSOLE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
- CONFIG_LOGO=y
-+CONFIG_DRM_I2C_ADV7511=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- # CONFIG_LOGO_LINUX_CLUT224 is not set
-@@ -114,3 +116,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
-diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
-index 66191cd..f4b51ce 100644
---- a/arch/arc/configs/axs103_smp_defconfig
-+++ b/arch/arc/configs/axs103_smp_defconfig
-@@ -77,12 +77,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_DRM=y
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- # CONFIG_VGA_CONSOLE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
- CONFIG_LOGO=y
-+CONFIG_DRM_I2C_ADV7511=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- # CONFIG_LOGO_LINUX_CLUT224 is not set
-@@ -115,3 +117,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
+diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
+index ed3dc33..14e1320 100644
+--- a/arch/arm/boot/dts/imx35.dtsi
++++ b/arch/arm/boot/dts/imx35.dtsi
+@@ -305,7 +305,8 @@
+ 				compatible = "fsl,imx35-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4000 0x0200>;
+ 				interrupts = <37>;
+-				clocks = <&clks 73>;
++				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				fsl,usbphy = <&usbphy0>;
+ 				status = "disabled";
+@@ -315,7 +316,8 @@
+ 				compatible = "fsl,imx35-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4400 0x0200>;
+ 				interrupts = <35>;
+-				clocks = <&clks 73>;
++				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
+ 				dr_mode = "host";
+@@ -325,8 +327,6 @@
+ 			usbmisc: usbmisc@53ff4600 {
+ 				#index-cells = <1>;
+ 				compatible = "fsl,imx35-usbmisc";
+-				clocks = <&clks 9>, <&clks 73>, <&clks 28>;
+-				clock-names = "ipg", "ahb", "per";
+ 				reg = <0x53ff4600 0x00f>;
+ 			};
+ 		};
 -- 
-2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
