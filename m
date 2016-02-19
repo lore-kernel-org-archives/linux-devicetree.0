@@ -1,49 +1,64 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] spi: rockchip: add bindings for rk3399 spi
-Date: Fri, 19 Feb 2016 14:38:17 +0800
-Message-ID: <56C6B859.8060608@rock-chips.com>
-References: <1455846978-4272-1-git-send-email-jay.xu@rock-chips.com>
- <1455846978-4272-4-git-send-email-jay.xu@rock-chips.com>
- <2298327.hkyYk2mMRK@phil>
+From: Jayachandran Chandrashekaran Nair
+	<jayachandran.chandrashekaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/4] arm64: Broadcom Vulcan support
+Date: Fri, 19 Feb 2016 12:28:26 +0530
+Message-ID: <CAKc_7PXte5nmtFRv4cQXJSFuWtAWnrBazYQJAEejX8ifxXRaMQ@mail.gmail.com>
+References: <1455389195-31870-1-git-send-email-jchandra@broadcom.com>
+ <1455389195-31870-2-git-send-email-jchandra@broadcom.com> <20160217171616.GH32647@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2298327.hkyYk2mMRK@phil>
+In-Reply-To: <20160217171616.GH32647@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko
+On Wed, Feb 17, 2016 at 10:46 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> On Sun, Feb 14, 2016 at 12:16:32AM +0530, Jayachandran C wrote:
+>> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>
+>> +     compatible = "brcm,vulcan-eval", "brcm,vulcan";
+>
+> You use "brcm,vulcan" as the compatible string for both the platform and
+> the CPU nodes. You need different strings.
+>
+>> +
+>> +     memory {
+>> +             device_type = "memory";
+>> +             reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
+>> +                   <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
+>> +     };
+>
+>> +/memreserve/ 0x80000000 0x00010000;
+>
+> What is this for?
 
-=D4=DA 19/02/2016 14:31, Heiko Stuebner =D0=B4=B5=C0:
-> Hi Jianqun,
->
-> Am Freitag, 19. Februar 2016, 09:56:15 schrieb jianqun.xu:
->> From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Add devicetree bindings for Rockchip rk3399 spi which found on
->> Rockchip rk3399 SoCs.
->>
->> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->
-> Mark already applied this patch yesterday.
->
+This seems to left over from the time we were using spin. Will take
+it out. Thanks.
 
-Good news, so the patch will be removed in next version's patchset.
+>> +
+>> +/ {
+>> +     model = "Broadcom Vulcan";
+>> +     compatible = "brcm,vulcan";
+>
+> As above, it doesn't make sense to have the same compatible string for
+> both the platform as a whole and the CPU.
 
-thanks
->
-> Heiko
->
->
->
+Will fix this in v2.
 
+>> +                     device_type = "cpu";
+>> +                     compatible = "brcm,vulcan", "arm,armv8";
+>> +                     reg = <0x0 0x0>;
+>> +                     enable-method = "psci";
+>> +             };
+
+Thanks for the review.
+
+JC.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
