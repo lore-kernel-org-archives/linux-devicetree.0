@@ -1,33 +1,116 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional property
- in DT binding
-Date: Fri, 19 Feb 2016 09:26:48 +0900
-Message-ID: <56C66148.5060006@samsung.com>
-References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
- <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: add documentation of rk3399 clock
+ controller
+Date: Fri, 19 Feb 2016 08:48:15 +0800
+Message-ID: <56C6664F.8070600@rock-chips.com>
+References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
+ <1455674089-16567-1-git-send-email-jay.xu@rock-chips.com>
+ <20160218143648.GL9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160218143648.GL9654@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19.02.2016 03:19, Javier Martinez Canillas wrote:
-> The Exynos Thermal Management Unit binding says that the vtmu-supply
-> is optional but is listed in the required properties section. Add an
-> optional properties section and move the regulator property there.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> ---
-> 
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
+Hi Rob
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+=D4=DA 18/02/2016 22:36, Rob Herring =D0=B4=B5=C0:
+> On Wed, Feb 17, 2016 at 09:54:49AM +0800, jianqun.xu wrote:
+>> From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> Add the devicetree binding for the cru on the rk3399 which quite
+>> similar structured as previous clock controllers.
+>>
+>> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++=
+++++++++++++
+>>   1 file changed, 82 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/rockchi=
+p,rk3399-cru.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399=
+-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.=
+txt
+>> new file mode 100644
+>> index 0000000..07bcc6e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.tx=
+t
+>> @@ -0,0 +1,82 @@
+>> +* Rockchip RK3399 Clock and Reset Unit
+>
+> [...]
+>
+>> +Example: General Register Files
+>> +
+>> +	pmugrf: syscon@ff320000 {
+>> +		compatible =3D "rockchip,rk3399-pmugrf", "syscon";
+>
+> Is this documented?
+Since there is no documentation for rockchip grf from early SoCs, I=20
+think if we need to add a new devicetree documentation, such as
+Documentation/devicetree/bindings/clock/rockchip,rk3399-grf.txt ?
 
-Best regards,
-Krzysztof
+If you agree, I will add it in next patch
+
+>
+>> +		reg =3D <0x0 0xff320000 0x0 0x1000>;
+>> +	};
+>> +
+>> +	grf: syscon@ff770000 {
+>> +		compatible =3D "rockchip,rk3399-grf", "syscon";
+>
+> ditto.
+>
+>> +		reg =3D <0x0 0xff770000 0x0 0x10000>;
+>> +	};
+>> +
+>> +Example: Clock controller node:
+>> +
+>> +	pmucru: pmu-clock-controller@ff750000 {
+>> +		compatible =3D "rockchip,rk3399-pmucru";
+>> +		reg =3D <0x0 0xff750000 0x0 0x1000>;
+>> +		#clock-cells =3D <1>;
+>> +		#reset-cells =3D <1>;
+>> +	};
+>> +
+>> +	cru: clock-controller@ff760000 {
+>> +		compatible =3D "rockchip,rk3399-cru";
+>> +		reg =3D <0x0 0xff760000 0x0 0x1000>;
+>> +		rockchip,grf =3D <&grf>;
+>> +		#clock-cells =3D <1>;
+>> +		#reset-cells =3D <1>;
+>> +	};
+>> +
+>> +Example: UART controller node that consumes the clock generated by =
+the clock
+>> +  controller:
+>> +
+>> +	uart0: serial@ff1a0000 {
+>> +		compatible =3D "rockchip,rk3399-uart", "snps,dw-apb-uart";
+>> +		reg =3D <0x0 0xff180000 0x0 0x100>;
+>> +		clocks =3D <&cru SCLK_UART0>, <&cru PCLK_UART0>;
+>> +		clock-names =3D "baudclk", "apb_pclk";
+>> +		interrupts =3D <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+>> +		reg-shift =3D <2>;
+>> +		reg-io-width =3D <4>;
+>> +	};
+>> --
+>> 1.9.1
+>>
+>>
+>
+>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
