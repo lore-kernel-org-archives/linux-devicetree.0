@@ -1,54 +1,87 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: MediaTek: Add binding document for the AUXADC
-Date: Fri, 19 Feb 2016 08:18:46 +0100
-Message-ID: <1455866326-15095-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH v2 2/2] ARM: AM43XX: HWMOD: Add rtc hwmod
+Date: Fri, 19 Feb 2016 07:21:36 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1602190720490.27696@utopia.booyaka.com>
+References: <1455856735-11515-1-git-send-email-j-keerthy@ti.com> <1455856735-11515-3-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455856735-11515-3-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Fri, 19 Feb 2016, Keerthy wrote:
+
+> The patch adds rtc hwmod. RTC module The RTC module is physically
+> present on the AM438x SoC used on AM43X-EPOS-EVM, but it is permanently
+> disabled. A secure RTC is used instead on these devices, where needed.
+> . Hence adding it selectively using a seprate list to get RTC Module
+> functional on the other am43x SoCs used on am437x-gp-evm and
+> am437x-sk-evm.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+> 
+> Changes in v2:
+> 
+> Inverted the checking logic to accommodate registering for all
+> the SoCs compatible to am4372 and removed the negating am438x logic
+> to register rtc hwmods as suggested by Paul.
+> 
+>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+
+OK thanks; I've queued the following patch for v4.6 or if I get unlucky, 
+v4.7.
+
+- Paul
+
+From: Keerthy <j-keerthy@ti.com>
+Date: Fri, 19 Feb 2016 10:08:55 +0530
+Subject: [PATCH] ARM: AM43XX: hwmod: Add rtc hwmod
+
+The patch registers the rtc hwmod on AM437x chips.  The RTC module is
+physically present on the AM438x SoC used on AM43X-EPOS-EVM, but it is
+permanently disabled. A secure RTC is used instead on these devices,
+where needed. Hence adding it selectively using a separate list to get
+RTC Module functional on the other am43x SoCs used on am437x-gp-evm
+and am437x-sk-evm.
+
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+[paul@pwsan.com: cleaned up patch description]
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
 ---
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-This is a supplement to the MTK Thermal series which was lacking the
-description for the AUXADC.
-
- .../devicetree/bindings/soc/mediatek/auxadc.txt     | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt b/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-new file mode 100644
-index 0000000..bdb7829
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-@@ -0,0 +1,21 @@
-+MediaTek AUXADC
-+===============
-+
-+The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-+in some Mediatek SoCs which among other things measures the temperatures
-+in the SoC. It can be used directly with register accesses, but it is also
-+used by thermal controller which reads the temperatures from the AUXADC
-+directly via its own bus interface. See
-+Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-+for the Thermal Controller which holds a phandle to the AUXADC.
-+
-+Required properties:
-+- compatible: Must be "mediatek,mt8173-auxadc"
-+- reg: Address range of the AUXADC unit
-+
-+Example:
-+
-+auxadc: auxadc@11001000 {
-+	compatible = "mediatek,mt8173-auxadc";
-+	reg = <0 0x11001000 0 0x1000>;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+index e97a894b5f88..97fd399202dc 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -1020,9 +1020,21 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	NULL,
+ };
+ 
++static struct omap_hwmod_ocp_if *am43xx_rtc_hwmod_ocp_ifs[] __initdata = {
++	&am33xx_l4_wkup__rtc,
++	NULL,
 +};
++
+ int __init am43xx_hwmod_init(void)
+ {
++	int ret;
++
+ 	omap_hwmod_am43xx_reg();
+ 	omap_hwmod_init();
+-	return omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
++	ret = omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
++
++	if (!ret && of_machine_is_compatible("ti,am4372"))
++		ret = omap_hwmod_register_links(am43xx_rtc_hwmod_ocp_ifs);
++
++	return ret;
+ }
 -- 
 2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
