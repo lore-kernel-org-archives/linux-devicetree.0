@@ -1,30 +1,40 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt/bindings: Add bindings for the PIC32 random
- number generator
-Date: Fri, 19 Feb 2016 10:23:45 -0700
-Message-ID: <56C74FA1.1050804@microchip.com>
-References: <1454966283-14965-1-git-send-email-joshua.henderson@microchip.com>
- <20160216202121.GF11908@gondor.apana.org.au>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v7 3/3] arm64: dts: Update X-Gene standby GPIO controller
+ DTS entries
+Date: Fri, 19 Feb 2016 09:44:32 -0800
+Message-ID: <CAPw-ZTmAe64XbXZ4OWJOec7YMEQcgf7ZrfUsZWG6Yjc1ON0K+w@mail.gmail.com>
+References: <1455714909-3027-1-git-send-email-qnguyen@apm.com>
+	<1455714909-3027-4-git-send-email-qnguyen@apm.com>
+	<CACRpkdav6UXn41UnWvWR4zjYN=QtkNJknihr+YnHu3rXbkPBBw@mail.gmail.com>
+	<CAFopSPR133CT5t2ck2_F3Zzh8gWosLpXFpYi-5VBBhVScOkvjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20160216202121.GF11908@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Mackall <mpm@selenic.com>, Kieran Bingham <kieranbingham@gmail.com>, Lee Jones <lee.jones@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Scott Branden <sbranden@broadcom.com>, Daniel Thompson <daniel.thompson@linaro.org>, Purna Chandra Mandal <purna.mandal@microchip.com>, Ray Jui <rjui@broadcom.com>, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAFopSPR133CT5t2ck2_F3Zzh8gWosLpXFpYi-5VBBhVScOkvjA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quan Nguyen <qnguyen@apm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, Iyappan Subramanian <isubramanian@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2016 01:21 PM, Herbert Xu wrote:
-> On Mon, Feb 08, 2016 at 02:17:52PM -0700, Joshua Henderson wrote:
->> Document the devicetree bindings for the random number generator found
->> on Microchip PIC32 class devices.
+Hi Quan,
+
+On Fri, Feb 19, 2016 at 5:47 AM, Quan Nguyen <qnguyen@apm.com> wrote:
+> On Fri, Feb 19, 2016 at 4:14 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Wed, Feb 17, 2016 at 2:15 PM, Quan Nguyen <qnguyen@apm.com> wrote:
 >>
->> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
->> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> All applied.
+>>> Update APM X-Gene standby GPIO controller DTS entries to enable it
+>>> as interrupt controller.
+>>>
+>>> Signed-off-by: Y Vo <yvo@apm.com>
+>>> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Please funnel this patch through the ARM SoC tree with all other
+>> DTS files.
+>
+> Let me do it and resend.
 
-Thank you Herbert.
+Duc will pull  this into xgene-next GIT for Olof to pull.
 
-Josh
+-Loc
