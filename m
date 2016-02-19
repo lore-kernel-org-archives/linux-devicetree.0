@@ -1,102 +1,59 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH V5 3/3] arm64: dts: add Hi6220 spi configuration nodes
-Date: Fri, 19 Feb 2016 19:58:27 +0800
-Message-ID: <1455883107-8411-4-git-send-email-guodong.xu@linaro.org>
-References: <1455883107-8411-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455883107-8411-1-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, xuyiping@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, w.f@huawei.com, dan.zhao@hisilicon.com, zhongkaihua@huawei.com, kong.kongxinwei@hisilicon.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] pinctrl: mediatek: Modify pinctrl bindings for mt7623
+Date: Fri, 19 Feb 2016 13:12:29 +0100
+Message-ID: <CACRpkdbWad9iZV9LYkvEFRZn_BQDtPEAy3JE0uuR569UwMJkHQ@mail.gmail.com>
+References: <1455866238-6102-1-git-send-email-blogic@openwrt.org>
+	<CACRpkdYiQop2qDNuh4N2YZy2DTy9mOEyERro8hT4YogCPc2LGw@mail.gmail.com>
+	<56C6DF23.3060202@openwrt.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C6DF23.3060202-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhong Kaihua <zhongkaihua@huawei.com>
+On Fri, Feb 19, 2016 at 10:23 AM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> On 19/02/2016 10:03, Linus Walleij wrote:
+>> On Fri, Feb 19, 2016 at 8:17 AM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>>
+>>> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>> please apply to the devel-mt2701 branch
+>>>
+>>> Changes in V2
+>>> * make mt7623-pinfunc.h part of patch 1/2
+>>> * make sure the list stays sorted
+>>
+>> Patch applied unless the Mediatek maintainers come with serious
+>> remarks (I can always revert).
+>>
+>> Only minor comments from Yingjoe on the previous version so I guess
+>> it is finished.
+>>
+>> MTK guys: do you even have this SoC? It appears MTK is churning out
+>> a plethora of SoCs and then they land in the lap of the OpenWRT
+>> developers before the MTK maintainers even start to look at it...
+>>
+>> Yours,
+>> Linus Walleij
+>>
+>
+> I am doing this work in close collaboration with MTK. It is contractual
+> work. MTK is huge and has many BUs, one of them is WCN, formerly known
+> as Ralink. I have supported their MIPS silicon for many years now so
+> asking me to also take care of the Wireless SoCs based on ARM was the
+> natural next step.
 
-Add Hi6220 spi configuration nodes
+Awesome!
 
-Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 15 +++++++++++++++
- arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
- 3 files changed, 37 insertions(+)
+Keep doing what you're doing :)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 985a2ad..5c9ee31 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -20,6 +20,7 @@
- 		serial1 = &uart1; /* BT UART */
- 		serial2 = &uart2; /* LS Expansion UART0 */
- 		serial3 = &uart3; /* LS Expansion UART1 */
-+		spi0 = &spi_0;
- 	};
- 
- 	chosen {
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index e96cc3c..dcca83b 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -585,5 +585,20 @@
- 			clock-names = "apb_pclk";
- 			status = "ok";
- 		};
-+
-+		spi_0: spi@f7106000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x0 0xf7106000 0x0 0x1000>;
-+			interrupts = <0 50 4>;
-+			bus-id = <0>;
-+			enable-dma = <0>;
-+			clocks = <&sys_ctrl HI6220_SPI_CLK>;
-+			clock-names = "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
-+			num-cs = <1>;
-+			cs-gpios = <&gpio6 2 0>;
-+			status = "ok";
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
-index 28806df..0916e84 100644
---- a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
-@@ -221,6 +221,15 @@
- 					0xfc   MUX_M0	/* I2C2_SDA     (IOMG063) */
- 				>;
- 			};
-+
-+			spi0_pmx_func: spi0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x1a0  MUX_M1   /* SPI0_DI      (IOMG104) */
-+					0x1a4  MUX_M1	/* SPI0_DO	(IOMG105) */
-+					0x1a8  MUX_M1	/* SPI0_CS_N	(IOMG106) */
-+					0x1ac  MUX_M1	/* SPI0_CLK	(IOMG107) */
-+				>;
-+			};
- 		};
- 
- 		pmx1: pinmux@f7010800 {
-@@ -625,6 +634,18 @@
- 				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
- 				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
- 			};
-+
-+			spi0_cfg_func: spi0_cfg_func {
-+				pinctrl-single,pins = <
-+					0x1b0  0x0	/* SPI0_DI	(IOCFG108) */
-+					0x1b4  0x0	/* SPI0_DO	(IOCFG109) */
-+					0x1b8  0x0	/* SPI0_CS_N	(IOCFG110) */
-+					0x1bc  0x0	/* SPI0_CLK	(IOCFG111) */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS  PULL_DOWN PULL_DIS PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
-+			};
- 		};
- 
- 		pmx2: pinmux@f8001800 {
--- 
-1.9.1
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
