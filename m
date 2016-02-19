@@ -1,86 +1,63 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: add documentation of rk3399 clock
- controller
-Date: Fri, 19 Feb 2016 09:05:13 +0800
-Message-ID: <56C66A49.2080501@rock-chips.com>
-References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
- <20160218143648.GL9654@rob-hp-laptop> <56C6664F.8070600@rock-chips.com>
- <1758156.nKISImzkM9@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1758156.nKISImzkM9@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/6] Add core dtsi for rk3399 from Rockchip
+Date: Fri, 19 Feb 2016 09:56:12 +0800
+Message-ID: <1455846978-4272-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28KCtTaIDE5LzAyLzIwMTYgMDg6NTMsIEhlaWtvIFN0dWVibmVyINC0tcA6Cj4gQW0g
-RnJlaXRhZywgMTkuIEZlYnJ1YXIgMjAxNiwgMDg6NDg6MTUgc2NocmllYiBKaWFucXVuIFh1Ogo+
-PiBIaSBSb2IKPj4KPj4g1NogMTgvMDIvMjAxNiAyMjozNiwgUm9iIEhlcnJpbmcg0LS1wDoKPj4+
-IE9uIFdlZCwgRmViIDE3LCAyMDE2IGF0IDA5OjU0OjQ5QU0gKzA4MDAsIGppYW5xdW4ueHUgd3Jv
-dGU6Cj4+Pj4gRnJvbTogWGluZyBaaGVuZyA8emhlbmd4aW5nQHJvY2stY2hpcHMuY29tPgo+Pj4+
-Cj4+Pj4gQWRkIHRoZSBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIHRoZSBjcnUgb24gdGhlIHJrMzM5
-OSB3aGljaCBxdWl0ZQo+Pj4+IHNpbWlsYXIgc3RydWN0dXJlZCBhcyBwcmV2aW91cyBjbG9jayBj
-b250cm9sbGVycy4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IFhpbmcgWmhlbmcgPHpoZW5neGlu
-Z0Byb2NrLWNoaXBzLmNvbT4KPj4+PiAtLS0KPj4+Pgo+Pj4+ICAgIC4uLi9iaW5kaW5ncy9jbG9j
-ay9yb2NrY2hpcCxyazMzOTktY3J1LnR4dCAgICAgICAgIHwgODIKPj4+PiAgICArKysrKysrKysr
-KysrKysrKysrKysrIDEgZmlsZSBjaGFuZ2VkLCA4MiBpbnNlcnRpb25zKCspCj4+Pj4gICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0Cj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nsb2NrL3JvY2tjaGlwLHJrMzM5OS1jcnUudHh0Pj4KPj4+PiBkaWZmIC0tZ2l0Cj4+Pj4gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcm9ja2NoaXAscmszMzk5LWNy
-dS50eHQKPj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9yb2Nr
-Y2hpcCxyazMzOTktY3J1LnR4dCBuZXcKPj4+PiBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXgg
-MDAwMDAwMC4uMDdiY2M2ZQo+Pj4+IC0tLSAvZGV2L251bGwKPj4+PiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcm9ja2NoaXAscmszMzk5LWNydS50eHQKPj4+
-PiBAQCAtMCwwICsxLDgyIEBACj4+Pj4gKyogUm9ja2NoaXAgUkszMzk5IENsb2NrIGFuZCBSZXNl
-dCBVbml0Cj4+Pgo+Pj4gWy4uLl0KPj4+Cj4+Pj4gK0V4YW1wbGU6IEdlbmVyYWwgUmVnaXN0ZXIg
-RmlsZXMKPj4+PiArCj4+Pj4gKwlwbXVncmY6IHN5c2NvbkBmZjMyMDAwMCB7Cj4+Pj4gKwkJY29t
-cGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktcG11Z3JmIiwgInN5c2NvbiI7Cj4+Pgo+Pj4gSXMg
-dGhpcyBkb2N1bWVudGVkPwo+Pgo+PiBTaW5jZSB0aGVyZSBpcyBubyBkb2N1bWVudGF0aW9uIGZv
-ciByb2NrY2hpcCBncmYgZnJvbSBlYXJseSBTb0NzLCBJCj4+IHRoaW5rIGlmIHdlIG5lZWQgdG8g
-YWRkIGEgbmV3IGRldmljZXRyZWUgZG9jdW1lbnRhdGlvbiwgc3VjaCBhcwo+PiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcm9ja2NoaXAscmszMzk5LWdyZi50eHQgPwo+
-Cj4gVGhlIGdyZiBpcyBub3QgY2xvY2stc3BlY2lmaWMsIHNvIHRoZSBkaXJlY3RvcnkgaXMgcHJv
-YmFibHkgbm90IGNvcnJlY3QuCj4gSSdkIHRoaW5rIGJpbmRpbmdzL2FybS9yb2NrY2hpcC9ncmYu
-dHh0IG1pZ2h0IGJlIGJldHRlciBvcgo+IGJpbmRpbmdzL3NvYy9yb2NrY2hpcC9ncmYudHh0IG9y
-IHNvbWV3aGVyZSBlbHNlLiBBbmQgZGVmaW5lIHRoZSBwcm9wZXJ0aWVzCj4gZm9yIGFsbCBwZXIt
-c29jIEdSRnMgaW4gdGhlcmUuCj4KPiBJbiBhbnkgY2FzZSB3ZSByZWFsbHkgc2hvdWxkIGFkZCB0
-aGUgbWlzc2luZyBncmYgYmluZGluZyBkb2N1bWVudGF0aW9uIChpbiBhCj4gc2VwYXJhdGUgcGF0
-Y2ggb2YgY291cnNlKSwgYXMgdGhlIGdyZiBpcyBhIHByZXR0eSBjb21tb25seSB1c2VkIHNoYXJl
-ZAo+IGNvbXBvbmVudC4KPgpHb3QgaXQsIEkgd2lsbCBhZGQgYmluZGluZ3Mvc29jL3JvY2tjaGlw
-L2dyZi50eHQgaW4gbmV4dCBwYXRjaApUaGFua3MgIQo+Cj4+Cj4+IElmIHlvdSBhZ3JlZSwgSSB3
-aWxsIGFkZCBpdCBpbiBuZXh0IHBhdGNoCj4+Cj4+Pj4gKwkJcmVnID0gPDB4MCAweGZmMzIwMDAw
-IDB4MCAweDEwMDA+Owo+Pj4+ICsJfTsKPj4+PiArCj4+Pj4gKwlncmY6IHN5c2NvbkBmZjc3MDAw
-MCB7Cj4+Pj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktZ3JmIiwgInN5c2NvbiI7
-Cj4+Pgo+Pj4gZGl0dG8uCj4+Pgo+Pj4+ICsJCXJlZyA9IDwweDAgMHhmZjc3MDAwMCAweDAgMHgx
-MDAwMD47Cj4+Pj4gKwl9Owo+Pj4+ICsKPj4+PiArRXhhbXBsZTogQ2xvY2sgY29udHJvbGxlciBu
-b2RlOgo+Pj4+ICsKPj4+PiArCXBtdWNydTogcG11LWNsb2NrLWNvbnRyb2xsZXJAZmY3NTAwMDAg
-ewo+Pj4+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzk5LXBtdWNydSI7Cj4+Pj4gKwkJ
-cmVnID0gPDB4MCAweGZmNzUwMDAwIDB4MCAweDEwMDA+Owo+Pj4+ICsJCSNjbG9jay1jZWxscyA9
-IDwxPjsKPj4+PiArCQkjcmVzZXQtY2VsbHMgPSA8MT47Cj4+Pj4gKwl9Owo+Pj4+ICsKPj4+PiAr
-CWNydTogY2xvY2stY29udHJvbGxlckBmZjc2MDAwMCB7Cj4+Pj4gKwkJY29tcGF0aWJsZSA9ICJy
-b2NrY2hpcCxyazMzOTktY3J1IjsKPj4+PiArCQlyZWcgPSA8MHgwIDB4ZmY3NjAwMDAgMHgwIDB4
-MTAwMD47Cj4+Pj4gKwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+Owo+Pj4+ICsJCSNjbG9jay1jZWxs
-cyA9IDwxPjsKPj4+PiArCQkjcmVzZXQtY2VsbHMgPSA8MT47Cj4+Pj4gKwl9Owo+Pj4+ICsKPj4+
-PiArRXhhbXBsZTogVUFSVCBjb250cm9sbGVyIG5vZGUgdGhhdCBjb25zdW1lcyB0aGUgY2xvY2sg
-Z2VuZXJhdGVkIGJ5IHRoZQo+Pj4+IGNsb2NrICsgIGNvbnRyb2xsZXI6Cj4+Pj4gKwo+Pj4+ICsJ
-dWFydDA6IHNlcmlhbEBmZjFhMDAwMCB7Cj4+Pj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxy
-azMzOTktdWFydCIsICJzbnBzLGR3LWFwYi11YXJ0IjsKPj4+PiArCQlyZWcgPSA8MHgwIDB4ZmYx
-ODAwMDAgMHgwIDB4MTAwPjsKPj4+PiArCQljbG9ja3MgPSA8JmNydSBTQ0xLX1VBUlQwPiwgPCZj
-cnUgUENMS19VQVJUMD47Cj4+Pj4gKwkJY2xvY2stbmFtZXMgPSAiYmF1ZGNsayIsICJhcGJfcGNs
-ayI7Cj4+Pj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDk5IElSUV9UWVBFX0xFVkVMX0hJR0g+
-Owo+Pj4+ICsJCXJlZy1zaGlmdCA9IDwyPjsKPj4+PiArCQlyZWctaW8td2lkdGggPSA8ND47Cj4+
-Pj4gKwl9Owo+Pj4+IC0tCj4+Pj4gMS45LjEKPgo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApM
-aW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+There is the new SoCs from Rockchip which named rk3399, the
+patches are added to support them.
+
+Jianque Xu (4):
+  soc: rockchip: add bindings for Rockchip grf
+  spi: rockchip: add bindings for rk3399 spi
+  ASoC: rockchip: add bindings for rk3399 i2s
+  ARM64: dts: rockchip: add core dtsi file for rk3399
+
+Xing Zheng (2):
+  clk: rockchip: add dt-binding header for rk3399
+  dt-bindings: add documentation of rk3399 clock controller
+
+ .../bindings/clock/rockchip,rk3399-cru.txt         |  82 ++
+ .../devicetree/bindings/soc/rockchip/grf.txt       |  35 +
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |   1 +
+ .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 949 +++++++++++++++++++++
+ drivers/spi/spi-rockchip.c                         |   1 +
+ include/dt-bindings/clock/rk3399-cru.h             | 609 +++++++++++++
+ 7 files changed, 1678 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/grf.txt
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
+
+-- 
+changes in v4:
+- restore rockchip-i2s.txt patch for rk3399-i2s (Rob)
+- add grf.txt for rockchip grf (Rob, Heiko)
+- reset my author name to keep same with signoff
+
+changes in v3:
+- add compatible for rk3399 spi (Mark, Heiko)
+
+changes in v2:
+- remove changeID (Heiko, Mark)
+- drop pmu and psci temporary (Mark)
+- drop applied patch (Heiko)
+- drop GIC_CPU_MASK_SIMPLE from the interrupt specifiers (Marc, Heiko)
+- drop clock-frequency of timer (Marc, Mark)
+- remove double defination for SCLK_SPI5
+
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
