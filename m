@@ -1,33 +1,121 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V6 01/11] dt-bindings: ARM: Mediatek: add MT2701/7623 string to the PMIC wrapper doc
-Date: Fri, 19 Feb 2016 09:44:05 +0100
-Message-ID: <1455871455-21212-2-git-send-email-blogic@openwrt.org>
-References: <1455871455-21212-1-git-send-email-blogic@openwrt.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455871455-21212-1-git-send-email-blogic@openwrt.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Henry Chen <henryc.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, Flora Fu <flora.fu@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/1] USB: core: let USB device know device node
+Date: Fri, 19 Feb 2016 09:51:07 +0100
+Message-ID: <1455871867.5745.3.camel@pengutronix.de>
+References: <1455612172-2081-1-git-send-email-peter.chen@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455612172-2081-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/soc/mediatek/pwrap.txt |    1 +
- 1 file changed, 1 insertion(+)
+Hi Peter,
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-index ddeb5b6..107700d 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-+++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-@@ -18,6 +18,7 @@ IP Pairing
- 
- Required properties in pwrap device node.
- - compatible:
-+	"mediatek,mt2701-pwrap" for MT2701/7623 SoCs
- 	"mediatek,mt8135-pwrap" for MT8135 SoCs
- 	"mediatek,mt8173-pwrap" for MT8173 SoCs
- - interrupts: IRQ for pwrap in SOC
--- 
-1.7.10.4
+Am Dienstag, den 16.02.2016, 16:42 +0800 schrieb Peter Chen:
+> From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Although most of USB devices are hot-plug's, there are still some devices
+> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> If these kinds of USB devices are multiple functions, and they can supply
+> other interfaces like i2c, gpios for other devices, we may need to
+> describe these at device tree.
+> 
+> In this commit, it uses "reg" in dts as physical port number to match
+> the phyiscal port number decided by USB core, if they are the same,
+> then the device node is for the device we are creating for USB core.
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes for v5:
+> - Refine the code how to get the device node at usb_alloc_dev according
+>   to Alan's comment.
+> - Point out "usbVID,PID" is the recommented compatible, and others
+>   compatibles at binding doc could also be used.
+> 
+> Changes for v4:
+> - The range of "reg" should be 1-31, changing device node address
+>   style as in lower case hexadecimal with leading zeroes suppressed
+>   [binding doc, usb-device.txt]
+> - Improve the example at binding doc, it describes node from the top
+>   (the controller)
+> - Delete the struct of_node * within struct usb_device
+> - Using usb_hcd_find_raw_port_number to get raw port number under root
+>   hub port
+> 
+> Changes for v3:
+> - typo: s/descirbe/describe/
+> 
+> Changes for v2:
+> - Fix build error reported by kbuild robot, lack of "static" for
+>   inline usb_of_get_child_node
+> - Fix typo, "devcie_node" -> "device_node"
+> - Add kernel-doc for of_node at struct usb_device
+> 
+> Changes from RFC:
+> - Fix the error address for binding doc, and add compatible for binding doc
+> - Change get child node API from "usb_of_find_node" to
+>   "usb_of_get_child_node"
+> - Delete unecessary header files
+> - One typo
+> 
+>  .../devicetree/bindings/usb/usb-device.txt         | 26 ++++++++++++
+>  drivers/usb/core/Makefile                          |  2 +-
+>  drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
+>  drivers/usb/core/usb.c                             | 10 +++++
+>  include/linux/usb/of.h                             |  7 ++++
+>  5 files changed, 91 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+>  create mode 100644 drivers/usb/core/of.c
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> new file mode 100644
+> index 0000000..a997a23
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -0,0 +1,26 @@
+> +Generic USB Device Properties
+> +
+> +Usually, we only use device tree for hard wired USB device.
+> +The reference binding doc is from:
+> +http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> +
+> +Required properties:
+> +- compatible: usbVID,PID. The other compatible strings from the above
+> +  standard binding could also be used, but a device adhering to this
+> +  binding may leave out all except for usbVID,PID.
+
+I asked to document the format of VID and PID ("lower case hexadecimal
+with leading zeroes suppressed") here.
+
+> +- reg: the port number which this device is connecting to, the range
+> +  is 1-31.
+> +
+> +Example:
+> +
+> +&usb1 {
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	hub: genesys@1 {
+> +		compatible = "usb05e3,0608";
+
+This should be:
+		compatible = "usb5e3,608";
+
+After those two issues are fixed,
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+best regards
+Philipp
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
