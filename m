@@ -1,146 +1,537 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: Device probing proceeds even when the default pinctrl state is
- invalid
-Date: Fri, 19 Feb 2016 14:54:33 +0100
-Message-ID: <20160219135433.GY2607@odux.rfo.atmel.com>
-References: <CAGkQfmOHgOoFrVyKtB+vpmwqs5s2DnLay9zjaksFj5Rbn+4h0g@mail.gmail.com>
- <CACRpkdamPh3pLetWs_S6b_BFWKDgZwiyTaOTQCJsm3cC=ZzLAA@mail.gmail.com>
- <CAGkQfmN7vu6G6Ky3fBhg3_1HmrmUCAGVLokbapS1r7KgyaaKew@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] Revert "regulator: tps65217: remove tps65217.dtsi file"
+Date: Fri, 19 Feb 2016 16:12:19 +0200
+Message-ID: <1455891139-6139-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGkQfmN7vu6G6Ky3fBhg3_1HmrmUCAGVLokbapS1r7KgyaaKew@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: romain izard <romain.izard@mobile-devices.fr>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux GPIO List <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, hs@denx.de
+Cc: j-keerthy@ti.com, broonie@kernel.org, robh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
+This reverts commit 8e6ebfaa9b384088002baa10f7534efa73a0794e.
 
-On Fri, Feb 19, 2016 at 02:30:49PM +0100, romain izard wrote:
-> 2016-02-18 21:07 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
-> > On Thu, Feb 18, 2016 at 11:37 AM, Romain Izard
-> > <romain.izard.pro@gmail.com> wrote:
-> >
-> >> The current code for device probing tries to map the default pinctrl
-> >> state (in pinctrl_bind_pins), but is returning 0 or -EDEFER. If there
-> >> is an other error, it is not reported. This means that devices that
-> >> do not have any specified pinctrl state can be probed, which is a
-> >> correct behaviour that should be conserved, but it can also be an
-> >> issue, as it will fail to report any other issue with the specified
-> >> pinctrl state.
-> >>
-> >> Did I miss something that would explain why all other errors are
-> >> ignored ?
-> >
-> > Yeah we should probably respect a few errors and let some pass. Please
-> > make a patch!
-> >
-> 
-> I have a hard time choosing which errors should be ignored. For my
-> tests, I simply removed the error filtering at the end of
-> pinctrl_bind_pins, which works because devices with no pinctrl info are
-> already handled in the body of the function. It worked with my board,
-> but I am not sure that it covers all use cases. There are no hogs in
-> there, for example.
-> 
-> 8<----------------------------------------------------------------------
-> 
-> diff --git a/drivers/base/pinctrl.c b/drivers/base/pinctrl.c
-> index 076297592754..2d876103fa29 100644
-> --- a/drivers/base/pinctrl.c
-> +++ b/drivers/base/pinctrl.c
-> @@ -91,9 +91,5 @@ cleanup_alloc:
->         devm_kfree(dev, dev->pins);
->         dev->pins = NULL;
-> 
-> -       /* Only return deferrals */
-> -       if (ret != -EPROBE_DEFER)
-> -               ret = 0;
-> -
->         return ret;
->  }
-> 
-> 8<----------------------------------------------------------------------
-> 
+Without the patch reverted regulators will not work. This prevents
+MMC to be working for example so the boards can not boot to
+MMC rootfs.
 
-For debug purpose, I think a message to say that a configuration is
-needed should be useful in pinconf_validate_map or at higher level such
-as dt_node_to_map. It is not obvious for someone who want the default
-pin configuration to set it in the device tree.
+Tested it on beaglebone white and bisect also points to the
+reverted commit.
+The issue can be also fixed by adding "regulator-compatible =3D" to all=
+ board
+dts file for the regulators.
 
-> >> This also leads to a larger problem, as currently the device tree for
-> >> existing boards may specify invalid pinctrl configurations, but the
-> >> boards look like they work correctly, as long as nothing else tries
-> >> to use the same pins.
-> >
-> > Well I guess if you look in the debugfs files it looks crazy does it
-> > not? That is how I verify that the pins get bound right.  Especially
-> > in the file pinmux-pins
-> >
-> >> Correcting the issue may require a new 'strict-mapping' property in
-> >> the pinctrl node in the device tree, otherwise this correction would
-> >> be an ABI regression.
-> >
-> > Bah if the device tree is wrong it is wrong, we certainly do not
-> > expect erroneous device trees that just "happen to work" to keep
-> > working.
-> >
-> >> Is this pattern really a good one ? We're moving away from describing
-> >> hardware in here.
-> >
-> > I don't understand.
-> >
-> I wanted to have your opinion about the using a "strict-mapping"
-> property, as this property does not describe the hardware, but describes
-> the status of the device tree iself. From the rest of your mail, I
-> understand that your point of view is that it's not really needed.
-> 
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
 
-I don't see it as a regression, something is missing in the device tree
-so a fix is needed.
-
-> >> For an existing example, in the device tree for Atmel's
-> >> SAMA5D2_Xplained board,
-> >
-> > Where is this device tree, so I can look at it?
-> >
-> >> the mapping for the Ethernet transceiver's IRQ line was missing it
-> >> bias configuration, and thus the pins were not reserved for the
-> >> Ethernet use. I've just send a patch to correct it, but breaking
-> >> Ethernet on kernel upgrade for the boards using the previous
-> >> revisions would be an issue.
-> >
-> > Hm, ask the Atmel DT maintainers what to do about this...  Nicolas:
-> > how real is this ABI issue?
-> 
-> I've sent the patch to Nicolas and the ARM mailing list, with cc to you.
-> See http://permalink.gmane.org/gmane.linux.kernel/2155589
-> 
-> In this precise case, the mapping for the ethernel interrupt is invalid
-> and skipped. It does not lead to a problem, because the line is mapped
-> later during the probe sequence to install the interrupt handler.
-> 
-> When I integrate mapping validation, the probing stops as soon as the
-> invalid mapping is detected, and the ethernet controller remains
-> unbound, without any loaded driver. As a result, the network interface
-> has disappeared. For someone who uses NFS for its rootfs, or anyone
-> using relying on the network to use the board, it is broken.
-> 
-> 
-> What I fear is that among the 300+ existing dts files that have a
-> "pinctrl-0" property, a fair proportion has an "invalid but working"
-> device tree, and the change of behaviour of the pinctrl driver will
-> break them. Hence my proposition to mark in the device trees those that
-> are known to work correctly.
-
-If we consider device tree as an ABI that shouldn't be broken, it is
-difficult to improve things, fix bugs.
-
-Nicolas will be back on Monday.
+I have noticed that bbw did not find the MMC with linux-next, but it tu=
+rns out
+that even 4.5-rc4 is behaving the same way.
+I have run bisect and with this revert patch I can boot up fine.
+To be honest I don't know why the tps65217.dtsi has been deleted in the=
+ first
+place.=20
 
 
-Regards
+ .../devicetree/bindings/regulator/tps65217.txt     | 10 ----
+ arch/arm/boot/dts/am335x-bone-common.dtsi          | 14 ++----
+ arch/arm/boot/dts/am335x-chilisom.dtsi             | 14 +-----
+ arch/arm/boot/dts/am335x-nano.dts                  | 14 +-----
+ arch/arm/boot/dts/am335x-pepper.dts                | 14 +-----
+ arch/arm/boot/dts/am335x-sl50.dts                  | 13 +----
+ arch/arm/boot/dts/tps65217.dtsi                    | 56 ++++++++++++++=
+++++++++
+ 7 files changed, 67 insertions(+), 68 deletions(-)
+ create mode 100644 arch/arm/boot/dts/tps65217.dtsi
 
-Ludovic
+diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b=
+/Documentation/devicetree/bindings/regulator/tps65217.txt
+index d18109657da6..4f05d208c95c 100644
+--- a/Documentation/devicetree/bindings/regulator/tps65217.txt
++++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
+@@ -26,11 +26,7 @@ Example:
+ 		ti,pmic-shutdown-controller;
+=20
+ 		regulators {
+-			#address-cells =3D <1>;
+-			#size-cells =3D <0>;
+-
+ 			dcdc1_reg: dcdc1 {
+-				reg =3D <0>;
+ 				regulator-min-microvolt =3D <900000>;
+ 				regulator-max-microvolt =3D <1800000>;
+ 				regulator-boot-on;
+@@ -38,7 +34,6 @@ Example:
+ 			};
+=20
+ 			dcdc2_reg: dcdc2 {
+-				reg =3D <1>;
+ 				regulator-min-microvolt =3D <900000>;
+ 				regulator-max-microvolt =3D <3300000>;
+ 				regulator-boot-on;
+@@ -46,7 +41,6 @@ Example:
+ 			};
+=20
+ 			dcdc3_reg: dcc3 {
+-				reg =3D <2>;
+ 				regulator-min-microvolt =3D <900000>;
+ 				regulator-max-microvolt =3D <1500000>;
+ 				regulator-boot-on;
+@@ -54,7 +48,6 @@ Example:
+ 			};
+=20
+ 			ldo1_reg: ldo1 {
+-				reg =3D <3>;
+ 				regulator-min-microvolt =3D <1000000>;
+ 				regulator-max-microvolt =3D <3300000>;
+ 				regulator-boot-on;
+@@ -62,7 +55,6 @@ Example:
+ 			};
+=20
+ 			ldo2_reg: ldo2 {
+-				reg =3D <4>;
+ 				regulator-min-microvolt =3D <900000>;
+ 				regulator-max-microvolt =3D <3300000>;
+ 				regulator-boot-on;
+@@ -70,7 +62,6 @@ Example:
+ 			};
+=20
+ 			ldo3_reg: ldo3 {
+-				reg =3D <5>;
+ 				regulator-min-microvolt =3D <1800000>;
+ 				regulator-max-microvolt =3D <3300000>;
+ 				regulator-boot-on;
+@@ -78,7 +69,6 @@ Example:
+ 			};
+=20
+ 			ldo4_reg: ldo4 {
+-				reg =3D <6>;
+ 				regulator-min-microvolt =3D <1800000>;
+ 				regulator-max-microvolt =3D <3300000>;
+ 				regulator-boot-on;
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/=
+dts/am335x-bone-common.dtsi
+index f3db13d2d90e..0cc150b87b86 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -285,8 +285,10 @@
+ 	};
+ };
+=20
++
++/include/ "tps65217.dtsi"
++
+ &tps {
+-	compatible =3D "ti,tps65217";
+ 	/*
+ 	 * Configure pmic to enter OFF-state instead of SLEEP-state ("RTC-onl=
+y
+ 	 * mode") at poweroff.  Most BeagleBone versions do not support RTC-o=
+nly
+@@ -307,17 +309,12 @@
+ 	ti,pmic-shutdown-controller;
+=20
+ 	regulators {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+ 		dcdc1_reg: regulator@0 {
+-			reg =3D <0>;
+ 			regulator-name =3D "vdds_dpr";
+ 			regulator-always-on;
+ 		};
+=20
+ 		dcdc2_reg: regulator@1 {
+-			reg =3D <1>;
+ 			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_mpu";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -327,7 +324,6 @@
+ 		};
+=20
+ 		dcdc3_reg: regulator@2 {
+-			reg =3D <2>;
+ 			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_core";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -337,25 +333,21 @@
+ 		};
+=20
+ 		ldo1_reg: regulator@3 {
+-			reg =3D <3>;
+ 			regulator-name =3D "vio,vrtc,vdds";
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo2_reg: regulator@4 {
+-			reg =3D <4>;
+ 			regulator-name =3D "vdd_3v3aux";
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo3_reg: regulator@5 {
+-			reg =3D <5>;
+ 			regulator-name =3D "vdd_1v8";
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo4_reg: regulator@6 {
+-			reg =3D <6>;
+ 			regulator-name =3D "vdd_3v3a";
+ 			regulator-always-on;
+ 		};
+diff --git a/arch/arm/boot/dts/am335x-chilisom.dtsi b/arch/arm/boot/dts=
+/am335x-chilisom.dtsi
+index fda457b07e15..857d9894103a 100644
+--- a/arch/arm/boot/dts/am335x-chilisom.dtsi
++++ b/arch/arm/boot/dts/am335x-chilisom.dtsi
+@@ -128,21 +128,16 @@
+=20
+ };
+=20
+-&tps {
+-	compatible =3D "ti,tps65217";
++/include/ "tps65217.dtsi"
+=20
++&tps {
+ 	regulators {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+ 		dcdc1_reg: regulator@0 {
+-			reg =3D <0>;
+ 			regulator-name =3D "vdds_dpr";
+ 			regulator-always-on;
+ 		};
+=20
+ 		dcdc2_reg: regulator@1 {
+-			reg =3D <1>;
+ 			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_mpu";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -152,7 +147,6 @@
+ 		};
+=20
+ 		dcdc3_reg: regulator@2 {
+-			reg =3D <2>;
+ 			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_core";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -162,28 +156,24 @@
+ 		};
+=20
+ 		ldo1_reg: regulator@3 {
+-			reg =3D <3>;
+ 			regulator-name =3D "vio,vrtc,vdds";
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo2_reg: regulator@4 {
+-			reg =3D <4>;
+ 			regulator-name =3D "vdd_3v3aux";
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo3_reg: regulator@5 {
+-			reg =3D <5>;
+ 			regulator-name =3D "vdd_1v8";
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo4_reg: regulator@6 {
+-			reg =3D <6>;
+ 			regulator-name =3D "vdd_3v3d";
+ 			regulator-boot-on;
+ 			regulator-always-on;
+diff --git a/arch/arm/boot/dts/am335x-nano.dts b/arch/arm/boot/dts/am33=
+5x-nano.dts
+index 77559a1ded60..f313999c503e 100644
+--- a/arch/arm/boot/dts/am335x-nano.dts
++++ b/arch/arm/boot/dts/am335x-nano.dts
+@@ -375,15 +375,11 @@
+ 	wp-gpios =3D <&gpio3 18 0>;
+ };
+=20
+-&tps {
+-	compatible =3D "ti,tps65217";
++#include "tps65217.dtsi"
+=20
++&tps {
+ 	regulators {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+ 		dcdc1_reg: regulator@0 {
+-			reg =3D <0>;
+ 			/* +1.5V voltage with =C2=B14% tolerance */
+ 			regulator-min-microvolt =3D <1450000>;
+ 			regulator-max-microvolt =3D <1550000>;
+@@ -392,7 +388,6 @@
+ 		};
+=20
+ 		dcdc2_reg: regulator@1 {
+-			reg =3D <1>;
+ 			/* VDD_MPU voltage limits 0.95V - 1.1V with =C2=B14% tolerance */
+ 			regulator-name =3D "vdd_mpu";
+ 			regulator-min-microvolt =3D <915000>;
+@@ -402,7 +397,6 @@
+ 		};
+=20
+ 		dcdc3_reg: regulator@2 {
+-			reg =3D <2>;
+ 			/* VDD_CORE voltage limits 0.95V - 1.1V with =C2=B14% tolerance */
+ 			regulator-name =3D "vdd_core";
+ 			regulator-min-microvolt =3D <915000>;
+@@ -412,7 +406,6 @@
+ 		};
+=20
+ 		ldo1_reg: regulator@3 {
+-			reg =3D <3>;
+ 			/* +1.8V voltage with =C2=B14% tolerance */
+ 			regulator-min-microvolt =3D <1750000>;
+ 			regulator-max-microvolt =3D <1870000>;
+@@ -421,7 +414,6 @@
+ 		};
+=20
+ 		ldo2_reg: regulator@4 {
+-			reg =3D <4>;
+ 			/* +3.3V voltage with =C2=B14% tolerance */
+ 			regulator-min-microvolt =3D <3175000>;
+ 			regulator-max-microvolt =3D <3430000>;
+@@ -430,7 +422,6 @@
+ 		};
+=20
+ 		ldo3_reg: regulator@5 {
+-			reg =3D <5>;
+ 			/* +1.8V voltage with =C2=B14% tolerance */
+ 			regulator-min-microvolt =3D <1750000>;
+ 			regulator-max-microvolt =3D <1870000>;
+@@ -439,7 +430,6 @@
+ 		};
+=20
+ 		ldo4_reg: regulator@6 {
+-			reg =3D <6>;
+ 			/* +3.3V voltage with =C2=B14% tolerance */
+ 			regulator-min-microvolt =3D <3175000>;
+ 			regulator-max-microvolt =3D <3430000>;
+diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am=
+335x-pepper.dts
+index 471a3a70ea1f..8867aaaec54d 100644
+--- a/arch/arm/boot/dts/am335x-pepper.dts
++++ b/arch/arm/boot/dts/am335x-pepper.dts
+@@ -420,9 +420,9 @@
+ 	vin-supply =3D <&vbat>;
+ };
+=20
+-&tps {
+-	compatible =3D "ti,tps65217";
++/include/ "tps65217.dtsi"
+=20
++&tps {
+ 	backlight {
+ 		isel =3D <1>; /* ISET1 */
+ 		fdim =3D <200>; /* TPS65217_BL_FDIM_200HZ */
+@@ -430,17 +430,12 @@
+ 	};
+=20
+ 	regulators {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+ 		dcdc1_reg: regulator@0 {
+-			reg =3D <0>;
+ 			/* VDD_1V8 system supply */
+ 			regulator-always-on;
+ 		};
+=20
+ 		dcdc2_reg: regulator@1 {
+-			reg =3D <1>;
+ 			/* VDD_CORE voltage limits 0.95V - 1.26V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_core";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -450,7 +445,6 @@
+ 		};
+=20
+ 		dcdc3_reg: regulator@2 {
+-			reg =3D <2>;
+ 			/* VDD_MPU voltage limits 0.95V - 1.1V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_mpu";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -460,21 +454,18 @@
+ 		};
+=20
+ 		ldo1_reg: regulator@3 {
+-			reg =3D <3>;
+ 			/* VRTC 1.8V always-on supply */
+ 			regulator-name =3D "vrtc,vdds";
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo2_reg: regulator@4 {
+-			reg =3D <4>;
+ 			/* 3.3V rail */
+ 			regulator-name =3D "vdd_3v3aux";
+ 			regulator-always-on;
+ 		};
+=20
+ 		ldo3_reg: regulator@5 {
+-			reg =3D <5>;
+ 			/* VDD_3V3A 3.3V rail */
+ 			regulator-name =3D "vdd_3v3a";
+ 			regulator-min-microvolt =3D <3300000>;
+@@ -482,7 +473,6 @@
+ 		};
+=20
+ 		ldo4_reg: regulator@6 {
+-			reg =3D <6>;
+ 			/* VDD_3V3B 3.3V rail */
+ 			regulator-name =3D "vdd_3v3b";
+ 			regulator-always-on;
+diff --git a/arch/arm/boot/dts/am335x-sl50.dts b/arch/arm/boot/dts/am33=
+5x-sl50.dts
+index a676869536bc..a6efbe6eda3b 100644
+--- a/arch/arm/boot/dts/am335x-sl50.dts
++++ b/arch/arm/boot/dts/am335x-sl50.dts
+@@ -395,19 +395,16 @@
+ 	pinctrl-0 =3D <&uart4_pins>;
+ };
+=20
++#include "tps65217.dtsi"
++
+ &tps {
+-	compatible =3D "ti,tps65217";
+ 	ti,pmic-shutdown-controller;
+=20
+ 	interrupt-parent =3D <&intc>;
+ 	interrupts =3D <7>;	/* NNMI */
+=20
+ 	regulators {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+ 		dcdc1_reg: regulator@0 {
+-			reg =3D <0>;
+ 			/* VDDS_DDR */
+ 			regulator-min-microvolt =3D <1500000>;
+ 			regulator-max-microvolt =3D <1500000>;
+@@ -415,7 +412,6 @@
+ 		};
+=20
+ 		dcdc2_reg: regulator@1 {
+-			reg =3D <1>;
+ 			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_mpu";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -425,7 +421,6 @@
+ 		};
+=20
+ 		dcdc3_reg: regulator@2 {
+-			reg =3D <2>;
+ 			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+ 			regulator-name =3D "vdd_core";
+ 			regulator-min-microvolt =3D <925000>;
+@@ -435,7 +430,6 @@
+ 		};
+=20
+ 		ldo1_reg: regulator@3 {
+-			reg =3D <3>;
+ 			/* VRTC / VIO / VDDS*/
+ 			regulator-always-on;
+ 			regulator-min-microvolt =3D <1800000>;
+@@ -443,7 +437,6 @@
+ 		};
+=20
+ 		ldo2_reg: regulator@4 {
+-			reg =3D <4>;
+ 			/* VDD_3V3AUX */
+ 			regulator-always-on;
+ 			regulator-min-microvolt =3D <3300000>;
+@@ -451,7 +444,6 @@
+ 		};
+=20
+ 		ldo3_reg: regulator@5 {
+-			reg =3D <5>;
+ 			/* VDD_1V8 */
+ 			regulator-min-microvolt =3D <1800000>;
+ 			regulator-max-microvolt =3D <1800000>;
+@@ -459,7 +451,6 @@
+ 		};
+=20
+ 		ldo4_reg: regulator@6 {
+-			reg =3D <6>;
+ 			/* VDD_3V3A */
+ 			regulator-min-microvolt =3D <3300000>;
+ 			regulator-max-microvolt =3D <3300000>;
+diff --git a/arch/arm/boot/dts/tps65217.dtsi b/arch/arm/boot/dts/tps652=
+17.dtsi
+new file mode 100644
+index 000000000000..a63272422d76
+--- /dev/null
++++ b/arch/arm/boot/dts/tps65217.dtsi
+@@ -0,0 +1,56 @@
++/*
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.c=
+om/
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ * Integrated Power Management Chip
++ * http://www.ti.com/lit/ds/symlink/tps65217.pdf
++ */
++
++&tps {
++	compatible =3D "ti,tps65217";
++
++	regulators {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		dcdc1_reg: regulator@0 {
++			reg =3D <0>;
++			regulator-compatible =3D "dcdc1";
++		};
++
++		dcdc2_reg: regulator@1 {
++			reg =3D <1>;
++			regulator-compatible =3D "dcdc2";
++		};
++
++		dcdc3_reg: regulator@2 {
++			reg =3D <2>;
++			regulator-compatible =3D "dcdc3";
++		};
++
++		ldo1_reg: regulator@3 {
++			reg =3D <3>;
++			regulator-compatible =3D "ldo1";
++		};
++
++		ldo2_reg: regulator@4 {
++			reg =3D <4>;
++			regulator-compatible =3D "ldo2";
++		};
++
++		ldo3_reg: regulator@5 {
++			reg =3D <5>;
++			regulator-compatible =3D "ldo3";
++		};
++
++		ldo4_reg: regulator@6 {
++			reg =3D <6>;
++			regulator-compatible =3D "ldo4";
++		};
++	};
++};
+--=20
+2.7.1
