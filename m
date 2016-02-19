@@ -1,116 +1,83 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Subject: Re: [PATCH 5/6] dt-bindings: add documentation of rk3399 clock
  controller
-Date: Fri, 19 Feb 2016 08:48:15 +0800
-Message-ID: <56C6664F.8070600@rock-chips.com>
+Date: Fri, 19 Feb 2016 01:53:52 +0100
+Message-ID: <1758156.nKISImzkM9@phil>
 References: <1455673992-16469-1-git-send-email-jay.xu@rock-chips.com>
- <1455674089-16567-1-git-send-email-jay.xu@rock-chips.com>
- <20160218143648.GL9654@rob-hp-laptop>
+ <20160218143648.GL9654@rob-hp-laptop> <56C6664F.8070600@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160218143648.GL9654@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56C6664F.8070600-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-
-=D4=DA 18/02/2016 22:36, Rob Herring =D0=B4=B5=C0:
-> On Wed, Feb 17, 2016 at 09:54:49AM +0800, jianqun.xu wrote:
->> From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Add the devicetree binding for the cru on the rk3399 which quite
->> similar structured as previous clock controllers.
->>
->> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>   .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++=
-++++++++++++
->>   1 file changed, 82 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/rockchi=
-p,rk3399-cru.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399=
--cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.=
-txt
->> new file mode 100644
->> index 0000000..07bcc6e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.tx=
-t
->> @@ -0,0 +1,82 @@
->> +* Rockchip RK3399 Clock and Reset Unit
->
-> [...]
->
->> +Example: General Register Files
->> +
->> +	pmugrf: syscon@ff320000 {
->> +		compatible =3D "rockchip,rk3399-pmugrf", "syscon";
->
-> Is this documented?
-Since there is no documentation for rockchip grf from early SoCs, I=20
-think if we need to add a new devicetree documentation, such as
-Documentation/devicetree/bindings/clock/rockchip,rk3399-grf.txt ?
-
-If you agree, I will add it in next patch
-
->
->> +		reg =3D <0x0 0xff320000 0x0 0x1000>;
->> +	};
->> +
->> +	grf: syscon@ff770000 {
->> +		compatible =3D "rockchip,rk3399-grf", "syscon";
->
-> ditto.
->
->> +		reg =3D <0x0 0xff770000 0x0 0x10000>;
->> +	};
->> +
->> +Example: Clock controller node:
->> +
->> +	pmucru: pmu-clock-controller@ff750000 {
->> +		compatible =3D "rockchip,rk3399-pmucru";
->> +		reg =3D <0x0 0xff750000 0x0 0x1000>;
->> +		#clock-cells =3D <1>;
->> +		#reset-cells =3D <1>;
->> +	};
->> +
->> +	cru: clock-controller@ff760000 {
->> +		compatible =3D "rockchip,rk3399-cru";
->> +		reg =3D <0x0 0xff760000 0x0 0x1000>;
->> +		rockchip,grf =3D <&grf>;
->> +		#clock-cells =3D <1>;
->> +		#reset-cells =3D <1>;
->> +	};
->> +
->> +Example: UART controller node that consumes the clock generated by =
-the clock
->> +  controller:
->> +
->> +	uart0: serial@ff1a0000 {
->> +		compatible =3D "rockchip,rk3399-uart", "snps,dw-apb-uart";
->> +		reg =3D <0x0 0xff180000 0x0 0x100>;
->> +		clocks =3D <&cru SCLK_UART0>, <&cru PCLK_UART0>;
->> +		clock-names =3D "baudclk", "apb_pclk";
->> +		interrupts =3D <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift =3D <2>;
->> +		reg-io-width =3D <4>;
->> +	};
->> --
->> 1.9.1
->>
->>
->
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gRnJlaXRhZywgMTkuIEZlYnJ1YXIgMjAxNiwgMDg6NDg6MTUgc2NocmllYiBKaWFucXVuIFh1
+Ogo+IEhpIFJvYgo+IAo+IOWcqCAxOC8wMi8yMDE2IDIyOjM2LCBSb2IgSGVycmluZyDlhpnpgZM6
+Cj4gPiBPbiBXZWQsIEZlYiAxNywgMjAxNiBhdCAwOTo1NDo0OUFNICswODAwLCBqaWFucXVuLnh1
+IHdyb3RlOgo+ID4+IEZyb206IFhpbmcgWmhlbmcgPHpoZW5neGluZ0Byb2NrLWNoaXBzLmNvbT4K
+PiA+PiAKPiA+PiBBZGQgdGhlIGRldmljZXRyZWUgYmluZGluZyBmb3IgdGhlIGNydSBvbiB0aGUg
+cmszMzk5IHdoaWNoIHF1aXRlCj4gPj4gc2ltaWxhciBzdHJ1Y3R1cmVkIGFzIHByZXZpb3VzIGNs
+b2NrIGNvbnRyb2xsZXJzLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IFhpbmcgWmhlbmcgPHpo
+ZW5neGluZ0Byb2NrLWNoaXBzLmNvbT4KPiA+PiAtLS0KPiA+PiAKPiA+PiAgIC4uLi9iaW5kaW5n
+cy9jbG9jay9yb2NrY2hpcCxyazMzOTktY3J1LnR4dCAgICAgICAgIHwgODIKPiA+PiAgICsrKysr
+KysrKysrKysrKysrKysrKysgMSBmaWxlIGNoYW5nZWQsIDgyIGluc2VydGlvbnMoKykKPiA+PiAg
+IGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nsb2NrL3JvY2tjaGlwLHJrMzM5OS1jcnUudHh0Pj4gCj4gPj4gZGlmZiAtLWdpdAo+ID4+
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3JvY2tjaGlwLHJrMzM5
+OS1jcnUudHh0Cj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
+cm9ja2NoaXAscmszMzk5LWNydS50eHQgbmV3Cj4gPj4gZmlsZSBtb2RlIDEwMDY0NAo+ID4+IGlu
+ZGV4IDAwMDAwMDAuLjA3YmNjNmUKPiA+PiAtLS0gL2Rldi9udWxsCj4gPj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3JvY2tjaGlwLHJrMzM5OS1jcnUudHh0
+Cj4gPj4gQEAgLTAsMCArMSw4MiBAQAo+ID4+ICsqIFJvY2tjaGlwIFJLMzM5OSBDbG9jayBhbmQg
+UmVzZXQgVW5pdAo+ID4gCj4gPiBbLi4uXQo+ID4gCj4gPj4gK0V4YW1wbGU6IEdlbmVyYWwgUmVn
+aXN0ZXIgRmlsZXMKPiA+PiArCj4gPj4gKwlwbXVncmY6IHN5c2NvbkBmZjMyMDAwMCB7Cj4gPj4g
+KwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktcG11Z3JmIiwgInN5c2NvbiI7Cj4gPiAK
+PiA+IElzIHRoaXMgZG9jdW1lbnRlZD8KPiAKPiBTaW5jZSB0aGVyZSBpcyBubyBkb2N1bWVudGF0
+aW9uIGZvciByb2NrY2hpcCBncmYgZnJvbSBlYXJseSBTb0NzLCBJCj4gdGhpbmsgaWYgd2UgbmVl
+ZCB0byBhZGQgYSBuZXcgZGV2aWNldHJlZSBkb2N1bWVudGF0aW9uLCBzdWNoIGFzCj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3JvY2tjaGlwLHJrMzM5OS1ncmYudHh0
+ID8KClRoZSBncmYgaXMgbm90IGNsb2NrLXNwZWNpZmljLCBzbyB0aGUgZGlyZWN0b3J5IGlzIHBy
+b2JhYmx5IG5vdCBjb3JyZWN0LgpJJ2QgdGhpbmsgYmluZGluZ3MvYXJtL3JvY2tjaGlwL2dyZi50
+eHQgbWlnaHQgYmUgYmV0dGVyIG9yCmJpbmRpbmdzL3NvYy9yb2NrY2hpcC9ncmYudHh0IG9yIHNv
+bWV3aGVyZSBlbHNlLiBBbmQgZGVmaW5lIHRoZSBwcm9wZXJ0aWVzIApmb3IgYWxsIHBlci1zb2Mg
+R1JGcyBpbiB0aGVyZS4KCkluIGFueSBjYXNlIHdlIHJlYWxseSBzaG91bGQgYWRkIHRoZSBtaXNz
+aW5nIGdyZiBiaW5kaW5nIGRvY3VtZW50YXRpb24gKGluIGEgCnNlcGFyYXRlIHBhdGNoIG9mIGNv
+dXJzZSksIGFzIHRoZSBncmYgaXMgYSBwcmV0dHkgY29tbW9ubHkgdXNlZCBzaGFyZWQgCmNvbXBv
+bmVudC4KCgo+IAo+IElmIHlvdSBhZ3JlZSwgSSB3aWxsIGFkZCBpdCBpbiBuZXh0IHBhdGNoCj4g
+Cj4gPj4gKwkJcmVnID0gPDB4MCAweGZmMzIwMDAwIDB4MCAweDEwMDA+Owo+ID4+ICsJfTsKPiA+
+PiArCj4gPj4gKwlncmY6IHN5c2NvbkBmZjc3MDAwMCB7Cj4gPj4gKwkJY29tcGF0aWJsZSA9ICJy
+b2NrY2hpcCxyazMzOTktZ3JmIiwgInN5c2NvbiI7Cj4gPiAKPiA+IGRpdHRvLgo+ID4gCj4gPj4g
+KwkJcmVnID0gPDB4MCAweGZmNzcwMDAwIDB4MCAweDEwMDAwPjsKPiA+PiArCX07Cj4gPj4gKwo+
+ID4+ICtFeGFtcGxlOiBDbG9jayBjb250cm9sbGVyIG5vZGU6Cj4gPj4gKwo+ID4+ICsJcG11Y3J1
+OiBwbXUtY2xvY2stY29udHJvbGxlckBmZjc1MDAwMCB7Cj4gPj4gKwkJY29tcGF0aWJsZSA9ICJy
+b2NrY2hpcCxyazMzOTktcG11Y3J1IjsKPiA+PiArCQlyZWcgPSA8MHgwIDB4ZmY3NTAwMDAgMHgw
+IDB4MTAwMD47Cj4gPj4gKwkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ID4+ICsJCSNyZXNldC1jZWxs
+cyA9IDwxPjsKPiA+PiArCX07Cj4gPj4gKwo+ID4+ICsJY3J1OiBjbG9jay1jb250cm9sbGVyQGZm
+NzYwMDAwIHsKPiA+PiArCQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1jcnUiOwo+ID4+
+ICsJCXJlZyA9IDwweDAgMHhmZjc2MDAwMCAweDAgMHgxMDAwPjsKPiA+PiArCQlyb2NrY2hpcCxn
+cmYgPSA8JmdyZj47Cj4gPj4gKwkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ID4+ICsJCSNyZXNldC1j
+ZWxscyA9IDwxPjsKPiA+PiArCX07Cj4gPj4gKwo+ID4+ICtFeGFtcGxlOiBVQVJUIGNvbnRyb2xs
+ZXIgbm9kZSB0aGF0IGNvbnN1bWVzIHRoZSBjbG9jayBnZW5lcmF0ZWQgYnkgdGhlCj4gPj4gY2xv
+Y2sgKyAgY29udHJvbGxlcjoKPiA+PiArCj4gPj4gKwl1YXJ0MDogc2VyaWFsQGZmMWEwMDAwIHsK
+PiA+PiArCQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS11YXJ0IiwgInNucHMsZHctYXBi
+LXVhcnQiOwo+ID4+ICsJCXJlZyA9IDwweDAgMHhmZjE4MDAwMCAweDAgMHgxMDA+Owo+ID4+ICsJ
+CWNsb2NrcyA9IDwmY3J1IFNDTEtfVUFSVDA+LCA8JmNydSBQQ0xLX1VBUlQwPjsKPiA+PiArCQlj
+bG9jay1uYW1lcyA9ICJiYXVkY2xrIiwgImFwYl9wY2xrIjsKPiA+PiArCQlpbnRlcnJ1cHRzID0g
+PEdJQ19TUEkgOTkgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPj4gKwkJcmVnLXNoaWZ0ID0gPDI+
+Owo+ID4+ICsJCXJlZy1pby13aWR0aCA9IDw0PjsKPiA+PiArCX07Cj4gPj4gLS0KPiA+PiAxLjku
+MQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
+LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2No
+aXAK
