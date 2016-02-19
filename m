@@ -1,52 +1,57 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/2] clk: add lpc18xx creg clk driver
-Date: Thu, 18 Feb 2016 18:36:45 -0800
-Message-ID: <20160219023645.GP4847@codeaurora.org>
-References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
- <1436651307-24098-2-git-send-email-manabian@gmail.com>
- <20150811204127.31346.16729@quantum>
- <CAGhQ9VwZaM_iWTkQYVTuTiyb6gCG2y6s8WFVySCHt7YHE1qbcA@mail.gmail.com>
- <20150818002604.31346.18322@quantum>
- <CAGhQ9VzOYbHsFZQxM8823OiWpGB6vLEwX8LfvjC=DnL1iqK_qQ@mail.gmail.com>
- <20160217005629.2278.90197@quark.deferred.io>
- <CAGhQ9VzB_WgB8b4_c3Z17W+K2MC7Fq7SD9zEvZUN_UJVGDZ3Wg@mail.gmail.com>
- <20160217202824.2278.25956@quark.deferred.io>
- <CAGhQ9VxPt7FmE4JN_-rBJMNpLpGoKVKocVFPWc3siV29Pk0_mQ@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] dts: ipq4019: Add support for IPQ4019 DK01 board
+Date: Thu, 18 Feb 2016 18:43:50 -0800
+Message-ID: <20160219024350.GQ4847@codeaurora.org>
+References: <1447975173-29485-1-git-send-email-mmcclint@qca.qualcomm.com>
+ <1447975173-29485-6-git-send-email-mmcclint@qca.qualcomm.com>
+ <20160208224328.GB10791@codeaurora.org>
+ <59152C1B-683F-417D-9C23-C6E3F53D7096@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGhQ9VxPt7FmE4JN_-rBJMNpLpGoKVKocVFPWc3siV29Pk0_mQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <59152C1B-683F-417D-9C23-C6E3F53D7096-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Matthew McClintock <mmcclint-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qca-upstream.external-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, Senthilkumar N L <snlakshm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17, Joachim Eastwood wrote:
-> 
-> For creg-clk it would probably work.
-> 
-> cgu would need to register most of clocks early since it needs to
-> support whatever setup the bootloader throws at it. The only clocks
-> that could be taken out is the base clocks (clk_onecell_data
-> clk_base_data) except for one of them. But splitting this table would
-> be a bad idea as hw clk numbers are used as indexes for easy look up.
-> 
-> Come to think of it; isn't splitting the clock table between a early
-> init and platform driver going become a problem?
-> At least the lookup in the driver or framework would become more complex(?)
-> And won't you confuse the lookup?
-> If the early driver register one clock table with
-> of_clk_add_provider() and then sometime later the platform driver
-> register another clock table, both using the same of_node. How is that
-> suppose to work?
+On 02/16, Matthew McClintock wrote:
+> On Feb 8, 2016, at 4:43 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote=
+:
+> >=20
+> > On 11/19, Matthew McClintock wrote:
+> >> +
+> >> +/ {
+> >> +	model =3D "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
+> >> +	compatible =3D "qcom,ipq4019";
+> >> +
+> >> +	clocks {
+> >> +                xo: xo {
+> >> +                        compatible =3D "fixed-clock";
+> >> +                        clock-frequency =3D <48000000>;
+> >> +                        #clock-cells =3D <0>;
+> >> +                };
+> >> +	};
+> >=20
+> > Is there a reason the xo is here and the sleep clk is in the SoC
+> > dtsi file? Both are board clocks so I would think they would be
+> > added in the same place.
+>=20
+> I=E2=80=99m a little bit confused and I wanted to confirm. I can see =
+the xo clock is on the board itself. However, the sleep_clk is not, can=
+ you clarify why they would both be in the same place?
+>=20
 
-I believe that should work, although I haven't tested it. The
-code looks until it finds a provider that matches the device node
-and gives us a valid clk pointer. If we don't get a valid pointer
-we keep looking for another provider until we exhaust all
-providers.
+The sleep clk is typically a pin on the SoC package. Look at your
+schematic. Same goes for the XO.
 
--- 
+--=20
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
