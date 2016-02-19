@@ -1,54 +1,42 @@
-From: Carlos Palminha <CARLOS.PALMINHA@synopsys.com>
-Subject: [PATCH 0/4] Add I2S/ADV7511 audio support for ARC AXS10x boards.
-Date: Fri, 19 Feb 2016 09:39:11 +0000
-Message-ID: <cover.1455872448.git.palminha@synopsys.com>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] serial: mps2-uart: add support for early console
+Date: Fri, 19 Feb 2016 09:45:18 +0000
+Message-ID: <56C6E42E.5070601@arm.com>
+References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>	<1455617295-23736-6-git-send-email-vladimir.murzin@arm.com> <CAHp75VdugAq0WnzLHmd9CJHCjBOdBwPqCmC3ARSaVF5XMYGoMw@mail.gmail.com> <56C31F9F.10000@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jose.Abreu@synopsys.com, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, Alexey.Brodkin@synopsys.com, pawel.moll@arm.com, Vineet.Gupta1@synopsys.com, tiwai@suse.com, lgirdwood@gmail.com, CARLOS.PALMINHA@synopsys.com, robh+dt@kernel.org, perex@perex.cz
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C31F9F.10000-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QVJDIEFYUzEweCBwbGF0Zm9ybXMgY29uc2lzdCBvZiBhIG1haW5ib2FyZCB3aXRoIHNldmVyYWwg
-cGVyaXBoZXJhbHMuCk9uZSBvZiB0aG9zZSBwZXJpcGhlcmFscyBpcyBhbiBIRE1JIG91dHB1dCBw
-b3J0IGNvbnRyb2xsZWQgYnkgQURWNzUxMSB0cmFuc21pdHRlci4KClRoaXMgcGF0Y2ggc2V0IGFk
-ZHMgYXVkaW8gZm9yIHRoZSBBRFY3NTExIHRyYW5zbWl0dGVyIGFuZCBJMlMgYXVkaW8gZm9yIHRo
-ZSAKQVhTMTB4IHBsYXRmb3JtLgogCkpvc2UgQWJyZXUgKDQpOgogIGRybS9pMmMvYWR2NzUxMTog
-QWRkIGF1ZGlvIHN1cHBvcnQKICBBUkM6IGF4czEweDogVXBkYXRlIGRlZmNvbmZpZ3Mgc28gdGhh
-dCBhdWRpbyBpcyBlbmFibGVkCiAgQVNvQzogZHdjOiBBZGQgSTJTIEhETUkgYXVkaW8gc3VwcG9y
-dCB1c2luZyBjdXN0b20gcGxhdGZvcm0KICBBUkM6IGF4czEweDogVXBkYXRlIGRlZmNvbmZpZ3Mg
-c28gdGhhdCBJMlMgaXMgZW5hYmxlZAoKIGFyY2gvYXJjL2Jvb3QvZHRzL2F4czEweF9tYi5kdHNp
-ICAgICAgfCAgIDIwICstCiBhcmNoL2FyYy9jb25maWdzL2F4czEwMV9kZWZjb25maWcgICAgIHwg
-ICAgNCArCiBhcmNoL2FyYy9jb25maWdzL2F4czEwM19kZWZjb25maWcgICAgIHwgICAgNiArCiBh
-cmNoL2FyYy9jb25maWdzL2F4czEwM19zbXBfZGVmY29uZmlnIHwgICAgNiArCiBkcml2ZXJzL2dw
-dS9kcm0vaTJjL0tjb25maWcgICAgICAgICAgIHwgICAgOCArCiBkcml2ZXJzL2dwdS9kcm0vaTJj
-L01ha2VmaWxlICAgICAgICAgIHwgICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTEu
-YyAgICAgICAgIHwgMTAyNCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGRyaXZl
-cnMvZ3B1L2RybS9pMmMvYWR2NzUxMS5oICAgICAgICAgfCAgIDQxICsrCiBkcml2ZXJzL2dwdS9k
-cm0vaTJjL2Fkdjc1MTFfYXVkaW8uYyAgIHwgIDMxMCArKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vaTJjL2Fkdjc1MTFfY29yZS5jICAgIHwgMTAwNSArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKwogaW5jbHVkZS9zb3VuZC9zb2MtZGFpLmggICAgICAgICAgICAgICB8ICAgIDEgKwog
-c291bmQvc29jL2R3Yy9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgIDEgKwogc291bmQvc29j
-L2R3Yy9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgIDQgKy0KIHNvdW5kL3NvYy9kd2MvZGVz
-aWdud2FyZV9pMnMuYyAgICAgICAgfCAgMTM5ICsrKystCiBzb3VuZC9zb2MvZHdjL2Rlc2lnbndh
-cmVfcGNtLmMgICAgICAgIHwgIDI2NCArKysrKysrKysKIHNvdW5kL3NvYy9kd2MvZGVzaWdud2Fy
-ZV9wY20uaCAgICAgICAgfCAgIDIxICsKIDE2IGZpbGVzIGNoYW5nZWQsIDE4MTMgaW5zZXJ0aW9u
-cygrKSwgMTA0MyBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vaTJjL2Fkdjc1MTEuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pMmMv
-YWR2NzUxMV9hdWRpby5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9h
-ZHY3NTExX2NvcmUuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9kd2MvZGVzaWdud2Fy
-ZV9wY20uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9kd2MvZGVzaWdud2FyZV9wY20u
-aAoKLS0gCjIuNS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On 16/02/16 13:09, Vladimir Murzin wrote:
+>>> +EARLYCON_DECLARE(mps2, mps2_early_console_setup);
+>>> >> +OF_EARLYCON_DECLARE(mps2, "arm,mps2-uart", mps2_early_console_setup);
+>> > 
+>> > IIRC Peter Hurley mentioned you don't need to put both anymore, OF_
+>> > one is enough.
+>> > 
+> I've just tried with OF_ only and seems it works fine. Thanks for
+> pointing at it!
+> 
+
+..and the reason for that was that I had stdout pointing at uart node.
+Now, while testing v4 I end-up with configuration:
+
+1) no EARLYCON_DECLARE in mps2-uart.c
+2) stdout not set
+3) cmdline has "earlycon=mps2,0x40004000 console=/dev/ttyMPS"
+
+and I don't see bootconsole, but if I avoid 1) everything works fine.
+So, I'd leave EARLYCON_DECLARE in this patch.
+
+Cheers
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
