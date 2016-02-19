@@ -1,69 +1,151 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 05/10] serial: mps2-uart: add support for early console
-Date: Fri, 19 Feb 2016 16:27:16 +0000
-Message-ID: <56C74264.9070906@arm.com>
-References: <1455617295-23736-1-git-send-email-vladimir.murzin@arm.com>
- <1455617295-23736-6-git-send-email-vladimir.murzin@arm.com>
- <CAHp75VdugAq0WnzLHmd9CJHCjBOdBwPqCmC3ARSaVF5XMYGoMw@mail.gmail.com>
- <56C31F9F.10000@arm.com> <56C6E42E.5070601@arm.com>
- <CAHp75VcosaVcz_aYbpfL-nUH0kBf72SshXU5k95s48Z3wnA5nQ@mail.gmail.com>
- <56C738F1.2070307@hurleysoftware.com>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [Patch v6 3/3] media: ti-vpe: Add CAL v4l2 camera capture
+ driver
+Date: Fri, 19 Feb 2016 14:54:23 -0200
+Message-ID: <20160219145423.49aaa0b9@recife.lan>
+References: <1452123446-5424-1-git-send-email-bparrot@ti.com>
+	<1452123446-5424-4-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C738F1.2070307-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1452123446-5424-4-git-send-email-bparrot@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/02/16 15:46, Peter Hurley wrote:
-> On 02/19/2016 01:57 AM, Andy Shevchenko wrote:
->> On Fri, Feb 19, 2016 at 11:45 AM, Vladimir Murzin
->> <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On 16/02/16 13:09, Vladimir Murzin wrote:
->>>>>> +EARLYCON_DECLARE(mps2, mps2_early_console_setup);
->>>>>>>> +OF_EARLYCON_DECLARE(mps2, "arm,mps2-uart", mps2_early_console_setup);
->>>>>>
->>>>>> IIRC Peter Hurley mentioned you don't need to put both anymore, OF_
->>>>>> one is enough.
->>>>>>
->>>> I've just tried with OF_ only and seems it works fine. Thanks for
->>>> pointing at it!
->>>>
->>>
->>> ..and the reason for that was that I had stdout pointing at uart node.
->>> Now, while testing v4 I end-up with configuration:
->>>
->>> 1) no EARLYCON_DECLARE in mps2-uart.c
->>> 2) stdout not set
->>> 3) cmdline has "earlycon=mps2,0x40004000 console=/dev/ttyMPS"
->>>
->>> and I don't see bootconsole, but if I avoid 1) everything works fine.
->>> So, I'd leave EARLYCON_DECLARE in this patch.
->>
->> Peter, what is your comment on this?
-> 
-> That Vladimir is not testing with linux-next.
-> 
-> linux-next has common framework for both command line and OF-defined
-> earlycons.
-> 
-> Vladimir, if you pull in Greg's tty-next branch, then just
-> 
-> OF_EARLYCON_DECLARE(mps2, "arm,mps2-uart", mps2_early_console_setup);
-> 
-> should enable both command-line and OF-defined earlycons.
+Em Wed, 6 Jan 2016 17:37:26 -0600
+Benoit Parrot <bparrot@ti.com> escreveu:
 
-Confirmed! No doubt now EARLYCON_DECLARE can be dropped from this patch
-safely.
+> The Camera Adaptation Layer (CAL) is a block which consists of a dual
+> port CSI2/MIPI camera capture engine.
+> Port #0 can handle CSI2 camera connected to up to 4 data lanes.
+> Port #1 can handle CSI2 camera connected to up to 2 data lanes.
+> The driver implements the required API/ioctls to be V4L2 compliant.
+> Driver supports the following:
+>     - V4L2 API using DMABUF/MMAP buffer access based on videobuf2 api
+>     - Asynchronous sensor sub device registration
+>     - DT support
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
 
-Thanks!
-Vladimir
+...
 
-> 
-> Regards,
-> Peter Hurley
-> 
-> 
+> +/* timeperframe is arbitrary and continuous */
+> +static int cal_enum_frameintervals(struct file *file, void *priv,
+> +				   struct v4l2_frmivalenum *fival)
+> +{
+> +	struct cal_ctx *ctx = video_drvdata(file);
+> +	const struct cal_fmt *fmt;
+> +	struct v4l2_subdev_frame_size_enum fse;
+> +	int ret;
+> +
+> +	if (fival->index)
+> +		return -EINVAL;
+> +
+> +	fmt = find_format_by_pix(ctx, fival->pixel_format);
+> +	if (!fmt)
+> +		return -EINVAL;
+> +
+> +	/* check for valid width/height */
+> +	ret = 0;
+> +	fse.pad = 0;
+> +	fse.code = fmt->code;
+> +	fse.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> +	for (fse.index = 0; ; fse.index++) {
+> +		ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size,
+> +				       NULL, &fse);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		if ((fival->width == fse.max_width) &&
+> +		    (fival->height == fse.max_height))
+> +			break;
+> +		else if ((fival->width >= fse.min_width) &&
+> +			 (fival->width <= fse.max_width) &&
+> +			 (fival->height >= fse.min_height) &&
+> +			 (fival->height <= fse.max_height))
+> +			break;
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	fival->type = V4L2_FRMIVAL_TYPE_DISCRETE;
+> +	fival->discrete.numerator = 1;
+> +	fival->discrete.denominator = 30;
+> +
+> +	return 0;
+> +}
+
+The above routine is too complex and sounds wrong. Why do you
+need a loop there, if the loop will either return -EINVAL or
+be aborted the first time it runs?
+
+The way it is, it is just confusing and produces a smatch error:
+
+	drivers/media/platform/ti-vpe/cal.c:1219 cal_enum_frameintervals() info: ignoring unreachable code.
+
+If all you want here is to run the loop once, this patch would do the
+same, with a clearer logic.
+
+ti-vpe/cal: Simplify the logic to avoid confusing smatch
+
+drivers/media/platform/ti-vpe/cal.c:1219 cal_enum_frameintervals() info: ignoring unreachable code.
+
+This is caused by a very confusing logic that looks like a loop, but
+it runs only once.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 35fa1071c5b2..62721ee7b9bc 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -1216,29 +1216,28 @@ static int cal_enum_frameintervals(struct file *file, void *priv,
+ 	fse.pad = 0;
+ 	fse.code = fmt->code;
+ 	fse.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+-	for (fse.index = 0; ; fse.index++) {
+-		ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size,
+-				       NULL, &fse);
+-		if (ret)
+-			return -EINVAL;
+-
+-		if ((fival->width == fse.max_width) &&
+-		    (fival->height == fse.max_height))
+-			break;
+-		else if ((fival->width >= fse.min_width) &&
+-			 (fival->width <= fse.max_width) &&
+-			 (fival->height >= fse.min_height) &&
+-			 (fival->height <= fse.max_height))
+-			break;
++	fse.index = 0;
+ 
++	ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size,
++			       NULL, &fse);
++	if (ret)
+ 		return -EINVAL;
+-	}
+ 
+ 	fival->type = V4L2_FRMIVAL_TYPE_DISCRETE;
+ 	fival->discrete.numerator = 1;
+ 	fival->discrete.denominator = 30;
+ 
+-	return 0;
++	if ((fival->width == fse.max_width) &&
++	    (fival->height == fse.max_height))
++		return 0;
++
++	if ((fival->width >= fse.min_width) &&
++	    (fival->width <= fse.max_width) &&
++	    (fival->height >= fse.min_height) &&
++	    (fival->height <= fse.max_height))
++		return 0;
++
++	return -EINVAL;
+ }
+ 
+ /*
