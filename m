@@ -1,40 +1,58 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v7 3/3] arm64: dts: Update X-Gene standby GPIO controller
- DTS entries
-Date: Fri, 19 Feb 2016 09:44:32 -0800
-Message-ID: <CAPw-ZTmAe64XbXZ4OWJOec7YMEQcgf7ZrfUsZWG6Yjc1ON0K+w@mail.gmail.com>
-References: <1455714909-3027-1-git-send-email-qnguyen@apm.com>
-	<1455714909-3027-4-git-send-email-qnguyen@apm.com>
-	<CACRpkdav6UXn41UnWvWR4zjYN=QtkNJknihr+YnHu3rXbkPBBw@mail.gmail.com>
-	<CAFopSPR133CT5t2ck2_F3Zzh8gWosLpXFpYi-5VBBhVScOkvjA@mail.gmail.com>
+From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 1/2] dt/bindings: Add bindings for the PIC32 real time clock
+Date: Fri, 19 Feb 2016 11:09:44 -0700
+Message-ID: <1455905390-3491-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAFopSPR133CT5t2ck2_F3Zzh8gWosLpXFpYi-5VBBhVScOkvjA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, Iyappan Subramanian <isubramanian@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Quan,
+Document the devicetree bindings for the real time clock found
+on Microchip PIC32 class devices.
 
-On Fri, Feb 19, 2016 at 5:47 AM, Quan Nguyen <qnguyen@apm.com> wrote:
-> On Fri, Feb 19, 2016 at 4:14 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Wed, Feb 17, 2016 at 2:15 PM, Quan Nguyen <qnguyen@apm.com> wrote:
->>
->>> Update APM X-Gene standby GPIO controller DTS entries to enable it
->>> as interrupt controller.
->>>
->>> Signed-off-by: Y Vo <yvo@apm.com>
->>> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Please funnel this patch through the ARM SoC tree with all other
->> DTS files.
->
-> Let me do it and resend.
+Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+Changes since v1: None
+---
+ .../bindings/rtc/microchip,pic32-rtc.txt           |   21 ++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
 
-Duc will pull  this into xgene-next GIT for Olof to pull.
+diff --git a/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt b/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
+new file mode 100644
+index 0000000..180b714
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
+@@ -0,0 +1,21 @@
++* Microchip PIC32 Real Time Clock and Calendar
++
++The RTCC keeps time in hours, minutes, and seconds, and one half second. It
++provides a calendar in weekday, date, month, and year. It also provides a
++configurable alarm.
++
++Required properties:
++- compatible: should be: "microchip,pic32mzda-rtc"
++- reg: physical base address of the controller and length of memory mapped
++    region.
++- interrupts: RTC alarm/event interrupt
++- clocks: clock phandle
++
++Example:
++
++	rtc: rtc@1f8c0000 {
++		compatible = "microchip,pic32mzda-rtc";
++		reg = <0x1f8c0000 0x60>;
++		interrupts = <166 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&PBCLK6>;
++	};
+-- 
+1.7.9.5
 
--Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
