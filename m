@@ -1,56 +1,28 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [1/4] arm64: Broadcom Vulcan support
-Date: Fri, 19 Feb 2016 11:24:57 -0800
-Message-ID: <56C76C09.50800@gmail.com>
-References: <1455389195-31870-2-git-send-email-jchandra@broadcom.com>
- <0c75ddd6-d353-bb73-62e4-bae0ff95a3b0@broadcom.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next,V2] net: macb: make magic-packet property
+ generic
+Date: Fri, 19 Feb 2016 15:32:59 -0500 (EST)
+Message-ID: <20160219.153259.1576466134100443929.davem@davemloft.net>
+References: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0c75ddd6-d353-bb73-62e4-bae0ff95a3b0-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "Jayachandran C." <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1455664245-6842-1-git-send-email-sergio.prado@e-labworks.com>
+Sender: netdev-owner@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nicolas.ferre@atmel.com, gregory.clement@free-electrons.com, narmstrong@baylibre.com, michal.simek@xilinx.com, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/16 10:15, Ray Jui wrote:
-> + bcm-kernel-feedback-list mailing list
-> 
-> On 2/13/2016 10:46 AM, Jayachandran C. wrote:
->> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Add a configuration option and a device tree for Broadcom's Vulcan
->> ARM64 processor. brcm-vulcan.dtsi has the on-chip blocks like the
->> PCIe controller, GICv3 with ITS, PMU, system timer and pl011 UART.
->> brcm-vulcan-eval.dts has definitions for a basic evaluation board.
->> The firmware supports PSCI 0.2 for cpu wakeup.
->>
->> Signed-off-by: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> [ updated and split dts - jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org ]
->> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> ---
->> arch/arm64/Kconfig.platforms                      |   5 +
->>  arch/arm64/boot/dts/broadcom/Makefile             |   1 +
->>  arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts |  33 +++++
->>  arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi     | 146
->> ++++++++++++++++++++++
->>  4 files changed, 185 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan-eval.dts
->>  create mode 100644 arch/arm64/boot/dts/broadcom/brcm-vulcan.dtsi
-> 
-> Could you please name the files "vulcan.dtsi" and "vulcan-eval.dts" so
-> it's consistent with the rest of files in the same directory?
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Date: Tue, 16 Feb 2016 21:10:45 -0200
 
-I would like to take these patches ASAP so I can include them in our
-upcoming 4.6 pull requests, can you do a quick respin adressing Ray's
-feedback and adding a MAINTAINERS file?
+> As requested by Rob Herring on patch
+> https://patchwork.ozlabs.org/patch/580862/.
+> 
+> This is a new property that it's still in net-next and has never been
+> used in production, so we are not breaking anything with the
+> incompatible binding change.
+> 
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
 
-Thanks!
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
