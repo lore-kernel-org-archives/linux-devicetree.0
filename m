@@ -1,7 +1,7 @@
 From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 6/6] ARM64: dts: rockchip: add core dtsi file for rk3399
-Date: Fri, 19 Feb 2016 10:03:47 +0800
-Message-ID: <1455847427-4498-1-git-send-email-jay.xu@rock-chips.com>
+Subject: [PATCH v4 6/6] ARM64: dts: rockchip: add core dtsi file for rk3399
+Date: Fri, 19 Feb 2016 10:05:40 +0800
+Message-ID: <1455847540-4545-1-git-send-email-jay.xu@rock-chips.com>
 References: <1455846978-4272-1-git-send-email-jay.xu@rock-chips.com>
 Content-Type: text/plain; charset="utf-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
