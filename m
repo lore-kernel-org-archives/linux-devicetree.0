@@ -1,247 +1,68 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v6 1/1] USB: core: let USB device know device node
-Date: Fri, 19 Feb 2016 17:26:15 +0800
-Message-ID: <1455873975-19531-1-git-send-email-peter.chen@nxp.com>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx25.dtsi: change the clock information for usb
+Date: Fri, 19 Feb 2016 17:35:03 +0800
+Message-ID: <1455874504-28993-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, stillcompiling@gmail.com, arnd@arndb.de, pawel.moll@arm.com, balbi@kernel.org, s.hauer@pengutronix.de, linux-usb@vger.kernel.org, robh+dt@kernel.org, Peter Chen <peter.chen@freescale.com>, p.zabel@pengutronix.de, valentin.longchamp@keymile.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Chen <peter.chen@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Although most of USB devices are hot-plug's, there are still some devices
-are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-If these kinds of USB devices are multiple functions, and they can supply
-other interfaces like i2c, gpios for other devices, we may need to
-describe these at device tree.
+For imx25, it needs three clocks to let the controller work,
+the old code is wrong, and usbmisc has not included clock
+handling code any more.
 
-In this commit, it uses "reg" in dts as physical port number to match
-the phyiscal port number decided by USB core, if they are the same,
-then the device node is for the device we are creating for USB core.
-
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
+Shawn, the related changes for i.mx27 has already been in mainline.
+Unlike the changes for i.mx27, it is not a bug fix for i.mx25 and i.mx35.
 
-Changes for v6:
-- Add textual representation for VID and PID in binding doc, and changing
-  example accordingly.
-- Add three Acks.
+ arch/arm/boot/dts/imx25.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes for v5:
-- Refine the code how to get the device node at usb_alloc_dev according
-  to Alan's comment.
-- Point out "usbVID,PID" is the recommented compatible, and others
-  compatibles at binding doc could also be used.
-
-Changes for v4:
-- The range of "reg" should be 1-31, changing device node address
-  style as in lower case hexadecimal with leading zeroes suppressed
-  [binding doc, usb-device.txt]
-- Improve the example at binding doc, it describes node from the top
-  (the controller)
-- Delete the struct of_node * within struct usb_device
-- Using usb_hcd_find_raw_port_number to get raw port number under root
-  hub port
-
-Changes for v3:
-- typo: s/descirbe/describe/
-
-Changes for v2:
-- Fix build error reported by kbuild robot, lack of "static" for
-  inline usb_of_get_child_node
-- Fix typo, "devcie_node" -> "device_node"
-- Add kernel-doc for of_node at struct usb_device
-
-Changes from RFC:
-- Fix the error address for binding doc, and add compatible for binding doc
-- Change get child node API from "usb_of_find_node" to
-  "usb_of_get_child_node"
-- Delete unecessary header files
-- One typo
-
- .../devicetree/bindings/usb/usb-device.txt         | 28 +++++++++++++
- drivers/usb/core/Makefile                          |  2 +-
- drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
- drivers/usb/core/usb.c                             | 10 +++++
- include/linux/usb/of.h                             |  7 ++++
- 5 files changed, 93 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
- create mode 100644 drivers/usb/core/of.c
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-new file mode 100644
-index 0000000..1c35e7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -0,0 +1,28 @@
-+Generic USB Device Properties
-+
-+Usually, we only use device tree for hard wired USB device.
-+The reference binding doc is from:
-+http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-+
-+Required properties:
-+- compatible: usbVID,PID. The textual representation of VID, PID shall
-+  be in lower case hexadecimal with leading zeroes suppressed. The
-+  other compatible strings from the above standard binding could also
-+  be used, but a device adhering to this binding may leave out all except
-+  for usbVID,PID.
-+- reg: the port number which this device is connecting to, the range
-+  is 1-31.
-+
-+Example:
-+
-+&usb1 {
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	hub: genesys@1 {
-+		compatible = "usb5e3,608";
-+		reg = <1>;
-+	};
-+}
-diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-index 2f6f932..9780877 100644
---- a/drivers/usb/core/Makefile
-+++ b/drivers/usb/core/Makefile
-@@ -5,7 +5,7 @@
- usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
- usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
- usbcore-y += devio.o notify.o generic.o quirks.o devices.o
--usbcore-y += port.o
-+usbcore-y += port.o of.o
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index cde329e..d82e8d8 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -497,7 +497,8 @@
+ 				compatible = "fsl,imx25-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4000 0x0200>;
+ 				interrupts = <37>;
+-				clocks = <&clks 70>;
++				clocks = <&clks 9>, <&clks 70>, <&clks 8>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				fsl,usbphy = <&usbphy0>;
+ 				status = "disabled";
+@@ -507,7 +508,8 @@
+ 				compatible = "fsl,imx25-usb", "fsl,imx27-usb";
+ 				reg = <0x53ff4400 0x0200>;
+ 				interrupts = <35>;
+-				clocks = <&clks 70>;
++				clocks = <&clks 9>, <&clks 70>, <&clks 8>;
++				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
+ 				status = "disabled";
+@@ -516,8 +518,6 @@
+ 			usbmisc: usbmisc@53ff4600 {
+ 				#index-cells = <1>;
+ 				compatible = "fsl,imx25-usbmisc";
+-				clocks = <&clks 9>, <&clks 70>, <&clks 8>;
+-				clock-names = "ipg", "ahb", "per";
+ 				reg = <0x53ff4600 0x00f>;
+ 			};
  
- usbcore-$(CONFIG_PCI)		+= hcd-pci.o
- usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-new file mode 100644
-index 0000000..2289700
---- /dev/null
-+++ b/drivers/usb/core/of.c
-@@ -0,0 +1,47 @@
-+/*
-+ * of.c		The helpers for hcd device tree support
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Author: Peter Chen <peter.chen@freescale.com>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/of.h>
-+
-+/**
-+ * usb_of_get_child_node - Find the device node match port number
-+ * @parent: the parent device node
-+ * @portnum: the port number which device is connecting
-+ *
-+ * Find the node from device tree according to its port number.
-+ *
-+ * Return: On success, a pointer to the device node, %NULL on failure.
-+ */
-+struct device_node *usb_of_get_child_node(struct device_node *parent,
-+					int portnum)
-+{
-+	struct device_node *node;
-+	u32 port;
-+
-+	for_each_child_of_node(parent, node) {
-+		if (!of_property_read_u32(node, "reg", &port)) {
-+			if (port == portnum)
-+				return node;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(usb_of_get_child_node);
-+
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 524c982..ffa5cf1 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -36,6 +36,7 @@
- #include <linux/mutex.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/usb/of.h>
- 
- #include <asm/io.h>
- #include <linux/scatterlist.h>
-@@ -470,6 +471,7 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
- 		dev->route = 0;
- 
- 		dev->dev.parent = bus->controller;
-+		dev->dev.of_node = bus->controller->of_node;
- 		dev_set_name(&dev->dev, "usb%d", bus->busnum);
- 		root_hub = 1;
- 	} else {
-@@ -494,6 +496,14 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
- 		dev->dev.parent = &parent->dev;
- 		dev_set_name(&dev->dev, "%d-%s", bus->busnum, dev->devpath);
- 
-+		if (!parent->parent) {
-+			/* device under root hub's port */
-+			port1 = usb_hcd_find_raw_port_number(usb_hcd,
-+				port1);
-+		}
-+		dev->dev.of_node = usb_of_get_child_node(parent->dev.of_node,
-+				port1);
-+
- 		/* hub driver sets up TT records */
- 	}
- 
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index 974bce9..de3237f 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -16,6 +16,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
- bool of_usb_host_tpl_support(struct device_node *np);
- int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
-+struct device_node *usb_of_get_child_node(struct device_node *parent,
-+			int portnum);
- #else
- static inline enum usb_dr_mode
- of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-@@ -31,6 +33,11 @@ static inline int of_usb_update_otg_caps(struct device_node *np,
- {
- 	return 0;
- }
-+static inline struct device_node *usb_of_get_child_node
-+		(struct device_node *parent, int portnum)
-+{
-+	return NULL;
-+}
- #endif
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
