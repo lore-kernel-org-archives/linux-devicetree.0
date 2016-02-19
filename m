@@ -1,69 +1,122 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Fri, 19 Feb 2016 13:54:59 +0100
-Message-ID: <3072897.5MMsyiojns@wuerfel>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com> <CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH 3/4] arc: axs10x - add support of ARC PGU
+Date: Fri, 19 Feb 2016 16:03:53 +0300
+Message-ID: <1455887034-7739-4-git-send-email-abrodkin@synopsys.com>
+References: <1455887034-7739-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1455887034-7739-1-git-send-email-abrodkin@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 February 2016 15:27:06 Daniel Drake wrote:
-> 
-> Having a cbus bus node with child devices does sound like it would
-> reflect this particular view of the hardware design. How would we then
-> represent the hwrev registers under that?
-> 
+Synopsys DesignWare ARC SDP boards sport ARC SDP display
+controller attached to ADV7511 HDMI encoder.
 
-The question is still how the CBUS is structured internally.
+That change adds desctiption of both ARC PGU and ADV7511 in
+ARC SDP'd base-board Device Tree.
 
-https://github.com/endlessm/linux-meson/blob/master/arch/arm/mach-meson8b/include/mach/register.h
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+---
+ arch/arc/boot/dts/axs10x_mb.dtsi | 54 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-seems to have a good list of registers, but it's a bit hard to
-read, so I reformatted it slightly and put it up at http://pastebin.com/GrzYM7Ti
-
-In many cases, the register name prefix gives a good idea of what things
-are. In particular, it seems that all registers numbers are between 0x1000
-and 0x2fff, which would be offsets 0x4000 through 0xbfff.
-
-The revisison register is in a block called ASSIST, which is mixed with two
-AC3 (audio?) regions, and the only other ASSIST register that is ever
-used is the ASSIST_POR_CONFIG.
-
-The METAL_REVISION is in the middle of some apparently all unrelated registers:
-
-#define PREG_ETH_REG0 0x2050
-#define PREG_ETH_REG1 0x2051
-#define PROD_TEST_REG1 0x2067
-#define PROD_TEST_REG0 0x2068
-#define METAL_REVISION 0x206a
-#define ADC_TOP_MISC 0x206b
-#define DPLL_TOP_MISC 0x206c
-#define ANALOG_TOP_MISC 0x206d
-#define AM_ANALOG_TOP_REG0 0x206e
-#define AM_ANALOG_TOP_REG1 0x206f
-#define PREG_STICKY_REG0 0x207c
-#define PREG_STICKY_REG1 0x207d
-
-This still really sounds like a mixed bag to me, which should better get represented
-as a syscon node, except that there are also some more structured areas in
-CBUS.
-
-Having just the registers between METAL_REVISION and HW_REV in a syscon
-is clearly wrong, as that would include the pinctrl area that already has
-a driver, but would not include some other parts that want the syscon.
-
-Maybe the best way is to make it compatible with both syscon and
-simple-bus and put the other nodes underneath. That is still rather
-ugly, but at least it works and can be extended.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 44a578c..0d50bc3 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -147,6 +147,37 @@
+ 			clocks = <&i2cclk>;
+ 			interrupts = <16>;
+ 
++			adv7511:adv7511@0x39{
++				compatible="adi,adv7511";
++				reg = <0x39>;
++				interrupts = <23>;
++				adi,input-depth = <8>;
++				adi,input-colorspace = "rgb";
++				adi,input-clock = "1x";
++				adi,clock-delay = <0x03>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					/* RGB/YUV input */
++					port@0 {
++						reg = <0>;
++						adv7511_input:endpoint {
++						remote-endpoint = <&pgu_output>;
++						};
++					};
++
++					/* HDMI output */
++					port@1 {
++						reg = <1>;
++						adv7511_output: endpoint {
++							remote-endpoint = <&hdmi_connector_in>;
++						};
++					};
++				};
++			};
++
+ 			eeprom@0x54{
+ 				compatible = "24c01";
+ 				reg = <0x54>;
+@@ -160,6 +191,16 @@
+ 			};
+ 		};
+ 
++		hdmi0: connector {
++			compatible = "hdmi-connector";
++			type = "a";
++			port {
++				hdmi_connector_in: endpoint {
++					remote-endpoint = <&adv7511_output>;
++				};
++			};
++		};
++
+ 		gpio0:gpio@13000 {
+ 			compatible = "snps,dw-apb-gpio";
+ 			reg = <0x13000 0x1000>;
+@@ -221,5 +262,18 @@
+ 				reg = <2>;
+ 			};
+ 		};
++
++		pgu@0x17000 {
++			compatible = "snps,arcpgu";
++			reg = <0x17000 0x400>;
++			encoder-slave = <&adv7511>;
++			interrupts = <5>;
++
++			port {
++				pgu_output: endpoint {
++					remote-endpoint = <&adv7511_input>;
++					};
++			};
++		};
+ 	};
+ };
+-- 
+2.5.0
