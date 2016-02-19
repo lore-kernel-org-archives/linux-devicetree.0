@@ -1,83 +1,63 @@
-From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] mailbox: Add APM X-Gene platform mailbox driver
-Date: Fri, 19 Feb 2016 12:43:34 -0800
-Message-ID: <CADaLND=7W9YQwKjMA1BR-PuncYEnKOcQyR6xLbEvig2qgKryqQ@mail.gmail.com>
-References: <CANLsYkxPnFCuJLyKsHnXKdbvAwNurtgQgJ-WF+bD26+8EjkfJw@mail.gmail.com>
- <cover.1455333720.git.dhdang@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Julien Grossholtz <julien.grossholtz-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH] ARM: dts: TS-4800: Add gpio driver
+Date: Fri, 19 Feb 2016 15:59:02 -0500
+Message-ID: <1455915542-14467-1-git-send-email-julien.grossholtz@savoirfairelinux.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1455333720.git.dhdang-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Julien Grossholtz <julien.grossholtz-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 7:39 PM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
-> APM X-Gene SoC has a mailbox controller that provides
-> communication mechanism for X-Gene Arm64 cores to communicate
-> with X-Gene SoC's Cortex M3 (SLIMpro) processor.
->
-> X-Gene mailbox controller provides 8 mailbox channels, with
-> each channel has a dedicated interrupt line.
+Add dts nodes for TS-4800 FPGA gpio chips.
 
-Hi Jassi,
+Signed-off-by: Julien Grossholtz <julien.grossholtz-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+---
+ arch/arm/boot/dts/imx51-ts4800.dts | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Are you fine with this version of the patch?
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index 0ff76a1..c72c944 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -165,6 +165,35 @@
+ 			reg = <0x12000 0x1000>;
+ 			syscon = <&syscon 0x10 6>;
+ 		};
++
++		fpga_gpio0: fpga_gpio0@b0010020 {
++			compatible = "technologic,ts4800-gpio";
++			reg = <0x10020 0x6>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		fpga_gpio1: fpga_gpio1@b0010028 {
++			compatible = "technologic,ts4800-gpio";
++			reg = <0x10028 0x6>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		fpga_gpio2: fpga_gpio2@b0010030 {
++			compatible = "technologic,ts4800-gpio";
++			reg = <0x10030 0x6>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		fpga_gpio3: fpga_gpio3@b0010038 {
++			compatible = "technologic,ts4800-gpio";
++			reg = <0x10038 0x6>;
++			gpio-controller;
++			ngpios = <8>;
++			#gpio-cells = <2>;
++		};
+ 	};
+ };
+ 
+-- 
+2.5.0
 
-Regards,
-Duc Dang.
->
-> Changes since v5:
->         - Add more description into SlimPRO
->         mailbox data structure
->
-> Changes since v4:
->         - Rebase over v4.5-rc1
->         - Fix section mismatch warning during compiling
->         - Correctly print channel number when there is
->         no IRQ for that channel
->         - Change node name to mailbox@10540000
->         - Correct the number of IRQs in documentation
->
-> Changes since v3:
->         - Rebase over v4.4
->         - Remove 'id' in slimpro_mbox_chan structure
->         - Remove functions that are only called once
->         and fold them into the other callers
->         - Remove void* pointer type cast
->         - Relax the number of mailbox IRQs condition
->         - Fix error and address comment in documentation
->         (xgene-slimpro-mailbox.txt)
->
-> Changes since v2:
->         - Rebase Feng's patch set over v4.3-rc5
->         - Remove uneccessary 'inline' in function definition
->         - Use module_platform_driver instead of subsys_initcall
->         - Minor coding stype clean up
->
-> Changes since v1:
->         - Add ACPI support
->         - Use defines for reg offset
->
-> Duc Dang (3):
->   mailbox: Add support for APM X-Gene platform mailbox driver
->   Documentation: mailbox: Add APM X-Gene SLIMpro mailbox dts
->     documentation
->   arm64: dts: mailbox device tree node for APM X-Gene platform.
->
->  .../bindings/mailbox/xgene-slimpro-mailbox.txt     |  35 +++
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |  14 +
->  drivers/mailbox/Kconfig                            |   9 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/mailbox-xgene-slimpro.c            | 284 +++++++++++++++++++++
->  5 files changed, 344 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
->  create mode 100644 drivers/mailbox/mailbox-xgene-slimpro.c
->
-> --
-> 1.9.1
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
