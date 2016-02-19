@@ -1,68 +1,80 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2 Xplained: Correct the macb irq
- pinctrl node
-Date: Fri, 19 Feb 2016 14:19:45 +0100
-Message-ID: <20160219131945.GX2607@odux.rfo.atmel.com>
-References: <1455790866-13301-1-git-send-email-romain.izard.pro@gmail.com>
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Fri, 19 Feb 2016 14:25:20 +0100
+Message-ID: <CAL9uMOG2gnGnxv9RmmKuHjc72xyyyEu3AW6pTyM2oA=aM171eQ@mail.gmail.com>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
+	<CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com>
+	<CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
+	<3072897.5MMsyiojns@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455790866-13301-1-git-send-email-romain.izard.pro@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Romain Izard <romain.izard.pro@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Linux GPIO List <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3072897.5MMsyiojns@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 11:21:06AM +0100, Romain Izard wrote:
-> All pinctrl nodes for the Atmel pinctrl controller need to have their
-> bias configuration explicitly defined. Otherwise, the pinctrl mapping
-> is not valid.
->=20
-> It works for now as the pinctrl driver proceeds even with invalid
-> mappings, but this can become an issue, if the pinctrl driver starts
-> to require valid mappings. Additionally, the pin is not protected fro=
-m
-> being remapped later by an other driver.
->=20
-> There is an external 1k=E2=84=A6 pull-up to 3.3V, so no bias is requi=
-red on
-> the Ethernet PHY's interrupt line.
->=20
-> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+On Fri, Feb 19, 2016 at 1:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 18 February 2016 15:27:06 Daniel Drake wrote:
+>>
+>> Having a cbus bus node with child devices does sound like it would
+>> reflect this particular view of the hardware design. How would we then
+>> represent the hwrev registers under that?
+>>
+>
+> The question is still how the CBUS is structured internally.
+>
+> https://github.com/endlessm/linux-meson/blob/master/arch/arm/mach-meson8b/include/mach/register.h
+>
+> seems to have a good list of registers, but it's a bit hard to
+> read, so I reformatted it slightly and put it up at http://pastebin.com/GrzYM7Ti
+>
+> In many cases, the register name prefix gives a good idea of what things
+> are. In particular, it seems that all registers numbers are between 0x1000
+> and 0x2fff, which would be offsets 0x4000 through 0xbfff.
+>
+> The revisison register is in a block called ASSIST, which is mixed with two
+> AC3 (audio?) regions, and the only other ASSIST register that is ever
+> used is the ASSIST_POR_CONFIG.
+>
+> The METAL_REVISION is in the middle of some apparently all unrelated registers:
+>
+> #define PREG_ETH_REG0 0x2050
+> #define PREG_ETH_REG1 0x2051
+> #define PROD_TEST_REG1 0x2067
+> #define PROD_TEST_REG0 0x2068
+> #define METAL_REVISION 0x206a
+> #define ADC_TOP_MISC 0x206b
+> #define DPLL_TOP_MISC 0x206c
+> #define ANALOG_TOP_MISC 0x206d
+> #define AM_ANALOG_TOP_REG0 0x206e
+> #define AM_ANALOG_TOP_REG1 0x206f
+> #define PREG_STICKY_REG0 0x207c
+> #define PREG_STICKY_REG1 0x207d
+>
+> This still really sounds like a mixed bag to me, which should better get represented
+> as a syscon node, except that there are also some more structured areas in
+> CBUS.
+>
+> Having just the registers between METAL_REVISION and HW_REV in a syscon
+> is clearly wrong, as that would include the pinctrl area that already has
+> a driver, but would not include some other parts that want the syscon.
 
-Acked-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Agree
 
-Thanks
+> Maybe the best way is to make it compatible with both syscon and
+> simple-bus and put the other nodes underneath. That is still rather
+> ugly, but at least it works and can be extended.
 
-> ---
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/b=
-oot/dts/at91-sama5d2_xplained.dts
-> index e683856c507c..75341eec2dfd 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -308,6 +308,7 @@
-> =20
->  				pinctrl_macb0_phy_irq: macb0_phy_irq {
->  					pinmux =3D <PIN_PC9__GPIO>;
-> +					bias-disable;
->  				};
-> =20
->  				pinctrl_pdmic_default: pdmic_default {
-> --=20
-> 2.5.0
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is a good idea actually. I'll prepare a patch.
+Thank you for having spent time on this.
+
+Cheers,
+
+-- 
+Carlo Caione  |  +39.340.80.30.096  |  Endless
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
