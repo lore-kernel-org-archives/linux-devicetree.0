@@ -1,87 +1,64 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH 3/5] arm64: dts: add dwmmc nodes for hi6220
-Date: Fri, 19 Feb 2016 13:19:06 +0800
-Message-ID: <1455859148-29098-4-git-send-email-guodong.xu@linaro.org>
-References: <1455859148-29098-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455859148-29098-1-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>
+From: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/5] PM / AVS: thermal: MT8173: Introduce support
+ for SVS engine
+Date: Fri, 19 Feb 2016 13:31:25 +0800
+Message-ID: <1455859885.17104.21.camel@mtksdaap41>
+References: <1453452029-20843-1-git-send-email-pi-cheng.chen@linaro.org>
+	 <1453452029-20843-5-git-send-email-pi-cheng.chen@linaro.org>
+	 <CAGS+omAYPhJ80kHG=bW4AjFsQzhwUfC6C+nAXa=Ny5UyoCid=w@mail.gmail.com>
+	 <20160218030049.GA8780@gmail.com> <1455858482.17104.13.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455858482.17104.13.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+On Fri, 2016-02-19 at 13:08 +0800, Henry Chen wrote:
+> On Thu, 2016-02-18 at 11:00 +0800, Pi-Cheng Chen wrote:
+> 
+> > > > +               vboot = regulator_get_voltage(svs->reg) / 1000;
+> > > > +               if (mvolt_to_config(vboot) !=
+> > > > +                   mvolt_to_config(svs_bank_cfgs[i].vboot)) {
+> > > > +                       dev_err(svs->dev, "Vboot value mismatch!\n");
+> > > > +                       ret = -EINVAL;
+> > > > +                       break;
+> > > > +               }
+> > > > +
+> > > > +               ret = regulator_set_mode(svs->reg, REGULATOR_MODE_FAST);
+> > > > +               if (ret) {
+> > > > +                       dev_err(svs->dev,
+> > > > +                               "Failed to set regulator in PWM mode\n");
+> > > > +                       ret = -EINVAL;
+> > > > +                       break;
+> > > > +               }
+> > > 
+> > > Shouldn't this be best effort?
+> > > If we can't set the regulator to fast mode, can we continue anyway?
+> > > 
+> > 
+> > AFAIK, we need to set the regulator to fast mode to get stable voltage as
+> > possible. I am sure about the details.
+> > 
+> > @Henry,
+> > Would you please comment it?
+> 
 
-Add all three dwmmc nodes description for hi6220
+Hi,
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 53 +++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Correct typos.Sorry for the wrong module name. 
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 6afd327..28bd441 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -738,5 +738,58 @@
- 			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <3>;
- 		};
-+
-+		dwmmc_0: dwmmc0@f723d000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			num-slots = <0x1>;
-+			cap-mmc-highspeed;
-+			non-removable;
-+			reg = <0x0 0xf723d000 0x0 0x1000>;
-+			interrupts = <0x0 0x48 0x4>;
-+			clocks = <&sys_ctrl 2>, <&sys_ctrl 1>;
-+			clock-names = "ciu", "biu";
-+			bus-width = <0x8>;
-+			vmmc-supply = <&ldo19>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&emmc_pmx_func &emmc_clk_cfg_func
-+				     &emmc_cfg_func &emmc_rst_cfg_func>;
-+		};
-+
-+		dwmmc_1: dwmmc1@f723e000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			num-slots = <0x1>;
-+			card-detect-delay = <200>;
-+			hisilicon,peripheral-syscon = <&ao_ctrl>;
-+			cap-sd-highspeed;
-+			reg = <0x0 0xf723e000 0x0 0x1000>;
-+			interrupts = <0x0 0x49 0x4>;
-+			#address-cells = <0x1>;
-+			#size-cells = <0x0>;
-+			clocks = <&sys_ctrl 4>, <&sys_ctrl 3>;
-+			clock-names = "ciu", "biu";
-+			vqmmc-supply = <&ldo7>;
-+			vmmc-supply = <&ldo10>;
-+			bus-width = <0x4>;
-+			disable-wp;
-+			cd-gpios = <&gpio1 0 1>;
-+			pinctrl-names = "default", "idle";
-+			pinctrl-0 = <&sd_pmx_func &sd_clk_cfg_func &sd_cfg_func>;
-+			pinctrl-1 = <&sd_pmx_idle &sd_clk_cfg_idle &sd_cfg_idle>;
-+		};
-+
-+		dwmmc_2: dwmmc2@f723f000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			status = "okay";
-+			num-slots = <0x1>;
-+			reg = <0x0 0xf723f000 0x0 0x1000>;
-+			interrupts = <0x0 0x4a 0x4>;
-+			clocks = <&sys_ctrl HI6220_MMC2_CIUCLK>, <&sys_ctrl HI6220_MMC2_CLK>;
-+			clock-names = "ciu", "biu";
-+			bus-width = <0x4>;
-+			broken-cd;
-+			pinctrl-names = "default", "idle";
-+			pinctrl-0 = <&sdio_pmx_func &sdio_clk_cfg_func &sdio_cfg_func>;
-+			pinctrl-1 = <&sdio_pmx_idle &sdio_clk_cfg_idle &sdio_cfg_idle>;
-+		};
- 	};
- };
--- 
-1.9.1
+Yes, as you said, SVS need the more precisely voltage as possible when
+driver initialize, there has two mode in mt6397: pwm/auto mode, the pwm
+mode which can get the more stable Vout than auto mode.
+
+Thanks,
+Henry
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
