@@ -1,58 +1,68 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] pinctrl: mediatek: Modify pinctrl bindings for mt7623
-Date: Fri, 19 Feb 2016 13:12:29 +0100
-Message-ID: <CACRpkdbWad9iZV9LYkvEFRZn_BQDtPEAy3JE0uuR569UwMJkHQ@mail.gmail.com>
-References: <1455866238-6102-1-git-send-email-blogic@openwrt.org>
-	<CACRpkdYiQop2qDNuh4N2YZy2DTy9mOEyERro8hT4YogCPc2LGw@mail.gmail.com>
-	<56C6DF23.3060202@openwrt.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Fri, 19 Feb 2016 13:54:59 +0100
+Message-ID: <3072897.5MMsyiojns@wuerfel>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com> <CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C6DF23.3060202-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 10:23 AM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> On 19/02/2016 10:03, Linus Walleij wrote:
->> On Fri, Feb 19, 2016 at 8:17 AM, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->>
->>> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>> please apply to the devel-mt2701 branch
->>>
->>> Changes in V2
->>> * make mt7623-pinfunc.h part of patch 1/2
->>> * make sure the list stays sorted
->>
->> Patch applied unless the Mediatek maintainers come with serious
->> remarks (I can always revert).
->>
->> Only minor comments from Yingjoe on the previous version so I guess
->> it is finished.
->>
->> MTK guys: do you even have this SoC? It appears MTK is churning out
->> a plethora of SoCs and then they land in the lap of the OpenWRT
->> developers before the MTK maintainers even start to look at it...
->>
->> Yours,
->> Linus Walleij
->>
->
-> I am doing this work in close collaboration with MTK. It is contractual
-> work. MTK is huge and has many BUs, one of them is WCN, formerly known
-> as Ralink. I have supported their MIPS silicon for many years now so
-> asking me to also take care of the Wireless SoCs based on ARM was the
-> natural next step.
+On Thursday 18 February 2016 15:27:06 Daniel Drake wrote:
+> 
+> Having a cbus bus node with child devices does sound like it would
+> reflect this particular view of the hardware design. How would we then
+> represent the hwrev registers under that?
+> 
 
-Awesome!
+The question is still how the CBUS is structured internally.
 
-Keep doing what you're doing :)
+https://github.com/endlessm/linux-meson/blob/master/arch/arm/mach-meson8b/include/mach/register.h
 
-Yours,
-Linus Walleij
+seems to have a good list of registers, but it's a bit hard to
+read, so I reformatted it slightly and put it up at http://pastebin.com/GrzYM7Ti
+
+In many cases, the register name prefix gives a good idea of what things
+are. In particular, it seems that all registers numbers are between 0x1000
+and 0x2fff, which would be offsets 0x4000 through 0xbfff.
+
+The revisison register is in a block called ASSIST, which is mixed with two
+AC3 (audio?) regions, and the only other ASSIST register that is ever
+used is the ASSIST_POR_CONFIG.
+
+The METAL_REVISION is in the middle of some apparently all unrelated registers:
+
+#define PREG_ETH_REG0 0x2050
+#define PREG_ETH_REG1 0x2051
+#define PROD_TEST_REG1 0x2067
+#define PROD_TEST_REG0 0x2068
+#define METAL_REVISION 0x206a
+#define ADC_TOP_MISC 0x206b
+#define DPLL_TOP_MISC 0x206c
+#define ANALOG_TOP_MISC 0x206d
+#define AM_ANALOG_TOP_REG0 0x206e
+#define AM_ANALOG_TOP_REG1 0x206f
+#define PREG_STICKY_REG0 0x207c
+#define PREG_STICKY_REG1 0x207d
+
+This still really sounds like a mixed bag to me, which should better get represented
+as a syscon node, except that there are also some more structured areas in
+CBUS.
+
+Having just the registers between METAL_REVISION and HW_REV in a syscon
+is clearly wrong, as that would include the pinctrl area that already has
+a driver, but would not include some other parts that want the syscon.
+
+Maybe the best way is to make it compatible with both syscon and
+simple-bus and put the other nodes underneath. That is still rather
+ugly, but at least it works and can be extended.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
