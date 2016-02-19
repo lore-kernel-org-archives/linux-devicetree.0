@@ -1,32 +1,34 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH 0/3] thermal: exynos: Fixes for vtmu-supply regulator
- handling
-Date: Fri, 19 Feb 2016 13:29:54 +0900
-Message-ID: <20160219042954.GD27936@samsunx.samsung>
-References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/2] arm: am43xx: Register rtc hwmod
+Date: Fri, 19 Feb 2016 10:08:53 +0530
+Message-ID: <1455856735-11515-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+The patch adds rtc hwmod. This is present on gp and sk evm and not on
+epos evm. Hence adding it selectively using a seprate list.
 
-> Javier Martinez Canillas (3):
->   thermal: exynos: List vtmu-supply as optional property in DT binding
->   thermal: exynos: Use devm_regulator_get_optional() for vtmu
->   thermal: exynos: Defer probe if vtmu is present but not registered
-> 
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
->  drivers/thermal/samsung/exynos_tmu.c                         | 4 +++-
->  2 files changed, 9 insertions(+), 4 deletions(-)
+Boot tested on AM437X-GP-EVM and AM437X-SK-EVM and checked
+for rtc ticking on AM437X-GP-EVM.
 
-for all of them:
+Keerthy (2):
+  ARM: dts: am43x-epos-evm: Add the am438 compatible string
+  ARM: AM43XX: HWMOD: Add rtc hwmod
 
-Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+ Documentation/devicetree/bindings/arm/omap/omap.txt |  2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts                |  2 +-
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c          | 14 +++++++++++++-
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-Andi
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
