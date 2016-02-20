@@ -1,64 +1,169 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713 codec
-Date: Sun, 21 Feb 2016 04:59:25 +0900
-Message-ID: <20160220195925.GF18327@sirena.org.uk>
+Date: Sat, 20 Feb 2016 21:32:58 +0100
+Message-ID: <87twl3xgud.fsf@belgarion.home>
 References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
- <20160220171459.GA18327@sirena.org.uk>
- <871t87z1gz.fsf@belgarion.home>
+	<20160220171459.GA18327@sirena.org.uk> <871t87z1gz.fsf@belgarion.home>
+	<20160220195925.GF18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l+RjsdkfuJDA0G6K"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <871t87z1gz.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+In-Reply-To: <20160220195925.GF18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org> (Mark Brown's message of
+	"Sun, 21 Feb 2016 04:59:25 +0900")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
---l+RjsdkfuJDA0G6K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Sat, Feb 20, 2016 at 07:22:04PM +0100, Robert Jarzmik wrote:
+>> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Removed DT people from this conversation.
 
-On Sat, Feb 20, 2016 at 07:22:04PM +0100, Robert Jarzmik wrote:
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>> > Instead we should be probing at runtime (as the non-ASoC AC'97 code does) or
+>> > something similar.
+>
+>> When you say "non-ASoC AC'97 code", which file are you referring to ? Is it
+>> sound/pci/ac97/ac97_codec.c ?
+>
+> Yes.
+>
+>> If so is there already a table of tuples (AC97_VENDOR_ID1, AC97_VENDOR_ID2) ->
+>> (platform device, platform device data) and a matching mechanism already
+>> available to the ASoC drivers ?
+>
+> ASoC doesn't really support the enumeration very well, you can use
+> ac97.c as the CODEC but that's about it.
 
-> > Instead we should be probing at runtime (as the non-ASoC AC'97 code does) or
-> > something similar.
+> There is a generic AC'97 PXA driver in sound/arm, if your system can use that
+> that'd be a better route to DT integration for it I think.
+I'm open on the topic.
 
-> When you say "non-ASoC AC'97 code", which file are you referring to ? Is it
-> sound/pci/ac97/ac97_codec.c ?
+Historically, I use sound/soc/pxa/pxa2xx-ac97.c since 2008. I know it works, but
+if you think I should examine sound/arm/pxa2xx-ac97.c, let's do that.
 
-Yes.
+> Did you try that, if there are problems with that perhaps we can improve that
+> driver, it should be simpler.
+I will. By now I fail to see how this will help in the wm9713 probing and
+detection ...
 
-> If so is there already a table of tuples (AC97_VENDOR_ID1, AC97_VENDOR_ID2) ->
-> (platform device, platform device data) and a matching mechanism already
-> available to the ASoC drivers ?
+Until I make the try, here is what I have as a device-tree extract in [1], which
+is my candidate for sound/soc/pxa/zylonite.c replacement.. If we conclude that
+wm9713 shouldn't be in device-tree, then I'm curious how the DAI bindings
+(simple-audio-card,dai-link*) should be handled.
 
-ASoC doesn't really support the enumeration very well, you can use
-ac97.c as the CODEC but that's about it.  There is a generic AC'97 PXA
-driver in sound/arm, if your system can use that that'd be a better
-route to DT integration for it I think.  Did you try that, if there are
-problems with that perhaps we can improve that driver, it should  be
-simpler.
+Cheers.
 
---l+RjsdkfuJDA0G6K
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Robert
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+[1] Zylonite DT extract
+	ssp3: ssp@41900000 {
+		compatible = "mrvl,pxa3xx-ssp";
+		reg = <0x41900000 0x40>;
+		interrupts = <0>;
+		clocks = < &clks CLK_SSP3 >;
+		dmas = <&pdma 66 3
+			&pdma 67 3>;
+		dma-names = "rx", "tx";
+		pinctrl-names = "default";
+		pinctrl-0 = < &pmux_ssp3_low_default
+			      &pmux_ssp3_float_default >;
+		status = "okay";
+	};
 
-iQEcBAEBCAAGBQJWyMWcAAoJECTWi3JdVIfQcpIH/1ulDFzu55nMKtVxAPHEWgG1
-Yr2g0trmnh/LckYj2pkvyh9xTMgRs3JFfoYjP5sqlpajii0JDHQJZFVwJgCALYT5
-eRK27JKj3wf5RVQqg2Xk1JBRmd1NKgzZAfTyzkm4QhmMrZIrB4m53MVE82m37Rff
-trsSQKTGaP8AO7BcTpW/I9uVzyRx7RQ17f0kLTagBtid1e8LkoQ7LDavbA2Jx7P+
-s/jb6ZSt0Y+JUDHYz7yEtMMo7PJp2vhfa6dRwtepEujGFfhKwWvIYcyRR4r2BTK6
-0EYDHe2ewKOnu5O8u5sEOQXH4/iV8ITzciYGGew4xry8S8Y5Uy2laq8ppmMLPPI=
-=qITc
------END PGP SIGNATURE-----
+	ssp_dai0: ssp_dai@0 {
+		compatible = "mrvl,pxa-ssp-dai";
+		port = <&ssp3>;
+		#sound-dai-cells = <0>;
+	};
+	ac97: sound@40500000 {
+	      	compatible = "marvell,pxa2xx-ac97";
+		reg = < 0x40500000 0x1000 >;
+		interrupts = <14>;
+		reset-gpio = <&gpio 113 GPIO_ACTIVE_HIGH>;
+		#sound-dai-cells = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = < &pmux_ac97_default >;
+		status = "okay";
+	};
 
---l+RjsdkfuJDA0G6K--
+	pxa_pcm_audio: snd_soc_pxa_audio {
+		compatible = "mrvl,pxa-pcm-audio";
+		#sound-dai-cells = <1>;
+	};
+	pxa_ssp_dai: snd_soc_pxa_audio {
+		compatible = "mrvl,pxa-pcm-audio";
+		#sound-dai-cells = <1>;
+	};
+
+	wm9713: wm9713@0 {
+		compatible = "wlf,wm9713";
+		#sound-dai-cells = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = < &pmux_wm9713_default >;
+		status = "okay";
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "Zylonite-Sound-Card";
+		simple-audio-card,format = "ac97";
+		simple-audio-card,widgets =
+			"Headphone", "Headphone",
+			"Microphone", "Headset Microphone",
+			"Microphone", "Handset Microphone",
+			"Speaker", "Multiactor",
+			"Speaker", "Headset Earpiece";
+		simple-audio-card,routing =
+			"Headphone", "HPL",		/* Headphone output */
+			"Headphone", "HPR",		/* connected to HPL/HPR */
+			"Headset Earpiece", "OUT3",	/* On-board earpiece */
+			"MIC2A", "Mic Bias",			/* Headphone mic */
+			"Mic Bias", "Headset Microphone",	/* Headphone mic */
+			"MIC1", "Mic Bias",			/* On-board mic */
+			"Mic Bias", "Handset Microphone",	/* On-board mic */
+			"Multiactor", "SPKL",		/* Multiactor differentially */
+			"Multiactor", "SPKR";		/* connected over SPKL/SPKR */
+	
+		simple-audio-card,dai-link@0 {		/* AC97 */
+			format = "ac97";
+			cpu {
+				sound-dai = <&ac97 0>;
+			};
+			codec {
+				sound-dai = <&wm9713 0>;
+			};
+			plat {
+				sound-dai = <&pxa_pcm_audio 0>;
+			};
+		};
+		simple-audio-card,dai-link@1 {		/* AC97 Aux */
+			format = "ac97";
+			cpu {
+				sound-dai = <&ac97 1>;
+			};
+			codec {
+				sound-dai = <&wm9713 1>;
+			};
+			plat {
+				sound-dai = <&pxa_pcm_audio 0>;
+			};
+		};
+		simple-audio-card,dai-link@2 {		/* AC97 Voice */
+			format = "i2s";
+			cpu {
+				sound-dai = <&ssp_dai0>;
+			};
+			codec {
+				sound-dai = <&wm9713 2>;
+			};
+			plat {
+				sound-dai = <&pxa_pcm_audio 0>;
+			};
+		};
+	};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
