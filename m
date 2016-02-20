@@ -1,7 +1,7 @@
 From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 4/5] arm64: cputype info for Broadcom Vulcan
-Date: Sat, 20 Feb 2016 19:49:23 +0530
-Message-ID: <1455977964-8099-5-git-send-email-jchandra@broadcom.com>
+Subject: [PATCH v2 5/5] MAINTAINERS: Add entry for Broadcom Vulcan SoC
+Date: Sat, 20 Feb 2016 19:49:24 +0530
+Message-ID: <1455977964-8099-6-git-send-email-jchandra@broadcom.com>
 References: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455977964-8099-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -10,37 +10,31 @@ To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon 
 Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Broadcom Vulcan implementor ID and part ID in cputype.h. This is
-to document the values.
+Add maintainer information for Broadcom's Vulcan arm64 SoC.
 
 Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm64/include/asm/cputype.h | 3 +++
- 1 file changed, 3 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index 1a59493..3dcecdf 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -65,6 +65,7 @@
- #define ARM_CPU_IMP_ARM			0x41
- #define ARM_CPU_IMP_APM			0x50
- #define ARM_CPU_IMP_CAVIUM		0x43
-+#define ARM_CPU_IMP_BRCM		0x42
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc2f753..eac98eb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2512,6 +2512,13 @@ L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Supported
+ F:	drivers/net/ethernet/broadcom/bcmsysport.*
  
- #define ARM_CPU_PART_AEM_V8		0xD0F
- #define ARM_CPU_PART_FOUNDATION		0xD00
-@@ -75,6 +76,8 @@
- 
- #define CAVIUM_CPU_PART_THUNDERX	0x0A1
- 
-+#define BRCM_CPU_PART_VULCAN		0x516
++BROADCOM VULCAN ARM64 SOC
++M:	Jayachandran C. <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++L:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
++S:	Maintained
++F:	arch/arm64/boot/dts/broadcom/vulcan*
 +
- #ifndef __ASSEMBLY__
- 
- /*
+ BROCADE BFA FC SCSI DRIVER
+ M:	Anil Gurumurthy <anil.gurumurthy-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>
+ M:	Sudarsana Kalluru <sudarsana.kalluru-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>
 -- 
 1.9.1
 
