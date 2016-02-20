@@ -1,163 +1,172 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 00/10] arm64, numa: Add numa support for arm64 platforms
-Date: Sat, 20 Feb 2016 09:20:05 +0100
-Message-ID: <CAKv+Gu8FRdif_WDZPqs7gHxXMu=6SqDd6A54dQc1KWuGwxpf0w@mail.gmail.com>
-References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 5/8] [Media] vcodec: mediatek: Add Mediatek V4L2
+ Video Encoder Driver
+Date: Sat, 20 Feb 2016 17:11:20 +0800
+Message-ID: <1455959480.12533.11.camel@mtksdaap41>
+References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
+ <1454585703-42428-6-git-send-email-tiffany.lin@mediatek.com>
+ <56C1B4AF.1030207@xs4all.nl> <1455604653.19396.68.camel@mtksdaap41>
+ <56C2D371.9090805@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455930799-5371-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56C2D371.9090805-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
+Hi Hans,
 
-On 20 February 2016 at 02:13, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->
-> v11:
->         - Dropped cleanup patches for other architectures, they will be
->           submitted as a separate set after more testing.
->
->         - Added patch set from Ard Biesheuvel that are needed to make
->           the whole thing actually work.  Previously this was a
->           separate set.
->
+On Tue, 2016-02-16 at 08:44 +0100, Hans Verkuil wrote:
+> On 02/16/2016 07:37 AM, tiffany lin wrote:
+> >>> +
+> >>> +const struct v4l2_ioctl_ops mtk_venc_ioctl_ops = {
+> >>> +	.vidioc_streamon		= v4l2_m2m_ioctl_streamon,
+> >>> +	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
+> >>> +
+> >>> +	.vidioc_reqbufs			= v4l2_m2m_ioctl_reqbufs,
+> >>> +	.vidioc_querybuf		= v4l2_m2m_ioctl_querybuf,
+> >>> +	.vidioc_qbuf			= vidioc_venc_qbuf,
+> >>> +	.vidioc_dqbuf			= vidioc_venc_dqbuf,
+> >>> +
+> >>> +	.vidioc_querycap		= vidioc_venc_querycap,
+> >>> +	.vidioc_enum_fmt_vid_cap_mplane = vidioc_enum_fmt_vid_cap_mplane,
+> >>> +	.vidioc_enum_fmt_vid_out_mplane = vidioc_enum_fmt_vid_out_mplane,
+> >>> +	.vidioc_enum_framesizes		= vidioc_enum_framesizes,
+> >>> +
+> >>> +	.vidioc_try_fmt_vid_cap_mplane	= vidioc_try_fmt_vid_cap_mplane,
+> >>> +	.vidioc_try_fmt_vid_out_mplane	= vidioc_try_fmt_vid_out_mplane,
+> >>> +	.vidioc_expbuf			= v4l2_m2m_ioctl_expbuf,
+> >>
+> >> Please add vidioc_create_bufs and vidioc_prepare_buf as well.
+> >>
+> > 
+> > Currently we do not support these use cases, do we need to add
+> > vidioc_create_bufs and vidioc_prepare_buf now?
+> 
+> I would suggest you do. The vb2 framework gives it (almost) for free.
+> prepare_buf is completely free (just add the helper) and create_bufs
+> needs a few small changes in the queue_setup function, that's all.
+> 
+After try to add vidioc_create_bufs directly using
+vb2_ioctl_create_bufs, it will have problem in 
+	int res = vb2_verify_memory_type(vdev->queue, p->memory,
+			p->format.type);
+We do not init our video_device queue in device probe function.
 
-This series is out of date, unfortunately. The EFI init code is now
-(as of v4.5-rc1) shared between ARM and arm64, which means that any
-changes you make must be made on both sides. This applies to the split
-between parsing the EFI dt nodes and performing the actual EFI init,
-but also to the early_init_dt_add_memory_arch() changes. I am happy to
-have a go at this, but first I need a clear statement from whoever
-maintains that area that keeping memory nodes *just* for the
-annotations (and otherwise ignore them) is the way forward (Rob?
-Grant?)
+Our vb2_queues for OUTPUT and CAPTURE are initialized in
+v4l2_m2m_ctx_init when ctx instance open.
+What is queue in video_device for?
+If we should init vdev->queue in probe function, this queue format
+should be CAPTURE queue or OUTPUT queue?
 
-Also, please drop the 6th patch. As i replied to Robert when he
-reposted these patches, we need to honor the /reserved-memory node
-rather than remove it. I will follow up with an updated
-/reserved-memory node validation patch for the EFI stub once these
-changes are in.
+best regards,
+Tiffany
 
-
->         - Kconfig and other fixes and simplifications as suggested by Rob Herring.
->
->         - Rearranged, refactored and reordered so that we don't patch
->           new files multiple times.
->
->         - Summary:
->
->                 o 6 patches from Ard Biesheuvel to allow use of
->                   "memory" nodes with efi stub.
->
->                 o 2 patches to document and add of_numa.c
->
->                 o 1 patch to add arm64 NUMA support.
->
->                 o 1 patch to add NUMA balancing support for arm64.
->
-> v10:
->         - Incorporated review comments from Rob Herring.
->         - Moved numa binding and implementation to devicetree core.
->         - Added cleanup patch to remove redundant NODE_DATA macro from asm header files
->         - Include numa balancing support for arm64 patch in this series.
->         - Fix tile build issue reported by the kbuild robot(patch 7)
->
-> v9:     - Added cleanup patch to reuse and avoid redefinition of cpumask_of_pcibus
->           as suggested from Will Deacon and Bjorn Helgaas.
->           - Including patch to Make pci-host-generic driver numa aware.
->           - Incorporated comment from Shannon Zhao.
->
-> v8:
->         - Incorporated review comments of Mark Rutland and Will Deacon.
->         - Added pci helper function and macro for numa.
->
-> v7:
->         - managing numa memory mapping using memblock.
->         - Incorporated review comments of Mark Rutland.
->
-> v6:
->         - defined and implemented the numa dt binding using
->         node property proximity and device node distance-map.
->         - renamed dt_numa to of_numa
->
-> v5:
->         - created base verion of numa.c which creates dummy numa without using dt
->           on single socket platforms. Then added patches for dt support.
->         - Incorporated review comments from Hanjun Guo.
->
-> v4:
-> done changes as per Arnd review comments.
->
-> v3:
-> Added changes to support numa on arm64 based platforms.
-> Tested these patches on cavium's multinode(2 node topology) platform.
-> In this patchset, defined and implemented dt bindings for numa mapping
-> for core and memory using device node property arm,associativity.
->
-> v2:
-> Defined and implemented numa map for memory, cores to node and
-> proximity distance matrix of nodes.
->
-> v1:
-> Initial patchset to support numa on arm64 platforms.
->
-> Note: 1. This patchset is tested for NUMA and without NUMA with dt
->         (both with and without NUMA bindings) on thunderx single
->         socket and dual socket boards.
->
->
-> Ard Biesheuvel (6):
->   of/fdt: make generic early_init_dt_add_memory_arch() a weak alias
->   arm64: override generic version of early_init_dt_add_memory_arch()
->   efi: move FDT handling to separate object file
->   arm64/efi: move EFI /chosen node parsing before early FDT processing
->   arm64/efi: ignore DT memory nodes instead of removing them
->   arm64/efi: ignore DT memreserve entries instead of removing them
->
-> Ganapatrao Kulkarni (4):
->   Documentation, dt, numa: dt bindings for NUMA.
->   dt, numa: Add NUMA dt binding implementation.
->   arm64, numa: Add NUMA support for arm64 platforms.
->   arm64, mm, numa: Add NUMA balancing support for arm64.
->
->  Documentation/devicetree/bindings/numa.txt | 272 +++++++++++++++++++
->  arch/arm64/Kconfig                         |  27 ++
->  arch/arm64/include/asm/efi.h               |   2 +
->  arch/arm64/include/asm/mmzone.h            |  12 +
->  arch/arm64/include/asm/numa.h              |  45 ++++
->  arch/arm64/include/asm/pgtable.h           |  15 ++
->  arch/arm64/include/asm/topology.h          |  10 +
->  arch/arm64/kernel/pci.c                    |  10 +
->  arch/arm64/kernel/setup.c                  |   7 +
->  arch/arm64/kernel/smp.c                    |   4 +
->  arch/arm64/mm/Makefile                     |   1 +
->  arch/arm64/mm/init.c                       |  46 +++-
->  arch/arm64/mm/mmu.c                        |   1 +
->  arch/arm64/mm/numa.c                       | 403 +++++++++++++++++++++++++++++
->  drivers/firmware/efi/Makefile              |   1 +
->  drivers/firmware/efi/arm-init.c            |  36 ++-
->  drivers/firmware/efi/efi-fdt.c             |  73 ++++++
->  drivers/firmware/efi/efi.c                 |  84 ------
->  drivers/firmware/efi/libstub/fdt.c         |  33 +--
->  drivers/of/Kconfig                         |   3 +
->  drivers/of/Makefile                        |   1 +
->  drivers/of/fdt.c                           |   7 +-
->  drivers/of/of_numa.c                       | 211 +++++++++++++++
->  include/linux/efi.h                        |   2 +-
->  include/linux/of.h                         |   9 +
->  include/linux/of_fdt.h                     |   1 +
->  26 files changed, 1178 insertions(+), 138 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/numa.txt
->  create mode 100644 arch/arm64/include/asm/mmzone.h
->  create mode 100644 arch/arm64/include/asm/numa.h
->  create mode 100644 arch/arm64/mm/numa.c
->  create mode 100644 drivers/firmware/efi/efi-fdt.c
->  create mode 100644 drivers/of/of_numa.c
->
-> --
-> 1.8.3.1
->
+> > 
+> > 
+> >>> +	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+> >>> +	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+> >>> +
+> >>> +	.vidioc_s_parm			= vidioc_venc_s_parm,
+> >>> +
+> >>> +	.vidioc_s_fmt_vid_cap_mplane	= vidioc_venc_s_fmt,
+> >>> +	.vidioc_s_fmt_vid_out_mplane	= vidioc_venc_s_fmt,
+> >>> +
+> >>> +	.vidioc_g_fmt_vid_cap_mplane	= vidioc_venc_g_fmt,
+> >>> +	.vidioc_g_fmt_vid_out_mplane	= vidioc_venc_g_fmt,
+> >>> +
+> >>> +	.vidioc_g_selection		= vidioc_venc_g_s_selection,
+> >>> +	.vidioc_s_selection		= vidioc_venc_g_s_selection,
+> >>> +};
+> 
+> <snip>
+> 
+> >>> +int mtk_vcodec_enc_queue_init(void *priv, struct vb2_queue *src_vq,
+> >>> +			   struct vb2_queue *dst_vq)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = priv;
+> >>> +	int ret;
+> >>> +
+> >>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> >>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
+> >>
+> >> I recomment dropping VB2_USERPTR. That only makes sense for scatter-gather dma,
+> >> and you use physically contiguous DMA.
+> >>
+> > Now our userspace app use VB2_USERPTR. I need to check if we could drop
+> > VB2_USERPTR.
+> > We use src_vq->mem_ops = &vb2_dma_contig_memops;
+> > And there are
+> > 	.get_userptr	= vb2_dc_get_userptr,
+> > 	.put_userptr	= vb2_dc_put_userptr,
+> > I was confused why it only make sense for scatter-gather.
+> > Could you kindly explain more?
+> 
+> VB2_USERPTR indicates that the application can use malloc to allocate buffers
+> and pass those to the driver. Since malloc uses virtual memory the physical
+> memory is scattered all over. And the first page typically does not start at
+> the beginning of the page but at a random offset.
+> 
+> To support that the DMA generally has to be able to do scatter-gather.
+> 
+> Now, where things get ugly is that a hack was added to the USERPTR support where
+> apps could pass a pointer to physically contiguous memory as a user pointer. This
+> was a hack for embedded systems that preallocated a pool of buffers and needed to
+> pass those pointers around somehow. So the dma-contig USERPTR support is for that
+> 'feature'. If you try to pass a malloc()ed buffer to a dma-contig driver it will
+> reject it. One big problem is that this specific hack isn't signaled anywhere, so
+> applications have no way of knowing if the USERPTR support is the proper version
+> or the hack where physically contiguous memory is expected.
+> 
+> This hack has been replaced with DMABUF which is the proper way of passing buffers
+> around.
+> 
+> New dma-contig drivers should not use that old hack anymore. Use dmabuf to pass
+> external buffers around.
+> 
+> How do you use it in your app? With malloc()ed buffers? Or with 'special' pointers
+> to physically contiguous buffers?
+> 
+> > 
+> >>> +	src_vq->drv_priv	= ctx;
+> >>> +	src_vq->buf_struct_size = sizeof(struct mtk_video_enc_buf);
+> >>> +	src_vq->ops		= &mtk_venc_vb2_ops;
+> >>> +	src_vq->mem_ops		= &vb2_dma_contig_memops;
+> >>> +	src_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> >>> +	src_vq->lock = &ctx->dev->dev_mutex;
+> >>> +
+> >>> +	ret = vb2_queue_init(src_vq);
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >>> +	dst_vq->type		= V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> >>> +	dst_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
+> >>> +	dst_vq->drv_priv	= ctx;
+> >>> +	dst_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
+> >>> +	dst_vq->ops		= &mtk_venc_vb2_ops;
+> >>> +	dst_vq->mem_ops		= &vb2_dma_contig_memops;
+> >>> +	dst_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> >>> +	dst_vq->lock = &ctx->dev->dev_mutex;
+> >>> +
+> >>> +	return vb2_queue_init(dst_vq);
+> >>> +}
+> 
+> Regards,
+> 
+> 	Hans
+> 
