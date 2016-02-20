@@ -1,50 +1,65 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Support for Broadcom Vulcan ARM64 processor
-Date: Sat, 20 Feb 2016 11:50:38 -0800
-Message-ID: <56C8C38E.50007@gmail.com>
-References: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713 codec
+Date: Sun, 21 Feb 2016 04:59:25 +0900
+Message-ID: <20160220195925.GF18327@sirena.org.uk>
+References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
+ <20160220171459.GA18327@sirena.org.uk>
+ <871t87z1gz.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l+RjsdkfuJDA0G6K"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455977964-8099-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <871t87z1gz.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 20/02/2016 06:19, Jayachandran C a =C3=A9crit :
-> This patchset adds support for Broadcom's Vulcan ARM64 processor.
-> The changes are to add the device tree files, documentation for the
-> device tree, cpu ID and the maintainers entry.
->=20
-> This is v2 of the patchset, changelog below:
->=20
-> v1->v2 :
->  - dts: remove memreserve, use brcm,vulcan-soc for board
->    (to address comments from Mark Rutland)
->  - Fixup copyright (Broadcomp corp -> Broadcom)
->    (suggested by Florian Fainelli)
->  - Rename dts from brcm-vulcan* to vulcan*
->    (suggested by Ray Jui)
->  - Add maintainers entry
->    (suggested by Florian Fainelli)
->  - Updated the device tree doc and fixed a couple of commit
->    comments
->=20
-> Jayachandran C (4):
->   dt-bindings: Add documentation for Broadcom Vulcan
->   arm64: defconfig: Add Broadcom Vulcan to defconfig
->   arm64: cputype info for Broadcom Vulcan
->   MAINTAINERS: Add entry for Broadcom Vulcan SoC
->=20
-> Zi Shen Lim (1):
->   arm64: Broadcom Vulcan support
 
-All applied and submitted for 4.6 thanks!
---=20
-=46lorian
+--l+RjsdkfuJDA0G6K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Feb 20, 2016 at 07:22:04PM +0100, Robert Jarzmik wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+
+> > Instead we should be probing at runtime (as the non-ASoC AC'97 code does) or
+> > something similar.
+
+> When you say "non-ASoC AC'97 code", which file are you referring to ? Is it
+> sound/pci/ac97/ac97_codec.c ?
+
+Yes.
+
+> If so is there already a table of tuples (AC97_VENDOR_ID1, AC97_VENDOR_ID2) ->
+> (platform device, platform device data) and a matching mechanism already
+> available to the ASoC drivers ?
+
+ASoC doesn't really support the enumeration very well, you can use
+ac97.c as the CODEC but that's about it.  There is a generic AC'97 PXA
+driver in sound/arm, if your system can use that that'd be a better
+route to DT integration for it I think.  Did you try that, if there are
+problems with that perhaps we can improve that driver, it should  be
+simpler.
+
+--l+RjsdkfuJDA0G6K
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWyMWcAAoJECTWi3JdVIfQcpIH/1ulDFzu55nMKtVxAPHEWgG1
+Yr2g0trmnh/LckYj2pkvyh9xTMgRs3JFfoYjP5sqlpajii0JDHQJZFVwJgCALYT5
+eRK27JKj3wf5RVQqg2Xk1JBRmd1NKgzZAfTyzkm4QhmMrZIrB4m53MVE82m37Rff
+trsSQKTGaP8AO7BcTpW/I9uVzyRx7RQ17f0kLTagBtid1e8LkoQ7LDavbA2Jx7P+
+s/jb6ZSt0Y+JUDHYz7yEtMMo7PJp2vhfa6dRwtepEujGFfhKwWvIYcyRR4r2BTK6
+0EYDHe2ewKOnu5O8u5sEOQXH4/iV8ITzciYGGew4xry8S8Y5Uy2laq8ppmMLPPI=
+=qITc
+-----END PGP SIGNATURE-----
+
+--l+RjsdkfuJDA0G6K--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
