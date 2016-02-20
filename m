@@ -1,7 +1,7 @@
 From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 5/5] MAINTAINERS: Add entry for Broadcom Vulcan SoC
-Date: Sat, 20 Feb 2016 19:49:24 +0530
-Message-ID: <1455977964-8099-6-git-send-email-jchandra@broadcom.com>
+Subject: [PATCH v2 2/5] dt-bindings: Add documentation for Broadcom Vulcan
+Date: Sat, 20 Feb 2016 19:49:21 +0530
+Message-ID: <1455977964-8099-3-git-send-email-jchandra@broadcom.com>
 References: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1455977964-8099-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -10,31 +10,44 @@ To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon 
 Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer information for Broadcom's Vulcan arm64 SoC.
+Update arm/cpus.txt to add "brcm,vulcan" CPU. Add documentation
+for Broadcom Vulcan boards in arm/bcm/brcm,vulcan-soc.txt
 
 Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt | 10 ++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt                |  1 +
+ 2 files changed, 11 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc2f753..eac98eb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2512,6 +2512,13 @@ L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Supported
- F:	drivers/net/ethernet/broadcom/bcmsysport.*
- 
-+BROADCOM VULCAN ARM64 SOC
-+M:	Jayachandran C. <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-+L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-+L:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-+S:	Maintained
-+F:	arch/arm64/boot/dts/broadcom/vulcan*
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
+new file mode 100644
+index 0000000..223ed34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
+@@ -0,0 +1,10 @@
++Broadcom Vulcan device tree bindings
++------------------------------------
 +
- BROCADE BFA FC SCSI DRIVER
- M:	Anil Gurumurthy <anil.gurumurthy-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>
- M:	Sudarsana Kalluru <sudarsana.kalluru-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>
++Boards with Broadcom Vulcan shall have the following root property:
++
++Broadcom Vulcan Evaluation Board:
++  compatible = "brcm,vulcan-eval", "brcm,vulcan-soc";
++
++Generic Vulcan board:
++  compatible = "brcm,vulcan-soc";
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index ae9be07..bc43ad7 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -167,6 +167,7 @@ nodes to be present and contain the properties described below.
+ 			    "arm,cortex-r5"
+ 			    "arm,cortex-r7"
+ 			    "brcm,brahma-b15"
++			    "brcm,vulcan"
+ 			    "cavium,thunder"
+ 			    "faraday,fa526"
+ 			    "intel,sa110"
 -- 
 1.9.1
 
