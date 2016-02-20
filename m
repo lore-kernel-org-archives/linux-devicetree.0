@@ -1,54 +1,51 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v11 02/10] arm64: override generic version of
- early_init_dt_add_memory_arch()
-Date: Fri, 19 Feb 2016 17:13:11 -0800
-Message-ID: <1455930799-5371-3-git-send-email-ddaney.cavm@gmail.com>
-References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] add Alphascale asm9260 RTC driver
+Date: Sat, 20 Feb 2016 05:38:33 +0100
+Message-ID: <20160220043833.GF2222@piout.net>
+References: <20160202102804.GT20165@piout.net>
+ <1454442971-25225-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, linux-efi@vger.kernel.org, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454442971-25225-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+On 02/02/2016 at 20:56:09 +0100, Oleksij Rempel wrote :
+> This patch set provide support for RTC controller found on Alphascale
+> ASM9260 SoC.
+> 
+> v2:
+> - change license to GPLv2 and later
+> - remove HW_RTC_AUX and HW_RTC_AUXEN. Thay was taken from reference driver.
+>   Documentation do not provide any info about it. According to my tests
+>   this regs are not available on asm9260.
+> - remove calibration from DT. It will be beter to set it over sysfs.
+> 
+> Oleksij Rempel (2):
+>   rtc: add rtc-asm9260 driver
+>   doc: dt: add documentation for alphascale,asm9260-rtc
+> 
+>  .../bindings/rtc/alphascale,asm9260-rtc.txt        |  19 ++
+>  drivers/rtc/Kconfig                                |  10 +
+>  drivers/rtc/Makefile                               |   1 +
+>  drivers/rtc/rtc-asm9260.c                          | 355 +++++++++++++++++++++
+>  4 files changed, 385 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/alphascale,asm9260-rtc.txt
+>  create mode 100644 drivers/rtc/rtc-asm9260.c
+> 
 
-Override the __weak early_init_dt_add_memory_arch() with our own
-version. We need this in a subsequent patch to make the handling of
-the memory nodes conditional on whether we are booting via UEFI or
-not. Note that for now, all that our version does is invoke the generic
-implementation.
+Applied, thanks!
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Robert Richter <rrichter@cavium.com>
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- arch/arm64/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f3b061e..208c1d3 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -380,3 +380,8 @@ static int __init keepinitrd_setup(char *__unused)
- 
- __setup("keepinitrd", keepinitrd_setup);
- #endif
-+
-+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-+{
-+	early_init_dt_add_memory(base, size);
-+}
 -- 
-1.8.3.1
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
