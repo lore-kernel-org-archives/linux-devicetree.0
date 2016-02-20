@@ -1,41 +1,56 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v2 4/4] dmaengine: pxa_dma: fix the maximum requestor line
-Date: Sat, 20 Feb 2016 22:39:15 +0100
-Message-ID: <87d1rrxdrw.fsf@belgarion.home>
-References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
-	<1455569868-25017-4-git-send-email-robert.jarzmik@free.fr>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713 codec
+Date: Sat, 20 Feb 2016 23:24:02 +0100
+Message-ID: <878u2fxbp9.fsf@belgarion.home>
+References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
+	<20160220171459.GA18327@sirena.org.uk> <871t87z1gz.fsf@belgarion.home>
+	<20160220195925.GF18327@sirena.org.uk> <87twl3xgud.fsf@belgarion.home>
+	<20160220211659.GG18327@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455569868-25017-4-git-send-email-robert.jarzmik@free.fr>
-	(Robert Jarzmik's message of "Mon, 15 Feb 2016 21:57:48 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160220211659.GG18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org> (Mark Brown's message of
+	"Sun, 21 Feb 2016 06:16:59 +0900")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-> The current number of requestor lines is limited to 31. This was an
-> error of a previous commit, as this number is platform dependent, and is
-> actually :
->  - for pxa25x: 40 requestor lines
->  - for pxa27x: 75 requestor lines
->  - for pxa3xx: 100 requestor lines
+> On Sat, Feb 20, 2016 at 09:32:58PM +0100, Robert Jarzmik wrote:
+>> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>> > On Sat, Feb 20, 2016 at 07:22:04PM +0100, Robert Jarzmik wrote:
+>> I will. By now I fail to see how this will help in the wm9713 probing and
+>> detection ...
 >
-> The previous testing did not reveal the faulty constant as on pxa[23]xx
-> platforms, only camera, MSL and USB are above requestor 32, and in these
-> only the camera has a driver using dma.
+> It will eumerate the AC'97 bus by itself and does not need the CODEC to
+> be described.
+I think I still don't get it.
+
+So let's rephrase it another way : how will the function wm9713_probe() be
+called, ie. what is the possible function backtrace leading to that call ?
+
+>> Until I make the try, here is what I have as a device-tree extract in [1],
+>> which is my candidate for sound/soc/pxa/zylonite.c replacement.. If we
+>> conclude that wm9713 shouldn't be in device-tree, then I'm curious how the
+>> DAI bindings (simple-audio-card,dai-link*) should be handled.
 >
-> Fixes: e87ffbdf0697 ("dmaengine: pxa_dma: fix the no-requestor case")
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
-> Since v1: change to #dma-requests the of property name
->       	  default to 32 requestors and warn as suggested by Vinod
+> They should be created as a function of enumerating the CODEC.  If you
+> use the genric AC'97 stuff it doesn't use ASoC at all and this happens
+> as a side effect.
+I don't get that either. For me sound/soc/pci/ac97/ac97_codec.c is PCI specific,
+not generic, so what is "generic AC'97 stuff" ? I will never be able to use it
+as on my platforms CONFIG_PCI=n.
 
-Hi Vinod,
-
-Are you happy with this version ?
-If so could you provide me your Acked-by please ?
+Do you have a devicetree example somewhere, with (ac97 host, audio codec) pair I
+can have a look at to understand ?
 
 Cheers.
+
+-- 
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
