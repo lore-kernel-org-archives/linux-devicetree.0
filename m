@@ -1,33 +1,42 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
-Date: Sat, 20 Feb 2016 10:10:56 +0530
-Message-ID: <56C7EE58.8000905@nvidia.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com> <20160216160029.GC11400@ulmo.nvidia.com>
+Subject: Re: [PATCH V8 6/8] gpio: max77620: add gpio driver for MAX77620/MAX20024
+Date: Sat, 20 Feb 2016 10:24:59 +0530
+Message-ID: <56C7F1A3.70404@nvidia.com>
+References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>	<1455191794-6065-7-git-send-email-ldewangan@nvidia.com> <CACRpkdbA+pHHpjT-HMr8FS8DehRZE=G2m5s6=MRoqR4n_RrHEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160216160029.GC11400@ulmo.nvidia.com>
+In-Reply-To: <CACRpkdbA+pHHpjT-HMr8FS8DehRZE=G2m5s6=MRoqR4n_RrHEQ@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Thierry Reding <treding@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dzaw==?= =?UTF-8?B?aQ==?= <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On Tuesday 16 February 2016 09:30 PM, Thierry Reding wrote:
-> On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
->> Add SW support for MAXIM Semiconductor's Power Management
->> IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
->> RTC, watchdog, clocks etc.
-> Hi Laxman,
+On Tuesday 16 February 2016 04:48 AM, Linus Walleij wrote:
+> On Thu, Feb 11, 2016 at 12:56 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 >
-> This series is starting to look pretty good. Do you have patches in the
-> works to add the corresponding DT content for the various boards that we
-> support? I think the Jetson TX1 patch would be most interesting since
-> that's what people can get their hands on.
+>> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
+>> pins. It also supports interrupts from these pins.
+>>
+>> Add GPIO driver for these pins to control via GPIO APIs.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> (...)
+> Nit and no big deal:
 >
+>> +#include <linux/gpio.h>
+> <linux/gpio/driver.h>
+>
+> should be enough.
 
-Yes, I am just waiting for this series to be concluded and applied. Once 
-it is done, I will immediately post the patches to enable this driver in 
-config and dt entry for the Jetson-TX1.
+Yaah, this is better.
+
+Lee,
+Should I respin the patch series for this change?
+
+
+
 
