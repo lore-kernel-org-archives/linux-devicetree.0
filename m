@@ -1,53 +1,54 @@
 From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/5] dt-bindings: Add documentation for Broadcom Vulcan
-Date: Sat, 20 Feb 2016 19:49:21 +0530
-Message-ID: <1455977964-8099-3-git-send-email-jchandra@broadcom.com>
-References: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
+Subject: [PATCH v2 0/5] Support for Broadcom Vulcan ARM64 processor
+Date: Sat, 20 Feb 2016 19:49:19 +0530
+Message-ID: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455977964-8099-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update arm/cpus.txt to add "brcm,vulcan" CPU. Add documentation
-for Broadcom Vulcan boards in arm/bcm/brcm,vulcan-soc.txt
+This patchset adds support for Broadcom's Vulcan ARM64 processor.
+The changes are to add the device tree files, documentation for the
+device tree, cpu ID and the maintainers entry.
 
-Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt | 10 ++++++++++
- Documentation/devicetree/bindings/arm/cpus.txt                |  1 +
- 2 files changed, 11 insertions(+)
+This is v2 of the patchset, changelog below:
+
+v1->v2 :
+ - dts: remove memreserve, use brcm,vulcan-soc for board
+   (to address comments from Mark Rutland)
+ - Fixup copyright (Broadcomp corp -> Broadcom)
+   (suggested by Florian Fainelli)
+ - Rename dts from brcm-vulcan* to vulcan*
+   (suggested by Ray Jui)
+ - Add maintainers entry
+   (suggested by Florian Fainelli)
+ - Updated the device tree doc and fixed a couple of commit
+   comments
+
+Jayachandran C (4):
+  dt-bindings: Add documentation for Broadcom Vulcan
+  arm64: defconfig: Add Broadcom Vulcan to defconfig
+  arm64: cputype info for Broadcom Vulcan
+  MAINTAINERS: Add entry for Broadcom Vulcan SoC
+
+Zi Shen Lim (1):
+  arm64: Broadcom Vulcan support
+
+ .../bindings/arm/bcm/brcm,vulcan-soc.txt           |  10 ++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ MAINTAINERS                                        |   7 +
+ arch/arm64/Kconfig.platforms                       |   5 +
+ arch/arm64/boot/dts/broadcom/Makefile              |   1 +
+ arch/arm64/boot/dts/broadcom/vulcan-eval.dts       |  33 +++++
+ arch/arm64/boot/dts/broadcom/vulcan.dtsi           | 144 +++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ arch/arm64/include/asm/cputype.h                   |   3 +
+ 9 files changed, 205 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
+ create mode 100644 arch/arm64/boot/dts/broadcom/vulcan-eval.dts
+ create mode 100644 arch/arm64/boot/dts/broadcom/vulcan.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
-new file mode 100644
-index 0000000..223ed34
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
-@@ -0,0 +1,10 @@
-+Broadcom Vulcan device tree bindings
-+------------------------------------
-+
-+Boards with Broadcom Vulcan shall have the following root property:
-+
-+Broadcom Vulcan Evaluation Board:
-+  compatible = "brcm,vulcan-eval", "brcm,vulcan-soc";
-+
-+Generic Vulcan board:
-+  compatible = "brcm,vulcan-soc";
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index ae9be07..bc43ad7 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -167,6 +167,7 @@ nodes to be present and contain the properties described below.
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
- 			    "brcm,brahma-b15"
-+			    "brcm,vulcan"
- 			    "cavium,thunder"
- 			    "faraday,fa526"
- 			    "intel,sa110"
 -- 
 1.9.1
 
