@@ -1,250 +1,50 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH v2 1/2] clk: add lpc18xx creg clk driver
-Date: Sat, 20 Feb 2016 19:53:36 +0100
-Message-ID: <1455994417-4471-2-git-send-email-manabian@gmail.com>
-References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455994417-4471-1-git-send-email-manabian@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: Joachim Eastwood <manabian@gmail.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Support for Broadcom Vulcan ARM64 processor
+Date: Sat, 20 Feb 2016 11:50:38 -0800
+Message-ID: <56C8C38E.50007@gmail.com>
+References: <1455977964-8099-1-git-send-email-jchandra@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455977964-8099-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The CREG block on lpc18xx contains configuration register
-for two low power clocks. Support enabling of these two
-clocks with a clk driver that access CREG trough the
-syscon regmap interface.
+Le 20/02/2016 06:19, Jayachandran C a =C3=A9crit :
+> This patchset adds support for Broadcom's Vulcan ARM64 processor.
+> The changes are to add the device tree files, documentation for the
+> device tree, cpu ID and the maintainers entry.
+>=20
+> This is v2 of the patchset, changelog below:
+>=20
+> v1->v2 :
+>  - dts: remove memreserve, use brcm,vulcan-soc for board
+>    (to address comments from Mark Rutland)
+>  - Fixup copyright (Broadcomp corp -> Broadcom)
+>    (suggested by Florian Fainelli)
+>  - Rename dts from brcm-vulcan* to vulcan*
+>    (suggested by Ray Jui)
+>  - Add maintainers entry
+>    (suggested by Florian Fainelli)
+>  - Updated the device tree doc and fixed a couple of commit
+>    comments
+>=20
+> Jayachandran C (4):
+>   dt-bindings: Add documentation for Broadcom Vulcan
+>   arm64: defconfig: Add Broadcom Vulcan to defconfig
+>   arm64: cputype info for Broadcom Vulcan
+>   MAINTAINERS: Add entry for Broadcom Vulcan SoC
+>=20
+> Zi Shen Lim (1):
+>   arm64: Broadcom Vulcan support
 
-These clocks are needed to support peripherals like the
-internal RTC on lpc18xx.
-
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
----
- drivers/clk/nxp/Makefile           |   1 +
- drivers/clk/nxp/clk-lpc18xx-creg.c | 205 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 206 insertions(+)
- create mode 100644 drivers/clk/nxp/clk-lpc18xx-creg.c
-
-diff --git a/drivers/clk/nxp/Makefile b/drivers/clk/nxp/Makefile
-index 607bd48c6563..d456ee6cc3d3 100644
---- a/drivers/clk/nxp/Makefile
-+++ b/drivers/clk/nxp/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-cgu.o
- obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-ccu.o
-+obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-creg.o
- obj-$(CONFIG_ARCH_LPC32XX)	+= clk-lpc32xx.o
-diff --git a/drivers/clk/nxp/clk-lpc18xx-creg.c b/drivers/clk/nxp/clk-lpc18xx-creg.c
-new file mode 100644
-index 000000000000..af2b2ae3aea7
---- /dev/null
-+++ b/drivers/clk/nxp/clk-lpc18xx-creg.c
-@@ -0,0 +1,205 @@
-+/*
-+ * Clk driver for NXP LPC18xx/43xx Configuration Registers (CREG)
-+ *
-+ * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define LPC18XX_CREG_CREG0			0x004
-+#define  LPC18XX_CREG_CREG0_EN1KHZ		BIT(0)
-+#define  LPC18XX_CREG_CREG0_EN32KHZ		BIT(1)
-+#define  LPC18XX_CREG_CREG0_RESET32KHZ		BIT(2)
-+#define  LPC18XX_CREG_CREG0_PD32KHZ		BIT(3)
-+
-+#define to_clk_creg(_hw) container_of(_hw, struct clk_creg_data, hw)
-+
-+enum {
-+	CREG_CLK_1KHZ,
-+	CREG_CLK_32KHZ,
-+	CREG_CLK_MAX,
-+};
-+
-+struct clk_creg_data {
-+	struct clk_hw hw;
-+	const char *name;
-+	struct regmap *reg;
-+	unsigned int en_mask;
-+	const struct clk_ops *ops;
-+};
-+
-+#define CREG_CLK(_name, _emask, _ops)		\
-+{						\
-+	.name = _name,				\
-+	.en_mask = LPC18XX_CREG_CREG0_##_emask,	\
-+	.ops = &_ops,				\
-+}
-+
-+static int clk_creg_32k_prepare(struct clk_hw *hw)
-+{
-+	struct clk_creg_data *creg = to_clk_creg(hw);
-+	int ret;
-+
-+	ret = regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
-+				 LPC18XX_CREG_CREG0_PD32KHZ |
-+				 LPC18XX_CREG_CREG0_RESET32KHZ, 0);
-+
-+	/*
-+	 * Powering up the 32k oscillator takes a long while
-+	 * and sadly there aren't any status bit to poll.
-+	 */
-+	msleep(2500);
-+
-+	return ret;
-+}
-+
-+static void clk_creg_32k_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_creg_data *creg = to_clk_creg(hw);
-+
-+	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
-+			   LPC18XX_CREG_CREG0_PD32KHZ,
-+			   LPC18XX_CREG_CREG0_PD32KHZ);
-+}
-+
-+static int clk_creg_32k_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_creg_data *creg = to_clk_creg(hw);
-+	u32 reg;
-+
-+	regmap_read(creg->reg, LPC18XX_CREG_CREG0, &reg);
-+
-+	return !(reg & LPC18XX_CREG_CREG0_PD32KHZ) &&
-+	       !(reg & LPC18XX_CREG_CREG0_RESET32KHZ);
-+}
-+
-+static unsigned long clk_creg_1k_recalc_rate(struct clk_hw *hw,
-+					     unsigned long parent_rate)
-+{
-+	return parent_rate / 32;
-+}
-+
-+static int clk_creg_enable(struct clk_hw *hw)
-+{
-+	struct clk_creg_data *creg = to_clk_creg(hw);
-+
-+	return regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
-+				  creg->en_mask, creg->en_mask);
-+}
-+
-+static void clk_creg_disable(struct clk_hw *hw)
-+{
-+	struct clk_creg_data *creg = to_clk_creg(hw);
-+
-+	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
-+			   creg->en_mask, 0);
-+}
-+
-+static const struct clk_ops clk_creg_32k = {
-+	.enable		= clk_creg_enable,
-+	.disable	= clk_creg_disable,
-+	.prepare	= clk_creg_32k_prepare,
-+	.unprepare	= clk_creg_32k_unprepare,
-+	.is_prepared	= clk_creg_32k_is_prepared,
-+};
-+
-+static const struct clk_ops clk_creg_1k = {
-+	.enable		= clk_creg_enable,
-+	.disable	= clk_creg_disable,
-+	.recalc_rate	= clk_creg_1k_recalc_rate,
-+};
-+
-+static struct clk_creg_data clk_creg_clocks[] = {
-+	[CREG_CLK_1KHZ]  = CREG_CLK("1khz_clk",  EN1KHZ,  clk_creg_1k),
-+	[CREG_CLK_32KHZ] = CREG_CLK("32khz_clk", EN32KHZ, clk_creg_32k),
-+};
-+
-+static struct clk *clk_register_creg_clk(struct clk_creg_data *creg_clk,
-+					 const char **parent_name,
-+					 struct regmap *syscon)
-+{
-+	struct clk_init_data init;
-+
-+	init.ops = creg_clk->ops;
-+	init.name = creg_clk->name;
-+	init.parent_names = parent_name;
-+	init.num_parents = 1;
-+
-+	creg_clk->reg = syscon;
-+	creg_clk->hw.init = &init;
-+
-+	return clk_register(NULL, &creg_clk->hw);
-+}
-+
-+static struct clk *clk_creg[CREG_CLK_MAX];
-+static struct clk_onecell_data clk_base_data = {
-+	.clks = clk_creg,
-+	.clk_num = CREG_CLK_MAX,
-+};
-+
-+static void __init lpc18xx_creg_clk_init(struct device_node *np)
-+{
-+	const char *clk_32khz_parent;
-+	struct regmap *syscon;
-+
-+	syscon = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(syscon)) {
-+		pr_err("%s: syscon lookup failed\n", __func__);
-+		return;
-+	}
-+
-+	clk_32khz_parent = of_clk_get_parent_name(np, 0);
-+
-+	clk_creg[CREG_CLK_32KHZ] =
-+		clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
-+				      &clk_32khz_parent, syscon);
-+	clk_creg[CREG_CLK_1KHZ] = ERR_PTR(-EPROBE_DEFER);
-+
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
-+}
-+CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
-+
-+static int lpc18xx_creg_clk_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct regmap *syscon;
-+
-+	syscon = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(syscon)) {
-+		dev_err(&pdev->dev, "syscon lookup failed\n");
-+		return PTR_ERR(syscon);
-+	}
-+
-+	clk_creg[CREG_CLK_1KHZ] =
-+		clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
-+				      &clk_creg_clocks[CREG_CLK_32KHZ].name,
-+				      syscon);
-+
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lpc18xx_creg_clk_of_match[] = {
-+	{ .compatible = "nxp,lpc1850-creg-clk", },
-+	{},
-+};
-+
-+static struct platform_driver lpc18xx_creg_clk_driver = {
-+	.probe = lpc18xx_creg_clk_probe,
-+	.driver = {
-+		.name = "lpc18xx-creg-clk",
-+		.of_match_table = lpc18xx_creg_clk_of_match,
-+	},
-+};
-+builtin_platform_driver(lpc18xx_creg_clk_driver);
--- 
-1.8.0
-
+All applied and submitted for 4.6 thanks!
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
