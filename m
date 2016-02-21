@@ -1,84 +1,84 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] iio:iio-interrupt-trigger: device-tree support
-Date: Sun, 21 Feb 2016 19:55:24 +0000
-Message-ID: <56CA162C.5010406@kernel.org>
-References: <cover.1455908065.git.gregor.boirie@parrot.com>
- <d8f7902dbfe6e911e6ac0d1117502a02b1212022.1455908065.git.gregor.boirie@parrot.com>
+Subject: Re: [PATCH v3 4/4] iio: ad5755: Add full DT binding documentation
+Date: Sun, 21 Feb 2016 20:12:35 +0000
+Message-ID: <56CA1A33.6060207@kernel.org>
+References: <1455632757-21748-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1455632757-21748-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <1455632757-21748-3-git-send-email-sean.nyekjaer@prevas.dk>
+ <1455632757-21748-4-git-send-email-sean.nyekjaer@prevas.dk>
+ <20160218143724.GQ9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d8f7902dbfe6e911e6ac0d1117502a02b1212022.1455908065.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160218143724.GQ9654@rob-hp-laptop>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/02/16 19:18, Gregor Boirie wrote:
-> From: Gr=C3=A9gor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->=20
-> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Snag here is that iio_interrupt_trigger is a very linux specific
-name and device tree bindings should be just about the hardware.
-
-Not entirely sure how we avoid this though as the use is rather
-hard to describe generically.
-
-cc'd device tree list and bindings maintainers.
-
-As a brief summary - this IIO trigger driver takes a generic
-interrupt (from whatever) and uses it to drive sampling of IIO devices.
-The interrupt might be associated with particularly simple sensors dire=
-ctly
-but is more commonly a gpio interrupt line used cause samples to be cap=
-tured
-from unrelated devices.  Sometimes the source of that interrupt can be =
-a convoluted
-external mux setup over which linux has no control for example.
-
-Any suggestions on appropriate naming?
-
-We aren't really describing hardware here, rather a policy decision on =
-what
-a given interrupt is to be used for.
-
-I suppose ultimately we could take the view this should be handled via =
-another
-route (from userspace via an appropriate configfs interface for example=
-).
-
-Jonathan
-> ---
->  drivers/iio/trigger/iio-trig-interrupt.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/trigger/iio-trig-interrupt.c b/drivers/iio/t=
-rigger/iio-trig-interrupt.c
-> index 572bc6f..3c4e18f 100644
-> --- a/drivers/iio/trigger/iio-trig-interrupt.c
-> +++ b/drivers/iio/trigger/iio-trig-interrupt.c
-> @@ -104,11 +104,20 @@ static int iio_interrupt_trigger_remove(struct =
-platform_device *pdev)
->  	return 0;
->  }
-> =20
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id iio_interrupt_trigger_of_match[] =3D=
- {
-> +	{ .compatible =3D "iio-interrupt-trigger" },
-> +	{}
-> +};
-> +#endif
-> +
->  static struct platform_driver iio_interrupt_trigger_driver =3D {
->  	.probe =3D iio_interrupt_trigger_probe,
->  	.remove =3D iio_interrupt_trigger_remove,
->  	.driver =3D {
-> -		.name =3D "iio_interrupt_trigger",
-> +		.name           =3D "iio_interrupt_trigger",
-> +		.owner          =3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(iio_interrupt_trigger_of_match)
->  	},
->  };
-> =20
->=20
+On 18/02/16 14:37, Rob Herring wrote:
+> On Tue, Feb 16, 2016 at 03:25:57PM +0100, Sean Nyekjaer wrote:
+>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>> ---
+>> Changes since v2:
+>>  - Removed defines, alot easier to read :-)
+>>
+>>  .../devicetree/bindings/iio/dac/ad5755.txt         | 94 ++++++++++++++++++++++
+>>  1 file changed, 94 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>> index 4c91583..751204b 100644
+>> --- a/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>> @@ -15,10 +15,104 @@ Recommended properties:
+>>   - spi-max-frequency: Definition as per
+>>  		Documentation/devicetree/bindings/spi/spi-bus.txt
+>>  
+>> +Optional properties:
+>> +See include/dt-bindings/iio/ad5755.h
+>> + - adi,ext_dc_dc_compenstation_resistor: boolean set if the hardware have an
+> 
+> Use - instead of _ in property names.
+> 
+>> +					 external resistor and thereby bypasses
+>> +					 the internal compensation resistor.
+>> + - adi,dc_dc_phase:
+>> +	Valid values for DC DC Phase control is:
+>> +	0: All dc-to-dc converters clock on the same edge.
+>> +	1: Channel A and Channel B clock on the same edge,
+>> +	   Channel C and Channel D clock on opposite edges.
+>> +	2: Channel A and Channel C clock on the same edge,
+>> +	   Channel B and Channel D clock on opposite edges.
+>> +	3: Channel A, Channel B, Channel C, and Channel D
+>> +	   clock 90 degrees out of phase from each other.
+>> + - adi,dc_dc_freq:
+>> +	Valid values for DC DC frequency is:
+>> +	0: 250 kHz.
+>> +	1: 410 kHz.
+>> +	2: 650 kHz.
+> 
+> It is preferrable to make the values the actual units rather than 
+> register values. Then we can have common properties. Is this a common 
+> property of a DAC?
+Not overly common (in the parts we have seen in IIO so far),
+but best to allow for it becoming a general property in the future
+and actual units definitely the way to go. 
+> 
+>> + - adi,dc_dc_maxv:
+>> +	Valid values for the maximum allowed Vboost voltage supplied by
+>> +	the dc-to-dc converter is:
+>> +	0: 23 V.
+>> +	1: 24.5 V.
+>> +	2: 27 V.
+>> +	3: 29.5 V.
+> 
+> Same here.
+> 
+> Rob
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
