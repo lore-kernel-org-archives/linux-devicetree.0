@@ -1,15 +1,18 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH] Revert "regulator: tps65217: remove tps65217.dtsi file"
-Date: Sun, 21 Feb 2016 10:27:49 +0100
-Message-ID: <56C98315.1000707@denx.de>
-References: <1455891139-6139-1-git-send-email-peter.ujfalusi@ti.com>
- <20160219170404.GH21202@atomide.com>
-Reply-To: hs@denx.de
+From: Michael Trimarchi <michael@amarulasolutions.com>
+Subject: [PATCH V2 1/4] ARM: dts: imx6ul: Add flexcan1 and flexcan2 support
+Date: Sun, 21 Feb 2016 12:18:03 +0100
+Message-ID: <20160221111759.GA5387@panicking>
+References: <1455963652-24618-1-git-send-email-michael@amarulasolutions.com>
+ <1455963652-24618-2-git-send-email-michael@amarulasolutions.com>
+ <CAOMZO5Bk_ZMhYzFLRFNK2TQvK4KHuj62AM_6uF-m-P1kJupTHQ@mail.gmail.com>
+ <20160220171816.GA24064@panicking>
+ <CAOMZO5DfKi5KymQ6p9yF4ntqEJ7O=EEE7CKFmS-0N2XL8=ET7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160219170404.GH21202@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DfKi5KymQ6p9yF4ntqEJ7O=EEE7CKFmS-0N2XL8=ET7A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,62 +22,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, j-keerthy@ti.com, linux-kernel@vger.kernel.org, broonie@kernel.org, hs@denx.de, linux-arm-kernel@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Brian Norris <computersforpeace@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tony, Peter,
+Add support for FLEXCAN1 and FLEXCAN2.
 
-Am 19.02.2016 um 18:04 schrieb Tony Lindgren:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160219 06:14]:
->> This reverts commit 8e6ebfaa9b384088002baa10f7534efa73a0794e.
->>
->> Without the patch reverted regulators will not work. This prevents
->> MMC to be working for example so the boards can not boot to
->> MMC rootfs.
->>
->> Tested it on beaglebone white and bisect also points to the
->> reverted commit.
->> The issue can be also fixed by adding "regulator-compatible =" to all board
->> dts file for the regulators.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi,
->>
->> I have noticed that bbw did not find the MMC with linux-next, but it turns out
->> that even 4.5-rc4 is behaving the same way.
->> I have run bisect and with this revert patch I can boot up fine.
->> To be honest I don't know why the tps65217.dtsi has been deleted in the first
->> place.
->
-> I think initially the only real issue was the naming. The
-> tps65217.dtsi file should be just renamed to tps65217-am335x.dtsi
-> to make it clear that this configuration is commonly used for
-> most am335x boards.
->
-> I'll apply this revert into omap-for-v4.5/fixes as it fixes a
-> regression.
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+---
+Changes in V2:
+	- remove stop-mode property because is not handle in
+	  mainline
 
-Sorry for breaking ... but I have no bbw hw for testing ...
-(This is maybe a reason for having something like an automated
-  testsystem, see an example/proposal here:
+ arch/arm/boot/dts/imx6ul.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-https://github.com/hsdenx/tbot
-
-see a demo for automated tests (running on a raspberry pi at my home
-in hungary, boards are in munich/germany)
-http://xeidos.ddns.net/buildbot/tgrid
-)
-
-But I removed this file as Mark Brown suggested it, see:
-
-https://lkml.org/lkml/2015/10/21/581
-
-So please introduce a "tps65217-am335x.dtsi" file ... Mark?
-
-bye,
-Heiko
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 99b6465..f7b852e 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -14,6 +14,8 @@
+ 
+ / {
+ 	aliases {
++		can0 = &flexcan1;
++		can1 = &flexcan2;
+ 		ethernet0 = &fec1;
+ 		ethernet1 = &fec2;
+ 		gpio0 = &gpio1;
+@@ -234,6 +236,26 @@
+ 					clock-names = "ipg", "per";
+ 					status = "disabled";
+ 				};
++
++				flexcan1: can@02090000 {
++					compatible = "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
++					reg = <0x02090000 0x4000>;
++					interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clks IMX6UL_CLK_CAN1_IPG>,
++						 <&clks IMX6UL_CLK_CAN1_SERIAL>;
++					clock-names = "ipg", "per";
++					status = "disabled";
++				};
++
++				flexcan2: can@02094000 {
++					compatible = "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
++					reg = <0x02094000 0x4000>;
++					interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clks IMX6UL_CLK_CAN2_IPG>,
++						 <&clks IMX6UL_CLK_CAN2_SERIAL>;
++					clock-names = "ipg", "per";
++					status = "disabled";
++				};
+ 			};
+ 
+ 			gpt1: gpt@02098000 {
 -- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+2.7.0
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
