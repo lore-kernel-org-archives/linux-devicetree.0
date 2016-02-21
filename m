@@ -1,66 +1,84 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/6] Small fixes for Nokia N900 power supply drivers
-Date: Sun, 21 Feb 2016 20:41:20 +0100
-Message-ID: <20160221194120.GC15242@earth>
-References: <1456054103-19551-1-git-send-email-pali.rohar@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] iio:iio-interrupt-trigger: device-tree support
+Date: Sun, 21 Feb 2016 19:55:24 +0000
+Message-ID: <56CA162C.5010406@kernel.org>
+References: <cover.1455908065.git.gregor.boirie@parrot.com>
+ <d8f7902dbfe6e911e6ac0d1117502a02b1212022.1455908065.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456054103-19551-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Pavel Machel <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d8f7902dbfe6e911e6ac0d1117502a02b1212022.1455908065.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---i7F3eY7HS/tUJxUd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sun, Feb 21, 2016 at 12:28:17PM +0100, Pali Roh=E1r wrote:
-> This patch series add debug error output for isp1704 driver and
-> fix module aliases for power supply drivers uses on Nokia N900.
+On 19/02/16 19:18, Gregor Boirie wrote:
+> From: Gr=C3=A9gor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
 >=20
-> Pali Roh=E1r (6):
->   power_supply: isp1704_charger: Error messages when probe fail
->   power_supply: isp1704_charger: Add compatible of match for nxp,isp1707
->   power_supply: bq2415x_charger: Do not add acpi modalias when CONFIG_ACP=
-I is not enabled
->   power_supply: bq2415x_charger: Add of modalias and match table when CON=
-FIG_OF is enabled
->   power_supply: bq27xxx_battery: Add of modalias and match table when CON=
-FIG_OF is enabled
->   ARM: dts: n900: Rename isp1704 to isp1707 to match correct name
+> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Snag here is that iio_interrupt_trigger is a very linux specific
+name and device tree bindings should be just about the hardware.
 
-I queued the power-supply patches for 4.6 applying Pavel's commit
-message changes and his Acked-By.
+Not entirely sure how we avoid this though as the use is rather
+hard to describe generically.
 
--- Sebastian
+cc'd device tree list and bindings maintainers.
 
---i7F3eY7HS/tUJxUd
-Content-Type: application/pgp-signature; name="signature.asc"
+As a brief summary - this IIO trigger driver takes a generic
+interrupt (from whatever) and uses it to drive sampling of IIO devices.
+The interrupt might be associated with particularly simple sensors dire=
+ctly
+but is more commonly a gpio interrupt line used cause samples to be cap=
+tured
+from unrelated devices.  Sometimes the source of that interrupt can be =
+a convoluted
+external mux setup over which linux has no control for example.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Any suggestions on appropriate naming?
 
-iQIcBAEBCgAGBQJWyhLdAAoJENju1/PIO/qaBhMP/izWMBi7PhfSiSA7jL7Xae6J
-GsmnLZfM5hSXIIwPjGHjnZ1firheOI5m0l1mASXnC0mCvS5wsoKE/eB8oEL9HTnI
-2nJIA2ZaYLlsCk763ZqPeEZrhn7sTrg+a/+Ug35gT7O4WxB7eLu1hDuLj9VaxUZX
-7g/0Vo3PjPmgJTPGw+XzpnwhcEV9eBbqGV9ZPf4kBGhJZo5yJOyLBYQTOh54YZs5
-7bYdEXFug/7KiTXKk+JminPn/iSWYFqIwHxRdkh6F7Q3o5Z8b/KWFu1FXqnaeLAF
-7/a40y/kKt5u9YhPhJua3ODk42FE0Wy8m/EcOa3emOotJv7BujDvPTgFB9IMMhnK
-lYyjfS5b8eUEuTYhqLjZh1V2boF/morlOoNVPZyAcUUMir+Ek1XuY8H5SrmrxQxp
-BY2xXi5bfNuUhifXiMmXBuPgqIdn86TMb1Wi7gkMzshUp3rw0XFfk4ljy3i0F4Sy
-xYO5EYzmQgVzmml4nb59Fs2/QCHK2OQ7JTlgRbvnRdAWS263VdBw9iMJZpKB+lBx
-eMEqw+1ByKLjCg8Mjn23BSEvYid6gzDTT55APdsDw/WSdUN032WivqhOsO8qioC4
-zhfc5PjKS8crQrhrHwlc8WycijFwVz5lIryk/Me+Wi+5ymxezcZMW2KMIyCJbohr
-QlfFlXnB+y+L27zjG/HZ
-=h0HV
------END PGP SIGNATURE-----
+We aren't really describing hardware here, rather a policy decision on =
+what
+a given interrupt is to be used for.
 
---i7F3eY7HS/tUJxUd--
+I suppose ultimately we could take the view this should be handled via =
+another
+route (from userspace via an appropriate configfs interface for example=
+).
+
+Jonathan
+> ---
+>  drivers/iio/trigger/iio-trig-interrupt.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/trigger/iio-trig-interrupt.c b/drivers/iio/t=
+rigger/iio-trig-interrupt.c
+> index 572bc6f..3c4e18f 100644
+> --- a/drivers/iio/trigger/iio-trig-interrupt.c
+> +++ b/drivers/iio/trigger/iio-trig-interrupt.c
+> @@ -104,11 +104,20 @@ static int iio_interrupt_trigger_remove(struct =
+platform_device *pdev)
+>  	return 0;
+>  }
+> =20
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id iio_interrupt_trigger_of_match[] =3D=
+ {
+> +	{ .compatible =3D "iio-interrupt-trigger" },
+> +	{}
+> +};
+> +#endif
+> +
+>  static struct platform_driver iio_interrupt_trigger_driver =3D {
+>  	.probe =3D iio_interrupt_trigger_probe,
+>  	.remove =3D iio_interrupt_trigger_remove,
+>  	.driver =3D {
+> -		.name =3D "iio_interrupt_trigger",
+> +		.name           =3D "iio_interrupt_trigger",
+> +		.owner          =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(iio_interrupt_trigger_of_match)
+>  	},
+>  };
+> =20
+>=20
