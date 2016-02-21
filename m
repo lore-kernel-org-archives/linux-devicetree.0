@@ -1,19 +1,15 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH V2 4/4] ARM: dts: imx6ul-geam: Add Engicam IMX6UL GEA M6UL
- initial support
-Date: Sun, 21 Feb 2016 16:32:02 +0100
-Message-ID: <20160221153155.GA5033@panicking>
-References: <1455963652-24618-1-git-send-email-michael@amarulasolutions.com>
- <1455963652-24618-5-git-send-email-michael@amarulasolutions.com>
- <CAOMZO5AmePs3aE2zRSXcSS8iKQ0m2kvTAezsfHS13e-Zv1HCrA@mail.gmail.com>
- <20160220171921.GB24064@panicking>
- <CAOMZO5CaBaNYAZDOhW2mXDe4OtBmZK7bDRfoQXcKio_tr3ZUBQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] iio: dac: vf610_dac: Add IIO DAC driver for Vybrid
+ SoC
+Date: Sun, 21 Feb 2016 16:48:20 +0000
+Message-ID: <02B1DDEF-6BE7-4C4C-AAD0-4EB496734316@kernel.org>
+References: <cover.1455516083.git.maitysanchayan@gmail.com><cover.1455516083.git.maitysanchayan@gmail.com>
+ <597b39da08c4c1416984cf7e873f56e19975b80e.1455516083.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CaBaNYAZDOhW2mXDe4OtBmZK7bDRfoQXcKio_tr3ZUBQ@mail.gmail.com>
+In-Reply-To: <597b39da08c4c1416984cf7e873f56e19975b80e.1455516083.git.maitysanchayan@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,524 +19,414 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Brian Norris <computersforpeace@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, stefan@agner.ch, pmeerw@pmeerw.net, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-http://www.engicam.com/prodotti/embedded/som/sodimm/gea-m6ul
 
-Signed-off-by: Matteo Lisi <matteo.lisi@engicam.com>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
----
-Changes V2:
-	- remove not used muxed
-	- sort better regulator but not remove "silly" one propertes for now
-	- small issue on code style
-	- add Matteo from Engicam that help me to test and verify the board,
-	  provide hw support
 
- arch/arm/boot/dts/Makefile            |   3 +-
- arch/arm/boot/dts/imx6ul-geam-kit.dts | 102 ++++++++++
- arch/arm/boot/dts/imx6ul-geam.dtsi    | 362 ++++++++++++++++++++++++++++++++++
- 3 files changed, 466 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx6ul-geam-kit.dts
- create mode 100644 arch/arm/boot/dts/imx6ul-geam.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a4a6d70..4f6965a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -358,7 +358,8 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-sdb-reva.dtb \
- 	imx6sx-sdb.dtb
- dtb-$(CONFIG_SOC_IMX6UL) += \
--	imx6ul-14x14-evk.dtb
-+	imx6ul-14x14-evk.dtb \
-+	imx6ul-geam-kit.dtb
- dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-cl-som-imx7.dtb \
- 	imx7d-sbc-imx7.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-new file mode 100644
-index 0000000..9ba4a66
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
-@@ -0,0 +1,102 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx6ul-geam.dtsi"
-+
-+/ {
-+	model = "Engicam GEAM6UL";
-+	compatible = "engicam,imx6ul-geam", "fsl,imx6ul";
-+};
-+
-+&flexcan1 {
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	status = "okay";
-+};
-+
-+&lcdif {
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display {
-+		bits-per-pixel = <16>;
-+		bus-width = <18>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency = <28000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <30>;
-+				hback-porch = <30>;
-+				hsync-len = <64>;
-+				vback-porch = <5>;
-+				vfront-porch = <5>;
-+				vsync-len = <20>;
-+
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	status = "okay";
-+};
-+
-+&tsc {
-+	measure_delay_time = <0x1ffff>;
-+	pre_charge_time = <0x1fff>;
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
-new file mode 100644
-index 0000000..914c0b1
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
-@@ -0,0 +1,362 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul.dtsi"
-+
-+/ {
-+	memory {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&reg_3p3v>;
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	xceiver-supply = <&reg_3p3v>;
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	status = "okay";
-+	nand-on-flash-bbt;
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif_dat
-+		     &pinctrl_lcdif_ctrl>;
-+	display = <&display0>;
-+};
-+
-+&tsc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_tsc>;
-+	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x1b0b0		/* ENET_nRST */
-+			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-+			MX6UL_PAD_GPIO1_IO05__ENET2_REF_CLK2	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
-+			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
-+			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_gpmi_nand: gpmi-nand {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
-+			MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
-+			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B       0xb0b1
-+			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B 0xb000
-+			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B     0xb0b1
-+			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B       0xb0b1
-+			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B       0xb0b1
-+			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00   0xb0b1
-+			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01   0xb0b1
-+			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02   0xb0b1
-+			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03   0xb0b1
-+			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04   0xb0b1
-+			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05   0xb0b1
-+			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06   0xb0b1
-+			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07   0xb0b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
-+			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+			MX6UL_PAD_UART5_TX_DATA__I2C2_SCL 0x4001b8b0
-+			MX6UL_PAD_UART5_RX_DATA__I2C2_SDA 0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_lcdif_ctrl: lcdifctrlgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x79
-+			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
-+			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
-+			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
-+		>;
-+	};
-+
-+	pinctrl_lcdif_dat: lcdifdatgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
-+			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
-+			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
-+			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
-+			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
-+			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
-+			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
-+			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
-+			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
-+			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
-+			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
-+			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
-+			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
-+			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
-+			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
-+			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
-+			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
-+			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
-+			MX6UL_PAD_UART3_RX_DATA__UART2_DCE_RTS	0x1b0b1
-+			MX6UL_PAD_UART3_TX_DATA__UART2_DCE_CTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x10059
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170b9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100b9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170b9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170b9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170b9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170f9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100f9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170f9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170f9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170f9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK     0x17070
-+			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD     0x10070
-+			MX6UL_PAD_CSI_DATA00__USDHC2_DATA0  0x17070
-+			MX6UL_PAD_CSI_DATA01__USDHC2_DATA1  0x17070
-+			MX6UL_PAD_CSI_DATA02__USDHC2_DATA2  0x17070
-+			MX6UL_PAD_CSI_DATA03__USDHC2_DATA3  0x17070
-+		>;
-+	};
-+
-+	pinctrl_tsc: tscgrp {
-+		fsl,pin = <
-+			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
-+			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
-+			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
-+			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
-+		>;
-+	};
-+};
--- 
-2.7.0
+On 15 February 2016 06:42:33 GMT+00:00, Sanchayan Maity <maitysanchayan@gmail.com> wrote:
+>Add driver support for DAC peripheral on Vybrid SoC.
+>
+>Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+>Acked-by: Rob Herring <robh@kernel.org>
+Ordering is wrong in remove. I may well fix this up and apply later today. 
+ Otherwise looks good to me.
+>---
+> Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
+> .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
+> drivers/iio/dac/Kconfig                            |   8 +
+> drivers/iio/dac/Makefile                           |   1 +
+>drivers/iio/dac/vf610_dac.c                        | 298
+>+++++++++++++++++++++
+> 5 files changed, 336 insertions(+)
+>create mode 100644
+>Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+> create mode 100644 drivers/iio/dac/vf610_dac.c
+>
+>diff --git a/Documentation/ABI/testing/sysfs-bus-iio-vf610
+>b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+>index ecbc1f4..5ea809c 100644
+>--- a/Documentation/ABI/testing/sysfs-bus-iio-vf610
+>+++ b/Documentation/ABI/testing/sysfs-bus-iio-vf610
+>@@ -5,3 +5,12 @@ Description:
+> 		Specifies the hardware conversion mode used. The three
+> 		available modes are "normal", "high-speed" and "low-power",
+> 		where the last is the default mode.
+>+
+>+
+>+What:		/sys/bus/iio/devices/iio:deviceX/out_conversion_mode
+>+KernelVersion:	4.6
+>+Contact:	linux-iio@vger.kernel.org
+>+Description:
+>+		Specifies the hardware conversion mode used within DAC.
+>+		The two available modes are "high-power" and "low-power",
+>+		where "low-power" mode is the default mode.
+>\ No newline at end of file
+>diff --git a/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+>b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+>new file mode 100644
+>index 0000000..20c6c7a
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+>@@ -0,0 +1,20 @@
+>+Freescale vf610 Digital to Analog Converter bindings
+>+
+>+The devicetree bindings are for the new DAC driver written for
+>+vf610 SoCs from Freescale.
+>+
+>+Required properties:
+>+- compatible: Should contain "fsl,vf610-dac"
+>+- reg: Offset and length of the register set for the device
+>+- interrupts: Should contain the interrupt for the device
+>+- clocks: The clock is needed by the DAC controller
+>+- clock-names: Must contain "dac" matching entry in the clocks
+>property.
+>+
+>+Example:
+>+dac0: dac@400cc000 {
+>+	compatible = "fsl,vf610-dac";
+>+	reg = <0x400cc000 0x1000>;
+>+	interrupts = <55 IRQ_TYPE_LEVEL_HIGH>;
+>+	clock-names = "dac";
+>+	clocks = <&clks VF610_CLK_DAC0>;
+>+};
+>diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+>index e701e28..8eb0502 100644
+>--- a/drivers/iio/dac/Kconfig
+>+++ b/drivers/iio/dac/Kconfig
+>@@ -196,4 +196,12 @@ config MCP4922
+> 	  To compile this driver as a module, choose M here: the module
+> 	  will be called mcp4922.
+> 
+>+config VF610_DAC
+>+	tristate "Vybrid vf610 DAC driver"
+>+	help
+>+	  Say yes here to support Vybrid board digital-to-analog converter.
+>+
+>+	  This driver can also be built as a module. If so, the module will
+>+	  be called vf610_dac.
+>+
+> endmenu
+>diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+>index 63ae056..93feb27 100644
+>--- a/drivers/iio/dac/Makefile
+>+++ b/drivers/iio/dac/Makefile
+>@@ -21,3 +21,4 @@ obj-$(CONFIG_MAX517) += max517.o
+> obj-$(CONFIG_MAX5821) += max5821.o
+> obj-$(CONFIG_MCP4725) += mcp4725.o
+> obj-$(CONFIG_MCP4922) += mcp4922.o
+>+obj-$(CONFIG_VF610_DAC) += vf610_dac.o
+>diff --git a/drivers/iio/dac/vf610_dac.c b/drivers/iio/dac/vf610_dac.c
+>new file mode 100644
+>index 0000000..3f70f96
+>--- /dev/null
+>+++ b/drivers/iio/dac/vf610_dac.c
+>@@ -0,0 +1,298 @@
+>+/*
+>+ * Freescale Vybrid vf610 DAC driver
+>+ *
+>+ * Copyright 2016 Toradex AG
+>+ *
+>+ * This program is free software; you can redistribute it and/or
+>modify
+>+ * it under the terms of the GNU General Public License as published
+>by
+>+ * the Free Software Foundation; either version 2 of the License, or
+>+ * (at your option) any later version.
+>+ *
+>+ * This program is distributed in the hope that it will be useful,
+>+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>+ * GNU General Public License for more details.
+>+ */
+>+
+>+#include <linux/clk.h>
+>+#include <linux/err.h>
+>+#include <linux/interrupt.h>
+>+#include <linux/io.h>
+>+#include <linux/kernel.h>
+>+#include <linux/module.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/regulator/consumer.h>
+>+#include <linux/slab.h>
+>+
+>+#include <linux/iio/iio.h>
+>+#include <linux/iio/sysfs.h>
+>+
+>+#define VF610_DACx_STATCTRL		0x20
+>+
+>+#define VF610_DAC_DACEN			BIT(15)
+>+#define VF610_DAC_DACRFS		BIT(14)
+>+#define VF610_DAC_LPEN			BIT(11)
+>+
+>+#define VF610_DAC_DAT0(x)		((x) & 0xFFF)
+>+
+>+enum vf610_conversion_mode_sel {
+>+	VF610_DAC_CONV_HIGH_POWER,
+>+	VF610_DAC_CONV_LOW_POWER,
+>+};
+>+
+>+struct vf610_dac {
+>+	struct clk *clk;
+>+	struct device *dev;
+>+	enum vf610_conversion_mode_sel conv_mode;
+>+	void __iomem *regs;
+>+};
+>+
+>+static void vf610_dac_init(struct vf610_dac *info)
+>+{
+>+	int val;
+>+
+>+	info->conv_mode = VF610_DAC_CONV_LOW_POWER;
+>+	val = VF610_DAC_DACEN | VF610_DAC_DACRFS |
+>+		VF610_DAC_LPEN;
+>+	writel(val, info->regs + VF610_DACx_STATCTRL);
+>+}
+>+
+>+static void vf610_dac_exit(struct vf610_dac *info)
+>+{
+>+	int val;
+>+
+>+	val = readl(info->regs + VF610_DACx_STATCTRL);
+>+	val &= ~VF610_DAC_DACEN;
+>+	writel(val, info->regs + VF610_DACx_STATCTRL);
+>+}
+>+
+>+static int vf610_set_conversion_mode(struct iio_dev *indio_dev,
+>+				const struct iio_chan_spec *chan,
+>+				unsigned int mode)
+>+{
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+	int val;
+>+
+>+	mutex_lock(&indio_dev->mlock);
+>+	info->conv_mode = mode;
+>+	val = readl(info->regs + VF610_DACx_STATCTRL);
+>+	if (mode)
+>+		val |= VF610_DAC_LPEN;
+>+	else
+>+		val &= ~VF610_DAC_LPEN;
+>+	writel(val, info->regs + VF610_DACx_STATCTRL);
+>+	mutex_unlock(&indio_dev->mlock);
+>+
+>+	return 0;
+>+}
+>+
+>+static int vf610_get_conversion_mode(struct iio_dev *indio_dev,
+>+				const struct iio_chan_spec *chan)
+>+{
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+
+>+	return info->conv_mode;
+>+}
+>+
+>+static const char * const vf610_conv_modes[] = { "high-power",
+>"low-power" };
+>+
+>+static const struct iio_enum vf610_conversion_mode = {
+>+	.items = vf610_conv_modes,
+>+	.num_items = ARRAY_SIZE(vf610_conv_modes),
+>+	.get = vf610_get_conversion_mode,
+>+	.set = vf610_set_conversion_mode,
+>+};
+>+
+>+static const struct iio_chan_spec_ext_info vf610_ext_info[] = {
+>+	IIO_ENUM("conversion_mode", IIO_SHARED_BY_DIR,
+>+		&vf610_conversion_mode),
+>+	{},
+>+};
+>+
+>+#define VF610_DAC_CHAN(_chan_type) { \
+>+	.type = (_chan_type), \
+>+	.output = 1, \
+>+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+>+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>+	.ext_info = vf610_ext_info, \
+>+}
+>+
+>+static const struct iio_chan_spec vf610_dac_iio_channels[] = {
+>+	VF610_DAC_CHAN(IIO_VOLTAGE),
+>+};
+>+
+>+static int vf610_read_raw(struct iio_dev *indio_dev,
+>+			struct iio_chan_spec const *chan,
+>+			int *val, int *val2,
+>+			long mask)
+>+{
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+
+>+	switch (mask) {
+>+	case IIO_CHAN_INFO_RAW:
+>+		*val = VF610_DAC_DAT0(readl(info->regs));
+>+		return IIO_VAL_INT;
+>+	case IIO_CHAN_INFO_SCALE:
+>+		/*
+>+		 * DACRFS is always 1 for valid reference and typical
+>+		 * reference voltage as per Vybrid datasheet is 3.3V
+>+		 * from section 9.1.2.1 of Vybrid datasheet
+>+		 */
+>+		*val = 3300 /* mV */;
+>+		*val2 = 12;
+>+		return IIO_VAL_FRACTIONAL_LOG2;
+>+
+>+	default:
+>+		return -EINVAL;
+>+	}
+>+}
+>+
+>+static int vf610_write_raw(struct iio_dev *indio_dev,
+>+			struct iio_chan_spec const *chan,
+>+			int val, int val2,
+>+			long mask)
+>+{
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+
+>+	switch (mask) {
+>+	case IIO_CHAN_INFO_RAW:
+>+		mutex_lock(&indio_dev->mlock);
+>+		writel(VF610_DAC_DAT0(val), info->regs);
+>+		mutex_unlock(&indio_dev->mlock);
+>+		return 0;
+>+
+>+	default:
+>+		return -EINVAL;
+>+	}
+>+}
+>+
+>+static const struct iio_info vf610_dac_iio_info = {
+>+	.driver_module = THIS_MODULE,
+>+	.read_raw = &vf610_read_raw,
+>+	.write_raw = &vf610_write_raw,
+>+};
+>+
+>+static const struct of_device_id vf610_dac_match[] = {
+>+	{ .compatible = "fsl,vf610-dac", },
+>+	{ /* sentinel */ }
+>+};
+>+MODULE_DEVICE_TABLE(of, vf610_dac_match);
+>+
+>+static int vf610_dac_probe(struct platform_device *pdev)
+>+{
+>+	struct iio_dev *indio_dev;
+>+	struct vf610_dac *info;
+>+	struct resource *mem;
+>+	int ret;
+>+
+>+	indio_dev = devm_iio_device_alloc(&pdev->dev,
+>+					sizeof(struct vf610_dac));
+>+	if (!indio_dev) {
+>+		dev_err(&pdev->dev, "Failed allocating iio device\n");
+>+		return -ENOMEM;
+>+	}
+>+
+>+	info = iio_priv(indio_dev);
+>+	info->dev = &pdev->dev;
+>+
+>+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>+	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+>+	if (IS_ERR(info->regs))
+>+		return PTR_ERR(info->regs);
+>+
+>+	info->clk = devm_clk_get(&pdev->dev, "dac");
+>+	if (IS_ERR(info->clk)) {
+>+		dev_err(&pdev->dev, "Failed getting clock, err = %ld\n",
+>+			PTR_ERR(info->clk));
+>+		return PTR_ERR(info->clk);
+>+	}
+>+
+>+	platform_set_drvdata(pdev, indio_dev);
+>+
+>+	indio_dev->name = dev_name(&pdev->dev);
+>+	indio_dev->dev.parent = &pdev->dev;
+>+	indio_dev->dev.of_node = pdev->dev.of_node;
+>+	indio_dev->info = &vf610_dac_iio_info;
+>+	indio_dev->modes = INDIO_DIRECT_MODE;
+>+	indio_dev->channels = vf610_dac_iio_channels;
+>+	indio_dev->num_channels = ARRAY_SIZE(vf610_dac_iio_channels);
+>+
+>+	ret = clk_prepare_enable(info->clk);
+>+	if (ret) {
+>+		dev_err(&pdev->dev,
+>+			"Could not prepare or enable the clock\n");
+>+		return ret;
+>+	}
+>+
+>+	vf610_dac_init(info);
+>+
+>+	ret = iio_device_register(indio_dev);
+>+	if (ret) {
+>+		dev_err(&pdev->dev, "Couldn't register the device\n");
+>+		goto error_iio_device_register;
+>+	}
+>+
+>+	return 0;
+>+
+>+error_iio_device_register:
+>+	clk_disable_unprepare(info->clk);
+>+
+>+	return ret;
+>+}
+>+
+>+static int vf610_dac_remove(struct platform_device *pdev)
+>+{
+>+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+
+>+	vf610_dac_exit(info);
+Should be reverse order of probe so exit after the unregister below.
+Right now you are disabling the hardware before removing the userspace interfaces.
+>+	iio_device_unregister(indio_dev);
+>+	clk_disable_unprepare(info->clk);
+>+
+>+	return 0;
+>+}
+>+
+>+#ifdef CONFIG_PM_SLEEP
+>+static int vf610_dac_suspend(struct device *dev)
+>+{
+>+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+
+>+	vf610_dac_exit(info);
+>+	clk_disable_unprepare(info->clk);
+>+
+>+	return 0;
+>+}
+>+
+>+static int vf610_dac_resume(struct device *dev)
+>+{
+>+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+>+	struct vf610_dac *info = iio_priv(indio_dev);
+>+	int ret;
+>+
+>+	ret = clk_prepare_enable(info->clk);
+>+	if (ret)
+>+		return ret;
+>+
+>+	vf610_dac_init(info);
+>+
+>+	return 0;
+>+}
+>+#endif
+>+
+>+static SIMPLE_DEV_PM_OPS(vf610_dac_pm_ops, vf610_dac_suspend,
+>vf610_dac_resume);
+>+
+>+static struct platform_driver vf610_dac_driver = {
+>+	.probe          = vf610_dac_probe,
+>+	.remove         = vf610_dac_remove,
+>+	.driver         = {
+>+		.name   = "vf610-dac",
+>+		.of_match_table = vf610_dac_match,
+>+		.pm     = &vf610_dac_pm_ops,
+>+	},
+>+};
+>+module_platform_driver(vf610_dac_driver);
+>+
+>+MODULE_AUTHOR("Sanchayan Maity <sanchayan.maity@toradex.com");
+>+MODULE_DESCRIPTION("Freescale VF610 DAC driver");
+>+MODULE_LICENSE("GPL v2");
 
 -- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
