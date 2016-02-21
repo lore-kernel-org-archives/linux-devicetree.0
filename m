@@ -1,84 +1,305 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] iio: ad5755: Add full DT binding documentation
-Date: Sun, 21 Feb 2016 20:12:35 +0000
-Message-ID: <56CA1A33.6060207@kernel.org>
-References: <1455632757-21748-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1455632757-21748-2-git-send-email-sean.nyekjaer@prevas.dk>
- <1455632757-21748-3-git-send-email-sean.nyekjaer@prevas.dk>
- <1455632757-21748-4-git-send-email-sean.nyekjaer@prevas.dk>
- <20160218143724.GQ9654@rob-hp-laptop>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 11/11] ARM: versatile: move CLCD configuration to device tree
+Date: Sun, 21 Feb 2016 23:39:24 +0100
+Message-ID: <CACRpkdaXFUCR5=5mS28_4Dx_LfzqV13zwT=vVeJwuOzm_rGRBQ@mail.gmail.com>
+References: <1454594660-7532-1-git-send-email-linus.walleij@linaro.org>
+	<1454594660-7532-12-git-send-email-linus.walleij@linaro.org>
+	<56C438DA.5040109@ti.com>
+	<CACRpkdZ+G17hmVP8AejL7NTqg7k0SBC5kgF55ASjD+kfuGFJhQ@mail.gmail.com>
+	<20160217213250.GK19428@n2100.arm.linux.org.uk>
+	<56C5B080.9090007@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160218143724.GQ9654@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56C5B080.9090007-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/02/16 14:37, Rob Herring wrote:
-> On Tue, Feb 16, 2016 at 03:25:57PM +0100, Sean Nyekjaer wrote:
->> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->> ---
->> Changes since v2:
->>  - Removed defines, alot easier to read :-)
->>
->>  .../devicetree/bindings/iio/dac/ad5755.txt         | 94 ++++++++++++++++++++++
->>  1 file changed, 94 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->> index 4c91583..751204b 100644
->> --- a/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->> @@ -15,10 +15,104 @@ Recommended properties:
->>   - spi-max-frequency: Definition as per
->>  		Documentation/devicetree/bindings/spi/spi-bus.txt
->>  
->> +Optional properties:
->> +See include/dt-bindings/iio/ad5755.h
->> + - adi,ext_dc_dc_compenstation_resistor: boolean set if the hardware have an
-> 
-> Use - instead of _ in property names.
-> 
->> +					 external resistor and thereby bypasses
->> +					 the internal compensation resistor.
->> + - adi,dc_dc_phase:
->> +	Valid values for DC DC Phase control is:
->> +	0: All dc-to-dc converters clock on the same edge.
->> +	1: Channel A and Channel B clock on the same edge,
->> +	   Channel C and Channel D clock on opposite edges.
->> +	2: Channel A and Channel C clock on the same edge,
->> +	   Channel B and Channel D clock on opposite edges.
->> +	3: Channel A, Channel B, Channel C, and Channel D
->> +	   clock 90 degrees out of phase from each other.
->> + - adi,dc_dc_freq:
->> +	Valid values for DC DC frequency is:
->> +	0: 250 kHz.
->> +	1: 410 kHz.
->> +	2: 650 kHz.
-> 
-> It is preferrable to make the values the actual units rather than 
-> register values. Then we can have common properties. Is this a common 
-> property of a DAC?
-Not overly common (in the parts we have seen in IIO so far),
-but best to allow for it becoming a general property in the future
-and actual units definitely the way to go. 
-> 
->> + - adi,dc_dc_maxv:
->> +	Valid values for the maximum allowed Vboost voltage supplied by
->> +	the dc-to-dc converter is:
->> +	0: 23 V.
->> +	1: 24.5 V.
->> +	2: 27 V.
->> +	3: 29.5 V.
-> 
-> Same here.
-> 
-> Rob
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+On Thu, Feb 18, 2016 at 12:52 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
+
+> For panels we need DT fragments. The question is where these fragments
+> are and, possibly, who who loads them.
+
+I hacked something up that augments the device tree from the kernel,
+given you have a node with all the props you want to augment, tell me
+what you think of this and whether I should continue in this direction...
+also the DT people need to be involved:
+
+#include "../../drivers/of/of_private.h"
+/* Obviously make the property duplication function public instead,
+it's a test */
+
+struct versatile_panel {
+    u32 id;
+    char *compatible;
+    u32 clock_frequency;
+    u32 pixelclk_active;
+    u32 hsync_active;
+    u32 vsync_active;
+    u32 de_active;
+    u32 hactive;
+    u32 hback_porch;
+    u32 hfront_porch;
+    u32 hsync_len;
+    u32 vactive;
+    u32 vback_porch;
+    u32 vfront_porch;
+    u32 vsync_len;
+    bool ib2;
+};
+
+static const struct versatile_panel versatile_panels[] = {
+    {
+        .id = SYS_CLCD_ID_VGA,
+        .compatible = "VGA",
+        .clock_frequency = 25175000,
+        .pixelclk_active = 0,
+        .hsync_active = 1,
+        .vsync_active = 1,
+        .de_active = 1,
+        .hactive = 640,
+        .hback_porch = 48,
+        .hfront_porch = 16,
+        .hsync_len = 96,
+        .vactive = 480,
+        .vback_porch = 33,
+        .vfront_porch = 10,
+        .vsync_len = 2,
+    },
+    {
+        .id = SYS_CLCD_ID_SANYO_3_8,
+        .compatible = "sanyo,tm38qv67a02a",
+        .clock_frequency = 10000000,
+        .pixelclk_active = 1,
+        .hsync_active = 1,
+        .vsync_active = 1,
+        .de_active = 1,
+        .hactive = 320,
+        .hback_porch = 6,
+        .hfront_porch = 6,
+        .hsync_len = 6,
+        .vactive = 240,
+        .vback_porch = 6,
+        .vfront_porch = 6,
+        .vsync_len = 0,
+    },
+    {
+        .id = SYS_CLCD_ID_SHARP_8_4,
+        .compatible = "sharp,lq084v1dg21",
+        .clock_frequency = 25175000,
+        .pixelclk_active = 0,
+        .hsync_active = 1,
+        .vsync_active = 1,
+        .de_active = 1,
+        .hactive = 640,
+        .hback_porch = 48,
+        .hfront_porch = 16,
+        .hsync_len = 96,
+        .vactive = 480,
+        .vback_porch = 33,
+        .vfront_porch = 10,
+        .vsync_len = 2,
+    },
+    {
+        .id = SYS_CLCD_ID_EPSON_2_2,
+        .compatible = "epson,l2f50113t00",
+        .clock_frequency = 16000000,
+        .pixelclk_active = 0,
+        .hsync_active = 1,
+        .vsync_active = 1,
+        .de_active = 1,
+        .hactive = 176,
+        .hback_porch = 3,
+        .hfront_porch = 2,
+        .hsync_len = 3,
+        .vactive = 220,
+        .vback_porch = 1,
+        .vfront_porch = 0,
+        .vsync_len = 2,
+    },
+    {
+        .id = SYS_CLCD_ID_SANYO_2_5,
+        .compatible = "sanyo,alr252rgt",
+        .ib2 = true,
+        .clock_frequency = 5440000,
+        .pixelclk_active = 0,
+        .hsync_active = 0,
+        .vsync_active = 0,
+        .de_active = 1,
+        .hactive = 240,
+        .hback_porch = 20,
+        .hfront_porch = 10,
+        .hsync_len = 10,
+        .vactive = 320,
+        .vback_porch = 2,
+        .vfront_porch = 2,
+        .vsync_len = 2,
+    },
+};
+
+static void update_timings_prop(struct device *dev,
+                struct of_changeset *cset,
+                struct device_node *timings,
+                const char *propname,
+                u32 val)
+{
+    struct property *prop, *new;
+    __be32 *dt_val;
+
+    prop = of_find_property(timings, propname, NULL);
+    if (!prop) {
+        dev_err(dev, "could not find property \"%s\" - skipping\n",
+            propname);
+        return;
+    }
+    new = __of_prop_dup(prop, GFP_KERNEL);
+    if (!new) {
+        dev_err(dev, "could not copy property \"%s\" - skipping\n",
+            propname);
+        return;
+    }
+
+    dt_val = new->value;
+    *dt_val = cpu_to_be32(val);
+
+    of_changeset_update_property(cset, timings, new);
+}
+
+static int versatile_overwrite_of_panel(struct device *dev,
+                    struct device_node *panel,
+                    const struct versatile_panel *vpanel)
+{
+    struct of_changeset cset;
+    struct device_node *timings;
+    int ret;
+
+    dev_info(dev, "CLCD: overwriting device tree\n");
+
+    of_changeset_init(&cset);
+    /* Find the timings node */
+    timings = of_get_child_by_name(panel, "panel-timing");
+    if (!timings) {
+        dev_err(dev, "could not find panel timing node\n");
+        goto err_destroy_cs;
+    }
+    update_timings_prop(dev, &cset, timings, "clock-frequency",
+                vpanel->clock_frequency);
+    update_timings_prop(dev, &cset, timings, "pixelclk-active",
+                vpanel->pixelclk_active);
+    update_timings_prop(dev, &cset, timings, "hsync-active",
+                vpanel->hsync_active);
+    update_timings_prop(dev, &cset, timings, "vsync-active",
+                vpanel->vsync_active);
+    update_timings_prop(dev, &cset, timings, "de-active",
+                vpanel->de_active);
+    update_timings_prop(dev, &cset, timings, "hactive",
+                vpanel->hactive);
+    update_timings_prop(dev, &cset, timings, "hback-porch",
+                vpanel->hback_porch);
+    update_timings_prop(dev, &cset, timings, "hsync-len",
+                vpanel->hsync_len);
+    update_timings_prop(dev, &cset, timings, "vactive",
+                vpanel->vactive);
+    update_timings_prop(dev, &cset, timings, "vback-porch",
+                vpanel->vback_porch);
+    update_timings_prop(dev, &cset, timings, "vfront-porch",
+                vpanel->vfront_porch);
+    update_timings_prop(dev, &cset, timings, "vsync-len",
+                vpanel->hsync_len);
+
+    ret = of_changeset_apply(&cset);
+    if (ret) {
+        dev_err(dev, "could not apply device tree changeset\n");
+        goto err_destroy_cs;
+    }
+    return ret;
+
+err_destroy_cs:
+    of_changeset_destroy(&cset);
+    return ret;
+}
+
+static void versatile_panel_probe(struct device *dev,
+                  struct device_node *endpoint)
+{
+    struct versatile_panel const *vpanel = NULL;
+    struct device_node *panel = NULL;
+    u32 val;
+    int ret;
+    int i;
+
+    /*
+     * The Versatile CLCD has a panel auto-detection mechanism.
+     * We use this and look for the compatible panel in the
+     * device tree.
+     */
+    ret = regmap_read(versatile_syscon_map, SYS_CLCD, &val);
+    if (ret) {
+        dev_err(dev, "cannot read CLCD syscon register\n");
+        return;
+    }
+    val &= SYS_CLCD_CLCDID_MASK;
+    dev_info(dev, "SYS_CLCD=%08x\n", val);
+
+    /* First find corresponding panel information */
+    for (i = 0; i < ARRAY_SIZE(versatile_panels); i++) {
+        vpanel = &versatile_panels[i];
+
+        if (val == vpanel->id) {
+            dev_err(dev, "autodetected panel \"%s\"\n",
+                vpanel->compatible);
+            break;
+        }
+    }
+    if (i == ARRAY_SIZE(versatile_panels)) {
+        dev_err(dev, "could not auto-detect panel\n");
+        return;
+    }
+
+    /* This is the default panel node in the device tree */
+    panel = of_graph_get_remote_port_parent(endpoint);
+    if (!panel) {
+        dev_err(dev, "could not locate remote port for panel\n");
+        return;
+    }
+
+    /*
+     * So now we dynamically update the display properties of the
+     * panel in accordance to what was detected..
+     */
+    ret = versatile_overwrite_of_panel(dev, panel, vpanel);
+    if (ret) {
+        dev_err(dev, "cannot overwrite devicetree panel\n");
+        return;
+    }
+
+    /*
+     * If we have a Sanyo 2.5" port
+     * that we're running on an IB2 and proceed to look for the
+     * IB2 syscon regmap.
+     */
+    if (!vpanel->ib2)
+        return;
+
+    versatile_ib2_map = syscon_regmap_lookup_by_compatible(
+        "arm,versatile-ib2-syscon");
+    if (IS_ERR(versatile_ib2_map)) {
+        dev_err(dev, "could not locate IB2 control register\n");
+        versatile_ib2_map = NULL;
+        return;
+    }
+}
+
+
+This actually works. But would need some public device tree
+property augmentation API instead of the hacks. Should I pursue
+it?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
