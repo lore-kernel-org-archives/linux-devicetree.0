@@ -1,62 +1,65 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH can-next 2/2] CAN: rcar: add device tree support for r8a779[234]
-Date: Mon, 22 Feb 2016 11:15:50 +0900
-Message-ID: <1456107350-12100-3-git-send-email-horms+renesas@verge.net.au>
-References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-can-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [v9,4/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Mon, 22 Feb 2016 02:43:09 +0800
+Message-ID: <1456080189.25237.4.camel@mhfsdcap03>
+References: <1455669974-1527-5-git-send-email-yong.wu@mediatek.com>
+	 <20160220070209.GA16577@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160220070209.GA16577-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Simply document new compatibility string.
-As a previous patch adds a generic R-Car Gen2 compatibility string
-there appears to be no need for a driver updates.
+On Fri, 2016-02-19 at 23:02 -0800, Guenter Roeck wrote:
+> On Wed, Feb 17, 2016 at 08:46:13AM +0800, Yong Wu wrote:
+> > This patch adds support for mediatek m4u (MultiMedia Memory Management
+> > Unit).
+[...]
+> > +#include <linux/clk.h>
+> > +#include <linux/component.h>
+> > +#include <linux/dma-iommu.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/iommu.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/list.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_iommu.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <soc/mediatek/smi.h>
+> > +#include <dt-bindings/memory/mt8173-larb-port.h>
+> > +
+> 
+> Some missing includes:
+> 
+> linux/bug.h
+> 	for WARN_ON()
+> linux/device.h
+> 	for dev_xxx() error messages, dev_get_drvdata(), etc.
+> linux/err.h
+> 	for error functions (IS_ERR, error definitions)
+> linux/slab.h
+> 	for kzalloc() etc.
+> linux/spinlock.h
+> 	for spinlock functions
+> asm/barrier.h
+> 	for wmb()
+> 
+> Guenter
 
-By documenting this compat sting it may be used in DTSs shipped, for
-example as part of ROMs. It must be used in conjunction with the Gen2
-fallback compat string. At this time there are no known differences between
-the r8a779[234] IP blocks and that implemented by the driver for the Gen2
-fallback compat string. Thus there is no need to update the driver as the
-use of the Gen2 fallback compat string will activate the correct code in
-the current driver while leaving the option for r8a779[234]-specific driver
-code to be activated in an updated driver should the need arise.
+Hi Guenter,
+    Thanks for this suggestion. I'm sorry that I didn't get any build
+warning or error here. Anyway I will add them and send a quick v10.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 +++
- drivers/net/can/rcar_can.c                             | 3 +++
- 2 files changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 036786e1f70d..c6fb74d7c809 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -6,6 +6,9 @@ Required properties:
- 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
- 	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
- 	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-+	      "renesas,can-r8a7792" if CAN controller is a part of R8A7792 SoC.
-+	      "renesas,can-r8a7793" if CAN controller is a part of R8A7793 SoC.
-+	      "renesas,can-r8a7794" if CAN controller is a part of R8A7794 SoC.
- 	      "renesas,can-gen1" for a generic R-Car Gen1 compatible device.
- 	      "renesas,can-gen2" for a generic R-Car Gen2 compatible device.
- - reg: physical base address and size of the R-Car CAN register map.
-diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
-index c70a1f795933..73761a4dd1bf 100644
---- a/drivers/net/can/rcar_can.c
-+++ b/drivers/net/can/rcar_can.c
-@@ -904,6 +904,9 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
- 	{ .compatible = "renesas,can-r8a7779" },
- 	{ .compatible = "renesas,can-r8a7790" },
- 	{ .compatible = "renesas,can-r8a7791" },
-+	{ .compatible = "renesas,can-r8a7792" },
-+	{ .compatible = "renesas,can-r8a7793" },
-+	{ .compatible = "renesas,can-r8a7794" },
- 	{ .compatible = "renesas,can-gen1" },
- 	{ .compatible = "renesas,can-gen2" },
- 	{ }
--- 
-2.1.4
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
