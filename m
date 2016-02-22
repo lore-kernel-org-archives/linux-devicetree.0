@@ -1,52 +1,106 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 0/2] patches to add support for rockchip rt5640 card
-Date: Mon, 22 Feb 2016 20:04:16 +0900
-Message-ID: <20160222110416.GC18327@sirena.org.uk>
-References: <1456127815-68575-1-git-send-email-sugar.zhang@rock-chips.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
+Date: Mon, 22 Feb 2016 16:37:17 +0530
+Message-ID: <56CAEBE5.7050605@codeaurora.org>
+References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+ <1455519206-12939-14-git-send-email-architt@codeaurora.org>
+ <20160222025414.GG15973@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DLy7ErigvZFpjC4N"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456127815-68575-1-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160222025414.GG15973@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---DLy7ErigvZFpjC4N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Feb 22, 2016 at 03:56:53PM +0800, Sugar Zhang wrote:
-
-> Sugar Zhang (2):
->   ASoC: rockchip: i2s: add default values for registers
->   ASoC: rt5640: add master clock handling for rt5640
-
-These appear to be commpletly unrelated patches so should each be sent
-individually rather than as a series - that way there is no confusion
-about them possibly depending on each other and they are easier to
-review and apply.
-
---DLy7ErigvZFpjC4N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWyusvAAoJECTWi3JdVIfQZhkH/jNZD0jV7sEbj+S5zX225hTs
-fnDTx29It6Yyw87P+vtDI+kM/MU8lMbxXJRV85sF+O/atiGwc0yrdKmLekkyRhrI
-eEsJQbq11J1nN31aYHMcOeC9oHx1pDSedTkT3z4oJDE0WPADaiPmLlaGJR/u0+Oh
-rA94BGqPQ/spz9FZY5rxb2M3lF+VD9eT8gWTES2v8T+k0VYjXvdSyJwbJPG7/SSe
-NU3ZIwk3e/AoqjlPWt/ZzbUKnK2C7CHzs5x2FLLsv3iwTrEussk8x6oGXoKoOw65
-8PBk/6bbXbhFfdwP9ZKxohbplfVubXZL5ho0G9PK4icp8s3Y7WZRliPUTZCwfG4=
-=+0Fx
------END PGP SIGNATURE-----
-
---DLy7ErigvZFpjC4N--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwMi8yMi8yMDE2IDA4OjI0IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBNb24sIEZl
+YiAxNSwgMjAxNiBhdCAxMjoyMzoyNlBNICswNTMwLCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+PiBB
+ZGQgSERNSSBQSFkgYmluZGluZ3MuIFVwZGF0ZSB0aGUgZXhhbXBsZSB0byB1c2UgSERNSSBQSFku
+Cj4+Cj4+IEFkZCBhIG1pc3NpbmcgcG93ZXItZG9tYWlucyBwcm9wZXJ0eSBpbiB0aGUgSERNSSBj
+b3JlIGJpbmRpbmdzLgo+Pgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gQ2M6
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEFyY2hp
+dCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0ICAgICAgIHwgMzkgKysrKysrKysrKysr
+KysrKysrKysrLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4gaW5kZXggMzc5ZWUyZS4uNGQ3MTkxMCAxMDA2NDQK
+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hk
+bWkudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21zbS9oZG1pLnR4dAo+PiBAQCAtMTEsNiArMTEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+PiAgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJv
+bGxlcidzIHJlZ2lzdGVycwo+PiAgIC0gcmVnLW5hbWVzOiAiY29yZV9waHlzaWNhbCIKPj4gICAt
+IGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGhkbWkgYmxvY2suCj4+
+ICstIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPj4gICAtIGNs
+b2NrczogZGV2aWNlIGNsb2Nrcwo+PiAgICAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50
+eHQgZm9yIGRldGFpbHMuCj4+ICAgLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xr
+IHBpbgo+PiBAQCAtMTgsNiArMTksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAgIC0gcWNv
+bSxoZG1pLXR4LWhwZC1ncGlvOiBocGQgcGluCj4+ICAgLSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFu
+ZGxlIHRvIHN1cHBseSByZWd1bGF0b3IKPj4gICAtIGhkbWktbXV4LXN1cHBseTogcGhhbmRsZSB0
+byBtdXggcmVndWxhdG9yCj4+ICstIHFjb20saGRtaS1waHk6IHBoYW5kbGUgdG8gSERNSSBQSFkg
+ZGV2aWNlIG5vZGUKPgo+IFdoeSBub3QgdXNlIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nPwoKWW91
+J2QgYXNrZWQgYWJvdXQgdGhpcyBpbiB0aGUgZmlyc3QgdmVyc2lvbiBvZiB0aGlzIHBhdGNoLiBZ
+b3UKcHJvYmFibHkgbWlzc2VkIHJlYWRpbmcgbXkgcmVwbHkuIFBhcnRpYWxseSBteSBmYXVsdCBz
+aW5jZSBJCm1pc3NlZCBvdXQgcHV0dGluZyB0aGUgIkluLVJlcGx5LXRvIiB3aGVuIHBvc3Rpbmcg
+dGhpcyBzZXQuIEkndmUKbWVudGlvbmVkIHRoZSByZWFzb24gYWdhaW4gaGVyZToKClRoZSBQSFkg
+aW4gdGhlIEhETUkgYW5kIERTSSBibG9ja3MgY2FuJ3QgYmUgaW1wbGVtZW50ZWQgdXNpbmcgdGhl
+CmNvbW1vbiBwaHkgZnJhbWV3b3JrLiBUaGUgUEhZIGJsb2NrcyBoYXZlIGEgUExMIHN1Yi1ibG9j
+ayB3aXRoaW4KdGhlbSB3aGljaCBhY3RzIGFzIGEgcGl4ZWwgY2xvY2sgc291cmNlIGZvciB0aGUg
+ZGlzcGxheSBwcm9jZXNzb3IKYmxvY2suCgpUaGlzIGRlcGVuZGVuY3kgY2F1c2VzIHRoZSBuZWVk
+IHRvIHNwbGl0IHRoZSBwaHkgcG93ZXIgb24gc2VxdWVuY2UKaW50byAyIHBhcnRzIChvbmUgdG8g
+ZW5hYmxlIHJlc291cmNlcyB0byBlbmFibGUgdGhlIFBMTCwgYW5kIHRoZQpvdGhlciB0byBlbmFi
+bGUgdGhlIHBoeSBpdHNlbGYpLCB3aGljaCB0aGUgcGh5IGZyYW1ld29yayBjYW4ndApkby4gVGhh
+dCdzIHRoZSBtYWluIHJlYXNvbiBub3QgdG8gdXNlIGl0LiBUaGVyZSBhcmUgc29tZSBtb3JlCmNv
+bXBsZXggdXNlIGNhc2VzIGZvciBEU0kgUEhZIChkcml2ZSB0d28gUEhZcyB3aXRoIHRoZSBzYW1l
+CkRTSSBQTEwpIHdoaWNoIHRoZSBwaHkgZnJhbWV3b3JrIGNhbid0IHN1cHBvcnQuCgo+Cj4+Cj4+
+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gICAtIHFjb20saGRtaS10eC1tdXgtZW4tZ3Bpbzog
+aGRtaSBtdXggZW5hYmxlIHBpbgo+PiBAQCAtMjcsNiArMjksMjcgQEAgT3B0aW9uYWwgcHJvcGVy
+dGllczoKPj4gICAtIHBpbmN0cmwtMDogdGhlIGRlZmF1bHQgcGluY3RybCBzdGF0ZSAoYWN0aXZl
+KQo+PiAgIC0gcGluY3RybC0xOiB0aGUgInNsZWVwIiBwaW5jdHJsIHN0YXRlCj4+Cj4+ICtIRE1J
+IFBIWToKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IENvdWxkIGJl
+IHRoZSBmb2xsb3dpbmcKPj4gKyAgKiAicWNvbSxoZG1pLXBoeS04eDYwIgo+PiArICAqICJxY29t
+LGhkbWktcGh5LTg5NjAiCj4+ICsgICogInFjb20saGRtaS1waHktOHg3NCIKPgo+IE5vIHdpbGRj
+YXJkcyBwbGVhc2UuIFdoZXJlJ3MgODk5ND8KCkknbGwgcmVtb3ZlIHRoZSB3aWxkY2FyZHMuIDg5
+OTQgUEhZIGlzbid0IHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyIGF0CnRoZSBtb21lbnQuIEkgY291
+bGQga2VlcCB0aGUgODk5NCBjb21wYXRpYmxlIHN0cmluZywgdGhlIGRyaXZlciB3aWxsCmJhaWwg
+b3V0IHdpdGggYW4gZXJyb3IuIEJ1dCB0aGF0J3Mgc29tZXRoaW5nIHdlIGFscmVhZHkgZG8gZm9y
+IDh4NzQKc2luY2UgaXQgZG9lc24ndCBoYXZlIGZ1bGwgUEhZIHN1cHBvcnQgZWl0aGVyLgoKPgo+
+PiArICAqICJxY29tLGhkbWktcGh5LTg5OTYiCj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRy
+ZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBvZiB0aGUgUEhZIHN1YiBibG9ja3MuCj4+
+ICstIHJlZy1uYW1lczogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dp
+bmcgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6Cj4+ICsgICogImhkbWlfcGxsIgo+PiArICAqICJoZG1p
+X3BoeSIKPj4gKyAgRm9yIEhETUkgUEhZIG9uIG1zbTg5OTYsIHRoZXNlIGFkZGl0aW9uYWwgcmVn
+aXN0ZXIgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6Cj4+ICsgICAgKiAiaGRtaV90eF9sMCIKPj4gKyAg
+ICAqICJoZG1pX3R4X2wxIgo+PiArICAgICogImhkbWlfdHhfbDMiCj4+ICsgICAgKiAiaGRtaV90
+eF9sNCIKPj4gKy0gcG93ZXItZG9tYWluczogU2hvdWxkIGJlIDwmbW1jYyBNRFNTX0dEU0M+Lgo+
+PiArLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKPj4gKyAgU2VlIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+PiAr
+LSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmljZSBub2Rl
+Cj4+ICsKPj4gICBFeGFtcGxlOgo+Pgo+PiAgIC8gewo+PiBAQCAtMzUsNyArNTgsNyBAQCBFeGFt
+cGxlOgo+PiAgIAloZG1pOiBxY29tLGhkbWktdHgtODk2MEA0YTAwMDAwIHsKPgo+IE5vZGUgbmFt
+ZXMgc2hvdWxkIGJlIGdlbmVyaWMsIHNvIGp1c3QgImhkbWkiLgo+Cj4+ICAgCQljb21wYXRpYmxl
+ID0gInFjb20saGRtaS10eC04OTYwIjsKPj4gICAJCXJlZy1uYW1lcyA9ICJjb3JlX3BoeXNpY2Fs
+IjsKPj4gLQkJcmVnID0gPDB4MDRhMDAwMDAgMHgxMDAwPjsKPj4gKwkJcmVnID0gPDB4MDRhMDAw
+MDAgMHgyZjA+Owo+PiAgIAkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDc5IDA+Owo+PiAgIAkJcG93
+ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+Owo+PiAgIAkJY2xvY2stbmFtZXMgPQo+PiBA
+QCAtNTQsNSArNzcsMTkgQEAgRXhhbXBsZToKPj4gICAJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
+dCIsICJzbGVlcCI7Cj4+ICAgCQlwaW5jdHJsLTAgPSA8JmhwZF9hY3RpdmUgICZkZGNfYWN0aXZl
+ICAmY2VjX2FjdGl2ZT47Cj4+ICAgCQlwaW5jdHJsLTEgPSA8JmhwZF9zdXNwZW5kICZkZGNfc3Vz
+cGVuZCAmY2VjX3N1c3BlbmQ+Owo+PiArCj4+ICsJCXFjb20saGRtaS1waHkgPSA8JmhkbWlfcGh5
+PjsKPj4gKwl9Owo+PiArCj4+ICsJaGRtaV9waHk6IHFjb20saGRtaS1waHktODk2MEA0YTAwNDAw
+IHsKPgo+IGRpdHRvLiBwaHlALi4uCgpJJ2xsIGZpeCB0aGVzZS4KClRoYW5rcywKQXJjaGl0Cgot
+LSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRo
+ZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
