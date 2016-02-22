@@ -1,45 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] Warn on node name unit-addresses with '0x' or leading 0s
-Date: Mon, 22 Feb 2016 10:51:46 -0600
-Message-ID: <CAL_JsqLDdyLd4z_Pmsr7+vtnMZsusEpJYZ4tdZmjQFt0PD_Fbw@mail.gmail.com>
-References: <1455223619-16052-1-git-send-email-robh@kernel.org>
- <1455223619-16052-3-git-send-email-robh@kernel.org> <20160219050709.GB15224@voom.fritz.box>
+From: John Keeping <john@metanate.com>
+Subject: Re: Disabling graph endpoints in device trees
+Date: Mon, 22 Feb 2016 17:26:00 +0000
+Message-ID: <20160222172600.67904681.john@metanate.com>
+References: <20160222141438.79de430c.john@metanate.com>
+	<1456157547.5148.44.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160219050709.GB15224-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456157547.5148.44.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 11:07 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Feb 11, 2016 at 02:46:59PM -0600, Rob Herring wrote:
->> Node name unit-addresses should never begin with 0x or leading 0s
->> regardless of whether they have a bus specific address (i.e. one with
->> commas) or not. Add warnings to check for these cases.
->
-> Hmm.. I'm pretty sure that's true in practice, but it's not true in
-> theory.  A bus could define it's unit address format just about
-> however it wants, including with leading 0s.
+Hi Phillipp,
 
-Only if it is not reviewed... This whole check is about what best
-practices are, not what is possible.
+On Mon, 22 Feb 2016 17:12:27 +0100, Philipp Zabel wrote:
+> Am Montag, den 22.02.2016, 14:14 +0000 schrieb John Keeping:
+> > Is there a reason why endpoints in a device tree graph can't be
+> > disabled?  
+> 
+> You can always remove them using /delete-node/, which also has the
+> advantage of reminding you not to leave a single dangling endpoint.
 
-> I think a better approach would be to add a test specific to
-> simple-bus devices (by looking at compatible on the parent) that fully
-> checks the unit address.
->
-> From there we can start adding tests for other bus types.
+Thanks, I wasn't aware of /delete-node/.  It does indeed do what I want.
 
-simple-bus is easy enough, but then next up would be I2C and SPI. We
-can't generically tell if a node is on I2C or SPI bus. If we do have
-some bus with wacky addresses, it should definitely have a bus
-compatible and then we can simply exclude it from the check.
+> > I would like to be able to force the use of a particular CRTC for
+> > certain outputs even though the hardware is capable of connecting any
+> > CRTC to any output.  In this case I need to be able to support a wide
+> > range of frequencies for external HDMI monitors so I will configure one
+> > of the CRTCs to be able to generate these while the other will be tied
+> > into a limited set of clock rates as a result of the overall system
+> > clock setup.
+> > 
+> > Currently this can only be achieved by removing the endpoints from the
+> > base SoC .dtsi file but it feels like it should be possible to add
+> > 'status = "disabled"' to the nodes in the board-specific .dts in order
+> > to disable undesirable configurations.
+> >
+> > I tested the change below and it behaves exactly as I want, but I don't
+> > claim to understand all of the users of these functions to know if it
+> > will break something else (hence this isn't a formal patch).  
+> 
+> I don't know that any driver depends on being able to parse disabled
+> endpoints, but given the above I'm not sure that keeping disabled
+> endpoints in the device tree is a useful feature.
+> Disabling ports makes more sense to me. It should be documented in
+> Documentation/devicetree/bindings/graph.txt though.
 
-Another option would be skipping the test if there are any commas (or
-periods, etc.) in the unit address. That's pretty rare to begin with
-and a single number is pretty much not a bus specific unit-address.
+That isn't relevent for my scenario because this case has a port with
+multiple endpoints and we only want one of the endpoints to be
+available:
 
-Rob
+	vopb_out: port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vopb_out_hdmi: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&hdmi_in_vopb>;
+		};
+		vopb_out_mipi: endpoint@1 {
+			reg = <1>;
+			remote-endpoint = <&mipi_in_vopb>;
+		};
+	};
+
+But I'm happy that /delete-node/ works and seems to be the right thing
+to do.
+
+
+Thanks,
+John
