@@ -1,31 +1,61 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt/bindings: Add 'nvidia,hd-no-invert' option
-Date: Mon, 22 Feb 2016 12:48:52 -0700
-Message-ID: <56CB6624.6030600@wwwdotorg.org>
-References: <56C3977E.8050001@wwwdotorg.org>
- <1456122253-3039-1-git-send-email-sctincman@gmail.com>
- <1456122253-3039-2-git-send-email-sctincman@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dma: mv_xor_v2: new driver
+Date: Mon, 22 Feb 2016 13:58:14 -0600
+Message-ID: <CAL_Jsq+bYmafQWasY1T2QG6Dujf7Ki6JSZKZoFzJXAphTAvnCA@mail.gmail.com>
+References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160222032730.GU19598@localhost> <20160222101621.4f03ef8b@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456122253-3039-2-git-send-email-sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160222101621.4f03ef8b-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2016 11:24 PM, Jonathan Tinkham wrote:
-> Document an option to not invert the headphone detect GPIO signal
+On Mon, Feb 22, 2016 at 3:16 AM, Thomas Petazzoni
+<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hello Vinod,
 >
+> On Mon, 22 Feb 2016 08:57:30 +0530, Vinod Koul wrote:
+>> On Mon, Feb 15, 2016 at 08:58:03AM +0100, Thomas Petazzoni wrote:
+>> > diff --git a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+>> > new file mode 100644
+>> > index 0000000..0a03dcf
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+>> > @@ -0,0 +1,19 @@
+>> > +* Marvell XOR v2 engines
+>> > +
+>> > +Required properties:
+>> > +- compatible: Should be "marvell,mv-xor-v2"
+>> > +- reg: Should contain registers location and length (two sets)
+>> > +    the first set is the DMA registers
+>> > +    the second set is the global registers
+>> > +- msi-parent: Phandle to the MSI-capable interrupt controller used for
+>> > +  interrupts.
+>> > +
+>> > +Example:
+>> > +
+>> > +   xor0@400000 {
+>> > +           compatible = "marvell,mv-xor-v2";
+>> > +           reg = <0x400000 0x1000>,
+>> > +                 <0x410000 0x1000>;
+>> > +           msi-parent = <&gic_v2m0>;
+>> > +           dma-coherent;
+>> > +   };
+>>
+>> This should be a separate patch :)
+>
+> This is really a personal preference, and different maintainers have
+> different opinions on the matter. However, if your preference is to
+> have the DT binding documentation as a separate patch, then I'll split
+> it, no problem :)
 
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
+Read step 1 in Documentation/devicetree/bindings/submitting-patches.txt.
 
->   Optional properties:
->   - nvidia,hp-det-gpios : The GPIO that detect headphones are plugged in
-> +- nvidia,hd-no-invert : Do not invert headphone detect signal
-
-We should use "hp" not "hd" to be consistent with other properties.
-
-Why can't we use the GPIO specifier's ACTIVE_LOW/ACTIVE_HIGH flag to 
-represent the polarity of this signal?
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
