@@ -1,52 +1,81 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] clk: add lpc18xx creg clk driver
-Date: Mon, 22 Feb 2016 13:55:36 -0800
-Message-ID: <20160222215536.GX4847@codeaurora.org>
-References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
- <1455994417-4471-2-git-send-email-manabian@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1455994417-4471-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: [PATCH v3 2/2] doc: dt: add documentation for lpc1850-creg-clk driver
+Date: Mon, 22 Feb 2016 23:53:15 +0100
+Message-ID: <1456181595-10392-3-git-send-email-manabian@gmail.com>
+References: <1456181595-10392-1-git-send-email-manabian@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1456181595-10392-1-git-send-email-manabian@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: Joachim Eastwood <manabian@gmail.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/20, Joachim Eastwood wrote:
-> +static int lpc18xx_creg_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct regmap *syscon;
-> +
-> +	syscon = syscon_node_to_regmap(np->parent);
-> +	if (IS_ERR(syscon)) {
-> +		dev_err(&pdev->dev, "syscon lookup failed\n");
-> +		return PTR_ERR(syscon);
-> +	}
-> +
-> +	clk_creg[CREG_CLK_1KHZ] =
-> +		clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
-> +				      &clk_creg_clocks[CREG_CLK_32KHZ].name,
-> +				      syscon);
-> +
-> +	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
+Add DT binding documentation for lpc1850-creg-clk driver.
 
-If we use the same clk_base_data both times then why can't we
-just insert the 1KHz clk into the clk_creg array when the
-platform device probes? That would be racy if something was
-trying to read the array when it's being modified, so the
-alternative non-racy solution would be to make two clk_base_data
-structures, one in CLK_OF_DECLARE() and one in platform device
-probe.
+Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+---
+ .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
 
-Otherwise this looks like what I was envisioning.
-
+diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+new file mode 100644
+index 000000000000..0c83d373b766
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+@@ -0,0 +1,52 @@
++* NXP LPC1850 CREG clocks
++
++The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
++control registers for two low speed clocks. One of the clocks is a
++32 kHz oscillator driver with power up/down and clock gating. Next
++is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
++
++These clocks are used by the RTC and the Event Router peripherials.
++The 32 kHz can also be routed to other peripherials to enable low
++power modes.
++
++This binding uses the common clock binding:
++    Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible:
++	Should be "nxp,lpc1850-creg-clk"
++- #clock-cells:
++	Shall have value <1>.
++- clocks:
++	Shall contain a phandle to the fix 32 kHz crystall.
++
++The creg-clk node must be a child of the creg syscon node.
++
++The following clocks are available from the clock node.
++
++Clock ID	Name
++   0		 1 kHz clock
++   1		32 kHz Oscillator
++
++Example:
++soc {
++	creg: syscon@40043000 {
++		compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
++		reg = <0x40043000 0x1000>;
++
++		creg_clk: clock-controller@004 {
++			compatible = "nxp,lpc1850-creg-clk";
++			clocks = <&xtal32>;
++			#clock-cells = <1>;
++		};
++
++		...
++	};
++
++	rtc: rtc@40046000 {
++		...
++		clocks = <&creg_clk 0>, <&ccu1 CLK_CPU_BUS>;
++		clock-names = "rtc", "reg";
++		...
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.0
+
