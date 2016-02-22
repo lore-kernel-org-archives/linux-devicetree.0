@@ -1,87 +1,53 @@
-From: Peter Seiderer <ps.report-hi6Y0CQ0nG0@public.gmane.org>
-Subject: [PATCH v1] ARM: dts: nitrogen6x: add USB host 1 support
-Date: Mon, 22 Feb 2016 21:03:41 +0100
-Message-ID: <1456171421-10044-1-git-send-email-ps.report@gmx.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v5 00/26] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Mon, 22 Feb 2016 22:05:08 +0200
+Message-ID: <56CB69F4.8040306@ti.com>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <20160219220442.GR21202@atomide.com> <56CADFD5.2040205@ti.com>
+ <20160222164234.GD13417@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160222164234.GD13417@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Regulator stuff and pin configuration copied from imx6qdl-nitrogen6_max.dtsi
-and checked against Boundary Devices linux kernel tree ([1]).
+On 22/02/16 18:42, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [160222 02:16]:
+>> On 20/02/16 00:04, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq@ti.com> [160219 13:27]:
+>>>> Hi,
+>>>>
+>>>> @Tony
+>>>> Patches 15 and 24 are new and will need your review.
+>>>> I've modified patch 22 to include the new am335x boards introduced since v4.4.
+>>>>
+>>>> Patches are based on top of omap-for-v4.6/dt so that the DT changes apply cleanly.
+>>>
+>>> Looks OK to me. Can we merge the dts changes separately? Otherwise
+>>> we will easily end up with tons of conflicts..
+>>
+>> I agree. But we just need to keep in mind that NAND functionality will be
+>> broken till all the patches in this series are merged. We don't maintain
+>> backward compatibility with the old DT implementation.
+> 
+> Please let's not do that! That breaks booting and git bisect.
+> It's better to have a minimal branch where each patch boots fine.
 
-[1] https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.14.28_1.0.0_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+Understood. I'll send out a patch set with only the minimal DT changes
+that doesn't break anything. This should be a preparatory step for
+the DT clean up.
 
-Signed-off-by: Peter Seiderer <ps.report-hi6Y0CQ0nG0@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> Also, I think you should at least print a warning for the old
+> binding. Otherwise people with out of tree boards will have
+> hard time updating their patches to send to mainline tree.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index c6c590d..81f8c5c 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -85,9 +85,21 @@
- 			enable-active-high;
- 		};
- 
--		reg_can_xcvr: regulator@3 {
-+		reg_usb_h1_vbus: regulator@3 {
- 			compatible = "regulator-fixed";
- 			reg = <3>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbh1>;
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+
-+		reg_can_xcvr: regulator@4 {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
- 			regulator-name = "CAN XCVR";
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
-@@ -96,9 +108,9 @@
- 			gpio = <&gpio1 2 GPIO_ACTIVE_LOW>;
- 		};
- 
--		reg_wlan_vmmc: regulator@4 {
-+		reg_wlan_vmmc: regulator@5 {
- 			compatible = "regulator-fixed";
--			reg = <4>;
-+			reg = <5>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_wlan_vmmc>;
- 			regulator-name = "reg_wlan_vmmc";
-@@ -515,6 +527,12 @@
- 			>;
- 		};
- 
-+		pinctrl_usbh1: usbh1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_17__GPIO7_IO12          0x0b0b0
-+			>;
-+		};
-+
- 		pinctrl_usbotg: usbotggrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID	0x17059
-@@ -632,6 +650,7 @@
- };
- 
- &usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
- 	status = "okay";
- };
- 
--- 
-2.1.4
+OK. I'll add this warning mechanism to the omap-gpmc driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
