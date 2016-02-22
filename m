@@ -1,85 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/6] drm/msm/dsi: Parse DSI lanes via DT
-Date: Sun, 21 Feb 2016 20:53:45 -0600
-Message-ID: <20160222025345.GB15973@rob-hp-laptop>
-References: <1455541259-8967-1-git-send-email-architt@codeaurora.org>
- <1455541259-8967-7-git-send-email-architt@codeaurora.org>
+Subject: Re: [PATCH] irqchip: irq-mvebu-odmi: new driver
+Date: Sun, 21 Feb 2016 20:53:53 -0600
+Message-ID: <20160222025353.GD15973@rob-hp-laptop>
+References: <1455522162-16425-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455541259-8967-7-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+In-Reply-To: <1455522162-16425-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMTUsIDIwMTYgYXQgMDY6MzA6NTlQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiBUaGUgRFNJIGRyaXZlciBpcyBjdXJyZW50bHkgdW5hd2FyZSBvZiBob3cgdGhlIERT
-SSBjbG9jayBhbmQgZGF0YSBwaW5zCj4gYXJlIG1hcHBlZCB0byB0aGUgbG9naWNhbCBsYW5lcyBw
-cm92aWRlZCBieSB0aGUgRFNJIGNvbnRyb2xsZXIuCj4gCj4gVXNlIHRoZSBnZW5lcmljICdsYW5l
-cycgRFQgYmluZGluZyBwcm92aWRlZCBmb3IgRFNJIGxhbmVzICh1c2VkIGZvciBEU0kKPiBpbiBi
-aW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA0LWRzcy50eHQpIHRvIGdldCB0aGUgZGVzaXJlZCBt
-YXBwaW5nLgo+IAo+IFRoZSBNU00gRFNJIGNvbnRyb2xsZXIgaXMgcmVzdHJpY3RlZCBpbiB0ZXJt
-cyBvZiB3aGF0IGFsbCBtYXBwaW5ncwo+IGl0IGNhbiBzdXBwb3J0LiBUaGUgbGFuZSBwb2xhcml0
-eSBpcyBmaXhlZCBmb3IgYWxsIHRoZSBsYW5lcywgdGhlIGNsb2NrCj4gbGFuZXMgYXJlIGZpeGVk
-LCBhbmQgdGhlIGRhdGEgbGFuZXMgY2FuIGJlIHN3YXBwZWQgYW1vbmcgZWFjaCBvdGhlciBvbmx5
-Cj4gZm9yIGEgZmV3IGNvbWJpbmF0aW9ucy4gQXBwbHkgdGhlc2UgcmVzdHJpY3Rpb25zIHdoZW4g
-d2UgcGFyc2UgdGhlIERUCj4gZGF0YS4KPiAKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcKPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiBDYzogVG9taSBWYWxrZWlu
-ZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
-ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21zbS9kc2kudHh0ICAgICAgICB8ICAyNiArKystCj4gIGRyaXZlcnMvZ3B1
-L2RybS9tc20vZHNpL2RzaV9ob3N0LmMgICAgICAgICAgICAgICAgIHwgMTQ2ICsrKysrKysrKysr
-KysrKysrKy0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDE0OSBpbnNlcnRpb25zKCspLCAyMyBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tc20vZHNpLnR4dAo+IGluZGV4IGU3NDIzYmUuLmYwZDhiNmYgMTAwNjQ0Cj4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50
-eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
-ZHNpLnR4dAo+IEBAIC00NCw5ICs0NCwyOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIHBp
-bmN0cmwtbmFtZXM6IHRoZSBwaW4gY29udHJvbCBzdGF0ZSBuYW1lczsgc2hvdWxkIGNvbnRhaW4g
-ImRlZmF1bHQiCj4gIC0gcGluY3RybC0wOiB0aGUgZGVmYXVsdCBwaW5jdHJsIHN0YXRlIChhY3Rp
-dmUpCj4gIC0gcGluY3RybC1uOiB0aGUgInNsZWVwIiBwaW5jdHJsIHN0YXRlCj4gLS0gcG9ydDog
-RFNJIGNvbnRyb2xsZXIgb3V0cHV0IHBvcnQuIFRoaXMgY29udGFpbnMgb25lIGVuZHBvaW50IHN1
-Ym5vZGUsIHdpdGggaXRzCj4gLSAgcmVtb3RlLWVuZHBvaW50IHNldCB0byB0aGUgcGhhbmRsZSBv
-ZiB0aGUgY29ubmVjdGVkIHBhbmVsJ3MgZW5kcG9pbnQuCj4gLSAgU2VlIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQgZm9yIGRldmljZSBncmFwaCBpbmZvLgo+ICst
-IHBvcnQ6IERTSSBjb250cm9sbGVyIG91dHB1dCBwb3J0LCBjb250YWluaW5nIG9uZSBlbmRwb2lu
-dCBzdWJub2RlLgo+ICsKPiArICBEU0kgRW5kcG9pbnQgcHJvcGVydGllczoKPiArICAtIHJlbW90
-ZS1lbmRwb2ludDogc2V0IHRvIHBoYW5kbGUgb2YgdGhlIGNvbm5lY3RlZCBwYW5lbCdzIGVuZHBv
-aW50Lgo+ICsgICAgU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50
-eHQgZm9yIGRldmljZSBncmFwaCBpbmZvLgo+ICsgIC0gbGFuZXM6IGxpc3Qgb2YgcGluIG51bWJl
-cnMgZm9yIHRoZSBEU0kgbGFuZXM6IENMS3AsIENMS24sIERBVEEwcCwgREFUQTBuLAo+ICsgICAg
-REFUQTFwLCBEQVRBMW4sIC4uLgo+ICsgICAgVGhpcyBwcm92aWRlcyBhIHBoeXNpY2FsIHRvIGxv
-Z2ljYWwgbWFwcGluZyBvZiB0aGUgRFNJIGxhbmVzLiBUaGUgQ0xLcCBhbmQKPiArICAgIENMS24g
-cGlucyBoYXZlIHRvIGJlIG1hcHBlZCB0byBwaW5zIDAgYW5kIDEuIEZvciBkYXRhIGxhbmVzLCB0
-aGVyZSBhcmUgb25seQoKVGhlbiB3aHkgZGVzY3JpYmUgdGhlIGNsayBwaW5zPwoKPiArICAgIGEg
-bGltaXRlZCBudW1iZXIgb2YgcGh5c2ljYWwgdG8gbG9naWNhbCBtYXBwaW5ncyBwb3NzaWJsZToK
-PiArCj4gKyAgICAgIjAxMjMiOiBMb2dpYyAwLT5QaHlzIDA7IExvZ2ljIDEtPlBoeXMgMTsgTG9n
-aWMgMi0+UGh5cyAyOyBMb2dpYyAzLT5QaHlzIDM7Cj4gKyAgICAgIjMwMTIiOiBMb2dpYyAzLT5Q
-aHlzIDA7IExvZ2ljIDAtPlBoeXMgMTsgTG9naWMgMS0+UGh5cyAyOyBMb2dpYyAyLT5QaHlzIDM7
-Cj4gKyAgICAgIjIzMDEiOiBMb2dpYyAyLT5QaHlzIDA7IExvZ2ljIDMtPlBoeXMgMTsgTG9naWMg
-MC0+UGh5cyAyOyBMb2dpYyAxLT5QaHlzIDM7Cj4gKyAgICAgIjEyMzAiOiBMb2dpYyAxLT5QaHlz
-IDA7IExvZ2ljIDItPlBoeXMgMTsgTG9naWMgMy0+UGh5cyAyOyBMb2dpYyAwLT5QaHlzIDM7Cj4g
-KyAgICAgIjAzMjEiOiBMb2dpYyAwLT5QaHlzIDA7IExvZ2ljIDMtPlBoeXMgMTsgTG9naWMgMi0+
-UGh5cyAyOyBMb2dpYyAxLT5QaHlzIDM7Cj4gKyAgICAgIjEwMzIiOiBMb2dpYyAxLT5QaHlzIDA7
-IExvZ2ljIDAtPlBoeXMgMTsgTG9naWMgMy0+UGh5cyAyOyBMb2dpYyAyLT5QaHlzIDM7Cj4gKyAg
-ICAgIjIxMDMiOiBMb2dpYyAyLT5QaHlzIDA7IExvZ2ljIDEtPlBoeXMgMTsgTG9naWMgMC0+UGh5
-cyAyOyBMb2dpYyAzLT5QaHlzIDM7Cj4gKyAgICAgIjMyMTAiOiBMb2dpYyAzLT5QaHlzIDA7IExv
-Z2ljIDItPlBoeXMgMTsgTG9naWMgMS0+UGh5cyAyOyBMb2dpYyAwLT5QaHlzIDM7Cj4gKwo+ICsg
-ICAgIEhlcmUsIGEgIjMwMTIiIG1hcHBpbmcgd2lsbCBiZSByZXByZXNlbnRlZCBieToKPiArICAg
-ICBsYW5lcyA9IDwwIDEgOCA5IDIgMyA0IDUgNiA3PjsKCkknbSBsb3N0IGhlcmUuIFdoYXQgZG9l
-cyA4IG1lYW4gZm9yIGV4YW1wbGUuIFRoZSBpbmRleCByZXByZXNlbnRzPwoKUm9iCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Feb 15, 2016 at 08:42:42AM +0100, Thomas Petazzoni wrote:
+> This commits adds a new irqchip driver that handles the ODMI
+> controller found on Marvell 7K/8K processors. The ODMI controller
+> provide MSI interrupt functionality to on-board peripherals, much like
+> the GIC-v2m.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  .../marvell,odmi-controller.txt                    |  36 +++
+>  drivers/irqchip/Kconfig                            |   4 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-mvebu-odmi.c                   | 270 +++++++++++++++++++++
+>  4 files changed, 311 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+>  create mode 100644 drivers/irqchip/irq-mvebu-odmi.c
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+> new file mode 100644
+> index 0000000..a2470af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+> @@ -0,0 +1,36 @@
+> +
+> +* Marvell ODMI for MSI support
+> +
+> +Some Marvell SoCs have an On-Die Message Interrupt (ODMI) controller
+> +which can be used by on-board peripheral for MSI interrupts.
+> +
+> +Required properties:
+> +
+> +- compatible	       : The value here should contain "marvell,odmi-controller".
+
+SoC specific compatible too please.
+
+> +
+> +- interrupt,controller : Identifies the node as an interrupt controller.
+> +
+> +- msi-controller       : Identifies the node as an MSI controller.
+> +
+> +- marvell,odmi-frames  : Number of ODMI frames available. Each frame
+> +                         provides a number of events.
+> +
+> +- reg		       : List of register definitions, one for each
+> +                         ODMI frame.
+> +
+> +- marvell,spi-base     : List of GIC base SPI interrupts, one for each
+> +                         ODMI frame.
+
+Why not "interrupts" property?
+
+> +
+> +Example:
+> +
+> +	odmi: odmi@300000 {
+> +		compatible = "marvell,odmi-controller";
+> +		interrupt-controller;
+> +		msi-controller;
+> +		marvell,odmi-frames = <4>;
+> +		reg = <0x300000 0x4000>,
+> +		      <0x304000 0x4000>,
+> +		      <0x308000 0x4000>,
+> +		      <0x30C000 0x4000>;
+> +		marvell,spi-base = <128>, <136>, <144>, <152>;
+> +	};
