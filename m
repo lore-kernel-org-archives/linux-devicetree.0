@@ -1,34 +1,59 @@
-From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add LG lp120up1 panel bindings
-Date: Mon, 22 Feb 2016 10:13:03 +0800
-Message-ID: <1456107183.6025.1.camel@mszsdhlt06>
-References: <1455691839-2410-1-git-send-email-jitao.shi@mediatek.com>
-	 <20160218143633.GJ9654@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160218143633.GJ9654@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.che
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback compatibility strings
+Date: Mon, 22 Feb 2016 11:15:49 +0900
+Message-ID: <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-02-18 at 08:36 -0600, Rob Herring wrote:
-> On Wed, Feb 17, 2016 at 02:50:38PM +0800, Jitao Shi wrote:
-> > Add documentation for lp120up1 panel
-> > 
-> > Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../bindings/display/panel/lg,lp120up1.txt         |    7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/lg,lp120up1.txt
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
+This is in keeping with the fallback scheme being adopted wherever
+appropriate for drivers for Renesas SoCs.
 
-Thanks for your "acked"
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
+ drivers/net/can/rcar_can.c                             | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+index 002d8440bf66..036786e1f70d 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -6,6 +6,8 @@ Required properties:
+ 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+ 	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+ 	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
++	      "renesas,can-gen1" for a generic R-Car Gen1 compatible device.
++	      "renesas,can-gen2" for a generic R-Car Gen2 compatible device.
+ - reg: physical base address and size of the R-Car CAN register map.
+ - interrupts: interrupt specifier for the sole interrupt.
+ - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+@@ -25,7 +27,7 @@ Example
+ SoC common .dtsi file:
+ 
+ 	can0: can@e6e80000 {
+-		compatible = "renesas,can-r8a7791";
++		compatible = "renesas,can-r8a7791", "renesas,can-gen2";
+ 		reg = <0 0xe6e80000 0 0x1000>;
+ 		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
+diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
+index bc46be39549d..c70a1f795933 100644
+--- a/drivers/net/can/rcar_can.c
++++ b/drivers/net/can/rcar_can.c
+@@ -904,6 +904,8 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
+ 	{ .compatible = "renesas,can-r8a7779" },
+ 	{ .compatible = "renesas,can-r8a7790" },
+ 	{ .compatible = "renesas,can-r8a7791" },
++	{ .compatible = "renesas,can-gen1" },
++	{ .compatible = "renesas,can-gen2" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rcar_can_of_table);
+-- 
+2.1.4
