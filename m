@@ -1,110 +1,64 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Mon, 22 Feb 2016 12:10:27 +0900
-Message-ID: <20160222031027.GP18327@sirena.org.uk>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+Subject: Re: [PATCH V3] ASoC: pcm179x: Add support for pcm1795 and pcm1796
+Date: Mon, 22 Feb 2016 12:19:44 +0900
+Message-ID: <20160222031944.GT18327@sirena.org.uk>
+References: <1452382685-18009-1-git-send-email-michael@amarulasolutions.com>
+ <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
+ <20160110120045.GW6588@sirena.org.uk>
+ <20160110173812.GA16304@panicking>
+ <20160205172451.GA30542@panicking>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DCmRZ841GpRfzaEr"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="LJuv+M/03Kgs6kNS"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456105630-28914-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160205172451.GA30542@panicking>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jacob Siverskog <jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---DCmRZ841GpRfzaEr
+--LJuv+M/03Kgs6kNS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Feb 22, 2016 at 04:47:06AM +0300, Sergei Ianovich wrote:
-> ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
-> master which makes the RTC usable. The driver is not supposed to work
-> with anything else.
+On Fri, Feb 05, 2016 at 06:24:57PM +0100, Michael Trimarchi wrote:
 
-So this is something that is internal to a single chip or something?
-I'm slightly unclear from the above if this is or is not a SPI
-controller.  If it isn't generic the DT should probably just describe
-the IP and let the driver create the SPI controller and device if that
-is an expedient way of doing things.
+> +#define PCM1795	1
+> +	unsigned int codec_model;
 
-> +spi0@901c {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "icpdas,spi-lp8841-rtc";
-> +	reg = <0x901c 0x1>;
-> +
-> +	rtc@0 {
-> +		compatible = "maxim,rtc-ds1302";
-> +		reg = <0>;
-> +		spi-max-frequency = <500000>;
-> +		spi-3wire;
-> +		spi-lsb-first;
-> +		spi-cs-high;
-> +	};
-> +};
+It looks like you're trying to define an enum here.
 
-This example makes it seem like an actual SPI controller but just one
-that's broken/limited?
+> +static const unsigned int codec_model = PCM1795;
 
-> +config SPI_LP8841_RTC
-> +	tristate "ICP DAS LP-8841 SPI Controller for RTC"
-> +	depends on OF && (MACH_PXA27X_DT || COMPILE_TEST)
+That's a weird name to use here.  Call it pcm1795 or something, though
+normally we just cast the integer to and from a pointer.
 
-Does this need a strict DT dependency or can it build without DT?
+> +	{ .compatible = "ti,pcm1795",
+> +	  .data = &codec_model,
+> +	},
 
-> +/*
-> + * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in SPI
-> + * GPIO driver, this SPI driver can be replaced by a simple GPIO driver
-> + * providing 3 GPIO pins.
-> + */
+This is strange indentation, just keep it on one line and it's easier to
+follow.
 
-What's the advantage of not doing that?  Overall the driver looks fairly
-good but it does seem to just implement a straight bitbanging driver
-with less flexibility.
-
-> +#ifndef DRIVER_NAME
-> +#define DRIVER_NAME	"spi_lp8841_rtc"
-> +#endif
-
-If you want to use a define for this just use a define for it, don't do
-this ifdef stuff.
-
-> +static inline void
-> +spidelay(unsigned usec)
-> +{
-> +	usleep_range(usec, usec + 1);
-> +}
-
-Just use usleep_range() directly.
-
-> +static void
-> +spi_lp8841_rtc_cleanup(struct spi_device *spi)
-> +{
-> +}
-
-Remove empty functions, if they can be empty the core will support
-ignoring them if they are missing.
-
---DCmRZ841GpRfzaEr
+--LJuv+M/03Kgs6kNS
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWynwjAAoJECTWi3JdVIfQ/5EH/RQ6i6ue8QI+XXSMHzFf1e4f
-QdXnzQqD9GD8NnLv7gs+nilD72V2MsTpRcLUVO9O2omZpm9CpUCX0uwEB5xMnDLR
-7KGEfAi7OlUdM5doPdN1ox4Dq38uwSuEAh2b9DraZ2hyM8t3BNL480EwoyX6Fdmw
-5ZmAPBfXD2+gD6YL0iU5ss+1LAtfRYYLG1EZNJyvAzWp5OcNgS8p/6+9FSaIk6wE
-ft7Bw2hLisNNlLQoG/y+pjEIAMpIYhbJj2+y64gqz8FMpERIEL/0DirEA9N4QDQC
-nignG3cYmF/LhUbCmTPdDIiPzaEiAwZ53iYGDAHYxLYILMd53j1Is+fglsRrSxA=
-=B17D
+iQEcBAEBCAAGBQJWyn5PAAoJECTWi3JdVIfQQqoH/j+slj+kg4UIkopgg2mdG74j
+o2xQXOI/SPJgRRYknSlqfwhzb5UzSEwb8oHMFvthmcotjVkupTwEhzEg2gl+wHp9
+2zLit0hNSjzwAhAz8JkzQZK2I0eZKbj+jCamVZH0nRldsvHMgP71dHc4TpFbXRX2
+aHthUCXw0MusP6MvUFDp9ApJM685Wof7jscH2zKQVONZ2E3sNJGZotjcw6DZqWS8
+1pt0tJEzWOLAxWsHMTEQ9q/eT1ULm7sSAtK1m/NM+pMUzVHasefyGfhzvLkqXXDC
+Se52A+8HwwAk+m1Qf/1SQUq80OWSGwCY1+3oT872XRvlWdDP+3oPeQyKINwwQ5Q=
+=OdqR
 -----END PGP SIGNATURE-----
 
---DCmRZ841GpRfzaEr--
+--LJuv+M/03Kgs6kNS--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
