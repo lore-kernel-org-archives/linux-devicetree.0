@@ -1,27 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] thermal: exynos: Document number of supported
- trip-points
-Date: Sun, 21 Feb 2016 20:55:04 -0600
-Message-ID: <20160222025504.GQ15973@rob-hp-laptop>
-References: <1455772460-20684-1-git-send-email-k.kozlowski@samsung.com>
- <1455772460-20684-2-git-send-email-k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/1] of/overlay: of overlay callbacks
+Date: Sun, 21 Feb 2016 20:55:17 -0600
+Message-ID: <20160222025517.GS15973@rob-hp-laptop>
+References: <1455730885-1514-1-git-send-email-atull@opensource.altera.com>
+ <1455730885-1514-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455772460-20684-2-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <1455730885-1514-2-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 02:14:19PM +0900, Krzysztof Kozlowski wrote:
-> Document the number of configurable temperature thresholds (for
-> trip-points in interrupt-driven mode).
+On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:
+> Add overlay callback functionality.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> When DT overlays are being added, some drivers/subsystems
+> will want to know about the changes before they go into the
+> live tree.  Similarly there is a need for post-remove
+> callbacks.
+> 
+> Each handler is registered with a of_device_id.  When
+> an overlay target matches a handler's id, the handler
+> gets called.
+> 
+> The following 4 cases are handled: pre-apply, post-apply,
+> pre-remove, and post-remove.
 
-Acked-by: Rob Herring <robh@kernel.org>
+So I know I suggested maybe not using notifiers, but this ends up just 
+looking like notifiers, so we might as well use them unless we somehow 
+change the flow. You would just need to add pre-apply and pre-remove 
+in of_attach_node and of_detach_node, right?
+
+Rob
