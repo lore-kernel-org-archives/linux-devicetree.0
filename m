@@ -1,26 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] thermal: exynos: Document compatible for Exynos5433
- TMU
-Date: Sun, 21 Feb 2016 20:55:08 -0600
-Message-ID: <20160222025508.GR15973@rob-hp-laptop>
-References: <1455772460-20684-1-git-send-email-k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3] auxdisplay: ht16k33: Driver for LED controller.
+Date: Sun, 21 Feb 2016 20:54:50 -0600
+Message-ID: <20160222025450.GO15973@rob-hp-laptop>
+References: <1455788642-4289-1-git-send-email-robin@protonic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455772460-20684-1-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <1455788642-4289-1-git-send-email-robin@protonic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+To: Robin van der Gracht <robin@protonic.nl>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 02:14:18PM +0900, Krzysztof Kozlowski wrote:
-> Commit 488c7455d74c ("thermal: exynos: Add the support for Exynos5433
-> TMU") added new compatible but forgot to update documentation.
+On Thu, Feb 18, 2016 at 10:44:02AM +0100, Robin van der Gracht wrote:
+> This is a driver for the Holtek HT16K33 LED controller with keyscan.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
 > ---
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v3:
+>  - Renamed device-tree property 'refresh-rate' to 'refresh-rate-hz'
+>  - Renamed device-tree property 'default-brightness' to 'default-brightness-level'
+>  - Realligned the strings in the documentation (ht16k33.txt).
+> 
+>  .../devicetree/bindings/display/ht16k33.txt        |  42 ++
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/auxdisplay/Kconfig                         |   9 +
+>  drivers/auxdisplay/Makefile                        |   1 +
+>  drivers/auxdisplay/ht16k33.c                       | 574 +++++++++++++++++++++
+>  4 files changed, 626 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
+>  create mode 100644 drivers/auxdisplay/ht16k33.c
