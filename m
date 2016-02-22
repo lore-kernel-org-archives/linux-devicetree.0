@@ -1,186 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
- support  generic Xilinx  AXI PCIe Host Bridge IP driver
-Date: Mon, 22 Feb 2016 16:17:45 +0000
-Message-ID: <20160222161745.GL3435@leverpostej>
-References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
- <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
- <8520D5D51A55D047800579B09414719825884643@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 00/26] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Mon, 22 Feb 2016 08:42:35 -0800
+Message-ID: <20160222164234.GD13417@atomide.com>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <20160219220442.GR21202@atomide.com>
+ <56CADFD5.2040205@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8520D5D51A55D047800579B09414719825884643-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org" <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org" <russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kern>
+In-Reply-To: <56CADFD5.2040205@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 04:01:15PM +0000, Bharat Kumar Gogada wrote:
-> Ping
-
-Please trim your To line, and state who you're pinging, and specifically
-what you are pinging for. You'll have much better luck with targetted
-replies.
-
-Given the number of people in the To line, no-one knows if they're being
-poked, or if someone else is. Given the lack of any question/statement
-with your ping, it's not clear what you're asking for.
-
-The DT parts of this series already appear to have been reviewed, so
-there's no reason to keep myself and other DT maintainers on the To
-line for this patch.
-
-Mark.
-
+* Roger Quadros <rogerq@ti.com> [160222 02:16]:
+> On 20/02/16 00:04, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [160219 13:27]:
+> >> Hi,
+> >>
+> >> @Tony
+> >> Patches 15 and 24 are new and will need your review.
+> >> I've modified patch 22 to include the new am335x boards introduced since v4.4.
+> >>
+> >> Patches are based on top of omap-for-v4.6/dt so that the DT changes apply cleanly.
+> > 
+> > Looks OK to me. Can we merge the dts changes separately? Otherwise
+> > we will easily end up with tons of conflicts..
 > 
-> > Subject: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
-> > support generic Xilinx AXI PCIe Host Bridge IP driver
-> > 
-> > This patch does required modifications to microblaze PCI subsystem, to work
-> > with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze and Zynq.
-> > 
-> > Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes:
-> > Removed pcibios_get_phb_of_node in pci-common.c, using generic version
-> > instead.
-> > Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
-> > Modified pcibios_align_resource in pci-common.c, as per generic
-> > architecuture, removed temporary variable.
-> > Removed pci_domain_nr in pci-common.c, instead using generic code.
-> > Added pcibios_add_device in pci-common.c, as per generic architecuture.
-> > Adding Kernel configuration in arch/microblaze as required for generic PCI
-> > domains.
-> > Added kernel configuration for driver to support Microblaze.
-> > ---
-> >  arch/microblaze/Kconfig          |  3 +++
-> >  arch/microblaze/pci/pci-common.c | 56 +++++++---------------------------------
-> >  drivers/pci/host/Kconfig         |  2 +-
-> >  3 files changed, 14 insertions(+), 47 deletions(-)
-> > 
-> > diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig index
-> > 0bce820..c3702b9 100644
-> > --- a/arch/microblaze/Kconfig
-> > +++ b/arch/microblaze/Kconfig
-> > @@ -271,6 +271,9 @@ config PCI
-> >  config PCI_DOMAINS
-> >  	def_bool PCI
-> > 
-> > +config PCI_DOMAINS_GENERIC
-> > +	def_bool PCI_DOMAINS
-> > +
-> >  config PCI_SYSCALL
-> >  	def_bool PCI
-> > 
-> > diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-
-> > common.c
-> > index ae838ed..35654be 100644
-> > --- a/arch/microblaze/pci/pci-common.c
-> > +++ b/arch/microblaze/pci/pci-common.c
-> > @@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t
-> > address)  }  EXPORT_SYMBOL_GPL(pci_address_to_pio);
-> > 
-> > -/*
-> > - * Return the domain number for this bus.
-> > - */
-> > -int pci_domain_nr(struct pci_bus *bus)
-> > -{
-> > -	struct pci_controller *hose = pci_bus_to_host(bus);
-> > -
-> > -	return hose->global_number;
-> > -}
-> > -EXPORT_SYMBOL(pci_domain_nr);
-> > -
-> >  /* This routine is meant to be used early during boot, when the
-> >   * PCI bus numbers have not yet been assigned, and you need to
-> >   * issue PCI config cycles to an OF device.
-> > @@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus
-> > *bus)
-> > 
-> >  void pcibios_fixup_bus(struct pci_bus *bus)  {
-> > -	/* When called from the generic PCI probe, read PCI<->PCI bridge
-> > -	 * bases. This is -not- called when generating the PCI tree from
-> > -	 * the OF device-tree.
-> > -	 */
-> > -	if (bus->self != NULL)
-> > -		pci_read_bridge_bases(bus);
-> > -
-> > -	/* Now fixup the bus bus */
-> > -	pcibios_setup_bus_self(bus);
-> > -
-> > -	/* Now fixup devices on that bus */
-> > -	pcibios_setup_bus_devices(bus);
-> > +	/* nothing to do */
-> >  }
-> >  EXPORT_SYMBOL(pcibios_fixup_bus);
-> > 
-> > -static int skip_isa_ioresource_align(struct pci_dev *dev) -{
-> > -	return 0;
-> > -}
-> > -
-> >  /*
-> >   * We need to avoid collisions with `mirrored' VGA ports
-> >   * and other strange ISA hardware, so we always want the @@ -899,20
-> > +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
-> > resource_size_t pcibios_align_resource(void *data, const struct resource
-> > *res,
-> >  				resource_size_t size, resource_size_t align)  {
-> > -	struct pci_dev *dev = data;
-> > -	resource_size_t start = res->start;
-> > -
-> > -	if (res->flags & IORESOURCE_IO) {
-> > -		if (skip_isa_ioresource_align(dev))
-> > -			return start;
-> > -		if (start & 0x300)
-> > -			start = (start + 0x3ff) & ~0x3ff;
-> > -	}
-> > -
-> > -	return start;
-> > +	return res->start;
-> >  }
-> >  EXPORT_SYMBOL(pcibios_align_resource);
-> > 
-> > +int pcibios_add_device(struct pci_dev *dev) {
-> > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(pcibios_add_device);
-> > +
-> >  /*
-> >   * Reparent resource children of pr that conflict with res
-> >   * under res, and make res replace those children.
-> > @@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct
-> > pci_controller *hose,
-> >  		 (unsigned long)hose->io_base_virt - _IO_BASE);  }
-> > 
-> > -struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus) -{
-> > -	struct pci_controller *hose = bus->sysdata;
-> > -
-> > -	return of_node_get(hose->dn);
-> > -}
-> > -
-> >  static void pcibios_scan_phb(struct pci_controller *hose)  {
-> >  	LIST_HEAD(resources);
-> > diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig index
-> > d5e58ba..7c56c2e 100644
-> > --- a/drivers/pci/host/Kconfig
-> > +++ b/drivers/pci/host/Kconfig
-> > @@ -79,7 +79,7 @@ config PCI_KEYSTONE
-> > 
-> >  config PCIE_XILINX
-> >  	bool "Xilinx AXI PCIe host bridge support"
-> > -	depends on ARCH_ZYNQ
-> > +	depends on ARCH_ZYNQ || MICROBLAZE
-> >  	help
-> >  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
-> >  	  Host Bridge driver.
-> > --
-> > 2.1.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I agree. But we just need to keep in mind that NAND functionality will be
+> broken till all the patches in this series are merged. We don't maintain
+> backward compatibility with the old DT implementation.
+
+Please let's not do that! That breaks booting and git bisect.
+It's better to have a minimal branch where each patch boots fine.
+
+Also, I think you should at least print a warning for the old
+binding. Otherwise people with out of tree boards will have
+hard time updating their patches to send to mainline tree.
+
+> Do you want me to send you the DT patches separately or you can
+> pick up patches 18 to 26?
+
+Sounds like some things need to be rearranged a bit first
+though :)
+
+Regards,
+
+Tony
