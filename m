@@ -1,48 +1,33 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Mon, 22 Feb 2016 19:39:30 +0900
-Message-ID: <20160222103930.GA18327@sirena.org.uk>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
- <1456134057-9824-1-git-send-email-ynvich@gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: n900: Use linux input defines instead
+ hardcoded constants
+Date: Mon, 22 Feb 2016 11:55:20 +0100
+Message-ID: <20160222105520.GA3215@amd>
+References: <1456052808-14461-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UKdSZztwKekUWPpk"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456134057-9824-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456052808-14461-1-git-send-email-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun 2016-02-21 12:06:48, Pali Roh=E1r wrote:
+> This makes DTS structure more readable.
+>=20
+> Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
---UKdSZztwKekUWPpk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-On Mon, Feb 22, 2016 at 12:40:54PM +0300, Sergei Ianovich wrote:
-
->    * drop empty master->cleanup
-
-You still have an empty remove() function.
-
---UKdSZztwKekUWPpk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWyuVhAAoJECTWi3JdVIfQGU0H/jlp6+nlCU3OgdlN9Q6nQ3sC
-jz5EtK1gW4idZwuHb+VLBVi+JB56FooE9iXpE/CdOpbJHjMZ+Q+zRic1N6lA1A7U
-zouY7mdXPgUguuY3Bxw01n6GaHjwSFbH5kp/0TU6kwGiFWmaA+ewnv8Y9LSHbnRx
-vua4xqvj4zlI3mELDkxDgaw8ZuVs0AjJYAwovZnto0n7e6fGSPqcfyXwm3U7mXIV
-O52PexHsjGU5DpyYocoLGT2jc18znHySSMoeWXvjrQt0eRYRgWuMeQTOPfKgiTmO
-Ee371hUFEakLHDnZe6oVSF6folDklfxeLanedVH1Jhq06Ecsk2G6mhdFRN44z0E=
-=TPiN
------END PGP SIGNATURE-----
-
---UKdSZztwKekUWPpk--
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
