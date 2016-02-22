@@ -1,61 +1,84 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of/overlay: of overlay callbacks
-Date: Mon, 22 Feb 2016 17:38:19 +0200
-Message-ID: <6F671B0F-4F94-47F0-9CA2-04E6F905F20A@konsulko.com>
-References: <1455730885-1514-1-git-send-email-atull@opensource.altera.com> <1455730885-1514-2-git-send-email-atull@opensource.altera.com> <20160222025517.GS15973@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160222025517.GS15973@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
+ compatibility strings
+Date: Mon, 22 Feb 2016 16:40:39 +0100
+Message-ID: <CAMuHMdX3VjAZzhNxuucBn3hSS3YMmhJPVxpA2VKM+X-Qs3gxLg@mail.gmail.com>
+References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
+	<1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Feb 22, 2016 at 3:15 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
+>  drivers/net/can/rcar_can.c                             | 2 ++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> index 002d8440bf66..036786e1f70d 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -6,6 +6,8 @@ Required properties:
+>               "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+>               "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+>               "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
+> +             "renesas,can-gen1" for a generic R-Car Gen1 compatible device.
+> +             "renesas,can-gen2" for a generic R-Car Gen2 compatible device.
 
-> On Feb 22, 2016, at 04:55 , Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:
->> Add overlay callback functionality.
->>=20
->> When DT overlays are being added, some drivers/subsystems
->> will want to know about the changes before they go into the
->> live tree.  Similarly there is a need for post-remove
->> callbacks.
->>=20
->> Each handler is registered with a of_device_id.  When
->> an overlay target matches a handler's id, the handler
->> gets called.
->>=20
->> The following 4 cases are handled: pre-apply, post-apply,
->> pre-remove, and post-remove.
->=20
-> So I know I suggested maybe not using notifiers, but this ends up jus=
-t=20
-> looking like notifiers, so we might as well use them unless we someho=
-w=20
-> change the flow. You would just need to add pre-apply and pre-remove=20
-> in of_attach_node and of_detach_node, right?
->=20
+"renesas,rcar-gen1-can", "renesas,rcar-gen2-can"?
 
+(Yeah, "can" looks a lot like "rcar" ;-)
 
-I agree those look just like notifiers. We could just update the notifi=
-er
-logic to handle this case.
+Nothing further to say about SoC-specific vs. generic compatible values?
 
-Am I missing something else?
+>  - reg: physical base address and size of the R-Car CAN register map.
+>  - interrupts: interrupt specifier for the sole interrupt.
+>  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> @@ -25,7 +27,7 @@ Example
+>  SoC common .dtsi file:
+>
+>         can0: can@e6e80000 {
+> -               compatible = "renesas,can-r8a7791";
+> +               compatible = "renesas,can-r8a7791", "renesas,can-gen2";
 
+"renesas,rcar-gen2-can".
 
-> Rob
+>                 reg = <0 0xe6e80000 0 0x1000>;
+>                 interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
+>                 clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
+> diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
+> index bc46be39549d..c70a1f795933 100644
+> --- a/drivers/net/can/rcar_can.c
+> +++ b/drivers/net/can/rcar_can.c
+> @@ -904,6 +904,8 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
+>         { .compatible = "renesas,can-r8a7779" },
+>         { .compatible = "renesas,can-r8a7790" },
+>         { .compatible = "renesas,can-r8a7791" },
+> +       { .compatible = "renesas,can-gen1" },
+> +       { .compatible = "renesas,can-gen2" },
 
-Regards
+"renesas,rcar-gen1-can"
+"renesas,rcar-gen2-can".
 
-=E2=80=94 Pantelis
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
