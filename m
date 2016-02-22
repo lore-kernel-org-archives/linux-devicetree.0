@@ -1,86 +1,165 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 11/11] ARM: versatile: move CLCD configuration to device tree
-Date: Mon, 22 Feb 2016 16:54:15 +0100
-Message-ID: <CACRpkdbO1+nWJOce8eC-G=tKrH3a2OEqQ-ro=LK88RhNrJ5cfQ@mail.gmail.com>
-References: <1454594660-7532-1-git-send-email-linus.walleij@linaro.org>
-	<1454594660-7532-12-git-send-email-linus.walleij@linaro.org>
-	<56C438DA.5040109@ti.com>
-	<CACRpkdZ+G17hmVP8AejL7NTqg7k0SBC5kgF55ASjD+kfuGFJhQ@mail.gmail.com>
-	<20160217213250.GK19428@n2100.arm.linux.org.uk>
-	<56C5B080.9090007@ti.com>
-	<CACRpkdaXFUCR5=5mS28_4Dx_LfzqV13zwT=vVeJwuOzm_rGRBQ@mail.gmail.com>
-	<56CB2C31.5040703@ti.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
+ support  generic Xilinx  AXI PCIe Host Bridge IP driver
+Date: Mon, 22 Feb 2016 16:01:15 +0000
+Message-ID: <8520D5D51A55D047800579B09414719825884643@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+ <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CB2C31.5040703-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharatku@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Michal Simek <michals@xilinx.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 4:41 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
+Ping
 
-> After thinking this a bit and discussing it with Laurent P., generally
-> speaking I still think that the only sane option is that the bootloader
-> does any detection needed and provides the kernel a .dtb that contains
-> the HW that is connected. No board specific drivers are needed on the
-> kernel side.
->
-> In some cases userspace loaded DT overlays may be fine, if the userspace
-> can do the detection and the device in question is not somehow critical
-> to operation. But I think displays are critical, and afaik in Versatile
-> case the userspace can't even do the detection (?).
->
-> The third option is to have board specific display handling code and the
-> display HW data in the kernel, as you've done in the patches.
-
-Yeah correct...
-
-> But, of course, which option should be used for which board is not
-> always clear...
->
-> What bootloader is used on Versatile?
-
-It's U-boot indeed. Not that I've tried to compile or use it, I got it
-as binary from ARM.
-
-> If it's some proprietary loader
-> which can't be changed, then the bootloader option is out, and I guess
-> it points to the third option, i.e. either the version in this patch or
-> the earlier version. If it's u-boot, I would suggest going for the
-> bootloader option.
->
-> Afaik u-boot doesn't support combining DT fragments yet. But (also
-> afaik) the u-boot maintainer is ok with the idea. And I know there are
-> others (for example TI) interested in the same functionality.
-
-Hm OK.... so the bootloader need to be better at augmenting device
-trees than the kernel. Well... The problem is that there are a bunch
-of deployed systems out there and they all need to have their boot loader
-updated then, which may be OK since it's ARM development boards
-but I don't know.
-
-> Now, adding that support might take some time, and in the meantime it'd
-> be good to get the HW working with kernel with a temporary solution. To
-> do that, my suggestion is basically "any solution which requires no
-> (temporary) changes to .dts".
->
-> While I don't like too much the solution in the patch here, it's all
-> inside kernel code and can be dropped easily, right? If we would merge
-> the the multi-endpoint solution you had in the earlier patch, you would
-> have to support that .dts in the future too.
-
-To go with this solution I need to extend the drivers/of library to be
-able to update properties properly instead of this hack, and that is
-non-reversible if we start to use it.
-
-It is not really an overlay because the DT stuff is dynamically
-augmented by the kernel, not taken from somewhere else.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Subject: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
+> support generic Xilinx AXI PCIe Host Bridge IP driver
+> 
+> This patch does required modifications to microblaze PCI subsystem, to work
+> with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze and Zynq.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> ---
+> Changes:
+> Removed pcibios_get_phb_of_node in pci-common.c, using generic version
+> instead.
+> Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
+> Modified pcibios_align_resource in pci-common.c, as per generic
+> architecuture, removed temporary variable.
+> Removed pci_domain_nr in pci-common.c, instead using generic code.
+> Added pcibios_add_device in pci-common.c, as per generic architecuture.
+> Adding Kernel configuration in arch/microblaze as required for generic PCI
+> domains.
+> Added kernel configuration for driver to support Microblaze.
+> ---
+>  arch/microblaze/Kconfig          |  3 +++
+>  arch/microblaze/pci/pci-common.c | 56 +++++++---------------------------------
+>  drivers/pci/host/Kconfig         |  2 +-
+>  3 files changed, 14 insertions(+), 47 deletions(-)
+> 
+> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig index
+> 0bce820..c3702b9 100644
+> --- a/arch/microblaze/Kconfig
+> +++ b/arch/microblaze/Kconfig
+> @@ -271,6 +271,9 @@ config PCI
+>  config PCI_DOMAINS
+>  	def_bool PCI
+> 
+> +config PCI_DOMAINS_GENERIC
+> +	def_bool PCI_DOMAINS
+> +
+>  config PCI_SYSCALL
+>  	def_bool PCI
+> 
+> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-
+> common.c
+> index ae838ed..35654be 100644
+> --- a/arch/microblaze/pci/pci-common.c
+> +++ b/arch/microblaze/pci/pci-common.c
+> @@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t
+> address)  }  EXPORT_SYMBOL_GPL(pci_address_to_pio);
+> 
+> -/*
+> - * Return the domain number for this bus.
+> - */
+> -int pci_domain_nr(struct pci_bus *bus)
+> -{
+> -	struct pci_controller *hose = pci_bus_to_host(bus);
+> -
+> -	return hose->global_number;
+> -}
+> -EXPORT_SYMBOL(pci_domain_nr);
+> -
+>  /* This routine is meant to be used early during boot, when the
+>   * PCI bus numbers have not yet been assigned, and you need to
+>   * issue PCI config cycles to an OF device.
+> @@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus
+> *bus)
+> 
+>  void pcibios_fixup_bus(struct pci_bus *bus)  {
+> -	/* When called from the generic PCI probe, read PCI<->PCI bridge
+> -	 * bases. This is -not- called when generating the PCI tree from
+> -	 * the OF device-tree.
+> -	 */
+> -	if (bus->self != NULL)
+> -		pci_read_bridge_bases(bus);
+> -
+> -	/* Now fixup the bus bus */
+> -	pcibios_setup_bus_self(bus);
+> -
+> -	/* Now fixup devices on that bus */
+> -	pcibios_setup_bus_devices(bus);
+> +	/* nothing to do */
+>  }
+>  EXPORT_SYMBOL(pcibios_fixup_bus);
+> 
+> -static int skip_isa_ioresource_align(struct pci_dev *dev) -{
+> -	return 0;
+> -}
+> -
+>  /*
+>   * We need to avoid collisions with `mirrored' VGA ports
+>   * and other strange ISA hardware, so we always want the @@ -899,20
+> +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
+> resource_size_t pcibios_align_resource(void *data, const struct resource
+> *res,
+>  				resource_size_t size, resource_size_t align)  {
+> -	struct pci_dev *dev = data;
+> -	resource_size_t start = res->start;
+> -
+> -	if (res->flags & IORESOURCE_IO) {
+> -		if (skip_isa_ioresource_align(dev))
+> -			return start;
+> -		if (start & 0x300)
+> -			start = (start + 0x3ff) & ~0x3ff;
+> -	}
+> -
+> -	return start;
+> +	return res->start;
+>  }
+>  EXPORT_SYMBOL(pcibios_align_resource);
+> 
+> +int pcibios_add_device(struct pci_dev *dev) {
+> +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(pcibios_add_device);
+> +
+>  /*
+>   * Reparent resource children of pr that conflict with res
+>   * under res, and make res replace those children.
+> @@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct
+> pci_controller *hose,
+>  		 (unsigned long)hose->io_base_virt - _IO_BASE);  }
+> 
+> -struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus) -{
+> -	struct pci_controller *hose = bus->sysdata;
+> -
+> -	return of_node_get(hose->dn);
+> -}
+> -
+>  static void pcibios_scan_phb(struct pci_controller *hose)  {
+>  	LIST_HEAD(resources);
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig index
+> d5e58ba..7c56c2e 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -79,7 +79,7 @@ config PCI_KEYSTONE
+> 
+>  config PCIE_XILINX
+>  	bool "Xilinx AXI PCIe host bridge support"
+> -	depends on ARCH_ZYNQ
+> +	depends on ARCH_ZYNQ || MICROBLAZE
+>  	help
+>  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+>  	  Host Bridge driver.
+> --
+> 2.1.1
