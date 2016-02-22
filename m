@@ -1,374 +1,540 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 00/20] PM / devferq: Add generic exynos bus frequency
- driver and new passive governor
-Date: Mon, 22 Feb 2016 10:00:30 +0900
-Message-ID: <56CA5DAE.50602@samsung.com>
-References: <1450075104-13705-1-git-send-email-cw00.choi@samsung.com>
- <56C72F3F.3000603@math.uni-bielefeld.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <56C72F3F.3000603@math.uni-bielefeld.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, myungjoo.ham@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org
-Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: [PATCH v6] rtc: rewrite DS1302 using SPI
+Date: Mon, 22 Feb 2016 04:41:22 +0300
+Message-ID: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
+References: <397668667-27328-3-git-send-email-ynvich@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <397668667-27328-3-git-send-email-ynvich@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Sergei Ianovich <ynvich@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK SUBSYSTEM" <rtc-linux@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tobias,
+DS1302 is half-duplex SPI device. The driver respects this fact now.
 
-On 2016=EB=85=84 02=EC=9B=94 20=EC=9D=BC 00:05, Tobias Jakobi wrote:
-> Hello,
->=20
-> I've applied the patchset to 4.5-rc4 and I'm now encountering two
-> additional problems. The first related to debugfs entries, the second
-> cocerning RCU locking.
->=20
-> Here are the debugfs lines:
-> exynos-bus bus_dmc: device_opp_debug_create_link: Failed to create li=
-nk
-> exynos-bus bus_dmc: _add_list_dev: Failed to register opp debugfs (-1=
-2)
-> exynos-bus bus_dmc: Looking up vdd-supply from device tree
-> exynos-bus: new bus device registered: bus_dmc (100000 KHz ~ 400000 K=
-Hz)
-> exynos-bus bus_acp: device_opp_debug_create_link: Failed to create li=
-nk
-> exynos-bus bus_acp: _add_list_dev: Failed to register opp debugfs (-1=
-2)
-> exynos-bus: new bus device registered: bus_acp (100000 KHz ~ 267000 K=
-Hz)
-> exynos-bus bus_c2c: device_opp_debug_create_link: Failed to create li=
-nk
-> exynos-bus bus_c2c: _add_list_dev: Failed to register opp debugfs (-1=
-2)
-> exynos-bus: new bus device registered: bus_c2c (100000 KHz ~ 400000 K=
-Hz)
-> exynos-bus bus_leftbus: device_opp_debug_create_link: Failed to creat=
-e link
-> devfreq bus_dmc: Couldn't update frequency transition information.
-> exynos-bus bus_leftbus: _add_list_dev: Failed to register opp debugfs=
- (-12)
-> exynos-bus bus_leftbus: Looking up vdd-supply from device tree
->=20
->=20
-> The RCU output is a bit longer, so I attached it.
+Pin configurations should be implemented using SPI subsystem.
 
-Thanks for your test and report.
+Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+CC: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+CC: Rob Herring <robh@kernel.org>
+---
+   v5..v6
+   * rewrite the driver as an SPI slave device
+   * use "maxim" for vendor name per Kconfig
+   * stop touching device RAM in device presence test
+   * only return time from device if valid
+   * use burst mode for reading/writing time
+   * droppped charging control. I cannot test it, and it looks broken
 
-I'm re-implementing this patchset related to devfreq core.
-I'll check the issue and resolve it.
+   v4..v5
+   * drop THIS_MODULE from struct platform driver
+   * use "dallas" for vendor name per vendor-prefixes.txt
 
-Best Regards,
-Chanwoo Choi
+   v3..v4
+   * move DTS bindings to a different patch
 
->=20
->=20
-> With best wishes,
-> Tobias
->=20
->=20
-> Chanwoo Choi wrote:
->> This patch-set includes the two features as following. The generic e=
-xynos bus
->> frequency driver is able to support almost Exynos SoCs for bus frequ=
-ency
->> scaling. And the new passive governor is able to make the dependency=
- on
->> between devices for frequency/voltage scaling. I had posted the patc=
-h-set[2]
->> with the similiar concept. This is is revised version for exynos bus=
- frequency.
->> - Generic exynos bus frequency driver
->> - New passive governor of DEVFREQ framework
->>
->> Depend on:
->> - next-20151210 tag of linux-next (master branch).
->> - Merge the latest devfreq patches on devfreq.git[2] (for-rafael bra=
-nch).
->> [1] https://git.kernel.org/cgit/linux/kernel/git/mzx/devfreq.git/ (b=
-ranch: for-rafael)
->> [2] https://lkml.org/lkml/2015/1/7/872
->>    : [PATCHv3 0/8] devfreq: Add generic exynos memory-bus frequency =
-driver
->>
->> Changes from v3:
->> (https://lkml.org/lkml/2015/12/11/75)
->> - Add the reviewed-by tag from Krzysztof Kozlowski (patch2/3/13/14/1=
-5/16/17)
->> - Fix typo of the description on patch14
->> - Modify the subject and description of patch17
->> - Reorder the 'bus_xxx' device tree node alphabetically in=20
->>   both exynos3250-rinato/monk.dts and exynos4412-trats/odroidu3
->>
->> Changes from v2:
->> (https://lkml.org/lkml/2015/12/8/869)
->> - Fix typo on documentation
->> - Modify the more appropriate sentence on patch description
->> - Add the detailed description about both parent and passive bus dev=
-ice
->> - Modify the DMC frequency for Exynos4x12 DMC bus (200MHz -> 267MHz)
->> - Modify the voltage of 200MHz was included in Exynos3250 DMC bus (8=
-00mV -> 825mV)
->> - Rename OPP nodes as 'opp@<opp-hz>'
->> - Delete the duplicate 'opp-microvolt' property of passive devfreq d=
-evice
->> - Reorder the 'bus_xxx' device tree node alphabetically in exynos325=
-0-rinato/monk.dts
->> - Reorder the 'bus_xxx' device tree node alphabetically in exynos441=
-2-trats/odroidu3
->> - Add new exynos4412-ppmu-common.dtsi to remove the duplicate PPMU d=
-t node
->>   on rinato/monk/trats2/odroid-u3 board
->> - Add the log message if bus device is registered to devfreq framewo=
-rk successfully
->> - Add the reviewed-by tag from Krzysztof Kozlowski
->> - Add the tested-by tag from Anand Moon on Odroid U3
->> - Add 'SAMSUNG BUS FREQUENCY DRIVER' entry to MAINTAINERS
->>
->> Changes from v1:
->> (https://lkml.org/lkml/2015/11/26/260)
->> - Check whether the instance of regulator is NULL or not
->>   when executing regulator_disable() because of only parent
->>   devfreq device has the regulator instance. After fixing it,
->>   the wake-up from suspend state is well working. (patch1)
->> - Fix bug which checks 'bus-clk' instead of 'bus->regulator'
->>   after calling devm_clk_get() (on patch1)
->> - Update the documentation to remove the description about
->>   DEVFREQ-EVENT subsystem (on patch2)
->> - Add the full name of DMC (Dynamic Memory Controller) (on patch2)
->> - Modify the detailed correlation of buses for Exynos3250
->>   on documentation (patch2)
->> - Add the MFC bus node for Exynos3250 (on patch11, patch12)
->> - Fix the duplicate frequency of bus_display on Exynos4x12.dtsi
->> - Add the PPMU node for exynos4412-odroidu3
->> - Add the support of bus frequency for exynos4412-odroidu3
->>
->> Detailed descirption for patch-set:
->> 1. Add generic exynos bus frequency driver
->> : This patch-set adds the generic exynos bus frequency driver for AX=
-I bus
->> of sub-blocks in exynos SoC. The Samsung Exynos SoC have the common
->> architecture for bus between DRAM and sub-blocks in SoC.
->>
->>  There are the different buses according to Exynos SoC because Exyno=
-s SoC
->> has the differnt sub-blocks and bus speed. In spite of this differen=
-ce
->> among Exynos SoCs, this driver is able to support almost Exynos SoC =
-by adding
->> unique data of each bus in the devicetree file.
->>
->>  In devicetree, each bus node has a bus clock, regulator, operation-=
-point
->> and devfreq-event devices which measure the utilization of each bus =
-block.
->>
->> For example,
->> - The bus of DMC block in exynos3250.dtsi are listed below:
->>
->> 	bus_dmc: bus_dmc {
->> 		compatible =3D "samsung,exynos-bus";
->> 		clocks =3D <&cmu_dmc CLK_DIV_DMC>;
->> 		clock-names =3D "bus";
->> 		operating-points-v2 =3D <&bus_dmc_opp_table>;
->> 		status =3D "disabled";
->> 	};
->>
->> 	bus_dmc_opp_table: opp_table1 {
->> 		compatible =3D "operating-points-v2";
->> 		opp-shared;
->>
->> 		opp@50000000 {
->> 			opp-hz =3D /bits/ 64 <50000000>;
->> 			opp-microvolt =3D <800000>;
->> 		};
->> 		opp@100000000 {
->> 			opp-hz =3D /bits/ 64 <100000000>;
->> 			opp-microvolt =3D <800000>;
->> 		};
->> 		opp@134000000 {
->> 			opp-hz =3D /bits/ 64 <134000000>;
->> 			opp-microvolt =3D <800000>;
->> 		};
->> 		opp@200000000 {
->> 			opp-hz =3D /bits/ 64 <200000000>;
->> 			opp-microvolt =3D <825000>;
->> 		};
->> 		opp@400000000 {
->> 			opp-hz =3D /bits/ 64 <400000000>;
->> 			opp-microvolt =3D <875000>;
->> 		};
->> 	};
->>
->> - Usage case to handle the frequency and voltage of bus on runtime
->>   in exynos3250-rinato.dts are listed below:
->>
->> 	&bus_dmc {
->> 		devfreq-events =3D <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->> 		vdd-supply =3D <&buck1_reg>;	/* VDD_MIF */
->> 		status =3D "okay";
->> 	};
->>
->> 2. Add new passive governor of DEVFREQ framework (patch5-patch7)
->> : This patch-set add the new passive governor for DEVFREQ framework.
->> The existing governors (ondemand, performance and so on) are used fo=
-r DVFS
->> (Dynamic Voltage and Frequency Scaling) drivers. The existing govern=
-ors
->> are independently used for specific device driver which don't give t=
-he
->> influence to other device drviers and also don't receive the effect =
-from
->> other device drivers.
->>
->>  The passive governor depends on operation of parent driver with exi=
-sting
->> governors(ondemand, performance and so on) extremely and is not able=
- to
->> decide the new frequency by oneself. According to the decided new fr=
-equency
->> of parent driver with governor, the passive governor uses it to deci=
-de
->> the appropriate frequency for own device driver. The passive governo=
-r
->> must need the following information from device tree:
->>
->> For exameple,
->>  There are one more bus device drivers in Exynos3250 which need to
->> change their source clock according to their utilization on runtime.
->> But, they share the same power line (e.g., regulator). So, LEFTBUS b=
-us
->> driver is operated as parent with ondemand governor and then the res=
-t
->> device driver with passive governor.
->>
->>  The buses of Internal block in exynos3250.dtsi are listed below:
->> When LEFTBUS bus driver (parent) changes the bus frequency with
->> ondemand governor on runtime, the rest bus devices which sharing
->> the same power line (VDD_INT) will change the each bus frequency
->> according to the decision of LEFTBUS bus driver (parent).
->>
->> - INT (Internal) block
->> 	: VDD_INT |--- LEFTBUS
->> 		  |--- PERIL
->> 		  |--- MFC
->> 		  |--- G3D
->> 		  |--- RIGHTBUS
->> 		  |--- FSYS
->> 		  |--- LCD0
->> 		  |--- PERIR
->> 		  |--- ISP
->> 		  |--- CAM
->>
->> - The buss of INT block in exynos3250.dtsi are listed below:
->> 	bus_leftbus: bus_leftbus {
->> 		compatible =3D "samsung,exynos-bus";
->> 		clocks =3D <&cmu CLK_DIV_GDL>;
->> 		clock-names =3D "bus";
->> 		operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> 		status =3D "disabled";
->> 	};
->>
->> 	bus_rightbus: bus_rightbus {
->> 		compatible =3D "samsung,exynos-bus";
->> 		clocks =3D <&cmu CLK_DIV_GDR>;
->> 		clock-names =3D "bus";
->> 		operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> 		status =3D "disabled";
->> 	};
->>
->> 	(Omit the rest bus dt node)
->>
->> - Usage case to handle the frequency and voltage of bus on runtime
->>   in exynos3250-rinato.dts are listed below:
->> 	/* Parent bus device of VDD_INT */
->> 	&bus_leftbus {
->> 		devfreq-events =3D <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->> 		vdd-supply =3D <&buck3_reg>;
->> 		status =3D "okay";
->> 	};
->>
->> 	/* Passive bus device depend on LEFTBUS bus. */
->> 	&bus_rightbus {
->> 		devfreq =3D <&bus_leftbus>; /* 'devfreq' property indicates
->> 					     the phandle of parent device. */
->> 		status =3D "okay";
->> 	};
->>
->> 	(Omit the rest bus dt node)
->>
->> Chanwoo Choi (20):
->>   PM / devfreq: exynos: Add generic exynos bus frequency driver
->>   PM / devfreq: exynos: Add documentation for generic exynos bus fre=
-quency driver
->>   ARM: dts: Add DMC bus node for Exynos3250
->>   ARM: dts: Add DMC bus frequency for exynos3250-rinato/monk
->>   PM / devfreq: Add new passive governor
->>   PM / devfreq: Add devfreq_get_devfreq_by_phandle()
->>   PM / devfreq: Show the related information according to governor t=
-ype
->>   PM / devfreq: exynos: Add support of bus frequency of sub-blocks u=
-sing passive governor
->>   PM / devfreq: exynos: Update documentation for bus devices using p=
-assive governor
->>   PM / devfreq: exynos: Add the detailed correlation between sub-blo=
-cks and power line
->>   PM / devfreq: exynos: Remove unused exynos4/5 busfreq driver
->>   MAINTAINERS: Add samsung bus frequency driver entry
->>   ARM: dts: Add bus nodes using VDD_INT for Exynos3250
->>   ARM: dts: Add bus nodes using VDD_MIF for Exynos4x12
->>   ARM: dts: Add bus nodes using VDD_INT for Exynos4x12
->>   ARM: dts: Add bus nodes using VDD_MIF for Exynos4210
->>   ARM: dts: Add exynos4412-ppmu-common dtsi to delete duplicate PPMU=
- nodes
->>   ARM: dts: Add support of bus frequency using VDD_INT for exynos325=
-0-rinato
->>   ARM: dts: Expand the voltage range of buck1/3 regulator for exynos=
-4412-odroidu3
->>   ARM: dts: Add support of bus frequency for exynos4412-trats/odroid=
-u3
->>
->>  .../devicetree/bindings/devfreq/exynos-bus.txt     |  388 +++++++
->>  MAINTAINERS                                        |    9 +
->>  arch/arm/boot/dts/exynos3250-monk.dts              |   47 +-
->>  arch/arm/boot/dts/exynos3250-rinato.dts            |   88 +-
->>  arch/arm/boot/dts/exynos3250.dtsi                  |  181 ++++
->>  arch/arm/boot/dts/exynos4210.dtsi                  |  159 +++
->>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   54 +-
->>  arch/arm/boot/dts/exynos4412-ppmu-common.dtsi      |   50 +
->>  arch/arm/boot/dts/exynos4412-trats2.dts            |   88 +-
->>  arch/arm/boot/dts/exynos4x12.dtsi                  |  174 ++++
->>  drivers/devfreq/Kconfig                            |   37 +-
->>  drivers/devfreq/Makefile                           |    2 +
->>  drivers/devfreq/devfreq.c                          |  120 ++-
->>  drivers/devfreq/exynos/Makefile                    |    3 +-
->>  drivers/devfreq/exynos/exynos-bus.c                |  556 +++++++++=
-++
->>  drivers/devfreq/exynos/exynos4_bus.c               | 1055 ---------=
------------
->>  drivers/devfreq/exynos/exynos4_bus.h               |  110 --
->>  drivers/devfreq/exynos/exynos5_bus.c               |  431 --------
->>  drivers/devfreq/exynos/exynos_ppmu.c               |  119 ---
->>  drivers/devfreq/exynos/exynos_ppmu.h               |   86 --
->>  drivers/devfreq/governor.h                         |    7 +
->>  drivers/devfreq/governor_passive.c                 |  109 ++
->>  drivers/devfreq/governor_performance.c             |    1 +
->>  drivers/devfreq/governor_powersave.c               |    1 +
->>  drivers/devfreq/governor_simpleondemand.c          |    1 +
->>  drivers/devfreq/governor_userspace.c               |    1 +
->>  include/linux/devfreq.h                            |   26 +
->>  27 files changed, 1955 insertions(+), 1948 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos=
--bus.txt
->>  create mode 100644 arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
->>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
->>  delete mode 100644 drivers/devfreq/exynos/exynos4_bus.c
->>  delete mode 100644 drivers/devfreq/exynos/exynos4_bus.h
->>  delete mode 100644 drivers/devfreq/exynos/exynos5_bus.c
->>  delete mode 100644 drivers/devfreq/exynos/exynos_ppmu.c
->>  delete mode 100644 drivers/devfreq/exynos/exynos_ppmu.h
->>  create mode 100644 drivers/devfreq/governor_passive.c
->>
->=20
+   v2..v3
+   * use usleep_range instead of custom nsleep
+   * number change (07/16 -> 09/21)
 
+   v0..v2
+   * use device tree
+   * use devm helpers where possible
+
+ .../devicetree/bindings/rtc/rtc-ds1302.txt         |  46 +++
+ drivers/rtc/Kconfig                                |  15 +-
+ drivers/rtc/rtc-ds1302.c                           | 348 ++++++++++-----------
+ 3 files changed, 212 insertions(+), 197 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+new file mode 100644
+index 0000000..b6c0973
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+@@ -0,0 +1,46 @@
++* Maxim/Dallas Semiconductor DS-1302 RTC
++
++Simple device which could be used to store date/time between reboots.
++
++The device uses the standard MicroWire half-duplex transfer timing.
++Master output is set on low clock and sensed by the RTC on the rising
++edge. Master input is set by the RTC on the trailing edge and is sensed
++by the master on low clock.
++
++Required properties:
++
++- compatible : Should be "maxim,rtc-ds1302"
++
++Required SPI properties:
++
++- reg : Should be address of the device chip select within
++  the controller.
++
++- spi-max-frequency : DS-1302 has 500 kHz if powered at 2.2V,
++  and 2MHz if powered at 5V.
++
++- spi-3wire : The device has a shared signal IN/OUT line.
++
++- spi-lsb-first : DS-1302 requires least significant bit first
++  transfers.
++
++- spi-cs-high: DS-1302 has active high chip select line. This is
++  required unless inverted in hardware.
++
++Example:
++
++spi0@901c {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "icpdas,spi-lp8841-rtc";
++	reg = <0x901c 0x1>;
++
++	rtc@0 {
++		compatible = "maxim,rtc-ds1302";
++		reg = <0>;
++		spi-max-frequency = <500000>;
++		spi-3wire;
++		spi-lsb-first;
++		spi-cs-high;
++	};
++};
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 2a52424..2e54aad 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -646,6 +646,15 @@ config RTC_DRV_M41T94
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-m41t94.
+ 
++config RTC_DRV_DS1302
++	tristate "Dallas/Maxim DS1302"
++	depends on SPI
++	help
++	  If you say yes here you get support for the Dallas DS1302 RTC chips.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-ds1302.
++
+ config RTC_DRV_DS1305
+ 	tristate "Dallas/Maxim DS1305/DS1306"
+ 	help
+@@ -811,12 +820,6 @@ config RTC_DRV_DS1286
+ 	help
+ 	  If you say yes here you get support for the Dallas DS1286 RTC chips.
+ 
+-config RTC_DRV_DS1302
+-	tristate "Dallas DS1302"
+-	depends on SH_SECUREEDGE5410
+-	help
+-	  If you say yes here you get support for the Dallas DS1302 RTC chips.
+-
+ config RTC_DRV_DS1511
+ 	tristate "Dallas DS1511"
+ 	depends on HAS_IOMEM
+diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
+index 6bef7a5..89a210b 100644
+--- a/drivers/rtc/rtc-ds1302.c
++++ b/drivers/rtc/rtc-ds1302.c
+@@ -9,16 +9,17 @@
+  * this archive for more details.
+  */
+ 
++#include <linux/bcd.h>
+ #include <linux/init.h>
+-#include <linux/module.h>
++#include <linux/io.h>
+ #include <linux/kernel.h>
+-#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/rtc.h>
+-#include <linux/io.h>
+-#include <linux/bcd.h>
++#include <linux/spi/spi.h>
+ 
+ #define DRV_NAME	"rtc-ds1302"
+-#define DRV_VERSION	"0.1.1"
++#define DRV_VERSION	"1.0.0"
+ 
+ #define	RTC_CMD_READ	0x81		/* Read command */
+ #define	RTC_CMD_WRITE	0x80		/* Write command */
+@@ -28,6 +29,8 @@
+ 
+ #define RTC_ADDR_RAM0	0x20		/* Address of RAM0 */
+ #define RTC_ADDR_TCR	0x08		/* Address of trickle charge register */
++#define RTC_CLCK_BURST	0x1F		/* Address of clock burst */
++#define	RTC_CLCK_LEN	0x08		/* Size of clock burst */
+ #define	RTC_ADDR_CTRL	0x07		/* Address of control register */
+ #define	RTC_ADDR_YEAR	0x06		/* Address of year register */
+ #define	RTC_ADDR_DAY	0x05		/* Address of day of week register */
+@@ -37,217 +40,180 @@
+ #define	RTC_ADDR_MIN	0x01		/* Address of minute register */
+ #define	RTC_ADDR_SEC	0x00		/* Address of second register */
+ 
+-#ifdef CONFIG_SH_SECUREEDGE5410
+-#include <asm/rtc.h>
+-#include <mach/secureedge5410.h>
+-
+-#define	RTC_RESET	0x1000
+-#define	RTC_IODATA	0x0800
+-#define	RTC_SCLK	0x0400
+-
+-#define set_dp(x)	SECUREEDGE_WRITE_IOPORT(x, 0x1c00)
+-#define get_dp()	SECUREEDGE_READ_IOPORT()
+-#define ds1302_set_tx()
+-#define ds1302_set_rx()
+-
+-static inline int ds1302_hw_init(void)
++static int ds1302_rtc_set_time(struct device *dev, struct rtc_time *time)
+ {
+-	return 0;
++	struct spi_device	*spi = dev_get_drvdata(dev);
++	u8		buf[1 + RTC_CLCK_LEN];
++	u8		*bp = buf;
++	int		status;
++
++	/* Enable writing */
++	bp = buf;
++	*bp++ = RTC_ADDR_CTRL << 1 | RTC_CMD_WRITE;
++	*bp++ = RTC_CMD_WRITE_ENABLE;
++
++	status = spi_write_then_read(spi, buf, 2,
++			NULL, 0);
++	if (!status)
++		return status;
++
++	/* Write registers starting at the first time/date address. */
++	bp = buf;
++	*bp++ = RTC_CLCK_BURST << 1 | RTC_CMD_WRITE;
++
++	*bp++ = bin2bcd(time->tm_sec);
++	*bp++ = bin2bcd(time->tm_min);
++	*bp++ = bin2bcd(time->tm_hour);
++	*bp++ = bin2bcd(time->tm_mday);
++	*bp++ = bin2bcd(time->tm_mon + 1);
++	*bp++ = time->tm_wday;
++	*bp++ = bin2bcd(time->tm_year % 100);
++	*bp++ = RTC_CMD_WRITE_DISABLE;
++
++	/* use write-then-read since dma from stack is nonportable */
++	return spi_write_then_read(spi, buf, sizeof(buf),
++			NULL, 0);
+ }
+ 
+-static inline void ds1302_reset(void)
++static int ds1302_rtc_get_time(struct device *dev, struct rtc_time *time)
+ {
+-	set_dp(get_dp() & ~(RTC_RESET | RTC_IODATA | RTC_SCLK));
++	struct spi_device	*spi = dev_get_drvdata(dev);
++	u8		addr = RTC_CLCK_BURST << 1 | RTC_CMD_READ;
++	u8		buf[RTC_CLCK_LEN - 1];
++	int		status;
++
++	/* Use write-then-read to get all the date/time registers
++	 * since dma from stack is nonportable
++	 */
++	status = spi_write_then_read(spi, &addr, sizeof(addr),
++			buf, sizeof(buf));
++	if (status < 0)
++		return status;
++
++	/* Decode the registers */
++	time->tm_sec = bcd2bin(buf[RTC_ADDR_SEC]);
++	time->tm_min = bcd2bin(buf[RTC_ADDR_MIN]);
++	time->tm_hour = bcd2bin(buf[RTC_ADDR_HOUR]);
++	time->tm_wday = buf[RTC_ADDR_DAY] - 1;
++	time->tm_mday = bcd2bin(buf[RTC_ADDR_DATE]);
++	time->tm_mon = bcd2bin(buf[RTC_ADDR_MON]) - 1;
++	time->tm_year = bcd2bin(buf[RTC_ADDR_YEAR]) + 100;
++
++	/* Time may not be set */
++	return rtc_valid_tm(time);
+ }
+ 
+-static inline void ds1302_clock(void)
+-{
+-	set_dp(get_dp() | RTC_SCLK);	/* clock high */
+-	set_dp(get_dp() & ~RTC_SCLK);	/* clock low */
+-}
+-
+-static inline void ds1302_start(void)
+-{
+-	set_dp(get_dp() | RTC_RESET);
+-}
+-
+-static inline void ds1302_stop(void)
+-{
+-	set_dp(get_dp() & ~RTC_RESET);
+-}
+-
+-static inline void ds1302_txbit(int bit)
+-{
+-	set_dp((get_dp() & ~RTC_IODATA) | (bit ? RTC_IODATA : 0));
+-}
+-
+-static inline int ds1302_rxbit(void)
+-{
+-	return !!(get_dp() & RTC_IODATA);
+-}
+-
+-#else
+-#error "Add support for your platform"
+-#endif
++static struct rtc_class_ops ds1302_rtc_ops = {
++	.read_time	= ds1302_rtc_get_time,
++	.set_time	= ds1302_rtc_set_time,
++};
+ 
+-static void ds1302_sendbits(unsigned int val)
++static int ds1302_probe(struct spi_device *spi)
+ {
+-	int i;
+-
+-	ds1302_set_tx();
+-
+-	for (i = 8; (i); i--, val >>= 1) {
+-		ds1302_txbit(val & 0x1);
+-		ds1302_clock();
++	struct rtc_device	*rtc;
++	u8		addr;
++	u8		buf[4];
++	u8		*bp = buf;
++	int		status;
++
++	/* Sanity check board setup data.  This may be hooked up
++	 * in 3wire mode, but we don't care.  Note that unless
++	 * there's an inverter in place, this needs SPI_CS_HIGH!
++	 */
++	if (spi->bits_per_word && (spi->bits_per_word != 8)) {
++		dev_err(&spi->dev, "bad word length\n");
++		return -EINVAL;
++	} else if (spi->max_speed_hz > 2000000) {
++		dev_err(&spi->dev, "speed is too high\n");
++		return -EINVAL;
++	} else if (spi->mode & SPI_CPHA) {
++		dev_err(&spi->dev, "bad mode\n");
++		return -EINVAL;
+ 	}
+-}
+-
+-static unsigned int ds1302_recvbits(void)
+-{
+-	unsigned int val;
+-	int i;
+-
+-	ds1302_set_rx();
+ 
+-	for (i = 0, val = 0; (i < 8); i++) {
+-		val |= (ds1302_rxbit() << i);
+-		ds1302_clock();
++	addr = RTC_ADDR_CTRL << 1 | RTC_CMD_READ;
++	status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
++	if (status < 0) {
++		dev_err(&spi->dev, "control register read error %d\n",
++				status);
++		return status;
+ 	}
+ 
+-	return val;
+-}
+-
+-static unsigned int ds1302_readbyte(unsigned int addr)
+-{
+-	unsigned int val;
+-
+-	ds1302_reset();
+-
+-	ds1302_start();
+-	ds1302_sendbits(((addr & 0x3f) << 1) | RTC_CMD_READ);
+-	val = ds1302_recvbits();
+-	ds1302_stop();
+-
+-	return val;
+-}
+-
+-static void ds1302_writebyte(unsigned int addr, unsigned int val)
+-{
+-	ds1302_reset();
+-
+-	ds1302_start();
+-	ds1302_sendbits(((addr & 0x3f) << 1) | RTC_CMD_WRITE);
+-	ds1302_sendbits(val);
+-	ds1302_stop();
+-}
+-
+-static int ds1302_rtc_read_time(struct device *dev, struct rtc_time *tm)
+-{
+-	tm->tm_sec	= bcd2bin(ds1302_readbyte(RTC_ADDR_SEC));
+-	tm->tm_min	= bcd2bin(ds1302_readbyte(RTC_ADDR_MIN));
+-	tm->tm_hour	= bcd2bin(ds1302_readbyte(RTC_ADDR_HOUR));
+-	tm->tm_wday	= bcd2bin(ds1302_readbyte(RTC_ADDR_DAY));
+-	tm->tm_mday	= bcd2bin(ds1302_readbyte(RTC_ADDR_DATE));
+-	tm->tm_mon	= bcd2bin(ds1302_readbyte(RTC_ADDR_MON)) - 1;
+-	tm->tm_year	= bcd2bin(ds1302_readbyte(RTC_ADDR_YEAR));
+-
+-	if (tm->tm_year < 70)
+-		tm->tm_year += 100;
+-
+-	dev_dbg(dev, "%s: tm is secs=%d, mins=%d, hours=%d, "
+-		"mday=%d, mon=%d, year=%d, wday=%d\n",
+-		__func__,
+-		tm->tm_sec, tm->tm_min, tm->tm_hour,
+-		tm->tm_mday, tm->tm_mon + 1, tm->tm_year, tm->tm_wday);
+-
+-	return rtc_valid_tm(tm);
+-}
+-
+-static int ds1302_rtc_set_time(struct device *dev, struct rtc_time *tm)
+-{
+-	ds1302_writebyte(RTC_ADDR_CTRL, RTC_CMD_WRITE_ENABLE);
+-	/* Stop RTC */
+-	ds1302_writebyte(RTC_ADDR_SEC, ds1302_readbyte(RTC_ADDR_SEC) | 0x80);
+-
+-	ds1302_writebyte(RTC_ADDR_SEC, bin2bcd(tm->tm_sec));
+-	ds1302_writebyte(RTC_ADDR_MIN, bin2bcd(tm->tm_min));
+-	ds1302_writebyte(RTC_ADDR_HOUR, bin2bcd(tm->tm_hour));
+-	ds1302_writebyte(RTC_ADDR_DAY, bin2bcd(tm->tm_wday));
+-	ds1302_writebyte(RTC_ADDR_DATE, bin2bcd(tm->tm_mday));
+-	ds1302_writebyte(RTC_ADDR_MON, bin2bcd(tm->tm_mon + 1));
+-	ds1302_writebyte(RTC_ADDR_YEAR, bin2bcd(tm->tm_year % 100));
++	if ((buf[0] & ~RTC_CMD_WRITE_DISABLE) != 0) {
++		status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
++		if (status < 0) {
++			dev_err(&spi->dev, "control register read error %d\n",
++					status);
++			return status;
++		}
++
++		if ((buf[0] & ~RTC_CMD_WRITE_DISABLE) != 0) {
++			dev_err(&spi->dev, "junk in control register\n");
++			return -ENODEV;
++		}
++	}
++	if (buf[0] == 0) {
++		bp = buf;
++		*bp++ = RTC_ADDR_CTRL << 1 | RTC_CMD_WRITE;
++		*bp++ = RTC_CMD_WRITE_DISABLE;
++
++		status = spi_write_then_read(spi, buf, 2, NULL, 0);
++		if (status < 0) {
++			dev_err(&spi->dev, "control register write error %d\n",
++					status);
++			return status;
++		}
++
++		addr = RTC_ADDR_CTRL << 1 | RTC_CMD_READ;
++		status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
++		if (status < 0) {
++			dev_err(&spi->dev,
++					"error %d reading control register\n",
++					status);
++			return status;
++		}
++
++		if (buf[0] != RTC_CMD_WRITE_DISABLE) {
++			dev_err(&spi->dev, "failed to detect chip\n");
++			return -ENODEV;
++		}
++	}
+ 
+-	/* Start RTC */
+-	ds1302_writebyte(RTC_ADDR_SEC, ds1302_readbyte(RTC_ADDR_SEC) & ~0x80);
++	spi_set_drvdata(spi, spi);
+ 
+-	ds1302_writebyte(RTC_ADDR_CTRL, RTC_CMD_WRITE_DISABLE);
++	rtc = devm_rtc_device_register(&spi->dev, "ds1302",
++			&ds1302_rtc_ops, THIS_MODULE);
++	if (IS_ERR(rtc)) {
++		status = PTR_ERR(rtc);
++		dev_err(&spi->dev, "error %d registering rtc\n", status);
++		return status;
++	}
+ 
+ 	return 0;
+ }
+ 
+-static int ds1302_rtc_ioctl(struct device *dev, unsigned int cmd,
+-			    unsigned long arg)
++static int ds1302_remove(struct spi_device *spi)
+ {
+-	switch (cmd) {
+-#ifdef RTC_SET_CHARGE
+-	case RTC_SET_CHARGE:
+-	{
+-		int tcs_val;
+-
+-		if (copy_from_user(&tcs_val, (int __user *)arg, sizeof(int)))
+-			return -EFAULT;
+-
+-		ds1302_writebyte(RTC_ADDR_TCR, (0xa0 | tcs_val * 0xf));
+-		return 0;
+-	}
+-#endif
+-	}
+-
+-	return -ENOIOCTLCMD;
++	spi_set_drvdata(spi, NULL);
++	return 0;
+ }
+ 
+-static struct rtc_class_ops ds1302_rtc_ops = {
+-	.read_time	= ds1302_rtc_read_time,
+-	.set_time	= ds1302_rtc_set_time,
+-	.ioctl		= ds1302_rtc_ioctl,
++#ifdef CONFIG_OF
++static const struct of_device_id ds1302_dt_ids[] = {
++	{ .compatible = "maxim,rtc-ds1302", },
++	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
++#endif
+ 
+-static int __init ds1302_rtc_probe(struct platform_device *pdev)
+-{
+-	struct rtc_device *rtc;
+-
+-	if (ds1302_hw_init()) {
+-		dev_err(&pdev->dev, "Failed to init communication channel");
+-		return -EINVAL;
+-	}
+-
+-	/* Reset */
+-	ds1302_reset();
+-
+-	/* Write a magic value to the DS1302 RAM, and see if it sticks. */
+-	ds1302_writebyte(RTC_ADDR_RAM0, 0x42);
+-	if (ds1302_readbyte(RTC_ADDR_RAM0) != 0x42) {
+-		dev_err(&pdev->dev, "Failed to probe");
+-		return -ENODEV;
+-	}
+-
+-	rtc = devm_rtc_device_register(&pdev->dev, "ds1302",
+-					   &ds1302_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(rtc))
+-		return PTR_ERR(rtc);
+-
+-	platform_set_drvdata(pdev, rtc);
+-
+-	return 0;
+-}
+-
+-static struct platform_driver ds1302_platform_driver = {
+-	.driver		= {
+-		.name	= DRV_NAME,
+-	},
++static struct spi_driver ds1302_driver = {
++	.driver.name	= "rtc-ds1302",
++	.driver.of_match_table = of_match_ptr(ds1302_dt_ids),
++	.probe		= ds1302_probe,
++	.remove		= ds1302_remove,
+ };
+ 
+-module_platform_driver_probe(ds1302_platform_driver, ds1302_rtc_probe);
++module_spi_driver(ds1302_driver);
+ 
+ MODULE_DESCRIPTION("Dallas DS1302 RTC driver");
+ MODULE_VERSION(DRV_VERSION);
+-- 
+2.6.3
