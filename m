@@ -1,48 +1,110 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v3 4/4] Documentation: atmel-pmc: add DT bindings for
- fast startup
-Date: Mon, 22 Feb 2016 03:03:53 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D642649E@penmbx01>
-References: <1455507630-29592-1-git-send-email-wenyou.yang@atmel.com>
- <1455507630-29592-5-git-send-email-wenyou.yang@atmel.com>
- <20160222025417.GH15973@rob-hp-laptop>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Mon, 22 Feb 2016 12:10:27 +0900
+Message-ID: <20160222031027.GP18327@sirena.org.uk>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160222025417.GH15973@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DCmRZ841GpRfzaEr"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456105630-28914-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogMjAxNsTqMtTCMjLI1SAxMDo1NA0KPiBUbzogWWFu
-ZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+DQo+IENjOiBGZXJyZSwgTmljb2xhcyA8
-Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+OyBBbGV4YW5kcmUgQmVsbG9uaQ0KPiA8YWxleGFuZHJl
-LmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPjsgSmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZp
-bGxhcmQNCj4gPHBsYWduaW9qQGpjcm9zb2Z0LmNvbT47IFJ1c3NlbGwgS2luZyA8bGludXhAYXJt
-LmxpbnV4Lm9yZy51az47IGxpbnV4LQ0KPiBjbGtAdmdlci5rZXJuZWwub3JnOyBQYXdlbCBNb2xs
-IDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIEJyb3duDQo+IDxicm9vbmllQGtlcm5lbC5vcmc+
-OyBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXINCj4g
-R2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDQvNF0gRG9jdW1lbnRhdGlv
-bjogYXRtZWwtcG1jOiBhZGQgRFQgYmluZGluZ3MgZm9yIGZhc3QNCj4gc3RhcnR1cA0KPiANCj4g
-T24gTW9uLCBGZWIgMTUsIDIwMTYgYXQgMTE6NDA6MzBBTSArMDgwMCwgV2VueW91IFlhbmcgd3Jv
-dGU6DQo+ID4gQWRkIERUIGJpbmRpbmdzIHRvIGNvbmZpZ3VyYXRlIHRoZSBQTUNfRlNNUiBhbmQg
-UE1DX0ZTUFIgcmVnaXN0ZXJzIHRvDQo+ID4gdHJpZ2dlciBhIGZhc3QgcmVzdGFydCBzaWduYWwg
-dG8gUE1DLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5n
-QGF0bWVsLmNvbT4NCj4gPiBEb2N1bWVudDogYmluZGluZw0KPiA+DQo+ID4gLS0tDQo+ID4NCj4g
-PiBDaGFuZ2VzIGluIHYzOg0KPiA+ICAtIHVwZGF0ZSB0aGUgcHJvcGVydHkgZGVzY3JpcHRpb24u
-DQo+IA0KPiBUaGlzIGlzIG5vdCBoZWxwZnVsLiBBc3N1bWUgSSBkb24ndCByZW1lbWJlciB3aGF0
-IEkgdG9sZCB5b3UgYW5kIHlvdSBuZWVkIHRvIGpvZw0KPiBteSBtZW1vcnkgd2hhdCBleGFjdGx5
-IGNoYW5nZWQgc28gSSBkb24ndCBoYXZlIHRvIGdvIGxvb2sgaXQgdXAuDQoNClRoYW5rIHlvdSBm
-b3IgeW91ciBpbnN0cnVjdGlvbiwgSSB3aWxsIGtlZXAgaXQgaW4gbWluZC4NCg0KPiANCj4gPg0K
-PiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gIC0gY2hhbmdlIHRoZSBwcm9wZXJ0eSBuYW1lIGFuZCBw
-cm9wZXJ0eSBkZXNjcmlwdGlvbi4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vYXRtZWwtcG1jLnR4dCAgICAgICAgICB8ICAgNjMNCj4gKysrKysrKysrKysrKysrKysrKysN
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKykNCj4gDQo+IEFja2VkLWJ5OiBS
-b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgQWNrZWQu
-DQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
+
+--DCmRZ841GpRfzaEr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Feb 22, 2016 at 04:47:06AM +0300, Sergei Ianovich wrote:
+> ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
+> master which makes the RTC usable. The driver is not supposed to work
+> with anything else.
+
+So this is something that is internal to a single chip or something?
+I'm slightly unclear from the above if this is or is not a SPI
+controller.  If it isn't generic the DT should probably just describe
+the IP and let the driver create the SPI controller and device if that
+is an expedient way of doing things.
+
+> +spi0@901c {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "icpdas,spi-lp8841-rtc";
+> +	reg = <0x901c 0x1>;
+> +
+> +	rtc@0 {
+> +		compatible = "maxim,rtc-ds1302";
+> +		reg = <0>;
+> +		spi-max-frequency = <500000>;
+> +		spi-3wire;
+> +		spi-lsb-first;
+> +		spi-cs-high;
+> +	};
+> +};
+
+This example makes it seem like an actual SPI controller but just one
+that's broken/limited?
+
+> +config SPI_LP8841_RTC
+> +	tristate "ICP DAS LP-8841 SPI Controller for RTC"
+> +	depends on OF && (MACH_PXA27X_DT || COMPILE_TEST)
+
+Does this need a strict DT dependency or can it build without DT?
+
+> +/*
+> + * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in SPI
+> + * GPIO driver, this SPI driver can be replaced by a simple GPIO driver
+> + * providing 3 GPIO pins.
+> + */
+
+What's the advantage of not doing that?  Overall the driver looks fairly
+good but it does seem to just implement a straight bitbanging driver
+with less flexibility.
+
+> +#ifndef DRIVER_NAME
+> +#define DRIVER_NAME	"spi_lp8841_rtc"
+> +#endif
+
+If you want to use a define for this just use a define for it, don't do
+this ifdef stuff.
+
+> +static inline void
+> +spidelay(unsigned usec)
+> +{
+> +	usleep_range(usec, usec + 1);
+> +}
+
+Just use usleep_range() directly.
+
+> +static void
+> +spi_lp8841_rtc_cleanup(struct spi_device *spi)
+> +{
+> +}
+
+Remove empty functions, if they can be empty the core will support
+ignoring them if they are missing.
+
+--DCmRZ841GpRfzaEr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWynwjAAoJECTWi3JdVIfQ/5EH/RQ6i6ue8QI+XXSMHzFf1e4f
+QdXnzQqD9GD8NnLv7gs+nilD72V2MsTpRcLUVO9O2omZpm9CpUCX0uwEB5xMnDLR
+7KGEfAi7OlUdM5doPdN1ox4Dq38uwSuEAh2b9DraZ2hyM8t3BNL480EwoyX6Fdmw
+5ZmAPBfXD2+gD6YL0iU5ss+1LAtfRYYLG1EZNJyvAzWp5OcNgS8p/6+9FSaIk6wE
+ft7Bw2hLisNNlLQoG/y+pjEIAMpIYhbJj2+y64gqz8FMpERIEL/0DirEA9N4QDQC
+nignG3cYmF/LhUbCmTPdDIiPzaEiAwZ53iYGDAHYxLYILMd53j1Is+fglsRrSxA=
+=B17D
+-----END PGP SIGNATURE-----
+
+--DCmRZ841GpRfzaEr--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
