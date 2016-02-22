@@ -1,112 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
-Date: Mon, 22 Feb 2016 13:27:55 -0600
-Message-ID: <CAL_JsqLcJvBUUt0PRg=WwhUyAyfSuxqUf8NMj1s+s4rAS+S3nA@mail.gmail.com>
-References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
- <1455519206-12939-14-git-send-email-architt@codeaurora.org>
- <20160222025414.GG15973@rob-hp-laptop> <56CAEBE5.7050605@codeaurora.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 1/3] input: cygnus-update touchscreen dt node document
+Date: Mon, 22 Feb 2016 11:36:04 -0800
+Message-ID: <20160222193604.GA26177@dtor-ws>
+References: <1455702226-20599-1-git-send-email-raveendra.padasalagi@broadcom.com>
+ <1455702226-20599-2-git-send-email-raveendra.padasalagi@broadcom.com>
+ <20160218143617.GH9654@rob-hp-laptop>
+ <CAAFb_vq6_uQbcWvwV8TZqVqH_C-ueUd+gBRA=mXUQrWqxoz=ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56CAEBE5.7050605@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAFb_vq6_uQbcWvwV8TZqVqH_C-ueUd+gBRA=mXUQrWqxoz=ww@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Cc: Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 5:07 AM, Archit Taneja <architt@codeaurora.org> wrote:
->
->
-> On 02/22/2016 08:24 AM, Rob Herring wrote:
->>
->> On Mon, Feb 15, 2016 at 12:23:26PM +0530, Archit Taneja wrote:
->>>
->>> Add HDMI PHY bindings. Update the example to use HDMI PHY.
->>>
->>> Add a missing power-domains property in the HDMI core bindings.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Cc: Rob Herring <robh@kernel.org>
->>>
->>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->>> ---
->>>   .../devicetree/bindings/display/msm/hdmi.txt       | 39
->>> +++++++++++++++++++++-
->>>   1 file changed, 38 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> b/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> index 379ee2e..4d71910 100644
->>> --- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> +++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
->>> @@ -11,6 +11,7 @@ Required properties:
->>>   - reg: Physical base address and length of the controller's registers
->>>   - reg-names: "core_physical"
->>>   - interrupts: The interrupt signal from the hdmi block.
->>> +- power-domains: Should be <&mmcc MDSS_GDSC>.
->>>   - clocks: device clocks
->>>     See ../clocks/clock-bindings.txt for details.
->>>   - qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
->>> @@ -18,6 +19,7 @@ Required properties:
->>>   - qcom,hdmi-tx-hpd-gpio: hpd pin
->>>   - core-vdda-supply: phandle to supply regulator
->>>   - hdmi-mux-supply: phandle to mux regulator
->>> +- qcom,hdmi-phy: phandle to HDMI PHY device node
->>
->>
->> Why not use the generic phy binding?
->
->
-> You'd asked about this in the first version of this patch. You
-> probably missed reading my reply. Partially my fault since I
-> missed out putting the "In-Reply-to" when posting this set. I've
-> mentioned the reason again here:
->
-> The PHY in the HDMI and DSI blocks can't be implemented using the
-> common phy framework. The PHY blocks have a PLL sub-block within
-> them which acts as a pixel clock source for the display processor
-> block.
+On Fri, Feb 19, 2016 at 11:43:50AM +0530, Raveendra Padasalagi wrote:
+> On Thu, Feb 18, 2016 at 8:06 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Wed, Feb 17, 2016 at 03:13:44PM +0530, Raveendra Padasalagi wrote:
+> >> In Cygnus SOC touch screen controller registers are shared
+> >> with ADC and flex timer. Using readl/writel could lead to
+> >> race condition. So touch screen driver is enhanced to support
+> >>
+> >> 1. If touchscreen register's are not shared. Register access
+> >> is handled through readl/writel if "brcm,iproc-touchscreen"
+> >> compatible is provided in touchscreen dt node. This will help
+> >> for future SOC's if comes with dedicated touchscreen IP register's.
+> >>
+> >> 2. If touchscreen register's are shared with other IP's, register
+> >> access is handled through syscon framework API's to take care of
+> >> mutually exclusive access. This feature can be enabled by selecting
+> >> "brcm,iproc-touchscreen-syscon" compatible string in the touchscreen
+> >> dt node.
+> >>
+> >> Hence touchscreen dt node bindings document is updated to take care
+> >> of above changes in the touchscreen driver.
+> >>
+> >> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+> >> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> >> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> >> ---
+> >>  .../input/touchscreen/brcm,iproc-touchscreen.txt   | 57 +++++++++++++++++++---
+> >>  1 file changed, 51 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
+> >> index 34e3382..f530c25 100644
+> >> --- a/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
+> >> +++ b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
+> >> @@ -1,12 +1,30 @@
+> >>  * Broadcom's IPROC Touchscreen Controller
+> >>
+> >>  Required properties:
+> >> -- compatible: must be "brcm,iproc-touchscreen"
+> >> -- reg: physical base address of the controller and length of memory mapped
+> >> -  region.
+> >> +- compatible: should be one of
+> >> +        "brcm,iproc-touchscreen"
+> >> +        "brcm,iproc-touchscreen-syscon"
+> >
+> > More specific and this is not how you do syscon. Either the block is or
+> > isn't. You can't have it both ways.
+> 
+> Existing driver has support for reg, if we modify now to support only syscon
+> then this driver will not work if some one wishes to use previous
+> kernel version's
+> dt and vice versa. Basically this breaks dt compatibility. Is that ok ?
 
-That sounds like a problem with the common phy framework, not the DT
-binding. Nothing says you have to use the common phy f/w if you use
-the phy binding. I say that as the binding maintainer. As a kernel
-developer, I would say fix the common phy framework to handle this
-case. However, I don't think anything prevents the phy driver from
-registering both a phy and a clock.
+But the issue is that the driver does not actually work correctly with
+direct register access on those systems, since the registers are
+actually shared with other components. I am not quite sure if it is OK
+to break DT binding in this case...
 
-> This dependency causes the need to split the phy power on sequence
-> into 2 parts (one to enable resources to enable the PLL, and the
-> other to enable the phy itself), which the phy framework can't
-> do. That's the main reason not to use it. There are some more
-> complex use cases for DSI PHY (drive two PHYs with the same
-> DSI PLL) which the phy framework can't support.
+Thanks.
 
-Doesn't the phy framework already support the former? It has power on
-and init calls. Personally, I find the split there ill-defined.
-
->>>   Optional properties:
->>>   - qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
->>> @@ -27,6 +29,27 @@ Optional properties:
->>>   - pinctrl-0: the default pinctrl state (active)
->>>   - pinctrl-1: the "sleep" pinctrl state
->>>
->>> +HDMI PHY:
->>> +Required properties:
->>> +- compatible: Could be the following
->>> +  * "qcom,hdmi-phy-8x60"
->>> +  * "qcom,hdmi-phy-8960"
->>> +  * "qcom,hdmi-phy-8x74"
->>
->>
->> No wildcards please. Where's 8994?
->
->
-> I'll remove the wildcards. 8994 PHY isn't supported by the driver at
-> the moment. I could keep the 8994 compatible string, the driver will
-> bail out with an error. But that's something we already do for 8x74
-> since it doesn't have full PHY support either.
-
-You can document it later if you want. I just asked 'cause I knew the
-8994 had one.
-
-Rob
+-- 
+Dmitry
