@@ -1,40 +1,35 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Mon, 22 Feb 2016 08:21:30 +0100
-Message-ID: <20160222082130.75e9c540@free-electrons.com>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160222025349.GC15973@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160222025349.GC15973@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Subject: [PATCH v3 0/3] Syscon support for iProc touchscreen driver
+Date: Mon, 22 Feb 2016 13:19:36 +0530
+Message-ID: <1456127379-25866-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+This patchset is based on v4.5-rc3 tag and its tested on
+Broadcom Cygnus SoC.
 
-On Sun, 21 Feb 2016 20:53:49 -0600, Rob Herring wrote:
+The patches can be fetched from iproc-tsc-v3 branch of
+https://github.com/Broadcom/arm64-linux.git
 
-> > +Required properties:
-> > +- compatible: Should be "marvell,mv-xor-v2"
-> 
-> and an SoC specific compatible please.
+Changes since v2:
+ - Omitted '0x' in "tsc node" definition in dt documentation file
+ - Omitted '0x' in "ts_adc_syscon" definition in dt documentation file
+ - Added "brcm,iproc-ts-adc-syscon" compatible string in "ts_adc_syscon"
+   node. Updated dt documentation file to reflect this change.
 
-So you mean *both* marvell,mv-xor-v2 and a SoC specific compatible?
+Raveendra Padasalagi (3):
+  input: cygnus-update touchscreen dt node document
+  input: syscon support in bcm_iproc_tsc driver
+  ARM: dts: use syscon in cygnus touchscreen dt node
 
-> "marvell,mv" is a bit redundant.
+ .../input/touchscreen/brcm,iproc-touchscreen.txt   |  59 +++++++-
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  11 +-
+ drivers/input/touchscreen/bcm_iproc_tsc.c          | 152 +++++++++++++++------
+ 3 files changed, 173 insertions(+), 49 deletions(-)
 
-True. I guess marvell,xor-v2 will do.
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
