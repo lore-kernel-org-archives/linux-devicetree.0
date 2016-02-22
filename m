@@ -1,84 +1,114 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
- compatibility strings
-Date: Mon, 22 Feb 2016 16:40:39 +0100
-Message-ID: <CAMuHMdX3VjAZzhNxuucBn3hSS3YMmhJPVxpA2VKM+X-Qs3gxLg@mail.gmail.com>
-References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
-	<1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 11/11] ARM: versatile: move CLCD configuration to device
+ tree
+Date: Mon, 22 Feb 2016 17:41:37 +0200
+Message-ID: <56CB2C31.5040703@ti.com>
+References: <1454594660-7532-1-git-send-email-linus.walleij@linaro.org>
+ <1454594660-7532-12-git-send-email-linus.walleij@linaro.org>
+ <56C438DA.5040109@ti.com>
+ <CACRpkdZ+G17hmVP8AejL7NTqg7k0SBC5kgF55ASjD+kfuGFJhQ@mail.gmail.com>
+ <20160217213250.GK19428@n2100.arm.linux.org.uk> <56C5B080.9090007@ti.com>
+ <CACRpkdaXFUCR5=5mS28_4Dx_LfzqV13zwT=vVeJwuOzm_rGRBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="2ARonUXH6IC3cCgeD5a84xSnXduRC8wLa"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaXFUCR5=5mS28_4Dx_LfzqV13zwT=vVeJwuOzm_rGRBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 3:15 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
->  drivers/net/can/rcar_can.c                             | 2 ++
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> index 002d8440bf66..036786e1f70d 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -6,6 +6,8 @@ Required properties:
->               "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
->               "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
->               "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-> +             "renesas,can-gen1" for a generic R-Car Gen1 compatible device.
-> +             "renesas,can-gen2" for a generic R-Car Gen2 compatible device.
+--2ARonUXH6IC3cCgeD5a84xSnXduRC8wLa
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-"renesas,rcar-gen1-can", "renesas,rcar-gen2-can"?
+On 22/02/16 00:39, Linus Walleij wrote:
+> On Thu, Feb 18, 2016 at 12:52 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org=
+> wrote:
+>=20
+>> For panels we need DT fragments. The question is where these fragments=
 
-(Yeah, "can" looks a lot like "rcar" ;-)
+>> are and, possibly, who who loads them.
+>=20
+> I hacked something up that augments the device tree from the kernel,
+> given you have a node with all the props you want to augment, tell me
+> what you think of this and whether I should continue in this direction.=
+=2E.
+> also the DT people need to be involved:
 
-Nothing further to say about SoC-specific vs. generic compatible values?
+What you have there is almost like a legacy board file, isn't it? It's
+just passing DT data forward, instead of device platform data. In fact,
+if the driver in question supports platform data too, you could as well
+generate platform data for it (but I'm not saying that's a better option)=
+=2E
 
->  - reg: physical base address and size of the R-Car CAN register map.
->  - interrupts: interrupt specifier for the sole interrupt.
->  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
-> @@ -25,7 +27,7 @@ Example
->  SoC common .dtsi file:
->
->         can0: can@e6e80000 {
-> -               compatible = "renesas,can-r8a7791";
-> +               compatible = "renesas,can-r8a7791", "renesas,can-gen2";
+After thinking this a bit and discussing it with Laurent P., generally
+speaking I still think that the only sane option is that the bootloader
+does any detection needed and provides the kernel a .dtb that contains
+the HW that is connected. No board specific drivers are needed on the
+kernel side.
 
-"renesas,rcar-gen2-can".
+In some cases userspace loaded DT overlays may be fine, if the userspace
+can do the detection and the device in question is not somehow critical
+to operation. But I think displays are critical, and afaik in Versatile
+case the userspace can't even do the detection (?).
 
->                 reg = <0 0xe6e80000 0 0x1000>;
->                 interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
->                 clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
-> diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
-> index bc46be39549d..c70a1f795933 100644
-> --- a/drivers/net/can/rcar_can.c
-> +++ b/drivers/net/can/rcar_can.c
-> @@ -904,6 +904,8 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
->         { .compatible = "renesas,can-r8a7779" },
->         { .compatible = "renesas,can-r8a7790" },
->         { .compatible = "renesas,can-r8a7791" },
-> +       { .compatible = "renesas,can-gen1" },
-> +       { .compatible = "renesas,can-gen2" },
+The third option is to have board specific display handling code and the
+display HW data in the kernel, as you've done in the patches.
 
-"renesas,rcar-gen1-can"
-"renesas,rcar-gen2-can".
+But, of course, which option should be used for which board is not
+always clear...
 
-Gr{oetje,eeting}s,
+What bootloader is used on Versatile? If it's some proprietary loader
+which can't be changed, then the bootloader option is out, and I guess
+it points to the third option, i.e. either the version in this patch or
+the earlier version. If it's u-boot, I would suggest going for the
+bootloader option.
 
-                        Geert
+Afaik u-boot doesn't support combining DT fragments yet. But (also
+afaik) the u-boot maintainer is ok with the idea. And I know there are
+others (for example TI) interested in the same functionality.
 
+Now, adding that support might take some time, and in the meantime it'd
+be good to get the HW working with kernel with a temporary solution. To
+do that, my suggestion is basically "any solution which requires no
+(temporary) changes to .dts".
+
+While I don't like too much the solution in the patch here, it's all
+inside kernel code and can be dropped easily, right? If we would merge
+the the multi-endpoint solution you had in the earlier patch, you would
+have to support that .dts in the future too.
+
+ Tomi
+
+
+--2ARonUXH6IC3cCgeD5a84xSnXduRC8wLa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWyywxAAoJEPo9qoy8lh71g/MQAK4KebDkTAHQ6c+TmQ0f8tLA
+G9F+zcBkqNlfMY0YFBVl3vM3duSV9r5JCz9Wo9MEAGLHjYpUBkyw6Rh67wETJffg
+ujCiBGJsHjyFfFLl/g+24naaF2sSin8JJLt3p7znkxmkQo1grOkwSl7BAyuaMikX
+lSR1IpTSnR3z+fkzewWwBG9Fdo8WT5behu4FYUj4J94628nPSJY/SqSrGITTmdm4
+1gWGETcoQeUpFnDpl/bpJm0aVUl3p6HKmMmh6BDOq1xXF8B5YIQjyLw3pzQbUGH1
+45Grkra4LQFWfSZhyH6mlSlqqlzgqo3oDdaBz/cMYg1EtbtQJrIoocYSUs8XY3wd
+cLPGqC4rmQKKAr2o8kL/ED52r8K99lnt1Nq3QnjK61QJjWjuK1GPdVjqDzIiT82f
+Cnq9aR2bCWy3kmnKSAOfFb/hqqskMrltRMycoFPXB+Nl5YjvraN+9ZTsdsLLUQTK
+0HlhQ2kpoaucdJUwgMEaj4o3TgGyoziEZoU/1VR1Y0ZdXRe57gbVqqYQlFQmynI+
+Kr3c0LWv2LxX75sGJMqNZ52fsB9Q3CnUm29VhAmurbkleZ3bs0CeDejXfco0hkxa
+sac/uY9Cw+qD5gr8KyHHS5E6QF22Hhdi2mXGKEo896BAgQc7aQ6kG2vJ9OBbBAtf
+3si4XRMMDHfByQmewcH6
+=aa5t
+-----END PGP SIGNATURE-----
+
+--2ARonUXH6IC3cCgeD5a84xSnXduRC8wLa--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
