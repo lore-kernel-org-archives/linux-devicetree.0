@@ -1,106 +1,72 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
-Date: Mon, 22 Feb 2016 16:37:17 +0530
-Message-ID: <56CAEBE5.7050605@codeaurora.org>
-References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
- <1455519206-12939-14-git-send-email-architt@codeaurora.org>
- <20160222025414.GG15973@rob-hp-laptop>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: RE: [RFC PATCH] drivers: ata: Read Rx water mark value from
+ device-tree
+Date: Mon, 22 Feb 2016 10:53:11 +0000
+Message-ID: <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com>
+ <28916176.WDrPajhOPa@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160222025414.GG15973@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <28916176.WDrPajhOPa@wuerfel>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8yMi8yMDE2IDA4OjI0IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBNb24sIEZl
-YiAxNSwgMjAxNiBhdCAxMjoyMzoyNlBNICswNTMwLCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+PiBB
-ZGQgSERNSSBQSFkgYmluZGluZ3MuIFVwZGF0ZSB0aGUgZXhhbXBsZSB0byB1c2UgSERNSSBQSFku
-Cj4+Cj4+IEFkZCBhIG1pc3NpbmcgcG93ZXItZG9tYWlucyBwcm9wZXJ0eSBpbiB0aGUgSERNSSBj
-b3JlIGJpbmRpbmdzLgo+Pgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEFyY2hp
-dCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0ICAgICAgIHwgMzkgKysrKysrKysrKysr
-KysrKysrKysrLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tc20vaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4gaW5kZXggMzc5ZWUyZS4uNGQ3MTkxMCAxMDA2NDQK
-Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hk
-bWkudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21zbS9oZG1pLnR4dAo+PiBAQCAtMTEsNiArMTEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-PiAgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJv
-bGxlcidzIHJlZ2lzdGVycwo+PiAgIC0gcmVnLW5hbWVzOiAiY29yZV9waHlzaWNhbCIKPj4gICAt
-IGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGhkbWkgYmxvY2suCj4+
-ICstIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPj4gICAtIGNs
-b2NrczogZGV2aWNlIGNsb2Nrcwo+PiAgICAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50
-eHQgZm9yIGRldGFpbHMuCj4+ICAgLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xr
-IHBpbgo+PiBAQCAtMTgsNiArMTksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAgIC0gcWNv
-bSxoZG1pLXR4LWhwZC1ncGlvOiBocGQgcGluCj4+ICAgLSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFu
-ZGxlIHRvIHN1cHBseSByZWd1bGF0b3IKPj4gICAtIGhkbWktbXV4LXN1cHBseTogcGhhbmRsZSB0
-byBtdXggcmVndWxhdG9yCj4+ICstIHFjb20saGRtaS1waHk6IHBoYW5kbGUgdG8gSERNSSBQSFkg
-ZGV2aWNlIG5vZGUKPgo+IFdoeSBub3QgdXNlIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nPwoKWW91
-J2QgYXNrZWQgYWJvdXQgdGhpcyBpbiB0aGUgZmlyc3QgdmVyc2lvbiBvZiB0aGlzIHBhdGNoLiBZ
-b3UKcHJvYmFibHkgbWlzc2VkIHJlYWRpbmcgbXkgcmVwbHkuIFBhcnRpYWxseSBteSBmYXVsdCBz
-aW5jZSBJCm1pc3NlZCBvdXQgcHV0dGluZyB0aGUgIkluLVJlcGx5LXRvIiB3aGVuIHBvc3Rpbmcg
-dGhpcyBzZXQuIEkndmUKbWVudGlvbmVkIHRoZSByZWFzb24gYWdhaW4gaGVyZToKClRoZSBQSFkg
-aW4gdGhlIEhETUkgYW5kIERTSSBibG9ja3MgY2FuJ3QgYmUgaW1wbGVtZW50ZWQgdXNpbmcgdGhl
-CmNvbW1vbiBwaHkgZnJhbWV3b3JrLiBUaGUgUEhZIGJsb2NrcyBoYXZlIGEgUExMIHN1Yi1ibG9j
-ayB3aXRoaW4KdGhlbSB3aGljaCBhY3RzIGFzIGEgcGl4ZWwgY2xvY2sgc291cmNlIGZvciB0aGUg
-ZGlzcGxheSBwcm9jZXNzb3IKYmxvY2suCgpUaGlzIGRlcGVuZGVuY3kgY2F1c2VzIHRoZSBuZWVk
-IHRvIHNwbGl0IHRoZSBwaHkgcG93ZXIgb24gc2VxdWVuY2UKaW50byAyIHBhcnRzIChvbmUgdG8g
-ZW5hYmxlIHJlc291cmNlcyB0byBlbmFibGUgdGhlIFBMTCwgYW5kIHRoZQpvdGhlciB0byBlbmFi
-bGUgdGhlIHBoeSBpdHNlbGYpLCB3aGljaCB0aGUgcGh5IGZyYW1ld29yayBjYW4ndApkby4gVGhh
-dCdzIHRoZSBtYWluIHJlYXNvbiBub3QgdG8gdXNlIGl0LiBUaGVyZSBhcmUgc29tZSBtb3JlCmNv
-bXBsZXggdXNlIGNhc2VzIGZvciBEU0kgUEhZIChkcml2ZSB0d28gUEhZcyB3aXRoIHRoZSBzYW1l
-CkRTSSBQTEwpIHdoaWNoIHRoZSBwaHkgZnJhbWV3b3JrIGNhbid0IHN1cHBvcnQuCgo+Cj4+Cj4+
-ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gICAtIHFjb20saGRtaS10eC1tdXgtZW4tZ3Bpbzog
-aGRtaSBtdXggZW5hYmxlIHBpbgo+PiBAQCAtMjcsNiArMjksMjcgQEAgT3B0aW9uYWwgcHJvcGVy
-dGllczoKPj4gICAtIHBpbmN0cmwtMDogdGhlIGRlZmF1bHQgcGluY3RybCBzdGF0ZSAoYWN0aXZl
-KQo+PiAgIC0gcGluY3RybC0xOiB0aGUgInNsZWVwIiBwaW5jdHJsIHN0YXRlCj4+Cj4+ICtIRE1J
-IFBIWToKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IENvdWxkIGJl
-IHRoZSBmb2xsb3dpbmcKPj4gKyAgKiAicWNvbSxoZG1pLXBoeS04eDYwIgo+PiArICAqICJxY29t
-LGhkbWktcGh5LTg5NjAiCj4+ICsgICogInFjb20saGRtaS1waHktOHg3NCIKPgo+IE5vIHdpbGRj
-YXJkcyBwbGVhc2UuIFdoZXJlJ3MgODk5ND8KCkknbGwgcmVtb3ZlIHRoZSB3aWxkY2FyZHMuIDg5
-OTQgUEhZIGlzbid0IHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyIGF0CnRoZSBtb21lbnQuIEkgY291
-bGQga2VlcCB0aGUgODk5NCBjb21wYXRpYmxlIHN0cmluZywgdGhlIGRyaXZlciB3aWxsCmJhaWwg
-b3V0IHdpdGggYW4gZXJyb3IuIEJ1dCB0aGF0J3Mgc29tZXRoaW5nIHdlIGFscmVhZHkgZG8gZm9y
-IDh4NzQKc2luY2UgaXQgZG9lc24ndCBoYXZlIGZ1bGwgUEhZIHN1cHBvcnQgZWl0aGVyLgoKPgo+
-PiArICAqICJxY29tLGhkbWktcGh5LTg5OTYiCj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRy
-ZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBvZiB0aGUgUEhZIHN1YiBibG9ja3MuCj4+
-ICstIHJlZy1uYW1lczogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dp
-bmcgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6Cj4+ICsgICogImhkbWlfcGxsIgo+PiArICAqICJoZG1p
-X3BoeSIKPj4gKyAgRm9yIEhETUkgUEhZIG9uIG1zbTg5OTYsIHRoZXNlIGFkZGl0aW9uYWwgcmVn
-aXN0ZXIgcmVnaW9ucyBhcmUgcmVxdWlyZWQ6Cj4+ICsgICAgKiAiaGRtaV90eF9sMCIKPj4gKyAg
-ICAqICJoZG1pX3R4X2wxIgo+PiArICAgICogImhkbWlfdHhfbDMiCj4+ICsgICAgKiAiaGRtaV90
-eF9sNCIKPj4gKy0gcG93ZXItZG9tYWluczogU2hvdWxkIGJlIDwmbW1jYyBNRFNTX0dEU0M+Lgo+
-PiArLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKPj4gKyAgU2VlIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+PiAr
-LSBjb3JlLXZkZGEtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmljZSBub2Rl
-Cj4+ICsKPj4gICBFeGFtcGxlOgo+Pgo+PiAgIC8gewo+PiBAQCAtMzUsNyArNTgsNyBAQCBFeGFt
-cGxlOgo+PiAgIAloZG1pOiBxY29tLGhkbWktdHgtODk2MEA0YTAwMDAwIHsKPgo+IE5vZGUgbmFt
-ZXMgc2hvdWxkIGJlIGdlbmVyaWMsIHNvIGp1c3QgImhkbWkiLgo+Cj4+ICAgCQljb21wYXRpYmxl
-ID0gInFjb20saGRtaS10eC04OTYwIjsKPj4gICAJCXJlZy1uYW1lcyA9ICJjb3JlX3BoeXNpY2Fs
-IjsKPj4gLQkJcmVnID0gPDB4MDRhMDAwMDAgMHgxMDAwPjsKPj4gKwkJcmVnID0gPDB4MDRhMDAw
-MDAgMHgyZjA+Owo+PiAgIAkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDc5IDA+Owo+PiAgIAkJcG93
-ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+Owo+PiAgIAkJY2xvY2stbmFtZXMgPQo+PiBA
-QCAtNTQsNSArNzcsMTkgQEAgRXhhbXBsZToKPj4gICAJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCIsICJzbGVlcCI7Cj4+ICAgCQlwaW5jdHJsLTAgPSA8JmhwZF9hY3RpdmUgICZkZGNfYWN0aXZl
-ICAmY2VjX2FjdGl2ZT47Cj4+ICAgCQlwaW5jdHJsLTEgPSA8JmhwZF9zdXNwZW5kICZkZGNfc3Vz
-cGVuZCAmY2VjX3N1c3BlbmQ+Owo+PiArCj4+ICsJCXFjb20saGRtaS1waHkgPSA8JmhkbWlfcGh5
-PjsKPj4gKwl9Owo+PiArCj4+ICsJaGRtaV9waHk6IHFjb20saGRtaS1waHktODk2MEA0YTAwNDAw
-IHsKPgo+IGRpdHRvLiBwaHlALi4uCgpJJ2xsIGZpeCB0aGVzZS4KClRoYW5rcywKQXJjaGl0Cgot
-LSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRo
-ZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Arnd,
+
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Sunday, February 21, 2016 4:05 AM
+> To: Anurag Kumar Vulisha
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> ide@vger.kernel.org; Anirudha Sarangi; Srikanth Vemula; Punnaiah Choudary
+> Kalluri; Anurag Kumar Vulisha
+> Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-
+> tree
+> 
+> On Saturday 20 February 2016 18:48:22 Anurag Kumar Vulisha wrote:
+> > index 7ca8b97..7e48dfc 100644
+> > --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > @@ -8,6 +8,7 @@ Required properties:
+> >
+> >  Optional properties:
+> >    - ceva,broken-gen2: limit to gen1 speed instead of gen2.
+> > +  - ceva,rx-watermark: RX fifo water mark level for SATA controller.
+> >
+> >  Examples:
+> >         ahci@fd0c0000 {
+> > @@ -17,4 +18,5 @@ Examples:
+> >                 interrupts = <0 133 4>;
+> >                 clocks = <&clkc SATA_CLK_ID>;
+> >                 ceva,broken-gen2;
+> > +               ceva,rx-watermark = <0x40>;
+> >         };
+> >
+> 
+> How would a hardware integrator know which value is right for a particular
+> SoC?
+> 
+> Could it be keyed off the hardware ID? Could the bootloader perhaps set an
+> appropriate value in the AHCI_VEND_PTC register at boot time and the driver
+> read the initial value from it?
+> 
+> From the description, it sounds like this is a policy decision rather than
+> hardware description, and shouldn't really be in here.
+> 
+
+Thanks for reviewing the patch. Can I use module_param() for this watermark instead of reading it from devicetree or
+doing it in bootloader. In bootloader we are initializing serdes controller for high speed devices. As a part of this initialization
+we will be reseting all the high speed pheripherals which are using serdes, so SATA will also get resetted. Because of this
+reason, can I use module_param() for Rxwatermark value  instead?
+
+Thanks,
+Anurag Kumar V
+  
+> 	Arnd
