@@ -1,43 +1,79 @@
-From: vinayak menon <vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: alloc anywhere from memblock if range not specified
-Date: Mon, 22 Feb 2016 19:18:17 +0530
-Message-ID: <CAOaiJ-mFxLt7G=mrJfk5mScbP8BYv4ATyEpU6SDnE4gDFUM-+w@mail.gmail.com>
-References: <1454337867-5111-1-git-send-email-vinmenon@codeaurora.org>
-	<56C6D21A.2050100@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH can-next 2/2] CAN: rcar: add device tree support for r8a779[234]
+Date: Mon, 22 Feb 2016 14:48:39 +0100
+Message-ID: <CAMuHMdU5zMG=Sha5MfotbKmdBDgzJucve483oZbmseLvLR-2sA@mail.gmail.com>
+References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
+	<1456107350-12100-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C6D21A.2050100-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1456107350-12100-3-git-send-email-horms+renesas@verge.net.au>
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 1:58 PM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hello,
->
-> On 2016-02-01 15:44, Vinayak Menon wrote:
->>
->> early_init_dt_alloc_reserved_memory_arch passes end as 0 to
->> __memblock_alloc_base, when limits are not specified. But
->> __memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
->> and limits the end to memblock.current_limit. This results in regions
->> never being placed in HIGHMEM area, for e.g. CMA.
->> Let __memblock_alloc_base allocate from anywhere in memory if limits are
->> not specified.
->>
->> Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->
->
-> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> You may need to resend it lkml to let someone to pick it for merging.
-> devicetree ml is mainly for discussing the bindings.
->
+On Mon, Feb 22, 2016 at 3:15 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Simply document new compatibility string.
+> As a previous patch adds a generic R-Car Gen2 compatibility string
+> there appears to be no need for a driver updates.
+> By documenting this compat sting it may be used in DTSs shipped, for
 
-Thanks. I will resend it to lkml.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+string
+
+> example as part of ROMs. It must be used in conjunction with the Gen2
+> fallback compat string. At this time there are no known differences between
+> the r8a779[234] IP blocks and that implemented by the driver for the Gen2
+> fallback compat string. Thus there is no need to update the driver as the
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> use of the Gen2 fallback compat string will activate the correct code in
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+> the current driver while leaving the option for r8a779[234]-specific driver
+> code to be activated in an updated driver should the need arise.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 +++
+>  drivers/net/can/rcar_can.c                             | 3 +++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> index 036786e1f70d..c6fb74d7c809 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -6,6 +6,9 @@ Required properties:
+>               "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+>               "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+>               "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
+> +             "renesas,can-r8a7792" if CAN controller is a part of R8A7792 SoC.
+> +             "renesas,can-r8a7793" if CAN controller is a part of R8A7793 SoC.
+> +             "renesas,can-r8a7794" if CAN controller is a part of R8A7794 SoC.
+>               "renesas,can-gen1" for a generic R-Car Gen1 compatible device.
+>               "renesas,can-gen2" for a generic R-Car Gen2 compatible device.
+>  - reg: physical base address and size of the R-Car CAN register map.
+> diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
+> index c70a1f795933..73761a4dd1bf 100644
+> --- a/drivers/net/can/rcar_can.c
+> +++ b/drivers/net/can/rcar_can.c
+> @@ -904,6 +904,9 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
+>         { .compatible = "renesas,can-r8a7779" },
+>         { .compatible = "renesas,can-r8a7790" },
+>         { .compatible = "renesas,can-r8a7791" },
+> +       { .compatible = "renesas,can-r8a7792" },
+> +       { .compatible = "renesas,can-r8a7793" },
+> +       { .compatible = "renesas,can-r8a7794" },
+
+So why do you update the driver?
+
+There's no upstream DTS using "renesas,can-r8a779[234]", so
+"renesas,can-gen2" should be fine.
+
+>         { .compatible = "renesas,can-gen1" },
+>         { .compatible = "renesas,can-gen2" },
+>         { }
+
+Gr{oetje,eeting}s,
+
+                        Geert
