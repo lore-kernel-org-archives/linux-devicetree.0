@@ -1,54 +1,59 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: [PATCH v3 3/3] ARM: dts: use syscon in cygnus touchscreen dt node
-Date: Mon, 22 Feb 2016 13:19:39 +0530
-Message-ID: <1456127379-25866-4-git-send-email-raveendra.padasalagi@broadcom.com>
-References: <1456127379-25866-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456127379-25866-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
+Subject: [PATCH v9 4/6] ARM: debug: add hi3519 debug uart
+Date: Mon, 22 Feb 2016 15:47:58 +0800
+Message-ID: <1456127280-23275-5-git-send-email-xuejiancheng@huawei.com>
+References: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-In Cygnus SOC touch screen controller registers are shared
-with ADC and flex timer. Using readl/writel could lead to
-race condition. So in such case register access is handled
-through syscon framework API's in the touch screen driver.
-This feature is enabled if "brcm,iproc-touchscreen-syscon"
-compatible string is selected in touchscreen dt node.
+add hi3519 debug uart
 
-So this patch enables syscon support in touchscreen driver
-by adding necessary properties in touchscreen dt node.
-
-Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 3878793..1704dc0 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -351,9 +351,16 @@
- 					<&pinctrl 142 10 1>;
- 		};
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index c6b6175..edd3fbe 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -260,6 +260,14 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on Cortina Gemini based platforms.
  
-+		ts_adc_syscon: ts_adc_syscon@180a6000 {
-+			compatible = "brcm,iproc-ts-adc-syscon","syscon";
-+			reg = <0x180a6000 0xc30>;
-+		};
++	config DEBUG_HI3519_UART
++		bool "Hisilicon HI3519 Debug UART"
++		depends on ARCH_HISI
++		select DEBUG_UART_PL01X
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on HI3519 UART.
 +
- 		touchscreen: tsc@180a6000 {
--			compatible = "brcm,iproc-touchscreen";
--			reg = <0x180a6000 0x40>;
-+			compatible = "brcm,iproc-touchscreen-syscon";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ts_syscon = <&ts_adc_syscon>;
- 			clocks = <&asiu_clks BCM_CYGNUS_ASIU_ADC_CLK>;
- 			clock-names = "tsc_clk";
- 			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+ 	config DEBUG_HI3620_UART
+ 		bool "Hisilicon HI3620 Debug UART"
+ 		depends on ARCH_HI3xxx
+@@ -1451,6 +1459,7 @@ config DEBUG_UART_PHYS
+ 	default 0x11002000 if DEBUG_MT8127_UART0
+ 	default 0x11006000 if DEBUG_MT6589_UART0
+ 	default 0x11009000 if DEBUG_MT8135_UART3
++	default 0x12100000 if DEBUG_HI3519_UART
+ 	default 0x16000000 if DEBUG_INTEGRATOR
+ 	default 0x18000300 if DEBUG_BCM_5301X
+ 	default 0x18010000 if DEBUG_SIRFATLAS7_UART0
+@@ -1619,6 +1628,7 @@ config DEBUG_UART_VIRT
+ 	default 0xfee20000 if DEBUG_NSPIRE_CLASSIC_UART || DEBUG_NSPIRE_CX_UART
+ 	default 0xfee82340 if ARCH_IOP13XX
+ 	default 0xfef00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
++	default 0xfef00000 if DEBUG_HI3519_UART
+ 	default 0xfef00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
+ 	default 0xfef36000 if DEBUG_HIGHBANK_UART
+ 	default 0xfefb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
 -- 
 1.9.1
+
