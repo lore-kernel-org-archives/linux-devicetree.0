@@ -1,41 +1,41 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v5 2/3] clk: samsung: Don't build ARMv8 clock drivers on ARMv7
-Date: Mon, 22 Feb 2016 10:26:56 -0800
-Message-ID: <20160222182656.2278.68402@quark.deferred.io>
-References: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
- <1455603632-11158-3-git-send-email-k.kozlowski@samsung.com>
- <56C44578.5010009@samsung.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
+Date: Mon, 22 Feb 2016 10:32:03 -0800
+Message-ID: <20160222183203.2278.60153@quark.deferred.io>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160222025357.GE15973@rob-hp-laptop>
+ <20160222091423.4756a579@free-electrons.com> <20160222141617.GA14970@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56C44578.5010009@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-clk@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160222141617.GA14970-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sylwester Nawrocki (2016-02-17 02:03:36)
-> On 16/02/16 07:20, Krzysztof Kozlowski wrote:
-> > Currently the Exynos5433 (ARMv8 SoC) clock driver depends on ARCH_EXYNOS
-> > so it is built also on ARMv7. This does not bring any kind of benefit.
-> > There won't be a single kernel image for ARMv7 and ARMv8 SoCs (like
-> > multi_v7 for ARMv7).
-> > 
-> > Instead build clock drivers only for respective SoC's architecture.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Quoting Andrew Lunn (2016-02-22 06:16:17)
+> > Such information will come later, and we can rework the drivers and DT
+> > bindings accordingly. Those DT bindings cannot be stable, as the
+> > platform is under heavy development and we'll probably discover some
+> > issues down the road.
 > 
-> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Hi Thomas
 > 
+> Maybe add a big fat warning that the bindings are unstable, and the DT
+> blob must be kept in sync with the kernel?
 
-Thanks for the Ack.
-
-I've rebased patches #1 and #2 against James's b9e65ebc654d and pushed
-the clk-samsung branch to the clk tree. I have deleted the
-clk-samsung-kconfig branch that was blowing up the kbuild robot.
-clk-samsung will not be rebased and can be used as a dependency for
-arm-soc. It has been merged into clk-next.
++1 and feel free to blame the lack of documentation.  No one can expect
+bindings to be finalized when the chip topology is not fully understood.
 
 Regards,
 Mike
+
+> 
+>      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
