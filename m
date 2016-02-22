@@ -1,29 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
- compatibility strings
-Date: Sun, 21 Feb 2016 21:37:20 -0600
-Message-ID: <20160222033720.GA27711@rob-hp-laptop>
-References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
- <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/8] arm64: dts: qcom: apq8016-sbc: add usb support
+Date: Sun, 21 Feb 2016 21:51:24 -0800
+Message-ID: <20160222055124.GG21240@tuxbot>
+References: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 11:15:49AM +0900, Simon Horman wrote:
-> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
->  drivers/net/can/rcar_can.c                             | 2 ++
->  2 files changed, 5 insertions(+), 1 deletion(-)
+On Wed 10 Feb 03:36 PST 2016, Srinivas Kandagatla wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 15 ++++++++++
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 35 ++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+> index cbeee0b..4a79dd9 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+> @@ -10,4 +10,19 @@
+>  			output-low;
+>  		};
+>  	};
+> +
+> +	usb_id_default: usb_id_default {
+
+Labels are built with _, node names with -.
+
+> +		pinmux {
+> +			function = "gpio";
+> +			pins = "gpio121";
+> +		};
+
+You don't need a separate node to specify function...
+
+> +
+> +		pinconf {
+> +			pins = "gpio121";
+> +			function = "gpio";
+
+...but if you really want it, then you shouldn't specify the function
+here.
+
+> +			drive-strength = <8>;
+> +			input-enable;
+> +			bias-pull-up;
+> +		};
+> +	};
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+[..]
+> +
+> +	usb_id: usb-id {
+> +		interrupt-parent = <&msmgpio>;
+
+interrupt-parent is part of specifying an interrupt. You're not doing
+that here, so no need to specify a parent.
+
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb_id_default>;
+>  	};
+>  };
+
+Apart from these two nits
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
