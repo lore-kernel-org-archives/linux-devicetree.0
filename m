@@ -1,35 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] clk: mvebu: add AP806 ring clock driver
-Date: Sun, 21 Feb 2016 20:54:01 -0600
-Message-ID: <20160222025401.GF15973@rob-hp-laptop>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1455521698-7905-4-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
+Date: Sun, 21 Feb 2016 20:54:14 -0600
+Message-ID: <20160222025414.GG15973@rob-hp-laptop>
+References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+ <1455519206-12939-14-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1455521698-7905-4-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1455519206-12939-14-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 08:34:58AM +0100, Thomas Petazzoni wrote:
-> This commit adds a new driver to handle the ring clocks found in the
-> AP806 HW block, which is the core block of all Armada 7K and 8K
-> Marvell 64-bits processors. Those ring clocks are derived from the
-> core ring clock handled by the AP806 core clock driver. The ring
-> clocks are used by various peripherals inside the AP806.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  .../clock/mvebu-armada-ap806-ring-clock.txt        | 32 +++++++++++
-
-Combine this with the other patch. Similar comments as the other one.
-
->  drivers/clk/mvebu/Kconfig                          |  3 +
->  drivers/clk/mvebu/Makefile                         |  1 +
->  drivers/clk/mvebu/ap806-ring.c                     | 65 ++++++++++++++++++++++
->  4 files changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-armada-ap806-ring-clock.txt
->  create mode 100644 drivers/clk/mvebu/ap806-ring.c
+T24gTW9uLCBGZWIgMTUsIDIwMTYgYXQgMTI6MjM6MjZQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBBZGQgSERNSSBQSFkgYmluZGluZ3MuIFVwZGF0ZSB0aGUgZXhhbXBsZSB0byB1c2Ug
+SERNSSBQSFkuCj4gCj4gQWRkIGEgbWlzc2luZyBwb3dlci1kb21haW5zIHByb3BlcnR5IGluIHRo
+ZSBIRE1JIGNvcmUgYmluZGluZ3MuCj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gCj4gU2lnbmVkLW9mZi1ieTog
+QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQgICAgICAgfCAzOSArKysrKysrKysr
+KysrKysrKysrKystCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21zbS9oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+IGluZGV4IDM3OWVlMmUuLjRkNzE5MTAgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWku
+dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2hkbWkudHh0Cj4gQEAgLTExLDYgKzExLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSBy
+ZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3Mg
+cmVnaXN0ZXJzCj4gIC0gcmVnLW5hbWVzOiAiY29yZV9waHlzaWNhbCIKPiAgLSBpbnRlcnJ1cHRz
+OiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBoZG1pIGJsb2NrLgo+ICstIHBvd2VyLWRv
+bWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPiAgLSBjbG9ja3M6IGRldmljZSBj
+bG9ja3MKPiAgICBTZWUgLi4vY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IgZGV0YWlscy4K
+PiAgLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgo+IEBAIC0xOCw2ICsx
+OSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gcWNvbSxoZG1pLXR4LWhwZC1ncGlvOiBo
+cGQgcGluCj4gIC0gY29yZS12ZGRhLXN1cHBseTogcGhhbmRsZSB0byBzdXBwbHkgcmVndWxhdG9y
+Cj4gIC0gaGRtaS1tdXgtc3VwcGx5OiBwaGFuZGxlIHRvIG11eCByZWd1bGF0b3IKPiArLSBxY29t
+LGhkbWktcGh5OiBwaGFuZGxlIHRvIEhETUkgUEhZIGRldmljZSBub2RlCgpXaHkgbm90IHVzZSB0
+aGUgZ2VuZXJpYyBwaHkgYmluZGluZz8KCj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAt
+IHFjb20saGRtaS10eC1tdXgtZW4tZ3BpbzogaGRtaSBtdXggZW5hYmxlIHBpbgo+IEBAIC0yNyw2
+ICsyOSwyNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIHBpbmN0cmwtMDogdGhlIGRlZmF1
+bHQgcGluY3RybCBzdGF0ZSAoYWN0aXZlKQo+ICAtIHBpbmN0cmwtMTogdGhlICJzbGVlcCIgcGlu
+Y3RybCBzdGF0ZQo+ICAKPiArSERNSSBQSFk6Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0g
+Y29tcGF0aWJsZTogQ291bGQgYmUgdGhlIGZvbGxvd2luZwo+ICsgICogInFjb20saGRtaS1waHkt
+OHg2MCIKPiArICAqICJxY29tLGhkbWktcGh5LTg5NjAiCj4gKyAgKiAicWNvbSxoZG1pLXBoeS04
+eDc0IgoKTm8gd2lsZGNhcmRzIHBsZWFzZS4gV2hlcmUncyA4OTk0PwoKPiArICAqICJxY29tLGhk
+bWktcGh5LTg5OTYiCj4gKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBv
+ZiB0aGUgcmVnaXN0ZXJzIG9mIHRoZSBQSFkgc3ViIGJsb2Nrcy4KPiArLSByZWctbmFtZXM6IFRo
+ZSBuYW1lcyBvZiByZWdpc3RlciByZWdpb25zLiBUaGUgZm9sbG93aW5nIHJlZ2lvbnMgYXJlIHJl
+cXVpcmVkOgo+ICsgICogImhkbWlfcGxsIgo+ICsgICogImhkbWlfcGh5Igo+ICsgIEZvciBIRE1J
+IFBIWSBvbiBtc204OTk2LCB0aGVzZSBhZGRpdGlvbmFsIHJlZ2lzdGVyIHJlZ2lvbnMgYXJlIHJl
+cXVpcmVkOgo+ICsgICAgKiAiaGRtaV90eF9sMCIKPiArICAgICogImhkbWlfdHhfbDEiCj4gKyAg
+ICAqICJoZG1pX3R4X2wzIgo+ICsgICAgKiAiaGRtaV90eF9sNCIKPiArLSBwb3dlci1kb21haW5z
+OiBTaG91bGQgYmUgPCZtbWNjIE1EU1NfR0RTQz4uCj4gKy0gY2xvY2tzOiBkZXZpY2UgY2xvY2tz
+Cj4gKyAgU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2st
+YmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+ICstIGNvcmUtdmRkYS1zdXBwbHk6IHBoYW5kbGUg
+dG8gdmRkYSByZWd1bGF0b3IgZGV2aWNlIG5vZGUKPiArCj4gIEV4YW1wbGU6Cj4gIAo+ICAvIHsK
+PiBAQCAtMzUsNyArNTgsNyBAQCBFeGFtcGxlOgo+ICAJaGRtaTogcWNvbSxoZG1pLXR4LTg5NjBA
+NGEwMDAwMCB7CgpOb2RlIG5hbWVzIHNob3VsZCBiZSBnZW5lcmljLCBzbyBqdXN0ICJoZG1pIi4K
+Cj4gIAkJY29tcGF0aWJsZSA9ICJxY29tLGhkbWktdHgtODk2MCI7Cj4gIAkJcmVnLW5hbWVzID0g
+ImNvcmVfcGh5c2ljYWwiOwo+IC0JCXJlZyA9IDwweDA0YTAwMDAwIDB4MTAwMD47Cj4gKwkJcmVn
+ID0gPDB4MDRhMDAwMDAgMHgyZjA+Owo+ICAJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3OSAwPjsK
+PiAgCQlwb3dlci1kb21haW5zID0gPCZtbWNjIE1EU1NfR0RTQz47Cj4gIAkJY2xvY2stbmFtZXMg
+PQo+IEBAIC01NCw1ICs3NywxOSBAQCBFeGFtcGxlOgo+ICAJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCIsICJzbGVlcCI7Cj4gIAkJcGluY3RybC0wID0gPCZocGRfYWN0aXZlICAmZGRjX2FjdGl2
+ZSAgJmNlY19hY3RpdmU+Owo+ICAJCXBpbmN0cmwtMSA9IDwmaHBkX3N1c3BlbmQgJmRkY19zdXNw
+ZW5kICZjZWNfc3VzcGVuZD47Cj4gKwo+ICsJCXFjb20saGRtaS1waHkgPSA8JmhkbWlfcGh5PjsK
+PiArCX07Cj4gKwo+ICsJaGRtaV9waHk6IHFjb20saGRtaS1waHktODk2MEA0YTAwNDAwIHsKCmRp
+dHRvLiBwaHlALi4uCgo+ICsJCWNvbXBhdGlibGUgPSAicWNvbSxoZG1pLXBoeS04OTYwIjsKPiAr
+CQlyZWctbmFtZXMgPSAiaGRtaV9waHkiLAo+ICsJCQkgICAgImhkbWlfcGxsIjsKPiArCQlyZWcg
+PSA8MHg0YTAwNDAwIDB4NjA+LAo+ICsJCSAgICAgIDwweDRhMDA1MDAgMHgxMDA+Owo+ICsJCXBv
+d2VyLWRvbWFpbnMgPSA8Jm1tY2MgTURTU19HRFNDPjsKPiArCQljbG9jay1uYW1lcyA9ICJzbGF2
+ZV9pZmFjZV9jbGsiOwo+ICsJCWNsb2NrcyA9IDwmbW1jYyBIRE1JX1NfQUhCX0NMSz47Cj4gKwkJ
+Y29yZS12ZGRhLXN1cHBseSA9IDwmcG04OTIxX2hkbWlfbXZzPjsKPiAgCX07Cj4gIH07Cj4gLS0g
+Cj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRo
+ZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRpb24KPiAK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
