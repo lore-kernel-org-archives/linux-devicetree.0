@@ -1,28 +1,51 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V7 4/6] i2c: qup: Add bam dma capabilities
-Date: Mon, 22 Feb 2016 19:11:08 +0530
-Message-ID: <001c01d16d76$b43d2690$1cb773b0$@codeaurora.org>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org> <1453197766-18976-5-git-send-email-sricharan@codeaurora.org> <20160212183737.GA1520@katana> <002a01d16d6c$0f790520$2e6b0f60$@codeaurora.org> <20160222123225.GC1392@katana>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160222123225.GC1392@katana>
-Content-Language: en-us
-Sender: linux-i2c-owner@vger.kernel.org
-To: 'Wolfram Sang' <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH] of: alloc anywhere from memblock if range not specified
+Date: Mon, 22 Feb 2016 19:15:44 +0530
+Message-ID: <1456148744-7583-1-git-send-email-vinmenon@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+early_init_dt_alloc_reserved_memory_arch passes end as 0 to
+__memblock_alloc_base, when limits are not specified. But
+__memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
+and limits the end to memblock.current_limit. This results in regions
+never being placed in HIGHMEM area, for e.g. CMA.
+Let __memblock_alloc_base allocate from anywhere in memory if limits are
+not specified.
 
-> >   Regression and a fix is required on top of this series. So can I
-> > send a separate fix on top of this series ?
-> 
-> Yes, do it like this. And please quote only relevant parts of a mail.
-   Ok, will send a fix separately.   Sorry for the noisy reply previously ..
+Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 1a3556a..ed01c01 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -32,11 +32,13 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ 	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
+ 	phys_addr_t *res_base)
+ {
++	phys_addr_t base;
+ 	/*
+ 	 * We use __memblock_alloc_base() because memblock_alloc_base()
+ 	 * panic()s on allocation failure.
+ 	 */
+-	phys_addr_t base = __memblock_alloc_base(size, align, end);
++	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
++	base = __memblock_alloc_base(size, align, end);
+ 	if (!base)
+ 		return -ENOMEM;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
 
-Regards,
- Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
