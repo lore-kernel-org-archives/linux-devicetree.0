@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v2 7/9] arm64: dts: salvator-x: enable usb2_phy
-Date: Mon, 22 Feb 2016 18:58:06 +0900
-Message-ID: <1456135088-7976-8-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v2 8/9] arm64: dts: salvator-x: enable USB 2.0 Host channels
+Date: Mon, 22 Feb 2016 18:58:07 +0900
+Message-ID: <1456135088-7976-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,91 +12,45 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch also adds a regulator node for USB2.0 to handle VBUS on/off
-by the generic PHY framework.
-This board has a MAX3355 chip. However, we cannot use the extcon/max3355
-driver because the ID pin doesn't connect to a gpio pin (in other words,
-it connects to the SoC specific pin).
+We should set SW15 to pin 2-3 side on the board before we use CN9
+as USB host or peripheral.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 45 +++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index fb1f382..6adb65f 100644
+index 6adb65f..f9d904b 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -33,6 +33,7 @@
- 
- /dts-v1/;
- #include "r8a7795.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Renesas Salvator-X board based on r8a7795";
-@@ -118,6 +119,15 @@
- 			};
- 		};
- 	};
-+
-+	vcc_usb2_phy0: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB20_VBUS0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio6 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &du {
-@@ -173,8 +183,22 @@
- 				 "audio_clkout_a", "audio_clkout3_a";
- 		renesas,function = "audio_clk";
- 	};
--};
- 
-+	usb0_pins: usb0 {
-+		renesas,groups = "usb0";
-+		renesas,function = "usb";
-+	};
-+
-+	usb1_pins: usb1 {
-+		renesas,groups = "usb1";
-+		renesas,function = "usb";
-+	};
-+
-+	usb2_pins: usb2 {
-+		renesas,groups = "usb2";
-+		renesas,function = "usb";
-+	};
-+};
- &scif1 {
- 	pinctrl-0 = <&scif1_pins>;
+@@ -364,3 +364,27 @@
+ 	pinctrl-0 = <&usb2_pins>;
  	pinctrl-names = "default";
-@@ -321,3 +345,22 @@
- &xhci0 {
- 	status = "okay";
  };
 +
-+&usb2_phy0 {
++&ehci0 {
 +	status = "okay";
-+	vbus-supply = <&vcc_usb2_phy0>;
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
 +};
 +
-+&usb2_phy1 {
++&ehci1 {
 +	status = "okay";
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
 +};
 +
-+&usb2_phy2 {
++&ehci2 {
 +	status = "okay";
-+	pinctrl-0 = <&usb2_pins>;
-+	pinctrl-names = "default";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
 +};
 -- 
 1.9.1
