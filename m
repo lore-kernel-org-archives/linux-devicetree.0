@@ -1,39 +1,285 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 6/6] ARM: dts: n900: Rename isp1704 to isp1707 to match
- correct name
-Date: Mon, 22 Feb 2016 11:06:50 -0800
-Message-ID: <20160222190649.GR13417@atomide.com>
-References: <1456054103-19551-1-git-send-email-pali.rohar@gmail.com>
- <1456054103-19551-7-git-send-email-pali.rohar@gmail.com>
- <20160221140517.GA25072@amd>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] bmips: add device tree example for BCM6358
+Date: Mon, 22 Feb 2016 13:09:07 -0600
+Message-ID: <20160222190907.GA8409@rob-hp-laptop>
+References: <1456054881-26787-2-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160221140517.GA25072@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Nishanth Menon <nm@ti.com>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1456054881-26787-2-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [160221 06:05]:
-> On Sun 2016-02-21 12:28:23, Pali Roh=C3=A1r wrote:
-> > This change does not break existing userspace or Maemo software bec=
-ause
-> > isp1704_charger.c always export power supply device under isp1704 n=
-ame.
+On Sun, Feb 21, 2016 at 12:41:21PM +0100, =C1lvaro Fern=E1ndez Rojas wr=
+ote:
+> This adds a device tree example for SFR Neufbox4 (Sercomm version), w=
+hich
+> also serves as a real example for brcm,bcm6358-leds.
 >=20
-> ..exports..
+> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  v2: Remove led0 alias and use stdout-path only
 >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>  .../devicetree/bindings/mips/brcm/soc.txt          |   2 +-
+>  arch/mips/bmips/Kconfig                            |   4 +
+>  arch/mips/boot/dts/brcm/Makefile                   |   2 +
+>  arch/mips/boot/dts/brcm/bcm6358.dtsi               | 111 +++++++++++=
+++++++++++
+>  arch/mips/boot/dts/brcm/bcm96358nb4ser.dts         |  46 +++++++++
+>  5 files changed, 164 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/boot/dts/brcm/bcm6358.dtsi
+>  create mode 100644 arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
+
+A couple of minor things, otherwise:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 >=20
-> 4,5,6: Acked-by: Pavel Machek <pavel@ucw.cz>
+> diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Do=
+cumentation/devicetree/bindings/mips/brcm/soc.txt
+> index 7bab90c..e58a4f6 100644
+> --- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
+> +++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+> @@ -4,7 +4,7 @@ Required properties:
+> =20
+>  - compatible: "brcm,bcm3384", "brcm,bcm33843"
+>                "brcm,bcm3384-viper", "brcm,bcm33843-viper"
+> -              "brcm,bcm6328", "brcm,bcm6368",
+> +              "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
+>                "brcm,bcm7125", "brcm,bcm7346", "brcm,bcm7358", "brcm,=
+bcm7360",
+>                "brcm,bcm7362", "brcm,bcm7420", "brcm,bcm7425"
+> =20
+> diff --git a/arch/mips/bmips/Kconfig b/arch/mips/bmips/Kconfig
+> index e2c4fd6..264328d 100644
+> --- a/arch/mips/bmips/Kconfig
+> +++ b/arch/mips/bmips/Kconfig
+> @@ -21,6 +21,10 @@ config DT_BCM93384WVG_VIPER
+>  	bool "BCM93384WVG Viper CPU (EXPERIMENTAL)"
+>  	select BUILTIN_DTB
+> =20
+> +config DT_BCM96358NB4SER
+> +	bool "BCM96358NB4SER"
+> +	select BUILTIN_DTB
+> +
+>  config DT_BCM96368MVWG
+>  	bool "BCM96368MVWG"
+>  	select BUILTIN_DTB
+> diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/br=
+cm/Makefile
+> index eabeb60..fda9d38 100644
+> --- a/arch/mips/boot/dts/brcm/Makefile
+> +++ b/arch/mips/boot/dts/brcm/Makefile
+> @@ -1,5 +1,6 @@
+>  dtb-$(CONFIG_DT_BCM93384WVG)		+=3D bcm93384wvg.dtb
+>  dtb-$(CONFIG_DT_BCM93384WVG_VIPER)	+=3D bcm93384wvg_viper.dtb
+> +dtb-$(CONFIG_DT_BCM96358NB4SER)		+=3D bcm96358nb4ser.dtb
+>  dtb-$(CONFIG_DT_BCM96368MVWG)		+=3D bcm96368mvwg.dtb
+>  dtb-$(CONFIG_DT_BCM9EJTAGPRB)		+=3D bcm9ejtagprb.dtb
+>  dtb-$(CONFIG_DT_BCM97125CBMB)		+=3D bcm97125cbmb.dtb
+> @@ -14,6 +15,7 @@ dtb-$(CONFIG_DT_BCM97435SVMB)		+=3D bcm97435svmb.dt=
+b
+>  dtb-$(CONFIG_DT_NONE)			+=3D \
+>  						bcm93384wvg.dtb		\
+>  						bcm93384wvg_viper.dtb	\
+> +						bcm96358nb4ser.dtb	\
+>  						bcm96368mvwg.dtb	\
+>  						bcm9ejtagprb.dtb	\
+>  						bcm97125cbmb.dtb	\
+> diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dt=
+s/brcm/bcm6358.dtsi
+> new file mode 100644
+> index 0000000..4da824f
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
+> @@ -0,0 +1,111 @@
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "brcm,bcm6358";
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		mips-hpt-frequency =3D <150000000>;
+> +
+> +		cpu@0 {
+> +			compatible =3D "brcm,bmips4350";
+> +			device_type =3D "cpu";
+> +			reg =3D <0>;
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible =3D "brcm,bmips4350";
+> +			device_type =3D "cpu";
+> +			reg =3D <1>;
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		periph_clk: periph_clk {
+> +			compatible =3D "fixed-clock";
+> +			#clock-cells =3D <0>;
+> +			clock-frequency =3D <50000000>;
+> +		};
+> +	};
+> +
+> +	aliases {
+> +		uart0 =3D &uart0;
+> +		uart1 =3D &uart1;
+> +	};
+> +
+> +	cpu_intc: cpu_intc {
+> +		#address-cells =3D <0>;
+> +		compatible =3D "mti,cpu-interrupt-controller";
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <1>;
+> +	};
+> +
+> +	ubus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +
+> +		compatible =3D "simple-bus";
+> +		ranges;
+> +
+> +		periph_cntl: syscon@fffe0000 {
+> +			compatible =3D "syscon";
+> +			reg =3D <0xfffe0000 0xc>;
+> +			little-endian;
+> +		};
+> +
+> +		reboot: syscon-reboot@fffe0008 {
+> +			compatible =3D "syscon-reboot";
+> +			regmap =3D <&periph_cntl>;
+> +			offset =3D <0x8>;
+> +			mask =3D <0x1>;
+> +		};
+> +
+> +		periph_intc: periph_intc@fffe000c {
 
-Ack for this one to get merged along with the driver changes:
+interrupt-controller@...
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+> +			compatible =3D "brcm,bcm3380-l2-intc";
+> +			reg =3D <0xfffe0010 0x4 0xfffe000c 0x4>,
+> +			      <0xfffe003c 0x4 0xfffe0038 0x4>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells =3D <1>;
+> +
+> +			interrupt-parent =3D <&cpu_intc>;
+> +			interrupts =3D <2>;
+> +		};
+> +
+> +		leds0: led-controller@fffe00d0 {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			compatible =3D "brcm,bcm6358-leds";
+> +			reg =3D <0xfffe00d0 0x8>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart0: serial@fffe0100 {
+> +			compatible =3D "brcm,bcm6345-uart";
+> +			reg =3D <0xfffe0100 0x18>;
+> +
+> +			interrupt-parent =3D <&periph_intc>;
+> +			interrupts =3D <2>;
+> +
+> +			clocks =3D <&periph_clk>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart1: serial@fffe0120 {
+> +			compatible =3D "brcm,bcm6345-uart";
+> +			reg =3D <0xfffe0120 0x18>;
+> +
+> +			interrupt-parent =3D <&periph_intc>;
+> +			interrupts =3D <3>;
+> +
+> +			clocks =3D <&periph_clk>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts b/arch/mips/b=
+oot/dts/brcm/bcm96358nb4ser.dts
+> new file mode 100644
+> index 0000000..c313e2c
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
+> @@ -0,0 +1,46 @@
+> +/dts-v1/;
+> +
+> +/include/ "bcm6358.dtsi"
+> +
+> +/ {
+> +	compatible =3D "sfr,nb4-ser", "brcm,bcm6358";
+> +	model =3D "SFR Neufbox 4 (Sercomm)";
+> +
+> +	memory@0 {
+> +		device_type =3D "memory";
+> +		reg =3D <0x00000000 0x02000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D &uart0;
+> +	};
+> +};
+> +
+> +&leds0 {
+> +	status =3D "ok";
+> +
+> +	alarm_white@0 {
 
-Regards,
+led@0
 
-Tony
+> +		reg =3D <0>;
+> +		active-low;
+> +		label =3D "nb4-ser:white:alarm";
+> +	};
+> +	tv_white@2 {
+
+led@2 and so on.
+
+> +		reg =3D <2>;
+> +		active-low;
+> +		label =3D "nb4-ser:white:tv";
+> +	};
+> +	tel_white@3 {
+> +		reg =3D <3>;
+> +		active-low;
+> +		label =3D "nb4-ser:white:tel";
+> +	};
+> +	adsl_white@4 {
+> +		reg =3D <4>;
+> +		active-low;
+> +		label =3D "nb4-ser:white:adsl";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status =3D "okay";
+> +};
+> --=20
+> 1.9.1
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
