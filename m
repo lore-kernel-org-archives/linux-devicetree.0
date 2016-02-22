@@ -1,86 +1,40 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 5/8] [Media] vcodec: mediatek: Add Mediatek V4L2
- Video Encoder Driver
-Date: Mon, 22 Feb 2016 23:19:24 +0800
-Message-ID: <1456154364.1943.3.camel@mtksdaap41>
-References: <1454585703-42428-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1454585703-42428-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1454585703-42428-3-git-send-email-tiffany.lin@mediatek.com>
-	 <1454585703-42428-4-git-send-email-tiffany.lin@mediatek.com>
-	 <1454585703-42428-5-git-send-email-tiffany.lin@mediatek.com>
-	 <1454585703-42428-6-git-send-email-tiffany.lin@mediatek.com>
-	 <56C1B4AF.1030207@xs4all.nl> <1455604653.19396.68.camel@mtksdaap41>
-	 <56C2D371.9090805@xs4all.nl> <1455959480.12533.11.camel@mtksdaap41>
-	 <56C82F60.4060304@xs4all.nl>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
+Date: Mon, 22 Feb 2016 16:19:39 +0100
+Message-ID: <18251200.Xfr10N5eWq@wuerfel>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <28916176.WDrPajhOPa@wuerfel> <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56C82F60.4060304-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Sat, 2016-02-20 at 10:18 +0100, Hans Verkuil wrote:
-> On 02/20/2016 10:11 AM, tiffany lin wrote:
-> > Hi Hans,
+On Monday 22 February 2016 10:53:11 Anurag Kumar Vulisha wrote:
+> > >
 > > 
-> > On Tue, 2016-02-16 at 08:44 +0100, Hans Verkuil wrote:
-> >> On 02/16/2016 07:37 AM, tiffany lin wrote:
-> >>>>> +
-> >>>>> +const struct v4l2_ioctl_ops mtk_venc_ioctl_ops = {
-> >>>>> +	.vidioc_streamon		= v4l2_m2m_ioctl_streamon,
-> >>>>> +	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
-> >>>>> +
-> >>>>> +	.vidioc_reqbufs			= v4l2_m2m_ioctl_reqbufs,
-> >>>>> +	.vidioc_querybuf		= v4l2_m2m_ioctl_querybuf,
-> >>>>> +	.vidioc_qbuf			= vidioc_venc_qbuf,
-> >>>>> +	.vidioc_dqbuf			= vidioc_venc_dqbuf,
-> >>>>> +
-> >>>>> +	.vidioc_querycap		= vidioc_venc_querycap,
-> >>>>> +	.vidioc_enum_fmt_vid_cap_mplane = vidioc_enum_fmt_vid_cap_mplane,
-> >>>>> +	.vidioc_enum_fmt_vid_out_mplane = vidioc_enum_fmt_vid_out_mplane,
-> >>>>> +	.vidioc_enum_framesizes		= vidioc_enum_framesizes,
-> >>>>> +
-> >>>>> +	.vidioc_try_fmt_vid_cap_mplane	= vidioc_try_fmt_vid_cap_mplane,
-> >>>>> +	.vidioc_try_fmt_vid_out_mplane	= vidioc_try_fmt_vid_out_mplane,
-> >>>>> +	.vidioc_expbuf			= v4l2_m2m_ioctl_expbuf,
-> >>>>
-> >>>> Please add vidioc_create_bufs and vidioc_prepare_buf as well.
-> >>>>
-> >>>
-> >>> Currently we do not support these use cases, do we need to add
-> >>> vidioc_create_bufs and vidioc_prepare_buf now?
-> >>
-> >> I would suggest you do. The vb2 framework gives it (almost) for free.
-> >> prepare_buf is completely free (just add the helper) and create_bufs
-> >> needs a few small changes in the queue_setup function, that's all.
-> >>
-> > After try to add vidioc_create_bufs directly using
-> > vb2_ioctl_create_bufs, it will have problem in 
+> > How would a hardware integrator know which value is right for a particular
+> > SoC?
+> > 
+> > Could it be keyed off the hardware ID? Could the bootloader perhaps set an
+> > appropriate value in the AHCI_VEND_PTC register at boot time and the driver
+> > read the initial value from it?
+> > 
+> > From the description, it sounds like this is a policy decision rather than
+> > hardware description, and shouldn't really be in here.
+> > 
 > 
-> This is a m2m device, so you should use the m2m variant of this:
-> v4l2_m2m_ioctl_create_bufs
+> Thanks for reviewing the patch. Can I use module_param() for this watermark instead of reading it from devicetree or
+> doing it in bootloader. In bootloader we are initializing serdes controller for high speed devices. As a part of this initialization
+> we will be reseting all the high speed pheripherals which are using serdes, so SATA will also get resetted. Because of this
+> reason, can I use module_param() for Rxwatermark value  instead?
 > 
-> That should solve this problem.
-> 
-> Ditto for prepare_buf: you need to use v4l2_m2m_ioctl_prepare_buf.
-> 
-Got it. After using v4l2_m2m_ioctl_create_bufs, the problem was solved.
-Thanks for your help.
 
-> Regards,
-> 
-> 	Hans
+I don't know what is appropriate because I have no idea what Rxwatermark
+is good for. Can you try describing why we can't just set it to the
+correct value for everyone automatically?
 
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
