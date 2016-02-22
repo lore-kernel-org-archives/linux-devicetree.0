@@ -1,80 +1,65 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 2/8] arm64: dts: qcom: apq8016-sbc: add usb support
-Date: Sun, 21 Feb 2016 21:51:24 -0800
-Message-ID: <20160222055124.GG21240@tuxbot>
-References: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] Add DAC driver support for Vybrid SoC
+Date: Mon, 22 Feb 2016 11:48:35 +0530
+Message-ID: <cover.1456121233.git.maitysanchayan@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 10 Feb 03:36 PST 2016, Srinivas Kandagatla wrote:
+Hello,
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 15 ++++++++++
->  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 35 ++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-> index cbeee0b..4a79dd9 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
-> @@ -10,4 +10,19 @@
->  			output-low;
->  		};
->  	};
-> +
-> +	usb_id_default: usb_id_default {
+This patchset adds support for the DAC peripheral on Vybrid SoC.
+Patchset is based on top of shawn's for-next branch and has been
+tested on a Toradex Colibri VF50 module.
 
-Labels are built with _, node names with -.
+@Jonathan
+I kept the IIO_SHARED_BY_DIR instead of using IIO_SHARED_BY_ALL
+since this gives "out_conversion_mode" allowing me to distinguish
+this in the ABI documentation, that this is explicitly for the DAC.
 
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio121";
-> +		};
+Since 4.5-rc4 was released recently and assuming this makes it with
+this or next version, I assumed the target kernel version would be
+4.6 and used that in ABI documentation.
 
-You don't need a separate node to specify function...
+Feedbacks and comments most welcome.
 
-> +
-> +		pinconf {
-> +			pins = "gpio121";
-> +			function = "gpio";
+Changes since v2:
+1. Add dependencies on OF and HAS_IOMEM in Kconfig
+2. Fix ordering of disabling DAC and calling iio unregister
 
-...but if you really want it, then you shouldn't specify the function
-here.
+Changes since v1:
+1. Fix return type of vf610_dac_init function
+2. Document conversion modes in sysfs-bus-iio-vf610
+3. Remove "indexed" specification from iio_chan_spec
+4. Use "return" directly from default case in switch
+5. Remove DRIVER_NAME
+6. Call vf610_dac_init before iio device registration
+7. Define and use vf610_dac_exit function in remove and suspend
 
-> +			drive-strength = <8>;
-> +			input-enable;
-> +			bias-pull-up;
-> +		};
-> +	};
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-[..]
-> +
-> +	usb_id: usb-id {
-> +		interrupt-parent = <&msmgpio>;
+v2 of the patchset
+http://www.spinics.net/lists/arm-kernel/msg482839.html
 
-interrupt-parent is part of specifying an interrupt. You're not doing
-that here, so no need to specify a parent.
+v1 of the patchset:
+http://www.spinics.net/lists/arm-kernel/msg481190.html
 
-> +		compatible = "linux,extcon-usb-gpio";
-> +		id-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_id_default>;
->  	};
->  };
+Thanks & Regards,
+Sanchayan Maity.
 
-Apart from these two nits
+Sanchayan Maity (2):
+  ARM: dts: vfxxx: Add DAC node for Vybrid SoC
+  iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
+ .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
+ arch/arm/boot/dts/vfxxx.dtsi                       |  18 ++
+ drivers/iio/dac/Kconfig                            |  10 +
+ drivers/iio/dac/Makefile                           |   1 +
+ drivers/iio/dac/vf610_dac.c                        | 298 +++++++++++++++++++++
+ 6 files changed, 356 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+ create mode 100644 drivers/iio/dac/vf610_dac.c
 
-Regards,
-Bjorn
+-- 
+2.7.1
