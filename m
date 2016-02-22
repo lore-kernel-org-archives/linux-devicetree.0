@@ -1,65 +1,57 @@
 From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/2] Add DAC driver support for Vybrid SoC
-Date: Mon, 22 Feb 2016 11:48:35 +0530
-Message-ID: <cover.1456121233.git.maitysanchayan@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v3 1/2] ARM: dts: vfxxx: Add DAC node for Vybrid SoC
+Date: Mon, 22 Feb 2016 11:48:36 +0530
+Message-ID: <cb23ab53250603e96eb4725c266d01e5376f8a68.1456121233.git.maitysanchayan@gmail.com>
+References: <cover.1456121233.git.maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1456121233.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1456121233.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1456121233.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add a device tree node entry for DAC peripheral on Vybrid SoC.
 
-This patchset adds support for the DAC peripheral on Vybrid SoC.
-Patchset is based on top of shawn's for-next branch and has been
-tested on a Toradex Colibri VF50 module.
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/vfxxx.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-@Jonathan
-I kept the IIO_SHARED_BY_DIR instead of using IIO_SHARED_BY_ALL
-since this gives "out_conversion_mode" allowing me to distinguish
-this in the ABI documentation, that this is explicitly for the DAC.
-
-Since 4.5-rc4 was released recently and assuming this makes it with
-this or next version, I assumed the target kernel version would be
-4.6 and used that in ABI documentation.
-
-Feedbacks and comments most welcome.
-
-Changes since v2:
-1. Add dependencies on OF and HAS_IOMEM in Kconfig
-2. Fix ordering of disabling DAC and calling iio unregister
-
-Changes since v1:
-1. Fix return type of vf610_dac_init function
-2. Document conversion modes in sysfs-bus-iio-vf610
-3. Remove "indexed" specification from iio_chan_spec
-4. Use "return" directly from default case in switch
-5. Remove DRIVER_NAME
-6. Call vf610_dac_init before iio device registration
-7. Define and use vf610_dac_exit function in remove and suspend
-
-v2 of the patchset
-http://www.spinics.net/lists/arm-kernel/msg482839.html
-
-v1 of the patchset:
-http://www.spinics.net/lists/arm-kernel/msg481190.html
-
-Thanks & Regards,
-Sanchayan Maity.
-
-Sanchayan Maity (2):
-  ARM: dts: vfxxx: Add DAC node for Vybrid SoC
-  iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC
-
- Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
- .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
- arch/arm/boot/dts/vfxxx.dtsi                       |  18 ++
- drivers/iio/dac/Kconfig                            |  10 +
- drivers/iio/dac/Makefile                           |   1 +
- drivers/iio/dac/vf610_dac.c                        | 298 +++++++++++++++++++++
- 6 files changed, 356 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
- create mode 100644 drivers/iio/dac/vf610_dac.c
-
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index a5f07e3..8238069 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -602,6 +602,24 @@
+ 				status = "disabled";
+ 			};
+ 
++			dac0: dac@400cc000 {
++				compatible = "fsl,vf610-dac";
++				reg = <0x400cc000 1000>;
++				interrupts = <55 IRQ_TYPE_LEVEL_HIGH>;
++				clock-names = "dac";
++				clocks = <&clks VF610_CLK_DAC0>;
++				status = "disabled";
++			};
++
++			dac1: dac@400cd000 {
++				compatible = "fsl,vf610-dac";
++				reg = <0x400cd000 1000>;
++				interrupts = <56 IRQ_TYPE_LEVEL_HIGH>;
++				clock-names = "dac";
++				clocks = <&clks VF610_CLK_DAC1>;
++				status = "disabled";
++			};
++
+ 			fec0: ethernet@400d0000 {
+ 				compatible = "fsl,mvf600-fec";
+ 				reg = <0x400d0000 0x1000>;
 -- 
 2.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
