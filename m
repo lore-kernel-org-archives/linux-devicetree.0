@@ -1,54 +1,61 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v1] arm: pxa: fix DT node name for PXA27X usb
-Date: Mon, 22 Feb 2016 16:35:17 +0100
-Message-ID: <87oab8wyfe.fsf@belgarion.home>
-References: <1456139297-5854-1-git-send-email-ynvich@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456139297-5854-1-git-send-email-ynvich@gmail.com> (Sergei
-	Ianovich's message of "Mon, 22 Feb 2016 14:08:17 +0300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:PXA2xx/PXA3xx
-	SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/1] of/overlay: of overlay callbacks
+Date: Mon, 22 Feb 2016 17:38:19 +0200
+Message-ID: <6F671B0F-4F94-47F0-9CA2-04E6F905F20A@konsulko.com>
+References: <1455730885-1514-1-git-send-email-atull@opensource.altera.com> <1455730885-1514-2-git-send-email-atull@opensource.altera.com> <20160222025517.GS15973@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160222025517.GS15973@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sergei Ianovich <ynvich@gmail.com> writes:
+Hi Rob,
 
-> Without this patch I am getting an error:
-> ---8<---
-> [   15.709742] ohci-pxa27x: OHCI PXA27x/PXA3x driver
-> [   15.737150] pxa27x-ohci: probe of 4c000000.ohci failed with error -2
-> ---8<---
->
-> The error is generated in drivers/usb/host/ohci-pxa27x.c at line 441:
-> ---8<---
-> 441:	usb_clk = devm_clk_get(&pdev->dev, NULL);
-> 442:	if (IS_ERR(usb_clk))
-> 443:		return PTR_ERR(usb_clk);
-> ---8<---
->
-> The error is caused by different names for the same DT node in pxa2xx.dtsi
-> and pxa27x.dtsi.
->
-> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> CC: Robert Jarzmik <robert.jarzmik@free.fr>
-Hi Sergei,
+> On Feb 22, 2016, at 04:55 , Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>=20
+> On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:
+>> Add overlay callback functionality.
+>>=20
+>> When DT overlays are being added, some drivers/subsystems
+>> will want to know about the changes before they go into the
+>> live tree.  Similarly there is a need for post-remove
+>> callbacks.
+>>=20
+>> Each handler is registered with a of_device_id.  When
+>> an overlay target matches a handler's id, the handler
+>> gets called.
+>>=20
+>> The following 4 cases are handled: pre-apply, post-apply,
+>> pre-remove, and post-remove.
+>=20
+> So I know I suggested maybe not using notifiers, but this ends up jus=
+t=20
+> looking like notifiers, so we might as well use them unless we someho=
+w=20
+> change the flow. You would just need to add pre-apply and pre-remove=20
+> in of_attach_node and of_detach_node, right?
+>=20
 
-You're right, I haven't seen the pxa2xx.dtsi statement before.
 
-As such, could you amend a bit your patch please to :
- - add:
-Fixes: 0ec1939668e5 ("ARM: dts: pxa: add the usb host controller")
- - make the same change in pxa3xx.dtsi, as the same error is there
- - and more globally align pxa2xx.dtsi, pxa27x.dtsi and pxa3xx.dtsi
- - remove the compatible, reg, interrupts and status from both pxa27x.dtsi and
-   pxa3xx.dtsi as they are redundant with the included pxa2xxx.dsti one
+I agree those look just like notifiers. We could just update the notifi=
+er
+logic to handle this case.
 
-I'm even wondering if the proper change wouldn't be to scrap the ohci
-declarations from pxa27x.dtsi and pxa3xx.dtsi, and only add the "clocks"
-property to pxa2xx.dtsi ...
+Am I missing something else?
 
-Cheers.
+
+> Rob
+
+Regards
+
+=E2=80=94 Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
