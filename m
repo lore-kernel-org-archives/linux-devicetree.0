@@ -1,72 +1,52 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v2 2/2] drm/panel: Support for LG lp120up1 panel with eDP input
-Date: Mon, 22 Feb 2016 19:01:44 +0800
-Message-ID: <1456138904-15258-2-git-send-email-jitao.shi@mediatek.com>
-References: <1456138904-15258-1-git-send-email-jitao.shi@mediatek.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] patches to add support for rockchip rt5640 card
+Date: Mon, 22 Feb 2016 20:04:16 +0900
+Message-ID: <20160222110416.GC18327@sirena.org.uk>
+References: <1456127815-68575-1-git-send-email-sugar.zhang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456138904-15258-1-git-send-email-jitao.shi@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengu>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DLy7ErigvZFpjC4N"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456127815-68575-1-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The LG lp120up1 TFT LCD panel with eDP interface is a 12.0" 1920x1280
-panel, which can be supported by the simple panel driver
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
-Changes since v1:
- - Add eDP panel type in comment msg
- - Fixed comment msg with 72 characters width
----
- drivers/gpu/drm/panel/panel-simple.c |   26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+--DLy7ErigvZFpjC4N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f88a631..2030c37 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -982,6 +982,29 @@ static const struct panel_desc lg_lb070wv8 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
- };
- 
-+static const struct drm_display_mode lg_lp120up1_mode = {
-+	.clock = 162300,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 40,
-+	.hsync_end = 1920 + 40 + 40,
-+	.htotal = 1920 + 40 + 40+ 80,
-+	.vdisplay = 1280,
-+	.vsync_start = 1280 + 4,
-+	.vsync_end = 1280 + 4 + 4,
-+	.vtotal = 1280 + 4 + 4 + 12,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc lg_lp120up1 = {
-+	.modes = &lg_lp120up1_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 267,
-+		.height = 183,
-+	},
-+};
-+
- static const struct drm_display_mode lg_lp129qe_mode = {
- 	.clock = 285250,
- 	.hdisplay = 2560,
-@@ -1256,6 +1279,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "lg,lb070wv8",
- 		.data = &lg_lb070wv8,
- 	}, {
-+		.compatible = "lg,lp120up1",
-+		.data = &lg_lp120up1,
-+	}, {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
- 	}, {
--- 
-1.7.9.5
+On Mon, Feb 22, 2016 at 03:56:53PM +0800, Sugar Zhang wrote:
+
+> Sugar Zhang (2):
+>   ASoC: rockchip: i2s: add default values for registers
+>   ASoC: rt5640: add master clock handling for rt5640
+
+These appear to be commpletly unrelated patches so should each be sent
+individually rather than as a series - that way there is no confusion
+about them possibly depending on each other and they are easier to
+review and apply.
+
+--DLy7ErigvZFpjC4N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWyusvAAoJECTWi3JdVIfQZhkH/jNZD0jV7sEbj+S5zX225hTs
+fnDTx29It6Yyw87P+vtDI+kM/MU8lMbxXJRV85sF+O/atiGwc0yrdKmLekkyRhrI
+eEsJQbq11J1nN31aYHMcOeC9oHx1pDSedTkT3z4oJDE0WPADaiPmLlaGJR/u0+Oh
+rA94BGqPQ/spz9FZY5rxb2M3lF+VD9eT8gWTES2v8T+k0VYjXvdSyJwbJPG7/SSe
+NU3ZIwk3e/AoqjlPWt/ZzbUKnK2C7CHzs5x2FLLsv3iwTrEussk8x6oGXoKoOw65
+8PBk/6bbXbhFfdwP9ZKxohbplfVubXZL5ho0G9PK4icp8s3Y7WZRliPUTZCwfG4=
+=+0Fx
+-----END PGP SIGNATURE-----
+
+--DLy7ErigvZFpjC4N--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
