@@ -1,297 +1,399 @@
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v2] clk: add userspace clock consumer
-Date: Mon, 22 Feb 2016 20:48:39 +0900
-Message-ID: <1456141719-2543-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: [PATCH v3] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Mon, 22 Feb 2016 14:57:42 +0300
+Message-ID: <1456142265-12925-1-git-send-email-ynvich@gmail.com>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Sergei Ianovich <ynvich@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds userspace consumer for common clock.
+ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
+master which makes the RTC usable. The driver is not supposed to work
+with anything else.
 
-This driver is inspired from Userspace regulator consumer
-(REGULATOR_USERSPACE_CONSUMER) and it is useful for test purposes and
-some classes of devices that are controlled entirely from user space.
+The driver uses the standard MicroWire half-duplex transfer timing.
+Master output is set on low clock and sensed by the RTC on the rising
+edge. Master input is set by the RTC on the trailing edge and is sensed
+by the master on low clock.
 
-Example binding and usages:
-
-clksqw_userspace_consumer {
-	compatible = "linux,clock-userspace-consumer";
-	clocks = <&clksqw>;
-};
-
-	# cd /sys/devices/platform/clksqw_userspace_consumer
-	# echo 8192 > rate
-	# echo 1 > enable
-
-This also create new COMMON_CLK_DEBUG option and this userspace clock
-consumer depends on it.
-
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+CC: Mark Brown <broonie@kernel.org>
 ---
-* v2
-- change compatible property to "linux,clock-userspace-consumer"
-- rename sysfs file from 'state' to 'enable'
-- create new COMMON_CLK_DEBUG option
+   v2..v3 to fix Mark Brown review comments
+   * drop dependencies in Kconfig
+   * use #ifdef CONFIG_OF to allow build without DT
+   * drop empty driver->remove
 
- .../bindings/clock/clk-userspace-consumer.txt      |  17 +++
- drivers/clk/Kconfig                                |   9 ++
- drivers/clk/Kconfig.debug                          |   9 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-userspace-consumer.c               | 169 +++++++++++++++++++++
- 5 files changed, 205 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clk-userspace-consumer.txt
- create mode 100644 drivers/clk/Kconfig.debug
- create mode 100644 drivers/clk/clk-userspace-consumer.c
+   v1..v2 to fix Mark Brown review comments
+   * drop ifdef around MODULE_NAME
+   * use usleep_range directly
+   * drop empty master->cleanup
 
-diff --git a/Documentation/devicetree/bindings/clock/clk-userspace-consumer.txt b/Documentation/devicetree/bindings/clock/clk-userspace-consumer.txt
+ .../devicetree/bindings/spi/spi-lp8841-rtc.txt     |  55 +++++
+ drivers/spi/Kconfig                                |   9 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-lp8841-rtc.c                       | 255 +++++++++++++++++++++
+ 4 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
+ create mode 100644 drivers/spi/spi-lp8841-rtc.c
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt b/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
 new file mode 100644
-index 0000000..f513a40
+index 0000000..f191aef
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clk-userspace-consumer.txt
-@@ -0,0 +1,17 @@
-+* Userspace consumer for common clock
++++ b/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
+@@ -0,0 +1,55 @@
++* ICP DAS LP-8841 SPI Controller for RTC
++
++ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
++master which makes the RTC usable. The driver is not supposed to work
++with anything else.
++
++The driver uses the standard MicroWire half-duplex transfer timing.
++Master output is set on low clock and sensed by the RTC on the rising
++edge. Master input is set by the RTC on the trailing edge and is sensed
++by the master on low clock.
 +
 +Required properties:
-+- compatible: Should be "linux,clock-userspace-consumer"
-+- clocks: clock phandle to control from userspace
 +
-+Examples:
++- #address-cells: should be 1
 +
-+clk32k_userspace_consumer {
-+	compatible = "linux,clock-userspace-consumer";
-+	clocks = <&clk32k>;
++- #size-cells: should be 0
++
++- compatible: should be "icpdas,spi-lp8841-rtc"
++
++- reg: should provide IO memory address
++
++Requirements to SPI slave nodes:
++
++- There can be only one slave device.
++
++- The spi slave node should claim the following flags which are
++  required by the spi controller.
++
++  - spi-3wire: The master itself has only 3 wire. It cannor work in
++    full duplex mode.
++
++  - spi-cs-high: DS-1302 has active high chip select line. The master
++    doesn't support active low.
++
++  - spi-lsb-first: DS-1302 requires least significant bit first
++    transfers. The master only support this type of bit ordering.
++
++
++Example:
++
++spi0@901c {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "icpdas,spi-lp8841-rtc";
++	reg = <0x901c 0x1>;
++
++	rtc@0 {
++		compatible = "maxim,rtc-ds1302";
++		reg = <0>;
++		spi-max-frequency = <500000>;
++		spi-3wire;
++		spi-lsb-first;
++		spi-cs-high;
++	};
 +};
-+
-+sqw_userspace_consumer {
-+	compatible = "linux,clock-userspace-consumer";
-+	clocks = <&sqw>;
-+};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index eca8e01..d4b5184 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -25,6 +25,15 @@ config COMMON_CLK
- menu "Common Clock Framework"
- 	depends on COMMON_CLK
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 7706416..6a6626a 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -271,6 +271,15 @@ config SPI_LM70_LLP
+ 	  which interfaces to an LM70 temperature sensor using
+ 	  a parallel port.
  
-+config COMMON_CLK_DEBUG
-+	bool "Clock driver debugging support"
-+	depends on DEBUG_KERNEL
-+	---help---
-+	  Say Y here if you are developing clock drivers or trying to
-+	  debug and identify the problems.
-+
-+source "drivers/clk/Kconfig.debug"
-+
- config COMMON_CLK_WM831X
- 	tristate "Clock driver for WM831x/2x PMICs"
- 	depends on MFD_WM831X
-diff --git a/drivers/clk/Kconfig.debug b/drivers/clk/Kconfig.debug
-new file mode 100644
-index 0000000..01a7ed4
---- /dev/null
-+++ b/drivers/clk/Kconfig.debug
-@@ -0,0 +1,9 @@
-+config COMMON_CLK_USERSPACE_CONSUMER
-+	tristate "Userspace clock consumer support"
-+	depends on COMMON_CLK_DEBUG
++config SPI_LP8841_RTC
++	tristate "ICP DAS LP-8841 SPI Controller for RTC"
 +	help
-+	  There are some classes of devices that are controlled entirely
-+	  from user space. Userspace consumer driver provides ability to
-+	  control clock for such devices.
++	  This driver provides an SPI master device to drive Maxim
++	  DS-1302 real time clock.
 +
-+	  If unsure, say no.
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index b038e36..f3b51f1 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-gpio.o
- ifeq ($(CONFIG_OF), y)
- obj-$(CONFIG_COMMON_CLK)	+= clk-conf.o
- endif
-+obj-$(CONFIG_COMMON_CLK_USERSPACE_CONSUMER)	+= clk-userspace-consumer.o
- 
- # hardware specific clock types
- # please keep this section sorted lexicographically by file/directory path name
-diff --git a/drivers/clk/clk-userspace-consumer.c b/drivers/clk/clk-userspace-consumer.c
++	  Say N here unless you plan to run the kernel on an ICP DAS
++	  LP-8x4x industrial computer.
++
+ config SPI_MPC52xx
+ 	tristate "Freescale MPC52xx SPI (non-PSC) controller support"
+ 	depends on PPC_MPC52xx
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 8991ffc..9d10ddc 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_SPI_GPIO)			+= spi-gpio.o
+ obj-$(CONFIG_SPI_IMG_SPFI)		+= spi-img-spfi.o
+ obj-$(CONFIG_SPI_IMX)			+= spi-imx.o
+ obj-$(CONFIG_SPI_LM70_LLP)		+= spi-lm70llp.o
++obj-$(CONFIG_SPI_LP8841_RTC)		+= spi-lp8841-rtc.o
+ obj-$(CONFIG_SPI_MESON_SPIFC)		+= spi-meson-spifc.o
+ obj-$(CONFIG_SPI_MPC512x_PSC)		+= spi-mpc512x-psc.o
+ obj-$(CONFIG_SPI_MPC52xx_PSC)		+= spi-mpc52xx-psc.o
+diff --git a/drivers/spi/spi-lp8841-rtc.c b/drivers/spi/spi-lp8841-rtc.c
 new file mode 100644
-index 0000000..846665a
+index 0000000..ae177bc
 --- /dev/null
-+++ b/drivers/clk/clk-userspace-consumer.c
-@@ -0,0 +1,169 @@
++++ b/drivers/spi/spi-lp8841-rtc.c
+@@ -0,0 +1,255 @@
 +/*
-+ * Copyright (c) 2016 Akinobu Mita <akinobu.mita@gmail.com>
++ * SPI master driver for ICP DAS LP-8841 RTC
 + *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License.  See the file COPYING in the main
-+ * directory of this archive for more details.
++ * Copyright (C) 2016 Sergei Ianovich
 + *
-+ * Inspired from reg-userspace-consumer
++ * based on
++ *
++ * Dallas DS1302 RTC Support
++ * Copyright (C) 2002 David McCullough
++ * Copyright (C) 2003 - 2007 Paul Mundt
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+
-+#include <linux/err.h>
-+#include <linux/mutex.h>
++#include <linux/delay.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
-+#include <linux/clk.h>
 +#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/spi/spi.h>
 +
-+struct clk_userspace_consumer {
-+	struct mutex lock;
-+	bool enabled;
-+	struct clk *clk;
++#define DRIVER_NAME	"spi_lp8841_rtc"
++
++#define SPI_LP8841_RTC_CE	0x01
++#define SPI_LP8841_RTC_CLK	0x02
++#define SPI_LP8841_RTC_nWE	0x04
++#define SPI_LP8841_RTC_MOSI	0x08
++#define SPI_LP8841_RTC_MISO	0x01
++
++/*
++ * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in SPI
++ * GPIO driver, this SPI driver can be replaced by a simple GPIO driver
++ * providing 3 GPIO pins.
++ */
++
++struct spi_lp8841_rtc {
++	void		*iomem;
++	unsigned long	state;
 +};
 +
-+static ssize_t clk_show_enable(struct device *dev,
-+				struct device_attribute *attr, char *buf)
++static inline void
++setsck(struct spi_lp8841_rtc *data, int is_on)
 +{
-+	struct clk_userspace_consumer *consumer = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%d\n", consumer->enabled);
++	if (is_on)
++		data->state |= SPI_LP8841_RTC_CLK;
++	else
++		data->state &= ~SPI_LP8841_RTC_CLK;
++	writeb(data->state, data->iomem);
 +}
 +
-+static ssize_t clk_store_enable(struct device *dev,
-+				struct device_attribute *attr, const char *buf,
-+				size_t count)
++static inline void
++setmosi(struct spi_lp8841_rtc *data, int is_on)
 +{
-+	struct clk_userspace_consumer *consumer = dev_get_drvdata(dev);
-+	bool enabled;
-+	int ret;
++	if (is_on)
++		data->state |= SPI_LP8841_RTC_MOSI;
++	else
++		data->state &= ~SPI_LP8841_RTC_MOSI;
++	writeb(data->state, data->iomem);
++}
 +
-+	ret = strtobool(buf, &enabled);
-+	if (ret)
-+		return ret;
++static inline int
++getmiso(struct spi_lp8841_rtc *data)
++{
++	return ioread8(data->iomem) & SPI_LP8841_RTC_MISO;
++}
 +
-+	mutex_lock(&consumer->lock);
++static inline u32
++bitbang_txrx_be_cpha0_lsb(struct spi_lp8841_rtc *data,
++		unsigned usecs, unsigned cpol, unsigned flags,
++		u32 word, u8 bits)
++{
++	/* if (cpol == 0) this is SPI_MODE_0; else this is SPI_MODE_2 */
 +
-+	if (enabled != consumer->enabled) {
-+		int ret = 0;
++	u32 shift = 32 - bits;
++	/* clock starts at inactive polarity */
++	for (; likely(bits); bits--) {
 +
-+		if (enabled) {
-+			ret = clk_prepare_enable(consumer->clk);
-+			if (ret) {
-+				dev_err(dev, "Failed to configure state: %d\n",
-+					ret);
-+			}
-+		} else {
-+			clk_disable_unprepare(consumer->clk);
++		/* setup LSB (to slave) on leading edge */
++		if ((flags & SPI_MASTER_NO_TX) == 0)
++			setmosi(data, (word & 1));
++
++		usleep_range(usecs, usecs + 1);	/* T(setup) */
++
++		/* sample LSB (from slave) on trailing edge */
++		word >>= 1;
++		if ((flags & SPI_MASTER_NO_RX) == 0)
++			word |= (getmiso(data) << 31);
++
++		setsck(data, !cpol);
++		usleep_range(usecs, usecs + 1);
++
++		setsck(data, cpol);
++	}
++
++	word >>= shift;
++	return word;
++}
++
++static int
++spi_lp8841_rtc_transfer_one(struct spi_master *master,
++			    struct spi_device *spi,
++			    struct spi_transfer *t)
++{
++	struct spi_lp8841_rtc	*data = spi_master_get_devdata(master);
++	unsigned		count = t->len;
++	const u8		*tx = t->tx_buf;
++	u8			*rx = t->rx_buf;
++	u8			word = 0;
++	int			ret = 0;
++
++	if (tx) {
++		data->state &= ~SPI_LP8841_RTC_nWE;
++		writeb(data->state, data->iomem);
++		while (likely(count > 0)) {
++			word = *tx++;
++			bitbang_txrx_be_cpha0_lsb(data, 1, 0,
++					SPI_MASTER_NO_RX, word, 8);
++			count--;
 +		}
-+
-+		if (!ret)
-+			consumer->enabled = enabled;
++	} else if (rx) {
++		data->state |= SPI_LP8841_RTC_nWE;
++		writeb(data->state, data->iomem);
++		while (likely(count > 0)) {
++			word = bitbang_txrx_be_cpha0_lsb(data, 1, 0,
++					SPI_MASTER_NO_TX, word, 8);
++			*rx++ = word;
++			count--;
++		}
++	} else {
++		ret = -EINVAL;
 +	}
 +
-+	mutex_unlock(&consumer->lock);
++	spi_finalize_current_transfer(master);
 +
-+	return count;
-+}
-+static DEVICE_ATTR(enable, 0644, clk_show_enable, clk_store_enable);
-+
-+static ssize_t clk_show_rate(struct device *dev, struct device_attribute *attr,
-+			char *buf)
-+{
-+	struct clk_userspace_consumer *consumer = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%ld\n", clk_get_rate(consumer->clk));
++	return ret;
 +}
 +
-+static ssize_t clk_store_rate(struct device *dev, struct device_attribute *attr,
-+			const char *buf, size_t count)
++static void
++spi_lp8841_rtc_set_cs(struct spi_device *spi, bool enable)
 +{
-+	struct clk_userspace_consumer *consumer = dev_get_drvdata(dev);
-+	unsigned long rate;
-+	int err;
++	struct spi_lp8841_rtc *data = spi_master_get_devdata(spi->master);
 +
-+	err = kstrtoul(buf, 0, &rate);
-+	if (err)
-+		return err;
-+
-+	err = clk_set_rate(consumer->clk, rate);
-+	if (err)
-+		return err;
-+
-+	return count;
++	data->state = 0;
++	writeb(data->state, data->iomem);
++	if (enable) {
++		usleep_range(4, 5);
++		data->state |= SPI_LP8841_RTC_CE;
++		writeb(data->state, data->iomem);
++		usleep_range(4, 5);
++	}
 +}
-+static DEVICE_ATTR(rate, 0644, clk_show_rate, clk_store_rate);
 +
-+static struct attribute *attributes[] = {
-+	&dev_attr_enable.attr,
-+	&dev_attr_rate.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group attr_group = {
-+	.attrs	= attributes,
-+};
-+
-+static int clk_userspace_consumer_probe(struct platform_device *pdev)
++static int
++spi_lp8841_rtc_setup(struct spi_device *spi)
 +{
-+	struct clk_userspace_consumer *consumer;
-+	int ret;
-+
-+	consumer = devm_kzalloc(&pdev->dev, sizeof(*consumer), GFP_KERNEL);
-+	if (!consumer)
-+		return -ENOMEM;
-+
-+	mutex_init(&consumer->lock);
-+
-+	consumer->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(consumer->clk)) {
-+		ret = PTR_ERR(consumer->clk);
-+		dev_err(&pdev->dev, "Failed to get clock: %d\n", ret);
-+		return ret;
++	if ((spi->mode & SPI_CS_HIGH) == 0) {
++		dev_err(&spi->dev, "unsupported active low chip select\n");
++		return -EINVAL;
 +	}
 +
-+	platform_set_drvdata(pdev, consumer);
++	if ((spi->mode & SPI_LSB_FIRST) == 0) {
++		dev_err(&spi->dev, "unsupported MSB first mode\n");
++		return -EINVAL;
++	}
 +
-+	ret = sysfs_create_group(&pdev->dev.kobj, &attr_group);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int clk_userspace_consumer_remove(struct platform_device *pdev)
-+{
-+	struct clk_userspace_consumer *consumer = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &attr_group);
-+
-+	mutex_lock(&consumer->lock);
-+	if (consumer->enabled)
-+		clk_disable_unprepare(consumer->clk);
-+	mutex_unlock(&consumer->lock);
++	if ((spi->mode & SPI_3WIRE) == 0) {
++		dev_err(&spi->dev, "unsupported wiring. 3 wires required\n");
++		return -EINVAL;
++	}
 +
 +	return 0;
 +}
 +
 +#ifdef CONFIG_OF
-+
-+static const struct of_device_id userspace_consumer_id[] = {
-+	{ .compatible = "linux,clock-userspace-consumer" },
++static const struct of_device_id spi_lp8841_rtc_dt_ids[] = {
++	{ .compatible = "icpdas,spi-lp8841-rtc" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, userspace_consumer_id);
 +
++MODULE_DEVICE_TABLE(of, spi_lp8841_rtc_dt_ids);
 +#endif
 +
-+static struct platform_driver clk_userspace_consumer_driver = {
-+	.probe = clk_userspace_consumer_probe,
-+	.remove = clk_userspace_consumer_remove,
-+	.driver = {
-+		.name = "clk-userspace-consumer",
-+		.of_match_table = of_match_ptr(userspace_consumer_id),
-+	},
-+};
-+module_platform_driver(clk_userspace_consumer_driver);
++static int
++spi_lp8841_rtc_probe(struct platform_device *pdev)
++{
++	int				ret;
++	struct spi_master		*master;
++	struct spi_lp8841_rtc		*data;
++	void				*iomem;
 +
-+MODULE_AUTHOR("Akinobu Mita <akinobu.mita@gmail.com>");
-+MODULE_DESCRIPTION("Userspace consumer for common clock");
++	master = spi_alloc_master(&pdev->dev, sizeof(*data));
++	if (!master)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, master);
++
++	master->flags = SPI_MASTER_HALF_DUPLEX;
++	master->mode_bits = SPI_CS_HIGH | SPI_3WIRE | SPI_LSB_FIRST;
++
++	master->bus_num = pdev->id;
++	master->num_chipselect = 1;
++	master->setup = spi_lp8841_rtc_setup;
++	master->set_cs = spi_lp8841_rtc_set_cs;
++	master->transfer_one = spi_lp8841_rtc_transfer_one;
++	master->bits_per_word_mask = SPI_BPW_MASK(8);
++#ifdef CONFIG_OF
++	master->dev.of_node = pdev->dev.of_node;
++#endif
++
++	data = spi_master_get_devdata(master);
++
++	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->iomem =  devm_ioremap_resource(&pdev->dev, iomem);
++	if (IS_ERR(data->iomem)) {
++		dev_err(&pdev->dev, "failed to get IO address\n");
++		goto err_put_master;
++	}
++
++	/* register with the SPI framework */
++	ret = devm_spi_register_master(&pdev->dev, master);
++	if (ret) {
++		dev_err(&pdev->dev, "cannot register spi master\n");
++		goto err_put_master;
++	}
++
++	return ret;
++
++
++err_put_master:
++	spi_master_put(master);
++
++	return ret;
++}
++
++MODULE_ALIAS("platform:" DRIVER_NAME);
++
++static struct platform_driver spi_lp8841_rtc_driver = {
++	.driver = {
++		.name	= DRIVER_NAME,
++		.of_match_table = of_match_ptr(spi_lp8841_rtc_dt_ids),
++	},
++	.probe		= spi_lp8841_rtc_probe,
++};
++module_platform_driver(spi_lp8841_rtc_driver);
++
++MODULE_DESCRIPTION("SPI master driver for ICP DAS LP-8841 RTC");
++MODULE_AUTHOR("Sergei Ianovich");
 +MODULE_LICENSE("GPL");
 -- 
-2.5.0
-
+2.6.3
