@@ -1,355 +1,125 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Mon, 22 Feb 2016 10:16:21 +0100
-Message-ID: <20160222101621.4f03ef8b@free-electrons.com>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160222032730.GU19598@localhost>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v1] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Mon, 22 Feb 2016 12:26:14 +0300
+Message-ID: <1456133174.2386.33.camel@gmail.com>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+	 <20160222031027.GP18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160222032730.GU19598@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160222031027.GP18327@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Vinod,
-
-On Mon, 22 Feb 2016 08:57:30 +0530, Vinod Koul wrote:
-> On Mon, Feb 15, 2016 at 08:58:03AM +0100, Thomas Petazzoni wrote:
-> > diff --git a/Documentation/devicetree/bindings/dma/mv-xor-v2.txt b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
-> > new file mode 100644
-> > index 0000000..0a03dcf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/mv-xor-v2.txt
-> > @@ -0,0 +1,19 @@
-> > +* Marvell XOR v2 engines
+On Mon, 2016-02-22 at 12:10 +0900, Mark Brown wrote:
+> On Mon, Feb 22, 2016 at 04:47:06AM +0300, Sergei Ianovich wrote:
+> > ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
+> > master which makes the RTC usable. The driver is not supposed to
+> > work
+> > with anything else.
+>=20
+> So this is something that is internal to a single chip or something?
+> I'm slightly unclear from the above if this is or is not a SPI
+> controller.=C2=A0=C2=A0If it isn't generic the DT should probably jus=
+t describe
+> the IP and let the driver create the SPI controller and device if
+> that
+> is an expedient way of doing things.
+>=20
+> > +spi0@901c {
+> > +	#address-cells =3D <1>;
+> > +	#size-cells =3D <0>;
+> > +	compatible =3D "icpdas,spi-lp8841-rtc";
+> > +	reg =3D <0x901c 0x1>;
 > > +
-> > +Required properties:
-> > +- compatible: Should be "marvell,mv-xor-v2"
-> > +- reg: Should contain registers location and length (two sets)
-> > +    the first set is the DMA registers
-> > +    the second set is the global registers
-> > +- msi-parent: Phandle to the MSI-capable interrupt controller used for
-> > +  interrupts.
-> > +
-> > +Example:
-> > +
-> > +	xor0@400000 {
-> > +		compatible = "marvell,mv-xor-v2";
-> > +		reg = <0x400000 0x1000>,
-> > +		      <0x410000 0x1000>;
-> > +		msi-parent = <&gic_v2m0>;
-> > +		dma-coherent;
+> > +	rtc@0 {
+> > +		compatible =3D "maxim,rtc-ds1302";
+> > +		reg =3D <0>;
+> > +		spi-max-frequency =3D <500000>;
+> > +		spi-3wire;
+> > +		spi-lsb-first;
+> > +		spi-cs-high;
 > > +	};
-> 
-> This should be a separate patch :)
+> > +};
+>=20
+> This example makes it seem like an actual SPI controller but just one
+> that's broken/limited?
 
-This is really a personal preference, and different maintainers have
-different opinions on the matter. However, if your preference is to
-have the DT binding documentation as a separate patch, then I'll split
-it, no problem :)
+Yes. This is an actual SPI controller with minimal required
+functionality. I didn't implement anything I don't need.
 
-> 
-> > +/* DMA Engine Registers */
-> > +#define DMA_DESQ_BALR_OFF	0x000
-> > +#define DMA_DESQ_BAHR_OFF	0x004
-> > +#define DMA_DESQ_SIZE_OFF	0x008
-> > +#define DMA_DESQ_DONE_OFF	0x00C
-> > +#define   DMA_DESQ_DONE_PENDING_MASK		0x7FFF
-> > +#define   DMA_DESQ_DONE_PENDING_SHIFT		0
-> > +#define   DMA_DESQ_DONE_READ_PTR_MASK		0x1FFF
-> > +#define   DMA_DESQ_DONE_READ_PTR_SHIFT		16
-> > +#define DMA_DESQ_ARATTR_OFF	0x010
-> > +#define   DMA_DESQ_ATTR_CACHE_MASK		0x3F3F
-> > +#define   DMA_DESQ_ATTR_OUTER_SHAREABLE		0x202
-> > +#define   DMA_DESQ_ATTR_CACHEABLE		0x3C3C
-> > +#define DMA_IMSG_CDAT_OFF	0x014
-> > +#define DMA_IMSG_THRD_OFF	0x018
-> > +#define   DMA_IMSG_THRD_MASK			0x7FFF
-> > +#define   DMA_IMSG_THRD_SHIFT			0x0
-> > +#define DMA_DESQ_AWATTR_OFF	0x01C
-> > +  /* Same flags as DMA_DESQ_ARATTR_OFF */
-> > +#define DMA_DESQ_ALLOC_OFF	0x04C
-> > +#define   DMA_DESQ_ALLOC_WRPTR_MASK		0xFFFF
-> > +#define   DMA_DESQ_ALLOC_WRPTR_SHIFT		16
-> > +#define DMA_IMSG_BALR_OFF	0x050
-> > +#define DMA_IMSG_BAHR_OFF	0x054
-> > +#define DMA_DESQ_CTRL_OFF	0x100
-> > +#define	  DMA_DESQ_CTRL_32B			1
-> > +#define   DMA_DESQ_CTRL_128B			7
-> > +#define DMA_DESQ_STOP_OFF	0x800
-> > +#define DMA_DESQ_DEALLOC_OFF	0x804
-> > +#define DMA_DESQ_ADD_OFF	0x808
-> 
-> Please namespace these and others. Something like MRVL_XOR_XXX or anyother
-> patter you like would be fine...
+> > +config SPI_LP8841_RTC
+> > +	tristate "ICP DAS LP-8841 SPI Controller for RTC"
+> > +	depends on OF && (MACH_PXA27X_DT || COMPILE_TEST)
+>=20
+> Does this need a strict DT dependency or can it build without DT?
 
-The issue is that with such name-spacing, the names get really long,
-and it's hard to stay with the 80 characters limit. But OK, I'll try to
-see what I can do.
-
-> > +/* descriptors queue size */
-> > +#define MV_XOR_V2_MAX_DESC_NUM	1024
-> 
-> Is this hardware defined?
-
-No, it is a software choice. The hardware supports up to 2^14
-descriptors, i.e 16384, at least from my understanding of the datasheet.
-
-> > +static void mv_xor_v2_set_data_buffers(struct mv_xor_v2_device *xor_dev,
-> > +					struct mv_xor_v2_descriptor *desc,
-> > +					dma_addr_t src, int index)
-> > +{
-> > +	int arr_index = ((index >> 1) * 3);
-> > +
-> > +	/*
-> > +	 * fill the buffer's addresses to the descriptor
-> > +	 * The format of the buffers address for 2 sequential buffers X and X+1:
-> 
-> space around + please.
-
-ACK.
-
-> > +	 *  First word: Buffer-DX-Address-Low[31:0]
-> > +	 *  Second word:Buffer-DX+1-Address-Low[31:0]
-> > +	 *  Third word: DX+1-Buffer-Address-High[47:32] [31:16]
-> > +	 *		DX-Buffer-Address-High[47:32] [15:0]
-> > +	 */
-> > +	if ((index & 0x1) == 0) {
-> > +		desc->data_buff_addr[arr_index] = lower_32_bits(src);
-> > +
-> > +		/* Clear lower 16-bits */
-> > +		desc->data_buff_addr[arr_index + 2] &= ~0xFFFF;
-> > +
-> > +		/* Set them if we have a 64 bits DMA address */
-> > +		if (IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT))
-> > +			desc->data_buff_addr[arr_index + 2] |=
-> > +				upper_32_bits(src) & 0xFFFF;
-> 
-> So why should it depend on how kernel is configured?
-
-Because using upper_32_bits() on a 32-bits type seems wrong? You can do
-a git grep for CONFIG_ARCH_DMA_ADDR_T_64BIT, and see that it is already
-used in drivers/dma/sh/rcar-dmac.c, drivers/gpu/drm/tegra/dc.c or
-drivers/iommu/tegra-smmu.c.
-
-drivers/dma/sh/rcar-dmac.c uses it for exactly the same reason as me:
-they need to know if dma_addr_t is 32 bits or 64 bits, and if it's 64
-bits, then they need to take the upper 32 bits and feed them to some
-register.
+The driver can only be useful on a single industrial PC. That PC
+requires DT, so I made this a strict=C2=A0dependency. The dependency ca=
+n be
+removed by using ifdefs, but I see no point why.
 
 > > +/*
-> > + * Return the next available index in the DESQ.
+> > + * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in
+> > SPI
+> > + * GPIO driver, this SPI driver can be replaced by a simple GPIO
+> > driver
+> > + * providing 3 GPIO pins.
 > > + */
-> > +static inline int mv_xor_v2_get_desq_write_ptr(struct mv_xor_v2_device *xor_dev)
-> 
-> Pls wrap with 80 chars wherever it is reasonable
+>=20
+> What's the advantage of not doing that?=C2=A0=C2=A0Overall the driver=
+ looks
+> fairly
+> good but it does seem to just implement a straight bitbanging driver
+> with less flexibility.
 
-Sure.
+MicroWire (SPI_3WIRE) mode is slightly different from the modes
+implemented in=C2=A0spi-bitbang-txrx.h. I was getting junk from device =
+in
+both Mode0 and Mode2 until I changed the implementation. The change is
+documented in the patch.
 
-> > +/*
-> > + * Allocate resources for a channel
-> > + */
-> > +static int mv_xor_v2_alloc_chan_resources(struct dma_chan *chan)
+There will also need to be changes in bitbang.c. SPI_LSB_FIRST will
+require a new flasg in txrx_word(). To keep overhead low will require
+to grow txrx_word[] from 4 to 16 or even 32. CPOL, CPHA, LSB_FIRST,
+3_WIRE each requires an additional power of 2.
+
+While this change could be benefitial to both spi-gpio and spi-bitbang,=
+=20
+it is very big.
+
+> > +#ifndef DRIVER_NAME
+> > +#define DRIVER_NAME	"spi_lp8841_rtc"
+> > +#endif
+>=20
+> If you want to use a define for this just use a define for it, don't
+> do
+> this ifdef stuff.
+
+Yes, I'll fix this. This has been blindly copied from spi-gpio.c.
+
+> > +static inline void
+> > +spidelay(unsigned usec)
 > > +{
-> > +	/* nothing to be done here */
-> > +	return 0;
+> > +	usleep_range(usec, usec + 1);
 > > +}
-> 
-> No need for empty alloc
-> 
-> > +
-> > +/*
-> > + * Free resources of a channel
-> > + */
-> > +void mv_xor_v2_free_chan_resources(struct dma_chan *chan)
+>=20
+> Just use usleep_range() directly.
+
+Yes, I will.
+
+> > +static void
+> > +spi_lp8841_rtc_cleanup(struct spi_device *spi)
 > > +{
-> > +	/* nothing to be done here */
 > > +}
-> 
-> and free as well :)
+>=20
+> Remove empty functions, if they can be empty the core will support
+> ignoring them if they are missing.
 
-Ah, cool, less useless code, I like that! Will fix.
+Yes, I will.
 
-> > +static irqreturn_t mv_xor_v2_interrupt_handler(int irq, void *data)
-> > +{
-> > +	struct mv_xor_v2_device *xor_dev = data;
-> > +
-> > +	/*
-> > +	 * Update IMSG threshold, to disable new IMSG interrupts until
-> > +	 * end of the tasklet
-> > +	 */
-> > +	mv_xor_v2_set_imsg_thrd(xor_dev, MV_XOR_V2_MAX_DESC_NUM);
-> 
-> You don't want to check the source of interrupt?
-
-To protect against what? An improper MSI message that ends up firing
-this interrupt for now reason? But only kernel space stuff (or
-privileged code in user-space) can write to the MSI triggering
-registers, so we should be able to trust that such an improper MSI
-message will not arrive.
-
-That being said, I can add a read of the pending descriptors number,
-and if it's 0, then bail out with IRQ_NONE. Is that what you were
-thinking about?
-
-> > +static dma_cookie_t
-> > +mv_xor_v2_tx_submit(struct dma_async_tx_descriptor *tx)
-> > +{
-> > +	int desq_ptr;
-> > +	void *dest_hw_desc;
-> > +	dma_cookie_t cookie;
-> > +	struct mv_xor_v2_sw_desc *sw_desc =
-> > +		container_of(tx, struct mv_xor_v2_sw_desc, async_tx);
-> > +	struct mv_xor_v2_device *xor_dev =
-> > +		container_of(tx->chan, struct mv_xor_v2_device, dmachan);
-> > +
-> > +	dev_dbg(xor_dev->dmadev.dev,
-> > +		"%s sw_desc %p: async_tx %p\n",
-> > +		__func__, sw_desc, &sw_desc->async_tx);
-> > +
-> > +	/* assign coookie */
-> > +	spin_lock_bh(&xor_dev->cookie_lock);
-> > +	cookie = dma_cookie_assign(tx);
-> > +	spin_unlock_bh(&xor_dev->cookie_lock);
-> > +
-> > +	/* lock enqueue DESCQ */
-> > +	spin_lock_bh(&xor_dev->push_lock);
-> 
-> Why not a generic channel lock which is used in submit, issue_pending and
-> tasklet. What is the reason for opting different locks?
-
-Yeah, agreed. Until I get real performance data, it's probably overkill
-to use multiple spinlocks here. I'll rework with one spinlock only.
-
-> > +	/* get the next available slot in the DESQ */
-> > +	desq_ptr = mv_xor_v2_get_desq_write_ptr(xor_dev);
-> > +
-> > +	/* copy the HW descriptor from the SW descriptor to the DESQ */
-> > +	dest_hw_desc = ((void *)xor_dev->hw_desq_virt +
-> 
-> cast to and away from void are not required
-
-Well in this case, it is actually needed, because xor_dev->hw_desq_virt
-is a pointer to a struct mv_xor_v2_descriptor, but we want to do
-byte-based arithmetic, and not sizeof(struct mv_xor_v2_descriptor)
-based arithmetic. Though I admit it's a bit ugly, I'll try to see if we
-can't simply use normal sizeof(struct mv_xor_v2_descriptor)
-based arithmetic.
-
-> 
-> > +			(xor_dev->desc_size * desq_ptr));
-> > +
-> > +	memcpy(dest_hw_desc, &sw_desc->hw_desc, xor_dev->desc_size);
-> > +
-> > +	/* update the DMA Engine with the new descriptor */
-> > +	mv_xor_v2_add_desc_to_desq(xor_dev, 1);
-> > +
-> > +	/* unlock enqueue DESCQ */
-> > +	spin_unlock_bh(&xor_dev->push_lock);
-> 
-> and if IIUC, you are pushing this to HW as well, that is not quite right if
-> thats the case. We need to do this in issue_pending
-
-issue_pending is already starting the DMA engine, which will process
-the descriptors that have been queued in ->tx_submit.
-
-Of course, if the DMA engine is already running, then the descriptors
-might be processed right after they are added in the queue in
-->tx_submit().
-
-We are using the same scheme in mv_xor.c (not to say that mv_xor.c
-doesn't need to be fixed, but it explains why we're using this logic in
-mv_xor_v2.c).
-
-> > +static struct dma_async_tx_descriptor *
-> > +mv_xor_v2_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
-> > +		       unsigned int src_cnt, size_t len, unsigned long flags)
-> > +{
-> > +	struct mv_xor_v2_sw_desc	*sw_desc;
-> > +	struct mv_xor_v2_descriptor	*hw_descriptor;
-> > +	struct mv_xor_v2_device		*xor_dev;
-> > +	int i;
-> > +
-> > +	BUG_ON(src_cnt > MV_XOR_V2_CMD_LINE_NUM_MAX_D_BUF || src_cnt < 1);
-> 
-> why BUG_ON, is the system unusable after this?
-
-Well, the XOR engine cannot do XOR with 0 source buffers, or with more
-than MV_XOR_V2_CMD_LINE_NUM_MAX_D_BUF.
-
-But I see that I'm already setting max_xor in struct dma_device, so one
-can assume that ->prep_dma_xor() will not be called with src_cnt == or
-src_cnt > max_xor, so this BUG_ON can be removed.
-
-> > +/*
-> > + * poll for a transaction completion
-> > + */
-> > +static enum dma_status mv_xor_v2_tx_status(struct dma_chan *chan,
-> > +		dma_cookie_t cookie, struct dma_tx_state *txstate)
-> > +{
-> > +	/* return the transaction status */
-> > +	return dma_cookie_status(chan, cookie, txstate);
-> 
-> why not assign this as you status callback?
-
-Right, will do.
-
-> > +static void mv_xor_v2_issue_pending(struct dma_chan *chan)
-> > +{
-> > +	struct mv_xor_v2_device *xor_dev =
-> > +		container_of(chan, struct mv_xor_v2_device, dmachan);
-> > +
-> > +	/* Activate the channel */
-> > +	writel(0, xor_dev->dma_base + DMA_DESQ_STOP_OFF);
-> 
-> what if channel is already running?
-
-It will continue to run. Datasheet says: "Reset this bit to enable the
-XOR unit (DESQ). Set this bit to disable (or Stop) the XOR unit." So as
-long as we write 0, the engine will continue processing descriptors.
-
-> > +static void mv_xor_v2_tasklet(unsigned long data)
-> > +{
-> > +	struct mv_xor_v2_device *xor_dev = (struct mv_xor_v2_device *) data;
-> > +	int pending_ptr, num_of_pending, i;
-> > +	struct mv_xor_v2_descriptor *next_pending_hw_desc = NULL;
-> > +	struct mv_xor_v2_sw_desc *next_pending_sw_desc = NULL;
-> > +
-> > +	dev_dbg(xor_dev->dmadev.dev, "%s %d\n", __func__, __LINE__);
-> > +
-> > +	/* get thepending descriptors parameters */
-> 
-> space after the pls
-
-Absolutely.
-
-> > +static struct platform_driver mv_xor_v2_driver = {
-> > +	.probe		= mv_xor_v2_probe,
-> > +	.remove		= mv_xor_v2_remove,
-> > +	.driver		= {
-> > +		.owner	= THIS_MODULE,
-> 
-> I dont think we need this
-
-This was already fixed in v2:
-
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/409404.html
-
-Thanks for the review! There are a few questions from you in the above
-discussion, I'll wait for your feedback to submit a v3 that includes
-your suggested fixes.
-
-Thanks again!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for a lightning fast review.
+>=C2=A0>=C2=A0
