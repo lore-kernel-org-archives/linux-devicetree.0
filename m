@@ -1,78 +1,59 @@
-From: nick <xerofoify@gmail.com>
-Subject: Re: [PATCH v5 00/26] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Mon, 22 Feb 2016 15:12:52 -0500
-Message-ID: <56CB6BC4.7060806@gmail.com>
-References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
- <20160219220442.GR21202@atomide.com> <56CADFD5.2040205@ti.com>
- <20160222164234.GD13417@atomide.com> <56CB69F4.8040306@ti.com>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] firmware: introduce sysfs driver for QEMU's
+ fw_cfg device
+Date: Mon, 22 Feb 2016 22:14:50 +0200
+Message-ID: <20160222220756-mutt-send-email-mst@redhat.com>
+References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
+ <1453990994-17801-2-git-send-email-somlo@cmu.edu>
+ <20160221100557-mutt-send-email-mst@redhat.com>
+ <20160221130614.GA4511@GLSMBP.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <56CB69F4.8040306@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, linux-omap@vger.kernel.org, dwmw2@infradead.org, fcooper@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160221130614.GA4511-VPZ87SnTp2qKUezXOiBB2eW1CriLhL8O@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016-02-22 03:05 PM, Roger Quadros wrote:
-> On 22/02/16 18:42, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [160222 02:16]:
->>> On 20/02/16 00:04, Tony Lindgren wrote:
->>>> * Roger Quadros <rogerq@ti.com> [160219 13:27]:
->>>>> Hi,
->>>>>
->>>>> @Tony
->>>>> Patches 15 and 24 are new and will need your review.
->>>>> I've modified patch 22 to include the new am335x boards introduced since v4.4.
->>>>>
->>>>> Patches are based on top of omap-for-v4.6/dt so that the DT changes apply cleanly.
->>>>
->>>> Looks OK to me. Can we merge the dts changes separately? Otherwise
->>>> we will easily end up with tons of conflicts..
->>>
->>> I agree. But we just need to keep in mind that NAND functionality will be
->>> broken till all the patches in this series are merged. We don't maintain
->>> backward compatibility with the old DT implementation.
->>
->> Please let's not do that! That breaks booting and git bisect.
->> It's better to have a minimal branch where each patch boots fine.
+On Sun, Feb 21, 2016 at 08:06:17AM -0500, Gabriel L. Somlo wrote:
+> > > +static void fw_cfg_io_cleanup(void)
+> > > +{
+> > > +	if (fw_cfg_is_mmio) {
+> > > +		iounmap(fw_cfg_dev_base);
+> > > +		release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
+> > > +	} else {
+> > > +		ioport_unmap(fw_cfg_dev_base);
+> > > +		release_region(fw_cfg_p_base, fw_cfg_p_size);
+> > > +	}
+> > > +}
+> > > +
+> > > +/* arch-specific ctrl & data register offsets are not available in ACPI, DT */
+> > 
+> > So for all arches which support ACPI, I think this driver
+> > should just rely on ACPI.
 > 
-> Understood. I'll send out a patch set with only the minimal DT changes
-> that doesn't break anything. This should be a preparatory step for
-> the DT clean up.
+> There was a discussion about that a few versions ago, and IIRC the
+> conclusion was not to expect the firmware to contend for fw_cfg access
+> after the guest kernel boots:
 > 
-Would you mind and try testing this on a few boards as even miminal DT
-changes can break things and thus I would like to see you test it if
-possible on the boards affected by the DT change.
->>
->> Also, I think you should at least print a warning for the old
->> binding. Otherwise people with out of tree boards will have
->> hard time updating their patches to send to mainline tree.
-> 
-Second that I agree with Tony on this it's just the reality.
-Nick
-> OK. I'll add this warning mechanism to the omap-gpmc driver.
-> 
-> cheers,
-> -roger
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> https://lkml.org/lkml/2015/10/5/283
 > 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+So it looks like NVDIMM at least wants to pass label data to guest -
+for which fw cfg might be a reasonable choice.
+
+I suspect things changed - fw cfg used to be very slow but we now have
+DMA interface which makes it useful for a range of applications.
+
+> (I even had a prototype version doing what you suggested, but per the above
+> reference decided to drop it -- which IMHO is for the better, since otherwise
+> I'd have had to ifdef between ACPI and non-ACPI versions of the driver --
+> see https://lkml.org/lkml/2015/11/4/534 )
+
+I'm not sure why you have these ifdefs - they are on the host, are they
+not?
+
+-- 
+MST
