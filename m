@@ -1,51 +1,97 @@
-From: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH] of: alloc anywhere from memblock if range not specified
-Date: Mon, 22 Feb 2016 19:15:44 +0530
-Message-ID: <1456148744-7583-1-git-send-email-vinmenon@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Aleksey Makarov <aleksey.makarov@linaro.org>
+Subject: [PATCH 2/8] of/serial: move earlycon early_param handling to serial
+Date: Mon, 22 Feb 2016 16:46:50 +0300
+Message-ID: <1456148818-26257-3-git-send-email-aleksey.makarov@linaro.org>
+References: <1456148818-26257-1-git-send-email-aleksey.makarov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456148818-26257-1-git-send-email-aleksey.makarov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-early_init_dt_alloc_reserved_memory_arch passes end as 0 to
-__memblock_alloc_base, when limits are not specified. But
-__memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
-and limits the end to memblock.current_limit. This results in regions
-never being placed in HIGHMEM area, for e.g. CMA.
-Let __memblock_alloc_base allocate from anywhere in memory if limits are
-not specified.
+From: Leif Lindholm <leif.lindholm@linaro.org>
 
-Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+We have multiple "earlycon" early_param handlers - merge the DT one into
+the main earlycon one. This means the earlycon early_param handler does
+not just return success if no options are specified.
+
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
 ---
- drivers/of/of_reserved_mem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/of/fdt.c              | 11 +----------
+ drivers/tty/serial/earlycon.c |  3 ++-
+ include/linux/of_fdt.h        |  2 ++
+ 3 files changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1a3556a..ed01c01 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -32,11 +32,13 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
- 	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
- 	phys_addr_t *res_base)
- {
-+	phys_addr_t base;
- 	/*
- 	 * We use __memblock_alloc_base() because memblock_alloc_base()
- 	 * panic()s on allocation failure.
- 	 */
--	phys_addr_t base = __memblock_alloc_base(size, align, end);
-+	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
-+	base = __memblock_alloc_base(size, align, end);
- 	if (!base)
- 		return -ENOMEM;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 655f79d..6b4ab4f 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -798,7 +798,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
+ #ifdef CONFIG_SERIAL_EARLYCON
+ extern struct of_device_id __earlycon_of_table[];
  
+-static int __init early_init_dt_scan_chosen_serial(void)
++int __init early_init_dt_scan_chosen_serial(void)
+ {
+ 	int offset;
+ 	const char *p;
+@@ -843,15 +843,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
+ 	}
+ 	return -ENODEV;
+ }
+-
+-static int __init setup_of_earlycon(char *buf)
+-{
+-	if (buf)
+-		return 0;
+-
+-	return early_init_dt_scan_chosen_serial();
+-}
+-early_param("earlycon", setup_of_earlycon);
+ #endif
+ 
+ /**
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index 3f24236..05f9e4b 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -17,6 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/of_fdt.h>
+ #include <linux/serial_core.h>
+ #include <linux/sizes.h>
+ #include <linux/mod_devicetable.h>
+@@ -195,7 +196,7 @@ static int __init param_setup_earlycon(char *buf)
+ 	 * don't generate a warning from parse_early_params() in that case
+ 	 */
+ 	if (!buf || !buf[0])
+-		return 0;
++		return early_init_dt_scan_chosen_serial();
+ 
+ 	err = setup_earlycon(buf);
+ 	if (err == -ENOENT || err == -EALREADY)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index df9ef38..4d783aa8 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -63,6 +63,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
++extern int early_init_dt_scan_chosen_serial(void);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+@@ -91,6 +92,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
+ extern u64 fdt_translate_address(const void *blob, int node_offset);
+ extern void of_fdt_limit_memory(int limit);
+ #else /* CONFIG_OF_FLATTREE */
++static inline int early_init_dt_scan_chosen_serial(void) { return -ENODEV; }
+ static inline void early_init_fdt_scan_reserved_mem(void) {}
+ static inline void early_init_fdt_reserve_self(void) {}
+ static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.1
