@@ -1,45 +1,54 @@
-From: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-Subject: [PATCH] firmware: fw_cfg register offsets on supported architectures
- only
-Date: Mon, 22 Feb 2016 16:18:18 -0500
-Message-ID: <20160222211818.GJ16357@HEDWIG.INI.CMU.EDU>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Tue, 23 Feb 2016 06:27:38 +0900
+Message-ID: <20160222212738.GH18327@sirena.org.uk>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+ <1456142265-12925-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nJFBJCcSkptt2CoF"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+In-Reply-To: <1456142265-12925-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Refrain from defining default fw_cfg register offsets on
-unsupported architectures -- throw an error instead. If
-QEMU were to add fw_cfg support on additional architectures,
-we should add them to the FW_CFG_SYSFS depends statement in
-drivers/firmware/Kconfig, and provide default values for
-register offsets in drivers/firmware/qemu_fw_cfg.c at that
-time.
 
-Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
----
- drivers/firmware/qemu_fw_cfg.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--nJFBJCcSkptt2CoF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-index fedbff5..79f6b7b 100644
---- a/drivers/firmware/qemu_fw_cfg.c
-+++ b/drivers/firmware/qemu_fw_cfg.c
-@@ -109,9 +109,7 @@ static void fw_cfg_io_cleanup(void)
- #  define FW_CFG_CTRL_OFF 0x00
- #  define FW_CFG_DATA_OFF 0x01
- # else
--#  warning "QEMU FW_CFG may not be available on this architecture!"
--#  define FW_CFG_CTRL_OFF 0x00
--#  define FW_CFG_DATA_OFF 0x01
-+#  error "QEMU FW_CFG not available on this architecture!"
- # endif
- #endif
- 
--- 
-2.4.3
+On Mon, Feb 22, 2016 at 02:57:42PM +0300, Sergei Ianovich wrote:
+
+Please don't send new patches in the middle of old threads, it makes it
+hard to find what the current versions of things are.
+
+>    v2..v3 to fix Mark Brown review comments
+>    * drop dependencies in Kconfig
+
+No, what I was asking you to do was to change where the || COMPILE_TEST
+was grouped.  It is good to hide things from users where they clearly
+can't use the driver, that's what COMPILE_TEST is for.
+
+--nJFBJCcSkptt2CoF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWy31JAAoJECTWi3JdVIfQgi0H/j5eOAsim8Xo1KG2I3bjJW7Z
+jkroSD2JTfa4F2hJmcZZaj2SniCwZUvZ0nVIZcjhYiAkQIw76Bqtu6OOFLerytgV
+GKHOBmj+OGxRi3NRzuPdEYM50rOAHBAc96L5HOvdMJAOP8WmwqsYk4JgymCa+yJ6
+kAjAQEkRR2a+4kFjq7ExYYPNQcPkVq7LzTc5A1GehQ4tC/7cRP2025+OoNkYe/d2
+bgRFQlaoA5CnhJR5aE3waPV+lPpshoMjFy53ZykMjRD0nTmJVDcyctfn0HI/X4q8
+nj7854GPlsjjR4wD/KBqb9z0yyLZlPdMSG4on9LOqNlDXonvvLhACwaz18cuSgc=
+=zhk5
+-----END PGP SIGNATURE-----
+
+--nJFBJCcSkptt2CoF--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
