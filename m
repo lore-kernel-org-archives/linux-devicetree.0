@@ -1,46 +1,82 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: omap2plus_defconfig: Enable AT24 eeprom
-Date: Mon, 22 Feb 2016 10:13:54 -0800
-Message-ID: <20160222181354.GN13417@atomide.com>
-References: <1456159868-32416-1-git-send-email-nm@ti.com>
- <1456159868-32416-3-git-send-email-nm@ti.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 02/10] ARM: dts: sunxi: make PLL8 in the H3 a
+ proper clock
+Date: Mon, 22 Feb 2016 18:20:47 +0000
+Message-ID: <1456165255-31013-3-git-send-email-andre.przywara@arm.com>
+References: <1456165255-31013-1-git-send-email-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456159868-32416-3-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBENDVW3AKGQERKB6YOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1456165255-31013-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [160222 08:51]:
-> AT24 compatible eeproms are used in BB family and X15 boards.
-> 
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/configs/omap2plus_defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> index d18d6b42fcf5..fa82f4e25d0e 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -145,6 +145,7 @@ CONFIG_BLK_DEV_RAM_SIZE=16384
->  CONFIG_SENSORS_TSL2550=m
->  CONFIG_BMP085_I2C=m
->  CONFIG_SRAM=y
-> +CONFIG_EEPROM_AT24=m
->  CONFIG_SENSORS_LIS3_I2C=m
->  CONFIG_BLK_DEV_SD=y
->  CONFIG_SCSI_SCAN_ASYNC=y
+Now that we can reuse the A31 PLL6 clock driver for clocks other then
+PLL6 itself, describe the PLL8 clock properly.
 
-Applying into omap-for-v4.6/defconfig.
+Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Thanks,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 3ba65c2..d84ea9b 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -137,12 +137,12 @@
+ 			clock-output-names = "pll6d2";
+ 		};
+ 
+-		/* dummy clock until pll6 can be reused */
+-		pll8: pll8_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <1>;
+-			clock-output-names = "pll8";
++		pll8: clk@c01c20044 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun6i-a31-pll6-clk";
++			reg = <0x01c20044 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll8", "pll8x2";
+ 		};
+ 
+ 		cpu: cpu_clk@01c20050 {
+@@ -243,7 +243,7 @@
+ 			#clock-cells = <1>;
+ 			compatible = "allwinner,sun4i-a10-mmc-clk";
+ 			reg = <0x01c20088 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+ 			clock-output-names = "mmc0",
+ 					     "mmc0_output",
+ 					     "mmc0_sample";
+@@ -253,7 +253,7 @@
+ 			#clock-cells = <1>;
+ 			compatible = "allwinner,sun4i-a10-mmc-clk";
+ 			reg = <0x01c2008c 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+ 			clock-output-names = "mmc1",
+ 					     "mmc1_output",
+ 					     "mmc1_sample";
+@@ -263,7 +263,7 @@
+ 			#clock-cells = <1>;
+ 			compatible = "allwinner,sun4i-a10-mmc-clk";
+ 			reg = <0x01c20090 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+ 			clock-output-names = "mmc2",
+ 					     "mmc2_output",
+ 					     "mmc2_sample";
+-- 
+2.6.4
