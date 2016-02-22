@@ -1,156 +1,135 @@
+Return-Path: <delicious.quinoa@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <56B8F946.9060301@ti.com>
-References: <1454690044-2560-1-git-send-email-nm@ti.com>
-	<1454690044-2560-2-git-send-email-nm@ti.com>
-	<20160208193706.GA333@rob-hp-laptop>
-	<56B8F946.9060301@ti.com>
-Date: Mon, 8 Feb 2016 15:18:59 -0600
-Message-ID: <CAL_JsqK+K9=FZebzx0VbmyXrn0K1pK8=Lo3OAJMRYzNZ=DMufQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: dt: mailbox: Add TI Message Manager
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Suman Anna <s-anna@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Jassi Brar <jassisinghbrar@gmail.com>, Franklin S Cooper Jr <fcooper@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>
+In-Reply-To: <6F671B0F-4F94-47F0-9CA2-04E6F905F20A@konsulko.com>
+References: <1455730885-1514-1-git-send-email-atull@opensource.altera.com>
+	<1455730885-1514-2-git-send-email-atull@opensource.altera.com>
+	<20160222025517.GS15973@rob-hp-laptop>
+	<6F671B0F-4F94-47F0-9CA2-04E6F905F20A@konsulko.com>
+Date: Mon, 22 Feb 2016 09:48:30 -0600
+Message-ID: <CANk1AXSGWLVVJZ5ydNOc9jP5vTZjUssLgoFhtYgz+=vVQSysBQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] of/overlay: of overlay callbacks
+From: Alan Tull <delicious.quinoa@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bea40b8bb16fb052c5dc39d
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: devicetree@vger.kernel.org, atull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+--047d7bea40b8bb16fb052c5dc39d
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-
-On Mon, Feb 8, 2016 at 2:23 PM, Suman Anna <s-anna@ti.com> wrote:
+On Feb 22, 2016 9:38 AM, "Pantelis Antoniou" <pantelis.antoniou@konsulko.co=
+m>
+wrote:
+>
 > Hi Rob,
 >
-> On 02/08/2016 01:37 PM, Rob Herring wrote:
->> On Fri, Feb 05, 2016 at 10:34:03AM -0600, Nishanth Menon wrote:
->>> Message Manager is a hardware block used to communicate with various
->>> processor systems within certain Texas Instrument's Keystone
->>> generation SoCs.
->>>
->>> This hardware engine is used to transfer messages from various compute
->>> entities(or processors) within the SoC. It is designed to be self
->>> contained without needing software initialization for operation.
->>>
->>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>> ---
->>>  .../bindings/mailbox/ti,message-manager.txt        | 72 ++++++++++++++++++++++
->>>  1 file changed, 72 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->>> new file mode 100644
->>> index 000000000000..f3d73b0b3c66
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
->>> @@ -0,0 +1,72 @@
->>> +Texas Instruments' Message Manager Driver
->>> +========================================
->>> +
->>> +The Texas Instruments' Message Manager is a mailbox controller that has
->>> +configurable queues selectable at SoC(System on Chip) integration. The Message
->>> +manager is broken up into queues in different address regions that are called
->>> +"proxies" - each instance is unidirectional and is instantiated at SoC
->>> +integration level to indicate receive or transmit path.
->>> +
->>> +Message Manager Device Node:
->>> +===========================
->>> +
->>> +Required properties:
->>> +--------------------
->>> +- compatible:               Shall be:
->>> +                            "ti,k2g-message-manager"
->>> +                            "ti,message-manager"
->>
->> Given that queues are configurable at integration time, does a generic
->> property really make sense here?
->>
->>> +- reg-names                 queue_proxy_region - Map the queue Proxy region
->>> +                    queue_state_debug_region - Map the queue state debug
->>> +                    region.
->>> +- reg:                      Contains the register map per reg-names
->>> +- #mbox-cells               Shall be 1
->>
->> And the value contained is what?
->>
->>> +
->>> +Child Nodes:
->>> +============
->>> +A child node is used for representing the actual queue device that is
->>> +used for the communication between the host processor and a remote processor.
->>> +Each child node should have a unique node name across all the different
->>> +message manager device nodes.
->>> +
->>> +Required Properties:
->>> +--------------------
->>> +- ti,queue-id:              Indicates the queue number this node represents
->>> +- ti,proxy-id:              Proxy ID representing the processor in the SoC.
->>
->> What determines these values?
->>
->>> +
->>> +Optional Properties:
->>> +--------------------
->>> +- interrupt-names:  'rx' - indicates a receive interrupt (mandatory ONLY if
->>> +                    this is a receive queue)
->>
->> Kind of pointless if there is only 1.
->>
->>> +- interrupts:               Contains the interrupt information corresponding to
->>> +                    interrupt-names property.
->>> +
->>> +Example:
->>> +--------
->>> +
->>> +    msgmgr: msgmgr@02a00000 {
->>> +            compatible = "ti,k2g-message-manager", "ti,message-manager";
->>> +            #mbox-cells = <1>;
->>> +            reg-names = "queue_proxy_region", "queue_state_debug_region";
->>> +            reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
->>> +
->>> +            msgmgr_proxy_pmmc_tx_prio0: pmmc_tx_prio0 {
->>> +                    ti,queue-id = <0>;
->>> +                    ti,proxy-id = <0>;
->>> +            };
->>> +
->>> +            msgmgr_proxy_pmmc_rx: pmmc_rx {
->>> +                    ti,queue-id = <5>;
->>> +                    ti,proxy-id = <2>;
->>> +                    interrupt-names = "rx";
->>> +                    interrupts = <GIC_SPI 324 IRQ_TYPE_EDGE_RISING>;
->>> +            };
->>> +    };
->>> +
->>> +...
->>> +    pmmc {
->>> +            ...
->>> +            mbox-names = "tx", "rx";
->>> +            mboxes = <&msgmgr &msgmgr_proxy_pmmc_tx>
->>> +                     <&msgmgr &msgmgr_proxy_pmmc_rx>;
->>
->> While I guess this is valid DT, it is a bit strange having the cell
->> values be phandles. Why not just make the queue and proxy ids be the
->> cell values? The interrupts could be moved to the parent and the child
->> nodes eliminated altogether.
+> > On Feb 22, 2016, at 04:55 , Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:
+> >> Add overlay callback functionality.
+> >>
+> >> When DT overlays are being added, some drivers/subsystems
+> >> will want to know about the changes before they go into the
+> >> live tree.  Similarly there is a need for post-remove
+> >> callbacks.
+> >>
+> >> Each handler is registered with a of_device_id.  When
+> >> an overlay target matches a handler's id, the handler
+> >> gets called.
+> >>
+> >> The following 4 cases are handled: pre-apply, post-apply,
+> >> pre-remove, and post-remove.
+> >
+> > So I know I suggested maybe not using notifiers, but this ends up just
+> > looking like notifiers, so we might as well use them unless we somehow
+> > change the flow. You would just need to add pre-apply and pre-remove
+> > in of_attach_node and of_detach_node, right?
+> >
 >
-> The mailbox controller node (msgmgr) and its child nodes all are
-> registered with the mailbox core together and the client users request a
-> mailbox using the framework API that requires the controller node.
-> Usually the channels are given numbers and the request is done based on
-> indices, but that meant that we had to introduce a logical device id
-> just for the sake of the API. Instead, we just chose to go with the
-> phandles.
 >
-> Doing a queue and proxy id as cell values requires the mailbox
-> controller node registration phase to parse through all the client nodes
-> with the matching controller node. The current approach was in-line with
-> how all the mailbox controller nodes are implemented today, except for
-> the usage of phandle instead of an index for the cell-value.
+> I agree those look just like notifiers. We could just update the notifier
+> logic to handle this case.
 >
->>
->> The alternative would be just drop msgmgr phandle and point to the child
->> nodes. I prefer getting rid of the child nodes though.
+> Am I missing something else?
+
+Yes this could just be added notifiers for pre-apply and pre-remove.  In
+the case of pre-apply, if the notifier returns error, the overlay should be
+rejected.
+
+We will also want similar notifiers added for properties.
+
+Alan
+
 >
-> The 'mboxes' property is a standard property supported by the mailbox
-> framework core, and requires the phandle of the controller node along
-> with a cell-value to lookup a channel. So, we cannot use the child nodes
-> directly.
 >
-> regards
-> Suman
+> > Rob
+>
+> Regards
+>
+> =E2=80=94 Pantelis
+>
+
+--047d7bea40b8bb16fb052c5dc39d
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr">On Feb 22, 2016 9:38 AM, &quot;Pantelis Antoniou&quot; &lt;<=
+a href=3D"mailto:pantelis.antoniou@konsulko.com">pantelis.antoniou@konsulko=
+.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi Rob,<br>
+&gt;<br>
+&gt; &gt; On Feb 22, 2016, at 04:55 , Rob Herring &lt;<a href=3D"mailto:rob=
+h@kernel.org">robh@kernel.org</a>&gt; wrote:<br>
+&gt; &gt;<br>
+&gt; &gt; On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:<br>
+&gt; &gt;&gt; Add overlay callback functionality.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; When DT overlays are being added, some drivers/subsystems<br>
+&gt; &gt;&gt; will want to know about the changes before they go into the<b=
+r>
+&gt; &gt;&gt; live tree.=C2=A0 Similarly there is a need for post-remove<br=
+>
+&gt; &gt;&gt; callbacks.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; Each handler is registered with a of_device_id.=C2=A0 When<br=
+>
+&gt; &gt;&gt; an overlay target matches a handler&#39;s id, the handler<br>
+&gt; &gt;&gt; gets called.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; The following 4 cases are handled: pre-apply, post-apply,<br>
+&gt; &gt;&gt; pre-remove, and post-remove.<br>
+&gt; &gt;<br>
+&gt; &gt; So I know I suggested maybe not using notifiers, but this ends up=
+ just<br>
+&gt; &gt; looking like notifiers, so we might as well use them unless we so=
+mehow<br>
+&gt; &gt; change the flow. You would just need to add pre-apply and pre-rem=
+ove<br>
+&gt; &gt; in of_attach_node and of_detach_node, right?<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt;<br>
+&gt; I agree those look just like notifiers. We could just update the notif=
+ier<br>
+&gt; logic to handle this case.<br>
+&gt;<br>
+&gt; Am I missing something else?</p>
+<p dir=3D"ltr">Yes this could just be added notifiers for pre-apply and pre=
+-remove.=C2=A0 In the case of pre-apply, if the notifier returns error, the=
+ overlay should be rejected.</p>
+<p dir=3D"ltr">We will also want similar notifiers added for properties. </=
+p>
+<p dir=3D"ltr">Alan</p>
+<p dir=3D"ltr">&gt;<br>
+&gt;<br>
+&gt; &gt; Rob<br>
+&gt;<br>
+&gt; Regards<br>
+&gt;<br>
+&gt; =E2=80=94 Pantelis<br>
+&gt;<br>
+</p>
+
+--047d7bea40b8bb16fb052c5dc39d--
