@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v2 2/9] phy: rcar-gen3-usb2: Add vbus-supply to handle VBUS on/off
-Date: Mon, 22 Feb 2016 18:58:01 +0900
-Message-ID: <1456135088-7976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v2 4/9] arm64: dts: r8a7795: add usb2_phy device nodes
+Date: Mon, 22 Feb 2016 18:58:03 +0900
+Message-ID: <1456135088-7976-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,99 +12,48 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-To handle the VBUS on/off by a regulator driver, this patch adds
-regulator APIs calling in the driver and description about vbus-supply
-in the rcar-gen3-phy-usb2.txt.
-
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 ++
- drivers/phy/phy-rcar-gen3-usb2.c                   | 28 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index eaf7e9b..2ffb856 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -15,6 +15,8 @@ To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
- combined, the device tree node should set interrupt properties to use the
- channel as USB OTG:
- - interrupts: interrupt specifier for the PHY.
-+- vbus-supply: Phandle to a regulator that provides power to the VBUS. This
-+	       regulator will be managed during the PHY power on/off sequence.
- 
- Example (R-Car H3):
- 
-diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-index 2da2148..c2bfde8 100644
---- a/drivers/phy/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/phy-rcar-gen3-usb2.c
-@@ -19,6 +19,7 @@
- #include <linux/of_address.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- 
- /******* USB2.0 Host registers (original offset is +0x200) *******/
- #define USB2_INT_ENABLE		0x000
-@@ -77,6 +78,7 @@
- struct rcar_gen3_chan {
- 	void __iomem *base;
- 	struct phy *phy;
-+	struct regulator *vbus;
- 	bool has_otg;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index e77f5fd..2203b8e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1406,5 +1406,33 @@
+ 				};
+ 			};
+ 		};
++
++		usb2_phy0: usb-phy@ee080200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee080200 0 0x700>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy1: usb-phy@ee0a0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0a0200 0 0x700>;
++			clocks = <&cpg CPG_MOD 702>;
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy2: usb-phy@ee0c0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0c0200 0 0x700>;
++			clocks = <&cpg CPG_MOD 701>;
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
+ 	};
  };
- 
-@@ -210,6 +212,13 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
- 	void __iomem *usb2_base = channel->base;
- 	u32 val;
-+	int ret;
-+
-+	if (channel->vbus) {
-+		ret = regulator_enable(channel->vbus);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	val = readl(usb2_base + USB2_USBCTR);
- 	val |= USB2_USBCTR_PLL_RST;
-@@ -220,10 +229,22 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	return 0;
- }
- 
-+static int rcar_gen3_phy_usb2_power_off(struct phy *p)
-+{
-+	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
-+	int ret = 0;
-+
-+	if (channel->vbus)
-+		ret = regulator_disable(channel->vbus);
-+
-+	return ret;
-+}
-+
- static struct phy_ops rcar_gen3_phy_usb2_ops = {
- 	.init		= rcar_gen3_phy_usb2_init,
- 	.exit		= rcar_gen3_phy_usb2_exit,
- 	.power_on	= rcar_gen3_phy_usb2_power_on,
-+	.power_off	= rcar_gen3_phy_usb2_power_off,
- 	.owner		= THIS_MODULE,
- };
- 
-@@ -289,6 +310,13 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		return PTR_ERR(channel->phy);
- 	}
- 
-+	channel->vbus = devm_regulator_get_optional(dev, "vbus");
-+	if (IS_ERR(channel->vbus)) {
-+		if (PTR_ERR(channel->vbus) == -EPROBE_DEFER)
-+			return PTR_ERR(channel->vbus);
-+		channel->vbus = NULL;
-+	}
-+
- 	phy_set_drvdata(channel->phy, channel);
- 
- 	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
 -- 
 1.9.1
